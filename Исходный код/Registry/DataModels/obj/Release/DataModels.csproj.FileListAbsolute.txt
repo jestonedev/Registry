@@ -1,0 +1,5 @@
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\DataModels\bin\Release\DataModels.dll.config
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\DataModels\bin\Release\DataModels.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\DataModels\bin\Release\DataModels.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\DataModels\obj\Release\DataModels.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\DataModels\obj\Release\DataModels.pdb

@@ -1,0 +1,4 @@
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\System.Windows.Forms.Ribbon\System.Windows.Forms.Ribbon\bin\Debug\System.Windows.Forms.Ribbon.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\System.Windows.Forms.Ribbon\System.Windows.Forms.Ribbon\bin\Debug\System.Windows.Forms.Ribbon.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\System.Windows.Forms.Ribbon\System.Windows.Forms.Ribbon\obj\Debug\System.Windows.Forms.Ribbon.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\System.Windows.Forms.Ribbon\System.Windows.Forms.Ribbon\obj\Debug\System.Windows.Forms.Ribbon.pdb

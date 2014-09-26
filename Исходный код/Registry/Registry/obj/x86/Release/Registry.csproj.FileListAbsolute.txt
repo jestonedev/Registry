@@ -1,0 +1,17 @@
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Registry.exe
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Registry.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\MBToolStrip.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\System.Windows.Forms.Ribbon.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Viewports.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\DataModels.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Viewports.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\MBToolStrip.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\MBToolStrip.xml
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\System.Windows.Forms.Ribbon.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\DataModels.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\obj\x86\Release\Registry.csprojResolveAssemblyReference.cache
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\obj\x86\Release\Registry.MainForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\obj\x86\Release\Registry.Properties.Resources.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\obj\x86\Release\Registry.csproj.GenerateResource.Cache
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\obj\x86\Release\Registry.exe
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\obj\x86\Release\Registry.pdb

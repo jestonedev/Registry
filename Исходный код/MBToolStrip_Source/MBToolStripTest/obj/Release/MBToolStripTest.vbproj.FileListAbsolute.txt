@@ -1,0 +1,4 @@
+C:\Users\IgnVV\Downloads\C__Users_sean.OFFICE_Desktop_Holding_Ground_MBToolStrip_Source\MBToolStripTest\obj\Release\MBToolStripTest.vbprojResolveAssemblyReference.cache
+C:\Users\IgnVV\Downloads\C__Users_sean.OFFICE_Desktop_Holding_Ground_MBToolStrip_Source\MBToolStripTest\obj\Release\MBToolStripTest.Form1.resources
+C:\Users\IgnVV\Downloads\C__Users_sean.OFFICE_Desktop_Holding_Ground_MBToolStrip_Source\MBToolStripTest\obj\Release\MBToolStripTest.Resources.resources
+C:\Users\IgnVV\Downloads\C__Users_sean.OFFICE_Desktop_Holding_Ground_MBToolStrip_Source\MBToolStripTest\obj\Release\MBToolStripTest.vbproj.GenerateResource.Cache

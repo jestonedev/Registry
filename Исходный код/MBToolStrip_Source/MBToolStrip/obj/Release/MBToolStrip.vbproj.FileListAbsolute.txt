@@ -1,0 +1,8 @@
+C:\Users\IgnVV\Downloads\C__Users_sean.OFFICE_Desktop_Holding_Ground_MBToolStrip_Source\MBToolStrip\bin\Release\MBToolStrip.dll
+C:\Users\IgnVV\Downloads\C__Users_sean.OFFICE_Desktop_Holding_Ground_MBToolStrip_Source\MBToolStrip\bin\Release\MBToolStrip.pdb
+C:\Users\IgnVV\Downloads\C__Users_sean.OFFICE_Desktop_Holding_Ground_MBToolStrip_Source\MBToolStrip\bin\Release\MBToolStrip.xml
+C:\Users\IgnVV\Downloads\C__Users_sean.OFFICE_Desktop_Holding_Ground_MBToolStrip_Source\MBToolStrip\obj\Release\MBToolStrip.Resources.resources
+C:\Users\IgnVV\Downloads\C__Users_sean.OFFICE_Desktop_Holding_Ground_MBToolStrip_Source\MBToolStrip\obj\Release\MBToolStrip.vbproj.GenerateResource.Cache
+C:\Users\IgnVV\Downloads\C__Users_sean.OFFICE_Desktop_Holding_Ground_MBToolStrip_Source\MBToolStrip\obj\Release\MBToolStrip.dll
+C:\Users\IgnVV\Downloads\C__Users_sean.OFFICE_Desktop_Holding_Ground_MBToolStrip_Source\MBToolStrip\obj\Release\MBToolStrip.xml
+C:\Users\IgnVV\Downloads\C__Users_sean.OFFICE_Desktop_Holding_Ground_MBToolStrip_Source\MBToolStrip\obj\Release\MBToolStrip.pdb

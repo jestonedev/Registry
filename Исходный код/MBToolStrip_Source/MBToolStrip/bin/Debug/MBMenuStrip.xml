@@ -1,0 +1,99 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+MBMenuStrip
+</name>
+</assembly>
+<members>
+<member name="M:MBMenuStrip.MBMenuStrip.#ctor">
+	<summary>
+ Constructor of MBMenuStrip
+ </summary>
+</member><member name="M:MBMenuStrip.MBMenuStrip.InitializeComponent">
+	<summary>
+ Initialize MBMenuStrip and MBMenuRenderClass
+ </summary>
+</member><member name="T:MBMenuStrip.MBMenuStrip">
+	<summary>
+ MBMenuStrip Class © Manoj K Bhoir
+ </summary>
+	<remarks>Version 1.0</remarks>
+</member><member name="M:MBMenuStrip.MBMenuRendere.OnRenderMenuItemBackground(System.Windows.Forms.ToolStripItemRenderEventArgs)">
+	<summary>
+ Draw MenuItem Background of MBMenuStrip
+ </summary>
+</member><member name="M:MBMenuStrip.MBMenuRendere.OnRenderItemImage(System.Windows.Forms.ToolStripItemImageRenderEventArgs)">
+	<summary>
+ Draw ItemImage for MBMenuStrip
+ </summary>
+</member><member name="M:MBMenuStrip.MBMenuRendere.DrawGradientBackground(System.Drawing.Graphics,System.Drawing.Rectangle,MBMenuStrip.MBMenuRendere.GradientColor)">
+	<summary>
+ Draw Gradient Backround for MBMenuStrip Items
+ </summary>
+	<param name="g">ByVal Graphics As Graphics</param>
+	<param name="backRect">ByVal BackRect As Rectangle</param>
+	<param name="colors">ByVal Colors As GradientColor</param>
+</member><member name="M:MBMenuStrip.MBMenuRendere.DrawGradientItem(System.Drawing.Graphics,System.Drawing.Rectangle,MBMenuStrip.MBMenuRendere.GradientColor)">
+	<summary>
+ Draw Gradient Items for MBMenuStrip
+ </summary>
+	<param name="g">ByVal Graphics As Graphics</param>
+	<param name="backRect">ByVal BackRect As Rectangle</param>
+	<param name="colors">ByVal Colors As GradientColor</param>
+</member><member name="M:MBMenuStrip.MBMenuRendere.DrawGradientBorder(System.Drawing.Graphics,System.Drawing.Rectangle,MBMenuStrip.MBMenuRendere.GradientColor)">
+	<summary>
+ Draw Gradient Border for MBMenuStrip
+ </summary>
+	<param name="g">ByVal Graphics As Graphics</param>
+	<param name="backRect">ByVal BackRect As Rectangle</param>
+	<param name="colors">ByVal Colors As GradientColor</param>
+</member><member name="M:MBMenuStrip.MBMenuRendere.DrawGradientToolItem(System.Drawing.Graphics,System.Windows.Forms.ToolStripItem,MBMenuStrip.MBMenuRendere.GradientColor)">
+	<summary>
+ Draw Gradient Tool Item for MBMenuStrip
+ </summary>
+	<param name="g">ByVal Graphics As Graphics</param>
+	<param name="item">ByVal Item As ToolStripItem</param>
+	<param name="colors">ByVal Colors As GradientColor</param>
+</member><member name="M:MBMenuStrip.MBMenuRendere.DrawGradientMenuItem(System.Drawing.Graphics,System.Windows.Forms.ToolStripItem,MBMenuStrip.MBMenuRendere.GradientColor)">
+	<summary>
+ Draw Gradient Menu Item for MBMenuStrip
+ </summary>
+	<param name="g">ByVal Graphics As Graphics</param>
+	<param name="item">ByVal Item As ToolStripItem</param>
+	<param name="colors">ByVal Colors As GradientColor</param>
+</member><member name="M:MBMenuStrip.MBMenuRendere.GetBorderPath(System.Drawing.Rectangle,System.Single)">
+	<summary>
+ Private Function GetBorderPath for MBMenuStrip
+ </summary>
+	<param name="rect">ByVal Rect As Rectangle</param>
+	<param name="cut">ByVal Cut As Single</param>
+	<returns>BorderPath As GraphicsPath</returns>
+</member><member name="M:MBMenuStrip.MBMenuRendere.GradientColor.#ctor(System.Drawing.Color,System.Drawing.Color,System.Drawing.Color,System.Drawing.Color,System.Drawing.Color,System.Drawing.Color,System.Drawing.Color,System.Drawing.Color,System.Drawing.Color,System.Drawing.Color)">
+	<summary>
+ Constructor for GradientItemColor Class
+ </summary>
+</member><member name="T:MBMenuStrip.MBMenuRendere.GradientColor">
+	<summary>
+ GradientColor Class which Provides Gradient Colors
+ </summary>
+</member><member name="T:MBMenuStrip.MBMenuRendere">
+	<summary>
+ MBMenuRenderer Class for MBMenuStrip
+ </summary>
+	<remarks>Version 1.0</remarks>
+</member><member name="T:MBMenuStrip.UseAntiAlias">
+	<summary>
+ Helper Class for MBMenuRenderer
+ </summary>
+</member><member name="M:MBMenuStrip.UseClipping.#ctor(System.Drawing.Graphics,System.Drawing.Drawing2D.GraphicsPath)">
+	<summary>
+ Constructor for UsingClipping Class
+ </summary>
+</member><member name="T:MBMenuStrip.UseClipping">
+	<summary>
+ Helper Class for MBMenuRenderer
+ </summary>
+</member>
+</members>
+</doc>
