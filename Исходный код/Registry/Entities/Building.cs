@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Registry.DataModels
+namespace Registry.Entities
 {
-    public class Building
+    public sealed class Building
     {
         public int? id_building { get; set; }
         public int? id_structure_type {get; set;} 

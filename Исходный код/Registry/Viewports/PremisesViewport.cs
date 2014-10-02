@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Data;
 using Registry.DataModels;
+using Registry.Entities;
 
 namespace Registry.Viewport
 {
@@ -57,6 +58,7 @@ namespace Registry.Viewport
         private Label label27 = new Label();
         private Label label28 = new Label();
         private Label label29 = new Label();
+        private Label label38 = new Label();
         private ComboBox comboBoxHouse = new ComboBox();
         private ComboBox comboBoxStreet = new ComboBox();
         private TextBox textBoxPremisesNumber = new TextBox();
@@ -64,6 +66,7 @@ namespace Registry.Viewport
         private TextBox textBoxSubPremisesNumber = new TextBox();
         private ComboBox comboBoxPremisesType = new ComboBox();
         private ComboBox comboBoxPremisesKind = new ComboBox();
+        private ComboBox comboBoxCurrentFundType = new System.Windows.Forms.ComboBox();
         private MaskedTextBox maskedTextBoxCadastralNum = new MaskedTextBox();
         #endregion Components
 
@@ -74,6 +77,7 @@ namespace Registry.Viewport
 
         //Models
         private PremisesDataModel premises = null;
+        private PremisesCurrentFundsDataModel premisesCurrentFund = null;
         private BuildingsDataModel buildings = null;
         private KladrDataModel kladr = null;
         private PremisesTypesDataModel premises_types = null;
@@ -85,10 +89,11 @@ namespace Registry.Viewport
         private OwnershipsRightsDataModel ownershipRights = null;
         private OwnershipRightTypesDataModel ownershipRightTypes = null;
         private OwnershipPremisesAssocDataModel ownershipPremisesAssoc = null;
-        
+        private FundTypesDataModel fundTypes = null;
 
         //Views
         private BindingSource v_premises = null;
+        private BindingSource v_premisesCurrentFund = null;
         private BindingSource v_buildings = null;
         private BindingSource v_kladr = null;
         private BindingSource v_premises_types = null;
@@ -100,6 +105,7 @@ namespace Registry.Viewport
         private BindingSource v_ownershipRights = null;
         private BindingSource v_ownershipRightTypes = null;
         private BindingSource v_ownershipPremisesAssoc = null;
+        private BindingSource v_fundType = null;
 
         private ViewportState viewportState = ViewportState.ReadState;
         private bool is_editable = false;
@@ -137,6 +143,7 @@ namespace Registry.Viewport
         public override void LoadData()
         {
             premises = PremisesDataModel.GetInstance();
+            premisesCurrentFund = PremisesCurrentFundsDataModel.GetInstance();
             kladr = KladrDataModel.GetInstance();
             buildings = BuildingsDataModel.GetInstance();
             premises_types = PremisesTypesDataModel.GetInstance();
@@ -148,6 +155,7 @@ namespace Registry.Viewport
             ownershipRights = OwnershipsRightsDataModel.GetInstance();
             ownershipRightTypes = OwnershipRightTypesDataModel.GetInstance();
             ownershipPremisesAssoc = OwnershipPremisesAssocDataModel.GetInstance();
+            fundTypes = FundTypesDataModel.GetInstance();
 
             DataSet ds = DataSetManager.GetDataSet();
 
@@ -158,6 +166,14 @@ namespace Registry.Viewport
             v_buildings = new BindingSource();
             v_buildings.DataMember = "kladr_buildings";
             v_buildings.DataSource = v_kladr;
+
+            v_premisesCurrentFund = new BindingSource();
+            v_premisesCurrentFund.DataMember = "premises_current_funds";
+            v_premisesCurrentFund.DataSource = premisesCurrentFund.Select();
+
+            v_fundType = new BindingSource();
+            v_fundType.DataMember = "fund_types";
+            v_fundType.DataSource = ds;
 
             v_premises = new BindingSource();
             v_premises.CurrentItemChanged += new EventHandler(v_premises_CurrentItemChanged);
@@ -200,13 +216,17 @@ namespace Registry.Viewport
             v_restrictionPremisesAssoc.DataMember = "premises_restrictions_premises_assoc";
             v_restrictionPremisesAssoc.CurrentItemChanged += new EventHandler(v_restrictionPremisesAssoc_CurrentItemChanged);
             v_restrictionPremisesAssoc.DataSource = v_premises;
-            v_restrictionPremisesAssoc_CurrentItemChanged(null, new EventArgs());
+            RestrictionsFilterRebuild();
+            restrictionPremisesAssoc.Select().RowChanged += new DataRowChangeEventHandler(RestrictionsAssoc_RowChanged);
+            restrictionPremisesAssoc.Select().RowDeleting += new DataRowChangeEventHandler(RestrictionsAssoc_RowDeleting);
 
             v_ownershipPremisesAssoc = new BindingSource();
             v_ownershipPremisesAssoc.DataMember = "premises_ownership_premises_assoc";
             v_ownershipPremisesAssoc.CurrentItemChanged += new EventHandler(v_ownershipPremisesAssoc_CurrentItemChanged);
             v_ownershipPremisesAssoc.DataSource = v_premises;
-            v_ownershipPremisesAssoc_CurrentItemChanged(null, new EventArgs());
+            OwnershipsFilterRebuild();
+            ownershipPremisesAssoc.Select().RowChanged += new DataRowChangeEventHandler(OwnershipsAssoc_RowChanged);
+            ownershipPremisesAssoc.Select().RowDeleting += new DataRowChangeEventHandler(OwnershipsAssoc_RowDeleting);
 
             DataBind();
 
@@ -230,6 +250,50 @@ namespace Registry.Viewport
             checkBoxAcceptByExchange.CheckedChanged += new EventHandler(checkBoxAcceptByExchange_CheckedChanged);
             checkBoxAcceptByOther.CheckedChanged += new EventHandler(checkBoxAcceptByOther_CheckedChanged);
             checkBoxForOrphans.CheckedChanged += new EventHandler(checkBoxForOrphans_CheckedChanged);
+        }
+
+        void RestrictionsAssoc_RowDeleting(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action == DataRowAction.Delete)
+                RestrictionsFilterRebuild();
+        }
+
+        void RestrictionsAssoc_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action == DataRowAction.Add)
+                RestrictionsFilterRebuild();
+        }
+
+        void OwnershipsAssoc_RowDeleting(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action == DataRowAction.Delete)
+                OwnershipsFilterRebuild();
+        }
+
+        void OwnershipsAssoc_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action == DataRowAction.Add)
+                OwnershipsFilterRebuild();
+        }
+
+        void RestrictionsFilterRebuild()
+        {
+            string restrictionsFilter = "id_restriction IN (0";
+            for (int i = 0; i < v_restrictionPremisesAssoc.Count; i++)
+                restrictionsFilter += ((DataRowView)v_restrictionPremisesAssoc[i])["id_restriction"].ToString() + ",";
+            restrictionsFilter = restrictionsFilter.TrimEnd(new char[] { ',' });
+            restrictionsFilter += ")";
+            v_restrictions.Filter = restrictionsFilter;
+        }
+
+        void OwnershipsFilterRebuild()
+        {
+            string ownershipFilter = "id_ownership_right IN (0";
+            for (int i = 0; i < v_ownershipPremisesAssoc.Count; i++)
+                ownershipFilter += ((DataRowView)v_ownershipPremisesAssoc[i])["id_ownership_right"].ToString() + ",";
+            ownershipFilter = ownershipFilter.TrimEnd(new char[] { ',' });
+            ownershipFilter += ")";
+            v_ownershipRights.Filter = ownershipFilter;
         }
 
         void comboBoxStreet_VisibleChanged(object sender, EventArgs e)
@@ -399,6 +463,23 @@ namespace Registry.Viewport
                     else
                         this.Text = "Помещения отсутствуют";
                 }
+            if (v_premisesCurrentFund != null)
+            {
+                if ((v_premises.Position != -1) && !(((DataRowView)v_premises[v_premises.Position])["id_premises"] is DBNull))
+                    v_premisesCurrentFund.Filter = "id_premises = " + ((DataRowView)v_premises[v_premises.Position])["id_premises"].ToString();
+                else
+                    v_premisesCurrentFund.Filter = "id_premises = 0";
+                if (v_premisesCurrentFund.Count > 0)
+                {
+                    label38.Visible = true;
+                    comboBoxCurrentFundType.Visible = true;
+                }
+                else
+                {
+                    label38.Visible = false;
+                    comboBoxCurrentFundType.Visible = false;
+                }
+            }
             SelectCurrentBuilding();
             menuCallback.NavigationStateUpdate();
             if (v_premises.Position == -1)
@@ -481,6 +562,12 @@ namespace Registry.Viewport
             checkBoxAcceptByExchange.DataBindings.Add("Checked", v_premises, "accepted_by_exchange", true, DataSourceUpdateMode.Never, false);
             checkBoxAcceptByOther.DataBindings.Clear();
             checkBoxAcceptByOther.DataBindings.Add("Checked", v_premises, "accepted_by_other", true, DataSourceUpdateMode.Never, false);
+
+            comboBoxCurrentFundType.DataSource = v_fundType;
+            comboBoxCurrentFundType.ValueMember = "id_fund_type";
+            comboBoxCurrentFundType.DisplayMember = "fund_type";
+            comboBoxCurrentFundType.DataBindings.Clear();
+            comboBoxCurrentFundType.DataBindings.Add("SelectedValue", v_premisesCurrentFund, "id_fund_type", true, DataSourceUpdateMode.Never, DBNull.Value);
 
             dataGridViewRestrictions.DataSource = v_restrictions;
             field_id_restriction_type.DataSource = v_restrictonTypes;
@@ -809,7 +896,7 @@ namespace Registry.Viewport
                             return true;
                         case ViewportState.NewRowState:
                         case ViewportState.ModifyRowState:
-                            DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
+                            DialogResult result = MessageBox.Show("Сохранить изменения о помещениях в базу данных?", "Внимание",
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
@@ -837,7 +924,7 @@ namespace Registry.Viewport
                         case ViewportState.NewRowState:
                             return true;
                         case ViewportState.ModifyRowState:
-                            DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
+                            DialogResult result = MessageBox.Show("Сохранить изменения о помещениях в базу данных?", "Внимание",
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
@@ -861,7 +948,7 @@ namespace Registry.Viewport
                         case ViewportState.ModifyRowState:
                             return true;
                         case ViewportState.NewRowState:
-                            DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
+                            DialogResult result = MessageBox.Show("Сохранить изменения о помещениях в базу данных?", "Внимание",
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
@@ -1044,7 +1131,7 @@ namespace Registry.Viewport
 
         public override bool HasAssocSubPremises()
         {
-            return true;
+            return (v_premises.Position != -1);
         }
 
         public override bool HasFundHistory()
@@ -1054,26 +1141,89 @@ namespace Registry.Viewport
 
         public override void ShowOwnerships()
         {
-            //TODO
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            if (v_premises.Position == -1)
+            {
+                MessageBox.Show("Не выбрано помещение для отображения ограничений", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            OwnershipListViewport viewport = new OwnershipListViewport(menuCallback);
+            viewport.StaticFilter = "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"]);
+            viewport.ParentRow = ((DataRowView)v_premises[v_premises.Position]).Row;
+            viewport.ParentType = ParentTypeEnum.Premises;
+            if ((viewport as IMenuController).CanLoadData())
+                (viewport as IMenuController).LoadData();
+            menuCallback.AddViewport(viewport);
+            menuCallback.SwitchToViewport(viewport);
         }
 
         public override void ShowRestrictions()
         {
-            //TODO
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            if (v_premises.Position == -1)
+            {
+                MessageBox.Show("Не выбрано помещение для отображения реквизитов", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            RestrictionListViewport viewport = new RestrictionListViewport(menuCallback);
+            viewport.StaticFilter = "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"]);
+            viewport.ParentRow = ((DataRowView)v_premises[v_premises.Position]).Row;
+            viewport.ParentType = ParentTypeEnum.Premises;
+            if ((viewport as IMenuController).CanLoadData())
+                (viewport as IMenuController).LoadData();
+            menuCallback.AddViewport(viewport);
+            menuCallback.SwitchToViewport(viewport);
         }
 
         public override void ShowSubPremises()
         {
-            //TODO
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            if (v_premises.Position == -1)
+            {
+                MessageBox.Show("Не выбрано помещение для отображения перечня комнат", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            if (Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises_type"]) == 2)
+            {
+                MessageBox.Show("Данное помещение является комнатой и не может содержать в себе другие комнаты", "Ошибка", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            SubPremisesViewport viewport = new SubPremisesViewport(menuCallback);
+            viewport.StaticFilter = "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"]);
+            viewport.ParentRow = ((DataRowView)v_premises[v_premises.Position]).Row;
+            viewport.ParentType = ParentTypeEnum.Premises;
+            if ((viewport as IMenuController).CanLoadData())
+                (viewport as IMenuController).LoadData();
+            menuCallback.AddViewport(viewport);
+            menuCallback.SwitchToViewport(viewport);
         }
 
         public override void ShowFundHistory()
         {
-            //TODO
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            if (v_premises.Position == -1)
+            {
+                MessageBox.Show("Не выбрано помещение для отображения реквизитов", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            FundsHistoryViewport viewport = new FundsHistoryViewport(menuCallback);
+            viewport.StaticFilter = "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"]);
+            viewport.ParentRow = ((DataRowView)v_premises[v_premises.Position]).Row;
+            viewport.ParentType = ParentTypeEnum.Premises;
+            if ((viewport as IMenuController).CanLoadData())
+                (viewport as IMenuController).LoadData();
+            menuCallback.AddViewport(viewport);
+            menuCallback.SwitchToViewport(viewport);
         }
 
         private void ConstructViewport()
         {
+            this.SuspendLayout();
             this.Controls.Add(this.tableLayoutPanel3);
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -1109,18 +1259,14 @@ namespace Registry.Viewport
             this.tableLayoutPanel3.Controls.Add(this.groupBox8, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel5, 0, 1);
             this.tableLayoutPanel3.Controls.Add(this.groupBoxRooms, 0, 2);
-            
-
+         
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 3;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 185F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 79F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 131F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(984, 531);
-            this.tableLayoutPanel3.TabIndex = 0;
             // 
             // tableLayoutPanel4
             // 
@@ -1130,13 +1276,10 @@ namespace Registry.Viewport
             this.tableLayoutPanel4.Controls.Add(this.panel3, 0, 0); 
             this.tableLayoutPanel4.Controls.Add(this.panel4, 1, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 16);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(972, 160);
-            this.tableLayoutPanel4.TabIndex = 0;
             // 
             // tableLayoutPanel5
             // 
@@ -1145,45 +1288,37 @@ namespace Registry.Viewport
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel5.Controls.Add(this.groupBox11, 0, 0);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 188);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 1;
+            this.tableLayoutPanel5.TabIndex = 1;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(486, 73);
-            this.tableLayoutPanel5.TabIndex = 16;
             // 
             // groupBox8
             // 
             this.tableLayoutPanel3.SetColumnSpan(this.groupBox8, 2);
             this.groupBox8.Controls.Add(this.tableLayoutPanel4);
             this.groupBox8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox8.Location = new System.Drawing.Point(3, 3);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(978, 179);
-            this.groupBox8.TabIndex = 0;
             this.groupBox8.TabStop = false;
+            this.groupBox8.TabIndex = 0;
             this.groupBox8.Text = "Общие сведения";
             // 
             // groupBox9
             // 
             this.groupBox9.Controls.Add(this.dataGridViewRestrictions);
             this.groupBox9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox9.Location = new System.Drawing.Point(3, 333);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(486, 195);
-            this.groupBox9.TabIndex = 13;
             this.groupBox9.TabStop = false;
+            this.groupBox9.TabIndex = 5;
             this.groupBox9.Text = "Реквизиты НПА";
             // 
             // groupBox10
             // 
             this.groupBox10.Controls.Add(this.dataGridViewOwnerships);
             this.groupBox10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox10.Location = new System.Drawing.Point(495, 333);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(486, 195);
-            this.groupBox10.TabIndex = 11;
             this.groupBox10.TabStop = false;
+            this.groupBox10.TabIndex = 6;
             this.groupBox10.Text = "Ограничения";
             // 
             // groupBox11
@@ -1193,12 +1328,10 @@ namespace Registry.Viewport
             this.groupBox11.Controls.Add(this.label25);
             this.groupBox11.Controls.Add(this.label26);
             this.groupBox11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox11.Location = new System.Drawing.Point(0, 0);
             this.groupBox11.Margin = new System.Windows.Forms.Padding(0);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(486, 69);
-            this.groupBox11.TabIndex = 15;
             this.groupBox11.TabStop = false;
+            this.groupBox11.TabIndex = 1;
             this.groupBox11.Text = "Площадь";
             // 
             // groupBox12
@@ -1208,33 +1341,27 @@ namespace Registry.Viewport
             this.groupBox12.Controls.Add(this.checkBoxAcceptByExchange);
             this.groupBox12.Controls.Add(this.checkBoxForOrphans);
             this.groupBox12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox12.Location = new System.Drawing.Point(495, 188);
             this.groupBox12.Name = "groupBox12";
-            this.groupBox12.Size = new System.Drawing.Size(486, 139);
-            this.groupBox12.TabIndex = 15;
             this.groupBox12.TabStop = false;
+            this.groupBox12.TabIndex = 2;
             this.groupBox12.Text = "Основания на включение в муниципальную собственность";
             // 
             // groupBox13
             // 
             this.groupBox13.Controls.Add(this.textBoxDescription);
             this.groupBox13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox13.Location = new System.Drawing.Point(0, 69);
             this.groupBox13.Name = "groupBox13";
-            this.groupBox13.Size = new System.Drawing.Size(486, 70);
-            this.groupBox13.TabIndex = 16;
             this.groupBox13.TabStop = false;
+            this.groupBox13.TabIndex = 4;
             this.groupBox13.Text = "Дополнительные сведения";
             // 
             // groupBoxRooms
             // 
             this.groupBoxRooms.Controls.Add(this.dataGridViewRooms);
             this.groupBoxRooms.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxRooms.Location = new System.Drawing.Point(3, 267);
             this.groupBoxRooms.Name = "groupBoxRooms";
-            this.groupBoxRooms.Size = new System.Drawing.Size(486, 125);
-            this.groupBoxRooms.TabIndex = 17;
             this.groupBoxRooms.TabStop = false;
+            this.groupBoxRooms.TabIndex = 3;
             this.groupBoxRooms.Text = "Комнаты";
             // 
             // panel3
@@ -1252,11 +1379,13 @@ namespace Registry.Viewport
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 3);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(480, 154);
             this.panel3.TabIndex = 0;
+            this.panel3.Size = new System.Drawing.Size(480, 154);
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.label38);
+            this.panel4.Controls.Add(this.comboBoxCurrentFundType);
             this.panel4.Controls.Add(this.label27);
             this.panel4.Controls.Add(this.numericUpDownNumBeds);
             this.panel4.Controls.Add(this.numericUpDownBalanceCost);
@@ -1268,23 +1397,23 @@ namespace Registry.Viewport
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(489, 3);
             this.panel4.Name = "panel4";
+            this.panel3.TabIndex = 1;
             this.panel4.Size = new System.Drawing.Size(480, 154);
-            this.panel4.TabIndex = 1;
             // 
             // dataGridViewRestrictions
             // 
             this.dataGridViewRestrictions.AllowUserToAddRows = false;
             this.dataGridViewRestrictions.AllowUserToDeleteRows = false;
+            this.dataGridViewRestrictions.Dock = DockStyle.Fill;
             this.dataGridViewRestrictions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewRestrictions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.field_restriction_number,
             this.field_restriction_date,
             this.field_restriction_description,
             this.field_id_restriction_type});
-            this.dataGridViewRestrictions.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewRestrictions.Name = "dataGridViewRestrictions";
             this.dataGridViewRestrictions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewRestrictions.TabIndex = 0;
+            this.dataGridViewRestrictions.TabIndex = 18;
             this.dataGridViewRestrictions.AutoGenerateColumns = false;
             // 
             // field_restriction_number
@@ -1318,16 +1447,16 @@ namespace Registry.Viewport
             // 
             this.dataGridViewOwnerships.AllowUserToAddRows = false;
             this.dataGridViewOwnerships.AllowUserToDeleteRows = false;
+            this.dataGridViewOwnerships.Dock = DockStyle.Fill;
             this.dataGridViewOwnerships.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewOwnerships.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.field_ownership_number,
             this.field_ownership_date,
             this.field_ownership_description,
             this.field_id_ownership_type});
-            this.dataGridViewOwnerships.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewOwnerships.Name = "dataGridViewOwnerships";
             this.dataGridViewOwnerships.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewOwnerships.TabIndex = 0;
+            this.dataGridViewOwnerships.TabIndex = 19;
             this.dataGridViewOwnerships.AutoGenerateColumns = false;
             // 
             // field_ownership_number
@@ -1366,7 +1495,7 @@ namespace Registry.Viewport
             this.dataGridViewRooms.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewRooms.Name = "dataGridViewRooms";
             this.dataGridViewRooms.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewRooms.TabIndex = 0;
+            this.dataGridViewRooms.TabIndex = 16;
             this.dataGridViewRooms.AutoGenerateColumns = false;
             // 
             // sub_premises_num
@@ -1388,7 +1517,7 @@ namespace Registry.Viewport
             // 
             this.numericUpDownFloor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownFloor.Location = new System.Drawing.Point(157, 91);
+            this.numericUpDownFloor.Location = new System.Drawing.Point(157, 94);
             this.numericUpDownFloor.Maximum = new decimal(new int[] {
             255,
             0,
@@ -1396,14 +1525,14 @@ namespace Registry.Viewport
             0});
             this.numericUpDownFloor.Name = "numericUpDownFloor";
             this.numericUpDownFloor.Size = new System.Drawing.Size(319, 20);
-            this.numericUpDownFloor.TabIndex = 17;
+            this.numericUpDownFloor.TabIndex = 3;
             // 
             // numericUpDownBalanceCost
             // 
             this.numericUpDownBalanceCost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownBalanceCost.DecimalPlaces = 2;
-            this.numericUpDownBalanceCost.Location = new System.Drawing.Point(159, 66);
+            this.numericUpDownBalanceCost.Location = new System.Drawing.Point(159, 65);
             this.numericUpDownBalanceCost.Maximum = new decimal(new int[] {
             1410065407,
             2,
@@ -1411,7 +1540,7 @@ namespace Registry.Viewport
             0});
             this.numericUpDownBalanceCost.Name = "numericUpDownBalanceCost";
             this.numericUpDownBalanceCost.Size = new System.Drawing.Size(318, 20);
-            this.numericUpDownBalanceCost.TabIndex = 23;
+            this.numericUpDownBalanceCost.TabIndex = 7;
             this.numericUpDownBalanceCost.ThousandsSeparator = true;
             // 
             // numericUpDownCadastralCost
@@ -1427,7 +1556,7 @@ namespace Registry.Viewport
             0});
             this.numericUpDownCadastralCost.Name = "numericUpDownCadastralCost";
             this.numericUpDownCadastralCost.Size = new System.Drawing.Size(318, 20);
-            this.numericUpDownCadastralCost.TabIndex = 20;
+            this.numericUpDownCadastralCost.TabIndex = 6;
             this.numericUpDownCadastralCost.ThousandsSeparator = true;
             // 
             // numericUpDownLivingArea
@@ -1443,7 +1572,7 @@ namespace Registry.Viewport
             0});
             this.numericUpDownLivingArea.Name = "numericUpDownLivingArea";
             this.numericUpDownLivingArea.Size = new System.Drawing.Size(319, 20);
-            this.numericUpDownLivingArea.TabIndex = 23;
+            this.numericUpDownLivingArea.TabIndex = 11;
             this.numericUpDownLivingArea.ThousandsSeparator = true;
             // 
             // numericUpDownTotalArea
@@ -1459,14 +1588,14 @@ namespace Registry.Viewport
             0});
             this.numericUpDownTotalArea.Name = "numericUpDownTotalArea";
             this.numericUpDownTotalArea.Size = new System.Drawing.Size(319, 20);
-            this.numericUpDownTotalArea.TabIndex = 22;
+            this.numericUpDownTotalArea.TabIndex = 10;
             this.numericUpDownTotalArea.ThousandsSeparator = true;
             // 
             // numericUpDownNumBeds
             // 
             this.numericUpDownNumBeds.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownNumBeds.Location = new System.Drawing.Point(159, 95);
+            this.numericUpDownNumBeds.Location = new System.Drawing.Point(159, 94);
             this.numericUpDownNumBeds.Maximum = new decimal(new int[] {
             255,
             0,
@@ -1474,7 +1603,7 @@ namespace Registry.Viewport
             0});
             this.numericUpDownNumBeds.Name = "numericUpDownNumBeds";
             this.numericUpDownNumBeds.Size = new System.Drawing.Size(318, 20);
-            this.numericUpDownNumBeds.TabIndex = 25;
+            this.numericUpDownNumBeds.TabIndex = 8;
             // 
             // checkBoxForOrphans
             // 
@@ -1482,7 +1611,7 @@ namespace Registry.Viewport
             this.checkBoxForOrphans.Location = new System.Drawing.Point(19, 19);
             this.checkBoxForOrphans.Name = "checkBoxForOrphans";
             this.checkBoxForOrphans.Size = new System.Drawing.Size(173, 17);
-            this.checkBoxForOrphans.TabIndex = 0;
+            this.checkBoxForOrphans.TabIndex = 12;
             this.checkBoxForOrphans.Text = "Приобретено детям-сиротам";
             this.checkBoxForOrphans.UseVisualStyleBackColor = true;
             // 
@@ -1492,7 +1621,7 @@ namespace Registry.Viewport
             this.checkBoxAcceptByExchange.Location = new System.Drawing.Point(19, 48);
             this.checkBoxAcceptByExchange.Name = "checkBoxAcceptByExchange";
             this.checkBoxAcceptByExchange.Size = new System.Drawing.Size(113, 17);
-            this.checkBoxAcceptByExchange.TabIndex = 1;
+            this.checkBoxAcceptByExchange.TabIndex = 14;
             this.checkBoxAcceptByExchange.Text = "Принято по мене";
             this.checkBoxAcceptByExchange.UseVisualStyleBackColor = true;
             // 
@@ -1502,7 +1631,7 @@ namespace Registry.Viewport
             this.checkBoxAcceptByDonation.Location = new System.Drawing.Point(222, 19);
             this.checkBoxAcceptByDonation.Name = "checkBoxAcceptByDonation";
             this.checkBoxAcceptByDonation.Size = new System.Drawing.Size(131, 17);
-            this.checkBoxAcceptByDonation.TabIndex = 2;
+            this.checkBoxAcceptByDonation.TabIndex = 13;
             this.checkBoxAcceptByDonation.Text = "Принято по дарению";
             this.checkBoxAcceptByDonation.UseVisualStyleBackColor = true;
             // 
@@ -1512,7 +1641,7 @@ namespace Registry.Viewport
             this.checkBoxAcceptByOther.Location = new System.Drawing.Point(222, 48);
             this.checkBoxAcceptByOther.Name = "checkBoxAcceptByOther";
             this.checkBoxAcceptByOther.Size = new System.Drawing.Size(120, 17);
-            this.checkBoxAcceptByOther.TabIndex = 3;
+            this.checkBoxAcceptByOther.TabIndex = 15;
             this.checkBoxAcceptByOther.Text = "Прочее основание";
             this.checkBoxAcceptByOther.UseVisualStyleBackColor = true;
             // 
@@ -1522,7 +1651,6 @@ namespace Registry.Viewport
             this.label19.Location = new System.Drawing.Point(10, 10);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(39, 13);
-            this.label19.TabIndex = 11;
             this.label19.Text = "Улица";
             // 
             // label20
@@ -1531,16 +1659,14 @@ namespace Registry.Viewport
             this.label20.Location = new System.Drawing.Point(10, 39);
             this.label20.Name = "label20";
             this.label20.Size = new System.Drawing.Size(70, 13);
-            this.label20.TabIndex = 13;
             this.label20.Text = "Номер дома";
             // 
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(10, 93);
+            this.label21.Location = new System.Drawing.Point(10, 97);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(33, 13);
-            this.label21.TabIndex = 16;
             this.label21.Text = "Этаж";
             // 
             // label22
@@ -1549,7 +1675,6 @@ namespace Registry.Viewport
             this.label22.Location = new System.Drawing.Point(16, 68);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(125, 13);
-            this.label22.TabIndex = 22;
             this.label22.Text = "Балансовая стоимость";
             // 
             // label23
@@ -1558,7 +1683,6 @@ namespace Registry.Viewport
             this.label23.Location = new System.Drawing.Point(16, 10);
             this.label23.Name = "label23";
             this.label23.Size = new System.Drawing.Size(110, 13);
-            this.label23.TabIndex = 18;
             this.label23.Text = "Кадастровый номер";
             // 
             // label24
@@ -1567,7 +1691,6 @@ namespace Registry.Viewport
             this.label24.Location = new System.Drawing.Point(16, 39);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(130, 13);
-            this.label24.TabIndex = 19;
             this.label24.Text = "Кадастровая стоимость";
             // 
             // label25
@@ -1576,7 +1699,6 @@ namespace Registry.Viewport
             this.label25.Location = new System.Drawing.Point(16, 49);
             this.label25.Name = "label25";
             this.label25.Size = new System.Drawing.Size(42, 13);
-            this.label25.TabIndex = 21;
             this.label25.Text = "Жилая";
             // 
             // label26
@@ -1585,7 +1707,6 @@ namespace Registry.Viewport
             this.label26.Location = new System.Drawing.Point(16, 20);
             this.label26.Name = "label26";
             this.label26.Size = new System.Drawing.Size(42, 13);
-            this.label26.TabIndex = 20;
             this.label26.Text = "Общая";
             // 
             // label27
@@ -1594,16 +1715,14 @@ namespace Registry.Viewport
             this.label27.Location = new System.Drawing.Point(16, 97);
             this.label27.Name = "label27";
             this.label27.Size = new System.Drawing.Size(127, 13);
-            this.label27.TabIndex = 24;
             this.label27.Text = "Количество койко-мест";
             // 
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(10, 122);
+            this.label28.Location = new System.Drawing.Point(10, 126);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(88, 13);
-            this.label28.TabIndex = 21;
             this.label28.Text = "Вид помещения";
             // 
             // label29
@@ -1612,8 +1731,15 @@ namespace Registry.Viewport
             this.label29.Location = new System.Drawing.Point(10, 97);
             this.label29.Name = "label29";
             this.label29.Size = new System.Drawing.Size(53, 13);
-            this.label29.TabIndex = 22;
             this.label29.Text = "Комнаты";
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(16, 126);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(107, 13);
+            this.label38.Text = "Текущий тип найма";
             // 
             // textBoxHouse
             // 
@@ -1623,7 +1749,7 @@ namespace Registry.Viewport
             this.comboBoxHouse.Name = "textBoxHouse";
             this.comboBoxHouse.DropDownStyle = ComboBoxStyle.DropDownList;
             this.comboBoxHouse.Size = new System.Drawing.Size(319, 20);
-            this.comboBoxHouse.TabIndex = 14;
+            this.comboBoxHouse.TabIndex = 1;
             // 
             // comboBoxStreet
             // 
@@ -1633,7 +1759,7 @@ namespace Registry.Viewport
             this.comboBoxStreet.Name = "comboBoxStreet";
             this.comboBoxStreet.DropDownStyle = ComboBoxStyle.DropDown;
             this.comboBoxStreet.Size = new System.Drawing.Size(319, 20);
-            this.comboBoxStreet.TabIndex = 15;
+            this.comboBoxStreet.TabIndex = 0;
             // 
             // textBoxPremisesNumber
             // 
@@ -1642,29 +1768,16 @@ namespace Registry.Viewport
             this.textBoxPremisesNumber.Location = new System.Drawing.Point(157, 65);
             this.textBoxPremisesNumber.Name = "textBoxPremisesNumber";
             this.textBoxPremisesNumber.Size = new System.Drawing.Size(319, 20);
-            this.textBoxPremisesNumber.TabIndex = 19;
-            this.textBoxPremisesNumber.MaxLength = 5;
+            this.textBoxPremisesNumber.TabIndex = 2;
+            this.textBoxPremisesNumber.MaxLength = 2;
             // 
             // textBoxDescription
             // 
-            this.textBoxDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right | AnchorStyles.Bottom)));
-            this.textBoxDescription.Location = new System.Drawing.Point(9, 18);
+            this.textBoxDescription.Dock = DockStyle.Fill;
             this.textBoxDescription.MaxLength = 255;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
-            this.textBoxDescription.Size = new System.Drawing.Size(468, 45);
-            this.textBoxDescription.TabIndex = 1;
-            // 
-            // textBoxSubPremisesNumber
-            // 
-            this.textBoxSubPremisesNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxSubPremisesNumber.Location = new System.Drawing.Point(157, 94);
-            this.textBoxSubPremisesNumber.Name = "textBoxSubPremisesNumber";
-            this.textBoxSubPremisesNumber.ReadOnly = true;
-            this.textBoxSubPremisesNumber.Size = new System.Drawing.Size(319, 20);
-            this.textBoxSubPremisesNumber.TabIndex = 21;
+            this.textBoxDescription.TabIndex = 17;
             // 
             // comboBoxPremisesType
             // 
@@ -1676,7 +1789,7 @@ namespace Registry.Viewport
             this.comboBoxPremisesType.Location = new System.Drawing.Point(9, 65);
             this.comboBoxPremisesType.Name = "comboBoxPremisesType";
             this.comboBoxPremisesType.Size = new System.Drawing.Size(143, 21);
-            this.comboBoxPremisesType.TabIndex = 20;
+            this.comboBoxPremisesType.TabIndex = 2;
             this.comboBoxPremisesType.SelectedValueChanged += new EventHandler(comboBoxPremisesType_SelectedValueChanged);
             // 
             // comboBoxPremisesKind
@@ -1684,11 +1797,23 @@ namespace Registry.Viewport
             this.comboBoxPremisesKind.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxPremisesKind.FormattingEnabled = true;
-            this.comboBoxPremisesKind.Location = new System.Drawing.Point(157, 119);
+            this.comboBoxPremisesKind.Location = new System.Drawing.Point(157, 123);
             this.comboBoxPremisesKind.Name = "comboBoxPremisesKind";
             this.comboBoxPremisesKind.Size = new System.Drawing.Size(319, 21);
-            this.comboBoxPremisesKind.TabIndex = 22;
+            this.comboBoxPremisesKind.TabIndex = 4;
             this.comboBoxPremisesKind.DropDownStyle = ComboBoxStyle.DropDownList;
+            // 
+            // comboBoxCurrentFundType
+            // 
+            this.comboBoxCurrentFundType.Anchor = 
+                ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxCurrentFundType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCurrentFundType.Enabled = false;
+            this.comboBoxCurrentFundType.FormattingEnabled = true;
+            this.comboBoxCurrentFundType.Location = new System.Drawing.Point(159, 123);
+            this.comboBoxCurrentFundType.Name = "comboBoxCurrentFundType";
+            this.comboBoxCurrentFundType.Size = new System.Drawing.Size(318, 21);
             // 
             // maskedTextBoxCadastralNum
             // 
@@ -1697,11 +1822,8 @@ namespace Registry.Viewport
             this.maskedTextBoxCadastralNum.Location = new System.Drawing.Point(159, 7);
             this.maskedTextBoxCadastralNum.Name = "maskedTextBoxCadastralNum";
             this.maskedTextBoxCadastralNum.Size = new System.Drawing.Size(318, 20);
-            this.maskedTextBoxCadastralNum.TabIndex = 21;
-
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel4.ResumeLayout(false);
-            this.tableLayoutPanel5.ResumeLayout(false);
+            this.maskedTextBoxCadastralNum.TabIndex = 5;
+         
             this.groupBox8.ResumeLayout(false);
             this.groupBox9.ResumeLayout(false);
             this.groupBox10.ResumeLayout(false);
@@ -1722,6 +1844,10 @@ namespace Registry.Viewport
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLivingArea)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalArea)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNumBeds)).EndInit();
+            this.tableLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel5.ResumeLayout(false);
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.ResumeLayout(false);
         }
 
         void comboBoxPremisesType_SelectedValueChanged(object sender, EventArgs e)

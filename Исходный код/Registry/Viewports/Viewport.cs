@@ -16,6 +16,7 @@ namespace Registry.Viewport
 
         public virtual void Close()
         {
+            menuCallback.SwitchToPreviousViewport();
             Dispose();
         }
 

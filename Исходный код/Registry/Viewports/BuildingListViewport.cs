@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using Registry.DataModels;
 using System.Data;
+using Registry.Entities;
 
 namespace Registry.Viewport
 {
@@ -95,6 +96,8 @@ namespace Registry.Viewport
             field_living_area.DataPropertyName = "living_area";
             field_cadastral_num.DataPropertyName = "cadastral_num";
             field_startup_year.DataPropertyName = "startup_year";
+
+            dataGridView.DoubleClick += new EventHandler(dataGridView_DoubleClick);
         }
 
         public void LocateBuildingBy(int id)
@@ -209,6 +212,12 @@ namespace Registry.Viewport
                 return true;
         }
 
+        void dataGridView_DoubleClick(object sender, EventArgs e)
+        {
+            if (CanOpenDetails())
+                OpenDetails();
+        }
+
         public override void OpenDetails()
         {
             BuildingViewport viewport = new BuildingViewport(menuCallback);
@@ -260,17 +269,53 @@ namespace Registry.Viewport
 
         public override void ShowOwnerships()
         {
-            //TODO
+            if (v_buildings.Position == -1)
+            {
+                MessageBox.Show("Не выбрано здание для отображения ограничений", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            OwnershipListViewport viewport = new OwnershipListViewport(menuCallback);
+            viewport.StaticFilter = "id_building = " + Convert.ToInt32(((DataRowView)v_buildings[v_buildings.Position])["id_building"]);
+            viewport.ParentRow = ((DataRowView)v_buildings[v_buildings.Position]).Row;
+            viewport.ParentType = ParentTypeEnum.Building;
+            if ((viewport as IMenuController).CanLoadData())
+                (viewport as IMenuController).LoadData();
+            menuCallback.AddViewport(viewport);
+            menuCallback.SwitchToViewport(viewport);
         }
 
         public override void ShowRestrictions()
         {
-            //TODO
+            if (v_buildings.Position == -1)
+            {
+                MessageBox.Show("Не выбрано здание для отображения реквизитов", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            RestrictionListViewport viewport = new RestrictionListViewport(menuCallback);
+            viewport.StaticFilter = "id_building = " + Convert.ToInt32(((DataRowView)v_buildings[v_buildings.Position])["id_building"]);
+            viewport.ParentRow = ((DataRowView)v_buildings[v_buildings.Position]).Row;
+            viewport.ParentType = ParentTypeEnum.Building;
+            if ((viewport as IMenuController).CanLoadData())
+                (viewport as IMenuController).LoadData();
+            menuCallback.AddViewport(viewport);
+            menuCallback.SwitchToViewport(viewport);
         }
 
         public override void ShowFundHistory()
         {
-            //TODO
+            if (v_buildings.Position == -1)
+            {
+                MessageBox.Show("Не выбрано здание для отображения истории найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            FundsHistoryViewport viewport = new FundsHistoryViewport(menuCallback);
+            viewport.StaticFilter = "id_building = " + Convert.ToInt32(((DataRowView)v_buildings[v_buildings.Position])["id_building"]);
+            viewport.ParentRow = ((DataRowView)v_buildings[v_buildings.Position]).Row;
+            viewport.ParentType = ParentTypeEnum.Building;
+            if ((viewport as IMenuController).CanLoadData())
+                (viewport as IMenuController).LoadData();
+            menuCallback.AddViewport(viewport);
+            menuCallback.SwitchToViewport(viewport);
         }
 
         public override bool CanInsertRecord()

@@ -6,7 +6,7 @@ using System.Data.Common;
 
 namespace Registry.DataModels
 {
-    public class PremisesTypesDataModel: DataModel
+    public sealed class PremisesTypesDataModel : DataModel
     {
         private static PremisesTypesDataModel dataModel = null;
         private static string selectQuery = "SELECT * FROM premises_types";
@@ -17,6 +17,12 @@ namespace Registry.DataModels
             DbCommand command = connection.CreateCommand();
             command.CommandText = selectQuery;
             table = connection.SqlSelectTable(tableName, command);
+            table.RowDeleted += new System.Data.DataRowChangeEventHandler(table_RowDeleted);
+        }
+
+        void table_RowDeleted(object sender, System.Data.DataRowChangeEventArgs e)
+        {
+            table.AcceptChanges();
         }
 
         public static PremisesTypesDataModel GetInstance()

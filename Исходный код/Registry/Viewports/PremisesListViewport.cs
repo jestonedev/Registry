@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Data;
 using Registry.DataModels;
 using System.Collections;
+using Registry.Entities;
 
 namespace Registry.Viewport
 {
@@ -120,6 +121,14 @@ namespace Registry.Viewport
             field_premises_type.DataPropertyName = "id_premises_type";
             field_premises_type.ValueMember = "id_premises_type";
             field_premises_type.DisplayMember = "premises_type";
+
+            dataGridView.DoubleClick += new EventHandler(dataGridView_DoubleClick);
+        }
+
+        void dataGridView_DoubleClick(object sender, EventArgs e)
+        {
+            if (CanOpenDetails())
+                OpenDetails();
         }
 
         public void LocatePremisesBy(int id)
@@ -305,6 +314,7 @@ namespace Registry.Viewport
 
         private void ConstructViewport()
         {
+            this.SuspendLayout();
             DataGridViewCellStyle dataGridViewCellStyle = new DataGridViewCellStyle();
             this.Controls.Add(this.dataGridView);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -400,6 +410,7 @@ namespace Registry.Viewport
             this.field_living_area.ReadOnly = true;
 
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.ResumeLayout(false);
         }
 
         public override Viewport Duplicate()
@@ -429,7 +440,7 @@ namespace Registry.Viewport
 
         public override bool HasAssocSubPremises()
         {
-            return true;
+            return (v_premises.Position != -1);
         }
 
         public override bool HasFundHistory()
@@ -439,22 +450,70 @@ namespace Registry.Viewport
 
         public override void ShowOwnerships()
         {
-            //TODO
+            if (v_premises.Position == -1)
+            {
+                MessageBox.Show("Не выбрано помещение для отображения ограничений", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            OwnershipListViewport viewport = new OwnershipListViewport(menuCallback);
+            viewport.StaticFilter = "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"]);
+            viewport.ParentRow = ((DataRowView)v_premises[v_premises.Position]).Row;
+            viewport.ParentType = ParentTypeEnum.Premises;
+            if ((viewport as IMenuController).CanLoadData())
+                (viewport as IMenuController).LoadData();
+            menuCallback.AddViewport(viewport);
+            menuCallback.SwitchToViewport(viewport);
         }
 
         public override void ShowRestrictions()
         {
-            //TODO
+            if (v_premises.Position == -1)
+            {
+                MessageBox.Show("Не выбрано помещение для отображения реквизитов", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            RestrictionListViewport viewport = new RestrictionListViewport(menuCallback);
+            viewport.StaticFilter = "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"]);
+            viewport.ParentRow = ((DataRowView)v_premises[v_premises.Position]).Row;
+            viewport.ParentType = ParentTypeEnum.Premises;
+            if ((viewport as IMenuController).CanLoadData())
+                (viewport as IMenuController).LoadData();
+            menuCallback.AddViewport(viewport);
+            menuCallback.SwitchToViewport(viewport);
         }
 
         public override void ShowSubPremises()
         {
-            //TODO
+            if (v_premises.Position == -1)
+            {
+                MessageBox.Show("Не выбрано помещение для отображения перечня комнат", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            SubPremisesViewport viewport = new SubPremisesViewport(menuCallback);
+            viewport.StaticFilter = "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"]);
+            viewport.ParentRow = ((DataRowView)v_premises[v_premises.Position]).Row;
+            viewport.ParentType = ParentTypeEnum.Premises;
+            if ((viewport as IMenuController).CanLoadData())
+                (viewport as IMenuController).LoadData();
+            menuCallback.AddViewport(viewport);
+            menuCallback.SwitchToViewport(viewport);
         }
 
         public override void ShowFundHistory()
         {
-            //TODO
+            if (v_premises.Position == -1)
+            {
+                MessageBox.Show("Не выбрано помещение для отображения реквизитов", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            FundsHistoryViewport viewport = new FundsHistoryViewport(menuCallback);
+            viewport.StaticFilter = "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"]);
+            viewport.ParentRow = ((DataRowView)v_premises[v_premises.Position]).Row;
+            viewport.ParentType = ParentTypeEnum.Premises;
+            if ((viewport as IMenuController).CanLoadData())
+                (viewport as IMenuController).LoadData();
+            menuCallback.AddViewport(viewport);
+            menuCallback.SwitchToViewport(viewport);
         }
     }
 }

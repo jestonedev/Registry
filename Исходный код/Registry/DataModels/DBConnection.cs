@@ -6,6 +6,7 @@ using System.Data.Common;
 using System.Data;
 using System.Text.RegularExpressions;
 using Registry.DataModels.Properties;
+using System.Data.Odbc;
 
 namespace Registry.DataModels
 {
@@ -87,7 +88,7 @@ namespace Registry.DataModels
             {
                 return command.ExecuteNonQuery();
             }
-            catch (InvalidOperationException e)
+            catch (OdbcException e)
             {
                 SqlRollbackTransaction();
                 throw e;
@@ -117,9 +118,12 @@ namespace Registry.DataModels
         /// </summary>
         public void SqlRollbackTransaction()
         {
-            transaction.Rollback();
-            transaction.Dispose();
-            transaction = null;
+            if (transaction != null)
+            {
+                transaction.Rollback();
+                transaction.Dispose();
+                transaction = null;
+            }
         }
 
         public void Dispose()

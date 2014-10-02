@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Registry.DataModels
 {
-    public class BuildingsAggregatedDataModel: DataModel
+    public sealed class BuildingsAggregatedDataModel: DataModel
     {
         private static BuildingsAggregatedDataModel dataModel = null;
 
@@ -24,42 +24,27 @@ namespace Registry.DataModels
             DataTable premises = PremisesDataModel.GetInstance().Select();
             DataTable funds_history = FundsHistoryDataModel.GetInstance().Select();
             DataTable funds_premises_assoc = FundsPremisesAssocDataModel.GetInstance().Select();
-            var max_date_by_premises = from fund_history_row in funds_history.AsEnumerable()
-                                       join funds_premises_assoc_row in funds_premises_assoc.AsEnumerable()
-                                       on fund_history_row.Field<int>("id_fund") equals funds_premises_assoc_row.Field<int>("id_fund")
-                                       group fund_history_row.Field<DateTime>("protocol_date") by
+            var max_id_by_premises = from funds_premises_assoc_row in funds_premises_assoc.AsEnumerable()
+                                     group funds_premises_assoc_row.Field<int>("id_fund") by
                                              funds_premises_assoc_row.Field<int>("id_premises") into gs
                                        select new
                                        {
                                            id_premises = gs.Key,
-                                           max_date = gs.Max()
+                                           id_fund = gs.Max()
                                        };
-            var not_deleted_document = from fund_history_row in funds_history.AsEnumerable()
-                                       join funds_premises_assoc_row in funds_premises_assoc.AsEnumerable()
-                                       on fund_history_row.Field<int>("id_fund") equals funds_premises_assoc_row.Field<int>("id_fund")
+            var current_documents = from fund_history_row in funds_history.AsEnumerable()
+                                    join max_id_by_premises_row in max_id_by_premises
+                                       on fund_history_row.Field<int>("id_fund") equals max_id_by_premises_row.id_fund
                                        select new
                                        {
-                                           id_premises = funds_premises_assoc_row.Field<int>("id_premises"),
-                                           id_fund = fund_history_row.Field<int>("id_fund"),
+                                           id_premises = max_id_by_premises_row.id_premises,
+                                           id_fund = max_id_by_premises_row.id_fund,
                                            id_fund_type = fund_history_row.Field<int>("id_fund_type"),
-                                           protocol_num = fund_history_row.Field<string>("protocol_num"),
-                                           protocol_date = fund_history_row.Field<DateTime>("protocol_date"),
+                                           protocol_number = fund_history_row.Field<string>("protocol_number"),
+                                           protocol_date = fund_history_row.Field<DateTime?>("protocol_date"),
                                        };
-            var join_mdp_and_ndd = from mdp_row in max_date_by_premises
-                                   join ndd_row in not_deleted_document
-                                   on new { date = mdp_row.max_date, id_premises = mdp_row.id_premises } equals
-                                      new { date = ndd_row.protocol_date, id_premises = ndd_row.id_premises }
-                                   group new
-                                   {
-                                       id_premises = ndd_row.id_premises,
-                                       id_fund = ndd_row.id_fund,
-                                       id_fund_type = ndd_row.id_fund_type,
-                                       protocol_num = ndd_row.protocol_num,
-                                       protocol_date = ndd_row.protocol_date
-                                   } by new { ndd_row.id_premises, ndd_row.protocol_date } into gs
-                                   select gs.Last();
             var social_premises = from premises_row in premises.AsEnumerable()
-                                  join agg_row in join_mdp_and_ndd
+                                  join agg_row in current_documents
                                   on premises_row.Field<int>("id_premises") equals agg_row.id_premises
                                   where agg_row.id_fund_type == 1
                                   group premises_row.Field<int>("id_premises") by premises_row.Field<int>("id_building") into gs
@@ -68,7 +53,7 @@ namespace Registry.DataModels
                                     social_premises_count = gs.Count()
                                   };
             var commercial_premises = from premises_row in premises.AsEnumerable()
-                                  join agg_row in join_mdp_and_ndd
+                                      join agg_row in current_documents
                                   on premises_row.Field<int>("id_premises") equals agg_row.id_premises
                                   where agg_row.id_fund_type == 2
                                   group premises_row.Field<int>("id_premises") by premises_row.Field<int>("id_building") into gs
@@ -78,7 +63,7 @@ namespace Registry.DataModels
                                       commercial_premises_count = gs.Count()
                                   };
             var special_premises = from premises_row in premises.AsEnumerable()
-                                  join agg_row in join_mdp_and_ndd
+                                   join agg_row in current_documents
                                   on premises_row.Field<int>("id_premises") equals agg_row.id_premises
                                   where agg_row.id_fund_type == 3
                                   group premises_row.Field<int>("id_premises") by premises_row.Field<int>("id_building") into gs
@@ -88,7 +73,7 @@ namespace Registry.DataModels
                                       special_premises_count = gs.Count()
                                   };
             var other_premises = from premises_row in premises.AsEnumerable()
-                                  join agg_row in join_mdp_and_ndd
+                                 join agg_row in current_documents
                                   on premises_row.Field<int>("id_premises") equals agg_row.id_premises
                                   where agg_row.id_fund_type == 4
                                   group premises_row.Field<int>("id_premises") by premises_row.Field<int>("id_building") into gs
@@ -137,7 +122,6 @@ namespace Registry.DataModels
         {
             if (dataModel == null)
                 dataModel = new BuildingsAggregatedDataModel();
-            DataSetManager.AddModel(dataModel);
             return dataModel;
         }
     }

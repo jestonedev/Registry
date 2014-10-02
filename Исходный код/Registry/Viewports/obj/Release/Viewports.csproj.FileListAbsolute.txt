@@ -5,3 +5,16 @@ D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исхо
 D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Viewports.csprojResolveAssemblyReference.cache
 D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Viewports.dll
 D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Viewports.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\CustomControls.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\Entities.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\VIBlend.WinForms.Controls.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\VIBlend.WinForms.Utilities.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\CustomControls.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\Entities.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\VIBlend.WinForms.Controls.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\VIBlend.WinForms.Controls.xml
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\VIBlend.WinForms.Utilities.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\VIBlend.WinForms.Utilities.xml
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.SearchBuildingForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SearchPremisesForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Viewports.csproj.GenerateResource.Cache

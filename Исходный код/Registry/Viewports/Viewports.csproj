@@ -47,10 +47,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Building.cs" />
     <Compile Include="BuildingListViewport.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="BuildingViewport.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="FundsHistoryViewport.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="IMenuCallback.cs" />
@@ -61,7 +65,6 @@
     <Compile Include="OwnershipTypeListViewport.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ParentTypeEnum.cs" />
     <Compile Include="PremisesListViewport.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -90,6 +93,9 @@
     <Compile Include="StructureTypeListViewport.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="SubPremisesViewport.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Viewport.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -99,9 +105,17 @@
     <Compile Include="ViewportFactory.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CustomCtrls\CustomCtrls.csproj">
+      <Project>{44CFB46D-C274-45B6-9498-879F9E3AFA44}</Project>
+      <Name>CustomCtrls</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DataModels\DataModels.csproj">
       <Project>{762222B2-0E8F-4759-A673-FCC0C5F35B8C}</Project>
       <Name>DataModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Entities\Entities.csproj">
+      <Project>{1D0E98AA-C11E-4C1D-AE3F-346FF7446DF4}</Project>
+      <Name>Entities</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

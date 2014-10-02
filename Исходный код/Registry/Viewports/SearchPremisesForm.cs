@@ -100,7 +100,7 @@ namespace Registry.Viewport
                 DataTable table = PremisesCurrentFundsDataModel.GetInstance().Select();
                 BindingSource v_table = new BindingSource();
                 v_table.DataSource = table;
-                v_table.Filter = "id_fund = " + comboBoxFundType.SelectedValue.ToString();
+                v_table.Filter = "id_fund_type = " + comboBoxFundType.SelectedValue.ToString();
                 if (filter.Trim() != "")
                     filter += " AND ";
                 filter += "id_premises IN (0";

@@ -44,7 +44,8 @@ namespace Registry.DataModels
             DataSetManager.AddRelation("premises_kinds", "id_premises_kind", "premises", "id_premises_kind", true);
         }
 
-        private static void AddRelation(string master_table_name, string master_column_name, string slave_table_name, string slave_column_name, bool create_constraints)
+        private static void AddRelation(string master_table_name, string master_column_name, string slave_table_name, 
+            string slave_column_name, bool create_constraints)
         {
             if (!ds.Tables.Contains(master_table_name))
                 return;

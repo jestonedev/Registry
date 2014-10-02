@@ -17,5 +17,6 @@ namespace Registry.Viewport
         void ForceCloseDetachedViewports();
         void AddViewport(Viewport viewport);
         void SwitchToViewport(Viewport viewport);
+        void SwitchToPreviousViewport();
     }
 }

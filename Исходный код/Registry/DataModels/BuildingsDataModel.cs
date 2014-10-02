@@ -5,10 +5,12 @@ using System.Text;
 using System.Data.Common;
 using System.Data;
 using System.Windows.Forms;
+using Registry.Entities;
+using System.Data.Odbc;
 
 namespace Registry.DataModels
 {
-    public class BuildingsDataModel: DataModel
+    public sealed class BuildingsDataModel : DataModel
     {
         private static BuildingsDataModel dataModel = null;
         private static string selectQuery = "SELECT * FROM buildings b WHERE deleted = 0";
@@ -76,9 +78,10 @@ namespace Registry.DataModels
             {
                 return connection.SqlModifyQuery(command);  
             }
-            catch (InvalidOperationException e)
+            catch (OdbcException e)
             {
-                MessageBox.Show(String.Format("Не удалось удалить здание из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(String.Format("Не удалось удалить здание из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return -1;
             }
         }
@@ -183,7 +186,7 @@ namespace Registry.DataModels
             {
                 return connection.SqlModifyQuery(command);
             }
-            catch (InvalidOperationException e)
+            catch (OdbcException e)
             {
                 MessageBox.Show(String.Format("Не удалось изменить данные о здание. Подробная ошибка: {0}", e.Message), "Ошибка", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -299,7 +302,7 @@ namespace Registry.DataModels
                 }
                 return Convert.ToInt32(last_id.Rows[0][0]);
             }
-            catch (InvalidOperationException e)
+            catch (OdbcException e)
             {
                 connection.SqlRollbackTransaction();
                 MessageBox.Show(String.Format("Не удалось добавить здание в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка", 

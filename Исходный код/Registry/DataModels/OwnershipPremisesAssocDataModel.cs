@@ -6,7 +6,7 @@ using System.Data.Common;
 
 namespace Registry.DataModels
 {
-    public class OwnershipPremisesAssocDataModel: DataModel
+    public sealed class OwnershipPremisesAssocDataModel : DataModel
     {
         private static OwnershipPremisesAssocDataModel dataModel = null;
         private static string selectQuery = "SELECT * FROM ownership_premises_assoc WHERE deleted = 0";

@@ -14,6 +14,7 @@ namespace Registry
 {
     public partial class MainForm : Form, IMenuCallback
     {
+
         private void ChangeMainMenuState()
         {
             TabsStateUpdate();
@@ -34,6 +35,7 @@ namespace Registry
 
         private void ribbonButtonTabClose_Click(object sender, EventArgs e)
         {
+            int index = tabControl.SelectedIndex;
             if (tabControl.SelectedIndex >= 0)
                 (tabControl.SelectedTab as IMenuController).Close();
             ChangeMainMenuState();
@@ -290,6 +292,45 @@ namespace Registry
             for (int i = tabControl.TabCount - 1; i >= 0; i--)
                 if ((tabControl.Controls[i] as IMenuController).ViewportDetached())
                     (tabControl.Controls[i] as IMenuController).ForceClose();
+        }
+
+        private void ribbonButtonStructureTypes_Click(object sender, EventArgs e)
+        {
+            Registry.Viewport.Viewport viewport = Registry.Viewport.ViewportFactory.CreateViewport(this, ViewportType.StructureTypeListViewport);
+            if ((viewport as IMenuController).CanLoadData())
+                (viewport as IMenuController).LoadData();
+            tabControl.Controls.Add(viewport);
+            tabControl.SelectedTab = viewport;
+            ChangeMainMenuState();
+        }
+
+        private void ribbonButtonRestrictionTypes_Click(object sender, EventArgs e)
+        {
+            Registry.Viewport.Viewport viewport = Registry.Viewport.ViewportFactory.CreateViewport(this, ViewportType.RestrictionTypeListViewport);
+            if ((viewport as IMenuController).CanLoadData())
+                (viewport as IMenuController).LoadData();
+            tabControl.Controls.Add(viewport);
+            tabControl.SelectedTab = viewport;
+            ChangeMainMenuState();
+        }
+
+        private void ribbonButtonOwnershipTypes_Click(object sender, EventArgs e)
+        {
+            Registry.Viewport.Viewport viewport = Registry.Viewport.ViewportFactory.CreateViewport(this, ViewportType.OwnershipTypeListViewport);
+            if ((viewport as IMenuController).CanLoadData())
+                (viewport as IMenuController).LoadData();
+            tabControl.Controls.Add(viewport);
+            tabControl.SelectedTab = viewport;
+            ChangeMainMenuState();
+        }
+
+        public void SwitchToPreviousViewport()
+        {
+            if (tabControl.TabCount > 0)
+            {
+                if (tabControl.SelectedIndex != 0)
+                    tabControl.SelectedIndex = tabControl.SelectedIndex - 1;
+            }
         }
     }
 }

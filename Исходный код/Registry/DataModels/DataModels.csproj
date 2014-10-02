@@ -41,7 +41,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Building.cs" />
     <Compile Include="BuildingsAggregatedDataModel.cs" />
     <Compile Include="BuildingsCurrentFundsDataModel.cs" />
     <Compile Include="BuildingsDataModel.cs" />
@@ -57,7 +56,6 @@
     <Compile Include="OwnershipPremisesAssocDataModel.cs" />
     <Compile Include="OwnershipRightTypesDataModel.cs" />
     <Compile Include="OwnershipsRightsDataModel.cs" />
-    <Compile Include="Premise.cs" />
     <Compile Include="PremisesCurrentFundsDataModel.cs" />
     <Compile Include="PremisesDataModel.cs" />
     <Compile Include="PremisesKindsDataModel.cs" />
@@ -75,7 +73,6 @@
     <Compile Include="RestrictionTypesDataModel.cs" />
     <Compile Include="StreetByBuildingDataSource.cs" />
     <Compile Include="StructureTypesDataModel.cs" />
-    <Compile Include="SubPremise.cs" />
     <Compile Include="SubPremisesDataModel.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +81,12 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Entities\Entities.csproj">
+      <Project>{1D0E98AA-C11E-4C1D-AE3F-346FF7446DF4}</Project>
+      <Name>Entities</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

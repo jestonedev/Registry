@@ -15,3 +15,7 @@ D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исхо
 D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\obj\x86\Release\Registry.csproj.GenerateResource.Cache
 D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\obj\x86\Release\Registry.exe
 D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\obj\x86\Release\Registry.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\CustomControls.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Entities.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\CustomControls.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Entities.pdb

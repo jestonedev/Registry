@@ -7,7 +7,7 @@ using System.Data;
 
 namespace Registry.DataModels
 {
-    public class KladrDataModel : DataModel
+    public sealed class KladrDataModel : DataModel
     {
         private static KladrDataModel dataModel = null;
         private static string selectQuery = "SELECT * FROM v_kladr_streets";

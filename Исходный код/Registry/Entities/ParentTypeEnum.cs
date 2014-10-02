@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Registry.Viewport
+namespace Registry.Entities
 {
-    enum ParentTypeEnum
+    public enum ParentTypeEnum
     {
         None,
-        Building
+        Building,
+        Premises
     }
 }

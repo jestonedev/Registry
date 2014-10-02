@@ -9,7 +9,7 @@ using System.Windows.Forms;
 namespace Registry.DataModels
 {
     //Связующий источник данных
-    public class StreetByBuildingDataSource : IList
+    public sealed class StreetByBuildingDataSource : IList
     {
         private BuildingsDataModel buildings = null;
         private KladrDataModel kladr = null;
