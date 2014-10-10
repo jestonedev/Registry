@@ -21,11 +21,13 @@ namespace Registry.DataModels
         private static string updateQuery = @"UPDATE ownership_right_types SET ownership_right_type = ? WHERE id_ownership_right_type = ?";
         private static string tableName = "ownership_right_types";
 
-        private OwnershipRightTypesDataModel()
+        private OwnershipRightTypesDataModel(ToolStripProgressBar progressBar, int incrementor)
+            : base(progressBar, incrementor, selectQuery, tableName)
         {
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = selectQuery;
-            table = connection.SqlSelectTable(tableName, command);
+        }
+
+        protected override void ConfigureTable()
+        {
             table.PrimaryKey = new DataColumn[] { table.Columns["id_ownership_right_type"] };
             table.RowDeleted += new System.Data.DataRowChangeEventHandler(table_RowDeleted);
         }
@@ -37,9 +39,13 @@ namespace Registry.DataModels
 
         public static OwnershipRightTypesDataModel GetInstance()
         {
+            return GetInstance(null, 0);
+        }
+
+        public static OwnershipRightTypesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
             if (dataModel == null)
-                dataModel = new OwnershipRightTypesDataModel();
-            DataSetManager.AddModel(dataModel);
+                dataModel = new OwnershipRightTypesDataModel(progressBar, incrementor);
             return dataModel;
         }
 

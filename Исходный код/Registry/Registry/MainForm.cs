@@ -9,11 +9,20 @@ using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using System.IO;
 using Registry.Viewport;
+using Registry.DataModels;
 
 namespace Registry
 {
     public partial class MainForm : Form, IMenuCallback
     {
+        private void ChangeViewportsSelectProprty()
+        {
+            for (int i = tabControl.TabCount - 1; i >= 0; i--)
+                (tabControl.Controls[i] as IMenuController).Selected = false;
+            if (tabControl.SelectedIndex == -1)
+                return;
+            (tabControl.SelectedTab as IMenuController).Selected = true;
+        }
 
         private void ChangeMainMenuState()
         {
@@ -26,26 +35,59 @@ namespace Registry
             HousingRefBooksStateUpdate();
         }
 
+        public void StatusBarStateUpdate()
+        {
+            if (tabControl.SelectedTab != null)
+                toolStripLabelRecordCount.Text = "Всего записей: " + (tabControl.SelectedTab as IMenuController).GetRecordCount();
+            else
+                toolStripLabelRecordCount.Text = "";
+        }
+
         public MainForm()
         {
             InitializeComponent();
             tabControl.Controls.Clear();
-            ChangeMainMenuState(); 
+            ChangeMainMenuState();
+            StatusBarStateUpdate();
+        }
+
+        private void PreLoadData()
+        {
+            // Инстрации подгружаются в асинхронном режиме
+            // Тут будет реализован планировщик загрузки с учетом прав пользователей и частоты использования данных
+            BuildingsDataModel.GetInstance(toolStripProgressBar, 5);
+            StructureTypesDataModel.GetInstance(toolStripProgressBar, 5);
+            KladrDataModel.GetInstance(toolStripProgressBar, 5);
+            PremisesDataModel.GetInstance(toolStripProgressBar, 5);
+            PremisesTypesDataModel.GetInstance(toolStripProgressBar, 5);
+            PremisesKindsDataModel.GetInstance(toolStripProgressBar, 5);
+            SubPremisesDataModel.GetInstance(toolStripProgressBar, 5);
+            FundTypesDataModel.GetInstance(toolStripProgressBar, 3);
+            StatesDataModel.GetInstance(toolStripProgressBar, 2);
+            FundsBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 5);
+            FundsPremisesAssocDataModel.GetInstance(toolStripProgressBar, 5);
+            FundsSubPremisesAssocDataModel.GetInstance(toolStripProgressBar,5);
+            FundsHistoryDataModel.GetInstance(toolStripProgressBar,5);
+            OwnershipBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 5);
+            OwnershipPremisesAssocDataModel.GetInstance(toolStripProgressBar, 5);
+            OwnershipsRightsDataModel.GetInstance(toolStripProgressBar, 5);
+            OwnershipRightTypesDataModel.GetInstance(toolStripProgressBar, 5);
+            RestrictionsBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 5);
+            RestrictionsPremisesAssocDataModel.GetInstance(toolStripProgressBar, 5);
+            RestrictionsDataModel.GetInstance(toolStripProgressBar, 5);
+            RestrictionTypesDataModel.GetInstance(toolStripProgressBar, 5);
         }
 
         private void ribbonButtonTabClose_Click(object sender, EventArgs e)
         {
-            int index = tabControl.SelectedIndex;
             if (tabControl.SelectedIndex >= 0)
                 (tabControl.SelectedTab as IMenuController).Close();
-            ChangeMainMenuState();
         }
 
         private void ribbonButtonTabsClose_Click(object sender, EventArgs e)
         {
             for (int i = tabControl.TabCount - 1; i >= 0; i--)
                 (tabControl.Controls[i] as IMenuController).Close();
-            ChangeMainMenuState();
         }
 
         private void ribbonButtonTabCopy_Click(object sender, EventArgs e)
@@ -54,17 +96,14 @@ namespace Registry
                 return;
             Registry.Viewport.Viewport viewport = (tabControl.SelectedTab as IMenuController).Duplicate();
             tabControl.Controls.Add(viewport);
-            tabControl.SelectedTab = viewport;
+            tabControl.SelectedTab = viewport; 
         }
 
         private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
         {
             ChangeMainMenuState();
-        }
-
-        public void ViewportStateChanged()
-        {
-            ChangeMainMenuState();
+            StatusBarStateUpdate();
+            ChangeViewportsSelectProprty();
         }
 
         private void ribbonButtonFirst_Click(object sender, EventArgs e)
@@ -72,31 +111,34 @@ namespace Registry
             if (tabControl.SelectedIndex == -1)
                 return;
             (tabControl.SelectedTab as IMenuController).MoveFirst();
-            ChangeMainMenuState();
+            NavigationStateUpdate();
         }
 
         private void ribbonButtonLast_Click(object sender, EventArgs e)
         {
             (tabControl.SelectedTab as IMenuController).MoveLast();
-            ChangeMainMenuState();
+            NavigationStateUpdate();
         }
 
         private void ribbonButtonPrev_Click(object sender, EventArgs e)
         {
             (tabControl.SelectedTab as IMenuController).MovePrev();
-            ChangeMainMenuState();
+            NavigationStateUpdate();
         }
 
         private void ribbonButtonNext_Click(object sender, EventArgs e)
         {
             (tabControl.SelectedTab as IMenuController).MoveNext();
-            ChangeMainMenuState();
+            NavigationStateUpdate();
         }
 
         private void ribbonButtonDeleteRecord_Click(object sender, EventArgs e)
         {
             (tabControl.SelectedTab as IMenuController).DeleteRecord();
-            ChangeMainMenuState();
+            NavigationStateUpdate();
+            EditingStateUpdate();
+            RelationsStateUpdate();
+            StatusBarStateUpdate();
         }
 
         private void ribbonButtonSearch_Click(object sender, EventArgs e)
@@ -105,7 +147,10 @@ namespace Registry
                 (tabControl.SelectedTab as IMenuController).ClearSearch();
             else
                 (tabControl.SelectedTab as IMenuController).SearchRecord();
-            ChangeMainMenuState();
+            NavigationStateUpdate();
+            EditingStateUpdate();
+            RelationsStateUpdate();
+            StatusBarStateUpdate();
         }
 
         public void SearchButtonToggle(bool value)
@@ -227,6 +272,8 @@ namespace Registry
             tabControl.Controls.Add(viewport);
             tabControl.SelectedTab = viewport;
             ChangeMainMenuState();
+            StatusBarStateUpdate();
+            ChangeViewportsSelectProprty();
         }
 
         private void ribbonOrbMenuItemPremises_Click(object sender, EventArgs e)
@@ -237,6 +284,8 @@ namespace Registry
             tabControl.Controls.Add(viewport);
             tabControl.SelectedTab = viewport;
             ChangeMainMenuState();
+            StatusBarStateUpdate();
+            ChangeViewportsSelectProprty();
         }
 
         private void ribbonOrbMenuItemSocNaim_Click(object sender, EventArgs e)
@@ -302,6 +351,8 @@ namespace Registry
             tabControl.Controls.Add(viewport);
             tabControl.SelectedTab = viewport;
             ChangeMainMenuState();
+            StatusBarStateUpdate();
+            ChangeViewportsSelectProprty();
         }
 
         private void ribbonButtonRestrictionTypes_Click(object sender, EventArgs e)
@@ -312,6 +363,8 @@ namespace Registry
             tabControl.Controls.Add(viewport);
             tabControl.SelectedTab = viewport;
             ChangeMainMenuState();
+            StatusBarStateUpdate();
+            ChangeViewportsSelectProprty();
         }
 
         private void ribbonButtonOwnershipTypes_Click(object sender, EventArgs e)
@@ -322,6 +375,8 @@ namespace Registry
             tabControl.Controls.Add(viewport);
             tabControl.SelectedTab = viewport;
             ChangeMainMenuState();
+            StatusBarStateUpdate();
+            ChangeViewportsSelectProprty();
         }
 
         public void SwitchToPreviousViewport()
@@ -331,6 +386,11 @@ namespace Registry
                 if (tabControl.SelectedIndex != 0)
                     tabControl.SelectedIndex = tabControl.SelectedIndex - 1;
             }
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            PreLoadData();
         }
     }
 }

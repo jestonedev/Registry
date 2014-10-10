@@ -67,5 +67,9 @@ namespace Registry.Viewport
         bool CanFilterCommercialFundFund();
         bool CanFilterSpecialFund();
         bool CanFilterOtherFunds();
+
+        int GetRecordCount();
+
+        bool Selected { get; set; }
     }
 }

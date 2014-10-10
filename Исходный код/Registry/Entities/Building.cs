@@ -8,6 +8,7 @@ namespace Registry.Entities
     public sealed class Building
     {
         public int? id_building { get; set; }
+        public int? id_state { get; set; } 
         public int? id_structure_type {get; set;} 
         public string id_street {get; set;} 
         public string house {get; set;}
@@ -59,7 +60,8 @@ namespace Registry.Entities
                 first.description == second.description &&
                 first.startup_year == second.startup_year &&
                 first.improvement == second.improvement &&
-                first.elevator == second.elevator;
+                first.elevator == second.elevator &&
+                first.id_state == second.id_state;
         }
 
         public static bool operator !=(Building first, Building second)

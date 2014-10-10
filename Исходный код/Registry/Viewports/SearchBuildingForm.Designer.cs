@@ -52,6 +52,9 @@
             this.checkBoxElevatorEnable = new System.Windows.Forms.CheckBox();
             this.checkBoxImprovementEnable = new System.Windows.Forms.CheckBox();
             this.checkBoxImprovement = new System.Windows.Forms.CheckBox();
+            this.comboBoxState = new System.Windows.Forms.ComboBox();
+            this.checkBoxStateEnable = new System.Windows.Forms.CheckBox();
+            this.label7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloors)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStartupYear)).BeginInit();
             this.SuspendLayout();
@@ -60,7 +63,7 @@
             // 
             this.vButton1.AllowAnimations = true;
             this.vButton1.BackColor = System.Drawing.Color.Transparent;
-            this.vButton1.Location = new System.Drawing.Point(102, 292);
+            this.vButton1.Location = new System.Drawing.Point(102, 334);
             this.vButton1.Name = "vButton1";
             this.vButton1.RoundedCornersMask = ((byte)(15));
             this.vButton1.Size = new System.Drawing.Size(100, 30);
@@ -75,7 +78,7 @@
             this.vButton2.AllowAnimations = true;
             this.vButton2.BackColor = System.Drawing.Color.Transparent;
             this.vButton2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButton2.Location = new System.Drawing.Point(220, 292);
+            this.vButton2.Location = new System.Drawing.Point(220, 334);
             this.vButton2.Name = "vButton2";
             this.vButton2.RoundedCornersMask = ((byte)(15));
             this.vButton2.Size = new System.Drawing.Size(100, 30);
@@ -278,7 +281,7 @@
             // 
             this.checkBoxElevator.AutoSize = true;
             this.checkBoxElevator.Enabled = false;
-            this.checkBoxElevator.Location = new System.Drawing.Point(36, 248);
+            this.checkBoxElevator.Location = new System.Drawing.Point(36, 290);
             this.checkBoxElevator.Name = "checkBoxElevator";
             this.checkBoxElevator.Size = new System.Drawing.Size(103, 17);
             this.checkBoxElevator.TabIndex = 13;
@@ -288,7 +291,7 @@
             // checkBoxElevatorEnable
             // 
             this.checkBoxElevatorEnable.AutoSize = true;
-            this.checkBoxElevatorEnable.Location = new System.Drawing.Point(15, 249);
+            this.checkBoxElevatorEnable.Location = new System.Drawing.Point(15, 291);
             this.checkBoxElevatorEnable.Name = "checkBoxElevatorEnable";
             this.checkBoxElevatorEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxElevatorEnable.TabIndex = 12;
@@ -298,7 +301,7 @@
             // checkBoxImprovementEnable
             // 
             this.checkBoxImprovementEnable.AutoSize = true;
-            this.checkBoxImprovementEnable.Location = new System.Drawing.Point(15, 270);
+            this.checkBoxImprovementEnable.Location = new System.Drawing.Point(15, 312);
             this.checkBoxImprovementEnable.Name = "checkBoxImprovementEnable";
             this.checkBoxImprovementEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxImprovementEnable.TabIndex = 14;
@@ -309,19 +312,51 @@
             // 
             this.checkBoxImprovement.AutoSize = true;
             this.checkBoxImprovement.Enabled = false;
-            this.checkBoxImprovement.Location = new System.Drawing.Point(36, 269);
+            this.checkBoxImprovement.Location = new System.Drawing.Point(36, 311);
             this.checkBoxImprovement.Name = "checkBoxImprovement";
             this.checkBoxImprovement.Size = new System.Drawing.Size(113, 17);
             this.checkBoxImprovement.TabIndex = 15;
             this.checkBoxImprovement.Text = "Благоустройство";
             this.checkBoxImprovement.UseVisualStyleBackColor = true;
             // 
+            // comboBoxState
+            // 
+            this.comboBoxState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxState.Enabled = false;
+            this.comboBoxState.FormattingEnabled = true;
+            this.comboBoxState.Location = new System.Drawing.Point(36, 261);
+            this.comboBoxState.Name = "comboBoxState";
+            this.comboBoxState.Size = new System.Drawing.Size(375, 21);
+            this.comboBoxState.TabIndex = 20;
+            // 
+            // checkBoxStateEnable
+            // 
+            this.checkBoxStateEnable.AutoSize = true;
+            this.checkBoxStateEnable.Location = new System.Drawing.Point(15, 264);
+            this.checkBoxStateEnable.Name = "checkBoxStateEnable";
+            this.checkBoxStateEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxStateEnable.TabIndex = 19;
+            this.checkBoxStateEnable.UseVisualStyleBackColor = true;
+            this.checkBoxStateEnable.CheckedChanged += new System.EventHandler(this.checkBoxStateEnable_CheckedChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(9, 245);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(100, 13);
+            this.label7.TabIndex = 21;
+            this.label7.Text = "Состояние здания";
+            // 
             // SearchBuildingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
-            this.ClientSize = new System.Drawing.Size(423, 329);
+            this.ClientSize = new System.Drawing.Size(423, 372);
+            this.Controls.Add(this.comboBoxState);
+            this.Controls.Add(this.checkBoxStateEnable);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.checkBoxImprovementEnable);
             this.Controls.Add(this.checkBoxImprovement);
             this.Controls.Add(this.checkBoxElevatorEnable);
@@ -383,6 +418,9 @@
         private System.Windows.Forms.CheckBox checkBoxElevatorEnable;
         private System.Windows.Forms.CheckBox checkBoxImprovementEnable;
         private System.Windows.Forms.CheckBox checkBoxImprovement;
+        private System.Windows.Forms.ComboBox comboBoxState;
+        private System.Windows.Forms.CheckBox checkBoxStateEnable;
+        private System.Windows.Forms.Label label7;
 
     }
 }

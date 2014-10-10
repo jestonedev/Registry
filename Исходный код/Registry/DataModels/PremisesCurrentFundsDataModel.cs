@@ -26,6 +26,9 @@ namespace Registry.DataModels
             DataTable funds_history = FundsHistoryDataModel.GetInstance().Select();
             DataTable funds_premises_assoc = FundsPremisesAssocDataModel.GetInstance().Select();
             var max_id_by_premises = from funds_premises_assoc_row in funds_premises_assoc.AsEnumerable()
+                                     join fund_history_row in funds_history.AsEnumerable()
+                                        on funds_premises_assoc_row.Field<int>("id_fund") equals fund_history_row.Field<int>("id_fund")
+                                     where fund_history_row.Field<DateTime?>("exclude_restriction_date") == null
                                      group funds_premises_assoc_row.Field<int>("id_fund") by
                                              funds_premises_assoc_row.Field<int>("id_premises") into gs
                                      select new

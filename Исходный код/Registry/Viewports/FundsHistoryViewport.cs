@@ -11,7 +11,7 @@ using System.Drawing;
 
 namespace Registry.Viewport
 {
-    internal class FundsHistoryViewport : Viewport
+    internal sealed class FundsHistoryViewport : Viewport
     {
         #region Components
 
@@ -101,32 +101,42 @@ namespace Registry.Viewport
             funds_history = FundsHistoryDataModel.GetInstance();
             fund_types = FundTypesDataModel.GetInstance();
 
-            if (ParentType == ParentTypeEnum.Premises)
-                fund_assoc = FundsPremisesAssocDataModel.GetInstance();
+            if (ParentType == ParentTypeEnum.SubPremises)
+                fund_assoc = FundsSubPremisesAssocDataModel.GetInstance();
             else
-                if (ParentType == ParentTypeEnum.Building)
-                    fund_assoc = FundsBuildingsAssocDataModel.GetInstance();
+                if (ParentType == ParentTypeEnum.Premises)
+                    fund_assoc = FundsPremisesAssocDataModel.GetInstance();
                 else
-                    throw new ViewportException("Неизвестный тип родительского объекта");
+                    if (ParentType == ParentTypeEnum.Building)
+                        fund_assoc = FundsBuildingsAssocDataModel.GetInstance();
+                    else
+                        throw new ViewportException("Неизвестный тип родительского объекта");
 
             DataSet ds = DataSetManager.GetDataSet();
 
             v_fund_assoc = new BindingSource();
-            if ((ParentType == ParentTypeEnum.Premises) && (ParentRow != null))
+            if ((ParentType == ParentTypeEnum.SubPremises) && (ParentRow != null))
             {
-                v_fund_assoc.DataMember = "funds_premises_assoc";
-                v_fund_assoc.Filter = "id_premises = " + ParentRow["id_premises"].ToString();
-                this.Text = String.Format("История найма помещения № {0}", ParentRow["id_premises"].ToString());
-            }
-            else
-                if ((ParentType == ParentTypeEnum.Building) && (ParentRow != null))
+                v_fund_assoc.DataMember = "funds_sub_premises_assoc";
+                v_fund_assoc.Filter = "id_sub_premises = " + ParentRow["id_sub_premises"].ToString();
+                this.Text = String.Format("История найма комнаты №{0} помещения №{1}", ParentRow["sub_premises_num"].ToString(), 
+                    ParentRow["id_premises"].ToString());
+            } else
+                if ((ParentType == ParentTypeEnum.Premises) && (ParentRow != null))
                 {
-                    v_fund_assoc.DataMember = "funds_buildings_assoc";
-                    v_fund_assoc.Filter = "id_building = " + ParentRow["id_building"].ToString();
-                    this.Text = String.Format("История найма здания № {0}", ParentRow["id_building"].ToString());
+                    v_fund_assoc.DataMember = "funds_premises_assoc";
+                    v_fund_assoc.Filter = "id_premises = " + ParentRow["id_premises"].ToString();
+                    this.Text = String.Format("История найма помещения №{0}", ParentRow["id_premises"].ToString());
                 }
                 else
-                    throw new ViewportException("Неизвестный тип родительского объекта");
+                    if ((ParentType == ParentTypeEnum.Building) && (ParentRow != null))
+                    {
+                        v_fund_assoc.DataMember = "funds_buildings_assoc";
+                        v_fund_assoc.Filter = "id_building = " + ParentRow["id_building"].ToString();
+                        this.Text = String.Format("История найма здания №{0}", ParentRow["id_building"].ToString());
+                    }
+                    else
+                        throw new ViewportException("Неизвестный тип родительского объекта");
             v_fund_assoc.DataSource = ds;
 
             v_fund_types = new BindingSource();
@@ -155,6 +165,12 @@ namespace Registry.Viewport
             textBoxExcludeRestNum.TextChanged += new EventHandler(textBoxExcludeRestNum_TextChanged);
             textBoxExcludeRestDesc.TextChanged += new EventHandler(textBoxExcludeRestDesc_TextChanged);
             dateTimePickerExcludeRestDate.ValueChanged += new EventHandler(dateTimePickerExcludeRestDate_ValueChanged);
+            dataGridView.DataError += new DataGridViewDataErrorEventHandler(dataGridView_DataError);
+        }
+
+        void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            e.ThrowException = false;
         }
 
         protected override void OnVisibleChanged(EventArgs e)
@@ -239,9 +255,15 @@ namespace Registry.Viewport
         {
             if (dataGridView.Rows.Count == 0)
                 return;
-            for (int i = 0; i < dataGridView.Rows.Count; i++)
-                dataGridView.Rows[i].DefaultCellStyle.BackColor = Color.White;
-            dataGridView.Rows[dataGridView.Rows.Count - 1].DefaultCellStyle.BackColor = Color.LightGreen;
+            bool currentFundFounded = false;
+            for (int i = dataGridView.Rows.Count - 1; i >= 0; i--)
+                if ((((DataRowView)v_funds_history[i])["exclude_restriction_date"] == DBNull.Value) && (!currentFundFounded))
+                {
+                    dataGridView.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
+                    currentFundFounded = true;
+                }
+                else
+                    dataGridView.Rows[i].DefaultCellStyle.BackColor = Color.White;
         }
 
         private void RebuildFilter()
@@ -559,6 +581,7 @@ namespace Registry.Viewport
             funds_history.EditingNewRecord = true;
             menuCallback.NavigationStateUpdate();
             menuCallback.EditingStateUpdate();
+            menuCallback.StatusBarStateUpdate();
         }
 
         public override void DeleteRecord()
@@ -605,7 +628,8 @@ namespace Registry.Viewport
 
         void v_funds_history_CurrentItemChanged(object sender, EventArgs e)
         {
-            menuCallback.NavigationStateUpdate(); 
+            if (Selected)
+                menuCallback.NavigationStateUpdate(); 
             dataGridView.Enabled = true;
             if (v_funds_history.Position == -1)
                 return;
@@ -613,6 +637,11 @@ namespace Registry.Viewport
                 return;
             viewportState = ViewportState.ReadState;
             is_editable = true;
+        }
+
+        public override int GetRecordCount()
+        {
+            return v_funds_history.Count;
         }
 
         public override bool CanCancelRecord()
@@ -661,7 +690,9 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case ViewportState.NewRowState:
-                    int id_parent = ((ParentType == ParentTypeEnum.Premises) && ParentRow != null) ? (int)ParentRow["id_premises"] :
+                    int id_parent = 
+                        ((ParentType == ParentTypeEnum.SubPremises) && ParentRow != null) ? (int)ParentRow["id_sub_premises"] :
+                        ((ParentType == ParentTypeEnum.Premises) && ParentRow != null) ? (int)ParentRow["id_premises"] :
                         ((ParentType == ParentTypeEnum.Building) && ParentRow != null) ? (int)ParentRow["id_building"] :
                         -1;
                     if (id_parent == -1)
@@ -705,12 +736,14 @@ namespace Registry.Viewport
                     viewportState = ViewportState.ReadState;
                     break;
             }
+            RedrawDataGridRows();
             menuCallback.EditingStateUpdate();
             menuCallback.NavigationStateUpdate();
         }
 
         private void FillRowFromFundHistory(FundHistory fundHistory, DataRowView row)
         {
+            row.BeginEdit();
             row["id_fund"] = fundHistory.id_fund == null ? DBNull.Value : (object)fundHistory.id_fund;
             row["id_fund_type"] = fundHistory.id_fund_type == null ? DBNull.Value : 
                 (object)fundHistory.id_fund_type;
@@ -732,6 +765,7 @@ namespace Registry.Viewport
                 fundHistory.exclude_restriction_description == null ? DBNull.Value : 
                 (object)fundHistory.exclude_restriction_description;
             row["description"] = fundHistory.description == null ? DBNull.Value : (object)fundHistory.description;
+            row.EndEdit();
         }
 
         public override void CancelRecord()
@@ -751,13 +785,15 @@ namespace Registry.Viewport
                     }
                     menuCallback.EditingStateUpdate();
                     menuCallback.NavigationStateUpdate();
+                    menuCallback.StatusBarStateUpdate();
                     break;
                 case ViewportState.ModifyRowState:
                     dataGridView.Enabled = true;
                     DataBind();
                     viewportState = ViewportState.ReadState;
+                    menuCallback.EditingStateUpdate();
                     break;
-            } 
+            }
         }
 
         bool ChangeViewportStateTo(ViewportState state)
@@ -1214,6 +1250,10 @@ namespace Registry.Viewport
             this.dataGridView.TabIndex = 13;
             this.tableLayoutPanel6.SetColumnSpan(this.dataGridView, 2);
             this.dataGridView.ScrollBars = ScrollBars.Both;
+            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridView.ShowCellToolTips = false;
+            this.dataGridView.AllowUserToResizeRows = false;
             // 
             // field_id_fund
             // 
@@ -1227,6 +1267,7 @@ namespace Registry.Viewport
             this.field_protocol_number.HeaderText = "Номер протокола";
             this.field_protocol_number.Name = "protocol_num";
             this.field_protocol_number.ReadOnly = true;
+            this.field_protocol_number.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // field_protocol_date
             // 

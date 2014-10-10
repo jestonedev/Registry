@@ -7,13 +7,13 @@ using System.Windows.Forms;
 
 namespace Registry.DataModels
 {
-    public sealed class FundsPremisesAssocDataModel : DataModel
+    public sealed class FundsSubPremisesAssocDataModel : DataModel
     {
-        private static FundsPremisesAssocDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM funds_premises_assoc WHERE deleted = 0";
-        private static string tableName = "funds_premises_assoc";
+        private static FundsSubPremisesAssocDataModel dataModel = null;
+        private static string selectQuery = "SELECT * FROM funds_sub_premises_assoc WHERE deleted = 0";
+        private static string tableName = "funds_sub_premises_assoc";
 
-        private FundsPremisesAssocDataModel(ToolStripProgressBar progressBar, int incrementor)
+        private FundsSubPremisesAssocDataModel(ToolStripProgressBar progressBar, int incrementor)
             : base(progressBar, incrementor, selectQuery, tableName)
         {
         }
@@ -28,15 +28,15 @@ namespace Registry.DataModels
             table.AcceptChanges();
         }
 
-        public static FundsPremisesAssocDataModel GetInstance()
+        public static FundsSubPremisesAssocDataModel GetInstance()
         {
             return GetInstance(null, 0);
         }
 
-        public static FundsPremisesAssocDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        public static FundsSubPremisesAssocDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
         {
             if (dataModel == null)
-                dataModel = new FundsPremisesAssocDataModel(progressBar, incrementor);
+                dataModel = new FundsSubPremisesAssocDataModel(progressBar, incrementor);
             return dataModel;
         }
     }

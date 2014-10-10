@@ -22,11 +22,13 @@ namespace Registry.DataModels
                             number= ?, `date` = ?, description = ? WHERE id_restriction = ?";
         private static string tableName = "restrictions";
 
-        private RestrictionsDataModel()
+        private RestrictionsDataModel(ToolStripProgressBar progressBar, int incrementor)
+            : base(progressBar, incrementor, selectQuery, tableName)
         {
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = selectQuery;
-            table = connection.SqlSelectTable(tableName, command);
+        }
+
+        protected override void ConfigureTable()
+        {
             table.PrimaryKey = new DataColumn[] { table.Columns["id_restriction"] };
             table.RowDeleted += new System.Data.DataRowChangeEventHandler(table_RowDeleted);
         }
@@ -36,12 +38,15 @@ namespace Registry.DataModels
             table.AcceptChanges();
         }
 
-
         public static RestrictionsDataModel GetInstance()
         {
+            return GetInstance(null, 0);
+        }
+
+        public static RestrictionsDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
             if (dataModel == null)
-                dataModel = new RestrictionsDataModel();
-            DataSetManager.AddModel(dataModel);
+                dataModel = new RestrictionsDataModel(progressBar, incrementor);
             return dataModel;
         }
 

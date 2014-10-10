@@ -6,10 +6,11 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using System.Data;
 using Registry.Entities;
+using System.Threading;
 
 namespace Registry.Viewport
 {
-    internal class BuildingListViewport: Viewport
+    internal sealed class BuildingListViewport : Viewport
     {
         #region Components
         private DataGridView dataGridView = new System.Windows.Forms.DataGridView();
@@ -68,6 +69,9 @@ namespace Registry.Viewport
         {
             buildings = BuildingsDataModel.GetInstance();
             kladr = KladrDataModel.GetInstance();
+            // Ожидаем дозагрузки данных, если это необходимо
+            buildings.Select();
+            kladr.Select();
 
             DataSet ds = DataSetManager.GetDataSet();
 
@@ -84,20 +88,103 @@ namespace Registry.Viewport
             v_kladr.DataMember = "kladr";
             v_kladr.DataSource = ds;
 
-            dataGridView.DataSource = v_buildings;
-
-            field_id_building.DataPropertyName = "id_building";
             field_id_street.DataSource = v_kladr;
-            field_id_street.DataPropertyName = "id_street";
             field_id_street.ValueMember = "id_street";
             field_id_street.DisplayMember = "street_name";
-            field_house.DataPropertyName = "house";
-            field_floors.DataPropertyName = "floors";
-            field_living_area.DataPropertyName = "living_area";
-            field_cadastral_num.DataPropertyName = "cadastral_num";
-            field_startup_year.DataPropertyName = "startup_year";
 
-            dataGridView.DoubleClick += new EventHandler(dataGridView_DoubleClick);
+            v_buildings.PositionChanged += new EventHandler(v_buildings_PositionChanged);
+            buildings.Select().RowChanged += new DataRowChangeEventHandler(BuildingListViewport_RowChanged);
+            buildings.Select().RowDeleting += new DataRowChangeEventHandler(BuildingListViewport_RowDeleting);
+            dataGridView.CellValueNeeded += new DataGridViewCellValueEventHandler(dataGridView_CellValueNeeded);
+            dataGridView.SelectionChanged += new EventHandler(dataGridView_SelectionChanged);
+            dataGridView.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(dataGridView_ColumnHeaderMouseClick);
+            dataGridView.RowCount = v_buildings.Count;
+            dataGridView.CellDoubleClick += new DataGridViewCellEventHandler(dataGridView_CellDoubleClick);
+        }
+
+        void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == -1) return;
+            if (CanOpenDetails())
+                OpenDetails();
+        }
+
+        void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (dataGridView.Columns[e.ColumnIndex].SortMode == DataGridViewColumnSortMode.NotSortable)
+                return;
+            if (dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection == SortOrder.Ascending)
+            {
+                v_buildings.Sort = dataGridView.Columns[e.ColumnIndex].Name + " DESC";
+                dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Descending;
+            }
+            else
+            {
+                v_buildings.Sort = dataGridView.Columns[e.ColumnIndex].Name + " ASC";
+                dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+            }
+            dataGridView.Refresh();
+        }
+
+        void BuildingListViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
+        {
+            dataGridView.RowCount = v_buildings.Count;
+            dataGridView.Refresh();
+        }
+
+        void BuildingListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action == DataRowAction.Change || e.Action == DataRowAction.ChangeCurrentAndOriginal || e.Action == DataRowAction.ChangeOriginal)
+                dataGridView.Refresh();
+            dataGridView.RowCount = v_buildings.Count;
+        }
+
+        void v_buildings_PositionChanged(object sender, EventArgs e)
+        {
+            if (v_buildings.Position == -1 || dataGridView.Rows.Count == 0)
+            {
+                dataGridView.ClearSelection();
+                return;
+            }
+            dataGridView.Rows[v_buildings.Position].Selected = true;
+            dataGridView.CurrentCell = dataGridView.Rows[v_buildings.Position].Cells[0];
+        }
+
+        void dataGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dataGridView.SelectedRows.Count > 0)
+                v_buildings.Position = dataGridView.SelectedRows[0].Index;
+            else
+                v_buildings.Position = -1;
+        }
+
+        void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        {
+            if (v_buildings.Count <= e.RowIndex) return;
+            switch (this.dataGridView.Columns[e.ColumnIndex].Name)
+            {
+                case "id_building":
+                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["id_building"];
+                    break;
+                case "id_street":
+                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["id_street"];
+                    break;
+                case "house":
+                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["house"];
+                    break;
+                case "floors":
+                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["floors"];
+                    break;
+                case "living_area":
+                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["living_area"];
+                    break;
+                case "cadastral_num":
+                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["cadastral_num"];
+                    break;
+                case "startup_year":
+                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["cadastral_num"];
+                    break;
+            }
         }
 
         public void LocateBuildingBy(int id)
@@ -107,7 +194,8 @@ namespace Registry.Viewport
 
         void v_buildings_CurrentItemChanged(object sender, EventArgs e)
         {
-            menuCallback.NavigationStateUpdate();
+            if (Selected)
+                menuCallback.NavigationStateUpdate();
         }
 
         public override bool CanMoveFirst()
@@ -169,6 +257,11 @@ namespace Registry.Viewport
             }
         }
 
+        public override int GetRecordCount()
+        {
+            return v_buildings.Count;
+        }
+
         public override bool CanSearchRecord()
         {
             return true;
@@ -188,20 +281,21 @@ namespace Registry.Viewport
             if (sbForm.ShowDialog() == DialogResult.OK)
             {
                 DynamicFilter = sbForm.GetFilter();
-                v_buildings.Filter = StaticFilter;
+                string Filter = StaticFilter;
                 if (StaticFilter != "" && DynamicFilter != "")
-                    v_buildings.Filter += " AND ";
-                v_buildings.Filter += DynamicFilter;
-                if (DynamicFilter != "")
-                    menuCallback.NavigationStateUpdate();
+                    Filter += " AND ";
+                Filter += DynamicFilter;
+                dataGridView.RowCount = 0;
+                v_buildings.Filter = Filter;
+                dataGridView.RowCount = v_buildings.Count;
             }
         }
 
         public override void ClearSearch()
         {
             v_buildings.Filter = StaticFilter;
+            dataGridView.RowCount = v_buildings.Count;
             DynamicFilter = "";
-            menuCallback.NavigationStateUpdate();
         }
 
         public override bool CanOpenDetails()
@@ -210,12 +304,6 @@ namespace Registry.Viewport
                 return false;
             else
                 return true;
-        }
-
-        void dataGridView_DoubleClick(object sender, EventArgs e)
-        {
-            if (CanOpenDetails())
-                OpenDetails();
         }
 
         public override void OpenDetails()
@@ -242,17 +330,17 @@ namespace Registry.Viewport
 
         public override bool HasAssocOwnerships()
         {
-            return true;
+            return (v_buildings.Position > -1);
         }
 
         public override bool HasAssocRestrictions()
         {
-            return true;
+            return (v_buildings.Position > -1);
         }
 
         public override bool HasFundHistory()
         {
-            return true;
+            return (v_buildings.Position > -1);
         }
 
         public override void ShowPremises()
@@ -368,6 +456,13 @@ namespace Registry.Viewport
             viewport.CopyRecord();
         }
 
+        public override void Close()
+        {
+            buildings.Select().RowChanged -= new DataRowChangeEventHandler(BuildingListViewport_RowChanged);
+            buildings.Select().RowDeleting -= new DataRowChangeEventHandler(BuildingListViewport_RowDeleting);
+            base.Close();
+        }
+
         private void ConstructViewport()
         {
             DataGridViewCellStyle dataGridViewCellStyle = new DataGridViewCellStyle();
@@ -404,6 +499,14 @@ namespace Registry.Viewport
             dataGridView.TabIndex = 0;
             dataGridView.AutoGenerateColumns = false;
             dataGridView.MultiSelect = false;
+            ViewportHelper.SetDoubleBuffered(dataGridView);
+            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
+            this.dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridView.ShowCellToolTips = false;
+            this.dataGridView.AllowUserToResizeRows = false;
+            this.dataGridView.ReadOnly = true;
+            this.dataGridView.VirtualMode = true;
             // 
             // field_id_building
             // 
@@ -414,45 +517,47 @@ namespace Registry.Viewport
             // 
             // field_id_street
             // 
+            field_id_street.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             field_id_street.HeaderText = "Адрес";
             field_id_street.MinimumWidth = 300;
             field_id_street.Name = "id_street";
             field_id_street.ReadOnly = true;
             field_id_street.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+            field_id_street.SortMode = DataGridViewColumnSortMode.Automatic;
             // 
             // field_house
             // 
+            field_house.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             field_house.HeaderText = "Дом";
             field_house.Name = "house";
-            field_house.ReadOnly = true;
             // 
             // field_floors
             // 
+            field_floors.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             field_floors.HeaderText = "Этажность";
             field_floors.Name = "floors";
-            field_floors.ReadOnly = true;
             // 
             // field_living_area
             // 
+            field_living_area.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             field_living_area.HeaderText = "Жилая площадь";
             field_living_area.MinimumWidth = 150;
             field_living_area.Name = "living_area";
-            field_living_area.ReadOnly = true;
             field_living_area.DefaultCellStyle.Format = "#0.0## м²";
             // 
             // field_cadastral_num
             // 
+            field_cadastral_num.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             field_cadastral_num.HeaderText = "Кадастровый номер";
             field_cadastral_num.MinimumWidth = 150;
             field_cadastral_num.Name = "cadastral_num";
-            field_cadastral_num.ReadOnly = true;
             // 
             // field_startup_year
             // 
+            field_startup_year.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             field_startup_year.HeaderText = "Год ввода в эксплуатацию";
             field_startup_year.MinimumWidth = 200;
             field_startup_year.Name = "startup_year";
-            field_startup_year.ReadOnly = true;
 
             ((System.ComponentModel.ISupportInitialize)(dataGridView)).EndInit();
         }

@@ -89,6 +89,10 @@
       <Project>{44CFB46D-C274-45B6-9498-879F9E3AFA44}</Project>
       <Name>CustomControl</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DataModels\DataModels.csproj">
+      <Project>{762222B2-0E8F-4759-A673-FCC0C5F35B8C}</Project>
+      <Name>DataModels</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Viewports\Viewports.csproj">
       <Project>{382C5ED0-7C1B-414D-AB01-54D42220DEC3}</Project>
       <Name>Viewports</Name>

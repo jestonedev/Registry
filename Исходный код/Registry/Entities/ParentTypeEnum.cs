@@ -9,6 +9,7 @@ namespace Registry.Entities
     {
         None,
         Building,
-        Premises
+        Premises,
+        SubPremises
     }
 }

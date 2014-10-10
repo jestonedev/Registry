@@ -10,7 +10,7 @@ using Registry.DataModels;
 
 namespace Registry.Viewport
 {
-    internal class RestrictionListViewport: Viewport
+    internal sealed class RestrictionListViewport : Viewport
     {
         #region Components
         private DataGridView dataGridView = new DataGridView();
@@ -238,13 +238,17 @@ namespace Registry.Viewport
             else
                 if (e.Action == DataRowAction.Add)
                 {
-                    snapshot_restrictions.Rows.Add(new object[] { 
-                        e.Row["id_restriction"], 
-                        e.Row["id_restriction_type"],
-                        e.Row["number"],
-                        e.Row["date"],
-                        e.Row["description"]
-                    });
+                    //Если строка имеется в текущем контексте оригинального представления, то добавить его и в snapshot, 
+                    //иначе - объект не принадлежит текущему родителю
+                    int row_index = v_restrictions.Find("id_restriction", e.Row["id_restriction"]);
+                    if (row_index != -1)
+                        snapshot_restrictions.Rows.Add(new object[] { 
+                            e.Row["id_restriction"], 
+                            e.Row["id_restriction_type"],
+                            e.Row["number"],
+                            e.Row["date"],
+                            e.Row["description"]
+                        });
                 }
         }
 
@@ -338,6 +342,7 @@ namespace Registry.Viewport
             row.EndEdit();
             menuCallback.EditingStateUpdate();
             menuCallback.NavigationStateUpdate();
+            menuCallback.StatusBarStateUpdate();
         }
 
         public override void Close()
@@ -371,6 +376,7 @@ namespace Registry.Viewport
             ((DataRowView)v_snapshot_restrictions[v_snapshot_restrictions.Position]).Row.Delete();
             menuCallback.EditingStateUpdate();
             menuCallback.NavigationStateUpdate();
+            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool CanCancelRecord()
@@ -385,6 +391,7 @@ namespace Registry.Viewport
                 snapshot_restrictions.Rows.Add(DataRowViewToArray(((DataRowView)v_restrictions[i])));
             menuCallback.EditingStateUpdate();
             menuCallback.NavigationStateUpdate();
+            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool CanSaveRecord()
@@ -526,6 +533,11 @@ namespace Registry.Viewport
             return ((ParentRow != null) && ((ParentRow.RowState == DataRowState.Detached) || (ParentRow.RowState == DataRowState.Deleted)));
         }
 
+        public override int GetRecordCount()
+        {
+            return v_snapshot_restrictions.Count;
+        }
+
         private void ConstructViewport()
         {
             this.SuspendLayout();
@@ -560,6 +572,11 @@ namespace Registry.Viewport
             this.dataGridView.AutoGenerateColumns = false;
             this.dataGridView.MultiSelect = false;
             this.dataGridView.TabIndex = 1;
+            ViewportHelper.SetDoubleBuffered(dataGridView);
+            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridView.ShowCellToolTips = false;
+            this.dataGridView.AllowUserToResizeRows = false;
             // 
             // field_id_restriction
             // 

@@ -9,7 +9,7 @@ using Registry.Entities;
 
 namespace Registry.Viewport
 {
-    internal class StructureTypeListViewport: Viewport
+    internal sealed class StructureTypeListViewport : Viewport
     {
         #region Components
         private DataGridView dataGridView = new DataGridView();
@@ -226,6 +226,7 @@ namespace Registry.Viewport
             row.EndEdit();
             menuCallback.EditingStateUpdate();
             menuCallback.NavigationStateUpdate();
+            menuCallback.StatusBarStateUpdate();
         }
 
         public override void Close()
@@ -257,6 +258,7 @@ namespace Registry.Viewport
             ((DataRowView)v_snapshot_structure_types[v_snapshot_structure_types.Position]).Row.Delete();
             menuCallback.EditingStateUpdate();
             menuCallback.NavigationStateUpdate();
+            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool CanCancelRecord()
@@ -271,6 +273,7 @@ namespace Registry.Viewport
                 snapshot_structure_types.Rows.Add(DataRowViewToArray(((DataRowView)v_structure_types[i])));
             menuCallback.EditingStateUpdate();
             menuCallback.NavigationStateUpdate();
+            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool CanSaveRecord()
@@ -369,6 +372,11 @@ namespace Registry.Viewport
             return viewport;
         }
 
+        public override int GetRecordCount()
+        {
+            return v_snapshot_structure_types.Count;
+        }
+
         private void ConstructViewport()
         {
             this.SuspendLayout();
@@ -400,7 +408,12 @@ namespace Registry.Viewport
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.MultiSelect = false;
-            this.dataGridView.TabIndex = 3;
+            this.dataGridView.TabIndex = 3; 
+            ViewportHelper.SetDoubleBuffered(dataGridView);
+            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridView.ShowCellToolTips = false;
+            this.dataGridView.AllowUserToResizeRows = false;
             // 
             // field_id_structure_type
             // 

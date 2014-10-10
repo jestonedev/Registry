@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data.Common;
 using System.Data;
+using System.Windows.Forms;
 
 namespace Registry.DataModels
 {
@@ -13,20 +14,26 @@ namespace Registry.DataModels
         private static string selectQuery = "SELECT * FROM v_kladr_streets";
         private static string tableName = "kladr";
 
-        private KladrDataModel()
+        private KladrDataModel(ToolStripProgressBar progressBar, int incrementor)
+            : base(progressBar, incrementor, selectQuery, tableName)
         {
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = selectQuery;
-            table = connection.SqlSelectTable(tableName, command);
+        }
+
+        protected override void ConfigureTable()
+        {
             table.PrimaryKey = new DataColumn[] { table.Columns["id_street"] };
         }
 
 
         public static KladrDataModel GetInstance()
         {
+            return GetInstance(null, 0);
+        }
+
+        public static KladrDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
             if (dataModel == null)
-                dataModel = new KladrDataModel();
-            DataSetManager.AddModel(dataModel);
+                dataModel = new KladrDataModel(progressBar, incrementor);
             return dataModel;
         }
     }

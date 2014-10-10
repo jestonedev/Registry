@@ -13,40 +13,33 @@ namespace Registry.DataModels
     public class DBConnection: IDisposable
     {
         private static string ProviderName = "ODBC";
-        private static System.Data.Common.DbConnection connection = null;
         private static DbProviderFactory factory = null;
 
         private System.Data.Common.DbTransaction transaction = null;
+        private DbConnection connection = null;
 
-        private DBConnection()
+        public DBConnection()
         {
-        }
-
-        static DBConnection()
-        {
-            if (factory == null)
-                factory = System.Data.Common.DbProviderFactories.GetFactory(ParseProviderName(ProviderName));
             connection = factory.CreateConnection();
             connection.ConnectionString = Settings.Default["ConnectionString"].ToString();
             if (connection.State == System.Data.ConnectionState.Closed)
                 connection.Open();
         }
 
+        static DBConnection()
+        {
+            if (factory == null)
+                factory = System.Data.Common.DbProviderFactories.GetFactory(ParseProviderName(ProviderName));
+        }
+
         public DbCommand CreateCommand()
         {
-            DbCommand command = factory.CreateCommand();
-            command.Connection = connection;
-            return command;
+            return factory.CreateCommand();
         }
 
         public DbParameter CreateParameter()
         {
             return factory.CreateParameter();
-        }
-
-        public static DBConnection GetInstance()
-        {
-            return new DBConnection();
         }
 
         private static string ParseProviderName(string name)
@@ -67,6 +60,7 @@ namespace Registry.DataModels
 
         public DataTable SqlSelectTable(string resultTableName, DbCommand command)
         {
+            command.Connection = connection;
             if (transaction != null)
                 command.Transaction = transaction;
             if (connection.State == ConnectionState.Closed)
@@ -80,6 +74,7 @@ namespace Registry.DataModels
 
         public int SqlModifyQuery(DbCommand command)
         {
+            command.Connection = connection;
             if (transaction != null)
                 command.Transaction = transaction;
             if (connection.State == ConnectionState.Closed)

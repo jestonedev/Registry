@@ -7,10 +7,11 @@ using System.Data;
 using Registry.DataModels;
 using System.Collections;
 using Registry.Entities;
+using System.Threading;
 
 namespace Registry.Viewport
 {
-    internal class PremisesListViewport: Viewport
+    internal sealed class PremisesListViewport : Viewport
     {
         #region Components
         private DataGridView dataGridView = new DataGridView();
@@ -18,7 +19,7 @@ namespace Registry.Viewport
         private DataGridViewComboBoxColumn field_street = new System.Windows.Forms.DataGridViewComboBoxColumn();
         private DataGridViewComboBoxColumn field_house = new System.Windows.Forms.DataGridViewComboBoxColumn();
         private DataGridViewTextBoxColumn field_premises_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        private DataGridViewComboBoxColumn field_premises_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
+        private DataGridViewComboBoxColumn field_id_premises_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
         private DataGridViewTextBoxColumn field_cadastral_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
         private DataGridViewTextBoxColumn field_living_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
         private DataGridViewTextBoxColumn field_total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -76,6 +77,12 @@ namespace Registry.Viewport
             buildings  = BuildingsDataModel.GetInstance();
             premises_types = PremisesTypesDataModel.GetInstance();
 
+            // Ожидаем дозагрузки данных, если это необходимо
+            premises.Select();
+            kladr.Select();
+            buildings.Select();
+            premises_types.Select();
+
             DataSet ds = DataSetManager.GetDataSet();
 
             v_premises = new BindingSource();
@@ -100,35 +107,113 @@ namespace Registry.Viewport
             v_premises_types.DataMember = "premises_types";
             v_premises_types.DataSource = ds;
 
-            dataGridView.DataSource = v_premises;
-
-            field_id_premises.DataPropertyName = "id_premises";
-            field_premises_num.DataPropertyName = "premises_num";
-
-            field_street.DataPropertyName = "id_building";
             field_street.DataSource = new StreetByBuildingDataSource(buildings, kladr);
             field_street.ValueMember = "id_building";
             field_street.DisplayMember = "street_name";
-
             field_house.DataSource = v_buildings;
-            field_house.DataPropertyName = "id_building";
             field_house.ValueMember = "id_building";
             field_house.DisplayMember = "house";
-            field_total_area.DataPropertyName = "total_area";
-            field_living_area.DataPropertyName = "living_area";
-            field_cadastral_num.DataPropertyName = "cadastral_num";
-            field_premises_type.DataSource = v_premises_types;
-            field_premises_type.DataPropertyName = "id_premises_type";
-            field_premises_type.ValueMember = "id_premises_type";
-            field_premises_type.DisplayMember = "premises_type";
+            field_id_premises_type.DataSource = v_premises_types;
+            field_id_premises_type.ValueMember = "id_premises_type";
+            field_id_premises_type.DisplayMember = "premises_type";
 
-            dataGridView.DoubleClick += new EventHandler(dataGridView_DoubleClick);
+            dataGridView.CellValueNeeded += new DataGridViewCellValueEventHandler(dataGridView_CellValueNeeded);
+            dataGridView.SelectionChanged += new EventHandler(dataGridView_SelectionChanged);
+            dataGridView.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(dataGridView_ColumnHeaderMouseClick);
+            v_premises.PositionChanged += new EventHandler(v_premises_PositionChanged);
+            premises.Select().RowChanged += new DataRowChangeEventHandler(PremisesListViewport_RowChanged);
+            premises.Select().RowDeleting += new DataRowChangeEventHandler(PremisesListViewport_RowDeleting);
+            dataGridView.RowCount = v_premises.Count;
+
+            dataGridView.CellDoubleClick += new DataGridViewCellEventHandler(dataGridView_CellDoubleClick);
         }
 
-        void dataGridView_DoubleClick(object sender, EventArgs e)
+        void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex == -1) return;
             if (CanOpenDetails())
                 OpenDetails();
+        }
+
+        void PremisesListViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
+        {
+            dataGridView.RowCount = v_premises.Count;
+            dataGridView.Refresh();
+        }
+
+        void PremisesListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action == DataRowAction.Change || e.Action == DataRowAction.ChangeCurrentAndOriginal || e.Action == DataRowAction.ChangeOriginal)
+                dataGridView.Refresh();
+            dataGridView.RowCount = v_premises.Count;
+        }
+
+        void v_premises_PositionChanged(object sender, EventArgs e)
+        {
+            if (v_premises.Position == -1 || dataGridView.Rows.Count == 0)
+            {
+                dataGridView.ClearSelection();
+                return;
+            }
+            dataGridView.Rows[v_premises.Position].Selected = true;
+            dataGridView.CurrentCell = dataGridView.Rows[v_premises.Position].Cells[0];
+        }
+
+        void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (dataGridView.Columns[e.ColumnIndex].SortMode == DataGridViewColumnSortMode.NotSortable)
+                return;
+            if (dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection == SortOrder.Ascending)
+            {
+                v_premises.Sort = dataGridView.Columns[e.ColumnIndex].Name + " DESC";
+                dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Descending;
+            }
+            else
+            {
+                v_premises.Sort = dataGridView.Columns[e.ColumnIndex].Name + " ASC";
+                dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
+            }
+            dataGridView.Refresh();
+        }
+
+        void dataGridView_SelectionChanged(object sender, EventArgs e)
+        {
+            if (dataGridView.SelectedRows.Count > 0)
+                v_premises.Position = dataGridView.SelectedRows[0].Index;
+            else
+                v_premises.Position = -1;
+        }
+
+        void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        {
+            if (v_premises.Count <= e.RowIndex) return;
+            switch (this.dataGridView.Columns[e.ColumnIndex].Name)
+            {
+                case "id_premises":
+                    e.Value = ((DataRowView)v_premises[e.RowIndex])["id_premises"];
+                    break;
+                case "id_street":
+                    e.Value = ((DataRowView)v_premises[e.RowIndex])["id_building"];
+                    break;
+                case "house":
+                    e.Value = ((DataRowView)v_premises[e.RowIndex])["id_building"];
+                    break;
+                case "premises_num":
+                    e.Value = ((DataRowView)v_premises[e.RowIndex])["premises_num"];
+                    break;
+                case "id_premises_type":
+                    e.Value = ((DataRowView)v_premises[e.RowIndex])["id_premises_type"];
+                    break;
+                case "cadastral_num":
+                    e.Value = ((DataRowView)v_premises[e.RowIndex])["cadastral_num"];
+                    break;
+                case "total_area":
+                    e.Value = ((DataRowView)v_premises[e.RowIndex])["total_area"];
+                    break;
+                case "living_area":
+                    e.Value = ((DataRowView)v_premises[e.RowIndex])["living_area"];
+                    break;
+            }
         }
 
         public void LocatePremisesBy(int id)
@@ -138,7 +223,8 @@ namespace Registry.Viewport
 
         void v_premises_CurrentItemChanged(object sender, EventArgs e)
         {
-            menuCallback.NavigationStateUpdate();
+            if (Selected)
+                menuCallback.NavigationStateUpdate();
         }
 
         public override bool CanMoveFirst()
@@ -219,20 +305,21 @@ namespace Registry.Viewport
             if (spForm.ShowDialog() == DialogResult.OK)
             {
                 DynamicFilter = spForm.GetFilter();
-                v_premises.Filter = StaticFilter;
+                string Filter = StaticFilter;
                 if (StaticFilter != "" && DynamicFilter != "")
-                    v_premises.Filter += " AND ";
-                v_premises.Filter += DynamicFilter;
-                if (DynamicFilter != "")
-                    menuCallback.NavigationStateUpdate();
+                    Filter += " AND ";
+                Filter += DynamicFilter;
+                dataGridView.RowCount = 0;
+                v_premises.Filter = Filter;
+                dataGridView.RowCount = v_premises.Count;
             }
         }
 
         public override void ClearSearch()
         {
             v_premises.Filter = StaticFilter;
+            dataGridView.RowCount = v_premises.Count;
             DynamicFilter = "";
-            menuCallback.NavigationStateUpdate();
         }
 
         public override bool CanOpenDetails()
@@ -312,107 +399,6 @@ namespace Registry.Viewport
             return ((ParentRow != null) && ((ParentRow.RowState == DataRowState.Detached) || (ParentRow.RowState == DataRowState.Deleted)));
         }
 
-        private void ConstructViewport()
-        {
-            this.SuspendLayout();
-            DataGridViewCellStyle dataGridViewCellStyle = new DataGridViewCellStyle();
-            this.Controls.Add(this.dataGridView);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
-            // 
-            // dataGridView
-            // 
-            this.dataGridView.AllowUserToAddRows = false;
-            this.dataGridView.Dock = DockStyle.Fill;
-            this.dataGridView.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
-            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
-            dataGridViewCellStyle.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle;
-            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.field_id_premises,
-            this.field_street,
-            this.field_house,
-            this.field_premises_num,
-            this.field_premises_type,
-            this.field_total_area,
-            this.field_living_area,
-            this.field_cadastral_num});
-            this.dataGridView.Location = new System.Drawing.Point(6, 6);
-            this.dataGridView.Name = "dataGridView";
-            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.TabIndex = 0;
-            dataGridView.AutoGenerateColumns = false;
-            dataGridView.MultiSelect = false;
-            // 
-            // field_id_premises
-            // 
-            this.field_id_premises.HeaderText = "№";
-            this.field_id_premises.Name = "id_premises";
-            this.field_id_premises.ReadOnly = true;
-            // 
-            // field_street
-            // 
-            this.field_street.HeaderText = "Адрес";
-            this.field_street.MinimumWidth = 300;
-            this.field_street.Name = "id_street";
-            this.field_street.ReadOnly = true;
-            this.field_street.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
-            // 
-            // field_street
-            // 
-            this.field_house.HeaderText = "Дом";
-            this.field_house.Name = "house";
-            this.field_house.ReadOnly = true;
-            this.field_house.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
-            // 
-            // field_premises_num
-            // 
-            this.field_premises_num.HeaderText = "Помещение";
-            this.field_premises_num.Name = "premises_num";
-            this.field_premises_num.ReadOnly = true;
-            // 
-            // field_premises_type
-            // 
-            this.field_premises_type.HeaderText = "Тип помещения";
-            this.field_premises_type.MinimumWidth = 150;
-            this.field_premises_type.Name = "premises_type";
-            this.field_premises_type.ReadOnly = true;
-            this.field_premises_type.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
-            // 
-            // field_cadastral_num
-            // 
-            this.field_cadastral_num.HeaderText = "Кадастровый номер";
-            this.field_cadastral_num.MinimumWidth = 150;
-            this.field_cadastral_num.Name = "cadastral_num";
-            this.field_cadastral_num.ReadOnly = true;
-            // 
-            // field_total_area
-            // 
-            this.field_total_area.HeaderText = "Общая площадь";
-            this.field_total_area.MinimumWidth = 120;
-            this.field_total_area.Name = "total_area";
-            this.field_total_area.DefaultCellStyle.Format = "#0.0## м²";
-            this.field_cadastral_num.ReadOnly = true;
-            // 
-            // field_living_area
-            // 
-            this.field_living_area.HeaderText = "Жилая площадь";
-            this.field_living_area.MinimumWidth = 150;
-            this.field_living_area.Name = "living_area";
-            this.field_living_area.DefaultCellStyle.Format = "#0.0## м²";
-            this.field_living_area.ReadOnly = true;
-
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
-            this.ResumeLayout(false);
-        }
-
         public override Viewport Duplicate()
         {
             PremisesListViewport viewport = new PremisesListViewport(this, menuCallback);
@@ -428,24 +414,29 @@ namespace Registry.Viewport
             return true;
         }
 
+        public override int GetRecordCount()
+        {
+            return v_premises.Count;
+        }
+
         public override bool HasAssocOwnerships()
         {
-            return true;
+            return (v_premises.Position > -1);
         }
 
         public override bool HasAssocRestrictions()
         {
-            return true;
+            return (v_premises.Position > -1);
         }
 
         public override bool HasAssocSubPremises()
         {
-            return (v_premises.Position != -1);
+            return (v_premises.Position > -1);
         }
 
         public override bool HasFundHistory()
         {
-            return true;
+            return (v_premises.Position > -1);
         }
 
         public override void ShowOwnerships()
@@ -503,7 +494,7 @@ namespace Registry.Viewport
         {
             if (v_premises.Position == -1)
             {
-                MessageBox.Show("Не выбрано помещение для отображения реквизитов", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Не выбрано помещение для отображения истории найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             FundsHistoryViewport viewport = new FundsHistoryViewport(menuCallback);
@@ -514,6 +505,108 @@ namespace Registry.Viewport
                 (viewport as IMenuController).LoadData();
             menuCallback.AddViewport(viewport);
             menuCallback.SwitchToViewport(viewport);
+        }
+
+        private void ConstructViewport()
+        {
+            this.SuspendLayout();
+            DataGridViewCellStyle dataGridViewCellStyle = new DataGridViewCellStyle();
+            this.Controls.Add(this.dataGridView);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            // 
+            // dataGridView
+            // 
+            this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.Dock = DockStyle.Fill;
+            this.dataGridView.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            dataGridViewCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            dataGridViewCellStyle.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle;
+            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.field_id_premises,
+            this.field_street,
+            this.field_house,
+            this.field_premises_num,
+            this.field_id_premises_type,
+            this.field_total_area,
+            this.field_living_area,
+            this.field_cadastral_num});
+            this.dataGridView.Location = new System.Drawing.Point(6, 6);
+            this.dataGridView.Name = "dataGridView";
+            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView.TabIndex = 0;
+            this.dataGridView.AutoGenerateColumns = false;
+            this.dataGridView.MultiSelect = false;
+            ViewportHelper.SetDoubleBuffered(dataGridView);
+            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
+            this.dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridView.ShowCellToolTips = false;
+            this.dataGridView.AllowUserToResizeRows = false;
+            this.dataGridView.ReadOnly = true;
+            this.dataGridView.VirtualMode = true;
+            // 
+            // field_id_premises
+            // 
+            this.field_id_premises.HeaderText = "№";
+            this.field_id_premises.Name = "id_premises";
+            // 
+            // field_street
+            // 
+            this.field_street.HeaderText = "Адрес";
+            this.field_street.MinimumWidth = 300;
+            this.field_street.Name = "id_street";
+            this.field_street.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+            // 
+            // field_street
+            // 
+            this.field_house.HeaderText = "Дом";
+            this.field_house.Name = "house";
+            this.field_house.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+            // 
+            // field_premises_num
+            // 
+            this.field_premises_num.HeaderText = "Помещение";
+            this.field_premises_num.Name = "premises_num";
+            // 
+            // field_premises_type
+            // 
+            this.field_id_premises_type.HeaderText = "Тип помещения";
+            this.field_id_premises_type.MinimumWidth = 150;
+            this.field_id_premises_type.Name = "id_premises_type";
+            this.field_id_premises_type.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+            this.field_id_premises_type.SortMode = DataGridViewColumnSortMode.Automatic;
+            // 
+            // field_cadastral_num
+            // 
+            this.field_cadastral_num.HeaderText = "Кадастровый номер";
+            this.field_cadastral_num.MinimumWidth = 150;
+            this.field_cadastral_num.Name = "cadastral_num";
+            // 
+            // field_total_area
+            // 
+            this.field_total_area.HeaderText = "Общая площадь";
+            this.field_total_area.MinimumWidth = 120;
+            this.field_total_area.Name = "total_area";
+            this.field_total_area.DefaultCellStyle.Format = "#0.0## м²";
+            // 
+            // field_living_area
+            // 
+            this.field_living_area.HeaderText = "Жилая площадь";
+            this.field_living_area.MinimumWidth = 150;
+            this.field_living_area.Name = "living_area";
+            this.field_living_area.DefaultCellStyle.Format = "#0.0## м²";
+
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.ResumeLayout(false);
         }
     }
 }

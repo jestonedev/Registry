@@ -7,6 +7,7 @@ using System.Data;
 using System.Windows.Forms;
 using Registry.Entities;
 using System.Data.Odbc;
+using System.Threading;
 
 namespace Registry.DataModels
 {
@@ -16,13 +17,13 @@ namespace Registry.DataModels
         private static string selectQuery = "SELECT * FROM buildings b WHERE deleted = 0";
         private static string deleteQuery = "UPDATE buildings SET deleted = 1 WHERE id_building = ?";
         private static string insertQuery = @"INSERT INTO buildings
-                            (id_structure_type, id_street, house
+                            (id_state, id_structure_type, id_street, house
                              , floors, num_premises, num_rooms, num_apartments
                              , num_shared_apartments, living_area, cadastral_num
                              , cadastral_cost, balance_cost, description, startup_year
                              , improvement, elevator)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        private static string updateQuery = @"UPDATE buildings SET id_structure_type = ?, id_street = ?, 
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        private static string updateQuery = @"UPDATE buildings SET id_state = ?, id_structure_type = ?, id_street = ?, 
                             house = ?, floors = ?, num_premises = ?, num_rooms = ?,
                             num_apartments = ?, num_shared_apartments = ?, living_area = ?, cadastral_num = ?, 
                             cadastral_cost = ?, balance_cost = ?, description = ?, startup_year = ?, 
@@ -31,14 +32,15 @@ namespace Registry.DataModels
 
         public bool EditingNewRecord { get; set; }
 
-
-        private BuildingsDataModel()
+        private BuildingsDataModel(ToolStripProgressBar progressBar, int incrementor): base(progressBar, incrementor, selectQuery, tableName)
         {
-            EditingNewRecord = false;
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = selectQuery;
-            table = connection.SqlSelectTable(tableName, command);
+            EditingNewRecord = false;      
+        }
+
+        protected override void ConfigureTable()
+        {
             table.PrimaryKey = new DataColumn[] { table.Columns["id_building"] };
+            table.Columns["id_state"].DefaultValue = 1;
             table.Columns["num_premises"].DefaultValue = 0;
             table.Columns["num_rooms"].DefaultValue = 0;
             table.Columns["num_apartments"].DefaultValue = 0;
@@ -60,9 +62,13 @@ namespace Registry.DataModels
 
         public static BuildingsDataModel GetInstance()
         {
+            return GetInstance(null, 0);
+        }
+
+        public static BuildingsDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
             if (dataModel == null)
-                dataModel = new BuildingsDataModel();
-            DataSetManager.AddModel(dataModel);
+                dataModel = new BuildingsDataModel(progressBar, incrementor);
             return dataModel;
         }
 
@@ -90,6 +96,11 @@ namespace Registry.DataModels
         {
             DbCommand command = connection.CreateCommand();
             command.CommandText = updateQuery;
+
+            DbParameter id_state = connection.CreateParameter();
+            id_state.ParameterName = "id_state";
+            id_state.Value = building.id_state;
+            command.Parameters.Add(id_state);
 
             DbParameter id_structure_type = connection.CreateParameter();
             id_structure_type.ParameterName = "id_structure_type";
@@ -200,6 +211,11 @@ namespace Registry.DataModels
             DbCommand last_id_command = connection.CreateCommand();
             last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
             command.CommandText = insertQuery;
+
+            DbParameter id_state = connection.CreateParameter();
+            id_state.ParameterName = "id_state";
+            id_state.Value = building.id_state;
+            command.Parameters.Add(id_state);
             
             DbParameter id_structure_type = connection.CreateParameter();
             id_structure_type.ParameterName = "id_structure_type";

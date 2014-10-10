@@ -9,6 +9,7 @@ namespace Registry.Entities
     {
         public int? id_premises { get; set; }
         public int? id_building { get; set; }
+        public int? id_state { get; set; }
         public string premises_num { get; set; }
         public double? total_area { get; set; }
         public double? living_area { get; set; }
@@ -59,7 +60,8 @@ namespace Registry.Entities
                 first.description == second.description &&
                 first.cadastral_num == second.cadastral_num &&
                 first.cadastral_cost == second.cadastral_cost &&
-                first.balance_cost == second.balance_cost;
+                first.balance_cost == second.balance_cost &&
+                first.id_state == second.id_state;
         }
 
         public static bool operator !=(Premise first, Premise second)

@@ -22,11 +22,13 @@ namespace Registry.DataModels
                             number= ?, `date` = ?, description = ? WHERE id_ownership_right = ?";
         private static string tableName = "ownership_rights";
 
-        private OwnershipsRightsDataModel()
+        private OwnershipsRightsDataModel(ToolStripProgressBar progressBar, int incrementor)
+            : base(progressBar, incrementor, selectQuery, tableName)
         {
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = selectQuery;
-            table = connection.SqlSelectTable(tableName, command);
+        }
+
+        protected override void ConfigureTable()
+        {
             table.PrimaryKey = new DataColumn[] { table.Columns["id_ownership_right"] };
             table.RowDeleted += new System.Data.DataRowChangeEventHandler(table_RowDeleted);
         }
@@ -38,9 +40,13 @@ namespace Registry.DataModels
 
         public static OwnershipsRightsDataModel GetInstance()
         {
+            return GetInstance(null, 0);
+        }
+
+        public static OwnershipsRightsDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
             if (dataModel == null)
-                dataModel = new OwnershipsRightsDataModel();
-            DataSetManager.AddModel(dataModel);
+                dataModel = new OwnershipsRightsDataModel(progressBar, incrementor);
             return dataModel;
         }
 

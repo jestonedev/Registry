@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data.Common;
+using System.Windows.Forms;
 
 namespace Registry.DataModels
 {
@@ -12,11 +13,13 @@ namespace Registry.DataModels
         private static string selectQuery = "SELECT * FROM premises_types";
         private static string tableName = "premises_types";
 
-        private PremisesTypesDataModel()
+        private PremisesTypesDataModel(ToolStripProgressBar progressBar, int incrementor)
+            : base(progressBar, incrementor, selectQuery, tableName)
+        {          
+        }
+
+        protected override void ConfigureTable()
         {
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = selectQuery;
-            table = connection.SqlSelectTable(tableName, command);
             table.RowDeleted += new System.Data.DataRowChangeEventHandler(table_RowDeleted);
         }
 
@@ -27,9 +30,13 @@ namespace Registry.DataModels
 
         public static PremisesTypesDataModel GetInstance()
         {
+            return GetInstance(null, 0);
+        }
+
+        public static PremisesTypesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
             if (dataModel == null)
-                dataModel = new PremisesTypesDataModel();
-            DataSetManager.AddModel(dataModel);
+                dataModel = new PremisesTypesDataModel(progressBar, incrementor);
             return dataModel;
         }
     }

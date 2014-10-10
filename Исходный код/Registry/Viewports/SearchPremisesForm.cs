@@ -14,9 +14,11 @@ namespace Registry.Viewport
     {
         KladrDataModel kladr = null;
         FundTypesDataModel fundTypes = null;
+        StatesDataModel states = null;
 
         BindingSource v_kladr = null;
         BindingSource v_fundTypes = null;
+        BindingSource v_states = null;
 
         public string GetFilter()
         {
@@ -108,6 +110,12 @@ namespace Registry.Viewport
                     filter += ((DataRowView)v_table[i])["id_premises"].ToString() + ",";
                 filter = filter.TrimEnd(new char[] { ',' }) + ")";
             }
+            if ((checkBoxStateEnable.Checked) && (comboBoxState.SelectedValue != null))
+            {
+                if (filter.Trim() != "")
+                    filter += " AND ";
+                filter += "id_state = " + comboBoxState.SelectedValue.ToString();
+            }
             return filter;
         }
 
@@ -116,6 +124,7 @@ namespace Registry.Viewport
             InitializeComponent();
             kladr = KladrDataModel.GetInstance();
             fundTypes = FundTypesDataModel.GetInstance();
+            states = StatesDataModel.GetInstance();
 
             DataSet ds = DataSetManager.GetDataSet();
 
@@ -127,6 +136,10 @@ namespace Registry.Viewport
             v_fundTypes.DataSource = ds;
             v_fundTypes.DataMember = "fund_types";
 
+            v_states = new BindingSource();
+            v_states.DataSource = ds;
+            v_states.DataMember = "states";
+
             comboBoxStreet.DataSource = v_kladr;
             comboBoxStreet.ValueMember = "id_street";
             comboBoxStreet.DisplayMember = "street_name";
@@ -134,6 +147,10 @@ namespace Registry.Viewport
             comboBoxFundType.DataSource = v_fundTypes;
             comboBoxFundType.ValueMember = "id_fund_type";
             comboBoxFundType.DisplayMember = "fund_type";
+
+            comboBoxState.DataSource = v_states;
+            comboBoxState.ValueMember = "id_state";
+            comboBoxState.DisplayMember = "state_neutral";
         }
 
         private void vButton1_Click(object sender, EventArgs e)
@@ -233,6 +250,11 @@ namespace Registry.Viewport
         {
             if (comboBoxStreet.Items.Count == 0)
                 comboBoxStreet.SelectedIndex = -1;
+        }
+
+        private void checkBoxStateEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            comboBoxState.Enabled = checkBoxStateEnable.Checked;
         }
     }
 }

@@ -14,6 +14,7 @@ namespace Registry.Viewport
         void RibbonTabsStateUpdate();
         void RelationsStateUpdate();
         void HousingRefBooksStateUpdate();
+        void StatusBarStateUpdate();
         void ForceCloseDetachedViewports();
         void AddViewport(Viewport viewport);
         void SwitchToViewport(Viewport viewport);

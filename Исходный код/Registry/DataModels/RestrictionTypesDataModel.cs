@@ -21,11 +21,13 @@ namespace Registry.DataModels
         private static string updateQuery = @"UPDATE restriction_types SET restriction_type = ? WHERE id_restriction_type = ?";
         private static string tableName = "restriction_types";
 
-        private RestrictionTypesDataModel()
+        private RestrictionTypesDataModel(ToolStripProgressBar progressBar, int incrementor)
+            : base(progressBar, incrementor, selectQuery, tableName)
         {
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = selectQuery;
-            table = connection.SqlSelectTable(tableName, command);
+        }
+
+        protected override void ConfigureTable()
+        {
             table.PrimaryKey = new DataColumn[] { table.Columns["id_restriction_type"] };
             table.RowDeleted += new System.Data.DataRowChangeEventHandler(table_RowDeleted);
         }
@@ -35,12 +37,15 @@ namespace Registry.DataModels
             table.AcceptChanges();
         }
 
-
         public static RestrictionTypesDataModel GetInstance()
         {
+            return GetInstance(null, 0);
+        }
+
+        public static RestrictionTypesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
             if (dataModel == null)
-                dataModel = new RestrictionTypesDataModel();
-            DataSetManager.AddModel(dataModel);
+                dataModel = new RestrictionTypesDataModel(progressBar, incrementor);
             return dataModel;
         }
 

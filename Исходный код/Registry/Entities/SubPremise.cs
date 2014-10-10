@@ -9,7 +9,9 @@ namespace Registry.Entities
     {
         public int? id_sub_premises { get; set; }
         public int? id_premises { get; set; }
+        public int? id_state { get; set; }
         public string sub_premises_num { get; set; }
+        public string description { get; set; }
         public double? total_area { get; set; }
 
         public override bool Equals(object obj)
@@ -33,7 +35,9 @@ namespace Registry.Entities
             return first.id_sub_premises == second.id_sub_premises &&
                 first.id_premises == second.id_premises &&
                 first.sub_premises_num == second.sub_premises_num &&
-                first.total_area == second.total_area;
+                first.total_area == second.total_area &&
+                first.description == second.description &&
+                first.id_state == second.id_state;
         }
 
         public static bool operator !=(SubPremise first, SubPremise second)

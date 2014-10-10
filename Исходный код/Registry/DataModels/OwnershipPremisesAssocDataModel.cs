@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data.Common;
+using System.Windows.Forms;
 
 namespace Registry.DataModels
 {
@@ -12,12 +13,9 @@ namespace Registry.DataModels
         private static string selectQuery = "SELECT * FROM ownership_premises_assoc WHERE deleted = 0";
         private static string tableName = "ownership_premises_assoc";
 
-        private OwnershipPremisesAssocDataModel()
+        private OwnershipPremisesAssocDataModel(ToolStripProgressBar progressBar, int incrementor)
+            : base(progressBar, incrementor, selectQuery, tableName)
         {
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = selectQuery;
-            table = connection.SqlSelectTable(tableName, command);
-            table.RowDeleted += new System.Data.DataRowChangeEventHandler(table_RowDeleted);
         }
 
         void table_RowDeleted(object sender, System.Data.DataRowChangeEventArgs e)
@@ -25,12 +23,20 @@ namespace Registry.DataModels
             table.AcceptChanges();
         }
 
+        protected override void ConfigureTable()
+        {
+            table.RowDeleted += new System.Data.DataRowChangeEventHandler(table_RowDeleted);
+        }
 
         public static OwnershipPremisesAssocDataModel GetInstance()
         {
+            return GetInstance(null, 0);
+        }
+
+        public static OwnershipPremisesAssocDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
             if (dataModel == null)
-                dataModel = new OwnershipPremisesAssocDataModel();
-            DataSetManager.AddModel(dataModel);
+                dataModel = new OwnershipPremisesAssocDataModel(progressBar, incrementor);
             return dataModel;
         }
     }

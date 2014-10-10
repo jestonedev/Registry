@@ -9,7 +9,7 @@ using Registry.Entities;
 
 namespace Registry.Viewport
 {
-    internal class OwnershipTypeListViewport: Viewport
+    internal sealed class OwnershipTypeListViewport : Viewport
     {
         #region Components
         private DataGridView dataGridView = new DataGridView();
@@ -238,6 +238,7 @@ namespace Registry.Viewport
             row.EndEdit();
             menuCallback.EditingStateUpdate();
             menuCallback.NavigationStateUpdate();
+            menuCallback.StatusBarStateUpdate();
         }
 
         public override void Close()
@@ -269,6 +270,7 @@ namespace Registry.Viewport
             ((DataRowView)v_snapshot_ownership_right_types[v_snapshot_ownership_right_types.Position]).Row.Delete();
             menuCallback.EditingStateUpdate();
             menuCallback.NavigationStateUpdate();
+            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool CanCancelRecord()
@@ -283,6 +285,7 @@ namespace Registry.Viewport
                 snapshot_ownership_right_types.Rows.Add(DataRowViewToArray(((DataRowView)v_ownership_right_types[i])));
             menuCallback.EditingStateUpdate();
             menuCallback.NavigationStateUpdate();
+            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool CanSaveRecord()
@@ -371,6 +374,11 @@ namespace Registry.Viewport
             return viewport;
         }
 
+        public override int GetRecordCount()
+        {
+            return v_snapshot_ownership_right_types.Count;
+        }
+
         private void ConstructViewport()
         {
             this.SuspendLayout();
@@ -402,6 +410,11 @@ namespace Registry.Viewport
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.MultiSelect = false;
             this.dataGridView.TabIndex = 4;
+            ViewportHelper.SetDoubleBuffered(dataGridView);
+            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridView.ShowCellToolTips = false;
+            this.dataGridView.AllowUserToResizeRows = false;
             // 
             // field_id_ownership_type
             // 

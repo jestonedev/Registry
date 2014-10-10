@@ -28,11 +28,13 @@ namespace Registry.DataModels
        
         public bool EditingNewRecord { get; set; }
 
-        private FundsHistoryDataModel()
+        private FundsHistoryDataModel(ToolStripProgressBar progressBar, int incrementor)
+            : base(progressBar, incrementor, selectQuery, tableName)
         {
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = selectQuery;
-            table = connection.SqlSelectTable(tableName, command);
+        }
+
+        protected override void ConfigureTable()
+        {
             table.PrimaryKey = new DataColumn[] { table.Columns["id_fund"] };
             table.RowDeleted += new System.Data.DataRowChangeEventHandler(table_RowDeleted);
         }
@@ -44,9 +46,13 @@ namespace Registry.DataModels
 
         public static FundsHistoryDataModel GetInstance()
         {
+            return GetInstance(null, 0);
+        }
+
+        public static FundsHistoryDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
             if (dataModel == null)
-                dataModel = new FundsHistoryDataModel();
-            DataSetManager.AddModel(dataModel);
+                dataModel = new FundsHistoryDataModel(progressBar, incrementor);
             return dataModel;
         }
 
@@ -116,11 +122,14 @@ namespace Registry.DataModels
                 if (ParentType == ParentTypeEnum.Premises)
                     command_assoc.CommandText = "INSERT INTO funds_premises_assoc (id_premises, id_fund) VALUES (?, ?)";
                 else
-                {
-                    MessageBox.Show("Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
-                            "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return -1;
-                }
+                    if (ParentType == ParentTypeEnum.SubPremises)
+                        command_assoc.CommandText = "INSERT INTO funds_sub_premises_assoc (id_sub_premises, id_fund) VALUES (?, ?)";
+                    else
+                    {
+                        MessageBox.Show("Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return -1;
+                    }
             try
             {
                 connection.SqlBeginTransaction();

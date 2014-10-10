@@ -9,7 +9,7 @@ using Registry.Entities;
 
 namespace Registry.Viewport
 {
-    internal class SubPremisesViewport: Viewport
+    internal sealed class SubPremisesViewport: Viewport
     {
         #region Components
         private DataGridView dataGridView = new System.Windows.Forms.DataGridView();
@@ -17,6 +17,8 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn field_id_premises = new DataGridViewTextBoxColumn();
         private DataGridViewTextBoxColumn field_sub_premises_num = new DataGridViewTextBoxColumn();
         private DataGridViewTextBoxColumn field_total_area = new DataGridViewTextBoxColumn();
+        private DataGridViewTextBoxColumn field_description = new DataGridViewTextBoxColumn();
+        private DataGridViewComboBoxColumn field_id_state = new DataGridViewComboBoxColumn();
         #endregion Components
 
         public string StaticFilter { get; set; }
@@ -26,10 +28,12 @@ namespace Registry.Viewport
 
         //Modeles
         SubPremisesDataModel sub_premises = null;
+        StatesDataModel states = null;
         DataTable snapshot_sub_premises = new DataTable("snapshot_sub_premises");
 
         //Views
         BindingSource v_sub_premises = null;
+        BindingSource v_states = null;
         BindingSource v_snapshot_sub_premises = null;
 
         //Флаг разрешения синхронизации snapshot и original моделей
@@ -68,6 +72,12 @@ namespace Registry.Viewport
         public override void LoadData()
         {
             sub_premises = SubPremisesDataModel.GetInstance();
+            states = StatesDataModel.GetInstance();
+
+            v_states = new BindingSource();
+            v_states.DataMember = "states";
+            v_states.DataSource = DataSetManager.GetDataSet();
+
             v_sub_premises = new BindingSource();
             v_sub_premises.DataMember = "sub_premises";
             v_sub_premises.Filter = StaticFilter;
@@ -94,6 +104,11 @@ namespace Registry.Viewport
             field_sub_premises_num.DataPropertyName = "sub_premises_num";
             field_sub_premises_num.DataPropertyName = "sub_premises_num";
             field_total_area.DataPropertyName = "total_area";
+            field_description.DataPropertyName = "description";
+            field_id_state.DataPropertyName = "id_state";
+            field_id_state.DataSource = v_states;
+            field_id_state.ValueMember = "id_state";
+            field_id_state.DisplayMember = "state_female";
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
             dataGridView.EditingControlShowing += new DataGridViewEditingControlShowingEventHandler(dataGridView_EditingControlShowing);
             dataGridView.CellValidated += new DataGridViewCellEventHandler(dataGridView_CellValidated);
@@ -150,10 +165,16 @@ namespace Registry.Viewport
                 (dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString() == ""))
                 dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = 0;
             if ((dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].OwningColumn.Name == "sub_premises_num") &&
-                (dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString().Length > 5))
+                (dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString().Length > 20))
             {
-                MessageBox.Show("Длина номера комнаты не может превышать 5 символов", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Длина номера комнаты не может превышать 20 символов", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString().Substring(0, 5);
+            }
+            if ((dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].OwningColumn.Name == "description") &&
+                (dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString().Length > 65535))
+            {
+                MessageBox.Show("Длина примечания комнаты не может превышать 65535 символов", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString().Substring(0, 65535);
             }
         }
 
@@ -180,19 +201,27 @@ namespace Registry.Viewport
                 {
                     DataRowView row = ((DataRowView)v_snapshot_sub_premises[row_index]);
                     row["id_premises"] = e.Row["id_premises"];
+                    row["id_state"] = e.Row["id_state"];
                     row["sub_premises_num"] = e.Row["sub_premises_num"];
                     row["total_area"] = e.Row["total_area"];
+                    row["description"] = e.Row["description"];
                 }
             }
             else
                 if (e.Action == DataRowAction.Add)
                 {
-                    snapshot_sub_premises.Rows.Add(new object[] { 
-                        e.Row["id_sub_premises"], 
-                        e.Row["id_premises"],                    
-                        e.Row["sub_premises_num"],
-                        e.Row["total_area"]
-                    });
+                    //Если строка имеется в текущем контексте оригинального представления, то добавить его и в snapshot, 
+                    //иначе - объект не принадлежит текущему родителю
+                    int row_index = v_sub_premises.Find("id_sub_premises", e.Row["id_sub_premises"]); 
+                    if (row_index != -1)
+                        snapshot_sub_premises.Rows.Add(new object[] { 
+                            e.Row["id_sub_premises"], 
+                            e.Row["id_premises"],   
+                            e.Row["id_state"],                 
+                            e.Row["sub_premises_num"],
+                            e.Row["total_area"],
+                            e.Row["description"]
+                        });
                 }
         }
 
@@ -225,9 +254,11 @@ namespace Registry.Viewport
                     SubPremise sp = new SubPremise();
                     DataGridViewRow row = dataGridView.Rows[i];
                     sp.id_sub_premises = row.Cells["id_sub_premises"].Value == DBNull.Value ? null : (int?)Convert.ToInt32(row.Cells["id_sub_premises"].Value);
-                    sp.id_premises = row.Cells["id_premises"].Value == DBNull.Value ? null : (int?)Convert.ToDouble(row.Cells["id_premises"].Value);
+                    sp.id_premises = row.Cells["id_premises"].Value == DBNull.Value ? null : (int?)Convert.ToInt32(row.Cells["id_premises"].Value);
+                    sp.id_state = row.Cells["id_state"].Value == DBNull.Value ? null : (int?)Convert.ToInt32(row.Cells["id_state"].Value);
                     sp.sub_premises_num = row.Cells["sub_premises_num"].Value == DBNull.Value ? null : row.Cells["sub_premises_num"].Value.ToString();
                     sp.total_area = row.Cells["total_area"].Value == DBNull.Value ? null : (double?)Convert.ToDouble(row.Cells["total_area"].Value);
+                    sp.description = row.Cells["description"].Value == DBNull.Value ? null : row.Cells["description"].Value.ToString();
                     list.Add(sp);
                 }
             }
@@ -242,9 +273,11 @@ namespace Registry.Viewport
                 SubPremise sp = new SubPremise();
                 DataRowView row = ((DataRowView)v_sub_premises[i]);
                 sp.id_sub_premises = row["id_sub_premises"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_sub_premises"]);
-                sp.id_premises = row["id_premises"] == DBNull.Value ? null : (int?)Convert.ToDouble(row["id_premises"]);
+                sp.id_premises = row["id_premises"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_premises"]);
+                sp.id_state = row["id_state"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_state"]);
                 sp.sub_premises_num = row["sub_premises_num"] == DBNull.Value ? null : row["sub_premises_num"].ToString();
                 sp.total_area = row["total_area"] == DBNull.Value ? null : (double?)row["total_area"];
+                sp.description = row["description"] == DBNull.Value ? null : row["description"].ToString();
                 list.Add(sp);
             }
             return list;
@@ -293,8 +326,10 @@ namespace Registry.Viewport
             return new object[] { 
                 dataRowView["id_sub_premises"], 
                 dataRowView["id_premises"], 
+                dataRowView["id_state"], 
                 dataRowView["sub_premises_num"], 
                 dataRowView["total_area"],
+                dataRowView["description"],
                 dataRowView["deleted"]
             };
         }
@@ -313,6 +348,7 @@ namespace Registry.Viewport
             row["total_area"] = 0;
             menuCallback.EditingStateUpdate();
             menuCallback.NavigationStateUpdate();
+            menuCallback.StatusBarStateUpdate();
         }
 
         public override void Close()
@@ -344,6 +380,7 @@ namespace Registry.Viewport
             ((DataRowView)v_snapshot_sub_premises[v_snapshot_sub_premises.Position]).Row.Delete();
             menuCallback.EditingStateUpdate();
             menuCallback.NavigationStateUpdate();
+            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool CanCancelRecord()
@@ -358,6 +395,7 @@ namespace Registry.Viewport
                 snapshot_sub_premises.Rows.Add(DataRowViewToArray(((DataRowView)v_sub_premises[i])));
             menuCallback.EditingStateUpdate();
             menuCallback.NavigationStateUpdate();
+            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool CanSaveRecord()
@@ -365,10 +403,26 @@ namespace Registry.Viewport
             return SnapshotHasChanges();
         }
 
+        private bool ValidateSubPremises(List<SubPremise> subPremises)
+        {
+            foreach (SubPremise subPremise in subPremises)
+                if (subPremise.id_state == null)
+                {
+                    MessageBox.Show("Необходимо выбрать состояние помещения", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            return true;
+        }
+
         public override void SaveRecord()
         {
             sync_views = false;
             List<SubPremise> list = SubPremisesFromViewport();
+            if (!ValidateSubPremises(list))
+            {
+                sync_views = true;
+                return;
+            }
             for (int i = 0; i < list.Count; i++)
             {
                 DataRow row = sub_premises.Select().Rows.Find(((SubPremise)list[i]).id_sub_premises);
@@ -376,17 +430,25 @@ namespace Registry.Viewport
                 {
                     int id_sub_premises = sub_premises.Insert(list[i]);
                     if (id_sub_premises == -1)
+                    {
+                        sync_views = true;
                         return;
+                    }
                     ((DataRowView)v_snapshot_sub_premises[i])["id_sub_premises"] = id_sub_premises;
                     sub_premises.Select().Rows.Add(DataRowViewToArray((DataRowView)v_snapshot_sub_premises[i]));
                 }
                 else
                 {
                     if (sub_premises.Update(list[i]) == -1)
+                    {
+                        sync_views = true;
                         return;
+                    }
                     row["id_premises"] = list[i].id_premises == null ? DBNull.Value : (object)list[i].id_premises;
+                    row["id_state"] = list[i].id_state == null ? DBNull.Value : (object)list[i].id_state;
                     row["sub_premises_num"] = list[i].sub_premises_num == null ? DBNull.Value : (object)list[i].sub_premises_num;
                     row["total_area"] = list[i].total_area == null ? DBNull.Value : (object)list[i].total_area;
+                    row["description"] = list[i].description == null ? DBNull.Value : (object)list[i].description;
                 }
             }
             list = SubPremisesFromView();
@@ -401,7 +463,10 @@ namespace Registry.Viewport
                 if (row_index == -1)
                 {
                     if (sub_premises.Delete(list[i].id_sub_premises.Value) == -1)
+                    {
+                        sync_views = true;
                         return;
+                    }
                     sub_premises.Select().Rows.Find(((SubPremise)list[i]).id_sub_premises).Delete();
                 }
             }
@@ -433,6 +498,46 @@ namespace Registry.Viewport
             return ((ParentRow != null) && ((ParentRow.RowState == DataRowState.Detached) || (ParentRow.RowState == DataRowState.Deleted)));
         }
 
+        public override bool HasFundHistory()
+        {
+            return (v_snapshot_sub_premises.Count > 0);
+        }
+
+        public override void ShowFundHistory()
+        {
+            if (SnapshotHasChanges())
+            {
+                DialogResult result = MessageBox.Show("Перед изменением истории найма необходимо сохранить изменения в базу данных. Вы хотите это сделать?",
+                    "Внимание", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                    SaveRecord();
+                else
+                    if (result == DialogResult.No)
+                        CancelRecord();
+                    else
+                        return;
+            }
+            if (v_snapshot_sub_premises.Position == -1)
+            {
+                MessageBox.Show("Не выбрана комната для отображения истории найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            FundsHistoryViewport viewport = new FundsHistoryViewport(menuCallback);
+            viewport.StaticFilter = "id_sub_premises = " + 
+                Convert.ToInt32(((DataRowView)v_snapshot_sub_premises[v_snapshot_sub_premises.Position])["id_sub_premises"]);
+            viewport.ParentRow = ((DataRowView)v_snapshot_sub_premises[v_snapshot_sub_premises.Position]).Row;
+            viewport.ParentType = ParentTypeEnum.SubPremises;
+            if ((viewport as IMenuController).CanLoadData())
+                (viewport as IMenuController).LoadData();
+            menuCallback.AddViewport(viewport);
+            menuCallback.SwitchToViewport(viewport);
+        }
+
+        public override int GetRecordCount()
+        {
+            return v_snapshot_sub_premises.Count;
+        }
+
         private void ConstructViewport()
         {
             this.SuspendLayout();
@@ -460,13 +565,20 @@ namespace Registry.Viewport
                 field_id_sub_premises,
                 field_id_premises,
                 field_sub_premises_num,
-                field_total_area });
+                field_total_area,
+                field_description,
+                field_id_state });
             dataGridView.Name = "dataGridView";
             dataGridView.TabIndex = 0;
             dataGridView.AutoGenerateColumns = false;
             dataGridView.MultiSelect = false;
             dataGridView.AllowUserToAddRows = false;
-            dataGridView.AllowUserToDeleteRows = false;
+            dataGridView.AllowUserToDeleteRows = false; 
+            ViewportHelper.SetDoubleBuffered(dataGridView);
+            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridView.ShowCellToolTips = false;
+            this.dataGridView.AllowUserToResizeRows = false;
             // 
             // field_id_sub_premises
             // 
@@ -482,14 +594,14 @@ namespace Registry.Viewport
             // 
             // field_sub_premises_num
             // 
-            field_sub_premises_num.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            field_sub_premises_num.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             field_sub_premises_num.HeaderText = "Номер комнаты";
             field_sub_premises_num.MinimumWidth = 150;
             field_sub_premises_num.Name = "sub_premises_num";
             // 
             // field_sub_premises_num
             // 
-            field_sub_premises_num.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            field_sub_premises_num.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
             field_sub_premises_num.HeaderText = "Номер комнаты";
             field_sub_premises_num.MinimumWidth = 150;
             field_sub_premises_num.Name = "sub_premises_num";
@@ -500,7 +612,21 @@ namespace Registry.Viewport
             field_total_area.MinimumWidth = 150;
             field_total_area.Name = "total_area";
             field_total_area.DefaultCellStyle.Format = "#0.0## м²";
-            field_total_area.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            field_total_area.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            // 
+            // field_description
+            // 
+            field_description.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            field_description.HeaderText = "Примечание";
+            field_description.MinimumWidth = 300;
+            field_description.Name = "description";
+            // 
+            // field_id_state
+            // 
+            field_id_state.HeaderText = "Текущее состояние";
+            field_id_state.Name = "id_state";
+            field_id_state.MinimumWidth = 150;
+            field_id_state.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
 
             ((System.ComponentModel.ISupportInitialize)(dataGridView)).EndInit();
             this.ResumeLayout(false);

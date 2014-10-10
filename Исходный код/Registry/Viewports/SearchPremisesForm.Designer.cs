@@ -56,6 +56,9 @@
             this.checkBoxAcceptedByDonationEnable = new System.Windows.Forms.CheckBox();
             this.checkBoxAcceptedByDonation = new System.Windows.Forms.CheckBox();
             this.textBoxHouse = new System.Windows.Forms.TextBox();
+            this.comboBoxState = new System.Windows.Forms.ComboBox();
+            this.checkBoxStateEnable = new System.Windows.Forms.CheckBox();
+            this.label7 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloor)).BeginInit();
             this.SuspendLayout();
             // 
@@ -64,7 +67,7 @@
             this.vButton2.AllowAnimations = true;
             this.vButton2.BackColor = System.Drawing.Color.Transparent;
             this.vButton2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButton2.Location = new System.Drawing.Point(220, 337);
+            this.vButton2.Location = new System.Drawing.Point(220, 378);
             this.vButton2.Name = "vButton2";
             this.vButton2.RoundedCornersMask = ((byte)(15));
             this.vButton2.Size = new System.Drawing.Size(100, 30);
@@ -77,7 +80,7 @@
             // 
             this.vButton1.AllowAnimations = true;
             this.vButton1.BackColor = System.Drawing.Color.Transparent;
-            this.vButton1.Location = new System.Drawing.Point(102, 337);
+            this.vButton1.Location = new System.Drawing.Point(102, 378);
             this.vButton1.Name = "vButton1";
             this.vButton1.RoundedCornersMask = ((byte)(15));
             this.vButton1.Size = new System.Drawing.Size(100, 30);
@@ -257,7 +260,7 @@
             // checkBoxAcceptedByExchangeEnable
             // 
             this.checkBoxAcceptedByExchangeEnable.AutoSize = true;
-            this.checkBoxAcceptedByExchangeEnable.Location = new System.Drawing.Point(15, 274);
+            this.checkBoxAcceptedByExchangeEnable.Location = new System.Drawing.Point(15, 313);
             this.checkBoxAcceptedByExchangeEnable.Name = "checkBoxAcceptedByExchangeEnable";
             this.checkBoxAcceptedByExchangeEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAcceptedByExchangeEnable.TabIndex = 14;
@@ -268,7 +271,7 @@
             // 
             this.checkBoxAcceptedByExchange.AutoSize = true;
             this.checkBoxAcceptedByExchange.Enabled = false;
-            this.checkBoxAcceptedByExchange.Location = new System.Drawing.Point(36, 273);
+            this.checkBoxAcceptedByExchange.Location = new System.Drawing.Point(36, 312);
             this.checkBoxAcceptedByExchange.Name = "checkBoxAcceptedByExchange";
             this.checkBoxAcceptedByExchange.Size = new System.Drawing.Size(284, 17);
             this.checkBoxAcceptedByExchange.TabIndex = 15;
@@ -278,7 +281,7 @@
             // checkBoxForOrpahnsEnable
             // 
             this.checkBoxForOrpahnsEnable.AutoSize = true;
-            this.checkBoxForOrpahnsEnable.Location = new System.Drawing.Point(15, 253);
+            this.checkBoxForOrpahnsEnable.Location = new System.Drawing.Point(15, 292);
             this.checkBoxForOrpahnsEnable.Name = "checkBoxForOrpahnsEnable";
             this.checkBoxForOrpahnsEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxForOrpahnsEnable.TabIndex = 12;
@@ -289,7 +292,7 @@
             // 
             this.checkBoxForOrpahns.AutoSize = true;
             this.checkBoxForOrpahns.Enabled = false;
-            this.checkBoxForOrpahns.Location = new System.Drawing.Point(36, 252);
+            this.checkBoxForOrpahns.Location = new System.Drawing.Point(36, 291);
             this.checkBoxForOrpahns.Name = "checkBoxForOrpahns";
             this.checkBoxForOrpahns.Size = new System.Drawing.Size(173, 17);
             this.checkBoxForOrpahns.TabIndex = 13;
@@ -299,7 +302,7 @@
             // checkBoxAcceptedByOtherEnable
             // 
             this.checkBoxAcceptedByOtherEnable.AutoSize = true;
-            this.checkBoxAcceptedByOtherEnable.Location = new System.Drawing.Point(15, 315);
+            this.checkBoxAcceptedByOtherEnable.Location = new System.Drawing.Point(15, 354);
             this.checkBoxAcceptedByOtherEnable.Name = "checkBoxAcceptedByOtherEnable";
             this.checkBoxAcceptedByOtherEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAcceptedByOtherEnable.TabIndex = 18;
@@ -310,7 +313,7 @@
             // 
             this.checkBoxAcceptedByOther.AutoSize = true;
             this.checkBoxAcceptedByOther.Enabled = false;
-            this.checkBoxAcceptedByOther.Location = new System.Drawing.Point(36, 314);
+            this.checkBoxAcceptedByOther.Location = new System.Drawing.Point(36, 353);
             this.checkBoxAcceptedByOther.Name = "checkBoxAcceptedByOther";
             this.checkBoxAcceptedByOther.Size = new System.Drawing.Size(370, 17);
             this.checkBoxAcceptedByOther.TabIndex = 19;
@@ -320,7 +323,7 @@
             // checkBoxAcceptedByDonationEnable
             // 
             this.checkBoxAcceptedByDonationEnable.AutoSize = true;
-            this.checkBoxAcceptedByDonationEnable.Location = new System.Drawing.Point(15, 294);
+            this.checkBoxAcceptedByDonationEnable.Location = new System.Drawing.Point(15, 333);
             this.checkBoxAcceptedByDonationEnable.Name = "checkBoxAcceptedByDonationEnable";
             this.checkBoxAcceptedByDonationEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAcceptedByDonationEnable.TabIndex = 16;
@@ -331,7 +334,7 @@
             // 
             this.checkBoxAcceptedByDonation.AutoSize = true;
             this.checkBoxAcceptedByDonation.Enabled = false;
-            this.checkBoxAcceptedByDonation.Location = new System.Drawing.Point(36, 293);
+            this.checkBoxAcceptedByDonation.Location = new System.Drawing.Point(36, 332);
             this.checkBoxAcceptedByDonation.Name = "checkBoxAcceptedByDonation";
             this.checkBoxAcceptedByDonation.Size = new System.Drawing.Size(302, 17);
             this.checkBoxAcceptedByDonation.TabIndex = 17;
@@ -346,12 +349,44 @@
             this.textBoxHouse.Size = new System.Drawing.Size(375, 20);
             this.textBoxHouse.TabIndex = 38;
             // 
+            // comboBoxState
+            // 
+            this.comboBoxState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxState.Enabled = false;
+            this.comboBoxState.FormattingEnabled = true;
+            this.comboBoxState.Location = new System.Drawing.Point(36, 264);
+            this.comboBoxState.Name = "comboBoxState";
+            this.comboBoxState.Size = new System.Drawing.Size(375, 21);
+            this.comboBoxState.TabIndex = 40;
+            // 
+            // checkBoxStateEnable
+            // 
+            this.checkBoxStateEnable.AutoSize = true;
+            this.checkBoxStateEnable.Location = new System.Drawing.Point(15, 267);
+            this.checkBoxStateEnable.Name = "checkBoxStateEnable";
+            this.checkBoxStateEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxStateEnable.TabIndex = 39;
+            this.checkBoxStateEnable.UseVisualStyleBackColor = true;
+            this.checkBoxStateEnable.CheckedChanged += new System.EventHandler(this.checkBoxStateEnable_CheckedChanged);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(9, 248);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(123, 13);
+            this.label7.TabIndex = 41;
+            this.label7.Text = "Состояние помещения";
+            // 
             // SearchPremisesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
-            this.ClientSize = new System.Drawing.Size(423, 375);
+            this.ClientSize = new System.Drawing.Size(423, 417);
+            this.Controls.Add(this.comboBoxState);
+            this.Controls.Add(this.checkBoxStateEnable);
+            this.Controls.Add(this.label7);
             this.Controls.Add(this.textBoxHouse);
             this.Controls.Add(this.checkBoxAcceptedByOtherEnable);
             this.Controls.Add(this.checkBoxAcceptedByOther);
@@ -420,5 +455,8 @@
         private System.Windows.Forms.CheckBox checkBoxAcceptedByDonationEnable;
         private System.Windows.Forms.CheckBox checkBoxAcceptedByDonation;
         private System.Windows.Forms.TextBox textBoxHouse;
+        private System.Windows.Forms.ComboBox comboBoxState;
+        private System.Windows.Forms.CheckBox checkBoxStateEnable;
+        private System.Windows.Forms.Label label7;
     }
 }

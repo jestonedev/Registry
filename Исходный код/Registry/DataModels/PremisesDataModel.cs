@@ -16,13 +16,13 @@ namespace Registry.DataModels
         private static string selectQuery = "SELECT * FROM premises WHERE deleted = 0";
         private static string deleteQuery = "UPDATE premises SET deleted = 1 WHERE id_premises = ?";
         private static string insertQuery = @"INSERT INTO premises
-                            (id_building, premises_num, total_area
+                            (id_building, id_state, premises_num, total_area
                              , living_area, num_beds, id_premises_type, id_premises_kind
                              , floor, for_orphans, accepted_by_exchange
                              , accepted_by_donation, accepted_by_other, cadastral_num, cadastral_cost
                              , balance_cost, description)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        private static string updateQuery = @"UPDATE premises SET id_building = ?, premises_num = ?, 
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        private static string updateQuery = @"UPDATE premises SET id_building = ?, id_state = ?, premises_num = ?, 
                             total_area = ?, living_area = ?, num_beds = ?, id_premises_type = ?,
                             id_premises_kind = ?, floor = ?, for_orphans = ?, accepted_by_exchange = ?, 
                             accepted_by_donation = ?, accepted_by_other = ?, cadastral_num = ?, cadastral_cost = ?, 
@@ -31,12 +31,16 @@ namespace Registry.DataModels
         
         public bool EditingNewRecord { get; set; }
 
-        private PremisesDataModel()
+        private PremisesDataModel(ToolStripProgressBar progressBar, int incrementor)
+            : base(progressBar, incrementor, selectQuery, tableName)
         {
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = selectQuery;
-            table = connection.SqlSelectTable(tableName, command);
+            EditingNewRecord = false;            
+        }
+
+        protected override void ConfigureTable()
+        {
             table.PrimaryKey = new DataColumn[] { table.Columns["id_premise"] };
+            table.Columns["id_state"].DefaultValue = 1;
             table.Columns["living_area"].DefaultValue = 0;
             table.Columns["total_area"].DefaultValue = 0;
             table.Columns["num_beds"].DefaultValue = 0;
@@ -59,9 +63,13 @@ namespace Registry.DataModels
 
         public static PremisesDataModel GetInstance()
         {
+            return GetInstance(null, 0);
+        }
+
+        public static PremisesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
             if (dataModel == null)
-                dataModel = new PremisesDataModel();
-            DataSetManager.AddModel(dataModel);
+                dataModel = new PremisesDataModel(progressBar, incrementor);
             return dataModel;
         }
 
@@ -94,6 +102,11 @@ namespace Registry.DataModels
             id_building.ParameterName = "id_building";
             id_building.Value = premise.id_building;
             command.Parameters.Add(id_building);
+
+            DbParameter id_state = connection.CreateParameter();
+            id_state.ParameterName = "id_state";
+            id_state.Value = premise.id_state;
+            command.Parameters.Add(id_state);
 
             DbParameter premises_num = connection.CreateParameter();
             premises_num.ParameterName = "premises_num";
@@ -204,6 +217,11 @@ namespace Registry.DataModels
             id_building.ParameterName = "id_building";
             id_building.Value = premise.id_building;
             command.Parameters.Add(id_building);
+
+            DbParameter id_state = connection.CreateParameter();
+            id_state.ParameterName = "id_state";
+            id_state.Value = premise.id_state;
+            command.Parameters.Add(id_state);
 
             DbParameter premises_num = connection.CreateParameter();
             premises_num.ParameterName = "premises_num";

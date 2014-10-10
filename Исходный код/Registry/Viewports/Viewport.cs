@@ -8,6 +8,7 @@ namespace Registry.Viewport
     public class Viewport: System.Windows.Forms.TabPage, IMenuController
     {
         protected readonly IMenuCallback menuCallback;
+        private bool selected_ = false;
 
         protected Viewport(IMenuCallback menuCallback)
         {
@@ -18,6 +19,11 @@ namespace Registry.Viewport
         {
             menuCallback.SwitchToPreviousViewport();
             Dispose();
+        }
+
+        public virtual int GetRecordCount()
+        {
+            return 0;
         }
 
         public virtual Viewport Duplicate()
@@ -293,6 +299,18 @@ namespace Registry.Viewport
         public virtual bool ViewportDetached()
         {
             return false;
+        }
+
+        public bool Selected
+        {
+            get
+            {
+                return selected_;
+            }
+            set
+            {
+                selected_ = value;
+            }
         }
     }
 }

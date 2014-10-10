@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Data.Common;
+using System.Windows.Forms;
 
 namespace Registry.DataModels
 {
@@ -12,11 +13,13 @@ namespace Registry.DataModels
         private static string selectQuery = "SELECT * FROM funds_buildings_assoc WHERE deleted = 0";
         private static string tableName = "funds_buildings_assoc";
 
-        private FundsBuildingsAssocDataModel()
+        private FundsBuildingsAssocDataModel(ToolStripProgressBar progressBar, int incrementor)
+            : base(progressBar, incrementor, selectQuery, tableName)
         {
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = selectQuery;
-            table = connection.SqlSelectTable(tableName, command);
+        }
+
+        protected override void ConfigureTable()
+        {
             table.RowDeleted += new System.Data.DataRowChangeEventHandler(table_RowDeleted);
         }
 
@@ -27,9 +30,13 @@ namespace Registry.DataModels
 
         public static FundsBuildingsAssocDataModel GetInstance()
         {
+            return GetInstance(null, 0);
+        }
+
+        public static FundsBuildingsAssocDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
             if (dataModel == null)
-                dataModel = new FundsBuildingsAssocDataModel();
-            DataSetManager.AddModel(dataModel);
+                dataModel = new FundsBuildingsAssocDataModel(progressBar, incrementor);
             return dataModel;
         }
     }

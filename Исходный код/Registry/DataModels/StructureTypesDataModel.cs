@@ -21,11 +21,13 @@ namespace Registry.DataModels
         private static string updateQuery = @"UPDATE structure_types SET structure_type = ? WHERE id_structure_type = ?";
         private static string tableName = "structure_types";
 
-        private StructureTypesDataModel()
+        private StructureTypesDataModel(ToolStripProgressBar progressBar, int incrementor)
+            : base(progressBar, incrementor, selectQuery, tableName)
         {
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = selectQuery;
-            table = connection.SqlSelectTable(tableName, command);
+        }
+
+        protected override void ConfigureTable()
+        {
             table.PrimaryKey = new DataColumn[] { table.Columns["id_structure_type"] };
             table.RowDeleted += new System.Data.DataRowChangeEventHandler(table_RowDeleted);
         }
@@ -37,9 +39,13 @@ namespace Registry.DataModels
 
         public static StructureTypesDataModel GetInstance()
         {
+            return GetInstance(null, 0);
+        }
+
+        public static StructureTypesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
             if (dataModel == null)
-                dataModel = new StructureTypesDataModel();
-            DataSetManager.AddModel(dataModel);
+                dataModel = new StructureTypesDataModel(progressBar, incrementor);
             return dataModel;
         }
 

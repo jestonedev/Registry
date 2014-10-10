@@ -9,7 +9,7 @@ using Registry.Entities;
 
 namespace Registry.Viewport
 {
-    internal class BuildingViewport: Viewport
+    internal sealed class BuildingViewport : Viewport
     {
         #region Components
         private TableLayoutPanel tableLayoutPanel = new TableLayoutPanel();
@@ -54,11 +54,13 @@ namespace Registry.Viewport
         private Label label17 = new Label();
         private Label label18 = new Label();
         private Label label19 = new Label();
+        private Label label40 = new Label();
         private Panel panel1 = new Panel();
         private Panel panel2 = new Panel();
         private TextBox textBoxHouse = new TextBox();
         private TextBox textBoxDescription = new TextBox();
         private ComboBox comboBoxCurrentFundType = new ComboBox();
+        private ComboBox comboBoxState = new ComboBox();
         private MaskedTextBox maskedTextBoxCadastralNum = new MaskedTextBox();
         private DataGridView dataGridViewRestrictions = new DataGridView();
         private DataGridView dataGridViewOwnerships = new DataGridView();
@@ -89,6 +91,7 @@ namespace Registry.Viewport
         private OwnershipRightTypesDataModel ownershipRightTypes = null;
         private OwnershipBuildingsAssocDataModel ownershipBuildingsAssoc = null;
         private FundTypesDataModel fundTypes = null;
+        private StatesDataModel states = null;
 
         //Views
         private BindingSource v_buildings = null;
@@ -103,6 +106,7 @@ namespace Registry.Viewport
         private BindingSource v_ownershipRightTypes = null;
         private BindingSource v_ownershipBuildingsAssoc = null;
         private BindingSource v_fundType = null;
+        private BindingSource v_states = null;
 
         //Текущее состояние viewport'а
         public string StaticFilter { get; set; }
@@ -144,9 +148,8 @@ namespace Registry.Viewport
 
         public override void LoadData()
         {
+            //Асинхронные модели
             buildings = BuildingsDataModel.GetInstance();
-            buildingsAggreagate = BuildingsAggregatedDataModel.GetInstance();
-            buildingsCurrentFund = BuildingsCurrentFundsDataModel.GetInstance();
             kladr = KladrDataModel.GetInstance();
             structureTypes = StructureTypesDataModel.GetInstance();
             restrictions = RestrictionsDataModel.GetInstance();
@@ -156,6 +159,24 @@ namespace Registry.Viewport
             ownershipRightTypes = OwnershipRightTypesDataModel.GetInstance();
             ownershipBuildingsAssoc = OwnershipBuildingsAssocDataModel.GetInstance();
             fundTypes = FundTypesDataModel.GetInstance();
+            states = StatesDataModel.GetInstance();
+
+            //Синхронные модели
+            buildingsAggreagate = BuildingsAggregatedDataModel.GetInstance();
+            buildingsCurrentFund = BuildingsCurrentFundsDataModel.GetInstance();
+
+            //Ожидаем дозагрузки данных, если это необходимо
+            buildings.Select();
+            kladr.Select();
+            structureTypes.Select();
+            restrictions.Select();
+            restrictionTypes.Select();
+            restrictionBuildingsAssoc.Select();
+            ownershipRights.Select();
+            ownershipRightTypes.Select();
+            ownershipBuildingsAssoc.Select();
+            fundTypes.Select();
+            states.Select();
 
             DataSet ds = DataSetManager.GetDataSet();
 
@@ -195,6 +216,10 @@ namespace Registry.Viewport
             v_fundType.DataMember = "fund_types";
             v_fundType.DataSource = ds;
 
+            v_states = new BindingSource();
+            v_states.DataMember = "states";
+            v_states.DataSource = ds;
+
             v_buildings = new BindingSource();
             v_buildings.CurrentItemChanged += new EventHandler(v_buildings_CurrentItemChanged);
             v_buildings.DataMember = "buildings";
@@ -228,6 +253,7 @@ namespace Registry.Viewport
             comboBoxStreet.DropDownClosed += new EventHandler(comboBoxStreet_DropDownClosed);
             comboBoxStreet.SelectedIndexChanged += new EventHandler(comboBoxStreet_SelectedIndexChanged);
             comboBoxStructureType.SelectedIndexChanged += new EventHandler(comboBoxStructureType_SelectedIndexChanged);
+            comboBoxState.SelectedIndexChanged += new EventHandler(comboBoxState_SelectedIndexChanged);
             textBoxHouse.TextChanged += new EventHandler(textBoxHouse_TextChanged);
             textBoxDescription.TextChanged += new EventHandler(textBoxDescription_TextChanged);
             maskedTextBoxCadastralNum.TextChanged += new EventHandler(maskedTextBoxCadastralNum_TextChanged);
@@ -315,17 +341,22 @@ namespace Registry.Viewport
                 {
                     label19.Visible = true;
                     comboBoxCurrentFundType.Visible = true;
-                    checkBoxImprovement.Location = new System.Drawing.Point(159, 125);
+                    checkBoxImprovement.Location = new System.Drawing.Point(159, 154);
+                    checkBoxElevator.Location = new System.Drawing.Point(19, 154);
+                    this.tableLayoutPanel.RowStyles[0].Height = 210F;
                 }
                 else
                 {
                     label19.Visible = false;
                     comboBoxCurrentFundType.Visible = false;
-                    checkBoxImprovement.Location = new System.Drawing.Point(19, 96);
+                    checkBoxImprovement.Location = new System.Drawing.Point(159, 125);
+                    checkBoxElevator.Location = new System.Drawing.Point(19, 125);
+                    this.tableLayoutPanel.RowStyles[0].Height = 185F;
                 }
             }
             v_kladr.Filter = "";
-            menuCallback.NavigationStateUpdate();
+            if (Selected)
+                menuCallback.NavigationStateUpdate();
             if (v_buildings.Position == -1)
                 return;
             if (viewportState == ViewportState.NewRowState)
@@ -393,6 +424,12 @@ namespace Registry.Viewport
             comboBoxCurrentFundType.DataBindings.Clear();
             comboBoxCurrentFundType.DataBindings.Add("SelectedValue", v_buildingsCurrentFund, "id_fund_type", true, DataSourceUpdateMode.Never, DBNull.Value);
 
+            comboBoxState.DataSource = v_states;
+            comboBoxState.ValueMember = "id_state";
+            comboBoxState.DisplayMember = "state_neutral";
+            comboBoxState.DataBindings.Clear();
+            comboBoxState.DataBindings.Add("SelectedValue", v_buildings, "id_state", true, DataSourceUpdateMode.Never, DBNull.Value);
+
             numericUpDownSocialPremisesCount.DataBindings.Clear();
             numericUpDownSocialPremisesCount.DataBindings.Add("Minimum", v_buildingsAggreagate, "social_premises_count", true, DataSourceUpdateMode.Never, 0);
             numericUpDownSocialPremisesCount.DataBindings.Add("Maximum", v_buildingsAggreagate, "social_premises_count", true, DataSourceUpdateMode.Never, 0);
@@ -427,6 +464,11 @@ namespace Registry.Viewport
             field_ownership_number.DataPropertyName = "number";
             field_ownership_date.DataPropertyName = "date";
             field_ownership_description.DataPropertyName = "description";
+        }
+
+        void comboBoxState_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
         }
 
         void numericUpDownLivingArea_ValueChanged(object sender, EventArgs e)
@@ -559,6 +601,7 @@ namespace Registry.Viewport
             buildings.EditingNewRecord = true;
             menuCallback.NavigationStateUpdate();
             menuCallback.EditingStateUpdate();
+            menuCallback.StatusBarStateUpdate();
             ViewportFromBuilding(building);
         }
 
@@ -573,6 +616,12 @@ namespace Registry.Viewport
             {
                 MessageBox.Show("Необходимо выбрать улицу", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 comboBoxStreet.Focus();
+                return false;
+            }
+            if (building.id_state == null)
+            {
+                MessageBox.Show("Необходимо выбрать состояние здания", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                comboBoxState.Focus();
                 return false;
             }
             if ((building.house == null) || (building.house.Trim() == ""))
@@ -599,8 +648,16 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             Building building = BuildingFromViewport();
+            bool updatePremisesState = false;
             if (!ValidateBuilding(building))
                 return;
+            if ((viewportState == ViewportState.ModifyRowState) && (building.id_state != BuildingFromView().id_state))
+            {
+                if (MessageBox.Show("Вы пытаетесь изменить состояние здания. В результате всем помещениям данного здания будет назначено то же состояние. " +
+                    "Вы уверены, что хотите сохранить данные?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                    return;
+                updatePremisesState = true;
+            }
             switch (viewportState)
             {
                 case ViewportState.ReadState:
@@ -618,7 +675,6 @@ namespace Registry.Viewport
                         newRow = ((DataRowView)v_buildings[v_buildings.Position]);
                     building.id_building = id_building;
                     FillRowFromBuilding(building, newRow);
-                    newRow.EndEdit();
                     buildings.EditingNewRecord = false;
                     this.Text = "Здание №" + id_building.ToString();
                     viewportState = ViewportState.ReadState;
@@ -635,7 +691,36 @@ namespace Registry.Viewport
                         return;
                     DataRowView row = ((DataRowView)v_buildings[v_buildings.Position]);
                     FillRowFromBuilding(building, row);
-                    row.EndEdit();
+                    if (updatePremisesState)
+                    {
+                        if (DataSetManager.GetDataSet().Tables.Contains("premises"))
+                        {
+                            DataTable premises = DataSetManager.GetDataSet().Tables["premises"];
+                            List<int> idPremises = new List<int>(); //Идентификаторы помещений, включенных в каскадное обновление состояний
+                            for (int i = 0; i < premises.Rows.Count; i++)
+                            {
+                                if ((premises.Rows[i]["id_building"] != DBNull.Value) && ((int)premises.Rows[i]["id_building"] == building.id_building))
+                                {
+                                    premises.Rows[i]["id_state"] = building.id_state;
+                                    premises.Rows[i].EndEdit();
+                                    idPremises.Add((int)premises.Rows[i]["id_premises"]);
+                                }
+                            }
+                            if (DataSetManager.GetDataSet().Tables.Contains("sub_premises"))
+                            {
+                                DataTable sub_premises = DataSetManager.GetDataSet().Tables["sub_premises"];
+                                for (int i = 0; i < sub_premises.Rows.Count; i++)
+                                {
+                                    if ((sub_premises.Rows[i]["id_premises"] != DBNull.Value) && 
+                                        (idPremises.Contains((int)sub_premises.Rows[i]["id_premises"])))
+                                    {
+                                        sub_premises.Rows[i]["id_state"] = building.id_state;
+                                        sub_premises.Rows[i].EndEdit();
+                                    }
+                                }
+                            }
+                        }
+                    }
                     viewportState = ViewportState.ReadState;
                     break;
             }
@@ -643,9 +728,16 @@ namespace Registry.Viewport
             menuCallback.NavigationStateUpdate();
         }
 
+        public override int GetRecordCount()
+        {
+            return v_buildings.Count;
+        }
+
         private static void FillRowFromBuilding(Building building, DataRowView row)
         {
+            row.BeginEdit();
             row["id_building"] = building.id_building;
+            row["id_state"] = building.id_state;
             row["id_structure_type"] = building.id_structure_type;
             row["id_street"] = building.id_street;
             row["house"] = building.house;
@@ -661,6 +753,7 @@ namespace Registry.Viewport
             row["startup_year"] = building.startup_year;
             row["improvement"] = building.improvement;
             row["elevator"] = building.elevator;
+            row.EndEdit();
         }
 
         public override void CancelRecord()
@@ -680,11 +773,15 @@ namespace Registry.Viewport
                         this.Text = "Здания отсутствуют";
                     menuCallback.EditingStateUpdate();
                     menuCallback.NavigationStateUpdate();
+                    menuCallback.StatusBarStateUpdate();
                     break;
                 case ViewportState.ModifyRowState:
                     v_kladr.Filter = "";
+                    is_editable = false;
                     DataBind();
+                    is_editable = true;
                     viewportState = ViewportState.ReadState;
+                    menuCallback.EditingStateUpdate();
                     break;
             }
         }
@@ -822,6 +919,10 @@ namespace Registry.Viewport
                 building.id_street = null;
             else
                 building.id_street = comboBoxStreet.SelectedValue.ToString();
+            if (comboBoxState.SelectedValue == null)
+                building.id_state = null;
+            else
+                building.id_state = Convert.ToInt32(comboBoxState.SelectedValue);
             if (textBoxHouse.Text.Trim() == "")
                 building.house = null;
             else
@@ -865,6 +966,10 @@ namespace Registry.Viewport
                 building.id_street = null;
             else
                 building.id_street = row["id_street"].ToString();
+            if (row["id_state"] is DBNull)
+                building.id_state = null;
+            else
+                building.id_state = Convert.ToInt32(row["id_state"]);
             if (row["id_structure_type"] is DBNull)
                 building.id_structure_type = null;
             else
@@ -900,6 +1005,8 @@ namespace Registry.Viewport
             textBoxHouse.Text = building.house;
             numericUpDownFloors.Value = building.floors.Value;
             numericUpDownStartupYear.Value = building.startup_year.Value;
+            if (building.id_state != null)
+                comboBoxState.SelectedValue = building.id_state;
             if (building.id_structure_type != null)
                 comboBoxStructureType.SelectedValue = building.id_structure_type;
             maskedTextBoxCadastralNum.Text = building.cadastral_num;
@@ -961,7 +1068,6 @@ namespace Registry.Viewport
         {
             v_buildings.Filter = StaticFilter;
             DynamicFilter = "";
-            menuCallback.NavigationStateUpdate();
         }
 
         public override bool CanMoveNext()
@@ -986,17 +1092,17 @@ namespace Registry.Viewport
 
         public override bool HasAssocOwnerships()
         {
-            return true;
+            return (v_buildings.Position > -1);
         }
 
         public override bool HasAssocRestrictions()
         {
-            return true;
+            return (v_buildings.Position > -1);
         }
 
         public override bool HasFundHistory()
         {
-            return true;
+            return (v_buildings.Position > -1);
         }
 
         public override void ShowPremises()
@@ -1091,6 +1197,7 @@ namespace Registry.Viewport
             buildings.EditingNewRecord = true;
             menuCallback.NavigationStateUpdate();
             menuCallback.EditingStateUpdate();
+            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool SearchedRecords()
@@ -1113,8 +1220,6 @@ namespace Registry.Viewport
                 if (StaticFilter != "" && DynamicFilter != "")
                     v_buildings.Filter += " AND ";
                 v_buildings.Filter += DynamicFilter;
-                if (DynamicFilter != "")
-                    menuCallback.NavigationStateUpdate();
             }
         }
 
@@ -1201,7 +1306,7 @@ namespace Registry.Viewport
             tableLayoutPanel.Location = new System.Drawing.Point(3, 3);
             tableLayoutPanel.Name = "tableLayoutPanel1";
             tableLayoutPanel.RowCount = 4;
-            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 185F));
+            tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
             tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
             tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
             tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -1681,11 +1786,20 @@ namespace Registry.Viewport
             // label19
             // 
             label19.AutoSize = true;
-            label19.Location = new System.Drawing.Point(16, 97);
+            label19.Location = new System.Drawing.Point(16, 126);
             label19.Name = "label19";
             label19.Size = new System.Drawing.Size(142, 13);
             label19.Text = "Текущий тип найма";
             label19.Visible = false;
+            // 
+            // label40
+            // 
+            this.label40.AutoSize = true;
+            this.label40.Location = new System.Drawing.Point(15, 98);
+            this.label40.Name = "label40";
+            this.label40.Size = new System.Drawing.Size(108, 13);
+            this.label40.TabIndex = 31;
+            this.label40.Text = "Текущее состояние";
             // 
             // panel1
             // 
@@ -1706,6 +1820,8 @@ namespace Registry.Viewport
             // 
             // panel2
             // 
+            panel2.Controls.Add(label40);
+            panel2.Controls.Add(comboBoxState);
             panel2.Controls.Add(comboBoxCurrentFundType);
             panel2.Controls.Add(numericUpDownBalanceCost);
             panel2.Controls.Add(numericUpDownCadastralCost);
@@ -1851,7 +1967,7 @@ namespace Registry.Viewport
             comboBoxCurrentFundType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             comboBoxCurrentFundType.FormattingEnabled = true;
-            comboBoxCurrentFundType.Location = new System.Drawing.Point(159, 95);
+            comboBoxCurrentFundType.Location = new System.Drawing.Point(159, 124);
             comboBoxCurrentFundType.Name = "comboBoxStreet";
             comboBoxCurrentFundType.Size = new System.Drawing.Size(319, 21);
             comboBoxCurrentFundType.TabStop = true;
@@ -1859,6 +1975,17 @@ namespace Registry.Viewport
             comboBoxCurrentFundType.Visible = false;
             comboBoxCurrentFundType.Enabled = false;
             comboBoxCurrentFundType.DropDownStyle = ComboBoxStyle.DropDownList;
+            // 
+            // comboBoxState
+            // 
+            this.comboBoxState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxState.FormattingEnabled = true;
+            this.comboBoxState.Location = new System.Drawing.Point(159, 95);
+            this.comboBoxState.Name = "comboBoxState";
+            this.comboBoxState.Size = new System.Drawing.Size(318, 21);
+            this.comboBoxState.TabIndex = 30;
             // 
             // comboBoxStructureType
             // 
@@ -1877,7 +2004,7 @@ namespace Registry.Viewport
             checkBoxImprovement.AutoSize = true;
             checkBoxImprovement.Location = new System.Drawing.Point(19, 96);
             checkBoxImprovement.Name = "checkBoxImprovement";
-            checkBoxImprovement.Size = new System.Drawing.Size(113, 17);
+            checkBoxImprovement.Size = new System.Drawing.Size(159, 125);
             checkBoxImprovement.Text = "Благоустройство";
             checkBoxImprovement.UseVisualStyleBackColor = true;
             checkBoxImprovement.TabStop = true;

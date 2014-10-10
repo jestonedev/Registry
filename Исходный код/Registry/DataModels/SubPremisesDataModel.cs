@@ -16,21 +16,24 @@ namespace Registry.DataModels
         private static string selectQuery = "SELECT * FROM sub_premises WHERE deleted = 0";
         private static string deleteQuery = "UPDATE sub_premises SET deleted = 1 WHERE id_sub_premises = ?";
         private static string insertQuery = @"INSERT INTO sub_premises
-                            (id_premises, sub_premises_num, total_area)
-                            VALUES (?, ?, ?)";
-        private static string updateQuery = @"UPDATE sub_premises SET id_premises = ?, sub_premises_num = ?, 
-                            total_area = ? WHERE id_sub_premises = ?";
+                            (id_premises, id_state, sub_premises_num, total_area, description)
+                            VALUES (?, ?, ?, ?, ?)";
+        private static string updateQuery = @"UPDATE sub_premises SET id_premises = ?, id_state = ?, sub_premises_num = ?, 
+                            total_area = ?, description = ? WHERE id_sub_premises = ?";
 
         private static string tableName = "sub_premises";
 
-        private SubPremisesDataModel()
+        private SubPremisesDataModel(ToolStripProgressBar progressBar, int incrementor)
+            : base(progressBar, incrementor, selectQuery, tableName)
         {
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = selectQuery;
-            table = connection.SqlSelectTable(tableName, command);
+        }
+
+        protected override void ConfigureTable()
+        {
             table.PrimaryKey = new DataColumn[] { table.Columns["id_sub_premises"] };
             table.Columns["total_area"].DefaultValue = 0;
             table.Columns["deleted"].DefaultValue = 0;
+            table.Columns["id_state"].DefaultValue = 1;
             table.RowDeleted += new System.Data.DataRowChangeEventHandler(table_RowDeleted);
         }
 
@@ -41,9 +44,13 @@ namespace Registry.DataModels
 
         public static SubPremisesDataModel GetInstance()
         {
+            return GetInstance(null, 0);
+        }
+
+        public static SubPremisesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
             if (dataModel == null)
-                dataModel = new SubPremisesDataModel();
-            DataSetManager.AddModel(dataModel);
+                dataModel = new SubPremisesDataModel(progressBar, incrementor);
             return dataModel;
         }
 
@@ -79,6 +86,11 @@ namespace Registry.DataModels
             id_premise.Value = (subPremise.id_premises == null) ? DBNull.Value : (Object)subPremise.id_premises;
             command.Parameters.Add(id_premise);
 
+            DbParameter id_state = connection.CreateParameter();
+            id_state.ParameterName = "id_state";
+            id_state.Value = (subPremise.id_state == null) ? DBNull.Value : (Object)subPremise.id_state;
+            command.Parameters.Add(id_state);
+
             DbParameter sub_premises_num = connection.CreateParameter();
             sub_premises_num.ParameterName = "sub_premises_num";
             sub_premises_num.DbType = DbType.String;
@@ -89,6 +101,12 @@ namespace Registry.DataModels
             total_area.ParameterName = "total_area";
             total_area.Value = subPremise.total_area;
             command.Parameters.Add(total_area);
+
+            DbParameter description = connection.CreateParameter();
+            description.ParameterName = "description";
+            description.DbType = DbType.String;
+            description.Value = (subPremise.description == null) ? DBNull.Value : (Object)subPremise.description;
+            command.Parameters.Add(description);
 
             try
             {
@@ -122,6 +140,11 @@ namespace Registry.DataModels
             id_premise.Value = subPremise.id_premises;
             command.Parameters.Add(id_premise);
 
+            DbParameter id_state = connection.CreateParameter();
+            id_state.ParameterName = "id_state";
+            id_state.Value = (subPremise.id_state == null) ? DBNull.Value : (Object)subPremise.id_state;
+            command.Parameters.Add(id_state);
+
             DbParameter sub_premises_num = connection.CreateParameter();
             sub_premises_num.ParameterName = "sub_premises_num";
             sub_premises_num.DbType = DbType.String;
@@ -132,6 +155,12 @@ namespace Registry.DataModels
             total_area.ParameterName = "total_area";
             total_area.Value = subPremise.total_area;
             command.Parameters.Add(total_area);
+
+            DbParameter description = connection.CreateParameter();
+            description.ParameterName = "description";
+            description.DbType = DbType.String;
+            description.Value = (subPremise.description == null) ? DBNull.Value : (Object)subPremise.description;
+            command.Parameters.Add(description);
 
             DbParameter id_sub_premise = connection.CreateParameter();
             id_sub_premise.ParameterName = "id_sub_premise";

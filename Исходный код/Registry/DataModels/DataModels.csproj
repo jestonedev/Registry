@@ -46,10 +46,13 @@
     <Compile Include="BuildingsDataModel.cs" />
     <Compile Include="DataModelException.cs" />
     <Compile Include="DataModel.cs" />
+    <Compile Include="DataModelLoadState.cs" />
+    <Compile Include="DataModelLoadSyncType.cs" />
     <Compile Include="DBConnection.cs" />
     <Compile Include="FundsBuildingsAssocDataModel.cs" />
     <Compile Include="FundsHistoryDataModel.cs" />
     <Compile Include="FundsPremisesAssocDataModel.cs" />
+    <Compile Include="FundsSubPremisesAssocDataModel.cs" />
     <Compile Include="FundTypesDataModel.cs" />
     <Compile Include="KladrDataModel.cs" />
     <Compile Include="OwnershipBuildingsAssocDataModel.cs" />
@@ -71,6 +74,7 @@
     <Compile Include="RestrictionsDataModel.cs" />
     <Compile Include="RestrictionsPremisesAssocDataModel.cs" />
     <Compile Include="RestrictionTypesDataModel.cs" />
+    <Compile Include="StatesDataModel.cs" />
     <Compile Include="StreetByBuildingDataSource.cs" />
     <Compile Include="StructureTypesDataModel.cs" />
     <Compile Include="SubPremisesDataModel.cs" />

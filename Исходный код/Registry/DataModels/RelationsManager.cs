@@ -19,6 +19,13 @@ namespace Registry.DataModels
             RebuildRelations();
         }
 
+        public static void AddTable(DataTable table)
+        {
+            if (!ds.Tables.Contains(table.TableName))
+                ds.Tables.Add(table);
+            RebuildRelations();
+        }
+
         private static void RebuildRelations()
         {
             DataSetManager.AddRelation("kladr", "id_street", "buildings", "id_street", true);
@@ -26,6 +33,7 @@ namespace Registry.DataModels
             DataSetManager.AddRelation("fund_types", "id_fund_type", "funds_history", "id_fund_type", true);
             DataSetManager.AddRelation("funds_history", "id_fund", "funds_buildings_assoc", "id_fund", true);
             DataSetManager.AddRelation("funds_history", "id_fund", "funds_premises_assoc", "id_fund", true);
+            DataSetManager.AddRelation("funds_history", "id_fund", "funds_sub_premises_assoc", "id_fund", true);
             DataSetManager.AddRelation("restriction_types", "id_restriction_type", "restrictions", "id_restriction_type", true);
             DataSetManager.AddRelation("restrictions", "id_restriction", "restrictions_buildings_assoc", "id_restriction", true);
             DataSetManager.AddRelation("restrictions", "id_restriction", "restrictions_premises_assoc", "id_restriction", true);
@@ -42,6 +50,9 @@ namespace Registry.DataModels
             DataSetManager.AddRelation("premises", "id_premises", "sub_premises", "id_premises", true);
             DataSetManager.AddRelation("premises_types", "id_premises_type", "premises", "id_premises_type", true);
             DataSetManager.AddRelation("premises_kinds", "id_premises_kind", "premises", "id_premises_kind", true);
+            DataSetManager.AddRelation("states", "id_state", "buildings", "id_state", true);
+            DataSetManager.AddRelation("states", "id_state", "premises", "id_state", true);
+            DataSetManager.AddRelation("states", "id_state", "sub_premises", "id_state", true);
         }
 
         private static void AddRelation(string master_table_name, string master_column_name, string slave_table_name, 

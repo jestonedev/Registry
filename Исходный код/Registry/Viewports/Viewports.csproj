@@ -12,6 +12,7 @@
     <AssemblyName>Viewports</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -99,6 +100,7 @@
     <Compile Include="Viewport.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="ViewportHelper.cs" />
     <Compile Include="ViewportState.cs" />
     <Compile Include="ViewportType.cs" />
     <Compile Include="ViewportException.cs" />

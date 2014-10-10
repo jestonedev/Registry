@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data.Common;
 using System.Data;
+using System.Windows.Forms;
 
 namespace Registry.DataModels
 {
@@ -13,11 +14,13 @@ namespace Registry.DataModels
         private static string selectQuery = "SELECT * FROM fund_types";
         private static string tableName = "fund_types";
 
-        private FundTypesDataModel()
+        private FundTypesDataModel(ToolStripProgressBar progressBar, int incrementor)
+            : base(progressBar, incrementor, selectQuery, tableName)
         {
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = selectQuery;
-            table = connection.SqlSelectTable(tableName, command);
+        }
+
+        protected override void ConfigureTable()
+        {
             table.PrimaryKey = new DataColumn[] { table.Columns["id_fund_type"] };
             table.RowDeleted += new DataRowChangeEventHandler(table_RowDeleted);
         }
@@ -29,9 +32,13 @@ namespace Registry.DataModels
 
         public static FundTypesDataModel GetInstance()
         {
+            return GetInstance(null, 0);
+        }
+
+        public static FundTypesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
             if (dataModel == null)
-                dataModel = new FundTypesDataModel();
-            DataSetManager.AddModel(dataModel);
+                dataModel = new FundTypesDataModel(progressBar, incrementor);
             return dataModel;
         }
     }

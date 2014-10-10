@@ -9,7 +9,7 @@ using Registry.Entities;
 
 namespace Registry.Viewport
 {
-    internal class PremisesViewport: Viewport
+    internal sealed class PremisesViewport : Viewport
     {
         #region Components
         private TableLayoutPanel tableLayoutPanel3 = new TableLayoutPanel();
@@ -59,6 +59,7 @@ namespace Registry.Viewport
         private Label label28 = new Label();
         private Label label29 = new Label();
         private Label label38 = new Label();
+        private Label label39 = new Label();
         private ComboBox comboBoxHouse = new ComboBox();
         private ComboBox comboBoxStreet = new ComboBox();
         private TextBox textBoxPremisesNumber = new TextBox();
@@ -66,7 +67,8 @@ namespace Registry.Viewport
         private TextBox textBoxSubPremisesNumber = new TextBox();
         private ComboBox comboBoxPremisesType = new ComboBox();
         private ComboBox comboBoxPremisesKind = new ComboBox();
-        private ComboBox comboBoxCurrentFundType = new System.Windows.Forms.ComboBox();
+        private ComboBox comboBoxCurrentFundType = new ComboBox();
+        private ComboBox comboBoxState = new ComboBox();
         private MaskedTextBox maskedTextBoxCadastralNum = new MaskedTextBox();
         #endregion Components
 
@@ -90,6 +92,7 @@ namespace Registry.Viewport
         private OwnershipRightTypesDataModel ownershipRightTypes = null;
         private OwnershipPremisesAssocDataModel ownershipPremisesAssoc = null;
         private FundTypesDataModel fundTypes = null;
+        private StatesDataModel states = null;
 
         //Views
         private BindingSource v_premises = null;
@@ -106,6 +109,7 @@ namespace Registry.Viewport
         private BindingSource v_ownershipRightTypes = null;
         private BindingSource v_ownershipPremisesAssoc = null;
         private BindingSource v_fundType = null;
+        private BindingSource v_states = null;
 
         private ViewportState viewportState = ViewportState.ReadState;
         private bool is_editable = false;
@@ -156,6 +160,7 @@ namespace Registry.Viewport
             ownershipRightTypes = OwnershipRightTypesDataModel.GetInstance();
             ownershipPremisesAssoc = OwnershipPremisesAssocDataModel.GetInstance();
             fundTypes = FundTypesDataModel.GetInstance();
+            states = StatesDataModel.GetInstance();
 
             DataSet ds = DataSetManager.GetDataSet();
 
@@ -174,6 +179,10 @@ namespace Registry.Viewport
             v_fundType = new BindingSource();
             v_fundType.DataMember = "fund_types";
             v_fundType.DataSource = ds;
+
+            v_states = new BindingSource();
+            v_states.DataMember = "states";
+            v_states.DataSource = ds;
 
             v_premises = new BindingSource();
             v_premises.CurrentItemChanged += new EventHandler(v_premises_CurrentItemChanged);
@@ -238,7 +247,9 @@ namespace Registry.Viewport
             comboBoxHouse.SelectedIndexChanged += new EventHandler(comboBoxHouse_SelectedIndexChanged);
             comboBoxPremisesType.SelectedIndexChanged += new EventHandler(comboBoxPremisesType_SelectedIndexChanged);
             comboBoxPremisesKind.SelectedIndexChanged += new EventHandler(comboBoxPremisesKind_SelectedIndexChanged);
+            comboBoxState.SelectedIndexChanged += new EventHandler(comboBoxState_SelectedIndexChanged);
             textBoxPremisesNumber.TextChanged += new EventHandler(textBoxPremisesNumber_TextChanged);
+            textBoxDescription.TextChanged += new EventHandler(textBoxDescription_TextChanged);
             numericUpDownFloor.ValueChanged += new EventHandler(numericUpDownFloor_ValueChanged);
             maskedTextBoxCadastralNum.TextChanged += new EventHandler(maskedTextBoxCadastralNum_TextChanged);
             numericUpDownCadastralCost.ValueChanged += new EventHandler(numericUpDownCadastralCost_ValueChanged);
@@ -250,6 +261,11 @@ namespace Registry.Viewport
             checkBoxAcceptByExchange.CheckedChanged += new EventHandler(checkBoxAcceptByExchange_CheckedChanged);
             checkBoxAcceptByOther.CheckedChanged += new EventHandler(checkBoxAcceptByOther_CheckedChanged);
             checkBoxForOrphans.CheckedChanged += new EventHandler(checkBoxForOrphans_CheckedChanged);
+        }
+
+        void textBoxDescription_TextChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
         }
 
         void RestrictionsAssoc_RowDeleting(object sender, DataRowChangeEventArgs e)
@@ -296,6 +312,16 @@ namespace Registry.Viewport
             v_ownershipRights.Filter = ownershipFilter;
         }
 
+        void v_ownershipPremisesAssoc_CurrentItemChanged(object sender, EventArgs e)
+        {
+            OwnershipsFilterRebuild();
+        }
+
+        void v_restrictionPremisesAssoc_CurrentItemChanged(object sender, EventArgs e)
+        {
+            RestrictionsFilterRebuild();
+        }
+
         void comboBoxStreet_VisibleChanged(object sender, EventArgs e)
         {
             if (is_first_visibility)
@@ -303,6 +329,11 @@ namespace Registry.Viewport
                 SelectCurrentBuilding();
                 is_first_visibility = false;
             }
+        }
+
+        void comboBoxState_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
         }
 
         void comboBoxHouse_SelectedIndexChanged(object sender, EventArgs e)
@@ -417,26 +448,6 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
-        void v_ownershipPremisesAssoc_CurrentItemChanged(object sender, EventArgs e)
-        {
-            string ownershipFilter = "id_ownership_right IN (0";
-            for (int i = 0; i < v_ownershipPremisesAssoc.Count; i++)
-                ownershipFilter += ((DataRowView)v_ownershipPremisesAssoc[i])["id_ownership_right"].ToString() + ",";
-            ownershipFilter = ownershipFilter.TrimEnd(new char[] { ',' });
-            ownershipFilter += ")";
-            v_ownershipRights.Filter = ownershipFilter;
-        }
-
-        void v_restrictionPremisesAssoc_CurrentItemChanged(object sender, EventArgs e)
-        {
-            string restrictionsFilter = "id_restriction IN (0";
-            for (int i = 0; i < v_restrictionPremisesAssoc.Count; i++)
-                restrictionsFilter += ((DataRowView)v_restrictionPremisesAssoc[i])["id_restriction"].ToString() + ",";
-            restrictionsFilter = restrictionsFilter.TrimEnd(new char[] { ',' });
-            restrictionsFilter += ")";
-            v_restrictions.Filter = restrictionsFilter;
-        }
-
         void v_premises_CurrentItemChanged(object sender, EventArgs e)
         {
             if (viewportState == ViewportState.NewRowState)
@@ -473,15 +484,18 @@ namespace Registry.Viewport
                 {
                     label38.Visible = true;
                     comboBoxCurrentFundType.Visible = true;
+                    this.tableLayoutPanel3.RowStyles[0].Height = 210F;
                 }
                 else
                 {
                     label38.Visible = false;
                     comboBoxCurrentFundType.Visible = false;
+                    this.tableLayoutPanel3.RowStyles[0].Height = 185F;
                 }
             }
             SelectCurrentBuilding();
-            menuCallback.NavigationStateUpdate();
+            if (Selected)
+                menuCallback.NavigationStateUpdate();
             if (v_premises.Position == -1)
                 return;
             if (viewportState == ViewportState.NewRowState)
@@ -507,6 +521,7 @@ namespace Registry.Viewport
                     if (building_row != null)
                         id_street = building_row["id_street"].ToString();
                 }
+                v_kladr.Filter = "";
                 if (id_street != null)
                     comboBoxStreet.SelectedValue = id_street;
                 else
@@ -569,6 +584,13 @@ namespace Registry.Viewport
             comboBoxCurrentFundType.DataBindings.Clear();
             comboBoxCurrentFundType.DataBindings.Add("SelectedValue", v_premisesCurrentFund, "id_fund_type", true, DataSourceUpdateMode.Never, DBNull.Value);
 
+            comboBoxState.DataSource = v_states;
+            comboBoxState.ValueMember = "id_state";
+            comboBoxState.DisplayMember = "state_neutral";
+            comboBoxState.DataBindings.Clear();
+            comboBoxState.DataBindings.Add("SelectedValue", v_premises, "id_state", true, DataSourceUpdateMode.Never, DBNull.Value);
+
+
             dataGridViewRestrictions.DataSource = v_restrictions;
             field_id_restriction_type.DataSource = v_restrictonTypes;
             field_id_restriction_type.DataPropertyName = "id_restriction_type";
@@ -623,6 +645,10 @@ namespace Registry.Viewport
                 premise.id_building = null;
             else
                 premise.id_building = Convert.ToInt32(row["id_building"]);
+            if (row["id_state"] is DBNull)
+                premise.id_state = null;
+            else
+                premise.id_state = Convert.ToInt32(row["id_state"]);
             if (row["premises_num"] is DBNull)
                 premise.premises_num = null;
             else
@@ -667,6 +693,10 @@ namespace Registry.Viewport
                 premise.id_building = Convert.ToInt32(comboBoxHouse.SelectedValue);
             else
                 premise.id_building = null;
+            if (comboBoxState.SelectedValue != null)
+                premise.id_state = Convert.ToInt32(comboBoxState.SelectedValue);
+            else
+                premise.id_state = null;
             if (textBoxPremisesNumber.Text.Trim() == "")
                 premise.premises_num = null;
             else
@@ -712,6 +742,8 @@ namespace Registry.Viewport
                     comboBoxHouse.SelectedValue = premise.id_building;
                 }
             }
+            if (premise.id_state != null)
+                comboBoxState.SelectedValue = premise.id_state;
             if (premise.id_premises_type != null)
                 comboBoxPremisesType.SelectedValue = premise.id_premises_type;
             if (premise.id_premises_kind != null)
@@ -783,6 +815,12 @@ namespace Registry.Viewport
                 comboBoxHouse.Focus();
                 return false;
             }
+            if (premise.id_state == null)
+            {
+                MessageBox.Show("Необходимо выбрать текущее состояние помещения", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                comboBoxState.Focus();
+                return false;
+            }
             if ((premise.cadastral_num != null) && (premise.cadastral_num.Length > 15))
             {
                 MessageBox.Show("Длина кадастрового номера не может превышать 15 символов", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -795,8 +833,16 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             Premise premise = PremiseFromViewport();
+            bool updateSubPremisesState = false;
             if (!ValidatePremise(premise))
                 return;
+            if ((viewportState == ViewportState.ModifyRowState) && (premise.id_state != PremiseFromView().id_state))
+            {
+                if (MessageBox.Show("Вы пытаетесь изменить состояние помещения. В результате всем комнатам данного помещения будет назначено то же состояние. " +
+                    "Вы уверены, что хотите сохранить данные?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                    return;
+                updateSubPremisesState = true;
+            }
             switch (viewportState)
             {
                 case ViewportState.ReadState:
@@ -814,9 +860,12 @@ namespace Registry.Viewport
                         newRow = ((DataRowView)v_premises[v_premises.Position]);
                     premise.id_premises = id_premise;
                     FillRowFromPremise(premise, newRow);
-                    newRow.EndEdit();
                     premises.EditingNewRecord = false;
-                    this.Text = "Помещение №" + id_premise.ToString();
+                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
+                        this.Text = String.Format("Помещение №{0} здания №{1}",
+                            id_premise.ToString(), ParentRow["id_building"]);
+                    else
+                        this.Text = String.Format("Помещение №{0}", id_premise.ToString());
                     viewportState = ViewportState.ReadState;
                     is_editable = true;
                     break;
@@ -831,7 +880,15 @@ namespace Registry.Viewport
                         return;
                     DataRowView row = ((DataRowView)v_premises[v_premises.Position]);
                     FillRowFromPremise(premise, row);
-                    row.EndEdit();
+                    if (updateSubPremisesState)
+                    {
+                        for (int i = 0; i < v_sub_premises.Count; i++)
+                        {
+                            DataRowView subPremiseRow = (DataRowView)v_sub_premises[i];
+                            subPremiseRow["id_state"] = premise.id_state;
+                            subPremiseRow.EndEdit();
+                        }
+                    }
                     viewportState = ViewportState.ReadState;
                     break;
             }
@@ -841,8 +898,10 @@ namespace Registry.Viewport
 
         private static void FillRowFromPremise(Premise premise, DataRowView row)
         {
+            row.BeginEdit();
             row["id_premises"] = premise.id_premises;
             row["id_building"] = premise.id_building;
+            row["id_state"] = premise.id_state;
             row["premises_num"] = premise.premises_num;
             row["total_area"] = premise.total_area;
             row["living_area"] = premise.living_area;
@@ -858,6 +917,7 @@ namespace Registry.Viewport
             row["cadastral_cost"] = premise.cadastral_cost;
             row["balance_cost"] = premise.balance_cost;
             row["description"] = premise.description;
+            row.EndEdit();
         }
 
         public override void CancelRecord()
@@ -877,10 +937,15 @@ namespace Registry.Viewport
                         this.Text = "Здания отсутствуют";
                     menuCallback.EditingStateUpdate();
                     menuCallback.NavigationStateUpdate();
+                    menuCallback.StatusBarStateUpdate();
                     break;
                 case ViewportState.ModifyRowState:
+                    is_editable = false;
                     DataBind();
+                    SelectCurrentBuilding();
+                    is_editable = true;
                     viewportState = ViewportState.ReadState;
+                    menuCallback.EditingStateUpdate();
                     break;
             }
         }
@@ -1013,7 +1078,6 @@ namespace Registry.Viewport
         {
             v_premises.Filter = StaticFilter;
             DynamicFilter = "";
-            menuCallback.NavigationStateUpdate();
         }
 
         public override bool CanMoveNext()
@@ -1048,6 +1112,7 @@ namespace Registry.Viewport
             premises.EditingNewRecord = true;
             menuCallback.NavigationStateUpdate();
             menuCallback.EditingStateUpdate();
+            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool SearchedRecords()
@@ -1070,8 +1135,6 @@ namespace Registry.Viewport
                 if (StaticFilter != "" && DynamicFilter != "")
                     v_premises.Filter += " AND ";
                 v_premises.Filter += DynamicFilter;
-                if (DynamicFilter != "")
-                    menuCallback.NavigationStateUpdate();
             }
         }
 
@@ -1079,6 +1142,8 @@ namespace Registry.Viewport
         {
             if (MessageBox.Show("Вы действительно хотите удалить это помещение?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+                if (premises.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
+                    return;
                 ((DataRowView)v_premises[v_premises.Position]).Delete();
                 menuCallback.ForceCloseDetachedViewports();
             }
@@ -1121,12 +1186,12 @@ namespace Registry.Viewport
 
         public override bool HasAssocOwnerships()
         {
-            return true;
+            return (v_premises.Position != -1);
         }
 
         public override bool HasAssocRestrictions()
         {
-            return true;
+            return (v_premises.Position != -1);
         }
 
         public override bool HasAssocSubPremises()
@@ -1136,7 +1201,7 @@ namespace Registry.Viewport
 
         public override bool HasFundHistory()
         {
-            return true;
+            return (v_premises.Position != -1);
         }
 
         public override void ShowOwnerships()
@@ -1186,12 +1251,6 @@ namespace Registry.Viewport
                 MessageBox.Show("Не выбрано помещение для отображения перечня комнат", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if (Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises_type"]) == 2)
-            {
-                MessageBox.Show("Данное помещение является комнатой и не может содержать в себе другие комнаты", "Ошибка", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
             SubPremisesViewport viewport = new SubPremisesViewport(menuCallback);
             viewport.StaticFilter = "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"]);
             viewport.ParentRow = ((DataRowView)v_premises[v_premises.Position]).Row;
@@ -1208,7 +1267,7 @@ namespace Registry.Viewport
                 return;
             if (v_premises.Position == -1)
             {
-                MessageBox.Show("Не выбрано помещение для отображения реквизитов", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Не выбрано помещение для отображения истории найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             FundsHistoryViewport viewport = new FundsHistoryViewport(menuCallback);
@@ -1219,6 +1278,11 @@ namespace Registry.Viewport
                 (viewport as IMenuController).LoadData();
             menuCallback.AddViewport(viewport);
             menuCallback.SwitchToViewport(viewport);
+        }
+
+        public override int GetRecordCount()
+        {
+            return v_premises.Count;
         }
 
         private void ConstructViewport()
@@ -1263,7 +1327,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 3;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 185F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 79F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 131F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
@@ -1384,6 +1448,8 @@ namespace Registry.Viewport
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.label39);
+            this.panel4.Controls.Add(this.comboBoxState);
             this.panel4.Controls.Add(this.label38);
             this.panel4.Controls.Add(this.comboBoxCurrentFundType);
             this.panel4.Controls.Add(this.label27);
@@ -1398,7 +1464,7 @@ namespace Registry.Viewport
             this.panel4.Location = new System.Drawing.Point(489, 3);
             this.panel4.Name = "panel4";
             this.panel3.TabIndex = 1;
-            this.panel4.Size = new System.Drawing.Size(480, 154);
+            this.panel4.Size = new System.Drawing.Size(480, 179);
             // 
             // dataGridViewRestrictions
             // 
@@ -1733,10 +1799,18 @@ namespace Registry.Viewport
             this.label29.Size = new System.Drawing.Size(53, 13);
             this.label29.Text = "Комнаты";
             // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(16, 126);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(107, 13);
+            this.label39.Text = "Текущее состояние";
+            // 
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(16, 126);
+            this.label38.Location = new System.Drawing.Point(16, 155);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(107, 13);
             this.label38.Text = "Текущий тип найма";
@@ -1769,12 +1843,12 @@ namespace Registry.Viewport
             this.textBoxPremisesNumber.Name = "textBoxPremisesNumber";
             this.textBoxPremisesNumber.Size = new System.Drawing.Size(319, 20);
             this.textBoxPremisesNumber.TabIndex = 2;
-            this.textBoxPremisesNumber.MaxLength = 2;
+            this.textBoxPremisesNumber.MaxLength = 20;
             // 
             // textBoxDescription
             // 
             this.textBoxDescription.Dock = DockStyle.Fill;
-            this.textBoxDescription.MaxLength = 255;
+            this.textBoxDescription.MaxLength = 65535;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.TabIndex = 17;
@@ -1790,7 +1864,6 @@ namespace Registry.Viewport
             this.comboBoxPremisesType.Name = "comboBoxPremisesType";
             this.comboBoxPremisesType.Size = new System.Drawing.Size(143, 21);
             this.comboBoxPremisesType.TabIndex = 2;
-            this.comboBoxPremisesType.SelectedValueChanged += new EventHandler(comboBoxPremisesType_SelectedValueChanged);
             // 
             // comboBoxPremisesKind
             // 
@@ -1803,6 +1876,17 @@ namespace Registry.Viewport
             this.comboBoxPremisesKind.TabIndex = 4;
             this.comboBoxPremisesKind.DropDownStyle = ComboBoxStyle.DropDownList;
             // 
+            // comboBoxState
+            // 
+            this.comboBoxState.Anchor =
+                ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxState.FormattingEnabled = true;
+            this.comboBoxState.Location = new System.Drawing.Point(159, 123);
+            this.comboBoxState.Name = "comboBoxState";
+            this.comboBoxState.Size = new System.Drawing.Size(318, 21);
+            // 
             // comboBoxCurrentFundType
             // 
             this.comboBoxCurrentFundType.Anchor = 
@@ -1811,7 +1895,7 @@ namespace Registry.Viewport
             this.comboBoxCurrentFundType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxCurrentFundType.Enabled = false;
             this.comboBoxCurrentFundType.FormattingEnabled = true;
-            this.comboBoxCurrentFundType.Location = new System.Drawing.Point(159, 123);
+            this.comboBoxCurrentFundType.Location = new System.Drawing.Point(159, 152);
             this.comboBoxCurrentFundType.Name = "comboBoxCurrentFundType";
             this.comboBoxCurrentFundType.Size = new System.Drawing.Size(318, 21);
             // 
@@ -1848,11 +1932,6 @@ namespace Registry.Viewport
             this.tableLayoutPanel5.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
             this.ResumeLayout(false);
-        }
-
-        void comboBoxPremisesType_SelectedValueChanged(object sender, EventArgs e)
-        {
-            menuCallback.HousingRefBooksStateUpdate();
         }
     }
 }

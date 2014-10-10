@@ -14,9 +14,11 @@ namespace Registry
     {
         KladrDataModel kladr = null;
         FundTypesDataModel fundTypes = null;
+        StatesDataModel states = null;
 
         BindingSource v_kladr = null;
         BindingSource v_fundTypes = null;
+        BindingSource v_states = null;
 
         public string GetFilter()
         {
@@ -75,6 +77,12 @@ namespace Registry
                     filter += ((DataRowView)v_table[i])["id_building"].ToString() + ",";
                 filter = filter.TrimEnd(new char[] { ',' }) + ")";
             }
+            if ((checkBoxStateEnable.Checked) && (comboBoxState.SelectedValue != null))
+            {
+                if (filter.Trim() != "")
+                    filter += " AND ";
+                filter += "id_state = " + comboBoxState.SelectedValue.ToString();
+            }
             return filter;
         }
 
@@ -83,12 +91,16 @@ namespace Registry
             InitializeComponent();
             kladr = KladrDataModel.GetInstance();
             fundTypes = FundTypesDataModel.GetInstance();
+            states = StatesDataModel.GetInstance();
 
             v_kladr = new BindingSource();
             v_kladr.DataSource = kladr.Select();
 
             v_fundTypes = new BindingSource();
             v_fundTypes.DataSource = fundTypes.Select();
+
+            v_states = new BindingSource();
+            v_states.DataSource = states.Select();
 
             comboBoxStreet.DataSource = v_kladr;
             comboBoxStreet.ValueMember = "id_street";
@@ -97,6 +109,10 @@ namespace Registry
             comboBoxFundType.DataSource = v_fundTypes;
             comboBoxFundType.ValueMember = "id_fund_type";
             comboBoxFundType.DisplayMember = "fund_type";
+
+            comboBoxState.DataSource = v_states;
+            comboBoxState.ValueMember = "id_state";
+            comboBoxState.DisplayMember = "state_neutral";
 
             numericUpDownStartupYear.Maximum = DateTime.Now.Year;
         }
@@ -188,6 +204,11 @@ namespace Registry
                 return;
             }
             this.DialogResult = System.Windows.Forms.DialogResult.OK;
+        }
+
+        private void checkBoxStateEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            comboBoxState.Enabled = checkBoxStateEnable.Checked;
         }
     }
 }
