@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using System.Data;
 using Registry.Entities;
+using System.Drawing;
 
 namespace Registry.Viewport
 {
@@ -1882,6 +1883,7 @@ namespace Registry.Viewport
             dataGridViewOwnerships.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             dataGridViewOwnerships.Size = new System.Drawing.Size(480, 101);
             dataGridViewOwnerships.AutoGenerateColumns = false;
+            dataGridViewOwnerships.BackgroundColor = SystemColors.ControlLightLight;
             // 
             // field_ownership_number
             // 
@@ -1924,6 +1926,7 @@ namespace Registry.Viewport
             dataGridViewRestrictions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             dataGridViewRestrictions.Size = new System.Drawing.Size(480, 101);
             dataGridViewRestrictions.AutoGenerateColumns = false;
+            dataGridViewRestrictions.BackgroundColor = SystemColors.ControlLightLight;
             // 
             // field_restriction_number
             // 

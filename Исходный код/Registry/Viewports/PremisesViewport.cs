@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Data;
 using Registry.DataModels;
 using Registry.Entities;
+using System.Drawing;
 
 namespace Registry.Viewport
 {
@@ -1483,6 +1484,7 @@ namespace Registry.Viewport
             this.dataGridViewRestrictions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewRestrictions.TabIndex = 18;
             this.dataGridViewRestrictions.AutoGenerateColumns = false;
+            this.dataGridViewRestrictions.BackgroundColor = SystemColors.ControlLightLight;
             // 
             // field_restriction_number
             // 
@@ -1526,6 +1528,7 @@ namespace Registry.Viewport
             this.dataGridViewOwnerships.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewOwnerships.TabIndex = 19;
             this.dataGridViewOwnerships.AutoGenerateColumns = false;
+            this.dataGridViewOwnerships.BackgroundColor = SystemColors.ControlLightLight;
             // 
             // field_ownership_number
             // 
@@ -1565,6 +1568,7 @@ namespace Registry.Viewport
             this.dataGridViewRooms.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewRooms.TabIndex = 16;
             this.dataGridViewRooms.AutoGenerateColumns = false;
+            this.dataGridViewRooms.BackgroundColor = SystemColors.ControlLightLight;
             // 
             // sub_premises_num
             // 

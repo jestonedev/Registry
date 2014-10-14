@@ -44,7 +44,7 @@ namespace Registry.Viewport
             ParentType = ParentTypeEnum.None;
             this.SuspendLayout();
             ConstructViewport();
-            this.Name = "tabPageBuildings";
+            this.Name = "tabPageTenancies";
             this.Padding = new System.Windows.Forms.Padding(3);
             this.Text = "Перечень зданий";
             this.UseVisualStyleBackColor = true;
@@ -477,7 +477,8 @@ namespace Registry.Viewport
             dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             dataGridViewCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle.Font = 
+                new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             dataGridViewCellStyle.SelectionBackColor = System.Drawing.SystemColors.Highlight;
@@ -513,7 +514,6 @@ namespace Registry.Viewport
             field_id_building.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             field_id_building.HeaderText = "№";
             field_id_building.Name = "id_building";
-            field_id_building.ReadOnly = true;
             // 
             // field_id_street
             // 
@@ -521,7 +521,6 @@ namespace Registry.Viewport
             field_id_street.HeaderText = "Адрес";
             field_id_street.MinimumWidth = 300;
             field_id_street.Name = "id_street";
-            field_id_street.ReadOnly = true;
             field_id_street.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
             field_id_street.SortMode = DataGridViewColumnSortMode.Automatic;
             // 
