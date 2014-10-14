@@ -93,6 +93,10 @@
       <Project>{762222B2-0E8F-4759-A673-FCC0C5F35B8C}</Project>
       <Name>DataModels</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Entities\Entities.csproj">
+      <Project>{1D0E98AA-C11E-4C1D-AE3F-346FF7446DF4}</Project>
+      <Name>Entities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Viewports\Viewports.csproj">
       <Project>{382C5ED0-7C1B-414D-AB01-54D42220DEC3}</Project>
       <Name>Viewports</Name>

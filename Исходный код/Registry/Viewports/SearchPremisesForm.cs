@@ -12,23 +12,31 @@ namespace Registry.Viewport
 {
     public partial class SearchPremisesForm : Form
     {
-        KladrDataModel kladr = null;
+        KladrStreetsDataModel kladr = null;
+        KladrRegionsDataModel regions = null;
         FundTypesDataModel fundTypes = null;
         StatesDataModel states = null;
 
         BindingSource v_kladr = null;
+        BindingSource v_regions = null;
         BindingSource v_fundTypes = null;
         BindingSource v_states = null;
 
         public string GetFilter()
         {
             string filter = "";
-            if ((checkBoxStreetEnable.Checked) && (comboBoxStreet.SelectedValue != null))
+            if (checkBoxIDPremisesEnable.Checked)
+            {
+                if (filter.Trim() != "")
+                    filter += " AND ";
+                filter += "id_premises = " + numericUpDownIDPremises.Value.ToString();
+            }
+            if ((checkBoxRegionEnable.Checked) && (comboBoxRegion.SelectedValue != null))
             {
                 DataTable table = BuildingsDataModel.GetInstance().Select();
                 BindingSource v_table = new BindingSource();
                 v_table.DataSource = table;
-                v_table.Filter = "id_street = " + comboBoxStreet.SelectedValue.ToString();
+                v_table.Filter = "id_street LIKE '" + comboBoxRegion.SelectedValue.ToString() + "%'";
                 if (filter.Trim() != "")
                     filter += " AND ";
                 filter += "id_building IN (0";
@@ -36,12 +44,26 @@ namespace Registry.Viewport
                     filter += ((DataRowView)v_table[i])["id_building"].ToString() + ",";
                 filter = filter.TrimEnd(new char[] { ',' }) + ")";
             }
+            if ((checkBoxStreetEnable.Checked) && (comboBoxStreet.SelectedValue != null))
+            {
+                DataTable table = BuildingsDataModel.GetInstance().Select();
+                BindingSource v_table = new BindingSource();
+                v_table.DataSource = table;
+                v_table.Filter = "id_street = '" + comboBoxStreet.SelectedValue.ToString()+"'";
+                if (filter.Trim() != "")
+                    filter += " AND ";
+                filter += "id_building IN (0";
+                for (int i = 0; i < v_table.Count; i++)
+                    filter += ((DataRowView)v_table[i])["id_building"].ToString() + ",";
+                filter = filter.TrimEnd(new char[] { ',' }) + ")";
+            }
+
             if (checkBoxHouseEnable.Checked)
             {
                 DataTable table = BuildingsDataModel.GetInstance().Select();
                 BindingSource v_table = new BindingSource();
                 v_table.DataSource = table;
-                v_table.Filter = "house = " + textBoxHouse.Text.Trim();
+                v_table.Filter = String.Format("house = '{0}'", textBoxHouse.Text.Trim().Replace("'",""));
                 if (filter.Trim() != "")
                     filter += " AND ";
                 filter += "id_building IN (0";
@@ -54,7 +76,7 @@ namespace Registry.Viewport
                 if (filter.Trim() != "")
                     filter += " AND ";
                 if (textBoxPremisesNum.Text.Trim() != "")
-                    filter += "premises_num = '" + textBoxPremisesNum.Text.Trim() + "'";
+                    filter += String.Format("premises_num = '{0}'", textBoxPremisesNum.Text.Trim().Replace("'", ""));
                 else
                     filter += "premises_num is null";
             }
@@ -69,7 +91,7 @@ namespace Registry.Viewport
                 if (filter.Trim() != "")
                     filter += " AND ";
                 if (textBoxCadastralNum.Text.Trim() != "")
-                    filter += "cadastral_num = '" + textBoxCadastralNum.Text.Trim() + "'";
+                    filter += String.Format("cadastral_num = '{0}'", textBoxCadastralNum.Text.Trim().Replace("'", ""));
                 else
                     filter += "cadastral_num is null";
             }
@@ -122,15 +144,19 @@ namespace Registry.Viewport
         public SearchPremisesForm()
         {
             InitializeComponent();
-            kladr = KladrDataModel.GetInstance();
+            kladr = KladrStreetsDataModel.GetInstance();
             fundTypes = FundTypesDataModel.GetInstance();
             states = StatesDataModel.GetInstance();
+            regions = KladrRegionsDataModel.GetInstance();
 
             DataSet ds = DataSetManager.GetDataSet();
 
             v_kladr = new BindingSource();
             v_kladr.DataSource = ds;
             v_kladr.DataMember = "kladr";
+
+            v_regions = new BindingSource();
+            v_regions.DataSource = regions.Select();
 
             v_fundTypes = new BindingSource();
             v_fundTypes.DataSource = ds;
@@ -151,6 +177,10 @@ namespace Registry.Viewport
             comboBoxState.DataSource = v_states;
             comboBoxState.ValueMember = "id_state";
             comboBoxState.DisplayMember = "state_neutral";
+
+            comboBoxRegion.DataSource = v_regions;
+            comboBoxRegion.ValueMember = "id_region";
+            comboBoxRegion.DisplayMember = "region";
         }
 
         private void vButton1_Click(object sender, EventArgs e)
@@ -255,6 +285,16 @@ namespace Registry.Viewport
         private void checkBoxStateEnable_CheckedChanged(object sender, EventArgs e)
         {
             comboBoxState.Enabled = checkBoxStateEnable.Checked;
+        }
+
+        private void checkBoxIDBuildingEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            numericUpDownIDPremises.Enabled = checkBoxIDPremisesEnable.Checked;
+        }
+
+        private void checkBoxRegionEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            comboBoxRegion.Enabled = checkBoxRegionEnable.Checked;
         }
     }
 }

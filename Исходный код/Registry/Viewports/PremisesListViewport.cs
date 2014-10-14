@@ -16,8 +16,8 @@ namespace Registry.Viewport
         #region Components
         private DataGridView dataGridView = new DataGridView();
         private DataGridViewTextBoxColumn field_id_premises = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        private DataGridViewComboBoxColumn field_street = new System.Windows.Forms.DataGridViewComboBoxColumn();
-        private DataGridViewComboBoxColumn field_house = new System.Windows.Forms.DataGridViewComboBoxColumn();
+        private DataGridViewTextBoxColumn field_street = new System.Windows.Forms.DataGridViewTextBoxColumn();
+        private DataGridViewTextBoxColumn field_house = new System.Windows.Forms.DataGridViewTextBoxColumn();
         private DataGridViewTextBoxColumn field_premises_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
         private DataGridViewComboBoxColumn field_id_premises_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
         private DataGridViewTextBoxColumn field_cadastral_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -33,7 +33,7 @@ namespace Registry.Viewport
         //Models
         private PremisesDataModel premises = null;
         private BuildingsDataModel buildings = null;
-        private KladrDataModel kladr = null;
+        private KladrStreetsDataModel kladr = null;
         private PremisesTypesDataModel premises_types = null;
 
         //Views
@@ -73,7 +73,7 @@ namespace Registry.Viewport
         public override void LoadData()
         {
             premises = PremisesDataModel.GetInstance();
-            kladr = KladrDataModel.GetInstance();
+            kladr = KladrStreetsDataModel.GetInstance();
             buildings  = BuildingsDataModel.GetInstance();
             premises_types = PremisesTypesDataModel.GetInstance();
 
@@ -107,12 +107,6 @@ namespace Registry.Viewport
             v_premises_types.DataMember = "premises_types";
             v_premises_types.DataSource = ds;
 
-            field_street.DataSource = new StreetByBuildingDataSource(buildings, kladr);
-            field_street.ValueMember = "id_building";
-            field_street.DisplayMember = "street_name";
-            field_house.DataSource = v_buildings;
-            field_house.ValueMember = "id_building";
-            field_house.DisplayMember = "house";
             field_id_premises_type.DataSource = v_premises_types;
             field_id_premises_type.ValueMember = "id_premises_type";
             field_id_premises_type.DisplayMember = "premises_type";
@@ -187,31 +181,37 @@ namespace Registry.Viewport
         void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (v_premises.Count <= e.RowIndex) return;
+            DataRowView row = ((DataRowView)v_premises[e.RowIndex]);
             switch (this.dataGridView.Columns[e.ColumnIndex].Name)
             {
                 case "id_premises":
-                    e.Value = ((DataRowView)v_premises[e.RowIndex])["id_premises"];
+                    e.Value = row["id_premises"];
                     break;
                 case "id_street":
-                    e.Value = ((DataRowView)v_premises[e.RowIndex])["id_building"];
+                    DataRow building_row = buildings.Select().Rows.Find(row["id_building"]);
+                    DataRow kladr_row = kladr.Select().Rows.Find(building_row["id_street"]);
+                    string street_name = null;
+                    if (kladr_row != null)
+                    street_name = kladr_row["street_name"].ToString();
+                    e.Value = street_name;
                     break;
                 case "house":
-                    e.Value = ((DataRowView)v_premises[e.RowIndex])["id_building"];
+                    e.Value = buildings.Select().Rows.Find(row["id_building"])["house"];
                     break;
                 case "premises_num":
-                    e.Value = ((DataRowView)v_premises[e.RowIndex])["premises_num"];
+                    e.Value = row["premises_num"];
                     break;
                 case "id_premises_type":
-                    e.Value = ((DataRowView)v_premises[e.RowIndex])["id_premises_type"];
+                    e.Value = row["id_premises_type"];
                     break;
                 case "cadastral_num":
-                    e.Value = ((DataRowView)v_premises[e.RowIndex])["cadastral_num"];
+                    e.Value = row["cadastral_num"];
                     break;
                 case "total_area":
-                    e.Value = ((DataRowView)v_premises[e.RowIndex])["total_area"];
+                    e.Value = row["total_area"];
                     break;
                 case "living_area":
-                    e.Value = ((DataRowView)v_premises[e.RowIndex])["living_area"];
+                    e.Value = row["living_area"];
                     break;
             }
         }
@@ -283,6 +283,7 @@ namespace Registry.Viewport
                     return;
                 ((DataRowView)v_premises[v_premises.Position]).Delete();
                 menuCallback.ForceCloseDetachedViewports();
+                BuildingsAggregatedDataModel.GetInstance().Refresh();
             }
         }
 
@@ -477,7 +478,8 @@ namespace Registry.Viewport
         {
             if (v_premises.Position == -1)
             {
-                MessageBox.Show("Не выбрано помещение для отображения перечня комнат", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Не выбрано помещение для отображения перечня комнат", 
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             SubPremisesViewport viewport = new SubPremisesViewport(menuCallback);
@@ -494,7 +496,8 @@ namespace Registry.Viewport
         {
             if (v_premises.Position == -1)
             {
-                MessageBox.Show("Не выбрано помещение для отображения истории найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Не выбрано помещение для отображения истории найма", 
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             FundsHistoryViewport viewport = new FundsHistoryViewport(menuCallback);
@@ -564,13 +567,11 @@ namespace Registry.Viewport
             this.field_street.HeaderText = "Адрес";
             this.field_street.MinimumWidth = 300;
             this.field_street.Name = "id_street";
-            this.field_street.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
             // 
             // field_street
             // 
             this.field_house.HeaderText = "Дом";
             this.field_house.Name = "house";
-            this.field_house.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
             // 
             // field_premises_num
             // 

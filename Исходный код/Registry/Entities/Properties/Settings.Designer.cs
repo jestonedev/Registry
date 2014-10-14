@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Registry.DataModels.Properties {
+namespace Registry.Entities.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
@@ -23,12 +23,39 @@ namespace Registry.DataModels.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("dsn=registry")]
         public string ConnectionString {
             get {
                 return ((string)(this["ConnectionString"]));
+            }
+            set {
+                this["ConnectionString"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("AD_turniket@pwr")]
+        public string LDAPUserName {
+            get {
+                return ((string)(this["LDAPUserName"]));
+            }
+            set {
+                this["LDAPUserName"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("VX0EE5YW0ETo")]
+        public string LDAPEncryptedPassword {
+            get {
+                return ((string)(this["LDAPEncryptedPassword"]));
+            }
+            set {
+                this["LDAPEncryptedPassword"] = value;
             }
         }
     }

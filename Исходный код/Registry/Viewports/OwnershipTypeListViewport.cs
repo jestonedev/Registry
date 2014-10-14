@@ -65,6 +65,7 @@ namespace Registry.Viewport
                 snapshot_ownership_right_types.Rows.Add(DataRowViewToArray(((DataRowView)v_ownership_right_types[i])));
             v_snapshot_ownership_right_types = new BindingSource();
             v_snapshot_ownership_right_types.DataSource = snapshot_ownership_right_types;
+            v_snapshot_ownership_right_types.CurrentItemChanged += new EventHandler(v_snapshot_ownership_right_types_CurrentItemChanged);
 
             dataGridView.DataSource = v_snapshot_ownership_right_types;
             field_id_ownership_type.DataPropertyName = "id_ownership_right_type";
@@ -76,6 +77,12 @@ namespace Registry.Viewport
             //Синхронизация данных исходные->текущие
             ownership_right_types.Select().RowChanged += new DataRowChangeEventHandler(OwnershipTypeListViewport_RowChanged);
             ownership_right_types.Select().RowDeleting += new DataRowChangeEventHandler(OwnershipTypeListViewport_RowDeleting);
+        }
+
+        void v_snapshot_ownership_right_types_CurrentItemChanged(object sender, EventArgs e)
+        {
+            if (Selected)
+                menuCallback.NavigationStateUpdate();
         }
 
         public override void MoveFirst()
@@ -236,9 +243,6 @@ namespace Registry.Viewport
         {
             DataRowView row = (DataRowView)v_snapshot_ownership_right_types.AddNew();
             row.EndEdit();
-            menuCallback.EditingStateUpdate();
-            menuCallback.NavigationStateUpdate();
-            menuCallback.StatusBarStateUpdate();
         }
 
         public override void Close()
@@ -268,9 +272,6 @@ namespace Registry.Viewport
         public override void DeleteRecord()
         {
             ((DataRowView)v_snapshot_ownership_right_types[v_snapshot_ownership_right_types.Position]).Row.Delete();
-            menuCallback.EditingStateUpdate();
-            menuCallback.NavigationStateUpdate();
-            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool CanCancelRecord()
@@ -283,9 +284,6 @@ namespace Registry.Viewport
             snapshot_ownership_right_types.Clear();
             for (int i = 0; i < v_ownership_right_types.Count; i++)
                 snapshot_ownership_right_types.Rows.Add(DataRowViewToArray(((DataRowView)v_ownership_right_types[i])));
-            menuCallback.EditingStateUpdate();
-            menuCallback.NavigationStateUpdate();
-            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool CanSaveRecord()
@@ -356,8 +354,6 @@ namespace Registry.Viewport
                     ownership_right_types.Select().Rows.Find(((OwnershipRightType)list[i]).id_ownership_right_type).Delete();
                 }
             }
-            menuCallback.NavigationStateUpdate();
-            menuCallback.EditingStateUpdate();
             sync_views = true;
         }
 

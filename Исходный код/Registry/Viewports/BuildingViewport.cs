@@ -82,7 +82,7 @@ namespace Registry.Viewport
         private BuildingsDataModel buildings = null;
         private BuildingsAggregatedDataModel buildingsAggreagate = null;
         private BuildingsCurrentFundsDataModel buildingsCurrentFund = null;
-        private KladrDataModel kladr = null;
+        private KladrStreetsDataModel kladr = null;
         private StructureTypesDataModel structureTypes = null;
         private RestrictionsDataModel restrictions = null;
         private RestrictionTypesDataModel restrictionTypes = null;
@@ -150,7 +150,7 @@ namespace Registry.Viewport
         {
             //Асинхронные модели
             buildings = BuildingsDataModel.GetInstance();
-            kladr = KladrDataModel.GetInstance();
+            kladr = KladrStreetsDataModel.GetInstance();
             structureTypes = StructureTypesDataModel.GetInstance();
             restrictions = RestrictionsDataModel.GetInstance();
             restrictionTypes = RestrictionTypesDataModel.GetInstance();
@@ -269,6 +269,13 @@ namespace Registry.Viewport
             numericUpDownApartmentsCount.ValueChanged += new EventHandler(numericUpDownApartmentsCount_ValueChanged);
             numericUpDownSharedApartmentsCount.ValueChanged += new EventHandler(numericUpDownSharedApartmentsCount_ValueChanged);
             numericUpDownLivingArea.ValueChanged += new EventHandler(numericUpDownLivingArea_ValueChanged);
+
+            buildingsCurrentFund.RefreshEvent += new EventHandler<EventArgs>(buildingsCurrentFund_RefreshEvent);
+        }
+
+        void buildingsCurrentFund_RefreshEvent(object sender, EventArgs e)
+        {
+            ShowOrHideCurrentFund();
         }
 
         void RestrictionsAssoc_RowDeleting(object sender, DataRowChangeEventArgs e)
@@ -337,22 +344,7 @@ namespace Registry.Viewport
                     v_buildingsCurrentFund.Filter = "id_building = " + ((DataRowView)v_buildings[v_buildings.Position])["id_building"].ToString();
                 else
                     v_buildingsCurrentFund.Filter = "id_building = 0";
-                if (v_buildingsCurrentFund.Count > 0)
-                {
-                    label19.Visible = true;
-                    comboBoxCurrentFundType.Visible = true;
-                    checkBoxImprovement.Location = new System.Drawing.Point(159, 154);
-                    checkBoxElevator.Location = new System.Drawing.Point(19, 154);
-                    this.tableLayoutPanel.RowStyles[0].Height = 210F;
-                }
-                else
-                {
-                    label19.Visible = false;
-                    comboBoxCurrentFundType.Visible = false;
-                    checkBoxImprovement.Location = new System.Drawing.Point(159, 125);
-                    checkBoxElevator.Location = new System.Drawing.Point(19, 125);
-                    this.tableLayoutPanel.RowStyles[0].Height = 185F;
-                }
+                ShowOrHideCurrentFund();
             }
             v_kladr.Filter = "";
             if (Selected)
@@ -363,6 +355,26 @@ namespace Registry.Viewport
                 return;
             viewportState = ViewportState.ReadState;
             is_editable = true;
+        }
+
+        private void ShowOrHideCurrentFund()
+        {
+            if (v_buildingsCurrentFund.Count > 0)
+            {
+                label19.Visible = true;
+                comboBoxCurrentFundType.Visible = true;
+                checkBoxImprovement.Location = new System.Drawing.Point(159, 154);
+                checkBoxElevator.Location = new System.Drawing.Point(19, 154);
+                this.tableLayoutPanel.RowStyles[0].Height = 210F;
+            }
+            else
+            {
+                label19.Visible = false;
+                comboBoxCurrentFundType.Visible = false;
+                checkBoxImprovement.Location = new System.Drawing.Point(159, 125);
+                checkBoxElevator.Location = new System.Drawing.Point(19, 125);
+                this.tableLayoutPanel.RowStyles[0].Height = 185F;
+            }
         }
 
         void v_ownershipBuildingsAssoc_CurrentItemChanged(object sender, EventArgs e)
@@ -570,7 +582,6 @@ namespace Registry.Viewport
             menuCallback.EditingStateUpdate();
         }
 
-
         public override void Close()
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
@@ -579,6 +590,7 @@ namespace Registry.Viewport
             restrictionBuildingsAssoc.Select().RowDeleting -= new DataRowChangeEventHandler(RestrictionsAssoc_RowDeleting);
             ownershipBuildingsAssoc.Select().RowChanged -= new DataRowChangeEventHandler(OwnershipsAssoc_RowChanged);
             ownershipBuildingsAssoc.Select().RowDeleting -= new DataRowChangeEventHandler(OwnershipsAssoc_RowDeleting);
+            buildingsCurrentFund.RefreshEvent -= new EventHandler<EventArgs>(buildingsCurrentFund_RefreshEvent);
             base.Close();
         }
 
@@ -599,9 +611,6 @@ namespace Registry.Viewport
             Building building = BuildingFromView();
             DataRowView row = (DataRowView)v_buildings.AddNew();
             buildings.EditingNewRecord = true;
-            menuCallback.NavigationStateUpdate();
-            menuCallback.EditingStateUpdate();
-            menuCallback.StatusBarStateUpdate();
             ViewportFromBuilding(building);
         }
 
@@ -724,8 +733,6 @@ namespace Registry.Viewport
                     viewportState = ViewportState.ReadState;
                     break;
             }
-            menuCallback.EditingStateUpdate();
-            menuCallback.NavigationStateUpdate();
         }
 
         public override int GetRecordCount()
@@ -771,9 +778,6 @@ namespace Registry.Viewport
                     }
                     else
                         this.Text = "Здания отсутствуют";
-                    menuCallback.EditingStateUpdate();
-                    menuCallback.NavigationStateUpdate();
-                    menuCallback.StatusBarStateUpdate();
                     break;
                 case ViewportState.ModifyRowState:
                     v_kladr.Filter = "";
@@ -781,7 +785,6 @@ namespace Registry.Viewport
                     DataBind();
                     is_editable = true;
                     viewportState = ViewportState.ReadState;
-                    menuCallback.EditingStateUpdate();
                     break;
             }
         }
@@ -1195,9 +1198,6 @@ namespace Registry.Viewport
                 return;
             DataRowView row = (DataRowView)v_buildings.AddNew();
             buildings.EditingNewRecord = true;
-            menuCallback.NavigationStateUpdate();
-            menuCallback.EditingStateUpdate();
-            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool SearchedRecords()

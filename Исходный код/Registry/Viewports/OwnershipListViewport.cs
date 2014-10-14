@@ -115,6 +115,7 @@ namespace Registry.Viewport
                 snapshot_ownerships_rights.Rows.Add(DataRowViewToArray(((DataRowView)v_ownership_rights[i])));
             v_snapshot_ownerships_rights = new BindingSource();
             v_snapshot_ownerships_rights.DataSource = snapshot_ownerships_rights;
+            v_snapshot_ownerships_rights.CurrentItemChanged += new EventHandler(v_snapshot_ownerships_rights_CurrentItemChanged);
 
             dataGridView.DataSource = v_snapshot_ownerships_rights;
 
@@ -137,6 +138,12 @@ namespace Registry.Viewport
             ownership_rights.Select().RowDeleting += new DataRowChangeEventHandler(OwnershipListViewport_RowDeleting);
             ownership_assoc.Select().RowChanged += new DataRowChangeEventHandler(OwnershipAssoc_RowChanged);
             ownership_assoc.Select().RowDeleting += new DataRowChangeEventHandler(OwnershipAssoc_RowDeleting);
+        }
+
+        void v_snapshot_ownerships_rights_CurrentItemChanged(object sender, EventArgs e)
+        {
+            if (Selected)
+                menuCallback.NavigationStateUpdate();
         }
 
         public override void MoveFirst()
@@ -339,9 +346,6 @@ namespace Registry.Viewport
         {
             DataRowView row = (DataRowView)v_snapshot_ownerships_rights.AddNew();
             row.EndEdit();
-            menuCallback.EditingStateUpdate();
-            menuCallback.NavigationStateUpdate();
-            menuCallback.StatusBarStateUpdate();
         }
 
         public override void Close()
@@ -373,9 +377,6 @@ namespace Registry.Viewport
         public override void DeleteRecord()
         {
             ((DataRowView)v_snapshot_ownerships_rights[v_snapshot_ownerships_rights.Position]).Row.Delete();
-            menuCallback.EditingStateUpdate();
-            menuCallback.NavigationStateUpdate();
-            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool CanCancelRecord()
@@ -388,9 +389,6 @@ namespace Registry.Viewport
             snapshot_ownerships_rights.Clear();
             for (int i = 0; i < v_ownership_rights.Count; i++)
                 snapshot_ownerships_rights.Rows.Add(DataRowViewToArray(((DataRowView)v_ownership_rights[i])));
-            menuCallback.EditingStateUpdate();
-            menuCallback.NavigationStateUpdate();
-            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool CanSaveRecord()
@@ -491,8 +489,6 @@ namespace Registry.Viewport
             }
             RebuildFilter();
             sync_views = true;
-            menuCallback.NavigationStateUpdate();
-            menuCallback.EditingStateUpdate();
         }
 
         void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)

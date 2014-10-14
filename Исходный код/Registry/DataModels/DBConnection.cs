@@ -5,8 +5,8 @@ using System.Text;
 using System.Data.Common;
 using System.Data;
 using System.Text.RegularExpressions;
-using Registry.DataModels.Properties;
 using System.Data.Odbc;
+using Registry.Entities;
 
 namespace Registry.DataModels
 {
@@ -21,7 +21,7 @@ namespace Registry.DataModels
         public DBConnection()
         {
             connection = factory.CreateConnection();
-            connection.ConnectionString = Settings.Default["ConnectionString"].ToString();
+            connection.ConnectionString = RegistrySettings.ConnectionString;
             if (connection.State == System.Data.ConnectionState.Closed)
                 connection.Open();
         }

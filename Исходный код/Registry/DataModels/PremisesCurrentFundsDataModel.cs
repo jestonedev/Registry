@@ -12,15 +12,18 @@ namespace Registry.DataModels
 
         private static string tableName = "premises_current_funds";
 
-        public static PremisesCurrentFundsDataModel GetInstance()
+        public event EventHandler<EventArgs> RefreshEvent;
+
+        private PremisesCurrentFundsDataModel()
         {
-            if (dataModel == null)
-                dataModel = new PremisesCurrentFundsDataModel();
-            DataSetManager.AddModel(dataModel);
-            return dataModel;
+            table = new DataTable(tableName);
+            table.Columns.Add("id_premises").DataType = typeof(int);
+            table.Columns.Add("id_fund_type").DataType = typeof(int);
+            table.PrimaryKey = new DataColumn[] { table.Columns["id_premises"] };
+            Refresh();
         }
 
-        public override DataTable Select()
+        public void Refresh()
         {
             DataTable premises = PremisesDataModel.GetInstance().Select();
             DataTable funds_history = FundsHistoryDataModel.GetInstance().Select();
@@ -37,27 +40,34 @@ namespace Registry.DataModels
                                          id_fund = gs.Max()
                                      };
             var result = from fund_history_row in funds_history.AsEnumerable()
-                                    join max_id_by_premises_row in max_id_by_premises
-                                       on fund_history_row.Field<int>("id_fund") equals max_id_by_premises_row.id_fund
-                                    select new
-                                    {
-                                        id_premises = max_id_by_premises_row.id_premises,
-                                        id_fund = max_id_by_premises_row.id_fund,
-                                        id_fund_type = fund_history_row.Field<int>("id_fund_type"),
-                                        protocol_number = fund_history_row.Field<string>("protocol_number"),
-                                        protocol_date = fund_history_row.Field<DateTime?>("protocol_date"),
-                                    };
-            DataTable premises_current_funds = new DataTable(tableName);
-            premises_current_funds.Columns.Add("id_premises").DataType = typeof(int);
-            premises_current_funds.Columns.Add("id_fund_type").DataType = typeof(int);
+                         join max_id_by_premises_row in max_id_by_premises
+                            on fund_history_row.Field<int>("id_fund") equals max_id_by_premises_row.id_fund
+                         select new
+                         {
+                             id_premises = max_id_by_premises_row.id_premises,
+                             id_fund = max_id_by_premises_row.id_fund,
+                             id_fund_type = fund_history_row.Field<int>("id_fund_type"),
+                             protocol_number = fund_history_row.Field<string>("protocol_number"),
+                             protocol_date = fund_history_row.Field<DateTime?>("protocol_date"),
+                         };
+            table.Clear();
+            table.BeginLoadData();
             result.ToList().ForEach((x) =>
             {
-                premises_current_funds.Rows.Add(new object[] { 
+                table.Rows.Add(new object[] { 
                     x.id_premises, 
                     x.id_fund_type });
             });
-            premises_current_funds.PrimaryKey = new DataColumn[] { premises_current_funds.Columns["id_premises"] };
-            return premises_current_funds;
+            table.EndLoadData();
+            if (RefreshEvent != null)
+                RefreshEvent(this, new EventArgs());
+        }
+        
+        public static PremisesCurrentFundsDataModel GetInstance()
+        {
+            if (dataModel == null)
+                dataModel = new PremisesCurrentFundsDataModel();
+            return dataModel;
         }
     }
 }

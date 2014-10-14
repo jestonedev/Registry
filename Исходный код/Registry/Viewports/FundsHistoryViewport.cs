@@ -191,7 +191,6 @@ namespace Registry.Viewport
 
         void textBoxExcludeRestNum_TextChanged(object sender, EventArgs e)
         {
-            checkBoxExcludeRest.Checked = textBoxExcludeRestNum.Text.Trim() != "";
             CheckViewportModifications();
         }
 
@@ -207,7 +206,6 @@ namespace Registry.Viewport
 
         void textBoxIncludeRestNum_TextChanged(object sender, EventArgs e)
         {
-            checkBoxIncludeRest.Checked = textBoxIncludeRestNum.Text.Trim() != "";
             CheckViewportModifications();
         }
 
@@ -365,8 +363,6 @@ namespace Registry.Viewport
             DataRowView row = (DataRowView)v_funds_history.AddNew();
             dataGridView.Enabled = false;
             funds_history.EditingNewRecord = true;
-            menuCallback.NavigationStateUpdate();
-            menuCallback.EditingStateUpdate();
             ViewportFromFundHistory(fundHistory);
         }
 
@@ -579,9 +575,6 @@ namespace Registry.Viewport
             DataRowView row = (DataRowView)v_funds_history.AddNew();
             dataGridView.Enabled = false;
             funds_history.EditingNewRecord = true;
-            menuCallback.NavigationStateUpdate();
-            menuCallback.EditingStateUpdate();
-            menuCallback.StatusBarStateUpdate();
         }
 
         public override void DeleteRecord()
@@ -593,6 +586,12 @@ namespace Registry.Viewport
                 ((DataRowView)v_funds_history[v_funds_history.Position]).Delete();
                 RedrawDataGridRows();
                 menuCallback.ForceCloseDetachedViewports();
+                BuildingsAggregatedDataModel.GetInstance().Refresh();
+                if (ParentType == ParentTypeEnum.Building)
+                    BuildingsCurrentFundsDataModel.GetInstance().Refresh();
+                else
+                    if (ParentType == ParentTypeEnum.Premises)
+                        PremisesCurrentFundsDataModel.GetInstance().Refresh();
             }
         }
 
@@ -631,6 +630,10 @@ namespace Registry.Viewport
             if (Selected)
                 menuCallback.NavigationStateUpdate(); 
             dataGridView.Enabled = true;
+            checkBoxIncludeRest.Checked = (v_funds_history.Position >= 0) && 
+                (((DataRowView)v_funds_history[v_funds_history.Position])["include_restriction_date"] != DBNull.Value);
+            checkBoxExcludeRest.Checked = (v_funds_history.Position >= 0) &&
+                (((DataRowView)v_funds_history[v_funds_history.Position])["exclude_restriction_date"] != DBNull.Value);
             if (v_funds_history.Position == -1)
                 return;
             if (viewportState == ViewportState.NewRowState)
@@ -712,7 +715,6 @@ namespace Registry.Viewport
                         newRow = ((DataRowView)v_funds_history[v_funds_history.Position]);
                     fundHistory.id_fund = id_fund;
                     FillRowFromFundHistory(fundHistory, newRow);
-                    newRow.EndEdit();
                     funds_history.EditingNewRecord = false;
                     viewportState = ViewportState.ReadState;
                     is_editable = true;
@@ -732,13 +734,16 @@ namespace Registry.Viewport
                     dataGridView.Enabled = true;
                     DataRowView row = ((DataRowView)v_funds_history[v_funds_history.Position]);
                     FillRowFromFundHistory(fundHistory, row);
-                    row.Row.EndEdit();
                     viewportState = ViewportState.ReadState;
                     break;
             }
             RedrawDataGridRows();
-            menuCallback.EditingStateUpdate();
-            menuCallback.NavigationStateUpdate();
+            BuildingsAggregatedDataModel.GetInstance().Refresh();
+            if (ParentType == ParentTypeEnum.Building)
+                BuildingsCurrentFundsDataModel.GetInstance().Refresh();
+            else
+                if (ParentType == ParentTypeEnum.Premises)
+                    PremisesCurrentFundsDataModel.GetInstance().Refresh();
         }
 
         private void FillRowFromFundHistory(FundHistory fundHistory, DataRowView row)
@@ -783,15 +788,11 @@ namespace Registry.Viewport
                         funds_history.Select().AcceptChanges();
                         RedrawDataGridRows();
                     }
-                    menuCallback.EditingStateUpdate();
-                    menuCallback.NavigationStateUpdate();
-                    menuCallback.StatusBarStateUpdate();
                     break;
                 case ViewportState.ModifyRowState:
                     dataGridView.Enabled = true;
                     DataBind();
                     viewportState = ViewportState.ReadState;
-                    menuCallback.EditingStateUpdate();
                     break;
             }
         }
@@ -1148,7 +1149,7 @@ namespace Registry.Viewport
             this.textBoxIncludeRestNum.Size = new System.Drawing.Size(319, 20);
             this.textBoxIncludeRestNum.TabIndex = 6;
             this.textBoxIncludeRestNum.Enabled = false;
-            this.textBoxIncludeRestNum.MaxLength = 10;
+            this.textBoxIncludeRestNum.MaxLength = 30;
             // 
             // textBoxExcludeRestNum
             // 
@@ -1160,7 +1161,7 @@ namespace Registry.Viewport
             this.textBoxExcludeRestNum.Size = new System.Drawing.Size(319, 20);
             this.textBoxExcludeRestNum.TabIndex = 10;
             this.textBoxExcludeRestNum.Enabled = false;
-            this.textBoxExcludeRestNum.MaxLength = 10;
+            this.textBoxExcludeRestNum.MaxLength = 30;
             // 
             // textBoxIncludeRestDesc
             // 

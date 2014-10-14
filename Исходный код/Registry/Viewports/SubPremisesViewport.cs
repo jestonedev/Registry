@@ -97,6 +97,7 @@ namespace Registry.Viewport
                 snapshot_sub_premises.Rows.Add(DataRowViewToArray(((DataRowView)v_sub_premises[i])));
             v_snapshot_sub_premises = new BindingSource();
             v_snapshot_sub_premises.DataSource = snapshot_sub_premises;
+            v_snapshot_sub_premises.CurrentItemChanged += new EventHandler(v_snapshot_sub_premises_CurrentItemChanged);
 
             dataGridView.DataSource = v_snapshot_sub_premises;
             field_id_sub_premises.DataPropertyName = "id_sub_premises";
@@ -117,6 +118,12 @@ namespace Registry.Viewport
             //Синхронизация данных исходные->текущие
             sub_premises.Select().RowChanged += new DataRowChangeEventHandler(SubPremisesViewport_RowChanged);
             sub_premises.Select().RowDeleting += new DataRowChangeEventHandler(SubPremisesViewport_RowDeleting);
+        }
+
+        void v_snapshot_sub_premises_CurrentItemChanged(object sender, EventArgs e)
+        {
+            if (Selected)
+                menuCallback.NavigationStateUpdate();
         }
 
         public override void MoveFirst()
@@ -346,9 +353,6 @@ namespace Registry.Viewport
             DataRowView row = (DataRowView)v_snapshot_sub_premises.AddNew();
             row["id_premises"] = ParentRow["id_premises"];
             row["total_area"] = 0;
-            menuCallback.EditingStateUpdate();
-            menuCallback.NavigationStateUpdate();
-            menuCallback.StatusBarStateUpdate();
         }
 
         public override void Close()
@@ -378,9 +382,6 @@ namespace Registry.Viewport
         public override void DeleteRecord()
         {
             ((DataRowView)v_snapshot_sub_premises[v_snapshot_sub_premises.Position]).Row.Delete();
-            menuCallback.EditingStateUpdate();
-            menuCallback.NavigationStateUpdate();
-            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool CanCancelRecord()
@@ -393,9 +394,6 @@ namespace Registry.Viewport
             snapshot_sub_premises.Clear();
             for (int i = 0; i < v_sub_premises.Count; i++)
                 snapshot_sub_premises.Rows.Add(DataRowViewToArray(((DataRowView)v_sub_premises[i])));
-            menuCallback.EditingStateUpdate();
-            menuCallback.NavigationStateUpdate();
-            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool CanSaveRecord()
@@ -470,8 +468,6 @@ namespace Registry.Viewport
                     sub_premises.Select().Rows.Find(((SubPremise)list[i]).id_sub_premises).Delete();
                 }
             }
-            menuCallback.NavigationStateUpdate();
-            menuCallback.EditingStateUpdate();
             sync_views = true;
         }
 

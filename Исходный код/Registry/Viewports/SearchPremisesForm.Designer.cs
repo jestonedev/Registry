@@ -59,7 +59,14 @@
             this.comboBoxState = new System.Windows.Forms.ComboBox();
             this.checkBoxStateEnable = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
+            this.numericUpDownIDPremises = new System.Windows.Forms.NumericUpDown();
+            this.checkBoxIDPremisesEnable = new System.Windows.Forms.CheckBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.comboBoxRegion = new System.Windows.Forms.ComboBox();
+            this.checkBoxRegionEnable = new System.Windows.Forms.CheckBox();
+            this.label8 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloor)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownIDPremises)).BeginInit();
             this.SuspendLayout();
             // 
             // vButton2
@@ -67,7 +74,7 @@
             this.vButton2.AllowAnimations = true;
             this.vButton2.BackColor = System.Drawing.Color.Transparent;
             this.vButton2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButton2.Location = new System.Drawing.Point(220, 378);
+            this.vButton2.Location = new System.Drawing.Point(220, 455);
             this.vButton2.Name = "vButton2";
             this.vButton2.RoundedCornersMask = ((byte)(15));
             this.vButton2.Size = new System.Drawing.Size(100, 30);
@@ -80,7 +87,7 @@
             // 
             this.vButton1.AllowAnimations = true;
             this.vButton1.BackColor = System.Drawing.Color.Transparent;
-            this.vButton1.Location = new System.Drawing.Point(102, 378);
+            this.vButton1.Location = new System.Drawing.Point(102, 455);
             this.vButton1.Name = "vButton1";
             this.vButton1.RoundedCornersMask = ((byte)(15));
             this.vButton1.Size = new System.Drawing.Size(100, 30);
@@ -93,7 +100,7 @@
             // checkBoxHouseEnable
             // 
             this.checkBoxHouseEnable.AutoSize = true;
-            this.checkBoxHouseEnable.Location = new System.Drawing.Point(15, 68);
+            this.checkBoxHouseEnable.Location = new System.Drawing.Point(15, 145);
             this.checkBoxHouseEnable.Name = "checkBoxHouseEnable";
             this.checkBoxHouseEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxHouseEnable.TabIndex = 2;
@@ -103,7 +110,7 @@
             // checkBoxStreetEnable
             // 
             this.checkBoxStreetEnable.AutoSize = true;
-            this.checkBoxStreetEnable.Location = new System.Drawing.Point(15, 28);
+            this.checkBoxStreetEnable.Location = new System.Drawing.Point(15, 105);
             this.checkBoxStreetEnable.Name = "checkBoxStreetEnable";
             this.checkBoxStreetEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxStreetEnable.TabIndex = 0;
@@ -113,7 +120,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 49);
+            this.label2.Location = new System.Drawing.Point(9, 126);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(70, 13);
             this.label2.TabIndex = 25;
@@ -122,7 +129,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 9);
+            this.label1.Location = new System.Drawing.Point(9, 86);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(39, 13);
             this.label1.TabIndex = 24;
@@ -132,7 +139,7 @@
             // 
             this.comboBoxStreet.Enabled = false;
             this.comboBoxStreet.FormattingEnabled = true;
-            this.comboBoxStreet.Location = new System.Drawing.Point(36, 25);
+            this.comboBoxStreet.Location = new System.Drawing.Point(36, 102);
             this.comboBoxStreet.Name = "comboBoxStreet";
             this.comboBoxStreet.Size = new System.Drawing.Size(375, 21);
             this.comboBoxStreet.TabIndex = 1;
@@ -143,7 +150,7 @@
             // checkBoxPremisesNumEnable
             // 
             this.checkBoxPremisesNumEnable.AutoSize = true;
-            this.checkBoxPremisesNumEnable.Location = new System.Drawing.Point(15, 109);
+            this.checkBoxPremisesNumEnable.Location = new System.Drawing.Point(15, 186);
             this.checkBoxPremisesNumEnable.Name = "checkBoxPremisesNumEnable";
             this.checkBoxPremisesNumEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxPremisesNumEnable.TabIndex = 4;
@@ -153,7 +160,7 @@
             // textBoxPremisesNum
             // 
             this.textBoxPremisesNum.Enabled = false;
-            this.textBoxPremisesNum.Location = new System.Drawing.Point(36, 106);
+            this.textBoxPremisesNum.Location = new System.Drawing.Point(36, 183);
             this.textBoxPremisesNum.MaxLength = 4;
             this.textBoxPremisesNum.Name = "textBoxPremisesNum";
             this.textBoxPremisesNum.Size = new System.Drawing.Size(375, 20);
@@ -162,7 +169,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 90);
+            this.label3.Location = new System.Drawing.Point(9, 167);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(103, 13);
             this.label3.TabIndex = 28;
@@ -171,7 +178,7 @@
             // checkBoxFloorEnable
             // 
             this.checkBoxFloorEnable.AutoSize = true;
-            this.checkBoxFloorEnable.Location = new System.Drawing.Point(15, 148);
+            this.checkBoxFloorEnable.Location = new System.Drawing.Point(15, 225);
             this.checkBoxFloorEnable.Name = "checkBoxFloorEnable";
             this.checkBoxFloorEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxFloorEnable.TabIndex = 6;
@@ -181,7 +188,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 129);
+            this.label4.Location = new System.Drawing.Point(9, 206);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(33, 13);
             this.label4.TabIndex = 31;
@@ -190,7 +197,7 @@
             // numericUpDownFloor
             // 
             this.numericUpDownFloor.Enabled = false;
-            this.numericUpDownFloor.Location = new System.Drawing.Point(36, 145);
+            this.numericUpDownFloor.Location = new System.Drawing.Point(36, 222);
             this.numericUpDownFloor.Maximum = new decimal(new int[] {
             999,
             0,
@@ -203,7 +210,7 @@
             // checkBoxCadastralNumEnable
             // 
             this.checkBoxCadastralNumEnable.AutoSize = true;
-            this.checkBoxCadastralNumEnable.Location = new System.Drawing.Point(15, 187);
+            this.checkBoxCadastralNumEnable.Location = new System.Drawing.Point(15, 264);
             this.checkBoxCadastralNumEnable.Name = "checkBoxCadastralNumEnable";
             this.checkBoxCadastralNumEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxCadastralNumEnable.TabIndex = 8;
@@ -213,7 +220,7 @@
             // textBoxCadastralNum
             // 
             this.textBoxCadastralNum.Enabled = false;
-            this.textBoxCadastralNum.Location = new System.Drawing.Point(36, 184);
+            this.textBoxCadastralNum.Location = new System.Drawing.Point(36, 261);
             this.textBoxCadastralNum.MaxLength = 15;
             this.textBoxCadastralNum.Name = "textBoxCadastralNum";
             this.textBoxCadastralNum.Size = new System.Drawing.Size(375, 20);
@@ -222,7 +229,7 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 168);
+            this.label5.Location = new System.Drawing.Point(9, 245);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(110, 13);
             this.label5.TabIndex = 34;
@@ -233,7 +240,7 @@
             this.comboBoxFundType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFundType.Enabled = false;
             this.comboBoxFundType.FormattingEnabled = true;
-            this.comboBoxFundType.Location = new System.Drawing.Point(36, 224);
+            this.comboBoxFundType.Location = new System.Drawing.Point(36, 301);
             this.comboBoxFundType.Name = "comboBoxFundType";
             this.comboBoxFundType.Size = new System.Drawing.Size(375, 21);
             this.comboBoxFundType.TabIndex = 11;
@@ -241,7 +248,7 @@
             // checkBoxFundTypeEnable
             // 
             this.checkBoxFundTypeEnable.AutoSize = true;
-            this.checkBoxFundTypeEnable.Location = new System.Drawing.Point(15, 227);
+            this.checkBoxFundTypeEnable.Location = new System.Drawing.Point(15, 304);
             this.checkBoxFundTypeEnable.Name = "checkBoxFundTypeEnable";
             this.checkBoxFundTypeEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxFundTypeEnable.TabIndex = 10;
@@ -251,7 +258,7 @@
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(9, 208);
+            this.label6.Location = new System.Drawing.Point(9, 285);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(61, 13);
             this.label6.TabIndex = 37;
@@ -260,7 +267,7 @@
             // checkBoxAcceptedByExchangeEnable
             // 
             this.checkBoxAcceptedByExchangeEnable.AutoSize = true;
-            this.checkBoxAcceptedByExchangeEnable.Location = new System.Drawing.Point(15, 313);
+            this.checkBoxAcceptedByExchangeEnable.Location = new System.Drawing.Point(15, 390);
             this.checkBoxAcceptedByExchangeEnable.Name = "checkBoxAcceptedByExchangeEnable";
             this.checkBoxAcceptedByExchangeEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAcceptedByExchangeEnable.TabIndex = 14;
@@ -271,7 +278,7 @@
             // 
             this.checkBoxAcceptedByExchange.AutoSize = true;
             this.checkBoxAcceptedByExchange.Enabled = false;
-            this.checkBoxAcceptedByExchange.Location = new System.Drawing.Point(36, 312);
+            this.checkBoxAcceptedByExchange.Location = new System.Drawing.Point(36, 389);
             this.checkBoxAcceptedByExchange.Name = "checkBoxAcceptedByExchange";
             this.checkBoxAcceptedByExchange.Size = new System.Drawing.Size(284, 17);
             this.checkBoxAcceptedByExchange.TabIndex = 15;
@@ -281,7 +288,7 @@
             // checkBoxForOrpahnsEnable
             // 
             this.checkBoxForOrpahnsEnable.AutoSize = true;
-            this.checkBoxForOrpahnsEnable.Location = new System.Drawing.Point(15, 292);
+            this.checkBoxForOrpahnsEnable.Location = new System.Drawing.Point(15, 369);
             this.checkBoxForOrpahnsEnable.Name = "checkBoxForOrpahnsEnable";
             this.checkBoxForOrpahnsEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxForOrpahnsEnable.TabIndex = 12;
@@ -292,7 +299,7 @@
             // 
             this.checkBoxForOrpahns.AutoSize = true;
             this.checkBoxForOrpahns.Enabled = false;
-            this.checkBoxForOrpahns.Location = new System.Drawing.Point(36, 291);
+            this.checkBoxForOrpahns.Location = new System.Drawing.Point(36, 368);
             this.checkBoxForOrpahns.Name = "checkBoxForOrpahns";
             this.checkBoxForOrpahns.Size = new System.Drawing.Size(173, 17);
             this.checkBoxForOrpahns.TabIndex = 13;
@@ -302,7 +309,7 @@
             // checkBoxAcceptedByOtherEnable
             // 
             this.checkBoxAcceptedByOtherEnable.AutoSize = true;
-            this.checkBoxAcceptedByOtherEnable.Location = new System.Drawing.Point(15, 354);
+            this.checkBoxAcceptedByOtherEnable.Location = new System.Drawing.Point(15, 431);
             this.checkBoxAcceptedByOtherEnable.Name = "checkBoxAcceptedByOtherEnable";
             this.checkBoxAcceptedByOtherEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAcceptedByOtherEnable.TabIndex = 18;
@@ -313,7 +320,7 @@
             // 
             this.checkBoxAcceptedByOther.AutoSize = true;
             this.checkBoxAcceptedByOther.Enabled = false;
-            this.checkBoxAcceptedByOther.Location = new System.Drawing.Point(36, 353);
+            this.checkBoxAcceptedByOther.Location = new System.Drawing.Point(36, 430);
             this.checkBoxAcceptedByOther.Name = "checkBoxAcceptedByOther";
             this.checkBoxAcceptedByOther.Size = new System.Drawing.Size(370, 17);
             this.checkBoxAcceptedByOther.TabIndex = 19;
@@ -323,7 +330,7 @@
             // checkBoxAcceptedByDonationEnable
             // 
             this.checkBoxAcceptedByDonationEnable.AutoSize = true;
-            this.checkBoxAcceptedByDonationEnable.Location = new System.Drawing.Point(15, 333);
+            this.checkBoxAcceptedByDonationEnable.Location = new System.Drawing.Point(15, 410);
             this.checkBoxAcceptedByDonationEnable.Name = "checkBoxAcceptedByDonationEnable";
             this.checkBoxAcceptedByDonationEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAcceptedByDonationEnable.TabIndex = 16;
@@ -334,7 +341,7 @@
             // 
             this.checkBoxAcceptedByDonation.AutoSize = true;
             this.checkBoxAcceptedByDonation.Enabled = false;
-            this.checkBoxAcceptedByDonation.Location = new System.Drawing.Point(36, 332);
+            this.checkBoxAcceptedByDonation.Location = new System.Drawing.Point(36, 409);
             this.checkBoxAcceptedByDonation.Name = "checkBoxAcceptedByDonation";
             this.checkBoxAcceptedByDonation.Size = new System.Drawing.Size(302, 17);
             this.checkBoxAcceptedByDonation.TabIndex = 17;
@@ -344,7 +351,7 @@
             // textBoxHouse
             // 
             this.textBoxHouse.Enabled = false;
-            this.textBoxHouse.Location = new System.Drawing.Point(36, 65);
+            this.textBoxHouse.Location = new System.Drawing.Point(36, 142);
             this.textBoxHouse.Name = "textBoxHouse";
             this.textBoxHouse.Size = new System.Drawing.Size(375, 20);
             this.textBoxHouse.TabIndex = 38;
@@ -354,7 +361,7 @@
             this.comboBoxState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxState.Enabled = false;
             this.comboBoxState.FormattingEnabled = true;
-            this.comboBoxState.Location = new System.Drawing.Point(36, 264);
+            this.comboBoxState.Location = new System.Drawing.Point(36, 341);
             this.comboBoxState.Name = "comboBoxState";
             this.comboBoxState.Size = new System.Drawing.Size(375, 21);
             this.comboBoxState.TabIndex = 40;
@@ -362,7 +369,7 @@
             // checkBoxStateEnable
             // 
             this.checkBoxStateEnable.AutoSize = true;
-            this.checkBoxStateEnable.Location = new System.Drawing.Point(15, 267);
+            this.checkBoxStateEnable.Location = new System.Drawing.Point(15, 344);
             this.checkBoxStateEnable.Name = "checkBoxStateEnable";
             this.checkBoxStateEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxStateEnable.TabIndex = 39;
@@ -372,18 +379,85 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(9, 248);
+            this.label7.Location = new System.Drawing.Point(9, 325);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(123, 13);
             this.label7.TabIndex = 41;
             this.label7.Text = "Состояние помещения";
+            // 
+            // numericUpDownIDPremises
+            // 
+            this.numericUpDownIDPremises.Enabled = false;
+            this.numericUpDownIDPremises.Location = new System.Drawing.Point(36, 23);
+            this.numericUpDownIDPremises.Maximum = new decimal(new int[] {
+            2000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownIDPremises.Name = "numericUpDownIDPremises";
+            this.numericUpDownIDPremises.Size = new System.Drawing.Size(375, 20);
+            this.numericUpDownIDPremises.TabIndex = 43;
+            // 
+            // checkBoxIDPremisesEnable
+            // 
+            this.checkBoxIDPremisesEnable.AutoSize = true;
+            this.checkBoxIDPremisesEnable.Location = new System.Drawing.Point(15, 25);
+            this.checkBoxIDPremisesEnable.Name = "checkBoxIDPremisesEnable";
+            this.checkBoxIDPremisesEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxIDPremisesEnable.TabIndex = 42;
+            this.checkBoxIDPremisesEnable.UseVisualStyleBackColor = true;
+            this.checkBoxIDPremisesEnable.CheckedChanged += new System.EventHandler(this.checkBoxIDBuildingEnable_CheckedChanged);
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(9, 6);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(163, 13);
+            this.label9.TabIndex = 47;
+            this.label9.Text = "Внутренний номер помещения";
+            // 
+            // comboBoxRegion
+            // 
+            this.comboBoxRegion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxRegion.Enabled = false;
+            this.comboBoxRegion.FormattingEnabled = true;
+            this.comboBoxRegion.Location = new System.Drawing.Point(36, 62);
+            this.comboBoxRegion.Name = "comboBoxRegion";
+            this.comboBoxRegion.Size = new System.Drawing.Size(375, 21);
+            this.comboBoxRegion.TabIndex = 45;
+            // 
+            // checkBoxRegionEnable
+            // 
+            this.checkBoxRegionEnable.AutoSize = true;
+            this.checkBoxRegionEnable.Location = new System.Drawing.Point(15, 65);
+            this.checkBoxRegionEnable.Name = "checkBoxRegionEnable";
+            this.checkBoxRegionEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxRegionEnable.TabIndex = 44;
+            this.checkBoxRegionEnable.UseVisualStyleBackColor = true;
+            this.checkBoxRegionEnable.CheckedChanged += new System.EventHandler(this.checkBoxRegionEnable_CheckedChanged);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(9, 46);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(75, 13);
+            this.label8.TabIndex = 46;
+            this.label8.Text = "Жилой район";
             // 
             // SearchPremisesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
-            this.ClientSize = new System.Drawing.Size(423, 417);
+            this.ClientSize = new System.Drawing.Size(423, 495);
+            this.Controls.Add(this.numericUpDownIDPremises);
+            this.Controls.Add(this.checkBoxIDPremisesEnable);
+            this.Controls.Add(this.label9);
+            this.Controls.Add(this.comboBoxRegion);
+            this.Controls.Add(this.checkBoxRegionEnable);
+            this.Controls.Add(this.label8);
             this.Controls.Add(this.comboBoxState);
             this.Controls.Add(this.checkBoxStateEnable);
             this.Controls.Add(this.label7);
@@ -420,6 +494,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Фильтрация квартир";
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloor)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownIDPremises)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -458,5 +533,11 @@
         private System.Windows.Forms.ComboBox comboBoxState;
         private System.Windows.Forms.CheckBox checkBoxStateEnable;
         private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.NumericUpDown numericUpDownIDPremises;
+        private System.Windows.Forms.CheckBox checkBoxIDPremisesEnable;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.ComboBox comboBoxRegion;
+        private System.Windows.Forms.CheckBox checkBoxRegionEnable;
+        private System.Windows.Forms.Label label8;
     }
 }

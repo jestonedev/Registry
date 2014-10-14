@@ -41,50 +41,55 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgreementsDataModel.cs" />
     <Compile Include="BuildingsAggregatedDataModel.cs" />
     <Compile Include="BuildingsCurrentFundsDataModel.cs" />
     <Compile Include="BuildingsDataModel.cs" />
+    <Compile Include="ContractReasonsDataModel.cs" />
     <Compile Include="DataModelException.cs" />
     <Compile Include="DataModel.cs" />
     <Compile Include="DataModelLoadState.cs" />
     <Compile Include="DataModelLoadSyncType.cs" />
     <Compile Include="DBConnection.cs" />
+    <Compile Include="DocumentTypesDataModel.cs" />
+    <Compile Include="ExecutorsDataModel.cs" />
     <Compile Include="FundsBuildingsAssocDataModel.cs" />
     <Compile Include="FundsHistoryDataModel.cs" />
     <Compile Include="FundsPremisesAssocDataModel.cs" />
     <Compile Include="FundsSubPremisesAssocDataModel.cs" />
     <Compile Include="FundTypesDataModel.cs" />
-    <Compile Include="KladrDataModel.cs" />
+    <Compile Include="KinshipsDataModel.cs" />
+    <Compile Include="KladrRegionsDataModel.cs" />
+    <Compile Include="KladrStreetsDataModel.cs" />
     <Compile Include="OwnershipBuildingsAssocDataModel.cs" />
     <Compile Include="OwnershipPremisesAssocDataModel.cs" />
     <Compile Include="OwnershipRightTypesDataModel.cs" />
     <Compile Include="OwnershipsRightsDataModel.cs" />
+    <Compile Include="PersonsDataModel.cs" />
     <Compile Include="PremisesCurrentFundsDataModel.cs" />
     <Compile Include="PremisesDataModel.cs" />
     <Compile Include="PremisesKindsDataModel.cs" />
     <Compile Include="PremisesTypesDataModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-      <DependentUpon>Settings.settings</DependentUpon>
-    </Compile>
+    <Compile Include="ReasonTypesDataModel.cs" />
     <Compile Include="RelationsManager.cs" />
+    <Compile Include="RentTypesDataModel.cs" />
     <Compile Include="RestrictionsBuildingsAssocDataModel.cs" />
     <Compile Include="RestrictionsDataModel.cs" />
     <Compile Include="RestrictionsPremisesAssocDataModel.cs" />
     <Compile Include="RestrictionTypesDataModel.cs" />
     <Compile Include="StatesDataModel.cs" />
-    <Compile Include="StreetByBuildingDataSource.cs" />
     <Compile Include="StructureTypesDataModel.cs" />
     <Compile Include="SubPremisesDataModel.cs" />
+    <Compile Include="TenancyBuildingsAssocDataModel.cs" />
+    <Compile Include="TenancyContractsDataModel.cs" />
+    <Compile Include="TenancyPremisesAssocDataModel.cs" />
+    <Compile Include="TenancySubPremisesAssocDataModel.cs" />
+    <Compile Include="WarrantDocTypesDataModel.cs" />
+    <Compile Include="WarrantsDataModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Entities\Entities.csproj">

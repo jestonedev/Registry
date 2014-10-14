@@ -58,12 +58,14 @@ namespace Registry.Viewport
 
             //Инициируем колонки snapshot-модели
             for (int i = 0; i < structure_types.Select().Columns.Count; i++)
-                snapshot_structure_types.Columns.Add(new DataColumn(structure_types.Select().Columns[i].ColumnName, structure_types.Select().Columns[i].DataType));
+                snapshot_structure_types.Columns.Add(new DataColumn(
+                    structure_types.Select().Columns[i].ColumnName, structure_types.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             for (int i = 0; i < v_structure_types.Count; i++)
                 snapshot_structure_types.Rows.Add(DataRowViewToArray(((DataRowView)v_structure_types[i])));
             v_snapshot_structure_types = new BindingSource();
             v_snapshot_structure_types.DataSource = snapshot_structure_types;
+            v_snapshot_structure_types.CurrentItemChanged += new EventHandler(v_snapshot_structure_types_CurrentItemChanged);
 
             dataGridView.DataSource = v_snapshot_structure_types;
             field_id_structure_type.DataPropertyName = "id_structure_type";
@@ -75,6 +77,12 @@ namespace Registry.Viewport
             //Синхронизация данных исходные->текущие
             structure_types.Select().RowChanged += new DataRowChangeEventHandler(StructureTypeListViewport_RowChanged);
             structure_types.Select().RowDeleting += new DataRowChangeEventHandler(StructureTypeListViewport_RowDeleting);
+        }
+
+        void v_snapshot_structure_types_CurrentItemChanged(object sender, EventArgs e)
+        {
+            if (Selected)
+                menuCallback.NavigationStateUpdate();
         }
 
         public override void MoveFirst()
@@ -224,9 +232,6 @@ namespace Registry.Viewport
         {
             DataRowView row = (DataRowView)v_snapshot_structure_types.AddNew();
             row.EndEdit();
-            menuCallback.EditingStateUpdate();
-            menuCallback.NavigationStateUpdate();
-            menuCallback.StatusBarStateUpdate();
         }
 
         public override void Close()
@@ -256,9 +261,6 @@ namespace Registry.Viewport
         public override void DeleteRecord()
         {
             ((DataRowView)v_snapshot_structure_types[v_snapshot_structure_types.Position]).Row.Delete();
-            menuCallback.EditingStateUpdate();
-            menuCallback.NavigationStateUpdate();
-            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool CanCancelRecord()
@@ -271,9 +273,6 @@ namespace Registry.Viewport
             snapshot_structure_types.Clear();
             for (int i = 0; i < v_structure_types.Count; i++)
                 snapshot_structure_types.Rows.Add(DataRowViewToArray(((DataRowView)v_structure_types[i])));
-            menuCallback.EditingStateUpdate();
-            menuCallback.NavigationStateUpdate();
-            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool CanSaveRecord()
@@ -344,8 +343,6 @@ namespace Registry.Viewport
                     structure_types.Select().Rows.Find(((StructureType)list[i]).id_structure_type).Delete();
                 }
             }
-            menuCallback.NavigationStateUpdate();
-            menuCallback.EditingStateUpdate();
             sync_views = true;
         }
 

@@ -115,6 +115,7 @@ namespace Registry.Viewport
                 snapshot_restrictions.Rows.Add(DataRowViewToArray(((DataRowView)v_restrictions[i])));
             v_snapshot_restrictions = new BindingSource();
             v_snapshot_restrictions.DataSource = snapshot_restrictions;
+            v_snapshot_restrictions.CurrentItemChanged += new EventHandler(v_snapshot_restrictions_CurrentItemChanged);
 
             dataGridView.DataSource = v_snapshot_restrictions;
 
@@ -137,6 +138,12 @@ namespace Registry.Viewport
             restrictions.Select().RowDeleting += new DataRowChangeEventHandler(RestrictionListViewport_RowDeleting);
             restriction_assoc.Select().RowChanged += new DataRowChangeEventHandler(RestrictionAssoc_RowChanged);
             restriction_assoc.Select().RowDeleting += new DataRowChangeEventHandler(RestrictionAssoc_RowDeleting);
+        }
+
+        void v_snapshot_restrictions_CurrentItemChanged(object sender, EventArgs e)
+        {
+            if (Selected)
+                menuCallback.NavigationStateUpdate();
         }
 
         public override void MoveFirst()
@@ -340,9 +347,6 @@ namespace Registry.Viewport
         {
             DataRowView row = (DataRowView)v_snapshot_restrictions.AddNew();
             row.EndEdit();
-            menuCallback.EditingStateUpdate();
-            menuCallback.NavigationStateUpdate();
-            menuCallback.StatusBarStateUpdate();
         }
 
         public override void Close()
@@ -374,9 +378,6 @@ namespace Registry.Viewport
         public override void DeleteRecord()
         {
             ((DataRowView)v_snapshot_restrictions[v_snapshot_restrictions.Position]).Row.Delete();
-            menuCallback.EditingStateUpdate();
-            menuCallback.NavigationStateUpdate();
-            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool CanCancelRecord()
@@ -389,9 +390,6 @@ namespace Registry.Viewport
             snapshot_restrictions.Clear();
             for (int i = 0; i < v_restrictions.Count; i++)
                 snapshot_restrictions.Rows.Add(DataRowViewToArray(((DataRowView)v_restrictions[i])));
-            menuCallback.EditingStateUpdate();
-            menuCallback.NavigationStateUpdate();
-            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool CanSaveRecord()
@@ -489,8 +487,6 @@ namespace Registry.Viewport
             }
             RebuildFilter();
             sync_views = true;
-            menuCallback.NavigationStateUpdate();
-            menuCallback.EditingStateUpdate();
         }
 
         void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)

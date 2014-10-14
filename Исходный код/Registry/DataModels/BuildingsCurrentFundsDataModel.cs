@@ -10,23 +10,27 @@ namespace Registry.DataModels
     {
         private static BuildingsCurrentFundsDataModel dataModel = null;
 
-        private static string tableName = "buildings_current_funds"; 
+        private static string tableName = "buildings_current_funds";
 
-        public static BuildingsCurrentFundsDataModel GetInstance()
+        public event EventHandler<EventArgs> RefreshEvent;
+
+        private BuildingsCurrentFundsDataModel()
         {
-            if (dataModel == null)
-                dataModel = new BuildingsCurrentFundsDataModel();
-            return dataModel;
+            table = new DataTable(tableName);
+            table.Columns.Add("id_building").DataType = typeof(int);
+            table.Columns.Add("id_fund_type").DataType = typeof(int);
+            table.PrimaryKey = new DataColumn[] { table.Columns["id_building"] };
+            Refresh();
         }
 
-        public override DataTable Select()
+        public void Refresh()
         {
             DataTable buildings = BuildingsDataModel.GetInstance().Select();
             DataTable funds_history = FundsHistoryDataModel.GetInstance().Select();
             DataTable funds_buildings_assoc = FundsBuildingsAssocDataModel.GetInstance().Select();
             var max_id_by_buldings = from funds_buildings_assoc_row in funds_buildings_assoc.AsEnumerable()
-                                        join fund_history_row in funds_history.AsEnumerable()
-                                        on funds_buildings_assoc_row.Field<int>("id_fund") equals fund_history_row.Field<int>("id_fund")
+                                     join fund_history_row in funds_history.AsEnumerable()
+                                     on funds_buildings_assoc_row.Field<int>("id_fund") equals fund_history_row.Field<int>("id_fund")
                                      where fund_history_row.Field<DateTime?>("exclude_restriction_date") == null
                                      group funds_buildings_assoc_row.Field<int>("id_fund") by
                                              funds_buildings_assoc_row.Field<int>("id_building") into gs
@@ -38,25 +42,32 @@ namespace Registry.DataModels
             var result = from fund_history_row in funds_history.AsEnumerable()
                          join max_id_by_building_row in max_id_by_buldings
                                        on fund_history_row.Field<int>("id_fund") equals max_id_by_building_row.id_fund
-                                    select new
-                                    {
-                                        id_building = max_id_by_building_row.id_building,
-                                        id_fund = max_id_by_building_row.id_fund,
-                                        id_fund_type = fund_history_row.Field<int>("id_fund_type"),
-                                        protocol_number = fund_history_row.Field<string>("protocol_number"),
-                                        protocol_date = fund_history_row.Field<DateTime?>("protocol_date"),
-                                    };
-            DataTable buildings_current_funds = new DataTable(tableName);
-            buildings_current_funds.Columns.Add("id_building").DataType = typeof(int);
-            buildings_current_funds.Columns.Add("id_fund_type").DataType = typeof(int);
+                         select new
+                         {
+                             id_building = max_id_by_building_row.id_building,
+                             id_fund = max_id_by_building_row.id_fund,
+                             id_fund_type = fund_history_row.Field<int>("id_fund_type"),
+                             protocol_number = fund_history_row.Field<string>("protocol_number"),
+                             protocol_date = fund_history_row.Field<DateTime?>("protocol_date"),
+                         };
+            table.Clear();
+            table.BeginLoadData();
             result.ToList().ForEach((x) =>
             {
-                buildings_current_funds.Rows.Add(new object[] { 
+                table.Rows.Add(new object[] { 
                     x.id_building, 
                     x.id_fund_type });
             });
-            buildings_current_funds.PrimaryKey = new DataColumn[] { buildings_current_funds.Columns["id_building"] };
-            return buildings_current_funds;
+            table.EndLoadData();
+            if (RefreshEvent != null)
+                RefreshEvent(this, new EventArgs());
+        }
+
+        public static BuildingsCurrentFundsDataModel GetInstance()
+        {
+            if (dataModel == null)
+                dataModel = new BuildingsCurrentFundsDataModel();
+            return dataModel;
         }
     }
 }

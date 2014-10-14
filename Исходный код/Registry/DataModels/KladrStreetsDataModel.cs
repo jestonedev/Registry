@@ -8,13 +8,13 @@ using System.Windows.Forms;
 
 namespace Registry.DataModels
 {
-    public sealed class KladrDataModel : DataModel
+    public sealed class KladrStreetsDataModel : DataModel
     {
-        private static KladrDataModel dataModel = null;
+        private static KladrStreetsDataModel dataModel = null;
         private static string selectQuery = "SELECT * FROM v_kladr_streets";
         private static string tableName = "kladr";
 
-        private KladrDataModel(ToolStripProgressBar progressBar, int incrementor)
+        private KladrStreetsDataModel(ToolStripProgressBar progressBar, int incrementor)
             : base(progressBar, incrementor, selectQuery, tableName)
         {
         }
@@ -25,15 +25,15 @@ namespace Registry.DataModels
         }
 
 
-        public static KladrDataModel GetInstance()
+        public static KladrStreetsDataModel GetInstance()
         {
             return GetInstance(null, 0);
         }
 
-        public static KladrDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        public static KladrStreetsDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
         {
             if (dataModel == null)
-                dataModel = new KladrDataModel(progressBar, incrementor);
+                dataModel = new KladrStreetsDataModel(progressBar, incrementor);
             return dataModel;
         }
     }

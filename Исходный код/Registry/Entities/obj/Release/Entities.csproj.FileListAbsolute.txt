@@ -3,3 +3,4 @@ D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исхо
 D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Entities\obj\Release\Entities.dll
 D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Entities\obj\Release\Entities.pdb
 D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Entities\obj\Release\Entities.csprojResolveAssemblyReference.cache
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Entities\bin\Release\Entities.dll.config

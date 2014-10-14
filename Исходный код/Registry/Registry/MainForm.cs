@@ -10,6 +10,7 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using Registry.Viewport;
 using Registry.DataModels;
+using Registry.Entities;
 
 namespace Registry
 {
@@ -55,27 +56,42 @@ namespace Registry
         {
             // Инстрации подгружаются в асинхронном режиме
             // Тут будет реализован планировщик загрузки с учетом прав пользователей и частоты использования данных
-            BuildingsDataModel.GetInstance(toolStripProgressBar, 5);
-            StructureTypesDataModel.GetInstance(toolStripProgressBar, 5);
-            KladrDataModel.GetInstance(toolStripProgressBar, 5);
-            PremisesDataModel.GetInstance(toolStripProgressBar, 5);
-            PremisesTypesDataModel.GetInstance(toolStripProgressBar, 5);
-            PremisesKindsDataModel.GetInstance(toolStripProgressBar, 5);
-            SubPremisesDataModel.GetInstance(toolStripProgressBar, 5);
+            BuildingsDataModel.GetInstance(toolStripProgressBar, 3);
+            StructureTypesDataModel.GetInstance(toolStripProgressBar, 3);
+            KladrStreetsDataModel.GetInstance(toolStripProgressBar, 3);
+            PremisesDataModel.GetInstance(toolStripProgressBar, 3);
+            TenancyContractsDataModel.GetInstance(toolStripProgressBar, 3);
+            PersonsDataModel.GetInstance(toolStripProgressBar, 3);
+            PremisesTypesDataModel.GetInstance(toolStripProgressBar, 3);
+            PremisesKindsDataModel.GetInstance(toolStripProgressBar, 3);
+            SubPremisesDataModel.GetInstance(toolStripProgressBar, 3);
             FundTypesDataModel.GetInstance(toolStripProgressBar, 3);
-            StatesDataModel.GetInstance(toolStripProgressBar, 2);
-            FundsBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 5);
-            FundsPremisesAssocDataModel.GetInstance(toolStripProgressBar, 5);
-            FundsSubPremisesAssocDataModel.GetInstance(toolStripProgressBar,5);
-            FundsHistoryDataModel.GetInstance(toolStripProgressBar,5);
-            OwnershipBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 5);
-            OwnershipPremisesAssocDataModel.GetInstance(toolStripProgressBar, 5);
-            OwnershipsRightsDataModel.GetInstance(toolStripProgressBar, 5);
-            OwnershipRightTypesDataModel.GetInstance(toolStripProgressBar, 5);
-            RestrictionsBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 5);
-            RestrictionsPremisesAssocDataModel.GetInstance(toolStripProgressBar, 5);
-            RestrictionsDataModel.GetInstance(toolStripProgressBar, 5);
-            RestrictionTypesDataModel.GetInstance(toolStripProgressBar, 5);
+            StatesDataModel.GetInstance(toolStripProgressBar, 3);
+            FundsBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 3);
+            FundsPremisesAssocDataModel.GetInstance(toolStripProgressBar, 3);
+            FundsSubPremisesAssocDataModel.GetInstance(toolStripProgressBar,3);
+            FundsHistoryDataModel.GetInstance(toolStripProgressBar,3);
+            OwnershipBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 3);
+            OwnershipPremisesAssocDataModel.GetInstance(toolStripProgressBar, 3);
+            OwnershipsRightsDataModel.GetInstance(toolStripProgressBar, 3);
+            OwnershipRightTypesDataModel.GetInstance(toolStripProgressBar, 3);
+            RestrictionsBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 3);
+            RestrictionsPremisesAssocDataModel.GetInstance(toolStripProgressBar, 3);
+            RestrictionsDataModel.GetInstance(toolStripProgressBar, 3);
+            RestrictionTypesDataModel.GetInstance(toolStripProgressBar, 3);
+            KinshipsDataModel.GetInstance(toolStripProgressBar, 3);
+            KladrRegionsDataModel.GetInstance(toolStripProgressBar, 3);
+            TenancyBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 3);
+            TenancyPremisesAssocDataModel.GetInstance(toolStripProgressBar, 3);
+            TenancySubPremisesAssocDataModel.GetInstance(toolStripProgressBar, 3);
+            ContractReasonsDataModel.GetInstance(toolStripProgressBar, 2);
+            ReasonTypesDataModel.GetInstance(toolStripProgressBar, 2);
+            RentTypesDataModel.GetInstance(toolStripProgressBar, 2);
+            DocumentTypesDataModel.GetInstance(toolStripProgressBar, 2);
+            ExecutorsDataModel.GetInstance(toolStripProgressBar, 2);
+            AgreementsDataModel.GetInstance(toolStripProgressBar, 2);
+            WarrantsDataModel.GetInstance(toolStripProgressBar, 2);
+            WarrantDocTypesDataModel.GetInstance(toolStripProgressBar, 2);
         }
 
         private void ribbonButtonTabClose_Click(object sender, EventArgs e)
@@ -176,6 +192,10 @@ namespace Registry
         private void ribbonButtonInsertRecord_Click(object sender, EventArgs e)
         {
             (tabControl.SelectedTab as IMenuController).InsertRecord();
+            EditingStateUpdate();
+            NavigationStateUpdate();
+            RelationsStateUpdate();
+            StatusBarStateUpdate();
         }
 
         public void TabsStateUpdate()
@@ -247,16 +267,27 @@ namespace Registry
         private void ribbonButtonSave_Click(object sender, EventArgs e)
         {
             (tabControl.SelectedTab as IMenuController).SaveRecord();
+            EditingStateUpdate();
+            NavigationStateUpdate();
+            RelationsStateUpdate();
         }
 
         private void ribbonButtonCancel_Click(object sender, EventArgs e)
         {
             (tabControl.SelectedTab as IMenuController).CancelRecord();
+            EditingStateUpdate();
+            NavigationStateUpdate();
+            RelationsStateUpdate();
+            StatusBarStateUpdate();
         }
 
         private void ribbonButtonCopyRecord_Click(object sender, EventArgs e)
         {
             (tabControl.SelectedTab as IMenuController).CopyRecord();
+            EditingStateUpdate();
+            NavigationStateUpdate();
+            RelationsStateUpdate();
+            StatusBarStateUpdate();
         }
 
         private void ribbonButtonPremisesAssoc_Click(object sender, EventArgs e)
@@ -390,6 +421,13 @@ namespace Registry
 
         private void MainForm_Load(object sender, EventArgs e)
         {
+            UserDomain user = UserDomain.Current;
+            if (user == null)
+            {
+                MessageBox.Show("Пользователь не распознан или учетная запись не включена в службу каталогов Active Directory");
+                Application.Exit();
+            }
+            toolStripLabelHelloUser.Text = "Здравствуйте, " + user.DisplayName;
             PreLoadData();
         }
     }

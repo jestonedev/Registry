@@ -25,7 +25,7 @@ namespace Registry.Viewport
 
         //Models
         private BuildingsDataModel buildings = null;
-        private KladrDataModel kladr = null;
+        private KladrStreetsDataModel kladr = null;
 
         //Views
         private BindingSource v_buildings = null;
@@ -68,7 +68,7 @@ namespace Registry.Viewport
         public override void LoadData()
         {
             buildings = BuildingsDataModel.GetInstance();
-            kladr = KladrDataModel.GetInstance();
+            kladr = KladrStreetsDataModel.GetInstance();
             // Ожидаем дозагрузки данных, если это необходимо
             buildings.Select();
             kladr.Select();

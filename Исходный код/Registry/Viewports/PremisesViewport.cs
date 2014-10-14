@@ -81,7 +81,7 @@ namespace Registry.Viewport
         private PremisesDataModel premises = null;
         private PremisesCurrentFundsDataModel premisesCurrentFund = null;
         private BuildingsDataModel buildings = null;
-        private KladrDataModel kladr = null;
+        private KladrStreetsDataModel kladr = null;
         private PremisesTypesDataModel premises_types = null;
         private PremisesKindsDataModel premises_kinds = null;
         private SubPremisesDataModel sub_premises = null;
@@ -148,7 +148,7 @@ namespace Registry.Viewport
         {
             premises = PremisesDataModel.GetInstance();
             premisesCurrentFund = PremisesCurrentFundsDataModel.GetInstance();
-            kladr = KladrDataModel.GetInstance();
+            kladr = KladrStreetsDataModel.GetInstance();
             buildings = BuildingsDataModel.GetInstance();
             premises_types = PremisesTypesDataModel.GetInstance();
             premises_kinds = PremisesKindsDataModel.GetInstance();
@@ -261,6 +261,13 @@ namespace Registry.Viewport
             checkBoxAcceptByExchange.CheckedChanged += new EventHandler(checkBoxAcceptByExchange_CheckedChanged);
             checkBoxAcceptByOther.CheckedChanged += new EventHandler(checkBoxAcceptByOther_CheckedChanged);
             checkBoxForOrphans.CheckedChanged += new EventHandler(checkBoxForOrphans_CheckedChanged);
+
+            premisesCurrentFund.RefreshEvent += new EventHandler<EventArgs>(premisesCurrentFund_RefreshEvent);
+        }
+
+        void premisesCurrentFund_RefreshEvent(object sender, EventArgs e)
+        {
+            ShowOrHideCurrentFund();
         }
 
         void textBoxDescription_TextChanged(object sender, EventArgs e)
@@ -480,18 +487,7 @@ namespace Registry.Viewport
                     v_premisesCurrentFund.Filter = "id_premises = " + ((DataRowView)v_premises[v_premises.Position])["id_premises"].ToString();
                 else
                     v_premisesCurrentFund.Filter = "id_premises = 0";
-                if (v_premisesCurrentFund.Count > 0)
-                {
-                    label38.Visible = true;
-                    comboBoxCurrentFundType.Visible = true;
-                    this.tableLayoutPanel3.RowStyles[0].Height = 210F;
-                }
-                else
-                {
-                    label38.Visible = false;
-                    comboBoxCurrentFundType.Visible = false;
-                    this.tableLayoutPanel3.RowStyles[0].Height = 185F;
-                }
+                ShowOrHideCurrentFund();
             }
             SelectCurrentBuilding();
             if (Selected)
@@ -502,6 +498,22 @@ namespace Registry.Viewport
                 return;
             viewportState = ViewportState.ReadState;
             is_editable = true;
+        }
+
+        private void ShowOrHideCurrentFund()
+        {
+            if (v_premisesCurrentFund.Count > 0)
+            {
+                label38.Visible = true;
+                comboBoxCurrentFundType.Visible = true;
+                this.tableLayoutPanel3.RowStyles[0].Height = 210F;
+            }
+            else
+            {
+                label38.Visible = false;
+                comboBoxCurrentFundType.Visible = false;
+                this.tableLayoutPanel3.RowStyles[0].Height = 185F;
+            }
         }
 
         private void SelectCurrentBuilding()
@@ -792,8 +804,6 @@ namespace Registry.Viewport
             Premise premise = PremiseFromView();
             DataRowView row = (DataRowView)v_premises.AddNew();
             premises.EditingNewRecord = true;
-            menuCallback.NavigationStateUpdate();
-            menuCallback.EditingStateUpdate();
             if (premise.id_building != null)
             {
                 comboBoxStreet.SelectedValue = premise.id_building;
@@ -892,8 +902,6 @@ namespace Registry.Viewport
                     viewportState = ViewportState.ReadState;
                     break;
             }
-            menuCallback.EditingStateUpdate();
-            menuCallback.NavigationStateUpdate();
         }
 
         private static void FillRowFromPremise(Premise premise, DataRowView row)
@@ -935,9 +943,6 @@ namespace Registry.Viewport
                     }
                     else
                         this.Text = "Здания отсутствуют";
-                    menuCallback.EditingStateUpdate();
-                    menuCallback.NavigationStateUpdate();
-                    menuCallback.StatusBarStateUpdate();
                     break;
                 case ViewportState.ModifyRowState:
                     is_editable = false;
@@ -945,7 +950,6 @@ namespace Registry.Viewport
                     SelectCurrentBuilding();
                     is_editable = true;
                     viewportState = ViewportState.ReadState;
-                    menuCallback.EditingStateUpdate();
                     break;
             }
         }
@@ -1110,9 +1114,6 @@ namespace Registry.Viewport
                 return;
             DataRowView row = (DataRowView)v_premises.AddNew();
             premises.EditingNewRecord = true;
-            menuCallback.NavigationStateUpdate();
-            menuCallback.EditingStateUpdate();
-            menuCallback.StatusBarStateUpdate();
         }
 
         public override bool SearchedRecords()
@@ -1146,6 +1147,7 @@ namespace Registry.Viewport
                     return;
                 ((DataRowView)v_premises[v_premises.Position]).Delete();
                 menuCallback.ForceCloseDetachedViewports();
+                BuildingsAggregatedDataModel.GetInstance().Refresh();
             }
         }
 
@@ -1843,7 +1845,7 @@ namespace Registry.Viewport
             this.textBoxPremisesNumber.Name = "textBoxPremisesNumber";
             this.textBoxPremisesNumber.Size = new System.Drawing.Size(319, 20);
             this.textBoxPremisesNumber.TabIndex = 2;
-            this.textBoxPremisesNumber.MaxLength = 20;
+            this.textBoxPremisesNumber.MaxLength = 25;
             // 
             // textBoxDescription
             // 

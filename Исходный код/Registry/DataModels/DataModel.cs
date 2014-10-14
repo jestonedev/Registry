@@ -13,10 +13,12 @@ namespace Registry.DataModels
     public abstract class DataModel
     {
         protected DataTable table = null;
-        protected DBConnection connection = new DBConnection();
+        protected DBConnection connection = null;
 
         public DataModelLoadState dmLoadState = DataModelLoadState.BeforeLoad;
         public DataModelLoadSyncType dmLoadType = DataModelLoadSyncType.Syncronize; // По умолчанию загрузка синхронная
+
+        private static object lock_obj = new object();
 
         protected DataModel()
         {
@@ -27,14 +29,15 @@ namespace Registry.DataModels
             dmLoadType = DataModelLoadSyncType.Asyncronize;
             ThreadPool.QueueUserWorkItem((progress) =>
             {
-                dmLoadState = DataModelLoadState.Loading;
-                DbCommand command = connection.CreateCommand();
-                command.CommandText = selectQuery;
                 try
                 {
+                    dmLoadState = DataModelLoadState.Loading;
+                    connection = new DBConnection();
+                    DbCommand command = connection.CreateCommand();
+                    command.CommandText = selectQuery;
                     Interlocked.Exchange<DataTable>(ref table, connection.SqlSelectTable(tableName, (DbCommand)command));
                     ConfigureTable();
-                    lock (DataSetManager.GetDataSet())
+                    lock (lock_obj)
                     {
                         DataSetManager.AddTable(table);
                     }
@@ -50,9 +53,13 @@ namespace Registry.DataModels
                 }
                 catch (OdbcException e)
                 {
-                    MessageBox.Show(String.Format("Произошла ошибка при загрузке зданий из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    dmLoadState = DataModelLoadState.ErrorLoad;
+                    lock (lock_obj)
+                    {
+                        MessageBox.Show(String.Format("Произошла ошибка при загрузке данных из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        dmLoadState = DataModelLoadState.ErrorLoad;
+                        Application.Exit();
+                    }
                 }
                 catch (DataModelException e)
                 {
@@ -74,11 +81,14 @@ namespace Registry.DataModels
             {
                 if (dmLoadState == DataModelLoadState.ErrorLoad)
                 {
-                    MessageBox.Show("Во время загрузки зданий из базы данных произошла ошибка. Дальнейшая работа приложения невозможна", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return null;
+                    lock (lock_obj)
+                    {
+                        MessageBox.Show("Произошла ошибка при загрузке данных из базы данных. Дальнейшая работа приложения невозможна", "Ошибка",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        Application.Exit();
+                        return null;
+                    }
                 }
-                Thread.Sleep(100);  // Ожидание загрузки (чтобы сильно не нагружать процессор)
             }
             return table;
         }

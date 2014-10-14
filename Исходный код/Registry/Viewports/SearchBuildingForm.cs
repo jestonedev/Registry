@@ -12,11 +12,13 @@ namespace Registry
 {
     public partial class SearchBuildingForm : Form
     {
-        KladrDataModel kladr = null;
+        KladrStreetsDataModel kladr = null;
+        KladrRegionsDataModel regions = null;
         FundTypesDataModel fundTypes = null;
         StatesDataModel states = null;
 
         BindingSource v_kladr = null;
+        BindingSource v_regions = null;
         BindingSource v_fundTypes = null;
         BindingSource v_states = null;
 
@@ -25,11 +27,23 @@ namespace Registry
             string filter = "";
             if ((checkBoxStreetEnable.Checked) && (comboBoxStreet.SelectedValue != null))
                 filter += "id_street = '" + comboBoxStreet.SelectedValue.ToString()+"'";
+            if (checkBoxIDBuildingEnable.Checked)
+            {
+                if (filter.Trim() != "")
+                    filter += " AND ";
+                filter += "id_building = "+ numericUpDownIDBuilding.Value.ToString();
+            }
+            if (checkBoxRegionEnable.Checked && comboBoxRegion.SelectedValue != null)
+            {
+                if (filter.Trim() != "")
+                    filter += " AND ";
+                filter += "id_street LIKE '"+comboBoxRegion.SelectedValue.ToString()+"%'";
+            }
             if (checkBoxHouseEnable.Checked)
             {
                 if (filter.Trim() != "")
                     filter += " AND ";
-                filter += "house = '" + textBoxHouse.Text.Trim()+"'";
+                filter += String.Format("house = '{0}'", textBoxHouse.Text.Trim().Replace("'", ""));
             }
             if (checkBoxFloorsEnable.Checked)
             {
@@ -42,7 +56,7 @@ namespace Registry
                 if (filter.Trim() != "")
                     filter += " AND ";
                 if (textBoxCadastralNum.Text.Trim() != "")
-                    filter += "cadastral_num = '" + textBoxCadastralNum.Text.Trim() + "'";
+                    filter += String.Format("cadastral_num = '{0}'", textBoxCadastralNum.Text.Trim().Replace("'", ""));
                 else
                     filter += "cadastral_num is null";
             }
@@ -89,12 +103,16 @@ namespace Registry
         public SearchBuildingForm()
         {
             InitializeComponent();
-            kladr = KladrDataModel.GetInstance();
+            kladr = KladrStreetsDataModel.GetInstance();
             fundTypes = FundTypesDataModel.GetInstance();
             states = StatesDataModel.GetInstance();
+            regions = KladrRegionsDataModel.GetInstance();
 
             v_kladr = new BindingSource();
             v_kladr.DataSource = kladr.Select();
+
+            v_regions = new BindingSource();
+            v_regions.DataSource = regions.Select();
 
             v_fundTypes = new BindingSource();
             v_fundTypes.DataSource = fundTypes.Select();
@@ -113,6 +131,10 @@ namespace Registry
             comboBoxState.DataSource = v_states;
             comboBoxState.ValueMember = "id_state";
             comboBoxState.DisplayMember = "state_neutral";
+
+            comboBoxRegion.DataSource = v_regions;
+            comboBoxRegion.ValueMember = "id_region";
+            comboBoxRegion.DisplayMember = "region";
 
             numericUpDownStartupYear.Maximum = DateTime.Now.Year;
         }
@@ -209,6 +231,16 @@ namespace Registry
         private void checkBoxStateEnable_CheckedChanged(object sender, EventArgs e)
         {
             comboBoxState.Enabled = checkBoxStateEnable.Checked;
+        }
+
+        private void checkBoxIDBuildingEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            numericUpDownIDBuilding.Enabled = checkBoxIDBuildingEnable.Checked;
+        }
+
+        private void checkBoxRegionEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            comboBoxRegion.Enabled = checkBoxRegionEnable.Checked;
         }
     }
 }
