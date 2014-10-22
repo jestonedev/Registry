@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Data;
 using Registry.DataModels;
 using Registry.Entities;
+using Registry.CalcDataModels;
 
 namespace Registry.Viewport
 {
@@ -20,11 +21,6 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn field_description = new DataGridViewTextBoxColumn();
         private DataGridViewComboBoxColumn field_id_state = new DataGridViewComboBoxColumn();
         #endregion Components
-
-        public string StaticFilter { get; set; }
-        public string DynamicFilter { get; set; }
-        public DataRow ParentRow { get; set; }
-        public ParentTypeEnum ParentType { get; set; }
 
         //Modeles
         SubPremisesDataModel sub_premises = null;
@@ -42,10 +38,6 @@ namespace Registry.Viewport
         public SubPremisesViewport(IMenuCallback menuCallback)
             : base(menuCallback)
         {
-            StaticFilter = "";
-            DynamicFilter = "";
-            ParentRow = null;
-            ParentType = ParentTypeEnum.None;
             this.SuspendLayout();
             ConstructViewport();
             this.Name = "tabPageBuildings";
@@ -73,6 +65,9 @@ namespace Registry.Viewport
         {
             sub_premises = SubPremisesDataModel.GetInstance();
             states = StatesDataModel.GetInstance();
+            // Дожидаемся дозагрузки данных, если это необходимо
+            sub_premises.Select();
+            states.Select();
 
             v_states = new BindingSource();
             v_states.DataMember = "states";
@@ -336,8 +331,7 @@ namespace Registry.Viewport
                 dataRowView["id_state"], 
                 dataRowView["sub_premises_num"], 
                 dataRowView["total_area"],
-                dataRowView["description"],
-                dataRowView["deleted"]
+                dataRowView["description"]
             };
         }
 
@@ -353,6 +347,7 @@ namespace Registry.Viewport
             DataRowView row = (DataRowView)v_snapshot_sub_premises.AddNew();
             row["id_premises"] = ParentRow["id_premises"];
             row["total_area"] = 0;
+            row.EndEdit();
         }
 
         public override void Close()
@@ -437,6 +432,8 @@ namespace Registry.Viewport
                 }
                 else
                 {
+                    if (RowToSubPremise(row) == list[i])
+                        continue;
                     if (sub_premises.Update(list[i]) == -1)
                     {
                         sync_views = true;
@@ -468,7 +465,20 @@ namespace Registry.Viewport
                     sub_premises.Select().Rows.Find(((SubPremise)list[i]).id_sub_premises).Delete();
                 }
             }
-            sync_views = true;
+            sync_views = true; 
+            CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
+        }
+
+        private SubPremise RowToSubPremise(DataRow row)
+        {
+            SubPremise subPremise = new SubPremise();
+            subPremise.id_sub_premises = row["id_sub_premises"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_sub_premises"]);
+            subPremise.id_premises = row["id_premises"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_premises"]);
+            subPremise.id_state = row["id_state"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_state"]);
+            subPremise.sub_premises_num = row["sub_premises_num"] == DBNull.Value ? null : row["sub_premises_num"].ToString();
+            subPremise.total_area = row["total_area"] == DBNull.Value ? null : (double?)Convert.ToDouble(row["total_area"]);
+            subPremise.description = row["description"] == DBNull.Value ? null : row["description"].ToString();
+            return subPremise;
         }
 
         public override bool CanDuplicate()
@@ -486,6 +496,8 @@ namespace Registry.Viewport
 
         public override void ForceClose()
         {
+            sub_premises.Select().RowChanged -= new DataRowChangeEventHandler(SubPremisesViewport_RowChanged);
+            sub_premises.Select().RowDeleting -= new DataRowChangeEventHandler(SubPremisesViewport_RowDeleting);
             base.Close();
         }
 
@@ -494,7 +506,7 @@ namespace Registry.Viewport
             return ((ParentRow != null) && ((ParentRow.RowState == DataRowState.Detached) || (ParentRow.RowState == DataRowState.Deleted)));
         }
 
-        public override bool HasFundHistory()
+        public override bool HasAssocFundHistory()
         {
             return (v_snapshot_sub_premises.Count > 0);
         }

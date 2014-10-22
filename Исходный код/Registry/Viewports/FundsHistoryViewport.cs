@@ -8,6 +8,7 @@ using Registry.DataModels;
 using System.Data;
 using Registry.Entities;
 using System.Drawing;
+using Registry.CalcDataModels;
 
 namespace Registry.Viewport
 {
@@ -62,11 +63,6 @@ namespace Registry.Viewport
         BindingSource v_fund_types = null;
         BindingSource v_fund_assoc = null;
 
-        public string StaticFilter { get; set; }
-        public string DynamicFilter { get; set; }
-        public DataRow ParentRow { get; set; }
-        public ParentTypeEnum ParentType { get; set; }
-
         private ViewportState viewportState = ViewportState.ReadState;
         private bool is_editable = false;
 
@@ -100,6 +96,10 @@ namespace Registry.Viewport
         {
             funds_history = FundsHistoryDataModel.GetInstance();
             fund_types = FundTypesDataModel.GetInstance();
+
+            // Ожидаем дозагрузки, если это необходимо
+            funds_history.Select();
+            fund_types.Select();
 
             if (ParentType == ParentTypeEnum.SubPremises)
                 fund_assoc = FundsSubPremisesAssocDataModel.GetInstance();
@@ -152,8 +152,10 @@ namespace Registry.Viewport
 
             DataBind();
 
+            funds_history.Select().RowChanged += new DataRowChangeEventHandler(FundsHistoryViewport_RowChanged);
+            funds_history.Select().RowDeleted += new DataRowChangeEventHandler(FundsHistoryViewport_RowDeleted);
             fund_assoc.Select().RowChanged += new DataRowChangeEventHandler(FundAssoc_RowChanged);
-            fund_assoc.Select().RowDeleting += new DataRowChangeEventHandler(FundAssoc_RowDeleting);
+            fund_assoc.Select().RowDeleted += new DataRowChangeEventHandler(FundAssoc_RowDeleted);
 
             comboBoxFundType.SelectedIndexChanged += new EventHandler(comboBoxFundType_SelectedIndexChanged);
             textBoxProtocolNumber.TextChanged += new EventHandler(textBoxProtocolNumber_TextChanged);
@@ -166,6 +168,16 @@ namespace Registry.Viewport
             textBoxExcludeRestDesc.TextChanged += new EventHandler(textBoxExcludeRestDesc_TextChanged);
             dateTimePickerExcludeRestDate.ValueChanged += new EventHandler(dateTimePickerExcludeRestDate_ValueChanged);
             dataGridView.DataError += new DataGridViewDataErrorEventHandler(dataGridView_DataError);
+        }
+
+        void FundsHistoryViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            GroupEnableCheckBoxesUpdate();
+        }
+
+        void FundsHistoryViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            GroupEnableCheckBoxesUpdate();            
         }
 
         void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -231,11 +243,12 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
-        void FundAssoc_RowDeleting(object sender, DataRowChangeEventArgs e)
+        void FundAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
             {
                 RebuildFilter();
+                GroupEnableCheckBoxesUpdate();
                 RedrawDataGridRows();
             }
         }
@@ -245,6 +258,7 @@ namespace Registry.Viewport
             if (e.Action == DataRowAction.Add)
             {
                 RebuildFilter();
+                GroupEnableCheckBoxesUpdate();
                 RedrawDataGridRows();
             }
         }
@@ -341,7 +355,9 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
             fund_assoc.Select().RowChanged -= new DataRowChangeEventHandler(FundAssoc_RowChanged);
-            fund_assoc.Select().RowDeleting -= new DataRowChangeEventHandler(FundAssoc_RowDeleting);
+            fund_assoc.Select().RowDeleted -= new DataRowChangeEventHandler(FundAssoc_RowDeleted); 
+            funds_history.Select().RowChanged -= new DataRowChangeEventHandler(FundsHistoryViewport_RowChanged);
+            funds_history.Select().RowDeleted -= new DataRowChangeEventHandler(FundsHistoryViewport_RowDeleted);
             base.Close();
         }
 
@@ -370,6 +386,8 @@ namespace Registry.Viewport
         {
             if (fundHistory.id_fund_type != null)
                 comboBoxFundType.SelectedValue = fundHistory.id_fund_type;
+            else
+                comboBoxFundType.SelectedValue = DBNull.Value;
             textBoxProtocolNumber.Text = fundHistory.protocol_number;
             if (fundHistory.protocol_date != null)
                 dateTimePickerProtocolDate.Value = fundHistory.protocol_date.Value;
@@ -405,15 +423,15 @@ namespace Registry.Viewport
             {
                 fundHistory.protocol_number = null;
                 fundHistory.protocol_date = null;
-            } else
+            }
+            else
+            {
                 if (textBoxProtocolNumber.Text.Trim() == "")
                     fundHistory.protocol_number = null;
                 else
                     fundHistory.protocol_number = textBoxProtocolNumber.Text.Trim();
-            if ((fundHistory.id_fund_type == null) || (fundHistory.id_fund_type == 1))
-                fundHistory.protocol_date = null;
-            else
                 fundHistory.protocol_date = dateTimePickerProtocolDate.Value;
+            }
             if (textBoxDescription.Text.Trim() == "")
                 fundHistory.description = null;
             else
@@ -586,12 +604,12 @@ namespace Registry.Viewport
                 ((DataRowView)v_funds_history[v_funds_history.Position]).Delete();
                 RedrawDataGridRows();
                 menuCallback.ForceCloseDetachedViewports();
-                BuildingsAggregatedDataModel.GetInstance().Refresh();
+                CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"]);
                 if (ParentType == ParentTypeEnum.Building)
-                    BuildingsCurrentFundsDataModel.GetInstance().Refresh();
+                    CalcDataModelBuildingsCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"]);
                 else
                     if (ParentType == ParentTypeEnum.Premises)
-                        PremisesCurrentFundsDataModel.GetInstance().Refresh();
+                        CalcDataModelPremisesCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, (int)ParentRow["id_premises"]);
             }
         }
 
@@ -630,16 +648,21 @@ namespace Registry.Viewport
             if (Selected)
                 menuCallback.NavigationStateUpdate(); 
             dataGridView.Enabled = true;
-            checkBoxIncludeRest.Checked = (v_funds_history.Position >= 0) && 
-                (((DataRowView)v_funds_history[v_funds_history.Position])["include_restriction_date"] != DBNull.Value);
-            checkBoxExcludeRest.Checked = (v_funds_history.Position >= 0) &&
-                (((DataRowView)v_funds_history[v_funds_history.Position])["exclude_restriction_date"] != DBNull.Value);
+            GroupEnableCheckBoxesUpdate();
             if (v_funds_history.Position == -1)
                 return;
             if (viewportState == ViewportState.NewRowState)
                 return;
             viewportState = ViewportState.ReadState;
             is_editable = true;
+        }
+
+        private void GroupEnableCheckBoxesUpdate()
+        {
+            checkBoxIncludeRest.Checked = (v_funds_history.Position >= 0) &&
+                (((DataRowView)v_funds_history[v_funds_history.Position])["include_restriction_date"] != DBNull.Value);
+            checkBoxExcludeRest.Checked = (v_funds_history.Position >= 0) &&
+                (((DataRowView)v_funds_history[v_funds_history.Position])["exclude_restriction_date"] != DBNull.Value);
         }
 
         public override int GetRecordCount()
@@ -707,7 +730,6 @@ namespace Registry.Viewport
                     int id_fund = funds_history.Insert(fundHistory, ParentType, id_parent);
                     if (id_fund == -1)
                         return;
-                    dataGridView.Enabled = true;
                     DataRowView newRow;
                     if (v_funds_history.Position == -1)
                         newRow = (DataRowView)v_funds_history.AddNew();
@@ -716,9 +738,8 @@ namespace Registry.Viewport
                     fundHistory.id_fund = id_fund;
                     FillRowFromFundHistory(fundHistory, newRow);
                     funds_history.EditingNewRecord = false;
-                    viewportState = ViewportState.ReadState;
                     is_editable = true;
-                    fund_assoc.Select().Rows.Add(new object[] { id_parent, id_fund }).AcceptChanges();
+                    fund_assoc.Select().Rows.Add(new object[] { id_parent, id_fund });
                     RebuildFilter();
                     v_funds_history.Position = v_funds_history.Count - 1;
                     break;
@@ -731,19 +752,20 @@ namespace Registry.Viewport
                     }
                     if (funds_history.Update(fundHistory) == -1)
                         return;
-                    dataGridView.Enabled = true;
                     DataRowView row = ((DataRowView)v_funds_history[v_funds_history.Position]);
                     FillRowFromFundHistory(fundHistory, row);
-                    viewportState = ViewportState.ReadState;
                     break;
             }
             RedrawDataGridRows();
-            BuildingsAggregatedDataModel.GetInstance().Refresh();
+            GroupEnableCheckBoxesUpdate();
+            dataGridView.Enabled = true;
+            viewportState = ViewportState.ReadState;
+            CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"]);
             if (ParentType == ParentTypeEnum.Building)
-                BuildingsCurrentFundsDataModel.GetInstance().Refresh();
+                CalcDataModelBuildingsCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"]);
             else
                 if (ParentType == ParentTypeEnum.Premises)
-                    PremisesCurrentFundsDataModel.GetInstance().Refresh();
+                    CalcDataModelPremisesCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, (int)ParentRow["id_premises"]);
         }
 
         private void FillRowFromFundHistory(FundHistory fundHistory, DataRowView row)
@@ -785,13 +807,15 @@ namespace Registry.Viewport
                     {
                         dataGridView.Enabled = true;
                         ((DataRowView)v_funds_history[v_funds_history.Position]).Delete();
-                        funds_history.Select().AcceptChanges();
                         RedrawDataGridRows();
                     }
                     break;
                 case ViewportState.ModifyRowState:
                     dataGridView.Enabled = true;
+                    is_editable = false;
                     DataBind();
+                    GroupEnableCheckBoxesUpdate();
+                    is_editable = true;
                     viewportState = ViewportState.ReadState;
                     break;
             }
@@ -883,6 +907,10 @@ namespace Registry.Viewport
         {
             if (viewportState == ViewportState.NewRowState)
                 funds_history.EditingNewRecord = false;
+            fund_assoc.Select().RowChanged -= new DataRowChangeEventHandler(FundAssoc_RowChanged);
+            fund_assoc.Select().RowDeleted -= new DataRowChangeEventHandler(FundAssoc_RowDeleted);
+            funds_history.Select().RowChanged -= new DataRowChangeEventHandler(FundsHistoryViewport_RowChanged);
+            funds_history.Select().RowDeleted -= new DataRowChangeEventHandler(FundsHistoryViewport_RowDeleted);
             base.Close();
         }
 

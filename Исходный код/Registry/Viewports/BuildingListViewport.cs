@@ -7,6 +7,8 @@ using Registry.DataModels;
 using System.Data;
 using Registry.Entities;
 using System.Threading;
+using Registry.SearchForms;
+using Registry.CalcDataModels;
 
 namespace Registry.Viewport
 {
@@ -31,17 +33,12 @@ namespace Registry.Viewport
         private BindingSource v_buildings = null;
         private BindingSource v_kladr = null;
 
-        public string StaticFilter { get; set; }
-        public string DynamicFilter { get; set; }
-        public DataRow ParentRow { get; set; }
-        public ParentTypeEnum ParentType { get; set; }
+        //Forms
+        private SearchForm sbSimpleSearchForm = null;
+        private SearchForm sbExtendedSearchForm = null;
 
         public BuildingListViewport(IMenuCallback menuCallback): base(menuCallback)
         {
-            StaticFilter = "";
-            DynamicFilter = "";
-            ParentRow = null;
-            ParentType = ParentTypeEnum.None;
             this.SuspendLayout();
             ConstructViewport();
             this.Name = "tabPageTenancies";
@@ -94,7 +91,7 @@ namespace Registry.Viewport
 
             v_buildings.PositionChanged += new EventHandler(v_buildings_PositionChanged);
             buildings.Select().RowChanged += new DataRowChangeEventHandler(BuildingListViewport_RowChanged);
-            buildings.Select().RowDeleting += new DataRowChangeEventHandler(BuildingListViewport_RowDeleting);
+            buildings.Select().RowDeleted += new DataRowChangeEventHandler(BuildingListViewport_RowDeleted);
             dataGridView.CellValueNeeded += new DataGridViewCellValueEventHandler(dataGridView_CellValueNeeded);
             dataGridView.SelectionChanged += new EventHandler(dataGridView_SelectionChanged);
             dataGridView.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(dataGridView_ColumnHeaderMouseClick);
@@ -113,20 +110,22 @@ namespace Registry.Viewport
         {
             if (dataGridView.Columns[e.ColumnIndex].SortMode == DataGridViewColumnSortMode.NotSortable)
                 return;
+            Func<SortOrder, bool> changeSortColumn = (way) =>
+            {
+                foreach (DataGridViewColumn column in dataGridView.Columns)
+                    column.HeaderCell.SortGlyphDirection = SortOrder.None;
+                v_buildings.Sort = dataGridView.Columns[e.ColumnIndex].Name + " " + ((way == SortOrder.Ascending) ? "ASC" : "DESC");
+                dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = way;
+                return true;
+            };
             if (dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection == SortOrder.Ascending)
-            {
-                v_buildings.Sort = dataGridView.Columns[e.ColumnIndex].Name + " DESC";
-                dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Descending;
-            }
+                changeSortColumn(SortOrder.Descending);
             else
-            {
-                v_buildings.Sort = dataGridView.Columns[e.ColumnIndex].Name + " ASC";
-                dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
-            }
+                changeSortColumn(SortOrder.Ascending);
             dataGridView.Refresh();
         }
 
-        void BuildingListViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
+        void BuildingListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             dataGridView.RowCount = v_buildings.Count;
             dataGridView.Refresh();
@@ -254,6 +253,8 @@ namespace Registry.Viewport
                     return;
                 ((DataRowView)v_buildings[v_buildings.Position]).Delete();
                 menuCallback.ForceCloseDetachedViewports();
+                if (ParentType == ParentTypeEnum.Tenancy)
+                    CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
             }
         }
 
@@ -275,20 +276,33 @@ namespace Registry.Viewport
                 return false;
         }
 
-        public override void SearchRecord()
+        public override void SearchRecord(SearchFormType searchFormType)
         {
-            SearchBuildingForm sbForm = new SearchBuildingForm();
-            if (sbForm.ShowDialog() == DialogResult.OK)
+            switch (searchFormType)
             {
-                DynamicFilter = sbForm.GetFilter();
-                string Filter = StaticFilter;
-                if (StaticFilter != "" && DynamicFilter != "")
-                    Filter += " AND ";
-                Filter += DynamicFilter;
-                dataGridView.RowCount = 0;
-                v_buildings.Filter = Filter;
-                dataGridView.RowCount = v_buildings.Count;
+                case SearchFormType.SimpleSearchForm:
+                    if (sbSimpleSearchForm == null)
+                        sbSimpleSearchForm = new SimpleSearchBuildingForm();
+                    if (sbSimpleSearchForm.ShowDialog() != DialogResult.OK)
+                        return;
+                    DynamicFilter = sbSimpleSearchForm.GetFilter();
+                    break;
+                case SearchFormType.ExtendedSearchForm:
+                    if (sbExtendedSearchForm == null)
+                        sbExtendedSearchForm = new ExtendedSearchBuildingForm();
+                    if (sbExtendedSearchForm.ShowDialog() != DialogResult.OK)
+                        return;
+                    DynamicFilter = sbExtendedSearchForm.GetFilter();
+                    break;
             }
+            string Filter = StaticFilter;
+            if (StaticFilter != "" && DynamicFilter != "")
+                Filter += " AND ";
+            Filter += DynamicFilter;
+            dataGridView.RowCount = 0;
+            v_buildings.Filter = Filter;
+            dataGridView.RowCount = v_buildings.Count;
+
         }
 
         public override void ClearSearch()
@@ -338,7 +352,7 @@ namespace Registry.Viewport
             return (v_buildings.Position > -1);
         }
 
-        public override bool HasFundHistory()
+        public override bool HasAssocFundHistory()
         {
             return (v_buildings.Position > -1);
         }
@@ -459,8 +473,23 @@ namespace Registry.Viewport
         public override void Close()
         {
             buildings.Select().RowChanged -= new DataRowChangeEventHandler(BuildingListViewport_RowChanged);
-            buildings.Select().RowDeleting -= new DataRowChangeEventHandler(BuildingListViewport_RowDeleting);
+            buildings.Select().RowDeleted -= new DataRowChangeEventHandler(BuildingListViewport_RowDeleted);
             base.Close();
+        }
+
+        public override Viewport Duplicate()
+        {
+            BuildingListViewport viewport = new BuildingListViewport(this, menuCallback);
+            if (viewport.CanLoadData())
+                viewport.LoadData();
+            if (v_buildings.Count > 0)
+                viewport.LocateBuildingBy((((DataRowView)v_buildings[v_buildings.Position])["id_building"] as Int32?) ?? -1);
+            return viewport;
+        }
+
+        public override bool CanDuplicate()
+        {
+            return true;
         }
 
         private void ConstructViewport()
@@ -559,21 +588,6 @@ namespace Registry.Viewport
             field_startup_year.Name = "startup_year";
 
             ((System.ComponentModel.ISupportInitialize)(dataGridView)).EndInit();
-        }
-
-        public override Viewport Duplicate()
-        {
-            BuildingListViewport viewport = new BuildingListViewport(this, menuCallback);
-            if (viewport.CanLoadData())
-                viewport.LoadData();
-            if (v_buildings.Count > 0)
-                viewport.LocateBuildingBy((((DataRowView)v_buildings[v_buildings.Position])["id_building"] as Int32?) ?? -1);
-            return viewport;
-        }
-
-        public override bool CanDuplicate()
-        {
-            return true;
         }
     }
 }

@@ -56,12 +56,11 @@ namespace Registry
         {
             // Инстрации подгружаются в асинхронном режиме
             // Тут будет реализован планировщик загрузки с учетом прав пользователей и частоты использования данных
+            // Реестр жилого фонда
             BuildingsDataModel.GetInstance(toolStripProgressBar, 3);
             StructureTypesDataModel.GetInstance(toolStripProgressBar, 3);
             KladrStreetsDataModel.GetInstance(toolStripProgressBar, 3);
             PremisesDataModel.GetInstance(toolStripProgressBar, 3);
-            TenancyContractsDataModel.GetInstance(toolStripProgressBar, 3);
-            PersonsDataModel.GetInstance(toolStripProgressBar, 3);
             PremisesTypesDataModel.GetInstance(toolStripProgressBar, 3);
             PremisesKindsDataModel.GetInstance(toolStripProgressBar, 3);
             SubPremisesDataModel.GetInstance(toolStripProgressBar, 3);
@@ -74,16 +73,19 @@ namespace Registry
             OwnershipBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 3);
             OwnershipPremisesAssocDataModel.GetInstance(toolStripProgressBar, 3);
             OwnershipsRightsDataModel.GetInstance(toolStripProgressBar, 3);
-            OwnershipRightTypesDataModel.GetInstance(toolStripProgressBar, 3);
-            RestrictionsBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 3);
-            RestrictionsPremisesAssocDataModel.GetInstance(toolStripProgressBar, 3);
-            RestrictionsDataModel.GetInstance(toolStripProgressBar, 3);
-            RestrictionTypesDataModel.GetInstance(toolStripProgressBar, 3);
-            KinshipsDataModel.GetInstance(toolStripProgressBar, 3);
-            KladrRegionsDataModel.GetInstance(toolStripProgressBar, 3);
-            TenancyBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 3);
-            TenancyPremisesAssocDataModel.GetInstance(toolStripProgressBar, 3);
-            TenancySubPremisesAssocDataModel.GetInstance(toolStripProgressBar, 3);
+            OwnershipRightTypesDataModel.GetInstance(toolStripProgressBar, 2);
+            RestrictionsBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 2);
+            RestrictionsPremisesAssocDataModel.GetInstance(toolStripProgressBar, 2);
+            RestrictionsDataModel.GetInstance(toolStripProgressBar, 2);
+            RestrictionTypesDataModel.GetInstance(toolStripProgressBar, 2);
+            KladrRegionsDataModel.GetInstance(toolStripProgressBar, 2);
+            // Процесс найма
+            TenancyContractsDataModel.GetInstance(toolStripProgressBar, 3);
+            PersonsDataModel.GetInstance(toolStripProgressBar, 3);
+            KinshipsDataModel.GetInstance(toolStripProgressBar, 2);
+            TenancyBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 2);
+            TenancyPremisesAssocDataModel.GetInstance(toolStripProgressBar, 2);
+            TenancySubPremisesAssocDataModel.GetInstance(toolStripProgressBar, 2);
             ContractReasonsDataModel.GetInstance(toolStripProgressBar, 2);
             ReasonTypesDataModel.GetInstance(toolStripProgressBar, 2);
             RentTypesDataModel.GetInstance(toolStripProgressBar, 2);
@@ -92,6 +94,12 @@ namespace Registry
             AgreementsDataModel.GetInstance(toolStripProgressBar, 2);
             WarrantsDataModel.GetInstance(toolStripProgressBar, 2);
             WarrantDocTypesDataModel.GetInstance(toolStripProgressBar, 2);
+            DocumentsIssuedByDataModel.GetInstance(toolStripProgressBar, 2);
+            // Претензионно-исковая работа
+            ClaimsDataModel.GetInstance(toolStripProgressBar, 2);
+            ClaimStatesDataModel.GetInstance(toolStripProgressBar, 2);
+            ClaimStateTypesDataModel.GetInstance(toolStripProgressBar, 2);
+            ClaimStateTypesRelationsDataModel.GetInstance(toolStripProgressBar, 2);
         }
 
         private void ribbonButtonTabClose_Click(object sender, EventArgs e)
@@ -148,21 +156,30 @@ namespace Registry
             NavigationStateUpdate();
         }
 
-        private void ribbonButtonDeleteRecord_Click(object sender, EventArgs e)
+        private void ribbonButtonSearch_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).DeleteRecord();
+            if (ribbonButtonSearch.Checked)
+                (tabControl.SelectedTab as IMenuController).ClearSearch();
+            else
+                (tabControl.SelectedTab as IMenuController).SearchRecord(SearchFormType.SimpleSearchForm);
             NavigationStateUpdate();
             EditingStateUpdate();
             RelationsStateUpdate();
             StatusBarStateUpdate();
         }
 
-        private void ribbonButtonSearch_Click(object sender, EventArgs e)
+        private void ribbonButtonExtendedSearch_Click(object sender, EventArgs e)
         {
-            if (ribbonButtonSearch.Checked)
-                (tabControl.SelectedTab as IMenuController).ClearSearch();
-            else
-                (tabControl.SelectedTab as IMenuController).SearchRecord();
+            (tabControl.SelectedTab as IMenuController).SearchRecord(SearchFormType.ExtendedSearchForm);
+            NavigationStateUpdate();
+            EditingStateUpdate();
+            RelationsStateUpdate();
+            StatusBarStateUpdate();
+        }
+
+        private void ribbonButtonSimpleSearch_Click(object sender, EventArgs e)
+        {
+            (tabControl.SelectedTab as IMenuController).SearchRecord(SearchFormType.SimpleSearchForm);
             NavigationStateUpdate();
             EditingStateUpdate();
             RelationsStateUpdate();
@@ -187,15 +204,6 @@ namespace Registry
         private void ribbonButtonOpen_Click(object sender, EventArgs e)
         {
             (tabControl.SelectedTab as IMenuController).OpenDetails();
-        }
-
-        private void ribbonButtonInsertRecord_Click(object sender, EventArgs e)
-        {
-            (tabControl.SelectedTab as IMenuController).InsertRecord();
-            EditingStateUpdate();
-            NavigationStateUpdate();
-            RelationsStateUpdate();
-            StatusBarStateUpdate();
         }
 
         public void TabsStateUpdate()
@@ -248,8 +256,17 @@ namespace Registry
                 ribbonPanelRelations.Items.Add(ribbonButtonOwnerships);
             if ((tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).HasAssocRestrictions())
                 ribbonPanelRelations.Items.Add(ribbonButtonRestrictions);
-            if ((tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).HasFundHistory())
+            if ((tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).HasAssocFundHistory())
                 ribbonPanelRelations.Items.Add(ribbonButtonFundsHistory);
+            if ((tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).HasAssocTenancyObjects())
+                ribbonPanelRelations.Items.Add(ribbonButtonTenancyObjects);
+            if ((tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).HasAssocPersons())
+                ribbonPanelRelations.Items.Add(ribbonButtonPersons);
+            if ((tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).HasAssocContractReasons())
+                ribbonPanelRelations.Items.Add(ribbonButtonContractReasons);
+            if ((tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).HasAssocAgreements())
+                ribbonPanelRelations.Items.Add(ribbonButtonAgreements);
+
             ribbon1.SuspendUpdating();
             if (ribbonPanelRelations.Items.Count == 0)
                 ribbonTabGeneral.Panels.Remove(ribbonPanelRelations);
@@ -272,6 +289,24 @@ namespace Registry
             RelationsStateUpdate();
         }
 
+        private void ribbonButtonDeleteRecord_Click(object sender, EventArgs e)
+        {
+            (tabControl.SelectedTab as IMenuController).DeleteRecord();
+            NavigationStateUpdate();
+            EditingStateUpdate();
+            RelationsStateUpdate();
+            StatusBarStateUpdate();
+        }
+
+        private void ribbonButtonInsertRecord_Click(object sender, EventArgs e)
+        {
+            (tabControl.SelectedTab as IMenuController).InsertRecord();
+            EditingStateUpdate();
+            NavigationStateUpdate();
+            RelationsStateUpdate();
+            StatusBarStateUpdate();
+        }
+
         private void ribbonButtonCancel_Click(object sender, EventArgs e)
         {
             (tabControl.SelectedTab as IMenuController).CancelRecord();
@@ -290,40 +325,6 @@ namespace Registry
             StatusBarStateUpdate();
         }
 
-        private void ribbonButtonPremisesAssoc_Click(object sender, EventArgs e)
-        {
-            (tabControl.SelectedTab as IMenuController).ShowPremises();
-        }
-
-        private void ribbonOrbMenuItemBuildings_Click(object sender, EventArgs e)
-        {
-            Registry.Viewport.Viewport viewport = Registry.Viewport.ViewportFactory.CreateViewport(this, ViewportType.BuildingListViewport);
-            if ((viewport as IMenuController).CanLoadData())
-                (viewport as IMenuController).LoadData();
-            tabControl.Controls.Add(viewport);
-            tabControl.SelectedTab = viewport;
-            ChangeMainMenuState();
-            StatusBarStateUpdate();
-            ChangeViewportsSelectProprty();
-        }
-
-        private void ribbonOrbMenuItemPremises_Click(object sender, EventArgs e)
-        {
-            Registry.Viewport.Viewport viewport = Registry.Viewport.ViewportFactory.CreateViewport(this, ViewportType.PremisesListViewport);
-            if ((viewport as IMenuController).CanLoadData())
-                (viewport as IMenuController).LoadData();
-            tabControl.Controls.Add(viewport);
-            tabControl.SelectedTab = viewport;
-            ChangeMainMenuState();
-            StatusBarStateUpdate();
-            ChangeViewportsSelectProprty();
-        }
-
-        private void ribbonOrbMenuItemSocNaim_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void ribbonOrbMenuItemExit_Click(object sender, EventArgs e)
         {
             Close();
@@ -335,6 +336,13 @@ namespace Registry
                 (tabControl.Controls[i] as IMenuController).Close();
             if (tabControl.TabCount != 0)
                 e.Cancel = true;
+        }
+
+        public void ForceCloseDetachedViewports()
+        {
+            for (int i = tabControl.TabCount - 1; i >= 0; i--)
+                if ((tabControl.Controls[i] as IMenuController).ViewportDetached())
+                    (tabControl.Controls[i] as IMenuController).ForceClose();
         }
 
         private void ribbonButtonBuildings_Click(object sender, EventArgs e)
@@ -367,40 +375,94 @@ namespace Registry
             (tabControl.SelectedTab as IMenuController).ShowFundHistory();
         }
 
-        public void ForceCloseDetachedViewports()
+        private void ribbonButtonPersons_Click(object sender, EventArgs e)
         {
-            for (int i = tabControl.TabCount - 1; i >= 0; i--)
-                if ((tabControl.Controls[i] as IMenuController).ViewportDetached())
-                    (tabControl.Controls[i] as IMenuController).ForceClose();
+            (tabControl.SelectedTab as IMenuController).ShowPersons();
+        }
+
+        private void ribbonButtonContractReasons_Click(object sender, EventArgs e)
+        {
+            (tabControl.SelectedTab as IMenuController).ShowContractReasons();
+        }
+
+        private void ribbonButtonAgreements_Click(object sender, EventArgs e)
+        {
+            (tabControl.SelectedTab as IMenuController).ShowAgreements();
+        }
+
+        private void ribbonButtonTenancyPremises_Click(object sender, EventArgs e)
+        {
+            (tabControl.SelectedTab as IMenuController).ShowTenancyPremises();
+        }
+
+        private void ribbonButtonTenancyBuildings_Click(object sender, EventArgs e)
+        {
+            (tabControl.SelectedTab as IMenuController).ShowTenancyBuildings();
+        }
+
+        private void ribbonOrbMenuItemBuildings_Click(object sender, EventArgs e)
+        {
+            CreateViewport(ViewportType.BuildingListViewport);
+        }
+
+        private void ribbonOrbMenuItemPremises_Click(object sender, EventArgs e)
+        {
+            CreateViewport(ViewportType.PremisesListViewport);
+        }
+
+        private void ribbonOrbMenuItemSocNaim_Click(object sender, EventArgs e)
+        {
+            CreateViewport(ViewportType.TenancyListViewport);
         }
 
         private void ribbonButtonStructureTypes_Click(object sender, EventArgs e)
         {
-            Registry.Viewport.Viewport viewport = Registry.Viewport.ViewportFactory.CreateViewport(this, ViewportType.StructureTypeListViewport);
-            if ((viewport as IMenuController).CanLoadData())
-                (viewport as IMenuController).LoadData();
-            tabControl.Controls.Add(viewport);
-            tabControl.SelectedTab = viewport;
-            ChangeMainMenuState();
-            StatusBarStateUpdate();
-            ChangeViewportsSelectProprty();
+            CreateViewport(ViewportType.StructureTypeListViewport);
         }
 
         private void ribbonButtonRestrictionTypes_Click(object sender, EventArgs e)
         {
-            Registry.Viewport.Viewport viewport = Registry.Viewport.ViewportFactory.CreateViewport(this, ViewportType.RestrictionTypeListViewport);
-            if ((viewport as IMenuController).CanLoadData())
-                (viewport as IMenuController).LoadData();
-            tabControl.Controls.Add(viewport);
-            tabControl.SelectedTab = viewport;
-            ChangeMainMenuState();
-            StatusBarStateUpdate();
-            ChangeViewportsSelectProprty();
+            CreateViewport(ViewportType.RestrictionTypeListViewport);
         }
 
         private void ribbonButtonOwnershipTypes_Click(object sender, EventArgs e)
         {
-            Registry.Viewport.Viewport viewport = Registry.Viewport.ViewportFactory.CreateViewport(this, ViewportType.OwnershipTypeListViewport);
+            CreateViewport(ViewportType.OwnershipTypeListViewport);
+        }
+
+        private void ribbonButtonWarrants_Click(object sender, EventArgs e)
+        {
+            CreateViewport(ViewportType.WarrantsViewport);
+        }
+
+        private void ribbonButtonReasonTypes_Click(object sender, EventArgs e)
+        {
+            CreateViewport(ViewportType.ReasonTypesViewport);
+        }
+
+        private void ribbonButtonExecutors_Click(object sender, EventArgs e)
+        {
+            CreateViewport(ViewportType.ExecutorsViewport);
+        }
+
+        private void ribbonButtonIssuedBy_Click(object sender, EventArgs e)
+        {
+            CreateViewport(ViewportType.DocumentIssuedByViewport);
+        }
+
+        private void ribbonOrbMenuItemClaims_Click(object sender, EventArgs e)
+        {
+            CreateViewport(ViewportType.Claims);
+        }
+
+        private void ribbonButtonClaimStateTypes_Click(object sender, EventArgs e)
+        {
+            CreateViewport(ViewportType.ClaimStateTypes);
+        }
+
+        private void CreateViewport(ViewportType viewportType)
+        {
+            Registry.Viewport.Viewport viewport = Registry.Viewport.ViewportFactory.CreateViewport(this, viewportType);
             if ((viewport as IMenuController).CanLoadData())
                 (viewport as IMenuController).LoadData();
             tabControl.Controls.Add(viewport);
@@ -424,11 +486,14 @@ namespace Registry
             UserDomain user = UserDomain.Current;
             if (user == null)
             {
-                MessageBox.Show("Пользователь не распознан или учетная запись не включена в службу каталогов Active Directory");
+                MessageBox.Show("Пользователь не распознан или учетная запись не включена в службу каталогов Active Directory","Ошибка", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
+                return;
             }
             toolStripLabelHelloUser.Text = "Здравствуйте, " + user.DisplayName;
             PreLoadData();
         }
+
     }
 }

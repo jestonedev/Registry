@@ -31,5 +31,20 @@ namespace Registry.Entities
                 return decrypted_password;
             }
         }
+
+        public static int MaxDBConnectionCount
+        {
+            get
+            {
+                try
+                {
+                    return (int)Settings.Default["MaxDBConnectionCount"];
+                }
+                catch
+                {
+                    return 10;
+                }
+            }
+        }
     }
 }

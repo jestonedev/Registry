@@ -52,6 +52,8 @@ namespace Registry.Viewport
         public override void LoadData()
         {
             ownership_right_types = OwnershipRightTypesDataModel.GetInstance();
+            ownership_right_types.Select();
+
             v_ownership_right_types = new BindingSource();
             v_ownership_right_types.DataMember = "ownership_right_types";
             v_ownership_right_types.DataSource = DataSetManager.GetDataSet();
@@ -327,6 +329,8 @@ namespace Registry.Viewport
                 }
                 else
                 {
+                    if (RowToOwnershipRightType(row) == list[i])
+                        continue;
                     if (ownership_right_types.Update(list[i]) == -1)
                     {
                         sync_views = true;
@@ -355,6 +359,15 @@ namespace Registry.Viewport
                 }
             }
             sync_views = true;
+        }
+
+        private OwnershipRightType RowToOwnershipRightType(DataRow row)
+        {
+            OwnershipRightType ownershipRightType = new OwnershipRightType();
+            ownershipRightType.id_ownership_right_type = row["id_ownership_right_type"] == DBNull.Value ? null : 
+                (int?)Convert.ToInt32(row["id_ownership_right_type"]);
+            ownershipRightType.ownership_right_type = row["ownership_right_type"] == DBNull.Value ? null : row["ownership_right_type"].ToString();
+            return ownershipRightType;
         }
 
         public override bool CanDuplicate()

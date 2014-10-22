@@ -60,21 +60,27 @@ namespace Registry.DataModels
             DataSetManager.AddRelation("states", "id_state", "sub_premises", "id_state", true);
             DataSetManager.AddRelation("sub_premises", "id_sub_premises", "funds_sub_premises_assoc", "id_sub_premises", true);
             DataSetManager.AddRelation("sub_premises", "id_sub_premises", "tenancy_sub_premises_assoc", "id_sub_premises", true);
-            DataSetManager.AddRelation("tenancty_contracts", "id_contract", "tenancy_buildings_assoc", "id_contract", true);
-            DataSetManager.AddRelation("tenancty_contracts", "id_contract", "tenancy_premises_assoc", "id_contract", true);
-            DataSetManager.AddRelation("tenancty_contracts", "id_contract", "tenancy_sub_premises_assoc", "id_contract", true);
-            DataSetManager.AddRelation("tenancty_contracts", "id_contract", "contract_reasons", "id_contract", true);
-            DataSetManager.AddRelation("tenancty_contracts", "id_contract", "persons", "id_contract", true);
-            DataSetManager.AddRelation("tenancty_contracts", "id_contract", "agreements", "id_contract", true);
-            DataSetManager.AddRelation("rent_types", "id_rent_type", "tenancty_contracts", "id_rent_type", true);
+            DataSetManager.AddRelation("tenancy_contracts", "id_contract", "tenancy_buildings_assoc", "id_contract", true);
+            DataSetManager.AddRelation("tenancy_contracts", "id_contract", "tenancy_premises_assoc", "id_contract", true);
+            DataSetManager.AddRelation("tenancy_contracts", "id_contract", "tenancy_sub_premises_assoc", "id_contract", true);
+            DataSetManager.AddRelation("tenancy_contracts", "id_contract", "contract_reasons", "id_contract", true);
+            DataSetManager.AddRelation("tenancy_contracts", "id_contract", "persons", "id_contract", true);
+            DataSetManager.AddRelation("tenancy_contracts", "id_contract", "agreements", "id_contract", true);
+            DataSetManager.AddRelation("tenancy_contracts", "id_contract", "claims", "id_contract", true);
+            DataSetManager.AddRelation("rent_types", "id_rent_type", "tenancy_contracts", "id_rent_type", true);
             DataSetManager.AddRelation("reason_types", "id_reason_type", "contract_reasons", "id_reason_type", true);
-            DataSetManager.AddRelation("executors", "id_executor", "tenancty_contracts", "id_executor", true);
+            DataSetManager.AddRelation("executors", "id_executor", "tenancy_contracts", "id_executor", true);
             DataSetManager.AddRelation("executors", "id_executor", "agreements", "id_executor", true);
-            DataSetManager.AddRelation("warrants", "id_warrant", "tenancty_contracts", "id_warrant", true);
+            DataSetManager.AddRelation("warrants", "id_warrant", "tenancy_contracts", "id_warrant", true);
             DataSetManager.AddRelation("warrants", "id_warrant", "agreement", "id_warrant", true);
             DataSetManager.AddRelation("warrant_doc_types", "id_warrant_doc_type", "warrants", "id_warrant_doc_type", true);
             DataSetManager.AddRelation("kinships", "id_kinship", "persons", "id_kinship", true);
             DataSetManager.AddRelation("document_types", "id_document_type", "persons", "id_document_type", true);
+            DataSetManager.AddRelation("documents_issued_by", "id_document_issued_by", "persons", "id_document_issued_by", true);
+            DataSetManager.AddRelation("claims", "id_claim", "claim_states", "id_claim", true);
+            DataSetManager.AddRelation("claim_state_types", "id_state_type", "claim_states", "id_state_type", true);
+            DataSetManager.AddRelation("claim_state_types", "id_state_type", "claim_state_types_relations", "id_state_from", true);
+            DataSetManager.AddRelation("claim_state_types", "id_state_type", "claim_state_types_relations", "id_state_to", true);
         }
 
         private static void AddRelation(string master_table_name, string master_column_name, string slave_table_name, 

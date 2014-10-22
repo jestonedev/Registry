@@ -10,6 +10,7 @@ namespace Registry.Entities
         None,
         Building,
         Premises,
-        SubPremises
+        SubPremises,
+        Tenancy
     }
 }

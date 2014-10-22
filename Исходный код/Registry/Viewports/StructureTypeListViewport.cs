@@ -52,6 +52,9 @@ namespace Registry.Viewport
         public override void LoadData()
         {
             structure_types = StructureTypesDataModel.GetInstance();
+            //Ожиданем дозагрузки данных, если это необходимо
+            structure_types.Select();
+
             v_structure_types = new BindingSource();
             v_structure_types.DataMember = "structure_types";
             v_structure_types.DataSource = DataSetManager.GetDataSet();
@@ -316,6 +319,8 @@ namespace Registry.Viewport
                 }
                 else
                 {
+                    if (RowToStructureType(row) == list[i])
+                        continue;
                     if (structure_types.Update(list[i]) == -1)
                     {
                         sync_views = true;
@@ -344,6 +349,14 @@ namespace Registry.Viewport
                 }
             }
             sync_views = true;
+        }
+
+        private StructureType RowToStructureType(DataRow row)
+        {
+            StructureType structureType = new StructureType();
+            structureType.id_structure_type = row["id_structure_type"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_structure_type"]);
+            structureType.structure_type = row["structure_type"] == DBNull.Value ? null : row["structure_type"].ToString();
+            return structureType;
         }
 
         void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)

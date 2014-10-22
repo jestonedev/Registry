@@ -11,5 +11,8 @@
     <Setting Name="LDAPEncryptedPassword" Type="System.String" Scope="User">
       <Value Profile="(Default)">VX0EE5YW0ETo</Value>
     </Setting>
+    <Setting Name="MaxDBConnectionCount" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">10</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

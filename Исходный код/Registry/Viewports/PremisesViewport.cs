@@ -7,6 +7,8 @@ using System.Data;
 using Registry.DataModels;
 using Registry.Entities;
 using System.Drawing;
+using Registry.SearchForms;
+using Registry.CalcDataModels;
 
 namespace Registry.Viewport
 {
@@ -73,14 +75,9 @@ namespace Registry.Viewport
         private MaskedTextBox maskedTextBoxCadastralNum = new MaskedTextBox();
         #endregion Components
 
-        public string StaticFilter { get; set; }
-        public string DynamicFilter { get; set; }
-        public DataRow ParentRow { get; set; }
-        public ParentTypeEnum ParentType { get; set; }
-
         //Models
         private PremisesDataModel premises = null;
-        private PremisesCurrentFundsDataModel premisesCurrentFund = null;
+        private CalcDataModelPremisesCurrentFunds premisesCurrentFund = null;
         private BuildingsDataModel buildings = null;
         private KladrStreetsDataModel kladr = null;
         private PremisesTypesDataModel premises_types = null;
@@ -112,16 +109,16 @@ namespace Registry.Viewport
         private BindingSource v_fundType = null;
         private BindingSource v_states = null;
 
+        //Forms
+        private SearchForm spExtendedSearchForm = null;
+        private SearchForm spSimpleSearchForm = null;
+
         private ViewportState viewportState = ViewportState.ReadState;
         private bool is_editable = false;
         private bool is_first_visibility = true;
 
         public PremisesViewport(IMenuCallback menuCallback): base(menuCallback)
         {
-            StaticFilter = "";
-            DynamicFilter = "";
-            ParentRow = null;
-            ParentType = ParentTypeEnum.None;
             this.SuspendLayout();
             ConstructViewport();
             this.Name = "tabPagePremise";
@@ -148,7 +145,6 @@ namespace Registry.Viewport
         public override void LoadData()
         {
             premises = PremisesDataModel.GetInstance();
-            premisesCurrentFund = PremisesCurrentFundsDataModel.GetInstance();
             kladr = KladrStreetsDataModel.GetInstance();
             buildings = BuildingsDataModel.GetInstance();
             premises_types = PremisesTypesDataModel.GetInstance();
@@ -162,6 +158,23 @@ namespace Registry.Viewport
             ownershipPremisesAssoc = OwnershipPremisesAssocDataModel.GetInstance();
             fundTypes = FundTypesDataModel.GetInstance();
             states = StatesDataModel.GetInstance();
+            premisesCurrentFund = CalcDataModelPremisesCurrentFunds.GetInstance();
+
+            // Ожидаем дозагрузки, если это необходмо
+            premises.Select();
+            kladr.Select();
+            buildings.Select();
+            premises_types.Select();
+            premises_kinds.Select();
+            sub_premises.Select();
+            restrictions.Select();
+            restrictionTypes.Select();
+            restrictionPremisesAssoc.Select();
+            ownershipRights.Select();
+            ownershipRightTypes.Select();
+            ownershipPremisesAssoc.Select();
+            fundTypes.Select();
+            states.Select();
 
             DataSet ds = DataSetManager.GetDataSet();
 
@@ -228,7 +241,7 @@ namespace Registry.Viewport
             v_restrictionPremisesAssoc.DataSource = v_premises;
             RestrictionsFilterRebuild();
             restrictionPremisesAssoc.Select().RowChanged += new DataRowChangeEventHandler(RestrictionsAssoc_RowChanged);
-            restrictionPremisesAssoc.Select().RowDeleting += new DataRowChangeEventHandler(RestrictionsAssoc_RowDeleting);
+            restrictionPremisesAssoc.Select().RowDeleted += new DataRowChangeEventHandler(RestrictionsAssoc_RowDeleted);
 
             v_ownershipPremisesAssoc = new BindingSource();
             v_ownershipPremisesAssoc.DataMember = "premises_ownership_premises_assoc";
@@ -236,7 +249,7 @@ namespace Registry.Viewport
             v_ownershipPremisesAssoc.DataSource = v_premises;
             OwnershipsFilterRebuild();
             ownershipPremisesAssoc.Select().RowChanged += new DataRowChangeEventHandler(OwnershipsAssoc_RowChanged);
-            ownershipPremisesAssoc.Select().RowDeleting += new DataRowChangeEventHandler(OwnershipsAssoc_RowDeleting);
+            ownershipPremisesAssoc.Select().RowDeleted += new DataRowChangeEventHandler(OwnershipsAssoc_RowDeleted);
 
             DataBind();
 
@@ -276,7 +289,7 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
-        void RestrictionsAssoc_RowDeleting(object sender, DataRowChangeEventArgs e)
+        void RestrictionsAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
                 RestrictionsFilterRebuild();
@@ -288,7 +301,7 @@ namespace Registry.Viewport
                 RestrictionsFilterRebuild();
         }
 
-        void OwnershipsAssoc_RowDeleting(object sender, DataRowChangeEventArgs e)
+        void OwnershipsAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
                 OwnershipsFilterRebuild();
@@ -739,7 +752,7 @@ namespace Registry.Viewport
             if (textBoxDescription.Text.Trim() == "")
                 premise.description = null;
             else
-                premise.description = textBoxDescription.Text.Trim().ToString();
+                premise.description = textBoxDescription.Text.Trim();
             return premise;
         }
 
@@ -901,8 +914,10 @@ namespace Registry.Viewport
                         }
                     }
                     viewportState = ViewportState.ReadState;
+                    CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, premise.id_premises);
                     break;
             }
+            CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building, premise.id_building);
         }
 
         private static void FillRowFromPremise(Premise premise, DataRowView row)
@@ -940,7 +955,6 @@ namespace Registry.Viewport
                     if (v_premises.Position != -1)
                     {
                         ((DataRowView)v_premises[v_premises.Position]).Delete();
-                        premises.Select().AcceptChanges();
                     }
                     else
                         this.Text = "Здания отсутствуют";
@@ -1125,30 +1139,46 @@ namespace Registry.Viewport
                 return false;
         }
 
-        public override void SearchRecord()
+        public override void SearchRecord(SearchFormType searchFormType)
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
-            SearchPremisesForm spForm = new SearchPremisesForm();
-            if (spForm.ShowDialog() == DialogResult.OK)
+            switch (searchFormType)
             {
-                DynamicFilter = spForm.GetFilter();
-                v_premises.Filter = StaticFilter;
-                if (StaticFilter != "" && DynamicFilter != "")
-                    v_premises.Filter += " AND ";
-                v_premises.Filter += DynamicFilter;
+                case SearchFormType.SimpleSearchForm:
+                    if (spSimpleSearchForm == null)
+                        spSimpleSearchForm = new SimpleSearchPremiseForm();
+                    if (spSimpleSearchForm.ShowDialog() != DialogResult.OK)
+                        return;
+                    DynamicFilter = spSimpleSearchForm.GetFilter();
+                    break;
+                case SearchFormType.ExtendedSearchForm:
+                    if (spExtendedSearchForm == null)
+                        spExtendedSearchForm = new ExtendedSearchPremisesForm();
+                    if (spExtendedSearchForm.ShowDialog() != DialogResult.OK)
+                        return;
+                    DynamicFilter = spExtendedSearchForm.GetFilter();
+                    break;
             }
+            string Filter = StaticFilter;
+            if (StaticFilter != "" && DynamicFilter != "")
+                Filter += " AND ";
+            Filter += DynamicFilter;
+            v_premises.Filter += Filter;
         }
 
         public override void DeleteRecord()
         {
             if (MessageBox.Show("Вы действительно хотите удалить это помещение?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+                int id_building = (int)((DataRowView)v_premises[v_premises.Position])["id_building"];
                 if (premises.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
                     return;
                 ((DataRowView)v_premises[v_premises.Position]).Delete();
                 menuCallback.ForceCloseDetachedViewports();
-                BuildingsAggregatedDataModel.GetInstance().Refresh();
+                CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building);
+                CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building);
+                CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
             }
         }
 
@@ -1202,7 +1232,7 @@ namespace Registry.Viewport
             return (v_premises.Position != -1);
         }
 
-        public override bool HasFundHistory()
+        public override bool HasAssocFundHistory()
         {
             return (v_premises.Position != -1);
         }
@@ -1290,7 +1320,6 @@ namespace Registry.Viewport
 
         private void ConstructViewport()
         {
-            this.SuspendLayout();
             this.Controls.Add(this.tableLayoutPanel3);
             this.tableLayoutPanel3.SuspendLayout();
             this.tableLayoutPanel4.SuspendLayout();
@@ -1937,7 +1966,6 @@ namespace Registry.Viewport
             this.tableLayoutPanel4.ResumeLayout(false);
             this.tableLayoutPanel5.ResumeLayout(false);
             this.tableLayoutPanel3.ResumeLayout(false);
-            this.ResumeLayout(false);
         }
     }
 }

@@ -32,12 +32,25 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>icon.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MBToolStrip">
       <HintPath>..\..\MBToolStrip_Source\MBToolStrip\bin\Release\MBToolStrip.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.TeamFoundation.Client, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.TeamFoundation.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="Microsoft.TeamFoundation.Diff, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms.Ribbon">
       <HintPath>..\..\System.Windows.Forms.Ribbon\System.Windows.Forms.Ribbon\bin\Release\System.Windows.Forms.Ribbon.dll</HintPath>
     </Reference>
@@ -50,6 +63,7 @@
     <Reference Include="System.Xml" />
     <Reference Include="VIBlend.WinForms.Controls, Version=10.0.0.0, Culture=neutral, PublicKeyToken=6feea38fef5ea0cf, processorArchitecture=MSIL" />
     <Reference Include="VIBlend.WinForms.Utilities, Version=8.0.0.0, Culture=neutral, PublicKeyToken=970a5af59bc48043, processorArchitecture=MSIL" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MainForm.cs">
@@ -62,6 +76,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -103,6 +118,9 @@
       <Project>{382C5ED0-7C1B-414D-AB01-54D42220DEC3}</Project>
       <Name>Viewports</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="icon.ico" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

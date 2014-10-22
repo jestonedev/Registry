@@ -33,11 +33,6 @@ namespace Registry.Viewport
         BindingSource v_ownership_assoc = null;
         BindingSource v_snapshot_ownerships_rights = null;
 
-        public string StaticFilter { get; set; }
-        public string DynamicFilter { get; set; }
-        public DataRow ParentRow { get; set; }
-        public ParentTypeEnum ParentType { get; set; }
-
         //Флаг разрешения синхронизации snapshot и original моделей
         bool sync_views = true;
 
@@ -70,6 +65,9 @@ namespace Registry.Viewport
         {
             ownership_rights = OwnershipsRightsDataModel.GetInstance();
             ownerships_rights_types = OwnershipRightTypesDataModel.GetInstance();
+            // Дожидаемся дозагрузки данных, если это необходимо
+            ownership_rights.Select();
+            ownerships_rights_types.Select();
             if (ParentType == ParentTypeEnum.Premises)
                 ownership_assoc = OwnershipPremisesAssocDataModel.GetInstance();
             else
@@ -77,20 +75,21 @@ namespace Registry.Viewport
                     ownership_assoc = OwnershipBuildingsAssocDataModel.GetInstance();
                 else
                     throw new ViewportException("Неизвестный тип родительского объекта");
+            ownership_assoc.Select();
 
             v_ownership_assoc = new BindingSource();
             if ((ParentType == ParentTypeEnum.Premises) && (ParentRow != null))
             {
                 v_ownership_assoc.DataMember = "ownership_premises_assoc";
                 v_ownership_assoc.Filter = "id_premises = " + ParentRow["id_premises"].ToString();
-                this.Text = String.Format("Ограничения помещения № {0}", ParentRow["id_premises"].ToString());
+                this.Text = String.Format("Ограничения помещения №{0}", ParentRow["id_premises"].ToString());
             }
             else
                 if ((ParentType == ParentTypeEnum.Building) && (ParentRow != null))
                 {
                     v_ownership_assoc.DataMember = "ownership_buildings_assoc";
                     v_ownership_assoc.Filter = "id_building = " + ParentRow["id_building"].ToString();
-                    this.Text = String.Format("Ограничения здания № {0}", ParentRow["id_building"].ToString());
+                    this.Text = String.Format("Ограничения здания №{0}", ParentRow["id_building"].ToString());
                 }
                 else
                     throw new ViewportException("Неизвестный тип родительского объекта");
@@ -137,7 +136,7 @@ namespace Registry.Viewport
             ownership_rights.Select().RowChanged += new DataRowChangeEventHandler(OwnershipListViewport_RowChanged);
             ownership_rights.Select().RowDeleting += new DataRowChangeEventHandler(OwnershipListViewport_RowDeleting);
             ownership_assoc.Select().RowChanged += new DataRowChangeEventHandler(OwnershipAssoc_RowChanged);
-            ownership_assoc.Select().RowDeleting += new DataRowChangeEventHandler(OwnershipAssoc_RowDeleting);
+            ownership_assoc.Select().RowDeleted += new DataRowChangeEventHandler(OwnershipAssoc_RowDeleted);
         }
 
         void v_snapshot_ownerships_rights_CurrentItemChanged(object sender, EventArgs e)
@@ -205,7 +204,7 @@ namespace Registry.Viewport
                 RebuildFilter();
         }
 
-        void OwnershipAssoc_RowDeleting(object sender, DataRowChangeEventArgs e)
+        void OwnershipAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (!sync_views)
                 return;
@@ -365,7 +364,7 @@ namespace Registry.Viewport
             ownership_rights.Select().RowChanged -= new DataRowChangeEventHandler(OwnershipListViewport_RowChanged);
             ownership_rights.Select().RowDeleting -= new DataRowChangeEventHandler(OwnershipListViewport_RowDeleting);
             ownership_assoc.Select().RowChanged -= new DataRowChangeEventHandler(OwnershipAssoc_RowChanged);
-            ownership_assoc.Select().RowDeleting -= new DataRowChangeEventHandler(OwnershipAssoc_RowDeleting);
+            ownership_assoc.Select().RowDeleted -= new DataRowChangeEventHandler(OwnershipAssoc_RowDeleted);
             base.Close();
         }
 
@@ -454,6 +453,8 @@ namespace Registry.Viewport
                 }
                 else
                 {
+                    if (RowToOwnershipRight(row) == list[i])
+                        continue;
                     if (ownership_rights.Update(list[i]) == -1)
                     {
                         sync_views = true;
@@ -491,6 +492,19 @@ namespace Registry.Viewport
             sync_views = true;
         }
 
+        private OwnershipRight RowToOwnershipRight(DataRow row)
+        {
+            OwnershipRight ownershipRight = new OwnershipRight();
+            ownershipRight.id_ownership_right = row["id_ownership_right"] == DBNull.Value ? null :
+                (int?)Convert.ToInt32(row["id_ownership_right"]);
+            ownershipRight.id_ownership_right_type = row["id_ownership_right_type"] == DBNull.Value ? null :
+                (int?)Convert.ToInt32(row["id_ownership_right_type"]);
+            ownershipRight.number = row["number"] == DBNull.Value ? null : row["number"].ToString();
+            ownershipRight.date = row["date"] == DBNull.Value ? null : (DateTime?)Convert.ToDateTime(row["date"]);
+            ownershipRight.description = row["description"] == DBNull.Value ? null : row["description"].ToString();
+            return ownershipRight;
+        }
+
         void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
         {
             if ((dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].OwningColumn.Name == "number") &&
@@ -522,6 +536,10 @@ namespace Registry.Viewport
 
         public override void ForceClose()
         {
+            ownership_rights.Select().RowChanged -= new DataRowChangeEventHandler(OwnershipListViewport_RowChanged);
+            ownership_rights.Select().RowDeleting -= new DataRowChangeEventHandler(OwnershipListViewport_RowDeleting);
+            ownership_assoc.Select().RowChanged -= new DataRowChangeEventHandler(OwnershipAssoc_RowChanged);
+            ownership_assoc.Select().RowDeleted -= new DataRowChangeEventHandler(OwnershipAssoc_RowDeleted);
             base.Close();
         }
 

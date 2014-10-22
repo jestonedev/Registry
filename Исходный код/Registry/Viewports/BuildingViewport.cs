@@ -7,6 +7,8 @@ using Registry.DataModels;
 using System.Data;
 using Registry.Entities;
 using System.Drawing;
+using Registry.SearchForms;
+using Registry.CalcDataModels;
 
 namespace Registry.Viewport
 {
@@ -81,8 +83,6 @@ namespace Registry.Viewport
         
         //Models
         private BuildingsDataModel buildings = null;
-        private BuildingsAggregatedDataModel buildingsAggreagate = null;
-        private BuildingsCurrentFundsDataModel buildingsCurrentFund = null;
         private KladrStreetsDataModel kladr = null;
         private StructureTypesDataModel structureTypes = null;
         private RestrictionsDataModel restrictions = null;
@@ -93,11 +93,12 @@ namespace Registry.Viewport
         private OwnershipBuildingsAssocDataModel ownershipBuildingsAssoc = null;
         private FundTypesDataModel fundTypes = null;
         private StatesDataModel states = null;
+        private CalcDataModelBuildingsPremisesFunds buildingsPremisesFunds = null;
+        private CalcDataModelBuildingsCurrentFunds buildingsCurrentFund = null;
+        private CalcDataModelBuildingsPremisesSumArea buildingsPremisesSumArea = null;
 
         //Views
         private BindingSource v_buildings = null;
-        private BindingSource v_buildingsAggreagate = null;
-        private BindingSource v_buildingsCurrentFund = null;
         private BindingSource v_kladr = null;
         private BindingSource v_structureTypes = null;
         private BindingSource v_restrictions = null;
@@ -108,22 +109,19 @@ namespace Registry.Viewport
         private BindingSource v_ownershipBuildingsAssoc = null;
         private BindingSource v_fundType = null;
         private BindingSource v_states = null;
+        private BindingSource v_buildingsPremisesFunds = null;
+        private BindingSource v_buildingsCurrentFund = null;
+        private BindingSource v_buildingsPremisesSumArea = null;
 
-        //Текущее состояние viewport'а
-        public string StaticFilter { get; set; }
-        public string DynamicFilter { get; set; }
-        public DataRow ParentRow { get; set; }
-        public ParentTypeEnum ParentType { get; set; }
+        //Forms
+        private SearchForm sbSimpleSearchForm = null;
+        private SearchForm sbExtendedSearchForm = null;
 
         private ViewportState viewportState = ViewportState.ReadState;
         private bool is_editable = false;
 
         public BuildingViewport(IMenuCallback menuCallback): base(menuCallback)
         {
-            StaticFilter = "";
-            DynamicFilter = "";
-            ParentRow = null;
-            ParentType = ParentTypeEnum.None;
             this.SuspendLayout();
             ConstructViewport();
             this.Name = "tabPageBuilding";
@@ -162,9 +160,10 @@ namespace Registry.Viewport
             fundTypes = FundTypesDataModel.GetInstance();
             states = StatesDataModel.GetInstance();
 
-            //Синхронные модели
-            buildingsAggreagate = BuildingsAggregatedDataModel.GetInstance();
-            buildingsCurrentFund = BuildingsCurrentFundsDataModel.GetInstance();
+            //Вычисляемые модели
+            buildingsPremisesFunds = CalcDataModelBuildingsPremisesFunds.GetInstance();
+            buildingsCurrentFund = CalcDataModelBuildingsCurrentFunds.GetInstance();
+            buildingsPremisesSumArea = CalcDataModelBuildingsPremisesSumArea.GetInstance();
 
             //Ожидаем дозагрузки данных, если это необходимо
             buildings.Select();
@@ -205,13 +204,17 @@ namespace Registry.Viewport
             v_ownershipRightTypes.DataMember = "ownership_right_types";
             v_ownershipRightTypes.DataSource = ds;
 
-            v_buildingsAggreagate = new BindingSource();
-            v_buildingsAggreagate.DataMember = "buildings_aggregated";
-            v_buildingsAggreagate.DataSource = buildingsAggreagate.Select();
+            v_buildingsPremisesFunds = new BindingSource();
+            v_buildingsPremisesFunds.DataMember = "buildings_premises_funds";
+            v_buildingsPremisesFunds.DataSource = buildingsPremisesFunds.Select();
 
             v_buildingsCurrentFund = new BindingSource();
             v_buildingsCurrentFund.DataMember = "buildings_current_funds";
             v_buildingsCurrentFund.DataSource = buildingsCurrentFund.Select();
+
+            v_buildingsPremisesSumArea = new BindingSource();
+            v_buildingsPremisesSumArea.DataMember = "buildings_sum_area";
+            v_buildingsPremisesSumArea.DataSource = buildingsPremisesSumArea.Select();
 
             v_fundType = new BindingSource();
             v_fundType.DataMember = "fund_types";
@@ -236,7 +239,7 @@ namespace Registry.Viewport
             v_restrictionBuildingsAssoc.DataSource = v_buildings;
             RestrictionsFilterRebuild();
             restrictionBuildingsAssoc.Select().RowChanged += new DataRowChangeEventHandler(RestrictionsAssoc_RowChanged);
-            restrictionBuildingsAssoc.Select().RowDeleting += new DataRowChangeEventHandler(RestrictionsAssoc_RowDeleting);
+            restrictionBuildingsAssoc.Select().RowDeleted += new DataRowChangeEventHandler(RestrictionsAssoc_RowDeleted);
 
             v_ownershipBuildingsAssoc = new BindingSource();
             v_ownershipBuildingsAssoc.CurrentItemChanged += new EventHandler(v_ownershipBuildingsAssoc_CurrentItemChanged);
@@ -245,7 +248,7 @@ namespace Registry.Viewport
             v_ownershipBuildingsAssoc_CurrentItemChanged(null, new EventArgs());
             OwnershipsFilterRebuild();
             ownershipBuildingsAssoc.Select().RowChanged += new DataRowChangeEventHandler(OwnershipsAssoc_RowChanged);
-            ownershipBuildingsAssoc.Select().RowDeleting += new DataRowChangeEventHandler(OwnershipsAssoc_RowDeleting);
+            ownershipBuildingsAssoc.Select().RowDeleted += new DataRowChangeEventHandler(OwnershipsAssoc_RowDeleted);
 
             DataBind();
 
@@ -279,7 +282,7 @@ namespace Registry.Viewport
             ShowOrHideCurrentFund();
         }
 
-        void RestrictionsAssoc_RowDeleting(object sender, DataRowChangeEventArgs e)
+        void RestrictionsAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
                 RestrictionsFilterRebuild();
@@ -291,7 +294,7 @@ namespace Registry.Viewport
                 RestrictionsFilterRebuild();
         }
 
-        void OwnershipsAssoc_RowDeleting(object sender, DataRowChangeEventArgs e)
+        void OwnershipsAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
                 OwnershipsFilterRebuild();
@@ -332,12 +335,12 @@ namespace Registry.Viewport
                     this.Text = String.Format("Здание №{0}", ((DataRowView)v_buildings[v_buildings.Position])["id_building"]);
                 else
                     this.Text = "Здания отсутствуют";
-            if (v_buildingsAggreagate != null)
+            if (v_buildingsPremisesFunds != null)
             {
                 if ((v_buildings.Position != -1) && !(((DataRowView)v_buildings[v_buildings.Position])["id_building"] is DBNull))
-                    v_buildingsAggreagate.Filter = "id_building = " + ((DataRowView)v_buildings[v_buildings.Position])["id_building"].ToString();
+                    v_buildingsPremisesFunds.Filter = "id_building = " + ((DataRowView)v_buildings[v_buildings.Position])["id_building"].ToString();
                 else
-                    v_buildingsAggreagate.Filter = "id_building = 0";  
+                    v_buildingsPremisesFunds.Filter = "id_building = 0";  
             }
             if (v_buildingsCurrentFund != null)
             {
@@ -346,6 +349,13 @@ namespace Registry.Viewport
                 else
                     v_buildingsCurrentFund.Filter = "id_building = 0";
                 ShowOrHideCurrentFund();
+            }
+            if (v_buildingsPremisesSumArea != null)
+            {
+                if ((v_buildings.Position != -1) && !(((DataRowView)v_buildings[v_buildings.Position])["id_building"] is DBNull))
+                    v_buildingsPremisesSumArea.Filter = "id_building = " + ((DataRowView)v_buildings[v_buildings.Position])["id_building"].ToString();
+                else
+                    v_buildingsPremisesSumArea.Filter = "id_building = 0";
             }
             v_kladr.Filter = "";
             if (Selected)
@@ -444,22 +454,29 @@ namespace Registry.Viewport
             comboBoxState.DataBindings.Add("SelectedValue", v_buildings, "id_state", true, DataSourceUpdateMode.Never, DBNull.Value);
 
             numericUpDownSocialPremisesCount.DataBindings.Clear();
-            numericUpDownSocialPremisesCount.DataBindings.Add("Minimum", v_buildingsAggreagate, "social_premises_count", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownSocialPremisesCount.DataBindings.Add("Maximum", v_buildingsAggreagate, "social_premises_count", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownSocialPremisesCount.DataBindings.Add("Value", v_buildingsAggreagate, "social_premises_count", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownSocialPremisesCount.DataBindings.Add("Minimum", v_buildingsPremisesFunds, "social_premises_count", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownSocialPremisesCount.DataBindings.Add("Maximum", v_buildingsPremisesFunds, "social_premises_count", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownSocialPremisesCount.DataBindings.Add("Value", v_buildingsPremisesFunds, "social_premises_count", true, DataSourceUpdateMode.Never, 0);
             numericUpDownCommercialPremisesCount.DataBindings.Clear();
-            numericUpDownCommercialPremisesCount.DataBindings.Add("Minimum", v_buildingsAggreagate, "commercial_premises_count", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownCommercialPremisesCount.DataBindings.Add("Maximum", v_buildingsAggreagate, "commercial_premises_count", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownCommercialPremisesCount.DataBindings.Add("Value", v_buildingsAggreagate, "commercial_premises_count", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownCommercialPremisesCount.DataBindings.Add("Minimum", v_buildingsPremisesFunds, "commercial_premises_count", 
+                true, DataSourceUpdateMode.Never, 0);
+            numericUpDownCommercialPremisesCount.DataBindings.Add("Maximum", v_buildingsPremisesFunds, "commercial_premises_count", 
+                true, DataSourceUpdateMode.Never, 0);
+            numericUpDownCommercialPremisesCount.DataBindings.Add("Value", v_buildingsPremisesFunds, "commercial_premises_count", true, DataSourceUpdateMode.Never, 0);
             numericUpDownSpecialPremisesCount.DataBindings.Clear();
-            numericUpDownSpecialPremisesCount.DataBindings.Add("Minimum", v_buildingsAggreagate, "special_premises_count", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownSpecialPremisesCount.DataBindings.Add("Maximum", v_buildingsAggreagate, "special_premises_count", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownSpecialPremisesCount.DataBindings.Add("Value", v_buildingsAggreagate, "special_premises_count", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownSpecialPremisesCount.DataBindings.Add("Minimum", v_buildingsPremisesFunds, "special_premises_count", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownSpecialPremisesCount.DataBindings.Add("Maximum", v_buildingsPremisesFunds, "special_premises_count", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownSpecialPremisesCount.DataBindings.Add("Value", v_buildingsPremisesFunds, "special_premises_count", true, DataSourceUpdateMode.Never, 0);
             numericUpDownOtherPremisesCount.DataBindings.Clear();
-            numericUpDownOtherPremisesCount.DataBindings.Add("Minimum", v_buildingsAggreagate, "other_premises_count", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownOtherPremisesCount.DataBindings.Add("Maximum", v_buildingsAggreagate, "other_premises_count", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownOtherPremisesCount.DataBindings.Add("Value", v_buildingsAggreagate, "other_premises_count", true, DataSourceUpdateMode.Never, 0);
-            
+            numericUpDownOtherPremisesCount.DataBindings.Add("Minimum", v_buildingsPremisesFunds, "other_premises_count", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownOtherPremisesCount.DataBindings.Add("Maximum", v_buildingsPremisesFunds, "other_premises_count", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownOtherPremisesCount.DataBindings.Add("Value", v_buildingsPremisesFunds, "other_premises_count", true, DataSourceUpdateMode.Never, 0);
+
+            numericUpDownMunicipalArea.DataBindings.Clear();
+            numericUpDownMunicipalArea.DataBindings.Add("Minimum", v_buildingsPremisesSumArea, "sum_area", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownMunicipalArea.DataBindings.Add("Maximum", v_buildingsPremisesSumArea, "sum_area", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownMunicipalArea.DataBindings.Add("Value", v_buildingsPremisesSumArea, "sum_area", true, DataSourceUpdateMode.Never, 0);
+
             dataGridViewRestrictions.DataSource = v_restrictions;
             field_id_restriction_type.DataSource = v_restrictonTypes;
             field_id_restriction_type.DataPropertyName = "id_restriction_type";
@@ -588,9 +605,9 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
             restrictionBuildingsAssoc.Select().RowChanged -= new DataRowChangeEventHandler(RestrictionsAssoc_RowChanged);
-            restrictionBuildingsAssoc.Select().RowDeleting -= new DataRowChangeEventHandler(RestrictionsAssoc_RowDeleting);
+            restrictionBuildingsAssoc.Select().RowDeleted -= new DataRowChangeEventHandler(RestrictionsAssoc_RowDeleted);
             ownershipBuildingsAssoc.Select().RowChanged -= new DataRowChangeEventHandler(OwnershipsAssoc_RowChanged);
-            ownershipBuildingsAssoc.Select().RowDeleting -= new DataRowChangeEventHandler(OwnershipsAssoc_RowDeleting);
+            ownershipBuildingsAssoc.Select().RowDeleted -= new DataRowChangeEventHandler(OwnershipsAssoc_RowDeleted);
             buildingsCurrentFund.RefreshEvent -= new EventHandler<EventArgs>(buildingsCurrentFund_RefreshEvent);
             base.Close();
         }
@@ -732,6 +749,7 @@ namespace Registry.Viewport
                         }
                     }
                     viewportState = ViewportState.ReadState;
+                    CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Building, building.id_building);
                     break;
             }
         }
@@ -775,7 +793,6 @@ namespace Registry.Viewport
                     if (v_buildings.Position != -1)
                     {
                         ((DataRowView)v_buildings[v_buildings.Position]).Delete();
-                        buildings.Select().AcceptChanges();
                     }
                     else
                         this.Text = "Здания отсутствуют";
@@ -1104,7 +1121,7 @@ namespace Registry.Viewport
             return (v_buildings.Position > -1);
         }
 
-        public override bool HasFundHistory()
+        public override bool HasAssocFundHistory()
         {
             return (v_buildings.Position > -1);
         }
@@ -1209,19 +1226,32 @@ namespace Registry.Viewport
                 return false;
         }
 
-        public override void SearchRecord()
+        public override void SearchRecord(SearchFormType searchFormType)
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
-            SearchBuildingForm sbForm = new SearchBuildingForm();
-            if (sbForm.ShowDialog() == DialogResult.OK)
+            switch (searchFormType)
             {
-                DynamicFilter = sbForm.GetFilter();
-                v_buildings.Filter = StaticFilter;
-                if (StaticFilter != "" && DynamicFilter != "")
-                    v_buildings.Filter += " AND ";
-                v_buildings.Filter += DynamicFilter;
+                case SearchFormType.SimpleSearchForm:
+                    if (sbSimpleSearchForm == null)
+                        sbSimpleSearchForm = new SimpleSearchBuildingForm();
+                    if (sbSimpleSearchForm.ShowDialog() != DialogResult.OK)
+                        return;
+                    DynamicFilter = sbSimpleSearchForm.GetFilter();
+                    break;
+                case SearchFormType.ExtendedSearchForm:
+                    if (sbExtendedSearchForm == null)
+                        sbExtendedSearchForm = new ExtendedSearchBuildingForm();
+                    if (sbExtendedSearchForm.ShowDialog() != DialogResult.OK)
+                        return;
+                    DynamicFilter = sbExtendedSearchForm.GetFilter();
+                    break;
             }
+            string Filter = StaticFilter;
+            if (StaticFilter != "" && DynamicFilter != "")
+                Filter += " AND ";
+            Filter += DynamicFilter;
+            v_buildings.Filter += Filter;
         }
 
         public override void DeleteRecord()
@@ -1232,6 +1262,8 @@ namespace Registry.Viewport
                     return;
                 ((DataRowView)v_buildings[v_buildings.Position]).Delete();
                 menuCallback.ForceCloseDetachedViewports();
+                if (ParentType == ParentTypeEnum.Tenancy)
+                    CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
             }
         }
 

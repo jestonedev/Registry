@@ -45,7 +45,7 @@ namespace Registry.Entities
             return domains;
         }
 
-        private static UserDomain GetUserDomain(string login)
+        public static UserDomain GetUserDomain(string login)
         {
             foreach (string domainName in GetDomains())
             {

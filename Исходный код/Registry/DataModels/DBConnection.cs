@@ -37,9 +37,12 @@ namespace Registry.DataModels
             return factory.CreateCommand();
         }
 
-        public DbParameter CreateParameter()
+        public DbParameter CreateParameter<T>(string name, T value) 
         {
-            return factory.CreateParameter();
+            DbParameter parameter = factory.CreateParameter();
+            parameter.ParameterName = name;
+            parameter.Value = value == null ? DBNull.Value : (Object)value;
+            return parameter;
         }
 
         private static string ParseProviderName(string name)

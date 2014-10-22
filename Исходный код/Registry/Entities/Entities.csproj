@@ -40,13 +40,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Agreement.cs" />
     <Compile Include="Building.cs" />
+    <Compile Include="Claim.cs" />
+    <Compile Include="ContractReason.cs" />
+    <Compile Include="DocumentIssuedBy.cs" />
+    <Compile Include="Executor.cs" />
     <Compile Include="FundHistory.cs" />
     <Compile Include="OwnershipRight.cs" />
     <Compile Include="OwnershipRightType.cs" />
     <Compile Include="ParentTypeEnum.cs" />
+    <Compile Include="Person.cs" />
     <Compile Include="Premise.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReasonType.cs" />
     <Compile Include="Restriction.cs" />
     <Compile Include="RestrictionType.cs" />
     <Compile Include="RegistrySettings.cs" />
@@ -57,7 +64,10 @@
     </Compile>
     <Compile Include="StructureType.cs" />
     <Compile Include="SubPremise.cs" />
+    <Compile Include="Tenancy.cs" />
+    <Compile Include="TenancyBuilding.cs" />
     <Compile Include="UserDomain.cs" />
+    <Compile Include="Warrant.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

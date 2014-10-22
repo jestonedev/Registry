@@ -8,6 +8,8 @@ using Registry.DataModels;
 using System.Collections;
 using Registry.Entities;
 using System.Threading;
+using Registry.SearchForms;
+using Registry.CalcDataModels;
 
 namespace Registry.Viewport
 {
@@ -25,11 +27,6 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn field_total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
         #endregion Components
 
-        public string StaticFilter { get; set; }
-        public string DynamicFilter { get; set; }
-        public DataRow ParentRow { get; set; }
-        public ParentTypeEnum ParentType { get; set; }
-
         //Models
         private PremisesDataModel premises = null;
         private BuildingsDataModel buildings = null;
@@ -41,12 +38,12 @@ namespace Registry.Viewport
         private BindingSource v_buildings = null;
         private BindingSource v_premises_types = null;
 
+        //Forms
+        private SearchForm spExtendedSearchForm = null;
+        private SearchForm spSimpleSearchForm = null;
+
         public PremisesListViewport(IMenuCallback menuCallback): base(menuCallback)
         {
-            StaticFilter = "";
-            DynamicFilter = "";
-            ParentRow = null;
-            ParentType = ParentTypeEnum.None;
             this.SuspendLayout();
             ConstructViewport();
             this.Name = "tabPagePremises";
@@ -93,11 +90,8 @@ namespace Registry.Viewport
             if (StaticFilter != "" && DynamicFilter != "")
                 v_premises.Filter += " AND ";
             v_premises.Filter += DynamicFilter;
-            if (ParentRow != null)
-            {
-                if (ParentType == ParentTypeEnum.Building)
-                    Text = "Помещения здания №" + ParentRow["id_building"].ToString();
-            }
+            if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
+                Text = "Помещения здания №" + ParentRow["id_building"].ToString();
 
             v_buildings = new BindingSource();
             v_buildings.DataMember = "buildings";
@@ -116,7 +110,7 @@ namespace Registry.Viewport
             dataGridView.ColumnHeaderMouseClick += new DataGridViewCellMouseEventHandler(dataGridView_ColumnHeaderMouseClick);
             v_premises.PositionChanged += new EventHandler(v_premises_PositionChanged);
             premises.Select().RowChanged += new DataRowChangeEventHandler(PremisesListViewport_RowChanged);
-            premises.Select().RowDeleting += new DataRowChangeEventHandler(PremisesListViewport_RowDeleting);
+            premises.Select().RowDeleted += new DataRowChangeEventHandler(PremisesListViewport_RowDeleted);
             dataGridView.RowCount = v_premises.Count;
 
             dataGridView.CellDoubleClick += new DataGridViewCellEventHandler(dataGridView_CellDoubleClick);
@@ -129,7 +123,7 @@ namespace Registry.Viewport
                 OpenDetails();
         }
 
-        void PremisesListViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
+        void PremisesListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             dataGridView.RowCount = v_premises.Count;
             dataGridView.Refresh();
@@ -157,16 +151,18 @@ namespace Registry.Viewport
         {
             if (dataGridView.Columns[e.ColumnIndex].SortMode == DataGridViewColumnSortMode.NotSortable)
                 return;
+            Func<SortOrder, bool> changeSortColumn = (way) =>
+            {
+                foreach (DataGridViewColumn column in dataGridView.Columns)
+                    column.HeaderCell.SortGlyphDirection = SortOrder.None;
+                v_premises.Sort = dataGridView.Columns[e.ColumnIndex].Name + " " + ((way == SortOrder.Ascending) ? "ASC" : "DESC");
+                dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = way;
+                return true;
+            };
             if (dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection == SortOrder.Ascending)
-            {
-                v_premises.Sort = dataGridView.Columns[e.ColumnIndex].Name + " DESC";
-                dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Descending;
-            }
+                changeSortColumn(SortOrder.Descending);
             else
-            {
-                v_premises.Sort = dataGridView.Columns[e.ColumnIndex].Name + " ASC";
-                dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
-            }
+                changeSortColumn(SortOrder.Ascending);
             dataGridView.Refresh();
         }
 
@@ -279,11 +275,14 @@ namespace Registry.Viewport
         {
             if (MessageBox.Show("Вы действительно хотите удалить это помещение?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+                int id_building = (int)((DataRowView)v_premises[v_premises.Position])["id_building"];
                 if (premises.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
                     return;
                 ((DataRowView)v_premises[v_premises.Position]).Delete();
                 menuCallback.ForceCloseDetachedViewports();
-                BuildingsAggregatedDataModel.GetInstance().Refresh();
+                CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building);
+                CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building);
+                CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
             }
         }
 
@@ -300,20 +299,32 @@ namespace Registry.Viewport
                 return false;
         }
 
-        public override void SearchRecord()
+        public override void SearchRecord(SearchFormType searchFormType)
         {
-            SearchPremisesForm spForm = new SearchPremisesForm();
-            if (spForm.ShowDialog() == DialogResult.OK)
+            switch (searchFormType)
             {
-                DynamicFilter = spForm.GetFilter();
-                string Filter = StaticFilter;
-                if (StaticFilter != "" && DynamicFilter != "")
-                    Filter += " AND ";
-                Filter += DynamicFilter;
-                dataGridView.RowCount = 0;
-                v_premises.Filter = Filter;
-                dataGridView.RowCount = v_premises.Count;
+                case SearchFormType.SimpleSearchForm:
+                    if (spSimpleSearchForm == null)
+                        spSimpleSearchForm = new SimpleSearchPremiseForm();
+                    if (spSimpleSearchForm.ShowDialog() != DialogResult.OK)
+                        return;
+                    DynamicFilter = spSimpleSearchForm.GetFilter();
+                    break;
+                case SearchFormType.ExtendedSearchForm:
+                    if (spExtendedSearchForm == null)
+                        spExtendedSearchForm = new ExtendedSearchPremisesForm();
+                    if (spExtendedSearchForm.ShowDialog() != DialogResult.OK)
+                        return;
+                    DynamicFilter = spExtendedSearchForm.GetFilter();
+                    break;
             }
+            string Filter = StaticFilter;
+            if (StaticFilter != "" && DynamicFilter != "")
+                Filter += " AND ";
+            Filter += DynamicFilter;
+            dataGridView.RowCount = 0;
+            v_premises.Filter = Filter;
+            dataGridView.RowCount = v_premises.Count;
         }
 
         public override void ClearSearch()
@@ -435,7 +446,7 @@ namespace Registry.Viewport
             return (v_premises.Position > -1);
         }
 
-        public override bool HasFundHistory()
+        public override bool HasAssocFundHistory()
         {
             return (v_premises.Position > -1);
         }
@@ -567,11 +578,13 @@ namespace Registry.Viewport
             this.field_street.HeaderText = "Адрес";
             this.field_street.MinimumWidth = 300;
             this.field_street.Name = "id_street";
+            this.field_street.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // field_street
             // 
             this.field_house.HeaderText = "Дом";
             this.field_house.Name = "house";
+            this.field_house.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // field_premises_num
             // 

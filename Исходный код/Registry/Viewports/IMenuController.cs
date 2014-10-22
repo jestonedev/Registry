@@ -20,7 +20,7 @@ namespace Registry.Viewport
         void DeleteRecord();
         void OpenDetails();
         void DataRefresh();
-        void SearchRecord();
+        void SearchRecord(SearchFormType searchFormType);
         void ClearSearch();
         void ShowBuildings();
         void ShowPremises();
@@ -28,6 +28,11 @@ namespace Registry.Viewport
         void ShowRestrictions();
         void ShowOwnerships();
         void ShowFundHistory();
+        void ShowPersons();
+        void ShowContractReasons();
+        void ShowAgreements();
+        void ShowTenancyBuildings();
+        void ShowTenancyPremises();
         void Close();
         void ForceClose();
 
@@ -61,7 +66,11 @@ namespace Registry.Viewport
         bool HasAssocPremises();
         bool HasAssocOwnerships();
         bool HasAssocRestrictions();
-        bool HasFundHistory();
+        bool HasAssocFundHistory();
+        bool HasAssocPersons();
+        bool HasAssocContractReasons();
+        bool HasAssocAgreements();
+        bool HasAssocTenancyObjects();
 
         bool CanFilterSocialFund();
         bool CanFilterCommercialFundFund();

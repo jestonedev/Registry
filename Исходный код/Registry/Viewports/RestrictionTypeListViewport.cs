@@ -52,6 +52,8 @@ namespace Registry.Viewport
         public override void LoadData()
         {
             restriction_types = RestrictionTypesDataModel.GetInstance();
+            restriction_types.Select();
+
             v_restriction_types = new BindingSource();
             v_restriction_types.DataMember = "restriction_types";
             v_restriction_types.DataSource = DataSetManager.GetDataSet();
@@ -317,6 +319,8 @@ namespace Registry.Viewport
                 }
                 else
                 {
+                    if (RowToRestrictionType(row) == list[i])
+                        continue;
                     if (restriction_types.Update(list[i]) == -1)
                     {
                         sync_views = true;
@@ -345,6 +349,15 @@ namespace Registry.Viewport
                 }
             }
             sync_views = true;
+        }
+
+        private RestrictionType RowToRestrictionType(DataRow row)
+        {
+            RestrictionType restrictionType = new RestrictionType();
+            restrictionType.id_restriction_type = row["id_restriction_type"] == DBNull.Value ? null :
+                (int?)Convert.ToInt32(row["id_restriction_type"]);
+            restrictionType.restriction_type = row["restriction_type"] == DBNull.Value ? null : row["restriction_type"].ToString();
+            return restrictionType;
         }
 
         void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)

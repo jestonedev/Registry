@@ -2,7 +2,7 @@
 using System.Drawing;
 using System.Windows.Forms;
 
-namespace Utilities.Windows.Forms
+namespace CustomControls
 {
     public class DraggableTabControl : TabControl
     {

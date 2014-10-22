@@ -58,5 +58,17 @@ namespace Registry.Entities.Properties {
                 this["LDAPEncryptedPassword"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("10")]
+        public int MaxDBConnectionCount {
+            get {
+                return ((int)(this["MaxDBConnectionCount"]));
+            }
+            set {
+                this["MaxDBConnectionCount"] = value;
+            }
+        }
     }
 }

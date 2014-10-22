@@ -5,15 +5,23 @@ using System.Text;
 
 namespace Registry.Viewport
 {
-    public enum ViewportType { 
-        BuildingListViewport, 
-        PremisesListViewport, 
-        PremisesViewport, 
-        BuildingViewport, 
-        RestrictionListViewport, 
+    public enum ViewportType
+    {
+        BuildingListViewport,
+        PremisesListViewport,
+        PremisesViewport,
+        BuildingViewport,
+        RestrictionListViewport,
         OwnershipListViewport,
         StructureTypeListViewport,
         RestrictionTypeListViewport,
-        OwnershipTypeListViewport
+        OwnershipTypeListViewport,
+        TenancyListViewport,
+        WarrantsViewport,
+        ReasonTypesViewport,
+        ExecutorsViewport,
+        DocumentIssuedByViewport,
+        Claims,
+        ClaimStateTypes
     }
 }

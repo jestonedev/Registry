@@ -15,6 +15,13 @@ D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исхо
 D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\VIBlend.WinForms.Controls.xml
 D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\VIBlend.WinForms.Utilities.pdb
 D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\VIBlend.WinForms.Utilities.xml
-D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.SearchBuildingForm.resources
-D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SearchPremisesForm.resources
 D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Viewports.csproj.GenerateResource.Cache
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SelectWarrantForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.SearchForms.ExtendedSearchBuildingForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.SearchForms.ExtendedSearchPremisesForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.SearchForms.ExtendedSearchTenancyForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SimpleSearchBuildingForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SimpleSearchPremiseForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.SearchForms.SimpleSearchTenancyForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.Properties.Resource.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SubPremisesDetailsControl.resources

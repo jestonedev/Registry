@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Data;
+using Registry.Entities;
 
 namespace Registry.Viewport
 {
@@ -10,8 +12,17 @@ namespace Registry.Viewport
         protected readonly IMenuCallback menuCallback;
         private bool selected_ = false;
 
+        public string StaticFilter { get; set; }
+        public string DynamicFilter { get; set; }
+        public DataRow ParentRow { get; set; }
+        public ParentTypeEnum ParentType { get; set; }
+
         protected Viewport(IMenuCallback menuCallback)
         {
+            StaticFilter = "";
+            DynamicFilter = "";
+            ParentRow = null;
+            ParentType = ParentTypeEnum.None;
             this.menuCallback = menuCallback;
         }
 
@@ -121,7 +132,7 @@ namespace Registry.Viewport
             throw new ViewportException("Не реализовано");
         }
 
-        public virtual void SearchRecord()
+        public virtual void SearchRecord(SearchFormType searchFormType)
         {
             throw new ViewportException("Не реализовано");
         }
@@ -152,6 +163,32 @@ namespace Registry.Viewport
         }
 
         public virtual void ShowSubPremises()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+        public virtual void ShowPersons()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+        public virtual void ShowContractReasons()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+        public virtual void ShowAgreements()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+
+        public virtual void ShowTenancyBuildings()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+        public virtual void ShowTenancyPremises()
         {
             throw new ViewportException("Не реализовано");
         }
@@ -266,7 +303,27 @@ namespace Registry.Viewport
             return false;
         }
 
-        public virtual bool HasFundHistory()
+        public virtual bool HasAssocFundHistory()
+        {
+            return false;
+        }
+
+        public virtual bool HasAssocPersons()
+        {
+            return false;
+        }
+
+        public virtual bool HasAssocContractReasons()
+        {
+            return false;
+        }
+
+        public virtual bool HasAssocAgreements()
+        {
+            return false;
+        }
+
+        public virtual bool HasAssocTenancyObjects()
         {
             return false;
         }

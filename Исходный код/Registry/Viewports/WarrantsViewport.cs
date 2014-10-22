@@ -6,21 +6,48 @@ using System.Windows.Forms;
 using System.Data;
 using Registry.Entities;
 using CustomControls;
+using Registry.DataModels;
 
 namespace Registry.Viewport
 {
     internal sealed class WarrantsViewport: Viewport
     {
         #region Components
-        private DataGridView dataGridView = new System.Windows.Forms.DataGridView();
-        private DataGridViewTextBoxColumn field_id_warrant = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        private DataGridViewTextBoxColumn field_registraction_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        private DateGridViewDateTimeColumn field_registraction_date = new CustomControls.DateGridViewDateTimeColumn();
-        private DataGridViewComboBoxColumn field_id_warrant_doc_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
-        private DataGridViewTextBoxColumn field_notary = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        private DataGridViewTextBoxColumn field_on_behalf_of = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        private DataGridViewTextBoxColumn field_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+        private TableLayoutPanel tableLayoutPanel14 = new TableLayoutPanel();
+        private DataGridView dataGridView = new DataGridView();
+        private DataGridViewTextBoxColumn field_id_warrant = new DataGridViewTextBoxColumn();
+        private DataGridViewTextBoxColumn field_registration_num = new DataGridViewTextBoxColumn();
+        private DateGridViewDateTimeColumn field_registration_date = new CustomControls.DateGridViewDateTimeColumn();
+        private DataGridViewTextBoxColumn field_notary = new DataGridViewTextBoxColumn();
+        private DataGridViewTextBoxColumn field_on_behalf_of = new DataGridViewTextBoxColumn();
+        private DataGridViewTextBoxColumn field_description = new DataGridViewTextBoxColumn();
+        private GroupBox groupBox32 = new GroupBox();
+        private GroupBox groupBox33 = new GroupBox();
+        private Label label83 = new Label();
+        private Label label84 = new Label();
+        private Label label85 = new Label();
+        private Label label86 = new Label();
+        private Label label87 = new Label();
+        private Label label88 = new Label();
+        private TextBox textBoxWarrantRegNum = new TextBox();
+        private TextBox textBoxWarrantNotary = new TextBox();
+        private TextBox textBoxWarrantDistrict = new TextBox();
+        private TextBox textBoxWarrantOnBehalfOf = new TextBox();
+        private TextBox textBoxWarrantDescription = new TextBox();
+        private DateTimePicker dateTimePickerWarrantDate = new DateTimePicker();
+        private ComboBox comboBoxWarrantDocType = new ComboBox();
         #endregion Components
+
+        //Modeles
+        WarrantsDataModel warrants = null;
+        WarrantDocTypesDataModel warrant_doc_types = null;
+
+        //Views
+        BindingSource v_warrants = null;
+        BindingSource v_warrant_doc_types = null;
+
+        private ViewportState viewportState = ViewportState.ReadState;
+        private bool is_editable = false;
 
         public WarrantsViewport(IMenuCallback menuCallback)
             : base(menuCallback)
@@ -34,15 +61,787 @@ namespace Registry.Viewport
             this.ResumeLayout(false);
         }
 
+        public WarrantsViewport(WarrantsViewport warrantsViewport, IMenuCallback menuCallback)
+            : this(menuCallback)
+        {
+            this.DynamicFilter = warrantsViewport.DynamicFilter;
+            this.StaticFilter = warrantsViewport.StaticFilter;
+            this.ParentRow = warrantsViewport.ParentRow;
+            this.ParentType = warrantsViewport.ParentType;
+        }
+
+        public override bool CanLoadData()
+        {
+            return true;
+        }
+
+        public override void LoadData()
+        {
+            warrants = WarrantsDataModel.GetInstance();
+            warrant_doc_types = WarrantDocTypesDataModel.GetInstance();
+
+            // Ожидаем дозагрузки, если это необходимо
+            warrants.Select();
+            warrant_doc_types.Select();
+
+            DataSet ds = DataSetManager.GetDataSet();
+
+            v_warrant_doc_types = new BindingSource();
+            v_warrant_doc_types.DataMember = "warrant_doc_types";
+            v_warrant_doc_types.DataSource = ds;
+
+            v_warrants = new BindingSource();
+            v_warrants.CurrentItemChanged += new EventHandler(v_warrants_CurrentItemChanged);
+            v_warrants.DataMember = "warrants";
+            v_warrants.DataSource = ds;
+            v_warrants.Sort = "registration_date DESC";
+
+            DataBind();
+
+            comboBoxWarrantDocType.SelectedIndexChanged += new EventHandler(comboBoxWarrantDocType_SelectedIndexChanged);
+            dateTimePickerWarrantDate.ValueChanged += new EventHandler(dateTimePickerWarrantDate_ValueChanged);
+            textBoxWarrantRegNum.TextChanged += new EventHandler(textBoxWarrantRegNum_TextChanged);
+            textBoxWarrantDistrict.TextChanged += new EventHandler(textBoxWarrantRegion_TextChanged);
+            textBoxWarrantOnBehalfOf.TextChanged += new EventHandler(textBoxWarrantNotaryDistrict_TextChanged);
+            textBoxWarrantNotary.TextChanged += new EventHandler(textBoxWarrantNotary_TextChanged);
+            textBoxWarrantDescription.TextChanged += new EventHandler(textBoxWarrantDescription_TextChanged);
+            dataGridView.DataError += new DataGridViewDataErrorEventHandler(dataGridView_DataError);
+        }
+
+        void dateTimePickerWarrantDate_ValueChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
+        }
+
+        void comboBoxWarrantDocType_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
+        }
+
+        void textBoxWarrantRegNum_TextChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
+        }
+
+        void textBoxWarrantRegion_TextChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
+        }
+
+        void textBoxWarrantNotaryDistrict_TextChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
+        }
+
+        void textBoxWarrantNotary_TextChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
+        }
+
+        void textBoxWarrantDescription_TextChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
+        }
+
+        void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            e.ThrowException = false;
+        }
+
+        private void CheckViewportModifications()
+        {
+            if (!is_editable)
+                return;
+            if ((!this.ContainsFocus) || (dataGridView.Focused))
+                return;
+            if ((v_warrants.Position != -1) && (WarrantFromView() != WarrantFromViewport()))
+            {
+                if (viewportState == ViewportState.ReadState)
+                {
+                    viewportState = ViewportState.ModifyRowState;
+                    dataGridView.Enabled = false;
+                }
+            }
+            else
+            {
+                if (viewportState == ViewportState.ModifyRowState)
+                {
+                    viewportState = ViewportState.ReadState;
+                    dataGridView.Enabled = true;
+                }
+            }
+            menuCallback.EditingStateUpdate();
+        }
+
+        private void DataBind()
+        {
+            comboBoxWarrantDocType.DataSource = v_warrant_doc_types;
+            comboBoxWarrantDocType.ValueMember = "id_warrant_doc_type";
+            comboBoxWarrantDocType.DisplayMember = "warrant_doc_type";
+            comboBoxWarrantDocType.DataBindings.Clear();
+            comboBoxWarrantDocType.DataBindings.Add("SelectedValue", v_warrants, "id_warrant_doc_type", true, DataSourceUpdateMode.Never, DBNull.Value);
+
+            textBoxWarrantRegNum.DataBindings.Clear();
+            textBoxWarrantRegNum.DataBindings.Add("Text", v_warrants, "registration_num", true, DataSourceUpdateMode.Never, "");
+            textBoxWarrantNotary.DataBindings.Clear();
+            textBoxWarrantNotary.DataBindings.Add("Text", v_warrants, "notary", true, DataSourceUpdateMode.Never, "");
+            textBoxWarrantOnBehalfOf.DataBindings.Clear();
+            textBoxWarrantOnBehalfOf.DataBindings.Add("Text", v_warrants, "on_behalf_of", true, DataSourceUpdateMode.Never, "");
+            textBoxWarrantDistrict.DataBindings.Clear();
+            textBoxWarrantDistrict.DataBindings.Add("Text", v_warrants, "notary_district", true, DataSourceUpdateMode.Never, "");
+            textBoxWarrantDescription.DataBindings.Clear();
+            textBoxWarrantDescription.DataBindings.Add("Text", v_warrants, "description", true, DataSourceUpdateMode.Never, "");
+            dateTimePickerWarrantDate.DataBindings.Clear();
+            dateTimePickerWarrantDate.DataBindings.Add("Value", v_warrants, "registration_date", true, DataSourceUpdateMode.Never, DateTime.Now);
+
+            dataGridView.DataSource = v_warrants;
+            field_id_warrant.DataPropertyName = "id_warrant";
+            field_notary.DataPropertyName = "notary";
+            field_on_behalf_of.DataPropertyName = "on_behalf_of";
+            field_registration_num.DataPropertyName = "registration_num";
+            field_registration_date.DataPropertyName = "registration_date";
+            field_description.DataPropertyName = "description";
+        }
+
+        public override void Close()
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            base.Close();
+        }
+
+        public override bool CanSaveRecord()
+        {
+            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
+        }
+
+        public override bool CanCopyRecord()
+        {
+            return ((v_warrants.Position != -1) && (!warrants.EditingNewRecord));
+        }
+
+        public override void CopyRecord()
+        {
+            if (!ChangeViewportStateTo(ViewportState.NewRowState))
+                return;
+            Warrant warrant = WarrantFromView();
+            DataRowView row = (DataRowView)v_warrants.AddNew();
+            dataGridView.Enabled = false;
+            warrants.EditingNewRecord = true;
+            ViewportFromWarrant(warrant);
+        }
+
+        private void ViewportFromWarrant(Warrant warrant)
+        {
+            if (warrant.id_warrant_doc_type != null)
+                comboBoxWarrantDocType.SelectedValue = warrant.id_warrant_doc_type;
+            else
+                comboBoxWarrantDocType.SelectedValue = DBNull.Value;
+            if (warrant.registration_date != null)
+                dateTimePickerWarrantDate.Value = warrant.registration_date.Value;
+            else
+                dateTimePickerWarrantDate.Value = DateTime.Now;
+
+            textBoxWarrantDescription.Text = warrant.description;
+            textBoxWarrantRegNum.Text = warrant.registration_num;
+            textBoxWarrantNotary.Text = warrant.notary;
+            textBoxWarrantDistrict.Text = warrant.notary_district;
+            textBoxWarrantOnBehalfOf.Text = warrant.on_behalf_of;
+        }
+
+        private Warrant WarrantFromViewport()
+        {
+            Warrant warrant = new Warrant();
+            if ((v_warrants.Position == -1) || ((DataRowView)v_warrants[v_warrants.Position])["id_warrant"] is DBNull)
+                warrant.id_warrant = null;
+            else
+                warrant.id_warrant = Convert.ToInt32(((DataRowView)v_warrants[v_warrants.Position])["id_warrant"]);
+            if (comboBoxWarrantDocType.SelectedValue == null)
+                warrant.id_warrant_doc_type = null;
+            else
+                warrant.id_warrant_doc_type = Convert.ToInt32(comboBoxWarrantDocType.SelectedValue);
+            if (textBoxWarrantRegNum.Text.Trim() == "")
+                warrant.registration_num = null;
+            else
+                warrant.registration_num = textBoxWarrantRegNum.Text.Trim();
+            if (textBoxWarrantOnBehalfOf.Text.Trim() == "")
+                warrant.on_behalf_of = null;
+            else
+                warrant.on_behalf_of = textBoxWarrantOnBehalfOf.Text.Trim();
+            if (textBoxWarrantNotary.Text.Trim() == "")
+                warrant.notary = null;
+            else
+                warrant.notary = textBoxWarrantNotary.Text.Trim();
+            if (textBoxWarrantDistrict.Text.Trim() == "")
+                warrant.notary_district = null;
+            else
+                warrant.notary_district = textBoxWarrantDistrict.Text.Trim();
+            if (textBoxWarrantDescription.Text.Trim() == "")
+                warrant.description = null;
+            else
+                warrant.description = textBoxWarrantDescription.Text.Trim();
+            warrant.registration_date = dateTimePickerWarrantDate.Value;
+            
+            return warrant;
+        }
+
+        private Warrant WarrantFromView()
+        {
+            Warrant warrant = new Warrant();
+            DataRowView row = (DataRowView)v_warrants[v_warrants.Position];
+            if (row["id_warrant"] is DBNull)
+                warrant.id_warrant = null;
+            else
+                warrant.id_warrant = Convert.ToInt32(row["id_warrant"]);
+            if (row["id_warrant_doc_type"] is DBNull)
+                warrant.id_warrant_doc_type = null;
+            else
+                warrant.id_warrant_doc_type = Convert.ToInt32(row["id_warrant_doc_type"]);
+            if (row["registration_num"] is DBNull)
+                warrant.registration_num = null;
+            else
+                warrant.registration_num = row["registration_num"].ToString();
+            if (row["registration_date"] is DBNull)
+                warrant.registration_date = null;
+            else
+                warrant.registration_date = Convert.ToDateTime(row["registration_date"]);
+            if (row["on_behalf_of"] is DBNull)
+                warrant.on_behalf_of = null;
+            else
+                warrant.on_behalf_of = row["on_behalf_of"].ToString();
+            if (row["notary"] is DBNull)
+                warrant.notary = null;
+            else
+                warrant.notary = row["notary"].ToString();
+            if (row["notary_district"] is DBNull)
+                warrant.notary_district = null;
+            else
+                warrant.notary_district = row["notary_district"].ToString();
+            if (row["description"] is DBNull)
+                warrant.description = null;
+            else
+                warrant.description = row["description"].ToString();
+            return warrant;
+        }
+
+        public override void MoveFirst()
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            is_editable = false;
+            v_warrants.MoveFirst();
+        }
+
+        public override void MoveLast()
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            is_editable = false;
+            v_warrants.MoveLast();
+        }
+
+        public override void MoveNext()
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            is_editable = false;
+            v_warrants.MoveNext();
+        }
+
+        public override void MovePrev()
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            is_editable = false;
+            v_warrants.MovePrevious();
+        }
+
+        public override bool CanMoveFirst()
+        {
+            return v_warrants.Position > 0;
+        }
+
+        public override bool CanMovePrev()
+        {
+            return v_warrants.Position > 0;
+        }
+
+        public override bool CanMoveNext()
+        {
+            return (v_warrants.Position > -1) && (v_warrants.Position < (v_warrants.Count - 1));
+        }
+
+        public override bool CanMoveLast()
+        {
+            return (v_warrants.Position > -1) && (v_warrants.Position < (v_warrants.Count - 1));
+        }
+
+        public override bool CanInsertRecord()
+        {
+            if ((viewportState == ViewportState.ReadState || viewportState == ViewportState.ModifyRowState) && !warrants.EditingNewRecord)
+                return true;
+            else
+                return false;
+        }
+
+        public override void InsertRecord()
+        {
+            if (!ChangeViewportStateTo(ViewportState.NewRowState))
+                return;
+            DataRowView row = (DataRowView)v_warrants.AddNew();
+            dataGridView.Enabled = false;
+            warrants.EditingNewRecord = true;
+        }
+
+        public override void DeleteRecord()
+        {
+            if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                if (warrants.Delete((int)((DataRowView)v_warrants.Current)["id_warrant"]) == -1)
+                    return;
+                ((DataRowView)v_warrants[v_warrants.Position]).Delete();
+                menuCallback.ForceCloseDetachedViewports();
+            }
+        }
+
+        public override bool CanDeleteRecord()
+        {
+            if ((v_warrants.Position == -1) || (viewportState == ViewportState.NewRowState))
+                return false;
+            else
+                return true;
+        }
+
+        public override bool CanDuplicate()
+        {
+            return true;
+        }
+
+        public override Viewport Duplicate()
+        {
+            WarrantsViewport viewport = new WarrantsViewport(this, menuCallback);
+            if (viewport.CanLoadData())
+                viewport.LoadData();
+            if (v_warrants.Count > 0)
+                viewport.LocateWarrantBy((((DataRowView)v_warrants[v_warrants.Position])["id_warrant"] as Int32?) ?? -1);
+            return viewport;
+        }
+
+        private void LocateWarrantBy(int id)
+        {
+            int Position = v_warrants.Find("id_warrant", id);
+            if (Position > 0)
+                v_warrants.Position = Position;
+        }
+
+        void v_warrants_CurrentItemChanged(object sender, EventArgs e)
+        {
+            if (Selected)
+                menuCallback.NavigationStateUpdate();
+            dataGridView.Enabled = true;
+            if (v_warrants.Position == -1)
+                return;
+            if (viewportState == ViewportState.NewRowState)
+                return;
+            viewportState = ViewportState.ReadState;
+            is_editable = true;
+        }
+
+        public override int GetRecordCount()
+        {
+            return v_warrants.Count;
+        }
+
+        public override bool CanCancelRecord()
+        {
+            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
+        }
+
+        private bool ValidateWarrant(Warrant warrant)
+        {
+            if (warrant.id_warrant_doc_type == null)
+            {
+                MessageBox.Show("Необходимо выбрать тип документа", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                comboBoxWarrantDocType.Focus();
+                return false;
+            }
+            if (warrant.registration_num == null)
+            {
+                MessageBox.Show("Регистрационный номер не может быть пустым", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                textBoxWarrantRegNum.Focus();
+                return false;
+            }
+            return true;
+        }
+
+        public override void SaveRecord()
+        {
+            Warrant warrant = WarrantFromViewport();
+            if (!ValidateWarrant(warrant))
+                return;
+            switch (viewportState)
+            {
+                case ViewportState.ReadState:
+                    MessageBox.Show("Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+                case ViewportState.NewRowState:
+                    int id_warrant = warrants.Insert(warrant);
+                    if (id_warrant == -1)
+                        return;
+                    DataRowView newRow;
+                    if (v_warrants.Position == -1)
+                        newRow = (DataRowView)v_warrants.AddNew();
+                    else
+                        newRow = ((DataRowView)v_warrants[v_warrants.Position]);
+                    warrant.id_warrant = id_warrant;
+                    FillRowFromWarrant(warrant, newRow);
+                    warrants.EditingNewRecord = false;
+                    is_editable = true;
+                    break;
+                case ViewportState.ModifyRowState:
+                    if (warrant.id_warrant == null)
+                    {
+                        MessageBox.Show("Вы пытаетесь изменить запись о принадлежности фонду без внутренного номера. " +
+                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    if (warrants.Update(warrant) == -1)
+                        return;
+                    DataRowView row = ((DataRowView)v_warrants[v_warrants.Position]);
+                    FillRowFromWarrant(warrant, row);
+                    break;
+            }
+            dataGridView.Enabled = true;
+            viewportState = ViewportState.ReadState;
+        }
+
+        private void FillRowFromWarrant(Warrant warrant, DataRowView row)
+        {
+            row.BeginEdit();
+            row["id_warrant"] = warrant.id_warrant == null ? DBNull.Value : (object)warrant.id_warrant;
+            row["id_warrant_doc_type"] = warrant.id_warrant_doc_type == null ? DBNull.Value : (object)warrant.id_warrant_doc_type;
+            row["registration_num"] = warrant.registration_num == null ? DBNull.Value : (object)warrant.registration_num;
+            row["registration_date"] = warrant.registration_date == null ? DBNull.Value : (object)warrant.registration_date;
+            row["on_behalf_of"] = warrant.on_behalf_of == null ? DBNull.Value : (object)warrant.on_behalf_of;
+            row["notary"] = warrant.notary == null ? DBNull.Value : (object)warrant.notary;
+            row["notary_district"] = warrant.notary_district == null ? DBNull.Value : (object)warrant.notary_district;
+            row["description"] = warrant.description == null ? DBNull.Value : (object)warrant.description;
+            row.EndEdit();
+        }
+
+        public override void CancelRecord()
+        {
+            switch (viewportState)
+            {
+                case ViewportState.ReadState: return;
+                case ViewportState.NewRowState:
+                    viewportState = ViewportState.ReadState;
+                    warrants.EditingNewRecord = false;
+                    if (v_warrants.Position != -1)
+                    {
+                        dataGridView.Enabled = true;
+                        ((DataRowView)v_warrants[v_warrants.Position]).Delete();
+                    }
+                    break;
+                case ViewportState.ModifyRowState:
+                    dataGridView.Enabled = true;
+                    is_editable = false;
+                    DataBind();
+                    is_editable = true;
+                    viewportState = ViewportState.ReadState;
+                    break;
+            }
+        }
+
+        bool ChangeViewportStateTo(ViewportState state)
+        {
+            switch (state)
+            {
+                case ViewportState.ReadState:
+                    switch (viewportState)
+                    {
+                        case ViewportState.ReadState:
+                            return true;
+                        case ViewportState.NewRowState:
+                        case ViewportState.ModifyRowState:
+                            DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                            if (result == DialogResult.Yes)
+                                SaveRecord();
+                            else
+                                if (result == DialogResult.No)
+                                    CancelRecord();
+                                else return false;
+                            if (viewportState == ViewportState.ReadState)
+                                return true;
+                            else
+                                return false;
+                    }
+                    break;
+                case ViewportState.NewRowState:
+                    switch (viewportState)
+                    {
+                        case ViewportState.ReadState:
+                            if (warrants.EditingNewRecord)
+                                return false;
+                            else
+                            {
+                                viewportState = ViewportState.NewRowState;
+                                return true;
+                            }
+                        case ViewportState.NewRowState:
+                            return true;
+                        case ViewportState.ModifyRowState:
+                            DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                            if (result == DialogResult.Yes)
+                                SaveRecord();
+                            else
+                                if (result == DialogResult.No)
+                                    CancelRecord();
+                                else
+                                    return false;
+                            if (viewportState == ViewportState.ReadState)
+                                return ChangeViewportStateTo(ViewportState.NewRowState);
+                            else
+                                return false;
+                    }
+                    break;
+                case ViewportState.ModifyRowState: ;
+                    switch (viewportState)
+                    {
+                        case ViewportState.ReadState:
+                            viewportState = ViewportState.ModifyRowState;
+                            return true;
+                        case ViewportState.ModifyRowState:
+                            return true;
+                        case ViewportState.NewRowState:
+                            DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                            if (result == DialogResult.Yes)
+                                SaveRecord();
+                            else
+                                if (result == DialogResult.No)
+                                    CancelRecord();
+                                else
+                                    return false;
+                            if (viewportState == ViewportState.ReadState)
+                                return ChangeViewportStateTo(ViewportState.ModifyRowState);
+                            else
+                                return false;
+                    }
+                    break;
+            }
+            return false;
+        }
+
+        public override void ForceClose()
+        {
+            if (viewportState == ViewportState.NewRowState)
+                warrants.EditingNewRecord = false;
+            base.Close();
+        }
+
+        public override bool ViewportDetached()
+        {
+            return ((ParentRow != null) && ((ParentRow.RowState == DataRowState.Detached) || (ParentRow.RowState == DataRowState.Deleted)));
+        }
+
         private void ConstructViewport()
         {
+            this.Controls.Add(tableLayoutPanel14);
             DataGridViewCellStyle dataGridViewCellStyle = new DataGridViewCellStyle();
+            this.tableLayoutPanel14.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.groupBox32.SuspendLayout();
+            this.groupBox33.SuspendLayout();
+            // 
+            // tableLayoutPanel14
+            // 
+            this.tableLayoutPanel14.ColumnCount = 2;
+            this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel14.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel14.Controls.Add(this.groupBox32, 0, 0);
+            this.tableLayoutPanel14.Controls.Add(this.groupBox33, 1, 0);
+            this.tableLayoutPanel14.Controls.Add(this.dataGridView, 0, 1);
+            this.tableLayoutPanel14.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel14.Location = new System.Drawing.Point(0, 0);
+            this.tableLayoutPanel14.Name = "tableLayoutPanel14";
+            this.tableLayoutPanel14.RowCount = 2;
+            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 200F));
+            this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel14.Size = new System.Drawing.Size(990, 537);
+            this.tableLayoutPanel14.TabIndex = 0;
+            // 
+            // groupBox32
+            // 
+            this.groupBox32.Controls.Add(this.label88);
+            this.groupBox32.Controls.Add(this.textBoxWarrantOnBehalfOf);
+            this.groupBox32.Controls.Add(this.label87);
+            this.groupBox32.Controls.Add(this.textBoxWarrantDistrict);
+            this.groupBox32.Controls.Add(this.label86);
+            this.groupBox32.Controls.Add(this.textBoxWarrantNotary);
+            this.groupBox32.Controls.Add(this.label85);
+            this.groupBox32.Controls.Add(this.label84);
+            this.groupBox32.Controls.Add(this.comboBoxWarrantDocType);
+            this.groupBox32.Controls.Add(this.textBoxWarrantRegNum);
+            this.groupBox32.Controls.Add(this.dateTimePickerWarrantDate);
+            this.groupBox32.Controls.Add(this.label83);
+            this.groupBox32.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox32.Location = new System.Drawing.Point(3, 3);
+            this.groupBox32.Name = "groupBox32";
+            this.groupBox32.Size = new System.Drawing.Size(489, 194);
+            this.groupBox32.TabIndex = 0;
+            this.groupBox32.TabStop = false;
+            this.groupBox32.Text = "Основные сведения";
+            // 
+            // groupBox33
+            // 
+            this.groupBox33.Controls.Add(this.textBoxWarrantDescription);
+            this.groupBox33.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox33.Location = new System.Drawing.Point(498, 3);
+            this.groupBox33.Name = "groupBox33";
+            this.groupBox33.Size = new System.Drawing.Size(489, 194);
+            this.groupBox33.TabIndex = 1;
+            this.groupBox33.TabStop = false;
+            this.groupBox33.Text = "Дополнительные сведения";
+            // 
+            // comboBoxWarrantDocType
+            // 
+            this.comboBoxWarrantDocType.Anchor = 
+                ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxWarrantDocType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxWarrantDocType.FormattingEnabled = true;
+            this.comboBoxWarrantDocType.Location = new System.Drawing.Point(164, 19);
+            this.comboBoxWarrantDocType.Name = "comboBoxWarrantDocType";
+            this.comboBoxWarrantDocType.Size = new System.Drawing.Size(319, 21);
+            this.comboBoxWarrantDocType.TabIndex = 0;
+            // 
+            // dateTimePicker1
+            // 
+            this.dateTimePickerWarrantDate.Anchor = 
+                ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerWarrantDate.Location = new System.Drawing.Point(164, 77);
+            this.dateTimePickerWarrantDate.Name = "dateTimePicker1";
+            this.dateTimePickerWarrantDate.Size = new System.Drawing.Size(319, 20);
+            this.dateTimePickerWarrantDate.TabIndex = 2;
+            // 
+            // label83
+            // 
+            this.label83.AutoSize = true;
+            this.label83.Location = new System.Drawing.Point(17, 81);
+            this.label83.Name = "label83";
+            this.label83.Size = new System.Drawing.Size(33, 13);
+            this.label83.TabIndex = 41;
+            this.label83.Text = "Дата";
+            // 
+            // label84
+            // 
+            this.label84.AutoSize = true;
+            this.label84.Location = new System.Drawing.Point(17, 22);
+            this.label84.Name = "label84";
+            this.label84.Size = new System.Drawing.Size(83, 13);
+            this.label84.TabIndex = 44;
+            this.label84.Text = "Тип документа";
+            // 
+            // label85
+            // 
+            this.label85.AutoSize = true;
+            this.label85.Location = new System.Drawing.Point(17, 51);
+            this.label85.Name = "label85";
+            this.label85.Size = new System.Drawing.Size(133, 13);
+            this.label85.TabIndex = 45;
+            this.label85.Text = "Регистрационный номер";
+            // 
+            // label86
+            // 
+            this.label86.AutoSize = true;
+            this.label86.Location = new System.Drawing.Point(17, 109);
+            this.label86.Name = "label86";
+            this.label86.Size = new System.Drawing.Size(128, 13);
+            this.label86.TabIndex = 47;
+            this.label86.Text = "Удостовер. нотариусом";
+            // 
+            // label87
+            // 
+            this.label87.AutoSize = true;
+            this.label87.Location = new System.Drawing.Point(17, 138);
+            this.label87.Name = "label87";
+            this.label87.Size = new System.Drawing.Size(122, 13);
+            this.label87.TabIndex = 49;
+            this.label87.Text = "Нотариального округа";
+            // 
+            // label88
+            // 
+            this.label88.AutoSize = true;
+            this.label88.Location = new System.Drawing.Point(17, 167);
+            this.label88.Name = "label88";
+            this.label88.Size = new System.Drawing.Size(123, 13);
+            this.label88.TabIndex = 51;
+            this.label88.Text = "Действует в лице кого";
+            // 
+            // textBoxWarrantRegNum
+            // 
+            this.textBoxWarrantRegNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | 
+                System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxWarrantRegNum.Location = new System.Drawing.Point(164, 48);
+            this.textBoxWarrantRegNum.MaxLength = 10;
+            this.textBoxWarrantRegNum.Name = "textBoxWarrantRegNum";
+            this.textBoxWarrantRegNum.Size = new System.Drawing.Size(319, 20);
+            this.textBoxWarrantRegNum.TabIndex = 1;
+            // 
+            // textBoxWarrantNotary
+            // 
+            this.textBoxWarrantNotary.Anchor = 
+                ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | 
+                System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxWarrantNotary.Location = new System.Drawing.Point(164, 106);
+            this.textBoxWarrantNotary.MaxLength = 100;
+            this.textBoxWarrantNotary.Name = "textBoxWarrantNotary";
+            this.textBoxWarrantNotary.Size = new System.Drawing.Size(319, 20);
+            this.textBoxWarrantNotary.TabIndex = 3;
+            // 
+            // textBoxWarrantDistrict
+            // 
+            this.textBoxWarrantDistrict.Anchor =
+                ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top |
+                System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxWarrantDistrict.Location = new System.Drawing.Point(164, 135);
+            this.textBoxWarrantDistrict.MaxLength = 100;
+            this.textBoxWarrantDistrict.Name = "textBoxWarrantDistrict";
+            this.textBoxWarrantDistrict.Size = new System.Drawing.Size(319, 20);
+            this.textBoxWarrantDistrict.TabIndex = 4;
+            // 
+            // textBoxWarrantOnBehalfOf
+            // 
+            this.textBoxWarrantOnBehalfOf.Anchor =
+                ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top |
+                System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxWarrantOnBehalfOf.Location = new System.Drawing.Point(164, 164);
+            this.textBoxWarrantOnBehalfOf.MaxLength = 100;
+            this.textBoxWarrantOnBehalfOf.Name = "textBoxWarrantOnBehalfOf";
+            this.textBoxWarrantOnBehalfOf.Size = new System.Drawing.Size(319, 20);
+            this.textBoxWarrantOnBehalfOf.TabIndex = 5;
+            // 
+            // textBoxWarrantDescription
+            // 
+            this.textBoxWarrantDescription.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxWarrantDescription.Location = new System.Drawing.Point(3, 16);
+            this.textBoxWarrantDescription.MaxLength = 4000;
+            this.textBoxWarrantDescription.Multiline = true;
+            this.textBoxWarrantDescription.Name = "textBoxWarrantDescription";
+            this.textBoxWarrantDescription.Size = new System.Drawing.Size(483, 175);
+            this.textBoxWarrantDescription.TabIndex = 0;
             // 
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
-            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             dataGridViewCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
@@ -57,11 +856,12 @@ namespace Registry.Viewport
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.field_id_warrant,
-            this.field_registraction_num,
-            this.field_registraction_date,
+            this.field_registration_num,
+            this.field_registration_date,
             this.field_notary,
             this.field_on_behalf_of,
             this.field_description});
+            this.tableLayoutPanel14.SetColumnSpan(this.dataGridView, 2);
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.Location = new System.Drawing.Point(0, 0);
             this.dataGridView.Name = "dataGridView";
@@ -69,46 +869,53 @@ namespace Registry.Viewport
             this.dataGridView.Size = new System.Drawing.Size(990, 537);
             this.dataGridView.TabIndex = 6;
             this.dataGridView.MultiSelect = false;
+            this.dataGridView.AutoGenerateColumns = false;
+            this.dataGridView.ReadOnly = true;
             // 
             // field_id_warrant
             // 
             this.field_id_warrant.Frozen = true;
             this.field_id_warrant.HeaderText = "Идентификатор доверенности";
             this.field_id_warrant.Name = "id_warrant";
-            this.field_id_warrant.ReadOnly = true;
             this.field_id_warrant.Visible = false;
             // 
-            // field_registraction_num
+            // field_registration_num
             // 
-            this.field_registraction_num.HeaderText = "Регистрационный №";
-            this.field_registraction_num.Name = "registraction_num";
+            this.field_registration_num.HeaderText = "Регистрационный №";
+            this.field_registration_num.Name = "registration_num";
+            this.field_registration_num.MinimumWidth = 150;
             // 
-            // field_registraction_date
+            // field_registration_date
             // 
-            this.field_registraction_date.HeaderText = "Дата";
-            this.field_registraction_date.Name = "registraction_date";
-            //
-            // field_id_warrant_doc_type
-            //
-            this.field_id_warrant_doc_type.HeaderText = "Тип документа";
-            this.field_id_warrant_doc_type.Name = "id_warrant_doc_type";
+            this.field_registration_date.HeaderText = "Дата";
+            this.field_registration_date.Name = "registration_date";
+            this.field_registration_date.MinimumWidth = 150;
             // 
             // field_notary
             // 
             this.field_notary.HeaderText = "Нотариус";
             this.field_notary.Name = "notary";
+            this.field_notary.MinimumWidth = 200;
             // 
             // field_on_behalf_of
             // 
             this.field_on_behalf_of.HeaderText = "В лице кого";
             this.field_on_behalf_of.Name = "on_behalf_of";
+            this.field_on_behalf_of.MinimumWidth = 200;
             // 
             // field_description
             // 
             this.field_description.HeaderText = "Примечание";
             this.field_description.Name = "description";
+            this.field_description.FillWeight = 200;
+            this.field_description.MinimumWidth = 300;
 
+            this.tableLayoutPanel14.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.groupBox32.ResumeLayout(false);
+            this.groupBox32.PerformLayout();
+            this.groupBox33.ResumeLayout(false);
+            this.groupBox33.PerformLayout();
         }
     }
 }

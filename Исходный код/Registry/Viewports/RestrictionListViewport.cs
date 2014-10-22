@@ -33,11 +33,6 @@ namespace Registry.Viewport
         BindingSource v_restriction_assoc = null;
         BindingSource v_snapshot_restrictions = null;
 
-        public string StaticFilter { get; set; }
-        public string DynamicFilter { get; set; }
-        public DataRow ParentRow { get; set; }
-        public ParentTypeEnum ParentType { get; set; }
-
         //Флаг разрешения синхронизации snapshot и original моделей
         bool sync_views = true;
 
@@ -70,6 +65,10 @@ namespace Registry.Viewport
         {
             restrictions = RestrictionsDataModel.GetInstance();
             restriction_types = RestrictionTypesDataModel.GetInstance();
+            // Дожидаемся дозагрузки данных, если это необходимо
+            restrictions.Select();
+            restriction_types.Select();
+
             if (ParentType == ParentTypeEnum.Premises)
                 restriction_assoc = RestrictionsPremisesAssocDataModel.GetInstance();
             else
@@ -77,20 +76,21 @@ namespace Registry.Viewport
                     restriction_assoc = RestrictionsBuildingsAssocDataModel.GetInstance();
                 else
                     throw new ViewportException("Неизвестный тип родительского объекта");
+            restriction_assoc.Select();
 
             v_restriction_assoc = new BindingSource();
             if ((ParentType == ParentTypeEnum.Premises) && (ParentRow != null))
             {
                 v_restriction_assoc.DataMember = "restrictions_premises_assoc";
                 v_restriction_assoc.Filter = "id_premises = " + ParentRow["id_premises"].ToString();
-                this.Text = String.Format("Реквизиты помещения № {0}", ParentRow["id_premises"].ToString());
+                this.Text = String.Format("Реквизиты помещения №{0}", ParentRow["id_premises"].ToString());
             }
             else
                 if ((ParentType == ParentTypeEnum.Building) && (ParentRow != null))
                 {
                     v_restriction_assoc.DataMember = "restrictions_buildings_assoc";
                     v_restriction_assoc.Filter = "id_building = " + ParentRow["id_building"].ToString();
-                    this.Text = String.Format("Реквизиты здания № {0}", ParentRow["id_building"].ToString());
+                    this.Text = String.Format("Реквизиты здания №{0}", ParentRow["id_building"].ToString());
                 }
                 else
                     throw new ViewportException("Неизвестный тип родительского объекта");
@@ -137,7 +137,7 @@ namespace Registry.Viewport
             restrictions.Select().RowChanged += new DataRowChangeEventHandler(RestrictionListViewport_RowChanged);
             restrictions.Select().RowDeleting += new DataRowChangeEventHandler(RestrictionListViewport_RowDeleting);
             restriction_assoc.Select().RowChanged += new DataRowChangeEventHandler(RestrictionAssoc_RowChanged);
-            restriction_assoc.Select().RowDeleting += new DataRowChangeEventHandler(RestrictionAssoc_RowDeleting);
+            restriction_assoc.Select().RowDeleted += new DataRowChangeEventHandler(RestrictionAssoc_RowDeleted);
         }
 
         void v_snapshot_restrictions_CurrentItemChanged(object sender, EventArgs e)
@@ -196,7 +196,7 @@ namespace Registry.Viewport
             v_restrictions.Filter = restrictionFilter;
         }
 
-        void RestrictionAssoc_RowDeleting(object sender, DataRowChangeEventArgs e)
+        void RestrictionAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (!sync_views)
                 return;
@@ -366,7 +366,7 @@ namespace Registry.Viewport
             restrictions.Select().RowChanged -= new DataRowChangeEventHandler(RestrictionListViewport_RowChanged);
             restrictions.Select().RowDeleting -= new DataRowChangeEventHandler(RestrictionListViewport_RowDeleting);
             restriction_assoc.Select().RowChanged -= new DataRowChangeEventHandler(RestrictionAssoc_RowChanged);
-            restriction_assoc.Select().RowDeleting -= new DataRowChangeEventHandler(RestrictionAssoc_RowDeleting);
+            restriction_assoc.Select().RowDeleted -= new DataRowChangeEventHandler(RestrictionAssoc_RowDeleted);
             base.Close();
         }
 
@@ -453,6 +453,8 @@ namespace Registry.Viewport
                 }
                 else
                 {
+                    if (RowToRestriction(row) == list[i])
+                        continue;
                     if (restrictions.Update(list[i]) == -1)
                     {
                         sync_views = true;
@@ -489,6 +491,19 @@ namespace Registry.Viewport
             sync_views = true;
         }
 
+        private Restriction RowToRestriction(DataRow row)
+        {
+            Restriction restriction = new Restriction();
+            restriction.id_restriction = row["id_restriction"] == DBNull.Value ? null :
+                (int?)Convert.ToInt32(row["id_restriction"]);
+            restriction.id_restriction_type = row["id_restriction_type"] == DBNull.Value ? null :
+                (int?)Convert.ToInt32(row["id_restriction_type"]);
+            restriction.number = row["number"] == DBNull.Value ? null : row["number"].ToString();
+            restriction.date = row["date"] == DBNull.Value ? null : (DateTime?)Convert.ToDateTime(row["date"]);
+            restriction.description = row["description"] == DBNull.Value ? null : row["description"].ToString();
+            return restriction;
+        }
+
         void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
         {
             if ((dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].OwningColumn.Name == "number") &&
@@ -521,6 +536,10 @@ namespace Registry.Viewport
 
         public override void ForceClose()
         {
+            restrictions.Select().RowChanged -= new DataRowChangeEventHandler(RestrictionListViewport_RowChanged);
+            restrictions.Select().RowDeleting -= new DataRowChangeEventHandler(RestrictionListViewport_RowDeleting);
+            restriction_assoc.Select().RowChanged -= new DataRowChangeEventHandler(RestrictionAssoc_RowChanged);
+            restriction_assoc.Select().RowDeleted -= new DataRowChangeEventHandler(RestrictionAssoc_RowDeleted);
             base.Close();
         }
 
