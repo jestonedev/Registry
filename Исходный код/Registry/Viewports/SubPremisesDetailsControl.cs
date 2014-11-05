@@ -14,24 +14,26 @@ namespace Registry.Viewport
     internal sealed class SubPremisesDetailsControl : System.Windows.Forms.UserControl
     {
         #region Components
-        private DataGridView dataGridView = new DataGridView();
-        DataGridViewCheckBoxColumn field_checked = new DataGridViewCheckBoxColumn();
-        DataGridViewTextBoxColumn field_beds = new DataGridViewTextBoxColumn();
-        private DataGridViewTextBoxColumn field_id_sub_premises = new DataGridViewTextBoxColumn();
-        private DataGridViewTextBoxColumn field_id_premises = new DataGridViewTextBoxColumn();
-        private DataGridViewTextBoxColumn field_sub_premises_num = new DataGridViewTextBoxColumn();
-        private DataGridViewTextBoxColumn field_total_area = new DataGridViewTextBoxColumn();
-        private DataGridViewTextBoxColumn field_description = new DataGridViewTextBoxColumn();
-
+        private DataGridView dataGridView;
         #endregion Components
 
-        //Models
+        #region Models
         public DataTable sub_premises { get; set; }
         private TenancySubPremisesAssocDataModel tenancy_sub_premises = null;
+        #endregion Models
+        private DataGridViewCheckBoxColumn is_checked;
+        private DataGridViewTextBoxColumn rent_total_area;
+        private DataGridViewTextBoxColumn id_sub_premises;
+        private DataGridViewTextBoxColumn id_premises;
+        private DataGridViewTextBoxColumn sub_premises_num;
+        private DataGridViewTextBoxColumn total_area;
+        private DataGridViewTextBoxColumn description;
 
-        //Views
+
+        #region Views
         public BindingSource v_sub_premises { get; set; }
         private BindingSource v_tenancy_sub_premises = null;
+        #endregion Views
 
         //Начальные настройки компонента. Задавать необходимо их все.
         public string StaticFilter { get; set; }
@@ -48,17 +50,20 @@ namespace Registry.Viewport
 
         public void InitializeControl()
         {
+            dataGridView.AutoGenerateColumns = false;
             if (v_sub_premises == null || sub_premises == null)
-                throw new ApplicationException("Не заданна ссылка на таблицу и представление комнат");
+                throw new ViewportException("Не заданна ссылка на таблицу и представление комнат");
             if (ParentRow == null)
-                throw new ApplicationException("Не заданна ссылка на родительский объект");
+                throw new ViewportException("Не заданна ссылка на родительский объект");
+            if (ParentType != ParentTypeEnum.Tenancy)
+                throw new ViewportException("Неизвестный родительский объект");
 
             // Инициализируем snapshot-модель
             snapshot_tenancy_sub_premises = new DataTable("selected_sub_premises");
             snapshot_tenancy_sub_premises.Columns.Add("id_assoc").DataType = typeof(int);
             snapshot_tenancy_sub_premises.Columns.Add("id_sub_premises").DataType = typeof(int);
-            snapshot_tenancy_sub_premises.Columns.Add("checked").DataType = typeof(bool);
-            snapshot_tenancy_sub_premises.Columns.Add("beds").DataType = typeof(string);
+            snapshot_tenancy_sub_premises.Columns.Add("is_checked").DataType = typeof(bool);
+            snapshot_tenancy_sub_premises.Columns.Add("rent_total_area").DataType = typeof(double);
 
             tenancy_sub_premises = TenancySubPremisesAssocDataModel.GetInstance();
             tenancy_sub_premises.Select();
@@ -84,53 +89,14 @@ namespace Registry.Viewport
             sub_premises.RowChanged += sub_premises_RowChanged;
             tenancy_sub_premises.Select().RowChanged += new DataRowChangeEventHandler(SubPremisesDetailsControl_RowChanged);
             tenancy_sub_premises.Select().RowDeleting += new DataRowChangeEventHandler(SubPremisesDetailsControl_RowDeleting);
+            ViewportHelper.SetDoubleBuffered(dataGridView);
         }
 
-        void SubPremisesDetailsControl_RowDeleting(object sender, DataRowChangeEventArgs e)
+        public SubPremisesDetailsControl()
         {
-            if (!sync_views)
-                return;
-            if (Convert.ToInt32(e.Row["id_contract"]) != Convert.ToInt32(ParentRow["id_contract"]))
-                return;
-            if (e.Action == DataRowAction.Delete)
-            {
-                int row_index = v_snapshot_tenancy_sub_premises.Find("id_sub_premises", e.Row["id_sub_premises"]);
-                if (row_index != -1)
-                    ((DataRowView)v_snapshot_tenancy_sub_premises[row_index]).Delete();
-            }
-            dataGridView.Refresh();
-        }
-
-        void SubPremisesDetailsControl_RowChanged(object sender, DataRowChangeEventArgs e)
-        {
-            if (!sync_views)
-                return;
-            if (Convert.ToInt32(e.Row["id_contract"]) != Convert.ToInt32(ParentRow["id_contract"]))
-                return;
-            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
-            {
-                int row_index = v_snapshot_tenancy_sub_premises.Find("id_sub_premises", e.Row["id_sub_premises"]);
-                if (row_index != -1)
-                {
-                    DataRowView row = ((DataRowView)v_snapshot_tenancy_sub_premises[row_index]);
-                    row["beds"] = e.Row["beds"];
-                }
-            }
-            else
-                if (e.Action == DataRowAction.Add)
-                {
-                    //Если строка имеется в текущем контексте оригинального представления, то добавить его и в snapshot, 
-                    //иначе - объект не принадлежит текущему родителю
-                    int row_index = v_tenancy_sub_premises.Find("id_assoc", e.Row["id_assoc"]);
-                    if (row_index != -1)
-                        snapshot_tenancy_sub_premises.Rows.Add(new object[] { 
-                            e.Row["id_assoc"],
-                            e.Row["id_sub_premises"], 
-                            true,   
-                            e.Row["beds"]
-                        });
-                }
-            dataGridView.Refresh();
+            this.ParentType = ParentTypeEnum.None;
+            InitializeComponent();
+            sync_views = true;
         }
 
         protected override void Dispose(bool disposing)
@@ -142,96 +108,14 @@ namespace Registry.Viewport
             base.Dispose(disposing);
         }
 
-        public SubPremisesDetailsControl()
+        private TenancyObject RowToTenancySubPremises(DataRow row)
         {
-            this.ParentType = ParentTypeEnum.None;
-            this.SuspendLayout();
-            this.Controls.Add(dataGridView);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
-
-            dataGridView.AllowUserToAddRows = false;
-            dataGridView.AllowUserToDeleteRows = false;
-            dataGridView.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
-            dataGridView.AutoGenerateColumns = false;
-            dataGridView.MultiSelect = false;
-            dataGridView.Columns.AddRange(new DataGridViewColumn[]
-                {
-                    field_checked,
-                    field_beds,
-                    field_id_sub_premises,
-                    field_id_premises,
-                    field_sub_premises_num,
-                    field_total_area,
-                    field_description
-                });
-            dataGridView.VirtualMode = true;
-            dataGridView.AllowUserToResizeRows = false;
-            dataGridView.ShowEditingIcon = false;
-            dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridView.DefaultCellStyle.BackColor = System.Drawing.SystemColors.ControlLight;
-            //
-            // field_checked
-            //
-            field_checked.HeaderText = "";
-            field_checked.Name = "checked";
-            field_checked.Width = 30;
-            field_checked.Resizable = DataGridViewTriState.False;
-            field_checked.DefaultCellStyle.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            field_checked.ReadOnly = false;
-            field_checked.SortMode = DataGridViewColumnSortMode.NotSortable;
-            //
-            // field_beds
-            //
-            field_beds.HeaderText = "№ койко-мест";
-            field_beds.Name = "beds";
-            field_beds.MinimumWidth = 130;
-            field_beds.DefaultCellStyle.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            field_beds.ReadOnly = false;
-            field_beds.SortMode = DataGridViewColumnSortMode.NotSortable;       
-            // 
-            // field_id_sub_premises
-            // 
-            field_id_sub_premises.HeaderText = "Внутренний номер комнаты";
-            field_id_sub_premises.Name = "id_sub_premises";
-            field_id_sub_premises.Visible = false;
-            field_id_sub_premises.ReadOnly = true;
-            // 
-            // field_id_premises
-            // 
-            field_id_premises.HeaderText = "Внутренний номер помещения";
-            field_id_premises.Name = "id_premises";
-            field_id_premises.Visible = false;
-            field_id_premises.ReadOnly = true;
-            // 
-            // field_sub_premises_num
-            // 
-            field_sub_premises_num.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            field_sub_premises_num.HeaderText = "Номер комнаты";
-            field_sub_premises_num.MinimumWidth = 150;
-            field_sub_premises_num.Name = "sub_premises_num";
-            field_sub_premises_num.ReadOnly = true;
-            // 
-            // field_total_area
-            // 
-            field_total_area.HeaderText = "Общая площадь";
-            field_total_area.MinimumWidth = 150;
-            field_total_area.Name = "total_area";
-            field_total_area.DefaultCellStyle.Format = "#0.0## м²";
-            field_total_area.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            field_total_area.ReadOnly = true;
-            // 
-            // field_description
-            // 
-            field_description.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            field_description.HeaderText = "Примечание";
-            field_description.MinimumWidth = 300;
-            field_description.Name = "description";
-            field_description.ReadOnly = true;
-            sync_views = true;
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
-            this.ResumeLayout(false);
+            TenancyObject to = new TenancyObject();
+            to.id_assoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
+            to.id_process = ViewportHelper.ValueOrNull<int>(row, "id_process");
+            to.id_object = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises");
+            to.rent_total_area = ViewportHelper.ValueOrNull<double>(row, "rent_total_area");
+            return to;
         }
 
         public List<TenancyObject> TenancySubPremisesFromViewport()
@@ -240,13 +124,13 @@ namespace Registry.Viewport
             for (int i = 0; i < snapshot_tenancy_sub_premises.Rows.Count; i++)
             {
                 DataRow row = snapshot_tenancy_sub_premises.Rows[i];
-                if (Convert.ToBoolean(row["checked"]) == false)
+                if (Convert.ToBoolean(row["is_checked"]) == false)
                     continue;
                 TenancyObject to = new TenancyObject();
-                to.id_assoc = row["id_assoc"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_assoc"]);
-                to.id_contract = (ParentType == ParentTypeEnum.Tenancy) ? (int?)Convert.ToInt32(ParentRow["id_contract"]) : null;
-                to.id_object = row["id_sub_premises"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_sub_premises"]);
-                to.beds = row["beds"] == DBNull.Value ? null : row["beds"].ToString();
+                to.id_assoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
+                to.id_process = ViewportHelper.ValueOrNull<int>(ParentRow, "id_process");
+                to.id_object = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises");
+                to.rent_total_area = ViewportHelper.ValueOrNull<double>(row, "rent_total_area");
                 list.Add(to);
             }
             return list;
@@ -259,22 +143,27 @@ namespace Registry.Viewport
             {
                 TenancyObject to = new TenancyObject();
                 DataRowView row = ((DataRowView)v_tenancy_sub_premises[i]);
-                to.id_assoc = row["id_assoc"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_assoc"]);
-                to.id_contract = row["id_contract"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_contract"]);
-                to.id_object = row["id_sub_premises"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_sub_premises"]);
-                to.beds = row["beds"] == DBNull.Value ? null : row["beds"].ToString();
+                to.id_assoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
+                to.id_process = ViewportHelper.ValueOrNull<int>(row, "id_process");
+                to.id_object = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises");
+                to.rent_total_area = ViewportHelper.ValueOrNull<double>(row, "rent_total_area");
                 list.Add(to);
             }
             return list;
         }
-        
+
+        public bool ValidateTenancySubPremises(List<TenancyObject> tenancySubPremises)
+        {
+            return true;
+        }
+
         private object[] DataRowViewToArray(DataRowView dataRowView)
         {
             return new object[] { 
                 dataRowView["id_assoc"],
                 dataRowView["id_sub_premises"], 
                 true, 
-                dataRowView["beds"]
+                dataRowView["rent_total_area"]
             };
         }
 
@@ -297,6 +186,87 @@ namespace Registry.Viewport
             }
             height += dataGridView.ColumnHeadersHeight;
             dataGridView.Height = height+5;
+        }
+
+        public void CancelRecord()
+        {
+            snapshot_tenancy_sub_premises.Clear();
+            for (int i = 0; i < v_tenancy_sub_premises.Count; i++)
+                snapshot_tenancy_sub_premises.Rows.Add(DataRowViewToArray(((DataRowView)v_tenancy_sub_premises[i])));
+            dataGridView.Refresh();
+        }
+
+        public void SaveRecord()
+        {
+            sync_views = false;
+            List<TenancyObject> list = TenancySubPremisesFromViewport();
+            for (int i = 0; i < list.Count; i++)
+            {
+                DataRow row = null;
+                if (((TenancyObject)list[i]).id_assoc != null)
+                    row = tenancy_sub_premises.Select().Rows.Find(list[i].id_assoc);
+                if (row == null)
+                {
+                    int id_assoc = tenancy_sub_premises.Insert(list[i]);
+                    if (id_assoc == -1)
+                    {
+                        sync_views = true;
+                        return;
+                    }
+                    ((DataRowView)v_snapshot_tenancy_sub_premises[
+                        v_snapshot_tenancy_sub_premises.Find("id_sub_premises", list[i].id_object)])["id_assoc"] = id_assoc;
+                    tenancy_sub_premises.Select().Rows.Add(new object[] { 
+                        id_assoc, list[i].id_object, list[i].id_process, list[i].rent_total_area, 0
+                    });
+                }
+                else
+                {
+                    if (RowToTenancySubPremises(row) == list[i])
+                        continue;
+                    if (tenancy_sub_premises.Update(list[i]) == -1)
+                    {
+                        sync_views = true;
+                        return;
+                    }
+                    row["rent_total_area"] = list[i].rent_total_area == null ? DBNull.Value : (object)list[i].rent_total_area;
+                }
+            }
+            list = TenancySubPremisesFromView();
+            for (int i = 0; i < list.Count; i++)
+            {
+                int row_index = -1;
+                for (int j = 0; j < v_snapshot_tenancy_sub_premises.Count; j++)
+                {
+                    DataRowView row = (DataRowView)v_snapshot_tenancy_sub_premises[j];
+                    if ((row["id_assoc"] != DBNull.Value) &&
+                        (row["id_assoc"].ToString() != "") &&
+                        ((int)row["id_assoc"] == list[i].id_assoc) &&
+                        (Convert.ToBoolean(row["is_checked"]) == true))
+                        row_index = j;
+                }
+                if (row_index == -1)
+                {
+                    if (tenancy_sub_premises.Delete(list[i].id_assoc.Value) == -1)
+                    {
+                        sync_views = true;
+                        return;
+                    }
+                    int snapshot_row_index = -1;
+                    for (int j = 0; j < v_snapshot_tenancy_sub_premises.Count; j++)
+                        if (((DataRowView)v_snapshot_tenancy_sub_premises[j])["id_assoc"] != DBNull.Value &&
+                            Convert.ToInt32(((DataRowView)v_snapshot_tenancy_sub_premises[j])["id_assoc"]) == list[i].id_assoc)
+                            snapshot_row_index = j;
+                    if (snapshot_row_index != -1)
+                    {
+                        int sub_premises_row_index = v_sub_premises.Find("id_sub_premises", list[i].id_object);
+                        ((DataRowView)v_snapshot_tenancy_sub_premises[snapshot_row_index]).Delete();
+                        if (sub_premises_row_index != -1)
+                            dataGridView.InvalidateRow(sub_premises_row_index);
+                    }
+                    tenancy_sub_premises.Select().Rows.Find(((TenancyObject)list[i]).id_assoc).Delete();
+                }
+            }
+            sync_views = true;
         }
 
         protected override void OnVisibleChanged(EventArgs e)
@@ -328,6 +298,11 @@ namespace Registry.Viewport
             CalcControlHeight();
         }
 
+        void dataSource_CurrentChanged(object sender, EventArgs e)
+        {
+            dataGridView.RowCount = v_sub_premises.Count;
+        }
+
         void dataGridView_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)
         {
             if (v_sub_premises.Count <= e.RowIndex || v_sub_premises.Count == 0) return;
@@ -336,27 +311,25 @@ namespace Registry.Viewport
             sync_views = false;
             switch (dataGridView.Columns[e.ColumnIndex].Name)
             {
-                case "checked":
+                case "is_checked":
                     if (row_index == -1)
                         snapshot_tenancy_sub_premises.Rows.Add(new object[] { null, id_sub_premises, e.Value, null });
                     else
-                        ((DataRowView)v_snapshot_tenancy_sub_premises[row_index])["checked"] = e.Value;
+                        ((DataRowView)v_snapshot_tenancy_sub_premises[row_index])["is_checked"] = e.Value;
                     break;
-                case "beds":
+                case "rent_total_area":
+                    double value = 0;
+                    if (e.Value != null)
+                        Double.TryParse(e.Value.ToString(), out value);
                     if (row_index == -1)
-                        snapshot_tenancy_sub_premises.Rows.Add(new object[] { null, id_sub_premises, false, e.Value == null ? null : e.Value.ToString().ToLower() });
+                        snapshot_tenancy_sub_premises.Rows.Add(new object[] { null, id_sub_premises, false, value == 0 ? DBNull.Value : (object)value });
                     else
-                        ((DataRowView)v_snapshot_tenancy_sub_premises[row_index])["beds"] = e.Value == null ? null : e.Value.ToString().ToLower();
+                        ((DataRowView)v_snapshot_tenancy_sub_premises[row_index])["rent_total_area"] = value == 0 ? DBNull.Value : (object)value;
                     break;
             }
             sync_views = true;
             if (menuCallback != null)
                 menuCallback.EditingStateUpdate();
-        }
-
-        void dataSource_CurrentChanged(object sender, EventArgs e)
-        {
-            dataGridView.RowCount = v_sub_premises.Count;
         }
 
         void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
@@ -367,17 +340,13 @@ namespace Registry.Viewport
             DataRowView row = ((DataRowView)v_sub_premises[e.RowIndex]);
             switch (dataGridView.Columns[e.ColumnIndex].Name)
             {
-                case "checked":
+                case "is_checked":
                     if (row_index != -1)
-                        e.Value = ((DataRowView)v_snapshot_tenancy_sub_premises[row_index])["checked"];
+                        e.Value = ((DataRowView)v_snapshot_tenancy_sub_premises[row_index])["is_checked"];
                     break;
-                case "beds":
+                case "rent_total_area":
                     if (row_index != -1)
-                        e.Value = ((DataRowView)v_snapshot_tenancy_sub_premises[row_index])["beds"];
-                    if (e.Value != null && e.Value.ToString() != "" && !Regex.IsMatch(e.Value.ToString().ToLower(), "^[0-9а-яА-Я]+([,][0-9а-яА-Я]*)*$"))
-                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = "Некорректное значение для номеров койко-мест";
-                    else
-                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].ErrorText = "";
+                        e.Value = ((DataRowView)v_snapshot_tenancy_sub_premises[row_index])["rent_total_area"];
                     break;
                 case "id_sub_premises": e.Value = ((DataRowView)v_sub_premises[e.RowIndex])["id_sub_premises"];
                     break;
@@ -394,111 +363,207 @@ namespace Registry.Viewport
             }
         }
 
-        public void CancelRecord()
+        void SubPremisesDetailsControl_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
-            snapshot_tenancy_sub_premises.Clear();
-            for (int i = 0; i < v_tenancy_sub_premises.Count; i++)
-                snapshot_tenancy_sub_premises.Rows.Add(DataRowViewToArray(((DataRowView)v_tenancy_sub_premises[i])));
+            if (!sync_views)
+                return;
+            if (Convert.ToInt32(e.Row["id_process"]) != Convert.ToInt32(ParentRow["id_process"]))
+                return;
+            if (e.Action == DataRowAction.Delete)
+            {
+                int row_index = v_snapshot_tenancy_sub_premises.Find("id_sub_premises", e.Row["id_sub_premises"]);
+                if (row_index != -1)
+                    ((DataRowView)v_snapshot_tenancy_sub_premises[row_index]).Delete();
+            }
             dataGridView.Refresh();
         }
 
-        public bool ValidateTenancySubPremises(List<TenancyObject> tenancySubPremises)
+        void SubPremisesDetailsControl_RowChanged(object sender, DataRowChangeEventArgs e)
         {
-            foreach (TenancyObject tenancySubPremise in tenancySubPremises)
-                if ((tenancySubPremise.beds != null) && !Regex.IsMatch(tenancySubPremise.beds, "^[0-9а-яА-Я]+([,][0-9а-яА-Я]*)*$"))
+            if (!sync_views)
+                return;
+            if (Convert.ToInt32(e.Row["id_process"]) != Convert.ToInt32(ParentRow["id_process"]))
+                return;
+            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
+            {
+                int row_index = v_snapshot_tenancy_sub_premises.Find("id_sub_premises", e.Row["id_sub_premises"]);
+                if (row_index != -1)
                 {
-                    MessageBox.Show("Некорректное значение для номеров койко-мест", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
+                    DataRowView row = ((DataRowView)v_snapshot_tenancy_sub_premises[row_index]);
+                    row["rent_total_area"] = e.Row["rent_total_area"];
                 }
-            return true;
+            }
+            else
+                if (e.Action == DataRowAction.Add)
+                {
+                    //Если строка имеется в текущем контексте оригинального представления, то добавить его и в snapshot, 
+                    //иначе - объект не принадлежит текущему родителю
+                    int row_index = v_tenancy_sub_premises.Find("id_assoc", e.Row["id_assoc"]);
+                    if (row_index != -1)
+                        snapshot_tenancy_sub_premises.Rows.Add(new object[] { 
+                            e.Row["id_assoc"],
+                            e.Row["id_sub_premises"], 
+                            true,   
+                            e.Row["rent_total_area"]
+                        });
+                }
+            dataGridView.Refresh();
         }
 
-        public void SaveRecord()
+        private void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            sync_views = false;
-            List<TenancyObject> list = TenancySubPremisesFromViewport();
-            for (int i = 0; i < list.Count; i++)
+            if (dataGridView.CurrentCell.OwningColumn.Name == "rent_total_area")
             {
-                DataRow row = null;
-                if (((TenancyObject)list[i]).id_assoc != null)
-                    row = tenancy_sub_premises.Select().Rows.Find(list[i].id_assoc);
-                if (row == null)
-                {
-                    int id_assoc = tenancy_sub_premises.Insert(list[i]);
-                    if (id_assoc == -1)
-                    {
-                        sync_views = true;
-                        return;
-                    }
-                    ((DataRowView)v_snapshot_tenancy_sub_premises[
-                        v_snapshot_tenancy_sub_premises.Find("id_sub_premises", list[i].id_object)])["id_assoc"] = id_assoc;
-                    tenancy_sub_premises.Select().Rows.Add(new object[] { 
-                        id_assoc, list[i].id_object, list[i].id_contract, list[i].beds, 0
-                    });
-                }
+                dataGridView.EditingControl.KeyPress -= new KeyPressEventHandler(EditingControl_KeyPress);
+                dataGridView.EditingControl.KeyPress += new KeyPressEventHandler(EditingControl_KeyPress);
+                if (((TextBox)e.Control).Text.Trim() == "")
+                    ((TextBox)e.Control).Text = ((TextBox)e.Control).Text = "0";
                 else
-                {
-                    if (RowToTenancySubPremises(row) == list[i])
-                        continue;
-                    if (tenancy_sub_premises.Update(list[i]) == -1)
-                    {
-                        sync_views = true;
-                        return;
-                    }
-                    row["beds"] = list[i].beds == null ? DBNull.Value : (object)list[i].beds;
-                }
+                    ((TextBox)e.Control).Text = ((TextBox)e.Control).Text.Substring(0, ((TextBox)e.Control).Text.Length - 3);
             }
-            list = TenancySubPremisesFromView();
-            for (int i = 0; i < list.Count; i++)
-            {
-                int row_index = -1;
-                for (int j = 0; j < v_snapshot_tenancy_sub_premises.Count; j++)
-                {
-                    DataRowView row = (DataRowView)v_snapshot_tenancy_sub_premises[j];
-                    if ((row["id_assoc"] != DBNull.Value) &&
-                        (row["id_assoc"].ToString() != "") &&
-                        ((int)row["id_assoc"] == list[i].id_assoc) &&
-                        (Convert.ToBoolean(row["checked"]) == true))
-                        row_index = j;
-                }
-                if (row_index == -1)
-                {
-                    if (tenancy_sub_premises.Delete(list[i].id_assoc.Value) == -1)
-                    {
-                        sync_views = true;
-                        return;
-                    }
-                    int snapshot_row_index = v_snapshot_tenancy_sub_premises.Find("id_assoc", list[i].id_assoc);
-                    if (snapshot_row_index != -1)
-                    {
-                        int premises_row_index = v_sub_premises.Find("id_sub_premises", list[i].id_object);
-                        ((DataRowView)v_snapshot_tenancy_sub_premises[snapshot_row_index]).Delete();
-                        dataGridView.InvalidateRow(premises_row_index);
-                    }
-                    tenancy_sub_premises.Select().Rows.Find(((TenancyObject)list[i]).id_assoc).Delete();
-                }
-            }
-            sync_views = true;
         }
 
-        private TenancyObject RowToTenancySubPremises(DataRow row)
+        void EditingControl_KeyPress(object sender, KeyPressEventArgs e)
         {
-            TenancyObject to = new TenancyObject();
-            to.id_assoc = row["id_assoc"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_assoc"]);
-            to.id_contract = row["id_contract"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_contract"]);
-            to.id_object = row["id_sub_premises"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_sub_premises"]);
-            to.beds = row["beds"] == DBNull.Value ? null : row["beds"].ToString();
-            return to;
+            if (dataGridView.CurrentCell.OwningColumn.Name == "rent_total_area")
+            {
+                if ((e.KeyChar >= '0' && e.KeyChar <= '9') || (e.KeyChar == (char)8))
+                    e.Handled = false;
+                else
+                    if ((e.KeyChar == '.') || (e.KeyChar == ','))
+                    {
+                        e.KeyChar = ',';
+                        if (((TextBox)dataGridView.EditingControl).Text.IndexOf(',') != -1)
+                            e.Handled = true;
+                        else
+                            e.Handled = false;
+                    }
+                    else
+                        e.Handled = true;
+            }
         }
 
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.is_checked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.rent_total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_sub_premises = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_premises = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sub_premises_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
+            // 
+            // dataGridView
+            // 
+            this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
+            this.dataGridView.AllowUserToResizeRows = false;
+            this.dataGridView.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.is_checked,
+            this.rent_total_area,
+            this.id_sub_premises,
+            this.id_premises,
+            this.sub_premises_num,
+            this.total_area,
+            this.description});
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView.DefaultCellStyle = dataGridViewCellStyle4;
+            this.dataGridView.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView.MultiSelect = false;
+            this.dataGridView.Name = "dataGridView";
+            this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView.ShowEditingIcon = false;
+            this.dataGridView.Size = new System.Drawing.Size(322, 192);
+            this.dataGridView.TabIndex = 0;
+            this.dataGridView.VirtualMode = true;
+            this.dataGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridView_EditingControlShowing);
+            // 
+            // is_checked
+            // 
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle1.NullValue = false;
+            this.is_checked.DefaultCellStyle = dataGridViewCellStyle1;
+            this.is_checked.HeaderText = "";
+            this.is_checked.Name = "is_checked";
+            this.is_checked.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.is_checked.Width = 30;
+            // 
+            // rent_total_area
+            // 
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle2.Format = "#0.0## м²";
+            this.rent_total_area.DefaultCellStyle = dataGridViewCellStyle2;
+            this.rent_total_area.HeaderText = "Арендуемая S общ.";
+            this.rent_total_area.MinimumWidth = 130;
+            this.rent_total_area.Name = "rent_total_area";
+            this.rent_total_area.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.rent_total_area.Width = 130;
+            // 
+            // id_sub_premises
+            // 
+            this.id_sub_premises.HeaderText = "Внутренний номер комнаты";
+            this.id_sub_premises.Name = "id_sub_premises";
+            this.id_sub_premises.ReadOnly = true;
+            this.id_sub_premises.Visible = false;
+            // 
+            // id_premises
+            // 
+            this.id_premises.HeaderText = "Внутренний номер помещения";
+            this.id_premises.Name = "id_premises";
+            this.id_premises.ReadOnly = true;
+            this.id_premises.Visible = false;
+            // 
+            // sub_premises_num
+            // 
+            this.sub_premises_num.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.sub_premises_num.HeaderText = "Номер комнаты";
+            this.sub_premises_num.MinimumWidth = 150;
+            this.sub_premises_num.Name = "sub_premises_num";
+            this.sub_premises_num.ReadOnly = true;
+            this.sub_premises_num.Width = 150;
+            // 
+            // total_area
+            // 
+            this.total_area.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle3.Format = "#0.0## м²";
+            this.total_area.DefaultCellStyle = dataGridViewCellStyle3;
+            this.total_area.HeaderText = "Общая площадь";
+            this.total_area.MinimumWidth = 150;
+            this.total_area.Name = "total_area";
+            this.total_area.ReadOnly = true;
+            this.total_area.Width = 150;
+            // 
+            // description
+            // 
+            this.description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.description.HeaderText = "Примечание";
+            this.description.MinimumWidth = 300;
+            this.description.Name = "description";
+            this.description.ReadOnly = true;
             // 
             // SubPremisesDetailsControl
             // 
+            this.Controls.Add(this.dataGridView);
             this.Name = "SubPremisesDetailsControl";
-            this.Size = new System.Drawing.Size(77, 19);
+            this.Size = new System.Drawing.Size(322, 192);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
 
         }

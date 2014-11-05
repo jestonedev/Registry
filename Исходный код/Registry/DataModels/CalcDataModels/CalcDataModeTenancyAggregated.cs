@@ -22,10 +22,10 @@ namespace Registry.CalcDataModels
         private DataTable InitializeTable()
         {
             DataTable table = table = new DataTable(tableName);
-            table.Columns.Add("id_contract").DataType = typeof(int);
+            table.Columns.Add("id_process").DataType = typeof(int);
             table.Columns.Add("address").DataType = typeof(string);
             table.Columns.Add("tenant").DataType = typeof(string);
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_contract"] };
+            table.PrimaryKey = new DataColumn[] { table.Columns["id_process"] };
             return table;
         }
 
@@ -62,55 +62,31 @@ namespace Registry.CalcDataModels
             dmLoadState = DataModelLoadState.Loading;
             CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;
             // Фильтруем удаленные строки
-            var tenancies = from tenancies_row in TenancyContractsDataModel.GetInstance().Select().AsEnumerable()
-                            where (tenancies_row.RowState != DataRowState.Deleted) &&
-                                  (tenancies_row.RowState != DataRowState.Detached) &&
-                                  (config.Entity == CalcDataModelFilterEnity.Tenancy ? 
-                                  tenancies_row.Field<int>("id_contract") == config.IdObject : true)
+            var tenancies = from tenancies_row in DataModelHelper.FilterRows(TenancyProcessesDataModel.GetInstance().Select()) 
+                            where (config.Entity == CalcDataModelFilterEnity.Tenancy ?
+                                  tenancies_row.Field<int>("id_process") == config.IdObject : true)
                             select tenancies_row;
-            var tenancy_sub_premises = from tenancy_sub_premises_row in TenancySubPremisesAssocDataModel.GetInstance().Select().AsEnumerable()
-                                       where (tenancy_sub_premises_row.RowState != DataRowState.Deleted) &&
-                                             (tenancy_sub_premises_row.RowState != DataRowState.Detached)
-                                       select tenancy_sub_premises_row; 
-            var tenancy_premises = from tenancy_premises_row in TenancyPremisesAssocDataModel.GetInstance().Select().AsEnumerable()
-                                   where (tenancy_premises_row.RowState != DataRowState.Deleted) &&
-                                         (tenancy_premises_row.RowState != DataRowState.Detached) &&
-                                          (config.Entity == CalcDataModelFilterEnity.Premise ?
+            var tenancy_sub_premises = DataModelHelper.FilterRows(TenancySubPremisesAssocDataModel.GetInstance().Select());
+            var tenancy_premises = from tenancy_premises_row in DataModelHelper.FilterRows(TenancyPremisesAssocDataModel.GetInstance().Select())
+                                   where (config.Entity == CalcDataModelFilterEnity.Premise ?
                                           tenancy_premises_row.Field<int>("id_premises") == config.IdObject : true)
                                    select tenancy_premises_row; 
-            var tenancy_buildings = from tenancy_buildings_row in TenancyBuildingsAssocDataModel.GetInstance().Select().AsEnumerable()
-                                    where (tenancy_buildings_row.RowState != DataRowState.Deleted) &&
-                                          (tenancy_buildings_row.RowState != DataRowState.Detached) &&
-                                          (config.Entity == CalcDataModelFilterEnity.Building ? 
-                                          tenancy_buildings_row.Field<int>("id_building") == config.IdObject : true)
+            var tenancy_buildings = from tenancy_buildings_row in DataModelHelper.FilterRows(TenancyBuildingsAssocDataModel.GetInstance().Select())
+                                    where (config.Entity == CalcDataModelFilterEnity.Building ? 
+                                           tenancy_buildings_row.Field<int>("id_building") == config.IdObject : true)
                                     select tenancy_buildings_row; 
-            var buildings = from buildings_row in BuildingsDataModel.GetInstance().Select().AsEnumerable()
-                            where (buildings_row.RowState != DataRowState.Deleted) &&
-                                  (buildings_row.RowState != DataRowState.Detached)
-                            select buildings_row; 
-            var premises = from premises_row in PremisesDataModel.GetInstance().Select().AsEnumerable()
-                           where (premises_row.RowState != DataRowState.Deleted) &&
-                                 (premises_row.RowState != DataRowState.Detached)
-                           select premises_row;
-            var sub_premises = from sub_premises_row in SubPremisesDataModel.GetInstance().Select().AsEnumerable()
-                               where (sub_premises_row.RowState != DataRowState.Deleted) &&
-                                     (sub_premises_row.RowState != DataRowState.Detached)
-                               select sub_premises_row;
-            var persons = from persons_row in PersonsDataModel.GetInstance().Select().AsEnumerable()
-                          where (persons_row.RowState != DataRowState.Deleted) &&
-                                (persons_row.RowState != DataRowState.Detached)
-                          select persons_row;
-            var kladr_street = from kladr_street_row in KladrStreetsDataModel.GetInstance().Select().AsEnumerable()
-                               where (kladr_street_row.RowState != DataRowState.Deleted) &&
-                                     (kladr_street_row.RowState != DataRowState.Detached)
-                               select kladr_street_row;
+            var buildings = DataModelHelper.FilterRows(BuildingsDataModel.GetInstance().Select());
+            var premises = DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select());
+            var sub_premises = DataModelHelper.FilterRows(SubPremisesDataModel.GetInstance().Select());
+            var tenancy_persons = DataModelHelper.FilterRows(TenancyPersonsDataModel.GetInstance().Select());
+            var kladr_street = DataModelHelper.FilterRows(KladrStreetsDataModel.GetInstance().Select());
             // Вычисляем агрегационную информацию
-            var tenants = from persons_row in persons.AsEnumerable()
-                          where persons_row.Field<int?>("id_kinship") == 1
-                          group persons_row by persons_row.Field<int>("id_contract") into gs
+            var tenants = from tenancy_persons_row in tenancy_persons.AsEnumerable()
+                          where tenancy_persons_row.Field<int?>("id_kinship") == 1
+                          group tenancy_persons_row by tenancy_persons_row.Field<int>("id_process") into gs
                           select new 
                           {
-                              id_contract = gs.Key,
+                              id_process = gs.Key,
                               tenant = (gs.First().Field<string>("surname")+" "+gs.First().Field<string>("name")+" "+gs.First().Field<string>("patronymic")).Trim()
                           };
             var t_sub_premises_gc = from tenancy_sub_premises_row in tenancy_sub_premises.AsEnumerable()
@@ -121,15 +97,15 @@ namespace Registry.CalcDataModels
                                     join premises_row in premises.AsEnumerable()
                                     on sub_premises_row.Field<int>("id_premises") equals premises_row.Field<int>("id_premises")
                                     group sub_premises_row.Field<string>("sub_premises_num") by
-                                        new { 
-                                            id_contract = tenancy_sub_premises_row.Field<int>("id_contract"),
+                                        new {
+                                            id_process = tenancy_sub_premises_row.Field<int>("id_process"),
                                             id_building = premises_row.Field<int>("id_building"),
                                             id_premises = sub_premises_row.Field<int>("id_premises"),
                                             premises_num = premises_row.Field<string>("premises_num")
                                         } into gs
                                     select new
                                         {
-                                            id_contract = gs.Key.id_contract,
+                                            id_process = gs.Key.id_process,
                                             id_building = gs.Key.id_building,
                                             id_premises = gs.Key.id_premises,
                                             result_str = " пом " + gs.Key.premises_num + ((gs.Count() > 0) ? 
@@ -144,7 +120,7 @@ namespace Registry.CalcDataModels
                                 on tenancy_premises_row.Field<int>("id_premises") equals premises_row.Field<int>("id_premises")
                              select new
                                 {
-                                    id_contract = tenancy_premises_row.Field<int>("id_contract"),
+                                    id_process = tenancy_premises_row.Field<int>("id_process"),
                                     id_building = premises_row.Field<int>("id_building"),
                                     id_premises = tenancy_premises_row.Field<int>("id_premises"),
                                     result_str = " пом " + premises_row.Field<string>("premises_num")
@@ -154,7 +130,7 @@ namespace Registry.CalcDataModels
                                     tenancy_buildings_row.RowState != DataRowState.Deleted
                               select new 
                               {
-                                  id_contract = tenancy_buildings_row.Field<int>("id_contract"),
+                                  id_process = tenancy_buildings_row.Field<int>("id_process"),
                                   id_building = tenancy_buildings_row.Field<int>("id_building"),
                                   result_str = ""
                               };
@@ -165,12 +141,12 @@ namespace Registry.CalcDataModels
                                           tenancy_premises_row.result_str
                                           by new
                                           {
-                                              tenancy_premises_row.id_contract,
+                                              tenancy_premises_row.id_process,
                                               tenancy_premises_row.id_building
                                           } into gs
                                       select new
                                           {
-                                              id_contract = gs.Key.id_contract,
+                                              id_process = gs.Key.id_process,
                                               id_building = gs.Key.id_building,
                                               result_str = gs.Aggregate((a, b) =>
                                               {
@@ -184,10 +160,10 @@ namespace Registry.CalcDataModels
                          on buildings_row.Field<string>("id_street") equals kladr_row.Field<string>("id_street")
                          group 
                             kladr_row.Field<string>("street_name") + ", дом " + buildings_row.Field<string>("house") + tenancy_row.result_str
-                         by tenancy_row.id_contract into gs
+                         by tenancy_row.id_process into gs
                          select new
                              {
-                                 id_contract = gs.Key,
+                                 id_process = gs.Key,
                                  address = gs.Aggregate((a, b) =>
                                  {
                                      return a + ", " + b.Trim();
@@ -195,14 +171,14 @@ namespace Registry.CalcDataModels
                              };
             var result = from tenancies_row in tenancies.AsEnumerable()
                          join tenants_row in tenants
-                         on tenancies_row.Field<int>("id_contract") equals tenants_row.id_contract into sp_t
+                         on tenancies_row.Field<int>("id_process") equals tenants_row.id_process into sp_t
                          from sp_t_row in sp_t.DefaultIfEmpty()
                          join addresses_row in addresses
-                         on tenancies_row.Field<int>("id_contract") equals addresses_row.id_contract into sp_a
+                         on tenancies_row.Field<int>("id_process") equals addresses_row.id_process into sp_a
                          from sp_a_row in sp_a.DefaultIfEmpty()
                          select new
                          {
-                             id_contract = tenancies_row.Field<int>("id_contract"),
+                             id_process = tenancies_row.Field<int>("id_process"),
                              address = (sp_a_row == null) ? "" : sp_a_row.address,
                              tenant = (sp_t_row == null) ? "" : sp_t_row.tenant
                          };
@@ -212,7 +188,7 @@ namespace Registry.CalcDataModels
             result.ToList().ForEach((x) =>
             {
                 table.Rows.Add(new object[] { 
-                    x.id_contract, 
+                    x.id_process, 
                     x.address, 
                     x.tenant
                 });

@@ -47,14 +47,6 @@
             this.comboBoxFundType = new System.Windows.Forms.ComboBox();
             this.checkBoxFundTypeEnable = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.checkBoxAcceptedByExchangeEnable = new System.Windows.Forms.CheckBox();
-            this.checkBoxAcceptedByExchange = new System.Windows.Forms.CheckBox();
-            this.checkBoxForOrpahnsEnable = new System.Windows.Forms.CheckBox();
-            this.checkBoxForOrpahns = new System.Windows.Forms.CheckBox();
-            this.checkBoxAcceptedByOtherEnable = new System.Windows.Forms.CheckBox();
-            this.checkBoxAcceptedByOther = new System.Windows.Forms.CheckBox();
-            this.checkBoxAcceptedByDonationEnable = new System.Windows.Forms.CheckBox();
-            this.checkBoxAcceptedByDonation = new System.Windows.Forms.CheckBox();
             this.textBoxHouse = new System.Windows.Forms.TextBox();
             this.comboBoxState = new System.Windows.Forms.ComboBox();
             this.checkBoxStateEnable = new System.Windows.Forms.CheckBox();
@@ -80,7 +72,7 @@
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(220, 532);
+            this.vButtonCancel.Location = new System.Drawing.Point(220, 447);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(100, 30);
@@ -93,7 +85,7 @@
             // 
             this.vButtonSearch.AllowAnimations = true;
             this.vButtonSearch.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSearch.Location = new System.Drawing.Point(102, 532);
+            this.vButtonSearch.Location = new System.Drawing.Point(102, 447);
             this.vButtonSearch.Name = "vButtonSearch";
             this.vButtonSearch.RoundedCornersMask = ((byte)(15));
             this.vButtonSearch.Size = new System.Drawing.Size(100, 30);
@@ -266,93 +258,9 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(9, 362);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(61, 13);
+            this.label6.Size = new System.Drawing.Size(101, 13);
             this.label6.TabIndex = 37;
-            this.label6.Text = "Вид найма";
-            // 
-            // checkBoxAcceptedByExchangeEnable
-            // 
-            this.checkBoxAcceptedByExchangeEnable.AutoSize = true;
-            this.checkBoxAcceptedByExchangeEnable.Location = new System.Drawing.Point(15, 467);
-            this.checkBoxAcceptedByExchangeEnable.Name = "checkBoxAcceptedByExchangeEnable";
-            this.checkBoxAcceptedByExchangeEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxAcceptedByExchangeEnable.TabIndex = 14;
-            this.checkBoxAcceptedByExchangeEnable.UseVisualStyleBackColor = true;
-            this.checkBoxAcceptedByExchangeEnable.CheckedChanged += new System.EventHandler(this.checkBoxAcceptedByExchangeEnable_CheckedChanged);
-            // 
-            // checkBoxAcceptedByExchange
-            // 
-            this.checkBoxAcceptedByExchange.AutoSize = true;
-            this.checkBoxAcceptedByExchange.Enabled = false;
-            this.checkBoxAcceptedByExchange.Location = new System.Drawing.Point(36, 466);
-            this.checkBoxAcceptedByExchange.Name = "checkBoxAcceptedByExchange";
-            this.checkBoxAcceptedByExchange.Size = new System.Drawing.Size(284, 17);
-            this.checkBoxAcceptedByExchange.TabIndex = 15;
-            this.checkBoxAcceptedByExchange.Text = "Принято в муниципальную собственность по мене";
-            this.checkBoxAcceptedByExchange.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxForOrpahnsEnable
-            // 
-            this.checkBoxForOrpahnsEnable.AutoSize = true;
-            this.checkBoxForOrpahnsEnable.Location = new System.Drawing.Point(15, 446);
-            this.checkBoxForOrpahnsEnable.Name = "checkBoxForOrpahnsEnable";
-            this.checkBoxForOrpahnsEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxForOrpahnsEnable.TabIndex = 12;
-            this.checkBoxForOrpahnsEnable.UseVisualStyleBackColor = true;
-            this.checkBoxForOrpahnsEnable.CheckedChanged += new System.EventHandler(this.checkBoxForOrpahnsEnable_CheckedChanged);
-            // 
-            // checkBoxForOrpahns
-            // 
-            this.checkBoxForOrpahns.AutoSize = true;
-            this.checkBoxForOrpahns.Enabled = false;
-            this.checkBoxForOrpahns.Location = new System.Drawing.Point(36, 445);
-            this.checkBoxForOrpahns.Name = "checkBoxForOrpahns";
-            this.checkBoxForOrpahns.Size = new System.Drawing.Size(173, 17);
-            this.checkBoxForOrpahns.TabIndex = 13;
-            this.checkBoxForOrpahns.Text = "Приобретено детям-сиротам";
-            this.checkBoxForOrpahns.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxAcceptedByOtherEnable
-            // 
-            this.checkBoxAcceptedByOtherEnable.AutoSize = true;
-            this.checkBoxAcceptedByOtherEnable.Location = new System.Drawing.Point(15, 508);
-            this.checkBoxAcceptedByOtherEnable.Name = "checkBoxAcceptedByOtherEnable";
-            this.checkBoxAcceptedByOtherEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxAcceptedByOtherEnable.TabIndex = 18;
-            this.checkBoxAcceptedByOtherEnable.UseVisualStyleBackColor = true;
-            this.checkBoxAcceptedByOtherEnable.CheckedChanged += new System.EventHandler(this.checkBoxAcceptedByOtherEnbale_CheckedChanged);
-            // 
-            // checkBoxAcceptedByOther
-            // 
-            this.checkBoxAcceptedByOther.AutoSize = true;
-            this.checkBoxAcceptedByOther.Enabled = false;
-            this.checkBoxAcceptedByOther.Location = new System.Drawing.Point(36, 507);
-            this.checkBoxAcceptedByOther.Name = "checkBoxAcceptedByOther";
-            this.checkBoxAcceptedByOther.Size = new System.Drawing.Size(370, 17);
-            this.checkBoxAcceptedByOther.TabIndex = 19;
-            this.checkBoxAcceptedByOther.Text = "Прочее основание для включения в муниципальную собственность";
-            this.checkBoxAcceptedByOther.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxAcceptedByDonationEnable
-            // 
-            this.checkBoxAcceptedByDonationEnable.AutoSize = true;
-            this.checkBoxAcceptedByDonationEnable.Location = new System.Drawing.Point(15, 487);
-            this.checkBoxAcceptedByDonationEnable.Name = "checkBoxAcceptedByDonationEnable";
-            this.checkBoxAcceptedByDonationEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxAcceptedByDonationEnable.TabIndex = 16;
-            this.checkBoxAcceptedByDonationEnable.UseVisualStyleBackColor = true;
-            this.checkBoxAcceptedByDonationEnable.CheckedChanged += new System.EventHandler(this.checkBoxAcceptedByDonationEnable_CheckedChanged);
-            // 
-            // checkBoxAcceptedByDonation
-            // 
-            this.checkBoxAcceptedByDonation.AutoSize = true;
-            this.checkBoxAcceptedByDonation.Enabled = false;
-            this.checkBoxAcceptedByDonation.Location = new System.Drawing.Point(36, 486);
-            this.checkBoxAcceptedByDonation.Name = "checkBoxAcceptedByDonation";
-            this.checkBoxAcceptedByDonation.Size = new System.Drawing.Size(302, 17);
-            this.checkBoxAcceptedByDonation.TabIndex = 17;
-            this.checkBoxAcceptedByDonation.Text = "Принято в муниципальную собственность по дарению";
-            this.checkBoxAcceptedByDonation.UseVisualStyleBackColor = true;
+            this.label6.Text = "Тип жилого фонда";
             // 
             // textBoxHouse
             // 
@@ -513,7 +421,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
-            this.ClientSize = new System.Drawing.Size(423, 569);
+            this.ClientSize = new System.Drawing.Size(423, 486);
             this.Controls.Add(this.checkBoxTenantSNPEnable);
             this.Controls.Add(this.textBoxTenantSNP);
             this.Controls.Add(this.label11);
@@ -530,14 +438,6 @@
             this.Controls.Add(this.checkBoxStateEnable);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.textBoxHouse);
-            this.Controls.Add(this.checkBoxAcceptedByOtherEnable);
-            this.Controls.Add(this.checkBoxAcceptedByOther);
-            this.Controls.Add(this.checkBoxAcceptedByDonationEnable);
-            this.Controls.Add(this.checkBoxAcceptedByDonation);
-            this.Controls.Add(this.checkBoxAcceptedByExchangeEnable);
-            this.Controls.Add(this.checkBoxAcceptedByExchange);
-            this.Controls.Add(this.checkBoxForOrpahnsEnable);
-            this.Controls.Add(this.checkBoxForOrpahns);
             this.Controls.Add(this.comboBoxFundType);
             this.Controls.Add(this.checkBoxFundTypeEnable);
             this.Controls.Add(this.label6);
@@ -589,14 +489,6 @@
         private System.Windows.Forms.ComboBox comboBoxFundType;
         private System.Windows.Forms.CheckBox checkBoxFundTypeEnable;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.CheckBox checkBoxAcceptedByExchangeEnable;
-        private System.Windows.Forms.CheckBox checkBoxAcceptedByExchange;
-        private System.Windows.Forms.CheckBox checkBoxForOrpahnsEnable;
-        private System.Windows.Forms.CheckBox checkBoxForOrpahns;
-        private System.Windows.Forms.CheckBox checkBoxAcceptedByOtherEnable;
-        private System.Windows.Forms.CheckBox checkBoxAcceptedByOther;
-        private System.Windows.Forms.CheckBox checkBoxAcceptedByDonationEnable;
-        private System.Windows.Forms.CheckBox checkBoxAcceptedByDonation;
         private System.Windows.Forms.TextBox textBoxHouse;
         private System.Windows.Forms.ComboBox comboBoxState;
         private System.Windows.Forms.CheckBox checkBoxStateEnable;

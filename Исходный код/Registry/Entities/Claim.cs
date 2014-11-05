@@ -8,7 +8,7 @@ namespace Registry.Entities
     public sealed class Claim
     {
         public int? id_claim { get; set; }
-        public int? id_contract { get; set; }
+        public int? id_process { get; set; }
         public DateTime? date_of_transfer { get; set; }
         public decimal? amount_of_debt_rent { get; set; }
         public decimal? amount_of_debt_fine { get; set; }
@@ -40,7 +40,7 @@ namespace Registry.Entities
         public static bool operator ==(Claim first, Claim second)
         {
             return first.id_claim == second.id_claim &&
-                first.id_contract == second.id_contract &&
+                first.id_process == second.id_process &&
                 first.date_of_transfer == second.date_of_transfer &&
                 first.amount_of_debt_rent == second.amount_of_debt_rent &&
                 first.amount_of_debt_fine == second.amount_of_debt_fine &&

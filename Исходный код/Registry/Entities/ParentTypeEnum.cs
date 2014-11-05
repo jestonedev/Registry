@@ -11,6 +11,7 @@ namespace Registry.Entities
         Building,
         Premises,
         SubPremises,
-        Tenancy
+        Tenancy,
+        Claim
     }
 }

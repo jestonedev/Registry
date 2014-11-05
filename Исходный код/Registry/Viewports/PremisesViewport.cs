@@ -15,67 +15,52 @@ namespace Registry.Viewport
     internal sealed class PremisesViewport : Viewport
     {
         #region Components
-        private TableLayoutPanel tableLayoutPanel3 = new TableLayoutPanel();
-        private TableLayoutPanel tableLayoutPanel4 = new TableLayoutPanel();
-        private TableLayoutPanel tableLayoutPanel5 = new TableLayoutPanel();
-        private GroupBox groupBox8 = new GroupBox();
-        private GroupBox groupBox9 = new GroupBox();
-        private GroupBox groupBox10 = new GroupBox();
-        private GroupBox groupBox11 = new GroupBox();
-        private GroupBox groupBox12 = new GroupBox();
-        private GroupBox groupBox13 = new GroupBox();
-        private GroupBox groupBoxRooms = new GroupBox();
+        private TableLayoutPanel tableLayoutPanel3;
+        private TableLayoutPanel tableLayoutPanel4;
+        private TableLayoutPanel tableLayoutPanel5;
+        private GroupBox groupBox8;
+        private GroupBox groupBox9;
+        private GroupBox groupBox10;
+        private GroupBox groupBox11;
+        private GroupBox groupBox13;
+        private GroupBox groupBoxRooms;
         private Panel panel3 = new Panel();
         private Panel panel4 = new Panel();
-        private DataGridView dataGridViewRestrictions = new DataGridView();
-        private DataGridView dataGridViewOwnerships = new DataGridView();
-        private DataGridView dataGridViewRooms = new DataGridView();
-        private DataGridViewComboBoxColumn field_id_restriction_type = new DataGridViewComboBoxColumn();
-        private DataGridViewTextBoxColumn field_restriction_number = new DataGridViewTextBoxColumn();
-        private DataGridViewTextBoxColumn field_restriction_date = new DataGridViewTextBoxColumn();
-        private DataGridViewTextBoxColumn field_restriction_description = new DataGridViewTextBoxColumn();
-        private DataGridViewComboBoxColumn field_id_ownership_type = new DataGridViewComboBoxColumn();
-        private DataGridViewTextBoxColumn field_ownership_number = new DataGridViewTextBoxColumn();
-        private DataGridViewTextBoxColumn field_ownership_date = new DataGridViewTextBoxColumn();
-        private DataGridViewTextBoxColumn field_ownership_description = new DataGridViewTextBoxColumn();
-        private DataGridViewTextBoxColumn field_sub_premises_num = new DataGridViewTextBoxColumn();
-        private DataGridViewTextBoxColumn field_sub_premises_total_area = new DataGridViewTextBoxColumn();
-        private NumericUpDown numericUpDownFloor = new NumericUpDown();
-        private NumericUpDown numericUpDownBalanceCost = new NumericUpDown();
-        private NumericUpDown numericUpDownCadastralCost = new NumericUpDown();
-        private NumericUpDown numericUpDownLivingArea = new NumericUpDown();
-        private NumericUpDown numericUpDownTotalArea = new NumericUpDown();
-        private NumericUpDown numericUpDownNumBeds = new NumericUpDown();
-        private CheckBox checkBoxForOrphans = new CheckBox();
-        private CheckBox checkBoxAcceptByExchange = new CheckBox();
-        private CheckBox checkBoxAcceptByDonation = new CheckBox();
-        private CheckBox checkBoxAcceptByOther = new CheckBox();
-        private Label label19 = new Label();
-        private Label label20 = new Label();
-        private Label label21 = new Label();
-        private Label label22 = new Label();
-        private Label label23 = new Label();
-        private Label label24 = new Label();
-        private Label label25 = new Label();
-        private Label label26 = new Label();
-        private Label label27 = new Label();
-        private Label label28 = new Label();
-        private Label label29 = new Label();
-        private Label label38 = new Label();
-        private Label label39 = new Label();
-        private ComboBox comboBoxHouse = new ComboBox();
-        private ComboBox comboBoxStreet = new ComboBox();
-        private TextBox textBoxPremisesNumber = new TextBox();
-        private TextBox textBoxDescription = new TextBox();
-        private TextBox textBoxSubPremisesNumber = new TextBox();
-        private ComboBox comboBoxPremisesType = new ComboBox();
-        private ComboBox comboBoxPremisesKind = new ComboBox();
-        private ComboBox comboBoxCurrentFundType = new ComboBox();
-        private ComboBox comboBoxState = new ComboBox();
-        private MaskedTextBox maskedTextBoxCadastralNum = new MaskedTextBox();
+        private DataGridView dataGridViewRestrictions;
+        private DataGridView dataGridViewOwnerships;
+        private DataGridView dataGridViewRooms;
+        private NumericUpDown numericUpDownFloor;
+        private NumericUpDown numericUpDownBalanceCost;
+        private NumericUpDown numericUpDownCadastralCost;
+        private NumericUpDown numericUpDownLivingArea;
+        private NumericUpDown numericUpDownTotalArea;
+        private NumericUpDown numericUpDownNumBeds;
+        private Label label19;
+        private Label label20;
+        private Label label21;
+        private Label label22;
+        private Label label23;
+        private Label label24;
+        private Label label25;
+        private Label label26;
+        private Label label27;
+        private Label label28;
+        private Label label29;
+        private Label label38;
+        private Label label39;
+        private ComboBox comboBoxHouse;
+        private ComboBox comboBoxStreet;
+        private TextBox textBoxPremisesNumber;
+        private TextBox textBoxDescription;
+        private TextBox textBoxSubPremisesNumber;
+        private TextBox textBoxCadastralNum;
+        private ComboBox comboBoxPremisesType;
+        private ComboBox comboBoxPremisesKind;
+        private ComboBox comboBoxCurrentFundType;
+        private ComboBox comboBoxState;
         #endregion Components
 
-        //Models
+        #region Models
         private PremisesDataModel premises = null;
         private CalcDataModelPremisesCurrentFunds premisesCurrentFund = null;
         private BuildingsDataModel buildings = null;
@@ -90,9 +75,10 @@ namespace Registry.Viewport
         private OwnershipRightTypesDataModel ownershipRightTypes = null;
         private OwnershipPremisesAssocDataModel ownershipPremisesAssoc = null;
         private FundTypesDataModel fundTypes = null;
-        private StatesDataModel states = null;
+        private ObjectStatesDataModel object_states = null;
+        #endregion Models
 
-        //Views
+        #region Views
         private BindingSource v_premises = null;
         private BindingSource v_premisesCurrentFund = null;
         private BindingSource v_buildings = null;
@@ -107,25 +93,40 @@ namespace Registry.Viewport
         private BindingSource v_ownershipRightTypes = null;
         private BindingSource v_ownershipPremisesAssoc = null;
         private BindingSource v_fundType = null;
-        private BindingSource v_states = null;
+        private BindingSource v_object_states = null;
+        #endregion Views
 
         //Forms
         private SearchForm spExtendedSearchForm = null;
         private SearchForm spSimpleSearchForm = null;
 
+        //State
         private ViewportState viewportState = ViewportState.ReadState;
         private bool is_editable = false;
+        private Label label1;
+        private NumericUpDown numericUpDownNumRooms;
+        private NumericUpDown numericUpDownHeight;
+        private Label label2;
+        private DataGridViewTextBoxColumn restriction_number;
+        private DataGridViewTextBoxColumn restriction_date;
+        private DataGridViewTextBoxColumn restriction_description;
+        private DataGridViewComboBoxColumn id_restriction_type;
+        private DataGridViewTextBoxColumn ownership_number;
+        private DataGridViewTextBoxColumn ownership_date;
+        private DataGridViewTextBoxColumn ownership_description;
+        private DataGridViewComboBoxColumn id_ownership_type;
+        private DataGridViewTextBoxColumn sub_premises_num;
+        private DataGridViewTextBoxColumn sub_premises_total_area;
         private bool is_first_visibility = true;
+
+        private PremisesViewport()
+            : this(null)
+        {
+        }
 
         public PremisesViewport(IMenuCallback menuCallback): base(menuCallback)
         {
-            this.SuspendLayout();
-            ConstructViewport();
-            this.Name = "tabPagePremise";
-            this.Padding = new System.Windows.Forms.Padding(3);
-            this.Text = "Помещение";
-            this.UseVisualStyleBackColor = true;
-            this.ResumeLayout(false);
+            InitializeComponent();
         }
 
         public PremisesViewport(PremisesViewport premsiesListViewport, IMenuCallback menuCallback)
@@ -137,6 +138,479 @@ namespace Registry.Viewport
             this.ParentType = premsiesListViewport.ParentType;
         }
 
+        private void RestrictionsFilterRebuild()
+        {
+            string restrictionsFilter = "id_restriction IN (0";
+            for (int i = 0; i < v_restrictionPremisesAssoc.Count; i++)
+                restrictionsFilter += ((DataRowView)v_restrictionPremisesAssoc[i])["id_restriction"].ToString() + ",";
+            restrictionsFilter = restrictionsFilter.TrimEnd(new char[] { ',' });
+            restrictionsFilter += ")";
+            v_restrictions.Filter = restrictionsFilter;
+        }
+
+        private void OwnershipsFilterRebuild()
+        {
+            string ownershipFilter = "id_ownership_right IN (0";
+            for (int i = 0; i < v_ownershipPremisesAssoc.Count; i++)
+                ownershipFilter += ((DataRowView)v_ownershipPremisesAssoc[i])["id_ownership_right"].ToString() + ",";
+            ownershipFilter = ownershipFilter.TrimEnd(new char[] { ',' });
+            ownershipFilter += ")";
+            v_ownershipRights.Filter = ownershipFilter;
+        }
+
+        private void FiltersRebuild()
+        {
+            if (v_premisesCurrentFund != null)
+            {
+                if ((v_premises.Position != -1) && !(((DataRowView)v_premises[v_premises.Position])["id_premises"] is DBNull))
+                    v_premisesCurrentFund.Filter = "id_premises = " + ((DataRowView)v_premises[v_premises.Position])["id_premises"].ToString();
+                else
+                    v_premisesCurrentFund.Filter = "id_premises = 0";
+                ShowOrHideCurrentFund();
+            }
+        }
+
+        private void SetViewportCaption()
+        {
+            if (viewportState == ViewportState.NewRowState)
+            {
+                if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
+                {
+                    this.Text = String.Format("Новое помещение здания №{0}", ParentRow["id_building"]);
+                }
+                else
+                    this.Text = "Новое помещение";
+            }
+            else
+                if (v_premises.Position != -1)
+                {
+                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
+                        this.Text = String.Format("Помещение №{0} здания №{1}",
+                            ((DataRowView)v_premises[v_premises.Position])["id_premises"], ParentRow["id_building"]);
+                    else
+                        this.Text = String.Format("Помещение №{0}", ((DataRowView)v_premises[v_premises.Position])["id_premises"]);
+                }
+                else
+                {
+                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
+                        this.Text = String.Format("Помещения в здании №{0} отсутствуют", ParentRow["id_building"]);
+                    else
+                        this.Text = "Помещения отсутствуют";
+                }
+        }
+
+        private void ShowOrHideCurrentFund()
+        {
+            if (v_premisesCurrentFund.Count > 0)
+            {
+                label38.Visible = true;
+                comboBoxCurrentFundType.Visible = true;
+            }
+            else
+            {
+                label38.Visible = false;
+                comboBoxCurrentFundType.Visible = false;
+            }
+        }
+
+        private void SelectCurrentBuilding()
+        {
+            if ((comboBoxHouse.DataSource != null) && (comboBoxStreet.DataSource != null))
+            {
+                int? id_building = null;
+                if ((v_premises.Position != -1) && (((DataRowView)v_premises[v_premises.Position])["id_building"] != DBNull.Value))
+                    id_building = Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_building"]);
+                else 
+                if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
+                    id_building = Convert.ToInt32(ParentRow["id_building"]);
+                string id_street = null;
+                if (id_building != null)
+                {
+                    DataRow building_row = buildings.Select().Rows.Find(id_building);
+                    if (building_row != null)
+                        id_street = building_row["id_street"].ToString();
+                }
+                v_kladr.Filter = "";
+                if (id_street != null)
+                    comboBoxStreet.SelectedValue = id_street;
+                else
+                    comboBoxStreet.SelectedValue = DBNull.Value;
+                if (id_building != null)
+                    comboBoxHouse.SelectedValue = id_building;
+                else
+                    comboBoxHouse.SelectedValue = DBNull.Value;
+            }
+        }
+
+        private void DataBind()
+        {
+            comboBoxStreet.DataSource = v_kladr;
+            comboBoxStreet.ValueMember = "id_street";
+            comboBoxStreet.DisplayMember = "street_name";
+            comboBoxHouse.DataSource = v_buildings;
+            comboBoxHouse.ValueMember = "id_building";
+            comboBoxHouse.DisplayMember = "house";
+            comboBoxPremisesKind.DataSource = v_premises_kinds;
+            comboBoxPremisesKind.ValueMember = "id_premises_kind";
+            comboBoxPremisesKind.DisplayMember = "premises_kind";
+            comboBoxPremisesKind.DataBindings.Clear();
+            comboBoxPremisesKind.DataBindings.Add("SelectedValue", v_premises, "id_premises_kind", true, DataSourceUpdateMode.Never, 1);
+            comboBoxPremisesType.DataSource = v_premises_types;
+            comboBoxPremisesType.ValueMember = "id_premises_type";
+            comboBoxPremisesType.DisplayMember = "premises_type_as_num";
+            comboBoxPremisesType.DataBindings.Clear();
+            comboBoxPremisesType.DataBindings.Add("SelectedValue", v_premises, "id_premises_type", true, DataSourceUpdateMode.Never, 1);
+            textBoxPremisesNumber.DataBindings.Clear();
+            textBoxPremisesNumber.DataBindings.Add("Text", v_premises, "premises_num", true, DataSourceUpdateMode.Never, "");
+            numericUpDownFloor.DataBindings.Clear();
+            numericUpDownFloor.DataBindings.Add("Value", v_premises, "floor", true, DataSourceUpdateMode.Never, 0);
+            textBoxCadastralNum.DataBindings.Clear();
+            textBoxCadastralNum.DataBindings.Add("Text", v_premises, "cadastral_num", true, DataSourceUpdateMode.Never, "");
+            textBoxDescription.DataBindings.Clear();
+            textBoxDescription.DataBindings.Add("Text", v_premises, "description", true, DataSourceUpdateMode.Never, "");
+            numericUpDownCadastralCost.DataBindings.Clear();
+            numericUpDownCadastralCost.DataBindings.Add("Value", v_premises, "cadastral_cost", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownBalanceCost.DataBindings.Clear();
+            numericUpDownBalanceCost.DataBindings.Add("Value", v_premises, "balance_cost", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownNumRooms.DataBindings.Clear();
+            numericUpDownNumRooms.DataBindings.Add("Value", v_premises, "num_rooms", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownNumBeds.DataBindings.Clear();
+            numericUpDownNumBeds.DataBindings.Add("Value", v_premises, "num_beds", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownTotalArea.DataBindings.Clear();
+            numericUpDownTotalArea.DataBindings.Add("Value", v_premises, "total_area", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownLivingArea.DataBindings.Clear();
+            numericUpDownLivingArea.DataBindings.Add("Value", v_premises, "living_area", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownHeight.DataBindings.Clear();
+            numericUpDownHeight.DataBindings.Add("Value", v_premises, "height", true, DataSourceUpdateMode.Never, 0);
+
+            comboBoxCurrentFundType.DataSource = v_fundType;
+            comboBoxCurrentFundType.ValueMember = "id_fund_type";
+            comboBoxCurrentFundType.DisplayMember = "fund_type";
+            comboBoxCurrentFundType.DataBindings.Clear();
+            comboBoxCurrentFundType.DataBindings.Add("SelectedValue", v_premisesCurrentFund, "id_fund_type", true, DataSourceUpdateMode.Never, DBNull.Value);
+
+            comboBoxState.DataSource = v_object_states;
+            comboBoxState.ValueMember = "id_state";
+            comboBoxState.DisplayMember = "state_neutral";
+            comboBoxState.DataBindings.Clear();
+            comboBoxState.DataBindings.Add("SelectedValue", v_premises, "id_state", true, DataSourceUpdateMode.Never, DBNull.Value);
+
+
+            dataGridViewRestrictions.DataSource = v_restrictions;
+            id_restriction_type.DataSource = v_restrictonTypes;
+            id_restriction_type.DataPropertyName = "id_restriction_type";
+            id_restriction_type.ValueMember = "id_restriction_type";
+            id_restriction_type.DisplayMember = "restriction_type";
+            restriction_number.DataPropertyName = "number";
+            restriction_date.DataPropertyName = "date";
+            restriction_description.DataPropertyName = "description";
+
+            dataGridViewOwnerships.DataSource = v_ownershipRights;
+            id_ownership_type.DataSource = v_ownershipRightTypes;
+            id_ownership_type.DataPropertyName = "id_ownership_right_type";
+            id_ownership_type.ValueMember = "id_ownership_right_type";
+            id_ownership_type.DisplayMember = "ownership_right_type";
+            ownership_number.DataPropertyName = "number";
+            ownership_date.DataPropertyName = "date";
+            ownership_description.DataPropertyName = "description";
+
+            dataGridViewRooms.DataSource = v_sub_premises;
+            sub_premises_num.DataPropertyName = "sub_premises_num";
+            sub_premises_total_area.DataPropertyName = "total_area";
+        }
+
+        private bool ChangeViewportStateTo(ViewportState state)
+        {
+            switch (state)
+            {
+                case ViewportState.ReadState:
+                    switch (viewportState)
+                    {
+                        case ViewportState.ReadState:
+                            return true;
+                        case ViewportState.NewRowState:
+                        case ViewportState.ModifyRowState:
+                            DialogResult result = MessageBox.Show("Сохранить изменения о помещениях в базу данных?", "Внимание",
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                            if (result == DialogResult.Yes)
+                                SaveRecord();
+                            else
+                                if (result == DialogResult.No)
+                                    CancelRecord();
+                                else return false;
+                            if (viewportState == ViewportState.ReadState)
+                                return true;
+                            else
+                                return false;
+                    }
+                    break;
+                case ViewportState.NewRowState:
+                    switch (viewportState)
+                    {
+                        case ViewportState.ReadState:
+                            if (premises.EditingNewRecord)
+                                return false;
+                            else
+                            {
+                                viewportState = ViewportState.NewRowState;
+                                return true;
+                            }
+                        case ViewportState.NewRowState:
+                            return true;
+                        case ViewportState.ModifyRowState:
+                            DialogResult result = MessageBox.Show("Сохранить изменения о помещениях в базу данных?", "Внимание",
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                            if (result == DialogResult.Yes)
+                                SaveRecord();
+                            else
+                                if (result == DialogResult.No)
+                                    CancelRecord();
+                                else
+                                    return false;
+                            if (viewportState == ViewportState.ReadState)
+                                return ChangeViewportStateTo(ViewportState.NewRowState);
+                            else
+                                return false;
+                    }
+                    break;
+                case ViewportState.ModifyRowState: ;
+                    switch (viewportState)
+                    {
+                        case ViewportState.ReadState:
+                            viewportState = ViewportState.ModifyRowState;
+                            return true;
+                        case ViewportState.ModifyRowState:
+                            return true;
+                        case ViewportState.NewRowState:
+                            DialogResult result = MessageBox.Show("Сохранить изменения о помещениях в базу данных?", "Внимание",
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                            if (result == DialogResult.Yes)
+                                SaveRecord();
+                            else
+                                if (result == DialogResult.No)
+                                    CancelRecord();
+                                else
+                                    return false;
+                            if (viewportState == ViewportState.ReadState)
+                                return ChangeViewportStateTo(ViewportState.ModifyRowState);
+                            else
+                                return false;
+                    }
+                    break;
+            }
+            return false;
+        }
+
+        private void CheckViewportModifications()
+        {
+            if (!is_editable)
+                return;
+            if (!this.ContainsFocus)
+                return;
+            if ((v_premises.Position != -1) && (PremiseFromView() != PremiseFromViewport()))
+            {
+                if (viewportState == ViewportState.ReadState)
+                    viewportState = ViewportState.ModifyRowState;
+            }
+            else
+            {
+                if (viewportState == ViewportState.ModifyRowState)
+                    viewportState = ViewportState.ReadState;
+            }
+            menuCallback.EditingStateUpdate();
+        }
+
+        public void LocatePremisesBy(int id)
+        {
+            int Position = v_premises.Find("id_premises", id);
+            is_editable = false;
+            if (Position > 0)
+                v_premises.Position = Position;
+            is_editable = true;
+        }
+
+        private bool ValidatePremise(Premise premise)
+        {
+            if (premise.id_building == null)
+            {
+                MessageBox.Show("Необходимо выбрать здание","Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                comboBoxHouse.Focus();
+                return false;
+            }
+            if (premise.premises_num == null)
+            {
+                MessageBox.Show("Необходимо указать номер помещения", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                textBoxPremisesNumber.Focus();
+                return false;
+            }
+            if (premise.id_state == null)
+            {
+                MessageBox.Show("Необходимо выбрать текущее состояние помещения", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                comboBoxState.Focus();
+                return false;
+            }
+            return true;
+        }
+
+        private Premise PremiseFromView()
+        {
+            Premise premise = new Premise();
+            DataRowView row = (DataRowView)v_premises[v_premises.Position];
+            premise.id_premises = ViewportHelper.ValueOrNull<int>(row, "id_premises");
+            premise.id_building = ViewportHelper.ValueOrNull<int>(row, "id_building");
+            premise.id_state = ViewportHelper.ValueOrNull<int>(row, "id_state");
+            premise.premises_num = ViewportHelper.ValueOrNull(row, "premises_num");
+            premise.living_area = ViewportHelper.ValueOrNull<double>(row, "living_area");
+            premise.total_area = ViewportHelper.ValueOrNull<double>(row, "total_area");
+            premise.height = ViewportHelper.ValueOrNull<double>(row, "height");
+            premise.num_rooms = ViewportHelper.ValueOrNull<short>(row, "num_rooms");
+            premise.num_beds = ViewportHelper.ValueOrNull<short>(row, "num_beds");
+            premise.id_premises_type = ViewportHelper.ValueOrNull<int>(row, "id_premises_type");
+            premise.id_premises_kind = ViewportHelper.ValueOrNull<int>(row, "id_premises_kind");
+            premise.floor = ViewportHelper.ValueOrNull<short>(row, "floor");
+            premise.cadastral_num = ViewportHelper.ValueOrNull(row, "cadastral_num");
+            premise.cadastral_cost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost");
+            premise.balance_cost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost");
+            premise.description = ViewportHelper.ValueOrNull(row, "description");
+            return premise;
+        }
+
+        private Premise PremiseFromViewport()
+        {
+            Premise premise = new Premise();
+            if (v_premises.Position == -1)
+                premise.id_premises = null;
+            else
+                premise.id_premises = ViewportHelper.ValueOrNull<int>((DataRowView)v_premises[v_premises.Position],"id_premises");
+            premise.id_building = ViewportHelper.ValueOrNull<int>(comboBoxHouse);
+            premise.id_state = ViewportHelper.ValueOrNull<int>(comboBoxState);
+            premise.premises_num = ViewportHelper.ValueOrNull(textBoxPremisesNumber);
+            premise.total_area = Convert.ToDouble(numericUpDownTotalArea.Value);
+            premise.living_area = Convert.ToDouble(numericUpDownLivingArea.Value);
+            premise.height = Convert.ToDouble(numericUpDownHeight.Value);
+            premise.num_rooms = Convert.ToInt16(numericUpDownNumRooms.Value);
+            premise.num_beds = Convert.ToInt16(numericUpDownNumBeds.Value);
+            premise.id_premises_type = ViewportHelper.ValueOrNull<int>(comboBoxPremisesType);
+            premise.id_premises_kind = ViewportHelper.ValueOrNull<int>(comboBoxPremisesKind);
+            premise.floor = Convert.ToInt16(numericUpDownFloor.Value);
+            premise.cadastral_num = ViewportHelper.ValueOrNull(textBoxCadastralNum);
+            premise.cadastral_cost = numericUpDownCadastralCost.Value;
+            premise.balance_cost = numericUpDownBalanceCost.Value;
+            premise.description = ViewportHelper.ValueOrNull(textBoxDescription);
+            return premise;
+        }
+
+        private void ViewportFromPremise(Premise premise)
+        {
+            if (premise.id_building != null)
+            {
+                DataRow building_row = buildings.Select().Rows.Find(premise.id_building);
+                if (building_row != null)
+                {
+                    v_kladr.Filter = "";
+                    comboBoxStreet.SelectedValue = building_row["id_street"];
+                    comboBoxHouse.SelectedValue = ViewportHelper.ValueOrDBNull(premise.id_building);
+                }
+            }
+            comboBoxState.SelectedValue = ViewportHelper.ValueOrDBNull(premise.id_state);
+            comboBoxPremisesType.SelectedValue = ViewportHelper.ValueOrDBNull(premise.id_premises_type);
+            comboBoxPremisesKind.SelectedValue = ViewportHelper.ValueOrDBNull(premise.id_premises_kind);
+            numericUpDownFloor.Value = ViewportHelper.ValueOrDefault(premise.floor);
+            numericUpDownCadastralCost.Value = ViewportHelper.ValueOrDefault(premise.cadastral_cost);
+            numericUpDownBalanceCost.Value = ViewportHelper.ValueOrDefault(premise.balance_cost);
+            numericUpDownNumBeds.Value = ViewportHelper.ValueOrDefault(premise.num_beds);
+            numericUpDownNumRooms.Value = ViewportHelper.ValueOrDefault(premise.num_rooms);
+            numericUpDownHeight.Value = (decimal)ViewportHelper.ValueOrDefault(premise.height);
+            numericUpDownLivingArea.Value = (decimal)ViewportHelper.ValueOrDefault(premise.living_area);
+            numericUpDownTotalArea.Value = (decimal)ViewportHelper.ValueOrDefault(premise.total_area);
+            textBoxPremisesNumber.Text = premise.premises_num;
+            textBoxCadastralNum.Text = premise.cadastral_num;
+            textBoxDescription.Text = premise.description;
+        }
+
+        private static void FillRowFromPremise(Premise premise, DataRowView row)
+        {
+            row.BeginEdit();
+            row["id_premises"] = ViewportHelper.ValueOrDBNull(premise.id_premises);
+            row["id_building"] = ViewportHelper.ValueOrDBNull(premise.id_building);
+            row["id_state"] = ViewportHelper.ValueOrDBNull(premise.id_state);
+            row["premises_num"] = ViewportHelper.ValueOrDBNull(premise.premises_num);
+            row["total_area"] = ViewportHelper.ValueOrDBNull(premise.total_area);
+            row["living_area"] = ViewportHelper.ValueOrDBNull(premise.living_area);
+            row["height"] = ViewportHelper.ValueOrDBNull(premise.height);
+            row["num_rooms"] = ViewportHelper.ValueOrDBNull(premise.num_rooms);
+            row["num_beds"] = ViewportHelper.ValueOrDBNull(premise.num_beds);
+            row["id_premises_type"] = ViewportHelper.ValueOrDBNull(premise.id_premises_type);
+            row["id_premises_kind"] = ViewportHelper.ValueOrDBNull(premise.id_premises_kind);
+            row["floor"] = ViewportHelper.ValueOrDBNull(premise.floor);
+            row["cadastral_num"] = ViewportHelper.ValueOrDBNull(premise.cadastral_num);
+            row["cadastral_cost"] = ViewportHelper.ValueOrDBNull(premise.cadastral_cost);
+            row["balance_cost"] = ViewportHelper.ValueOrDBNull(premise.balance_cost);
+            row["description"] = ViewportHelper.ValueOrDBNull(premise.description);
+            row.EndEdit();
+        }
+
+        public override int GetRecordCount()
+        {
+            return v_premises.Count;
+        }
+
+        public override void MoveFirst()
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            is_editable = false;
+            v_premises.MoveFirst();
+            is_editable = true;
+        }
+
+        public override void MoveLast()
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            is_editable = false;
+            v_premises.MoveLast();
+            is_editable = true;
+        }
+
+        public override void MoveNext()
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            is_editable = false;
+            v_premises.MoveNext();
+            is_editable = true;
+        }
+
+        public override void MovePrev()
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            is_editable = false;
+            v_premises.MovePrevious();
+            is_editable = true;
+        }
+
+        public override bool CanMoveFirst()
+        {
+            return v_premises.Position > 0;
+        }
+
+        public override bool CanMovePrev()
+        {
+            return v_premises.Position > 0;
+        }
+
+        public override bool CanMoveNext()
+        {
+            return (v_premises.Position > -1) && (v_premises.Position < (v_premises.Count - 1));
+        }
+
+        public override bool CanMoveLast()
+        {
+            return (v_premises.Position > -1) && (v_premises.Position < (v_premises.Count - 1));
+        }
+
         public override bool CanLoadData()
         {
             return true;
@@ -144,6 +618,11 @@ namespace Registry.Viewport
 
         public override void LoadData()
         {
+            dataGridViewOwnerships.AutoGenerateColumns = false;
+            dataGridViewRestrictions.AutoGenerateColumns = false;
+            dataGridViewRooms.AutoGenerateColumns = false;
+            this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
+
             premises = PremisesDataModel.GetInstance();
             kladr = KladrStreetsDataModel.GetInstance();
             buildings = BuildingsDataModel.GetInstance();
@@ -157,7 +636,7 @@ namespace Registry.Viewport
             ownershipRightTypes = OwnershipRightTypesDataModel.GetInstance();
             ownershipPremisesAssoc = OwnershipPremisesAssocDataModel.GetInstance();
             fundTypes = FundTypesDataModel.GetInstance();
-            states = StatesDataModel.GetInstance();
+            object_states = ObjectStatesDataModel.GetInstance();
             premisesCurrentFund = CalcDataModelPremisesCurrentFunds.GetInstance();
 
             // Ожидаем дозагрузки, если это необходмо
@@ -174,7 +653,7 @@ namespace Registry.Viewport
             ownershipRightTypes.Select();
             ownershipPremisesAssoc.Select();
             fundTypes.Select();
-            states.Select();
+            object_states.Select();
 
             DataSet ds = DataSetManager.GetDataSet();
 
@@ -194,9 +673,9 @@ namespace Registry.Viewport
             v_fundType.DataMember = "fund_types";
             v_fundType.DataSource = ds;
 
-            v_states = new BindingSource();
-            v_states.DataMember = "states";
-            v_states.DataSource = ds;
+            v_object_states = new BindingSource();
+            v_object_states.DataMember = "object_states";
+            v_object_states.DataSource = ds;
 
             v_premises = new BindingSource();
             v_premises.CurrentItemChanged += new EventHandler(v_premises_CurrentItemChanged);
@@ -253,30 +732,316 @@ namespace Registry.Viewport
 
             DataBind();
 
-            comboBoxStreet.Leave += new EventHandler(comboBoxStreet_Leave);
-            comboBoxStreet.KeyUp += new KeyEventHandler(comboBoxStreet_KeyUp);
-            comboBoxStreet.DropDownClosed += new EventHandler(comboBoxStreet_DropDownClosed);
-            comboBoxStreet.SelectedIndexChanged += new EventHandler(comboBoxStreet_SelectedIndexChanged);
-            comboBoxStreet.VisibleChanged += new EventHandler(comboBoxStreet_VisibleChanged);
-            comboBoxHouse.SelectedIndexChanged += new EventHandler(comboBoxHouse_SelectedIndexChanged);
-            comboBoxPremisesType.SelectedIndexChanged += new EventHandler(comboBoxPremisesType_SelectedIndexChanged);
-            comboBoxPremisesKind.SelectedIndexChanged += new EventHandler(comboBoxPremisesKind_SelectedIndexChanged);
-            comboBoxState.SelectedIndexChanged += new EventHandler(comboBoxState_SelectedIndexChanged);
-            textBoxPremisesNumber.TextChanged += new EventHandler(textBoxPremisesNumber_TextChanged);
-            textBoxDescription.TextChanged += new EventHandler(textBoxDescription_TextChanged);
-            numericUpDownFloor.ValueChanged += new EventHandler(numericUpDownFloor_ValueChanged);
-            maskedTextBoxCadastralNum.TextChanged += new EventHandler(maskedTextBoxCadastralNum_TextChanged);
-            numericUpDownCadastralCost.ValueChanged += new EventHandler(numericUpDownCadastralCost_ValueChanged);
-            numericUpDownBalanceCost.ValueChanged += new EventHandler(numericUpDownBalanceCost_ValueChanged);
-            numericUpDownNumBeds.ValueChanged += new EventHandler(numericUpDownNumBeds_ValueChanged);
-            numericUpDownTotalArea.ValueChanged += new EventHandler(numericUpDownTotalArea_ValueChanged);
-            numericUpDownLivingArea.ValueChanged += new EventHandler(numericUpDownLivingArea_ValueChanged);
-            checkBoxAcceptByDonation.CheckedChanged += new EventHandler(checkBoxAcceptByDonation_CheckedChanged);
-            checkBoxAcceptByExchange.CheckedChanged += new EventHandler(checkBoxAcceptByExchange_CheckedChanged);
-            checkBoxAcceptByOther.CheckedChanged += new EventHandler(checkBoxAcceptByOther_CheckedChanged);
-            checkBoxForOrphans.CheckedChanged += new EventHandler(checkBoxForOrphans_CheckedChanged);
-
             premisesCurrentFund.RefreshEvent += new EventHandler<EventArgs>(premisesCurrentFund_RefreshEvent);
+            SetViewportCaption();
+        }
+        
+        public override bool CanCopyRecord()
+        {
+            return (v_premises.Position != -1) && (viewportState == ViewportState.ReadState || viewportState == ViewportState.ModifyRowState)
+                    && !premises.EditingNewRecord;
+        }
+
+        public override void CopyRecord()
+        {
+            if (!ChangeViewportStateTo(ViewportState.NewRowState))
+                return;
+            is_editable = false;
+            Premise premise = PremiseFromView();
+            DataRowView row = (DataRowView)v_premises.AddNew();
+            premises.EditingNewRecord = true;
+            if (premise.id_building != null)
+            {
+                comboBoxStreet.SelectedValue = premise.id_building;
+                comboBoxHouse.SelectedValue = premise.id_building;
+            }
+            ViewportFromPremise(premise);
+            is_editable = true;
+        }
+
+        public override bool CanInsertRecord()
+        {
+            if ((viewportState == ViewportState.ReadState || viewportState == ViewportState.ModifyRowState) 
+                    && !premises.EditingNewRecord)
+                return true;
+            else
+                return false;
+        }
+
+        public override void InsertRecord()
+        {
+            if (!ChangeViewportStateTo(ViewportState.NewRowState))
+                return;
+            is_editable = false;
+            DataRowView row = (DataRowView)v_premises.AddNew();
+            is_editable = true;
+            premises.EditingNewRecord = true;
+        }
+
+        public override bool CanSearchRecord()
+        {
+            return true;
+        }
+
+        public override bool SearchedRecords()
+        {
+            if (DynamicFilter != "")
+                return true;
+            else
+                return false;
+        }
+
+        public override void SearchRecord(SearchFormType searchFormType)
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            switch (searchFormType)
+            {
+                case SearchFormType.SimpleSearchForm:
+                    if (spSimpleSearchForm == null)
+                        spSimpleSearchForm = new SimpleSearchPremiseForm();
+                    if (spSimpleSearchForm.ShowDialog() != DialogResult.OK)
+                        return;
+                    DynamicFilter = spSimpleSearchForm.GetFilter();
+                    break;
+                case SearchFormType.ExtendedSearchForm:
+                    if (spExtendedSearchForm == null)
+                        spExtendedSearchForm = new ExtendedSearchPremisesForm();
+                    if (spExtendedSearchForm.ShowDialog() != DialogResult.OK)
+                        return;
+                    DynamicFilter = spExtendedSearchForm.GetFilter();
+                    break;
+            }
+            string Filter = StaticFilter;
+            if (StaticFilter != "" && DynamicFilter != "")
+                Filter += " AND ";
+            Filter += DynamicFilter;
+            is_editable = false;
+            v_premises.Filter = Filter;
+            is_editable = true;
+        }
+
+        public override void ClearSearch()
+        {
+            is_editable = false;
+            v_premises.Filter = StaticFilter;
+            is_editable = true;
+            DynamicFilter = "";
+        }
+
+        public override bool CanDeleteRecord()
+        {
+            if ((v_premises.Position == -1) || (viewportState == ViewportState.NewRowState))
+                return false;
+            else
+                return true;
+        }
+
+        public override void DeleteRecord()
+        {
+            if (MessageBox.Show("Вы действительно хотите удалить это помещение?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                int id_building = (int)((DataRowView)v_premises[v_premises.Position])["id_building"];
+                if (premises.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
+                    return;
+                is_editable = false;
+                ((DataRowView)v_premises[v_premises.Position]).Delete();
+                is_editable = true;
+                menuCallback.ForceCloseDetachedViewports();
+                CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building);
+                CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building);
+                CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
+            }
+        }
+
+        public override bool CanDuplicate()
+        {
+            return true;
+        }
+
+        public override Viewport Duplicate()
+        {
+            PremisesViewport viewport = new PremisesViewport(this, menuCallback);
+            if (viewport.CanLoadData())
+                viewport.LoadData();
+            if (v_premises.Count > 0)
+                viewport.LocatePremisesBy((((DataRowView)v_premises[v_premises.Position])["id_premises"] as Int32?) ?? -1);
+            return viewport;
+        }
+
+        public override bool CanSaveRecord()
+        {
+            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
+        }
+
+        public override void SaveRecord()
+        {
+            Premise premise = PremiseFromViewport();
+            bool updateSubPremisesState = false;
+            if (!ValidatePremise(premise))
+                return;
+            if ((viewportState == ViewportState.ModifyRowState) && (premise.id_state != PremiseFromView().id_state))
+            {
+                if (MessageBox.Show("Вы пытаетесь изменить состояние помещения. В результате всем комнатам данного помещения будет назначено то же состояние. " +
+                    "Вы уверены, что хотите сохранить данные?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                    return;
+                updateSubPremisesState = true;
+            }
+            switch (viewportState)
+            {
+                case ViewportState.ReadState:
+                    MessageBox.Show("Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    break;
+                case ViewportState.NewRowState:
+                    int id_premise = premises.Insert(premise);
+                    if (id_premise == -1)
+                        return;
+                    DataRowView newRow;
+                    premise.id_premises = id_premise;
+                    is_editable = false;
+                    if (v_premises.Position == -1)
+                        newRow = (DataRowView)v_premises.AddNew();
+                    else
+                        newRow = ((DataRowView)v_premises[v_premises.Position]);
+                    FillRowFromPremise(premise, newRow);
+                    premises.EditingNewRecord = false;
+                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
+                        this.Text = String.Format("Помещение №{0} здания №{1}",
+                            id_premise.ToString(), ParentRow["id_building"]);
+                    else
+                        this.Text = String.Format("Помещение №{0}", id_premise.ToString());
+                    viewportState = ViewportState.ReadState;
+                    is_editable = true;
+                    break;
+                case ViewportState.ModifyRowState:
+                    if (premise.id_premises == null)
+                    {
+                        MessageBox.Show("Вы пытаетесь изменить помещение без внутренного номера. " +
+                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        return;
+                    }
+                    if (premises.Update(premise) == -1)
+                        return;
+                    DataRowView row = ((DataRowView)v_premises[v_premises.Position]);
+                    is_editable = false;
+                    FillRowFromPremise(premise, row);
+                    if (updateSubPremisesState)
+                    {
+                        for (int i = 0; i < v_sub_premises.Count; i++)
+                        {
+                            DataRowView subPremiseRow = (DataRowView)v_sub_premises[i];
+                            subPremiseRow["id_state"] = premise.id_state;
+                            subPremiseRow.EndEdit();
+                        }
+                    }
+                    viewportState = ViewportState.ReadState;
+                    CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, premise.id_premises);
+                    break;
+            }
+            is_editable = true;
+            menuCallback.EditingStateUpdate();
+            CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building, premise.id_building);
+        }
+
+        public override bool CanCancelRecord()
+        {
+            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
+        }
+
+        public override void CancelRecord()
+        {
+            switch (viewportState)
+            {
+                case ViewportState.ReadState: return;
+                case ViewportState.NewRowState:
+                    premises.EditingNewRecord = false;
+                    if (v_premises.Position != -1)
+                    {
+                        is_editable = false;
+                        ((DataRowView)v_premises[v_premises.Position]).Delete();
+                    }
+                    else
+                        this.Text = "Здания отсутствуют";
+                    viewportState = ViewportState.ReadState;
+                    break;
+                case ViewportState.ModifyRowState:
+                    is_editable = false;
+                    DataBind();
+                    SelectCurrentBuilding();
+                    viewportState = ViewportState.ReadState;
+                    break;
+            }
+            is_editable = true;
+            menuCallback.EditingStateUpdate();
+        }
+
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                e.Cancel = true;
+        }
+
+        public override void ForceClose()
+        {
+            if (viewportState == ViewportState.NewRowState)
+                premises.EditingNewRecord = false;
+            base.Close();
+        }
+
+        public override bool HasAssocOwnerships()
+        {
+            return (v_premises.Position != -1);
+        }
+
+        public override bool HasAssocRestrictions()
+        {
+            return (v_premises.Position != -1);
+        }
+
+        public override bool HasAssocSubPremises()
+        {
+            return (v_premises.Position != -1);
+        }
+
+        public override bool HasAssocFundHistory()
+        {
+            return (v_premises.Position != -1);
+        }
+
+        public override void ShowOwnerships()
+        {
+            ShowAssocViewport(ViewportType.OwnershipListViewport);
+        }
+
+        public override void ShowRestrictions()
+        {
+            ShowAssocViewport(ViewportType.RestrictionListViewport);
+        }
+
+        public override void ShowSubPremises()
+        {
+            ShowAssocViewport(ViewportType.SubPremisesViewport);
+        }
+
+        public override void ShowFundHistory()
+        {
+            ShowAssocViewport(ViewportType.FundsHistoryViewport);
+        }
+
+        private void ShowAssocViewport(ViewportType viewportType)
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            if (v_premises.Position == -1)
+            {
+                MessageBox.Show("Не выбрано помещение", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            ShowAssocViewport(menuCallback, viewportType,
+                "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"]),
+                ((DataRowView)v_premises[v_premises.Position]).Row,
+                ParentTypeEnum.Premises);
         }
 
         void premisesCurrentFund_RefreshEvent(object sender, EventArgs e)
@@ -311,26 +1076,6 @@ namespace Registry.Viewport
         {
             if (e.Action == DataRowAction.Add)
                 OwnershipsFilterRebuild();
-        }
-
-        void RestrictionsFilterRebuild()
-        {
-            string restrictionsFilter = "id_restriction IN (0";
-            for (int i = 0; i < v_restrictionPremisesAssoc.Count; i++)
-                restrictionsFilter += ((DataRowView)v_restrictionPremisesAssoc[i])["id_restriction"].ToString() + ",";
-            restrictionsFilter = restrictionsFilter.TrimEnd(new char[] { ',' });
-            restrictionsFilter += ")";
-            v_restrictions.Filter = restrictionsFilter;
-        }
-
-        void OwnershipsFilterRebuild()
-        {
-            string ownershipFilter = "id_ownership_right IN (0";
-            for (int i = 0; i < v_ownershipPremisesAssoc.Count; i++)
-                ownershipFilter += ((DataRowView)v_ownershipPremisesAssoc[i])["id_ownership_right"].ToString() + ",";
-            ownershipFilter = ownershipFilter.TrimEnd(new char[] { ',' });
-            ownershipFilter += ")";
-            v_ownershipRights.Filter = ownershipFilter;
         }
 
         void v_ownershipPremisesAssoc_CurrentItemChanged(object sender, EventArgs e)
@@ -429,6 +1174,16 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
+        private void numericUpDownHeight_ValueChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
+        }
+
+        private void numericUpDownNumRooms_ValueChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
+        }
+
         void numericUpDownNumBeds_ValueChanged(object sender, EventArgs e)
         {
             CheckViewportModifications();
@@ -444,7 +1199,7 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
-        void maskedTextBoxCadastralNum_TextChanged(object sender, EventArgs e)
+        void textBoxCadastralNum_TextChanged(object sender, EventArgs e)
         {
             CheckViewportModifications();
         }
@@ -471,38 +1226,8 @@ namespace Registry.Viewport
 
         void v_premises_CurrentItemChanged(object sender, EventArgs e)
         {
-            if (viewportState == ViewportState.NewRowState)
-            {
-                if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                {
-                    this.Text = String.Format("Новое помещение здания №{0}", ParentRow["id_building"]);
-                } else
-                    this.Text = "Новое помещение";
-            }
-            else
-                if (v_premises.Position != -1)
-                {
-                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                        this.Text = String.Format("Помещение №{0} здания №{1}",
-                            ((DataRowView)v_premises[v_premises.Position])["id_premises"], ParentRow["id_building"]);
-                    else
-                        this.Text = String.Format("Помещение №{0}", ((DataRowView)v_premises[v_premises.Position])["id_premises"]);
-                }
-                else
-                {
-                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                        this.Text = String.Format("Помещения в здании {0} отсутствуют", ParentRow["id_building"]);
-                    else
-                        this.Text = "Помещения отсутствуют";
-                }
-            if (v_premisesCurrentFund != null)
-            {
-                if ((v_premises.Position != -1) && !(((DataRowView)v_premises[v_premises.Position])["id_premises"] is DBNull))
-                    v_premisesCurrentFund.Filter = "id_premises = " + ((DataRowView)v_premises[v_premises.Position])["id_premises"].ToString();
-                else
-                    v_premisesCurrentFund.Filter = "id_premises = 0";
-                ShowOrHideCurrentFund();
-            }
+            SetViewportCaption();
+            FiltersRebuild();
             SelectCurrentBuilding();
             if (Selected)
                 menuCallback.NavigationStateUpdate();
@@ -514,959 +1239,363 @@ namespace Registry.Viewport
             is_editable = true;
         }
 
-        private void ShowOrHideCurrentFund()
+        private void dataGridViewRestrictions_Resize(object sender, EventArgs e)
         {
-            if (v_premisesCurrentFund.Count > 0)
+            if (dataGridViewRestrictions.Size.Width > 600)
             {
-                label38.Visible = true;
-                comboBoxCurrentFundType.Visible = true;
-                this.tableLayoutPanel3.RowStyles[0].Height = 210F;
+                if (dataGridViewRestrictions.Columns["restriction_description"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
+                    dataGridViewRestrictions.Columns["restriction_description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             }
             else
             {
-                label38.Visible = false;
-                comboBoxCurrentFundType.Visible = false;
-                this.tableLayoutPanel3.RowStyles[0].Height = 185F;
+                if (dataGridViewRestrictions.Columns["restriction_description"].AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
+                    dataGridViewRestrictions.Columns["restriction_description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
         }
 
-        private void SelectCurrentBuilding()
+        private void dataGridViewOwnerships_Resize(object sender, EventArgs e)
         {
-            if ((comboBoxHouse.DataSource != null) && (comboBoxStreet.DataSource != null))
+            if (dataGridViewOwnerships.Size.Width > 600)
             {
-                int? id_building = null;
-                if ((v_premises.Position != -1) && (((DataRowView)v_premises[v_premises.Position])["id_building"] != DBNull.Value))
-                    id_building = Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_building"]);
-                else 
-                if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                    id_building = Convert.ToInt32(ParentRow["id_building"]);
-                string id_street = null;
-                if (id_building != null)
-                {
-                    DataRow building_row = buildings.Select().Rows.Find(id_building);
-                    if (building_row != null)
-                        id_street = building_row["id_street"].ToString();
-                }
-                v_kladr.Filter = "";
-                if (id_street != null)
-                    comboBoxStreet.SelectedValue = id_street;
-                else
-                    comboBoxStreet.SelectedValue = DBNull.Value;
-                if (id_building != null)
-                    comboBoxHouse.SelectedValue = id_building;
-                else
-                    comboBoxHouse.SelectedValue = DBNull.Value;
+                if (dataGridViewOwnerships.Columns["ownership_description"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
+                    dataGridViewOwnerships.Columns["ownership_description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            }
+            else
+            {
+                if (dataGridViewOwnerships.Columns["ownership_description"].AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
+                    dataGridViewOwnerships.Columns["ownership_description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
         }
 
-        private void DataBind()
+        private void dataGridViewRestrictions_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            comboBoxStreet.DataSource = v_kladr;
-            comboBoxStreet.ValueMember = "id_street";
-            comboBoxStreet.DisplayMember = "street_name";
-            comboBoxHouse.DataSource = v_buildings;
-            comboBoxHouse.ValueMember = "id_building";
-            comboBoxHouse.DisplayMember = "house";
-            comboBoxPremisesKind.DataSource = v_premises_kinds;
-            comboBoxPremisesKind.ValueMember = "id_premises_kind";
-            comboBoxPremisesKind.DisplayMember = "premises_kind";
-            comboBoxPremisesKind.DataBindings.Clear();
-            comboBoxPremisesKind.DataBindings.Add("SelectedValue", v_premises, "id_premises_kind", true, DataSourceUpdateMode.Never, 1);
-            comboBoxPremisesType.DataSource = v_premises_types;
-            comboBoxPremisesType.ValueMember = "id_premises_type";
-            comboBoxPremisesType.DisplayMember = "premises_type_as_num";
-            comboBoxPremisesType.DataBindings.Clear();
-            comboBoxPremisesType.DataBindings.Add("SelectedValue", v_premises, "id_premises_type", true, DataSourceUpdateMode.Never, 1);
-            textBoxPremisesNumber.DataBindings.Clear();
-            textBoxPremisesNumber.DataBindings.Add("Text", v_premises, "premises_num", true, DataSourceUpdateMode.Never, "");
-            numericUpDownFloor.DataBindings.Clear();
-            numericUpDownFloor.DataBindings.Add("Value", v_premises, "floor", true, DataSourceUpdateMode.Never, 0);
-            maskedTextBoxCadastralNum.DataBindings.Clear();
-            maskedTextBoxCadastralNum.DataBindings.Add("Text", v_premises, "cadastral_num");
-            textBoxDescription.DataBindings.Clear();
-            textBoxDescription.DataBindings.Add("Text", v_premises, "description", true, DataSourceUpdateMode.Never, "");
-            numericUpDownCadastralCost.DataBindings.Clear();
-            numericUpDownCadastralCost.DataBindings.Add("Value", v_premises, "cadastral_cost", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownBalanceCost.DataBindings.Clear();
-            numericUpDownBalanceCost.DataBindings.Add("Value", v_premises, "balance_cost", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownNumBeds.DataBindings.Clear();
-            numericUpDownNumBeds.DataBindings.Add("Value", v_premises, "num_beds", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownTotalArea.DataBindings.Clear();
-            numericUpDownTotalArea.DataBindings.Add("Value", v_premises, "total_area", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownLivingArea.DataBindings.Clear();
-            numericUpDownLivingArea.DataBindings.Add("Value", v_premises, "living_area", true, DataSourceUpdateMode.Never, 0);
-            checkBoxForOrphans.DataBindings.Clear();
-            checkBoxForOrphans.DataBindings.Add("Checked", v_premises, "for_orphans", true, DataSourceUpdateMode.Never, false);
-            checkBoxAcceptByDonation.DataBindings.Clear();
-            checkBoxAcceptByDonation.DataBindings.Add("Checked", v_premises, "accepted_by_donation", true, DataSourceUpdateMode.Never, false);
-            checkBoxAcceptByExchange.DataBindings.Clear();
-            checkBoxAcceptByExchange.DataBindings.Add("Checked", v_premises, "accepted_by_exchange", true, DataSourceUpdateMode.Never, false);
-            checkBoxAcceptByOther.DataBindings.Clear();
-            checkBoxAcceptByOther.DataBindings.Add("Checked", v_premises, "accepted_by_other", true, DataSourceUpdateMode.Never, false);
-
-            comboBoxCurrentFundType.DataSource = v_fundType;
-            comboBoxCurrentFundType.ValueMember = "id_fund_type";
-            comboBoxCurrentFundType.DisplayMember = "fund_type";
-            comboBoxCurrentFundType.DataBindings.Clear();
-            comboBoxCurrentFundType.DataBindings.Add("SelectedValue", v_premisesCurrentFund, "id_fund_type", true, DataSourceUpdateMode.Never, DBNull.Value);
-
-            comboBoxState.DataSource = v_states;
-            comboBoxState.ValueMember = "id_state";
-            comboBoxState.DisplayMember = "state_neutral";
-            comboBoxState.DataBindings.Clear();
-            comboBoxState.DataBindings.Add("SelectedValue", v_premises, "id_state", true, DataSourceUpdateMode.Never, DBNull.Value);
-
-
-            dataGridViewRestrictions.DataSource = v_restrictions;
-            field_id_restriction_type.DataSource = v_restrictonTypes;
-            field_id_restriction_type.DataPropertyName = "id_restriction_type";
-            field_id_restriction_type.ValueMember = "id_restriction_type";
-            field_id_restriction_type.DisplayMember = "restriction_type";
-            field_restriction_number.DataPropertyName = "number";
-            field_restriction_date.DataPropertyName = "date";
-            field_restriction_description.DataPropertyName = "description";
-
-            dataGridViewOwnerships.DataSource = v_ownershipRights;
-            field_id_ownership_type.DataSource = v_ownershipRightTypes;
-            field_id_ownership_type.DataPropertyName = "id_ownership_right_type";
-            field_id_ownership_type.ValueMember = "id_ownership_right_type";
-            field_id_ownership_type.DisplayMember = "ownership_right_type";
-            field_ownership_number.DataPropertyName = "number";
-            field_ownership_date.DataPropertyName = "date";
-            field_ownership_description.DataPropertyName = "description";
-
-            dataGridViewRooms.DataSource = v_sub_premises;
-            field_sub_premises_num.DataPropertyName = "sub_premises_num";
-            field_sub_premises_total_area.DataPropertyName = "total_area";
-        }
-
-        private void CheckViewportModifications()
-        {
-            if (!is_editable)
+            if (e.RowIndex == -1)
                 return;
-            if (!this.ContainsFocus)
+            if (HasAssocRestrictions())
+                ShowRestrictions();
+        }
+
+        private void dataGridViewOwnerships_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == -1)
                 return;
-            if ((v_premises.Position != -1) && (PremiseFromView() != PremiseFromViewport()))
-            {
-                if (viewportState == ViewportState.ReadState)
-                    viewportState = ViewportState.ModifyRowState;
-            }
-            else
-            {
-                if (viewportState == ViewportState.ModifyRowState)
-                    viewportState = ViewportState.ReadState;
-            }
-            menuCallback.EditingStateUpdate();
+            if (HasAssocOwnerships())
+                ShowOwnerships();
         }
 
-        private Premise PremiseFromView()
+        private void dataGridViewRooms_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            Premise premise = new Premise();
-            DataRowView row = (DataRowView)v_premises[v_premises.Position];
-            if (row["id_premises"] is DBNull)
-                premise.id_premises = null;
-            else
-                premise.id_premises = Convert.ToInt32(row["id_premises"]);
-            if (row["id_building"] is DBNull)
-                premise.id_building = null;
-            else
-                premise.id_building = Convert.ToInt32(row["id_building"]);
-            if (row["id_state"] is DBNull)
-                premise.id_state = null;
-            else
-                premise.id_state = Convert.ToInt32(row["id_state"]);
-            if (row["premises_num"] is DBNull)
-                premise.premises_num = null;
-            else
-                premise.premises_num = row["premises_num"].ToString();
-            premise.living_area = Convert.ToDouble(row["living_area"]);
-            premise.total_area = Convert.ToDouble(row["total_area"]);
-            premise.num_beds = Convert.ToInt16(row["num_beds"]);
-            if (row["id_premises_type"] is DBNull)
-                premise.id_premises_type = null;
-            else
-                premise.id_premises_type = Convert.ToInt32(row["id_premises_type"]);
-            if (row["id_premises_kind"] is DBNull)
-                premise.id_premises_kind = null;
-            else
-                premise.id_premises_kind = Convert.ToInt32(row["id_premises_kind"]);
-            premise.floor = Convert.ToInt16(row["floor"]);
-            premise.for_orphans = Convert.ToBoolean(row["for_orphans"]);
-            premise.accepted_by_exchange = Convert.ToBoolean(row["accepted_by_exchange"]);
-            premise.accepted_by_donation = Convert.ToBoolean(row["accepted_by_donation"]);
-            premise.accepted_by_other = Convert.ToBoolean(row["accepted_by_other"]);
-            if (row["cadastral_num"] is DBNull)
-                premise.cadastral_num = null;
-            else
-                premise.cadastral_num = row["cadastral_num"].ToString();
-            premise.cadastral_cost = Convert.ToDecimal(row["cadastral_cost"]);
-            premise.balance_cost = Convert.ToDecimal(row["balance_cost"]);
-            if (row["description"] is DBNull)
-                premise.description = null;
-            else
-                premise.description = row["description"].ToString();
-            return premise;
-        }
-
-        private Premise PremiseFromViewport()
-        {
-            Premise premise = new Premise();
-            if ((v_premises.Position == -1) || ((DataRowView)v_premises[v_premises.Position])["id_premises"] is DBNull)
-                premise.id_premises = null;
-            else
-                premise.id_premises = Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"]);
-            if (comboBoxHouse.SelectedValue != null)
-                premise.id_building = Convert.ToInt32(comboBoxHouse.SelectedValue);
-            else
-                premise.id_building = null;
-            if (comboBoxState.SelectedValue != null)
-                premise.id_state = Convert.ToInt32(comboBoxState.SelectedValue);
-            else
-                premise.id_state = null;
-            if (textBoxPremisesNumber.Text.Trim() == "")
-                premise.premises_num = null;
-            else
-                premise.premises_num = textBoxPremisesNumber.Text.Trim();
-            premise.total_area = Convert.ToDouble(numericUpDownTotalArea.Value);
-            premise.living_area = Convert.ToDouble(numericUpDownLivingArea.Value);
-            premise.num_beds = Convert.ToInt16(numericUpDownNumBeds.Value);
-            if (comboBoxPremisesType.SelectedValue == null)
-                premise.id_premises_type = null;
-            else
-                premise.id_premises_type = Convert.ToInt32(comboBoxPremisesType.SelectedValue);
-            if (comboBoxPremisesKind.SelectedValue == null)
-                premise.id_premises_kind = null;
-            else
-                premise.id_premises_kind = Convert.ToInt32(comboBoxPremisesKind.SelectedValue);
-            premise.floor = Convert.ToInt16(numericUpDownFloor.Value);
-            premise.for_orphans = checkBoxForOrphans.Checked;
-            premise.accepted_by_donation = checkBoxAcceptByDonation.Checked;
-            premise.accepted_by_exchange = checkBoxAcceptByExchange.Checked;
-            premise.accepted_by_other = checkBoxAcceptByOther.Checked;
-            if (maskedTextBoxCadastralNum.Text.Trim() == "")
-                premise.cadastral_num = null;
-            else
-                premise.cadastral_num = maskedTextBoxCadastralNum.Text.Trim();
-            premise.cadastral_cost = numericUpDownCadastralCost.Value;
-            premise.balance_cost = numericUpDownBalanceCost.Value;
-            if (textBoxDescription.Text.Trim() == "")
-                premise.description = null;
-            else
-                premise.description = textBoxDescription.Text.Trim();
-            return premise;
-        }
-
-        private void ViewportFromPremise(Premise premise)
-        {
-            if (premise.id_building != null)
-            {
-                DataRow building_row = buildings.Select().Rows.Find(premise.id_building);
-                if (building_row != null)
-                {
-                    string id_street = building_row["id_street"].ToString();
-                    comboBoxStreet.SelectedValue = id_street;
-                    comboBoxHouse.SelectedValue = premise.id_building;
-                }
-            }
-            if (premise.id_state != null)
-                comboBoxState.SelectedValue = premise.id_state;
-            if (premise.id_premises_type != null)
-                comboBoxPremisesType.SelectedValue = premise.id_premises_type;
-            if (premise.id_premises_kind != null)
-                comboBoxPremisesKind.SelectedValue = premise.id_premises_kind;
-            textBoxPremisesNumber.Text = premise.premises_num;
-            numericUpDownFloor.Value = premise.floor.Value;
-            maskedTextBoxCadastralNum.Text = premise.cadastral_num;
-            numericUpDownCadastralCost.Value = premise.cadastral_cost.Value;
-            numericUpDownBalanceCost.Value = premise.balance_cost.Value;
-            numericUpDownNumBeds.Value = premise.num_beds.Value;
-            numericUpDownLivingArea.Value = (decimal)premise.living_area.Value;
-            numericUpDownTotalArea.Value = (decimal)premise.total_area.Value;
-            textBoxDescription.Text = premise.description;
-            checkBoxForOrphans.Checked = premise.for_orphans.Value;
-            checkBoxAcceptByDonation.Checked = premise.accepted_by_donation.Value;
-            checkBoxAcceptByExchange.Checked = premise.accepted_by_exchange.Value;
-            checkBoxAcceptByOther.Checked = premise.accepted_by_other.Value;
-        }
-
-        public void LocatePremisesBy(int id)
-        {
-            v_premises.Position = v_premises.Find("id_premises", id);
-        }
-
-        public override void Close()
-        {
-            if (ChangeViewportStateTo(ViewportState.ReadState))
-                base.Close();
-        }
-
-        public override bool CanSaveRecord()
-        {
-            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
-        }
-
-        public override bool CanCopyRecord()
-        {
-            return (v_premises.Position != -1) && (viewportState == ViewportState.ReadState || viewportState == ViewportState.ModifyRowState)
-                    && !premises.EditingNewRecord;
-        }
-
-        public override void CopyRecord()
-        {
-            if (!ChangeViewportStateTo(ViewportState.NewRowState))
+            if (e.RowIndex == -1)
                 return;
-            Premise premise = PremiseFromView();
-            DataRowView row = (DataRowView)v_premises.AddNew();
-            premises.EditingNewRecord = true;
-            if (premise.id_building != null)
-            {
-                comboBoxStreet.SelectedValue = premise.id_building;
-                comboBoxHouse.SelectedValue = premise.id_building;
-            }
-            ViewportFromPremise(premise);
+            if (HasAssocSubPremises())
+                ShowSubPremises();
         }
 
-        public override bool CanCancelRecord()
+        private void InitializeComponent()
         {
-            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
-        }
-
-        private bool ValidatePremise(Premise premise)
-        {
-            if (premise.id_building == null)
-            {
-                MessageBox.Show("Необходимо выбрать здание","Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                comboBoxHouse.Focus();
-                return false;
-            }
-            if (premise.id_state == null)
-            {
-                MessageBox.Show("Необходимо выбрать текущее состояние помещения", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                comboBoxState.Focus();
-                return false;
-            }
-            if ((premise.cadastral_num != null) && (premise.cadastral_num.Length > 15))
-            {
-                MessageBox.Show("Длина кадастрового номера не может превышать 15 символов", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                maskedTextBoxCadastralNum.Focus();
-                return false;
-            }
-            return true;
-        }
-
-        public override void SaveRecord()
-        {
-            Premise premise = PremiseFromViewport();
-            bool updateSubPremisesState = false;
-            if (!ValidatePremise(premise))
-                return;
-            if ((viewportState == ViewportState.ModifyRowState) && (premise.id_state != PremiseFromView().id_state))
-            {
-                if (MessageBox.Show("Вы пытаетесь изменить состояние помещения. В результате всем комнатам данного помещения будет назначено то же состояние. " +
-                    "Вы уверены, что хотите сохранить данные?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
-                    return;
-                updateSubPremisesState = true;
-            }
-            switch (viewportState)
-            {
-                case ViewportState.ReadState:
-                    MessageBox.Show("Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    break;
-                case ViewportState.NewRowState:
-                    int id_premise = premises.Insert(premise);
-                    if (id_premise == -1)
-                        return;
-                    DataRowView newRow;
-                    if (v_premises.Position == -1)
-                        newRow = (DataRowView)v_premises.AddNew();
-                    else
-                        newRow = ((DataRowView)v_premises[v_premises.Position]);
-                    premise.id_premises = id_premise;
-                    FillRowFromPremise(premise, newRow);
-                    premises.EditingNewRecord = false;
-                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                        this.Text = String.Format("Помещение №{0} здания №{1}",
-                            id_premise.ToString(), ParentRow["id_building"]);
-                    else
-                        this.Text = String.Format("Помещение №{0}", id_premise.ToString());
-                    viewportState = ViewportState.ReadState;
-                    is_editable = true;
-                    break;
-                case ViewportState.ModifyRowState:
-                    if (premise.id_premises == null)
-                    {
-                        MessageBox.Show("Вы пытаетесь изменить помещение без внутренного номера. " +
-                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        return;
-                    }
-                    if (premises.Update(premise) == -1)
-                        return;
-                    DataRowView row = ((DataRowView)v_premises[v_premises.Position]);
-                    FillRowFromPremise(premise, row);
-                    if (updateSubPremisesState)
-                    {
-                        for (int i = 0; i < v_sub_premises.Count; i++)
-                        {
-                            DataRowView subPremiseRow = (DataRowView)v_sub_premises[i];
-                            subPremiseRow["id_state"] = premise.id_state;
-                            subPremiseRow.EndEdit();
-                        }
-                    }
-                    viewportState = ViewportState.ReadState;
-                    CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, premise.id_premises);
-                    break;
-            }
-            CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building, premise.id_building);
-        }
-
-        private static void FillRowFromPremise(Premise premise, DataRowView row)
-        {
-            row.BeginEdit();
-            row["id_premises"] = premise.id_premises;
-            row["id_building"] = premise.id_building;
-            row["id_state"] = premise.id_state;
-            row["premises_num"] = premise.premises_num;
-            row["total_area"] = premise.total_area;
-            row["living_area"] = premise.living_area;
-            row["num_beds"] = premise.num_beds;
-            row["id_premises_type"] = premise.id_premises_type;
-            row["id_premises_kind"] = premise.id_premises_kind;
-            row["floor"] = premise.floor;
-            row["for_orphans"] = premise.for_orphans;
-            row["accepted_by_exchange"] = premise.accepted_by_exchange;
-            row["accepted_by_donation"] = premise.accepted_by_donation;
-            row["accepted_by_other"] = premise.accepted_by_other;
-            row["cadastral_num"] = premise.cadastral_num;
-            row["cadastral_cost"] = premise.cadastral_cost;
-            row["balance_cost"] = premise.balance_cost;
-            row["description"] = premise.description;
-            row.EndEdit();
-        }
-
-        public override void CancelRecord()
-        {
-            switch (viewportState)
-            {
-                case ViewportState.ReadState: return;
-                case ViewportState.NewRowState:
-                    viewportState = ViewportState.ReadState;
-                    premises.EditingNewRecord = false;
-                    if (v_premises.Position != -1)
-                    {
-                        ((DataRowView)v_premises[v_premises.Position]).Delete();
-                    }
-                    else
-                        this.Text = "Здания отсутствуют";
-                    break;
-                case ViewportState.ModifyRowState:
-                    is_editable = false;
-                    DataBind();
-                    SelectCurrentBuilding();
-                    is_editable = true;
-                    viewportState = ViewportState.ReadState;
-                    break;
-            }
-        }
-
-        bool ChangeViewportStateTo(ViewportState state)
-        {
-            switch (state)
-            {
-                case ViewportState.ReadState:
-                    switch (viewportState)
-                    {
-                        case ViewportState.ReadState:
-                            return true;
-                        case ViewportState.NewRowState:
-                        case ViewportState.ModifyRowState:
-                            DialogResult result = MessageBox.Show("Сохранить изменения о помещениях в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                            if (result == DialogResult.Yes)
-                                SaveRecord();
-                            else
-                                if (result == DialogResult.No)
-                                    CancelRecord();
-                                else return false;
-                            if (viewportState == ViewportState.ReadState)
-                                return true;
-                            else
-                                return false;
-                    }
-                    break;
-                case ViewportState.NewRowState:
-                    switch (viewportState)
-                    {
-                        case ViewportState.ReadState:
-                            if (premises.EditingNewRecord)
-                                return false;
-                            else
-                            {
-                                viewportState = ViewportState.NewRowState;
-                                return true;
-                            }
-                        case ViewportState.NewRowState:
-                            return true;
-                        case ViewportState.ModifyRowState:
-                            DialogResult result = MessageBox.Show("Сохранить изменения о помещениях в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                            if (result == DialogResult.Yes)
-                                SaveRecord();
-                            else
-                                if (result == DialogResult.No)
-                                    CancelRecord();
-                                else
-                                    return false;
-                            if (viewportState == ViewportState.ReadState)
-                                return ChangeViewportStateTo(ViewportState.NewRowState);
-                            else
-                                return false;
-                    }
-                    break;
-                case ViewportState.ModifyRowState: ;
-                    switch (viewportState)
-                    {
-                        case ViewportState.ReadState:
-                            viewportState = ViewportState.ModifyRowState;
-                            return true;
-                        case ViewportState.ModifyRowState:
-                            return true;
-                        case ViewportState.NewRowState:
-                            DialogResult result = MessageBox.Show("Сохранить изменения о помещениях в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                            if (result == DialogResult.Yes)
-                                SaveRecord();
-                            else
-                                if (result == DialogResult.No)
-                                    CancelRecord();
-                                else
-                                    return false;
-                            if (viewportState == ViewportState.ReadState)
-                                return ChangeViewportStateTo(ViewportState.ModifyRowState);
-                            else
-                                return false;
-                    }
-                    break;
-            }
-            return false;
-        }
-
-        public override void MoveFirst()
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            is_editable = false;
-            v_premises.MoveFirst();
-        }
-
-        public override void MoveLast()
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            is_editable = false;
-            v_premises.MoveLast();
-        }
-
-        public override void MoveNext()
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            is_editable = false;
-            v_premises.MoveNext();
-        }
-
-        public override void MovePrev()
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            is_editable = false;
-            v_premises.MovePrevious();
-        }
-
-        public override bool CanMoveFirst()
-        {
-            return v_premises.Position > 0;
-        }
-
-        public override bool CanMovePrev()
-        {
-            return v_premises.Position > 0;
-        }
-
-        public override void ClearSearch()
-        {
-            v_premises.Filter = StaticFilter;
-            DynamicFilter = "";
-        }
-
-        public override bool CanMoveNext()
-        {
-            return (v_premises.Position > -1) && (v_premises.Position < (v_premises.Count - 1));
-        }
-
-        public override bool CanMoveLast()
-        {
-            return (v_premises.Position > -1) && (v_premises.Position < (v_premises.Count - 1));
-        }
-
-        public override bool CanSearchRecord()
-        {
-            return (viewportState == ViewportState.ReadState);
-        }
-
-        public override bool CanInsertRecord()
-        {
-            if ((viewportState == ViewportState.ReadState || viewportState == ViewportState.ModifyRowState) 
-                    && !premises.EditingNewRecord)
-                return true;
-            else
-                return false;
-        }
-
-        public override void InsertRecord()
-        {
-            if (!ChangeViewportStateTo(ViewportState.NewRowState))
-                return;
-            DataRowView row = (DataRowView)v_premises.AddNew();
-            premises.EditingNewRecord = true;
-        }
-
-        public override bool SearchedRecords()
-        {
-            if (DynamicFilter != "")
-                return true;
-            else
-                return false;
-        }
-
-        public override void SearchRecord(SearchFormType searchFormType)
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            switch (searchFormType)
-            {
-                case SearchFormType.SimpleSearchForm:
-                    if (spSimpleSearchForm == null)
-                        spSimpleSearchForm = new SimpleSearchPremiseForm();
-                    if (spSimpleSearchForm.ShowDialog() != DialogResult.OK)
-                        return;
-                    DynamicFilter = spSimpleSearchForm.GetFilter();
-                    break;
-                case SearchFormType.ExtendedSearchForm:
-                    if (spExtendedSearchForm == null)
-                        spExtendedSearchForm = new ExtendedSearchPremisesForm();
-                    if (spExtendedSearchForm.ShowDialog() != DialogResult.OK)
-                        return;
-                    DynamicFilter = spExtendedSearchForm.GetFilter();
-                    break;
-            }
-            string Filter = StaticFilter;
-            if (StaticFilter != "" && DynamicFilter != "")
-                Filter += " AND ";
-            Filter += DynamicFilter;
-            v_premises.Filter += Filter;
-        }
-
-        public override void DeleteRecord()
-        {
-            if (MessageBox.Show("Вы действительно хотите удалить это помещение?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                int id_building = (int)((DataRowView)v_premises[v_premises.Position])["id_building"];
-                if (premises.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
-                    return;
-                ((DataRowView)v_premises[v_premises.Position]).Delete();
-                menuCallback.ForceCloseDetachedViewports();
-                CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building);
-                CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building);
-                CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
-            }
-        }
-
-        public override bool CanDeleteRecord()
-        {
-            if ((v_premises.Position == -1) || (viewportState == ViewportState.NewRowState))
-                return false;
-            else
-                return true;
-        }
-
-        public override bool CanDuplicate()
-        {
-            return true;
-        }
-
-        public override Viewport Duplicate()
-        {
-            PremisesViewport viewport = new PremisesViewport(this, menuCallback);
-            if (viewport.CanLoadData())
-                viewport.LoadData();
-            if (v_premises.Count > 0)
-                viewport.LocatePremisesBy((((DataRowView)v_premises[v_premises.Position])["id_premises"] as Int32?) ?? -1);
-            return viewport;
-        }
-
-        public override void ForceClose()
-        {
-            if (viewportState == ViewportState.NewRowState)
-                premises.EditingNewRecord = false;
-            base.Close();
-        }
-
-        public override bool ViewportDetached()
-        {
-            return ((ParentRow != null) && ((ParentRow.RowState == DataRowState.Detached) || (ParentRow.RowState == DataRowState.Deleted)));
-        }
-
-        public override bool HasAssocOwnerships()
-        {
-            return (v_premises.Position != -1);
-        }
-
-        public override bool HasAssocRestrictions()
-        {
-            return (v_premises.Position != -1);
-        }
-
-        public override bool HasAssocSubPremises()
-        {
-            return (v_premises.Position != -1);
-        }
-
-        public override bool HasAssocFundHistory()
-        {
-            return (v_premises.Position != -1);
-        }
-
-        public override void ShowOwnerships()
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            if (v_premises.Position == -1)
-            {
-                MessageBox.Show("Не выбрано помещение для отображения ограничений", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            OwnershipListViewport viewport = new OwnershipListViewport(menuCallback);
-            viewport.StaticFilter = "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"]);
-            viewport.ParentRow = ((DataRowView)v_premises[v_premises.Position]).Row;
-            viewport.ParentType = ParentTypeEnum.Premises;
-            if ((viewport as IMenuController).CanLoadData())
-                (viewport as IMenuController).LoadData();
-            menuCallback.AddViewport(viewport);
-            menuCallback.SwitchToViewport(viewport);
-        }
-
-        public override void ShowRestrictions()
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            if (v_premises.Position == -1)
-            {
-                MessageBox.Show("Не выбрано помещение для отображения реквизитов", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            RestrictionListViewport viewport = new RestrictionListViewport(menuCallback);
-            viewport.StaticFilter = "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"]);
-            viewport.ParentRow = ((DataRowView)v_premises[v_premises.Position]).Row;
-            viewport.ParentType = ParentTypeEnum.Premises;
-            if ((viewport as IMenuController).CanLoadData())
-                (viewport as IMenuController).LoadData();
-            menuCallback.AddViewport(viewport);
-            menuCallback.SwitchToViewport(viewport);
-        }
-
-        public override void ShowSubPremises()
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            if (v_premises.Position == -1)
-            {
-                MessageBox.Show("Не выбрано помещение для отображения перечня комнат", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            SubPremisesViewport viewport = new SubPremisesViewport(menuCallback);
-            viewport.StaticFilter = "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"]);
-            viewport.ParentRow = ((DataRowView)v_premises[v_premises.Position]).Row;
-            viewport.ParentType = ParentTypeEnum.Premises;
-            if ((viewport as IMenuController).CanLoadData())
-                (viewport as IMenuController).LoadData();
-            menuCallback.AddViewport(viewport);
-            menuCallback.SwitchToViewport(viewport);
-        }
-
-        public override void ShowFundHistory()
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            if (v_premises.Position == -1)
-            {
-                MessageBox.Show("Не выбрано помещение для отображения истории найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            FundsHistoryViewport viewport = new FundsHistoryViewport(menuCallback);
-            viewport.StaticFilter = "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"]);
-            viewport.ParentRow = ((DataRowView)v_premises[v_premises.Position]).Row;
-            viewport.ParentType = ParentTypeEnum.Premises;
-            if ((viewport as IMenuController).CanLoadData())
-                (viewport as IMenuController).LoadData();
-            menuCallback.AddViewport(viewport);
-            menuCallback.SwitchToViewport(viewport);
-        }
-
-        public override int GetRecordCount()
-        {
-            return v_premises.Count;
-        }
-
-        private void ConstructViewport()
-        {
-            this.Controls.Add(this.tableLayoutPanel3);
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.label29 = new System.Windows.Forms.Label();
+            this.textBoxSubPremisesNumber = new System.Windows.Forms.TextBox();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.groupBox13 = new System.Windows.Forms.GroupBox();
+            this.textBoxDescription = new System.Windows.Forms.TextBox();
+            this.groupBox9 = new System.Windows.Forms.GroupBox();
+            this.dataGridViewRestrictions = new System.Windows.Forms.DataGridView();
+            this.restriction_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.restriction_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.restriction_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_restriction_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.groupBox10 = new System.Windows.Forms.GroupBox();
+            this.dataGridViewOwnerships = new System.Windows.Forms.DataGridView();
+            this.ownership_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ownership_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ownership_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_ownership_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.groupBox8 = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.numericUpDownNumRooms = new System.Windows.Forms.NumericUpDown();
+            this.comboBoxPremisesType = new System.Windows.Forms.ComboBox();
+            this.textBoxPremisesNumber = new System.Windows.Forms.TextBox();
+            this.label27 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
+            this.numericUpDownNumBeds = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownFloor = new System.Windows.Forms.NumericUpDown();
+            this.comboBoxStreet = new System.Windows.Forms.ComboBox();
+            this.label20 = new System.Windows.Forms.Label();
+            this.comboBoxHouse = new System.Windows.Forms.ComboBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.comboBoxPremisesKind = new System.Windows.Forms.ComboBox();
+            this.label28 = new System.Windows.Forms.Label();
+            this.label39 = new System.Windows.Forms.Label();
+            this.comboBoxState = new System.Windows.Forms.ComboBox();
+            this.label38 = new System.Windows.Forms.Label();
+            this.comboBoxCurrentFundType = new System.Windows.Forms.ComboBox();
+            this.numericUpDownBalanceCost = new System.Windows.Forms.NumericUpDown();
+            this.label22 = new System.Windows.Forms.Label();
+            this.textBoxCadastralNum = new System.Windows.Forms.TextBox();
+            this.numericUpDownCadastralCost = new System.Windows.Forms.NumericUpDown();
+            this.label23 = new System.Windows.Forms.Label();
+            this.label24 = new System.Windows.Forms.Label();
+            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.groupBox11 = new System.Windows.Forms.GroupBox();
+            this.numericUpDownHeight = new System.Windows.Forms.NumericUpDown();
+            this.label2 = new System.Windows.Forms.Label();
+            this.numericUpDownLivingArea = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownTotalArea = new System.Windows.Forms.NumericUpDown();
+            this.label25 = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
+            this.groupBoxRooms = new System.Windows.Forms.GroupBox();
+            this.dataGridViewRooms = new System.Windows.Forms.DataGridView();
+            this.sub_premises_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sub_premises_total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel3.SuspendLayout();
-            this.tableLayoutPanel4.SuspendLayout();
-            this.tableLayoutPanel5.SuspendLayout();
-            this.groupBox8.SuspendLayout();
-            this.groupBox9.SuspendLayout();
-            this.groupBox10.SuspendLayout();
-            this.groupBox11.SuspendLayout();
-            this.groupBox12.SuspendLayout();
             this.groupBox13.SuspendLayout();
-            this.groupBoxRooms.SuspendLayout();
-            this.panel3.SuspendLayout();
-            this.panel4.SuspendLayout();
+            this.groupBox9.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRestrictions)).BeginInit();
+            this.groupBox10.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOwnerships)).BeginInit();
+            this.groupBox8.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
+            this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNumRooms)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNumBeds)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloor)).BeginInit();
+            this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceCost)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCadastralCost)).BeginInit();
+            this.tableLayoutPanel5.SuspendLayout();
+            this.groupBox11.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLivingArea)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalArea)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNumBeds)).BeginInit();
+            this.groupBoxRooms.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRooms)).BeginInit();
+            this.SuspendLayout();
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Location = new System.Drawing.Point(10, 97);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(53, 13);
+            this.label29.TabIndex = 0;
+            this.label29.Text = "Комнаты";
+            // 
+            // textBoxSubPremisesNumber
+            // 
+            this.textBoxSubPremisesNumber.Location = new System.Drawing.Point(0, 0);
+            this.textBoxSubPremisesNumber.Name = "textBoxSubPremisesNumber";
+            this.textBoxSubPremisesNumber.Size = new System.Drawing.Size(100, 20);
+            this.textBoxSubPremisesNumber.TabIndex = 0;
             // 
             // tableLayoutPanel3
             // 
             this.tableLayoutPanel3.ColumnCount = 2;
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel3.Controls.Add(this.groupBox13, 1, 2);
-            this.tableLayoutPanel3.Controls.Add(this.groupBox12, 1, 1);
+            this.tableLayoutPanel3.Controls.Add(this.groupBox13, 0, 2);
             this.tableLayoutPanel3.Controls.Add(this.groupBox9, 0, 3);
             this.tableLayoutPanel3.Controls.Add(this.groupBox10, 1, 3);
             this.tableLayoutPanel3.Controls.Add(this.groupBox8, 0, 0);
             this.tableLayoutPanel3.Controls.Add(this.tableLayoutPanel5, 0, 1);
-            this.tableLayoutPanel3.Controls.Add(this.groupBoxRooms, 0, 2);
-         
+            this.tableLayoutPanel3.Controls.Add(this.groupBoxRooms, 1, 1);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 3;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 79F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 131F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(774, 592);
+            this.tableLayoutPanel3.TabIndex = 0;
             // 
-            // tableLayoutPanel4
+            // groupBox13
             // 
-            this.tableLayoutPanel4.ColumnCount = 2;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel4.Controls.Add(this.panel3, 0, 0); 
-            this.tableLayoutPanel4.Controls.Add(this.panel4, 1, 0);
-            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.RowCount = 1;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
+            this.groupBox13.Controls.Add(this.textBoxDescription);
+            this.groupBox13.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox13.Location = new System.Drawing.Point(3, 323);
+            this.groupBox13.Name = "groupBox13";
+            this.groupBox13.Size = new System.Drawing.Size(381, 94);
+            this.groupBox13.TabIndex = 4;
+            this.groupBox13.TabStop = false;
+            this.groupBox13.Text = "Дополнительные сведения";
             // 
-            // tableLayoutPanel5
+            // textBoxDescription
             // 
-            this.tableLayoutPanel5.ColumnCount = 1;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel5.Controls.Add(this.groupBox11, 0, 0);
-            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-            this.tableLayoutPanel5.RowCount = 1;
-            this.tableLayoutPanel5.TabIndex = 1;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxDescription.Location = new System.Drawing.Point(3, 16);
+            this.textBoxDescription.MaxLength = 65535;
+            this.textBoxDescription.Multiline = true;
+            this.textBoxDescription.Name = "textBoxDescription";
+            this.textBoxDescription.Size = new System.Drawing.Size(375, 75);
+            this.textBoxDescription.TabIndex = 0;
+            this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxDescription_TextChanged);
+            // 
+            // groupBox9
+            // 
+            this.groupBox9.Controls.Add(this.dataGridViewRestrictions);
+            this.groupBox9.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox9.Location = new System.Drawing.Point(3, 423);
+            this.groupBox9.Name = "groupBox9";
+            this.groupBox9.Size = new System.Drawing.Size(381, 166);
+            this.groupBox9.TabIndex = 5;
+            this.groupBox9.TabStop = false;
+            this.groupBox9.Text = "Реквизиты";
+            // 
+            // dataGridViewRestrictions
+            // 
+            this.dataGridViewRestrictions.AllowUserToAddRows = false;
+            this.dataGridViewRestrictions.AllowUserToDeleteRows = false;
+            this.dataGridViewRestrictions.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridViewRestrictions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewRestrictions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.restriction_number,
+            this.restriction_date,
+            this.restriction_description,
+            this.id_restriction_type});
+            this.dataGridViewRestrictions.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewRestrictions.Location = new System.Drawing.Point(3, 16);
+            this.dataGridViewRestrictions.Name = "dataGridViewRestrictions";
+            this.dataGridViewRestrictions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewRestrictions.Size = new System.Drawing.Size(375, 147);
+            this.dataGridViewRestrictions.TabIndex = 0;
+            this.dataGridViewRestrictions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewRestrictions_CellDoubleClick);
+            this.dataGridViewRestrictions.Resize += new System.EventHandler(this.dataGridViewRestrictions_Resize);
+            // 
+            // restriction_number
+            // 
+            this.restriction_number.HeaderText = "Номер";
+            this.restriction_number.MinimumWidth = 100;
+            this.restriction_number.Name = "restriction_number";
+            this.restriction_number.ReadOnly = true;
+            // 
+            // restriction_date
+            // 
+            this.restriction_date.HeaderText = "Дата";
+            this.restriction_date.MinimumWidth = 100;
+            this.restriction_date.Name = "restriction_date";
+            this.restriction_date.ReadOnly = true;
+            // 
+            // restriction_description
+            // 
+            this.restriction_description.HeaderText = "Наименование";
+            this.restriction_description.MinimumWidth = 200;
+            this.restriction_description.Name = "restriction_description";
+            this.restriction_description.ReadOnly = true;
+            this.restriction_description.Width = 200;
+            // 
+            // id_restriction_type
+            // 
+            this.id_restriction_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
+            this.id_restriction_type.HeaderText = "Тип права собственности";
+            this.id_restriction_type.MinimumWidth = 200;
+            this.id_restriction_type.Name = "id_restriction_type";
+            this.id_restriction_type.ReadOnly = true;
+            this.id_restriction_type.Width = 200;
+            // 
+            // groupBox10
+            // 
+            this.groupBox10.Controls.Add(this.dataGridViewOwnerships);
+            this.groupBox10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox10.Location = new System.Drawing.Point(390, 423);
+            this.groupBox10.Name = "groupBox10";
+            this.groupBox10.Size = new System.Drawing.Size(381, 166);
+            this.groupBox10.TabIndex = 6;
+            this.groupBox10.TabStop = false;
+            this.groupBox10.Text = "Ограничения";
+            // 
+            // dataGridViewOwnerships
+            // 
+            this.dataGridViewOwnerships.AllowUserToAddRows = false;
+            this.dataGridViewOwnerships.AllowUserToDeleteRows = false;
+            this.dataGridViewOwnerships.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridViewOwnerships.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewOwnerships.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.ownership_number,
+            this.ownership_date,
+            this.ownership_description,
+            this.id_ownership_type});
+            this.dataGridViewOwnerships.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewOwnerships.Location = new System.Drawing.Point(3, 16);
+            this.dataGridViewOwnerships.Name = "dataGridViewOwnerships";
+            this.dataGridViewOwnerships.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewOwnerships.Size = new System.Drawing.Size(375, 147);
+            this.dataGridViewOwnerships.TabIndex = 0;
+            this.dataGridViewOwnerships.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOwnerships_CellDoubleClick);
+            this.dataGridViewOwnerships.Resize += new System.EventHandler(this.dataGridViewOwnerships_Resize);
+            // 
+            // ownership_number
+            // 
+            this.ownership_number.HeaderText = "Номер";
+            this.ownership_number.MinimumWidth = 100;
+            this.ownership_number.Name = "ownership_number";
+            this.ownership_number.ReadOnly = true;
+            // 
+            // ownership_date
+            // 
+            this.ownership_date.HeaderText = "Дата";
+            this.ownership_date.MinimumWidth = 100;
+            this.ownership_date.Name = "ownership_date";
+            this.ownership_date.ReadOnly = true;
+            // 
+            // ownership_description
+            // 
+            this.ownership_description.HeaderText = "Наименование";
+            this.ownership_description.MinimumWidth = 200;
+            this.ownership_description.Name = "ownership_description";
+            this.ownership_description.ReadOnly = true;
+            this.ownership_description.Width = 200;
+            // 
+            // id_ownership_type
+            // 
+            this.id_ownership_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
+            this.id_ownership_type.HeaderText = "Тип ограничения";
+            this.id_ownership_type.MinimumWidth = 200;
+            this.id_ownership_type.Name = "id_ownership_type";
+            this.id_ownership_type.ReadOnly = true;
+            this.id_ownership_type.Width = 200;
             // 
             // groupBox8
             // 
             this.tableLayoutPanel3.SetColumnSpan(this.groupBox8, 2);
             this.groupBox8.Controls.Add(this.tableLayoutPanel4);
             this.groupBox8.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox8.Location = new System.Drawing.Point(3, 3);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.TabStop = false;
+            this.groupBox8.Size = new System.Drawing.Size(768, 204);
             this.groupBox8.TabIndex = 0;
+            this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Общие сведения";
             // 
-            // groupBox9
+            // tableLayoutPanel4
             // 
-            this.groupBox9.Controls.Add(this.dataGridViewRestrictions);
-            this.groupBox9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox9.Name = "groupBox9";
-            this.groupBox9.TabStop = false;
-            this.groupBox9.TabIndex = 5;
-            this.groupBox9.Text = "Реквизиты НПА";
-            // 
-            // groupBox10
-            // 
-            this.groupBox10.Controls.Add(this.dataGridViewOwnerships);
-            this.groupBox10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox10.Name = "groupBox10";
-            this.groupBox10.TabStop = false;
-            this.groupBox10.TabIndex = 6;
-            this.groupBox10.Text = "Ограничения";
-            // 
-            // groupBox11
-            // 
-            this.groupBox11.Controls.Add(this.numericUpDownLivingArea);
-            this.groupBox11.Controls.Add(this.numericUpDownTotalArea);
-            this.groupBox11.Controls.Add(this.label25);
-            this.groupBox11.Controls.Add(this.label26);
-            this.groupBox11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox11.Margin = new System.Windows.Forms.Padding(0);
-            this.groupBox11.Name = "groupBox11";
-            this.groupBox11.TabStop = false;
-            this.groupBox11.TabIndex = 1;
-            this.groupBox11.Text = "Площадь";
-            // 
-            // groupBox12
-            // 
-            this.groupBox12.Controls.Add(this.checkBoxAcceptByOther);
-            this.groupBox12.Controls.Add(this.checkBoxAcceptByDonation);
-            this.groupBox12.Controls.Add(this.checkBoxAcceptByExchange);
-            this.groupBox12.Controls.Add(this.checkBoxForOrphans);
-            this.groupBox12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox12.Name = "groupBox12";
-            this.groupBox12.TabStop = false;
-            this.groupBox12.TabIndex = 2;
-            this.groupBox12.Text = "Основания на включение в муниципальную собственность";
-            // 
-            // groupBox13
-            // 
-            this.groupBox13.Controls.Add(this.textBoxDescription);
-            this.groupBox13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox13.Name = "groupBox13";
-            this.groupBox13.TabStop = false;
-            this.groupBox13.TabIndex = 4;
-            this.groupBox13.Text = "Дополнительные сведения";
-            // 
-            // groupBoxRooms
-            // 
-            this.groupBoxRooms.Controls.Add(this.dataGridViewRooms);
-            this.groupBoxRooms.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxRooms.Name = "groupBoxRooms";
-            this.groupBoxRooms.TabStop = false;
-            this.groupBoxRooms.TabIndex = 3;
-            this.groupBoxRooms.Text = "Комнаты";
+            this.tableLayoutPanel4.ColumnCount = 2;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel4.Controls.Add(this.panel3, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.panel4, 1, 0);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.RowCount = 1;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(762, 185);
+            this.tableLayoutPanel4.TabIndex = 0;
             // 
             // panel3
             // 
-            this.panel3.Controls.Add(this.comboBoxPremisesKind);
-            this.panel3.Controls.Add(this.label28);
+            this.panel3.Controls.Add(this.label1);
+            this.panel3.Controls.Add(this.numericUpDownNumRooms);
             this.panel3.Controls.Add(this.comboBoxPremisesType);
             this.panel3.Controls.Add(this.textBoxPremisesNumber);
+            this.panel3.Controls.Add(this.label27);
             this.panel3.Controls.Add(this.label21);
+            this.panel3.Controls.Add(this.numericUpDownNumBeds);
             this.panel3.Controls.Add(this.numericUpDownFloor);
             this.panel3.Controls.Add(this.comboBoxStreet);
             this.panel3.Controls.Add(this.label20);
@@ -1475,418 +1604,32 @@ namespace Registry.Viewport
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 3);
             this.panel3.Name = "panel3";
-            this.panel3.TabIndex = 0;
-            this.panel3.Size = new System.Drawing.Size(480, 154);
-            // 
-            // panel4
-            // 
-            this.panel4.Controls.Add(this.label39);
-            this.panel4.Controls.Add(this.comboBoxState);
-            this.panel4.Controls.Add(this.label38);
-            this.panel4.Controls.Add(this.comboBoxCurrentFundType);
-            this.panel4.Controls.Add(this.label27);
-            this.panel4.Controls.Add(this.numericUpDownNumBeds);
-            this.panel4.Controls.Add(this.numericUpDownBalanceCost);
-            this.panel4.Controls.Add(this.label22);
-            this.panel4.Controls.Add(this.maskedTextBoxCadastralNum);
-            this.panel4.Controls.Add(this.numericUpDownCadastralCost);
-            this.panel4.Controls.Add(this.label23);
-            this.panel4.Controls.Add(this.label24);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel4.Location = new System.Drawing.Point(489, 3);
-            this.panel4.Name = "panel4";
+            this.panel3.Size = new System.Drawing.Size(375, 179);
             this.panel3.TabIndex = 1;
-            this.panel4.Size = new System.Drawing.Size(480, 179);
             // 
-            // dataGridViewRestrictions
+            // label1
             // 
-            this.dataGridViewRestrictions.AllowUserToAddRows = false;
-            this.dataGridViewRestrictions.AllowUserToDeleteRows = false;
-            this.dataGridViewRestrictions.Dock = DockStyle.Fill;
-            this.dataGridViewRestrictions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewRestrictions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.field_restriction_number,
-            this.field_restriction_date,
-            this.field_restriction_description,
-            this.field_id_restriction_type});
-            this.dataGridViewRestrictions.Name = "dataGridViewRestrictions";
-            this.dataGridViewRestrictions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewRestrictions.TabIndex = 18;
-            this.dataGridViewRestrictions.AutoGenerateColumns = false;
-            this.dataGridViewRestrictions.BackgroundColor = SystemColors.ControlLightLight;
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(10, 126);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(106, 13);
+            this.label1.TabIndex = 9;
+            this.label1.Text = "Количество комнат";
             // 
-            // field_restriction_number
+            // numericUpDownNumRooms
             // 
-            this.field_restriction_number.HeaderText = "Номер";
-            this.field_restriction_number.Name = "number";
-            this.field_restriction_number.ReadOnly = true;
-            // 
-            // field_restriction_date
-            // 
-            this.field_restriction_date.HeaderText = "Дата";
-            this.field_restriction_date.Name = "date";
-            this.field_restriction_date.ReadOnly = true;
-            // 
-            // field_restriction_description
-            // 
-            this.field_restriction_description.HeaderText = "Наименование";
-            this.field_restriction_description.Name = "description";
-            this.field_restriction_description.ReadOnly = true;
-            //
-            // field_id_restriction_type
-            //
-            field_id_restriction_type.HeaderText = "Тип права собственности";
-            field_id_restriction_type.Name = "id_restriction_type";
-            field_id_restriction_type.ReadOnly = true;
-            field_id_restriction_type.MinimumWidth = 150;
-            field_id_restriction_type.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
-            // 
-            // 
-            // dataGridViewOwnerships
-            // 
-            this.dataGridViewOwnerships.AllowUserToAddRows = false;
-            this.dataGridViewOwnerships.AllowUserToDeleteRows = false;
-            this.dataGridViewOwnerships.Dock = DockStyle.Fill;
-            this.dataGridViewOwnerships.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewOwnerships.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.field_ownership_number,
-            this.field_ownership_date,
-            this.field_ownership_description,
-            this.field_id_ownership_type});
-            this.dataGridViewOwnerships.Name = "dataGridViewOwnerships";
-            this.dataGridViewOwnerships.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewOwnerships.TabIndex = 19;
-            this.dataGridViewOwnerships.AutoGenerateColumns = false;
-            this.dataGridViewOwnerships.BackgroundColor = SystemColors.ControlLightLight;
-            // 
-            // field_ownership_number
-            // 
-            this.field_ownership_number.HeaderText = "Номер";
-            this.field_ownership_number.Name = "number";
-            this.field_ownership_number.ReadOnly = true;
-            // 
-            // field_ownership_date
-            // 
-            this.field_ownership_date.HeaderText = "Дата";
-            this.field_ownership_date.Name = "date";
-            this.field_ownership_date.ReadOnly = true;
-            // 
-            // field_ownership_description
-            // 
-            this.field_ownership_description.HeaderText = "Наименование";
-            this.field_ownership_description.Name = "description";
-            this.field_ownership_description.ReadOnly = true;
-            //
-            // field_id_ownership_type
-            //
-            field_id_ownership_type.HeaderText = "Тип ограничения";
-            field_id_ownership_type.Name = "id_ownership_type";
-            field_id_ownership_type.ReadOnly = true;
-            field_id_ownership_type.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
-            // 
-            // dataGridViewRooms
-            // 
-            this.dataGridViewRooms.AllowUserToAddRows = false;
-            this.dataGridViewRooms.AllowUserToDeleteRows = false;
-            this.dataGridViewRooms.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewRooms.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.field_sub_premises_num,
-            this.field_sub_premises_total_area});
-            this.dataGridViewRooms.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewRooms.Name = "dataGridViewRooms";
-            this.dataGridViewRooms.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewRooms.TabIndex = 16;
-            this.dataGridViewRooms.AutoGenerateColumns = false;
-            this.dataGridViewRooms.BackgroundColor = SystemColors.ControlLightLight;
-            // 
-            // sub_premises_num
-            // 
-            this.field_sub_premises_num.HeaderText = "Номер";
-            this.field_sub_premises_num.Name = "sub_premises_num";
-            this.field_sub_premises_num.ReadOnly = true;
-            // 
-            // subremises_total_area
-            // 
-            this.field_sub_premises_total_area.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.field_sub_premises_total_area.HeaderText = "Общая площадь";
-            this.field_sub_premises_total_area.MinimumWidth = 100;
-            this.field_sub_premises_total_area.Name = "subremises_total_area";
-            this.field_sub_premises_total_area.DefaultCellStyle.Format = "#0.0## м²";
-            this.field_sub_premises_total_area.ReadOnly = true;
-            // 
-            // numericUpDownFloor
-            // 
-            this.numericUpDownFloor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownFloor.Location = new System.Drawing.Point(157, 94);
-            this.numericUpDownFloor.Maximum = new decimal(new int[] {
+            this.numericUpDownNumRooms.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownNumRooms.Location = new System.Drawing.Point(157, 123);
+            this.numericUpDownNumRooms.Maximum = new decimal(new int[] {
             255,
             0,
             0,
             0});
-            this.numericUpDownFloor.Name = "numericUpDownFloor";
-            this.numericUpDownFloor.Size = new System.Drawing.Size(319, 20);
-            this.numericUpDownFloor.TabIndex = 3;
-            // 
-            // numericUpDownBalanceCost
-            // 
-            this.numericUpDownBalanceCost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownBalanceCost.DecimalPlaces = 2;
-            this.numericUpDownBalanceCost.Location = new System.Drawing.Point(159, 65);
-            this.numericUpDownBalanceCost.Maximum = new decimal(new int[] {
-            1410065407,
-            2,
-            0,
-            0});
-            this.numericUpDownBalanceCost.Name = "numericUpDownBalanceCost";
-            this.numericUpDownBalanceCost.Size = new System.Drawing.Size(318, 20);
-            this.numericUpDownBalanceCost.TabIndex = 7;
-            this.numericUpDownBalanceCost.ThousandsSeparator = true;
-            // 
-            // numericUpDownCadastralCost
-            // 
-            this.numericUpDownCadastralCost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownCadastralCost.DecimalPlaces = 2;
-            this.numericUpDownCadastralCost.Location = new System.Drawing.Point(159, 36);
-            this.numericUpDownCadastralCost.Maximum = new decimal(new int[] {
-            1410065407,
-            2,
-            0,
-            0});
-            this.numericUpDownCadastralCost.Name = "numericUpDownCadastralCost";
-            this.numericUpDownCadastralCost.Size = new System.Drawing.Size(318, 20);
-            this.numericUpDownCadastralCost.TabIndex = 6;
-            this.numericUpDownCadastralCost.ThousandsSeparator = true;
-            // 
-            // numericUpDownLivingArea
-            // 
-            this.numericUpDownLivingArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownLivingArea.DecimalPlaces = 3;
-            this.numericUpDownLivingArea.Location = new System.Drawing.Point(163, 47);
-            this.numericUpDownLivingArea.Maximum = new decimal(new int[] {
-            9999,
-            0,
-            0,
-            0});
-            this.numericUpDownLivingArea.Name = "numericUpDownLivingArea";
-            this.numericUpDownLivingArea.Size = new System.Drawing.Size(319, 20);
-            this.numericUpDownLivingArea.TabIndex = 11;
-            this.numericUpDownLivingArea.ThousandsSeparator = true;
-            // 
-            // numericUpDownTotalArea
-            // 
-            this.numericUpDownTotalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownTotalArea.DecimalPlaces = 3;
-            this.numericUpDownTotalArea.Location = new System.Drawing.Point(163, 18);
-            this.numericUpDownTotalArea.Maximum = new decimal(new int[] {
-            9999,
-            0,
-            0,
-            0});
-            this.numericUpDownTotalArea.Name = "numericUpDownTotalArea";
-            this.numericUpDownTotalArea.Size = new System.Drawing.Size(319, 20);
-            this.numericUpDownTotalArea.TabIndex = 10;
-            this.numericUpDownTotalArea.ThousandsSeparator = true;
-            // 
-            // numericUpDownNumBeds
-            // 
-            this.numericUpDownNumBeds.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownNumBeds.Location = new System.Drawing.Point(159, 94);
-            this.numericUpDownNumBeds.Maximum = new decimal(new int[] {
-            255,
-            0,
-            0,
-            0});
-            this.numericUpDownNumBeds.Name = "numericUpDownNumBeds";
-            this.numericUpDownNumBeds.Size = new System.Drawing.Size(318, 20);
-            this.numericUpDownNumBeds.TabIndex = 8;
-            // 
-            // checkBoxForOrphans
-            // 
-            this.checkBoxForOrphans.AutoSize = true;
-            this.checkBoxForOrphans.Location = new System.Drawing.Point(19, 19);
-            this.checkBoxForOrphans.Name = "checkBoxForOrphans";
-            this.checkBoxForOrphans.Size = new System.Drawing.Size(173, 17);
-            this.checkBoxForOrphans.TabIndex = 12;
-            this.checkBoxForOrphans.Text = "Приобретено детям-сиротам";
-            this.checkBoxForOrphans.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxAcceptByExchange
-            // 
-            this.checkBoxAcceptByExchange.AutoSize = true;
-            this.checkBoxAcceptByExchange.Location = new System.Drawing.Point(19, 48);
-            this.checkBoxAcceptByExchange.Name = "checkBoxAcceptByExchange";
-            this.checkBoxAcceptByExchange.Size = new System.Drawing.Size(113, 17);
-            this.checkBoxAcceptByExchange.TabIndex = 14;
-            this.checkBoxAcceptByExchange.Text = "Принято по мене";
-            this.checkBoxAcceptByExchange.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxAcceptByDonation
-            // 
-            this.checkBoxAcceptByDonation.AutoSize = true;
-            this.checkBoxAcceptByDonation.Location = new System.Drawing.Point(222, 19);
-            this.checkBoxAcceptByDonation.Name = "checkBoxAcceptByDonation";
-            this.checkBoxAcceptByDonation.Size = new System.Drawing.Size(131, 17);
-            this.checkBoxAcceptByDonation.TabIndex = 13;
-            this.checkBoxAcceptByDonation.Text = "Принято по дарению";
-            this.checkBoxAcceptByDonation.UseVisualStyleBackColor = true;
-            // 
-            // checkBoxAcceptByOther
-            // 
-            this.checkBoxAcceptByOther.AutoSize = true;
-            this.checkBoxAcceptByOther.Location = new System.Drawing.Point(222, 48);
-            this.checkBoxAcceptByOther.Name = "checkBoxAcceptByOther";
-            this.checkBoxAcceptByOther.Size = new System.Drawing.Size(120, 17);
-            this.checkBoxAcceptByOther.TabIndex = 15;
-            this.checkBoxAcceptByOther.Text = "Прочее основание";
-            this.checkBoxAcceptByOther.UseVisualStyleBackColor = true;
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(10, 10);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(39, 13);
-            this.label19.Text = "Улица";
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(10, 39);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(70, 13);
-            this.label20.Text = "Номер дома";
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(10, 97);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(33, 13);
-            this.label21.Text = "Этаж";
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(16, 68);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(125, 13);
-            this.label22.Text = "Балансовая стоимость";
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(16, 10);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(110, 13);
-            this.label23.Text = "Кадастровый номер";
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(16, 39);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(130, 13);
-            this.label24.Text = "Кадастровая стоимость";
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(16, 49);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(42, 13);
-            this.label25.Text = "Жилая";
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(16, 20);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(42, 13);
-            this.label26.Text = "Общая";
-            // 
-            // label27
-            // 
-            this.label27.AutoSize = true;
-            this.label27.Location = new System.Drawing.Point(16, 97);
-            this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(127, 13);
-            this.label27.Text = "Количество койко-мест";
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(10, 126);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(88, 13);
-            this.label28.Text = "Вид помещения";
-            // 
-            // label29
-            // 
-            this.label29.AutoSize = true;
-            this.label29.Location = new System.Drawing.Point(10, 97);
-            this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(53, 13);
-            this.label29.Text = "Комнаты";
-            // 
-            // label39
-            // 
-            this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(16, 126);
-            this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(107, 13);
-            this.label39.Text = "Текущее состояние";
-            // 
-            // label38
-            // 
-            this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(16, 155);
-            this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(107, 13);
-            this.label38.Text = "Текущий тип найма";
-            // 
-            // textBoxHouse
-            // 
-            this.comboBoxHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxHouse.Location = new System.Drawing.Point(157, 36);
-            this.comboBoxHouse.Name = "textBoxHouse";
-            this.comboBoxHouse.DropDownStyle = ComboBoxStyle.DropDownList;
-            this.comboBoxHouse.Size = new System.Drawing.Size(319, 20);
-            this.comboBoxHouse.TabIndex = 1;
-            // 
-            // comboBoxStreet
-            // 
-            this.comboBoxStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxStreet.Location = new System.Drawing.Point(157, 7);
-            this.comboBoxStreet.Name = "comboBoxStreet";
-            this.comboBoxStreet.DropDownStyle = ComboBoxStyle.DropDown;
-            this.comboBoxStreet.Size = new System.Drawing.Size(319, 20);
-            this.comboBoxStreet.TabIndex = 0;
-            // 
-            // textBoxPremisesNumber
-            // 
-            this.textBoxPremisesNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxPremisesNumber.Location = new System.Drawing.Point(157, 65);
-            this.textBoxPremisesNumber.Name = "textBoxPremisesNumber";
-            this.textBoxPremisesNumber.Size = new System.Drawing.Size(319, 20);
-            this.textBoxPremisesNumber.TabIndex = 2;
-            this.textBoxPremisesNumber.MaxLength = 25;
-            // 
-            // textBoxDescription
-            // 
-            this.textBoxDescription.Dock = DockStyle.Fill;
-            this.textBoxDescription.MaxLength = 65535;
-            this.textBoxDescription.Multiline = true;
-            this.textBoxDescription.Name = "textBoxDescription";
-            this.textBoxDescription.TabIndex = 17;
+            this.numericUpDownNumRooms.Name = "numericUpDownNumRooms";
+            this.numericUpDownNumRooms.Size = new System.Drawing.Size(212, 20);
+            this.numericUpDownNumRooms.TabIndex = 5;
+            this.numericUpDownNumRooms.ValueChanged += new System.EventHandler(this.numericUpDownNumRooms_ValueChanged);
             // 
             // comboBoxPremisesType
             // 
@@ -1899,73 +1642,459 @@ namespace Registry.Viewport
             this.comboBoxPremisesType.Name = "comboBoxPremisesType";
             this.comboBoxPremisesType.Size = new System.Drawing.Size(143, 21);
             this.comboBoxPremisesType.TabIndex = 2;
+            this.comboBoxPremisesType.SelectedIndexChanged += new System.EventHandler(this.comboBoxPremisesType_SelectedIndexChanged);
+            // 
+            // textBoxPremisesNumber
+            // 
+            this.textBoxPremisesNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxPremisesNumber.Location = new System.Drawing.Point(157, 65);
+            this.textBoxPremisesNumber.MaxLength = 25;
+            this.textBoxPremisesNumber.Name = "textBoxPremisesNumber";
+            this.textBoxPremisesNumber.Size = new System.Drawing.Size(212, 20);
+            this.textBoxPremisesNumber.TabIndex = 3;
+            this.textBoxPremisesNumber.TextChanged += new System.EventHandler(this.textBoxPremisesNumber_TextChanged);
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Location = new System.Drawing.Point(10, 154);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(127, 13);
+            this.label27.TabIndex = 4;
+            this.label27.Text = "Количество койко-мест";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(10, 97);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(33, 13);
+            this.label21.TabIndex = 6;
+            this.label21.Text = "Этаж";
+            // 
+            // numericUpDownNumBeds
+            // 
+            this.numericUpDownNumBeds.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownNumBeds.Location = new System.Drawing.Point(157, 152);
+            this.numericUpDownNumBeds.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDownNumBeds.Name = "numericUpDownNumBeds";
+            this.numericUpDownNumBeds.Size = new System.Drawing.Size(212, 20);
+            this.numericUpDownNumBeds.TabIndex = 6;
+            this.numericUpDownNumBeds.ValueChanged += new System.EventHandler(this.numericUpDownNumBeds_ValueChanged);
+            // 
+            // numericUpDownFloor
+            // 
+            this.numericUpDownFloor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownFloor.Location = new System.Drawing.Point(157, 94);
+            this.numericUpDownFloor.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
+            this.numericUpDownFloor.Name = "numericUpDownFloor";
+            this.numericUpDownFloor.Size = new System.Drawing.Size(212, 20);
+            this.numericUpDownFloor.TabIndex = 4;
+            this.numericUpDownFloor.ValueChanged += new System.EventHandler(this.numericUpDownFloor_ValueChanged);
+            // 
+            // comboBoxStreet
+            // 
+            this.comboBoxStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxStreet.Location = new System.Drawing.Point(157, 7);
+            this.comboBoxStreet.Name = "comboBoxStreet";
+            this.comboBoxStreet.Size = new System.Drawing.Size(212, 21);
+            this.comboBoxStreet.TabIndex = 0;
+            this.comboBoxStreet.SelectedIndexChanged += new System.EventHandler(this.comboBoxStreet_SelectedIndexChanged);
+            this.comboBoxStreet.DropDownClosed += new System.EventHandler(this.comboBoxStreet_DropDownClosed);
+            this.comboBoxStreet.VisibleChanged += new System.EventHandler(this.comboBoxStreet_VisibleChanged);
+            this.comboBoxStreet.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxStreet_KeyUp);
+            this.comboBoxStreet.Leave += new System.EventHandler(this.comboBoxStreet_Leave);
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(10, 39);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(70, 13);
+            this.label20.TabIndex = 7;
+            this.label20.Text = "Номер дома";
+            // 
+            // comboBoxHouse
+            // 
+            this.comboBoxHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxHouse.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxHouse.Location = new System.Drawing.Point(157, 36);
+            this.comboBoxHouse.Name = "comboBoxHouse";
+            this.comboBoxHouse.Size = new System.Drawing.Size(212, 21);
+            this.comboBoxHouse.TabIndex = 1;
+            this.comboBoxHouse.SelectedIndexChanged += new System.EventHandler(this.comboBoxHouse_SelectedIndexChanged);
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(10, 10);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(39, 13);
+            this.label19.TabIndex = 8;
+            this.label19.Text = "Улица";
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.comboBoxPremisesKind);
+            this.panel4.Controls.Add(this.label28);
+            this.panel4.Controls.Add(this.label39);
+            this.panel4.Controls.Add(this.comboBoxState);
+            this.panel4.Controls.Add(this.label38);
+            this.panel4.Controls.Add(this.comboBoxCurrentFundType);
+            this.panel4.Controls.Add(this.numericUpDownBalanceCost);
+            this.panel4.Controls.Add(this.label22);
+            this.panel4.Controls.Add(this.textBoxCadastralNum);
+            this.panel4.Controls.Add(this.numericUpDownCadastralCost);
+            this.panel4.Controls.Add(this.label23);
+            this.panel4.Controls.Add(this.label24);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel4.Location = new System.Drawing.Point(384, 3);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(375, 179);
+            this.panel4.TabIndex = 2;
             // 
             // comboBoxPremisesKind
             // 
-            this.comboBoxPremisesKind.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxPremisesKind.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxPremisesKind.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPremisesKind.FormattingEnabled = true;
-            this.comboBoxPremisesKind.Location = new System.Drawing.Point(157, 123);
+            this.comboBoxPremisesKind.Location = new System.Drawing.Point(158, 94);
             this.comboBoxPremisesKind.Name = "comboBoxPremisesKind";
-            this.comboBoxPremisesKind.Size = new System.Drawing.Size(319, 21);
-            this.comboBoxPremisesKind.TabIndex = 4;
-            this.comboBoxPremisesKind.DropDownStyle = ComboBoxStyle.DropDownList;
+            this.comboBoxPremisesKind.Size = new System.Drawing.Size(213, 21);
+            this.comboBoxPremisesKind.TabIndex = 3;
+            this.comboBoxPremisesKind.SelectedIndexChanged += new System.EventHandler(this.comboBoxPremisesKind_SelectedIndexChanged);
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(16, 96);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(88, 13);
+            this.label28.TabIndex = 5;
+            this.label28.Text = "Вид помещения";
+            // 
+            // label39
+            // 
+            this.label39.AutoSize = true;
+            this.label39.Location = new System.Drawing.Point(16, 126);
+            this.label39.Name = "label39";
+            this.label39.Size = new System.Drawing.Size(108, 13);
+            this.label39.TabIndex = 0;
+            this.label39.Text = "Текущее состояние";
             // 
             // comboBoxState
             // 
-            this.comboBoxState.Anchor =
-                ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxState.FormattingEnabled = true;
             this.comboBoxState.Location = new System.Drawing.Point(159, 123);
             this.comboBoxState.Name = "comboBoxState";
-            this.comboBoxState.Size = new System.Drawing.Size(318, 21);
+            this.comboBoxState.Size = new System.Drawing.Size(212, 21);
+            this.comboBoxState.TabIndex = 4;
+            this.comboBoxState.SelectedIndexChanged += new System.EventHandler(this.comboBoxState_SelectedIndexChanged);
+            // 
+            // label38
+            // 
+            this.label38.AutoSize = true;
+            this.label38.Location = new System.Drawing.Point(16, 155);
+            this.label38.Name = "label38";
+            this.label38.Size = new System.Drawing.Size(107, 13);
+            this.label38.TabIndex = 2;
+            this.label38.Text = "Текущий тип найма";
             // 
             // comboBoxCurrentFundType
             // 
-            this.comboBoxCurrentFundType.Anchor = 
-                ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxCurrentFundType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxCurrentFundType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxCurrentFundType.Enabled = false;
             this.comboBoxCurrentFundType.FormattingEnabled = true;
             this.comboBoxCurrentFundType.Location = new System.Drawing.Point(159, 152);
             this.comboBoxCurrentFundType.Name = "comboBoxCurrentFundType";
-            this.comboBoxCurrentFundType.Size = new System.Drawing.Size(318, 21);
+            this.comboBoxCurrentFundType.Size = new System.Drawing.Size(212, 21);
+            this.comboBoxCurrentFundType.TabIndex = 5;
             // 
-            // maskedTextBoxCadastralNum
+            // numericUpDownBalanceCost
             // 
-            this.maskedTextBoxCadastralNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.maskedTextBoxCadastralNum.Location = new System.Drawing.Point(159, 7);
-            this.maskedTextBoxCadastralNum.Name = "maskedTextBoxCadastralNum";
-            this.maskedTextBoxCadastralNum.Size = new System.Drawing.Size(318, 20);
-            this.maskedTextBoxCadastralNum.TabIndex = 5;
-         
-            this.groupBox8.ResumeLayout(false);
-            this.groupBox9.ResumeLayout(false);
-            this.groupBox10.ResumeLayout(false);
-            this.groupBox11.ResumeLayout(false);
-            this.groupBox12.ResumeLayout(false);
+            this.numericUpDownBalanceCost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownBalanceCost.DecimalPlaces = 2;
+            this.numericUpDownBalanceCost.Location = new System.Drawing.Point(159, 65);
+            this.numericUpDownBalanceCost.Maximum = new decimal(new int[] {
+            1410065407,
+            2,
+            0,
+            0});
+            this.numericUpDownBalanceCost.Name = "numericUpDownBalanceCost";
+            this.numericUpDownBalanceCost.Size = new System.Drawing.Size(213, 20);
+            this.numericUpDownBalanceCost.TabIndex = 2;
+            this.numericUpDownBalanceCost.ThousandsSeparator = true;
+            this.numericUpDownBalanceCost.ValueChanged += new System.EventHandler(this.numericUpDownBalanceCost_ValueChanged);
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(16, 68);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(125, 13);
+            this.label22.TabIndex = 9;
+            this.label22.Text = "Балансовая стоимость";
+            // 
+            // textBoxCadastralNum
+            // 
+            this.textBoxCadastralNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCadastralNum.Location = new System.Drawing.Point(159, 7);
+            this.textBoxCadastralNum.MaxLength = 15;
+            this.textBoxCadastralNum.Name = "textBoxCadastralNum";
+            this.textBoxCadastralNum.Size = new System.Drawing.Size(212, 20);
+            this.textBoxCadastralNum.TabIndex = 0;
+            this.textBoxCadastralNum.TextChanged += new System.EventHandler(this.textBoxCadastralNum_TextChanged);
+            // 
+            // numericUpDownCadastralCost
+            // 
+            this.numericUpDownCadastralCost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownCadastralCost.DecimalPlaces = 2;
+            this.numericUpDownCadastralCost.Location = new System.Drawing.Point(159, 36);
+            this.numericUpDownCadastralCost.Maximum = new decimal(new int[] {
+            1410065407,
+            2,
+            0,
+            0});
+            this.numericUpDownCadastralCost.Name = "numericUpDownCadastralCost";
+            this.numericUpDownCadastralCost.Size = new System.Drawing.Size(213, 20);
+            this.numericUpDownCadastralCost.TabIndex = 1;
+            this.numericUpDownCadastralCost.ThousandsSeparator = true;
+            this.numericUpDownCadastralCost.ValueChanged += new System.EventHandler(this.numericUpDownCadastralCost_ValueChanged);
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(16, 10);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(110, 13);
+            this.label23.TabIndex = 10;
+            this.label23.Text = "Кадастровый номер";
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(16, 39);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(130, 13);
+            this.label24.TabIndex = 11;
+            this.label24.Text = "Кадастровая стоимость";
+            // 
+            // tableLayoutPanel5
+            // 
+            this.tableLayoutPanel5.ColumnCount = 1;
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel5.Controls.Add(this.groupBox11, 0, 0);
+            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 213);
+            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+            this.tableLayoutPanel5.RowCount = 1;
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(381, 104);
+            this.tableLayoutPanel5.TabIndex = 1;
+            // 
+            // groupBox11
+            // 
+            this.groupBox11.Controls.Add(this.numericUpDownHeight);
+            this.groupBox11.Controls.Add(this.label2);
+            this.groupBox11.Controls.Add(this.numericUpDownLivingArea);
+            this.groupBox11.Controls.Add(this.numericUpDownTotalArea);
+            this.groupBox11.Controls.Add(this.label25);
+            this.groupBox11.Controls.Add(this.label26);
+            this.groupBox11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox11.Location = new System.Drawing.Point(0, 0);
+            this.groupBox11.Margin = new System.Windows.Forms.Padding(0);
+            this.groupBox11.Name = "groupBox11";
+            this.groupBox11.Size = new System.Drawing.Size(381, 104);
+            this.groupBox11.TabIndex = 1;
+            this.groupBox11.TabStop = false;
+            this.groupBox11.Text = "Геометрия помещения";
+            // 
+            // numericUpDownHeight
+            // 
+            this.numericUpDownHeight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownHeight.DecimalPlaces = 2;
+            this.numericUpDownHeight.Location = new System.Drawing.Point(162, 76);
+            this.numericUpDownHeight.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numericUpDownHeight.Name = "numericUpDownHeight";
+            this.numericUpDownHeight.Size = new System.Drawing.Size(213, 20);
+            this.numericUpDownHeight.TabIndex = 2;
+            this.numericUpDownHeight.ThousandsSeparator = true;
+            this.numericUpDownHeight.ValueChanged += new System.EventHandler(this.numericUpDownHeight_ValueChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(15, 78);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(107, 13);
+            this.label2.TabIndex = 15;
+            this.label2.Text = "Высота помещения";
+            // 
+            // numericUpDownLivingArea
+            // 
+            this.numericUpDownLivingArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownLivingArea.DecimalPlaces = 3;
+            this.numericUpDownLivingArea.Location = new System.Drawing.Point(163, 47);
+            this.numericUpDownLivingArea.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numericUpDownLivingArea.Name = "numericUpDownLivingArea";
+            this.numericUpDownLivingArea.Size = new System.Drawing.Size(212, 20);
+            this.numericUpDownLivingArea.TabIndex = 1;
+            this.numericUpDownLivingArea.ThousandsSeparator = true;
+            this.numericUpDownLivingArea.ValueChanged += new System.EventHandler(this.numericUpDownLivingArea_ValueChanged);
+            // 
+            // numericUpDownTotalArea
+            // 
+            this.numericUpDownTotalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownTotalArea.DecimalPlaces = 3;
+            this.numericUpDownTotalArea.Location = new System.Drawing.Point(163, 18);
+            this.numericUpDownTotalArea.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numericUpDownTotalArea.Name = "numericUpDownTotalArea";
+            this.numericUpDownTotalArea.Size = new System.Drawing.Size(212, 20);
+            this.numericUpDownTotalArea.TabIndex = 0;
+            this.numericUpDownTotalArea.ThousandsSeparator = true;
+            this.numericUpDownTotalArea.ValueChanged += new System.EventHandler(this.numericUpDownTotalArea_ValueChanged);
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(16, 49);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(90, 13);
+            this.label25.TabIndex = 12;
+            this.label25.Text = "Жилая площадь";
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(16, 20);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(90, 13);
+            this.label26.TabIndex = 13;
+            this.label26.Text = "Общая площадь";
+            // 
+            // groupBoxRooms
+            // 
+            this.groupBoxRooms.Controls.Add(this.dataGridViewRooms);
+            this.groupBoxRooms.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxRooms.Location = new System.Drawing.Point(390, 213);
+            this.groupBoxRooms.Name = "groupBoxRooms";
+            this.tableLayoutPanel3.SetRowSpan(this.groupBoxRooms, 2);
+            this.groupBoxRooms.Size = new System.Drawing.Size(381, 204);
+            this.groupBoxRooms.TabIndex = 3;
+            this.groupBoxRooms.TabStop = false;
+            this.groupBoxRooms.Text = "Комнаты";
+            // 
+            // dataGridViewRooms
+            // 
+            this.dataGridViewRooms.AllowUserToAddRows = false;
+            this.dataGridViewRooms.AllowUserToDeleteRows = false;
+            this.dataGridViewRooms.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridViewRooms.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewRooms.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.sub_premises_num,
+            this.sub_premises_total_area});
+            this.dataGridViewRooms.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewRooms.Location = new System.Drawing.Point(3, 16);
+            this.dataGridViewRooms.Name = "dataGridViewRooms";
+            this.dataGridViewRooms.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewRooms.Size = new System.Drawing.Size(375, 185);
+            this.dataGridViewRooms.TabIndex = 0;
+            this.dataGridViewRooms.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewRooms_CellDoubleClick);
+            // 
+            // sub_premises_num
+            // 
+            this.sub_premises_num.HeaderText = "Номер";
+            this.sub_premises_num.MinimumWidth = 100;
+            this.sub_premises_num.Name = "sub_premises_num";
+            this.sub_premises_num.ReadOnly = true;
+            // 
+            // sub_premises_total_area
+            // 
+            this.sub_premises_total_area.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            dataGridViewCellStyle1.Format = "#0.0## м²";
+            this.sub_premises_total_area.DefaultCellStyle = dataGridViewCellStyle1;
+            this.sub_premises_total_area.HeaderText = "Общая площадь";
+            this.sub_premises_total_area.MinimumWidth = 100;
+            this.sub_premises_total_area.Name = "sub_premises_total_area";
+            this.sub_premises_total_area.ReadOnly = true;
+            // 
+            // PremisesViewport
+            // 
+            this.AutoScroll = true;
+            this.AutoScrollMinSize = new System.Drawing.Size(665, 520);
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ClientSize = new System.Drawing.Size(780, 598);
+            this.Controls.Add(this.tableLayoutPanel3);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Name = "PremisesViewport";
+            this.Padding = new System.Windows.Forms.Padding(3);
+            this.Text = "Помещение";
+            this.tableLayoutPanel3.ResumeLayout(false);
             this.groupBox13.ResumeLayout(false);
-            this.groupBoxRooms.ResumeLayout(false);
+            this.groupBox13.PerformLayout();
+            this.groupBox9.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRestrictions)).EndInit();
+            this.groupBox10.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOwnerships)).EndInit();
+            this.groupBox8.ResumeLayout(false);
+            this.tableLayoutPanel4.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNumRooms)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNumBeds)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloor)).EndInit();
             this.panel4.ResumeLayout(false);
             this.panel4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRestrictions)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOwnerships)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRooms)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloor)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceCost)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCadastralCost)).EndInit();
+            this.tableLayoutPanel5.ResumeLayout(false);
+            this.groupBox11.ResumeLayout(false);
+            this.groupBox11.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLivingArea)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalArea)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownNumBeds)).EndInit();
-            this.tableLayoutPanel4.ResumeLayout(false);
-            this.tableLayoutPanel5.ResumeLayout(false);
-            this.tableLayoutPanel3.ResumeLayout(false);
+            this.groupBoxRooms.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRooms)).EndInit();
+            this.ResumeLayout(false);
+
         }
     }
 }

@@ -1,0 +1,122 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{B2856AAD-D1D2-4E10-B597-5DB1CFA80A96}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Registry.Reporting</RootNamespace>
+    <AssemblyName>Reporting</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="VIBlend.WinForms.Controls, Version=10.1.0.0, Culture=neutral, PublicKeyToken=6feea38fef5ea0cf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\VIBlend\Windows Forms Controls v.10.1.0.0\VIBlend.WinForms.Controls.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="VIBlend.WinForms.Utilities, Version=10.1.0.0, Culture=neutral, PublicKeyToken=970a5af59bc48043, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\VIBlend\Windows Forms Controls v.10.1.0.0\VIBlend.WinForms.Utilities.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="ClaimsFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClaimsFilterForm.Designer.cs">
+      <DependentUpon>ClaimsFilterForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ClaimsReporters\ClaimsStatisticReporter.cs" />
+    <Compile Include="RegistryReporters\FullStatisticReporter.cs" />
+    <Compile Include="RegistryReporters\MunicipalPremisesReporter.cs" />
+    <Compile Include="RegistryReporters\PremisesByDonationReporter.cs" />
+    <Compile Include="RegistryReporters\PremisesByExchangeReporter.cs" />
+    <Compile Include="RegistryReporters\PremisesForOrphansReporter.cs" />
+    <Compile Include="RegistryReporters\CommercialFundReporter.cs" />
+    <Compile Include="RegistryReporters\OwnershipsReporter.cs" />
+    <Compile Include="RegistryReporters\ShortStatisticReporter.cs" />
+    <Compile Include="Reporter.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReporterException.cs" />
+    <Compile Include="ReporterFactory.cs" />
+    <Compile Include="ReporterType.cs" />
+    <Compile Include="ReportOutputStreamEventArgs.cs" />
+    <Compile Include="SelectRegionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SelectRegionsForm.Designer.cs">
+      <DependentUpon>SelectRegionsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RegistryReporters\SocialFundReporter.cs" />
+    <Compile Include="RegistryReporters\SpecialFundReporter.cs" />
+    <Compile Include="TenancyReporters\TenancyAgreementReporter.cs" />
+    <Compile Include="TenancyContractTypes.cs" />
+    <Compile Include="TenancyReporters\TenancyActReporter.cs" />
+    <Compile Include="TenancyReporters\TenancyContractCommercialReporter.cs" />
+    <Compile Include="TenancyReporters\TenancyContractSocialReporter.cs" />
+    <Compile Include="TenancyReporters\TenancyContractSpecial1711Reporter.cs" />
+    <Compile Include="TenancyReporters\TenancyContractSpecial1712Reporter.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DataModels\DataModels.csproj">
+      <Project>{762222B2-0E8F-4759-A673-FCC0C5F35B8C}</Project>
+      <Name>DataModels</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Entities\Entities.csproj">
+      <Project>{1D0E98AA-C11E-4C1D-AE3F-346FF7446DF4}</Project>
+      <Name>Entities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Settings\Settings.csproj">
+      <Project>{A81032B6-05F8-4D34-8D01-4A268743E2D5}</Project>
+      <Name>Settings</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="ClaimsFilterForm.resx">
+      <DependentUpon>ClaimsFilterForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SelectRegionsForm.resx">
+      <DependentUpon>SelectRegionsForm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

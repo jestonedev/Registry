@@ -13,8 +13,6 @@ namespace Registry.SearchForms
 {
     internal partial class ExtendedSearchTenancyForm : SearchForm
     {
-        private enum ConditionType { BuildingCondition, PremisesCondition };
-
         KladrStreetsDataModel kladr = null;
         KladrRegionsDataModel regions = null;
         RentTypesDataModel rentTypes = null;
@@ -77,13 +75,7 @@ namespace Registry.SearchForms
         internal override string GetFilter()
         {
             string filter = "";
-            List<int> included_contracts = null;
-            if (checkBoxIDTenancyEnable.Checked)
-            {
-                if (included_contracts == null)
-                    included_contracts = new List<int>();
-                included_contracts.Add(Convert.ToInt32(numericUpDownIDTenancy.Value));
-            }
+            List<int> included_processes = null;
             if (checkBoxContractNumEnable.Checked)
             {
                 if (filter.Trim() != "")
@@ -107,62 +99,6 @@ namespace Registry.SearchForms
                 if (filter.Trim() != "")
                     filter += " AND ";
                 filter += String.Format("id_rent_type = {0}", comboBoxRentType.SelectedValue.ToString());
-            }
-            if (checkBoxTenantSNPEnable.Checked)
-            {
-                string[] snp = textBoxTenantSNP.Text.Trim().Replace("'", "").Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                List<int> contract_ids = ContractsIDBySNP(snp, (row) => { return row.Field<int>("id_kinship") == 1; });
-                contract_ids = contract_ids.Distinct().ToList();
-                if (included_contracts != null)
-                    included_contracts = included_contracts.Intersect(contract_ids).ToList();
-                else
-                    included_contracts = contract_ids;
-            }
-            if (checkBoxPersonSNPEnable.Checked)
-            {
-                string[] snp = textBoxTenantSNP.Text.Trim().Replace("'", "").Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                List<int> contract_ids = ContractsIDBySNP(snp, (row) => { return true; });
-                contract_ids = contract_ids.Distinct().ToList();
-                if (included_contracts != null)
-                    included_contracts = included_contracts.Intersect(contract_ids).ToList();
-                else
-                    included_contracts = contract_ids;
-            }
-            if (checkBoxRegionEnable.Checked && (comboBoxRegion.SelectedValue != null))
-            {
-                List<int> contract_ids = SearchContractsByCondition((row) =>
-                    { return row.Field<string>("id_street").StartsWith(comboBoxRegion.SelectedValue.ToString()); }, ConditionType.BuildingCondition);
-                if (included_contracts != null)
-                    included_contracts = included_contracts.Intersect(contract_ids).ToList();
-                else
-                    included_contracts = contract_ids;
-            }
-            if (checkBoxStreetEnable.Checked && (comboBoxStreet.SelectedValue != null))
-            {
-                List<int> contract_ids = SearchContractsByCondition((row) => { return row.Field<string>("id_street") == comboBoxStreet.SelectedValue.ToString(); },
-                    ConditionType.BuildingCondition);
-                if (included_contracts != null)
-                    included_contracts = included_contracts.Intersect(contract_ids).ToList();
-                else
-                    included_contracts = contract_ids;
-            }
-            if (checkBoxHouseEnable.Checked)
-            {
-                List<int> contract_ids = SearchContractsByCondition(
-                    (row) => { return row.Field<string>("house") == textBoxHouse.Text.Trim().Replace("'", ""); }, ConditionType.BuildingCondition);
-                if (included_contracts != null)
-                    included_contracts = included_contracts.Intersect(contract_ids).ToList();
-                else
-                    included_contracts = contract_ids;
-            }
-            if (checkBoxPremisesNumEnable.Checked)
-            {
-                List<int> contract_ids = SearchContractsByCondition(
-                    (row) => { return row.Field<string>("premises_num") == textBoxPremisesNum.Text.Trim().Replace("'", ""); }, ConditionType.PremisesCondition);
-                if (included_contracts != null)
-                    included_contracts = included_contracts.Intersect(contract_ids).ToList();
-                else
-                    included_contracts = contract_ids;
             }
             if (checkBoxRegDateEnable.Checked)
             {
@@ -197,7 +133,7 @@ namespace Registry.SearchForms
                 if (filter.Trim() != "")
                     filter += " AND ";
                 filter += String.Format("residence_warrant_date {0} '{1}'",
-                    ConvertDisplayEqExprToSql(comboBoxResidenceWarrDateExpr.SelectedItem.ToString()), 
+                    ConvertDisplayEqExprToSql(comboBoxResidenceWarrDateExpr.SelectedItem.ToString()),
                     dateTimePickerResidenceWarrDate.Value.ToString("dd.MM.yyyy"));
             }
             if (checkBoxKumiOrderDateEnable.Checked)
@@ -208,41 +144,62 @@ namespace Registry.SearchForms
                     ConvertDisplayEqExprToSql(comboBoxKumiOrderDateExpr.SelectedItem.ToString()),
                     dateTimePickerKumiOrderDate.Value.ToString("dd.MM.yyyy"));
             }
-            if (included_contracts != null)
+            if (checkBoxIDTenancyEnable.Checked)
+            {
+                if (included_processes == null)
+                    included_processes = new List<int>();
+                included_processes.Add(Convert.ToInt32(numericUpDownIDTenancy.Value));
+            }
+            if (checkBoxTenantSNPEnable.Checked)
+            {
+                string[] snp = textBoxTenantSNP.Text.Trim().Replace("'", "").Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+                List<int> processes_ids = DataModelHelper.TenancyProcessIDsBySNP(snp, (row) => { return row.Field<int>("id_kinship") == 1; });
+                included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
+            }
+            if (checkBoxPersonSNPEnable.Checked)
+            {
+                string[] snp = textBoxTenantSNP.Text.Trim().Replace("'", "").Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+                List<int> processes_ids = DataModelHelper.TenancyProcessIDsBySNP(snp, (row) => { return true; });
+                included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
+            }
+            if (checkBoxRegionEnable.Checked && (comboBoxRegion.SelectedValue != null))
+            {
+                List<int> processes_ids = DataModelHelper.TenancyProcessIDsByCondition(
+                    (row) => { return row.Field<string>("id_street").StartsWith(comboBoxRegion.SelectedValue.ToString()); }, 
+                    DataModelHelper.ConditionType.BuildingCondition);
+                included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
+            }
+            if (checkBoxStreetEnable.Checked && (comboBoxStreet.SelectedValue != null))
+            {
+                List<int> processes_ids = DataModelHelper.TenancyProcessIDsByCondition(
+                    (row) => { return row.Field<string>("id_street") == comboBoxStreet.SelectedValue.ToString(); },
+                    DataModelHelper.ConditionType.BuildingCondition);
+                included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
+            }
+            if (checkBoxHouseEnable.Checked)
+            {
+                List<int> processes_ids = DataModelHelper.TenancyProcessIDsByCondition(
+                    (row) => { return row.Field<string>("house") == textBoxHouse.Text.Trim().Replace("'", ""); }, 
+                    DataModelHelper.ConditionType.BuildingCondition);
+                included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
+            }
+            if (checkBoxPremisesNumEnable.Checked)
+            {
+                List<int> processes_ids = DataModelHelper.TenancyProcessIDsByCondition(
+                    (row) => { return row.Field<string>("premises_num") == textBoxPremisesNum.Text.Trim().Replace("'", ""); }, 
+                    DataModelHelper.ConditionType.PremisesCondition);
+                included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
+            }
+            if (included_processes != null)
             {
                 if (filter.Trim() != "")
                     filter += " AND ";
-                filter += "id_contract IN (0";
-                for (int i = 0; i < included_contracts.Count; i++)
-                    filter += included_contracts[i].ToString() + ",";
+                filter += "id_process IN (0";
+                for (int i = 0; i < included_processes.Count; i++)
+                    filter += included_processes[i].ToString() + ",";
                 filter = filter.TrimEnd(new char[] { ',' }) + ")";
             }
             return filter;
-        }
-
-        private List<int> ContractsIDBySNP(string[] snp, Func<DataRow, bool> condition)
-        {
-            DataTable persons = PersonsDataModel.GetInstance().Select();
-            return
-            (from persons_row in persons.AsEnumerable()
-             where ((snp.Count() == 1) ? persons_row.Field<string>("surname") == snp[0] :
-                    (snp.Count() == 2) ? persons_row.Field<string>("surname") == snp[0] && persons_row.Field<string>("name") == snp[1] :
-                    (snp.Count() == 3) ? persons_row.Field<string>("surname") == snp[0] && persons_row.Field<string>("name") == snp[1] &&
-                    persons_row.Field<string>("patronymic") == snp[2] : false) && condition(persons_row)
-             select persons_row.Field<int>("id_contract")).ToList();
-        }
-
-        private string SNPArrayToFilter(string[] snp)
-        {
-            switch (snp.Count())
-            {
-                case 0: return "surname = '' AND name = '' AND patronymic = ''";
-                case 1: return String.Format("surname LIKE '{0}%'", snp[0]);
-                case 2: return String.Format("surname LIKE '{0}%' AND name LIKE '{1}%'", snp[0], snp[1]);
-                case 3: return String.Format("surname LIKE '{0}%' AND name LIKE '{1}%' AND patronymic LIKE '{2}%'", snp[0], snp[1], snp[2]);
-                default:
-                    throw new ViewportException("Ошибка при фильтрации по имени участника найма");
-            }
         }
 
         private string ConvertDisplayEqExprToSql(string expr)
@@ -255,39 +212,6 @@ namespace Registry.SearchForms
                 default:
                     throw new ViewportException("Неизвестный знак сравнения дат");
             }
-        }
-
-        private List<int> SearchContractsByCondition(Func<DataRow, bool> condition, ConditionType conditionType)
-        {
-            DataTable buildings = BuildingsDataModel.GetInstance().Select();
-            DataTable premises = PremisesDataModel.GetInstance().Select();
-            DataTable sub_premises = SubPremisesDataModel.GetInstance().Select();
-            DataTable tenancy_buildings_assoc = TenancyBuildingsAssocDataModel.GetInstance().Select();
-            DataTable tenancy_premises_assoc = TenancyPremisesAssocDataModel.GetInstance().Select();
-            DataTable tenancy_sub_premises_assoc = TenancySubPremisesAssocDataModel.GetInstance().Select();
-            var tenancy_buildings = from tenancy_buildings_row in tenancy_buildings_assoc.AsEnumerable()
-                                    join buildings_row in buildings.AsEnumerable()
-                                    on tenancy_buildings_row.Field<int>("id_building") equals buildings_row.Field<int>("id_building")
-                                    where
-                                    (conditionType == ConditionType.PremisesCondition) ? false : condition(buildings_row)
-                                    select tenancy_buildings_row.Field<int>("id_contract");
-            var tenancy_premises = from tenancy_premises_row in tenancy_premises_assoc.AsEnumerable()
-                                   join premises_row in premises.AsEnumerable()
-                                   on tenancy_premises_row.Field<int>("id_premises") equals premises_row.Field<int>("id_premises")
-                                   join buildings_row in buildings.AsEnumerable()
-                                   on premises_row.Field<int>("id_building") equals buildings_row.Field<int>("id_building")
-                                   where (conditionType == ConditionType.PremisesCondition) ? condition(premises_row) : condition(buildings_row)
-                                   select tenancy_premises_row.Field<int>("id_contract");
-            var tenancy_sub_premises = from tenancy_sub_premises_row in tenancy_sub_premises_assoc.AsEnumerable()
-                                       join sub_premises_row in sub_premises.AsEnumerable()
-                                       on tenancy_sub_premises_row.Field<int>("id_sub_premises") equals sub_premises_row.Field<int>("id_sub_premises")
-                                       join premises_row in premises.AsEnumerable()
-                                       on sub_premises_row.Field<int>("id_premises") equals premises_row.Field<int>("id_premises")
-                                       join buildings_row in buildings.AsEnumerable()
-                                       on premises_row.Field<int>("id_building") equals buildings_row.Field<int>("id_building")
-                                       where (conditionType == ConditionType.PremisesCondition) ? condition(premises_row) : condition(buildings_row)
-                                       select tenancy_sub_premises_row.Field<int>("id_contract");
-            return tenancy_buildings.Union(tenancy_premises).Union(tenancy_sub_premises).ToList();
         }
 
         private void checkBoxIDTenancyEnable_CheckedChanged(object sender, EventArgs e)

@@ -13,11 +13,10 @@ namespace Registry.Viewport
         void EditingStateUpdate();
         void RibbonTabsStateUpdate();
         void RelationsStateUpdate();
-        void HousingRefBooksStateUpdate();
+        void TenancyRefsStateUpdate();
         void StatusBarStateUpdate();
         void ForceCloseDetachedViewports();
         void AddViewport(Viewport viewport);
-        void SwitchToViewport(Viewport viewport);
         void SwitchToPreviousViewport();
     }
 }

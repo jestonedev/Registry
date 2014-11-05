@@ -2,3 +2,12 @@ D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исхо
 D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\CustomCtrls\bin\Release\CustomControls.pdb
 D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\CustomCtrls\obj\Release\CustomControls.dll
 D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\CustomCtrls\obj\Release\CustomControls.pdb
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\CustomCtrls\bin\Release\CustomControls.dll
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\CustomCtrls\bin\Release\CustomControls.pdb
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\CustomCtrls\obj\Release\CustomControls.dll
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\CustomCtrls\obj\Release\CustomControls.pdb
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\CustomCtrls\obj\Release\CustomCtrls.csprojResolveAssemblyReference.cache
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\CustomCtrls\bin\Release\CustomControls.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\CustomCtrls\bin\Release\CustomControls.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\CustomCtrls\obj\Release\CustomControls.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\CustomCtrls\obj\Release\CustomControls.pdb

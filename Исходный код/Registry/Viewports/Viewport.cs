@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using Registry.Entities;
+using WeifenLuo.WinFormsUI.Docking;
+using Registry.Reporting;
 
 namespace Registry.Viewport
 {
-    public class Viewport: System.Windows.Forms.TabPage, IMenuController
+    public class Viewport: DockContent, IMenuController
     {
         protected readonly IMenuCallback menuCallback;
         private bool selected_ = false;
@@ -17,6 +19,14 @@ namespace Registry.Viewport
         public DataRow ParentRow { get; set; }
         public ParentTypeEnum ParentType { get; set; }
 
+        protected Viewport(): this(null)
+        {
+            InitializeComponent();
+        }
+
+        private void InitializeComponent()
+        {
+        }
         protected Viewport(IMenuCallback menuCallback)
         {
             StaticFilter = "";
@@ -26,10 +36,10 @@ namespace Registry.Viewport
             this.menuCallback = menuCallback;
         }
 
-        public virtual void Close()
+        public new virtual void Close()
         {
             menuCallback.SwitchToPreviousViewport();
-            Dispose();
+            base.Close();
         }
 
         public virtual int GetRecordCount()
@@ -167,21 +177,20 @@ namespace Registry.Viewport
             throw new ViewportException("Не реализовано");
         }
 
-        public virtual void ShowPersons()
+        public virtual void ShowTenancyPersons()
         {
             throw new ViewportException("Не реализовано");
         }
 
-        public virtual void ShowContractReasons()
+        public virtual void ShowTenancyReasons()
         {
             throw new ViewportException("Не реализовано");
         }
 
-        public virtual void ShowAgreements()
+        public virtual void ShowTenancyAgreements()
         {
             throw new ViewportException("Не реализовано");
         }
-
 
         public virtual void ShowTenancyBuildings()
         {
@@ -191,6 +200,28 @@ namespace Registry.Viewport
         public virtual void ShowTenancyPremises()
         {
             throw new ViewportException("Не реализовано");
+        }
+
+        public virtual void ShowClaims()
+        {
+           throw new ViewportException("Не реализовано");
+        }
+
+        public virtual void ShowClaimStates()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+        protected virtual Viewport ShowAssocViewport(IMenuCallback menuCallback, ViewportType viewportType, string staticFilter, DataRow parentRow, ParentTypeEnum parentType)
+        {
+            Viewport viewport = ViewportFactory.CreateViewport(menuCallback, viewportType);
+            viewport.StaticFilter = staticFilter;
+            viewport.ParentRow = parentRow;
+            viewport.ParentType = parentType;
+            if ((viewport as IMenuController).CanLoadData())
+                (viewport as IMenuController).LoadData();
+            menuCallback.AddViewport(viewport);
+            return viewport;
         }
 
         public virtual void ClearSearch()
@@ -228,32 +259,7 @@ namespace Registry.Viewport
             return false;
         }
 
-        public virtual bool CanDataRefresh()
-        {
-            return false;
-        }
-
         public virtual bool CanSearchRecord()
-        {
-            return false;
-        }
-
-        public virtual bool CanShowPremises()
-        {
-            return false;
-        }
-
-        public virtual bool CanShowSubPremises()
-        {
-            return false;
-        }
-
-        public virtual bool CanShowRestrictions()
-        {
-            return false;
-        }
-
-        public virtual bool CanShowOwnerships()
         {
             return false;
         }
@@ -308,22 +314,32 @@ namespace Registry.Viewport
             return false;
         }
 
-        public virtual bool HasAssocPersons()
+        public virtual bool HasAssocTenancyPersons()
         {
             return false;
         }
 
-        public virtual bool HasAssocContractReasons()
+        public virtual bool HasAssocTenancyReasons()
         {
             return false;
         }
 
-        public virtual bool HasAssocAgreements()
+        public virtual bool HasAssocTenancyAgreements()
         {
             return false;
         }
 
         public virtual bool HasAssocTenancyObjects()
+        {
+            return false;
+        }
+
+        public virtual bool HasAssocClaims()
+        {
+            return false;
+        }
+
+        public virtual bool HasAssocClaimStates()
         {
             return false;
         }
@@ -355,7 +371,7 @@ namespace Registry.Viewport
 
         public virtual bool ViewportDetached()
         {
-            return false;
+            return ((ParentRow != null) && ((ParentRow.RowState == DataRowState.Detached) || (ParentRow.RowState == DataRowState.Deleted)));
         }
 
         public bool Selected
@@ -369,5 +385,46 @@ namespace Registry.Viewport
                 selected_ = value;
             }
         }
+
+        public virtual bool HasTenancyContract17xReport()
+        {
+            return false;
+        }
+
+        public virtual bool HasTenancyContractReport()
+        {
+            return false;
+        }
+
+        public virtual bool HasTenancyActReport()
+        {
+            return false;
+        }
+
+        public virtual bool HasTenancyAgreementReport()
+        {
+            return false;
+        }
+
+        public virtual void TenancyContract17xReportGenerate(TenancyContractTypes tenancyContractType)
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+        public virtual void TenancyContractReportGenerate()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+        public virtual void TenancyActReportGenerate()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+        public virtual void TenancyAgreementReportGenerate()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
     }
 }

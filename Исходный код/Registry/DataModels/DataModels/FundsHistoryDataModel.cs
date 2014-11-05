@@ -50,7 +50,7 @@ namespace Registry.DataModels
             return dataModel;
         }
 
-        public int Insert(Entities.FundHistory fundHistory, ParentTypeEnum ParentType, int id_parent)
+        public int Insert(FundHistory fundHistory, ParentTypeEnum ParentType, int id_parent)
         {
             DBConnection connection = new DBConnection();
             DbCommand command = connection.CreateCommand();
@@ -64,9 +64,9 @@ namespace Registry.DataModels
             command.Parameters.Add(connection.CreateParameter<string>("include_restriction_number", fundHistory.include_restriction_number));
             command.Parameters.Add(connection.CreateParameter<DateTime?>("include_restriction_date", fundHistory.include_restriction_date));
             command.Parameters.Add(connection.CreateParameter<string>("include_restriction_description", fundHistory.include_restriction_description));
-            command.Parameters.Add(connection.CreateParameter<string>("exclude_restriction_number", fundHistory.include_restriction_number));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("exclude_restriction_date", fundHistory.include_restriction_date));
-            command.Parameters.Add(connection.CreateParameter<string>("exclude_restriction_description", fundHistory.include_restriction_description));
+            command.Parameters.Add(connection.CreateParameter<string>("exclude_restriction_number", fundHistory.exclude_restriction_number));
+            command.Parameters.Add(connection.CreateParameter<DateTime?>("exclude_restriction_date", fundHistory.exclude_restriction_date));
+            command.Parameters.Add(connection.CreateParameter<string>("exclude_restriction_description", fundHistory.exclude_restriction_description));
             command.Parameters.Add(connection.CreateParameter<string>("description", fundHistory.description));
 
             DbCommand command_assoc = connection.CreateCommand();
@@ -110,7 +110,7 @@ namespace Registry.DataModels
             }
         }
 
-        public int Update(Entities.FundHistory fundHistory)
+        public int Update(FundHistory fundHistory)
         {
             DBConnection connection = new DBConnection();
             DbCommand command = connection.CreateCommand();
@@ -122,9 +122,9 @@ namespace Registry.DataModels
             command.Parameters.Add(connection.CreateParameter<string>("include_restriction_number", fundHistory.include_restriction_number));
             command.Parameters.Add(connection.CreateParameter<DateTime?>("include_restriction_date", fundHistory.include_restriction_date));
             command.Parameters.Add(connection.CreateParameter<string>("include_restriction_description", fundHistory.include_restriction_description));
-            command.Parameters.Add(connection.CreateParameter<string>("exclude_restriction_number", fundHistory.include_restriction_number));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("exclude_restriction_date", fundHistory.include_restriction_date));
-            command.Parameters.Add(connection.CreateParameter<string>("exclude_restriction_description", fundHistory.include_restriction_description));
+            command.Parameters.Add(connection.CreateParameter<string>("exclude_restriction_number", fundHistory.exclude_restriction_number));
+            command.Parameters.Add(connection.CreateParameter<DateTime?>("exclude_restriction_date", fundHistory.exclude_restriction_date));
+            command.Parameters.Add(connection.CreateParameter<string>("exclude_restriction_description", fundHistory.exclude_restriction_description));
             command.Parameters.Add(connection.CreateParameter<string>("description", fundHistory.description));
             command.Parameters.Add(connection.CreateParameter<int?>("id_fund", fundHistory.id_fund));
 

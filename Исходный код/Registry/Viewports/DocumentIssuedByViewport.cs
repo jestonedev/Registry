@@ -9,35 +9,36 @@ using Registry.Entities;
 
 namespace Registry.Viewport
 {
-    internal class DocumentIssuedByViewport: Viewport
+    internal sealed class DocumentIssuedByViewport: Viewport
     {
         #region Components
-        private DataGridView dataGridView = new System.Windows.Forms.DataGridView();
-        private DataGridViewTextBoxColumn field_id_document_issued_by = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        private DataGridViewTextBoxColumn field_document_issued_by = new System.Windows.Forms.DataGridViewTextBoxColumn();
+        private DataGridView dataGridView;
+        private DataGridViewTextBoxColumn id_document_issued_by;
+        private DataGridViewTextBoxColumn document_issued_by;
         #endregion Components
 
-        //Modeles
+        #region Models
         DocumentsIssuedByDataModel documents_issued_by = null;
         DataTable snapshot_documents_issued_by = new DataTable("snapshot_documents_issued_by");
+        #endregion Models
 
-        //Views
+        #region Views
         BindingSource v_documents_issued_by = null;
         BindingSource v_snapshot_documents_issued_by = null;
+        #endregion Models
 
         //Флаг разрешения синхронизации snapshot и original моделей
         bool sync_views = true;
 
+        private DocumentIssuedByViewport()
+            : this(null)
+        {
+        }
+
         public DocumentIssuedByViewport(IMenuCallback menuCallback)
             : base(menuCallback)
         {
-            this.SuspendLayout();
-            ConstructViewport();
-            this.Name = "tabPageExecutors";
-            this.Padding = new System.Windows.Forms.Padding(3);
-            this.Text = "Органы, выдающие документы";
-            this.UseVisualStyleBackColor = true;
-            this.ResumeLayout(false);
+            InitializeComponent();
         }
 
         public DocumentIssuedByViewport(DocumentIssuedByViewport documentIssuedByViewport, IMenuCallback menuCallback)
@@ -49,6 +50,97 @@ namespace Registry.Viewport
             this.ParentType = documentIssuedByViewport.ParentType;
         }
 
+        private bool SnapshotHasChanges()
+        {
+            List<DocumentIssuedBy> list_from_view = DocumentsIssuedByFromView();
+            List<DocumentIssuedBy> list_from_viewport = DocumentsIssuedByFromViewport();
+            if (list_from_view.Count != list_from_viewport.Count)
+                return true;
+            bool founded = false;
+            for (int i = 0; i < list_from_view.Count; i++)
+            {
+                founded = false;
+                for (int j = 0; j < list_from_viewport.Count; j++)
+                    if (list_from_view[i] == list_from_viewport[j])
+                        founded = true;
+                if (!founded)
+                    return true;
+            }
+            return false;
+        }
+
+        private object[] DataRowViewToArray(DataRowView dataRowView)
+        {
+            return new object[] { 
+                dataRowView["id_document_issued_by"], 
+                dataRowView["document_issued_by"]
+            };
+        }
+
+        private bool ValidateViewportData(List<DocumentIssuedBy> list)
+        {
+            foreach (DocumentIssuedBy documentIssuedBy in list)
+            {
+                if (documentIssuedBy.document_issued_by == null)
+                {
+                    MessageBox.Show("Наименование органа, выдающего документы, удостоверяющие личность, не может быть пустым",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+                if (documentIssuedBy.document_issued_by != null && documentIssuedBy.document_issued_by.Length > 255)
+                {
+                    MessageBox.Show("Длина наименования органа, выдающего документы, удостоверяющие личность, не может превышать 255 символов",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private DocumentIssuedBy RowToDocumentIssuedBy(DataRow row)
+        {
+            DocumentIssuedBy documentIssuedBy = new DocumentIssuedBy();
+            documentIssuedBy.id_document_issued_by = ViewportHelper.ValueOrNull<int>(row, "id_document_issued_by");
+            documentIssuedBy.document_issued_by = ViewportHelper.ValueOrNull(row, "document_issued_by");
+            return documentIssuedBy;
+        }
+
+        private List<DocumentIssuedBy> DocumentsIssuedByFromViewport()
+        {
+            List<DocumentIssuedBy> list = new List<DocumentIssuedBy>();
+            for (int i = 0; i < dataGridView.Rows.Count; i++)
+            {
+                if (!dataGridView.Rows[i].IsNewRow)
+                {
+                    DocumentIssuedBy dib = new DocumentIssuedBy();
+                    DataGridViewRow row = dataGridView.Rows[i];
+                    dib.id_document_issued_by = ViewportHelper.ValueOrNull<int>(row, "id_document_issued_by");
+                    dib.document_issued_by = ViewportHelper.ValueOrNull(row, "document_issued_by");
+                    list.Add(dib);
+                }
+            }
+            return list;
+        }
+
+        private List<DocumentIssuedBy> DocumentsIssuedByFromView()
+        {
+            List<DocumentIssuedBy> list = new List<DocumentIssuedBy>();
+            for (int i = 0; i < v_documents_issued_by.Count; i++)
+            {
+                DocumentIssuedBy dib = new DocumentIssuedBy();
+                DataRowView row = ((DataRowView)v_documents_issued_by[i]);
+                dib.id_document_issued_by = ViewportHelper.ValueOrNull<int>(row, "id_document_issued_by");
+                dib.document_issued_by = ViewportHelper.ValueOrNull(row, "document_issued_by");
+                list.Add(dib);
+            }
+            return list;
+        }
+
+        public override int GetRecordCount()
+        {
+            return v_snapshot_documents_issued_by.Count;
+        }
+
         public override bool CanLoadData()
         {
             return true;
@@ -56,6 +148,8 @@ namespace Registry.Viewport
 
         public override void LoadData()
         {
+            dataGridView.AutoGenerateColumns = false;
+            this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
             documents_issued_by = DocumentsIssuedByDataModel.GetInstance();
 
             //Ожидаем дозагрузки данных, если это необходимо
@@ -77,8 +171,8 @@ namespace Registry.Viewport
             v_snapshot_documents_issued_by.CurrentItemChanged += new EventHandler(v_snapshot_documents_issued_by_CurrentItemChanged);
 
             dataGridView.DataSource = v_snapshot_documents_issued_by;
-            field_id_document_issued_by.DataPropertyName = "id_document_issued_by";
-            field_document_issued_by.DataPropertyName = "document_issued_by";
+            id_document_issued_by.DataPropertyName = "id_document_issued_by";
+            document_issued_by.DataPropertyName = "document_issued_by";
 
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
 
@@ -130,97 +224,6 @@ namespace Registry.Viewport
             return (v_snapshot_documents_issued_by.Position > -1) && (v_snapshot_documents_issued_by.Position < (v_snapshot_documents_issued_by.Count - 1));
         }
 
-        void DocumentIssuedByViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
-        {
-            if (!sync_views)
-                return;
-            if (e.Action == DataRowAction.Delete)
-            {
-                int row_index = v_snapshot_documents_issued_by.Find("id_document_issued_by", e.Row["id_document_issued_by"]);
-                if (row_index != -1)
-                    ((DataRowView)v_snapshot_documents_issued_by[row_index]).Delete();
-            }
-        }
-
-        void DocumentIssuedByViewport_RowChanged(object sender, DataRowChangeEventArgs e)
-        {
-            if (!sync_views)
-                return;
-            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
-            {
-                int row_index = v_snapshot_documents_issued_by.Find("id_document_issued_by", e.Row["id_document_issued_by"]);
-                if (row_index != -1)
-                {
-                    DataRowView row = ((DataRowView)v_snapshot_documents_issued_by[row_index]);
-                    row["document_issued_by"] = e.Row["document_issued_by"];
-                }
-            }
-            else
-                if (e.Action == DataRowAction.Add)
-                {
-                    snapshot_documents_issued_by.Rows.Add(new object[] { 
-                        e.Row["id_document_issued_by"], 
-                        e.Row["document_issued_by"]
-                    });
-                }
-        }
-
-        private bool SnapshotHasChanges()
-        {
-            List<DocumentIssuedBy> list_from_view = DocumentsIssuedByFromView();
-            List<DocumentIssuedBy> list_from_viewport = DocumentsIssuedByFromViewport();
-            if (list_from_view.Count != list_from_viewport.Count)
-                return true;
-            bool founded = false;
-            for (int i = 0; i < list_from_view.Count; i++)
-            {
-                founded = false;
-                for (int j = 0; j < list_from_viewport.Count; j++)
-                    if (list_from_view[i] == list_from_viewport[j])
-                        founded = true;
-                if (!founded)
-                    return true;
-            }
-            return false;
-        }
-
-        private List<DocumentIssuedBy> DocumentsIssuedByFromViewport()
-        {
-            List<DocumentIssuedBy> list = new List<DocumentIssuedBy>();
-            for (int i = 0; i < dataGridView.Rows.Count; i++)
-            {
-                if (!dataGridView.Rows[i].IsNewRow)
-                {
-                    DocumentIssuedBy dib = new DocumentIssuedBy();
-                    DataGridViewRow row = dataGridView.Rows[i];
-                    dib.id_document_issued_by = row.Cells["id_document_issued_by"].Value == DBNull.Value ? null :
-                        (int?)Convert.ToInt32(row.Cells["id_document_issued_by"].Value);
-                    dib.document_issued_by = row.Cells["document_issued_by"].Value == DBNull.Value ? null : row.Cells["document_issued_by"].Value.ToString();
-                    list.Add(dib);
-                }
-            }
-            return list;
-        }
-
-        private List<DocumentIssuedBy> DocumentsIssuedByFromView()
-        {
-            List<DocumentIssuedBy> list = new List<DocumentIssuedBy>();
-            for (int i = 0; i < v_documents_issued_by.Count; i++)
-            {
-                DocumentIssuedBy dib = new DocumentIssuedBy();
-                DataRowView row = ((DataRowView)v_documents_issued_by[i]);
-                dib.id_document_issued_by = row["id_document_issued_by"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_document_issued_by"]);
-                dib.document_issued_by = row["document_issued_by"] == DBNull.Value ? null : row["document_issued_by"].ToString();
-                list.Add(dib);
-            }
-            return list;
-        }
-
-        void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            menuCallback.EditingStateUpdate();
-        }
-
         public override bool CanInsertRecord()
         {
             return true;
@@ -232,7 +235,7 @@ namespace Registry.Viewport
             row.EndEdit();
         }
 
-        public override void Close()
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
             if (SnapshotHasChanges())
             {
@@ -244,11 +247,13 @@ namespace Registry.Viewport
                     if (result == DialogResult.No)
                         CancelRecord();
                     else
+                    {
+                        e.Cancel = true;
                         return;
+                    }
             }
             documents_issued_by.Select().RowChanged -= new DataRowChangeEventHandler(DocumentIssuedByViewport_RowChanged);
             documents_issued_by.Select().RowDeleting -= new DataRowChangeEventHandler(DocumentIssuedByViewport_RowDeleting);
-            base.Close();
         }
 
         public override bool CanDeleteRecord()
@@ -271,20 +276,12 @@ namespace Registry.Viewport
             snapshot_documents_issued_by.Clear();
             for (int i = 0; i < v_documents_issued_by.Count; i++)
                 snapshot_documents_issued_by.Rows.Add(DataRowViewToArray(((DataRowView)v_documents_issued_by[i])));
+            menuCallback.EditingStateUpdate();
         }
 
-        private bool ValidateViewportData(List<DocumentIssuedBy> list)
+        public override bool CanSaveRecord()
         {
-            foreach (DocumentIssuedBy documentIssuedBy in list)
-            {
-                if (documentIssuedBy.document_issued_by == null)
-                {
-                    MessageBox.Show("Наименование органа, выдающего документы, удостоверяющие личность, не может быть пустым", 
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-            }
-            return true;
+            return SnapshotHasChanges();
         }
 
         public override void SaveRecord()
@@ -343,46 +340,7 @@ namespace Registry.Viewport
                 }
             }
             sync_views = true;
-        }
-
-        private DocumentIssuedBy RowToDocumentIssuedBy(DataRow row)
-        {
-            DocumentIssuedBy documentIssuedBy = new DocumentIssuedBy();
-            documentIssuedBy.id_document_issued_by = row["id_document_issued_by"] == DBNull.Value ? null : 
-                (int?)Convert.ToInt32(row["id_document_issued_by"]);
-            documentIssuedBy.document_issued_by = row["document_issued_by"] == DBNull.Value ? null : row["document_issued_by"].ToString();
-            return documentIssuedBy;
-        }
-
-        public override bool CanSaveRecord()
-        {
-            return SnapshotHasChanges();
-        }
-
-        void v_snapshot_documents_issued_by_CurrentItemChanged(object sender, EventArgs e)
-        {
-            if (Selected)
-                menuCallback.NavigationStateUpdate();
-        }
-
-        void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
-        {
-            DataGridViewCell cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            if (cell.OwningColumn.Name == "document_issued_by")
-            {
-                if (cell.Value.ToString().Length > 255)
-                {
-                    MessageBox.Show("Наименование органа, выдающего документы, удостоверяющие личность не может превышать 255 символов", 
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    cell.Value = cell.Value.ToString().Substring(0, 255);
-                }
-                if (cell.Value.ToString().Trim().Length == 0)
-                {
-                    cell.ErrorText = "Наименование органа, выдающего документы, удостоверяющие личность не может быть пустым";
-                }
-                else
-                    cell.ErrorText = "";
-            }
+            menuCallback.EditingStateUpdate();
         }
 
         public override bool CanDuplicate()
@@ -398,24 +356,77 @@ namespace Registry.Viewport
             return viewport;
         }
 
-        public override int GetRecordCount()
+        void DocumentIssuedByViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
-            return v_snapshot_documents_issued_by.Count;
+            if (!sync_views)
+                return;
+            if (e.Action == DataRowAction.Delete)
+            {
+                int row_index = v_snapshot_documents_issued_by.Find("id_document_issued_by", e.Row["id_document_issued_by"]);
+                if (row_index != -1)
+                    ((DataRowView)v_snapshot_documents_issued_by[row_index]).Delete();
+            }
         }
 
-        private object[] DataRowViewToArray(DataRowView dataRowView)
+        void DocumentIssuedByViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
-            return new object[] { 
-                dataRowView["id_document_issued_by"], 
-                dataRowView["document_issued_by"]
-            };
+            if (!sync_views)
+                return;
+            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
+            {
+                int row_index = v_snapshot_documents_issued_by.Find("id_document_issued_by", e.Row["id_document_issued_by"]);
+                if (row_index != -1)
+                {
+                    DataRowView row = ((DataRowView)v_snapshot_documents_issued_by[row_index]);
+                    row["document_issued_by"] = e.Row["document_issued_by"];
+                }
+            }
+            else
+                if (e.Action == DataRowAction.Add)
+                {
+                    snapshot_documents_issued_by.Rows.Add(new object[] { 
+                        e.Row["id_document_issued_by"], 
+                        e.Row["document_issued_by"]
+                    });
+                }
         }
 
-        private void ConstructViewport()
+        void v_snapshot_documents_issued_by_CurrentItemChanged(object sender, EventArgs e)
         {
-            this.Controls.Add(dataGridView);
-            DataGridViewCellStyle dataGridViewCellStyle = new DataGridViewCellStyle();
+            if (Selected)
+                menuCallback.NavigationStateUpdate();
+        }
+
+        void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridViewCell cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            switch (cell.OwningColumn.Name)
+            {
+                case "document_issued_by":
+                    if (cell.Value.ToString().Trim().Length > 255)
+                        cell.ErrorText = "Длина наименования органа, выдающего документы, удостоверяющие личность, не может превышать 255 символов";
+                    else
+                        if (cell.Value.ToString().Trim() == "")
+                            cell.ErrorText = "Наименование органа, выдающего документы, удостоверяющие личность, не может быть пустым";
+                        else
+                            cell.ErrorText = "";
+                    break;
+            }
+        }
+
+        void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            menuCallback.EditingStateUpdate();
+        }
+
+        private void InitializeComponent()
+        {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.id_document_issued_by = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.document_issued_by = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.SuspendLayout();
             // 
             // dataGridView
             // 
@@ -423,43 +434,53 @@ namespace Registry.Viewport
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
-            dataGridViewCellStyle.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.field_id_document_issued_by,
-            this.field_document_issued_by});
+            this.id_document_issued_by,
+            this.document_issued_by});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView.Location = new System.Drawing.Point(3, 3);
+            this.dataGridView.MultiSelect = false;
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.Size = new System.Drawing.Size(990, 537);
+            this.dataGridView.Size = new System.Drawing.Size(687, 345);
             this.dataGridView.TabIndex = 8;
-            this.dataGridView.MultiSelect = false;
-            this.dataGridView.AutoGenerateColumns = false;
             // 
-            // field_id_document_issued_by
+            // id_document_issued_by
             // 
-            this.field_id_document_issued_by.Frozen = true;
-            this.field_id_document_issued_by.HeaderText = "Идентификатор органа";
-            this.field_id_document_issued_by.Name = "id_document_issued_by";
-            this.field_id_document_issued_by.ReadOnly = true;
-            this.field_id_document_issued_by.Visible = false;
+            this.id_document_issued_by.Frozen = true;
+            this.id_document_issued_by.HeaderText = "Идентификатор органа";
+            this.id_document_issued_by.Name = "id_document_issued_by";
+            this.id_document_issued_by.ReadOnly = true;
+            this.id_document_issued_by.Visible = false;
             // 
-            // field_document_issued_by
+            // document_issued_by
             // 
-            this.field_document_issued_by.HeaderText = "Наименование";
-            this.field_document_issued_by.Name = "document_issued_by";
-            this.field_document_issued_by.MinimumWidth = 100;
-
+            this.document_issued_by.HeaderText = "Наименование";
+            this.document_issued_by.MinimumWidth = 100;
+            this.document_issued_by.Name = "document_issued_by";
+            // 
+            // DocumentIssuedByViewport
+            // 
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ClientSize = new System.Drawing.Size(693, 351);
+            this.Controls.Add(this.dataGridView);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Name = "DocumentIssuedByViewport";
+            this.Padding = new System.Windows.Forms.Padding(3);
+            this.Text = "Органы, выдающие документы";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.ResumeLayout(false);
+
         }
     }
 }

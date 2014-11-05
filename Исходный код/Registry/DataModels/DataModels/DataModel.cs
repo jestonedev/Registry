@@ -19,8 +19,8 @@ namespace Registry.DataModels
 
         private static object lock_obj = new object();
         // Не больше MaxDBConnectionCount потоков одновременно делают запросы к БД
-        private static Semaphore db_access_semaphore = new Semaphore(Registry.Entities.RegistrySettings.MaxDBConnectionCount,
-            Registry.Entities.RegistrySettings.MaxDBConnectionCount);
+        private static Semaphore db_access_semaphore = new Semaphore(Registry.RegistrySettings.MaxDBConnectionCount,
+            Registry.RegistrySettings.MaxDBConnectionCount);
 
         protected DataModel()
         {
@@ -28,6 +28,7 @@ namespace Registry.DataModels
 
         protected DataModel(ToolStripProgressBar progressBar, int incrementor, string selectQuery, string tableName)
         {
+            SynchronizationContext context = SynchronizationContext.Current;
             dmLoadType = DataModelLoadSyncType.Asyncronize;
             ThreadPool.QueueUserWorkItem((progress) =>
             {
@@ -47,13 +48,13 @@ namespace Registry.DataModels
                     }
                     dmLoadState = DataModelLoadState.SuccessLoad;
                     if (progress != null)
-                        ((ToolStripProgressBar)progress).GetCurrentParent().Invoke(
-                            new MethodInvoker(delegate()
-                        {
+                    {
+                        context.Post(_ => {
                             progressBar.Value += incrementor;
                             if (progressBar.Value == progressBar.Maximum)
                                 progressBar.Visible = false;
-                        }));
+                        }, null);
+                    }
                 }
                 catch (OdbcException e)
                 {

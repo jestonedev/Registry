@@ -33,20 +33,12 @@ namespace Registry.CalcDataModels
             dmLoadState = DataModelLoadState.Loading;
             CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;
             // Фильтруем удаленные строки
-            var premises = from premises_row in PremisesDataModel.GetInstance().Select().AsEnumerable()
-                           where (premises_row.RowState != DataRowState.Deleted) &&
-                                 (premises_row.RowState != DataRowState.Detached) &&
-                                 (config.Entity == CalcDataModelFilterEnity.Premise ? premises_row.Field<int>("id_premises") == config.IdObject :
+            var premises = from premises_row in DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select()) 
+                           where (config.Entity == CalcDataModelFilterEnity.Premise ? premises_row.Field<int>("id_premises") == config.IdObject :
                                   config.Entity == CalcDataModelFilterEnity.All ? true : false)
                            select premises_row;
-            var funds_history = from funds_history_row in FundsHistoryDataModel.GetInstance().Select().AsEnumerable()
-                                where (funds_history_row.RowState != DataRowState.Deleted) &&
-                                      (funds_history_row.RowState != DataRowState.Detached)
-                                select funds_history_row;
-            var funds_premises_assoc = from funds_premises_assoc_row in FundsPremisesAssocDataModel.GetInstance().Select().AsEnumerable()
-                                       where (funds_premises_assoc_row.RowState != DataRowState.Deleted) &&
-                                              (funds_premises_assoc_row.RowState != DataRowState.Detached)
-                                       select funds_premises_assoc_row;
+            var funds_history = DataModelHelper.FilterRows(FundsHistoryDataModel.GetInstance().Select());
+            var funds_premises_assoc = DataModelHelper.FilterRows(FundsPremisesAssocDataModel.GetInstance().Select());
             // Вычисляем агрегационную информацию
             var max_id_by_premises = from funds_premises_assoc_row in funds_premises_assoc
                                      join fund_history_row in funds_history

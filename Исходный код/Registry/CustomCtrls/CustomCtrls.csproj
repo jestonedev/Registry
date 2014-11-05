@@ -41,8 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DateGridViewDateTimeCell.cs" />
-    <Compile Include="DateGridViewDateTimeColumn.cs" />
+    <Compile Include="DataGridViewDateTimeCell.cs" />
+    <Compile Include="DataGridViewDateTimeColumn.cs" />
     <Compile Include="DateTimeEditingControl.cs">
       <SubType>Component</SubType>
     </Compile>

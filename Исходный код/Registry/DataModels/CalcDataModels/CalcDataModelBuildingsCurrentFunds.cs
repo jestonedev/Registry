@@ -33,20 +33,12 @@ namespace Registry.CalcDataModels
             dmLoadState = DataModelLoadState.Loading;
             CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;
             // Фильтруем удаленные строки
-            var buildings = from buildings_row in BuildingsDataModel.GetInstance().Select().AsEnumerable()
-                            where (buildings_row.RowState != DataRowState.Deleted) &&
-                                  (buildings_row.RowState != DataRowState.Detached) &&
-                                  (config.Entity == CalcDataModelFilterEnity.Building ? buildings_row.Field<int>("id_building") == config.IdObject :
+            var buildings = from buildings_row in DataModelHelper.FilterRows(BuildingsDataModel.GetInstance().Select())
+                            where (config.Entity == CalcDataModelFilterEnity.Building ? buildings_row.Field<int>("id_building") == config.IdObject :
                                    config.Entity == CalcDataModelFilterEnity.All ? true : false)
                             select buildings_row;
-            var funds_history = from funds_history_row in FundsHistoryDataModel.GetInstance().Select().AsEnumerable()
-                                where (funds_history_row.RowState != DataRowState.Deleted) &&
-                                      (funds_history_row.RowState != DataRowState.Detached)
-                                select funds_history_row;
-            var funds_buildings_assoc = from funds_buildings_assoc_row in FundsBuildingsAssocDataModel.GetInstance().Select().AsEnumerable()
-                                        where (funds_buildings_assoc_row.RowState != DataRowState.Deleted) &&
-                                              (funds_buildings_assoc_row.RowState != DataRowState.Detached)
-                                        select funds_buildings_assoc_row;
+            var funds_history = DataModelHelper.FilterRows(FundsHistoryDataModel.GetInstance().Select());
+            var funds_buildings_assoc = DataModelHelper.FilterRows(FundsBuildingsAssocDataModel.GetInstance().Select());
             // Вычисляем агрегационную информацию
             var max_id_by_buldings = from funds_buildings_assoc_row in funds_buildings_assoc
                                      join fund_history_row in funds_history

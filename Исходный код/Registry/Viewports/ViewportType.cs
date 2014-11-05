@@ -8,20 +8,28 @@ namespace Registry.Viewport
     public enum ViewportType
     {
         BuildingListViewport,
+        BuildingViewport,
         PremisesListViewport,
         PremisesViewport,
-        BuildingViewport,
+        SubPremisesViewport,
         RestrictionListViewport,
-        OwnershipListViewport,
-        StructureTypeListViewport,
         RestrictionTypeListViewport,
+        OwnershipListViewport,
         OwnershipTypeListViewport,
+        StructureTypeListViewport,
+        FundsHistoryViewport,
+        ClaimListViewport,
+        ClaimStatesViewport,
+        ClaimStateTypesViewport,
         TenancyListViewport,
+        TenancyPersonsViewport,
+        TenancyBuildingsViewport,
+        TenancyPremisesViewport,
+        TenancyAgreementsViewport,
+        TenancyReasonsViewport,
+        TenancyReasonTypesViewport,
         WarrantsViewport,
-        ReasonTypesViewport,
         ExecutorsViewport,
-        DocumentIssuedByViewport,
-        Claims,
-        ClaimStateTypes
+        DocumentIssuedByViewport
     }
 }

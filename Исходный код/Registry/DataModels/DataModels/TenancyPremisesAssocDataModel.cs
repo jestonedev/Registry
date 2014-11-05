@@ -15,8 +15,8 @@ namespace Registry.DataModels
         private static TenancyPremisesAssocDataModel dataModel = null;
         private static string selectQuery = "SELECT * FROM tenancy_premises_assoc WHERE deleted = 0";
         private static string deleteQuery = "UPDATE tenancy_premises_assoc SET deleted = 1 WHERE id_assoc = ?";
-        private static string insertQuery = @"INSERT INTO tenancy_premises_assoc (id_premises, id_contract, beds) VALUES (?,?,?)";
-        private static string updateQuery = @"UPDATE tenancy_premises_assoc SET id_premises = ?, id_contract = ?, beds = ? WHERE id_assoc = ?";
+        private static string insertQuery = @"INSERT INTO tenancy_premises_assoc (id_premises, id_process, rent_total_area, rent_living_area) VALUES (?,?,?,?)";
+        private static string updateQuery = @"UPDATE tenancy_premises_assoc SET id_premises = ?, id_process = ?, rent_total_area = ?, rent_living_area = ? WHERE id_assoc = ?";
         private static string tableName = "tenancy_premises_assoc";
 
         private TenancyPremisesAssocDataModel(ToolStripProgressBar progressBar, int incrementor)
@@ -49,8 +49,9 @@ namespace Registry.DataModels
             last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
             command.CommandText = insertQuery;
             command.Parameters.Add(connection.CreateParameter<int?>("id_premises", tenancyObject.id_object));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_contract", tenancyObject.id_contract));
-            command.Parameters.Add(connection.CreateParameter<string>("beds", tenancyObject.beds));
+            command.Parameters.Add(connection.CreateParameter<int?>("id_process", tenancyObject.id_process));
+            command.Parameters.Add(connection.CreateParameter<double?>("rent_total_area", tenancyObject.rent_total_area));
+            command.Parameters.Add(connection.CreateParameter<double?>("rent_living_area", tenancyObject.rent_living_area));
             try
             {
                 connection.SqlBeginTransaction();
@@ -79,8 +80,9 @@ namespace Registry.DataModels
             DbCommand command = connection.CreateCommand();
             command.CommandText = updateQuery;
             command.Parameters.Add(connection.CreateParameter<int?>("id_premises", tenancyObject.id_object));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_contract", tenancyObject.id_contract));
-            command.Parameters.Add(connection.CreateParameter<string>("beds", tenancyObject.beds));
+            command.Parameters.Add(connection.CreateParameter<int?>("id_process", tenancyObject.id_process));
+            command.Parameters.Add(connection.CreateParameter<double?>("rent_total_area", tenancyObject.rent_total_area));
+            command.Parameters.Add(connection.CreateParameter<double?>("rent_living_area", tenancyObject.rent_living_area));
             command.Parameters.Add(connection.CreateParameter<int?>("id_assoc", tenancyObject.id_assoc));
             try
             {

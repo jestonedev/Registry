@@ -10,7 +10,8 @@ using System.Drawing.Drawing2D;
 using System.IO;
 using Registry.Viewport;
 using Registry.DataModels;
-using Registry.Entities;
+using WeifenLuo.WinFormsUI.Docking;
+using Registry.Reporting;
 
 namespace Registry
 {
@@ -18,11 +19,11 @@ namespace Registry
     {
         private void ChangeViewportsSelectProprty()
         {
-            for (int i = tabControl.TabCount - 1; i >= 0; i--)
-                (tabControl.Controls[i] as IMenuController).Selected = false;
-            if (tabControl.SelectedIndex == -1)
+            for (int i = dockPanel.Documents.Count() - 1; i >= 0; i--)
+                (dockPanel.Documents.ElementAt(i) as IMenuController).Selected = false;
+            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
                 return;
-            (tabControl.SelectedTab as IMenuController).Selected = true;
+            (dockPanel.ActiveDocument as IMenuController).Selected = true;
         }
 
         private void ChangeMainMenuState()
@@ -33,13 +34,13 @@ namespace Registry
             EditingStateUpdate();
             RibbonTabsStateUpdate();
             RelationsStateUpdate();
-            HousingRefBooksStateUpdate();
+            TenancyRefsStateUpdate();
         }
 
         public void StatusBarStateUpdate()
         {
-            if (tabControl.SelectedTab != null)
-                toolStripLabelRecordCount.Text = "Всего записей: " + (tabControl.SelectedTab as IMenuController).GetRecordCount();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                toolStripLabelRecordCount.Text = "Всего записей: " + (dockPanel.ActiveDocument as IMenuController).GetRecordCount();
             else
                 toolStripLabelRecordCount.Text = "";
         }
@@ -47,7 +48,6 @@ namespace Registry
         public MainForm()
         {
             InitializeComponent();
-            tabControl.Controls.Clear();
             ChangeMainMenuState();
             StatusBarStateUpdate();
         }
@@ -65,7 +65,7 @@ namespace Registry
             PremisesKindsDataModel.GetInstance(toolStripProgressBar, 3);
             SubPremisesDataModel.GetInstance(toolStripProgressBar, 3);
             FundTypesDataModel.GetInstance(toolStripProgressBar, 3);
-            StatesDataModel.GetInstance(toolStripProgressBar, 3);
+            ObjectStatesDataModel.GetInstance(toolStripProgressBar, 3);
             FundsBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 3);
             FundsPremisesAssocDataModel.GetInstance(toolStripProgressBar, 3);
             FundsSubPremisesAssocDataModel.GetInstance(toolStripProgressBar,3);
@@ -80,18 +80,18 @@ namespace Registry
             RestrictionTypesDataModel.GetInstance(toolStripProgressBar, 2);
             KladrRegionsDataModel.GetInstance(toolStripProgressBar, 2);
             // Процесс найма
-            TenancyContractsDataModel.GetInstance(toolStripProgressBar, 3);
-            PersonsDataModel.GetInstance(toolStripProgressBar, 3);
+            TenancyProcessesDataModel.GetInstance(toolStripProgressBar, 3);
+            TenancyPersonsDataModel.GetInstance(toolStripProgressBar, 3);
             KinshipsDataModel.GetInstance(toolStripProgressBar, 2);
             TenancyBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 2);
             TenancyPremisesAssocDataModel.GetInstance(toolStripProgressBar, 2);
             TenancySubPremisesAssocDataModel.GetInstance(toolStripProgressBar, 2);
-            ContractReasonsDataModel.GetInstance(toolStripProgressBar, 2);
-            ReasonTypesDataModel.GetInstance(toolStripProgressBar, 2);
+            TenancyReasonsDataModel.GetInstance(toolStripProgressBar, 2);
+            TenancyReasonTypesDataModel.GetInstance(toolStripProgressBar, 2);
             RentTypesDataModel.GetInstance(toolStripProgressBar, 2);
             DocumentTypesDataModel.GetInstance(toolStripProgressBar, 2);
             ExecutorsDataModel.GetInstance(toolStripProgressBar, 2);
-            AgreementsDataModel.GetInstance(toolStripProgressBar, 2);
+            TenancyAgreementsDataModel.GetInstance(toolStripProgressBar, 2);
             WarrantsDataModel.GetInstance(toolStripProgressBar, 2);
             WarrantDocTypesDataModel.GetInstance(toolStripProgressBar, 2);
             DocumentsIssuedByDataModel.GetInstance(toolStripProgressBar, 2);
@@ -104,26 +104,26 @@ namespace Registry
 
         private void ribbonButtonTabClose_Click(object sender, EventArgs e)
         {
-            if (tabControl.SelectedIndex >= 0)
-                (tabControl.SelectedTab as IMenuController).Close();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).Close();
         }
 
         private void ribbonButtonTabsClose_Click(object sender, EventArgs e)
         {
-            for (int i = tabControl.TabCount - 1; i >= 0; i--)
-                (tabControl.Controls[i] as IMenuController).Close();
+            for (int i = dockPanel.Documents.Count() - 1; i >= 0; i--)
+                if (dockPanel.Documents.ElementAt(i) as IMenuController != null)
+                    (dockPanel.Documents.ElementAt(i) as IMenuController).Close();
         }
 
         private void ribbonButtonTabCopy_Click(object sender, EventArgs e)
         {
-            if (tabControl.SelectedIndex == -1)
+            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
                 return;
-            Registry.Viewport.Viewport viewport = (tabControl.SelectedTab as IMenuController).Duplicate();
-            tabControl.Controls.Add(viewport);
-            tabControl.SelectedTab = viewport; 
+            Registry.Viewport.Viewport viewport = (dockPanel.ActiveDocument as IMenuController).Duplicate();
+            viewport.Show(dockPanel, DockState.Document);
         }
 
-        private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
+        private void dockPanel_ActiveDocumentChanged(object sender, EventArgs e)
         {
             ChangeMainMenuState();
             StatusBarStateUpdate();
@@ -132,57 +132,72 @@ namespace Registry
 
         private void ribbonButtonFirst_Click(object sender, EventArgs e)
         {
-            if (tabControl.SelectedIndex == -1)
+            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
                 return;
-            (tabControl.SelectedTab as IMenuController).MoveFirst();
+            (dockPanel.ActiveDocument as IMenuController).MoveFirst();
             NavigationStateUpdate();
         }
 
         private void ribbonButtonLast_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).MoveLast();
+            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+                return;
+            (dockPanel.ActiveDocument as IMenuController).MoveLast();
             NavigationStateUpdate();
         }
 
         private void ribbonButtonPrev_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).MovePrev();
+            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+                return;
+            (dockPanel.ActiveDocument as IMenuController).MovePrev();
             NavigationStateUpdate();
         }
 
         private void ribbonButtonNext_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).MoveNext();
+            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+                return;
+            (dockPanel.ActiveDocument as IMenuController).MoveNext();
             NavigationStateUpdate();
         }
 
         private void ribbonButtonSearch_Click(object sender, EventArgs e)
         {
+            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+                return;
             if (ribbonButtonSearch.Checked)
-                (tabControl.SelectedTab as IMenuController).ClearSearch();
+                (dockPanel.ActiveDocument as IMenuController).ClearSearch();
             else
-                (tabControl.SelectedTab as IMenuController).SearchRecord(SearchFormType.SimpleSearchForm);
+                (dockPanel.ActiveDocument as IMenuController).SearchRecord(SearchFormType.SimpleSearchForm);
             NavigationStateUpdate();
             EditingStateUpdate();
             RelationsStateUpdate();
+            TenancyRefsStateUpdate();
             StatusBarStateUpdate();
         }
 
         private void ribbonButtonExtendedSearch_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).SearchRecord(SearchFormType.ExtendedSearchForm);
+            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+                return;
+            (dockPanel.ActiveDocument as IMenuController).SearchRecord(SearchFormType.ExtendedSearchForm);
             NavigationStateUpdate();
             EditingStateUpdate();
             RelationsStateUpdate();
+            TenancyRefsStateUpdate();
             StatusBarStateUpdate();
         }
 
         private void ribbonButtonSimpleSearch_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).SearchRecord(SearchFormType.SimpleSearchForm);
+            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+                return;
+            (dockPanel.ActiveDocument as IMenuController).SearchRecord(SearchFormType.SimpleSearchForm);
             NavigationStateUpdate();
             EditingStateUpdate();
             RelationsStateUpdate();
+            TenancyRefsStateUpdate();
             StatusBarStateUpdate();
         }
 
@@ -193,24 +208,20 @@ namespace Registry
 
         public void AddViewport(Viewport.Viewport viewport)
         {
-            tabControl.TabPages.Add(viewport);
-        }
-
-        public void SwitchToViewport(Viewport.Viewport viewport)
-        {
-            tabControl.SelectedTab = viewport;
+            viewport.Show(dockPanel, DockState.Document);
         }
 
         private void ribbonButtonOpen_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).OpenDetails();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).OpenDetails();
         }
 
         public void TabsStateUpdate()
         {
-            ribbonButtonTabCopy.Enabled = (tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).CanDuplicate();
-            ribbonButtonTabClose.Enabled = (tabControl.SelectedTab != null);
-            ribbonButtonTabsClose.Enabled = (tabControl.TabCount > 0);  
+            ribbonButtonTabCopy.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanDuplicate();
+            ribbonButtonTabClose.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null);
+            ribbonButtonTabsClose.Enabled = (dockPanel.Documents.Count() > 0);  
         }
 
         public void RegistryStateUpdate()
@@ -220,22 +231,22 @@ namespace Registry
 
         public void NavigationStateUpdate()
         {
-            ribbonButtonFirst.Enabled = (tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).CanMoveFirst();
-            ribbonButtonPrev.Enabled = (tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).CanMovePrev();
-            ribbonButtonNext.Enabled = (tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).CanMoveNext();
-            ribbonButtonLast.Enabled = (tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).CanMoveLast();
-            ribbonButtonSearch.Enabled = (tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).CanSearchRecord();
-            ribbonButtonSearch.Checked = (tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).SearchedRecords();
-            ribbonButtonOpen.Enabled = (tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).CanOpenDetails();
+            ribbonButtonFirst.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanMoveFirst();
+            ribbonButtonPrev.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanMovePrev();
+            ribbonButtonNext.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanMoveNext();
+            ribbonButtonLast.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanMoveLast();
+            ribbonButtonSearch.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanSearchRecord();
+            ribbonButtonSearch.Checked = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).SearchedRecords();
+            ribbonButtonOpen.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanOpenDetails();
         }
 
         public void EditingStateUpdate()
         {
-            ribbonButtonDeleteRecord.Enabled = (tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).CanDeleteRecord();
-            ribbonButtonInsertRecord.Enabled = (tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).CanInsertRecord();
-            ribbonButtonCopyRecord.Enabled = (tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).CanCopyRecord();
-            ribbonButtonCancel.Enabled = (tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).CanCancelRecord();
-            ribbonButtonSave.Enabled = (tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).CanSaveRecord();
+            ribbonButtonDeleteRecord.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanDeleteRecord();
+            ribbonButtonInsertRecord.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanInsertRecord();
+            ribbonButtonCopyRecord.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanCopyRecord();
+            ribbonButtonCancel.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanCancelRecord();
+            ribbonButtonSave.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanSaveRecord();
         }
 
         public void RibbonTabsStateUpdate()
@@ -246,27 +257,30 @@ namespace Registry
         public void RelationsStateUpdate()
         {
             ribbonPanelRelations.Items.Clear();
-            if ((tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).HasAssocBuildings())
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).HasAssocBuildings())
                 ribbonPanelRelations.Items.Add(ribbonButtonBuildings);
-            if ((tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).HasAssocSubPremises())
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).HasAssocSubPremises())
                 ribbonPanelRelations.Items.Add(ribbonButtonSubPremises);
-            if ((tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).HasAssocPremises())
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).HasAssocPremises())
                 ribbonPanelRelations.Items.Add(ribbonButtonPremises);
-            if ((tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).HasAssocOwnerships())
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).HasAssocOwnerships())
                 ribbonPanelRelations.Items.Add(ribbonButtonOwnerships);
-            if ((tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).HasAssocRestrictions())
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).HasAssocRestrictions())
                 ribbonPanelRelations.Items.Add(ribbonButtonRestrictions);
-            if ((tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).HasAssocFundHistory())
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).HasAssocFundHistory())
                 ribbonPanelRelations.Items.Add(ribbonButtonFundsHistory);
-            if ((tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).HasAssocTenancyObjects())
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).HasAssocTenancyObjects())
                 ribbonPanelRelations.Items.Add(ribbonButtonTenancyObjects);
-            if ((tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).HasAssocPersons())
-                ribbonPanelRelations.Items.Add(ribbonButtonPersons);
-            if ((tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).HasAssocContractReasons())
-                ribbonPanelRelations.Items.Add(ribbonButtonContractReasons);
-            if ((tabControl.SelectedTab != null) && (tabControl.SelectedTab as IMenuController).HasAssocAgreements())
-                ribbonPanelRelations.Items.Add(ribbonButtonAgreements);
-
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).HasAssocTenancyPersons())
+                ribbonPanelRelations.Items.Add(ribbonButtonTenancyPersons);
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).HasAssocTenancyReasons())
+                ribbonPanelRelations.Items.Add(ribbonButtonTenancyReasons);
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).HasAssocTenancyAgreements())
+                ribbonPanelRelations.Items.Add(ribbonButtonTenancyAgreements);
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).HasAssocClaims())
+                ribbonPanelRelations.Items.Add(ribbonButtonClaims);
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).HasAssocClaimStates())
+                ribbonPanelRelations.Items.Add(ribbonButtonClaimStates);
             ribbon1.SuspendUpdating();
             if (ribbonPanelRelations.Items.Count == 0)
                 ribbonTabGeneral.Panels.Remove(ribbonPanelRelations);
@@ -276,52 +290,75 @@ namespace Registry
             ribbon1.ResumeUpdating(true);
         }
 
-        public void HousingRefBooksStateUpdate()
+        public void TenancyRefsStateUpdate()
         {
-            //Always enable, maybe will change in future
+            ribbonPanelTenancyDocs.Items.Clear();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).HasTenancyContract17xReport())
+                ribbonPanelTenancyDocs.Items.Add(ribbonButtonTenancyContract17x);
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).HasTenancyContractReport())
+                ribbonPanelTenancyDocs.Items.Add(ribbonButtonTenancyContract);
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).HasTenancyActReport())
+                ribbonPanelTenancyDocs.Items.Add(ribbonButtonTenancyAct);
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).HasTenancyAgreementReport())
+                ribbonPanelTenancyDocs.Items.Add(ribbonButtonTenancyAgreement);
+            ribbon1.SuspendUpdating();
+            if (ribbonPanelTenancyDocs.Items.Count == 0)
+                ribbonTabTenancyProcesses.Panels.Remove(ribbonPanelTenancyDocs);
+            else
+                if (!ribbonTabTenancyProcesses.Panels.Contains(ribbonPanelTenancyDocs))
+                    ribbonTabTenancyProcesses.Panels.Insert(1, ribbonPanelTenancyDocs);
+            ribbon1.ResumeUpdating(true);
         }
 
         private void ribbonButtonSave_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).SaveRecord();
-            EditingStateUpdate();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).SaveRecord();
             NavigationStateUpdate();
             RelationsStateUpdate();
+            TenancyRefsStateUpdate();
         }
 
         private void ribbonButtonDeleteRecord_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).DeleteRecord();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).DeleteRecord();
             NavigationStateUpdate();
             EditingStateUpdate();
             RelationsStateUpdate();
+            TenancyRefsStateUpdate();
             StatusBarStateUpdate();
         }
 
         private void ribbonButtonInsertRecord_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).InsertRecord();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).InsertRecord();
             EditingStateUpdate();
             NavigationStateUpdate();
             RelationsStateUpdate();
+            TenancyRefsStateUpdate();
             StatusBarStateUpdate();
         }
 
         private void ribbonButtonCancel_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).CancelRecord();
-            EditingStateUpdate();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).CancelRecord();
             NavigationStateUpdate();
             RelationsStateUpdate();
+            TenancyRefsStateUpdate();
             StatusBarStateUpdate();
         }
 
         private void ribbonButtonCopyRecord_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).CopyRecord();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).CopyRecord();
             EditingStateUpdate();
             NavigationStateUpdate();
             RelationsStateUpdate();
+            TenancyRefsStateUpdate();
             StatusBarStateUpdate();
         }
 
@@ -332,72 +369,96 @@ namespace Registry
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            for (int i = tabControl.TabCount - 1; i >= 0; i--)
-                (tabControl.Controls[i] as IMenuController).Close();
-            if (tabControl.TabCount != 0)
+            for (int i = dockPanel.Documents.Count() - 1; i >= 0; i--)
+                if (dockPanel.Documents.ElementAt(i) as IMenuController != null)
+                    (dockPanel.Documents.ElementAt(i) as IMenuController).Close();
+            if (dockPanel.Documents.Count() != 0)
                 e.Cancel = true;
         }
 
         public void ForceCloseDetachedViewports()
         {
-            for (int i = tabControl.TabCount - 1; i >= 0; i--)
-                if ((tabControl.Controls[i] as IMenuController).ViewportDetached())
-                    (tabControl.Controls[i] as IMenuController).ForceClose();
+            for (int i = dockPanel.Documents.Count() - 1; i >= 0; i--)
+                if ((dockPanel.Documents.ElementAt(i) as IMenuController != null) && (dockPanel.Documents.ElementAt(i) as IMenuController).ViewportDetached())
+                    (dockPanel.Documents.ElementAt(i) as IMenuController).ForceClose();
         }
 
         private void ribbonButtonBuildings_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).ShowBuildings();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).ShowBuildings();
         }
 
         private void ribbonButtonPremises_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).ShowPremises();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).ShowPremises();
         }
 
         private void ribbonButtonSubPremises_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).ShowSubPremises();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).ShowSubPremises();
         }
 
         private void ribbonButtonRestrictions_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).ShowRestrictions();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).ShowRestrictions();
         }
 
         private void ribbonButtonOwnership_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).ShowOwnerships();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).ShowOwnerships();
         }
 
         private void ribbonButtonFundsHistory_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).ShowFundHistory();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).ShowFundHistory();
         }
 
         private void ribbonButtonPersons_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).ShowPersons();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).ShowTenancyPersons();
         }
 
-        private void ribbonButtonContractReasons_Click(object sender, EventArgs e)
+        private void ribbonButtonTenancyReasons_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).ShowContractReasons();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).ShowTenancyReasons();
         }
 
         private void ribbonButtonAgreements_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).ShowAgreements();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).ShowTenancyAgreements();
         }
 
         private void ribbonButtonTenancyPremises_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).ShowTenancyPremises();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).ShowTenancyPremises();
         }
 
         private void ribbonButtonTenancyBuildings_Click(object sender, EventArgs e)
         {
-            (tabControl.SelectedTab as IMenuController).ShowTenancyBuildings();
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).ShowTenancyBuildings();
+        }
+
+        private void ribbonButtonClaims_Click(object sender, EventArgs e)
+        {
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).ShowClaims();
+        }
+
+        private void ribbonButtonClaimStates_Click(object sender, EventArgs e)
+        {
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).ShowClaimStates();
         }
 
         private void ribbonOrbMenuItemBuildings_Click(object sender, EventArgs e)
@@ -437,7 +498,7 @@ namespace Registry
 
         private void ribbonButtonReasonTypes_Click(object sender, EventArgs e)
         {
-            CreateViewport(ViewportType.ReasonTypesViewport);
+            CreateViewport(ViewportType.TenancyReasonTypesViewport);
         }
 
         private void ribbonButtonExecutors_Click(object sender, EventArgs e)
@@ -452,12 +513,12 @@ namespace Registry
 
         private void ribbonOrbMenuItemClaims_Click(object sender, EventArgs e)
         {
-            CreateViewport(ViewportType.Claims);
+            CreateViewport(ViewportType.ClaimListViewport);
         }
 
         private void ribbonButtonClaimStateTypes_Click(object sender, EventArgs e)
         {
-            CreateViewport(ViewportType.ClaimStateTypes);
+            CreateViewport(ViewportType.ClaimStateTypesViewport);
         }
 
         private void CreateViewport(ViewportType viewportType)
@@ -465,8 +526,7 @@ namespace Registry
             Registry.Viewport.Viewport viewport = Registry.Viewport.ViewportFactory.CreateViewport(this, viewportType);
             if ((viewport as IMenuController).CanLoadData())
                 (viewport as IMenuController).LoadData();
-            tabControl.Controls.Add(viewport);
-            tabControl.SelectedTab = viewport;
+            AddViewport(viewport);
             ChangeMainMenuState();
             StatusBarStateUpdate();
             ChangeViewportsSelectProprty();
@@ -474,16 +534,24 @@ namespace Registry
 
         public void SwitchToPreviousViewport()
         {
-            if (tabControl.TabCount > 0)
+            /*if (dockPanel.Documents.Count() > 1)
             {
-                if (tabControl.SelectedIndex != 0)
-                    tabControl.SelectedIndex = tabControl.SelectedIndex - 1;
-            }
+                int index = -1;
+                foreach (var document in dockPanel.Documents)
+                {
+                    index++;
+                    if (document == dockPanel.ActiveDocument)
+                    {
+                        break;
+                    }
+                }
+                ((DockContent)dockPanel.Documents.ElementAt(index - 1)).Activate();
+            }*/
         }
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            UserDomain user = UserDomain.Current;
+            /*UserDomain user = UserDomain.Current;
             if (user == null)
             {
                 MessageBox.Show("Пользователь не распознан или учетная запись не включена в службу каталогов Active Directory","Ошибка", 
@@ -491,9 +559,98 @@ namespace Registry
                 Application.Exit();
                 return;
             }
-            toolStripLabelHelloUser.Text = "Здравствуйте, " + user.DisplayName;
+            toolStripLabelHelloUser.Text = "Здравствуйте, " + user.DisplayName;*/
             PreLoadData();
         }
 
+        private void ribbonButtonRegistryShortStatistic_Click(object sender, EventArgs e)
+        {
+            Reporting.ReporterFactory.CreateReporter(Reporting.ReporterType.RegistryShortStatisticReporter).Run();
+        }
+
+        private void ribbonButtonOwnershipReport_Click(object sender, EventArgs e)
+        {
+            Reporting.ReporterFactory.CreateReporter(Reporting.ReporterType.RegistryOwnershipsReporter).Run();
+        }
+
+        private void ribbonButtonCommercialFundReport_Click(object sender, EventArgs e)
+        {
+            Reporting.ReporterFactory.CreateReporter(Reporting.ReporterType.RegistryCommercialFundReporter).Run();
+        }
+
+        private void ribbonButtonSpecialFundReport_Click(object sender, EventArgs e)
+        {
+            Reporting.ReporterFactory.CreateReporter(Reporting.ReporterType.RegistrySpecialFundReporter).Run();
+        }
+
+        private void ribbonButtonSocialFundReport_Click(object sender, EventArgs e)
+        {
+            Reporting.ReporterFactory.CreateReporter(Reporting.ReporterType.RegistrySocialFundReporter).Run();
+        }
+
+        private void ribbonButtonPremisesForOrphansReport_Click(object sender, EventArgs e)
+        {
+            Reporting.ReporterFactory.CreateReporter(Reporting.ReporterType.RegistryPremisesForOrphansReporter).Run();
+        }
+
+        private void ribbonButtonPremisesByExchangeReport_Click(object sender, EventArgs e)
+        {
+            Reporting.ReporterFactory.CreateReporter(Reporting.ReporterType.RegistryPremisesByExchangeReporter).Run();
+        }
+
+        private void ribbonButtonPremisesByDonationReport_Click(object sender, EventArgs e)
+        {
+            Reporting.ReporterFactory.CreateReporter(Reporting.ReporterType.RegistryPremisesByDonationReporter).Run();
+        }
+
+        private void ribbonButtonMunicipalPremises_Click(object sender, EventArgs e)
+        {
+            Reporting.ReporterFactory.CreateReporter(Reporting.ReporterType.RegistryMunicipalPremisesReporter).Run();
+        }
+
+        private void ribbonButtonRegistryFullStatistic_Click(object sender, EventArgs e)
+        {
+            Reporting.ReporterFactory.CreateReporter(Reporting.ReporterType.RegistryFullStatisticReporter).Run();
+        }
+
+        private void ribbonButtonClaimsStatistic_Click(object sender, EventArgs e)
+        {
+            Reporting.ReporterFactory.CreateReporter(Reporting.ReporterType.ClaimsStatisticReporter).Run();
+        }
+
+        private void ribbonButton1711_Click(object sender, EventArgs e)
+        {
+            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+                return;
+            (dockPanel.ActiveDocument as IMenuController).TenancyContract17xReportGenerate(TenancyContractTypes.SpecialContract1711Form);
+        }
+
+        private void ribbonButton1712_Click(object sender, EventArgs e)
+        {
+            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+                return;
+            (dockPanel.ActiveDocument as IMenuController).TenancyContract17xReportGenerate(TenancyContractTypes.SpecialContract1712Form);
+        }
+
+        private void ribbonButtonTenancyAct_Click(object sender, EventArgs e)
+        {
+            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+                return;
+            (dockPanel.ActiveDocument as IMenuController).TenancyActReportGenerate();
+        }
+
+        private void ribbonButtonTenancyContract_Click(object sender, EventArgs e)
+        {
+            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+                return;
+            (dockPanel.ActiveDocument as IMenuController).TenancyContractReportGenerate();
+        }
+
+        private void ribbonButtonTenancyAgreement_Click(object sender, EventArgs e)
+        {
+            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+                return;
+            (dockPanel.ActiveDocument as IMenuController).TenancyAgreementReportGenerate();
+        }
     }
 }

@@ -32,9 +32,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.TeamFoundation.Client, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.TeamFoundation.Common, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.TeamFoundation.Diff, Version=11.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.TeamFoundation.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Release\Microsoft.TeamFoundation.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.Common, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Release\Microsoft.TeamFoundation.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.TeamFoundation.Diff, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\Release\Microsoft.TeamFoundation.Diff.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
@@ -50,67 +59,70 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="VIBlend.WinForms.Controls, Version=10.0.0.0, Culture=neutral, PublicKeyToken=6feea38fef5ea0cf, processorArchitecture=MSIL">
-      <Private>True</Private>
+    <Reference Include="VIBlend.WinForms.Controls, Version=10.1.0.0, Culture=neutral, PublicKeyToken=6feea38fef5ea0cf, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\VIBlend\Windows Forms Controls v.10.1.0.0\VIBlend.WinForms.Controls.dll</HintPath>
     </Reference>
-    <Reference Include="VIBlend.WinForms.Utilities, Version=8.0.0.0, Culture=neutral, PublicKeyToken=970a5af59bc48043">
-      <Private>True</Private>
+    <Reference Include="VIBlend.WinForms.Utilities, Version=10.1.0.0, Culture=neutral, PublicKeyToken=970a5af59bc48043, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>C:\Program Files (x86)\VIBlend\Windows Forms Controls v.10.1.0.0\VIBlend.WinForms.Utilities.dll</HintPath>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>..\..\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AgreementsViewport.cs">
-      <SubType>Component</SubType>
+    <Compile Include="TenancyAgreementsViewport.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Building.cs" />
     <Compile Include="BuildingListViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="BuildingViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="ClaimListViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="ClaimStatesViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="ClaimStateTypesViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ContractReasonsViewport.cs">
-      <SubType>Component</SubType>
+    <Compile Include="TenancyReasonsViewport.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="DataGridViewDateTimeColumn.cs" />
     <Compile Include="DocumentIssuedByViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="ExecutorsViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="FundsHistoryViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="IMenuCallback.cs" />
     <Compile Include="IMenuController.cs" />
     <Compile Include="OwnershipListViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="OwnershipTypeListViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="PersonsViewport.cs">
-      <SubType>Component</SubType>
+    <Compile Include="TenancyPersonsViewport.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="PremisesListViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="PremisesViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ReasonTypesViewport.cs">
-      <SubType>Component</SubType>
+    <Compile Include="TenancyReasonTypesViewport.cs">
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Properties\Resource.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -118,10 +130,10 @@
       <DependentUpon>Resource.resx</DependentUpon>
     </Compile>
     <Compile Include="RestrictionListViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="RestrictionTypeListViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="ExtendedSearchBuildingForm.cs">
       <SubType>Form</SubType>
@@ -170,28 +182,28 @@
       <DependentUpon>SimpleSearchTenancyForm.cs</DependentUpon>
     </Compile>
     <Compile Include="StructureTypeListViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="SubPremisesDetailsControl.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SubPremisesViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="TenancyBuildingsViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="TenancyListViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="TenancyPremisesViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="TenancyViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="Viewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="ViewportHelper.cs" />
     <Compile Include="ViewportState.cs" />
@@ -199,7 +211,7 @@
     <Compile Include="ViewportException.cs" />
     <Compile Include="ViewportFactory.cs" />
     <Compile Include="WarrantsViewport.cs">
-      <SubType>Component</SubType>
+      <SubType>Form</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -215,8 +227,37 @@
       <Project>{1D0E98AA-C11E-4C1D-AE3F-346FF7446DF4}</Project>
       <Name>Entities</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Reporting\Reporting.csproj">
+      <Project>{B2856AAD-D1D2-4E10-B597-5DB1CFA80A96}</Project>
+      <Name>Reporting</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Settings\Settings.csproj">
+      <Project>{A81032B6-05F8-4D34-8D01-4A268743E2D5}</Project>
+      <Name>Settings</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="BuildingListViewport.resx">
+      <DependentUpon>BuildingListViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BuildingViewport.resx">
+      <DependentUpon>BuildingViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ClaimListViewport.resx">
+      <DependentUpon>ClaimListViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ClaimStatesViewport.resx">
+      <DependentUpon>ClaimStatesViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ClaimStateTypesViewport.resx">
+      <DependentUpon>ClaimStateTypesViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DocumentIssuedByViewport.resx">
+      <DependentUpon>DocumentIssuedByViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExecutorsViewport.resx">
+      <DependentUpon>ExecutorsViewport.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ExtendedSearchBuildingForm.resx">
       <DependentUpon>ExtendedSearchBuildingForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -226,9 +267,30 @@
     <EmbeddedResource Include="ExtendedSearchTenancyForm.resx">
       <DependentUpon>ExtendedSearchTenancyForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="FundsHistoryViewport.resx">
+      <DependentUpon>FundsHistoryViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OwnershipListViewport.resx">
+      <DependentUpon>OwnershipListViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OwnershipTypeListViewport.resx">
+      <DependentUpon>OwnershipTypeListViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PremisesListViewport.resx">
+      <DependentUpon>PremisesListViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PremisesViewport.resx">
+      <DependentUpon>PremisesViewport.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resource.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RestrictionListViewport.resx">
+      <DependentUpon>RestrictionListViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RestrictionTypeListViewport.resx">
+      <DependentUpon>RestrictionTypeListViewport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SelectWarrantForm.resx">
       <DependentUpon>SelectWarrantForm.cs</DependentUpon>
@@ -242,8 +304,44 @@
     <EmbeddedResource Include="SimpleSearchTenancyForm.resx">
       <DependentUpon>SimpleSearchTenancyForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="StructureTypeListViewport.resx">
+      <DependentUpon>StructureTypeListViewport.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SubPremisesDetailsControl.resx">
       <DependentUpon>SubPremisesDetailsControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SubPremisesViewport.resx">
+      <DependentUpon>SubPremisesViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TenancyAgreementsViewport.resx">
+      <DependentUpon>TenancyAgreementsViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TenancyBuildingsViewport.resx">
+      <DependentUpon>TenancyBuildingsViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TenancyListViewport.resx">
+      <DependentUpon>TenancyListViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TenancyPersonsViewport.resx">
+      <DependentUpon>TenancyPersonsViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TenancyPremisesViewport.resx">
+      <DependentUpon>TenancyPremisesViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TenancyReasonsViewport.resx">
+      <DependentUpon>TenancyReasonsViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TenancyReasonTypesViewport.resx">
+      <DependentUpon>TenancyReasonTypesViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TenancyViewport.resx">
+      <DependentUpon>TenancyViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Viewport.resx">
+      <DependentUpon>Viewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WarrantsViewport.resx">
+      <DependentUpon>WarrantsViewport.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

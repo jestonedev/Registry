@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Registry.Reporting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -19,7 +20,6 @@ namespace Registry.Viewport
         void InsertRecord();
         void DeleteRecord();
         void OpenDetails();
-        void DataRefresh();
         void SearchRecord(SearchFormType searchFormType);
         void ClearSearch();
         void ShowBuildings();
@@ -28,11 +28,13 @@ namespace Registry.Viewport
         void ShowRestrictions();
         void ShowOwnerships();
         void ShowFundHistory();
-        void ShowPersons();
-        void ShowContractReasons();
-        void ShowAgreements();
+        void ShowTenancyPersons();
+        void ShowTenancyReasons();
+        void ShowTenancyAgreements();
         void ShowTenancyBuildings();
         void ShowTenancyPremises();
+        void ShowClaims();
+        void ShowClaimStates();
         void Close();
         void ForceClose();
 
@@ -48,12 +50,7 @@ namespace Registry.Viewport
         bool CanInsertRecord();
         bool CanDeleteRecord();
         bool CanOpenDetails();
-        bool CanDataRefresh();
         bool CanSearchRecord();
-        bool CanShowPremises();
-        bool CanShowSubPremises();
-        bool CanShowRestrictions();
-        bool CanShowOwnerships();
         bool SearchedRecords();
         bool ViewportDetached();
         
@@ -67,10 +64,12 @@ namespace Registry.Viewport
         bool HasAssocOwnerships();
         bool HasAssocRestrictions();
         bool HasAssocFundHistory();
-        bool HasAssocPersons();
-        bool HasAssocContractReasons();
-        bool HasAssocAgreements();
+        bool HasAssocTenancyPersons();
+        bool HasAssocTenancyReasons();
+        bool HasAssocTenancyAgreements();
         bool HasAssocTenancyObjects();
+        bool HasAssocClaims();
+        bool HasAssocClaimStates();
 
         bool CanFilterSocialFund();
         bool CanFilterCommercialFundFund();
@@ -80,5 +79,21 @@ namespace Registry.Viewport
         int GetRecordCount();
 
         bool Selected { get; set; }
+
+        bool HasTenancyContract17xReport();
+
+        bool HasTenancyContractReport();
+
+        bool HasTenancyActReport();
+
+        bool HasTenancyAgreementReport();
+
+        void TenancyContract17xReportGenerate(TenancyContractTypes tenancyContractType);
+
+        void TenancyContractReportGenerate();
+
+        void TenancyActReportGenerate();
+
+        void TenancyAgreementReportGenerate();
     }
 }

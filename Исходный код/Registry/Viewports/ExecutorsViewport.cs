@@ -12,33 +12,34 @@ namespace Registry.Viewport
     internal sealed class ExecutorsViewport: Viewport
     {
         #region Components
-        private DataGridView dataGridView = new System.Windows.Forms.DataGridView();
-        private DataGridViewTextBoxColumn field_id_executor = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        private DataGridViewTextBoxColumn field_executor_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-        private DataGridViewTextBoxColumn field_executor_login = new System.Windows.Forms.DataGridViewTextBoxColumn();
+        private DataGridView dataGridView;
         #endregion Components
 
-        //Modeles
+        #region Models
         ExecutorsDataModel executors = null;
         DataTable snapshot_executors = new DataTable("snapshot_executors");
+        #endregion Models
 
-        //Views
+        #region Views
         BindingSource v_executors = null;
         BindingSource v_snapshot_executors = null;
+        #endregion Views
+        private DataGridViewTextBoxColumn id_executor;
+        private DataGridViewTextBoxColumn executor_name;
+        private DataGridViewTextBoxColumn executor_login;
 
         //Флаг разрешения синхронизации snapshot и original моделей
         bool sync_views = true;
 
+        private ExecutorsViewport()
+            : this(null)
+        {
+        }
+
         public ExecutorsViewport(IMenuCallback menuCallback)
             : base(menuCallback)
         {
-            this.SuspendLayout();
-            ConstructViewport();
-            this.Name = "tabPageExecutors";
-            this.Padding = new System.Windows.Forms.Padding(3);
-            this.Text = "Исполнители";
-            this.UseVisualStyleBackColor = true;
-            this.ResumeLayout(false);
+            InitializeComponent();
         }
 
         public ExecutorsViewport(ExecutorsViewport executorsViewport, IMenuCallback menuCallback)
@@ -50,46 +51,110 @@ namespace Registry.Viewport
             this.ParentType = executorsViewport.ParentType;
         }
 
-        public override bool CanLoadData()
+        private bool SnapshotHasChanges()
         {
+            List<Executor> list_from_view = ExecutorsFromView();
+            List<Executor> list_from_viewport = ExecutorsFromViewport();
+            if (list_from_view.Count != list_from_viewport.Count)
+                return true;
+            bool founded = false;
+            for (int i = 0; i < list_from_view.Count; i++)
+            {
+                founded = false;
+                for (int j = 0; j < list_from_viewport.Count; j++)
+                    if (list_from_view[i] == list_from_viewport[j])
+                        founded = true;
+                if (!founded)
+                    return true;
+            }
+            return false;
+        }
+
+        private object[] DataRowViewToArray(DataRowView dataRowView)
+        {
+            return new object[] { 
+                dataRowView["id_executor"], 
+                dataRowView["executor_name"],
+                dataRowView["executor_login"]
+            };
+        }
+
+        private bool ValidateViewportData(List<Executor> list)
+        {
+            foreach (Executor executor in list)
+            {
+                if (executor.executor_name == null)
+                {
+                    MessageBox.Show("ФИО исполнителя не может быть пустым", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+                if (executor.executor_name != null && executor.executor_name.Length > 255)
+                {
+                    MessageBox.Show("Длина ФИО исполнителя не может превышать 255 символов",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+                if (executor.executor_login != null && executor.executor_login.Length > 255)
+                {
+                    MessageBox.Show("Длина логина исполнителя не может превышать 255 символов",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+                if ((executor.executor_login != null) &&
+                    (UserDomain.GetUserDomain(executor.executor_login) == null))
+                {
+                    MessageBox.Show("Пользователя с указанным логином не существует", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            }
             return true;
         }
 
-        public override void LoadData()
+        private Executor RowToExecutor(DataRow row)
         {
-            executors = ExecutorsDataModel.GetInstance();
+            Executor executor = new Executor();
+            executor.id_executor = ViewportHelper.ValueOrNull<int>(row, "id_executor");
+            executor.executor_name = ViewportHelper.ValueOrNull(row, "executor_name");
+            executor.executor_login = ViewportHelper.ValueOrNull(row, "executor_login");
+            return executor;
+        }
 
-            //Ожидаем дозагрузки данных, если это необходимо
-            executors.Select();
+        private List<Executor> ExecutorsFromViewport()
+        {
+            List<Executor> list = new List<Executor>();
+            for (int i = 0; i < dataGridView.Rows.Count; i++)
+            {
+                if (!dataGridView.Rows[i].IsNewRow)
+                {
+                    Executor e = new Executor();
+                    DataGridViewRow row = dataGridView.Rows[i];
+                    e.id_executor = ViewportHelper.ValueOrNull<int>(row, "id_executor");
+                    e.executor_name = ViewportHelper.ValueOrNull(row, "executor_name");
+                    e.executor_login = ViewportHelper.ValueOrNull(row, "executor_login");
+                    list.Add(e);
+                }
+            }
+            return list;
+        }
 
-            v_executors = new BindingSource();
-            v_executors.DataMember = "executors";
-            v_executors.DataSource = DataSetManager.GetDataSet();
-
-            //Инициируем колонки snapshot-модели
-            for (int i = 0; i < executors.Select().Columns.Count; i++)
-                snapshot_executors.Columns.Add(new DataColumn(
-                    executors.Select().Columns[i].ColumnName, executors.Select().Columns[i].DataType));
-            //Загружаем данные snapshot-модели из original-view
+        private List<Executor> ExecutorsFromView()
+        {
+            List<Executor> list = new List<Executor>();
             for (int i = 0; i < v_executors.Count; i++)
-                snapshot_executors.Rows.Add(DataRowViewToArray(((DataRowView)v_executors[i])));
-            v_snapshot_executors = new BindingSource();
-            v_snapshot_executors.DataSource = snapshot_executors;
-            v_snapshot_executors.CurrentItemChanged += new EventHandler(v_snapshot_executors_CurrentItemChanged);
+            {
+                Executor e = new Executor();
+                DataRowView row = ((DataRowView)v_executors[i]);
+                e.id_executor = ViewportHelper.ValueOrNull<int>(row, "id_executor");
+                e.executor_name = ViewportHelper.ValueOrNull(row, "executor_name");
+                e.executor_login = ViewportHelper.ValueOrNull(row, "executor_login");
+                list.Add(e);
+            }
+            return list;
+        }
 
-            dataGridView.DataSource = v_snapshot_executors;
-            field_id_executor.DataPropertyName = "id_executor";
-            field_executor_name.DataPropertyName = "executor_name";
-            field_executor_login.DataPropertyName = "executor_login";
-
-            dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
-
-            dataGridView.CellValidated += new DataGridViewCellEventHandler(dataGridView_CellValidated);
-            //События изменения данных для проверки соответствия реальным данным в модели
-            dataGridView.CellValueChanged += new DataGridViewCellEventHandler(dataGridView_CellValueChanged);
-            //Синхронизация данных исходные->текущие
-            executors.Select().RowChanged += new DataRowChangeEventHandler(ExecutorsViewport_RowChanged);
-            executors.Select().RowDeleting += new DataRowChangeEventHandler(ExecutorsViewport_RowDeleting);
+        public override int GetRecordCount()
+        {
+            return v_snapshot_executors.Count;
         }
 
         public override void MoveFirst()
@@ -132,98 +197,48 @@ namespace Registry.Viewport
             return (v_snapshot_executors.Position > -1) && (v_snapshot_executors.Position < (v_snapshot_executors.Count - 1));
         }
 
-        void ExecutorsViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
+        public override bool CanLoadData()
         {
-            if (!sync_views)
-                return;
-            if (e.Action == DataRowAction.Delete)
-            {
-                int row_index = v_snapshot_executors.Find("id_executor", e.Row["id_executor"]);
-                if (row_index != -1)
-                    ((DataRowView)v_snapshot_executors[row_index]).Delete();
-            }
+            return true;
         }
 
-        void ExecutorsViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        public override void LoadData()
         {
-            if (!sync_views)
-                return;
-            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
-            {
-                int row_index = v_snapshot_executors.Find("id_executor", e.Row["id_executor"]);
-                if (row_index != -1)
-                {
-                    DataRowView row = ((DataRowView)v_snapshot_executors[row_index]);
-                    row["executor_name"] = e.Row["executor_name"];
-                    row["executor_login"] = e.Row["executor_login"];
-                }
-            }
-            else
-                if (e.Action == DataRowAction.Add)
-                {
-                    snapshot_executors.Rows.Add(new object[] { 
-                        e.Row["id_executor"], 
-                        e.Row["executor_name"], 
-                        e.Row["executor_login"]
-                    });
-                }
-        }
+            dataGridView.AutoGenerateColumns = false;
+            this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
+            executors = ExecutorsDataModel.GetInstance();
 
-        private bool SnapshotHasChanges()
-        {
-            List<Executor> list_from_view = ExecutorsFromView();
-            List<Executor> list_from_viewport = ExecutorsFromViewport();
-            if (list_from_view.Count != list_from_viewport.Count)
-                return true;
-            bool founded = false;
-            for (int i = 0; i < list_from_view.Count; i++)
-            {
-                founded = false;
-                for (int j = 0; j < list_from_viewport.Count; j++)
-                    if (list_from_view[i] == list_from_viewport[j])
-                        founded = true;
-                if (!founded)
-                    return true;
-            }
-            return false;
-        }
+            //Ожидаем дозагрузки данных, если это необходимо
+            executors.Select();
 
-        private List<Executor> ExecutorsFromViewport()
-        {
-            List<Executor> list = new List<Executor>();
-            for (int i = 0; i < dataGridView.Rows.Count; i++)
-            {
-                if (!dataGridView.Rows[i].IsNewRow)
-                {
-                    Executor e = new Executor();
-                    DataGridViewRow row = dataGridView.Rows[i];
-                    e.id_executor = row.Cells["id_executor"].Value == DBNull.Value ? null : (int?)Convert.ToInt32(row.Cells["id_executor"].Value);
-                    e.executor_name = row.Cells["executor_name"].Value == DBNull.Value ? null : row.Cells["executor_name"].Value.ToString();
-                    e.executor_login = row.Cells["executor_login"].Value == DBNull.Value ? null : row.Cells["executor_login"].Value.ToString();
-                    list.Add(e);
-                }
-            }
-            return list;
-        }
+            v_executors = new BindingSource();
+            v_executors.DataMember = "executors";
+            v_executors.DataSource = DataSetManager.GetDataSet();
 
-        private List<Executor> ExecutorsFromView()
-        {
-            List<Executor> list = new List<Executor>();
+            //Инициируем колонки snapshot-модели
+            for (int i = 0; i < executors.Select().Columns.Count; i++)
+                snapshot_executors.Columns.Add(new DataColumn(
+                    executors.Select().Columns[i].ColumnName, executors.Select().Columns[i].DataType));
+            //Загружаем данные snapshot-модели из original-view
             for (int i = 0; i < v_executors.Count; i++)
-            {
-                Executor e = new Executor();
-                DataRowView row = ((DataRowView)v_executors[i]);
-                e.id_executor = row["id_executor"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_executor"]);
-                e.executor_name = row["executor_name"] == DBNull.Value ? null : row["executor_name"].ToString();
-                e.executor_login = row["executor_login"] == DBNull.Value ? null : row["executor_login"].ToString();
-                list.Add(e);
-            }
-            return list;
-        }
+                snapshot_executors.Rows.Add(DataRowViewToArray(((DataRowView)v_executors[i])));
+            v_snapshot_executors = new BindingSource();
+            v_snapshot_executors.DataSource = snapshot_executors;
+            v_snapshot_executors.CurrentItemChanged += new EventHandler(v_snapshot_executors_CurrentItemChanged);
 
-        void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            menuCallback.EditingStateUpdate();
+            dataGridView.DataSource = v_snapshot_executors;
+            id_executor.DataPropertyName = "id_executor";
+            executor_name.DataPropertyName = "executor_name";
+            executor_login.DataPropertyName = "executor_login";
+
+            dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
+
+            dataGridView.CellValidated += new DataGridViewCellEventHandler(dataGridView_CellValidated);
+            //События изменения данных для проверки соответствия реальным данным в модели
+            dataGridView.CellValueChanged += new DataGridViewCellEventHandler(dataGridView_CellValueChanged);
+            //Синхронизация данных исходные->текущие
+            executors.Select().RowChanged += new DataRowChangeEventHandler(ExecutorsViewport_RowChanged);
+            executors.Select().RowDeleting += new DataRowChangeEventHandler(ExecutorsViewport_RowDeleting);
         }
 
         public override bool CanInsertRecord()
@@ -235,25 +250,6 @@ namespace Registry.Viewport
         {
             DataRowView row = (DataRowView)v_snapshot_executors.AddNew();
             row.EndEdit();
-        }
-
-        public override void Close()
-        {
-            if (SnapshotHasChanges())
-            {
-                DialogResult result = MessageBox.Show("Сохранить изменения о виде основания в базу данных?", "Внимание",
-                                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                if (result == DialogResult.Yes)
-                    SaveRecord();
-                else
-                    if (result == DialogResult.No)
-                        CancelRecord();
-                    else
-                        return;
-            }
-            executors.Select().RowChanged -= new DataRowChangeEventHandler(ExecutorsViewport_RowChanged);
-            executors.Select().RowDeleting -= new DataRowChangeEventHandler(ExecutorsViewport_RowDeleting);
-            base.Close();
         }
 
         public override bool CanDeleteRecord()
@@ -276,26 +272,12 @@ namespace Registry.Viewport
             snapshot_executors.Clear();
             for (int i = 0; i < v_executors.Count; i++)
                 snapshot_executors.Rows.Add(DataRowViewToArray(((DataRowView)v_executors[i])));
+            menuCallback.EditingStateUpdate();
         }
 
-        private bool ValidateViewportData(List<Executor> list)
+        public override bool CanSaveRecord()
         {
-            foreach (Executor executor in list)
-            {
-                if (executor.executor_name == null)
-                {
-                    MessageBox.Show("ФИО исполнителя не может быть пустым", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-                if ((executor.executor_login != null) && 
-                    (executor.executor_login.Trim() != "") &&
-                    (UserDomain.GetUserDomain(executor.executor_login) == null))
-                {
-                    MessageBox.Show("Не удалось найти пользователя с указанным логином", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-            }
-            return true;
+            return SnapshotHasChanges();
         }
 
         public override void SaveRecord()
@@ -355,47 +337,7 @@ namespace Registry.Viewport
                 }
             }
             sync_views = true;
-        }
-
-        private Executor RowToExecutor(DataRow row)
-        {
-            Executor executor = new Executor();
-            executor.id_executor = row["id_executor"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_executor"]);
-            executor.executor_name = row["executor_name"] == DBNull.Value ? null : row["executor_name"].ToString();
-            executor.executor_login = row["executor_login"] == DBNull.Value ? null : row["executor_login"].ToString();
-            return executor;
-        }
-
-        public override bool CanSaveRecord()
-        {
-            return SnapshotHasChanges();
-        }
-
-        void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
-        {
-            DataGridViewCell cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            if (cell.OwningColumn.Name == "executor_name")
-            {
-                if (cell.Value.ToString().Length > 255)
-                {
-                    MessageBox.Show("Длина ФИО исполнителя не может превышать 255 символов", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    cell.Value = cell.Value.ToString().Substring(0, 255);
-                }
-                if (cell.Value.ToString().Trim().Length == 0)
-                {
-                    cell.ErrorText = "ФИО исполнителя не может быть пустым";
-                }
-                else
-                    cell.ErrorText = "";
-            }
-            if (cell.OwningColumn.Name == "executor_login")
-            {
-                if (cell.Value.ToString().Length > 255)
-                {
-                    MessageBox.Show("Длина логина исполнителя не может превышать 255 символов", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    cell.Value = cell.Value.ToString().Substring(0, 255);
-                }
-            }
+            menuCallback.EditingStateUpdate();
         }
 
         public override bool CanDuplicate()
@@ -411,9 +353,90 @@ namespace Registry.Viewport
             return viewport;
         }
 
-        public override int GetRecordCount()
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            return v_snapshot_executors.Count;
+            if (SnapshotHasChanges())
+            {
+                DialogResult result = MessageBox.Show("Сохранить изменения о виде основания в базу данных?", "Внимание",
+                                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                    SaveRecord();
+                else
+                    if (result == DialogResult.No)
+                        CancelRecord();
+                    else
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+            }
+            executors.Select().RowChanged -= new DataRowChangeEventHandler(ExecutorsViewport_RowChanged);
+            executors.Select().RowDeleting -= new DataRowChangeEventHandler(ExecutorsViewport_RowDeleting);
+        }
+
+        void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridViewCell cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            switch (cell.OwningColumn.Name)
+            {
+                case "executor_name":
+                    if (cell.Value.ToString().Trim().Length > 255)
+                        cell.ErrorText = "Длина ФИО исполнителя не может превышать 255 символов";
+                    else
+                        if (cell.Value.ToString().Trim() == "")
+                            cell.ErrorText = "ФИО исполнителя не может быть пустым";
+                        else
+                            cell.ErrorText = "";
+                    break;
+                case "executor_login":
+                    if (cell.Value.ToString().Length > 255)
+                        cell.ErrorText = "Длина логина исполнителя не может превышать 255 символов";
+                    else
+                        cell.ErrorText = "";
+                    break;
+            }
+        }
+
+        void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            menuCallback.EditingStateUpdate();
+        }
+
+        void ExecutorsViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
+        {
+            if (!sync_views)
+                return;
+            if (e.Action == DataRowAction.Delete)
+            {
+                int row_index = v_snapshot_executors.Find("id_executor", e.Row["id_executor"]);
+                if (row_index != -1)
+                    ((DataRowView)v_snapshot_executors[row_index]).Delete();
+            }
+        }
+
+        void ExecutorsViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (!sync_views)
+                return;
+            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
+            {
+                int row_index = v_snapshot_executors.Find("id_executor", e.Row["id_executor"]);
+                if (row_index != -1)
+                {
+                    DataRowView row = ((DataRowView)v_snapshot_executors[row_index]);
+                    row["executor_name"] = e.Row["executor_name"];
+                    row["executor_login"] = e.Row["executor_login"];
+                }
+            }
+            else
+                if (e.Action == DataRowAction.Add)
+                {
+                    snapshot_executors.Rows.Add(new object[] { 
+                        e.Row["id_executor"], 
+                        e.Row["executor_name"], 
+                        e.Row["executor_login"]
+                    });
+                }
         }
 
         void v_snapshot_executors_CurrentItemChanged(object sender, EventArgs e)
@@ -422,20 +445,15 @@ namespace Registry.Viewport
                 menuCallback.NavigationStateUpdate();
         }
 
-        private object[] DataRowViewToArray(DataRowView dataRowView)
+        private void InitializeComponent()
         {
-            return new object[] { 
-                dataRowView["id_executor"], 
-                dataRowView["executor_name"],
-                dataRowView["executor_login"]
-            };
-        }
-
-        private void ConstructViewport()
-        {
-            this.Controls.Add(dataGridView);
-            DataGridViewCellStyle dataGridViewCellStyle = new DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.id_executor = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.executor_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.executor_login = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.SuspendLayout();
             // 
             // dataGridView
             // 
@@ -443,50 +461,60 @@ namespace Registry.Viewport
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
-            dataGridViewCellStyle.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.field_id_executor,
-            this.field_executor_name,
-            this.field_executor_login});
+            this.id_executor,
+            this.executor_name,
+            this.executor_login});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView.Location = new System.Drawing.Point(3, 3);
+            this.dataGridView.MultiSelect = false;
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.Size = new System.Drawing.Size(990, 537);
+            this.dataGridView.Size = new System.Drawing.Size(505, 281);
             this.dataGridView.TabIndex = 8;
-            this.dataGridView.MultiSelect = false;
-            this.dataGridView.AutoGenerateColumns = false;
             // 
-            // field_id_executor
+            // id_executor
             // 
-            this.field_id_executor.Frozen = true;
-            this.field_id_executor.HeaderText = "Идентификатор исполнителя";
-            this.field_id_executor.Name = "id_executor";
-            this.field_id_executor.ReadOnly = true;
-            this.field_id_executor.Visible = false;
+            this.id_executor.Frozen = true;
+            this.id_executor.HeaderText = "Идентификатор исполнителя";
+            this.id_executor.Name = "id_executor";
+            this.id_executor.ReadOnly = true;
+            this.id_executor.Visible = false;
             // 
-            // field_executor_name
+            // executor_name
             // 
-            this.field_executor_name.HeaderText = "ФИО исполнителя";
-            this.field_executor_name.MinimumWidth = 100;
-            this.field_executor_name.Name = "executor_name";
+            this.executor_name.HeaderText = "ФИО исполнителя";
+            this.executor_name.MinimumWidth = 150;
+            this.executor_name.Name = "executor_name";
             // 
-            // field_executor_login
+            // executor_login
             // 
-            this.field_executor_login.HeaderText = "Логин исполнителя";
-            this.field_executor_login.MinimumWidth = 100;
-            this.field_executor_login.Name = "executor_login";
-
+            this.executor_login.HeaderText = "Логин исполнителя";
+            this.executor_login.MinimumWidth = 150;
+            this.executor_login.Name = "executor_login";
+            // 
+            // ExecutorsViewport
+            // 
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ClientSize = new System.Drawing.Size(511, 287);
+            this.Controls.Add(this.dataGridView);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Name = "ExecutorsViewport";
+            this.Padding = new System.Windows.Forms.Padding(3);
+            this.Text = "Исполнители";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.ResumeLayout(false);
+
         }
     }
 }

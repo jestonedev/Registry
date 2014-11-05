@@ -16,57 +16,18 @@ namespace Registry.SearchForms
         KladrStreetsDataModel kladr = null;
         KladrRegionsDataModel regions = null;
         FundTypesDataModel fundTypes = null;
-        StatesDataModel states = null;
+        ObjectStatesDataModel object_states = null;
 
         BindingSource v_kladr = null;
         BindingSource v_regions = null;
         BindingSource v_fundTypes = null;
-        BindingSource v_states = null;
+        BindingSource v_object_states = null;
 
         internal override string GetFilter()
         {
             string filter = "";
             List<int> included_premises = null;
             List<int> included_buildings = null;
-            if (checkBoxIDPremisesEnable.Checked)
-            {
-                if (included_premises == null)
-                    included_premises = new List<int>();
-                included_premises.Add(Convert.ToInt32(numericUpDownIDPremises.Value));
-            }
-            if ((checkBoxRegionEnable.Checked) && (comboBoxRegion.SelectedValue != null))
-            {
-                DataTable table = BuildingsDataModel.GetInstance().Select();
-                List<int> buildings_ids = (from building_row in table.AsEnumerable()
-                                           where building_row.Field<string>("id_street").StartsWith(comboBoxRegion.SelectedValue.ToString())
-                                           select building_row.Field<int>("id_building")).ToList();
-                if (included_buildings != null)
-                    included_buildings = included_buildings.Intersect(buildings_ids).ToList();
-                else
-                    included_buildings = buildings_ids;
-            }
-            if ((checkBoxStreetEnable.Checked) && (comboBoxStreet.SelectedValue != null))
-            {
-                DataTable table = BuildingsDataModel.GetInstance().Select();
-                List<int> buildings_ids = (from building_row in table.AsEnumerable()
-                                           where building_row.Field<string>("id_street") == comboBoxStreet.SelectedValue.ToString()
-                                           select building_row.Field<int>("id_building")).ToList();
-                if (included_buildings != null)
-                    included_buildings = included_buildings.Intersect(buildings_ids).ToList();
-                else
-                    included_buildings = buildings_ids;
-            }
-            if (checkBoxHouseEnable.Checked)
-            {
-                DataTable table = BuildingsDataModel.GetInstance().Select();
-                List<int> buildings_ids = (from building_row in table.AsEnumerable()
-                                           where building_row.Field<string>("house") == textBoxHouse.Text.Trim().Replace("'", "")
-                                           select building_row.Field<int>("id_building")).ToList();
-                if (included_buildings != null)
-                    included_buildings = included_buildings.Intersect(buildings_ids).ToList();
-                else
-                    included_buildings = buildings_ids;
-            }
             if (checkBoxPremisesNumEnable.Checked)
             {
                 if (filter.Trim() != "")
@@ -91,82 +52,48 @@ namespace Registry.SearchForms
                 else
                     filter += "cadastral_num is null";
             }
-            if (checkBoxForOrpahnsEnable.Checked)
-            {
-                if (filter.Trim() != "")
-                    filter += " AND ";
-                filter += "for_orphans = " + (checkBoxForOrpahns.Checked ? 1 : 0).ToString();
-            }
-            if (checkBoxAcceptedByDonationEnable.Checked)
-            {
-                if (filter.Trim() != "")
-                    filter += " AND ";
-                filter += "accepted_by_donation = " + (checkBoxAcceptedByDonation.Checked ? 1 : 0).ToString();
-            }
-            if (checkBoxAcceptedByExchangeEnable.Checked)
-            {
-                if (filter.Trim() != "")
-                    filter += " AND ";
-                filter += "accepted_by_exchange = " + (checkBoxAcceptedByExchange.Checked ? 1 : 0).ToString();
-            }
-            if (checkBoxAcceptedByOtherEnable.Checked)
-            {
-                if (filter.Trim() != "")
-                    filter += " AND ";
-                filter += "accepted_by_other = " + (checkBoxAcceptedByOther.Checked ? 1 : 0).ToString();
-            }
-            if ((checkBoxFundTypeEnable.Checked) && (comboBoxStreet.SelectedValue != null))
-            {
-                DataTable table = CalcDataModelPremisesCurrentFunds.GetInstance().Select();
-                List<int> premises_ids = (from funds_row in table.AsEnumerable()
-                                           where funds_row.Field<int>("id_fund_type") == Convert.ToInt32(comboBoxFundType.SelectedValue)
-                                           select funds_row.Field<int>("id_premises")).ToList();
-                if (included_premises != null)
-                    included_premises = included_premises.Intersect(premises_ids).ToList();
-                else
-                    included_premises = premises_ids;           
-            }
             if ((checkBoxStateEnable.Checked) && (comboBoxState.SelectedValue != null))
             {
                 if (filter.Trim() != "")
                     filter += " AND ";
                 filter += "id_state = " + comboBoxState.SelectedValue.ToString();
             }
+            if (checkBoxIDPremisesEnable.Checked)
+            {
+                if (included_premises == null)
+                    included_premises = new List<int>();
+                included_premises.Add(Convert.ToInt32(numericUpDownIDPremises.Value));
+            }
+            if ((checkBoxRegionEnable.Checked) && (comboBoxRegion.SelectedValue != null))
+            {
+                List<int> buildings_ids = DataModelHelper.BuildingIDsByRegion(comboBoxRegion.SelectedValue.ToString());
+                included_buildings = DataModelHelper.Intersect(included_buildings, buildings_ids);
+            }
+            if ((checkBoxStreetEnable.Checked) && (comboBoxStreet.SelectedValue != null))
+            {
+                List<int> buildings_ids = DataModelHelper.BuildingIDsByStreet(comboBoxStreet.SelectedValue.ToString());
+                included_buildings = DataModelHelper.Intersect(included_buildings, buildings_ids);
+            }
+            if (checkBoxHouseEnable.Checked)
+            {
+                List<int> buildings_ids = DataModelHelper.BuildingIDsByHouse(textBoxHouse.Text.Trim().Replace("'", ""));
+                included_buildings = DataModelHelper.Intersect(included_buildings, buildings_ids);
+            }
+            if ((checkBoxFundTypeEnable.Checked) && (comboBoxStreet.SelectedValue != null))
+            {
+                List<int> premises_ids = DataModelHelper.PremiseIDsByCurrentFund(Convert.ToInt32(comboBoxFundType.SelectedValue));
+                included_premises = DataModelHelper.Intersect(included_premises, premises_ids);        
+            }
             if (checkBoxContractNumberEnable.Checked)
             {
-                List<int> contract_ids = new List<int>();
-                DataTable tenancy_premises_assoc = TenancyPremisesAssocDataModel.GetInstance().Select();
-                DataTable tenancy_contracts = TenancyContractsDataModel.GetInstance().Select();
-
-                contract_ids = (from tenancy_premises_assoc_row in tenancy_premises_assoc.AsEnumerable()
-                                join tenancy_contract_row in tenancy_contracts.AsEnumerable()
-                                on tenancy_premises_assoc_row.Field<int>("id_contract") equals tenancy_contract_row.Field<int>("id_contract")
-                                where tenancy_contract_row.Field<string>("registration_num") == textBoxContractNumber.Text.Trim().Replace("'", "")
-                                select tenancy_premises_assoc_row.Field<int>("id_premises")).ToList();
-                if (included_premises != null)
-                    included_premises = included_premises.Intersect(contract_ids).ToList();
-                else
-                    included_premises = contract_ids;
+                List<int> premises_ids = DataModelHelper.PremiseIDsByRegistrationNumber(textBoxContractNumber.Text.Trim().Replace("'", ""));
+                included_premises = DataModelHelper.Intersect(included_premises, premises_ids);    
             }
             if (checkBoxTenantSNPEnable.Checked)
             {
-                List<int> contract_ids = new List<int>();
                 string[] snp = textBoxTenantSNP.Text.Trim().Replace("'", "").Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                DataTable tenancy_premises_assoc = TenancyPremisesAssocDataModel.GetInstance().Select();
-                DataTable persons = PersonsDataModel.GetInstance().Select();
-                contract_ids = (from tenancy_premises_assoc_row in tenancy_premises_assoc.AsEnumerable()
-                                join persons_row in persons.AsEnumerable()
-                                on tenancy_premises_assoc_row.Field<int>("id_contract") equals persons_row.Field<int>("id_contract")
-                                where (persons_row.Field<int>("id_kinship") == 1) &&
-                                      ((snp.Count() == 1) ? persons_row.Field<string>("surname") == snp[0] :
-                                       (snp.Count() == 2) ? persons_row.Field<string>("surname") == snp[0] && persons_row.Field<string>("name") == snp[1] :
-                                       (snp.Count() == 3) ? persons_row.Field<string>("surname") == snp[0] && persons_row.Field<string>("name") == snp[1] &&
-                                       persons_row.Field<string>("patronymic") == snp[2] : false)
-                                select tenancy_premises_assoc_row.Field<int>("id_premises")).ToList();
-                if (included_premises != null)
-                    included_premises = included_premises.Intersect(contract_ids).ToList();
-                else
-                    included_premises = contract_ids;
+                List<int> premises_ids = DataModelHelper.PremisesIDsBySNP(snp, (row) => { return row.Field<int>("id_kinship") == 1; });
+                included_premises = DataModelHelper.Intersect(included_premises, premises_ids);    
             }
             if (included_premises != null)
             {
@@ -194,7 +121,7 @@ namespace Registry.SearchForms
             InitializeComponent();
             kladr = KladrStreetsDataModel.GetInstance();
             fundTypes = FundTypesDataModel.GetInstance();
-            states = StatesDataModel.GetInstance();
+            object_states = ObjectStatesDataModel.GetInstance();
             regions = KladrRegionsDataModel.GetInstance();
 
             DataSet ds = DataSetManager.GetDataSet();
@@ -210,9 +137,9 @@ namespace Registry.SearchForms
             v_fundTypes.DataSource = ds;
             v_fundTypes.DataMember = "fund_types";
 
-            v_states = new BindingSource();
-            v_states.DataSource = ds;
-            v_states.DataMember = "states";
+            v_object_states = new BindingSource();
+            v_object_states.DataSource = ds;
+            v_object_states.DataMember = "object_states";
 
             comboBoxStreet.DataSource = v_kladr;
             comboBoxStreet.ValueMember = "id_street";
@@ -222,7 +149,7 @@ namespace Registry.SearchForms
             comboBoxFundType.ValueMember = "id_fund_type";
             comboBoxFundType.DisplayMember = "fund_type";
 
-            comboBoxState.DataSource = v_states;
+            comboBoxState.DataSource = v_object_states;
             comboBoxState.ValueMember = "id_state";
             comboBoxState.DisplayMember = "state_neutral";
 
@@ -313,26 +240,6 @@ namespace Registry.SearchForms
         private void checkBoxFundTypeEnable_CheckedChanged(object sender, EventArgs e)
         {
             comboBoxFundType.Enabled = checkBoxFundTypeEnable.Checked;
-        }
-
-        private void checkBoxForOrpahnsEnable_CheckedChanged(object sender, EventArgs e)
-        {
-            checkBoxForOrpahns.Enabled = checkBoxForOrpahnsEnable.Checked;
-        }
-
-        private void checkBoxAcceptedByExchangeEnable_CheckedChanged(object sender, EventArgs e)
-        {
-            checkBoxAcceptedByExchange.Enabled = checkBoxAcceptedByExchangeEnable.Checked;
-        }
-
-        private void checkBoxAcceptedByDonationEnable_CheckedChanged(object sender, EventArgs e)
-        {
-            checkBoxAcceptedByDonation.Enabled = checkBoxAcceptedByDonationEnable.Checked;
-        }
-
-        private void checkBoxAcceptedByOtherEnbale_CheckedChanged(object sender, EventArgs e)
-        {
-            checkBoxAcceptedByOther.Enabled = checkBoxAcceptedByOtherEnable.Checked;
         }
 
         private void comboBoxStreet_Leave(object sender, EventArgs e)

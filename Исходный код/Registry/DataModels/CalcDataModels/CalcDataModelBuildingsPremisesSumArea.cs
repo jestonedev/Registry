@@ -35,16 +35,11 @@ namespace Registry.CalcDataModels
             dmLoadState = DataModelLoadState.Loading;
             CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;
             // Фильтруем удаленные строки
-            var buildings = from buildings_row in BuildingsDataModel.GetInstance().Select().AsEnumerable()
-                            where (buildings_row.RowState != DataRowState.Deleted) &&
-                                  (buildings_row.RowState != DataRowState.Detached) &&
-                                  (config.Entity == CalcDataModelFilterEnity.Building ? buildings_row.Field<int>("id_building") == config.IdObject :
+            var buildings = from buildings_row in DataModelHelper.FilterRows(BuildingsDataModel.GetInstance().Select())
+                            where (config.Entity == CalcDataModelFilterEnity.Building ? buildings_row.Field<int>("id_building") == config.IdObject :
                                    config.Entity == CalcDataModelFilterEnity.All ? true : false)
                             select buildings_row;
-            var premises = from premises_row in PremisesDataModel.GetInstance().Select().AsEnumerable()
-                           where (premises_row.RowState != DataRowState.Deleted) &&
-                                  (premises_row.RowState != DataRowState.Detached)
-                           select premises_row;
+            var premises = DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select());
             // Вычисляем агрегационную информацию
             var result = from buildings_row in buildings
                          join premises_row in premises

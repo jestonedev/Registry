@@ -12,31 +12,32 @@ namespace Registry.Viewport
     internal sealed class StructureTypeListViewport : Viewport
     {
         #region Components
-        private DataGridView dataGridView = new DataGridView();
-        private DataGridViewTextBoxColumn field_id_structure_type = new DataGridViewTextBoxColumn();
-        private DataGridViewTextBoxColumn field_structure_type = new DataGridViewTextBoxColumn();
+        private DataGridView dataGridView;
+        private DataGridViewTextBoxColumn id_structure_type;
+        private DataGridViewTextBoxColumn structure_type;
         #endregion Components
 
-        //Modeles
+        #region Models
         StructureTypesDataModel structure_types = null;
         DataTable snapshot_structure_types = new DataTable("snapshot_structure_types");
+        #endregion Models
 
-        //Views
+        #region Views
         BindingSource v_structure_types = null;
         BindingSource v_snapshot_structure_types = null;
+        #endregion Views
 
         //Флаг разрешения синхронизации snapshot и original моделей
         bool sync_views = true;
 
+        private StructureTypeListViewport()
+            : this(null)
+        {
+        }
+
         public StructureTypeListViewport(IMenuCallback menuCallback): base(menuCallback)
         {
-            this.SuspendLayout();
-            ConstructViewport();
-            this.Name = "tabPageStructureTypes";
-            this.Padding = new System.Windows.Forms.Padding(3);
-            this.Text = "Типы материалов";
-            this.UseVisualStyleBackColor = true;
-            this.ResumeLayout(false);
+            InitializeComponent();
         }
 
         public StructureTypeListViewport(StructureTypeListViewport structureTypeListViewport, IMenuCallback menuCallback)
@@ -44,48 +45,94 @@ namespace Registry.Viewport
         {
         }
 
-        public override bool CanLoadData()
+        private bool SnapshotHasChanges()
         {
+            List<StructureType> list_from_view = StructureTypesFromView();
+            List<StructureType> list_from_viewport = StructureTypesFromViewport();
+            if (list_from_view.Count != list_from_viewport.Count)
+                return true;
+            bool founded = false;
+            for (int i = 0; i < list_from_view.Count; i++)
+            {
+                founded = false;
+                for (int j = 0; j < list_from_viewport.Count; j++)
+                    if (list_from_view[i] == list_from_viewport[j])
+                        founded = true;
+                if (!founded)
+                    return true;
+            }
+            return false;
+        }
+
+        private object[] DataRowViewToArray(DataRowView dataRowView)
+        {
+            return new object[] { 
+                dataRowView["id_structure_type"], 
+                dataRowView["structure_type"]
+            };
+        }
+
+        private bool ValidateViewportData(List<StructureType> list)
+        {
+            foreach (StructureType structureType in list)
+            {
+                if (structureType.structure_type == null)
+                {
+                    MessageBox.Show("Не заполнено наименование структуры здания", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+                if (structureType.structure_type != null && structureType.structure_type.Length > 255)
+                {
+                    MessageBox.Show("Длина названия структуры здания не может превышать 255 символов",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
+                }
+            }
             return true;
         }
 
-        public override void LoadData()
+        private StructureType RowToStructureType(DataRow row)
         {
-            structure_types = StructureTypesDataModel.GetInstance();
-            //Ожиданем дозагрузки данных, если это необходимо
-            structure_types.Select();
-
-            v_structure_types = new BindingSource();
-            v_structure_types.DataMember = "structure_types";
-            v_structure_types.DataSource = DataSetManager.GetDataSet();
-
-            //Инициируем колонки snapshot-модели
-            for (int i = 0; i < structure_types.Select().Columns.Count; i++)
-                snapshot_structure_types.Columns.Add(new DataColumn(
-                    structure_types.Select().Columns[i].ColumnName, structure_types.Select().Columns[i].DataType));
-            //Загружаем данные snapshot-модели из original-view
-            for (int i = 0; i < v_structure_types.Count; i++)
-                snapshot_structure_types.Rows.Add(DataRowViewToArray(((DataRowView)v_structure_types[i])));
-            v_snapshot_structure_types = new BindingSource();
-            v_snapshot_structure_types.DataSource = snapshot_structure_types;
-            v_snapshot_structure_types.CurrentItemChanged += new EventHandler(v_snapshot_structure_types_CurrentItemChanged);
-
-            dataGridView.DataSource = v_snapshot_structure_types;
-            field_id_structure_type.DataPropertyName = "id_structure_type";
-            field_structure_type.DataPropertyName = "structure_type";
-            dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
-            dataGridView.CellValidated += new DataGridViewCellEventHandler(dataGridView_CellValidated);
-            //События изменения данных для проверки соответствия реальным данным в модели
-            dataGridView.CellValueChanged += new DataGridViewCellEventHandler(dataGridView_CellValueChanged);
-            //Синхронизация данных исходные->текущие
-            structure_types.Select().RowChanged += new DataRowChangeEventHandler(StructureTypeListViewport_RowChanged);
-            structure_types.Select().RowDeleting += new DataRowChangeEventHandler(StructureTypeListViewport_RowDeleting);
+            StructureType structureType = new StructureType();
+            structureType.id_structure_type = ViewportHelper.ValueOrNull<int>(row, "id_structure_type");
+            structureType.structure_type = ViewportHelper.ValueOrNull(row, "structure_type");
+            return structureType;
         }
 
-        void v_snapshot_structure_types_CurrentItemChanged(object sender, EventArgs e)
+        private List<StructureType> StructureTypesFromViewport()
         {
-            if (Selected)
-                menuCallback.NavigationStateUpdate();
+            List<StructureType> list = new List<StructureType>();
+            for (int i = 0; i < dataGridView.Rows.Count; i++)
+            {
+                if (!dataGridView.Rows[i].IsNewRow)
+                {
+                    StructureType st = new StructureType();
+                    DataGridViewRow row = dataGridView.Rows[i];
+                    st.id_structure_type = ViewportHelper.ValueOrNull<int>(row, "id_structure_type");
+                    st.structure_type = ViewportHelper.ValueOrNull(row, "structure_type");
+                    list.Add(st);
+                }
+            }
+            return list;
+        }
+
+        private List<StructureType> StructureTypesFromView()
+        {
+            List<StructureType> list = new List<StructureType>();
+            for (int i = 0; i < v_structure_types.Count; i++)
+            {
+                StructureType st = new StructureType();
+                DataRowView row = ((DataRowView)v_structure_types[i]);
+                st.id_structure_type = ViewportHelper.ValueOrNull<int>(row, "id_structure_type");
+                st.structure_type = ViewportHelper.ValueOrNull(row, "structure_type");
+                list.Add(st);
+            }
+            return list;
+        }
+
+        public override int GetRecordCount()
+        {
+            return v_snapshot_structure_types.Count;
         }
 
         public override void MoveFirst()
@@ -128,102 +175,44 @@ namespace Registry.Viewport
             return (v_snapshot_structure_types.Position > -1) && (v_snapshot_structure_types.Position < (v_snapshot_structure_types.Count - 1));
         }
 
-        void StructureTypeListViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
+        public override bool CanLoadData()
         {
-            if (!sync_views)
-                return;
-            if (e.Action == DataRowAction.Delete)
-            {
-                int row_index = v_snapshot_structure_types.Find("id_structure_type", e.Row["id_structure_type"]);
-                if (row_index != -1)
-                    ((DataRowView)v_snapshot_structure_types[row_index]).Delete();
-            }
+            return true;
         }
 
-        void StructureTypeListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        public override void LoadData()
         {
-            if (!sync_views)
-                return;
-            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
-            {
-                int row_index = v_snapshot_structure_types.Find("id_structure_type", e.Row["id_structure_type"]);
-                if (row_index != -1)
-                {
-                    DataRowView row = ((DataRowView)v_snapshot_structure_types[row_index]);
-                    row["structure_type"] = e.Row["structure_type"];
-                }
-            }
-            else
-                if (e.Action == DataRowAction.Add)
-                {
-                    snapshot_structure_types.Rows.Add(new object[] { 
-                        e.Row["id_structure_type"], 
-                        e.Row["structure_type"]
-                    });
-                }
-        }
+            dataGridView.AutoGenerateColumns = false;
+            this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
+            structure_types = StructureTypesDataModel.GetInstance();
+            //Ожиданем дозагрузки данных, если это необходимо
+            structure_types.Select();
 
-        private bool SnapshotHasChanges()
-        {
-            List<StructureType> list_from_view = StructureTypesFromView();
-            List<StructureType> list_from_viewport = StructureTypesFromViewport();
-            if (list_from_view.Count != list_from_viewport.Count)
-                return true;
-            bool founded = false;
-            for (int i = 0; i < list_from_view.Count; i++)
-            {
-                founded = false;
-                for (int j = 0; j < list_from_viewport.Count; j++)
-                    if (list_from_view[i] == list_from_viewport[j])
-                        founded = true;
-                if (!founded)
-                    return true;
-            }
-            return false;
-        }
+            v_structure_types = new BindingSource();
+            v_structure_types.DataMember = "structure_types";
+            v_structure_types.DataSource = DataSetManager.GetDataSet();
 
-        private List<StructureType> StructureTypesFromViewport()
-        {
-            List<StructureType> list = new List<StructureType>();
-            for (int i = 0; i < dataGridView.Rows.Count; i++)
-            {
-                if (!dataGridView.Rows[i].IsNewRow)
-                {
-                    StructureType st = new StructureType();
-                    DataGridViewRow row = dataGridView.Rows[i];
-                    st.id_structure_type = row.Cells["id_structure_type"].Value == DBNull.Value ? null : (int?)Convert.ToInt32(row.Cells["id_structure_type"].Value);
-                    st.structure_type = row.Cells["structure_type"].Value == DBNull.Value ? null : row.Cells["structure_type"].Value.ToString();
-                    list.Add(st);
-                }
-            }
-            return list;
-        }
-
-        private List<StructureType> StructureTypesFromView()
-        {
-            List<StructureType> list = new List<StructureType>();
+            //Инициируем колонки snapshot-модели
+            for (int i = 0; i < structure_types.Select().Columns.Count; i++)
+                snapshot_structure_types.Columns.Add(new DataColumn(
+                    structure_types.Select().Columns[i].ColumnName, structure_types.Select().Columns[i].DataType));
+            //Загружаем данные snapshot-модели из original-view
             for (int i = 0; i < v_structure_types.Count; i++)
-            {
-                StructureType st = new StructureType();
-                DataRowView row = ((DataRowView)v_structure_types[i]);
-                st.id_structure_type = row["id_structure_type"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_structure_type"]);
-                st.structure_type = row["structure_type"] == DBNull.Value ? null : row["structure_type"].ToString();
-                list.Add(st);
-            }
-            return list;
-        }
+                snapshot_structure_types.Rows.Add(DataRowViewToArray(((DataRowView)v_structure_types[i])));
+            v_snapshot_structure_types = new BindingSource();
+            v_snapshot_structure_types.DataSource = snapshot_structure_types;
+            v_snapshot_structure_types.CurrentItemChanged += new EventHandler(v_snapshot_structure_types_CurrentItemChanged);
 
-        private object[] DataRowViewToArray(DataRowView dataRowView)
-        {
-            return new object[] { 
-                dataRowView["id_structure_type"], 
-                dataRowView["structure_type"]
-            };
-        }
-
-        void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            menuCallback.EditingStateUpdate();
+            dataGridView.DataSource = v_snapshot_structure_types;
+            id_structure_type.DataPropertyName = "id_structure_type";
+            structure_type.DataPropertyName = "structure_type";
+            dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
+            dataGridView.CellValidated += new DataGridViewCellEventHandler(dataGridView_CellValidated);
+            //События изменения данных для проверки соответствия реальным данным в модели
+            dataGridView.CellValueChanged += new DataGridViewCellEventHandler(dataGridView_CellValueChanged);
+            //Синхронизация данных исходные->текущие
+            structure_types.Select().RowChanged += new DataRowChangeEventHandler(StructureTypeListViewport_RowChanged);
+            structure_types.Select().RowDeleting += new DataRowChangeEventHandler(StructureTypeListViewport_RowDeleting);
         }
 
         public override bool CanInsertRecord()
@@ -235,25 +224,6 @@ namespace Registry.Viewport
         {
             DataRowView row = (DataRowView)v_snapshot_structure_types.AddNew();
             row.EndEdit();
-        }
-
-        public override void Close()
-        {
-            if (SnapshotHasChanges())
-            {
-                DialogResult result = MessageBox.Show("Сохранить изменения о структуре зданий в базу данных?", "Внимание",
-                                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                if (result == DialogResult.Yes)
-                    SaveRecord();
-                else
-                    if (result == DialogResult.No)
-                        CancelRecord();
-                    else
-                        return;
-            }
-            structure_types.Select().RowChanged -= new DataRowChangeEventHandler(StructureTypeListViewport_RowChanged);
-            structure_types.Select().RowDeleting -= new DataRowChangeEventHandler(StructureTypeListViewport_RowDeleting);
-            base.Close();
         }
 
         public override bool CanDeleteRecord()
@@ -276,22 +246,12 @@ namespace Registry.Viewport
             snapshot_structure_types.Clear();
             for (int i = 0; i < v_structure_types.Count; i++)
                 snapshot_structure_types.Rows.Add(DataRowViewToArray(((DataRowView)v_structure_types[i])));
+            menuCallback.EditingStateUpdate();
         }
 
         public override bool CanSaveRecord()
         {
             return SnapshotHasChanges();
-        }
-
-        private bool ValidateViewportData(List<StructureType> list)
-        {
-            foreach (StructureType structureType in list)
-                if (structureType.structure_type == null)
-                {
-                    MessageBox.Show("Не заполнено наименование структуры здания", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-            return true;
         }
 
         public override void SaveRecord()
@@ -349,24 +309,7 @@ namespace Registry.Viewport
                 }
             }
             sync_views = true;
-        }
-
-        private StructureType RowToStructureType(DataRow row)
-        {
-            StructureType structureType = new StructureType();
-            structureType.id_structure_type = row["id_structure_type"] == DBNull.Value ? null : (int?)Convert.ToInt32(row["id_structure_type"]);
-            structureType.structure_type = row["structure_type"] == DBNull.Value ? null : row["structure_type"].ToString();
-            return structureType;
-        }
-
-        void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
-        {
-            if ((dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].OwningColumn.Name == "structure_type") &&
-                (dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString().Length > 255))
-            {
-                MessageBox.Show("Длина названия типа структуры здания не может превышать 255 символов", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString().Substring(0, 255);
-            }
+            menuCallback.EditingStateUpdate();
         }
 
         public override bool CanDuplicate()
@@ -382,62 +325,152 @@ namespace Registry.Viewport
             return viewport;
         }
 
-        public override int GetRecordCount()
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            return v_snapshot_structure_types.Count;
+            if (SnapshotHasChanges())
+            {
+                DialogResult result = MessageBox.Show("Сохранить изменения о структуре зданий в базу данных?", "Внимание",
+                                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                    SaveRecord();
+                else
+                    if (result == DialogResult.No)
+                        CancelRecord();
+                    else
+                    {
+                        e.Cancel = true;
+                        return;
+                    }
+            }
+            structure_types.Select().RowChanged -= new DataRowChangeEventHandler(StructureTypeListViewport_RowChanged);
+            structure_types.Select().RowDeleting -= new DataRowChangeEventHandler(StructureTypeListViewport_RowDeleting);
         }
 
-        private void ConstructViewport()
+        void StructureTypeListViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
-            this.SuspendLayout();
-            DataGridViewCellStyle dataGridViewCellStyle = new DataGridViewCellStyle();
+            if (!sync_views)
+                return;
+            if (e.Action == DataRowAction.Delete)
+            {
+                int row_index = v_snapshot_structure_types.Find("id_structure_type", e.Row["id_structure_type"]);
+                if (row_index != -1)
+                    ((DataRowView)v_snapshot_structure_types[row_index]).Delete();
+            }
+        }
+
+        void StructureTypeListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (!sync_views)
+                return;
+            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
+            {
+                int row_index = v_snapshot_structure_types.Find("id_structure_type", e.Row["id_structure_type"]);
+                if (row_index != -1)
+                {
+                    DataRowView row = ((DataRowView)v_snapshot_structure_types[row_index]);
+                    row["structure_type"] = e.Row["structure_type"];
+                }
+            }
+            else
+                if (e.Action == DataRowAction.Add)
+                {
+                    snapshot_structure_types.Rows.Add(new object[] { 
+                        e.Row["id_structure_type"], 
+                        e.Row["structure_type"]
+                    });
+                }
+        }
+
+        void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            menuCallback.EditingStateUpdate();
+        }
+
+        void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
+        {
+            DataGridViewCell cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            switch (cell.OwningColumn.Name)
+            {
+                case "structure_type":
+                    if (cell.Value.ToString().Trim().Length > 255)
+                        cell.ErrorText = "Длина названия структуры здания не может превышать 255 символов";
+                    else
+                        if (cell.Value.ToString().Trim() == "")
+                            cell.ErrorText = "Название структуры здания не может быть пустым";
+                        else
+                            cell.ErrorText = "";
+                    break;
+            }
+        }
+
+        void v_snapshot_structure_types_CurrentItemChanged(object sender, EventArgs e)
+        {
+            if (Selected)
+                menuCallback.NavigationStateUpdate();
+        }
+
+        private void InitializeComponent()
+        {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.id_structure_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.structure_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
-            this.Controls.Add(this.dataGridView);
+            this.SuspendLayout();
             // 
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
-            this.dataGridView.Dock = DockStyle.Fill;
+            this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
-            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, 
-                System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
-            dataGridViewCellStyle.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle;
+            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.field_id_structure_type,
-            this.field_structure_type});
-            this.dataGridView.Name = "dataGridView";
-            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.id_structure_type,
+            this.structure_type});
+            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView.Location = new System.Drawing.Point(3, 3);
             this.dataGridView.MultiSelect = false;
-            this.dataGridView.TabIndex = 3; 
-            ViewportHelper.SetDoubleBuffered(dataGridView);
-            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridView.Name = "dataGridView";
+            this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.ShowCellToolTips = false;
-            this.dataGridView.AllowUserToResizeRows = false;
+            this.dataGridView.Size = new System.Drawing.Size(320, 255);
+            this.dataGridView.TabIndex = 3;
             // 
-            // field_id_structure_type
+            // id_structure_type
             // 
-            this.field_id_structure_type.HeaderText = "Идентификатор типа материала";
-            this.field_id_structure_type.Name = "id_structure_type";
-            this.field_id_structure_type.Visible = false;
+            this.id_structure_type.HeaderText = "Идентификатор типа материала";
+            this.id_structure_type.Name = "id_structure_type";
+            this.id_structure_type.Visible = false;
             // 
-            // field_structure_type
+            // structure_type
             // 
-            this.field_structure_type.HeaderText = "Наименование";
-            this.field_structure_type.Name = "structure_type";
-
+            this.structure_type.HeaderText = "Наименование";
+            this.structure_type.Name = "structure_type";
+            // 
+            // StructureTypeListViewport
+            // 
+            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.ClientSize = new System.Drawing.Size(326, 261);
+            this.Controls.Add(this.dataGridView);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Name = "StructureTypeListViewport";
+            this.Padding = new System.Windows.Forms.Padding(3);
+            this.Text = "Типы материалов";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
+
         }
     }
 }

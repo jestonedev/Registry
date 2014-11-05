@@ -19,3 +19,74 @@ D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исхо
 D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Entities.dll
 D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\CustomControls.pdb
 D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Entities.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Settings.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Settings.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Reporting.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Reporting.pdb
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\obj\x86\Release\Registry.exe
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\obj\x86\Release\Registry.pdb
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Registry.exe
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Registry.pdb
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\CustomControls.dll
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\DataModels.dll
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\MBToolStrip.dll
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Reporting.dll
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Settings.dll
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\System.Windows.Forms.Ribbon.dll
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\VIBlend.WinForms.Controls.dll
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\VIBlend.WinForms.Utilities.dll
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Viewports.dll
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\WeifenLuo.WinFormsUI.Docking.dll
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Entities.dll
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Microsoft.TeamFoundation.Client.dll
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Microsoft.TeamFoundation.Common.dll
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Microsoft.TeamFoundation.Diff.dll
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\CustomControls.pdb
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\DataModels.pdb
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Reporting.pdb
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Settings.pdb
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Viewports.pdb
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\MBToolStrip.pdb
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\MBToolStrip.xml
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\System.Windows.Forms.Ribbon.pdb
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\VIBlend.WinForms.Controls.pdb
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\VIBlend.WinForms.Controls.xml
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\VIBlend.WinForms.Utilities.pdb
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\VIBlend.WinForms.Utilities.xml
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\bin\Release\Entities.pdb
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\obj\x86\Release\Registry.csprojResolveAssemblyReference.cache
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\obj\x86\Release\Registry.MainForm.resources
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\obj\x86\Release\Registry.Properties.Resources.resources
+E:\Проекты\Реестр жилого фонда\Исходный код\Registry\Registry\obj\x86\Release\Registry.csproj.GenerateResource.Cache
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\obj\x86\Release\Registry.exe
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\obj\x86\Release\Registry.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\Registry.exe
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\Registry.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\CustomControls.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\DataModels.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\MBToolStrip.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\Reporting.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\Settings.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\System.Windows.Forms.Ribbon.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\VIBlend.WinForms.Controls.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\VIBlend.WinForms.Utilities.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\Viewports.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\WeifenLuo.WinFormsUI.Docking.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\Entities.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\CustomControls.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\DataModels.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\Reporting.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\Settings.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\Viewports.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\MBToolStrip.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\MBToolStrip.xml
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\System.Windows.Forms.Ribbon.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\VIBlend.WinForms.Controls.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\VIBlend.WinForms.Controls.xml
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\VIBlend.WinForms.Utilities.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\VIBlend.WinForms.Utilities.xml
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\bin\Release\Entities.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\obj\x86\Release\Registry.csprojResolveAssemblyReference.cache
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\obj\x86\Release\Registry.MainForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\obj\x86\Release\Registry.Properties.Resources.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\Registry\obj\x86\Release\Registry.csproj.GenerateResource.Cache

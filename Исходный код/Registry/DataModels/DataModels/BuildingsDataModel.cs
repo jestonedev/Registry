@@ -19,13 +19,13 @@ namespace Registry.DataModels
         private static string insertQuery = @"INSERT INTO buildings
                             (id_state, id_structure_type, id_street, house
                              , floors, num_premises, num_rooms, num_apartments
-                             , num_shared_apartments, living_area, cadastral_num
+                             , num_shared_apartments, total_area, living_area, cadastral_num
                              , cadastral_cost, balance_cost, description, startup_year
                              , improvement, elevator)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         private static string updateQuery = @"UPDATE buildings SET id_state = ?, id_structure_type = ?, id_street = ?, 
                             house = ?, floors = ?, num_premises = ?, num_rooms = ?,
-                            num_apartments = ?, num_shared_apartments = ?, living_area = ?, cadastral_num = ?, 
+                            num_apartments = ?, num_shared_apartments = ?, total_area = ?, living_area = ?, cadastral_num = ?, 
                             cadastral_cost = ?, balance_cost = ?, description = ?, startup_year = ?, 
                             improvement = ?, elevator = ? WHERE id_building = ?";
         private static string tableName = "buildings";
@@ -49,6 +49,7 @@ namespace Registry.DataModels
             table.Columns["improvement"].DefaultValue = true;
             table.Columns["elevator"].DefaultValue = false;
             table.Columns["living_area"].DefaultValue = 0;
+            table.Columns["total_area"].DefaultValue = 0;
             table.Columns["floors"].DefaultValue = 5;
             table.Columns["cadastral_cost"].DefaultValue = 0;
             table.Columns["balance_cost"].DefaultValue = 0;
@@ -99,21 +100,11 @@ namespace Registry.DataModels
             command.Parameters.Add(connection.CreateParameter<int?>("num_rooms", building.num_rooms));
             command.Parameters.Add(connection.CreateParameter<int?>("num_apartments", building.num_apartments));
             command.Parameters.Add(connection.CreateParameter<int?>("num_shared_apartments", building.num_shared_apartments));
+            command.Parameters.Add(connection.CreateParameter<double?>("total_area", building.total_area));
             command.Parameters.Add(connection.CreateParameter<double?>("living_area", building.living_area));
             command.Parameters.Add(connection.CreateParameter<string>("cadastral_num", building.cadastral_num));
-
-            DbParameter cadastral_cost = connection.CreateParameter<decimal?>("cadastral_cost", building.cadastral_cost);
-            cadastral_cost.DbType = DbType.Decimal;
-            ((IDbDataParameter)cadastral_cost).Scale = 2;
-            ((IDbDataParameter)cadastral_cost).Precision = 12;
-            command.Parameters.Add(cadastral_cost);
-
-            DbParameter balance_cost = connection.CreateParameter<decimal?>("balance_cost", building.balance_cost);
-            balance_cost.DbType = DbType.Decimal;
-            ((IDbDataParameter)balance_cost).Scale = 2;
-            ((IDbDataParameter)balance_cost).Precision = 12;
-            command.Parameters.Add(balance_cost);
-
+            command.Parameters.Add(connection.CreateParameter<decimal?>("cadastral_cost", building.cadastral_cost));
+            command.Parameters.Add(connection.CreateParameter<decimal?>("balance_cost", building.balance_cost));
             command.Parameters.Add(connection.CreateParameter<string>("description", building.description));
             command.Parameters.Add(connection.CreateParameter<int?>("startup_year", building.startup_year));
             command.Parameters.Add(connection.CreateParameter<bool?>("improvement", building.improvement));
@@ -149,21 +140,11 @@ namespace Registry.DataModels
             command.Parameters.Add(connection.CreateParameter<int?>("num_rooms", building.num_rooms));
             command.Parameters.Add(connection.CreateParameter<int?>("num_apartments", building.num_apartments));
             command.Parameters.Add(connection.CreateParameter<int?>("num_shared_apartments", building.num_shared_apartments));
+            command.Parameters.Add(connection.CreateParameter<double?>("total_area", building.total_area));
             command.Parameters.Add(connection.CreateParameter<double?>("living_area", building.living_area));
             command.Parameters.Add(connection.CreateParameter<string>("cadastral_num", building.cadastral_num));
-
-            DbParameter cadastral_cost = connection.CreateParameter<decimal?>("cadastral_cost", building.cadastral_cost);
-            cadastral_cost.DbType = DbType.Decimal;
-            ((IDbDataParameter)cadastral_cost).Scale = 2;
-            ((IDbDataParameter)cadastral_cost).Precision = 12;
-            command.Parameters.Add(cadastral_cost);
-
-            DbParameter balance_cost = connection.CreateParameter<decimal?>("balance_cost", building.balance_cost);
-            balance_cost.DbType = DbType.Decimal;
-            ((IDbDataParameter)balance_cost).Scale = 2;
-            ((IDbDataParameter)balance_cost).Precision = 12;
-            command.Parameters.Add(balance_cost);
-
+            command.Parameters.Add(connection.CreateParameter<decimal?>("cadastral_cost", building.cadastral_cost));
+            command.Parameters.Add(connection.CreateParameter<decimal?>("balance_cost", building.balance_cost));
             command.Parameters.Add(connection.CreateParameter<string>("description", building.description));
             command.Parameters.Add(connection.CreateParameter<int?>("startup_year", building.startup_year));
             command.Parameters.Add(connection.CreateParameter<bool?>("improvement", building.improvement));

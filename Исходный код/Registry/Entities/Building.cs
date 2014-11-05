@@ -16,8 +16,9 @@ namespace Registry.Entities
         public int? num_premises {get;set;} 
         public int? num_rooms {get;set;} 
         public int? num_apartments {get;set;}
-        public int? num_shared_apartments {get;set;} 
-        public double? living_area {get;set;} 
+        public int? num_shared_apartments {get;set;}
+        public double? living_area { get; set; }
+        public double? total_area { get; set; } 
         public string cadastral_num {get;set;}
         public decimal? cadastral_cost {get;set;} 
         public decimal? balance_cost {get;set;} 
@@ -53,6 +54,7 @@ namespace Registry.Entities
                 first.num_rooms == second.num_rooms &&
                 first.num_apartments == second.num_apartments &&
                 first.num_shared_apartments == second.num_shared_apartments &&
+                first.total_area == second.total_area &&
                 first.living_area == second.living_area &&
                 first.cadastral_num == second.cadastral_num &&
                 first.cadastral_cost == second.cadastral_cost &&

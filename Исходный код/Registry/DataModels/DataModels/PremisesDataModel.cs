@@ -16,16 +16,15 @@ namespace Registry.DataModels
         private static string selectQuery = "SELECT * FROM premises WHERE deleted = 0";
         private static string deleteQuery = "UPDATE premises SET deleted = 1 WHERE id_premises = ?";
         private static string insertQuery = @"INSERT INTO premises
-                            (id_building, id_state, premises_num, total_area
-                             , living_area, num_beds, id_premises_type, id_premises_kind
-                             , floor, for_orphans, accepted_by_exchange
-                             , accepted_by_donation, accepted_by_other, cadastral_num, cadastral_cost
+                            (id_building, id_state, id_premises_kind, id_premises_type, premises_num, floor
+                             , num_rooms, num_beds, total_area, living_area, height
+                             , cadastral_num, cadastral_cost
                              , balance_cost, description)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        private static string updateQuery = @"UPDATE premises SET id_building = ?, id_state = ?, premises_num = ?, 
-                            total_area = ?, living_area = ?, num_beds = ?, id_premises_type = ?,
-                            id_premises_kind = ?, floor = ?, for_orphans = ?, accepted_by_exchange = ?, 
-                            accepted_by_donation = ?, accepted_by_other = ?, cadastral_num = ?, cadastral_cost = ?, 
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        private static string updateQuery = @"UPDATE premises SET id_building = ?, id_state = ?, id_premises_kind = ?, 
+                            id_premises_type = ?,premises_num = ?, floor = ?, num_rooms = ?, num_beds = ?, 
+                            total_area = ?, living_area = ?, height = ?, 
+                            cadastral_num = ?, cadastral_cost = ?, 
                             balance_cost = ?, description = ? WHERE id_premises = ?";
         private static string tableName = "premises";
         
@@ -43,14 +42,12 @@ namespace Registry.DataModels
             table.Columns["id_state"].DefaultValue = 1;
             table.Columns["living_area"].DefaultValue = 0;
             table.Columns["total_area"].DefaultValue = 0;
+            table.Columns["height"].DefaultValue = 0;
+            table.Columns["num_rooms"].DefaultValue = 0;
             table.Columns["num_beds"].DefaultValue = 0;
             table.Columns["id_premises_type"].DefaultValue = 1;
             table.Columns["id_premises_kind"].DefaultValue = 1;
             table.Columns["floor"].DefaultValue = 0;
-            table.Columns["for_orphans"].DefaultValue = false;
-            table.Columns["accepted_by_exchange"].DefaultValue = false;
-            table.Columns["accepted_by_donation"].DefaultValue = false;
-            table.Columns["accepted_by_other"].DefaultValue = false;
             table.Columns["cadastral_cost"].DefaultValue = 0;
             table.Columns["balance_cost"].DefaultValue = 0;
         }
@@ -93,31 +90,18 @@ namespace Registry.DataModels
 
             command.Parameters.Add(connection.CreateParameter<int?>("id_building", premise.id_building));
             command.Parameters.Add(connection.CreateParameter<int?>("id_state", premise.id_state));
+            command.Parameters.Add(connection.CreateParameter<int?>("id_premises_kind", premise.id_premises_kind));
+            command.Parameters.Add(connection.CreateParameter<int?>("id_premises_type", premise.id_premises_type));
             command.Parameters.Add(connection.CreateParameter<string>("premises_num", premise.premises_num));
+            command.Parameters.Add(connection.CreateParameter<short?>("floor", premise.floor));
+            command.Parameters.Add(connection.CreateParameter<short?>("num_rooms", premise.num_rooms));
+            command.Parameters.Add(connection.CreateParameter<short?>("num_beds", premise.num_beds));
             command.Parameters.Add(connection.CreateParameter<double?>("total_area", premise.total_area));
             command.Parameters.Add(connection.CreateParameter<double?>("living_area", premise.living_area));
-            command.Parameters.Add(connection.CreateParameter<short?>("num_beds", premise.num_beds));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_premises_type", premise.id_premises_type));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_premises_kind", premise.id_premises_kind));
-            command.Parameters.Add(connection.CreateParameter<short?>("floor", premise.floor));
-            command.Parameters.Add(connection.CreateParameter<bool?>("for_orphans", premise.for_orphans));
-            command.Parameters.Add(connection.CreateParameter<bool?>("accepted_by_exchange", premise.accepted_by_exchange));
-            command.Parameters.Add(connection.CreateParameter<bool?>("accepted_by_donation", premise.accepted_by_donation));
-            command.Parameters.Add(connection.CreateParameter<bool?>("accepted_by_other", premise.accepted_by_other));
+            command.Parameters.Add(connection.CreateParameter<double?>("height", premise.height));
             command.Parameters.Add(connection.CreateParameter<string>("cadastral_num", premise.cadastral_num));
-
-            DbParameter cadastral_cost = connection.CreateParameter<decimal?>("cadastral_cost", premise.cadastral_cost);
-            cadastral_cost.DbType = DbType.Decimal;
-            ((IDbDataParameter)cadastral_cost).Scale = 2;
-            ((IDbDataParameter)cadastral_cost).Precision = 12;
-            command.Parameters.Add(cadastral_cost);
-
-            DbParameter balance_cost = connection.CreateParameter<decimal?>("balance_cost", premise.balance_cost);
-            balance_cost.DbType = DbType.Decimal;
-            ((IDbDataParameter)balance_cost).Scale = 2;
-            ((IDbDataParameter)balance_cost).Precision = 12;
-            command.Parameters.Add(balance_cost);
-
+            command.Parameters.Add(connection.CreateParameter<decimal?>("cadastral_cost", premise.cadastral_cost));
+            command.Parameters.Add(connection.CreateParameter<decimal?>("balance_cost", premise.balance_cost));
             command.Parameters.Add(connection.CreateParameter<string>("description", premise.description));
             command.Parameters.Add(connection.CreateParameter<int?>("id_premises", premise.id_premises));
             try
@@ -142,31 +126,18 @@ namespace Registry.DataModels
 
             command.Parameters.Add(connection.CreateParameter<int?>("id_building", premise.id_building));
             command.Parameters.Add(connection.CreateParameter<int?>("id_state", premise.id_state));
+            command.Parameters.Add(connection.CreateParameter<int?>("id_premises_kind", premise.id_premises_kind));
+            command.Parameters.Add(connection.CreateParameter<int?>("id_premises_type", premise.id_premises_type));
             command.Parameters.Add(connection.CreateParameter<string>("premises_num", premise.premises_num));
+            command.Parameters.Add(connection.CreateParameter<short?>("floor", premise.floor));
+            command.Parameters.Add(connection.CreateParameter<short?>("num_rooms", premise.num_rooms));
+            command.Parameters.Add(connection.CreateParameter<short?>("num_beds", premise.num_beds));
             command.Parameters.Add(connection.CreateParameter<double?>("total_area", premise.total_area));
             command.Parameters.Add(connection.CreateParameter<double?>("living_area", premise.living_area));
-            command.Parameters.Add(connection.CreateParameter<short?>("num_beds", premise.num_beds));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_premises_type", premise.id_premises_type));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_premises_kind", premise.id_premises_kind));
-            command.Parameters.Add(connection.CreateParameter<short?>("floor", premise.floor));
-            command.Parameters.Add(connection.CreateParameter<bool?>("for_orphans", premise.for_orphans));
-            command.Parameters.Add(connection.CreateParameter<bool?>("accepted_by_exchange", premise.accepted_by_exchange));
-            command.Parameters.Add(connection.CreateParameter<bool?>("accepted_by_donation", premise.accepted_by_donation));
-            command.Parameters.Add(connection.CreateParameter<bool?>("accepted_by_other", premise.accepted_by_other));
+            command.Parameters.Add(connection.CreateParameter<double?>("height", premise.height));
             command.Parameters.Add(connection.CreateParameter<string>("cadastral_num", premise.cadastral_num));
-
-            DbParameter cadastral_cost = connection.CreateParameter<decimal?>("cadastral_cost", premise.cadastral_cost);
-            cadastral_cost.DbType = DbType.Decimal;
-            ((IDbDataParameter)cadastral_cost).Scale = 2;
-            ((IDbDataParameter)cadastral_cost).Precision = 12;
-            command.Parameters.Add(cadastral_cost);
-
-            DbParameter balance_cost = connection.CreateParameter<decimal?>("balance_cost", premise.balance_cost);
-            balance_cost.DbType = DbType.Decimal;
-            ((IDbDataParameter)balance_cost).Scale = 2;
-            ((IDbDataParameter)balance_cost).Precision = 12;
-            command.Parameters.Add(balance_cost);
-
+            command.Parameters.Add(connection.CreateParameter<decimal?>("cadastral_cost", premise.cadastral_cost));
+            command.Parameters.Add(connection.CreateParameter<decimal?>("balance_cost", premise.balance_cost));
             command.Parameters.Add(connection.CreateParameter<string>("description", premise.description));
 
             try
