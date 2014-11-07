@@ -110,12 +110,11 @@ namespace Registry
             this.ribbonButtonOwnershipTypes = new System.Windows.Forms.RibbonButton();
             this.ribbonTabTenancyProcesses = new System.Windows.Forms.RibbonTab();
             this.ribbonPanel8 = new System.Windows.Forms.RibbonPanel();
-            this.ribbonButtonStatistic = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonContractRegistry = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonContractRegistryForCPMU = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonContractRegistryByReason = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonContractRegistryByProtocol = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonTenancyStatistic = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonTenancyForCoMS = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonTenancyOrder = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonOrderByNewTenancy = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonOrderByCurrentTenancy = new System.Windows.Forms.RibbonButton();
             this.ribbonPanelTenancyDocs = new System.Windows.Forms.RibbonPanel();
             this.ribbonButtonTenancyContract17x = new System.Windows.Forms.RibbonButton();
             this.ribbonButton1711 = new System.Windows.Forms.RibbonButton();
@@ -123,6 +122,7 @@ namespace Registry
             this.ribbonButtonTenancyContract = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonTenancyAct = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonTenancyAgreement = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonTenancyExcerpt = new System.Windows.Forms.RibbonButton();
             this.ribbonPanel9 = new System.Windows.Forms.RibbonPanel();
             this.ribbonButtonWarrants = new System.Windows.Forms.RibbonButton();
             this.ribbonButton1 = new System.Windows.Forms.RibbonButton();
@@ -175,7 +175,7 @@ namespace Registry
             this.ribbon1.QuickAcessToolbar.ToolTip = null;
             this.ribbon1.QuickAcessToolbar.ToolTipImage = null;
             this.ribbon1.QuickAcessToolbar.ToolTipTitle = null;
-            this.ribbon1.Size = new System.Drawing.Size(1008, 138);
+            this.ribbon1.Size = new System.Drawing.Size(1016, 138);
             this.ribbon1.TabIndex = 0;
             this.ribbon1.Tabs.Add(this.ribbonTabGeneral);
             this.ribbon1.Tabs.Add(this.ribbonTabHousing);
@@ -1112,90 +1112,49 @@ namespace Registry
             // 
             // ribbonPanel8
             // 
-            this.ribbonPanel8.Items.Add(this.ribbonButtonStatistic);
-            this.ribbonPanel8.Items.Add(this.ribbonButtonContractRegistry);
+            this.ribbonPanel8.Items.Add(this.ribbonButtonTenancyStatistic);
+            this.ribbonPanel8.Items.Add(this.ribbonButtonTenancyForCoMS);
             this.ribbonPanel8.Items.Add(this.ribbonButtonTenancyOrder);
             this.ribbonPanel8.Tag = null;
             this.ribbonPanel8.Text = "Отчеты";
             // 
-            // ribbonButtonStatistic
+            // ribbonButtonTenancyStatistic
             // 
-            this.ribbonButtonStatistic.AltKey = null;
-            this.ribbonButtonStatistic.DropDownArrowDirection = System.Windows.Forms.RibbonArrowDirection.Down;
-            this.ribbonButtonStatistic.DropDownArrowSize = new System.Drawing.Size(5, 3);
-            this.ribbonButtonStatistic.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonStatistic.Image")));
-            this.ribbonButtonStatistic.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonStatistic.SmallImage")));
-            this.ribbonButtonStatistic.Style = System.Windows.Forms.RibbonButtonStyle.Normal;
-            this.ribbonButtonStatistic.Tag = null;
-            this.ribbonButtonStatistic.Text = "Статистика";
-            this.ribbonButtonStatistic.ToolTip = null;
-            this.ribbonButtonStatistic.ToolTipImage = null;
-            this.ribbonButtonStatistic.ToolTipTitle = null;
+            this.ribbonButtonTenancyStatistic.AltKey = null;
+            this.ribbonButtonTenancyStatistic.DropDownArrowDirection = System.Windows.Forms.RibbonArrowDirection.Down;
+            this.ribbonButtonTenancyStatistic.DropDownArrowSize = new System.Drawing.Size(5, 3);
+            this.ribbonButtonTenancyStatistic.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyStatistic.Image")));
+            this.ribbonButtonTenancyStatistic.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyStatistic.SmallImage")));
+            this.ribbonButtonTenancyStatistic.Style = System.Windows.Forms.RibbonButtonStyle.Normal;
+            this.ribbonButtonTenancyStatistic.Tag = null;
+            this.ribbonButtonTenancyStatistic.Text = "Статистика";
+            this.ribbonButtonTenancyStatistic.ToolTip = null;
+            this.ribbonButtonTenancyStatistic.ToolTipImage = null;
+            this.ribbonButtonTenancyStatistic.ToolTipTitle = null;
+            this.ribbonButtonTenancyStatistic.Click += new System.EventHandler(this.ribbonButtonStatistic_Click);
             // 
-            // ribbonButtonContractRegistry
+            // ribbonButtonTenancyForCoMS
             // 
-            this.ribbonButtonContractRegistry.AltKey = null;
-            this.ribbonButtonContractRegistry.DropDownArrowDirection = System.Windows.Forms.RibbonArrowDirection.Down;
-            this.ribbonButtonContractRegistry.DropDownArrowSize = new System.Drawing.Size(5, 3);
-            this.ribbonButtonContractRegistry.DropDownItems.Add(this.ribbonButtonContractRegistryForCPMU);
-            this.ribbonButtonContractRegistry.DropDownItems.Add(this.ribbonButtonContractRegistryByReason);
-            this.ribbonButtonContractRegistry.DropDownItems.Add(this.ribbonButtonContractRegistryByProtocol);
-            this.ribbonButtonContractRegistry.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonContractRegistry.Image")));
-            this.ribbonButtonContractRegistry.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonContractRegistry.SmallImage")));
-            this.ribbonButtonContractRegistry.Style = System.Windows.Forms.RibbonButtonStyle.DropDown;
-            this.ribbonButtonContractRegistry.Tag = null;
-            this.ribbonButtonContractRegistry.Text = "Реестр договоров";
-            this.ribbonButtonContractRegistry.ToolTip = null;
-            this.ribbonButtonContractRegistry.ToolTipImage = null;
-            this.ribbonButtonContractRegistry.ToolTipTitle = null;
-            // 
-            // ribbonButtonContractRegistryForCPMU
-            // 
-            this.ribbonButtonContractRegistryForCPMU.AltKey = null;
-            this.ribbonButtonContractRegistryForCPMU.DropDownArrowDirection = System.Windows.Forms.RibbonArrowDirection.Left;
-            this.ribbonButtonContractRegistryForCPMU.DropDownArrowSize = new System.Drawing.Size(5, 3);
-            this.ribbonButtonContractRegistryForCPMU.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonContractRegistryForCPMU.Image")));
-            this.ribbonButtonContractRegistryForCPMU.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonContractRegistryForCPMU.SmallImage")));
-            this.ribbonButtonContractRegistryForCPMU.Style = System.Windows.Forms.RibbonButtonStyle.Normal;
-            this.ribbonButtonContractRegistryForCPMU.Tag = null;
-            this.ribbonButtonContractRegistryForCPMU.Text = "для передачи в МКУ ЦПМУ";
-            this.ribbonButtonContractRegistryForCPMU.ToolTip = null;
-            this.ribbonButtonContractRegistryForCPMU.ToolTipImage = null;
-            this.ribbonButtonContractRegistryForCPMU.ToolTipTitle = null;
-            // 
-            // ribbonButtonContractRegistryByReason
-            // 
-            this.ribbonButtonContractRegistryByReason.AltKey = null;
-            this.ribbonButtonContractRegistryByReason.DropDownArrowDirection = System.Windows.Forms.RibbonArrowDirection.Left;
-            this.ribbonButtonContractRegistryByReason.DropDownArrowSize = new System.Drawing.Size(5, 3);
-            this.ribbonButtonContractRegistryByReason.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonContractRegistryByReason.Image")));
-            this.ribbonButtonContractRegistryByReason.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonContractRegistryByReason.SmallImage")));
-            this.ribbonButtonContractRegistryByReason.Style = System.Windows.Forms.RibbonButtonStyle.Normal;
-            this.ribbonButtonContractRegistryByReason.Tag = null;
-            this.ribbonButtonContractRegistryByReason.Text = "по виду основания";
-            this.ribbonButtonContractRegistryByReason.ToolTip = null;
-            this.ribbonButtonContractRegistryByReason.ToolTipImage = null;
-            this.ribbonButtonContractRegistryByReason.ToolTipTitle = null;
-            // 
-            // ribbonButtonContractRegistryByProtocol
-            // 
-            this.ribbonButtonContractRegistryByProtocol.AltKey = null;
-            this.ribbonButtonContractRegistryByProtocol.DropDownArrowDirection = System.Windows.Forms.RibbonArrowDirection.Left;
-            this.ribbonButtonContractRegistryByProtocol.DropDownArrowSize = new System.Drawing.Size(5, 3);
-            this.ribbonButtonContractRegistryByProtocol.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonContractRegistryByProtocol.Image")));
-            this.ribbonButtonContractRegistryByProtocol.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonContractRegistryByProtocol.SmallImage")));
-            this.ribbonButtonContractRegistryByProtocol.Style = System.Windows.Forms.RibbonButtonStyle.Normal;
-            this.ribbonButtonContractRegistryByProtocol.Tag = null;
-            this.ribbonButtonContractRegistryByProtocol.Text = "по протоколу жилищной комиссии";
-            this.ribbonButtonContractRegistryByProtocol.ToolTip = null;
-            this.ribbonButtonContractRegistryByProtocol.ToolTipImage = null;
-            this.ribbonButtonContractRegistryByProtocol.ToolTipTitle = null;
+            this.ribbonButtonTenancyForCoMS.AltKey = null;
+            this.ribbonButtonTenancyForCoMS.DropDownArrowDirection = System.Windows.Forms.RibbonArrowDirection.Down;
+            this.ribbonButtonTenancyForCoMS.DropDownArrowSize = new System.Drawing.Size(5, 3);
+            this.ribbonButtonTenancyForCoMS.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyForCoMS.Image")));
+            this.ribbonButtonTenancyForCoMS.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyForCoMS.SmallImage")));
+            this.ribbonButtonTenancyForCoMS.Style = System.Windows.Forms.RibbonButtonStyle.Normal;
+            this.ribbonButtonTenancyForCoMS.Tag = null;
+            this.ribbonButtonTenancyForCoMS.Text = "МКУ ЦПМУ";
+            this.ribbonButtonTenancyForCoMS.ToolTip = null;
+            this.ribbonButtonTenancyForCoMS.ToolTipImage = null;
+            this.ribbonButtonTenancyForCoMS.ToolTipTitle = null;
+            this.ribbonButtonTenancyForCoMS.Click += new System.EventHandler(this.ribbonButtonTenancyForCoMS_Click);
             // 
             // ribbonButtonTenancyOrder
             // 
             this.ribbonButtonTenancyOrder.AltKey = null;
             this.ribbonButtonTenancyOrder.DropDownArrowDirection = System.Windows.Forms.RibbonArrowDirection.Down;
             this.ribbonButtonTenancyOrder.DropDownArrowSize = new System.Drawing.Size(5, 3);
+            this.ribbonButtonTenancyOrder.DropDownItems.Add(this.ribbonButtonOrderByNewTenancy);
+            this.ribbonButtonTenancyOrder.DropDownItems.Add(this.ribbonButtonOrderByCurrentTenancy);
             this.ribbonButtonTenancyOrder.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyOrder.Image")));
             this.ribbonButtonTenancyOrder.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyOrder.SmallImage")));
             this.ribbonButtonTenancyOrder.Style = System.Windows.Forms.RibbonButtonStyle.Normal;
@@ -1204,6 +1163,36 @@ namespace Registry
             this.ribbonButtonTenancyOrder.ToolTip = null;
             this.ribbonButtonTenancyOrder.ToolTipImage = null;
             this.ribbonButtonTenancyOrder.ToolTipTitle = null;
+            this.ribbonButtonTenancyOrder.Click += new System.EventHandler(this.ribbonButtonTenancyOrder_Click);
+            // 
+            // ribbonButtonOrderByNewTenancy
+            // 
+            this.ribbonButtonOrderByNewTenancy.AltKey = null;
+            this.ribbonButtonOrderByNewTenancy.DropDownArrowDirection = System.Windows.Forms.RibbonArrowDirection.Left;
+            this.ribbonButtonOrderByNewTenancy.DropDownArrowSize = new System.Drawing.Size(5, 3);
+            this.ribbonButtonOrderByNewTenancy.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrderByNewTenancy.Image")));
+            this.ribbonButtonOrderByNewTenancy.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrderByNewTenancy.SmallImage")));
+            this.ribbonButtonOrderByNewTenancy.Style = System.Windows.Forms.RibbonButtonStyle.Normal;
+            this.ribbonButtonOrderByNewTenancy.Tag = null;
+            this.ribbonButtonOrderByNewTenancy.Text = "По новому процессу найма";
+            this.ribbonButtonOrderByNewTenancy.ToolTip = null;
+            this.ribbonButtonOrderByNewTenancy.ToolTipImage = null;
+            this.ribbonButtonOrderByNewTenancy.ToolTipTitle = null;
+            // 
+            // ribbonButtonOrderByCurrentTenancy
+            // 
+            this.ribbonButtonOrderByCurrentTenancy.AltKey = null;
+            this.ribbonButtonOrderByCurrentTenancy.DropDownArrowDirection = System.Windows.Forms.RibbonArrowDirection.Left;
+            this.ribbonButtonOrderByCurrentTenancy.DropDownArrowSize = new System.Drawing.Size(5, 3);
+            this.ribbonButtonOrderByCurrentTenancy.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrderByCurrentTenancy.Image")));
+            this.ribbonButtonOrderByCurrentTenancy.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrderByCurrentTenancy.SmallImage")));
+            this.ribbonButtonOrderByCurrentTenancy.Style = System.Windows.Forms.RibbonButtonStyle.Normal;
+            this.ribbonButtonOrderByCurrentTenancy.Tag = null;
+            this.ribbonButtonOrderByCurrentTenancy.Text = "По текущему процессу найма";
+            this.ribbonButtonOrderByCurrentTenancy.ToolTip = null;
+            this.ribbonButtonOrderByCurrentTenancy.ToolTipImage = null;
+            this.ribbonButtonOrderByCurrentTenancy.ToolTipTitle = null;
+            this.ribbonButtonOrderByCurrentTenancy.Click += new System.EventHandler(this.ribbonButtonOrderByCurrentTenancy_Click);
             // 
             // ribbonPanelTenancyDocs
             // 
@@ -1211,6 +1200,7 @@ namespace Registry
             this.ribbonPanelTenancyDocs.Items.Add(this.ribbonButtonTenancyContract);
             this.ribbonPanelTenancyDocs.Items.Add(this.ribbonButtonTenancyAct);
             this.ribbonPanelTenancyDocs.Items.Add(this.ribbonButtonTenancyAgreement);
+            this.ribbonPanelTenancyDocs.Items.Add(this.ribbonButtonTenancyExcerpt);
             this.ribbonPanelTenancyDocs.Tag = null;
             this.ribbonPanelTenancyDocs.Text = "Документы";
             // 
@@ -1304,6 +1294,21 @@ namespace Registry
             this.ribbonButtonTenancyAgreement.ToolTipImage = null;
             this.ribbonButtonTenancyAgreement.ToolTipTitle = null;
             this.ribbonButtonTenancyAgreement.Click += new System.EventHandler(this.ribbonButtonTenancyAgreement_Click);
+            // 
+            // ribbonButtonTenancyExcerpt
+            // 
+            this.ribbonButtonTenancyExcerpt.AltKey = null;
+            this.ribbonButtonTenancyExcerpt.DropDownArrowDirection = System.Windows.Forms.RibbonArrowDirection.Down;
+            this.ribbonButtonTenancyExcerpt.DropDownArrowSize = new System.Drawing.Size(5, 3);
+            this.ribbonButtonTenancyExcerpt.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyExcerpt.Image")));
+            this.ribbonButtonTenancyExcerpt.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyExcerpt.SmallImage")));
+            this.ribbonButtonTenancyExcerpt.Style = System.Windows.Forms.RibbonButtonStyle.Normal;
+            this.ribbonButtonTenancyExcerpt.Tag = null;
+            this.ribbonButtonTenancyExcerpt.Text = "Выписка";
+            this.ribbonButtonTenancyExcerpt.ToolTip = null;
+            this.ribbonButtonTenancyExcerpt.ToolTipImage = null;
+            this.ribbonButtonTenancyExcerpt.ToolTipTitle = null;
+            this.ribbonButtonTenancyExcerpt.Click += new System.EventHandler(this.ribbonButtonTenancyExcerpt_Click);
             // 
             // ribbonPanel9
             // 
@@ -1478,9 +1483,9 @@ namespace Registry
             this.toolStripSeparator1,
             this.toolStripProgressBar,
             this.toolStripLabelRecordCount});
-            this.mbStatusStrip1.Location = new System.Drawing.Point(0, 705);
+            this.mbStatusStrip1.Location = new System.Drawing.Point(0, 716);
             this.mbStatusStrip1.Name = "mbStatusStrip1";
-            this.mbStatusStrip1.Size = new System.Drawing.Size(1008, 25);
+            this.mbStatusStrip1.Size = new System.Drawing.Size(1016, 25);
             this.mbStatusStrip1.TabIndex = 4;
             this.mbStatusStrip1.Text = "mbStatusStrip1";
             // 
@@ -1511,23 +1516,24 @@ namespace Registry
             // dockPanel
             // 
             this.dockPanel.ActiveAutoHideContent = null;
-            this.dockPanel.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dockPanel.BackColor = System.Drawing.Color.White;
             this.dockPanel.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dockPanel.DockBackColor = System.Drawing.Color.White;
             this.dockPanel.DocumentStyle = WeifenLuo.WinFormsUI.Docking.DocumentStyle.DockingWindow;
             this.dockPanel.Location = new System.Drawing.Point(0, 138);
             this.dockPanel.Name = "dockPanel";
-            this.dockPanel.Size = new System.Drawing.Size(1008, 567);
-            dockPanelGradient1.EndColor = System.Drawing.SystemColors.ControlLight;
-            dockPanelGradient1.StartColor = System.Drawing.SystemColors.ControlLight;
+            this.dockPanel.ShowDocumentIcon = true;
+            this.dockPanel.Size = new System.Drawing.Size(1016, 578);
+            dockPanelGradient1.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
+            dockPanelGradient1.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
             autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
-            tabGradient1.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient1.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient1.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+            tabGradient1.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
+            tabGradient1.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
+            tabGradient1.TextColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             autoHideStripSkin1.TabGradient = tabGradient1;
             dockPanelSkin1.AutoHideStripSkin = autoHideStripSkin1;
-            tabGradient2.EndColor = System.Drawing.SystemColors.ControlLightLight;
-            tabGradient2.StartColor = System.Drawing.SystemColors.ControlLightLight;
+            tabGradient2.EndColor = System.Drawing.Color.White;
+            tabGradient2.StartColor = System.Drawing.Color.White;
             tabGradient2.TextColor = System.Drawing.SystemColors.ControlText;
             dockPaneStripGradient1.ActiveTabGradient = tabGradient2;
             dockPanelGradient2.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
@@ -1535,30 +1541,30 @@ namespace Registry
             dockPaneStripGradient1.DockStripGradient = dockPanelGradient2;
             tabGradient3.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
             tabGradient3.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient3.StartColor = System.Drawing.SystemColors.ControlLightLight;
+            tabGradient3.StartColor = System.Drawing.Color.White;
             tabGradient3.TextColor = System.Drawing.SystemColors.ControlText;
             dockPaneStripGradient1.InactiveTabGradient = tabGradient3;
             dockPaneStripSkin1.DocumentGradient = dockPaneStripGradient1;
-            tabGradient4.EndColor = System.Drawing.SystemColors.ActiveCaption;
+            tabGradient4.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
             tabGradient4.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient4.StartColor = System.Drawing.SystemColors.GradientActiveCaption;
-            tabGradient4.TextColor = System.Drawing.SystemColors.ActiveCaptionText;
+            tabGradient4.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
+            tabGradient4.TextColor = System.Drawing.Color.Black;
             dockPaneStripToolWindowGradient1.ActiveCaptionGradient = tabGradient4;
-            tabGradient5.EndColor = System.Drawing.SystemColors.Control;
-            tabGradient5.StartColor = System.Drawing.SystemColors.Control;
-            tabGradient5.TextColor = System.Drawing.SystemColors.ControlText;
+            tabGradient5.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            tabGradient5.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            tabGradient5.TextColor = System.Drawing.Color.Black;
             dockPaneStripToolWindowGradient1.ActiveTabGradient = tabGradient5;
-            dockPanelGradient3.EndColor = System.Drawing.SystemColors.ControlLight;
-            dockPanelGradient3.StartColor = System.Drawing.SystemColors.ControlLight;
+            dockPanelGradient3.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
+            dockPanelGradient3.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
             dockPaneStripToolWindowGradient1.DockStripGradient = dockPanelGradient3;
-            tabGradient6.EndColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            tabGradient6.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             tabGradient6.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient6.StartColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            tabGradient6.TextColor = System.Drawing.SystemColors.ControlText;
+            tabGradient6.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            tabGradient6.TextColor = System.Drawing.Color.Black;
             dockPaneStripToolWindowGradient1.InactiveCaptionGradient = tabGradient6;
             tabGradient7.EndColor = System.Drawing.Color.Transparent;
             tabGradient7.StartColor = System.Drawing.Color.Transparent;
-            tabGradient7.TextColor = System.Drawing.SystemColors.ControlDarkDark;
+            tabGradient7.TextColor = System.Drawing.Color.Gray;
             dockPaneStripToolWindowGradient1.InactiveTabGradient = tabGradient7;
             dockPaneStripSkin1.ToolWindowGradient = dockPaneStripToolWindowGradient1;
             dockPanelSkin1.DockPaneStripSkin = dockPaneStripSkin1;
@@ -1571,7 +1577,7 @@ namespace Registry
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
-            this.ClientSize = new System.Drawing.Size(1008, 730);
+            this.ClientSize = new System.Drawing.Size(1016, 741);
             this.Controls.Add(this.dockPanel);
             this.Controls.Add(this.mbStatusStrip1);
             this.Controls.Add(this.ribbon1);
@@ -1662,7 +1668,7 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButtonClaimStateTypes;
         private System.Windows.Forms.RibbonButton ribbonButtonClaims;
         private System.Windows.Forms.RibbonButton ribbonButtonClaimStates;
-        private System.Windows.Forms.RibbonButton ribbonButtonStatistic;
+        private System.Windows.Forms.RibbonButton ribbonButtonTenancyStatistic;
         private System.Windows.Forms.RibbonPanel ribbonPanelTenancyDocs;
         private System.Windows.Forms.RibbonButton ribbonButtonTenancyContract17x;
         private System.Windows.Forms.RibbonButton ribbonButtonTenancyAct;
@@ -1679,15 +1685,15 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButtonPremisesByDonationReport;
         private System.Windows.Forms.RibbonButton ribbonButtonMunicipalPremises;
         private System.Windows.Forms.RibbonButton ribbonButtonClaimsStatistic;
-        private System.Windows.Forms.RibbonButton ribbonButtonContractRegistry;
-        private System.Windows.Forms.RibbonButton ribbonButtonTenancyOrder;
+        private System.Windows.Forms.RibbonButton ribbonButtonTenancyForCoMS;
         private System.Windows.Forms.RibbonButton ribbonButton1711;
         private System.Windows.Forms.RibbonButton ribbonButton1712;
-        private System.Windows.Forms.RibbonButton ribbonButtonContractRegistryForCPMU;
-        private System.Windows.Forms.RibbonButton ribbonButtonContractRegistryByReason;
-        private System.Windows.Forms.RibbonButton ribbonButtonContractRegistryByProtocol;
         private WeifenLuo.WinFormsUI.Docking.DockPanel dockPanel;
         private System.Windows.Forms.RibbonButton ribbonButtonTenancyContract;
+        private System.Windows.Forms.RibbonButton ribbonButtonTenancyExcerpt;
+        private System.Windows.Forms.RibbonButton ribbonButtonTenancyOrder;
+        private System.Windows.Forms.RibbonButton ribbonButtonOrderByNewTenancy;
+        private System.Windows.Forms.RibbonButton ribbonButtonOrderByCurrentTenancy;
     }
 }
 

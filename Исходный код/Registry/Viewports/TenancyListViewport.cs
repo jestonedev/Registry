@@ -393,6 +393,11 @@ namespace Registry.Viewport
             return (v_tenancies.Position > -1);
         }
 
+        public override bool HasTenancyExcerptReport()
+        {
+            return (v_tenancies.Position > -1);
+        }
+
         public override void TenancyContract17xReportGenerate(Reporting.TenancyContractTypes tenancyContractType)
         {
             if (!TenancyValidForReportGenerate())
@@ -400,14 +405,17 @@ namespace Registry.Viewport
             DataRowView row = (DataRowView)v_tenancies[v_tenancies.Position];
             if (ViewportHelper.ValueOrNull<int>(row, "id_rent_type") != 2)
             {
-                MessageBox.Show("Для формирования договора по формам 1711 и 1712 необходимо, чтобы тип найма был - специализированный", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Для формирования договора по формам 1711 и 1712 необходимо, чтобы тип найма был - специализированный", 
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             if (tenancyContractType == TenancyContractTypes.SpecialContract1711Form)
-                ReporterFactory.CreateReporter(ReporterType.TenancyContractSpecial1711Reporter).Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
+                ReporterFactory.CreateReporter(ReporterType.TenancyContractSpecial1711Reporter).
+                    Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
             else
             if (tenancyContractType == TenancyContractTypes.SpecialContract1712Form)
-                ReporterFactory.CreateReporter(ReporterType.TenancyContractSpecial1712Reporter).Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
+                ReporterFactory.CreateReporter(ReporterType.TenancyContractSpecial1712Reporter).
+                    Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
         }
 
         public override void TenancyContractReportGenerate()
@@ -416,13 +424,16 @@ namespace Registry.Viewport
                 return;
             DataRowView row = (DataRowView)v_tenancies[v_tenancies.Position];
             if (ViewportHelper.ValueOrNull<int>(row, "id_rent_type") == 2)
-                MessageBox.Show("Для формирования договора специализированного найма необходимо выбрать форму договора: 1711 или 1712", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Для формирования договора специализированного найма необходимо выбрать форму договора: 1711 или 1712", 
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
             if (ViewportHelper.ValueOrNull<int>(row, "id_rent_type") == 1)
-                ReporterFactory.CreateReporter(ReporterType.TenancyContractCommercialReporter).Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } }); 
+                ReporterFactory.CreateReporter(ReporterType.TenancyContractCommercialReporter).
+                    Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } }); 
             else
             if (ViewportHelper.ValueOrNull<int>(row, "id_rent_type") == 3)
-                ReporterFactory.CreateReporter(ReporterType.TenancyContractSocialReporter).Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
+                ReporterFactory.CreateReporter(ReporterType.TenancyContractSocialReporter).
+                    Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
         }
 
         public override void TenancyActReportGenerate()
@@ -430,7 +441,17 @@ namespace Registry.Viewport
             if (!TenancyValidForReportGenerate())
                 return;
             DataRowView row = (DataRowView)v_tenancies[v_tenancies.Position];
-            ReporterFactory.CreateReporter(ReporterType.TenancyActReporter).Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
+            ReporterFactory.CreateReporter(ReporterType.TenancyActReporter).
+                Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
+        }
+
+        public override void TenancyExcerptReportGenerate()
+        {
+            if (!TenancyValidForReportGenerate())
+                return;
+            DataRowView row = (DataRowView)v_tenancies[v_tenancies.Position];
+            ReporterFactory.CreateReporter(ReporterType.TenancyExcerptReporter).
+                Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
         }
 
         private bool TenancyValidForReportGenerate()
@@ -595,6 +616,7 @@ namespace Registry.Viewport
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyListViewport));
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.id_process = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.registration_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -610,7 +632,7 @@ namespace Registry.Viewport
             // 
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AllowUserToResizeRows = false;
-            this.dataGridView.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
@@ -700,7 +722,6 @@ namespace Registry.Viewport
             this.rent_type.MinimumWidth = 150;
             this.rent_type.Name = "rent_type";
             this.rent_type.ReadOnly = true;
-            this.tenant.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.rent_type.Width = 150;
             // 
             // address
@@ -715,10 +736,11 @@ namespace Registry.Viewport
             // 
             // TenancyListViewport
             // 
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1172, 261);
             this.Controls.Add(this.dataGridView);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "TenancyListViewport";
             this.Padding = new System.Windows.Forms.Padding(3);
             this.Text = "Процессы найма жилья";

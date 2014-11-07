@@ -460,6 +460,7 @@ namespace Registry.Viewport
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyReasonTypesViewport));
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.id_reason_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.reason_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -471,7 +472,7 @@ namespace Registry.Viewport
             // 
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridView.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
@@ -519,10 +520,11 @@ namespace Registry.Viewport
             // 
             // TenancyReasonTypesViewport
             // 
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(712, 261);
             this.Controls.Add(this.dataGridView);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "TenancyReasonTypesViewport";
             this.Padding = new System.Windows.Forms.Padding(3);
             this.Text = "Виды оснований";

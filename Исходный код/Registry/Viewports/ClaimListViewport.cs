@@ -870,6 +870,7 @@ namespace Registry.Viewport
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClaimListViewport));
             this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox34 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
@@ -988,8 +989,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownAmountOfDebtRent
             // 
-            this.numericUpDownAmountOfDebtRent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownAmountOfDebtRent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownAmountOfDebtRent.DecimalPlaces = 2;
             this.numericUpDownAmountOfDebtRent.Location = new System.Drawing.Point(161, 33);
             this.numericUpDownAmountOfDebtRent.Maximum = new decimal(new int[] {
@@ -1014,8 +1015,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownAmountOfFine
             // 
-            this.numericUpDownAmountOfFine.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownAmountOfFine.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownAmountOfFine.DecimalPlaces = 2;
             this.numericUpDownAmountOfFine.Location = new System.Drawing.Point(161, 149);
             this.numericUpDownAmountOfFine.Maximum = new decimal(new int[] {
@@ -1040,8 +1041,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownAmountOfRent
             // 
-            this.numericUpDownAmountOfRent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownAmountOfRent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownAmountOfRent.DecimalPlaces = 2;
             this.numericUpDownAmountOfRent.Location = new System.Drawing.Point(161, 120);
             this.numericUpDownAmountOfRent.Maximum = new decimal(new int[] {
@@ -1066,8 +1067,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerAtDate
             // 
-            this.dateTimePickerAtDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerAtDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerAtDate.Location = new System.Drawing.Point(161, 91);
             this.dateTimePickerAtDate.Name = "dateTimePickerAtDate";
             this.dateTimePickerAtDate.ShowCheckBox = true;
@@ -1086,8 +1087,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerDateOfTransfer
             // 
-            this.dateTimePickerDateOfTransfer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerDateOfTransfer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerDateOfTransfer.Location = new System.Drawing.Point(161, 4);
             this.dateTimePickerDateOfTransfer.Name = "dateTimePickerDateOfTransfer";
             this.dateTimePickerDateOfTransfer.ShowCheckBox = true;
@@ -1106,8 +1107,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownAmountOfDebtFine
             // 
-            this.numericUpDownAmountOfDebtFine.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownAmountOfDebtFine.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownAmountOfDebtFine.DecimalPlaces = 2;
             this.numericUpDownAmountOfDebtFine.Location = new System.Drawing.Point(161, 62);
             this.numericUpDownAmountOfDebtFine.Maximum = new decimal(new int[] {
@@ -1154,8 +1155,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownProcessID
             // 
-            this.numericUpDownProcessID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownProcessID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownProcessID.Location = new System.Drawing.Point(159, 4);
             this.numericUpDownProcessID.Maximum = new decimal(new int[] {
             1410065407,
@@ -1178,8 +1179,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownAmountOfFineRecover
             // 
-            this.numericUpDownAmountOfFineRecover.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownAmountOfFineRecover.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownAmountOfFineRecover.DecimalPlaces = 2;
             this.numericUpDownAmountOfFineRecover.Location = new System.Drawing.Point(161, 62);
             this.numericUpDownAmountOfFineRecover.Maximum = new decimal(new int[] {
@@ -1204,8 +1205,8 @@ namespace Registry.Viewport
             // 
             // textBoxDescription
             // 
-            this.textBoxDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxDescription.Location = new System.Drawing.Point(161, 149);
             this.textBoxDescription.MaxLength = 4000;
             this.textBoxDescription.Name = "textBoxDescription";
@@ -1215,8 +1216,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownAmountOfRentRecover
             // 
-            this.numericUpDownAmountOfRentRecover.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownAmountOfRentRecover.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownAmountOfRentRecover.DecimalPlaces = 2;
             this.numericUpDownAmountOfRentRecover.Location = new System.Drawing.Point(161, 33);
             this.numericUpDownAmountOfRentRecover.Maximum = new decimal(new int[] {
@@ -1259,8 +1260,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerEndDeptPeriod
             // 
-            this.dateTimePickerEndDeptPeriod.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerEndDeptPeriod.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerEndDeptPeriod.Location = new System.Drawing.Point(161, 120);
             this.dateTimePickerEndDeptPeriod.Name = "dateTimePickerEndDeptPeriod";
             this.dateTimePickerEndDeptPeriod.ShowCheckBox = true;
@@ -1279,8 +1280,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerStartDeptPeriod
             // 
-            this.dateTimePickerStartDeptPeriod.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerStartDeptPeriod.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerStartDeptPeriod.Location = new System.Drawing.Point(161, 91);
             this.dateTimePickerStartDeptPeriod.Name = "dateTimePickerStartDeptPeriod";
             this.dateTimePickerStartDeptPeriod.ShowCheckBox = true;
@@ -1302,7 +1303,7 @@ namespace Registry.Viewport
             this.dataGridViewClaims.AllowUserToAddRows = false;
             this.dataGridViewClaims.AllowUserToDeleteRows = false;
             this.dataGridViewClaims.AllowUserToResizeRows = false;
-            this.dataGridViewClaims.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridViewClaims.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewClaims.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.dataGridViewClaims.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewClaims.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -1383,10 +1384,11 @@ namespace Registry.Viewport
             // 
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(620, 300);
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(955, 497);
             this.Controls.Add(this.tableLayoutPanel15);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ClaimListViewport";
             this.Padding = new System.Windows.Forms.Padding(3);
             this.Text = "Исковая работа №{0}";

@@ -851,6 +851,7 @@ namespace Registry.Viewport
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyBuildingsViewport));
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.is_checked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.rent_total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -869,7 +870,7 @@ namespace Registry.Viewport
             // 
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AllowUserToResizeRows = false;
-            this.dataGridView.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
@@ -893,7 +894,7 @@ namespace Registry.Viewport
             this.cadastral_num,
             this.startup_year});
             dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle6.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
@@ -920,7 +921,7 @@ namespace Registry.Viewport
             // is_checked
             // 
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle2.NullValue = false;
             this.is_checked.DefaultCellStyle = dataGridViewCellStyle2;
             this.is_checked.HeaderText = "";
@@ -930,7 +931,7 @@ namespace Registry.Viewport
             // 
             // rent_total_area
             // 
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle3.Format = "#0.0## м²";
             this.rent_total_area.DefaultCellStyle = dataGridViewCellStyle3;
             this.rent_total_area.HeaderText = "Арендуемая S общ.";
@@ -941,7 +942,7 @@ namespace Registry.Viewport
             // 
             // rent_living_area
             // 
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle4.Format = "#0.0## м²";
             this.rent_living_area.DefaultCellStyle = dataGridViewCellStyle4;
             this.rent_living_area.HeaderText = "Арендуемая S жил.";
@@ -1015,6 +1016,7 @@ namespace Registry.Viewport
             this.ClientSize = new System.Drawing.Size(1537, 729);
             this.Controls.Add(this.dataGridView);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "TenancyBuildingsViewport";
             this.Padding = new System.Windows.Forms.Padding(3);
             this.Text = "Здания по процессу найма №{0}";

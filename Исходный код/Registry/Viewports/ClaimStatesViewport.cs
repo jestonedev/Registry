@@ -799,6 +799,7 @@ namespace Registry.Viewport
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClaimStatesViewport));
             this.tableLayoutPanel17 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox35 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel18 = new System.Windows.Forms.TableLayoutPanel();
@@ -889,8 +890,8 @@ namespace Registry.Viewport
             // 
             // textBoxDocumentNumber
             // 
-            this.textBoxDocumentNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxDocumentNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxDocumentNumber.Location = new System.Drawing.Point(161, 4);
             this.textBoxDocumentNumber.MaxLength = 50;
             this.textBoxDocumentNumber.Name = "textBoxDocumentNumber";
@@ -909,8 +910,8 @@ namespace Registry.Viewport
             // 
             // textBoxDescription
             // 
-            this.textBoxDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxDescription.Location = new System.Drawing.Point(161, 62);
             this.textBoxDescription.MaxLength = 4000;
             this.textBoxDescription.Name = "textBoxDescription";
@@ -929,8 +930,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerDocDate
             // 
-            this.dateTimePickerDocDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerDocDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerDocDate.Location = new System.Drawing.Point(161, 33);
             this.dateTimePickerDocDate.Name = "dateTimePickerDocDate";
             this.dateTimePickerDocDate.ShowCheckBox = true;
@@ -964,8 +965,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerEndState
             // 
-            this.dateTimePickerEndState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerEndState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerEndState.Location = new System.Drawing.Point(161, 62);
             this.dateTimePickerEndState.Name = "dateTimePickerEndState";
             this.dateTimePickerEndState.ShowCheckBox = true;
@@ -984,8 +985,8 @@ namespace Registry.Viewport
             // 
             // comboBoxClaimStateType
             // 
-            this.comboBoxClaimStateType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxClaimStateType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxClaimStateType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxClaimStateType.FormattingEnabled = true;
             this.comboBoxClaimStateType.Location = new System.Drawing.Point(161, 4);
@@ -996,8 +997,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerStartState
             // 
-            this.dateTimePickerStartState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerStartState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerStartState.Location = new System.Drawing.Point(161, 33);
             this.dateTimePickerStartState.Name = "dateTimePickerStartState";
             this.dateTimePickerStartState.ShowCheckBox = true;
@@ -1027,7 +1028,7 @@ namespace Registry.Viewport
             // 
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AllowUserToDeleteRows = false;
-            this.dataGridView.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id_state_type,
@@ -1081,10 +1082,11 @@ namespace Registry.Viewport
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(640, 190);
             this.AutoSize = true;
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(660, 211);
             this.Controls.Add(this.tableLayoutPanel17);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ClaimStatesViewport";
             this.Padding = new System.Windows.Forms.Padding(3);
             this.Text = "Состояния иск. работы №{0}";

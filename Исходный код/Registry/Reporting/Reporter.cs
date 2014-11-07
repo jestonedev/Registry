@@ -11,7 +11,14 @@ namespace Registry.Reporting
     public class Reporter
     {
         public event EventHandler<EventArgs> ReportComplete = null;
+        public event EventHandler<EventArgs> ReportCanceled = null;
         public event EventHandler<ReportOutputStreamEventArgs> ReportOutputStreamResponse = null;
+        public virtual string ReportTitle { get; set; }
+
+        public Reporter()
+        {
+            ReportTitle = this.ToString();
+        }
 
         public virtual void Run()
         {
@@ -75,6 +82,19 @@ namespace Registry.Reporting
             foreach (var argument in arguments)
                 argumentsString += String.Format("{0}=\"{1}\" ", argument.Key.Replace("\"", "\\\""), argument.Value.Replace("\"", "\\\""));
             return argumentsString; ;
+        }
+
+        public virtual void Cancel()
+        {
+            if (ReportCanceled != null)
+                try
+                {
+                    ReportCanceled(this, new EventArgs());
+                }
+                catch (NullReferenceException)
+                {
+                    //Исключение происходит, когда подписчики отписываются после проверки условия на null в многопоточном режиме
+                }
         }
     }
 }

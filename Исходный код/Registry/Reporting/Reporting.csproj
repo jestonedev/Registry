@@ -49,6 +49,9 @@
       <HintPath>C:\Program Files (x86)\VIBlend\Windows Forms Controls v.10.1.0.0\VIBlend.WinForms.Utilities.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>..\..\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ClaimsFilterForm.cs">
@@ -80,6 +83,18 @@
     </Compile>
     <Compile Include="RegistryReporters\SocialFundReporter.cs" />
     <Compile Include="RegistryReporters\SpecialFundReporter.cs" />
+    <Compile Include="TenancyExcerptSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TenancyExcerptSettingsForm.Designer.cs">
+      <DependentUpon>TenancyExcerptSettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TenancyOrderSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TenancyOrderSettingsForm.Designer.cs">
+      <DependentUpon>TenancyOrderSettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="TenancyReporters\TenancyAgreementReporter.cs" />
     <Compile Include="TenancyContractTypes.cs" />
     <Compile Include="TenancyReporters\TenancyActReporter.cs" />
@@ -87,6 +102,16 @@
     <Compile Include="TenancyReporters\TenancyContractSocialReporter.cs" />
     <Compile Include="TenancyReporters\TenancyContractSpecial1711Reporter.cs" />
     <Compile Include="TenancyReporters\TenancyContractSpecial1712Reporter.cs" />
+    <Compile Include="TenancyReporters\TenancyOrderReporter.cs" />
+    <Compile Include="TenancyReporters\TenancyStatisticForCoMSReporter.cs" />
+    <Compile Include="TenancyReporters\TenancyStatisticReporter.cs" />
+    <Compile Include="TenancyReporters\TenancyExcerptReporter.cs" />
+    <Compile Include="TenancyStatisticFilterForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TenancyStatisticFilterForm.Designer.cs">
+      <DependentUpon>TenancyStatisticFilterForm.cs</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DataModels\DataModels.csproj">
@@ -108,6 +133,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SelectRegionsForm.resx">
       <DependentUpon>SelectRegionsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TenancyExcerptSettingsForm.resx">
+      <DependentUpon>TenancyExcerptSettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TenancyOrderSettingsForm.resx">
+      <DependentUpon>TenancyOrderSettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TenancyStatisticFilterForm.resx">
+      <DependentUpon>TenancyStatisticFilterForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />

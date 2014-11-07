@@ -10,6 +10,7 @@ namespace Registry.Reporting.RegistryReporters
     {
         public override void Run()
         {
+            ReportTitle = "Помещения по мене";
             Dictionary<string, string> arguments = new Dictionary<string, string>();
             arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "registry\\premises_by_exchange.xml"));
             arguments.Add("connectionString", RegistrySettings.ConnectionString);
@@ -24,6 +25,8 @@ namespace Registry.Reporting.RegistryReporters
                 arguments.Add("regions", regionsStr);
                 base.Run(arguments);
             }
+            else
+                base.Cancel();
         }
     }
 }

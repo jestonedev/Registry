@@ -458,6 +458,8 @@
             this.Controls.Add(this.vButtonCancel);
             this.Controls.Add(this.vButtonSearch);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ExtendedSearchPremisesForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Фильтрация помещений";

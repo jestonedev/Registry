@@ -999,7 +999,7 @@ namespace Registry.Viewport
             // 
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AllowUserToResizeRows = false;
-            this.dataGridView.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
@@ -1025,7 +1025,7 @@ namespace Registry.Viewport
             this.living_area,
             this.cadastral_num});
             dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
@@ -1058,7 +1058,7 @@ namespace Registry.Viewport
             // image
             // 
             dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle2.BackColor = System.Drawing.Color.LightGray;
             dataGridViewCellStyle2.NullValue = ((object)(resources.GetObject("dataGridViewCellStyle2.NullValue")));
             this.image.DefaultCellStyle = dataGridViewCellStyle2;
             this.image.HeaderText = "";
@@ -1071,7 +1071,7 @@ namespace Registry.Viewport
             // is_checked
             // 
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle3.NullValue = false;
             this.is_checked.DefaultCellStyle = dataGridViewCellStyle3;
             this.is_checked.HeaderText = "";
@@ -1082,7 +1082,7 @@ namespace Registry.Viewport
             // 
             // rent_total_area
             // 
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle4.Format = "#0.0## м²";
             this.rent_total_area.DefaultCellStyle = dataGridViewCellStyle4;
             this.rent_total_area.HeaderText = "Арендуемая S общ.";
@@ -1093,7 +1093,7 @@ namespace Registry.Viewport
             // 
             // rent_living_area
             // 
-            dataGridViewCellStyle5.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            dataGridViewCellStyle5.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle5.Format = "#0.0## м²";
             this.rent_living_area.DefaultCellStyle = dataGridViewCellStyle5;
             this.rent_living_area.HeaderText = "Арендуемая S жил.";
@@ -1171,10 +1171,11 @@ namespace Registry.Viewport
             // 
             // TenancyPremisesViewport
             // 
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1370, 304);
             this.Controls.Add(this.dataGridView);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "TenancyPremisesViewport";
             this.Padding = new System.Windows.Forms.Padding(3);
             this.Text = "Перечень помещений";

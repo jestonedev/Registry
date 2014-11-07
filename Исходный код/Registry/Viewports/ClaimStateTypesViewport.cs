@@ -21,10 +21,6 @@ namespace Registry.Viewport
         DataGridViewCheckBoxColumn is_start_state_type;
         DataGridViewTextBoxColumn state_type;
         DataGridView dataGridViewClaimStateTypesFrom;
-        DataGridViewCheckBoxColumn state_type_checked;
-        DataGridViewTextBoxColumn id_relation;
-        DataGridViewTextBoxColumn id_state_type_from;
-        DataGridViewTextBoxColumn state_type_from;
         #endregion Components
 
         #region Models
@@ -44,6 +40,10 @@ namespace Registry.Viewport
 
         //Флаг разрешения синхронизации snapshot и original моделей
         bool sync_views = true;
+        private DataGridViewCheckBoxColumn state_type_checked;
+        private DataGridViewTextBoxColumn id_relation;
+        private DataGridViewTextBoxColumn id_state_type_from;
+        private DataGridViewTextBoxColumn state_type_from;
         int temp_id_state_type = Int32.MaxValue;
 
         private ClaimStateTypesViewport()
@@ -723,6 +723,7 @@ namespace Registry.Viewport
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClaimStateTypesViewport));
             this.tableLayoutPanel19 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox36 = new System.Windows.Forms.GroupBox();
             this.dataGridViewClaimStateTypes = new System.Windows.Forms.DataGridView();
@@ -773,6 +774,7 @@ namespace Registry.Viewport
             // 
             this.dataGridViewClaimStateTypes.AllowUserToAddRows = false;
             this.dataGridViewClaimStateTypes.AllowUserToDeleteRows = false;
+            this.dataGridViewClaimStateTypes.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewClaimStateTypes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewClaimStateTypes.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id_state_type,
@@ -823,6 +825,7 @@ namespace Registry.Viewport
             // 
             this.dataGridViewClaimStateTypesFrom.AllowUserToAddRows = false;
             this.dataGridViewClaimStateTypesFrom.AllowUserToDeleteRows = false;
+            this.dataGridViewClaimStateTypesFrom.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewClaimStateTypesFrom.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewClaimStateTypesFrom.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.state_type_checked,
@@ -863,7 +866,7 @@ namespace Registry.Viewport
             // state_type_from
             // 
             this.state_type_from.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.state_type_from.DefaultCellStyle = dataGridViewCellStyle1;
             this.state_type_from.HeaderText = "Наименование вида состояния";
             this.state_type_from.Name = "state_type_from";
@@ -871,10 +874,11 @@ namespace Registry.Viewport
             // 
             // ClaimStateTypesViewport
             // 
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(649, 433);
             this.Controls.Add(this.tableLayoutPanel19);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ClaimStateTypesViewport";
             this.Padding = new System.Windows.Forms.Padding(3);
             this.Text = "Виды состояний иск. работы";

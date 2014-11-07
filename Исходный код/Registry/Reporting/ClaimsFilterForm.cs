@@ -14,6 +14,17 @@ namespace Registry.Reporting
         public ClaimsFilterForm()
         {
             InitializeComponent();
+            foreach (Control control in this.Controls)
+                control.KeyDown += (sender, e) =>
+                {
+                    if (sender is ComboBox && ((ComboBox)sender).DroppedDown)
+                        return;
+                    if (e.KeyCode == Keys.Enter)
+                        this.DialogResult = System.Windows.Forms.DialogResult.OK;
+                    else
+                        if (e.KeyCode == Keys.Escape)
+                            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+                };
         }
 
         internal string GetFilter()

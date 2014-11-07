@@ -24,6 +24,9 @@ namespace Registry.Reporting
         TenancyContractSpecial1712Reporter,
         TenancyActReporter,
         TenancyAgreementReporter,
+        TenancyStatisticReporter,
+        TenancyStatisticForCoMSReporter,
+        TenancyOrderReporter,
         TenancyExcerptReporter
     }
 }

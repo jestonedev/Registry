@@ -64,7 +64,7 @@
             this.vButton2.Name = "vButton2";
             this.vButton2.RoundedCornersMask = ((byte)(15));
             this.vButton2.Size = new System.Drawing.Size(100, 30);
-            this.vButton2.TabIndex = 4;
+            this.vButton2.TabIndex = 16;
             this.vButton2.Text = "Сформировать";
             this.vButton2.UseVisualStyleBackColor = false;
             this.vButton2.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE;
@@ -78,7 +78,7 @@
             this.vButton1.Name = "vButton1";
             this.vButton1.RoundedCornersMask = ((byte)(15));
             this.vButton1.Size = new System.Drawing.Size(100, 30);
-            this.vButton1.TabIndex = 3;
+            this.vButton1.TabIndex = 17;
             this.vButton1.Text = "Отменить";
             this.vButton1.UseVisualStyleBackColor = false;
             this.vButton1.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE;
@@ -94,7 +94,7 @@
             0});
             this.numericUpDownIDClaim.Name = "numericUpDownIDClaim";
             this.numericUpDownIDClaim.Size = new System.Drawing.Size(375, 20);
-            this.numericUpDownIDClaim.TabIndex = 29;
+            this.numericUpDownIDClaim.TabIndex = 1;
             // 
             // checkBoxIDClaimEnable
             // 
@@ -102,7 +102,7 @@
             this.checkBoxIDClaimEnable.Location = new System.Drawing.Point(17, 26);
             this.checkBoxIDClaimEnable.Name = "checkBoxIDClaimEnable";
             this.checkBoxIDClaimEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxIDClaimEnable.TabIndex = 28;
+            this.checkBoxIDClaimEnable.TabIndex = 0;
             this.checkBoxIDClaimEnable.UseVisualStyleBackColor = true;
             this.checkBoxIDClaimEnable.CheckedChanged += new System.EventHandler(this.checkBoxIDClaimEnable_CheckedChanged);
             // 
@@ -126,7 +126,7 @@
             0});
             this.numericUpDownIDProcess.Name = "numericUpDownIDProcess";
             this.numericUpDownIDProcess.Size = new System.Drawing.Size(375, 20);
-            this.numericUpDownIDProcess.TabIndex = 32;
+            this.numericUpDownIDProcess.TabIndex = 3;
             // 
             // checkBoxIDProcessEnable
             // 
@@ -134,7 +134,7 @@
             this.checkBoxIDProcessEnable.Location = new System.Drawing.Point(17, 65);
             this.checkBoxIDProcessEnable.Name = "checkBoxIDProcessEnable";
             this.checkBoxIDProcessEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxIDProcessEnable.TabIndex = 31;
+            this.checkBoxIDProcessEnable.TabIndex = 2;
             this.checkBoxIDProcessEnable.UseVisualStyleBackColor = true;
             this.checkBoxIDProcessEnable.CheckedChanged += new System.EventHandler(this.checkBoxIDProcessEnable_CheckedChanged);
             // 
@@ -163,7 +163,7 @@
             this.dateTimePickerTransferFrom.Name = "dateTimePickerTransferFrom";
             this.dateTimePickerTransferFrom.ShowCheckBox = true;
             this.dateTimePickerTransferFrom.Size = new System.Drawing.Size(170, 20);
-            this.dateTimePickerTransferFrom.TabIndex = 37;
+            this.dateTimePickerTransferFrom.TabIndex = 5;
             // 
             // label3
             // 
@@ -171,7 +171,7 @@
             this.label3.Location = new System.Drawing.Point(19, 105);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(13, 13);
-            this.label3.TabIndex = 38;
+            this.label3.TabIndex = 4;
             this.label3.Text = "с";
             // 
             // label4
@@ -180,7 +180,7 @@
             this.label4.Location = new System.Drawing.Point(222, 105);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(19, 13);
-            this.label4.TabIndex = 39;
+            this.label4.TabIndex = 6;
             this.label4.Text = "по";
             // 
             // dateTimePickerTransferTo
@@ -190,7 +190,7 @@
             this.dateTimePickerTransferTo.Name = "dateTimePickerTransferTo";
             this.dateTimePickerTransferTo.ShowCheckBox = true;
             this.dateTimePickerTransferTo.Size = new System.Drawing.Size(170, 20);
-            this.dateTimePickerTransferTo.TabIndex = 40;
+            this.dateTimePickerTransferTo.TabIndex = 7;
             // 
             // dateTimePickerStartDeptTo
             // 
@@ -199,7 +199,7 @@
             this.dateTimePickerStartDeptTo.Name = "dateTimePickerStartDeptTo";
             this.dateTimePickerStartDeptTo.ShowCheckBox = true;
             this.dateTimePickerStartDeptTo.Size = new System.Drawing.Size(170, 20);
-            this.dateTimePickerStartDeptTo.TabIndex = 44;
+            this.dateTimePickerStartDeptTo.TabIndex = 11;
             // 
             // label5
             // 
@@ -207,7 +207,7 @@
             this.label5.Location = new System.Drawing.Point(19, 144);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(13, 13);
-            this.label5.TabIndex = 43;
+            this.label5.TabIndex = 8;
             this.label5.Text = "с";
             // 
             // dateTimePickerStartDeptFrom
@@ -217,7 +217,7 @@
             this.dateTimePickerStartDeptFrom.Name = "dateTimePickerStartDeptFrom";
             this.dateTimePickerStartDeptFrom.ShowCheckBox = true;
             this.dateTimePickerStartDeptFrom.Size = new System.Drawing.Size(170, 20);
-            this.dateTimePickerStartDeptFrom.TabIndex = 42;
+            this.dateTimePickerStartDeptFrom.TabIndex = 9;
             // 
             // label6
             // 
@@ -234,7 +234,7 @@
             this.label7.Location = new System.Drawing.Point(222, 144);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(19, 13);
-            this.label7.TabIndex = 45;
+            this.label7.TabIndex = 10;
             this.label7.Text = "по";
             // 
             // label8
@@ -243,7 +243,7 @@
             this.label8.Location = new System.Drawing.Point(222, 184);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(19, 13);
-            this.label8.TabIndex = 50;
+            this.label8.TabIndex = 14;
             this.label8.Text = "по";
             // 
             // dateTimePickerEndDeptTo
@@ -253,7 +253,7 @@
             this.dateTimePickerEndDeptTo.Name = "dateTimePickerEndDeptTo";
             this.dateTimePickerEndDeptTo.ShowCheckBox = true;
             this.dateTimePickerEndDeptTo.Size = new System.Drawing.Size(170, 20);
-            this.dateTimePickerEndDeptTo.TabIndex = 49;
+            this.dateTimePickerEndDeptTo.TabIndex = 15;
             // 
             // label10
             // 
@@ -261,7 +261,7 @@
             this.label10.Location = new System.Drawing.Point(19, 184);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(13, 13);
-            this.label10.TabIndex = 48;
+            this.label10.TabIndex = 12;
             this.label10.Text = "с";
             // 
             // dateTimePickerEndDeptFrom
@@ -271,7 +271,7 @@
             this.dateTimePickerEndDeptFrom.Name = "dateTimePickerEndDeptFrom";
             this.dateTimePickerEndDeptFrom.ShowCheckBox = true;
             this.dateTimePickerEndDeptFrom.Size = new System.Drawing.Size(170, 20);
-            this.dateTimePickerEndDeptFrom.TabIndex = 47;
+            this.dateTimePickerEndDeptFrom.TabIndex = 13;
             // 
             // label11
             // 
@@ -312,6 +312,8 @@
             this.Controls.Add(this.vButton2);
             this.Controls.Add(this.vButton1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "ClaimsFilterForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Критерии отчета по исковой работе";

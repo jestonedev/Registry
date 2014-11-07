@@ -51,7 +51,7 @@
             this.vButton1.Name = "vButton1";
             this.vButton1.RoundedCornersMask = ((byte)(15));
             this.vButton1.Size = new System.Drawing.Size(100, 30);
-            this.vButton1.TabIndex = 1;
+            this.vButton1.TabIndex = 3;
             this.vButton1.Text = "Отменить";
             this.vButton1.UseVisualStyleBackColor = false;
             this.vButton1.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE;
@@ -76,12 +76,12 @@
             this.checkBoxCheckAll.Location = new System.Drawing.Point(12, 219);
             this.checkBoxCheckAll.Name = "checkBoxCheckAll";
             this.checkBoxCheckAll.Size = new System.Drawing.Size(97, 17);
-            this.checkBoxCheckAll.TabIndex = 3;
+            this.checkBoxCheckAll.TabIndex = 1;
             this.checkBoxCheckAll.Text = "Выделить все";
             this.checkBoxCheckAll.UseVisualStyleBackColor = true;
             this.checkBoxCheckAll.CheckedChanged += new System.EventHandler(this.checkBoxCheckAll_CheckedChanged);
             // 
-            // SelectRegions
+            // SelectRegionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -92,7 +92,9 @@
             this.Controls.Add(this.vButton1);
             this.Controls.Add(this.checkedListBoxRegions);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
-            this.Name = "SelectRegions";
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
+            this.Name = "SelectRegionsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Выберите жилые районы";
             this.ResumeLayout(false);

@@ -16,8 +16,8 @@ namespace Registry.DataModels
         private static string selectQuery = "SELECT * FROM executors";
         private static string deleteQuery = "DELETE FROM executors WHERE id_executor = ?";
         private static string insertQuery = @"INSERT INTO executors
-                            (executor_name, executor_login) VALUES (?, ?)";
-        private static string updateQuery = @"UPDATE executors SET executor_name = ?, executor_login = ? WHERE id_executor = ?";
+                            (executor_name, executor_login, phone, is_inactive) VALUES (?, ?, ?, ?)";
+        private static string updateQuery = @"UPDATE executors SET executor_name = ?, executor_login = ?, phone = ?, is_inactive = ? WHERE id_executor = ?";
         private static string tableName = "executors";
 
         private ExecutorsDataModel(ToolStripProgressBar progressBar, int incrementor)
@@ -28,6 +28,7 @@ namespace Registry.DataModels
         protected override void ConfigureTable()
         {
             table.PrimaryKey = new DataColumn[] { table.Columns["id_executor"] };
+            table.Columns["is_inactive"].DefaultValue = false;
         }
 
         public static ExecutorsDataModel GetInstance()
@@ -52,6 +53,8 @@ namespace Registry.DataModels
 
             command.Parameters.Add(connection.CreateParameter<string>("executor_name", executor.executor_name));
             command.Parameters.Add(connection.CreateParameter<string>("executor_login", executor.executor_login));
+            command.Parameters.Add(connection.CreateParameter<string>("phone", executor.phone));
+            command.Parameters.Add(connection.CreateParameter<bool?>("is_inactive", executor.is_inactive));
 
             try
             {
@@ -86,6 +89,8 @@ namespace Registry.DataModels
 
             command.Parameters.Add(connection.CreateParameter<string>("executor_name", executor.executor_name));
             command.Parameters.Add(connection.CreateParameter<string>("executor_login", executor.executor_login));
+            command.Parameters.Add(connection.CreateParameter<string>("phone", executor.phone));
+            command.Parameters.Add(connection.CreateParameter<bool?>("is_inactive", executor.is_inactive));
             command.Parameters.Add(connection.CreateParameter<int?>("id_executor", executor.id_executor));
 
             try

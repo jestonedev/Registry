@@ -88,9 +88,9 @@ namespace Registry.DataModels
             return (from building_row in buildings
                     join kladr_row in kladr_streets
                     on building_row.Field<string>("id_street") equals kladr_row.Field<string>("id_street")
-                    where (addressParts.Count() == 1) ? kladr_row.Field<string>("street_name").Contains(addressParts[0]) :
-                            (addressParts.Count() >= 2) ? kladr_row.Field<string>("street_name").Contains(addressParts[0]) &&
-                            building_row.Field<string>("house") == addressParts[1] : false
+                    where (addressParts.Count() == 1) ? kladr_row.Field<string>("street_name").ToLower().Contains(addressParts[0].ToLower()) :
+                            (addressParts.Count() >= 2) ? kladr_row.Field<string>("street_name").ToLower().Contains(addressParts[0].ToLower()) &&
+                            building_row.Field<string>("house").ToLower() == addressParts[1].ToLower() : false
                     select building_row.Field<int>("id_building")).ToList();
         }
 
@@ -104,12 +104,12 @@ namespace Registry.DataModels
                     on premises_row.Field<int>("id_building") equals building_row.Field<int>("id_building")
                     join kladr_row in kladr_streets
                     on building_row.Field<string>("id_street") equals kladr_row.Field<string>("id_street")
-                    where (addressParts.Count() == 1) ? kladr_row.Field<string>("street_name").Contains(addressParts[0]) :
-                            (addressParts.Count() == 2) ? kladr_row.Field<string>("street_name").Contains(addressParts[0]) &&
-                            building_row.Field<string>("house") == addressParts[1] :
-                            (addressParts.Count() == 3) ? kladr_row.Field<string>("street_name").Contains(addressParts[0]) &&
-                            building_row.Field<string>("house") == addressParts[1] && 
-                            premises_row.Field<string>("premises_num") == addressParts[2] : false
+                    where (addressParts.Count() == 1) ? kladr_row.Field<string>("street_name").ToLower().Contains(addressParts[0].ToLower()) :
+                            (addressParts.Count() == 2) ? kladr_row.Field<string>("street_name").ToLower().Contains(addressParts[0].ToLower()) &&
+                            building_row.Field<string>("house").ToLower() == addressParts[1].ToLower() :
+                            (addressParts.Count() == 3) ? kladr_row.Field<string>("street_name").ToLower().Contains(addressParts[0].ToLower()) &&
+                            building_row.Field<string>("house").ToLower() == addressParts[1].ToLower() &&
+                            premises_row.Field<string>("premises_num").ToLower() == addressParts[2].ToLower() : false
                     select premises_row.Field<int>("id_premises")).ToList();
         }
 
@@ -127,9 +127,9 @@ namespace Registry.DataModels
                                     on tenancy_buildings_row.Field<int>("id_building") equals buildings_row.Field<int>("id_building")
                                     join kladr_row in kladr_streets.AsEnumerable()
                                     on buildings_row.Field<string>("id_street") equals kladr_row.Field<string>("id_street")
-                                    where (addressParts.Count() == 1) ? kladr_row.Field<string>("street_name").Contains(addressParts[0]) :
-                                          (addressParts.Count() >= 2) ? (kladr_row.Field<string>("street_name").Contains(addressParts[0])) &&
-                                          (buildings_row.Field<string>("house") == addressParts[1]) : false
+                                    where (addressParts.Count() == 1) ? kladr_row.Field<string>("street_name").ToLower().Contains(addressParts[0].ToLower()) :
+                                          (addressParts.Count() >= 2) ? (kladr_row.Field<string>("street_name").ToLower().Contains(addressParts[0].ToLower())) &&
+                                          (buildings_row.Field<string>("house").ToLower() == addressParts[1].ToLower()) : false
                                     select tenancy_buildings_row.Field<int>("id_process");
             var tenancy_premises = from tenancy_premises_row in tenancy_premises_assoc.AsEnumerable()
                                    join premises_row in premises.AsEnumerable()
@@ -138,12 +138,12 @@ namespace Registry.DataModels
                                    on premises_row.Field<int>("id_building") equals buildings_row.Field<int>("id_building")
                                    join kladr_row in kladr_streets.AsEnumerable()
                                     on buildings_row.Field<string>("id_street") equals kladr_row.Field<string>("id_street")
-                                   where (addressParts.Count() == 1) ? (kladr_row.Field<string>("street_name").Contains(addressParts[0])) :
-                                         (addressParts.Count() == 2) ? (kladr_row.Field<string>("street_name").Contains(addressParts[0])) &&
-                                         (buildings_row.Field<string>("house") == addressParts[1]) :
-                                         (addressParts.Count() == 3) ? (kladr_row.Field<string>("street_name").Contains(addressParts[0])) &&
-                                         (buildings_row.Field<string>("house") == addressParts[1]) &&
-                                         (premises_row.Field<string>("premises_num") == addressParts[2]) : false
+                                   where (addressParts.Count() == 1) ? (kladr_row.Field<string>("street_name").ToLower().Contains(addressParts[0].ToLower())) :
+                                         (addressParts.Count() == 2) ? (kladr_row.Field<string>("street_name").ToLower().Contains(addressParts[0].ToLower())) &&
+                                         (buildings_row.Field<string>("house").ToLower() == addressParts[1].ToLower()) :
+                                         (addressParts.Count() == 3) ? (kladr_row.Field<string>("street_name").ToLower().Contains(addressParts[0].ToLower())) &&
+                                         (buildings_row.Field<string>("house").ToLower() == addressParts[1].ToLower()) &&
+                                         (premises_row.Field<string>("premises_num").ToLower() == addressParts[2].ToLower()) : false
                                    select tenancy_premises_row.Field<int>("id_process");
             var tenancy_sub_premises = from tenancy_sub_premises_row in tenancy_sub_premises_assoc.AsEnumerable()
                                        join sub_premises_row in sub_premises.AsEnumerable()
@@ -154,12 +154,12 @@ namespace Registry.DataModels
                                        on premises_row.Field<int>("id_building") equals buildings_row.Field<int>("id_building")
                                        join kladr_row in kladr_streets.AsEnumerable()
                                        on buildings_row.Field<string>("id_street") equals kladr_row.Field<string>("id_street")
-                                       where (addressParts.Count() == 1) ? (kladr_row.Field<string>("street_name").Contains(addressParts[0])) :
-                                         (addressParts.Count() == 2) ? (kladr_row.Field<string>("street_name").Contains(addressParts[0])) &&
-                                         (buildings_row.Field<string>("house") == addressParts[1]) :
-                                         (addressParts.Count() == 3) ? (kladr_row.Field<string>("street_name").Contains(addressParts[0])) &&
-                                         (buildings_row.Field<string>("house") == addressParts[1]) &&
-                                         (premises_row.Field<string>("premises_num") == addressParts[2]) : false
+                                       where (addressParts.Count() == 1) ? (kladr_row.Field<string>("street_name").ToLower().Contains(addressParts[0].ToLower())) :
+                                         (addressParts.Count() == 2) ? (kladr_row.Field<string>("street_name").ToLower().Contains(addressParts[0].ToLower())) &&
+                                         (buildings_row.Field<string>("house").ToLower() == addressParts[1].ToLower()) :
+                                         (addressParts.Count() == 3) ? (kladr_row.Field<string>("street_name").ToLower().Contains(addressParts[0].ToLower())) &&
+                                         (buildings_row.Field<string>("house").ToLower() == addressParts[1].ToLower()) &&
+                                         (premises_row.Field<string>("premises_num").ToLower() == addressParts[2].ToLower()) : false
                                        select tenancy_sub_premises_row.Field<int>("id_process");
             return tenancy_buildings.Union(tenancy_premises).Union(tenancy_sub_premises).ToList();
         }

@@ -13,6 +13,11 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridView dataGridView;
+        private DataGridViewTextBoxColumn id_executor;
+        private DataGridViewTextBoxColumn executor_name;
+        private DataGridViewTextBoxColumn executor_login;
+        private DataGridViewTextBoxColumn phone;
+        private DataGridViewCheckBoxColumn is_inactive;
         #endregion Components
 
         #region Models
@@ -24,9 +29,8 @@ namespace Registry.Viewport
         BindingSource v_executors = null;
         BindingSource v_snapshot_executors = null;
         #endregion Views
-        private DataGridViewTextBoxColumn id_executor;
-        private DataGridViewTextBoxColumn executor_name;
-        private DataGridViewTextBoxColumn executor_login;
+
+
 
         //Флаг разрешения синхронизации snapshot и original моделей
         bool sync_views = true;
@@ -75,7 +79,9 @@ namespace Registry.Viewport
             return new object[] { 
                 dataRowView["id_executor"], 
                 dataRowView["executor_name"],
-                dataRowView["executor_login"]
+                dataRowView["executor_login"],
+                dataRowView["phone"],
+                dataRowView["is_inactive"]
             };
         }
 
@@ -86,18 +92,6 @@ namespace Registry.Viewport
                 if (executor.executor_name == null)
                 {
                     MessageBox.Show("ФИО исполнителя не может быть пустым", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-                if (executor.executor_name != null && executor.executor_name.Length > 255)
-                {
-                    MessageBox.Show("Длина ФИО исполнителя не может превышать 255 символов",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return false;
-                }
-                if (executor.executor_login != null && executor.executor_login.Length > 255)
-                {
-                    MessageBox.Show("Длина логина исполнителя не может превышать 255 символов",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return false;
                 }
                 if ((executor.executor_login != null) &&
@@ -116,6 +110,8 @@ namespace Registry.Viewport
             executor.id_executor = ViewportHelper.ValueOrNull<int>(row, "id_executor");
             executor.executor_name = ViewportHelper.ValueOrNull(row, "executor_name");
             executor.executor_login = ViewportHelper.ValueOrNull(row, "executor_login");
+            executor.phone = ViewportHelper.ValueOrNull(row, "phone");
+            executor.is_inactive = ViewportHelper.ValueOrNull<bool>(row, "is_inactive");
             return executor;
         }
 
@@ -131,6 +127,8 @@ namespace Registry.Viewport
                     e.id_executor = ViewportHelper.ValueOrNull<int>(row, "id_executor");
                     e.executor_name = ViewportHelper.ValueOrNull(row, "executor_name");
                     e.executor_login = ViewportHelper.ValueOrNull(row, "executor_login");
+                    e.phone = ViewportHelper.ValueOrNull(row, "phone");
+                    e.is_inactive = ViewportHelper.ValueOrNull<bool>(row, "is_inactive") == true;
                     list.Add(e);
                 }
             }
@@ -147,6 +145,8 @@ namespace Registry.Viewport
                 e.id_executor = ViewportHelper.ValueOrNull<int>(row, "id_executor");
                 e.executor_name = ViewportHelper.ValueOrNull(row, "executor_name");
                 e.executor_login = ViewportHelper.ValueOrNull(row, "executor_login");
+                e.phone = ViewportHelper.ValueOrNull(row, "phone");
+                e.is_inactive = ViewportHelper.ValueOrNull<bool>(row, "is_inactive");
                 list.Add(e);
             }
             return list;
@@ -230,6 +230,8 @@ namespace Registry.Viewport
             id_executor.DataPropertyName = "id_executor";
             executor_name.DataPropertyName = "executor_name";
             executor_login.DataPropertyName = "executor_login";
+            phone.DataPropertyName = "phone";
+            is_inactive.DataPropertyName = "is_inactive";
 
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
 
@@ -315,6 +317,8 @@ namespace Registry.Viewport
                     }
                     row["executor_name"] = list[i].executor_name == null ? DBNull.Value : (object)list[i].executor_name;
                     row["executor_login"] = list[i].executor_login == null ? DBNull.Value : (object)list[i].executor_login;
+                    row["phone"] = list[i].phone == null ? DBNull.Value : (object)list[i].phone;
+                    row["is_inactive"] = list[i].is_inactive == null ? DBNull.Value : (object)list[i].is_inactive;
                 }
             }
             list = ExecutorsFromView();
@@ -380,17 +384,8 @@ namespace Registry.Viewport
             switch (cell.OwningColumn.Name)
             {
                 case "executor_name":
-                    if (cell.Value.ToString().Trim().Length > 255)
-                        cell.ErrorText = "Длина ФИО исполнителя не может превышать 255 символов";
-                    else
-                        if (cell.Value.ToString().Trim() == "")
-                            cell.ErrorText = "ФИО исполнителя не может быть пустым";
-                        else
-                            cell.ErrorText = "";
-                    break;
-                case "executor_login":
-                    if (cell.Value.ToString().Length > 255)
-                        cell.ErrorText = "Длина логина исполнителя не может превышать 255 символов";
+                    if (cell.Value.ToString().Trim() == "")
+                        cell.ErrorText = "ФИО исполнителя не может быть пустым";
                     else
                         cell.ErrorText = "";
                     break;
@@ -426,6 +421,8 @@ namespace Registry.Viewport
                     DataRowView row = ((DataRowView)v_snapshot_executors[row_index]);
                     row["executor_name"] = e.Row["executor_name"];
                     row["executor_login"] = e.Row["executor_login"];
+                    row["phone"] = e.Row["phone"];
+                    row["is_inactive"] = e.Row["is_inactive"];
                 }
             }
             else
@@ -434,7 +431,9 @@ namespace Registry.Viewport
                     snapshot_executors.Rows.Add(new object[] { 
                         e.Row["id_executor"], 
                         e.Row["executor_name"], 
-                        e.Row["executor_login"]
+                        e.Row["executor_login"], 
+                        e.Row["phone"], 
+                        e.Row["is_inactive"]
                     });
                 }
         }
@@ -448,10 +447,13 @@ namespace Registry.Viewport
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExecutorsViewport));
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.id_executor = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.executor_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.executor_login = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.phone = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.is_inactive = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -459,7 +461,7 @@ namespace Registry.Viewport
             // 
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridView.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
@@ -474,13 +476,15 @@ namespace Registry.Viewport
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id_executor,
             this.executor_name,
-            this.executor_login});
+            this.executor_login,
+            this.phone,
+            this.is_inactive});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.Location = new System.Drawing.Point(3, 3);
             this.dataGridView.MultiSelect = false;
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.Size = new System.Drawing.Size(505, 281);
+            this.dataGridView.Size = new System.Drawing.Size(599, 281);
             this.dataGridView.TabIndex = 8;
             // 
             // id_executor
@@ -494,21 +498,39 @@ namespace Registry.Viewport
             // executor_name
             // 
             this.executor_name.HeaderText = "ФИО исполнителя";
+            this.executor_name.MaxInputLength = 255;
             this.executor_name.MinimumWidth = 150;
             this.executor_name.Name = "executor_name";
             // 
             // executor_login
             // 
             this.executor_login.HeaderText = "Логин исполнителя";
+            this.executor_login.MaxInputLength = 255;
             this.executor_login.MinimumWidth = 150;
             this.executor_login.Name = "executor_login";
             // 
+            // phone
+            // 
+            this.phone.HeaderText = "Телефон";
+            this.phone.MaxInputLength = 255;
+            this.phone.MinimumWidth = 150;
+            this.phone.Name = "phone";
+            // 
+            // is_inactive
+            // 
+            this.is_inactive.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.is_inactive.HeaderText = "Неактивный";
+            this.is_inactive.Name = "is_inactive";
+            this.is_inactive.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.is_inactive.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            // 
             // ExecutorsViewport
             // 
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
-            this.ClientSize = new System.Drawing.Size(511, 287);
+            this.BackColor = System.Drawing.Color.White;
+            this.ClientSize = new System.Drawing.Size(605, 287);
             this.Controls.Add(this.dataGridView);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ExecutorsViewport";
             this.Padding = new System.Windows.Forms.Padding(3);
             this.Text = "Исполнители";

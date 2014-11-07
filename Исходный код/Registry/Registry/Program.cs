@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Input;
+using System.Reflection;
 
 namespace Registry
 {
@@ -11,11 +13,23 @@ namespace Registry
         /// Главная точка входа для приложения.
         /// </summary>
         [STAThread]
-        static void Main()
+        static void Main(string[] args)
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainForm());
+            if (args.Length > 0 && args.Contains("--config"))
+            {
+                SettingsForm sf = new SettingsForm();
+                sf.ShowDialog();
+            }
+            try
+            {
+                Application.Run(new MainForm());
+            }
+            catch (TargetInvocationException)
+            {
+                //На данный момент не знаю, чем вызвано данное исключение
+            }
         }
     }
 }

@@ -10,6 +10,7 @@ namespace Registry.Reporting.ClaimsReporters
     {
         public override void Run()
         {
+            ReportTitle = "Общий отчет по исковой работе";
             Dictionary<string, string> arguments = new Dictionary<string, string>();
             arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "claims\\claims_statistic.xml"));
             arguments.Add("connectionString", RegistrySettings.ConnectionString);
@@ -24,6 +25,8 @@ namespace Registry.Reporting.ClaimsReporters
                     arguments.Add("filter", filter);
                 base.Run(arguments);
             }
+            else
+                base.Cancel();
         }
     }
 }

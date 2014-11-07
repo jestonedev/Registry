@@ -1055,6 +1055,7 @@ namespace Registry.Viewport
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyPersonsViewport));
             this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox23 = new System.Windows.Forms.GroupBox();
             this.textBoxPersonalAccount = new System.Windows.Forms.TextBox();
@@ -1156,8 +1157,8 @@ namespace Registry.Viewport
             // 
             // textBoxPersonalAccount
             // 
-            this.textBoxPersonalAccount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxPersonalAccount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxPersonalAccount.Location = new System.Drawing.Point(164, 164);
             this.textBoxPersonalAccount.MaxLength = 255;
             this.textBoxPersonalAccount.Name = "textBoxPersonalAccount";
@@ -1176,8 +1177,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerDateOfBirth
             // 
-            this.dateTimePickerDateOfBirth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerDateOfBirth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerDateOfBirth.Location = new System.Drawing.Point(164, 106);
             this.dateTimePickerDateOfBirth.Name = "dateTimePickerDateOfBirth";
             this.dateTimePickerDateOfBirth.ShowCheckBox = true;
@@ -1187,8 +1188,8 @@ namespace Registry.Viewport
             // 
             // comboBoxKinship
             // 
-            this.comboBoxKinship.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxKinship.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxKinship.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxKinship.FormattingEnabled = true;
             this.comboBoxKinship.Location = new System.Drawing.Point(164, 135);
@@ -1217,8 +1218,8 @@ namespace Registry.Viewport
             // 
             // textBoxPatronymic
             // 
-            this.textBoxPatronymic.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxPatronymic.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxPatronymic.Location = new System.Drawing.Point(164, 77);
             this.textBoxPatronymic.MaxLength = 255;
             this.textBoxPatronymic.Name = "textBoxPatronymic";
@@ -1237,8 +1238,8 @@ namespace Registry.Viewport
             // 
             // textBoxName
             // 
-            this.textBoxName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxName.Location = new System.Drawing.Point(164, 48);
             this.textBoxName.MaxLength = 50;
             this.textBoxName.Name = "textBoxName";
@@ -1257,8 +1258,8 @@ namespace Registry.Viewport
             // 
             // textBoxSurname
             // 
-            this.textBoxSurname.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSurname.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxSurname.Location = new System.Drawing.Point(164, 19);
             this.textBoxSurname.MaxLength = 50;
             this.textBoxSurname.Name = "textBoxSurname";
@@ -1304,8 +1305,8 @@ namespace Registry.Viewport
             // 
             // textBoxRegistrationRoom
             // 
-            this.textBoxRegistrationRoom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxRegistrationRoom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxRegistrationRoom.Location = new System.Drawing.Point(164, 107);
             this.textBoxRegistrationRoom.MaxLength = 15;
             this.textBoxRegistrationRoom.Name = "textBoxRegistrationRoom";
@@ -1324,8 +1325,8 @@ namespace Registry.Viewport
             // 
             // textBoxRegistrationFlat
             // 
-            this.textBoxRegistrationFlat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxRegistrationFlat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxRegistrationFlat.Location = new System.Drawing.Point(164, 78);
             this.textBoxRegistrationFlat.MaxLength = 15;
             this.textBoxRegistrationFlat.Name = "textBoxRegistrationFlat";
@@ -1353,8 +1354,8 @@ namespace Registry.Viewport
             // 
             // comboBoxRegistrationStreet
             // 
-            this.comboBoxRegistrationStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxRegistrationStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxRegistrationStreet.FormattingEnabled = true;
             this.comboBoxRegistrationStreet.Location = new System.Drawing.Point(164, 20);
             this.comboBoxRegistrationStreet.Name = "comboBoxRegistrationStreet";
@@ -1367,8 +1368,8 @@ namespace Registry.Viewport
             // 
             // textBoxRegistrationHouse
             // 
-            this.textBoxRegistrationHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxRegistrationHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxRegistrationHouse.Location = new System.Drawing.Point(164, 49);
             this.textBoxRegistrationHouse.MaxLength = 10;
             this.textBoxRegistrationHouse.Name = "textBoxRegistrationHouse";
@@ -1398,8 +1399,8 @@ namespace Registry.Viewport
             // 
             // comboBoxIssuedBy
             // 
-            this.comboBoxIssuedBy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxIssuedBy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxIssuedBy.FormattingEnabled = true;
             this.comboBoxIssuedBy.Location = new System.Drawing.Point(164, 135);
             this.comboBoxIssuedBy.Name = "comboBoxIssuedBy";
@@ -1421,8 +1422,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerDateOfDocumentIssue
             // 
-            this.dateTimePickerDateOfDocumentIssue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerDateOfDocumentIssue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerDateOfDocumentIssue.Location = new System.Drawing.Point(164, 106);
             this.dateTimePickerDateOfDocumentIssue.Name = "dateTimePickerDateOfDocumentIssue";
             this.dateTimePickerDateOfDocumentIssue.ShowCheckBox = true;
@@ -1441,8 +1442,8 @@ namespace Registry.Viewport
             // 
             // textBoxDocumentNumber
             // 
-            this.textBoxDocumentNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxDocumentNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxDocumentNumber.Location = new System.Drawing.Point(164, 77);
             this.textBoxDocumentNumber.MaxLength = 8;
             this.textBoxDocumentNumber.Name = "textBoxDocumentNumber";
@@ -1461,8 +1462,8 @@ namespace Registry.Viewport
             // 
             // textBoxDocumentSeria
             // 
-            this.textBoxDocumentSeria.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxDocumentSeria.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxDocumentSeria.Location = new System.Drawing.Point(164, 48);
             this.textBoxDocumentSeria.MaxLength = 8;
             this.textBoxDocumentSeria.Name = "textBoxDocumentSeria";
@@ -1481,8 +1482,8 @@ namespace Registry.Viewport
             // 
             // comboBoxDocumentType
             // 
-            this.comboBoxDocumentType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxDocumentType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxDocumentType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDocumentType.FormattingEnabled = true;
             this.comboBoxDocumentType.Location = new System.Drawing.Point(164, 19);
@@ -1529,8 +1530,8 @@ namespace Registry.Viewport
             // 
             // textBoxResidenceRoom
             // 
-            this.textBoxResidenceRoom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxResidenceRoom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxResidenceRoom.Location = new System.Drawing.Point(164, 107);
             this.textBoxResidenceRoom.MaxLength = 15;
             this.textBoxResidenceRoom.Name = "textBoxResidenceRoom";
@@ -1549,8 +1550,8 @@ namespace Registry.Viewport
             // 
             // textBoxResidenceFlat
             // 
-            this.textBoxResidenceFlat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxResidenceFlat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxResidenceFlat.Location = new System.Drawing.Point(164, 78);
             this.textBoxResidenceFlat.MaxLength = 15;
             this.textBoxResidenceFlat.Name = "textBoxResidenceFlat";
@@ -1578,8 +1579,8 @@ namespace Registry.Viewport
             // 
             // comboBoxResidenceStreet
             // 
-            this.comboBoxResidenceStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxResidenceStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxResidenceStreet.FormattingEnabled = true;
             this.comboBoxResidenceStreet.Location = new System.Drawing.Point(164, 20);
             this.comboBoxResidenceStreet.Name = "comboBoxResidenceStreet";
@@ -1592,8 +1593,8 @@ namespace Registry.Viewport
             // 
             // textBoxResidenceHouse
             // 
-            this.textBoxResidenceHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxResidenceHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxResidenceHouse.Location = new System.Drawing.Point(164, 49);
             this.textBoxResidenceHouse.MaxLength = 10;
             this.textBoxResidenceHouse.Name = "textBoxResidenceHouse";
@@ -1605,7 +1606,7 @@ namespace Registry.Viewport
             // 
             this.dataGridViewTenancyPersons.AllowUserToAddRows = false;
             this.dataGridViewTenancyPersons.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridViewTenancyPersons.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridViewTenancyPersons.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewTenancyPersons.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
@@ -1672,10 +1673,11 @@ namespace Registry.Viewport
             // 
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(630, 420);
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(773, 444);
             this.Controls.Add(this.tableLayoutPanel11);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "TenancyPersonsViewport";
             this.Padding = new System.Windows.Forms.Padding(3);
             this.Text = "Участники найма №{0}";

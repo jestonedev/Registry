@@ -406,6 +406,16 @@ namespace Registry.Viewport
             return false;
         }
 
+        public virtual bool HasTenancyOrderReport()
+        {
+            return false;
+        }
+
+        public virtual bool HasTenancyExcerptReport()
+        {
+            return false;
+        }
+
         public virtual void TenancyContract17xReportGenerate(TenancyContractTypes tenancyContractType)
         {
             throw new ViewportException("Не реализовано");
@@ -426,5 +436,14 @@ namespace Registry.Viewport
             throw new ViewportException("Не реализовано");
         }
 
+        public virtual void TenancyOrderReportGenerate()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+        public virtual void TenancyExcerptReportGenerate()
+        {
+            throw new ViewportException("Не реализовано");
+        }
     }
 }

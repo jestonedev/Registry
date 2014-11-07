@@ -468,6 +468,7 @@ namespace Registry.Viewport
             v_executors = new BindingSource();
             v_executors.DataMember = "executors";
             v_executors.DataSource = ds;
+            v_executors.Filter = "is_inactive = 0";
 
             v_warrants = new BindingSource();
             v_warrants.DataMember = "warrants";
@@ -985,7 +986,8 @@ namespace Registry.Viewport
 
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyAgreementsViewport));
             this.tableLayoutPanel12 = new System.Windows.Forms.TableLayoutPanel();
             this.panel7 = new System.Windows.Forms.Panel();
             this.groupBox29 = new System.Windows.Forms.GroupBox();
@@ -1091,8 +1093,8 @@ namespace Registry.Viewport
             // 
             // comboBoxExecutor
             // 
-            this.comboBoxExecutor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxExecutor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxExecutor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxExecutor.FormattingEnabled = true;
             this.comboBoxExecutor.Location = new System.Drawing.Point(164, 77);
@@ -1127,8 +1129,9 @@ namespace Registry.Viewport
             // 
             // textBoxAgreementWarrant
             // 
-            this.textBoxAgreementWarrant.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxAgreementWarrant.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxAgreementWarrant.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.textBoxAgreementWarrant.Location = new System.Drawing.Point(164, 48);
             this.textBoxAgreementWarrant.Name = "textBoxAgreementWarrant";
             this.textBoxAgreementWarrant.ReadOnly = true;
@@ -1147,8 +1150,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerAgreementDate
             // 
-            this.dateTimePickerAgreementDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerAgreementDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerAgreementDate.Location = new System.Drawing.Point(164, 19);
             this.dateTimePickerAgreementDate.Name = "dateTimePickerAgreementDate";
             this.dateTimePickerAgreementDate.Size = new System.Drawing.Size(174, 20);
@@ -1204,6 +1207,7 @@ namespace Registry.Viewport
             // 
             // tabPageExclude
             // 
+            this.tabPageExclude.BackColor = System.Drawing.Color.White;
             this.tabPageExclude.Controls.Add(this.dataGridViewTenancyPersons);
             this.tabPageExclude.Controls.Add(this.vButtonExcludePaste);
             this.tabPageExclude.Controls.Add(this.textBoxExcludePoint);
@@ -1211,21 +1215,28 @@ namespace Registry.Viewport
             this.tabPageExclude.Location = new System.Drawing.Point(4, 22);
             this.tabPageExclude.Name = "tabPageExclude";
             this.tabPageExclude.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageExclude.Size = new System.Drawing.Size(322, 129);
+            this.tabPageExclude.Size = new System.Drawing.Size(342, 129);
             this.tabPageExclude.TabIndex = 0;
             this.tabPageExclude.Text = "Исключить";
-            this.tabPageExclude.UseVisualStyleBackColor = true;
             // 
             // dataGridViewTenancyPersons
             // 
             this.dataGridViewTenancyPersons.AllowUserToAddRows = false;
-            this.dataGridViewTenancyPersons.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridViewTenancyPersons.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridViewTenancyPersons.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridViewTenancyPersons.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridViewTenancyPersons.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewTenancyPersons.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.dataGridViewTenancyPersons.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewTenancyPersons.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridViewTenancyPersons.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewTenancyPersons.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.surname,
@@ -1237,7 +1248,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(316, 94);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(336, 94);
             this.dataGridViewTenancyPersons.TabIndex = 2;
             // 
             // surname
@@ -1273,7 +1284,7 @@ namespace Registry.Viewport
             this.vButtonExcludePaste.AllowAnimations = true;
             this.vButtonExcludePaste.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonExcludePaste.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonExcludePaste.Location = new System.Drawing.Point(290, 6);
+            this.vButtonExcludePaste.Location = new System.Drawing.Point(310, 6);
             this.vButtonExcludePaste.Name = "vButtonExcludePaste";
             this.vButtonExcludePaste.RoundedCornersMask = ((byte)(15));
             this.vButtonExcludePaste.Size = new System.Drawing.Size(27, 20);
@@ -1285,11 +1296,11 @@ namespace Registry.Viewport
             // 
             // textBoxExcludePoint
             // 
-            this.textBoxExcludePoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxExcludePoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxExcludePoint.Location = new System.Drawing.Point(163, 6);
             this.textBoxExcludePoint.Name = "textBoxExcludePoint";
-            this.textBoxExcludePoint.Size = new System.Drawing.Size(121, 20);
+            this.textBoxExcludePoint.Size = new System.Drawing.Size(141, 20);
             this.textBoxExcludePoint.TabIndex = 0;
             // 
             // label74
@@ -1303,6 +1314,7 @@ namespace Registry.Viewport
             // 
             // tabPageInclude
             // 
+            this.tabPageInclude.BackColor = System.Drawing.Color.White;
             this.tabPageInclude.Controls.Add(this.dateTimePickerIncludeDateOfBirth);
             this.tabPageInclude.Controls.Add(this.comboBoxIncludeKinship);
             this.tabPageInclude.Controls.Add(this.label76);
@@ -1318,12 +1330,11 @@ namespace Registry.Viewport
             this.tabPageInclude.Size = new System.Drawing.Size(342, 129);
             this.tabPageInclude.TabIndex = 1;
             this.tabPageInclude.Text = "Включить";
-            this.tabPageInclude.UseVisualStyleBackColor = true;
             // 
             // dateTimePickerIncludeDateOfBirth
             // 
-            this.dateTimePickerIncludeDateOfBirth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerIncludeDateOfBirth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerIncludeDateOfBirth.Location = new System.Drawing.Point(163, 61);
             this.dateTimePickerIncludeDateOfBirth.Name = "dateTimePickerIncludeDateOfBirth";
             this.dateTimePickerIncludeDateOfBirth.Size = new System.Drawing.Size(140, 20);
@@ -1331,8 +1342,8 @@ namespace Registry.Viewport
             // 
             // comboBoxIncludeKinship
             // 
-            this.comboBoxIncludeKinship.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxIncludeKinship.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxIncludeKinship.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxIncludeKinship.FormattingEnabled = true;
             this.comboBoxIncludeKinship.Location = new System.Drawing.Point(163, 90);
@@ -1360,8 +1371,8 @@ namespace Registry.Viewport
             // 
             // textBoxIncludeSNP
             // 
-            this.textBoxIncludeSNP.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxIncludeSNP.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxIncludeSNP.Location = new System.Drawing.Point(163, 32);
             this.textBoxIncludeSNP.Name = "textBoxIncludeSNP";
             this.textBoxIncludeSNP.Size = new System.Drawing.Size(140, 20);
@@ -1369,8 +1380,8 @@ namespace Registry.Viewport
             // 
             // textBoxIncludePoint
             // 
-            this.textBoxIncludePoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxIncludePoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxIncludePoint.Location = new System.Drawing.Point(163, 6);
             this.textBoxIncludePoint.Name = "textBoxIncludePoint";
             this.textBoxIncludePoint.Size = new System.Drawing.Size(140, 20);
@@ -1411,35 +1422,35 @@ namespace Registry.Viewport
             // 
             // tabPageExplain
             // 
+            this.tabPageExplain.BackColor = System.Drawing.Color.White;
             this.tabPageExplain.Controls.Add(this.textBoxExplainContent);
             this.tabPageExplain.Controls.Add(this.textBoxExplainPoint);
             this.tabPageExplain.Controls.Add(this.vButtonExplainPaste);
             this.tabPageExplain.Controls.Add(this.label79);
             this.tabPageExplain.Location = new System.Drawing.Point(4, 22);
             this.tabPageExplain.Name = "tabPageExplain";
-            this.tabPageExplain.Size = new System.Drawing.Size(324, 129);
+            this.tabPageExplain.Size = new System.Drawing.Size(342, 129);
             this.tabPageExplain.TabIndex = 2;
             this.tabPageExplain.Text = "Изложить";
-            this.tabPageExplain.UseVisualStyleBackColor = true;
             // 
             // textBoxExplainContent
             // 
-            this.textBoxExplainContent.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxExplainContent.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxExplainContent.Location = new System.Drawing.Point(7, 32);
             this.textBoxExplainContent.Multiline = true;
             this.textBoxExplainContent.Name = "textBoxExplainContent";
-            this.textBoxExplainContent.Size = new System.Drawing.Size(312, 95);
+            this.textBoxExplainContent.Size = new System.Drawing.Size(330, 95);
             this.textBoxExplainContent.TabIndex = 1;
             // 
             // textBoxExplainPoint
             // 
-            this.textBoxExplainPoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxExplainPoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxExplainPoint.Location = new System.Drawing.Point(163, 6);
             this.textBoxExplainPoint.Name = "textBoxExplainPoint";
-            this.textBoxExplainPoint.Size = new System.Drawing.Size(122, 20);
+            this.textBoxExplainPoint.Size = new System.Drawing.Size(140, 20);
             this.textBoxExplainPoint.TabIndex = 0;
             // 
             // vButtonExplainPaste
@@ -1447,7 +1458,7 @@ namespace Registry.Viewport
             this.vButtonExplainPaste.AllowAnimations = true;
             this.vButtonExplainPaste.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonExplainPaste.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonExplainPaste.Location = new System.Drawing.Point(292, 6);
+            this.vButtonExplainPaste.Location = new System.Drawing.Point(310, 6);
             this.vButtonExplainPaste.Name = "vButtonExplainPaste";
             this.vButtonExplainPaste.RoundedCornersMask = ((byte)(15));
             this.vButtonExplainPaste.Size = new System.Drawing.Size(27, 20);
@@ -1468,22 +1479,22 @@ namespace Registry.Viewport
             // 
             // tabPageTerminate
             // 
+            this.tabPageTerminate.BackColor = System.Drawing.Color.White;
             this.tabPageTerminate.Controls.Add(this.vButtonTerminatePaste);
             this.tabPageTerminate.Controls.Add(this.textBoxTerminateAgreement);
             this.tabPageTerminate.Controls.Add(this.label80);
             this.tabPageTerminate.Location = new System.Drawing.Point(4, 22);
             this.tabPageTerminate.Name = "tabPageTerminate";
-            this.tabPageTerminate.Size = new System.Drawing.Size(324, 129);
+            this.tabPageTerminate.Size = new System.Drawing.Size(342, 129);
             this.tabPageTerminate.TabIndex = 3;
             this.tabPageTerminate.Text = "Расторгнуть";
-            this.tabPageTerminate.UseVisualStyleBackColor = true;
             // 
             // vButtonTerminatePaste
             // 
             this.vButtonTerminatePaste.AllowAnimations = true;
             this.vButtonTerminatePaste.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonTerminatePaste.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonTerminatePaste.Location = new System.Drawing.Point(292, 6);
+            this.vButtonTerminatePaste.Location = new System.Drawing.Point(310, 6);
             this.vButtonTerminatePaste.Name = "vButtonTerminatePaste";
             this.vButtonTerminatePaste.RoundedCornersMask = ((byte)(15));
             this.vButtonTerminatePaste.Size = new System.Drawing.Size(27, 20);
@@ -1495,11 +1506,11 @@ namespace Registry.Viewport
             // 
             // textBoxTerminateAgreement
             // 
-            this.textBoxTerminateAgreement.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxTerminateAgreement.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxTerminateAgreement.Location = new System.Drawing.Point(163, 6);
             this.textBoxTerminateAgreement.Name = "textBoxTerminateAgreement";
-            this.textBoxTerminateAgreement.Size = new System.Drawing.Size(122, 20);
+            this.textBoxTerminateAgreement.Size = new System.Drawing.Size(140, 20);
             this.textBoxTerminateAgreement.TabIndex = 0;
             // 
             // label80
@@ -1514,21 +1525,13 @@ namespace Registry.Viewport
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
-            this.dataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+                        | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridView.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id_agreement,
@@ -1574,10 +1577,11 @@ namespace Registry.Viewport
             // 
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(660, 360);
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(706, 398);
             this.Controls.Add(this.tableLayoutPanel12);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "TenancyAgreementsViewport";
             this.Padding = new System.Windows.Forms.Padding(3);
             this.Text = "Соглашения найма №{0}";

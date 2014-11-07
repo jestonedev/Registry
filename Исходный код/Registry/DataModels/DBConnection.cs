@@ -7,6 +7,7 @@ using System.Data;
 using System.Text.RegularExpressions;
 using System.Data.Odbc;
 using Registry.Entities;
+using System.Windows.Forms;
 
 namespace Registry.DataModels
 {
@@ -23,7 +24,16 @@ namespace Registry.DataModels
             connection = factory.CreateConnection();
             connection.ConnectionString = RegistrySettings.ConnectionString;
             if (connection.State == System.Data.ConnectionState.Closed)
-                connection.Open();
+                try
+                {
+                    connection.Open();
+                }
+                catch(OdbcException e)
+                {
+                    MessageBox.Show(String.Format("Произошла ошибка при установке соединения с базой данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                }
         }
 
         static DBConnection()

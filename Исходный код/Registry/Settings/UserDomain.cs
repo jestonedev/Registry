@@ -50,7 +50,7 @@ namespace Registry
             foreach (string domainName in GetDomains())
             {
                 DirectoryContext context = new DirectoryContext(DirectoryContextType.Domain, domainName,
-                RegistrySettings.LDAPUserName, RegistrySettings.LDAPEncryptedPassword);
+                RegistrySettings.LDAPUserName, RegistrySettings.LDAPPassword);
                 Domain domain = Domain.GetDomain(context);
                 using (DirectoryEntry domainEntry = domain.GetDirectoryEntry())
                 {

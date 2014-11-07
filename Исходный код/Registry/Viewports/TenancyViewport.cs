@@ -614,6 +614,7 @@ namespace Registry.Viewport
             v_executors = new BindingSource();
             v_executors.DataMember = "executors";
             v_executors.DataSource = ds;
+            v_executors.Filter = "is_inactive = 0";
 
             v_rent_types = new BindingSource();
             v_rent_types.DataMember = "rent_types";
@@ -987,6 +988,11 @@ namespace Registry.Viewport
                 Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_process"])) > 0);
         }
 
+        public override bool HasTenancyExcerptReport()
+        {
+            return (v_tenancies.Position > -1);
+        }
+
         public override void TenancyContract17xReportGenerate(Reporting.TenancyContractTypes tenancyContractType)
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
@@ -996,14 +1002,17 @@ namespace Registry.Viewport
             DataRowView row = (DataRowView)v_tenancies[v_tenancies.Position];
             if (ViewportHelper.ValueOrNull<int>(row, "id_rent_type") != 2)
             {
-                MessageBox.Show("Для формирования договора по формам 1711 и 1712 необходимо, чтобы тип найма был - специализированный", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Для формирования договора по формам 1711 и 1712 необходимо, чтобы тип найма был - специализированный", 
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             if (tenancyContractType == TenancyContractTypes.SpecialContract1711Form)
-                ReporterFactory.CreateReporter(ReporterType.TenancyContractSpecial1711Reporter).Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
+                ReporterFactory.CreateReporter(ReporterType.TenancyContractSpecial1711Reporter).
+                    Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
             else
                 if (tenancyContractType == TenancyContractTypes.SpecialContract1712Form)
-                    ReporterFactory.CreateReporter(ReporterType.TenancyContractSpecial1712Reporter).Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
+                    ReporterFactory.CreateReporter(ReporterType.TenancyContractSpecial1712Reporter).
+                        Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
         }
 
         public override void TenancyContractReportGenerate()
@@ -1014,13 +1023,16 @@ namespace Registry.Viewport
                 return;
             DataRowView row = (DataRowView)v_tenancies[v_tenancies.Position];
             if (ViewportHelper.ValueOrNull<int>(row, "id_rent_type") == 2)
-                MessageBox.Show("Для формирования договора специализированного найма необходимо выбрать форму договора: 1711 или 1712", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Для формирования договора специализированного найма необходимо выбрать форму договора: 1711 или 1712", 
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             else
                 if (ViewportHelper.ValueOrNull<int>(row, "id_rent_type") == 1)
-                    ReporterFactory.CreateReporter(ReporterType.TenancyContractCommercialReporter).Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
+                    ReporterFactory.CreateReporter(ReporterType.TenancyContractCommercialReporter).
+                        Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
                 else
                     if (ViewportHelper.ValueOrNull<int>(row, "id_rent_type") == 3)
-                        ReporterFactory.CreateReporter(ReporterType.TenancyContractSocialReporter).Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
+                        ReporterFactory.CreateReporter(ReporterType.TenancyContractSocialReporter).
+                            Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
         }
 
         public override void TenancyActReportGenerate()
@@ -1030,7 +1042,8 @@ namespace Registry.Viewport
             if (!TenancyValidForReportGenerate())
                 return;
             DataRowView row = (DataRowView)v_tenancies[v_tenancies.Position];
-            ReporterFactory.CreateReporter(ReporterType.TenancyActReporter).Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
+            ReporterFactory.CreateReporter(ReporterType.TenancyActReporter).
+                Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
         }
 
         public override void TenancyAgreementReportGenerate()
@@ -1048,6 +1061,17 @@ namespace Registry.Viewport
             DataRowView row = (DataRowView)v_tenancy_agreements[v_tenancy_agreements.Position];
             ReporterFactory.CreateReporter(ReporterType.TenancyAgreementReporter).Run(
                 new Dictionary<string, string>() { { "id_agreement", row["id_agreement"].ToString() } });
+        }
+
+        public override void TenancyExcerptReportGenerate()
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            if (!TenancyValidForReportGenerate())
+                return;
+            DataRowView row = (DataRowView)v_tenancies[v_tenancies.Position];
+            ReporterFactory.CreateReporter(ReporterType.TenancyExcerptReporter).
+                Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
         }
 
         private bool TenancyValidForReportGenerate()
@@ -1274,6 +1298,7 @@ namespace Registry.Viewport
 
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyViewport));
             this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBoxTenancyContract = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
@@ -1435,8 +1460,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerEndDate
             // 
-            this.dateTimePickerEndDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerEndDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerEndDate.Location = new System.Drawing.Point(162, 62);
             this.dateTimePickerEndDate.Name = "dateTimePickerEndDate";
             this.dateTimePickerEndDate.ShowCheckBox = true;
@@ -1455,8 +1480,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerBeginDate
             // 
-            this.dateTimePickerBeginDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerBeginDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerBeginDate.Location = new System.Drawing.Point(162, 33);
             this.dateTimePickerBeginDate.Name = "dateTimePickerBeginDate";
             this.dateTimePickerBeginDate.ShowCheckBox = true;
@@ -1475,8 +1500,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerIssueDate
             // 
-            this.dateTimePickerIssueDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerIssueDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerIssueDate.Location = new System.Drawing.Point(162, 4);
             this.dateTimePickerIssueDate.Name = "dateTimePickerIssueDate";
             this.dateTimePickerIssueDate.ShowCheckBox = true;
@@ -1517,8 +1542,8 @@ namespace Registry.Viewport
             // 
             // textBoxSelectedWarrant
             // 
-            this.textBoxSelectedWarrant.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSelectedWarrant.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxSelectedWarrant.Location = new System.Drawing.Point(161, 62);
             this.textBoxSelectedWarrant.Name = "textBoxSelectedWarrant";
             this.textBoxSelectedWarrant.ReadOnly = true;
@@ -1546,8 +1571,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerRegistrationDate
             // 
-            this.dateTimePickerRegistrationDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerRegistrationDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerRegistrationDate.Location = new System.Drawing.Point(161, 33);
             this.dateTimePickerRegistrationDate.Name = "dateTimePickerRegistrationDate";
             this.dateTimePickerRegistrationDate.Size = new System.Drawing.Size(276, 20);
@@ -1556,8 +1581,8 @@ namespace Registry.Viewport
             // 
             // textBoxRegistrationNumber
             // 
-            this.textBoxRegistrationNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxRegistrationNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxRegistrationNumber.Location = new System.Drawing.Point(161, 4);
             this.textBoxRegistrationNumber.MaxLength = 16;
             this.textBoxRegistrationNumber.Name = "textBoxRegistrationNumber";
@@ -1601,7 +1626,7 @@ namespace Registry.Viewport
             // 
             this.dataGridViewTenancyAgreements.AllowUserToAddRows = false;
             this.dataGridViewTenancyAgreements.AllowUserToDeleteRows = false;
-            this.dataGridViewTenancyAgreements.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridViewTenancyAgreements.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewTenancyAgreements.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewTenancyAgreements.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.agreement_date,
@@ -1644,7 +1669,7 @@ namespace Registry.Viewport
             // 
             this.dataGridViewTenancyReasons.AllowUserToAddRows = false;
             this.dataGridViewTenancyReasons.AllowUserToDeleteRows = false;
-            this.dataGridViewTenancyReasons.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridViewTenancyReasons.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewTenancyReasons.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewTenancyReasons.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.reason_prepared,
@@ -1714,8 +1739,8 @@ namespace Registry.Viewport
             // 
             // textBoxResidenceWarrantNumber
             // 
-            this.textBoxResidenceWarrantNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxResidenceWarrantNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxResidenceWarrantNumber.Location = new System.Drawing.Point(164, 19);
             this.textBoxResidenceWarrantNumber.MaxLength = 50;
             this.textBoxResidenceWarrantNumber.Name = "textBoxResidenceWarrantNumber";
@@ -1725,8 +1750,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerResidenceWarrantDate
             // 
-            this.dateTimePickerResidenceWarrantDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerResidenceWarrantDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerResidenceWarrantDate.Location = new System.Drawing.Point(164, 48);
             this.dateTimePickerResidenceWarrantDate.Name = "dateTimePickerResidenceWarrantDate";
             this.dateTimePickerResidenceWarrantDate.Size = new System.Drawing.Size(276, 20);
@@ -1771,8 +1796,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerKumiOrderDate
             // 
-            this.dateTimePickerKumiOrderDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerKumiOrderDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerKumiOrderDate.Location = new System.Drawing.Point(159, 48);
             this.dateTimePickerKumiOrderDate.Name = "dateTimePickerKumiOrderDate";
             this.dateTimePickerKumiOrderDate.Size = new System.Drawing.Size(277, 20);
@@ -1790,8 +1815,8 @@ namespace Registry.Viewport
             // 
             // textBoxKumiOrderNumber
             // 
-            this.textBoxKumiOrderNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxKumiOrderNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxKumiOrderNumber.Location = new System.Drawing.Point(159, 19);
             this.textBoxKumiOrderNumber.MaxLength = 50;
             this.textBoxKumiOrderNumber.Name = "textBoxKumiOrderNumber";
@@ -1827,7 +1852,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.AllowUserToAddRows = false;
             this.dataGridViewTenancyPersons.AllowUserToDeleteRows = false;
             this.dataGridViewTenancyPersons.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridViewTenancyPersons.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridViewTenancyPersons.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewTenancyPersons.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewTenancyPersons.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.surname,
@@ -1912,8 +1937,8 @@ namespace Registry.Viewport
             // 
             // comboBoxExecutor
             // 
-            this.comboBoxExecutor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxExecutor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxExecutor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxExecutor.FormattingEnabled = true;
             this.comboBoxExecutor.Location = new System.Drawing.Point(159, 48);
@@ -1924,8 +1949,8 @@ namespace Registry.Viewport
             // 
             // label41
             // 
-            this.label41.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label41.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.label41.AutoSize = true;
             this.label41.Location = new System.Drawing.Point(12, 51);
             this.label41.Name = "label41";
@@ -1935,8 +1960,8 @@ namespace Registry.Viewport
             // 
             // comboBoxRentType
             // 
-            this.comboBoxRentType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxRentType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxRentType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxRentType.FormattingEnabled = true;
             this.comboBoxRentType.Location = new System.Drawing.Point(159, 19);
@@ -1980,10 +2005,11 @@ namespace Registry.Viewport
             // 
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(670, 480);
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(911, 521);
             this.Controls.Add(this.tableLayoutPanel9);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "TenancyViewport";
             this.Padding = new System.Windows.Forms.Padding(3);
             this.Text = "Процесс найма №{0}";

@@ -11,3 +11,7 @@ D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\CustomCtrls\bin\Release\CustomControls.pdb
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\CustomCtrls\obj\Release\CustomControls.dll
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [04.11.2014]\Исходный код\Registry\CustomCtrls\obj\Release\CustomControls.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-05]\Исходный код\Registry\CustomCtrls\bin\Release\CustomControls.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-05]\Исходный код\Registry\CustomCtrls\bin\Release\CustomControls.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-05]\Исходный код\Registry\CustomCtrls\obj\Release\CustomControls.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-05]\Исходный код\Registry\CustomCtrls\obj\Release\CustomControls.pdb

@@ -48,6 +48,14 @@ namespace Registry.Reporting
                     return new TenancyActReporter();
                 case ReporterType.TenancyAgreementReporter:
                     return new TenancyAgreementReporter();
+                case ReporterType.TenancyStatisticReporter:
+                    return new TenancyStatisticReporter();
+                case ReporterType.TenancyStatisticForCoMSReporter:
+                    return new TenancyStatisticForCoMSReporter();
+                case ReporterType.TenancyOrderReporter:
+                    return new TenancyOrderReporter();
+                case ReporterType.TenancyExcerptReporter:
+                    return new TenancyExcerptReporter();
             }
             throw new ReporterException(
                 String.Format("В фабрику ReporterFactory передан неизвестный тип {0}", reporterType.ToString()));

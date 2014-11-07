@@ -27,6 +27,18 @@ namespace Registry.Reporting
                 DataRowView row = (DataRowView)v_regions[i];
                 checkedListBoxRegions.Items.Add(new Entities.Region((string)row["id_region"], (string)row["region"]));
             }
+
+            foreach (Control control in this.Controls)
+                control.KeyDown += (sender, e) =>
+                {
+                    if (sender is ComboBox && ((ComboBox)sender).DroppedDown)
+                        return;
+                    if (e.KeyCode == Keys.Enter)
+                        vButton2_Click(null, new EventArgs());
+                    else
+                        if (e.KeyCode == Keys.Escape)
+                            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+                };
         }
 
         public List<string> CheckedRegionIDs()

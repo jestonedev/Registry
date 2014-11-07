@@ -34,8 +34,6 @@ namespace Registry.SearchForms
                     filter += " AND ";
                 if (textBoxPremisesNum.Text.Trim() != "")
                     filter += String.Format("premises_num = '{0}'", textBoxPremisesNum.Text.Trim().Replace("'", ""));
-                else
-                    filter += "premises_num is null";
             }
             if (checkBoxFloorEnable.Checked)
             {

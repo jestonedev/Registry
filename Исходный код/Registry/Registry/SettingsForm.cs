@@ -1,0 +1,43 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Windows.Forms;
+
+namespace Registry
+{
+    public partial class SettingsForm : Form
+    {
+        public SettingsForm()
+        {
+            InitializeComponent();
+        }
+
+        private void SettingsForm_Load(object sender, EventArgs e)
+        {
+            textBoxActivityManagerConfigsPath.Text = RegistrySettings.ActivityManagerConfigsPath;
+            textBoxActivityManagerOutputCodepage.Text = RegistrySettings.ActivityManagerOutputCodepage;
+            textBoxActivityManagerPath.Text = RegistrySettings.ActivityManagerPath;
+            textBoxConnectionString.Text = RegistrySettings.ConnectionString;
+            textBoxLDAPPassword.Text = RegistrySettings.LDAPPassword;
+            textBoxLDAPUserName.Text = RegistrySettings.LDAPUserName;
+            numericUpDownMaxDBConnectionCount.Value = RegistrySettings.MaxDBConnectionCount;
+        }
+
+        private void vButton2_Click(object sender, EventArgs e)
+        {
+            RegistrySettings.ActivityManagerConfigsPath = textBoxActivityManagerConfigsPath.Text;
+            RegistrySettings.ActivityManagerOutputCodepage = textBoxActivityManagerOutputCodepage.Text;
+            RegistrySettings.ActivityManagerPath = textBoxActivityManagerPath.Text;
+            RegistrySettings.ConnectionString = textBoxConnectionString.Text;
+            RegistrySettings.LDAPPassword = textBoxLDAPPassword.Text;
+            RegistrySettings.LDAPUserName = textBoxLDAPUserName.Text;
+            RegistrySettings.MaxDBConnectionCount = Convert.ToInt32(numericUpDownMaxDBConnectionCount.Value);
+            RegistrySettings.Save();
+            Close();
+        }
+    }
+}

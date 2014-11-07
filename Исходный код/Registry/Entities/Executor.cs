@@ -10,6 +10,8 @@ namespace Registry.Entities
         public int? id_executor { get; set; }
         public string executor_name { get; set; }
         public string executor_login { get; set; }
+        public string phone { get; set; }
+        public bool? is_inactive { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -31,7 +33,9 @@ namespace Registry.Entities
         {
             return first.id_executor == second.id_executor &&
                 first.executor_name == second.executor_name &&
-                first.executor_login == second.executor_login;
+                first.executor_login == second.executor_login &&
+                first.phone == second.phone &&
+                first.is_inactive == second.is_inactive;
         }
 
         public static bool operator !=(Executor first, Executor second)

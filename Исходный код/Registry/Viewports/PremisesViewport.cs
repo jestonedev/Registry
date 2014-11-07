@@ -1294,6 +1294,7 @@ namespace Registry.Viewport
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PremisesViewport));
             this.label29 = new System.Windows.Forms.Label();
             this.textBoxSubPremisesNumber = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
@@ -1450,7 +1451,7 @@ namespace Registry.Viewport
             // 
             this.dataGridViewRestrictions.AllowUserToAddRows = false;
             this.dataGridViewRestrictions.AllowUserToDeleteRows = false;
-            this.dataGridViewRestrictions.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridViewRestrictions.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewRestrictions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewRestrictions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.restriction_number,
@@ -1512,7 +1513,7 @@ namespace Registry.Viewport
             // 
             this.dataGridViewOwnerships.AllowUserToAddRows = false;
             this.dataGridViewOwnerships.AllowUserToDeleteRows = false;
-            this.dataGridViewOwnerships.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridViewOwnerships.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewOwnerships.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewOwnerships.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ownership_number,
@@ -1618,8 +1619,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownNumRooms
             // 
-            this.numericUpDownNumRooms.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownNumRooms.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownNumRooms.Location = new System.Drawing.Point(157, 123);
             this.numericUpDownNumRooms.Maximum = new decimal(new int[] {
             255,
@@ -1646,8 +1647,8 @@ namespace Registry.Viewport
             // 
             // textBoxPremisesNumber
             // 
-            this.textBoxPremisesNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxPremisesNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxPremisesNumber.Location = new System.Drawing.Point(157, 65);
             this.textBoxPremisesNumber.MaxLength = 25;
             this.textBoxPremisesNumber.Name = "textBoxPremisesNumber";
@@ -1675,8 +1676,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownNumBeds
             // 
-            this.numericUpDownNumBeds.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownNumBeds.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownNumBeds.Location = new System.Drawing.Point(157, 152);
             this.numericUpDownNumBeds.Maximum = new decimal(new int[] {
             255,
@@ -1690,8 +1691,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownFloor
             // 
-            this.numericUpDownFloor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownFloor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownFloor.Location = new System.Drawing.Point(157, 94);
             this.numericUpDownFloor.Maximum = new decimal(new int[] {
             255,
@@ -1705,8 +1706,8 @@ namespace Registry.Viewport
             // 
             // comboBoxStreet
             // 
-            this.comboBoxStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxStreet.Location = new System.Drawing.Point(157, 7);
             this.comboBoxStreet.Name = "comboBoxStreet";
             this.comboBoxStreet.Size = new System.Drawing.Size(212, 21);
@@ -1728,8 +1729,8 @@ namespace Registry.Viewport
             // 
             // comboBoxHouse
             // 
-            this.comboBoxHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxHouse.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxHouse.Location = new System.Drawing.Point(157, 36);
             this.comboBoxHouse.Name = "comboBoxHouse";
@@ -1768,8 +1769,8 @@ namespace Registry.Viewport
             // 
             // comboBoxPremisesKind
             // 
-            this.comboBoxPremisesKind.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxPremisesKind.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxPremisesKind.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPremisesKind.FormattingEnabled = true;
             this.comboBoxPremisesKind.Location = new System.Drawing.Point(158, 94);
@@ -1798,8 +1799,8 @@ namespace Registry.Viewport
             // 
             // comboBoxState
             // 
-            this.comboBoxState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxState.FormattingEnabled = true;
             this.comboBoxState.Location = new System.Drawing.Point(159, 123);
@@ -1819,10 +1820,12 @@ namespace Registry.Viewport
             // 
             // comboBoxCurrentFundType
             // 
-            this.comboBoxCurrentFundType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxCurrentFundType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxCurrentFundType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.comboBoxCurrentFundType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxCurrentFundType.Enabled = false;
+            this.comboBoxCurrentFundType.ForeColor = System.Drawing.Color.Black;
             this.comboBoxCurrentFundType.FormattingEnabled = true;
             this.comboBoxCurrentFundType.Location = new System.Drawing.Point(159, 152);
             this.comboBoxCurrentFundType.Name = "comboBoxCurrentFundType";
@@ -1831,8 +1834,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownBalanceCost
             // 
-            this.numericUpDownBalanceCost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownBalanceCost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownBalanceCost.DecimalPlaces = 2;
             this.numericUpDownBalanceCost.Location = new System.Drawing.Point(159, 65);
             this.numericUpDownBalanceCost.Maximum = new decimal(new int[] {
@@ -1857,8 +1860,8 @@ namespace Registry.Viewport
             // 
             // textBoxCadastralNum
             // 
-            this.textBoxCadastralNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCadastralNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCadastralNum.Location = new System.Drawing.Point(159, 7);
             this.textBoxCadastralNum.MaxLength = 15;
             this.textBoxCadastralNum.Name = "textBoxCadastralNum";
@@ -1868,8 +1871,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownCadastralCost
             // 
-            this.numericUpDownCadastralCost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownCadastralCost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownCadastralCost.DecimalPlaces = 2;
             this.numericUpDownCadastralCost.Location = new System.Drawing.Point(159, 36);
             this.numericUpDownCadastralCost.Maximum = new decimal(new int[] {
@@ -1934,8 +1937,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownHeight
             // 
-            this.numericUpDownHeight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownHeight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownHeight.DecimalPlaces = 2;
             this.numericUpDownHeight.Location = new System.Drawing.Point(162, 76);
             this.numericUpDownHeight.Maximum = new decimal(new int[] {
@@ -1960,8 +1963,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownLivingArea
             // 
-            this.numericUpDownLivingArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownLivingArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownLivingArea.DecimalPlaces = 3;
             this.numericUpDownLivingArea.Location = new System.Drawing.Point(163, 47);
             this.numericUpDownLivingArea.Maximum = new decimal(new int[] {
@@ -1977,8 +1980,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownTotalArea
             // 
-            this.numericUpDownTotalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownTotalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownTotalArea.DecimalPlaces = 3;
             this.numericUpDownTotalArea.Location = new System.Drawing.Point(163, 18);
             this.numericUpDownTotalArea.Maximum = new decimal(new int[] {
@@ -2026,7 +2029,7 @@ namespace Registry.Viewport
             // 
             this.dataGridViewRooms.AllowUserToAddRows = false;
             this.dataGridViewRooms.AllowUserToDeleteRows = false;
-            this.dataGridViewRooms.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridViewRooms.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewRooms.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewRooms.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.sub_premises_num,
@@ -2060,10 +2063,11 @@ namespace Registry.Viewport
             // 
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(665, 520);
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(780, 598);
             this.Controls.Add(this.tableLayoutPanel3);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "PremisesViewport";
             this.Padding = new System.Windows.Forms.Padding(3);
             this.Text = "Помещение";

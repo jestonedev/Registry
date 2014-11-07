@@ -612,6 +612,7 @@ namespace Registry.Viewport
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(WarrantsViewport));
             this.tableLayoutPanel14 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox32 = new System.Windows.Forms.GroupBox();
             this.label88 = new System.Windows.Forms.Label();
@@ -691,8 +692,8 @@ namespace Registry.Viewport
             // 
             // textBoxWarrantOnBehalfOf
             // 
-            this.textBoxWarrantOnBehalfOf.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxWarrantOnBehalfOf.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxWarrantOnBehalfOf.Location = new System.Drawing.Point(164, 164);
             this.textBoxWarrantOnBehalfOf.MaxLength = 100;
             this.textBoxWarrantOnBehalfOf.Name = "textBoxWarrantOnBehalfOf";
@@ -711,8 +712,8 @@ namespace Registry.Viewport
             // 
             // textBoxWarrantDistrict
             // 
-            this.textBoxWarrantDistrict.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxWarrantDistrict.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxWarrantDistrict.Location = new System.Drawing.Point(164, 135);
             this.textBoxWarrantDistrict.MaxLength = 100;
             this.textBoxWarrantDistrict.Name = "textBoxWarrantDistrict";
@@ -731,8 +732,8 @@ namespace Registry.Viewport
             // 
             // textBoxWarrantNotary
             // 
-            this.textBoxWarrantNotary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxWarrantNotary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxWarrantNotary.Location = new System.Drawing.Point(164, 106);
             this.textBoxWarrantNotary.MaxLength = 100;
             this.textBoxWarrantNotary.Name = "textBoxWarrantNotary";
@@ -760,8 +761,8 @@ namespace Registry.Viewport
             // 
             // comboBoxWarrantDocType
             // 
-            this.comboBoxWarrantDocType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxWarrantDocType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxWarrantDocType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxWarrantDocType.FormattingEnabled = true;
             this.comboBoxWarrantDocType.Location = new System.Drawing.Point(164, 19);
@@ -772,8 +773,8 @@ namespace Registry.Viewport
             // 
             // textBoxWarrantRegNum
             // 
-            this.textBoxWarrantRegNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxWarrantRegNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxWarrantRegNum.Location = new System.Drawing.Point(164, 48);
             this.textBoxWarrantRegNum.MaxLength = 10;
             this.textBoxWarrantRegNum.Name = "textBoxWarrantRegNum";
@@ -783,8 +784,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerWarrantDate
             // 
-            this.dateTimePickerWarrantDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerWarrantDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerWarrantDate.Location = new System.Drawing.Point(164, 77);
             this.dateTimePickerWarrantDate.Name = "dateTimePickerWarrantDate";
             this.dateTimePickerWarrantDate.Size = new System.Drawing.Size(184, 20);
@@ -826,7 +827,7 @@ namespace Registry.Viewport
             // 
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridView.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
@@ -904,10 +905,11 @@ namespace Registry.Viewport
             // 
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(630, 310);
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(726, 376);
             this.Controls.Add(this.tableLayoutPanel14);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "WarrantsViewport";
             this.Padding = new System.Windows.Forms.Padding(3);
             this.Text = "Реестр доверенностей";

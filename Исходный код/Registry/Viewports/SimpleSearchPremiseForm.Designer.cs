@@ -96,6 +96,8 @@
             this.Controls.Add(this.vButtonSearch);
             this.Controls.Add(this.comboBoxCriteriaType);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "SimpleSearchPremiseForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Фильтрация помещений";

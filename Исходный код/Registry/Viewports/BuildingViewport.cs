@@ -1282,6 +1282,7 @@ namespace Registry.Viewport
         
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BuildingViewport));
             this.tableLayoutPanel = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
@@ -1497,8 +1498,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownFloors
             // 
-            this.numericUpDownFloors.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownFloors.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownFloors.Location = new System.Drawing.Point(157, 66);
             this.numericUpDownFloors.Maximum = new decimal(new int[] {
             255,
@@ -1512,8 +1513,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownStartupYear
             // 
-            this.numericUpDownStartupYear.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownStartupYear.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownStartupYear.Location = new System.Drawing.Point(157, 95);
             this.numericUpDownStartupYear.Maximum = new decimal(new int[] {
             2014,
@@ -1537,8 +1538,8 @@ namespace Registry.Viewport
             // 
             // comboBoxStreet
             // 
-            this.comboBoxStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxStreet.FormattingEnabled = true;
             this.comboBoxStreet.Location = new System.Drawing.Point(157, 7);
             this.comboBoxStreet.Name = "comboBoxStreet";
@@ -1551,8 +1552,8 @@ namespace Registry.Viewport
             // 
             // comboBoxStructureType
             // 
-            this.comboBoxStructureType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxStructureType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxStructureType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxStructureType.FormattingEnabled = true;
             this.comboBoxStructureType.Location = new System.Drawing.Point(157, 123);
@@ -1563,8 +1564,8 @@ namespace Registry.Viewport
             // 
             // textBoxHouse
             // 
-            this.textBoxHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxHouse.Location = new System.Drawing.Point(157, 36);
             this.textBoxHouse.MaxLength = 4;
             this.textBoxHouse.Name = "textBoxHouse";
@@ -1603,8 +1604,8 @@ namespace Registry.Viewport
             // 
             // comboBoxState
             // 
-            this.comboBoxState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxState.FormattingEnabled = true;
             this.comboBoxState.Location = new System.Drawing.Point(159, 95);
@@ -1615,10 +1616,12 @@ namespace Registry.Viewport
             // 
             // comboBoxCurrentFundType
             // 
-            this.comboBoxCurrentFundType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxCurrentFundType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxCurrentFundType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.comboBoxCurrentFundType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxCurrentFundType.Enabled = false;
+            this.comboBoxCurrentFundType.ForeColor = System.Drawing.Color.Black;
             this.comboBoxCurrentFundType.FormattingEnabled = true;
             this.comboBoxCurrentFundType.Location = new System.Drawing.Point(159, 124);
             this.comboBoxCurrentFundType.Name = "comboBoxCurrentFundType";
@@ -1628,8 +1631,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownBalanceCost
             // 
-            this.numericUpDownBalanceCost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownBalanceCost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownBalanceCost.DecimalPlaces = 2;
             this.numericUpDownBalanceCost.Location = new System.Drawing.Point(159, 66);
             this.numericUpDownBalanceCost.Maximum = new decimal(new int[] {
@@ -1645,8 +1648,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownCadastralCost
             // 
-            this.numericUpDownCadastralCost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownCadastralCost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownCadastralCost.DecimalPlaces = 2;
             this.numericUpDownCadastralCost.Location = new System.Drawing.Point(159, 36);
             this.numericUpDownCadastralCost.Maximum = new decimal(new int[] {
@@ -1721,8 +1724,8 @@ namespace Registry.Viewport
             // 
             // textBoxCadastralNum
             // 
-            this.textBoxCadastralNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCadastralNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCadastralNum.Location = new System.Drawing.Point(159, 7);
             this.textBoxCadastralNum.MaxLength = 15;
             this.textBoxCadastralNum.Name = "textBoxCadastralNum";
@@ -1750,8 +1753,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownPremisesCount
             // 
-            this.numericUpDownPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownPremisesCount.Location = new System.Drawing.Point(163, 18);
             this.numericUpDownPremisesCount.Maximum = new decimal(new int[] {
             65535,
@@ -1765,8 +1768,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownRoomsCount
             // 
-            this.numericUpDownRoomsCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownRoomsCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownRoomsCount.Location = new System.Drawing.Point(163, 47);
             this.numericUpDownRoomsCount.Maximum = new decimal(new int[] {
             65535,
@@ -1780,8 +1783,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownApartmentsCount
             // 
-            this.numericUpDownApartmentsCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownApartmentsCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownApartmentsCount.Location = new System.Drawing.Point(163, 76);
             this.numericUpDownApartmentsCount.Maximum = new decimal(new int[] {
             65535,
@@ -1795,8 +1798,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownSharedApartmentsCount
             // 
-            this.numericUpDownSharedApartmentsCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownSharedApartmentsCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownSharedApartmentsCount.Location = new System.Drawing.Point(163, 105);
             this.numericUpDownSharedApartmentsCount.Maximum = new decimal(new int[] {
             65535,
@@ -1864,8 +1867,9 @@ namespace Registry.Viewport
             // 
             // numericUpDownOtherPremisesCount
             // 
-            this.numericUpDownOtherPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownOtherPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownOtherPremisesCount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.numericUpDownOtherPremisesCount.Location = new System.Drawing.Point(159, 105);
             this.numericUpDownOtherPremisesCount.Maximum = new decimal(new int[] {
             65535,
@@ -1879,8 +1883,9 @@ namespace Registry.Viewport
             // 
             // numericUpDownSpecialPremisesCount
             // 
-            this.numericUpDownSpecialPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownSpecialPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownSpecialPremisesCount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.numericUpDownSpecialPremisesCount.Location = new System.Drawing.Point(159, 76);
             this.numericUpDownSpecialPremisesCount.Maximum = new decimal(new int[] {
             65535,
@@ -1894,8 +1899,9 @@ namespace Registry.Viewport
             // 
             // numericUpDownCommercialPremisesCount
             // 
-            this.numericUpDownCommercialPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownCommercialPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownCommercialPremisesCount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.numericUpDownCommercialPremisesCount.Location = new System.Drawing.Point(158, 47);
             this.numericUpDownCommercialPremisesCount.Maximum = new decimal(new int[] {
             65535,
@@ -1909,8 +1915,9 @@ namespace Registry.Viewport
             // 
             // numericUpDownSocialPremisesCount
             // 
-            this.numericUpDownSocialPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownSocialPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownSocialPremisesCount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.numericUpDownSocialPremisesCount.Location = new System.Drawing.Point(158, 18);
             this.numericUpDownSocialPremisesCount.Maximum = new decimal(new int[] {
             65535,
@@ -1976,8 +1983,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownTotalArea
             // 
-            this.numericUpDownTotalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownTotalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownTotalArea.DecimalPlaces = 3;
             this.numericUpDownTotalArea.Location = new System.Drawing.Point(163, 18);
             this.numericUpDownTotalArea.Maximum = new decimal(new int[] {
@@ -2002,8 +2009,8 @@ namespace Registry.Viewport
             // 
             // numericUpDownLivingArea
             // 
-            this.numericUpDownLivingArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownLivingArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownLivingArea.DecimalPlaces = 3;
             this.numericUpDownLivingArea.Location = new System.Drawing.Point(163, 47);
             this.numericUpDownLivingArea.Maximum = new decimal(new int[] {
@@ -2019,8 +2026,9 @@ namespace Registry.Viewport
             // 
             // numericUpDownMunicipalArea
             // 
-            this.numericUpDownMunicipalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownMunicipalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownMunicipalArea.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.numericUpDownMunicipalArea.DecimalPlaces = 3;
             this.numericUpDownMunicipalArea.Location = new System.Drawing.Point(163, 76);
             this.numericUpDownMunicipalArea.Maximum = new decimal(new int[] {
@@ -2089,7 +2097,7 @@ namespace Registry.Viewport
             // 
             this.dataGridViewRestrictions.AllowUserToAddRows = false;
             this.dataGridViewRestrictions.AllowUserToDeleteRows = false;
-            this.dataGridViewRestrictions.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridViewRestrictions.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewRestrictions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewRestrictions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.restriction_number,
@@ -2151,7 +2159,7 @@ namespace Registry.Viewport
             // 
             this.dataGridViewOwnerships.AllowUserToAddRows = false;
             this.dataGridViewOwnerships.AllowUserToDeleteRows = false;
-            this.dataGridViewOwnerships.BackgroundColor = System.Drawing.SystemColors.ControlLightLight;
+            this.dataGridViewOwnerships.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewOwnerships.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewOwnerships.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.ownership_number,
@@ -2202,10 +2210,11 @@ namespace Registry.Viewport
             // 
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(600, 540);
-            this.BackColor = System.Drawing.SystemColors.ControlLightLight;
+            this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1008, 729);
             this.Controls.Add(this.tableLayoutPanel);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "BuildingViewport";
             this.Padding = new System.Windows.Forms.Padding(3);
             this.Text = "Здание";

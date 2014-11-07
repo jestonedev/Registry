@@ -81,19 +81,17 @@ namespace Registry.Viewport
         bool Selected { get; set; }
 
         bool HasTenancyContract17xReport();
-
         bool HasTenancyContractReport();
-
         bool HasTenancyActReport();
-
         bool HasTenancyAgreementReport();
+        bool HasTenancyOrderReport();     
+        bool HasTenancyExcerptReport();
 
         void TenancyContract17xReportGenerate(TenancyContractTypes tenancyContractType);
-
         void TenancyContractReportGenerate();
-
         void TenancyActReportGenerate();
-
         void TenancyAgreementReportGenerate();
+        void TenancyOrderReportGenerate();
+        void TenancyExcerptReportGenerate();
     }
 }
