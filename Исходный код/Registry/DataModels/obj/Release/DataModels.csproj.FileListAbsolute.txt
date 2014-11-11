@@ -38,3 +38,15 @@ D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-05]\Исходный код\Registry\DataModels\obj\Release\DataModels.csprojResolveAssemblyReference.cache
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-05]\Исходный код\Registry\DataModels\obj\Release\DataModels.dll
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-05]\Исходный код\Registry\DataModels\obj\Release\DataModels.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\DataModels\bin\Release\DataModels.dll.config
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\DataModels\bin\Release\DataModels.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\DataModels\bin\Release\DataModels.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\DataModels\bin\Release\Entities.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\DataModels\bin\Release\Settings.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\DataModels\bin\Release\Entities.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\DataModels\bin\Release\Settings.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\DataModels\obj\Release\DataModels.csprojResolveAssemblyReference.cache
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\DataModels\obj\Release\DataModels.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\DataModels\obj\Release\DataModels.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\DataModels\bin\Release\DataModels.dll.CodeAnalysisLog.xml
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\DataModels\bin\Release\DataModels.dll.lastcodeanalysissucceeded

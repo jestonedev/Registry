@@ -21,3 +21,8 @@ D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-05]\Исходный код\Registry\Entities\obj\Release\Entities.dll
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-05]\Исходный код\Registry\Entities\obj\Release\Entities.pdb
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-05]\Исходный код\Registry\Entities\obj\Release\Entities.csprojResolveAssemblyReference.cache
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Entities\bin\Release\Entities.dll.config
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Entities\bin\Release\Entities.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Entities\bin\Release\Entities.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Entities\obj\Release\Entities.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Entities\obj\Release\Entities.pdb

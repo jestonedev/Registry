@@ -15,3 +15,9 @@ D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-05]\Исходный код\Registry\CustomCtrls\bin\Release\CustomControls.pdb
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-05]\Исходный код\Registry\CustomCtrls\obj\Release\CustomControls.dll
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-05]\Исходный код\Registry\CustomCtrls\obj\Release\CustomControls.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\CustomCtrls\bin\Release\CustomControls.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\CustomCtrls\bin\Release\CustomControls.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\CustomCtrls\obj\Release\CustomControls.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\CustomCtrls\obj\Release\CustomControls.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\CustomCtrls\bin\Release\CustomControls.dll.CodeAnalysisLog.xml
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\CustomCtrls\bin\Release\CustomControls.dll.lastcodeanalysissucceeded

@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.Common;
 using System.Windows.Forms;
 using Registry.DataModels;
+using System.Globalization;
 
 namespace Registry.CalcDataModels
 {
@@ -21,9 +22,10 @@ namespace Registry.CalcDataModels
             Refresh(CalcDataModelFilterEnity.All, null);
         }
 
-        private DataTable InitializeTable()
+        private static DataTable InitializeTable()
         {
             DataTable table = new DataTable(tableName);
+            table.Locale = CultureInfo.CurrentCulture;
             table.Columns.Add("id_building").DataType = typeof(int);
             table.Columns.Add("social_premises_count").DataType = typeof(int);
             table.Columns.Add("commercial_premises_count").DataType = typeof(int);

@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using System.Data;
 using Registry.Entities;
+using Security;
 
 namespace Registry.Viewport
 {
@@ -43,12 +44,6 @@ namespace Registry.Viewport
         DateTimePicker dateTimePickerAtDate;
         DateTimePicker dateTimePickerDateOfTransfer;
         DataGridView dataGridViewClaims;
-        DataGridViewTextBoxColumn id_claim;
-        DataGridViewTextBoxColumn date_of_transfer;
-        DataGridViewTextBoxColumn amount_of_debt_rent;
-        DataGridViewTextBoxColumn amount_of_debt_fine;
-        DataGridViewTextBoxColumn at_date;
-        DataGridViewTextBoxColumn description;
         #endregion Components
 
         //Modeles
@@ -58,6 +53,12 @@ namespace Registry.Viewport
         BindingSource v_claims = null;
 
         private ViewportState viewportState = ViewportState.ReadState;
+        private DataGridViewTextBoxColumn id_claim;
+        private DataGridViewTextBoxColumn date_of_transfer;
+        private DataGridViewTextBoxColumn amount_of_debt_rent;
+        private DataGridViewTextBoxColumn amount_of_debt_fine;
+        private DataGridViewTextBoxColumn at_date;
+        private DataGridViewTextBoxColumn description;
         private bool is_editable = false;
 
         private ClaimListViewport()
@@ -295,7 +296,7 @@ namespace Registry.Viewport
                     "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
-            var tenancy_rows = from tenancy_row in TenancyProcessesDataModel.GetInstance().Select().AsEnumerable()
+            var tenancy_rows = from tenancy_row in DataModelHelper.FilterRows(TenancyProcessesDataModel.GetInstance().Select())
                                where tenancy_row.Field<int>("id_process") == claim.id_process
                                select tenancy_row;
             if (tenancy_rows.Count() == 0)
@@ -486,10 +487,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            if ((viewportState == ViewportState.ReadState || viewportState == ViewportState.ModifyRowState) && !claims.EditingNewRecord)
-                return true;
-            else
-                return false;
+            return (!claims.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.ClaimsWrite);
         }
 
         public override void InsertRecord()
@@ -508,7 +506,8 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            return ((v_claims.Position != -1) && (!claims.EditingNewRecord));
+            return (v_claims.Position != -1) && (!claims.EditingNewRecord) 
+                && AccessControl.HasPrivelege(Priveleges.ClaimsWrite);
         }
 
         public override void CopyRecord()
@@ -533,17 +532,15 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            if ((v_claims.Position == -1) || (viewportState == ViewportState.NewRowState))
-                return false;
-            else
-                return true;
+            return (v_claims.Position > -1) && (viewportState != ViewportState.NewRowState)
+                && AccessControl.HasPrivelege(Priveleges.ClaimsWrite);
         }
 
         public override void DeleteRecord()
         {
             if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                if (claims.Delete((int)((DataRowView)v_claims.Current)["id_claim"]) == -1)
+                if (ClaimsDataModel.Delete((int)((DataRowView)v_claims.Current)["id_claim"]) == -1)
                     return;
                 is_editable = false;
                 ((DataRowView)v_claims[v_claims.Position]).Delete();
@@ -554,7 +551,8 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
+            return ((viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState))
+                && AccessControl.HasPrivelege(Priveleges.ClaimsWrite);
         }
 
         public override void SaveRecord()
@@ -569,7 +567,7 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case ViewportState.NewRowState:
-                    int id_claim = claims.Insert(claim);
+                    int id_claim = ClaimsDataModel.Insert(claim);
                     if (id_claim == -1)
                         return;
                     DataRowView newRow;
@@ -589,7 +587,7 @@ namespace Registry.Viewport
                             "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    if (claims.Update(claim) == -1)
+                    if (ClaimsDataModel.Update(claim) == -1)
                         return;
                     DataRowView row = ((DataRowView)v_claims[v_claims.Position]);
                     is_editable = false;
@@ -636,6 +634,7 @@ namespace Registry.Viewport
             UnbindedCheckBoxesUpdate();
             is_editable = true;
             menuCallback.EditingStateUpdate();
+            SetViewportCaption();
         }
 
         public override bool CanDuplicate()
@@ -935,7 +934,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel15.RowCount = 2;
             this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 196F));
             this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel15.Size = new System.Drawing.Size(949, 491);
+            this.tableLayoutPanel15.Size = new System.Drawing.Size(773, 491);
             this.tableLayoutPanel15.TabIndex = 0;
             // 
             // groupBox34
@@ -945,7 +944,7 @@ namespace Registry.Viewport
             this.groupBox34.Location = new System.Drawing.Point(0, 0);
             this.groupBox34.Margin = new System.Windows.Forms.Padding(0);
             this.groupBox34.Name = "groupBox34";
-            this.groupBox34.Size = new System.Drawing.Size(949, 196);
+            this.groupBox34.Size = new System.Drawing.Size(773, 196);
             this.groupBox34.TabIndex = 0;
             this.groupBox34.TabStop = false;
             this.groupBox34.Text = "Общие сведения";
@@ -958,12 +957,12 @@ namespace Registry.Viewport
             this.tableLayoutPanel16.Controls.Add(this.panel8, 0, 0);
             this.tableLayoutPanel16.Controls.Add(this.panel9, 1, 0);
             this.tableLayoutPanel16.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel16.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanel16.Location = new System.Drawing.Point(3, 17);
             this.tableLayoutPanel16.Name = "tableLayoutPanel16";
             this.tableLayoutPanel16.RowCount = 1;
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 155F));
-            this.tableLayoutPanel16.Size = new System.Drawing.Size(943, 177);
+            this.tableLayoutPanel16.Size = new System.Drawing.Size(767, 176);
             this.tableLayoutPanel16.TabIndex = 0;
             // 
             // panel8
@@ -984,22 +983,22 @@ namespace Registry.Viewport
             this.panel8.Location = new System.Drawing.Point(0, 0);
             this.panel8.Margin = new System.Windows.Forms.Padding(0);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(471, 177);
+            this.panel8.Size = new System.Drawing.Size(383, 176);
             this.panel8.TabIndex = 0;
             // 
             // numericUpDownAmountOfDebtRent
             // 
-            this.numericUpDownAmountOfDebtRent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownAmountOfDebtRent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownAmountOfDebtRent.DecimalPlaces = 2;
-            this.numericUpDownAmountOfDebtRent.Location = new System.Drawing.Point(161, 33);
+            this.numericUpDownAmountOfDebtRent.Location = new System.Drawing.Point(172, 33);
             this.numericUpDownAmountOfDebtRent.Maximum = new decimal(new int[] {
             1410065407,
             2,
             0,
             0});
             this.numericUpDownAmountOfDebtRent.Name = "numericUpDownAmountOfDebtRent";
-            this.numericUpDownAmountOfDebtRent.Size = new System.Drawing.Size(301, 20);
+            this.numericUpDownAmountOfDebtRent.Size = new System.Drawing.Size(202, 21);
             this.numericUpDownAmountOfDebtRent.TabIndex = 1;
             this.numericUpDownAmountOfDebtRent.ThousandsSeparator = true;
             this.numericUpDownAmountOfDebtRent.ValueChanged += new System.EventHandler(this.numericUpDownAmountOfDebtRent_ValueChanged);
@@ -1009,23 +1008,23 @@ namespace Registry.Viewport
             this.label102.AutoSize = true;
             this.label102.Location = new System.Drawing.Point(14, 35);
             this.label102.Name = "label102";
-            this.label102.Size = new System.Drawing.Size(91, 13);
+            this.label102.Size = new System.Drawing.Size(100, 15);
             this.label102.TabIndex = 37;
             this.label102.Text = "Сумма долга АП";
             // 
             // numericUpDownAmountOfFine
             // 
-            this.numericUpDownAmountOfFine.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownAmountOfFine.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownAmountOfFine.DecimalPlaces = 2;
-            this.numericUpDownAmountOfFine.Location = new System.Drawing.Point(161, 149);
+            this.numericUpDownAmountOfFine.Location = new System.Drawing.Point(172, 149);
             this.numericUpDownAmountOfFine.Maximum = new decimal(new int[] {
             1410065407,
             2,
             0,
             0});
             this.numericUpDownAmountOfFine.Name = "numericUpDownAmountOfFine";
-            this.numericUpDownAmountOfFine.Size = new System.Drawing.Size(301, 20);
+            this.numericUpDownAmountOfFine.Size = new System.Drawing.Size(202, 21);
             this.numericUpDownAmountOfFine.TabIndex = 5;
             this.numericUpDownAmountOfFine.ThousandsSeparator = true;
             this.numericUpDownAmountOfFine.ValueChanged += new System.EventHandler(this.numericUpDownAmountOfFine_ValueChanged);
@@ -1035,23 +1034,23 @@ namespace Registry.Viewport
             this.label93.AutoSize = true;
             this.label93.Location = new System.Drawing.Point(14, 151);
             this.label93.Name = "label93";
-            this.label93.Size = new System.Drawing.Size(109, 13);
+            this.label93.Size = new System.Drawing.Size(120, 15);
             this.label93.TabIndex = 35;
             this.label93.Text = "Сумма пени по иску";
             // 
             // numericUpDownAmountOfRent
             // 
-            this.numericUpDownAmountOfRent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownAmountOfRent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownAmountOfRent.DecimalPlaces = 2;
-            this.numericUpDownAmountOfRent.Location = new System.Drawing.Point(161, 120);
+            this.numericUpDownAmountOfRent.Location = new System.Drawing.Point(172, 120);
             this.numericUpDownAmountOfRent.Maximum = new decimal(new int[] {
             1410065407,
             2,
             0,
             0});
             this.numericUpDownAmountOfRent.Name = "numericUpDownAmountOfRent";
-            this.numericUpDownAmountOfRent.Size = new System.Drawing.Size(301, 20);
+            this.numericUpDownAmountOfRent.Size = new System.Drawing.Size(202, 21);
             this.numericUpDownAmountOfRent.TabIndex = 4;
             this.numericUpDownAmountOfRent.ThousandsSeparator = true;
             this.numericUpDownAmountOfRent.ValueChanged += new System.EventHandler(this.numericUpDownAmountOfRent_ValueChanged);
@@ -1061,18 +1060,18 @@ namespace Registry.Viewport
             this.label92.AutoSize = true;
             this.label92.Location = new System.Drawing.Point(14, 122);
             this.label92.Name = "label92";
-            this.label92.Size = new System.Drawing.Size(100, 13);
+            this.label92.Size = new System.Drawing.Size(108, 15);
             this.label92.TabIndex = 33;
             this.label92.Text = "Сумма АП по иску";
             // 
             // dateTimePickerAtDate
             // 
-            this.dateTimePickerAtDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerAtDate.Location = new System.Drawing.Point(161, 91);
+            this.dateTimePickerAtDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerAtDate.Location = new System.Drawing.Point(172, 91);
             this.dateTimePickerAtDate.Name = "dateTimePickerAtDate";
             this.dateTimePickerAtDate.ShowCheckBox = true;
-            this.dateTimePickerAtDate.Size = new System.Drawing.Size(301, 20);
+            this.dateTimePickerAtDate.Size = new System.Drawing.Size(202, 21);
             this.dateTimePickerAtDate.TabIndex = 3;
             this.dateTimePickerAtDate.ValueChanged += new System.EventHandler(this.dateTimePickerAtDate_ValueChanged);
             // 
@@ -1081,18 +1080,18 @@ namespace Registry.Viewport
             this.label91.AutoSize = true;
             this.label91.Location = new System.Drawing.Point(14, 94);
             this.label91.Name = "label91";
-            this.label91.Size = new System.Drawing.Size(46, 13);
+            this.label91.Size = new System.Drawing.Size(52, 15);
             this.label91.TabIndex = 31;
             this.label91.Text = "На дату";
             // 
             // dateTimePickerDateOfTransfer
             // 
-            this.dateTimePickerDateOfTransfer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerDateOfTransfer.Location = new System.Drawing.Point(161, 4);
+            this.dateTimePickerDateOfTransfer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerDateOfTransfer.Location = new System.Drawing.Point(172, 4);
             this.dateTimePickerDateOfTransfer.Name = "dateTimePickerDateOfTransfer";
             this.dateTimePickerDateOfTransfer.ShowCheckBox = true;
-            this.dateTimePickerDateOfTransfer.Size = new System.Drawing.Size(301, 20);
+            this.dateTimePickerDateOfTransfer.Size = new System.Drawing.Size(202, 21);
             this.dateTimePickerDateOfTransfer.TabIndex = 0;
             this.dateTimePickerDateOfTransfer.ValueChanged += new System.EventHandler(this.dateTimePickerDateOfTransfer_ValueChanged);
             // 
@@ -1101,23 +1100,23 @@ namespace Registry.Viewport
             this.label90.AutoSize = true;
             this.label90.Location = new System.Drawing.Point(14, 7);
             this.label90.Name = "label90";
-            this.label90.Size = new System.Drawing.Size(83, 13);
+            this.label90.Size = new System.Drawing.Size(95, 15);
             this.label90.TabIndex = 29;
             this.label90.Text = "Дата передачи";
             // 
             // numericUpDownAmountOfDebtFine
             // 
-            this.numericUpDownAmountOfDebtFine.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownAmountOfDebtFine.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownAmountOfDebtFine.DecimalPlaces = 2;
-            this.numericUpDownAmountOfDebtFine.Location = new System.Drawing.Point(161, 62);
+            this.numericUpDownAmountOfDebtFine.Location = new System.Drawing.Point(172, 62);
             this.numericUpDownAmountOfDebtFine.Maximum = new decimal(new int[] {
             1410065407,
             2,
             0,
             0});
             this.numericUpDownAmountOfDebtFine.Name = "numericUpDownAmountOfDebtFine";
-            this.numericUpDownAmountOfDebtFine.Size = new System.Drawing.Size(301, 20);
+            this.numericUpDownAmountOfDebtFine.Size = new System.Drawing.Size(202, 21);
             this.numericUpDownAmountOfDebtFine.TabIndex = 2;
             this.numericUpDownAmountOfDebtFine.ThousandsSeparator = true;
             this.numericUpDownAmountOfDebtFine.ValueChanged += new System.EventHandler(this.numericUpDownAmountOfDebtFine_ValueChanged);
@@ -1127,7 +1126,7 @@ namespace Registry.Viewport
             this.label89.AutoSize = true;
             this.label89.Location = new System.Drawing.Point(14, 64);
             this.label89.Name = "label89";
-            this.label89.Size = new System.Drawing.Size(100, 13);
+            this.label89.Size = new System.Drawing.Size(112, 15);
             this.label89.TabIndex = 24;
             this.label89.Text = "Сумма долга пени";
             // 
@@ -1147,24 +1146,24 @@ namespace Registry.Viewport
             this.panel9.Controls.Add(this.dateTimePickerStartDeptPeriod);
             this.panel9.Controls.Add(this.label96);
             this.panel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel9.Location = new System.Drawing.Point(471, 0);
+            this.panel9.Location = new System.Drawing.Point(383, 0);
             this.panel9.Margin = new System.Windows.Forms.Padding(0);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(472, 177);
+            this.panel9.Size = new System.Drawing.Size(384, 176);
             this.panel9.TabIndex = 1;
             // 
             // numericUpDownProcessID
             // 
-            this.numericUpDownProcessID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownProcessID.Location = new System.Drawing.Point(159, 4);
+            this.numericUpDownProcessID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownProcessID.Location = new System.Drawing.Point(172, 4);
             this.numericUpDownProcessID.Maximum = new decimal(new int[] {
             1410065407,
             0,
             0,
             0});
             this.numericUpDownProcessID.Name = "numericUpDownProcessID";
-            this.numericUpDownProcessID.Size = new System.Drawing.Size(302, 20);
+            this.numericUpDownProcessID.Size = new System.Drawing.Size(202, 21);
             this.numericUpDownProcessID.TabIndex = 0;
             this.numericUpDownProcessID.ValueChanged += new System.EventHandler(this.numericUpDownProcessID_ValueChanged);
             // 
@@ -1173,23 +1172,23 @@ namespace Registry.Viewport
             this.label103.AutoSize = true;
             this.label103.Location = new System.Drawing.Point(14, 6);
             this.label103.Name = "label103";
-            this.label103.Size = new System.Drawing.Size(86, 13);
+            this.label103.Size = new System.Drawing.Size(96, 15);
             this.label103.TabIndex = 51;
             this.label103.Text = "Процесс найма";
             // 
             // numericUpDownAmountOfFineRecover
             // 
-            this.numericUpDownAmountOfFineRecover.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownAmountOfFineRecover.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownAmountOfFineRecover.DecimalPlaces = 2;
-            this.numericUpDownAmountOfFineRecover.Location = new System.Drawing.Point(161, 62);
+            this.numericUpDownAmountOfFineRecover.Location = new System.Drawing.Point(172, 62);
             this.numericUpDownAmountOfFineRecover.Maximum = new decimal(new int[] {
             1410065407,
             2,
             0,
             0});
             this.numericUpDownAmountOfFineRecover.Name = "numericUpDownAmountOfFineRecover";
-            this.numericUpDownAmountOfFineRecover.Size = new System.Drawing.Size(302, 20);
+            this.numericUpDownAmountOfFineRecover.Size = new System.Drawing.Size(202, 21);
             this.numericUpDownAmountOfFineRecover.TabIndex = 8;
             this.numericUpDownAmountOfFineRecover.ThousandsSeparator = true;
             this.numericUpDownAmountOfFineRecover.ValueChanged += new System.EventHandler(this.numericUpDownAmountOfFineRecover_ValueChanged);
@@ -1199,34 +1198,34 @@ namespace Registry.Viewport
             this.label95.AutoSize = true;
             this.label95.Location = new System.Drawing.Point(14, 64);
             this.label95.Name = "label95";
-            this.label95.Size = new System.Drawing.Size(138, 13);
+            this.label95.Size = new System.Drawing.Size(152, 15);
             this.label95.TabIndex = 39;
             this.label95.Text = "Сумма пени к взысканию";
             // 
             // textBoxDescription
             // 
-            this.textBoxDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDescription.Location = new System.Drawing.Point(161, 149);
+            this.textBoxDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxDescription.Location = new System.Drawing.Point(172, 149);
             this.textBoxDescription.MaxLength = 4000;
             this.textBoxDescription.Name = "textBoxDescription";
-            this.textBoxDescription.Size = new System.Drawing.Size(302, 20);
+            this.textBoxDescription.Size = new System.Drawing.Size(202, 21);
             this.textBoxDescription.TabIndex = 11;
             this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxDescription_TextChanged);
             // 
             // numericUpDownAmountOfRentRecover
             // 
-            this.numericUpDownAmountOfRentRecover.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownAmountOfRentRecover.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownAmountOfRentRecover.DecimalPlaces = 2;
-            this.numericUpDownAmountOfRentRecover.Location = new System.Drawing.Point(161, 33);
+            this.numericUpDownAmountOfRentRecover.Location = new System.Drawing.Point(172, 33);
             this.numericUpDownAmountOfRentRecover.Maximum = new decimal(new int[] {
             1410065407,
             2,
             0,
             0});
             this.numericUpDownAmountOfRentRecover.Name = "numericUpDownAmountOfRentRecover";
-            this.numericUpDownAmountOfRentRecover.Size = new System.Drawing.Size(302, 20);
+            this.numericUpDownAmountOfRentRecover.Size = new System.Drawing.Size(202, 21);
             this.numericUpDownAmountOfRentRecover.TabIndex = 7;
             this.numericUpDownAmountOfRentRecover.ThousandsSeparator = true;
             this.numericUpDownAmountOfRentRecover.ValueChanged += new System.EventHandler(this.numericUpDownAmountOfRentRecover_ValueChanged);
@@ -1236,7 +1235,7 @@ namespace Registry.Viewport
             this.label99.AutoSize = true;
             this.label99.Location = new System.Drawing.Point(14, 151);
             this.label99.Name = "label99";
-            this.label99.Size = new System.Drawing.Size(70, 13);
+            this.label99.Size = new System.Drawing.Size(80, 15);
             this.label99.TabIndex = 49;
             this.label99.Text = "Примечание";
             // 
@@ -1245,47 +1244,47 @@ namespace Registry.Viewport
             this.label94.AutoSize = true;
             this.label94.Location = new System.Drawing.Point(14, 35);
             this.label94.Name = "label94";
-            this.label94.Size = new System.Drawing.Size(129, 13);
+            this.label94.Size = new System.Drawing.Size(140, 15);
             this.label94.TabIndex = 37;
             this.label94.Text = "Сумма АП к взысканию";
             // 
             // label98
             // 
             this.label98.AutoSize = true;
-            this.label98.Location = new System.Drawing.Point(136, 122);
+            this.label98.Location = new System.Drawing.Point(145, 122);
             this.label98.Name = "label98";
-            this.label98.Size = new System.Drawing.Size(19, 13);
+            this.label98.Size = new System.Drawing.Size(21, 15);
             this.label98.TabIndex = 48;
             this.label98.Text = "по";
             // 
             // dateTimePickerEndDeptPeriod
             // 
-            this.dateTimePickerEndDeptPeriod.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerEndDeptPeriod.Location = new System.Drawing.Point(161, 120);
+            this.dateTimePickerEndDeptPeriod.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerEndDeptPeriod.Location = new System.Drawing.Point(172, 120);
             this.dateTimePickerEndDeptPeriod.Name = "dateTimePickerEndDeptPeriod";
             this.dateTimePickerEndDeptPeriod.ShowCheckBox = true;
-            this.dateTimePickerEndDeptPeriod.Size = new System.Drawing.Size(302, 20);
+            this.dateTimePickerEndDeptPeriod.Size = new System.Drawing.Size(202, 21);
             this.dateTimePickerEndDeptPeriod.TabIndex = 10;
             this.dateTimePickerEndDeptPeriod.ValueChanged += new System.EventHandler(this.dateTimePickerEndDeptPeriod_ValueChanged);
             // 
             // label97
             // 
             this.label97.AutoSize = true;
-            this.label97.Location = new System.Drawing.Point(142, 93);
+            this.label97.Location = new System.Drawing.Point(151, 93);
             this.label97.Name = "label97";
-            this.label97.Size = new System.Drawing.Size(13, 13);
+            this.label97.Size = new System.Drawing.Size(13, 15);
             this.label97.TabIndex = 46;
             this.label97.Text = "с";
             // 
             // dateTimePickerStartDeptPeriod
             // 
-            this.dateTimePickerStartDeptPeriod.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerStartDeptPeriod.Location = new System.Drawing.Point(161, 91);
+            this.dateTimePickerStartDeptPeriod.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerStartDeptPeriod.Location = new System.Drawing.Point(172, 91);
             this.dateTimePickerStartDeptPeriod.Name = "dateTimePickerStartDeptPeriod";
             this.dateTimePickerStartDeptPeriod.ShowCheckBox = true;
-            this.dateTimePickerStartDeptPeriod.Size = new System.Drawing.Size(302, 20);
+            this.dateTimePickerStartDeptPeriod.Size = new System.Drawing.Size(202, 21);
             this.dateTimePickerStartDeptPeriod.TabIndex = 9;
             this.dateTimePickerStartDeptPeriod.ValueChanged += new System.EventHandler(this.dateTimePickerStartDeptPeriod_ValueChanged);
             // 
@@ -1294,7 +1293,7 @@ namespace Registry.Viewport
             this.label96.AutoSize = true;
             this.label96.Location = new System.Drawing.Point(14, 93);
             this.label96.Name = "label96";
-            this.label96.Size = new System.Drawing.Size(115, 13);
+            this.label96.Size = new System.Drawing.Size(131, 15);
             this.label96.TabIndex = 44;
             this.label96.Text = "Период задолжности";
             // 
@@ -1322,7 +1321,7 @@ namespace Registry.Viewport
             this.dataGridViewClaims.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridViewClaims.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewClaims.ShowCellToolTips = false;
-            this.dataGridViewClaims.Size = new System.Drawing.Size(943, 289);
+            this.dataGridViewClaims.Size = new System.Drawing.Size(767, 289);
             this.dataGridViewClaims.TabIndex = 1;
             this.dataGridViewClaims.VirtualMode = true;
             this.dataGridViewClaims.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridViewClaims_CellValueNeeded);
@@ -1383,11 +1382,11 @@ namespace Registry.Viewport
             // ClaimListViewport
             // 
             this.AutoScroll = true;
-            this.AutoScrollMinSize = new System.Drawing.Size(620, 300);
+            this.AutoScrollMinSize = new System.Drawing.Size(680, 300);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(955, 497);
+            this.ClientSize = new System.Drawing.Size(779, 497);
             this.Controls.Add(this.tableLayoutPanel15);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ClaimListViewport";
             this.Padding = new System.Windows.Forms.Padding(3);

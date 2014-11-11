@@ -8,13 +8,14 @@ using System.Text.RegularExpressions;
 using System.Data.Odbc;
 using Registry.Entities;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace Registry.DataModels
 {
-    public class DBConnection: IDisposable
+    public sealed class DBConnection: IDisposable
     {
         private static string ProviderName = "ODBC";
-        private static DbProviderFactory factory = null;
+        private static DbProviderFactory factory = System.Data.Common.DbProviderFactories.GetFactory(ParseProviderName(ProviderName));
 
         private System.Data.Common.DbTransaction transaction = null;
         private DbConnection connection = null;
@@ -30,24 +31,19 @@ namespace Registry.DataModels
                 }
                 catch(OdbcException e)
                 {
-                    MessageBox.Show(String.Format("Произошла ошибка при установке соединения с базой данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Произошла ошибка при установке соединения с базой данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     Application.Exit();
                 }
         }
 
-        static DBConnection()
-        {
-            if (factory == null)
-                factory = System.Data.Common.DbProviderFactories.GetFactory(ParseProviderName(ProviderName));
-        }
-
-        public DbCommand CreateCommand()
+        public static DbCommand CreateCommand()
         {
             return factory.CreateCommand();
         }
 
-        public DbParameter CreateParameter<T>(string name, T value) 
+        public static DbParameter CreateParameter<T>(string name, T value) 
         {
             DbParameter parameter = factory.CreateParameter();
             parameter.ParameterName = name;
@@ -68,7 +64,7 @@ namespace Registry.DataModels
                 if (Regex.IsMatch(provider, name, RegexOptions.IgnoreCase))
                     return provider;
             }
-            throw new DataModelException(String.Format("Провайдер {0} не найден", name));
+            throw new DataModelException(String.Format(CultureInfo.CurrentCulture, "Провайдер {0} не найден", name));
         }
 
         public DataTable SqlSelectTable(string resultTableName, DbCommand command)
@@ -81,6 +77,7 @@ namespace Registry.DataModels
             DbDataAdapter adapter = factory.CreateDataAdapter();
             adapter.SelectCommand = command;
             DataTable dt = new DataTable(resultTableName);
+            dt.Locale = CultureInfo.CurrentCulture;
             adapter.Fill(dt);
             return dt;
         }
@@ -96,10 +93,10 @@ namespace Registry.DataModels
             {
                 return command.ExecuteNonQuery();
             }
-            catch (OdbcException e)
+            catch (OdbcException)
             {
                 SqlRollbackTransaction();
-                throw e;
+                throw;
             }
         }
 

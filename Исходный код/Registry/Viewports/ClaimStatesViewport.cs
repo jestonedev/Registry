@@ -7,6 +7,7 @@ using Registry.DataModels;
 using System.Data;
 using Registry.Entities;
 using System.Drawing;
+using Security;
 
 namespace Registry.Viewport
 {
@@ -495,7 +496,8 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
+            return ((viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState))
+                && AccessControl.HasPrivelege(Priveleges.ClaimsWrite);
         }
 
         public override void SaveRecord()
@@ -510,7 +512,7 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case ViewportState.NewRowState:
-                    int id_state = claim_states.Insert(claimState);
+                    int id_state = ClaimStatesDataModel.Insert(claimState);
                     if (id_state == -1)
                         return;
                     DataRowView newRow;
@@ -531,7 +533,7 @@ namespace Registry.Viewport
                             "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    if (claim_states.Update(claimState) == -1)
+                    if (ClaimStatesDataModel.Update(claimState) == -1)
                         return;
                     DataRowView row = ((DataRowView)v_claim_states[v_claim_states.Position]);
                     is_editable = false;
@@ -547,7 +549,8 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            return ((v_claim_states.Position != -1) && (!claim_states.EditingNewRecord));
+            return (v_claim_states.Position != -1) && (!claim_states.EditingNewRecord)
+                && AccessControl.HasPrivelege(Priveleges.ClaimsWrite);
         }
 
         public override void CopyRecord()
@@ -568,10 +571,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            if ((viewportState == ViewportState.ReadState || viewportState == ViewportState.ModifyRowState) && !claim_states.EditingNewRecord)
-                return true;
-            else
-                return false;
+            return (!claim_states.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.ClaimsWrite);
         }
 
         public override void InsertRecord()
@@ -587,10 +587,9 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            if ((v_claim_states.Position == -1) || (viewportState == ViewportState.NewRowState))
-                return false;
-            else
-                return true;
+            return (v_claim_states.Position > -1) 
+                && (viewportState != ViewportState.NewRowState) 
+                && AccessControl.HasPrivelege(Priveleges.ClaimsWrite);
         }
 
         public override void DeleteRecord()
@@ -624,7 +623,7 @@ namespace Registry.Viewport
                         "Чтобы удалить данное состояние, необходимо сначала удалить все состояния после него", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
-                if (claim_states.Delete((int)((DataRowView)v_claim_states.Current)["id_state"]) == -1)
+                if (ClaimStatesDataModel.Delete((int)((DataRowView)v_claim_states.Current)["id_state"]) == -1)
                     return;
                 is_editable = false;
                 ((DataRowView)v_claim_states[v_claim_states.Position]).Delete();
@@ -842,7 +841,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel17.RowCount = 2;
             this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
             this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel17.Size = new System.Drawing.Size(654, 205);
+            this.tableLayoutPanel17.Size = new System.Drawing.Size(703, 205);
             this.tableLayoutPanel17.TabIndex = 1;
             // 
             // groupBox35
@@ -852,7 +851,7 @@ namespace Registry.Viewport
             this.groupBox35.Location = new System.Drawing.Point(0, 0);
             this.groupBox35.Margin = new System.Windows.Forms.Padding(0);
             this.groupBox35.Name = "groupBox35";
-            this.groupBox35.Size = new System.Drawing.Size(654, 110);
+            this.groupBox35.Size = new System.Drawing.Size(703, 110);
             this.groupBox35.TabIndex = 0;
             this.groupBox35.TabStop = false;
             this.groupBox35.Text = "Общие сведения";
@@ -865,12 +864,12 @@ namespace Registry.Viewport
             this.tableLayoutPanel18.Controls.Add(this.panel10, 1, 0);
             this.tableLayoutPanel18.Controls.Add(this.panel11, 0, 0);
             this.tableLayoutPanel18.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel18.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanel18.Location = new System.Drawing.Point(3, 17);
             this.tableLayoutPanel18.Name = "tableLayoutPanel18";
             this.tableLayoutPanel18.RowCount = 1;
             this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 148F));
-            this.tableLayoutPanel18.Size = new System.Drawing.Size(648, 91);
+            this.tableLayoutPanel18.Size = new System.Drawing.Size(697, 90);
             this.tableLayoutPanel18.TabIndex = 0;
             // 
             // panel10
@@ -882,20 +881,20 @@ namespace Registry.Viewport
             this.panel10.Controls.Add(this.dateTimePickerDocDate);
             this.panel10.Controls.Add(this.label105);
             this.panel10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel10.Location = new System.Drawing.Point(324, 0);
+            this.panel10.Location = new System.Drawing.Point(348, 0);
             this.panel10.Margin = new System.Windows.Forms.Padding(0);
             this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(324, 91);
+            this.panel10.Size = new System.Drawing.Size(349, 90);
             this.panel10.TabIndex = 1;
             // 
             // textBoxDocumentNumber
             // 
-            this.textBoxDocumentNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxDocumentNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxDocumentNumber.Location = new System.Drawing.Point(161, 4);
             this.textBoxDocumentNumber.MaxLength = 50;
             this.textBoxDocumentNumber.Name = "textBoxDocumentNumber";
-            this.textBoxDocumentNumber.Size = new System.Drawing.Size(154, 20);
+            this.textBoxDocumentNumber.Size = new System.Drawing.Size(179, 21);
             this.textBoxDocumentNumber.TabIndex = 0;
             this.textBoxDocumentNumber.TextChanged += new System.EventHandler(this.textBoxDocNumber_TextChanged);
             // 
@@ -904,18 +903,18 @@ namespace Registry.Viewport
             this.label100.AutoSize = true;
             this.label100.Location = new System.Drawing.Point(12, 7);
             this.label100.Name = "label100";
-            this.label100.Size = new System.Drawing.Size(98, 13);
+            this.label100.Size = new System.Drawing.Size(111, 15);
             this.label100.TabIndex = 51;
             this.label100.Text = "Номер документа";
             // 
             // textBoxDescription
             // 
-            this.textBoxDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxDescription.Location = new System.Drawing.Point(161, 62);
             this.textBoxDescription.MaxLength = 4000;
             this.textBoxDescription.Name = "textBoxDescription";
-            this.textBoxDescription.Size = new System.Drawing.Size(154, 20);
+            this.textBoxDescription.Size = new System.Drawing.Size(179, 21);
             this.textBoxDescription.TabIndex = 2;
             this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxClaimStateDescription_TextChanged);
             // 
@@ -924,18 +923,18 @@ namespace Registry.Viewport
             this.label101.AutoSize = true;
             this.label101.Location = new System.Drawing.Point(12, 65);
             this.label101.Name = "label101";
-            this.label101.Size = new System.Drawing.Size(70, 13);
+            this.label101.Size = new System.Drawing.Size(80, 15);
             this.label101.TabIndex = 49;
             this.label101.Text = "Примечание";
             // 
             // dateTimePickerDocDate
             // 
-            this.dateTimePickerDocDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerDocDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerDocDate.Location = new System.Drawing.Point(161, 33);
             this.dateTimePickerDocDate.Name = "dateTimePickerDocDate";
             this.dateTimePickerDocDate.ShowCheckBox = true;
-            this.dateTimePickerDocDate.Size = new System.Drawing.Size(154, 20);
+            this.dateTimePickerDocDate.Size = new System.Drawing.Size(179, 21);
             this.dateTimePickerDocDate.TabIndex = 1;
             this.dateTimePickerDocDate.ValueChanged += new System.EventHandler(this.dateTimePickerDocDate_ValueChanged);
             // 
@@ -944,7 +943,7 @@ namespace Registry.Viewport
             this.label105.AutoSize = true;
             this.label105.Location = new System.Drawing.Point(12, 36);
             this.label105.Name = "label105";
-            this.label105.Size = new System.Drawing.Size(90, 13);
+            this.label105.Size = new System.Drawing.Size(102, 15);
             this.label105.TabIndex = 44;
             this.label105.Text = "Дата документа";
             // 
@@ -960,17 +959,17 @@ namespace Registry.Viewport
             this.panel11.Location = new System.Drawing.Point(0, 0);
             this.panel11.Margin = new System.Windows.Forms.Padding(0);
             this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(324, 91);
+            this.panel11.Size = new System.Drawing.Size(348, 90);
             this.panel11.TabIndex = 0;
             // 
             // dateTimePickerEndState
             // 
-            this.dateTimePickerEndState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerEndState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerEndState.Location = new System.Drawing.Point(161, 62);
             this.dateTimePickerEndState.Name = "dateTimePickerEndState";
             this.dateTimePickerEndState.ShowCheckBox = true;
-            this.dateTimePickerEndState.Size = new System.Drawing.Size(154, 20);
+            this.dateTimePickerEndState.Size = new System.Drawing.Size(178, 21);
             this.dateTimePickerEndState.TabIndex = 2;
             this.dateTimePickerEndState.ValueChanged += new System.EventHandler(this.dateTimePickerEndState_ValueChanged);
             // 
@@ -979,30 +978,30 @@ namespace Registry.Viewport
             this.label110.AutoSize = true;
             this.label110.Location = new System.Drawing.Point(14, 65);
             this.label110.Name = "label110";
-            this.label110.Size = new System.Drawing.Size(77, 13);
+            this.label110.Size = new System.Drawing.Size(86, 15);
             this.label110.TabIndex = 38;
             this.label110.Text = "Крайний срок";
             // 
             // comboBoxClaimStateType
             // 
-            this.comboBoxClaimStateType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxClaimStateType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxClaimStateType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxClaimStateType.FormattingEnabled = true;
             this.comboBoxClaimStateType.Location = new System.Drawing.Point(161, 4);
             this.comboBoxClaimStateType.Name = "comboBoxClaimStateType";
-            this.comboBoxClaimStateType.Size = new System.Drawing.Size(154, 21);
+            this.comboBoxClaimStateType.Size = new System.Drawing.Size(178, 23);
             this.comboBoxClaimStateType.TabIndex = 0;
             this.comboBoxClaimStateType.SelectedIndexChanged += new System.EventHandler(this.comboBoxClaimStateType_SelectedIndexChanged);
             // 
             // dateTimePickerStartState
             // 
-            this.dateTimePickerStartState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerStartState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerStartState.Location = new System.Drawing.Point(161, 33);
             this.dateTimePickerStartState.Name = "dateTimePickerStartState";
             this.dateTimePickerStartState.ShowCheckBox = true;
-            this.dateTimePickerStartState.Size = new System.Drawing.Size(154, 20);
+            this.dateTimePickerStartState.Size = new System.Drawing.Size(178, 21);
             this.dateTimePickerStartState.TabIndex = 1;
             this.dateTimePickerStartState.ValueChanged += new System.EventHandler(this.dateTimePickerStartState_ValueChanged);
             // 
@@ -1011,7 +1010,7 @@ namespace Registry.Viewport
             this.label108.AutoSize = true;
             this.label108.Location = new System.Drawing.Point(14, 36);
             this.label108.Name = "label108";
-            this.label108.Size = new System.Drawing.Size(88, 13);
+            this.label108.Size = new System.Drawing.Size(99, 15);
             this.label108.TabIndex = 31;
             this.label108.Text = "Дата установки";
             // 
@@ -1020,7 +1019,7 @@ namespace Registry.Viewport
             this.label109.AutoSize = true;
             this.label109.Location = new System.Drawing.Point(14, 7);
             this.label109.Name = "label109";
-            this.label109.Size = new System.Drawing.Size(82, 13);
+            this.label109.Size = new System.Drawing.Size(93, 15);
             this.label109.TabIndex = 29;
             this.label109.Text = "Вид состояния";
             // 
@@ -1039,7 +1038,7 @@ namespace Registry.Viewport
             this.dataGridView.Location = new System.Drawing.Point(3, 113);
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.Size = new System.Drawing.Size(648, 89);
+            this.dataGridView.Size = new System.Drawing.Size(697, 89);
             this.dataGridView.TabIndex = 1;
             this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridViewClaimStates_DataError);
             // 
@@ -1057,17 +1056,17 @@ namespace Registry.Viewport
             // date_start_state
             // 
             this.date_start_state.HeaderText = "Дата установки";
-            this.date_start_state.MinimumWidth = 120;
+            this.date_start_state.MinimumWidth = 150;
             this.date_start_state.Name = "date_start_state";
-            this.date_start_state.Width = 120;
+            this.date_start_state.Width = 150;
             // 
             // date_end_state
             // 
             this.date_end_state.HeaderText = "Крайний срок";
-            this.date_end_state.MinimumWidth = 120;
+            this.date_end_state.MinimumWidth = 150;
             this.date_end_state.Name = "date_end_state";
             this.date_end_state.ReadOnly = true;
-            this.date_end_state.Width = 120;
+            this.date_end_state.Width = 150;
             // 
             // description
             // 
@@ -1080,12 +1079,12 @@ namespace Registry.Viewport
             // ClaimStatesViewport
             // 
             this.AutoScroll = true;
-            this.AutoScrollMinSize = new System.Drawing.Size(640, 190);
+            this.AutoScrollMinSize = new System.Drawing.Size(700, 190);
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(660, 211);
+            this.ClientSize = new System.Drawing.Size(709, 211);
             this.Controls.Add(this.tableLayoutPanel17);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ClaimStatesViewport";
             this.Padding = new System.Windows.Forms.Padding(3);

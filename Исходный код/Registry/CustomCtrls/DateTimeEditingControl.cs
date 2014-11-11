@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace CustomControls
 {
@@ -27,19 +28,15 @@ namespace CustomControls
             }
             set
             {
-                if (value is String)
+                string valueStr = value as string;
+                if (valueStr != null)
                 {
                     try
                     {
-                        // This will throw an exception of the string is  
-                        // null, empty, or not in the format of a date. 
-                        this.Value = DateTime.Parse((String)value);
+                        this.Value = DateTime.Parse(valueStr, CultureInfo.CurrentCulture);
                     }
-                    catch
+                    catch(InvalidCastException)
                     {
-                        // In the case of an exception, just use the  
-                        // default value so we're not left with a null 
-                        // value. 
                         this.Value = DateTime.Now;
                     }
                 }
@@ -59,6 +56,8 @@ namespace CustomControls
         public void ApplyCellStyleToEditingControl(
             DataGridViewCellStyle dataGridViewCellStyle)
         {
+            if (dataGridViewCellStyle == null)
+                return;
             this.Font = dataGridViewCellStyle.Font;
             this.CalendarForeColor = dataGridViewCellStyle.ForeColor;
             this.CalendarMonthBackground = dataGridViewCellStyle.BackColor;

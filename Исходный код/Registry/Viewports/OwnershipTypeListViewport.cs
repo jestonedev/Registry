@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using System.Data;
 using Registry.Entities;
+using Security;
 
 namespace Registry.Viewport
 {
@@ -216,7 +217,7 @@ namespace Registry.Viewport
         
         public override bool CanInsertRecord()
         {
-            return true;
+            return  AccessControl.HasPrivelege(Priveleges.RegistryDirectoriesReadWrite);
         }
 
         public override void InsertRecord()
@@ -227,7 +228,7 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            return (v_snapshot_ownership_right_types.Position != -1);
+            return (v_snapshot_ownership_right_types.Position != -1) && AccessControl.HasPrivelege(Priveleges.RegistryDirectoriesReadWrite);
         }
 
         public override void DeleteRecord()
@@ -250,7 +251,7 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return SnapshotHasChanges();
+            return SnapshotHasChanges() && AccessControl.HasPrivelege(Priveleges.RegistryDirectoriesReadWrite);
         }
 
         public override void SaveRecord()
@@ -267,7 +268,7 @@ namespace Registry.Viewport
                 DataRow row = ownership_right_types.Select().Rows.Find(((OwnershipRightType)list[i]).id_ownership_right_type);
                 if (row == null)
                 {
-                    int id_ownership_right_type = ownership_right_types.Insert(list[i]);
+                    int id_ownership_right_type = OwnershipRightTypesDataModel.Insert(list[i]);
                     if (id_ownership_right_type == -1)
                     {
                         sync_views = true;
@@ -280,7 +281,7 @@ namespace Registry.Viewport
                 {
                     if (RowToOwnershipRightType(row) == list[i])
                         continue;
-                    if (ownership_right_types.Update(list[i]) == -1)
+                    if (OwnershipRightTypesDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         return;
@@ -299,7 +300,7 @@ namespace Registry.Viewport
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (ownership_right_types.Delete(list[i].id_ownership_right_type.Value) == -1)
+                    if (OwnershipRightTypesDataModel.Delete(list[i].id_ownership_right_type.Value) == -1)
                     {
                         sync_views = true;
                         return;
@@ -427,7 +428,7 @@ namespace Registry.Viewport
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
@@ -464,7 +465,7 @@ namespace Registry.Viewport
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(461, 261);
             this.Controls.Add(this.dataGridView);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "OwnershipTypeListViewport";
             this.Padding = new System.Windows.Forms.Padding(3);

@@ -9,6 +9,7 @@ using Registry.Entities;
 using System.Drawing;
 using Registry.SearchForms;
 using Registry.CalcDataModels;
+using Security;
 
 namespace Registry.Viewport
 {
@@ -197,16 +198,16 @@ namespace Registry.Viewport
             {
                 label19.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
-                checkBoxImprovement.Location = new System.Drawing.Point(159, 154);
-                checkBoxElevator.Location = new System.Drawing.Point(19, 154);
+                checkBoxImprovement.Location = new System.Drawing.Point(175, 151);
+                checkBoxElevator.Location = new System.Drawing.Point(19, 151);
                 this.tableLayoutPanel.RowStyles[0].Height = 210F;
             }
             else
             {
                 label19.Visible = false;
                 comboBoxCurrentFundType.Visible = false;
-                checkBoxImprovement.Location = new System.Drawing.Point(159, 125);
-                checkBoxElevator.Location = new System.Drawing.Point(19, 125);
+                checkBoxImprovement.Location = new System.Drawing.Point(175, 123);
+                checkBoxElevator.Location = new System.Drawing.Point(19, 123);
                 this.tableLayoutPanel.RowStyles[0].Height = 185F;
             }
         }
@@ -795,7 +796,8 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
+            return ((viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState))
+                && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void SaveRecord()
@@ -818,7 +820,7 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case ViewportState.NewRowState:
-                    int id_building = buildings.Insert(building);
+                    int id_building = BuildingsDataModel.Insert(building);
                     if (id_building == -1)
                         return;
                     DataRowView newRow;
@@ -842,7 +844,7 @@ namespace Registry.Viewport
                             "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    if (buildings.Update(building) == -1)
+                    if (BuildingsDataModel.Update(building) == -1)
                         return;
                     DataRowView row = ((DataRowView)v_buildings[v_buildings.Position]);
                     is_editable = false;
@@ -916,14 +918,12 @@ namespace Registry.Viewport
                     break;
             }
             menuCallback.EditingStateUpdate();
+            SetViewportCaption();
         }
 
         public override bool CanInsertRecord()
         {
-            if ((viewportState  == ViewportState.ReadState || viewportState == ViewportState.ModifyRowState) && !buildings.EditingNewRecord)
-                return true;
-            else
-                return false;
+            return (!buildings.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void InsertRecord()
@@ -938,7 +938,8 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            return ((v_buildings.Position != -1) && (!buildings.EditingNewRecord));
+            return (v_buildings.Position != -1) && (!buildings.EditingNewRecord) 
+                && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void CopyRecord()
@@ -955,17 +956,16 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            if ((v_buildings.Position == -1) || (viewportState == ViewportState.NewRowState))
-                return false;
-            else
-                return true;
+            return (v_buildings.Position > -1) 
+                && (viewportState != ViewportState.NewRowState) 
+                && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void DeleteRecord()
         {
             if (MessageBox.Show("Вы действительно хотите удалить это здание?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                if (buildings.Delete((int)((DataRowView)v_buildings.Current)["id_building"]) == -1)
+                if (BuildingsDataModel.Delete((int)((DataRowView)v_buildings.Current)["id_building"]) == -1)
                     return;
                 is_editable = false;
                 ((DataRowView)v_buildings[v_buildings.Position]).Delete();
@@ -1010,6 +1010,11 @@ namespace Registry.Viewport
         {
             return (v_buildings.Position > -1);
         }
+        
+        public override bool HasAssocTenancies()
+        {
+            return (v_buildings.Position > -1);
+        }
 
         public override void ShowPremises()
         {
@@ -1029,6 +1034,11 @@ namespace Registry.Viewport
         public override void ShowFundHistory()
         {         
             ShowAssocViewport(ViewportType.FundsHistoryViewport);
+        }
+
+        public override void ShowTenancies()
+        {
+            ShowAssocViewport(ViewportType.TenancyListViewport);
         }
 
         private void ShowAssocViewport(ViewportType viewportType)
@@ -1399,7 +1409,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel.Size = new System.Drawing.Size(1002, 723);
+            this.tableLayoutPanel.Size = new System.Drawing.Size(753, 609);
             this.tableLayoutPanel.TabIndex = 0;
             // 
             // groupBox4
@@ -1409,7 +1419,7 @@ namespace Registry.Viewport
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox4.Location = new System.Drawing.Point(3, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(996, 204);
+            this.groupBox4.Size = new System.Drawing.Size(747, 204);
             this.groupBox4.TabIndex = 0;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Общие сведения";
@@ -1422,7 +1432,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel2.Controls.Add(this.panel1, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.panel2, 1, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 17);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.RowCount = 1;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -1430,7 +1440,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(990, 185);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(741, 184);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // panel1
@@ -1448,74 +1458,74 @@ namespace Registry.Viewport
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(489, 179);
+            this.panel1.Size = new System.Drawing.Size(364, 178);
             this.panel1.TabIndex = 0;
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(10, 10);
+            this.label1.Location = new System.Drawing.Point(10, 9);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(39, 13);
+            this.label1.Size = new System.Drawing.Size(43, 15);
             this.label1.TabIndex = 0;
             this.label1.Text = "Улица";
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(10, 39);
+            this.label2.Location = new System.Drawing.Point(10, 38);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(70, 13);
+            this.label2.Size = new System.Drawing.Size(79, 15);
             this.label2.TabIndex = 1;
             this.label2.Text = "Номер дома";
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(10, 68);
+            this.label3.Location = new System.Drawing.Point(10, 67);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(91, 13);
+            this.label3.Size = new System.Drawing.Size(105, 15);
             this.label3.TabIndex = 2;
             this.label3.Text = "Этажность дома";
             // 
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(10, 97);
+            this.label17.Location = new System.Drawing.Point(10, 96);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(142, 13);
+            this.label17.Size = new System.Drawing.Size(160, 15);
             this.label17.TabIndex = 3;
             this.label17.Text = "Год ввода в эксплуатацию";
             // 
             // label18
             // 
             this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(10, 126);
+            this.label18.Location = new System.Drawing.Point(10, 125);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(134, 13);
+            this.label18.Size = new System.Drawing.Size(155, 15);
             this.label18.TabIndex = 4;
             this.label18.Text = "Тип строения (материал)";
             // 
             // numericUpDownFloors
             // 
-            this.numericUpDownFloors.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownFloors.Location = new System.Drawing.Point(157, 66);
+            this.numericUpDownFloors.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownFloors.Location = new System.Drawing.Point(175, 65);
             this.numericUpDownFloors.Maximum = new decimal(new int[] {
             255,
             0,
             0,
             0});
             this.numericUpDownFloors.Name = "numericUpDownFloors";
-            this.numericUpDownFloors.Size = new System.Drawing.Size(328, 20);
+            this.numericUpDownFloors.Size = new System.Drawing.Size(185, 21);
             this.numericUpDownFloors.TabIndex = 2;
             this.numericUpDownFloors.ValueChanged += new System.EventHandler(this.numericUpDownFloors_ValueChanged);
             // 
             // numericUpDownStartupYear
             // 
-            this.numericUpDownStartupYear.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownStartupYear.Location = new System.Drawing.Point(157, 95);
+            this.numericUpDownStartupYear.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownStartupYear.Location = new System.Drawing.Point(175, 93);
             this.numericUpDownStartupYear.Maximum = new decimal(new int[] {
             2014,
             0,
@@ -1527,7 +1537,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownStartupYear.Name = "numericUpDownStartupYear";
-            this.numericUpDownStartupYear.Size = new System.Drawing.Size(328, 20);
+            this.numericUpDownStartupYear.Size = new System.Drawing.Size(185, 21);
             this.numericUpDownStartupYear.TabIndex = 3;
             this.numericUpDownStartupYear.Value = new decimal(new int[] {
             1900,
@@ -1538,12 +1548,12 @@ namespace Registry.Viewport
             // 
             // comboBoxStreet
             // 
-            this.comboBoxStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxStreet.FormattingEnabled = true;
-            this.comboBoxStreet.Location = new System.Drawing.Point(157, 7);
+            this.comboBoxStreet.Location = new System.Drawing.Point(175, 7);
             this.comboBoxStreet.Name = "comboBoxStreet";
-            this.comboBoxStreet.Size = new System.Drawing.Size(328, 21);
+            this.comboBoxStreet.Size = new System.Drawing.Size(185, 23);
             this.comboBoxStreet.TabIndex = 0;
             this.comboBoxStreet.SelectedIndexChanged += new System.EventHandler(this.comboBoxStreet_SelectedIndexChanged);
             this.comboBoxStreet.DropDownClosed += new System.EventHandler(this.comboBoxStreet_DropDownClosed);
@@ -1552,24 +1562,24 @@ namespace Registry.Viewport
             // 
             // comboBoxStructureType
             // 
-            this.comboBoxStructureType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxStructureType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxStructureType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxStructureType.FormattingEnabled = true;
-            this.comboBoxStructureType.Location = new System.Drawing.Point(157, 123);
+            this.comboBoxStructureType.Location = new System.Drawing.Point(175, 121);
             this.comboBoxStructureType.Name = "comboBoxStructureType";
-            this.comboBoxStructureType.Size = new System.Drawing.Size(328, 21);
+            this.comboBoxStructureType.Size = new System.Drawing.Size(185, 23);
             this.comboBoxStructureType.TabIndex = 4;
             this.comboBoxStructureType.SelectedIndexChanged += new System.EventHandler(this.comboBoxStructureType_SelectedIndexChanged);
             // 
             // textBoxHouse
             // 
-            this.textBoxHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxHouse.Location = new System.Drawing.Point(157, 36);
+            this.textBoxHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxHouse.Location = new System.Drawing.Point(175, 37);
             this.textBoxHouse.MaxLength = 4;
             this.textBoxHouse.Name = "textBoxHouse";
-            this.textBoxHouse.Size = new System.Drawing.Size(328, 20);
+            this.textBoxHouse.Size = new System.Drawing.Size(185, 21);
             this.textBoxHouse.TabIndex = 1;
             this.textBoxHouse.TextChanged += new System.EventHandler(this.textBoxHouse_TextChanged);
             // 
@@ -1588,77 +1598,76 @@ namespace Registry.Viewport
             this.panel2.Controls.Add(this.label19);
             this.panel2.Controls.Add(this.textBoxCadastralNum);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(498, 3);
+            this.panel2.Location = new System.Drawing.Point(373, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(489, 179);
+            this.panel2.Size = new System.Drawing.Size(365, 178);
             this.panel2.TabIndex = 1;
             // 
             // label40
             // 
             this.label40.AutoSize = true;
-            this.label40.Location = new System.Drawing.Point(16, 98);
+            this.label40.Location = new System.Drawing.Point(16, 95);
             this.label40.Name = "label40";
-            this.label40.Size = new System.Drawing.Size(108, 13);
+            this.label40.Size = new System.Drawing.Size(119, 15);
             this.label40.TabIndex = 31;
             this.label40.Text = "Текущее состояние";
             // 
             // comboBoxState
             // 
-            this.comboBoxState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxState.FormattingEnabled = true;
-            this.comboBoxState.Location = new System.Drawing.Point(159, 95);
+            this.comboBoxState.Location = new System.Drawing.Point(175, 91);
             this.comboBoxState.Name = "comboBoxState";
-            this.comboBoxState.Size = new System.Drawing.Size(327, 21);
+            this.comboBoxState.Size = new System.Drawing.Size(186, 23);
             this.comboBoxState.TabIndex = 3;
             this.comboBoxState.SelectedIndexChanged += new System.EventHandler(this.comboBoxState_SelectedIndexChanged);
             // 
             // comboBoxCurrentFundType
             // 
-            this.comboBoxCurrentFundType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxCurrentFundType.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.comboBoxCurrentFundType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxCurrentFundType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxCurrentFundType.Enabled = false;
             this.comboBoxCurrentFundType.ForeColor = System.Drawing.Color.Black;
             this.comboBoxCurrentFundType.FormattingEnabled = true;
-            this.comboBoxCurrentFundType.Location = new System.Drawing.Point(159, 124);
+            this.comboBoxCurrentFundType.Location = new System.Drawing.Point(175, 121);
             this.comboBoxCurrentFundType.Name = "comboBoxCurrentFundType";
-            this.comboBoxCurrentFundType.Size = new System.Drawing.Size(328, 21);
+            this.comboBoxCurrentFundType.Size = new System.Drawing.Size(186, 23);
             this.comboBoxCurrentFundType.TabIndex = 4;
             this.comboBoxCurrentFundType.Visible = false;
             // 
             // numericUpDownBalanceCost
             // 
-            this.numericUpDownBalanceCost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownBalanceCost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownBalanceCost.DecimalPlaces = 2;
-            this.numericUpDownBalanceCost.Location = new System.Drawing.Point(159, 66);
+            this.numericUpDownBalanceCost.Location = new System.Drawing.Point(175, 63);
             this.numericUpDownBalanceCost.Maximum = new decimal(new int[] {
             1410065407,
             2,
             0,
             0});
             this.numericUpDownBalanceCost.Name = "numericUpDownBalanceCost";
-            this.numericUpDownBalanceCost.Size = new System.Drawing.Size(327, 20);
+            this.numericUpDownBalanceCost.Size = new System.Drawing.Size(186, 21);
             this.numericUpDownBalanceCost.TabIndex = 2;
             this.numericUpDownBalanceCost.ThousandsSeparator = true;
             this.numericUpDownBalanceCost.ValueChanged += new System.EventHandler(this.numericUpDownBalanceCost_ValueChanged);
             // 
             // numericUpDownCadastralCost
             // 
-            this.numericUpDownCadastralCost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownCadastralCost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownCadastralCost.DecimalPlaces = 2;
-            this.numericUpDownCadastralCost.Location = new System.Drawing.Point(159, 36);
+            this.numericUpDownCadastralCost.Location = new System.Drawing.Point(175, 35);
             this.numericUpDownCadastralCost.Maximum = new decimal(new int[] {
             1410065407,
             2,
             0,
             0});
             this.numericUpDownCadastralCost.Name = "numericUpDownCadastralCost";
-            this.numericUpDownCadastralCost.Size = new System.Drawing.Size(327, 20);
+            this.numericUpDownCadastralCost.Size = new System.Drawing.Size(186, 21);
             this.numericUpDownCadastralCost.TabIndex = 1;
             this.numericUpDownCadastralCost.ThousandsSeparator = true;
             this.numericUpDownCadastralCost.ValueChanged += new System.EventHandler(this.numericUpDownCadastralCost_ValueChanged);
@@ -1666,9 +1675,9 @@ namespace Registry.Viewport
             // checkBoxImprovement
             // 
             this.checkBoxImprovement.AutoSize = true;
-            this.checkBoxImprovement.Location = new System.Drawing.Point(159, 153);
+            this.checkBoxImprovement.Location = new System.Drawing.Point(175, 151);
             this.checkBoxImprovement.Name = "checkBoxImprovement";
-            this.checkBoxImprovement.Size = new System.Drawing.Size(113, 17);
+            this.checkBoxImprovement.Size = new System.Drawing.Size(126, 19);
             this.checkBoxImprovement.TabIndex = 6;
             this.checkBoxImprovement.Text = "Благоустройство";
             this.checkBoxImprovement.UseVisualStyleBackColor = true;
@@ -1677,9 +1686,9 @@ namespace Registry.Viewport
             // checkBoxElevator
             // 
             this.checkBoxElevator.AutoSize = true;
-            this.checkBoxElevator.Location = new System.Drawing.Point(19, 153);
+            this.checkBoxElevator.Location = new System.Drawing.Point(19, 151);
             this.checkBoxElevator.Name = "checkBoxElevator";
-            this.checkBoxElevator.Size = new System.Drawing.Size(103, 17);
+            this.checkBoxElevator.Size = new System.Drawing.Size(118, 19);
             this.checkBoxElevator.TabIndex = 5;
             this.checkBoxElevator.Text = "Наличие лифта";
             this.checkBoxElevator.UseVisualStyleBackColor = true;
@@ -1688,9 +1697,9 @@ namespace Registry.Viewport
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(16, 10);
+            this.label14.Location = new System.Drawing.Point(16, 11);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(110, 13);
+            this.label14.Size = new System.Drawing.Size(126, 15);
             this.label14.TabIndex = 32;
             this.label14.Text = "Кадастровый номер";
             // 
@@ -1699,37 +1708,37 @@ namespace Registry.Viewport
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(16, 39);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(130, 13);
+            this.label15.Size = new System.Drawing.Size(150, 15);
             this.label15.TabIndex = 33;
             this.label15.Text = "Кадастровая стоимость";
             // 
             // label16
             // 
             this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(16, 68);
+            this.label16.Location = new System.Drawing.Point(16, 67);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(125, 13);
+            this.label16.Size = new System.Drawing.Size(143, 15);
             this.label16.TabIndex = 34;
             this.label16.Text = "Балансовая стоимость";
             // 
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(16, 126);
+            this.label19.Location = new System.Drawing.Point(16, 123);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(107, 13);
+            this.label19.Size = new System.Drawing.Size(119, 15);
             this.label19.TabIndex = 35;
             this.label19.Text = "Текущий тип найма";
             this.label19.Visible = false;
             // 
             // textBoxCadastralNum
             // 
-            this.textBoxCadastralNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxCadastralNum.Location = new System.Drawing.Point(159, 7);
+            this.textBoxCadastralNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCadastralNum.Location = new System.Drawing.Point(175, 7);
             this.textBoxCadastralNum.MaxLength = 15;
             this.textBoxCadastralNum.Name = "textBoxCadastralNum";
-            this.textBoxCadastralNum.Size = new System.Drawing.Size(327, 20);
+            this.textBoxCadastralNum.Size = new System.Drawing.Size(186, 21);
             this.textBoxCadastralNum.TabIndex = 0;
             this.textBoxCadastralNum.TextChanged += new System.EventHandler(this.textBoxCadastralNum_TextChanged);
             // 
@@ -1746,68 +1755,68 @@ namespace Registry.Viewport
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox1.Location = new System.Drawing.Point(3, 213);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(495, 134);
+            this.groupBox1.Size = new System.Drawing.Size(370, 134);
             this.groupBox1.TabIndex = 1;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Количество жилых помещений";
             // 
             // numericUpDownPremisesCount
             // 
-            this.numericUpDownPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownPremisesCount.Location = new System.Drawing.Point(163, 18);
+            this.numericUpDownPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownPremisesCount.Location = new System.Drawing.Point(181, 18);
             this.numericUpDownPremisesCount.Maximum = new decimal(new int[] {
             65535,
             0,
             0,
             0});
             this.numericUpDownPremisesCount.Name = "numericUpDownPremisesCount";
-            this.numericUpDownPremisesCount.Size = new System.Drawing.Size(328, 20);
+            this.numericUpDownPremisesCount.Size = new System.Drawing.Size(185, 21);
             this.numericUpDownPremisesCount.TabIndex = 0;
             this.numericUpDownPremisesCount.ValueChanged += new System.EventHandler(this.numericUpDownPremisesCount_ValueChanged);
             // 
             // numericUpDownRoomsCount
             // 
-            this.numericUpDownRoomsCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownRoomsCount.Location = new System.Drawing.Point(163, 47);
+            this.numericUpDownRoomsCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownRoomsCount.Location = new System.Drawing.Point(181, 47);
             this.numericUpDownRoomsCount.Maximum = new decimal(new int[] {
             65535,
             0,
             0,
             0});
             this.numericUpDownRoomsCount.Name = "numericUpDownRoomsCount";
-            this.numericUpDownRoomsCount.Size = new System.Drawing.Size(328, 20);
+            this.numericUpDownRoomsCount.Size = new System.Drawing.Size(185, 21);
             this.numericUpDownRoomsCount.TabIndex = 1;
             this.numericUpDownRoomsCount.ValueChanged += new System.EventHandler(this.numericUpDownRoomsCount_ValueChanged);
             // 
             // numericUpDownApartmentsCount
             // 
-            this.numericUpDownApartmentsCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownApartmentsCount.Location = new System.Drawing.Point(163, 76);
+            this.numericUpDownApartmentsCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownApartmentsCount.Location = new System.Drawing.Point(181, 76);
             this.numericUpDownApartmentsCount.Maximum = new decimal(new int[] {
             65535,
             0,
             0,
             0});
             this.numericUpDownApartmentsCount.Name = "numericUpDownApartmentsCount";
-            this.numericUpDownApartmentsCount.Size = new System.Drawing.Size(328, 20);
+            this.numericUpDownApartmentsCount.Size = new System.Drawing.Size(185, 21);
             this.numericUpDownApartmentsCount.TabIndex = 2;
             this.numericUpDownApartmentsCount.ValueChanged += new System.EventHandler(this.numericUpDownApartmentsCount_ValueChanged);
             // 
             // numericUpDownSharedApartmentsCount
             // 
-            this.numericUpDownSharedApartmentsCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownSharedApartmentsCount.Location = new System.Drawing.Point(163, 105);
+            this.numericUpDownSharedApartmentsCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownSharedApartmentsCount.Location = new System.Drawing.Point(181, 105);
             this.numericUpDownSharedApartmentsCount.Maximum = new decimal(new int[] {
             65535,
             0,
             0,
             0});
             this.numericUpDownSharedApartmentsCount.Name = "numericUpDownSharedApartmentsCount";
-            this.numericUpDownSharedApartmentsCount.Size = new System.Drawing.Size(328, 20);
+            this.numericUpDownSharedApartmentsCount.Size = new System.Drawing.Size(185, 21);
             this.numericUpDownSharedApartmentsCount.TabIndex = 3;
             this.numericUpDownSharedApartmentsCount.ValueChanged += new System.EventHandler(this.numericUpDownSharedApartmentsCount_ValueChanged);
             // 
@@ -1816,7 +1825,7 @@ namespace Registry.Viewport
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(16, 20);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(37, 13);
+            this.label4.Size = new System.Drawing.Size(40, 15);
             this.label4.TabIndex = 4;
             this.label4.Text = "Всего";
             // 
@@ -1825,7 +1834,7 @@ namespace Registry.Viewport
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(16, 78);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(49, 13);
+            this.label5.Size = new System.Drawing.Size(57, 15);
             this.label5.TabIndex = 5;
             this.label5.Text = "Квартир";
             // 
@@ -1834,7 +1843,7 @@ namespace Registry.Viewport
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(16, 49);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(45, 13);
+            this.label6.Size = new System.Drawing.Size(52, 15);
             this.label6.TabIndex = 6;
             this.label6.Text = "Комнат";
             // 
@@ -1843,7 +1852,7 @@ namespace Registry.Viewport
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(16, 107);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(129, 13);
+            this.label7.Size = new System.Drawing.Size(147, 15);
             this.label7.TabIndex = 7;
             this.label7.Text = "Квартир с подселением";
             // 
@@ -1858,19 +1867,18 @@ namespace Registry.Viewport
             this.groupBox3.Controls.Add(this.label12);
             this.groupBox3.Controls.Add(this.label13);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox3.Location = new System.Drawing.Point(504, 213);
+            this.groupBox3.Location = new System.Drawing.Point(379, 213);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(495, 134);
+            this.groupBox3.Size = new System.Drawing.Size(371, 134);
             this.groupBox3.TabIndex = 2;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Количество помещений по типу найма";
             // 
             // numericUpDownOtherPremisesCount
             // 
-            this.numericUpDownOtherPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownOtherPremisesCount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.numericUpDownOtherPremisesCount.Location = new System.Drawing.Point(159, 105);
+            this.numericUpDownOtherPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownOtherPremisesCount.Location = new System.Drawing.Point(175, 105);
             this.numericUpDownOtherPremisesCount.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -1878,15 +1886,14 @@ namespace Registry.Viewport
             0});
             this.numericUpDownOtherPremisesCount.Name = "numericUpDownOtherPremisesCount";
             this.numericUpDownOtherPremisesCount.ReadOnly = true;
-            this.numericUpDownOtherPremisesCount.Size = new System.Drawing.Size(328, 20);
+            this.numericUpDownOtherPremisesCount.Size = new System.Drawing.Size(186, 21);
             this.numericUpDownOtherPremisesCount.TabIndex = 3;
             // 
             // numericUpDownSpecialPremisesCount
             // 
-            this.numericUpDownSpecialPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownSpecialPremisesCount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.numericUpDownSpecialPremisesCount.Location = new System.Drawing.Point(159, 76);
+            this.numericUpDownSpecialPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownSpecialPremisesCount.Location = new System.Drawing.Point(175, 76);
             this.numericUpDownSpecialPremisesCount.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -1894,15 +1901,14 @@ namespace Registry.Viewport
             0});
             this.numericUpDownSpecialPremisesCount.Name = "numericUpDownSpecialPremisesCount";
             this.numericUpDownSpecialPremisesCount.ReadOnly = true;
-            this.numericUpDownSpecialPremisesCount.Size = new System.Drawing.Size(328, 20);
+            this.numericUpDownSpecialPremisesCount.Size = new System.Drawing.Size(186, 21);
             this.numericUpDownSpecialPremisesCount.TabIndex = 2;
             // 
             // numericUpDownCommercialPremisesCount
             // 
-            this.numericUpDownCommercialPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownCommercialPremisesCount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.numericUpDownCommercialPremisesCount.Location = new System.Drawing.Point(158, 47);
+            this.numericUpDownCommercialPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownCommercialPremisesCount.Location = new System.Drawing.Point(175, 47);
             this.numericUpDownCommercialPremisesCount.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -1910,15 +1916,14 @@ namespace Registry.Viewport
             0});
             this.numericUpDownCommercialPremisesCount.Name = "numericUpDownCommercialPremisesCount";
             this.numericUpDownCommercialPremisesCount.ReadOnly = true;
-            this.numericUpDownCommercialPremisesCount.Size = new System.Drawing.Size(328, 20);
+            this.numericUpDownCommercialPremisesCount.Size = new System.Drawing.Size(186, 21);
             this.numericUpDownCommercialPremisesCount.TabIndex = 1;
             // 
             // numericUpDownSocialPremisesCount
             // 
-            this.numericUpDownSocialPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownSocialPremisesCount.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            this.numericUpDownSocialPremisesCount.Location = new System.Drawing.Point(158, 18);
+            this.numericUpDownSocialPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownSocialPremisesCount.Location = new System.Drawing.Point(175, 18);
             this.numericUpDownSocialPremisesCount.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -1926,7 +1931,7 @@ namespace Registry.Viewport
             0});
             this.numericUpDownSocialPremisesCount.Name = "numericUpDownSocialPremisesCount";
             this.numericUpDownSocialPremisesCount.ReadOnly = true;
-            this.numericUpDownSocialPremisesCount.Size = new System.Drawing.Size(328, 20);
+            this.numericUpDownSocialPremisesCount.Size = new System.Drawing.Size(186, 21);
             this.numericUpDownSocialPremisesCount.TabIndex = 0;
             // 
             // label10
@@ -1934,7 +1939,7 @@ namespace Registry.Viewport
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(16, 107);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(44, 13);
+            this.label10.Size = new System.Drawing.Size(50, 15);
             this.label10.TabIndex = 4;
             this.label10.Text = "Прочие";
             // 
@@ -1943,7 +1948,7 @@ namespace Registry.Viewport
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(16, 78);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(118, 13);
+            this.label11.Size = new System.Drawing.Size(135, 15);
             this.label11.TabIndex = 5;
             this.label11.Text = "Специализированный";
             // 
@@ -1952,7 +1957,7 @@ namespace Registry.Viewport
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(16, 49);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(83, 13);
+            this.label12.Size = new System.Drawing.Size(93, 15);
             this.label12.TabIndex = 6;
             this.label12.Text = "Коммерческий";
             // 
@@ -1961,7 +1966,7 @@ namespace Registry.Viewport
             this.label13.AutoSize = true;
             this.label13.Location = new System.Drawing.Point(16, 20);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(70, 13);
+            this.label13.Size = new System.Drawing.Size(80, 15);
             this.label13.TabIndex = 7;
             this.label13.Text = "Социальный";
             // 
@@ -1976,24 +1981,24 @@ namespace Registry.Viewport
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox2.Location = new System.Drawing.Point(3, 353);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(495, 104);
+            this.groupBox2.Size = new System.Drawing.Size(370, 104);
             this.groupBox2.TabIndex = 3;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Площадь";
             // 
             // numericUpDownTotalArea
             // 
-            this.numericUpDownTotalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownTotalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownTotalArea.DecimalPlaces = 3;
-            this.numericUpDownTotalArea.Location = new System.Drawing.Point(163, 18);
+            this.numericUpDownTotalArea.Location = new System.Drawing.Point(181, 18);
             this.numericUpDownTotalArea.Maximum = new decimal(new int[] {
             9999,
             0,
             0,
             0});
             this.numericUpDownTotalArea.Name = "numericUpDownTotalArea";
-            this.numericUpDownTotalArea.Size = new System.Drawing.Size(328, 20);
+            this.numericUpDownTotalArea.Size = new System.Drawing.Size(185, 21);
             this.numericUpDownTotalArea.TabIndex = 0;
             this.numericUpDownTotalArea.ThousandsSeparator = true;
             this.numericUpDownTotalArea.ValueChanged += new System.EventHandler(this.numericUpDownTotalArea_ValueChanged);
@@ -2003,34 +2008,33 @@ namespace Registry.Viewport
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(16, 20);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(42, 13);
+            this.label20.Size = new System.Drawing.Size(46, 15);
             this.label20.TabIndex = 5;
             this.label20.Text = "Общая";
             // 
             // numericUpDownLivingArea
             // 
-            this.numericUpDownLivingArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownLivingArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownLivingArea.DecimalPlaces = 3;
-            this.numericUpDownLivingArea.Location = new System.Drawing.Point(163, 47);
+            this.numericUpDownLivingArea.Location = new System.Drawing.Point(181, 47);
             this.numericUpDownLivingArea.Maximum = new decimal(new int[] {
             9999,
             0,
             0,
             0});
             this.numericUpDownLivingArea.Name = "numericUpDownLivingArea";
-            this.numericUpDownLivingArea.Size = new System.Drawing.Size(328, 20);
+            this.numericUpDownLivingArea.Size = new System.Drawing.Size(185, 21);
             this.numericUpDownLivingArea.TabIndex = 1;
             this.numericUpDownLivingArea.ThousandsSeparator = true;
             this.numericUpDownLivingArea.ValueChanged += new System.EventHandler(this.numericUpDownLivingArea_ValueChanged);
             // 
             // numericUpDownMunicipalArea
             // 
-            this.numericUpDownMunicipalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownMunicipalArea.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.numericUpDownMunicipalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownMunicipalArea.DecimalPlaces = 3;
-            this.numericUpDownMunicipalArea.Location = new System.Drawing.Point(163, 76);
+            this.numericUpDownMunicipalArea.Location = new System.Drawing.Point(181, 76);
             this.numericUpDownMunicipalArea.Maximum = new decimal(new int[] {
             9999,
             0,
@@ -2038,7 +2042,7 @@ namespace Registry.Viewport
             0});
             this.numericUpDownMunicipalArea.Name = "numericUpDownMunicipalArea";
             this.numericUpDownMunicipalArea.ReadOnly = true;
-            this.numericUpDownMunicipalArea.Size = new System.Drawing.Size(328, 20);
+            this.numericUpDownMunicipalArea.Size = new System.Drawing.Size(185, 21);
             this.numericUpDownMunicipalArea.TabIndex = 2;
             this.numericUpDownMunicipalArea.ThousandsSeparator = true;
             // 
@@ -2047,7 +2051,7 @@ namespace Registry.Viewport
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(16, 78);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(110, 13);
+            this.label8.Size = new System.Drawing.Size(124, 15);
             this.label8.TabIndex = 2;
             this.label8.Text = "Муниципальных ЖП";
             // 
@@ -2056,7 +2060,7 @@ namespace Registry.Viewport
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(16, 49);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(42, 13);
+            this.label9.Size = new System.Drawing.Size(46, 15);
             this.label9.TabIndex = 3;
             this.label9.Text = "Жилая";
             // 
@@ -2064,9 +2068,9 @@ namespace Registry.Viewport
             // 
             this.groupBox5.Controls.Add(this.textBoxDescription);
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox5.Location = new System.Drawing.Point(504, 353);
+            this.groupBox5.Location = new System.Drawing.Point(379, 353);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(495, 104);
+            this.groupBox5.Size = new System.Drawing.Size(371, 104);
             this.groupBox5.TabIndex = 4;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Дополнительные сведения";
@@ -2074,11 +2078,11 @@ namespace Registry.Viewport
             // textBoxDescription
             // 
             this.textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxDescription.Location = new System.Drawing.Point(3, 16);
+            this.textBoxDescription.Location = new System.Drawing.Point(3, 17);
             this.textBoxDescription.MaxLength = 255;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
-            this.textBoxDescription.Size = new System.Drawing.Size(489, 85);
+            this.textBoxDescription.Size = new System.Drawing.Size(365, 84);
             this.textBoxDescription.TabIndex = 0;
             this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxDescription_TextChanged);
             // 
@@ -2088,7 +2092,7 @@ namespace Registry.Viewport
             this.groupBox6.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox6.Location = new System.Drawing.Point(3, 463);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(495, 257);
+            this.groupBox6.Size = new System.Drawing.Size(370, 143);
             this.groupBox6.TabIndex = 5;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Реквизиты";
@@ -2105,10 +2109,10 @@ namespace Registry.Viewport
             this.restriction_description,
             this.id_restriction_type});
             this.dataGridViewRestrictions.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewRestrictions.Location = new System.Drawing.Point(3, 16);
+            this.dataGridViewRestrictions.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewRestrictions.Name = "dataGridViewRestrictions";
             this.dataGridViewRestrictions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewRestrictions.Size = new System.Drawing.Size(489, 238);
+            this.dataGridViewRestrictions.Size = new System.Drawing.Size(364, 123);
             this.dataGridViewRestrictions.TabIndex = 0;
             this.dataGridViewRestrictions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewRestrictions_CellDoubleClick);
             this.dataGridViewRestrictions.Resize += new System.EventHandler(this.dataGridViewRestrictions_Resize);
@@ -2148,9 +2152,9 @@ namespace Registry.Viewport
             // 
             this.groupBox7.Controls.Add(this.dataGridViewOwnerships);
             this.groupBox7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox7.Location = new System.Drawing.Point(504, 463);
+            this.groupBox7.Location = new System.Drawing.Point(379, 463);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(495, 257);
+            this.groupBox7.Size = new System.Drawing.Size(371, 143);
             this.groupBox7.TabIndex = 6;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Ограничения";
@@ -2167,10 +2171,10 @@ namespace Registry.Viewport
             this.ownership_description,
             this.id_ownership_type});
             this.dataGridViewOwnerships.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewOwnerships.Location = new System.Drawing.Point(3, 16);
+            this.dataGridViewOwnerships.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewOwnerships.Name = "dataGridViewOwnerships";
             this.dataGridViewOwnerships.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewOwnerships.Size = new System.Drawing.Size(489, 238);
+            this.dataGridViewOwnerships.Size = new System.Drawing.Size(365, 123);
             this.dataGridViewOwnerships.TabIndex = 0;
             this.dataGridViewOwnerships.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOwnerships_CellDoubleClick);
             this.dataGridViewOwnerships.Resize += new System.EventHandler(this.dataGridViewOwnerships_Resize);
@@ -2209,11 +2213,11 @@ namespace Registry.Viewport
             // BuildingViewport
             // 
             this.AutoScroll = true;
-            this.AutoScrollMinSize = new System.Drawing.Size(600, 540);
+            this.AutoScrollMinSize = new System.Drawing.Size(630, 570);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1008, 729);
+            this.ClientSize = new System.Drawing.Size(759, 615);
             this.Controls.Add(this.tableLayoutPanel);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "BuildingViewport";
             this.Padding = new System.Windows.Forms.Padding(3);

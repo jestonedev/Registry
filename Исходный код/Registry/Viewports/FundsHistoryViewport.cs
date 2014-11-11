@@ -9,6 +9,7 @@ using System.Data;
 using Registry.Entities;
 using System.Drawing;
 using Registry.CalcDataModels;
+using Security;
 
 namespace Registry.Viewport
 {
@@ -150,10 +151,18 @@ namespace Registry.Viewport
 
         private void UnbindedCheckBoxesUpdate()
         {
+            DataRowView row = (v_funds_history.Position >= 0) ? (DataRowView)v_funds_history[v_funds_history.Position] : null;
             checkBoxIncludeRest.Checked = (v_funds_history.Position >= 0) &&
                 (((DataRowView)v_funds_history[v_funds_history.Position])["include_restriction_date"] != DBNull.Value);
             checkBoxExcludeRest.Checked = (v_funds_history.Position >= 0) &&
                 (((DataRowView)v_funds_history[v_funds_history.Position])["exclude_restriction_date"] != DBNull.Value);
+            if ((v_funds_history.Position >= 0) && (row["protocol_date"] != DBNull.Value))
+                dateTimePickerProtocolDate.Checked = true;
+            else
+            {
+                dateTimePickerProtocolDate.Value = DateTime.Now.Date;
+                dateTimePickerProtocolDate.Checked = false;
+            }
         }
 
         private void CheckViewportModifications()
@@ -275,15 +284,15 @@ namespace Registry.Viewport
 
         private bool ValidateFundHistory(FundHistory fundHistory)
         {
-            if (checkBoxExcludeRest.Checked && fundHistory.exclude_restriction_number == null)
+            if (checkBoxIncludeRest.Checked && fundHistory.include_restriction_number == null)
             {
-                MessageBox.Show("Необходимо задать номер реквизитов НПА по исключению из фонда или отключить реквизит", "Ошибка",
+                MessageBox.Show("Необходимо задать номер реквизитов НПА по включению в фонд или отключить реквизит", "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
-            if (textBoxProtocolNumber.Enabled && textBoxProtocolNumber.Text.Trim() == "")
+            if (checkBoxExcludeRest.Checked && fundHistory.exclude_restriction_number == null)
             {
-                MessageBox.Show("Необходимо задать номер протокола жилищной комиссии", "Ошибка",
+                MessageBox.Show("Необходимо задать номер реквизитов НПА по исключению из фонда или отключить реквизит", "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
@@ -312,7 +321,7 @@ namespace Registry.Viewport
             else
             {
                 fundHistory.protocol_number = ViewportHelper.ValueOrNull(textBoxProtocolNumber);
-                fundHistory.protocol_date = dateTimePickerProtocolDate.Value;
+                fundHistory.protocol_date = ViewportHelper.ValueOrNull(dateTimePickerProtocolDate);
             }
             fundHistory.description = ViewportHelper.ValueOrNull(textBoxDescription);
             if (checkBoxIncludeRest.Checked)
@@ -529,7 +538,8 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
+            return ((viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState))
+                && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void SaveRecord()
@@ -555,7 +565,7 @@ namespace Registry.Viewport
                             "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    int id_fund = funds_history.Insert(fundHistory, ParentType, id_parent);
+                    int id_fund = FundsHistoryDataModel.Insert(fundHistory, ParentType, id_parent);
                     if (id_fund == -1)
                         return;
                     DataRowView newRow;
@@ -578,7 +588,7 @@ namespace Registry.Viewport
                             "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    if (funds_history.Update(fundHistory) == -1)
+                    if (FundsHistoryDataModel.Update(fundHistory) == -1)
                         return;
                     is_editable = false;
                     DataRowView row = ((DataRowView)v_funds_history[v_funds_history.Position]);
@@ -601,7 +611,8 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            return ((v_funds_history.Position != -1) && (!funds_history.EditingNewRecord));
+            return (v_funds_history.Position != -1) && (!funds_history.EditingNewRecord)
+                && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void CopyRecord()
@@ -621,10 +632,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            if ((viewportState == ViewportState.ReadState || viewportState == ViewportState.ModifyRowState) && !funds_history.EditingNewRecord)
-                return true;
-            else
-                return false;
+            return (!funds_history.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void InsertRecord()
@@ -640,17 +648,16 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            if ((v_funds_history.Position == -1) || (viewportState == ViewportState.NewRowState))
-                return false;
-            else
-                return true;
+            return (v_funds_history.Position > -1) 
+                && (viewportState != ViewportState.NewRowState)
+                && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void DeleteRecord()
         {
             if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                if (funds_history.Delete((int)((DataRowView)v_funds_history.Current)["id_fund"]) == -1)
+                if (FundsHistoryDataModel.Delete((int)((DataRowView)v_funds_history.Current)["id_fund"]) == -1)
                     return;
                 is_editable = false;
                 ((DataRowView)v_funds_history[v_funds_history.Position]).Delete();
@@ -927,7 +934,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel6.RowCount = 2;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 230F));
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(683, 399);
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(708, 336);
             this.tableLayoutPanel6.TabIndex = 0;
             // 
             // tableLayoutPanel8
@@ -943,7 +950,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel8.RowCount = 2;
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel8.Size = new System.Drawing.Size(335, 224);
+            this.tableLayoutPanel8.Size = new System.Drawing.Size(348, 224);
             this.tableLayoutPanel8.TabIndex = 0;
             // 
             // groupBox14
@@ -957,7 +964,7 @@ namespace Registry.Viewport
             this.groupBox14.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox14.Location = new System.Drawing.Point(3, 3);
             this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(329, 106);
+            this.groupBox14.Size = new System.Drawing.Size(342, 106);
             this.groupBox14.TabIndex = 1;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "Общие сведения";
@@ -969,7 +976,8 @@ namespace Registry.Viewport
             this.dateTimePickerProtocolDate.Enabled = false;
             this.dateTimePickerProtocolDate.Location = new System.Drawing.Point(161, 77);
             this.dateTimePickerProtocolDate.Name = "dateTimePickerProtocolDate";
-            this.dateTimePickerProtocolDate.Size = new System.Drawing.Size(162, 20);
+            this.dateTimePickerProtocolDate.ShowCheckBox = true;
+            this.dateTimePickerProtocolDate.Size = new System.Drawing.Size(175, 21);
             this.dateTimePickerProtocolDate.TabIndex = 2;
             this.dateTimePickerProtocolDate.ValueChanged += new System.EventHandler(this.dateTimePickerProtocolDate_ValueChanged);
             // 
@@ -978,7 +986,7 @@ namespace Registry.Viewport
             this.label37.AutoSize = true;
             this.label37.Location = new System.Drawing.Point(14, 80);
             this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(110, 13);
+            this.label37.Size = new System.Drawing.Size(124, 15);
             this.label37.TabIndex = 3;
             this.label37.Text = "Дата протокола ЖК";
             // 
@@ -987,7 +995,7 @@ namespace Registry.Viewport
             this.label36.AutoSize = true;
             this.label36.Location = new System.Drawing.Point(14, 54);
             this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(118, 13);
+            this.label36.Size = new System.Drawing.Size(133, 15);
             this.label36.TabIndex = 4;
             this.label36.Text = "Номер протокола ЖК";
             // 
@@ -999,7 +1007,7 @@ namespace Registry.Viewport
             this.textBoxProtocolNumber.Location = new System.Drawing.Point(161, 51);
             this.textBoxProtocolNumber.MaxLength = 50;
             this.textBoxProtocolNumber.Name = "textBoxProtocolNumber";
-            this.textBoxProtocolNumber.Size = new System.Drawing.Size(162, 20);
+            this.textBoxProtocolNumber.Size = new System.Drawing.Size(175, 21);
             this.textBoxProtocolNumber.TabIndex = 1;
             this.textBoxProtocolNumber.TextChanged += new System.EventHandler(this.textBoxProtocolNumber_TextChanged);
             // 
@@ -1011,7 +1019,7 @@ namespace Registry.Viewport
             this.comboBoxFundType.FormattingEnabled = true;
             this.comboBoxFundType.Location = new System.Drawing.Point(161, 24);
             this.comboBoxFundType.Name = "comboBoxFundType";
-            this.comboBoxFundType.Size = new System.Drawing.Size(162, 21);
+            this.comboBoxFundType.Size = new System.Drawing.Size(175, 23);
             this.comboBoxFundType.TabIndex = 0;
             // 
             // label35
@@ -1019,7 +1027,7 @@ namespace Registry.Viewport
             this.label35.AutoSize = true;
             this.label35.Location = new System.Drawing.Point(14, 27);
             this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(61, 13);
+            this.label35.Size = new System.Drawing.Size(68, 15);
             this.label35.TabIndex = 5;
             this.label35.Text = "Тип найма";
             // 
@@ -1029,7 +1037,7 @@ namespace Registry.Viewport
             this.groupBox17.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox17.Location = new System.Drawing.Point(3, 115);
             this.groupBox17.Name = "groupBox17";
-            this.groupBox17.Size = new System.Drawing.Size(329, 106);
+            this.groupBox17.Size = new System.Drawing.Size(342, 106);
             this.groupBox17.TabIndex = 2;
             this.groupBox17.TabStop = false;
             this.groupBox17.Text = "Дополнительные сведения";
@@ -1043,7 +1051,7 @@ namespace Registry.Viewport
             this.textBoxDescription.MaxLength = 255;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
-            this.textBoxDescription.Size = new System.Drawing.Size(317, 78);
+            this.textBoxDescription.Size = new System.Drawing.Size(330, 78);
             this.textBoxDescription.TabIndex = 4;
             this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxDescription_TextChanged);
             // 
@@ -1055,12 +1063,12 @@ namespace Registry.Viewport
             this.tableLayoutPanel7.Controls.Add(this.groupBox15, 0, 0);
             this.tableLayoutPanel7.Controls.Add(this.groupBox16, 0, 1);
             this.tableLayoutPanel7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel7.Location = new System.Drawing.Point(344, 3);
+            this.tableLayoutPanel7.Location = new System.Drawing.Point(357, 3);
             this.tableLayoutPanel7.Name = "tableLayoutPanel7";
             this.tableLayoutPanel7.RowCount = 2;
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel7.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel7.Size = new System.Drawing.Size(336, 224);
+            this.tableLayoutPanel7.Size = new System.Drawing.Size(348, 224);
             this.tableLayoutPanel7.TabIndex = 1;
             // 
             // groupBox15
@@ -1075,7 +1083,7 @@ namespace Registry.Viewport
             this.groupBox15.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox15.Location = new System.Drawing.Point(3, 3);
             this.groupBox15.Name = "groupBox15";
-            this.groupBox15.Size = new System.Drawing.Size(330, 106);
+            this.groupBox15.Size = new System.Drawing.Size(342, 106);
             this.groupBox15.TabIndex = 0;
             this.groupBox15.TabStop = false;
             this.groupBox15.Text = "      Реквизиты НПА по включению в фонд";
@@ -1083,8 +1091,6 @@ namespace Registry.Viewport
             // checkBoxIncludeRest
             // 
             this.checkBoxIncludeRest.AutoSize = true;
-            this.checkBoxIncludeRest.Checked = true;
-            this.checkBoxIncludeRest.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxIncludeRest.Location = new System.Drawing.Point(11, 0);
             this.checkBoxIncludeRest.Name = "checkBoxIncludeRest";
             this.checkBoxIncludeRest.Size = new System.Drawing.Size(15, 14);
@@ -1097,7 +1103,7 @@ namespace Registry.Viewport
             this.label31.AutoSize = true;
             this.label31.Location = new System.Drawing.Point(8, 77);
             this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(83, 13);
+            this.label31.Size = new System.Drawing.Size(95, 15);
             this.label31.TabIndex = 6;
             this.label31.Text = "Наименование";
             // 
@@ -1106,10 +1112,10 @@ namespace Registry.Viewport
             this.textBoxIncludeRestDesc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxIncludeRestDesc.Enabled = false;
-            this.textBoxIncludeRestDesc.Location = new System.Drawing.Point(155, 74);
+            this.textBoxIncludeRestDesc.Location = new System.Drawing.Point(161, 74);
             this.textBoxIncludeRestDesc.MaxLength = 255;
             this.textBoxIncludeRestDesc.Name = "textBoxIncludeRestDesc";
-            this.textBoxIncludeRestDesc.Size = new System.Drawing.Size(169, 20);
+            this.textBoxIncludeRestDesc.Size = new System.Drawing.Size(175, 21);
             this.textBoxIncludeRestDesc.TabIndex = 8;
             this.textBoxIncludeRestDesc.TextChanged += new System.EventHandler(this.textBoxIncludeRestDesc_TextChanged);
             // 
@@ -1118,9 +1124,9 @@ namespace Registry.Viewport
             this.dateTimePickerIncludeRestDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerIncludeRestDate.Enabled = false;
-            this.dateTimePickerIncludeRestDate.Location = new System.Drawing.Point(155, 48);
+            this.dateTimePickerIncludeRestDate.Location = new System.Drawing.Point(161, 48);
             this.dateTimePickerIncludeRestDate.Name = "dateTimePickerIncludeRestDate";
-            this.dateTimePickerIncludeRestDate.Size = new System.Drawing.Size(169, 20);
+            this.dateTimePickerIncludeRestDate.Size = new System.Drawing.Size(175, 21);
             this.dateTimePickerIncludeRestDate.TabIndex = 7;
             this.dateTimePickerIncludeRestDate.ValueChanged += new System.EventHandler(this.dateTimePickerIncludeRestDate_ValueChanged);
             // 
@@ -1129,7 +1135,7 @@ namespace Registry.Viewport
             this.label30.AutoSize = true;
             this.label30.Location = new System.Drawing.Point(8, 52);
             this.label30.Name = "label30";
-            this.label30.Size = new System.Drawing.Size(89, 13);
+            this.label30.Size = new System.Drawing.Size(101, 15);
             this.label30.TabIndex = 9;
             this.label30.Text = "Дата реквизита";
             // 
@@ -1138,7 +1144,7 @@ namespace Registry.Viewport
             this.label29.AutoSize = true;
             this.label29.Location = new System.Drawing.Point(8, 25);
             this.label29.Name = "label29";
-            this.label29.Size = new System.Drawing.Size(97, 13);
+            this.label29.Size = new System.Drawing.Size(110, 15);
             this.label29.TabIndex = 10;
             this.label29.Text = "Номер реквизита";
             // 
@@ -1147,10 +1153,10 @@ namespace Registry.Viewport
             this.textBoxIncludeRestNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxIncludeRestNum.Enabled = false;
-            this.textBoxIncludeRestNum.Location = new System.Drawing.Point(155, 22);
+            this.textBoxIncludeRestNum.Location = new System.Drawing.Point(161, 22);
             this.textBoxIncludeRestNum.MaxLength = 30;
             this.textBoxIncludeRestNum.Name = "textBoxIncludeRestNum";
-            this.textBoxIncludeRestNum.Size = new System.Drawing.Size(169, 20);
+            this.textBoxIncludeRestNum.Size = new System.Drawing.Size(175, 21);
             this.textBoxIncludeRestNum.TabIndex = 6;
             this.textBoxIncludeRestNum.TextChanged += new System.EventHandler(this.textBoxIncludeRestNum_TextChanged);
             // 
@@ -1166,7 +1172,7 @@ namespace Registry.Viewport
             this.groupBox16.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox16.Location = new System.Drawing.Point(3, 115);
             this.groupBox16.Name = "groupBox16";
-            this.groupBox16.Size = new System.Drawing.Size(330, 106);
+            this.groupBox16.Size = new System.Drawing.Size(342, 106);
             this.groupBox16.TabIndex = 1;
             this.groupBox16.TabStop = false;
             this.groupBox16.Text = "      Реквизиты НПА по исключению из фонда";
@@ -1174,8 +1180,6 @@ namespace Registry.Viewport
             // checkBoxExcludeRest
             // 
             this.checkBoxExcludeRest.AutoSize = true;
-            this.checkBoxExcludeRest.Checked = true;
-            this.checkBoxExcludeRest.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxExcludeRest.Location = new System.Drawing.Point(11, 0);
             this.checkBoxExcludeRest.Name = "checkBoxExcludeRest";
             this.checkBoxExcludeRest.Size = new System.Drawing.Size(15, 14);
@@ -1188,7 +1192,7 @@ namespace Registry.Viewport
             this.label32.AutoSize = true;
             this.label32.Location = new System.Drawing.Point(8, 76);
             this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(83, 13);
+            this.label32.Size = new System.Drawing.Size(95, 15);
             this.label32.TabIndex = 10;
             this.label32.Text = "Наименование";
             // 
@@ -1197,10 +1201,10 @@ namespace Registry.Viewport
             this.textBoxExcludeRestDesc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxExcludeRestDesc.Enabled = false;
-            this.textBoxExcludeRestDesc.Location = new System.Drawing.Point(155, 73);
+            this.textBoxExcludeRestDesc.Location = new System.Drawing.Point(161, 73);
             this.textBoxExcludeRestDesc.MaxLength = 255;
             this.textBoxExcludeRestDesc.Name = "textBoxExcludeRestDesc";
-            this.textBoxExcludeRestDesc.Size = new System.Drawing.Size(169, 20);
+            this.textBoxExcludeRestDesc.Size = new System.Drawing.Size(175, 21);
             this.textBoxExcludeRestDesc.TabIndex = 12;
             this.textBoxExcludeRestDesc.TextChanged += new System.EventHandler(this.textBoxExcludeRestDesc_TextChanged);
             // 
@@ -1209,9 +1213,9 @@ namespace Registry.Viewport
             this.dateTimePickerExcludeRestDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerExcludeRestDate.Enabled = false;
-            this.dateTimePickerExcludeRestDate.Location = new System.Drawing.Point(155, 47);
+            this.dateTimePickerExcludeRestDate.Location = new System.Drawing.Point(161, 47);
             this.dateTimePickerExcludeRestDate.Name = "dateTimePickerExcludeRestDate";
-            this.dateTimePickerExcludeRestDate.Size = new System.Drawing.Size(169, 20);
+            this.dateTimePickerExcludeRestDate.Size = new System.Drawing.Size(175, 21);
             this.dateTimePickerExcludeRestDate.TabIndex = 11;
             this.dateTimePickerExcludeRestDate.ValueChanged += new System.EventHandler(this.dateTimePickerExcludeRestDate_ValueChanged);
             // 
@@ -1220,7 +1224,7 @@ namespace Registry.Viewport
             this.label33.AutoSize = true;
             this.label33.Location = new System.Drawing.Point(8, 51);
             this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(89, 13);
+            this.label33.Size = new System.Drawing.Size(101, 15);
             this.label33.TabIndex = 13;
             this.label33.Text = "Дата реквизита";
             // 
@@ -1229,7 +1233,7 @@ namespace Registry.Viewport
             this.label34.AutoSize = true;
             this.label34.Location = new System.Drawing.Point(8, 24);
             this.label34.Name = "label34";
-            this.label34.Size = new System.Drawing.Size(97, 13);
+            this.label34.Size = new System.Drawing.Size(110, 15);
             this.label34.TabIndex = 14;
             this.label34.Text = "Номер реквизита";
             // 
@@ -1238,10 +1242,10 @@ namespace Registry.Viewport
             this.textBoxExcludeRestNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
                         | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxExcludeRestNum.Enabled = false;
-            this.textBoxExcludeRestNum.Location = new System.Drawing.Point(155, 21);
+            this.textBoxExcludeRestNum.Location = new System.Drawing.Point(161, 21);
             this.textBoxExcludeRestNum.MaxLength = 30;
             this.textBoxExcludeRestNum.Name = "textBoxExcludeRestNum";
-            this.textBoxExcludeRestNum.Size = new System.Drawing.Size(169, 20);
+            this.textBoxExcludeRestNum.Size = new System.Drawing.Size(175, 21);
             this.textBoxExcludeRestNum.TabIndex = 10;
             this.textBoxExcludeRestNum.TextChanged += new System.EventHandler(this.textBoxExcludeRestNum_TextChanged);
             // 
@@ -1254,7 +1258,7 @@ namespace Registry.Viewport
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
@@ -1275,7 +1279,7 @@ namespace Registry.Viewport
             this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.ShowCellToolTips = false;
-            this.dataGridView.Size = new System.Drawing.Size(677, 163);
+            this.dataGridView.Size = new System.Drawing.Size(702, 100);
             this.dataGridView.TabIndex = 13;
             this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView_DataError);
             // 
@@ -1317,11 +1321,11 @@ namespace Registry.Viewport
             // FundsHistoryViewport
             // 
             this.AutoScroll = true;
-            this.AutoScrollMinSize = new System.Drawing.Size(620, 320);
+            this.AutoScrollMinSize = new System.Drawing.Size(640, 320);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(689, 405);
+            this.ClientSize = new System.Drawing.Size(714, 342);
             this.Controls.Add(this.tableLayoutPanel6);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FundsHistoryViewport";
             this.Padding = new System.Windows.Forms.Padding(3);

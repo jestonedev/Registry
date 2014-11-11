@@ -34,10 +34,8 @@ namespace Registry
         private void ChangeMainMenuState()
         {
             TabsStateUpdate();
-            RegistryStateUpdate();
             NavigationStateUpdate();
             EditingStateUpdate();
-            RibbonTabsStateUpdate();
             RelationsStateUpdate();
             TenancyRefsStateUpdate();
         }
@@ -59,52 +57,76 @@ namespace Registry
 
         private void PreLoadData()
         {
-            // Инстрации подгружаются в асинхронном режиме
-            // Тут будет реализован планировщик загрузки с учетом прав пользователей и частоты использования данных
+            toolStripProgressBar.Maximum = 0;
+            if (AccessControl.HasPrivelege(Priveleges.RegistryRead) || AccessControl.HasPrivelege(Priveleges.TenancyRead))
+                toolStripProgressBar.Maximum += 6;   
+            if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
+                toolStripProgressBar.Maximum += 16;
+            if (AccessControl.HasPrivelege(Priveleges.TenancyRead) || AccessControl.HasPrivelege(Priveleges.ClaimsRead))
+                toolStripProgressBar.Maximum += 1;
+            if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
+                toolStripProgressBar.Maximum += 14;
+            if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
+                toolStripProgressBar.Maximum += 4;
+            //Общие таблицы для реестра жилого фонда и процессов найма
+            if (AccessControl.HasPrivelege(Priveleges.RegistryRead) || AccessControl.HasPrivelege(Priveleges.TenancyRead))
+            {
+                BuildingsDataModel.GetInstance(toolStripProgressBar, 1);
+                PremisesDataModel.GetInstance(toolStripProgressBar, 1);
+                SubPremisesDataModel.GetInstance(toolStripProgressBar, 1);
+                KladrStreetsDataModel.GetInstance(toolStripProgressBar, 1);
+                KladrRegionsDataModel.GetInstance(toolStripProgressBar, 1);
+                PremisesTypesDataModel.GetInstance(toolStripProgressBar, 1);
+            }
             // Реестр жилого фонда
-            BuildingsDataModel.GetInstance(toolStripProgressBar, 3);
-            StructureTypesDataModel.GetInstance(toolStripProgressBar, 3);
-            KladrStreetsDataModel.GetInstance(toolStripProgressBar, 3);
-            PremisesDataModel.GetInstance(toolStripProgressBar, 3);
-            PremisesTypesDataModel.GetInstance(toolStripProgressBar, 3);
-            PremisesKindsDataModel.GetInstance(toolStripProgressBar, 3);
-            SubPremisesDataModel.GetInstance(toolStripProgressBar, 3);
-            FundTypesDataModel.GetInstance(toolStripProgressBar, 3);
-            ObjectStatesDataModel.GetInstance(toolStripProgressBar, 3);
-            FundsBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 3);
-            FundsPremisesAssocDataModel.GetInstance(toolStripProgressBar, 3);
-            FundsSubPremisesAssocDataModel.GetInstance(toolStripProgressBar,3);
-            FundsHistoryDataModel.GetInstance(toolStripProgressBar,3);
-            OwnershipBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 3);
-            OwnershipPremisesAssocDataModel.GetInstance(toolStripProgressBar, 3);
-            OwnershipsRightsDataModel.GetInstance(toolStripProgressBar, 3);
-            OwnershipRightTypesDataModel.GetInstance(toolStripProgressBar, 2);
-            RestrictionsBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 2);
-            RestrictionsPremisesAssocDataModel.GetInstance(toolStripProgressBar, 2);
-            RestrictionsDataModel.GetInstance(toolStripProgressBar, 2);
-            RestrictionTypesDataModel.GetInstance(toolStripProgressBar, 2);
-            KladrRegionsDataModel.GetInstance(toolStripProgressBar, 2);
+            if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
+            {
+                StructureTypesDataModel.GetInstance(toolStripProgressBar, 1);
+                PremisesKindsDataModel.GetInstance(toolStripProgressBar, 1);
+                FundTypesDataModel.GetInstance(toolStripProgressBar, 1);
+                ObjectStatesDataModel.GetInstance(toolStripProgressBar, 1);
+                FundsBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 1);
+                FundsPremisesAssocDataModel.GetInstance(toolStripProgressBar, 1);
+                FundsSubPremisesAssocDataModel.GetInstance(toolStripProgressBar, 1);
+                FundsHistoryDataModel.GetInstance(toolStripProgressBar, 1);
+                OwnershipBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 1);
+                OwnershipPremisesAssocDataModel.GetInstance(toolStripProgressBar, 1);
+                OwnershipsRightsDataModel.GetInstance(toolStripProgressBar, 1);
+                OwnershipRightTypesDataModel.GetInstance(toolStripProgressBar, 1);
+                RestrictionsBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 1);
+                RestrictionsPremisesAssocDataModel.GetInstance(toolStripProgressBar, 1);
+                RestrictionsDataModel.GetInstance(toolStripProgressBar, 1);
+                RestrictionTypesDataModel.GetInstance(toolStripProgressBar, 1);
+            }
+            //Общие таблицы для претензионно-исковой работы и процессов найма
+            if (AccessControl.HasPrivelege(Priveleges.TenancyRead) || AccessControl.HasPrivelege(Priveleges.ClaimsRead))
+                TenancyProcessesDataModel.GetInstance(toolStripProgressBar, 1);
             // Процесс найма
-            TenancyProcessesDataModel.GetInstance(toolStripProgressBar, 3);
-            TenancyPersonsDataModel.GetInstance(toolStripProgressBar, 3);
-            KinshipsDataModel.GetInstance(toolStripProgressBar, 2);
-            TenancyBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 2);
-            TenancyPremisesAssocDataModel.GetInstance(toolStripProgressBar, 2);
-            TenancySubPremisesAssocDataModel.GetInstance(toolStripProgressBar, 2);
-            TenancyReasonsDataModel.GetInstance(toolStripProgressBar, 2);
-            TenancyReasonTypesDataModel.GetInstance(toolStripProgressBar, 2);
-            RentTypesDataModel.GetInstance(toolStripProgressBar, 2);
-            DocumentTypesDataModel.GetInstance(toolStripProgressBar, 2);
-            ExecutorsDataModel.GetInstance(toolStripProgressBar, 2);
-            TenancyAgreementsDataModel.GetInstance(toolStripProgressBar, 2);
-            WarrantsDataModel.GetInstance(toolStripProgressBar, 2);
-            WarrantDocTypesDataModel.GetInstance(toolStripProgressBar, 2);
-            DocumentsIssuedByDataModel.GetInstance(toolStripProgressBar, 2);
+            if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
+            {
+                TenancyPersonsDataModel.GetInstance(toolStripProgressBar, 1);
+                KinshipsDataModel.GetInstance(toolStripProgressBar, 1);
+                TenancyBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 1);
+                TenancyPremisesAssocDataModel.GetInstance(toolStripProgressBar, 1);
+                TenancySubPremisesAssocDataModel.GetInstance(toolStripProgressBar, 1);
+                TenancyReasonsDataModel.GetInstance(toolStripProgressBar, 1);
+                TenancyReasonTypesDataModel.GetInstance(toolStripProgressBar, 1);
+                RentTypesDataModel.GetInstance(toolStripProgressBar, 1);
+                DocumentTypesDataModel.GetInstance(toolStripProgressBar, 1);
+                ExecutorsDataModel.GetInstance(toolStripProgressBar, 1);
+                TenancyAgreementsDataModel.GetInstance(toolStripProgressBar, 1);
+                WarrantsDataModel.GetInstance(toolStripProgressBar, 1);
+                WarrantDocTypesDataModel.GetInstance(toolStripProgressBar, 1);
+                DocumentsIssuedByDataModel.GetInstance(toolStripProgressBar, 1);
+            }
             // Претензионно-исковая работа
-            ClaimsDataModel.GetInstance(toolStripProgressBar, 2);
-            ClaimStatesDataModel.GetInstance(toolStripProgressBar, 2);
-            ClaimStateTypesDataModel.GetInstance(toolStripProgressBar, 2);
-            ClaimStateTypesRelationsDataModel.GetInstance(toolStripProgressBar, 2);
+            if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
+            {
+                ClaimsDataModel.GetInstance(toolStripProgressBar, 1);
+                ClaimStatesDataModel.GetInstance(toolStripProgressBar, 1);
+                ClaimStateTypesDataModel.GetInstance(toolStripProgressBar, 1);
+                ClaimStateTypesRelationsDataModel.GetInstance(toolStripProgressBar, 1);
+            }
         }
 
         private void ribbonButtonTabClose_Click(object sender, EventArgs e)
@@ -213,7 +235,8 @@ namespace Registry
 
         public void AddViewport(Viewport.Viewport viewport)
         {
-            viewport.Show(dockPanel, DockState.Document);
+            if (viewport != null)
+                viewport.Show(dockPanel, DockState.Document);
         }
 
         private void ribbonButtonOpen_Click(object sender, EventArgs e)
@@ -224,14 +247,10 @@ namespace Registry
 
         public void TabsStateUpdate()
         {
-            ribbonButtonTabCopy.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanDuplicate();
+            ribbonButtonTabCopy.Enabled = (dockPanel.ActiveDocument != null) && 
+                (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanDuplicate();
             ribbonButtonTabClose.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null);
             ribbonButtonTabsClose.Enabled = (dockPanel.Documents.Count() > 0);  
-        }
-
-        public void RegistryStateUpdate()
-        {
-            //Always enable, maybe will change in future
         }
 
         public void NavigationStateUpdate()
@@ -247,64 +266,79 @@ namespace Registry
 
         public void EditingStateUpdate()
         {
-            ribbonButtonDeleteRecord.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanDeleteRecord();
-            ribbonButtonInsertRecord.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanInsertRecord();
-            ribbonButtonCopyRecord.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanCopyRecord();
-            ribbonButtonCancel.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanCancelRecord();
-            ribbonButtonSave.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanSaveRecord();
-        }
-
-        public void RibbonTabsStateUpdate()
-        {
-            //Always enable, maybe will change in future
+            ribbonButtonDeleteRecord.Enabled = (dockPanel.ActiveDocument != null) && 
+                (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanDeleteRecord();
+            ribbonButtonInsertRecord.Enabled = (dockPanel.ActiveDocument != null) && 
+                (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanInsertRecord();
+            ribbonButtonCopyRecord.Enabled = (dockPanel.ActiveDocument != null) && 
+                (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanCopyRecord();
+            ribbonButtonCancel.Enabled = (dockPanel.ActiveDocument != null) && 
+                (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanCancelRecord();
+            ribbonButtonSave.Enabled = (dockPanel.ActiveDocument != null) && 
+                (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanSaveRecord();
         }
 
         public void RelationsStateUpdate()
         {
             ribbonPanelRelations.Items.Clear();
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && 
-                (dockPanel.ActiveDocument as IMenuController).HasAssocBuildings())
-                ribbonPanelRelations.Items.Add(ribbonButtonBuildings);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && 
-                (dockPanel.ActiveDocument as IMenuController).HasAssocSubPremises())
-                ribbonPanelRelations.Items.Add(ribbonButtonSubPremises);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && 
-                (dockPanel.ActiveDocument as IMenuController).HasAssocPremises())
-                ribbonPanelRelations.Items.Add(ribbonButtonPremises);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && 
-                (dockPanel.ActiveDocument as IMenuController).HasAssocOwnerships())
-                ribbonPanelRelations.Items.Add(ribbonButtonOwnerships);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && 
-                (dockPanel.ActiveDocument as IMenuController).HasAssocRestrictions())
-                ribbonPanelRelations.Items.Add(ribbonButtonRestrictions);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && 
-                (dockPanel.ActiveDocument as IMenuController).HasAssocFundHistory())
-                ribbonPanelRelations.Items.Add(ribbonButtonFundsHistory);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasAssocTenancyObjects())
-                ribbonPanelRelations.Items.Add(ribbonButtonTenancyObjects);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && 
-                (dockPanel.ActiveDocument as IMenuController).HasAssocTenancyPersons())
-                ribbonPanelRelations.Items.Add(ribbonButtonTenancyPersons);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && 
-                (dockPanel.ActiveDocument as IMenuController).HasAssocTenancyReasons())
-                ribbonPanelRelations.Items.Add(ribbonButtonTenancyReasons);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && 
-                (dockPanel.ActiveDocument as IMenuController).HasAssocTenancyAgreements())
-                ribbonPanelRelations.Items.Add(ribbonButtonTenancyAgreements);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && 
-                (dockPanel.ActiveDocument as IMenuController).HasAssocClaims())
-                ribbonPanelRelations.Items.Add(ribbonButtonClaims);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && 
-                (dockPanel.ActiveDocument as IMenuController).HasAssocClaimStates())
-                ribbonPanelRelations.Items.Add(ribbonButtonClaimStates);
+            bool hasActiveDocument = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null);
             ribbon1.SuspendUpdating();
+            RegistryRelationsStateUpdate(hasActiveDocument);
+            TenancyRelationsStateUpdate(hasActiveDocument);
+            ClaimRelationgsStateUpdate(hasActiveDocument);
             if (ribbonPanelRelations.Items.Count == 0)
                 ribbonTabGeneral.Panels.Remove(ribbonPanelRelations);
             else
                 if (!ribbonTabGeneral.Panels.Contains(ribbonPanelRelations))
                     ribbonTabGeneral.Panels.Insert(2, ribbonPanelRelations);
             ribbon1.ResumeUpdating(true);
+        }
+
+        private void ClaimRelationgsStateUpdate(bool hasActiveDocument)
+        {
+            if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
+            {
+                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocClaims())
+                    ribbonPanelRelations.Items.Add(ribbonButtonClaims);
+                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocClaimStates())
+                    ribbonPanelRelations.Items.Add(ribbonButtonClaimStates);
+            }
+        }
+
+        private void TenancyRelationsStateUpdate(bool hasActiveDocument)
+        {
+            if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
+            {
+                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocTenancyObjects())
+                    ribbonPanelRelations.Items.Add(ribbonButtonTenancyObjects);
+                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocTenancyPersons())
+                    ribbonPanelRelations.Items.Add(ribbonButtonTenancyPersons);
+                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocTenancyReasons())
+                    ribbonPanelRelations.Items.Add(ribbonButtonTenancyReasons);
+                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocTenancyAgreements())
+                    ribbonPanelRelations.Items.Add(ribbonButtonTenancyAgreements);
+                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocTenancies())
+                    ribbonPanelRelations.Items.Add(ribbonButtonAssocTenancies);
+            }
+        }
+
+        private void RegistryRelationsStateUpdate(bool hasActiveDocument)
+        {
+            if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
+            {
+                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocBuildings())
+                    ribbonPanelRelations.Items.Add(ribbonButtonBuildings);
+                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocSubPremises())
+                    ribbonPanelRelations.Items.Add(ribbonButtonSubPremises);
+                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocPremises())
+                    ribbonPanelRelations.Items.Add(ribbonButtonPremises);
+                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocOwnerships())
+                    ribbonPanelRelations.Items.Add(ribbonButtonOwnerships);
+                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocRestrictions())
+                    ribbonPanelRelations.Items.Add(ribbonButtonRestrictions);
+                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocFundHistory())
+                    ribbonPanelRelations.Items.Add(ribbonButtonFundsHistory);
+            }
         }
 
         public void TenancyRefsStateUpdate()
@@ -332,6 +366,24 @@ namespace Registry
                 if (!ribbonTabTenancyProcesses.Panels.Contains(ribbonPanelTenancyDocs))
                     ribbonTabTenancyProcesses.Panels.Insert(1, ribbonPanelTenancyDocs);
             ribbon1.ResumeUpdating(true);
+        }
+
+        private void RibbonTabsStateUpdate()
+        {
+            if (!AccessControl.HasPrivelege(Priveleges.RegistryRead))
+                ribbon1.Tabs.Remove(ribbonTabHousing);
+            if (!AccessControl.HasPrivelege(Priveleges.TenancyRead))
+                ribbon1.Tabs.Remove(ribbonTabTenancyProcesses);
+            if (!AccessControl.HasPrivelege(Priveleges.ClaimsRead))
+                ribbon1.Tabs.Remove(ribbonTabClaims);
+        }
+
+        private void MainMenuStateUpdate()
+        {
+            ribbonOrbMenuItemBuildings.Enabled = AccessControl.HasPrivelege(Priveleges.RegistryRead);
+            ribbonOrbMenuItemPremises.Enabled = AccessControl.HasPrivelege(Priveleges.RegistryRead);
+            ribbonOrbMenuItemTenancy.Enabled = AccessControl.HasPrivelege(Priveleges.TenancyRead);
+            ribbonOrbMenuItemClaims.Enabled = AccessControl.HasPrivelege(Priveleges.ClaimsRead);
         }
 
         private void ribbonButtonSave_Click(object sender, EventArgs e)
@@ -485,6 +537,12 @@ namespace Registry
                 (dockPanel.ActiveDocument as IMenuController).ShowClaimStates();
         }
 
+        private void ribbonButtonAssocTenancies_Click(object sender, EventArgs e)
+        {
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).ShowTenancies();
+        }
+
         private void ribbonOrbMenuItemBuildings_Click(object sender, EventArgs e)
         {
             CreateViewport(ViewportType.BuildingListViewport);
@@ -558,19 +616,8 @@ namespace Registry
 
         public void SwitchToPreviousViewport()
         {
-            /*if (dockPanel.Documents.Count() > 1)
-            {
-                int index = -1;
-                foreach (var document in dockPanel.Documents)
-                {
-                    index++;
-                    if (document == dockPanel.ActiveDocument)
-                    {
-                        break;
-                    }
-                }
-                ((DockContent)dockPanel.Documents.ElementAt(index - 1)).Activate();
-            }*/
+            if (dockPanel.ActiveDocument != null && dockPanel.ActiveDocument.DockHandler.PreviousActive != null)
+                dockPanel.ActiveDocument.DockHandler.PreviousActive.DockHandler.Show();
         }
 
         private void MainForm_Load(object sender, EventArgs e)
@@ -579,13 +626,22 @@ namespace Registry
             if (user == null)
             {
                 MessageBox.Show("Пользователь не распознан или учетная запись не включена в службу каталогов Active Directory","Ошибка", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                 Application.Exit();
                 return;
             }
             toolStripLabelHelloUser.Text = "Здравствуйте, " + user.DisplayName;
             AccessControl.LoadPriveleges();
+            if (AccessControl.HasNoPriveleges())
+            {
+                MessageBox.Show("У вас нет прав на использование данного приложения", "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                Application.Exit();
+                return;
+            }
             PreLoadData();
+            MainMenuStateUpdate();
+            RibbonTabsStateUpdate();
         }
 
         private void RunReport(Reporting.ReporterType reporterType)
@@ -617,7 +673,7 @@ namespace Registry
         {
             if (reportLogForm.Visible == false)
                 reportLogForm.Show(dockPanel, DockState.DockBottomAutoHide);
-            if ((e.Text.Trim() != "") && (!Regex.IsMatch(e.Text.Trim(), "styles.xml")))
+            if (String.IsNullOrEmpty(e.Text.Trim()) && (!Regex.IsMatch(e.Text.Trim(), "styles.xml")))
                 reportLogForm.Log("["+((Reporter)sender).ReportTitle+"]: "+e.Text.Trim());
         }
 

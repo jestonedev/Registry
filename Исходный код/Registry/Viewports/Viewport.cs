@@ -42,6 +42,12 @@ namespace Registry.Viewport
             base.Close();
         }
 
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        {
+            menuCallback.SwitchToPreviousViewport();
+            base.OnClosing(e);
+        }
+
         public virtual int GetRecordCount()
         {
             return 0;
@@ -212,7 +218,13 @@ namespace Registry.Viewport
             throw new ViewportException("Не реализовано");
         }
 
-        protected virtual Viewport ShowAssocViewport(IMenuCallback menuCallback, ViewportType viewportType, string staticFilter, DataRow parentRow, ParentTypeEnum parentType)
+        public virtual void ShowTenancies()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+        protected virtual Viewport ShowAssocViewport(IMenuCallback menuCallback, ViewportType viewportType, 
+            string staticFilter, DataRow parentRow, ParentTypeEnum parentType)
         {
             Viewport viewport = ViewportFactory.CreateViewport(menuCallback, viewportType);
             viewport.StaticFilter = staticFilter;
@@ -340,6 +352,11 @@ namespace Registry.Viewport
         }
 
         public virtual bool HasAssocClaimStates()
+        {
+            return false;
+        }
+
+        public virtual bool HasAssocTenancies()
         {
             return false;
         }

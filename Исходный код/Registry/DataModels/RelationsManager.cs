@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data.Common;
 using System.Data;
+using System.Globalization;
 
 namespace Registry.DataModels
 {

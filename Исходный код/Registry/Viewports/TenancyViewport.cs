@@ -9,6 +9,8 @@ using Registry.DataModels;
 using Registry.SearchForms;
 using System.Drawing;
 using Registry.Reporting;
+using Security;
+using Registry.CalcDataModels;
 
 namespace Registry.Viewport
 {
@@ -70,6 +72,9 @@ namespace Registry.Viewport
 
         #region Models
         private TenancyProcessesDataModel tenancies = null;
+        private TenancyBuildingsAssocDataModel tenancy_building_assoc = null;
+        private TenancyPremisesAssocDataModel tenancy_premises_assoc = null;
+        private TenancySubPremisesAssocDataModel tenancy_sub_premises_assoc = null;
         private ExecutorsDataModel executors = null;
         private RentTypesDataModel rent_types = null;
         private TenancyAgreementsDataModel tenancy_agreements = null;
@@ -123,6 +128,86 @@ namespace Registry.Viewport
             this.StaticFilter = tenancyViewport.StaticFilter;
             this.ParentRow = tenancyViewport.ParentRow;
             this.ParentType = tenancyViewport.ParentType;
+        }
+
+        private void RebuildStaticFilter()
+        {
+            List<int> ids = null;
+            if (ParentRow == null)
+                return;
+            switch (ParentType)
+            {
+                case ParentTypeEnum.Building:
+                    ids = DataModelHelper.TenancyProcessIDsByBuildingID(Convert.ToInt32(ParentRow["id_building"]));
+                    break;
+                case ParentTypeEnum.Premises:
+                    ids = DataModelHelper.TenancyProcessIDsByPremisesID(Convert.ToInt32(ParentRow["id_premises"]));
+                    break;
+                case ParentTypeEnum.SubPremises:
+                    ids = DataModelHelper.TenancyProcessIDsBySubPremisesID(Convert.ToInt32(ParentRow["id_sub_premises"]));
+                    break;
+                default:
+                    throw new ViewportException("Неизвестный тип родительского объекта");
+            }
+            if (ids != null)
+            {
+                StaticFilter = "id_process IN (0";
+                for (int i = 0; i < ids.Count; i++)
+                    StaticFilter += ids[i].ToString() + ",";
+                StaticFilter = StaticFilter.TrimEnd(new char[] { ',' }) + ")";
+            }
+            v_tenancies.Filter = StaticFilter;           
+        }
+
+        private void SetViewportCaption()
+        {
+            if (ParentRow == null)
+            {
+                if (viewportState == ViewportState.NewRowState)
+                    this.Text = "Новый найм";
+                else
+                    if (v_tenancies.Position != -1)
+                        this.Text = String.Format("Процесс найма №{0}", ((DataRowView)v_tenancies[v_tenancies.Position])["id_process"]);
+                    else
+                        this.Text = "Процессы отсутствуют";
+            }
+            else
+            {
+                switch (ParentType)
+                {
+                    case ParentTypeEnum.Building:
+                        if (viewportState == ViewportState.NewRowState)
+                            this.Text = String.Format("Новый найм здания №{0}", ParentRow["id_building"]);
+                        else
+                        if (v_tenancies.Position != -1)
+                            this.Text = String.Format("Найм №{0} здания №{1}", 
+                                ((DataRowView)v_tenancies[v_tenancies.Position])["id_process"], ParentRow["id_building"]);
+                        else
+                            this.Text = String.Format("Наймы здания №{0} отсутствуют", ParentRow["id_building"]);
+                        break;
+                    case ParentTypeEnum.Premises:
+                        if (viewportState == ViewportState.NewRowState)
+                            this.Text = String.Format("Новый найм помещения №{0}", ParentRow["id_premises"]);
+                        else
+                            if (v_tenancies.Position != -1)
+                                this.Text = String.Format("Найм №{0} помещения №{1}",
+                                    ((DataRowView)v_tenancies[v_tenancies.Position])["id_process"], ParentRow["id_premises"]);
+                            else
+                                this.Text = String.Format("Наймы помещения №{0} отсутствуют", ParentRow["id_premises"]);
+                        break;
+                    case ParentTypeEnum.SubPremises:
+                        if (viewportState == ViewportState.NewRowState)
+                            this.Text = String.Format("Новый найм комнаты №{0}", ParentRow["id_sub_premises"]);
+                        else
+                            if (v_tenancies.Position != -1)
+                                this.Text = String.Format("Найм №{0} комнаты №{1}",
+                                    ((DataRowView)v_tenancies[v_tenancies.Position])["id_process"], ParentRow["id_sub_premises"]);
+                            else
+                                this.Text = String.Format("Наймы комнаты №{0} отсутствуют", ParentRow["id_sub_premises"]);
+                        break;
+                    default: throw new ViewportException("Неизвестный тип родительского объекта");
+                }
+            }
         }
 
         private void RedrawDataGridRows()
@@ -632,7 +717,7 @@ namespace Registry.Viewport
             v_tenancies.CurrentItemChanged += new EventHandler(v_tenancies_CurrentItemChanged);
             v_tenancies.DataMember = "tenancy_processes";
             v_tenancies.DataSource = ds;
-            v_tenancies.Filter = StaticFilter;
+            RebuildStaticFilter();
             if (StaticFilter != "" && DynamicFilter != "")
                 v_tenancies.Filter += " AND ";
             v_tenancies.Filter += DynamicFilter;
@@ -655,6 +740,28 @@ namespace Registry.Viewport
             tenancy_persons.Select().RowDeleted += new DataRowChangeEventHandler(TenancyPersons_RowDeleted);
             tenancies.Select().RowChanged += new DataRowChangeEventHandler(TenancyViewport_RowChanged);
             tenancies.Select().RowDeleted += new DataRowChangeEventHandler(TenancyViewport_RowDeleted);
+            if (ParentRow != null)
+            {
+                switch (ParentType)
+                {
+                    case ParentTypeEnum.Building:
+                        tenancy_building_assoc = TenancyBuildingsAssocDataModel.GetInstance();
+                        tenancy_building_assoc.Select().RowChanged += new DataRowChangeEventHandler(TenancyAssocViewport_RowChanged);
+                        tenancy_building_assoc.Select().RowDeleted += new DataRowChangeEventHandler(TenancyAssocViewport_RowDeleted);
+                        break;
+                    case ParentTypeEnum.Premises:
+                        tenancy_premises_assoc = TenancyPremisesAssocDataModel.GetInstance();
+                        tenancy_premises_assoc.Select().RowChanged += new DataRowChangeEventHandler(TenancyAssocViewport_RowChanged);
+                        tenancy_premises_assoc.Select().RowDeleted += new DataRowChangeEventHandler(TenancyAssocViewport_RowDeleted);
+                        break;
+                    case ParentTypeEnum.SubPremises:
+                        tenancy_sub_premises_assoc = TenancySubPremisesAssocDataModel.GetInstance();
+                        tenancy_sub_premises_assoc.Select().RowChanged += new DataRowChangeEventHandler(TenancyAssocViewport_RowChanged);
+                        tenancy_sub_premises_assoc.Select().RowDeleted += new DataRowChangeEventHandler(TenancyAssocViewport_RowDeleted);
+                        break;
+                    default: throw new ViewportException("Неизвестный тип родительского объекта");
+                }
+            }
             v_tenancy_persons.ListChanged += new System.ComponentModel.ListChangedEventHandler(v_persons_ListChanged);
         }
 
@@ -665,11 +772,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            if ((viewportState == ViewportState.ReadState || viewportState == ViewportState.ModifyRowState)
-                    && !tenancies.EditingNewRecord)
-                return true;
-            else
-                return false;
+            return (!tenancies.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void InsertRecord()
@@ -687,8 +790,8 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            return (v_tenancies.Position != -1) && (viewportState == ViewportState.ReadState || viewportState == ViewportState.ModifyRowState)
-                    && !tenancies.EditingNewRecord;
+            return (v_tenancies.Position != -1) && (!tenancies.EditingNewRecord)
+                && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void CopyRecord()
@@ -759,10 +862,9 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            if ((v_tenancies.Position == -1) || (viewportState == ViewportState.NewRowState))
-                return false;
-            else
-                return true;
+            return (v_tenancies.Position > -1)
+                && (viewportState != ViewportState.NewRowState)
+                && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void DeleteRecord()
@@ -770,7 +872,7 @@ namespace Registry.Viewport
             if (MessageBox.Show("Вы действительно хотите удалить этот процесс найма?", 
                 "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                if (tenancies.Delete((int)((DataRowView)v_tenancies.Current)["id_process"]) == -1)
+                if (TenancyProcessesDataModel.Delete((int)((DataRowView)v_tenancies.Current)["id_process"]) == -1)
                     return;
                 is_editable = false;
                 ((DataRowView)v_tenancies[v_tenancies.Position]).Delete();
@@ -810,11 +912,13 @@ namespace Registry.Viewport
             UnbindedCheckBoxesUpdate();
             is_editable = true;
             menuCallback.EditingStateUpdate();
+            SetViewportCaption();
         }
 
         public override bool CanSaveRecord()
         {
-            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
+            return ((viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState))
+                && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void SaveRecord()
@@ -829,7 +933,7 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case ViewportState.NewRowState:
-                    int id_process = tenancies.Insert(tenancy);
+                    int id_process = TenancyProcessesDataModel.Insert(tenancy);
                     if (id_process == -1)
                         return;
                     DataRowView newRow;
@@ -840,8 +944,57 @@ namespace Registry.Viewport
                     else
                         newRow = ((DataRowView)v_tenancies[v_tenancies.Position]);
                     FillRowFromTenancy(tenancy, newRow);
+                    if (ParentRow != null)
+                    {
+                        TenancyObject to = new TenancyObject();
+                        to.id_process = id_process;
+                        to.rent_living_area = null;
+                        to.rent_total_area = null;
+                        int id_assoc = -1;
+                        switch (ParentType)
+                        {
+                            case ParentTypeEnum.Building:
+                                TenancyBuildingsAssocDataModel tenancy_buildings = TenancyBuildingsAssocDataModel.GetInstance();
+                                to.id_object = Convert.ToInt32(ParentRow["id_building"]);
+                                id_assoc = TenancyBuildingsAssocDataModel.Insert(to);
+                                if (id_assoc == -1)
+                                    return;
+                                to.id_assoc = id_assoc;
+                                tenancy_buildings.Select().Rows.Add(new object[] { 
+                                    id_assoc, to.id_object, to.id_process, to.rent_total_area, to.rent_living_area, 0
+                                });
+                                CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"]);
+                                break;
+                            case ParentTypeEnum.Premises:
+                                TenancyPremisesAssocDataModel tenancy_premises = TenancyPremisesAssocDataModel.GetInstance();
+                                to.id_object = Convert.ToInt32(ParentRow["id_premises"]);
+                                id_assoc = TenancyPremisesAssocDataModel.Insert(to);
+                                if (id_assoc == -1)
+                                    return;
+                                to.id_assoc = id_assoc;
+                                tenancy_premises.Select().Rows.Add(new object[] { 
+                                    id_assoc, to.id_object, to.id_process, to.rent_total_area, to.rent_living_area, 0
+                                });
+                                CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, (int)ParentRow["id_premises"]);
+                                break;
+                            case ParentTypeEnum.SubPremises:
+                                TenancySubPremisesAssocDataModel tenancy_sub_premises = TenancySubPremisesAssocDataModel.GetInstance();
+                                to.id_object = Convert.ToInt32(ParentRow["id_sub_premises"]);
+                                id_assoc = TenancySubPremisesAssocDataModel.Insert(to);
+                                if (id_assoc == -1)
+                                    return;
+                                to.id_assoc = id_assoc;
+                                tenancy_sub_premises.Select().Rows.Add(new object[] { 
+                                    id_assoc, to.id_object, to.id_process, to.rent_total_area, 0
+                                });
+                                CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.SubPremise, (int)ParentRow["id_sub_premises"]);
+                                break;
+                            default: throw new ViewportException("Неизвестный тип родительского объекта");
+                        }
+                    }
                     tenancies.EditingNewRecord = false;
-                    this.Text = String.Format("Процесс найма №{0}", id_process.ToString());
+                    RebuildStaticFilter();
+                    v_tenancies.Position = v_tenancies.Count - 1;
                     break;
                 case ViewportState.ModifyRowState:
                     if (tenancy.id_process == null)
@@ -850,7 +1003,7 @@ namespace Registry.Viewport
                             "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    if (tenancies.Update(tenancy) == -1)
+                    if (TenancyProcessesDataModel.Update(tenancy) == -1)
                         return;
                     DataRowView row = ((DataRowView)v_tenancies[v_tenancies.Position]);
                     is_editable = false;
@@ -861,6 +1014,7 @@ namespace Registry.Viewport
             is_editable = true;
             viewportState = ViewportState.ReadState;
             menuCallback.EditingStateUpdate();
+            SetViewportCaption();
         }
 
         public override bool CanDuplicate()
@@ -984,8 +1138,9 @@ namespace Registry.Viewport
 
         public override bool HasTenancyAgreementReport()
         {
-            return (DataModelHelper.TenancyAgreementsForProcess(
-                Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_process"])) > 0);
+            return (v_tenancies.Position > -1) && (((DataRowView)v_tenancies[v_tenancies.Position])["id_process"] != DBNull.Value) &&
+                (DataModelHelper.TenancyAgreementsForProcess(
+                    Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_process"])) > 0);
         }
 
         public override bool HasTenancyExcerptReport()
@@ -1095,17 +1250,6 @@ namespace Registry.Viewport
             return true;
         }
 
-        void TenancyViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
-        {
-            if (e.Action == DataRowAction.Delete)
-                UnbindedCheckBoxesUpdate();
-        }
-
-        void TenancyViewport_RowChanged(object sender, DataRowChangeEventArgs e)
-        {
-            UnbindedCheckBoxesUpdate();
-        }
-
         protected override void OnVisibleChanged(EventArgs e)
         {
             RedrawDataGridRows();
@@ -1120,13 +1264,7 @@ namespace Registry.Viewport
 
         void v_tenancies_CurrentItemChanged(object sender, EventArgs e)
         {
-            if (viewportState == ViewportState.NewRowState)
-                this.Text = "Новый процесс";
-            else
-                if (v_tenancies.Position != -1)
-                    this.Text = String.Format("Процесс найма №{0}", ((DataRowView)v_tenancies[v_tenancies.Position])["id_process"]);
-                else
-                    this.Text = "Процессы отсутствуют";
+            SetViewportCaption();
             if (Selected)
             {
                 menuCallback.NavigationStateUpdate();
@@ -1142,6 +1280,17 @@ namespace Registry.Viewport
             is_editable = true;
         }
 
+        void TenancyViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action == DataRowAction.Delete)
+                UnbindedCheckBoxesUpdate();
+        }
+
+        void TenancyViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            UnbindedCheckBoxesUpdate();
+        }
+
         void TenancyPersons_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
@@ -1153,6 +1302,16 @@ namespace Registry.Viewport
         void TenancyPersons_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             RedrawDataGridRows();
+        }
+
+        private void TenancyAssocViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            RebuildStaticFilter();
+        }
+
+        private void TenancyAssocViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            RebuildStaticFilter();
         }
 
         void textBoxSelectedWarrant_TextChanged(object sender, EventArgs e)
@@ -1342,11 +1501,6 @@ namespace Registry.Viewport
             this.checkBoxKumiOrderEnable = new System.Windows.Forms.CheckBox();
             this.groupBox21 = new System.Windows.Forms.GroupBox();
             this.dataGridViewTenancyPersons = new System.Windows.Forms.DataGridView();
-            this.surname = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.patronymic = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.date_of_birth = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_kinship = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.tableLayoutPanel13 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox22 = new System.Windows.Forms.GroupBox();
             this.comboBoxExecutor = new System.Windows.Forms.ComboBox();
@@ -1355,6 +1509,11 @@ namespace Registry.Viewport
             this.label46 = new System.Windows.Forms.Label();
             this.groupBox31 = new System.Windows.Forms.GroupBox();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
+            this.surname = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.patronymic = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.date_of_birth = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_kinship = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.tableLayoutPanel9.SuspendLayout();
             this.groupBoxTenancyContract.SuspendLayout();
             this.tableLayoutPanel10.SuspendLayout();
@@ -1393,7 +1552,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 83F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(905, 515);
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(758, 521);
             this.tableLayoutPanel9.TabIndex = 0;
             // 
             // groupBoxTenancyContract
@@ -1404,7 +1563,7 @@ namespace Registry.Viewport
             this.groupBoxTenancyContract.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxTenancyContract.Location = new System.Drawing.Point(3, 3);
             this.groupBoxTenancyContract.Name = "groupBoxTenancyContract";
-            this.groupBoxTenancyContract.Size = new System.Drawing.Size(899, 107);
+            this.groupBoxTenancyContract.Size = new System.Drawing.Size(752, 107);
             this.groupBoxTenancyContract.TabIndex = 0;
             this.groupBoxTenancyContract.TabStop = false;
             this.groupBoxTenancyContract.Text = "      Договор найма";
@@ -1417,11 +1576,11 @@ namespace Registry.Viewport
             this.tableLayoutPanel10.Controls.Add(this.panel6, 1, 0);
             this.tableLayoutPanel10.Controls.Add(this.panel5, 0, 0);
             this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel10.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanel10.Location = new System.Drawing.Point(3, 17);
             this.tableLayoutPanel10.Name = "tableLayoutPanel10";
             this.tableLayoutPanel10.RowCount = 1;
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-            this.tableLayoutPanel10.Size = new System.Drawing.Size(893, 88);
+            this.tableLayoutPanel10.Size = new System.Drawing.Size(746, 87);
             this.tableLayoutPanel10.TabIndex = 1;
             // 
             // panel6
@@ -1434,38 +1593,38 @@ namespace Registry.Viewport
             this.panel6.Controls.Add(this.label49);
             this.panel6.Controls.Add(this.dateTimePickerIssueDate);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(446, 0);
+            this.panel6.Location = new System.Drawing.Point(373, 0);
             this.panel6.Margin = new System.Windows.Forms.Padding(0);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(447, 90);
+            this.panel6.Size = new System.Drawing.Size(373, 90);
             this.panel6.TabIndex = 1;
             // 
             // label52
             // 
             this.label52.AutoSize = true;
-            this.label52.Location = new System.Drawing.Point(137, 65);
+            this.label52.Location = new System.Drawing.Point(150, 65);
             this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(19, 13);
+            this.label52.Size = new System.Drawing.Size(21, 15);
             this.label52.TabIndex = 28;
             this.label52.Text = "по";
             // 
             // label51
             // 
             this.label51.AutoSize = true;
-            this.label51.Location = new System.Drawing.Point(143, 36);
+            this.label51.Location = new System.Drawing.Point(158, 36);
             this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size(13, 13);
+            this.label51.Size = new System.Drawing.Size(13, 15);
             this.label51.TabIndex = 27;
             this.label51.Text = "с";
             // 
             // dateTimePickerEndDate
             // 
-            this.dateTimePickerEndDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerEndDate.Location = new System.Drawing.Point(162, 62);
+            this.dateTimePickerEndDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerEndDate.Location = new System.Drawing.Point(174, 62);
             this.dateTimePickerEndDate.Name = "dateTimePickerEndDate";
             this.dateTimePickerEndDate.ShowCheckBox = true;
-            this.dateTimePickerEndDate.Size = new System.Drawing.Size(277, 20);
+            this.dateTimePickerEndDate.Size = new System.Drawing.Size(191, 21);
             this.dateTimePickerEndDate.TabIndex = 3;
             this.dateTimePickerEndDate.ValueChanged += new System.EventHandler(this.dateTimePickerEndDate_ValueChanged);
             // 
@@ -1474,18 +1633,18 @@ namespace Registry.Viewport
             this.label50.AutoSize = true;
             this.label50.Location = new System.Drawing.Point(15, 36);
             this.label50.Name = "label50";
-            this.label50.Size = new System.Drawing.Size(82, 13);
+            this.label50.Size = new System.Drawing.Size(93, 15);
             this.label50.TabIndex = 25;
             this.label50.Text = "Срок действия";
             // 
             // dateTimePickerBeginDate
             // 
-            this.dateTimePickerBeginDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerBeginDate.Location = new System.Drawing.Point(162, 33);
+            this.dateTimePickerBeginDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerBeginDate.Location = new System.Drawing.Point(174, 33);
             this.dateTimePickerBeginDate.Name = "dateTimePickerBeginDate";
             this.dateTimePickerBeginDate.ShowCheckBox = true;
-            this.dateTimePickerBeginDate.Size = new System.Drawing.Size(277, 20);
+            this.dateTimePickerBeginDate.Size = new System.Drawing.Size(191, 21);
             this.dateTimePickerBeginDate.TabIndex = 1;
             this.dateTimePickerBeginDate.ValueChanged += new System.EventHandler(this.dateTimePickerBeginDate_ValueChanged);
             // 
@@ -1494,18 +1653,18 @@ namespace Registry.Viewport
             this.label49.AutoSize = true;
             this.label49.Location = new System.Drawing.Point(15, 7);
             this.label49.Name = "label49";
-            this.label49.Size = new System.Drawing.Size(73, 13);
+            this.label49.Size = new System.Drawing.Size(83, 15);
             this.label49.TabIndex = 23;
             this.label49.Text = "Дата выдачи";
             // 
             // dateTimePickerIssueDate
             // 
-            this.dateTimePickerIssueDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerIssueDate.Location = new System.Drawing.Point(162, 4);
+            this.dateTimePickerIssueDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerIssueDate.Location = new System.Drawing.Point(174, 4);
             this.dateTimePickerIssueDate.Name = "dateTimePickerIssueDate";
             this.dateTimePickerIssueDate.ShowCheckBox = true;
-            this.dateTimePickerIssueDate.Size = new System.Drawing.Size(277, 20);
+            this.dateTimePickerIssueDate.Size = new System.Drawing.Size(191, 21);
             this.dateTimePickerIssueDate.TabIndex = 0;
             this.dateTimePickerIssueDate.ValueChanged += new System.EventHandler(this.dateTimePickerIssueDate_ValueChanged);
             // 
@@ -1522,7 +1681,7 @@ namespace Registry.Viewport
             this.panel5.Location = new System.Drawing.Point(0, 0);
             this.panel5.Margin = new System.Windows.Forms.Padding(0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(446, 90);
+            this.panel5.Size = new System.Drawing.Size(373, 90);
             this.panel5.TabIndex = 0;
             // 
             // vButtonWarrant
@@ -1530,7 +1689,7 @@ namespace Registry.Viewport
             this.vButtonWarrant.AllowAnimations = true;
             this.vButtonWarrant.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonWarrant.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonWarrant.Location = new System.Drawing.Point(410, 62);
+            this.vButtonWarrant.Location = new System.Drawing.Point(337, 62);
             this.vButtonWarrant.Name = "vButtonWarrant";
             this.vButtonWarrant.RoundedCornersMask = ((byte)(15));
             this.vButtonWarrant.Size = new System.Drawing.Size(27, 20);
@@ -1542,12 +1701,12 @@ namespace Registry.Viewport
             // 
             // textBoxSelectedWarrant
             // 
-            this.textBoxSelectedWarrant.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxSelectedWarrant.Location = new System.Drawing.Point(161, 62);
+            this.textBoxSelectedWarrant.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSelectedWarrant.Location = new System.Drawing.Point(172, 62);
             this.textBoxSelectedWarrant.Name = "textBoxSelectedWarrant";
             this.textBoxSelectedWarrant.ReadOnly = true;
-            this.textBoxSelectedWarrant.Size = new System.Drawing.Size(243, 20);
+            this.textBoxSelectedWarrant.Size = new System.Drawing.Size(159, 21);
             this.textBoxSelectedWarrant.TabIndex = 22;
             this.textBoxSelectedWarrant.TextChanged += new System.EventHandler(this.textBoxSelectedWarrant_TextChanged);
             // 
@@ -1556,7 +1715,7 @@ namespace Registry.Viewport
             this.label82.AutoSize = true;
             this.label82.Location = new System.Drawing.Point(14, 65);
             this.label82.Name = "label82";
-            this.label82.Size = new System.Drawing.Size(81, 13);
+            this.label82.Size = new System.Drawing.Size(92, 15);
             this.label82.TabIndex = 23;
             this.label82.Text = "Доверенность";
             // 
@@ -1565,28 +1724,28 @@ namespace Registry.Viewport
             this.label48.AutoSize = true;
             this.label48.Location = new System.Drawing.Point(14, 36);
             this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(100, 13);
+            this.label48.Size = new System.Drawing.Size(114, 15);
             this.label48.TabIndex = 21;
             this.label48.Text = "Дата регистрации";
             // 
             // dateTimePickerRegistrationDate
             // 
-            this.dateTimePickerRegistrationDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerRegistrationDate.Location = new System.Drawing.Point(161, 33);
+            this.dateTimePickerRegistrationDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerRegistrationDate.Location = new System.Drawing.Point(172, 33);
             this.dateTimePickerRegistrationDate.Name = "dateTimePickerRegistrationDate";
-            this.dateTimePickerRegistrationDate.Size = new System.Drawing.Size(276, 20);
+            this.dateTimePickerRegistrationDate.Size = new System.Drawing.Size(192, 21);
             this.dateTimePickerRegistrationDate.TabIndex = 2;
             this.dateTimePickerRegistrationDate.ValueChanged += new System.EventHandler(this.dateTimePickerRegistrationDate_ValueChanged);
             // 
             // textBoxRegistrationNumber
             // 
-            this.textBoxRegistrationNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxRegistrationNumber.Location = new System.Drawing.Point(161, 4);
+            this.textBoxRegistrationNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxRegistrationNumber.Location = new System.Drawing.Point(172, 4);
             this.textBoxRegistrationNumber.MaxLength = 16;
             this.textBoxRegistrationNumber.Name = "textBoxRegistrationNumber";
-            this.textBoxRegistrationNumber.Size = new System.Drawing.Size(276, 20);
+            this.textBoxRegistrationNumber.Size = new System.Drawing.Size(192, 21);
             this.textBoxRegistrationNumber.TabIndex = 1;
             this.textBoxRegistrationNumber.TextChanged += new System.EventHandler(this.textBoxRegistrationNumber_TextChanged);
             // 
@@ -1595,7 +1754,7 @@ namespace Registry.Viewport
             this.label47.AutoSize = true;
             this.label47.Location = new System.Drawing.Point(14, 7);
             this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(133, 13);
+            this.label47.Size = new System.Drawing.Size(152, 15);
             this.label47.TabIndex = 18;
             this.label47.Text = "Регистрационный номер";
             // 
@@ -1617,7 +1776,7 @@ namespace Registry.Viewport
             this.groupBox25.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox25.Location = new System.Drawing.Point(3, 116);
             this.groupBox25.Name = "groupBox25";
-            this.groupBox25.Size = new System.Drawing.Size(446, 121);
+            this.groupBox25.Size = new System.Drawing.Size(373, 124);
             this.groupBox25.TabIndex = 1;
             this.groupBox25.TabStop = false;
             this.groupBox25.Text = "Соглашения найма";
@@ -1632,12 +1791,12 @@ namespace Registry.Viewport
             this.agreement_date,
             this.agreement_content});
             this.dataGridViewTenancyAgreements.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewTenancyAgreements.Location = new System.Drawing.Point(3, 16);
+            this.dataGridViewTenancyAgreements.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewTenancyAgreements.MultiSelect = false;
             this.dataGridViewTenancyAgreements.Name = "dataGridViewTenancyAgreements";
             this.dataGridViewTenancyAgreements.ReadOnly = true;
             this.dataGridViewTenancyAgreements.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyAgreements.Size = new System.Drawing.Size(440, 102);
+            this.dataGridViewTenancyAgreements.Size = new System.Drawing.Size(367, 104);
             this.dataGridViewTenancyAgreements.TabIndex = 0;
             this.dataGridViewTenancyAgreements.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyAgreements_CellDoubleClick);
             // 
@@ -1658,9 +1817,9 @@ namespace Registry.Viewport
             // 
             this.groupBox24.Controls.Add(this.dataGridViewTenancyReasons);
             this.groupBox24.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox24.Location = new System.Drawing.Point(455, 116);
+            this.groupBox24.Location = new System.Drawing.Point(382, 116);
             this.groupBox24.Name = "groupBox24";
-            this.groupBox24.Size = new System.Drawing.Size(447, 121);
+            this.groupBox24.Size = new System.Drawing.Size(373, 124);
             this.groupBox24.TabIndex = 2;
             this.groupBox24.TabStop = false;
             this.groupBox24.Text = "Основания найма";
@@ -1676,12 +1835,12 @@ namespace Registry.Viewport
             this.reason_number,
             this.reason_date});
             this.dataGridViewTenancyReasons.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewTenancyReasons.Location = new System.Drawing.Point(3, 16);
+            this.dataGridViewTenancyReasons.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewTenancyReasons.MultiSelect = false;
             this.dataGridViewTenancyReasons.Name = "dataGridViewTenancyReasons";
             this.dataGridViewTenancyReasons.ReadOnly = true;
             this.dataGridViewTenancyReasons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyReasons.Size = new System.Drawing.Size(441, 102);
+            this.dataGridViewTenancyReasons.Size = new System.Drawing.Size(367, 104);
             this.dataGridViewTenancyReasons.TabIndex = 0;
             this.dataGridViewTenancyReasons.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyReasons_CellDoubleClick);
             // 
@@ -1712,9 +1871,9 @@ namespace Registry.Viewport
             this.groupBoxResidenceWarrant.Controls.Add(this.dateTimePickerResidenceWarrantDate);
             this.groupBoxResidenceWarrant.Controls.Add(this.checkBoxResidenceWarrantEnable);
             this.groupBoxResidenceWarrant.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxResidenceWarrant.Location = new System.Drawing.Point(3, 243);
+            this.groupBoxResidenceWarrant.Location = new System.Drawing.Point(3, 246);
             this.groupBoxResidenceWarrant.Name = "groupBoxResidenceWarrant";
-            this.groupBoxResidenceWarrant.Size = new System.Drawing.Size(446, 77);
+            this.groupBoxResidenceWarrant.Size = new System.Drawing.Size(373, 77);
             this.groupBoxResidenceWarrant.TabIndex = 3;
             this.groupBoxResidenceWarrant.TabStop = false;
             this.groupBoxResidenceWarrant.Text = "      Ордер на проживание";
@@ -1724,7 +1883,7 @@ namespace Registry.Viewport
             this.label44.AutoSize = true;
             this.label44.Location = new System.Drawing.Point(17, 54);
             this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(72, 13);
+            this.label44.Size = new System.Drawing.Size(82, 15);
             this.label44.TabIndex = 16;
             this.label44.Text = "Дата ордера";
             // 
@@ -1733,28 +1892,28 @@ namespace Registry.Viewport
             this.label43.AutoSize = true;
             this.label43.Location = new System.Drawing.Point(17, 22);
             this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(80, 13);
+            this.label43.Size = new System.Drawing.Size(91, 15);
             this.label43.TabIndex = 14;
             this.label43.Text = "Номер ордера";
             // 
             // textBoxResidenceWarrantNumber
             // 
-            this.textBoxResidenceWarrantNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxResidenceWarrantNumber.Location = new System.Drawing.Point(164, 19);
+            this.textBoxResidenceWarrantNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxResidenceWarrantNumber.Location = new System.Drawing.Point(175, 19);
             this.textBoxResidenceWarrantNumber.MaxLength = 50;
             this.textBoxResidenceWarrantNumber.Name = "textBoxResidenceWarrantNumber";
-            this.textBoxResidenceWarrantNumber.Size = new System.Drawing.Size(276, 20);
+            this.textBoxResidenceWarrantNumber.Size = new System.Drawing.Size(192, 21);
             this.textBoxResidenceWarrantNumber.TabIndex = 1;
             this.textBoxResidenceWarrantNumber.TextChanged += new System.EventHandler(this.textBoxResidenceWarrantNumber_TextChanged);
             // 
             // dateTimePickerResidenceWarrantDate
             // 
-            this.dateTimePickerResidenceWarrantDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerResidenceWarrantDate.Location = new System.Drawing.Point(164, 48);
+            this.dateTimePickerResidenceWarrantDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerResidenceWarrantDate.Location = new System.Drawing.Point(175, 48);
             this.dateTimePickerResidenceWarrantDate.Name = "dateTimePickerResidenceWarrantDate";
-            this.dateTimePickerResidenceWarrantDate.Size = new System.Drawing.Size(276, 20);
+            this.dateTimePickerResidenceWarrantDate.Size = new System.Drawing.Size(192, 21);
             this.dateTimePickerResidenceWarrantDate.TabIndex = 2;
             this.dateTimePickerResidenceWarrantDate.ValueChanged += new System.EventHandler(this.dateTimePickerResidenceWarrantDate_ValueChanged);
             // 
@@ -1778,9 +1937,9 @@ namespace Registry.Viewport
             this.groupBoxKumiOrder.Controls.Add(this.textBoxKumiOrderNumber);
             this.groupBoxKumiOrder.Controls.Add(this.checkBoxKumiOrderEnable);
             this.groupBoxKumiOrder.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxKumiOrder.Location = new System.Drawing.Point(455, 243);
+            this.groupBoxKumiOrder.Location = new System.Drawing.Point(382, 246);
             this.groupBoxKumiOrder.Name = "groupBoxKumiOrder";
-            this.groupBoxKumiOrder.Size = new System.Drawing.Size(447, 77);
+            this.groupBoxKumiOrder.Size = new System.Drawing.Size(373, 77);
             this.groupBoxKumiOrder.TabIndex = 4;
             this.groupBoxKumiOrder.TabStop = false;
             this.groupBoxKumiOrder.Text = "      Распоряжение КУМИ";
@@ -1790,17 +1949,17 @@ namespace Registry.Viewport
             this.label45.AutoSize = true;
             this.label45.Location = new System.Drawing.Point(12, 54);
             this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(110, 13);
+            this.label45.Size = new System.Drawing.Size(125, 15);
             this.label45.TabIndex = 18;
             this.label45.Text = "Дата распоряжения";
             // 
             // dateTimePickerKumiOrderDate
             // 
-            this.dateTimePickerKumiOrderDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerKumiOrderDate.Location = new System.Drawing.Point(159, 48);
+            this.dateTimePickerKumiOrderDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerKumiOrderDate.Location = new System.Drawing.Point(171, 48);
             this.dateTimePickerKumiOrderDate.Name = "dateTimePickerKumiOrderDate";
-            this.dateTimePickerKumiOrderDate.Size = new System.Drawing.Size(277, 20);
+            this.dateTimePickerKumiOrderDate.Size = new System.Drawing.Size(191, 21);
             this.dateTimePickerKumiOrderDate.TabIndex = 2;
             this.dateTimePickerKumiOrderDate.ValueChanged += new System.EventHandler(this.dateTimePickerKumiOrderDate_ValueChanged);
             // 
@@ -1809,18 +1968,18 @@ namespace Registry.Viewport
             this.label42.AutoSize = true;
             this.label42.Location = new System.Drawing.Point(12, 22);
             this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(118, 13);
+            this.label42.Size = new System.Drawing.Size(134, 15);
             this.label42.TabIndex = 12;
             this.label42.Text = "Номер распоряжения";
             // 
             // textBoxKumiOrderNumber
             // 
-            this.textBoxKumiOrderNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxKumiOrderNumber.Location = new System.Drawing.Point(159, 19);
+            this.textBoxKumiOrderNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxKumiOrderNumber.Location = new System.Drawing.Point(171, 19);
             this.textBoxKumiOrderNumber.MaxLength = 50;
             this.textBoxKumiOrderNumber.Name = "textBoxKumiOrderNumber";
-            this.textBoxKumiOrderNumber.Size = new System.Drawing.Size(277, 20);
+            this.textBoxKumiOrderNumber.Size = new System.Drawing.Size(191, 21);
             this.textBoxKumiOrderNumber.TabIndex = 1;
             this.textBoxKumiOrderNumber.TextChanged += new System.EventHandler(this.textBoxKumiOrderNumber_TextChanged);
             // 
@@ -1840,9 +1999,9 @@ namespace Registry.Viewport
             // 
             this.groupBox21.Controls.Add(this.dataGridViewTenancyPersons);
             this.groupBox21.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox21.Location = new System.Drawing.Point(3, 326);
+            this.groupBox21.Location = new System.Drawing.Point(3, 329);
             this.groupBox21.Name = "groupBox21";
-            this.groupBox21.Size = new System.Drawing.Size(446, 186);
+            this.groupBox21.Size = new System.Drawing.Size(373, 189);
             this.groupBox21.TabIndex = 5;
             this.groupBox21.TabStop = false;
             this.groupBox21.Text = "Участники найма";
@@ -1861,14 +2020,109 @@ namespace Registry.Viewport
             this.date_of_birth,
             this.id_kinship});
             this.dataGridViewTenancyPersons.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewTenancyPersons.Location = new System.Drawing.Point(3, 16);
+            this.dataGridViewTenancyPersons.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewTenancyPersons.MultiSelect = false;
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(440, 167);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(367, 169);
             this.dataGridViewTenancyPersons.TabIndex = 0;
             this.dataGridViewTenancyPersons.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyPersons_CellDoubleClick);
+            // 
+            // tableLayoutPanel13
+            // 
+            this.tableLayoutPanel13.ColumnCount = 1;
+            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel13.Controls.Add(this.groupBox22, 0, 0);
+            this.tableLayoutPanel13.Controls.Add(this.groupBox31, 0, 1);
+            this.tableLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel13.Location = new System.Drawing.Point(382, 329);
+            this.tableLayoutPanel13.Name = "tableLayoutPanel13";
+            this.tableLayoutPanel13.RowCount = 2;
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 85F));
+            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel13.Size = new System.Drawing.Size(373, 189);
+            this.tableLayoutPanel13.TabIndex = 6;
+            // 
+            // groupBox22
+            // 
+            this.groupBox22.Controls.Add(this.comboBoxExecutor);
+            this.groupBox22.Controls.Add(this.label41);
+            this.groupBox22.Controls.Add(this.comboBoxRentType);
+            this.groupBox22.Controls.Add(this.label46);
+            this.groupBox22.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox22.Location = new System.Drawing.Point(3, 3);
+            this.groupBox22.Name = "groupBox22";
+            this.groupBox22.Size = new System.Drawing.Size(367, 79);
+            this.groupBox22.TabIndex = 9;
+            this.groupBox22.TabStop = false;
+            this.groupBox22.Text = "Общие сведения";
+            // 
+            // comboBoxExecutor
+            // 
+            this.comboBoxExecutor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxExecutor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxExecutor.FormattingEnabled = true;
+            this.comboBoxExecutor.Location = new System.Drawing.Point(168, 48);
+            this.comboBoxExecutor.Name = "comboBoxExecutor";
+            this.comboBoxExecutor.Size = new System.Drawing.Size(190, 23);
+            this.comboBoxExecutor.TabIndex = 1;
+            this.comboBoxExecutor.SelectedValueChanged += new System.EventHandler(this.comboBoxExecutor_SelectedValueChanged);
+            // 
+            // label41
+            // 
+            this.label41.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(12, 51);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(141, 15);
+            this.label41.TabIndex = 1;
+            this.label41.Text = "Составитель договора";
+            // 
+            // comboBoxRentType
+            // 
+            this.comboBoxRentType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxRentType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxRentType.FormattingEnabled = true;
+            this.comboBoxRentType.Location = new System.Drawing.Point(168, 19);
+            this.comboBoxRentType.Name = "comboBoxRentType";
+            this.comboBoxRentType.Size = new System.Drawing.Size(190, 23);
+            this.comboBoxRentType.TabIndex = 0;
+            this.comboBoxRentType.SelectedValueChanged += new System.EventHandler(this.comboBoxRentType_SelectedValueChanged);
+            // 
+            // label46
+            // 
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(12, 22);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(108, 15);
+            this.label46.TabIndex = 16;
+            this.label46.Text = "Тип найма жилья";
+            // 
+            // groupBox31
+            // 
+            this.groupBox31.Controls.Add(this.textBoxDescription);
+            this.groupBox31.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox31.Location = new System.Drawing.Point(3, 88);
+            this.groupBox31.Name = "groupBox31";
+            this.groupBox31.Size = new System.Drawing.Size(367, 98);
+            this.groupBox31.TabIndex = 10;
+            this.groupBox31.TabStop = false;
+            this.groupBox31.Text = "Дополнительные сведения";
+            // 
+            // textBoxDescription
+            // 
+            this.textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxDescription.Location = new System.Drawing.Point(3, 17);
+            this.textBoxDescription.MaxLength = 4000;
+            this.textBoxDescription.Multiline = true;
+            this.textBoxDescription.Name = "textBoxDescription";
+            this.textBoxDescription.Size = new System.Drawing.Size(361, 78);
+            this.textBoxDescription.TabIndex = 18;
+            this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxDescription_TextChanged);
             // 
             // surname
             // 
@@ -1894,7 +2148,7 @@ namespace Registry.Viewport
             // date_of_birth
             // 
             this.date_of_birth.HeaderText = "Дата рождения";
-            this.date_of_birth.MinimumWidth = 120;
+            this.date_of_birth.MinimumWidth = 130;
             this.date_of_birth.Name = "date_of_birth";
             this.date_of_birth.ReadOnly = true;
             // 
@@ -1906,109 +2160,14 @@ namespace Registry.Viewport
             this.id_kinship.Name = "id_kinship";
             this.id_kinship.ReadOnly = true;
             // 
-            // tableLayoutPanel13
-            // 
-            this.tableLayoutPanel13.ColumnCount = 1;
-            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel13.Controls.Add(this.groupBox22, 0, 0);
-            this.tableLayoutPanel13.Controls.Add(this.groupBox31, 0, 1);
-            this.tableLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel13.Location = new System.Drawing.Point(455, 326);
-            this.tableLayoutPanel13.Name = "tableLayoutPanel13";
-            this.tableLayoutPanel13.RowCount = 2;
-            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 85F));
-            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel13.Size = new System.Drawing.Size(447, 186);
-            this.tableLayoutPanel13.TabIndex = 6;
-            // 
-            // groupBox22
-            // 
-            this.groupBox22.Controls.Add(this.comboBoxExecutor);
-            this.groupBox22.Controls.Add(this.label41);
-            this.groupBox22.Controls.Add(this.comboBoxRentType);
-            this.groupBox22.Controls.Add(this.label46);
-            this.groupBox22.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox22.Location = new System.Drawing.Point(3, 3);
-            this.groupBox22.Name = "groupBox22";
-            this.groupBox22.Size = new System.Drawing.Size(441, 79);
-            this.groupBox22.TabIndex = 9;
-            this.groupBox22.TabStop = false;
-            this.groupBox22.Text = "Общие сведения";
-            // 
-            // comboBoxExecutor
-            // 
-            this.comboBoxExecutor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxExecutor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxExecutor.FormattingEnabled = true;
-            this.comboBoxExecutor.Location = new System.Drawing.Point(159, 48);
-            this.comboBoxExecutor.Name = "comboBoxExecutor";
-            this.comboBoxExecutor.Size = new System.Drawing.Size(273, 21);
-            this.comboBoxExecutor.TabIndex = 1;
-            this.comboBoxExecutor.SelectedValueChanged += new System.EventHandler(this.comboBoxExecutor_SelectedValueChanged);
-            // 
-            // label41
-            // 
-            this.label41.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(12, 51);
-            this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(122, 13);
-            this.label41.TabIndex = 1;
-            this.label41.Text = "Составитель договора";
-            // 
-            // comboBoxRentType
-            // 
-            this.comboBoxRentType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxRentType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxRentType.FormattingEnabled = true;
-            this.comboBoxRentType.Location = new System.Drawing.Point(159, 19);
-            this.comboBoxRentType.Name = "comboBoxRentType";
-            this.comboBoxRentType.Size = new System.Drawing.Size(273, 21);
-            this.comboBoxRentType.TabIndex = 0;
-            this.comboBoxRentType.SelectedValueChanged += new System.EventHandler(this.comboBoxRentType_SelectedValueChanged);
-            // 
-            // label46
-            // 
-            this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(12, 22);
-            this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(96, 13);
-            this.label46.TabIndex = 16;
-            this.label46.Text = "Тип найма жилья";
-            // 
-            // groupBox31
-            // 
-            this.groupBox31.Controls.Add(this.textBoxDescription);
-            this.groupBox31.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox31.Location = new System.Drawing.Point(3, 88);
-            this.groupBox31.Name = "groupBox31";
-            this.groupBox31.Size = new System.Drawing.Size(441, 95);
-            this.groupBox31.TabIndex = 10;
-            this.groupBox31.TabStop = false;
-            this.groupBox31.Text = "Дополнительные сведения";
-            // 
-            // textBoxDescription
-            // 
-            this.textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxDescription.Location = new System.Drawing.Point(3, 16);
-            this.textBoxDescription.MaxLength = 4000;
-            this.textBoxDescription.Multiline = true;
-            this.textBoxDescription.Name = "textBoxDescription";
-            this.textBoxDescription.Size = new System.Drawing.Size(435, 76);
-            this.textBoxDescription.TabIndex = 18;
-            this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxDescription_TextChanged);
-            // 
             // TenancyViewport
             // 
             this.AutoScroll = true;
-            this.AutoScrollMinSize = new System.Drawing.Size(670, 480);
+            this.AutoScrollMinSize = new System.Drawing.Size(720, 480);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(911, 521);
+            this.ClientSize = new System.Drawing.Size(764, 527);
             this.Controls.Add(this.tableLayoutPanel9);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "TenancyViewport";
             this.Padding = new System.Windows.Forms.Padding(3);

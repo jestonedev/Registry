@@ -7,6 +7,7 @@ using System.Data;
 using System.Windows.Forms;
 using System.Threading;
 using System.Data.Odbc;
+using System.Globalization;
 
 namespace Registry.DataModels
 {
@@ -35,11 +36,13 @@ namespace Registry.DataModels
                 try
                 {
                     dmLoadState = DataModelLoadState.Loading;
-                    DBConnection connection = new DBConnection();
-                    DbCommand command = connection.CreateCommand();
-                    command.CommandText = selectQuery;
-                    db_access_semaphore.WaitOne();
-                    Interlocked.Exchange<DataTable>(ref table, connection.SqlSelectTable(tableName, (DbCommand)command));
+                    using (DBConnection connection = new DBConnection())
+                    using (DbCommand command = DBConnection.CreateCommand())
+                    {
+                        command.CommandText = selectQuery;
+                        db_access_semaphore.WaitOne();
+                        Interlocked.Exchange<DataTable>(ref table, connection.SqlSelectTable(tableName, (DbCommand)command));
+                    }
                     db_access_semaphore.Release();
                     ConfigureTable();
                     lock (lock_obj)
@@ -60,15 +63,17 @@ namespace Registry.DataModels
                 {
                     lock (lock_obj)
                     {
-                        MessageBox.Show(String.Format("Произошла ошибка при загрузке данных из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                            "Произошла ошибка при загрузке данных из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                         dmLoadState = DataModelLoadState.ErrorLoad;
                         Application.Exit();
                     }
                 }
                 catch (DataModelException e)
                 {
-                    MessageBox.Show(e.Message, "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(e.Message, "Ошибка", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     dmLoadState = DataModelLoadState.ErrorLoad;
                 }
             }, progressBar); 
@@ -89,7 +94,7 @@ namespace Registry.DataModels
                     lock (lock_obj)
                     {
                         MessageBox.Show("Произошла ошибка при загрузке данных из базы данных. Дальнейшая работа приложения невозможна", "Ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                         Application.Exit();
                         return null;
                     }

@@ -39,7 +39,7 @@
             this.checkedListBoxRegions.Dock = System.Windows.Forms.DockStyle.Top;
             this.checkedListBoxRegions.Location = new System.Drawing.Point(0, 0);
             this.checkedListBoxRegions.Name = "checkedListBoxRegions";
-            this.checkedListBoxRegions.Size = new System.Drawing.Size(242, 214);
+            this.checkedListBoxRegions.Size = new System.Drawing.Size(282, 244);
             this.checkedListBoxRegions.TabIndex = 0;
             // 
             // vButton1
@@ -47,10 +47,10 @@
             this.vButton1.AllowAnimations = true;
             this.vButton1.BackColor = System.Drawing.Color.Transparent;
             this.vButton1.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButton1.Location = new System.Drawing.Point(129, 242);
+            this.vButton1.Location = new System.Drawing.Point(150, 279);
             this.vButton1.Name = "vButton1";
             this.vButton1.RoundedCornersMask = ((byte)(15));
-            this.vButton1.Size = new System.Drawing.Size(100, 30);
+            this.vButton1.Size = new System.Drawing.Size(117, 35);
             this.vButton1.TabIndex = 3;
             this.vButton1.Text = "Отменить";
             this.vButton1.UseVisualStyleBackColor = false;
@@ -60,10 +60,10 @@
             // 
             this.vButton2.AllowAnimations = true;
             this.vButton2.BackColor = System.Drawing.Color.Transparent;
-            this.vButton2.Location = new System.Drawing.Point(13, 242);
+            this.vButton2.Location = new System.Drawing.Point(15, 279);
             this.vButton2.Name = "vButton2";
             this.vButton2.RoundedCornersMask = ((byte)(15));
-            this.vButton2.Size = new System.Drawing.Size(100, 30);
+            this.vButton2.Size = new System.Drawing.Size(117, 35);
             this.vButton2.TabIndex = 2;
             this.vButton2.Text = "Сформировать";
             this.vButton2.UseVisualStyleBackColor = false;
@@ -73,9 +73,9 @@
             // checkBoxCheckAll
             // 
             this.checkBoxCheckAll.AutoSize = true;
-            this.checkBoxCheckAll.Location = new System.Drawing.Point(12, 219);
+            this.checkBoxCheckAll.Location = new System.Drawing.Point(14, 253);
             this.checkBoxCheckAll.Name = "checkBoxCheckAll";
-            this.checkBoxCheckAll.Size = new System.Drawing.Size(97, 17);
+            this.checkBoxCheckAll.Size = new System.Drawing.Size(108, 19);
             this.checkBoxCheckAll.TabIndex = 1;
             this.checkBoxCheckAll.Text = "Выделить все";
             this.checkBoxCheckAll.UseVisualStyleBackColor = true;
@@ -83,14 +83,15 @@
             // 
             // SelectRegionsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
-            this.ClientSize = new System.Drawing.Size(242, 278);
+            this.ClientSize = new System.Drawing.Size(282, 321);
             this.Controls.Add(this.checkBoxCheckAll);
             this.Controls.Add(this.vButton2);
             this.Controls.Add(this.vButton1);
             this.Controls.Add(this.checkedListBoxRegions);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

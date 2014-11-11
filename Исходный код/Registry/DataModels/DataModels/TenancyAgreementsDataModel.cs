@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.Odbc;
 using Registry.Entities;
+using System.Globalization;
 
 namespace Registry.DataModels
 {
@@ -46,79 +47,89 @@ namespace Registry.DataModels
 
         public bool EditingNewRecord { get; set; }
 
-        public int Delete(int id)
+        public static int Delete(int id)
         {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = deleteQuery;
-            command.Parameters.Add(connection.CreateParameter<int?>("id_agreement", id));
-            try
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
             {
-                return connection.SqlModifyQuery(command);
-            }
-            catch (OdbcException e)
-            {
-                MessageBox.Show(String.Format("Не удалось удалить соглашение из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
-            }
-        }
-
-        public int Update(TenancyAgreement tenancyAgreement)
-        {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = updateQuery;
-            command.Parameters.Add(connection.CreateParameter<int?>("id_process", tenancyAgreement.id_process));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("agreement_date", tenancyAgreement.agreement_date));
-            command.Parameters.Add(connection.CreateParameter<string>("agreement_content", tenancyAgreement.agreement_content));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_executor", tenancyAgreement.id_executor));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_warrant", tenancyAgreement.id_warrant));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_agreement", tenancyAgreement.id_agreement));
-            try
-            {
-                return connection.SqlModifyQuery(command);
-            }
-            catch (OdbcException e)
-            {
-                connection.SqlRollbackTransaction();
-                MessageBox.Show(String.Format("Не удалось изменить информацию о соглашении в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
-            }
-        }
-
-        public int Insert(TenancyAgreement tenancyAgreement)
-        {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            DbCommand last_id_command = connection.CreateCommand();
-            last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
-            command.CommandText = insertQuery;
-            command.Parameters.Add(connection.CreateParameter<int?>("id_process", tenancyAgreement.id_process));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("agreement_date", tenancyAgreement.agreement_date));
-            command.Parameters.Add(connection.CreateParameter<string>("agreement_content", tenancyAgreement.agreement_content));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_executor", tenancyAgreement.id_executor));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_warrant", tenancyAgreement.id_warrant));
-            try
-            {
-                connection.SqlBeginTransaction();
-                connection.SqlModifyQuery(command);
-                DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
-                connection.SqlCommitTransaction();
-                if (last_id.Rows.Count == 0)
+                command.CommandText = deleteQuery;
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_agreement", id));
+                try
                 {
-                    MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return connection.SqlModifyQuery(command);
+                }
+                catch (OdbcException e)
+                {
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось удалить соглашение из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     return -1;
                 }
-                return Convert.ToInt32(last_id.Rows[0][0]);
             }
-            catch (OdbcException e)
+        }
+
+        public static int Update(TenancyAgreement tenancyAgreement)
+        {
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
             {
-                connection.SqlRollbackTransaction();
-                MessageBox.Show(String.Format("Не удалось добавить соглашение в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
+                command.CommandText = updateQuery;
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyAgreement.id_process));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("agreement_date", tenancyAgreement.agreement_date));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("agreement_content", tenancyAgreement.agreement_content));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancyAgreement.id_executor));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", tenancyAgreement.id_warrant));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_agreement", tenancyAgreement.id_agreement));
+                try
+                {
+                    return connection.SqlModifyQuery(command);
+                }
+                catch (OdbcException e)
+                {
+                    connection.SqlRollbackTransaction();
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось изменить информацию о соглашении в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
+            }
+        }
+
+        public static int Insert(TenancyAgreement tenancyAgreement)
+        {
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
+            using (DbCommand last_id_command = DBConnection.CreateCommand())
+            {
+                last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
+                command.CommandText = insertQuery;
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyAgreement.id_process));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("agreement_date", tenancyAgreement.agreement_date));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("agreement_content", tenancyAgreement.agreement_content));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancyAgreement.id_executor));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", tenancyAgreement.id_warrant));
+                try
+                {
+                    connection.SqlBeginTransaction();
+                    connection.SqlModifyQuery(command);
+                    DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
+                    connection.SqlCommitTransaction();
+                    if (last_id.Rows.Count == 0)
+                    {
+                        MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        return -1;
+                    }
+                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
+                }
+                catch (OdbcException e)
+                {
+                    connection.SqlRollbackTransaction();
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось добавить соглашение в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
             }
         }
     }

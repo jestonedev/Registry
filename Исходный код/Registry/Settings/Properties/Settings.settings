@@ -3,13 +3,13 @@
   <Profiles />
   <Settings>
     <Setting Name="ConnectionString" Type="System.String" Scope="User">
-      <Value Profile="(Default)">dsn=registry</Value>
+      <Value Profile="(Default)">6FsLGxuGeDI63dYUPflMwg==</Value>
     </Setting>
     <Setting Name="LDAPUserName" Type="System.String" Scope="User">
       <Value Profile="(Default)">AD_turniket@pwr</Value>
     </Setting>
     <Setting Name="LDAPEncryptedPassword" Type="System.String" Scope="User">
-      <Value Profile="(Default)">VX0EE5YW0ETo</Value>
+      <Value Profile="(Default)">uhh0joeX/12AzuPmHVrz5A==</Value>
     </Setting>
     <Setting Name="MaxDBConnectionCount" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">10</Value>

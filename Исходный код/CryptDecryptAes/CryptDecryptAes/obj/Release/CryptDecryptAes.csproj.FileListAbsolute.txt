@@ -1,0 +1,18 @@
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\CryptDecryptAes\CryptDecryptAes\bin\Release\CryptDecryptAes.exe.config
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\CryptDecryptAes\CryptDecryptAes\bin\Release\CryptDecryptAes.exe
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\CryptDecryptAes\CryptDecryptAes\bin\Release\CryptDecryptAes.pdb
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\CryptDecryptAes\CryptDecryptAes\obj\Release\CryptDecryptAes.FormEncryptor.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\CryptDecryptAes\CryptDecryptAes\obj\Release\CryptDecryptAes.Properties.Resources.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\CryptDecryptAes\CryptDecryptAes\obj\Release\CryptDecryptAes.csproj.GenerateResource.Cache
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\CryptDecryptAes\CryptDecryptAes\obj\Release\CryptDecryptAes.exe
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\CryptDecryptAes\CryptDecryptAes\obj\Release\CryptDecryptAes.pdb
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\CryptDecryptAes\CryptDecryptAes\obj\Release\CryptDecryptAes.csprojResolveAssemblyReference.cache
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\CryptDecryptAes\CryptDecryptAes\bin\Release\CryptDecryptAes.exe.config
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\CryptDecryptAes\CryptDecryptAes\obj\Release\CryptDecryptAes.exe
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\CryptDecryptAes\CryptDecryptAes\obj\Release\CryptDecryptAes.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\CryptDecryptAes\CryptDecryptAes\bin\Release\CryptDecryptAes.exe
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\CryptDecryptAes\CryptDecryptAes\bin\Release\CryptDecryptAes.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\CryptDecryptAes\CryptDecryptAes\obj\Release\CryptDecryptAes.csprojResolveAssemblyReference.cache
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\CryptDecryptAes\CryptDecryptAes\obj\Release\CryptDecryptAes.FormCrypt.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\CryptDecryptAes\CryptDecryptAes\obj\Release\CryptDecryptAes.Properties.Resources.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\CryptDecryptAes\CryptDecryptAes\obj\Release\CryptDecryptAes.csproj.GenerateResource.Cache

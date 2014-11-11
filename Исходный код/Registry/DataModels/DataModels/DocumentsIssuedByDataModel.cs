@@ -7,6 +7,7 @@ using System.Data;
 using Registry.Entities;
 using System.Data.Common;
 using System.Data.Odbc;
+using System.Globalization;
 
 namespace Registry.DataModels
 {
@@ -42,78 +43,89 @@ namespace Registry.DataModels
             return dataModel;
         }
 
-        public int Insert(DocumentIssuedBy documentIssuedBy)
+        public static int Insert(DocumentIssuedBy documentIssuedBy)
         {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            DbCommand last_id_command = connection.CreateCommand();
-            last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
-            command.CommandText = insertQuery;
-
-            command.Parameters.Add(connection.CreateParameter<string>("document_issued_by", documentIssuedBy.document_issued_by));
-
-            try
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
+            using (DbCommand last_id_command = DBConnection.CreateCommand())
             {
-                connection.SqlBeginTransaction();
-                connection.SqlModifyQuery(command);
-                DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
+                last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
+                command.CommandText = insertQuery;
 
-                if (last_id.Rows.Count == 0)
+                command.Parameters.Add(DBConnection.CreateParameter<string>("document_issued_by", documentIssuedBy.document_issued_by));
+
+                try
                 {
-                    MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    connection.SqlBeginTransaction();
+                    connection.SqlModifyQuery(command);
+                    DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
+
+                    if (last_id.Rows.Count == 0)
+                    {
+                        MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        connection.SqlRollbackTransaction();
+                        return -1;
+                    }
+                    connection.SqlCommitTransaction();
+
+                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
+                }
+                catch (OdbcException e)
+                {
                     connection.SqlRollbackTransaction();
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось добавить запись об органе, выдающем документы, удостоверяющие личность. Подробная ошибка: {0}",
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     return -1;
                 }
-                connection.SqlCommitTransaction();
-
-                return Convert.ToInt32(last_id.Rows[0][0]);
-            }
-            catch (OdbcException e)
-            {
-                connection.SqlRollbackTransaction();
-                MessageBox.Show(String.Format("Не удалось добавить запись об органе, выдающем документы, удостоверяющие личность. Подробная ошибка: {0}", 
-                    e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
             }
         }
 
-        public int Update(Entities.DocumentIssuedBy documentIssuedBy)
+        public static int Update(Entities.DocumentIssuedBy documentIssuedBy)
         {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = updateQuery;
-
-            command.Parameters.Add(connection.CreateParameter<string>("document_issued_by", documentIssuedBy.document_issued_by));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_document_issued_by", documentIssuedBy.id_document_issued_by));
-
-            try
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
             {
-                return connection.SqlModifyQuery(command);
-            }
-            catch (OdbcException e)
-            {
-                connection.SqlRollbackTransaction();
-                MessageBox.Show(String.Format("Не удалось изменить запись в базе данных об органе, выдающем документы, удостоверяющие личность"+
-                    ". Подробная ошибка: {0}", e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
+                command.CommandText = updateQuery;
+
+                command.Parameters.Add(DBConnection.CreateParameter<string>("document_issued_by", documentIssuedBy.document_issued_by));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_document_issued_by", documentIssuedBy.id_document_issued_by));
+
+                try
+                {
+                    return connection.SqlModifyQuery(command);
+                }
+                catch (OdbcException e)
+                {
+                    connection.SqlRollbackTransaction();
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось изменить запись в базе данных об органе, выдающем документы, удостоверяющие личность" +
+                        ". Подробная ошибка: {0}", e.Message), "Ошибка", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
             }
         }
 
-        public int Delete(int id)
+        public static int Delete(int id)
         {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = deleteQuery;
-            command.Parameters.Add(connection.CreateParameter<int?>("id_document_issued_by", id));
-            try
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
             {
-                return connection.SqlModifyQuery(command);
-            }
-            catch (OdbcException e)
-            {
-                MessageBox.Show(String.Format("Не удалось удалить орган, выдающий документы, удостоверяющие личность, из базы данных. Подробная ошибка: {0}", 
-                    e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
+                command.CommandText = deleteQuery;
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_document_issued_by", id));
+                try
+                {
+                    return connection.SqlModifyQuery(command);
+                }
+                catch (OdbcException e)
+                {
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось удалить орган, выдающий документы, удостоверяющие личность, из базы данных. Подробная ошибка: {0}",
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
             }
         }
     }

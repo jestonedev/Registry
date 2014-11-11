@@ -17,30 +17,37 @@ namespace Security
 
         public static void LoadPriveleges()
         {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = String.Format(query, System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("'", "").Replace("\\", "\\\\"));
-            try
+            using (DBConnection connection = new DBConnection())
             {
-                DataTable table = connection.SqlSelectTable("privileges", command);
-                if (table.Rows.Count == 0)
+                DbCommand command = DBConnection.CreateCommand();
+                command.CommandText = String.Format(query, System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("'", "").Replace("\\", "\\\\"));
+                try
                 {
-                    MessageBox.Show("Запрос не вернул привелегии для данного пользователя", "Неизвестная ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    priveleges = 0;
+                    DataTable table = connection.SqlSelectTable("privileges", command);
+                    if (table.Rows.Count == 0)
+                    {
+                        MessageBox.Show("Запрос не вернул привелегии для данного пользователя", "Неизвестная ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        priveleges = 0;
+                    }
+                    priveleges = Convert.ToInt32(table.Rows[0][0]);
                 }
-                priveleges = Convert.ToInt32(table.Rows[0][0]);
-            }
-            catch (OdbcException e)
-            {
-                priveleges = 0;
-                MessageBox.Show(String.Format("Не удалось загрузить привелегии пользователя", e.Message), "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                catch (OdbcException e)
+                {
+                    priveleges = 0;
+                    MessageBox.Show(String.Format("Не удалось загрузить привелегии пользователя", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
         }
 
         public static bool HasPrivelege(Priveleges privelege)
         {
             return ((int)priveleges & (int)privelege) == (int)privelege;
+        }
+
+        public static bool HasNoPriveleges()
+        {
+            return (int)priveleges == 0;
         }
     }
 }

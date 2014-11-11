@@ -7,6 +7,7 @@ using Registry.DataModels;
 using System.Data;
 using Registry.Entities;
 using System.Drawing;
+using Security;
 
 namespace Registry.Viewport
 {
@@ -324,7 +325,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return true;
+            return AccessControl.HasPrivelege(Priveleges.ClaimsDirectoriesReadWrite);
         }
 
         public override void InsertRecord()
@@ -336,7 +337,7 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            return (v_snapshot_claim_state_types.Position != -1);
+            return (v_snapshot_claim_state_types.Position != -1) && AccessControl.HasPrivelege(Priveleges.ClaimsDirectoriesReadWrite);
         }
 
         public override void DeleteRecord()
@@ -363,7 +364,7 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return SnapshotHasChanges();
+            return SnapshotHasChanges() && AccessControl.HasPrivelege(Priveleges.ClaimsDirectoriesReadWrite);
         }
 
         public override void SaveRecord()
@@ -381,7 +382,7 @@ namespace Registry.Viewport
                 DataRow row = claim_state_types.Select().Rows.Find(((ClaimStateType)list[i]).id_state_type);
                 if (row == null)
                 {
-                    int id_state_type = claim_state_types.Insert(list[i]);
+                    int id_state_type = ClaimStateTypesDataModel.Insert(list[i]);
                     if (id_state_type == -1)
                     {
                         sync_views = true;
@@ -397,7 +398,7 @@ namespace Registry.Viewport
                 {
                     if (RowToClaimStateType(row) == list[i])
                         continue;
-                    if (claim_state_types.Update(list[i]) == -1)
+                    if (ClaimStateTypesDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         return;
@@ -417,7 +418,7 @@ namespace Registry.Viewport
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (claim_state_types.Delete(list[i].id_state_type.Value) == -1)
+                    if (ClaimStateTypesDataModel.Delete(list[i].id_state_type.Value) == -1)
                     {
                         sync_views = true;
                         return;
@@ -432,7 +433,7 @@ namespace Registry.Viewport
                 DataRow row = claim_state_types_relations.Select().Rows.Find(((ClaimStateTypeRelation)list_relations[i]).id_relation);
                 if (row == null)
                 {
-                    int id_relation = claim_state_types_relations.Insert(list_relations[i]);
+                    int id_relation = ClaimStateTypesRelationsDataModel.Insert(list_relations[i]);
                     if (id_relation == -1)
                     {
                         sync_views = true;
@@ -464,7 +465,7 @@ namespace Registry.Viewport
                 }
                 if (row_index == -1)
                 {
-                    if (claim_state_types_relations.Delete(list_relations[i].id_relation.Value) == -1)
+                    if (ClaimStateTypesRelationsDataModel.Delete(list_relations[i].id_relation.Value) == -1)
                     {
                         sync_views = true;
                         return;
@@ -756,7 +757,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel19.RowCount = 1;
             this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel19.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel19.Size = new System.Drawing.Size(643, 427);
+            this.tableLayoutPanel19.Size = new System.Drawing.Size(707, 427);
             this.tableLayoutPanel19.TabIndex = 0;
             // 
             // groupBox36
@@ -765,7 +766,7 @@ namespace Registry.Viewport
             this.groupBox36.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox36.Location = new System.Drawing.Point(3, 3);
             this.groupBox36.Name = "groupBox36";
-            this.groupBox36.Size = new System.Drawing.Size(315, 421);
+            this.groupBox36.Size = new System.Drawing.Size(347, 421);
             this.groupBox36.TabIndex = 0;
             this.groupBox36.TabStop = false;
             this.groupBox36.Text = "Состояния";
@@ -781,10 +782,10 @@ namespace Registry.Viewport
             this.is_start_state_type,
             this.state_type});
             this.dataGridViewClaimStateTypes.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewClaimStateTypes.Location = new System.Drawing.Point(3, 16);
+            this.dataGridViewClaimStateTypes.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewClaimStateTypes.Name = "dataGridViewClaimStateTypes";
             this.dataGridViewClaimStateTypes.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewClaimStateTypes.Size = new System.Drawing.Size(309, 402);
+            this.dataGridViewClaimStateTypes.Size = new System.Drawing.Size(341, 401);
             this.dataGridViewClaimStateTypes.TabIndex = 0;
             this.dataGridViewClaimStateTypes.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewClaimStateTypes_CellValidated);
             // 
@@ -814,9 +815,9 @@ namespace Registry.Viewport
             // 
             this.groupBox37.Controls.Add(this.dataGridViewClaimStateTypesFrom);
             this.groupBox37.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox37.Location = new System.Drawing.Point(324, 3);
+            this.groupBox37.Location = new System.Drawing.Point(356, 3);
             this.groupBox37.Name = "groupBox37";
-            this.groupBox37.Size = new System.Drawing.Size(316, 421);
+            this.groupBox37.Size = new System.Drawing.Size(348, 421);
             this.groupBox37.TabIndex = 1;
             this.groupBox37.TabStop = false;
             this.groupBox37.Text = "Разрешены переходы из";
@@ -833,9 +834,9 @@ namespace Registry.Viewport
             this.id_state_type_from,
             this.state_type_from});
             this.dataGridViewClaimStateTypesFrom.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewClaimStateTypesFrom.Location = new System.Drawing.Point(3, 16);
+            this.dataGridViewClaimStateTypesFrom.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewClaimStateTypesFrom.Name = "dataGridViewClaimStateTypesFrom";
-            this.dataGridViewClaimStateTypesFrom.Size = new System.Drawing.Size(310, 402);
+            this.dataGridViewClaimStateTypesFrom.Size = new System.Drawing.Size(342, 401);
             this.dataGridViewClaimStateTypesFrom.TabIndex = 0;
             this.dataGridViewClaimStateTypesFrom.VirtualMode = true;
             this.dataGridViewClaimStateTypesFrom.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridViewClaimStateTypesFrom_CellValueNeeded);
@@ -875,9 +876,9 @@ namespace Registry.Viewport
             // ClaimStateTypesViewport
             // 
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(649, 433);
+            this.ClientSize = new System.Drawing.Size(713, 433);
             this.Controls.Add(this.tableLayoutPanel19);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ClaimStateTypesViewport";
             this.Padding = new System.Windows.Forms.Padding(3);

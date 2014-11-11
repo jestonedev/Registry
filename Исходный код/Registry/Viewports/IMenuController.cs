@@ -35,6 +35,7 @@ namespace Registry.Viewport
         void ShowTenancyPremises();
         void ShowClaims();
         void ShowClaimStates();
+        void ShowTenancies();
         void Close();
         void ForceClose();
 
@@ -70,6 +71,7 @@ namespace Registry.Viewport
         bool HasAssocTenancyObjects();
         bool HasAssocClaims();
         bool HasAssocClaimStates();
+        bool HasAssocTenancies();
 
         bool CanFilterSocialFund();
         bool CanFilterCommercialFundFund();

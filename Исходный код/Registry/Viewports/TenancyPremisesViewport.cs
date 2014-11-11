@@ -10,6 +10,7 @@ using Registry.Entities;
 using Microsoft.TeamFoundation.Client;
 using System.Text.RegularExpressions;
 using Registry.CalcDataModels;
+using Security;
 
 namespace Registry.Viewport
 {
@@ -322,10 +323,7 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            if (v_premises.Position == -1)
-                return false;
-            else
-                return true;
+            return (v_premises.Position > -1) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void DeleteRecord()
@@ -333,7 +331,7 @@ namespace Registry.Viewport
             if (MessageBox.Show("Вы действительно хотите удалить это помещение?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 int id_building = (int)((DataRowView)v_premises[v_premises.Position])["id_building"];
-                if (premises.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
+                if (PremisesDataModel.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
                     return;
                 ((DataRowView)v_premises[v_premises.Position]).Delete();
                 menuCallback.ForceCloseDetachedViewports();
@@ -387,10 +385,7 @@ namespace Registry.Viewport
 
         public override bool CanOpenDetails()
         {
-            if (v_premises.Position == -1)
-                return false;
-            else
-                return true;
+            return (v_premises.Position != -1) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void OpenDetails()
@@ -425,7 +420,7 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return SnapshotHasChanges();
+            return SnapshotHasChanges() && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void SaveRecord()
@@ -453,7 +448,7 @@ namespace Registry.Viewport
                     row = tenancy_premises.Select().Rows.Find(list[i].id_assoc);
                 if (row == null)
                 {
-                    int id_assoc = tenancy_premises.Insert(list[i]);
+                    int id_assoc = TenancyPremisesAssocDataModel.Insert(list[i]);
                     if (id_assoc == -1)
                     {
                         sync_views = true;
@@ -469,7 +464,7 @@ namespace Registry.Viewport
                 {
                     if (RowToTenancyPremises(row) == list[i])
                         continue;
-                    if (tenancy_premises.Update(list[i]) == -1)
+                    if (TenancyPremisesAssocDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         return;
@@ -493,7 +488,7 @@ namespace Registry.Viewport
                 }
                 if (row_index == -1)
                 {
-                    if (tenancy_premises.Delete(list[i].id_assoc.Value) == -1)
+                    if (TenancyPremisesAssocDataModel.Delete(list[i].id_assoc.Value) == -1)
                     {
                         sync_views = true;
                         return;
@@ -524,10 +519,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            if (!premises.EditingNewRecord)
-                return true;
-            else
-                return false;
+            return (!premises.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void InsertRecord()
@@ -546,7 +538,7 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            return (v_premises.Position != -1) && !premises.EditingNewRecord;
+            return (v_premises.Position != -1) && (!premises.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void CopyRecord()
@@ -775,7 +767,7 @@ namespace Registry.Viewport
                 width += dataGridView.Columns[i].Width;
             width += dataGridView.RowHeadersWidth;
             ((SubPremisesDetailsControl)dataGridView.DetailsControl).SetControlWidth(width);
-            if (dataGridView.Size.Width > 1060)
+            if (dataGridView.Size.Width > 1500)
             {
                 if (dataGridView.Columns["id_street"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     dataGridView.Columns["id_street"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -1003,7 +995,7 @@ namespace Registry.Viewport
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
@@ -1026,7 +1018,7 @@ namespace Registry.Viewport
             this.cadastral_num});
             dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -1146,35 +1138,35 @@ namespace Registry.Viewport
             dataGridViewCellStyle6.Format = "#0.0## м²";
             this.total_area.DefaultCellStyle = dataGridViewCellStyle6;
             this.total_area.HeaderText = "Общая площадь";
-            this.total_area.MinimumWidth = 120;
+            this.total_area.MinimumWidth = 130;
             this.total_area.Name = "total_area";
             this.total_area.ReadOnly = true;
-            this.total_area.Width = 120;
+            this.total_area.Width = 130;
             // 
             // living_area
             // 
             dataGridViewCellStyle7.Format = "#0.0## м²";
             this.living_area.DefaultCellStyle = dataGridViewCellStyle7;
             this.living_area.HeaderText = "Жилая площадь";
-            this.living_area.MinimumWidth = 120;
+            this.living_area.MinimumWidth = 130;
             this.living_area.Name = "living_area";
             this.living_area.ReadOnly = true;
-            this.living_area.Width = 120;
+            this.living_area.Width = 130;
             // 
             // cadastral_num
             // 
             this.cadastral_num.HeaderText = "Кадастровый номер";
-            this.cadastral_num.MinimumWidth = 150;
+            this.cadastral_num.MinimumWidth = 170;
             this.cadastral_num.Name = "cadastral_num";
             this.cadastral_num.ReadOnly = true;
-            this.cadastral_num.Width = 150;
+            this.cadastral_num.Width = 170;
             // 
             // TenancyPremisesViewport
             // 
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1370, 304);
             this.Controls.Add(this.dataGridView);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "TenancyPremisesViewport";
             this.Padding = new System.Windows.Forms.Padding(3);

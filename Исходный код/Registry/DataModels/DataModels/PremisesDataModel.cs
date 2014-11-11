@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using System.Data;
 using Registry.Entities;
 using System.Data.Odbc;
+using System.Globalization;
 
 namespace Registry.DataModels
 {
@@ -64,101 +65,111 @@ namespace Registry.DataModels
             return dataModel;
         }
 
-        public int Delete(int id)
+        public static int Delete(int id)
         {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = deleteQuery;
-            command.Parameters.Add(connection.CreateParameter<int?>("id_premises", id));
-            try
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
             {
-                return connection.SqlModifyQuery(command);
-            }
-            catch (OdbcException e)
-            {
-                MessageBox.Show(String.Format("Не удалось удалить помещение из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
-            }
-        }
-
-        public int Update(Premise premise)
-        {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = updateQuery;
-
-            command.Parameters.Add(connection.CreateParameter<int?>("id_building", premise.id_building));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_state", premise.id_state));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_premises_kind", premise.id_premises_kind));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_premises_type", premise.id_premises_type));
-            command.Parameters.Add(connection.CreateParameter<string>("premises_num", premise.premises_num));
-            command.Parameters.Add(connection.CreateParameter<short?>("floor", premise.floor));
-            command.Parameters.Add(connection.CreateParameter<short?>("num_rooms", premise.num_rooms));
-            command.Parameters.Add(connection.CreateParameter<short?>("num_beds", premise.num_beds));
-            command.Parameters.Add(connection.CreateParameter<double?>("total_area", premise.total_area));
-            command.Parameters.Add(connection.CreateParameter<double?>("living_area", premise.living_area));
-            command.Parameters.Add(connection.CreateParameter<double?>("height", premise.height));
-            command.Parameters.Add(connection.CreateParameter<string>("cadastral_num", premise.cadastral_num));
-            command.Parameters.Add(connection.CreateParameter<decimal?>("cadastral_cost", premise.cadastral_cost));
-            command.Parameters.Add(connection.CreateParameter<decimal?>("balance_cost", premise.balance_cost));
-            command.Parameters.Add(connection.CreateParameter<string>("description", premise.description));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_premises", premise.id_premises));
-            try
-            {
-                return connection.SqlModifyQuery(command);
-            }
-            catch (OdbcException e)
-            {
-                MessageBox.Show(String.Format("Не удалось изменить данные о помещении. Подробная ошибка: {0}", e.Message), "Ошибка", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
-            }
-        }
-
-        public int Insert(Premise premise)
-        {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            DbCommand last_id_command = connection.CreateCommand();
-            last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
-            command.CommandText = insertQuery;
-
-            command.Parameters.Add(connection.CreateParameter<int?>("id_building", premise.id_building));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_state", premise.id_state));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_premises_kind", premise.id_premises_kind));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_premises_type", premise.id_premises_type));
-            command.Parameters.Add(connection.CreateParameter<string>("premises_num", premise.premises_num));
-            command.Parameters.Add(connection.CreateParameter<short?>("floor", premise.floor));
-            command.Parameters.Add(connection.CreateParameter<short?>("num_rooms", premise.num_rooms));
-            command.Parameters.Add(connection.CreateParameter<short?>("num_beds", premise.num_beds));
-            command.Parameters.Add(connection.CreateParameter<double?>("total_area", premise.total_area));
-            command.Parameters.Add(connection.CreateParameter<double?>("living_area", premise.living_area));
-            command.Parameters.Add(connection.CreateParameter<double?>("height", premise.height));
-            command.Parameters.Add(connection.CreateParameter<string>("cadastral_num", premise.cadastral_num));
-            command.Parameters.Add(connection.CreateParameter<decimal?>("cadastral_cost", premise.cadastral_cost));
-            command.Parameters.Add(connection.CreateParameter<decimal?>("balance_cost", premise.balance_cost));
-            command.Parameters.Add(connection.CreateParameter<string>("description", premise.description));
-
-            try
-            {
-                connection.SqlBeginTransaction();
-                connection.SqlModifyQuery(command);
-                DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
-                connection.SqlCommitTransaction();
-                if (last_id.Rows.Count == 0)
+                command.CommandText = deleteQuery;
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", id));
+                try
                 {
-                    MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return connection.SqlModifyQuery(command);
+                }
+                catch (OdbcException e)
+                {
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось удалить помещение из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     return -1;
                 }
-                return Convert.ToInt32(last_id.Rows[0][0]);
             }
-            catch (OdbcException e)
+        }
+
+        public static int Update(Premise premise)
+        {
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
             {
-                connection.SqlRollbackTransaction();
-                MessageBox.Show(String.Format("Не удалось добавить помещение в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
+                command.CommandText = updateQuery;
+
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_building", premise.id_building));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", premise.id_state));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_kind", premise.id_premises_kind));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_type", premise.id_premises_type));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("premises_num", premise.premises_num));
+                command.Parameters.Add(DBConnection.CreateParameter<short?>("floor", premise.floor));
+                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_rooms", premise.num_rooms));
+                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_beds", premise.num_beds));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", premise.total_area));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("living_area", premise.living_area));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("height", premise.height));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("cadastral_num", premise.cadastral_num));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("cadastral_cost", premise.cadastral_cost));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("balance_cost", premise.balance_cost));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", premise.description));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", premise.id_premises));
+                try
+                {
+                    return connection.SqlModifyQuery(command);
+                }
+                catch (OdbcException e)
+                {
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось изменить данные о помещении. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
+            }
+        }
+
+        public static int Insert(Premise premise)
+        {
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
+            using (DbCommand last_id_command = DBConnection.CreateCommand())
+            {
+                last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
+                command.CommandText = insertQuery;
+
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_building", premise.id_building));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", premise.id_state));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_kind", premise.id_premises_kind));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_type", premise.id_premises_type));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("premises_num", premise.premises_num));
+                command.Parameters.Add(DBConnection.CreateParameter<short?>("floor", premise.floor));
+                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_rooms", premise.num_rooms));
+                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_beds", premise.num_beds));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", premise.total_area));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("living_area", premise.living_area));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("height", premise.height));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("cadastral_num", premise.cadastral_num));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("cadastral_cost", premise.cadastral_cost));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("balance_cost", premise.balance_cost));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", premise.description));
+
+                try
+                {
+                    connection.SqlBeginTransaction();
+                    connection.SqlModifyQuery(command);
+                    DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
+                    connection.SqlCommitTransaction();
+                    if (last_id.Rows.Count == 0)
+                    {
+                        MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        return -1;
+                    }
+                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
+                }
+                catch (OdbcException e)
+                {
+                    connection.SqlRollbackTransaction();
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось добавить помещение в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
             }
         }
     }

@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.Odbc;
 using Registry.Entities;
+using System.Globalization;
 
 namespace Registry.DataModels
 {
@@ -53,94 +54,116 @@ namespace Registry.DataModels
             return dataModel;
         }
 
-        public int Delete(int id)
+        public static int Delete(int id)
         {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = deleteQuery;
-            command.Parameters.Add(connection.CreateParameter<int?>("id_process", id));
-            try
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
             {
-                return connection.SqlModifyQuery(command);
-            }
-            catch (OdbcException e)
-            {
-                MessageBox.Show(String.Format("Не удалось удалить процесс найма из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
-            }
-        }
-
-        public int Update(TenancyProcess tenancy)
-        {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = updateQuery;
-            command.Parameters.Add(connection.CreateParameter<int?>("id_rent_type", tenancy.id_rent_type));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_warrant", tenancy.id_warrant));
-            command.Parameters.Add(connection.CreateParameter<string>("registration_num", tenancy.registration_num));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("registration_date", tenancy.registration_date));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("issue_date", tenancy.issue_date));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("begin_date", tenancy.begin_date));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("end_date", tenancy.end_date));
-            command.Parameters.Add(connection.CreateParameter<string>("residence_warrant_num", tenancy.residence_warrant_num));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("residence_warrant_date", tenancy.residence_warrant_date));
-            command.Parameters.Add(connection.CreateParameter<string>("kumi_order_num", tenancy.kumi_order_num));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("kumi_order_date", tenancy.kumi_order_date));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_executor", tenancy.id_executor));
-            command.Parameters.Add(connection.CreateParameter<string>("description", tenancy.description));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_process", tenancy.id_process));
-            try
-            {
-                return connection.SqlModifyQuery(command);
-            }
-            catch (OdbcException e)
-            {
-                MessageBox.Show(String.Format("Не удалось изменить данные о процессе найма. Подробная ошибка: {0}", e.Message), "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
-            }
-        }
-
-        public int Insert(TenancyProcess tenancy)
-        {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            DbCommand last_id_command = connection.CreateCommand();
-            last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
-            command.CommandText = insertQuery;
-            command.Parameters.Add(connection.CreateParameter<int?>("id_rent_type", tenancy.id_rent_type));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_warrant", tenancy.id_warrant));
-            command.Parameters.Add(connection.CreateParameter<string>("registration_num", tenancy.registration_num));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("registration_date", tenancy.registration_date));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("issue_date", tenancy.issue_date));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("begin_date", tenancy.begin_date));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("end_date", tenancy.end_date));
-            command.Parameters.Add(connection.CreateParameter<string>("residence_warrant_num", tenancy.residence_warrant_num));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("residence_warrant_date", tenancy.residence_warrant_date));
-            command.Parameters.Add(connection.CreateParameter<string>("kumi_order_num", tenancy.kumi_order_num));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("kumi_order_date", tenancy.kumi_order_date));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_executor", tenancy.id_executor));
-            command.Parameters.Add(connection.CreateParameter<string>("description", tenancy.description));
-            try
-            {
-                connection.SqlBeginTransaction();
-                connection.SqlModifyQuery(command);
-                DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
-                connection.SqlCommitTransaction();
-                if (last_id.Rows.Count == 0)
+                command.CommandText = deleteQuery;
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", id));
+                try
                 {
-                    MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return connection.SqlModifyQuery(command);
+                }
+                catch (OdbcException e)
+                {
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось удалить процесс найма из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     return -1;
                 }
-                return Convert.ToInt32(last_id.Rows[0][0]);
             }
-            catch (OdbcException e)
+        }
+
+        public static int Update(TenancyProcess tenancy)
+        {
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
             {
-                connection.SqlRollbackTransaction();
-                MessageBox.Show(String.Format("Не удалось добавить информацию о процессе найма в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
+                command.CommandText = updateQuery;
+                if (tenancy == null)
+                {
+                    MessageBox.Show("В метод Update не передана ссылка на сущность процесса найма", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_rent_type", tenancy.id_rent_type));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", tenancy.id_warrant));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_num", tenancy.registration_num));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", tenancy.registration_date));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("issue_date", tenancy.issue_date));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("begin_date", tenancy.begin_date));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("end_date", tenancy.end_date));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_warrant_num", tenancy.residence_warrant_num));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("residence_warrant_date", tenancy.residence_warrant_date));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("kumi_order_num", tenancy.kumi_order_num));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("kumi_order_date", tenancy.kumi_order_date));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancy.id_executor));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", tenancy.description));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancy.id_process));
+                try
+                {
+                    return connection.SqlModifyQuery(command);
+                }
+                catch (OdbcException e)
+                {
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось изменить данные о процессе найма. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
+            }
+        }
+
+        public static int Insert(TenancyProcess tenancy)
+        {
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
+            using (DbCommand last_id_command = DBConnection.CreateCommand())
+            {
+                last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
+                command.CommandText = insertQuery;
+                if (tenancy == null)
+                {
+                    MessageBox.Show("В метод Insert не передана ссылка на сущность процесса найма", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_rent_type", tenancy.id_rent_type));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", tenancy.id_warrant));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_num", tenancy.registration_num));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", tenancy.registration_date));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("issue_date", tenancy.issue_date));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("begin_date", tenancy.begin_date));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("end_date", tenancy.end_date));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_warrant_num", tenancy.residence_warrant_num));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("residence_warrant_date", tenancy.residence_warrant_date));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("kumi_order_num", tenancy.kumi_order_num));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("kumi_order_date", tenancy.kumi_order_date));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancy.id_executor));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", tenancy.description));
+                try
+                {
+                    connection.SqlBeginTransaction();
+                    connection.SqlModifyQuery(command);
+                    DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
+                    connection.SqlCommitTransaction();
+                    if (last_id.Rows.Count == 0)
+                    {
+                        MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        return -1;
+                    }
+                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
+                }
+                catch (OdbcException e)
+                {
+                    connection.SqlRollbackTransaction();
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось добавить информацию о процессе найма в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
             }
         }
     }

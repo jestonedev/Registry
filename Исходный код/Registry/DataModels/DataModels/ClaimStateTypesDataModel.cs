@@ -7,6 +7,7 @@ using System.Data;
 using Registry.Entities;
 using System.Data.Common;
 using System.Data.Odbc;
+using System.Globalization;
 
 namespace Registry.DataModels
 {
@@ -44,76 +45,86 @@ namespace Registry.DataModels
             return dataModel;
         }
 
-        public int Delete(int id)
+        public static int Delete(int id)
         {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = deleteQuery;
-            command.Parameters.Add(connection.CreateParameter<int?>("id_state_type", id));
-            try
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
             {
-                return connection.SqlModifyQuery(command);
-            }
-            catch (OdbcException e)
-            {
-                MessageBox.Show(String.Format("Не удалось удалить наименование вида состояния претензионно-исковой рабоыт. Подробная ошибка: {0}", 
-                    e.Message), "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
-            }
-        }
-
-        public int Update(ClaimStateType claimStateType)
-        {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = updateQuery;
-            command.Parameters.Add(connection.CreateParameter<string>("state_type", claimStateType.state_type));
-            command.Parameters.Add(connection.CreateParameter<bool?>("is_start_state_type", claimStateType.is_start_state_type));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_state_type", claimStateType.id_state_type));
-            try
-            {
-                return connection.SqlModifyQuery(command);
-            }
-            catch (OdbcException e)
-            {
-                connection.SqlRollbackTransaction();
-                MessageBox.Show(String.Format("Не удалось изменить наименование вида состояния претензионно-исковой работы в базе данных. "+
-                    "Подробная ошибка: {0}", e.Message), "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
-            }
-        }
-
-        public int Insert(ClaimStateType claimStateType)
-        {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            DbCommand last_id_command = connection.CreateCommand();
-            last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
-            command.CommandText = insertQuery;
-            command.Parameters.Add(connection.CreateParameter<string>("state_type", claimStateType.state_type));
-            command.Parameters.Add(connection.CreateParameter<bool?>("is_start_state_type", claimStateType.is_start_state_type));
-            try
-            {
-                connection.SqlBeginTransaction();
-                connection.SqlModifyQuery(command);
-                DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
-                connection.SqlCommitTransaction();
-                if (last_id.Rows.Count == 0)
+                command.CommandText = deleteQuery;
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state_type", id));
+                try
                 {
-                    MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return connection.SqlModifyQuery(command);
+                }
+                catch (OdbcException e)
+                {
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось удалить наименование вида состояния претензионно-исковой рабоыт. Подробная ошибка: {0}",
+                        e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     return -1;
                 }
-                return Convert.ToInt32(last_id.Rows[0][0]);
             }
-            catch (OdbcException e)
+        }
+
+        public static int Update(ClaimStateType claimStateType)
+        {
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
             {
-                connection.SqlRollbackTransaction();
-                MessageBox.Show(String.Format("Не удалось добавить наименование вида состояния претензионно-исковой работы в базу данных. "+
-                    "Подробная ошибка: {0}", e.Message), "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
+                command.CommandText = updateQuery;
+                command.Parameters.Add(DBConnection.CreateParameter<string>("state_type", claimStateType.state_type));
+                command.Parameters.Add(DBConnection.CreateParameter<bool?>("is_start_state_type", claimStateType.is_start_state_type));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state_type", claimStateType.id_state_type));
+                try
+                {
+                    return connection.SqlModifyQuery(command);
+                }
+                catch (OdbcException e)
+                {
+                    connection.SqlRollbackTransaction();
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось изменить наименование вида состояния претензионно-исковой работы в базе данных. " +
+                        "Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
+            }
+        }
+
+        public static int Insert(ClaimStateType claimStateType)
+        {
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
+            using (DbCommand last_id_command = DBConnection.CreateCommand())
+            {
+                last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
+                command.CommandText = insertQuery;
+                command.Parameters.Add(DBConnection.CreateParameter<string>("state_type", claimStateType.state_type));
+                command.Parameters.Add(DBConnection.CreateParameter<bool?>("is_start_state_type", claimStateType.is_start_state_type));
+                try
+                {
+                    connection.SqlBeginTransaction();
+                    connection.SqlModifyQuery(command);
+                    DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
+                    connection.SqlCommitTransaction();
+                    if (last_id.Rows.Count == 0)
+                    {
+                        MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        return -1;
+                    }
+                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
+                }
+                catch (OdbcException e)
+                {
+                    connection.SqlRollbackTransaction();
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось добавить наименование вида состояния претензионно-исковой работы в базу данных. " +
+                        "Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
             }
         }
     }

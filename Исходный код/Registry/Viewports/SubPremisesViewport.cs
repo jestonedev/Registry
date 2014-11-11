@@ -9,6 +9,7 @@ using Registry.Entities;
 using Registry.CalcDataModels;
 using System.Text.RegularExpressions;
 using CustomControls;
+using Security;
 
 namespace Registry.Viewport
 {
@@ -280,7 +281,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return (ParentType == ParentTypeEnum.Premises) && (ParentRow != null);
+            return (ParentType == ParentTypeEnum.Premises) && (ParentRow != null) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void InsertRecord()
@@ -295,7 +296,7 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            return (v_snapshot_sub_premises.Position != -1);
+            return (v_snapshot_sub_premises.Position != -1) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void DeleteRecord()
@@ -318,7 +319,7 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return SnapshotHasChanges();
+            return SnapshotHasChanges() && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void SaveRecord()
@@ -335,7 +336,7 @@ namespace Registry.Viewport
                 DataRow row = sub_premises.Select().Rows.Find(((SubPremise)list[i]).id_sub_premises);
                 if (row == null)
                 {
-                    int id_sub_premises = sub_premises.Insert(list[i]);
+                    int id_sub_premises = SubPremisesDataModel.Insert(list[i]);
                     if (id_sub_premises == -1)
                     {
                         sync_views = true;
@@ -348,7 +349,7 @@ namespace Registry.Viewport
                 {
                     if (RowToSubPremise(row) == list[i])
                         continue;
-                    if (sub_premises.Update(list[i]) == -1)
+                    if (SubPremisesDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         return;
@@ -371,7 +372,7 @@ namespace Registry.Viewport
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (sub_premises.Delete(list[i].id_sub_premises.Value) == -1)
+                    if (SubPremisesDataModel.Delete(list[i].id_sub_premises.Value) == -1)
                     {
                         sync_views = true;
                         return;
@@ -430,11 +431,40 @@ namespace Registry.Viewport
             return (v_snapshot_sub_premises.Count > 0);
         }
 
+        public override bool HasAssocTenancies()
+        {
+            return (v_snapshot_sub_premises.Count > 0);
+        }
+
         public override void ShowFundHistory()
         {
             if (SnapshotHasChanges())
             {
-                DialogResult result = MessageBox.Show("Перед изменением истории найма необходимо сохранить изменения в базу данных. Вы хотите это сделать?",
+                DialogResult result = MessageBox.Show("Перед открытием истории принадлежности фондам необходимо сохранить изменения в базу данных. "+
+                    "Вы хотите это сделать?", "Внимание", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                if (result == DialogResult.Yes)
+                    SaveRecord();
+                else
+                    if (result == DialogResult.No)
+                        CancelRecord();
+                    else
+                        return;
+            }
+            if (v_snapshot_sub_premises.Position == -1)
+            {
+                MessageBox.Show("Не выбрана комната для отображения истории принадлежности к фондам", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            ShowAssocViewport(menuCallback, ViewportType.FundsHistoryViewport, "id_sub_premises = " +
+                Convert.ToInt32(((DataRowView)v_snapshot_sub_premises[v_snapshot_sub_premises.Position])["id_sub_premises"]),
+                ((DataRowView)v_snapshot_sub_premises[v_snapshot_sub_premises.Position]).Row, ParentTypeEnum.SubPremises);
+        }
+
+        public override void ShowTenancies()
+        {
+            if (SnapshotHasChanges())
+            {
+                DialogResult result = MessageBox.Show("Перед открытием истории найма необходимо сохранить изменения в базу данных. Вы хотите это сделать?",
                     "Внимание", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                 if (result == DialogResult.Yes)
                     SaveRecord();
@@ -449,7 +479,7 @@ namespace Registry.Viewport
                 MessageBox.Show("Не выбрана комната для отображения истории найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            ShowAssocViewport(menuCallback, ViewportType.FundsHistoryViewport, "id_sub_premises = " +
+            ShowAssocViewport(menuCallback, ViewportType.TenancyListViewport, "id_sub_premises = " +
                 Convert.ToInt32(((DataRowView)v_snapshot_sub_premises[v_snapshot_sub_premises.Position])["id_sub_premises"]),
                 ((DataRowView)v_snapshot_sub_premises[v_snapshot_sub_premises.Position]).Row, ParentTypeEnum.SubPremises);
         }
@@ -608,7 +638,7 @@ namespace Registry.Viewport
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
@@ -682,7 +712,7 @@ namespace Registry.Viewport
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(801, 339);
             this.Controls.Add(this.dataGridView);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SubPremisesViewport";
             this.Padding = new System.Windows.Forms.Padding(3);

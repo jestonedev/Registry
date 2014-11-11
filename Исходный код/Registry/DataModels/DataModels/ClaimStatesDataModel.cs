@@ -7,6 +7,7 @@ using System.Data;
 using Registry.Entities;
 using System.Data.Common;
 using System.Data.Odbc;
+using System.Globalization;
 
 namespace Registry.DataModels
 {
@@ -49,88 +50,98 @@ namespace Registry.DataModels
             return dataModel;
         }
 
-        public int Insert(ClaimState claimState)
+        public static int Insert(ClaimState claimState)
         {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            DbCommand last_id_command = connection.CreateCommand();
-            last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
-            command.CommandText = insertQuery;
-
-            command.Parameters.Add(connection.CreateParameter<int?>("id_claim", claimState.id_claim));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_state_type", claimState.id_state_type));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("date_start_state", claimState.date_start_state));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("date_end_state", claimState.date_end_state));
-            command.Parameters.Add(connection.CreateParameter<string>("document_num", claimState.document_num));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("document_date", claimState.document_date));
-            command.Parameters.Add(connection.CreateParameter<string>("description", claimState.description));
-
-            try
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
+            using (DbCommand last_id_command = DBConnection.CreateCommand())
             {
-                connection.SqlBeginTransaction();
-                connection.SqlModifyQuery(command);
-                DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
-                if (last_id.Rows.Count == 0)
+                last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
+                command.CommandText = insertQuery;
+
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_claim", claimState.id_claim));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state_type", claimState.id_state_type));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_start_state", claimState.date_start_state));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_end_state", claimState.date_end_state));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("document_num", claimState.document_num));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("document_date", claimState.document_date));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", claimState.description));
+
+                try
                 {
-                    MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    connection.SqlBeginTransaction();
+                    connection.SqlModifyQuery(command);
+                    DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
+                    if (last_id.Rows.Count == 0)
+                    {
+                        MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        connection.SqlRollbackTransaction();
+                        return -1;
+                    }
+                    connection.SqlCommitTransaction();
+                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
+                }
+                catch (OdbcException e)
+                {
                     connection.SqlRollbackTransaction();
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось добавить запись о состоянии претензионно-исковой работы в базу данных. Подробная ошибка: {0}",
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     return -1;
                 }
-                connection.SqlCommitTransaction();
-                return Convert.ToInt32(last_id.Rows[0][0]);
-            }
-            catch (OdbcException e)
-            {
-                connection.SqlRollbackTransaction();
-                MessageBox.Show(String.Format("Не удалось добавить запись о состоянии претензионно-исковой работы в базу данных. Подробная ошибка: {0}",
-                    e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
             }
         }
 
-        public int Update(ClaimState claimState)
+        public static int Update(ClaimState claimState)
         {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = updateQuery;
-
-            command.Parameters.Add(connection.CreateParameter<int?>("id_claim", claimState.id_claim));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_state_type", claimState.id_state_type));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("date_start_state", claimState.date_start_state));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("date_end_state", claimState.date_end_state));
-            command.Parameters.Add(connection.CreateParameter<string>("document_num", claimState.document_num));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("document_date", claimState.document_date));
-            command.Parameters.Add(connection.CreateParameter<string>("description", claimState.description));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_state", claimState.id_state));
-
-            try
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
             {
-                return connection.SqlModifyQuery(command);
-            }
-            catch (OdbcException e)
-            {
-                connection.SqlRollbackTransaction();
-                MessageBox.Show(String.Format("Не удалось изменить запись о состоянии претензионно-исковой работы в базе данных. Подробная ошибка: {0}",
-                    e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
+                command.CommandText = updateQuery;
+
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_claim", claimState.id_claim));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state_type", claimState.id_state_type));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_start_state", claimState.date_start_state));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_end_state", claimState.date_end_state));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("document_num", claimState.document_num));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("document_date", claimState.document_date));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", claimState.description));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", claimState.id_state));
+
+                try
+                {
+                    return connection.SqlModifyQuery(command);
+                }
+                catch (OdbcException e)
+                {
+                    connection.SqlRollbackTransaction();
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось изменить запись о состоянии претензионно-исковой работы в базе данных. Подробная ошибка: {0}",
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
             }
         }
 
-        public int Delete(int id)
+        public static int Delete(int id)
         {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = deleteQuery;
-            command.Parameters.Add(connection.CreateParameter<int?>("id_state", id));
-            try
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
             {
-                return connection.SqlModifyQuery(command);
-            }
-            catch (OdbcException e)
-            {
-                MessageBox.Show(String.Format("Не удалось удалить запись о состоянии претензионно-исковой работы из базы данных. Подробная ошибка: {0}",
-                    e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
+                command.CommandText = deleteQuery;
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", id));
+                try
+                {
+                    return connection.SqlModifyQuery(command);
+                }
+                catch (OdbcException e)
+                {
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось удалить запись о состоянии претензионно-исковой работы из базы данных. Подробная ошибка: {0}",
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
             }
         }
     }

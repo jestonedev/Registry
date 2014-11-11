@@ -10,6 +10,7 @@ using Registry.DataModels;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using Registry.Reporting;
+using Security;
 
 namespace Registry.Viewport
 {
@@ -23,10 +24,6 @@ namespace Registry.Viewport
         private Panel panel7;
         private DataGridView dataGridView;
         private DataGridView dataGridViewTenancyPersons;
-        private DataGridViewTextBoxColumn surname;
-        private DataGridViewTextBoxColumn name;
-        private DataGridViewTextBoxColumn patronymic;
-        private DataGridViewTextBoxColumn date_of_birth;
         private TextBox textBoxAgreementContent;
         private TextBox textBoxAgreementWarrant;
         private TextBox textBoxExcludePoint;
@@ -85,6 +82,10 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn id_agreement;
         private DataGridViewDateTimeColumn agreement_date;
         private DataGridViewTextBoxColumn agreement_content;
+        private DataGridViewTextBoxColumn surname;
+        private DataGridViewTextBoxColumn name;
+        private DataGridViewTextBoxColumn patronymic;
+        private DataGridViewTextBoxColumn date_of_birth;
         private int? id_warrant = null;
 
         private TenancyAgreementsViewport()
@@ -495,17 +496,16 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            if ((v_tenancy_agreements.Position == -1) || (viewportState == ViewportState.NewRowState))
-                return false;
-            else
-                return true;
+            return (v_tenancy_agreements.Position > -1)
+                && (viewportState != ViewportState.NewRowState)
+                && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void DeleteRecord()
         {
             if (MessageBox.Show("Вы действительно хотите это соглашение?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                if (tenancy_agreements.Delete((int)((DataRowView)v_tenancy_agreements.Current)["id_agreement"]) == -1)
+                if (TenancyAgreementsDataModel.Delete((int)((DataRowView)v_tenancy_agreements.Current)["id_agreement"]) == -1)
                     return;
                 is_editable = false;
                 ((DataRowView)v_tenancy_agreements[v_tenancy_agreements.Position]).Delete();
@@ -552,7 +552,8 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
+            return ((viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState))
+                 && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void SaveRecord()
@@ -567,7 +568,7 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 case ViewportState.NewRowState:
-                    int id_agreement = tenancy_agreements.Insert(tenancyAgreement);
+                    int id_agreement = TenancyAgreementsDataModel.Insert(tenancyAgreement);
                     if (id_agreement == -1)
                         return;
                     DataRowView newRow;
@@ -587,7 +588,7 @@ namespace Registry.Viewport
                             "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    if (tenancy_agreements.Update(tenancyAgreement) == -1)
+                    if (TenancyAgreementsDataModel.Update(tenancyAgreement) == -1)
                         return;
                     DataRowView row = ((DataRowView)v_tenancy_agreements[v_tenancy_agreements.Position]);
                     is_editable = false;
@@ -602,10 +603,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            if ((viewportState == ViewportState.ReadState || viewportState == ViewportState.ModifyRowState) && !tenancy_agreements.EditingNewRecord)
-                return true;
-            else
-                return false;
+            return (!tenancy_agreements.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void InsertRecord()
@@ -628,7 +626,8 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            return ((v_tenancy_agreements.Position != -1) && (!tenancy_agreements.EditingNewRecord));
+            return (v_tenancy_agreements.Position != -1) && (!tenancy_agreements.EditingNewRecord)
+                && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void CopyRecord()
@@ -1003,10 +1002,6 @@ namespace Registry.Viewport
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageExclude = new System.Windows.Forms.TabPage();
             this.dataGridViewTenancyPersons = new System.Windows.Forms.DataGridView();
-            this.surname = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.patronymic = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.date_of_birth = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.vButtonExcludePaste = new VIBlend.WinForms.Controls.vButton();
             this.textBoxExcludePoint = new System.Windows.Forms.TextBox();
             this.label74 = new System.Windows.Forms.Label();
@@ -1033,6 +1028,10 @@ namespace Registry.Viewport
             this.id_agreement = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.agreement_date = new CustomControls.DataGridViewDateTimeColumn();
             this.agreement_content = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.surname = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.patronymic = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.date_of_birth = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel12.SuspendLayout();
             this.panel7.SuspendLayout();
             this.groupBox29.SuspendLayout();
@@ -1062,7 +1061,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 155F));
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel12.Size = new System.Drawing.Size(700, 392);
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(888, 392);
             this.tableLayoutPanel12.TabIndex = 0;
             // 
             // panel7
@@ -1071,7 +1070,7 @@ namespace Registry.Viewport
             this.panel7.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel7.Location = new System.Drawing.Point(3, 3);
             this.panel7.Name = "panel7";
-            this.panel7.Size = new System.Drawing.Size(344, 104);
+            this.panel7.Size = new System.Drawing.Size(438, 104);
             this.panel7.TabIndex = 0;
             // 
             // groupBox29
@@ -1086,20 +1085,20 @@ namespace Registry.Viewport
             this.groupBox29.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox29.Location = new System.Drawing.Point(0, 0);
             this.groupBox29.Name = "groupBox29";
-            this.groupBox29.Size = new System.Drawing.Size(344, 104);
+            this.groupBox29.Size = new System.Drawing.Size(438, 104);
             this.groupBox29.TabIndex = 0;
             this.groupBox29.TabStop = false;
             this.groupBox29.Text = "Общие сведения";
             // 
             // comboBoxExecutor
             // 
-            this.comboBoxExecutor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxExecutor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxExecutor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxExecutor.FormattingEnabled = true;
             this.comboBoxExecutor.Location = new System.Drawing.Point(164, 77);
             this.comboBoxExecutor.Name = "comboBoxExecutor";
-            this.comboBoxExecutor.Size = new System.Drawing.Size(174, 21);
+            this.comboBoxExecutor.Size = new System.Drawing.Size(268, 23);
             this.comboBoxExecutor.TabIndex = 3;
             this.comboBoxExecutor.TextChanged += new System.EventHandler(this.comboBoxExecutor_TextChanged);
             // 
@@ -1108,7 +1107,7 @@ namespace Registry.Viewport
             this.label73.AutoSize = true;
             this.label73.Location = new System.Drawing.Point(17, 80);
             this.label73.Name = "label73";
-            this.label73.Size = new System.Drawing.Size(74, 13);
+            this.label73.Size = new System.Drawing.Size(85, 15);
             this.label73.TabIndex = 38;
             this.label73.Text = "Исполнитель";
             // 
@@ -1117,7 +1116,7 @@ namespace Registry.Viewport
             this.vButtonSelectWarrant.AllowAnimations = true;
             this.vButtonSelectWarrant.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonSelectWarrant.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSelectWarrant.Location = new System.Drawing.Point(311, 48);
+            this.vButtonSelectWarrant.Location = new System.Drawing.Point(405, 48);
             this.vButtonSelectWarrant.Name = "vButtonSelectWarrant";
             this.vButtonSelectWarrant.RoundedCornersMask = ((byte)(15));
             this.vButtonSelectWarrant.Size = new System.Drawing.Size(27, 20);
@@ -1129,13 +1128,12 @@ namespace Registry.Viewport
             // 
             // textBoxAgreementWarrant
             // 
-            this.textBoxAgreementWarrant.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxAgreementWarrant.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.textBoxAgreementWarrant.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxAgreementWarrant.Location = new System.Drawing.Point(164, 48);
             this.textBoxAgreementWarrant.Name = "textBoxAgreementWarrant";
             this.textBoxAgreementWarrant.ReadOnly = true;
-            this.textBoxAgreementWarrant.Size = new System.Drawing.Size(141, 20);
+            this.textBoxAgreementWarrant.Size = new System.Drawing.Size(235, 21);
             this.textBoxAgreementWarrant.TabIndex = 1;
             this.textBoxAgreementWarrant.TextChanged += new System.EventHandler(this.textBoxAgreementWarrant_TextChanged);
             // 
@@ -1144,17 +1142,17 @@ namespace Registry.Viewport
             this.label72.AutoSize = true;
             this.label72.Location = new System.Drawing.Point(17, 51);
             this.label72.Name = "label72";
-            this.label72.Size = new System.Drawing.Size(95, 13);
+            this.label72.Size = new System.Drawing.Size(109, 15);
             this.label72.TabIndex = 35;
             this.label72.Text = "По доверенности";
             // 
             // dateTimePickerAgreementDate
             // 
-            this.dateTimePickerAgreementDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerAgreementDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerAgreementDate.Location = new System.Drawing.Point(164, 19);
             this.dateTimePickerAgreementDate.Name = "dateTimePickerAgreementDate";
-            this.dateTimePickerAgreementDate.Size = new System.Drawing.Size(174, 20);
+            this.dateTimePickerAgreementDate.Size = new System.Drawing.Size(268, 21);
             this.dateTimePickerAgreementDate.TabIndex = 0;
             this.dateTimePickerAgreementDate.ValueChanged += new System.EventHandler(this.dateTimePickerAgreementDate_ValueChanged);
             // 
@@ -1163,7 +1161,7 @@ namespace Registry.Viewport
             this.label71.AutoSize = true;
             this.label71.Location = new System.Drawing.Point(17, 23);
             this.label71.Name = "label71";
-            this.label71.Size = new System.Drawing.Size(97, 13);
+            this.label71.Size = new System.Drawing.Size(109, 15);
             this.label71.TabIndex = 33;
             this.label71.Text = "Дата соглашения";
             // 
@@ -1171,10 +1169,10 @@ namespace Registry.Viewport
             // 
             this.groupBox30.Controls.Add(this.textBoxAgreementContent);
             this.groupBox30.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox30.Location = new System.Drawing.Point(353, 3);
+            this.groupBox30.Location = new System.Drawing.Point(447, 3);
             this.groupBox30.Name = "groupBox30";
             this.tableLayoutPanel12.SetRowSpan(this.groupBox30, 2);
-            this.groupBox30.Size = new System.Drawing.Size(344, 259);
+            this.groupBox30.Size = new System.Drawing.Size(438, 259);
             this.groupBox30.TabIndex = 1;
             this.groupBox30.TabStop = false;
             this.groupBox30.Text = "Содержание";
@@ -1182,11 +1180,11 @@ namespace Registry.Viewport
             // textBoxAgreementContent
             // 
             this.textBoxAgreementContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxAgreementContent.Location = new System.Drawing.Point(3, 16);
+            this.textBoxAgreementContent.Location = new System.Drawing.Point(3, 17);
             this.textBoxAgreementContent.MaxLength = 4000;
             this.textBoxAgreementContent.Multiline = true;
             this.textBoxAgreementContent.Name = "textBoxAgreementContent";
-            this.textBoxAgreementContent.Size = new System.Drawing.Size(338, 240);
+            this.textBoxAgreementContent.Size = new System.Drawing.Size(432, 239);
             this.textBoxAgreementContent.TabIndex = 1;
             this.textBoxAgreementContent.TextChanged += new System.EventHandler(this.textBoxAgreementContent_TextChanged);
             // 
@@ -1202,7 +1200,7 @@ namespace Registry.Viewport
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.Padding = new System.Drawing.Point(0, 0);
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(350, 155);
+            this.tabControl1.Size = new System.Drawing.Size(444, 155);
             this.tabControl1.TabIndex = 1;
             // 
             // tabPageExclude
@@ -1212,25 +1210,25 @@ namespace Registry.Viewport
             this.tabPageExclude.Controls.Add(this.vButtonExcludePaste);
             this.tabPageExclude.Controls.Add(this.textBoxExcludePoint);
             this.tabPageExclude.Controls.Add(this.label74);
-            this.tabPageExclude.Location = new System.Drawing.Point(4, 22);
+            this.tabPageExclude.Location = new System.Drawing.Point(4, 24);
             this.tabPageExclude.Name = "tabPageExclude";
             this.tabPageExclude.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageExclude.Size = new System.Drawing.Size(342, 129);
+            this.tabPageExclude.Size = new System.Drawing.Size(436, 127);
             this.tabPageExclude.TabIndex = 0;
             this.tabPageExclude.Text = "Исключить";
             // 
             // dataGridViewTenancyPersons
             // 
             this.dataGridViewTenancyPersons.AllowUserToAddRows = false;
-            this.dataGridViewTenancyPersons.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridViewTenancyPersons.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridViewTenancyPersons.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewTenancyPersons.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewTenancyPersons.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
@@ -1248,43 +1246,15 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(336, 94);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(430, 92);
             this.dataGridViewTenancyPersons.TabIndex = 2;
-            // 
-            // surname
-            // 
-            this.surname.HeaderText = "Фамилия";
-            this.surname.MinimumWidth = 100;
-            this.surname.Name = "surname";
-            this.surname.ReadOnly = true;
-            // 
-            // name
-            // 
-            this.name.HeaderText = "Имя";
-            this.name.MinimumWidth = 100;
-            this.name.Name = "name";
-            this.name.ReadOnly = true;
-            // 
-            // patronymic
-            // 
-            this.patronymic.HeaderText = "Отчество";
-            this.patronymic.MinimumWidth = 100;
-            this.patronymic.Name = "patronymic";
-            this.patronymic.ReadOnly = true;
-            // 
-            // date_of_birth
-            // 
-            this.date_of_birth.HeaderText = "Дата рождения";
-            this.date_of_birth.MinimumWidth = 120;
-            this.date_of_birth.Name = "date_of_birth";
-            this.date_of_birth.ReadOnly = true;
             // 
             // vButtonExcludePaste
             // 
             this.vButtonExcludePaste.AllowAnimations = true;
             this.vButtonExcludePaste.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonExcludePaste.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonExcludePaste.Location = new System.Drawing.Point(310, 6);
+            this.vButtonExcludePaste.Location = new System.Drawing.Point(404, 6);
             this.vButtonExcludePaste.Name = "vButtonExcludePaste";
             this.vButtonExcludePaste.RoundedCornersMask = ((byte)(15));
             this.vButtonExcludePaste.Size = new System.Drawing.Size(27, 20);
@@ -1296,11 +1266,11 @@ namespace Registry.Viewport
             // 
             // textBoxExcludePoint
             // 
-            this.textBoxExcludePoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxExcludePoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxExcludePoint.Location = new System.Drawing.Point(163, 6);
             this.textBoxExcludePoint.Name = "textBoxExcludePoint";
-            this.textBoxExcludePoint.Size = new System.Drawing.Size(141, 20);
+            this.textBoxExcludePoint.Size = new System.Drawing.Size(235, 21);
             this.textBoxExcludePoint.TabIndex = 0;
             // 
             // label74
@@ -1308,7 +1278,7 @@ namespace Registry.Viewport
             this.label74.AutoSize = true;
             this.label74.Location = new System.Drawing.Point(12, 9);
             this.label74.Name = "label74";
-            this.label74.Size = new System.Drawing.Size(55, 13);
+            this.label74.Size = new System.Drawing.Size(62, 15);
             this.label74.TabIndex = 37;
             this.label74.Text = "Подпункт";
             // 
@@ -1324,39 +1294,39 @@ namespace Registry.Viewport
             this.tabPageInclude.Controls.Add(this.label78);
             this.tabPageInclude.Controls.Add(this.vButtonIncludePaste);
             this.tabPageInclude.Controls.Add(this.label75);
-            this.tabPageInclude.Location = new System.Drawing.Point(4, 22);
+            this.tabPageInclude.Location = new System.Drawing.Point(4, 24);
             this.tabPageInclude.Name = "tabPageInclude";
             this.tabPageInclude.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInclude.Size = new System.Drawing.Size(342, 129);
+            this.tabPageInclude.Size = new System.Drawing.Size(436, 127);
             this.tabPageInclude.TabIndex = 1;
             this.tabPageInclude.Text = "Включить";
             // 
             // dateTimePickerIncludeDateOfBirth
             // 
-            this.dateTimePickerIncludeDateOfBirth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerIncludeDateOfBirth.Location = new System.Drawing.Point(163, 61);
+            this.dateTimePickerIncludeDateOfBirth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerIncludeDateOfBirth.Location = new System.Drawing.Point(163, 62);
             this.dateTimePickerIncludeDateOfBirth.Name = "dateTimePickerIncludeDateOfBirth";
-            this.dateTimePickerIncludeDateOfBirth.Size = new System.Drawing.Size(140, 20);
+            this.dateTimePickerIncludeDateOfBirth.Size = new System.Drawing.Size(234, 21);
             this.dateTimePickerIncludeDateOfBirth.TabIndex = 2;
             // 
             // comboBoxIncludeKinship
             // 
-            this.comboBoxIncludeKinship.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxIncludeKinship.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxIncludeKinship.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxIncludeKinship.FormattingEnabled = true;
             this.comboBoxIncludeKinship.Location = new System.Drawing.Point(163, 90);
             this.comboBoxIncludeKinship.Name = "comboBoxIncludeKinship";
-            this.comboBoxIncludeKinship.Size = new System.Drawing.Size(140, 21);
+            this.comboBoxIncludeKinship.Size = new System.Drawing.Size(234, 23);
             this.comboBoxIncludeKinship.TabIndex = 3;
             // 
             // label76
             // 
             this.label76.AutoSize = true;
-            this.label76.Location = new System.Drawing.Point(12, 93);
+            this.label76.Location = new System.Drawing.Point(12, 94);
             this.label76.Name = "label76";
-            this.label76.Size = new System.Drawing.Size(99, 13);
+            this.label76.Size = new System.Drawing.Size(110, 15);
             this.label76.TabIndex = 46;
             this.label76.Text = "Отношение/связь";
             // 
@@ -1365,34 +1335,34 @@ namespace Registry.Viewport
             this.label77.AutoSize = true;
             this.label77.Location = new System.Drawing.Point(12, 65);
             this.label77.Name = "label77";
-            this.label77.Size = new System.Drawing.Size(86, 13);
+            this.label77.Size = new System.Drawing.Size(98, 15);
             this.label77.TabIndex = 45;
             this.label77.Text = "Дата рождения";
             // 
             // textBoxIncludeSNP
             // 
-            this.textBoxIncludeSNP.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxIncludeSNP.Location = new System.Drawing.Point(163, 32);
+            this.textBoxIncludeSNP.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxIncludeSNP.Location = new System.Drawing.Point(163, 34);
             this.textBoxIncludeSNP.Name = "textBoxIncludeSNP";
-            this.textBoxIncludeSNP.Size = new System.Drawing.Size(140, 20);
+            this.textBoxIncludeSNP.Size = new System.Drawing.Size(234, 21);
             this.textBoxIncludeSNP.TabIndex = 1;
             // 
             // textBoxIncludePoint
             // 
-            this.textBoxIncludePoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxIncludePoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxIncludePoint.Location = new System.Drawing.Point(163, 6);
             this.textBoxIncludePoint.Name = "textBoxIncludePoint";
-            this.textBoxIncludePoint.Size = new System.Drawing.Size(140, 20);
+            this.textBoxIncludePoint.Size = new System.Drawing.Size(234, 21);
             this.textBoxIncludePoint.TabIndex = 0;
             // 
             // label78
             // 
             this.label78.AutoSize = true;
-            this.label78.Location = new System.Drawing.Point(12, 35);
+            this.label78.Location = new System.Drawing.Point(12, 37);
             this.label78.Name = "label78";
-            this.label78.Size = new System.Drawing.Size(34, 13);
+            this.label78.Size = new System.Drawing.Size(36, 15);
             this.label78.TabIndex = 43;
             this.label78.Text = "ФИО";
             // 
@@ -1401,7 +1371,7 @@ namespace Registry.Viewport
             this.vButtonIncludePaste.AllowAnimations = true;
             this.vButtonIncludePaste.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonIncludePaste.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonIncludePaste.Location = new System.Drawing.Point(310, 6);
+            this.vButtonIncludePaste.Location = new System.Drawing.Point(404, 6);
             this.vButtonIncludePaste.Name = "vButtonIncludePaste";
             this.vButtonIncludePaste.RoundedCornersMask = ((byte)(15));
             this.vButtonIncludePaste.Size = new System.Drawing.Size(27, 20);
@@ -1416,7 +1386,7 @@ namespace Registry.Viewport
             this.label75.AutoSize = true;
             this.label75.Location = new System.Drawing.Point(12, 9);
             this.label75.Name = "label75";
-            this.label75.Size = new System.Drawing.Size(55, 13);
+            this.label75.Size = new System.Drawing.Size(62, 15);
             this.label75.TabIndex = 40;
             this.label75.Text = "Подпункт";
             // 
@@ -1427,30 +1397,30 @@ namespace Registry.Viewport
             this.tabPageExplain.Controls.Add(this.textBoxExplainPoint);
             this.tabPageExplain.Controls.Add(this.vButtonExplainPaste);
             this.tabPageExplain.Controls.Add(this.label79);
-            this.tabPageExplain.Location = new System.Drawing.Point(4, 22);
+            this.tabPageExplain.Location = new System.Drawing.Point(4, 24);
             this.tabPageExplain.Name = "tabPageExplain";
-            this.tabPageExplain.Size = new System.Drawing.Size(342, 129);
+            this.tabPageExplain.Size = new System.Drawing.Size(436, 127);
             this.tabPageExplain.TabIndex = 2;
             this.tabPageExplain.Text = "Изложить";
             // 
             // textBoxExplainContent
             // 
-            this.textBoxExplainContent.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxExplainContent.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxExplainContent.Location = new System.Drawing.Point(7, 32);
             this.textBoxExplainContent.Multiline = true;
             this.textBoxExplainContent.Name = "textBoxExplainContent";
-            this.textBoxExplainContent.Size = new System.Drawing.Size(330, 95);
+            this.textBoxExplainContent.Size = new System.Drawing.Size(424, 93);
             this.textBoxExplainContent.TabIndex = 1;
             // 
             // textBoxExplainPoint
             // 
-            this.textBoxExplainPoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxExplainPoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxExplainPoint.Location = new System.Drawing.Point(163, 6);
             this.textBoxExplainPoint.Name = "textBoxExplainPoint";
-            this.textBoxExplainPoint.Size = new System.Drawing.Size(140, 20);
+            this.textBoxExplainPoint.Size = new System.Drawing.Size(234, 21);
             this.textBoxExplainPoint.TabIndex = 0;
             // 
             // vButtonExplainPaste
@@ -1458,7 +1428,7 @@ namespace Registry.Viewport
             this.vButtonExplainPaste.AllowAnimations = true;
             this.vButtonExplainPaste.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonExplainPaste.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonExplainPaste.Location = new System.Drawing.Point(310, 6);
+            this.vButtonExplainPaste.Location = new System.Drawing.Point(404, 6);
             this.vButtonExplainPaste.Name = "vButtonExplainPaste";
             this.vButtonExplainPaste.RoundedCornersMask = ((byte)(15));
             this.vButtonExplainPaste.Size = new System.Drawing.Size(27, 20);
@@ -1473,7 +1443,7 @@ namespace Registry.Viewport
             this.label79.AutoSize = true;
             this.label79.Location = new System.Drawing.Point(12, 9);
             this.label79.Name = "label79";
-            this.label79.Size = new System.Drawing.Size(55, 13);
+            this.label79.Size = new System.Drawing.Size(62, 15);
             this.label79.TabIndex = 40;
             this.label79.Text = "Подпункт";
             // 
@@ -1483,9 +1453,9 @@ namespace Registry.Viewport
             this.tabPageTerminate.Controls.Add(this.vButtonTerminatePaste);
             this.tabPageTerminate.Controls.Add(this.textBoxTerminateAgreement);
             this.tabPageTerminate.Controls.Add(this.label80);
-            this.tabPageTerminate.Location = new System.Drawing.Point(4, 22);
+            this.tabPageTerminate.Location = new System.Drawing.Point(4, 24);
             this.tabPageTerminate.Name = "tabPageTerminate";
-            this.tabPageTerminate.Size = new System.Drawing.Size(342, 129);
+            this.tabPageTerminate.Size = new System.Drawing.Size(436, 127);
             this.tabPageTerminate.TabIndex = 3;
             this.tabPageTerminate.Text = "Расторгнуть";
             // 
@@ -1494,7 +1464,7 @@ namespace Registry.Viewport
             this.vButtonTerminatePaste.AllowAnimations = true;
             this.vButtonTerminatePaste.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonTerminatePaste.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonTerminatePaste.Location = new System.Drawing.Point(310, 6);
+            this.vButtonTerminatePaste.Location = new System.Drawing.Point(404, 6);
             this.vButtonTerminatePaste.Name = "vButtonTerminatePaste";
             this.vButtonTerminatePaste.RoundedCornersMask = ((byte)(15));
             this.vButtonTerminatePaste.Size = new System.Drawing.Size(27, 20);
@@ -1506,11 +1476,11 @@ namespace Registry.Viewport
             // 
             // textBoxTerminateAgreement
             // 
-            this.textBoxTerminateAgreement.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxTerminateAgreement.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxTerminateAgreement.Location = new System.Drawing.Point(163, 6);
             this.textBoxTerminateAgreement.Name = "textBoxTerminateAgreement";
-            this.textBoxTerminateAgreement.Size = new System.Drawing.Size(140, 20);
+            this.textBoxTerminateAgreement.Size = new System.Drawing.Size(234, 21);
             this.textBoxTerminateAgreement.TabIndex = 0;
             // 
             // label80
@@ -1518,16 +1488,16 @@ namespace Registry.Viewport
             this.label80.AutoSize = true;
             this.label80.Location = new System.Drawing.Point(12, 9);
             this.label80.Name = "label80";
-            this.label80.Size = new System.Drawing.Size(82, 13);
+            this.label80.Size = new System.Drawing.Size(91, 15);
             this.label80.TabIndex = 43;
             this.label80.Text = "№ соглашения";
             // 
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
-            this.dataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
@@ -1543,7 +1513,7 @@ namespace Registry.Viewport
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.Size = new System.Drawing.Size(694, 121);
+            this.dataGridView.Size = new System.Drawing.Size(882, 121);
             this.dataGridView.TabIndex = 2;
             this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView_DataError);
             // 
@@ -1573,14 +1543,42 @@ namespace Registry.Viewport
             this.agreement_content.Name = "agreement_content";
             this.agreement_content.ReadOnly = true;
             // 
+            // surname
+            // 
+            this.surname.HeaderText = "Фамилия";
+            this.surname.MinimumWidth = 100;
+            this.surname.Name = "surname";
+            this.surname.ReadOnly = true;
+            // 
+            // name
+            // 
+            this.name.HeaderText = "Имя";
+            this.name.MinimumWidth = 100;
+            this.name.Name = "name";
+            this.name.ReadOnly = true;
+            // 
+            // patronymic
+            // 
+            this.patronymic.HeaderText = "Отчество";
+            this.patronymic.MinimumWidth = 100;
+            this.patronymic.Name = "patronymic";
+            this.patronymic.ReadOnly = true;
+            // 
+            // date_of_birth
+            // 
+            this.date_of_birth.HeaderText = "Дата рождения";
+            this.date_of_birth.MinimumWidth = 140;
+            this.date_of_birth.Name = "date_of_birth";
+            this.date_of_birth.ReadOnly = true;
+            // 
             // TenancyAgreementsViewport
             // 
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(660, 360);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(706, 398);
+            this.ClientSize = new System.Drawing.Size(894, 398);
             this.Controls.Add(this.tableLayoutPanel12);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "TenancyAgreementsViewport";
             this.Padding = new System.Windows.Forms.Padding(3);

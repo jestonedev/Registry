@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using System.Drawing;
 using Registry.CalcDataModels;
+using Security;
 
 namespace Registry.Viewport
 {
@@ -20,11 +21,6 @@ namespace Registry.Viewport
         private GroupBox groupBox27;
         private GroupBox groupBox28;
         private DataGridView dataGridViewTenancyPersons;
-        private DataGridViewTextBoxColumn surname;
-        private DataGridViewTextBoxColumn name;
-        private DataGridViewTextBoxColumn patronymic;
-        private DataGridViewTextBoxColumn date_of_birth;
-        private DataGridViewComboBoxColumn id_kinship;
         private Label label53;
         private Label label54;
         private Label label55;
@@ -84,6 +80,11 @@ namespace Registry.Viewport
 
         //State
         private ViewportState viewportState = ViewportState.ReadState;
+        private DataGridViewTextBoxColumn surname;
+        private DataGridViewTextBoxColumn name;
+        private DataGridViewTextBoxColumn patronymic;
+        private DataGridViewTextBoxColumn date_of_birth;
+        private DataGridViewComboBoxColumn id_kinship;
         private bool is_editable = false;
 
         private TenancyPersonsViewport()
@@ -616,10 +617,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            if ((viewportState == ViewportState.ReadState || viewportState == ViewportState.ModifyRowState) && !tenancy_persons.EditingNewRecord)
-                return true;
-            else
-                return false;
+            return (!tenancy_persons.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void InsertRecord()
@@ -635,7 +633,8 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            return ((v_tenancy_persons.Position != -1) && (!tenancy_persons.EditingNewRecord));
+            return (v_tenancy_persons.Position != -1) && (!tenancy_persons.EditingNewRecord)
+                && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void CopyRecord()
@@ -655,17 +654,16 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            if ((v_tenancy_persons.Position == -1) || (viewportState == ViewportState.NewRowState))
-                return false;
-            else
-                return true;
+            return (v_tenancy_persons.Position > -1)
+                && (viewportState != ViewportState.NewRowState)
+                && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void DeleteRecord()
         {
             if (MessageBox.Show("Вы действительно хотите этого участника договора?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                if (tenancy_persons.Delete((int)((DataRowView)v_tenancy_persons.Current)["id_person"]) == -1)
+                if (TenancyPersonsDataModel.Delete((int)((DataRowView)v_tenancy_persons.Current)["id_person"]) == -1)
                     return;
                 is_editable = false;
                 ((DataRowView)v_tenancy_persons[v_tenancy_persons.Position]).Delete();
@@ -730,7 +728,8 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
+            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState)
+                && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void SaveRecord()
@@ -745,7 +744,7 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 case ViewportState.NewRowState:
-                    int id_person = tenancy_persons.Insert(tenancyPerson);
+                    int id_person = TenancyPersonsDataModel.Insert(tenancyPerson);
                     if (id_person == -1)
                         return;
                     DataRowView newRow;
@@ -765,7 +764,7 @@ namespace Registry.Viewport
                             "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    if (tenancy_persons.Update(tenancyPerson) == -1)
+                    if (TenancyPersonsDataModel.Update(tenancyPerson) == -1)
                         return;
                     DataRowView row = ((DataRowView)v_tenancy_persons[v_tenancy_persons.Position]);
                     is_editable = false;
@@ -1130,7 +1129,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 200F));
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel11.Size = new System.Drawing.Size(767, 438);
+            this.tableLayoutPanel11.Size = new System.Drawing.Size(758, 423);
             this.tableLayoutPanel11.TabIndex = 0;
             // 
             // groupBox23
@@ -1150,120 +1149,120 @@ namespace Registry.Viewport
             this.groupBox23.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox23.Location = new System.Drawing.Point(3, 3);
             this.groupBox23.Name = "groupBox23";
-            this.groupBox23.Size = new System.Drawing.Size(377, 194);
+            this.groupBox23.Size = new System.Drawing.Size(373, 194);
             this.groupBox23.TabIndex = 0;
             this.groupBox23.TabStop = false;
             this.groupBox23.Text = "Личные данные";
             // 
             // textBoxPersonalAccount
             // 
-            this.textBoxPersonalAccount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxPersonalAccount.Location = new System.Drawing.Point(164, 164);
+            this.textBoxPersonalAccount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxPersonalAccount.Location = new System.Drawing.Point(164, 161);
             this.textBoxPersonalAccount.MaxLength = 255;
             this.textBoxPersonalAccount.Name = "textBoxPersonalAccount";
-            this.textBoxPersonalAccount.Size = new System.Drawing.Size(207, 20);
+            this.textBoxPersonalAccount.Size = new System.Drawing.Size(203, 21);
             this.textBoxPersonalAccount.TabIndex = 29;
             this.textBoxPersonalAccount.TextChanged += new System.EventHandler(this.textBoxPersonalAccount_TextChanged);
             // 
             // label81
             // 
             this.label81.AutoSize = true;
-            this.label81.Location = new System.Drawing.Point(17, 167);
+            this.label81.Location = new System.Drawing.Point(17, 164);
             this.label81.Name = "label81";
-            this.label81.Size = new System.Drawing.Size(71, 13);
+            this.label81.Size = new System.Drawing.Size(80, 15);
             this.label81.TabIndex = 30;
             this.label81.Text = "Личный счет";
             // 
             // dateTimePickerDateOfBirth
             // 
-            this.dateTimePickerDateOfBirth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerDateOfBirth.Location = new System.Drawing.Point(164, 106);
+            this.dateTimePickerDateOfBirth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerDateOfBirth.Location = new System.Drawing.Point(164, 103);
             this.dateTimePickerDateOfBirth.Name = "dateTimePickerDateOfBirth";
             this.dateTimePickerDateOfBirth.ShowCheckBox = true;
-            this.dateTimePickerDateOfBirth.Size = new System.Drawing.Size(207, 20);
+            this.dateTimePickerDateOfBirth.Size = new System.Drawing.Size(203, 21);
             this.dateTimePickerDateOfBirth.TabIndex = 3;
             this.dateTimePickerDateOfBirth.ValueChanged += new System.EventHandler(this.dateTimePickerDateOfBirth_ValueChanged);
             // 
             // comboBoxKinship
             // 
-            this.comboBoxKinship.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxKinship.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxKinship.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxKinship.FormattingEnabled = true;
-            this.comboBoxKinship.Location = new System.Drawing.Point(164, 135);
+            this.comboBoxKinship.Location = new System.Drawing.Point(164, 131);
             this.comboBoxKinship.Name = "comboBoxKinship";
-            this.comboBoxKinship.Size = new System.Drawing.Size(207, 21);
+            this.comboBoxKinship.Size = new System.Drawing.Size(203, 23);
             this.comboBoxKinship.TabIndex = 4;
             this.comboBoxKinship.SelectedValueChanged += new System.EventHandler(this.comboBoxKinship_SelectedValueChanged);
             // 
             // label57
             // 
             this.label57.AutoSize = true;
-            this.label57.Location = new System.Drawing.Point(17, 138);
+            this.label57.Location = new System.Drawing.Point(17, 135);
             this.label57.Name = "label57";
-            this.label57.Size = new System.Drawing.Size(99, 13);
+            this.label57.Size = new System.Drawing.Size(110, 15);
             this.label57.TabIndex = 28;
             this.label57.Text = "Отношение/связь";
             // 
             // label56
             // 
             this.label56.AutoSize = true;
-            this.label56.Location = new System.Drawing.Point(17, 110);
+            this.label56.Location = new System.Drawing.Point(17, 106);
             this.label56.Name = "label56";
-            this.label56.Size = new System.Drawing.Size(86, 13);
+            this.label56.Size = new System.Drawing.Size(98, 15);
             this.label56.TabIndex = 26;
             this.label56.Text = "Дата рождения";
             // 
             // textBoxPatronymic
             // 
-            this.textBoxPatronymic.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxPatronymic.Location = new System.Drawing.Point(164, 77);
+            this.textBoxPatronymic.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxPatronymic.Location = new System.Drawing.Point(164, 75);
             this.textBoxPatronymic.MaxLength = 255;
             this.textBoxPatronymic.Name = "textBoxPatronymic";
-            this.textBoxPatronymic.Size = new System.Drawing.Size(207, 20);
+            this.textBoxPatronymic.Size = new System.Drawing.Size(203, 21);
             this.textBoxPatronymic.TabIndex = 2;
             this.textBoxPatronymic.TextChanged += new System.EventHandler(this.textBoxPatronymic_TextChanged);
             // 
             // label55
             // 
             this.label55.AutoSize = true;
-            this.label55.Location = new System.Drawing.Point(17, 80);
+            this.label55.Location = new System.Drawing.Point(17, 78);
             this.label55.Name = "label55";
-            this.label55.Size = new System.Drawing.Size(54, 13);
+            this.label55.Size = new System.Drawing.Size(63, 15);
             this.label55.TabIndex = 24;
             this.label55.Text = "Отчество";
             // 
             // textBoxName
             // 
-            this.textBoxName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxName.Location = new System.Drawing.Point(164, 48);
+            this.textBoxName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxName.Location = new System.Drawing.Point(164, 47);
             this.textBoxName.MaxLength = 50;
             this.textBoxName.Name = "textBoxName";
-            this.textBoxName.Size = new System.Drawing.Size(207, 20);
+            this.textBoxName.Size = new System.Drawing.Size(203, 21);
             this.textBoxName.TabIndex = 1;
             this.textBoxName.TextChanged += new System.EventHandler(this.textBoxName_TextChanged);
             // 
             // label54
             // 
             this.label54.AutoSize = true;
-            this.label54.Location = new System.Drawing.Point(17, 51);
+            this.label54.Location = new System.Drawing.Point(17, 50);
             this.label54.Name = "label54";
-            this.label54.Size = new System.Drawing.Size(29, 13);
+            this.label54.Size = new System.Drawing.Size(32, 15);
             this.label54.TabIndex = 22;
             this.label54.Text = "Имя";
             // 
             // textBoxSurname
             // 
-            this.textBoxSurname.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSurname.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxSurname.Location = new System.Drawing.Point(164, 19);
             this.textBoxSurname.MaxLength = 50;
             this.textBoxSurname.Name = "textBoxSurname";
-            this.textBoxSurname.Size = new System.Drawing.Size(207, 20);
+            this.textBoxSurname.Size = new System.Drawing.Size(203, 21);
             this.textBoxSurname.TabIndex = 0;
             this.textBoxSurname.TextChanged += new System.EventHandler(this.textBoxSurname_TextChanged);
             // 
@@ -1272,7 +1271,7 @@ namespace Registry.Viewport
             this.label53.AutoSize = true;
             this.label53.Location = new System.Drawing.Point(17, 22);
             this.label53.Name = "label53";
-            this.label53.Size = new System.Drawing.Size(56, 13);
+            this.label53.Size = new System.Drawing.Size(62, 15);
             this.label53.TabIndex = 20;
             this.label53.Text = "Фамилия";
             // 
@@ -1289,7 +1288,7 @@ namespace Registry.Viewport
             this.groupBox27.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox27.Location = new System.Drawing.Point(3, 203);
             this.groupBox27.Name = "groupBox27";
-            this.groupBox27.Size = new System.Drawing.Size(377, 134);
+            this.groupBox27.Size = new System.Drawing.Size(373, 134);
             this.groupBox27.TabIndex = 1;
             this.groupBox27.TabStop = false;
             this.groupBox27.Text = "Адрес регистрации";
@@ -1297,20 +1296,20 @@ namespace Registry.Viewport
             // label66
             // 
             this.label66.AutoSize = true;
-            this.label66.Location = new System.Drawing.Point(17, 110);
+            this.label66.Location = new System.Drawing.Point(17, 109);
             this.label66.Name = "label66";
-            this.label66.Size = new System.Drawing.Size(89, 13);
+            this.label66.Size = new System.Drawing.Size(101, 15);
             this.label66.TabIndex = 18;
             this.label66.Text = "Номер комнаты";
             // 
             // textBoxRegistrationRoom
             // 
-            this.textBoxRegistrationRoom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxRegistrationRoom.Location = new System.Drawing.Point(164, 107);
+            this.textBoxRegistrationRoom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxRegistrationRoom.Location = new System.Drawing.Point(164, 106);
             this.textBoxRegistrationRoom.MaxLength = 15;
             this.textBoxRegistrationRoom.Name = "textBoxRegistrationRoom";
-            this.textBoxRegistrationRoom.Size = new System.Drawing.Size(207, 20);
+            this.textBoxRegistrationRoom.Size = new System.Drawing.Size(203, 21);
             this.textBoxRegistrationRoom.TabIndex = 3;
             this.textBoxRegistrationRoom.TextChanged += new System.EventHandler(this.textBoxRegistrationRoom_TextChanged);
             // 
@@ -1319,47 +1318,47 @@ namespace Registry.Viewport
             this.label65.AutoSize = true;
             this.label65.Location = new System.Drawing.Point(17, 81);
             this.label65.Name = "label65";
-            this.label65.Size = new System.Drawing.Size(93, 13);
+            this.label65.Size = new System.Drawing.Size(106, 15);
             this.label65.TabIndex = 16;
             this.label65.Text = "Номер квартиры";
             // 
             // textBoxRegistrationFlat
             // 
-            this.textBoxRegistrationFlat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxRegistrationFlat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxRegistrationFlat.Location = new System.Drawing.Point(164, 78);
             this.textBoxRegistrationFlat.MaxLength = 15;
             this.textBoxRegistrationFlat.Name = "textBoxRegistrationFlat";
-            this.textBoxRegistrationFlat.Size = new System.Drawing.Size(207, 20);
+            this.textBoxRegistrationFlat.Size = new System.Drawing.Size(203, 21);
             this.textBoxRegistrationFlat.TabIndex = 2;
             this.textBoxRegistrationFlat.TextChanged += new System.EventHandler(this.textBoxRegistrationFlat_TextChanged);
             // 
             // label63
             // 
             this.label63.AutoSize = true;
-            this.label63.Location = new System.Drawing.Point(17, 23);
+            this.label63.Location = new System.Drawing.Point(17, 24);
             this.label63.Name = "label63";
-            this.label63.Size = new System.Drawing.Size(39, 13);
+            this.label63.Size = new System.Drawing.Size(43, 15);
             this.label63.TabIndex = 12;
             this.label63.Text = "Улица";
             // 
             // label64
             // 
             this.label64.AutoSize = true;
-            this.label64.Location = new System.Drawing.Point(17, 52);
+            this.label64.Location = new System.Drawing.Point(17, 53);
             this.label64.Name = "label64";
-            this.label64.Size = new System.Drawing.Size(70, 13);
+            this.label64.Size = new System.Drawing.Size(79, 15);
             this.label64.TabIndex = 13;
             this.label64.Text = "Номер дома";
             // 
             // comboBoxRegistrationStreet
             // 
-            this.comboBoxRegistrationStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxRegistrationStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxRegistrationStreet.FormattingEnabled = true;
             this.comboBoxRegistrationStreet.Location = new System.Drawing.Point(164, 20);
             this.comboBoxRegistrationStreet.Name = "comboBoxRegistrationStreet";
-            this.comboBoxRegistrationStreet.Size = new System.Drawing.Size(207, 21);
+            this.comboBoxRegistrationStreet.Size = new System.Drawing.Size(203, 23);
             this.comboBoxRegistrationStreet.TabIndex = 0;
             this.comboBoxRegistrationStreet.DropDownClosed += new System.EventHandler(this.comboBoxRegistrationStreet_DropDownClosed);
             this.comboBoxRegistrationStreet.SelectedValueChanged += new System.EventHandler(this.comboBoxRegistrationStreet_SelectedValueChanged);
@@ -1368,12 +1367,12 @@ namespace Registry.Viewport
             // 
             // textBoxRegistrationHouse
             // 
-            this.textBoxRegistrationHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxRegistrationHouse.Location = new System.Drawing.Point(164, 49);
+            this.textBoxRegistrationHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxRegistrationHouse.Location = new System.Drawing.Point(164, 50);
             this.textBoxRegistrationHouse.MaxLength = 10;
             this.textBoxRegistrationHouse.Name = "textBoxRegistrationHouse";
-            this.textBoxRegistrationHouse.Size = new System.Drawing.Size(207, 20);
+            this.textBoxRegistrationHouse.Size = new System.Drawing.Size(203, 21);
             this.textBoxRegistrationHouse.TabIndex = 1;
             this.textBoxRegistrationHouse.TextChanged += new System.EventHandler(this.textBoxRegistrationHouse_TextChanged);
             // 
@@ -1390,21 +1389,21 @@ namespace Registry.Viewport
             this.groupBox26.Controls.Add(this.comboBoxDocumentType);
             this.groupBox26.Controls.Add(this.label58);
             this.groupBox26.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox26.Location = new System.Drawing.Point(386, 3);
+            this.groupBox26.Location = new System.Drawing.Point(382, 3);
             this.groupBox26.Name = "groupBox26";
-            this.groupBox26.Size = new System.Drawing.Size(378, 194);
+            this.groupBox26.Size = new System.Drawing.Size(373, 194);
             this.groupBox26.TabIndex = 2;
             this.groupBox26.TabStop = false;
             this.groupBox26.Text = "Документ, удостоверяющий личность";
             // 
             // comboBoxIssuedBy
             // 
-            this.comboBoxIssuedBy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxIssuedBy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxIssuedBy.FormattingEnabled = true;
-            this.comboBoxIssuedBy.Location = new System.Drawing.Point(164, 135);
+            this.comboBoxIssuedBy.Location = new System.Drawing.Point(164, 131);
             this.comboBoxIssuedBy.Name = "comboBoxIssuedBy";
-            this.comboBoxIssuedBy.Size = new System.Drawing.Size(208, 21);
+            this.comboBoxIssuedBy.Size = new System.Drawing.Size(203, 23);
             this.comboBoxIssuedBy.TabIndex = 4;
             this.comboBoxIssuedBy.DropDownClosed += new System.EventHandler(this.comboBoxIssuedBy_DropDownClosed);
             this.comboBoxIssuedBy.SelectedValueChanged += new System.EventHandler(this.comboBoxIssuedBy_SelectedValueChanged);
@@ -1414,90 +1413,90 @@ namespace Registry.Viewport
             // label62
             // 
             this.label62.AutoSize = true;
-            this.label62.Location = new System.Drawing.Point(17, 138);
+            this.label62.Location = new System.Drawing.Point(17, 135);
             this.label62.Name = "label62";
-            this.label62.Size = new System.Drawing.Size(63, 13);
+            this.label62.Size = new System.Drawing.Size(71, 15);
             this.label62.TabIndex = 38;
             this.label62.Text = "Кем выдан";
             // 
             // dateTimePickerDateOfDocumentIssue
             // 
-            this.dateTimePickerDateOfDocumentIssue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerDateOfDocumentIssue.Location = new System.Drawing.Point(164, 106);
+            this.dateTimePickerDateOfDocumentIssue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerDateOfDocumentIssue.Location = new System.Drawing.Point(164, 103);
             this.dateTimePickerDateOfDocumentIssue.Name = "dateTimePickerDateOfDocumentIssue";
             this.dateTimePickerDateOfDocumentIssue.ShowCheckBox = true;
-            this.dateTimePickerDateOfDocumentIssue.Size = new System.Drawing.Size(208, 20);
+            this.dateTimePickerDateOfDocumentIssue.Size = new System.Drawing.Size(203, 21);
             this.dateTimePickerDateOfDocumentIssue.TabIndex = 3;
             this.dateTimePickerDateOfDocumentIssue.ValueChanged += new System.EventHandler(this.dateTimePickerDateOfDocumentIssue_ValueChanged);
             // 
             // label61
             // 
             this.label61.AutoSize = true;
-            this.label61.Location = new System.Drawing.Point(17, 110);
+            this.label61.Location = new System.Drawing.Point(17, 106);
             this.label61.Name = "label61";
-            this.label61.Size = new System.Drawing.Size(73, 13);
+            this.label61.Size = new System.Drawing.Size(83, 15);
             this.label61.TabIndex = 36;
             this.label61.Text = "Дата выдачи";
             // 
             // textBoxDocumentNumber
             // 
-            this.textBoxDocumentNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDocumentNumber.Location = new System.Drawing.Point(164, 77);
+            this.textBoxDocumentNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxDocumentNumber.Location = new System.Drawing.Point(164, 75);
             this.textBoxDocumentNumber.MaxLength = 8;
             this.textBoxDocumentNumber.Name = "textBoxDocumentNumber";
-            this.textBoxDocumentNumber.Size = new System.Drawing.Size(208, 20);
+            this.textBoxDocumentNumber.Size = new System.Drawing.Size(203, 21);
             this.textBoxDocumentNumber.TabIndex = 2;
             this.textBoxDocumentNumber.TextChanged += new System.EventHandler(this.textBoxDocumentNumber_TextChanged);
             // 
             // label60
             // 
             this.label60.AutoSize = true;
-            this.label60.Location = new System.Drawing.Point(17, 80);
+            this.label60.Location = new System.Drawing.Point(17, 78);
             this.label60.Name = "label60";
-            this.label60.Size = new System.Drawing.Size(41, 13);
+            this.label60.Size = new System.Drawing.Size(46, 15);
             this.label60.TabIndex = 34;
             this.label60.Text = "Номер";
             // 
             // textBoxDocumentSeria
             // 
-            this.textBoxDocumentSeria.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDocumentSeria.Location = new System.Drawing.Point(164, 48);
+            this.textBoxDocumentSeria.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxDocumentSeria.Location = new System.Drawing.Point(164, 47);
             this.textBoxDocumentSeria.MaxLength = 8;
             this.textBoxDocumentSeria.Name = "textBoxDocumentSeria";
-            this.textBoxDocumentSeria.Size = new System.Drawing.Size(208, 20);
+            this.textBoxDocumentSeria.Size = new System.Drawing.Size(203, 21);
             this.textBoxDocumentSeria.TabIndex = 1;
             this.textBoxDocumentSeria.TextChanged += new System.EventHandler(this.textBoxDocumentSeria_TextChanged);
             // 
             // label59
             // 
             this.label59.AutoSize = true;
-            this.label59.Location = new System.Drawing.Point(17, 51);
+            this.label59.Location = new System.Drawing.Point(17, 50);
             this.label59.Name = "label59";
-            this.label59.Size = new System.Drawing.Size(38, 13);
+            this.label59.Size = new System.Drawing.Size(43, 15);
             this.label59.TabIndex = 32;
             this.label59.Text = "Серия";
             // 
             // comboBoxDocumentType
             // 
-            this.comboBoxDocumentType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxDocumentType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxDocumentType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxDocumentType.FormattingEnabled = true;
-            this.comboBoxDocumentType.Location = new System.Drawing.Point(164, 19);
+            this.comboBoxDocumentType.Location = new System.Drawing.Point(164, 18);
             this.comboBoxDocumentType.Name = "comboBoxDocumentType";
-            this.comboBoxDocumentType.Size = new System.Drawing.Size(208, 21);
+            this.comboBoxDocumentType.Size = new System.Drawing.Size(203, 23);
             this.comboBoxDocumentType.TabIndex = 0;
             this.comboBoxDocumentType.SelectedValueChanged += new System.EventHandler(this.comboBoxDocumentType_SelectedValueChanged);
             // 
             // label58
             // 
             this.label58.AutoSize = true;
-            this.label58.Location = new System.Drawing.Point(17, 22);
+            this.label58.Location = new System.Drawing.Point(17, 23);
             this.label58.Name = "label58";
-            this.label58.Size = new System.Drawing.Size(83, 13);
+            this.label58.Size = new System.Drawing.Size(94, 15);
             this.label58.TabIndex = 30;
             this.label58.Text = "Вид документа";
             // 
@@ -1512,9 +1511,9 @@ namespace Registry.Viewport
             this.groupBox28.Controls.Add(this.comboBoxResidenceStreet);
             this.groupBox28.Controls.Add(this.textBoxResidenceHouse);
             this.groupBox28.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox28.Location = new System.Drawing.Point(386, 203);
+            this.groupBox28.Location = new System.Drawing.Point(382, 203);
             this.groupBox28.Name = "groupBox28";
-            this.groupBox28.Size = new System.Drawing.Size(378, 134);
+            this.groupBox28.Size = new System.Drawing.Size(373, 134);
             this.groupBox28.TabIndex = 3;
             this.groupBox28.TabStop = false;
             this.groupBox28.Text = "Адрес проживания";
@@ -1524,18 +1523,18 @@ namespace Registry.Viewport
             this.label67.AutoSize = true;
             this.label67.Location = new System.Drawing.Point(17, 110);
             this.label67.Name = "label67";
-            this.label67.Size = new System.Drawing.Size(89, 13);
+            this.label67.Size = new System.Drawing.Size(101, 15);
             this.label67.TabIndex = 26;
             this.label67.Text = "Номер комнаты";
             // 
             // textBoxResidenceRoom
             // 
-            this.textBoxResidenceRoom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxResidenceRoom.Location = new System.Drawing.Point(164, 107);
+            this.textBoxResidenceRoom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxResidenceRoom.Location = new System.Drawing.Point(164, 106);
             this.textBoxResidenceRoom.MaxLength = 15;
             this.textBoxResidenceRoom.Name = "textBoxResidenceRoom";
-            this.textBoxResidenceRoom.Size = new System.Drawing.Size(208, 20);
+            this.textBoxResidenceRoom.Size = new System.Drawing.Size(203, 21);
             this.textBoxResidenceRoom.TabIndex = 3;
             this.textBoxResidenceRoom.TextChanged += new System.EventHandler(this.textBoxResidenceRoom_TextChanged);
             // 
@@ -1544,47 +1543,47 @@ namespace Registry.Viewport
             this.label68.AutoSize = true;
             this.label68.Location = new System.Drawing.Point(17, 81);
             this.label68.Name = "label68";
-            this.label68.Size = new System.Drawing.Size(93, 13);
+            this.label68.Size = new System.Drawing.Size(106, 15);
             this.label68.TabIndex = 24;
             this.label68.Text = "Номер квартиры";
             // 
             // textBoxResidenceFlat
             // 
-            this.textBoxResidenceFlat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxResidenceFlat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxResidenceFlat.Location = new System.Drawing.Point(164, 78);
             this.textBoxResidenceFlat.MaxLength = 15;
             this.textBoxResidenceFlat.Name = "textBoxResidenceFlat";
-            this.textBoxResidenceFlat.Size = new System.Drawing.Size(208, 20);
+            this.textBoxResidenceFlat.Size = new System.Drawing.Size(203, 21);
             this.textBoxResidenceFlat.TabIndex = 2;
             this.textBoxResidenceFlat.TextChanged += new System.EventHandler(this.textBoxResidenceFlat_TextChanged);
             // 
             // label69
             // 
             this.label69.AutoSize = true;
-            this.label69.Location = new System.Drawing.Point(17, 23);
+            this.label69.Location = new System.Drawing.Point(17, 24);
             this.label69.Name = "label69";
-            this.label69.Size = new System.Drawing.Size(39, 13);
+            this.label69.Size = new System.Drawing.Size(43, 15);
             this.label69.TabIndex = 20;
             this.label69.Text = "Улица";
             // 
             // label70
             // 
             this.label70.AutoSize = true;
-            this.label70.Location = new System.Drawing.Point(17, 52);
+            this.label70.Location = new System.Drawing.Point(17, 53);
             this.label70.Name = "label70";
-            this.label70.Size = new System.Drawing.Size(70, 13);
+            this.label70.Size = new System.Drawing.Size(79, 15);
             this.label70.TabIndex = 21;
             this.label70.Text = "Номер дома";
             // 
             // comboBoxResidenceStreet
             // 
-            this.comboBoxResidenceStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxResidenceStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxResidenceStreet.FormattingEnabled = true;
             this.comboBoxResidenceStreet.Location = new System.Drawing.Point(164, 20);
             this.comboBoxResidenceStreet.Name = "comboBoxResidenceStreet";
-            this.comboBoxResidenceStreet.Size = new System.Drawing.Size(208, 21);
+            this.comboBoxResidenceStreet.Size = new System.Drawing.Size(203, 23);
             this.comboBoxResidenceStreet.TabIndex = 0;
             this.comboBoxResidenceStreet.DropDownClosed += new System.EventHandler(this.comboBoxResidenceStreet_DropDownClosed);
             this.comboBoxResidenceStreet.SelectedValueChanged += new System.EventHandler(this.comboBoxResidenceStreet_SelectedValueChanged);
@@ -1593,12 +1592,12 @@ namespace Registry.Viewport
             // 
             // textBoxResidenceHouse
             // 
-            this.textBoxResidenceHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxResidenceHouse.Location = new System.Drawing.Point(164, 49);
+            this.textBoxResidenceHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxResidenceHouse.Location = new System.Drawing.Point(164, 50);
             this.textBoxResidenceHouse.MaxLength = 10;
             this.textBoxResidenceHouse.Name = "textBoxResidenceHouse";
-            this.textBoxResidenceHouse.Size = new System.Drawing.Size(208, 20);
+            this.textBoxResidenceHouse.Size = new System.Drawing.Size(203, 21);
             this.textBoxResidenceHouse.TabIndex = 1;
             this.textBoxResidenceHouse.TextChanged += new System.EventHandler(this.textBoxResidenceHouse_TextChanged);
             // 
@@ -1610,7 +1609,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
@@ -1630,7 +1629,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.MultiSelect = false;
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(761, 92);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(752, 77);
             this.dataGridViewTenancyPersons.TabIndex = 4;
             this.dataGridViewTenancyPersons.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridViewTenancyPersons_DataError);
             // 
@@ -1658,7 +1657,7 @@ namespace Registry.Viewport
             // date_of_birth
             // 
             this.date_of_birth.HeaderText = "Дата рождения";
-            this.date_of_birth.MinimumWidth = 100;
+            this.date_of_birth.MinimumWidth = 130;
             this.date_of_birth.Name = "date_of_birth";
             this.date_of_birth.ReadOnly = true;
             // 
@@ -1672,11 +1671,11 @@ namespace Registry.Viewport
             // TenancyPersonsViewport
             // 
             this.AutoScroll = true;
-            this.AutoScrollMinSize = new System.Drawing.Size(630, 420);
+            this.AutoScrollMinSize = new System.Drawing.Size(660, 420);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(773, 444);
+            this.ClientSize = new System.Drawing.Size(764, 429);
             this.Controls.Add(this.tableLayoutPanel11);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "TenancyPersonsViewport";
             this.Padding = new System.Windows.Forms.Padding(3);

@@ -7,6 +7,7 @@ using System.Data;
 using Registry.Entities;
 using Registry.DataModels;
 using System.Text.RegularExpressions;
+using Security;
 
 namespace Registry.Viewport
 {
@@ -250,7 +251,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return true;
+            return  AccessControl.HasPrivelege(Priveleges.TenancyDirectoriesReadWrite);
         }
 
         public override void InsertRecord()
@@ -261,7 +262,7 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            return (v_snapshot_tenancy_reason_types.Position != -1);
+            return (v_snapshot_tenancy_reason_types.Position != -1) && AccessControl.HasPrivelege(Priveleges.TenancyDirectoriesReadWrite);
         }
 
         public override void DeleteRecord()
@@ -284,7 +285,7 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return SnapshotHasChanges();
+            return SnapshotHasChanges() && AccessControl.HasPrivelege(Priveleges.TenancyDirectoriesReadWrite);
         }
 
         public override void SaveRecord()
@@ -301,7 +302,7 @@ namespace Registry.Viewport
                 DataRow row = tenancy_reason_types.Select().Rows.Find(((ReasonType)list[i]).id_reason_type);
                 if (row == null)
                 {
-                    int id_reason_type = tenancy_reason_types.Insert(list[i]);
+                    int id_reason_type = TenancyReasonTypesDataModel.Insert(list[i]);
                     if (id_reason_type == -1)
                     {
                         sync_views = true;
@@ -315,7 +316,7 @@ namespace Registry.Viewport
 
                     if (RowToReasonType(row) == list[i])
                         continue;
-                    if (tenancy_reason_types.Update(list[i]) == -1)
+                    if (TenancyReasonTypesDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         return;
@@ -335,7 +336,7 @@ namespace Registry.Viewport
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (tenancy_reason_types.Delete(list[i].id_reason_type.Value) == -1)
+                    if (TenancyReasonTypesDataModel.Delete(list[i].id_reason_type.Value) == -1)
                     {
                         sync_views = true;
                         return;
@@ -476,7 +477,7 @@ namespace Registry.Viewport
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
@@ -523,7 +524,7 @@ namespace Registry.Viewport
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(712, 261);
             this.Controls.Add(this.dataGridView);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "TenancyReasonTypesViewport";
             this.Padding = new System.Windows.Forms.Padding(3);

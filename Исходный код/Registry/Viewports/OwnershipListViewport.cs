@@ -7,6 +7,7 @@ using System.Data;
 using CustomControls;
 using Registry.DataModels;
 using Registry.Entities;
+using Security;
 
 namespace Registry.Viewport
 {
@@ -309,7 +310,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return true;
+            return AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void InsertRecord()
@@ -320,7 +321,7 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            return (v_snapshot_ownerships_rights.Position != -1);
+            return (v_snapshot_ownerships_rights.Position != -1) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void DeleteRecord()
@@ -343,7 +344,7 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return SnapshotHasChanges();
+            return SnapshotHasChanges() && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void SaveRecord()
@@ -371,7 +372,7 @@ namespace Registry.Viewport
                         RebuildFilter();
                         return;
                     }
-                    int id_ownership_right = ownership_rights.Insert(list[i], ParentType, id_parent);
+                    int id_ownership_right = OwnershipsRightsDataModel.Insert(list[i], ParentType, id_parent);
                     if (id_ownership_right == -1)
                     {
                         sync_views = true;
@@ -386,7 +387,7 @@ namespace Registry.Viewport
                 {
                     if (RowToOwnershipRight(row) == list[i])
                         continue;
-                    if (ownership_rights.Update(list[i]) == -1)
+                    if (OwnershipsRightsDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         RebuildFilter();
@@ -409,7 +410,7 @@ namespace Registry.Viewport
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (ownership_rights.Delete(list[i].id_ownership_right.Value) == -1)
+                    if (OwnershipsRightsDataModel.Delete(list[i].id_ownership_right.Value) == -1)
                     {
                         sync_views = true;
                         RebuildFilter();
@@ -591,7 +592,7 @@ namespace Registry.Viewport
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
@@ -611,7 +612,7 @@ namespace Registry.Viewport
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridView.ShowCellToolTips = false;
-            this.dataGridView.Size = new System.Drawing.Size(793, 328);
+            this.dataGridView.Size = new System.Drawing.Size(819, 328);
             this.dataGridView.TabIndex = 2;
             // 
             // id_ownership_right
@@ -654,9 +655,9 @@ namespace Registry.Viewport
             // OwnershipListViewport
             // 
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(799, 334);
+            this.ClientSize = new System.Drawing.Size(825, 334);
             this.Controls.Add(this.dataGridView);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "OwnershipListViewport";
             this.Padding = new System.Windows.Forms.Padding(3);

@@ -207,7 +207,7 @@ namespace Registry.Viewport
                     row = tenancy_sub_premises.Select().Rows.Find(list[i].id_assoc);
                 if (row == null)
                 {
-                    int id_assoc = tenancy_sub_premises.Insert(list[i]);
+                    int id_assoc = TenancySubPremisesAssocDataModel.Insert(list[i]);
                     if (id_assoc == -1)
                     {
                         sync_views = true;
@@ -223,7 +223,7 @@ namespace Registry.Viewport
                 {
                     if (RowToTenancySubPremises(row) == list[i])
                         continue;
-                    if (tenancy_sub_premises.Update(list[i]) == -1)
+                    if (TenancySubPremisesAssocDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         return;
@@ -246,7 +246,7 @@ namespace Registry.Viewport
                 }
                 if (row_index == -1)
                 {
-                    if (tenancy_sub_premises.Delete(list[i].id_assoc.Value) == -1)
+                    if (TenancySubPremisesAssocDataModel.Delete(list[i].id_assoc.Value) == -1)
                     {
                         sync_views = true;
                         return;
@@ -477,7 +477,7 @@ namespace Registry.Viewport
             this.description});
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.Color.LightGray;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -489,7 +489,7 @@ namespace Registry.Viewport
             this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.ShowEditingIcon = false;
-            this.dataGridView.Size = new System.Drawing.Size(322, 192);
+            this.dataGridView.Size = new System.Drawing.Size(769, 192);
             this.dataGridView.TabIndex = 0;
             this.dataGridView.VirtualMode = true;
             this.dataGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridView_EditingControlShowing);
@@ -561,8 +561,9 @@ namespace Registry.Viewport
             // SubPremisesDetailsControl
             // 
             this.Controls.Add(this.dataGridView);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Name = "SubPremisesDetailsControl";
-            this.Size = new System.Drawing.Size(322, 192);
+            this.Size = new System.Drawing.Size(772, 192);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
 

@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.Odbc;
 using Registry.Entities;
+using System.Globalization;
 
 namespace Registry.DataModels
 {
@@ -45,83 +46,102 @@ namespace Registry.DataModels
             return dataModel;
         }
 
-        public int Insert(TenancyReason tenancyReason)
+        public static int Insert(TenancyReason tenancyReason)
         {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            DbCommand last_id_command = connection.CreateCommand();
-            last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
-            command.CommandText = insertQuery;
-
-            command.Parameters.Add(connection.CreateParameter<int?>("id_process", tenancyReason.id_process));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_reason_type", tenancyReason.id_reason_type));
-            command.Parameters.Add(connection.CreateParameter<string>("reason_number", tenancyReason.reason_number));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("reason_date", tenancyReason.reason_date));
-            command.Parameters.Add(connection.CreateParameter<string>("reason_prepared", tenancyReason.reason_prepared));
-
-            try
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
+            using (DbCommand last_id_command = DBConnection.CreateCommand())
             {
-                connection.SqlBeginTransaction();
-                connection.SqlModifyQuery(command);
-                DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
-                connection.SqlCommitTransaction();
-                if (last_id.Rows.Count == 0)
+                last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
+                command.CommandText = insertQuery;
+                if (tenancyReason == null)
                 {
-                    MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("В метод Insert не передана ссылка на сущность основания найма", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     return -1;
                 }
-                return Convert.ToInt32(last_id.Rows[0][0]);
-            }
-            catch (OdbcException e)
-            {
-                connection.SqlRollbackTransaction();
-                MessageBox.Show(String.Format("Не удалось добавить основание найма в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
-            }
-        }
-
-        public int Update(TenancyReason tenancyReason)
-        {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = updateQuery;
-
-            command.Parameters.Add(connection.CreateParameter<int?>("id_process", tenancyReason.id_process));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_reason_type", tenancyReason.id_reason_type));
-            command.Parameters.Add(connection.CreateParameter<string>("reason_number", tenancyReason.reason_number));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("reason_date", tenancyReason.reason_date));
-            command.Parameters.Add(connection.CreateParameter<string>("reason_prepared", tenancyReason.reason_prepared));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_reason", tenancyReason.id_reason));
-
-            try
-            {
-                return connection.SqlModifyQuery(command);
-            }
-            catch (OdbcException e)
-            {
-                connection.SqlRollbackTransaction();
-                MessageBox.Show(String.Format("Не удалось изменить основание найма в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyReason.id_process));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_reason_type", tenancyReason.id_reason_type));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_number", tenancyReason.reason_number));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("reason_date", tenancyReason.reason_date));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_prepared", tenancyReason.reason_prepared));
+                try
+                {
+                    connection.SqlBeginTransaction();
+                    connection.SqlModifyQuery(command);
+                    DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
+                    connection.SqlCommitTransaction();
+                    if (last_id.Rows.Count == 0)
+                    {
+                        MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        return -1;
+                    }
+                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
+                }
+                catch (OdbcException e)
+                {
+                    connection.SqlRollbackTransaction();
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось добавить основание найма в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
             }
         }
 
-        public int Delete(int id)
+        public static int Update(TenancyReason tenancyReason)
         {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = deleteQuery;
-            command.Parameters.Add(connection.CreateParameter<int?>("id_reason", id));
-            try
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
             {
-                return connection.SqlModifyQuery(command);
+                command.CommandText = updateQuery;
+                if (tenancyReason == null)
+                {
+                    MessageBox.Show("В метод Update не передана ссылка на сущность основания найма", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyReason.id_process));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_reason_type", tenancyReason.id_reason_type));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_number", tenancyReason.reason_number));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("reason_date", tenancyReason.reason_date));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_prepared", tenancyReason.reason_prepared));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_reason", tenancyReason.id_reason));
+
+                try
+                {
+                    return connection.SqlModifyQuery(command);
+                }
+                catch (OdbcException e)
+                {
+                    connection.SqlRollbackTransaction();
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось изменить основание найма в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
             }
-            catch (OdbcException e)
+        }
+
+        public static int Delete(int id)
+        {
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
             {
-                MessageBox.Show(String.Format("Не удалось удалить основание найма из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
+                command.CommandText = deleteQuery;
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_reason", id));
+                try
+                {
+                    return connection.SqlModifyQuery(command);
+                }
+                catch (OdbcException e)
+                {
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось удалить основание найма из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
             }
         }
     }

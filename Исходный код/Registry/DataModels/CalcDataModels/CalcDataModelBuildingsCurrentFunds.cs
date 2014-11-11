@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Data;
 using Registry.DataModels;
+using System.Globalization;
 
 namespace Registry.CalcDataModels
 {
@@ -19,9 +20,10 @@ namespace Registry.CalcDataModels
             Refresh(CalcDataModelFilterEnity.All, null);
         }
 
-        private DataTable InitializeTable()
+        private static DataTable InitializeTable()
         {
             DataTable table = new DataTable(tableName);
+            table.Locale = CultureInfo.CurrentCulture;
             table.Columns.Add("id_building").DataType = typeof(int);
             table.Columns.Add("id_fund_type").DataType = typeof(int);
             table.PrimaryKey = new DataColumn[] { table.Columns["id_building"] };

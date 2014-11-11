@@ -9,6 +9,7 @@ using Registry.DataModels;
 using Registry.SearchForms;
 using Registry.CalcDataModels;
 using Registry.Reporting;
+using Security;
 
 namespace Registry.Viewport
 {
@@ -20,6 +21,9 @@ namespace Registry.Viewport
 
         #region Models
         private TenancyProcessesDataModel tenancies = null;
+        private TenancyBuildingsAssocDataModel tenancy_building_assoc = null;
+        private TenancyPremisesAssocDataModel tenancy_premises_assoc = null;
+        private TenancySubPremisesAssocDataModel tenancy_sub_premises_assoc = null;
         private CalcDataModeTenancyAggregated tenancies_aggregate = null;
         private RentTypesDataModel rent_types = null;
         #endregion Models
@@ -59,6 +63,61 @@ namespace Registry.Viewport
             this.StaticFilter = tenancyListViewport.StaticFilter;
             this.ParentRow = tenancyListViewport.ParentRow;
             this.ParentType = tenancyListViewport.ParentType;
+        }
+
+        private void RebuildStaticFilter()
+        {
+            List<int> ids = null;
+            if (ParentRow == null)
+                return;
+            switch (ParentType)
+            {
+                case ParentTypeEnum.Building:
+                    ids = DataModelHelper.TenancyProcessIDsByBuildingID(Convert.ToInt32(ParentRow["id_building"]));
+                    break;
+                case ParentTypeEnum.Premises:
+                    ids = DataModelHelper.TenancyProcessIDsByPremisesID(Convert.ToInt32(ParentRow["id_premises"]));
+                    break;
+                case ParentTypeEnum.SubPremises:
+                    ids = DataModelHelper.TenancyProcessIDsBySubPremisesID(Convert.ToInt32(ParentRow["id_sub_premises"]));
+                    break;
+                default: 
+                    throw new ViewportException("Неизвестный тип родительского объекта");
+            }
+            if (ids != null)
+            {
+                StaticFilter = "id_process IN (0";
+                for (int i = 0; i < ids.Count; i++)
+                    StaticFilter += ids[i].ToString() + ",";
+                StaticFilter = StaticFilter.TrimEnd(new char[] { ',' }) + ")";
+            }
+            string Filter = StaticFilter;
+            v_tenancies.Filter = StaticFilter;
+            if (Filter != "" && DynamicFilter != "")
+                Filter += " AND ";
+            v_tenancies.Filter = Filter + DynamicFilter;
+        }
+
+        private void SetViewportCaption()
+        {
+            if (ParentRow == null)
+                this.Text = "Процессы найма жилья";
+            else
+            {
+                switch (ParentType)
+                {
+                    case ParentTypeEnum.Building:
+                        this.Text = String.Format("Найм здания №{0}", ParentRow["id_building"]);
+                        break;
+                    case ParentTypeEnum.Premises:
+                        this.Text = String.Format("Найм помещения №{0}", ParentRow["id_premises"]);
+                        break;
+                    case ParentTypeEnum.SubPremises:
+                        this.Text = String.Format("Найм комнаты №{0}", ParentRow["id_sub_premises"]);
+                        break;
+                    default: throw new ViewportException("Неизвестный тип родительского объекта");
+                }
+            }
         }
 
         public void LocateTenancyBy(int id)
@@ -130,13 +189,15 @@ namespace Registry.Viewport
             tenancies.Select();
             rent_types.Select();
 
+            SetViewportCaption();
+
             DataSet ds = DataSetManager.GetDataSet();
 
             v_tenancies = new BindingSource();
             v_tenancies.DataMember = "tenancy_processes";
             v_tenancies.CurrentItemChanged += new EventHandler(v_tenancies_CurrentItemChanged);
             v_tenancies.DataSource = ds;
-            v_tenancies.Filter = StaticFilter;
+            RebuildStaticFilter();
             if (StaticFilter != "" && DynamicFilter != "")
                 v_tenancies.Filter += " AND ";
             v_tenancies.Filter += DynamicFilter;
@@ -150,6 +211,28 @@ namespace Registry.Viewport
 
             tenancies.Select().RowChanged += new DataRowChangeEventHandler(TenancyListViewport_RowChanged);
             tenancies.Select().RowDeleted += new DataRowChangeEventHandler(TenancyListViewport_RowDeleted);
+            if (ParentRow != null)
+            {
+                switch (ParentType)
+                {
+                    case ParentTypeEnum.Building:
+                        tenancy_building_assoc = TenancyBuildingsAssocDataModel.GetInstance();
+                        tenancy_building_assoc.Select().RowChanged += new DataRowChangeEventHandler(TenancyAssocViewport_RowChanged);
+                        tenancy_building_assoc.Select().RowDeleted += new DataRowChangeEventHandler(TenancyAssocViewport_RowDeleted);
+                        break;
+                    case ParentTypeEnum.Premises:
+                        tenancy_premises_assoc = TenancyPremisesAssocDataModel.GetInstance();
+                        tenancy_premises_assoc.Select().RowChanged += new DataRowChangeEventHandler(TenancyAssocViewport_RowChanged);
+                        tenancy_premises_assoc.Select().RowDeleted += new DataRowChangeEventHandler(TenancyAssocViewport_RowDeleted);
+                        break;
+                    case ParentTypeEnum.SubPremises:
+                        tenancy_sub_premises_assoc = TenancySubPremisesAssocDataModel.GetInstance();
+                        tenancy_sub_premises_assoc.Select().RowChanged += new DataRowChangeEventHandler(TenancyAssocViewport_RowChanged);
+                        tenancy_sub_premises_assoc.Select().RowDeleted += new DataRowChangeEventHandler(TenancyAssocViewport_RowDeleted);
+                        break;
+                    default: throw new ViewportException("Неизвестный тип родительского объекта");
+                }
+            }
             dataGridView.RowCount = v_tenancies.Count;
             tenancies_aggregate.RefreshEvent += new EventHandler<EventArgs>(tenancies_aggregate_RefreshEvent);
             ViewportHelper.SetDoubleBuffered(dataGridView);
@@ -157,10 +240,7 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            if (v_tenancies.Position == -1)
-                return false;
-            else
-                return true;
+            return (v_tenancies.Position > -1) && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void DeleteRecord()
@@ -168,7 +248,7 @@ namespace Registry.Viewport
             if (MessageBox.Show("Вы действительно хотите удалить этот процесс найма жилья?", "Внимание", 
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                if (tenancies.Delete((int)((DataRowView)v_tenancies.Current)["id_process"]) == -1)
+                if (TenancyProcessesDataModel.Delete((int)((DataRowView)v_tenancies.Current)["id_process"]) == -1)
                     return;
                 ((DataRowView)v_tenancies[v_tenancies.Position]).Delete();
                 menuCallback.ForceCloseDetachedViewports();
@@ -249,10 +329,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            if (!tenancies.EditingNewRecord)
-                return true;
-            else
-                return false;
+            return (!tenancies.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void InsertRecord()
@@ -272,10 +349,7 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            if ((v_tenancies.Position != -1) && (!tenancies.EditingNewRecord))
-                return true;
-            else
-                return false;
+            return (v_tenancies.Position != -1) && (!tenancies.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void CopyRecord()
@@ -575,6 +649,18 @@ namespace Registry.Viewport
             dataGridView.RowCount = v_tenancies.Count;
         }
 
+        private void TenancyAssocViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            RebuildStaticFilter();
+            dataGridView.RowCount = v_tenancies.Count;
+        }
+
+        private void TenancyAssocViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            RebuildStaticFilter();
+            dataGridView.RowCount = v_tenancies.Count;
+        }
+
         void v_tenancies_CurrentItemChanged(object sender, EventArgs e)
         {
             if (v_tenancies.Position == -1 || dataGridView.RowCount == 0)
@@ -601,7 +687,7 @@ namespace Registry.Viewport
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
-            if (dataGridView.Size.Width > 1150)
+            if (dataGridView.Size.Width > 1230)
             {
                 if (dataGridView.Columns["address"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     dataGridView.Columns["address"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -636,7 +722,7 @@ namespace Registry.Viewport
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
@@ -682,38 +768,38 @@ namespace Registry.Viewport
             // 
             this.registration_num.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.registration_num.HeaderText = "№ договора";
-            this.registration_num.MinimumWidth = 120;
+            this.registration_num.MinimumWidth = 130;
             this.registration_num.Name = "registration_num";
             this.registration_num.ReadOnly = true;
-            this.registration_num.Width = 120;
+            this.registration_num.Width = 130;
             // 
             // residence_warrant_num
             // 
             this.residence_warrant_num.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.residence_warrant_num.HeaderText = "№ ордера";
-            this.residence_warrant_num.MinimumWidth = 120;
+            this.residence_warrant_num.MinimumWidth = 130;
             this.residence_warrant_num.Name = "residence_warrant_num";
             this.residence_warrant_num.ReadOnly = true;
-            this.residence_warrant_num.Width = 120;
+            this.residence_warrant_num.Width = 130;
             // 
             // kumi_order_num
             // 
             this.kumi_order_num.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.kumi_order_num.HeaderText = "№ распоряжения";
-            this.kumi_order_num.MinimumWidth = 120;
+            this.kumi_order_num.MinimumWidth = 130;
             this.kumi_order_num.Name = "kumi_order_num";
             this.kumi_order_num.ReadOnly = true;
-            this.kumi_order_num.Width = 120;
+            this.kumi_order_num.Width = 130;
             // 
             // tenant
             // 
             this.tenant.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.tenant.HeaderText = "Наниматель";
-            this.tenant.MinimumWidth = 200;
+            this.tenant.MinimumWidth = 250;
             this.tenant.Name = "tenant";
             this.tenant.ReadOnly = true;
             this.tenant.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.tenant.Width = 200;
+            this.tenant.Width = 250;
             // 
             // rent_type
             // 
@@ -739,7 +825,7 @@ namespace Registry.Viewport
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1172, 261);
             this.Controls.Add(this.dataGridView);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "TenancyListViewport";
             this.Padding = new System.Windows.Forms.Padding(3);
@@ -748,5 +834,6 @@ namespace Registry.Viewport
             this.ResumeLayout(false);
 
         }
+
     }
 }

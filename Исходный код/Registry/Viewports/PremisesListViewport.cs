@@ -10,6 +10,7 @@ using Registry.Entities;
 using System.Threading;
 using Registry.SearchForms;
 using Registry.CalcDataModels;
+using Security;
 
 namespace Registry.Viewport
 {
@@ -169,10 +170,7 @@ namespace Registry.Viewport
         
         public override bool CanDeleteRecord()
         {
-            if (v_premises.Position == -1)
-                return false;
-            else
-                return true;
+            return (v_premises.Position > -1) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void DeleteRecord()
@@ -180,7 +178,7 @@ namespace Registry.Viewport
             if (MessageBox.Show("Вы действительно хотите удалить это помещение?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 int id_building = (int)((DataRowView)v_premises[v_premises.Position])["id_building"];
-                if (premises.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
+                if (PremisesDataModel.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
                     return;
                 ((DataRowView)v_premises[v_premises.Position]).Delete();
                 menuCallback.ForceCloseDetachedViewports();
@@ -264,10 +262,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            if (!premises.EditingNewRecord)
-                return true;
-            else
-                return false;
+            return (!premises.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void InsertRecord()
@@ -287,7 +282,7 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            return (v_premises.Position != -1) && !premises.EditingNewRecord;
+            return (v_premises.Position != -1) && (!premises.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void CopyRecord()
@@ -342,6 +337,11 @@ namespace Registry.Viewport
             return (v_premises.Position > -1);
         }
 
+        public override bool HasAssocTenancies()
+        {
+            return (v_premises.Position > -1);
+        }
+
         public override void ShowOwnerships()
         {
             ShowAssocViewport(ViewportType.OwnershipListViewport);
@@ -360,6 +360,11 @@ namespace Registry.Viewport
         public override void ShowFundHistory()
         {
             ShowAssocViewport(ViewportType.FundsHistoryViewport);
+        }
+
+        public override void ShowTenancies()
+        {
+            ShowAssocViewport(ViewportType.TenancyListViewport);
         }
 
         private void ShowAssocViewport(ViewportType viewportType)
@@ -483,7 +488,7 @@ namespace Registry.Viewport
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
-            if (dataGridView.Size.Width > 1060)
+            if (dataGridView.Size.Width > 1120)
             {
                 if (dataGridView.Columns["id_street"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     dataGridView.Columns["id_street"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -521,7 +526,7 @@ namespace Registry.Viewport
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
@@ -602,28 +607,28 @@ namespace Registry.Viewport
             dataGridViewCellStyle2.Format = "#0.0## м²";
             this.total_area.DefaultCellStyle = dataGridViewCellStyle2;
             this.total_area.HeaderText = "Общая площадь";
-            this.total_area.MinimumWidth = 120;
+            this.total_area.MinimumWidth = 140;
             this.total_area.Name = "total_area";
             this.total_area.ReadOnly = true;
-            this.total_area.Width = 120;
+            this.total_area.Width = 140;
             // 
             // living_area
             // 
             dataGridViewCellStyle3.Format = "#0.0## м²";
             this.living_area.DefaultCellStyle = dataGridViewCellStyle3;
             this.living_area.HeaderText = "Жилая площадь";
-            this.living_area.MinimumWidth = 120;
+            this.living_area.MinimumWidth = 140;
             this.living_area.Name = "living_area";
             this.living_area.ReadOnly = true;
-            this.living_area.Width = 120;
+            this.living_area.Width = 140;
             // 
             // cadastral_num
             // 
             this.cadastral_num.HeaderText = "Кадастровый номер";
-            this.cadastral_num.MinimumWidth = 150;
+            this.cadastral_num.MinimumWidth = 170;
             this.cadastral_num.Name = "cadastral_num";
             this.cadastral_num.ReadOnly = true;
-            this.cadastral_num.Width = 150;
+            this.cadastral_num.Width = 170;
             // 
             // PremisesListViewport
             // 
@@ -631,7 +636,7 @@ namespace Registry.Viewport
             this.ClientSize = new System.Drawing.Size(1131, 710);
             this.Controls.Add(this.dataGridView);
             this.DoubleBuffered = true;
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "PremisesListViewport";
             this.Padding = new System.Windows.Forms.Padding(3);

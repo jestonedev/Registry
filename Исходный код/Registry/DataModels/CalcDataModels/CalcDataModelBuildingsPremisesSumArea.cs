@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Registry.DataModels;
 using System.Data;
+using System.Globalization;
 
 namespace Registry.CalcDataModels
 {
@@ -21,9 +22,10 @@ namespace Registry.CalcDataModels
             Refresh(CalcDataModelFilterEnity.All, null);
         }
 
-        private DataTable InitializeTable()
+        private static DataTable InitializeTable()
         {
             DataTable table = new DataTable(tableName);
+            table.Locale = CultureInfo.CurrentCulture;
             table.Columns.Add("id_building").DataType = typeof(int);
             table.Columns.Add("sum_area").DataType = typeof(double);
             table.PrimaryKey = new DataColumn[] { table.Columns["id_building"] };

@@ -7,6 +7,7 @@ using System.Data;
 using Registry.Entities;
 using CustomControls;
 using Registry.DataModels;
+using Security;
 
 namespace Registry.Viewport
 {
@@ -388,17 +389,9 @@ namespace Registry.Viewport
             is_editable = true;
         }
 
-        public override bool CanSaveRecord()
-        {
-            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
-        }
-
         public override bool CanInsertRecord()
         {
-            if ((viewportState == ViewportState.ReadState || viewportState == ViewportState.ModifyRowState) && !warrants.EditingNewRecord)
-                return true;
-            else
-                return false;
+            return (!warrants.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.TenancyDirectoriesReadWrite);
         }
 
         public override void InsertRecord()
@@ -414,7 +407,8 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            return ((v_warrants.Position != -1) && (!warrants.EditingNewRecord));
+            return (v_warrants.Position != -1) && (!warrants.EditingNewRecord)
+                && AccessControl.HasPrivelege(Priveleges.TenancyDirectoriesReadWrite);
         }
 
         public override void CopyRecord()
@@ -434,7 +428,7 @@ namespace Registry.Viewport
         {
             if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                if (warrants.Delete((int)((DataRowView)v_warrants.Current)["id_warrant"]) == -1)
+                if (WarrantsDataModel.Delete((int)((DataRowView)v_warrants.Current)["id_warrant"]) == -1)
                     return;
                 is_editable = false;
                 ((DataRowView)v_warrants[v_warrants.Position]).Delete();
@@ -445,10 +439,9 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            if ((v_warrants.Position == -1) || (viewportState == ViewportState.NewRowState))
-                return false;
-            else
-                return true;
+            return (v_warrants.Position > -1)
+                && (viewportState != ViewportState.NewRowState)
+                && AccessControl.HasPrivelege(Priveleges.TenancyDirectoriesReadWrite);
         }
 
         public override bool CanDuplicate()
@@ -471,6 +464,12 @@ namespace Registry.Viewport
             return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
         }
 
+        public override bool CanSaveRecord()
+        {
+            return ((viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState))
+                && AccessControl.HasPrivelege(Priveleges.TenancyDirectoriesReadWrite);
+        }
+
         public override void SaveRecord()
         {
             Warrant warrant = WarrantFromViewport();
@@ -483,7 +482,7 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     break;
                 case ViewportState.NewRowState:
-                    int id_warrant = warrants.Insert(warrant);
+                    int id_warrant = WarrantsDataModel.Insert(warrant);
                     if (id_warrant == -1)
                         return;
                     DataRowView newRow;
@@ -504,7 +503,7 @@ namespace Registry.Viewport
                             "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
-                    if (warrants.Update(warrant) == -1)
+                    if (WarrantsDataModel.Update(warrant) == -1)
                         return;
                     DataRowView row = ((DataRowView)v_warrants[v_warrants.Position]);
                     is_editable = false;
@@ -656,7 +655,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel14.RowCount = 2;
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 200F));
             this.tableLayoutPanel14.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel14.Size = new System.Drawing.Size(720, 370);
+            this.tableLayoutPanel14.Size = new System.Drawing.Size(653, 370);
             this.tableLayoutPanel14.TabIndex = 0;
             // 
             // groupBox32
@@ -676,7 +675,7 @@ namespace Registry.Viewport
             this.groupBox32.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox32.Location = new System.Drawing.Point(3, 3);
             this.groupBox32.Name = "groupBox32";
-            this.groupBox32.Size = new System.Drawing.Size(354, 194);
+            this.groupBox32.Size = new System.Drawing.Size(320, 194);
             this.groupBox32.TabIndex = 0;
             this.groupBox32.TabStop = false;
             this.groupBox32.Text = "Основные сведения";
@@ -686,18 +685,18 @@ namespace Registry.Viewport
             this.label88.AutoSize = true;
             this.label88.Location = new System.Drawing.Point(17, 167);
             this.label88.Name = "label88";
-            this.label88.Size = new System.Drawing.Size(123, 13);
+            this.label88.Size = new System.Drawing.Size(138, 15);
             this.label88.TabIndex = 51;
             this.label88.Text = "Действует в лице кого";
             // 
             // textBoxWarrantOnBehalfOf
             // 
-            this.textBoxWarrantOnBehalfOf.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxWarrantOnBehalfOf.Location = new System.Drawing.Point(164, 164);
+            this.textBoxWarrantOnBehalfOf.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxWarrantOnBehalfOf.Location = new System.Drawing.Point(175, 164);
             this.textBoxWarrantOnBehalfOf.MaxLength = 100;
             this.textBoxWarrantOnBehalfOf.Name = "textBoxWarrantOnBehalfOf";
-            this.textBoxWarrantOnBehalfOf.Size = new System.Drawing.Size(184, 20);
+            this.textBoxWarrantOnBehalfOf.Size = new System.Drawing.Size(139, 21);
             this.textBoxWarrantOnBehalfOf.TabIndex = 5;
             this.textBoxWarrantOnBehalfOf.TextChanged += new System.EventHandler(this.textBoxWarrantNotaryDistrict_TextChanged);
             // 
@@ -706,18 +705,18 @@ namespace Registry.Viewport
             this.label87.AutoSize = true;
             this.label87.Location = new System.Drawing.Point(17, 138);
             this.label87.Name = "label87";
-            this.label87.Size = new System.Drawing.Size(122, 13);
+            this.label87.Size = new System.Drawing.Size(138, 15);
             this.label87.TabIndex = 49;
             this.label87.Text = "Нотариального округа";
             // 
             // textBoxWarrantDistrict
             // 
-            this.textBoxWarrantDistrict.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxWarrantDistrict.Location = new System.Drawing.Point(164, 135);
+            this.textBoxWarrantDistrict.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxWarrantDistrict.Location = new System.Drawing.Point(175, 135);
             this.textBoxWarrantDistrict.MaxLength = 100;
             this.textBoxWarrantDistrict.Name = "textBoxWarrantDistrict";
-            this.textBoxWarrantDistrict.Size = new System.Drawing.Size(184, 20);
+            this.textBoxWarrantDistrict.Size = new System.Drawing.Size(139, 21);
             this.textBoxWarrantDistrict.TabIndex = 4;
             this.textBoxWarrantDistrict.TextChanged += new System.EventHandler(this.textBoxWarrantRegion_TextChanged);
             // 
@@ -726,18 +725,18 @@ namespace Registry.Viewport
             this.label86.AutoSize = true;
             this.label86.Location = new System.Drawing.Point(17, 109);
             this.label86.Name = "label86";
-            this.label86.Size = new System.Drawing.Size(128, 13);
+            this.label86.Size = new System.Drawing.Size(145, 15);
             this.label86.TabIndex = 47;
             this.label86.Text = "Удостовер. нотариусом";
             // 
             // textBoxWarrantNotary
             // 
-            this.textBoxWarrantNotary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxWarrantNotary.Location = new System.Drawing.Point(164, 106);
+            this.textBoxWarrantNotary.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxWarrantNotary.Location = new System.Drawing.Point(175, 106);
             this.textBoxWarrantNotary.MaxLength = 100;
             this.textBoxWarrantNotary.Name = "textBoxWarrantNotary";
-            this.textBoxWarrantNotary.Size = new System.Drawing.Size(184, 20);
+            this.textBoxWarrantNotary.Size = new System.Drawing.Size(139, 21);
             this.textBoxWarrantNotary.TabIndex = 3;
             this.textBoxWarrantNotary.TextChanged += new System.EventHandler(this.textBoxWarrantNotary_TextChanged);
             // 
@@ -746,58 +745,58 @@ namespace Registry.Viewport
             this.label85.AutoSize = true;
             this.label85.Location = new System.Drawing.Point(17, 51);
             this.label85.Name = "label85";
-            this.label85.Size = new System.Drawing.Size(133, 13);
+            this.label85.Size = new System.Drawing.Size(152, 15);
             this.label85.TabIndex = 45;
             this.label85.Text = "Регистрационный номер";
             // 
             // label84
             // 
             this.label84.AutoSize = true;
-            this.label84.Location = new System.Drawing.Point(17, 22);
+            this.label84.Location = new System.Drawing.Point(17, 23);
             this.label84.Name = "label84";
-            this.label84.Size = new System.Drawing.Size(83, 13);
+            this.label84.Size = new System.Drawing.Size(93, 15);
             this.label84.TabIndex = 44;
             this.label84.Text = "Тип документа";
             // 
             // comboBoxWarrantDocType
             // 
-            this.comboBoxWarrantDocType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxWarrantDocType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxWarrantDocType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxWarrantDocType.FormattingEnabled = true;
-            this.comboBoxWarrantDocType.Location = new System.Drawing.Point(164, 19);
+            this.comboBoxWarrantDocType.Location = new System.Drawing.Point(175, 19);
             this.comboBoxWarrantDocType.Name = "comboBoxWarrantDocType";
-            this.comboBoxWarrantDocType.Size = new System.Drawing.Size(184, 21);
+            this.comboBoxWarrantDocType.Size = new System.Drawing.Size(139, 23);
             this.comboBoxWarrantDocType.TabIndex = 0;
             this.comboBoxWarrantDocType.SelectedIndexChanged += new System.EventHandler(this.comboBoxWarrantDocType_SelectedIndexChanged);
             // 
             // textBoxWarrantRegNum
             // 
-            this.textBoxWarrantRegNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxWarrantRegNum.Location = new System.Drawing.Point(164, 48);
+            this.textBoxWarrantRegNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxWarrantRegNum.Location = new System.Drawing.Point(175, 48);
             this.textBoxWarrantRegNum.MaxLength = 10;
             this.textBoxWarrantRegNum.Name = "textBoxWarrantRegNum";
-            this.textBoxWarrantRegNum.Size = new System.Drawing.Size(184, 20);
+            this.textBoxWarrantRegNum.Size = new System.Drawing.Size(139, 21);
             this.textBoxWarrantRegNum.TabIndex = 1;
             this.textBoxWarrantRegNum.TextChanged += new System.EventHandler(this.textBoxWarrantRegNum_TextChanged);
             // 
             // dateTimePickerWarrantDate
             // 
-            this.dateTimePickerWarrantDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerWarrantDate.Location = new System.Drawing.Point(164, 77);
+            this.dateTimePickerWarrantDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerWarrantDate.Location = new System.Drawing.Point(175, 77);
             this.dateTimePickerWarrantDate.Name = "dateTimePickerWarrantDate";
-            this.dateTimePickerWarrantDate.Size = new System.Drawing.Size(184, 20);
+            this.dateTimePickerWarrantDate.Size = new System.Drawing.Size(139, 21);
             this.dateTimePickerWarrantDate.TabIndex = 2;
             this.dateTimePickerWarrantDate.ValueChanged += new System.EventHandler(this.dateTimePickerWarrantDate_ValueChanged);
             // 
             // label83
             // 
             this.label83.AutoSize = true;
-            this.label83.Location = new System.Drawing.Point(17, 81);
+            this.label83.Location = new System.Drawing.Point(17, 80);
             this.label83.Name = "label83";
-            this.label83.Size = new System.Drawing.Size(33, 13);
+            this.label83.Size = new System.Drawing.Size(37, 15);
             this.label83.TabIndex = 41;
             this.label83.Text = "Дата";
             // 
@@ -805,9 +804,9 @@ namespace Registry.Viewport
             // 
             this.groupBox33.Controls.Add(this.textBoxWarrantDescription);
             this.groupBox33.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox33.Location = new System.Drawing.Point(363, 3);
+            this.groupBox33.Location = new System.Drawing.Point(329, 3);
             this.groupBox33.Name = "groupBox33";
-            this.groupBox33.Size = new System.Drawing.Size(354, 194);
+            this.groupBox33.Size = new System.Drawing.Size(321, 194);
             this.groupBox33.TabIndex = 1;
             this.groupBox33.TabStop = false;
             this.groupBox33.Text = "Дополнительные сведения";
@@ -815,11 +814,11 @@ namespace Registry.Viewport
             // textBoxWarrantDescription
             // 
             this.textBoxWarrantDescription.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxWarrantDescription.Location = new System.Drawing.Point(3, 16);
+            this.textBoxWarrantDescription.Location = new System.Drawing.Point(3, 17);
             this.textBoxWarrantDescription.MaxLength = 4000;
             this.textBoxWarrantDescription.Multiline = true;
             this.textBoxWarrantDescription.Name = "textBoxWarrantDescription";
-            this.textBoxWarrantDescription.Size = new System.Drawing.Size(348, 175);
+            this.textBoxWarrantDescription.Size = new System.Drawing.Size(315, 174);
             this.textBoxWarrantDescription.TabIndex = 0;
             this.textBoxWarrantDescription.TextChanged += new System.EventHandler(this.textBoxWarrantDescription_TextChanged);
             // 
@@ -831,7 +830,7 @@ namespace Registry.Viewport
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
@@ -853,7 +852,7 @@ namespace Registry.Viewport
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.Size = new System.Drawing.Size(714, 164);
+            this.dataGridView.Size = new System.Drawing.Size(647, 164);
             this.dataGridView.TabIndex = 6;
             this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView_DataError);
             // 
@@ -904,11 +903,11 @@ namespace Registry.Viewport
             // WarrantsViewport
             // 
             this.AutoScroll = true;
-            this.AutoScrollMinSize = new System.Drawing.Size(630, 310);
+            this.AutoScrollMinSize = new System.Drawing.Size(650, 310);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(726, 376);
+            this.ClientSize = new System.Drawing.Size(659, 376);
             this.Controls.Add(this.tableLayoutPanel14);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "WarrantsViewport";
             this.Padding = new System.Windows.Forms.Padding(3);

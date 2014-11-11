@@ -9,6 +9,7 @@ using Registry.Entities;
 using System.Threading;
 using Registry.SearchForms;
 using Registry.CalcDataModels;
+using Security;
 
 namespace Registry.Viewport
 {
@@ -224,17 +225,14 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            if (v_buildings.Position == -1)
-                return false;
-            else
-                return true;
+            return (v_buildings.Position > -1) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void DeleteRecord()
         {
             if (MessageBox.Show("Вы действительно хотите удалить это здание?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                if (buildings.Delete((int)((DataRowView)v_buildings.Current)["id_building"]) == -1)
+                if (BuildingsDataModel.Delete((int)((DataRowView)v_buildings.Current)["id_building"]) == -1)
                     return;
                 ((DataRowView)v_buildings[v_buildings.Position]).Delete();
                 menuCallback.ForceCloseDetachedViewports();
@@ -245,10 +243,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            if (!buildings.EditingNewRecord)
-                return true;
-            else
-                return false;
+            return (!buildings.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void InsertRecord()
@@ -268,10 +263,7 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            if ((v_buildings.Position != -1) && (!buildings.EditingNewRecord))
-                return true;
-            else
-                return false;
+            return (v_buildings.Position != -1) && (!buildings.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void CopyRecord()
@@ -326,6 +318,11 @@ namespace Registry.Viewport
             return (v_buildings.Position > -1);
         }
 
+        public override bool HasAssocTenancies()
+        {
+            return (v_buildings.Position > -1);
+        }
+
         public override void ShowPremises()
         {
             ShowAssocViewport(ViewportType.PremisesListViewport);
@@ -344,6 +341,11 @@ namespace Registry.Viewport
         public override void ShowFundHistory()
         {
             ShowAssocViewport(ViewportType.FundsHistoryViewport);
+        }
+
+        public override void ShowTenancies()
+        {
+            ShowAssocViewport(ViewportType.TenancyListViewport);
         }
 
         private void ShowAssocViewport(ViewportType viewportType)
@@ -465,7 +467,7 @@ namespace Registry.Viewport
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
-            if (dataGridView.Size.Width > 1060)
+            if (dataGridView.Size.Width > 1100)
             {
                 if (dataGridView.Columns["id_street"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     dataGridView.Columns["id_street"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -501,7 +503,7 @@ namespace Registry.Viewport
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
@@ -526,7 +528,7 @@ namespace Registry.Viewport
             this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.ShowCellToolTips = false;
-            this.dataGridView.Size = new System.Drawing.Size(1062, 723);
+            this.dataGridView.Size = new System.Drawing.Size(1099, 723);
             this.dataGridView.TabIndex = 0;
             this.dataGridView.VirtualMode = true;
             this.dataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellDoubleClick);
@@ -585,26 +587,26 @@ namespace Registry.Viewport
             // 
             this.cadastral_num.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.cadastral_num.HeaderText = "Кадастровый номер";
-            this.cadastral_num.MinimumWidth = 150;
+            this.cadastral_num.MinimumWidth = 170;
             this.cadastral_num.Name = "cadastral_num";
             this.cadastral_num.ReadOnly = true;
-            this.cadastral_num.Width = 150;
+            this.cadastral_num.Width = 170;
             // 
             // startup_year
             // 
             this.startup_year.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.startup_year.HeaderText = "Год ввода в эксплуатацию";
-            this.startup_year.MinimumWidth = 170;
+            this.startup_year.MinimumWidth = 190;
             this.startup_year.Name = "startup_year";
             this.startup_year.ReadOnly = true;
-            this.startup_year.Width = 170;
+            this.startup_year.Width = 190;
             // 
             // BuildingListViewport
             // 
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1068, 729);
+            this.ClientSize = new System.Drawing.Size(1105, 729);
             this.Controls.Add(this.dataGridView);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "BuildingListViewport";
             this.Padding = new System.Windows.Forms.Padding(3);

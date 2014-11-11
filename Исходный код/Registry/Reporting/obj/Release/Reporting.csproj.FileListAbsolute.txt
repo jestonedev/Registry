@@ -76,3 +76,49 @@ D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-05]\Исходный код\Registry\Reporting\obj\Release\Registry.Reporting.TenancyOrderSettingsForm.resources
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-05]\Исходный код\Registry\Reporting\obj\Release\Registry.Reporting.TenancyExcerptSettingsForm.resources
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-05]\Исходный код\Registry\Reporting\bin\Release\WeifenLuo.WinFormsUI.Docking.dll
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\bin\Release\Reporting.dll
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\bin\Release\Reporting.pdb
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\bin\Release\DataModels.dll
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\bin\Release\Entities.dll
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\bin\Release\Settings.dll
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\bin\Release\WeifenLuo.WinFormsUI.Docking.dll
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\bin\Release\DataModels.pdb
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\bin\Release\Entities.pdb
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\bin\Release\Settings.pdb
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\bin\Release\VIBlend.WinForms.Controls.pdb
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\bin\Release\VIBlend.WinForms.Controls.xml
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\bin\Release\VIBlend.WinForms.Utilities.pdb
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\bin\Release\VIBlend.WinForms.Utilities.xml
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\obj\Release\Reporting.csprojResolveAssemblyReference.cache
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\obj\Release\Registry.Reporting.ClaimsFilterForm.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\obj\Release\Registry.Reporting.SelectRegionsForm.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\obj\Release\Registry.Reporting.TenancyExcerptSettingsForm.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\obj\Release\Registry.Reporting.TenancyOrderSettingsForm.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\obj\Release\Registry.Reporting.TenancyStatisticFilterForm.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\obj\Release\Reporting.csproj.GenerateResource.Cache
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\obj\Release\Reporting.dll
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Reporting\obj\Release\Reporting.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\bin\Release\Reporting.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\bin\Release\Reporting.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\bin\Release\DataModels.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\bin\Release\Entities.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\bin\Release\Settings.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\bin\Release\VIBlend.WinForms.Controls.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\bin\Release\VIBlend.WinForms.Utilities.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\bin\Release\WeifenLuo.WinFormsUI.Docking.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\bin\Release\DataModels.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\bin\Release\Entities.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\bin\Release\Settings.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\bin\Release\VIBlend.WinForms.Controls.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\bin\Release\VIBlend.WinForms.Controls.xml
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\bin\Release\VIBlend.WinForms.Utilities.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\bin\Release\VIBlend.WinForms.Utilities.xml
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\obj\Release\Reporting.csprojResolveAssemblyReference.cache
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\obj\Release\Registry.Reporting.ClaimsFilterForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\obj\Release\Registry.Reporting.SelectRegionsForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\obj\Release\Registry.Reporting.TenancyExcerptSettingsForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\obj\Release\Registry.Reporting.TenancyOrderSettingsForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\obj\Release\Registry.Reporting.TenancyStatisticFilterForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\obj\Release\Reporting.csproj.GenerateResource.Cache
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\obj\Release\Reporting.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\obj\Release\Reporting.pdb

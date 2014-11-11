@@ -7,6 +7,7 @@ using System.Data;
 using Registry.Entities;
 using System.Data.Odbc;
 using System.Windows.Forms;
+using System.Globalization;
 
 namespace Registry.DataModels
 {
@@ -44,98 +45,108 @@ namespace Registry.DataModels
             return dataModel;
         }
 
-        public int Insert(Entities.OwnershipRight ownershipRight, ParentTypeEnum ParentType, int id_parent)
+        public static int Insert(Entities.OwnershipRight ownershipRight, ParentTypeEnum parentType, int idParent)
         {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            DbCommand last_id_command = connection.CreateCommand();
-            last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
-            command.CommandText = insertQuery;
-
-            command.Parameters.Add(connection.CreateParameter<int?>("id_ownership_right_type", ownershipRight.id_ownership_right_type));
-            command.Parameters.Add(connection.CreateParameter<string>("number", ownershipRight.number));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("date", ownershipRight.date));
-            command.Parameters.Add(connection.CreateParameter<string>("description", ownershipRight.description));
-
-            DbCommand command_assoc = connection.CreateCommand();
-            if (ParentType == ParentTypeEnum.Building)
-                command_assoc.CommandText = "INSERT INTO ownership_buildings_assoc (id_building, id_ownership_right) VALUES (?, ?)";
-            else
-            if (ParentType == ParentTypeEnum.Premises)
-                command_assoc.CommandText = "INSERT INTO ownership_premises_assoc (id_premises, id_ownership_right) VALUES (?, ?)";
-            else
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
+            using (DbCommand command_assoc = DBConnection.CreateCommand())
+            using (DbCommand last_id_command = DBConnection.CreateCommand())
             {
-                MessageBox.Show("Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
-            }
-            try
-            {
-                connection.SqlBeginTransaction();
-                connection.SqlModifyQuery(command);
-                DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
-                if (last_id.Rows.Count == 0)
+                last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
+                command.CommandText = insertQuery;
+
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right_type", ownershipRight.id_ownership_right_type));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("number", ownershipRight.number));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date", ownershipRight.date));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", ownershipRight.description));
+
+                if (parentType == ParentTypeEnum.Building)
+                    command_assoc.CommandText = "INSERT INTO ownership_buildings_assoc (id_building, id_ownership_right) VALUES (?, ?)";
+                else
+                    if (parentType == ParentTypeEnum.Premises)
+                        command_assoc.CommandText = "INSERT INTO ownership_premises_assoc (id_premises, id_ownership_right) VALUES (?, ?)";
+                    else
+                    {
+                        MessageBox.Show("Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        return -1;
+                    }
+                try
                 {
-                    MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    connection.SqlBeginTransaction();
+                    connection.SqlModifyQuery(command);
+                    DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
+                    if (last_id.Rows.Count == 0)
+                    {
+                        MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        connection.SqlRollbackTransaction();
+                        return -1;
+                    }
+                    command_assoc.Parameters.Add(DBConnection.CreateParameter<int?>("id_object", idParent));
+                    command_assoc.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right", 
+                        Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture)));
+                    connection.SqlModifyQuery(command_assoc);
+                    connection.SqlCommitTransaction();
+                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
+                }
+                catch (OdbcException e)
+                {
                     connection.SqlRollbackTransaction();
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture,
+                        "Не удалось добавить наименование ограничения в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     return -1;
                 }
-                command_assoc.Parameters.Add(connection.CreateParameter<int?>("id_object", id_parent));
-                command_assoc.Parameters.Add(connection.CreateParameter<int?>("id_ownership_right", Convert.ToInt32(last_id.Rows[0][0])));
-                connection.SqlModifyQuery(command_assoc);
-                connection.SqlCommitTransaction();
-                return Convert.ToInt32(last_id.Rows[0][0]);
-            }
-            catch (OdbcException e)
-            {
-                connection.SqlRollbackTransaction();
-                MessageBox.Show(String.Format("Не удалось добавить наименование ограничения в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
             }
         }
 
-        public int Update(Entities.OwnershipRight ownershipRight)
+        public static int Update(Entities.OwnershipRight ownershipRight)
         {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = updateQuery;
-
-            command.Parameters.Add(connection.CreateParameter<int?>("id_ownership_right_type", ownershipRight.id_ownership_right_type));
-            command.Parameters.Add(connection.CreateParameter<string>("number", ownershipRight.number));
-            command.Parameters.Add(connection.CreateParameter<DateTime?>("date", ownershipRight.date));
-            command.Parameters.Add(connection.CreateParameter<string>("description", ownershipRight.description));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_ownership_right", ownershipRight.id_ownership_right));
-
-            DbCommand command_assoc = connection.CreateCommand();
-            try
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
             {
-                return connection.SqlModifyQuery(command);               
-            }
-            catch (OdbcException e)
-            {
-                connection.SqlRollbackTransaction();
-                MessageBox.Show(String.Format("Не удалось изменить наименование ограничения в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
+                command.CommandText = updateQuery;
+
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right_type", ownershipRight.id_ownership_right_type));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("number", ownershipRight.number));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date", ownershipRight.date));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", ownershipRight.description));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right", ownershipRight.id_ownership_right));
+
+                try
+                {
+                    return connection.SqlModifyQuery(command);
+                }
+                catch (OdbcException e)
+                {
+                    connection.SqlRollbackTransaction();
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось изменить наименование ограничения в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
             }
         }
 
-        public int Delete(int id)
+        public static int Delete(int id)
         {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = deleteQuery;
-            command.Parameters.Add(connection.CreateParameter<int?>("id_ownership_right", id));
-            try
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
             {
-                return connection.SqlModifyQuery(command);
-            }
-            catch (OdbcException e)
-            {
-                MessageBox.Show(String.Format("Не удалось удалить ограничение из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
+                command.CommandText = deleteQuery;
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right", id));
+                try
+                {
+                    return connection.SqlModifyQuery(command);
+                }
+                catch (OdbcException e)
+                {
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось удалить ограничение из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
             }
         }
     }

@@ -25,7 +25,7 @@ namespace Settings.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("dsn=registry")]
+        [global::System.Configuration.DefaultSettingValueAttribute("6FsLGxuGeDI63dYUPflMwg==")]
         public string ConnectionString {
             get {
                 return ((string)(this["ConnectionString"]));
@@ -49,7 +49,7 @@ namespace Settings.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("VX0EE5YW0ETo")]
+        [global::System.Configuration.DefaultSettingValueAttribute("uhh0joeX/12AzuPmHVrz5A==")]
         public string LDAPEncryptedPassword {
             get {
                 return ((string)(this["LDAPEncryptedPassword"]));

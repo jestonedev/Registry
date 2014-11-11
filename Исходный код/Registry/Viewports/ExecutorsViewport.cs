@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using System.Data;
 using Registry.Entities;
+using Security;
 
 namespace Registry.Viewport
 {
@@ -245,7 +246,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return true;
+            return  AccessControl.HasPrivelege(Priveleges.TenancyDirectoriesReadWrite);
         }
 
         public override void InsertRecord()
@@ -256,7 +257,7 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            return (v_snapshot_executors.Position != -1);
+            return (v_snapshot_executors.Position != -1) && AccessControl.HasPrivelege(Priveleges.TenancyDirectoriesReadWrite);
         }
 
         public override void DeleteRecord()
@@ -279,7 +280,7 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return SnapshotHasChanges();
+            return SnapshotHasChanges() && AccessControl.HasPrivelege(Priveleges.TenancyDirectoriesReadWrite);
         }
 
         public override void SaveRecord()
@@ -296,7 +297,7 @@ namespace Registry.Viewport
                 DataRow row = executors.Select().Rows.Find(((Executor)list[i]).id_executor);
                 if (row == null)
                 {
-                    int id_executor = executors.Insert(list[i]);
+                    int id_executor = ExecutorsDataModel.Insert(list[i]);
                     if (id_executor == -1)
                     {
                         sync_views = true;
@@ -310,7 +311,7 @@ namespace Registry.Viewport
 
                     if (RowToExecutor(row) == list[i])
                         continue;
-                    if (executors.Update(list[i]) == -1)
+                    if (ExecutorsDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         return;
@@ -332,7 +333,7 @@ namespace Registry.Viewport
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (executors.Delete(list[i].id_executor.Value) == -1)
+                    if (ExecutorsDataModel.Delete(list[i].id_executor.Value) == -1)
                     {
                         sync_views = true;
                         return;
@@ -465,7 +466,7 @@ namespace Registry.Viewport
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
@@ -484,7 +485,7 @@ namespace Registry.Viewport
             this.dataGridView.MultiSelect = false;
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.Size = new System.Drawing.Size(599, 281);
+            this.dataGridView.Size = new System.Drawing.Size(648, 281);
             this.dataGridView.TabIndex = 8;
             // 
             // id_executor
@@ -527,9 +528,9 @@ namespace Registry.Viewport
             // ExecutorsViewport
             // 
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(605, 287);
+            this.ClientSize = new System.Drawing.Size(654, 287);
             this.Controls.Add(this.dataGridView);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ExecutorsViewport";
             this.Padding = new System.Windows.Forms.Padding(3);

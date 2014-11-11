@@ -7,6 +7,7 @@ using System.Data;
 using Registry.Entities;
 using System.Data.Odbc;
 using System.Data.Common;
+using System.Globalization;
 
 namespace Registry.DataModels
 {
@@ -41,75 +42,97 @@ namespace Registry.DataModels
             return dataModel;
         }
 
-        public int Insert(TenancyObject tenancyObject)
+        public static int Insert(TenancyObject tenancyObject)
         {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            DbCommand last_id_command = connection.CreateCommand();
-            last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
-            command.CommandText = insertQuery;
-            command.Parameters.Add(connection.CreateParameter<int?>("id_sub_premises", tenancyObject.id_object));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_process", tenancyObject.id_process));
-            command.Parameters.Add(connection.CreateParameter<double?>("rent_total_area", tenancyObject.rent_total_area));
-            try
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
+            using (DbCommand last_id_command = DBConnection.CreateCommand())
             {
-                connection.SqlBeginTransaction();
-                connection.SqlModifyQuery(command);
-                DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
-                connection.SqlCommitTransaction();
-                if (last_id.Rows.Count == 0)
+                last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
+                command.CommandText = insertQuery;
+                if (tenancyObject == null)
                 {
-                    MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("В метод Insert не передана ссылка на сущность объекта найма", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
                     return -1;
                 }
-                return Convert.ToInt32(last_id.Rows[0][0]);
-            }
-            catch (OdbcException e)
-            {
-                connection.SqlRollbackTransaction();
-                MessageBox.Show(String.Format("Не удалось добавить связь комнату с процессом найма в базу данных. Подробная ошибка: {0}",
-                    e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
-            }
-        }
-
-        public int Update(TenancyObject tenancyObject)
-        {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = updateQuery;
-            command.Parameters.Add(connection.CreateParameter<int?>("id_sub_premises", tenancyObject.id_object));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_process", tenancyObject.id_process));
-            command.Parameters.Add(connection.CreateParameter<double?>("rent_total_area", tenancyObject.rent_total_area));
-            command.Parameters.Add(connection.CreateParameter<int?>("id_assoc", tenancyObject.id_assoc));
-            try
-            {
-                return connection.SqlModifyQuery(command);
-            }
-            catch (OdbcException e)
-            {
-                connection.SqlRollbackTransaction();
-                MessageBox.Show(String.Format("Не удалось изменить связь комнату с процессом найма в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_sub_premises", tenancyObject.id_object));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyObject.id_process));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("rent_total_area", tenancyObject.rent_total_area));
+                try
+                {
+                    connection.SqlBeginTransaction();
+                    connection.SqlModifyQuery(command);
+                    DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
+                    connection.SqlCommitTransaction();
+                    if (last_id.Rows.Count == 0)
+                    {
+                        MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        return -1;
+                    }
+                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
+                }
+                catch (OdbcException e)
+                {
+                    connection.SqlRollbackTransaction();
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось добавить связь комнату с процессом найма в базу данных. Подробная ошибка: {0}",
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
             }
         }
 
-        public int Delete(int id)
+        public static int Update(TenancyObject tenancyObject)
         {
-            DBConnection connection = new DBConnection();
-            DbCommand command = connection.CreateCommand();
-            command.CommandText = deleteQuery;
-            command.Parameters.Add(connection.CreateParameter<int?>("id_assoc", id));
-            try
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
             {
-                return connection.SqlModifyQuery(command);
+                command.CommandText = updateQuery;
+                if (tenancyObject == null)
+                {
+                    MessageBox.Show("В метод Update не передана ссылка на сущность объекта найма", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_sub_premises", tenancyObject.id_object));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyObject.id_process));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("rent_total_area", tenancyObject.rent_total_area));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_assoc", tenancyObject.id_assoc));
+                try
+                {
+                    return connection.SqlModifyQuery(command);
+                }
+                catch (OdbcException e)
+                {
+                    connection.SqlRollbackTransaction();
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось изменить связь комнату с процессом найма в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
             }
-            catch (OdbcException e)
+        }
+
+        public static int Delete(int id)
+        {
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
             {
-                MessageBox.Show(String.Format("Не удалось удалить связь комнату с процесссом найма из базы данных. Подробная ошибка: {0}",
-                    e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return -1;
+                command.CommandText = deleteQuery;
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_assoc", id));
+                try
+                {
+                    return connection.SqlModifyQuery(command);
+                }
+                catch (OdbcException e)
+                {
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        "Не удалось удалить связь комнату с процесссом найма из базы данных. Подробная ошибка: {0}",
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    return -1;
+                }
             }
         }
     }

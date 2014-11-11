@@ -190,3 +190,109 @@ D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-05]\Исходный код\Registry\Viewports\obj\Release\Viewports.csproj.GenerateResource.Cache
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-05]\Исходный код\Registry\Viewports\obj\Release\Viewports.dll
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-05]\Исходный код\Registry\Viewports\obj\Release\Viewports.pdb
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\Viewports.dll
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\Viewports.pdb
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\CustomControls.dll
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\DataModels.dll
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\Entities.dll
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\Reporting.dll
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\Settings.dll
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\WeifenLuo.WinFormsUI.Docking.dll
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\CustomControls.pdb
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\DataModels.pdb
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\Entities.pdb
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\Reporting.pdb
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\bin\Release\Settings.pdb
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Viewports.csprojResolveAssemblyReference.cache
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.BuildingListViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.BuildingViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.ClaimListViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.ClaimStatesViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.ClaimStateTypesViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.DocumentIssuedByViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.ExecutorsViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.SearchForms.ExtendedSearchBuildingForm.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.SearchForms.ExtendedSearchPremisesForm.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.SearchForms.ExtendedSearchTenancyForm.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.FundsHistoryViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.OwnershipListViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.OwnershipTypeListViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.PremisesListViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.PremisesViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.Properties.Resource.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.RestrictionListViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.RestrictionTypeListViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SelectWarrantForm.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SimpleSearchBuildingForm.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SimpleSearchPremiseForm.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.SearchForms.SimpleSearchTenancyForm.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.StructureTypeListViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SubPremisesDetailsControl.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SubPremisesViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.TenancyAgreementsViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.TenancyBuildingsViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.TenancyListViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.TenancyPersonsViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.TenancyPremisesViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.TenancyReasonsViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.TenancyReasonTypesViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.TenancyViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.Viewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.WarrantsViewport.resources
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Viewports.csproj.GenerateResource.Cache
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Viewports.dll
+C:\Users\DNS\Documents\Visual Studio 2013\Projects\Реестр жилого фонда\Исходный код\Registry\Viewports\obj\Release\Viewports.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\bin\Release\Viewports.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\bin\Release\Viewports.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\bin\Release\CustomControls.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\bin\Release\DataModels.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\bin\Release\Entities.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\bin\Release\Reporting.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\bin\Release\Settings.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\bin\Release\WeifenLuo.WinFormsUI.Docking.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\bin\Release\CustomControls.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\bin\Release\DataModels.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\bin\Release\Entities.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\bin\Release\Reporting.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\bin\Release\Settings.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Viewports.csprojResolveAssemblyReference.cache
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.BuildingListViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.BuildingViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.ClaimListViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.ClaimStatesViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.ClaimStateTypesViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.DocumentIssuedByViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.ExecutorsViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.SearchForms.ExtendedSearchBuildingForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.SearchForms.ExtendedSearchPremisesForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.SearchForms.ExtendedSearchTenancyForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.FundsHistoryViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.OwnershipListViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.OwnershipTypeListViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.PremisesListViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.PremisesViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.Properties.Resource.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.RestrictionListViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.RestrictionTypeListViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SelectWarrantForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SimpleSearchBuildingForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SimpleSearchPremiseForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.SearchForms.SimpleSearchTenancyForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.StructureTypeListViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SubPremisesDetailsControl.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SubPremisesViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.TenancyAgreementsViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.TenancyBuildingsViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.TenancyListViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.TenancyPersonsViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.TenancyPremisesViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.TenancyReasonsViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.TenancyReasonTypesViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.TenancyViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.Viewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.WarrantsViewport.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Viewports.csproj.GenerateResource.Cache
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Viewports.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Viewports.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\bin\Release\Security.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\bin\Release\Security.pdb

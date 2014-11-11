@@ -43,9 +43,9 @@
             "по ФИО нанимателя",
             "по ФИО участника",
             "по адресу"});
-            this.comboBoxCriteriaType.Location = new System.Drawing.Point(9, 8);
+            this.comboBoxCriteriaType.Location = new System.Drawing.Point(10, 9);
             this.comboBoxCriteriaType.Name = "comboBoxCriteriaType";
-            this.comboBoxCriteriaType.Size = new System.Drawing.Size(153, 21);
+            this.comboBoxCriteriaType.Size = new System.Drawing.Size(178, 23);
             this.comboBoxCriteriaType.TabIndex = 0;
             // 
             // vButtonCancel
@@ -53,10 +53,10 @@
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(247, 37);
+            this.vButtonCancel.Location = new System.Drawing.Point(288, 41);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
-            this.vButtonCancel.Size = new System.Drawing.Size(100, 30);
+            this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
             this.vButtonCancel.TabIndex = 3;
             this.vButtonCancel.Text = "Отмена";
             this.vButtonCancel.UseVisualStyleBackColor = false;
@@ -66,10 +66,10 @@
             // 
             this.vButtonSearch.AllowAnimations = true;
             this.vButtonSearch.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSearch.Location = new System.Drawing.Point(129, 37);
+            this.vButtonSearch.Location = new System.Drawing.Point(150, 41);
             this.vButtonSearch.Name = "vButtonSearch";
             this.vButtonSearch.RoundedCornersMask = ((byte)(15));
-            this.vButtonSearch.Size = new System.Drawing.Size(100, 30);
+            this.vButtonSearch.Size = new System.Drawing.Size(117, 35);
             this.vButtonSearch.TabIndex = 2;
             this.vButtonSearch.Text = "Поиск";
             this.vButtonSearch.UseVisualStyleBackColor = false;
@@ -78,22 +78,23 @@
             // 
             // textBoxCriteria
             // 
-            this.textBoxCriteria.Location = new System.Drawing.Point(168, 9);
+            this.textBoxCriteria.Location = new System.Drawing.Point(196, 10);
             this.textBoxCriteria.MaxLength = 255;
             this.textBoxCriteria.Name = "textBoxCriteria";
-            this.textBoxCriteria.Size = new System.Drawing.Size(299, 20);
+            this.textBoxCriteria.Size = new System.Drawing.Size(348, 21);
             this.textBoxCriteria.TabIndex = 1;
             // 
             // SimpleSearchTenancyForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
-            this.ClientSize = new System.Drawing.Size(477, 74);
+            this.ClientSize = new System.Drawing.Size(556, 85);
             this.Controls.Add(this.textBoxCriteria);
             this.Controls.Add(this.vButtonCancel);
             this.Controls.Add(this.vButtonSearch);
             this.Controls.Add(this.comboBoxCriteriaType);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

@@ -7,6 +7,7 @@ using Registry.Entities;
 using System.Windows.Forms;
 using CustomControls;
 using Registry.DataModels;
+using Security;
 
 namespace Registry.Viewport
 {
@@ -277,7 +278,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return true;
+            return  AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void InsertRecord()
@@ -290,7 +291,7 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            return (v_snapshot_tenancy_reasons.Position != -1);
+            return (v_snapshot_tenancy_reasons.Position != -1) && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void DeleteRecord()
@@ -313,7 +314,7 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return SnapshotHasChanges();
+            return SnapshotHasChanges() && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void SaveRecord()
@@ -330,7 +331,7 @@ namespace Registry.Viewport
                 DataRow row = tenancy_reasons.Select().Rows.Find(((TenancyReason)list[i]).id_reason);
                 if (row == null)
                 {
-                    int id_reason = tenancy_reasons.Insert(list[i]);
+                    int id_reason = TenancyReasonsDataModel.Insert(list[i]);
                     if (id_reason == -1)
                     {
                         sync_views = true;
@@ -343,7 +344,7 @@ namespace Registry.Viewport
                 {
                     if (RowToTenancyReason(row) == list[i])
                         continue;
-                    if (tenancy_reasons.Update(list[i]) == -1)
+                    if (TenancyReasonsDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         return;
@@ -366,7 +367,7 @@ namespace Registry.Viewport
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (tenancy_reasons.Delete(list[i].id_reason.Value) == -1)
+                    if (TenancyReasonsDataModel.Delete(list[i].id_reason.Value) == -1)
                     {
                         sync_views = true;
                         return;
@@ -539,7 +540,7 @@ namespace Registry.Viewport
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
@@ -615,7 +616,7 @@ namespace Registry.Viewport
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(849, 261);
             this.Controls.Add(this.dataGridView);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "TenancyReasonsViewport";
             this.Padding = new System.Windows.Forms.Padding(3);

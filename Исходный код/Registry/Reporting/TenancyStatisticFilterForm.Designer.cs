@@ -69,10 +69,10 @@
             // 
             this.vButtonOk.AllowAnimations = true;
             this.vButtonOk.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonOk.Location = new System.Drawing.Point(101, 367);
+            this.vButtonOk.Location = new System.Drawing.Point(118, 389);
             this.vButtonOk.Name = "vButtonOk";
             this.vButtonOk.RoundedCornersMask = ((byte)(15));
-            this.vButtonOk.Size = new System.Drawing.Size(100, 30);
+            this.vButtonOk.Size = new System.Drawing.Size(117, 35);
             this.vButtonOk.TabIndex = 18;
             this.vButtonOk.Text = "Сформировать";
             this.vButtonOk.UseVisualStyleBackColor = false;
@@ -84,10 +84,10 @@
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(217, 367);
+            this.vButtonCancel.Location = new System.Drawing.Point(253, 389);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
-            this.vButtonCancel.Size = new System.Drawing.Size(100, 30);
+            this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
             this.vButtonCancel.TabIndex = 19;
             this.vButtonCancel.Text = "Отменить";
             this.vButtonCancel.UseVisualStyleBackColor = false;
@@ -98,15 +98,15 @@
             this.comboBoxRegion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxRegion.Enabled = false;
             this.comboBoxRegion.FormattingEnabled = true;
-            this.comboBoxRegion.Location = new System.Drawing.Point(34, 21);
+            this.comboBoxRegion.Location = new System.Drawing.Point(40, 24);
             this.comboBoxRegion.Name = "comboBoxRegion";
-            this.comboBoxRegion.Size = new System.Drawing.Size(375, 21);
+            this.comboBoxRegion.Size = new System.Drawing.Size(437, 23);
             this.comboBoxRegion.TabIndex = 1;
             // 
             // checkBoxRegionEnable
             // 
             this.checkBoxRegionEnable.AutoSize = true;
-            this.checkBoxRegionEnable.Location = new System.Drawing.Point(13, 24);
+            this.checkBoxRegionEnable.Location = new System.Drawing.Point(15, 28);
             this.checkBoxRegionEnable.Name = "checkBoxRegionEnable";
             this.checkBoxRegionEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxRegionEnable.TabIndex = 0;
@@ -116,24 +116,24 @@
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(7, 5);
+            this.label8.Location = new System.Drawing.Point(8, 7);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(75, 13);
+            this.label8.Size = new System.Drawing.Size(84, 15);
             this.label8.TabIndex = 58;
             this.label8.Text = "Жилой район";
             // 
             // textBoxHouse
             // 
             this.textBoxHouse.Enabled = false;
-            this.textBoxHouse.Location = new System.Drawing.Point(34, 101);
+            this.textBoxHouse.Location = new System.Drawing.Point(40, 110);
             this.textBoxHouse.Name = "textBoxHouse";
-            this.textBoxHouse.Size = new System.Drawing.Size(375, 20);
+            this.textBoxHouse.Size = new System.Drawing.Size(437, 21);
             this.textBoxHouse.TabIndex = 5;
             // 
             // checkBoxPremisesNumEnable
             // 
             this.checkBoxPremisesNumEnable.AutoSize = true;
-            this.checkBoxPremisesNumEnable.Location = new System.Drawing.Point(13, 144);
+            this.checkBoxPremisesNumEnable.Location = new System.Drawing.Point(15, 154);
             this.checkBoxPremisesNumEnable.Name = "checkBoxPremisesNumEnable";
             this.checkBoxPremisesNumEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxPremisesNumEnable.TabIndex = 6;
@@ -143,25 +143,25 @@
             // textBoxPremisesNum
             // 
             this.textBoxPremisesNum.Enabled = false;
-            this.textBoxPremisesNum.Location = new System.Drawing.Point(34, 141);
+            this.textBoxPremisesNum.Location = new System.Drawing.Point(40, 151);
             this.textBoxPremisesNum.MaxLength = 4;
             this.textBoxPremisesNum.Name = "textBoxPremisesNum";
-            this.textBoxPremisesNum.Size = new System.Drawing.Size(375, 20);
+            this.textBoxPremisesNum.Size = new System.Drawing.Size(437, 21);
             this.textBoxPremisesNum.TabIndex = 7;
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(7, 125);
+            this.label3.Location = new System.Drawing.Point(8, 134);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(153, 13);
+            this.label3.Size = new System.Drawing.Size(171, 15);
             this.label3.TabIndex = 54;
             this.label3.Text = "Номер помещения/комнаты";
             // 
             // checkBoxHouseEnable
             // 
             this.checkBoxHouseEnable.AutoSize = true;
-            this.checkBoxHouseEnable.Location = new System.Drawing.Point(13, 104);
+            this.checkBoxHouseEnable.Location = new System.Drawing.Point(15, 113);
             this.checkBoxHouseEnable.Name = "checkBoxHouseEnable";
             this.checkBoxHouseEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxHouseEnable.TabIndex = 4;
@@ -171,7 +171,7 @@
             // checkBoxStreetEnable
             // 
             this.checkBoxStreetEnable.AutoSize = true;
-            this.checkBoxStreetEnable.Location = new System.Drawing.Point(13, 64);
+            this.checkBoxStreetEnable.Location = new System.Drawing.Point(15, 71);
             this.checkBoxStreetEnable.Name = "checkBoxStreetEnable";
             this.checkBoxStreetEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxStreetEnable.TabIndex = 2;
@@ -181,18 +181,18 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(7, 85);
+            this.label2.Location = new System.Drawing.Point(8, 93);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(70, 13);
+            this.label2.Size = new System.Drawing.Size(79, 15);
             this.label2.TabIndex = 53;
             this.label2.Text = "Номер дома";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(7, 45);
+            this.label1.Location = new System.Drawing.Point(8, 50);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(39, 13);
+            this.label1.Size = new System.Drawing.Size(43, 15);
             this.label1.TabIndex = 52;
             this.label1.Text = "Улица";
             // 
@@ -200,9 +200,9 @@
             // 
             this.comboBoxStreet.Enabled = false;
             this.comboBoxStreet.FormattingEnabled = true;
-            this.comboBoxStreet.Location = new System.Drawing.Point(34, 61);
+            this.comboBoxStreet.Location = new System.Drawing.Point(40, 67);
             this.comboBoxStreet.Name = "comboBoxStreet";
-            this.comboBoxStreet.Size = new System.Drawing.Size(375, 21);
+            this.comboBoxStreet.Size = new System.Drawing.Size(437, 23);
             this.comboBoxStreet.TabIndex = 3;
             // 
             // comboBoxRentType
@@ -210,15 +210,15 @@
             this.comboBoxRentType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxRentType.Enabled = false;
             this.comboBoxRentType.FormattingEnabled = true;
-            this.comboBoxRentType.Location = new System.Drawing.Point(34, 181);
+            this.comboBoxRentType.Location = new System.Drawing.Point(40, 192);
             this.comboBoxRentType.Name = "comboBoxRentType";
-            this.comboBoxRentType.Size = new System.Drawing.Size(375, 21);
+            this.comboBoxRentType.Size = new System.Drawing.Size(437, 23);
             this.comboBoxRentType.TabIndex = 9;
             // 
             // checkBoxRentTypeEnable
             // 
             this.checkBoxRentTypeEnable.AutoSize = true;
-            this.checkBoxRentTypeEnable.Location = new System.Drawing.Point(13, 184);
+            this.checkBoxRentTypeEnable.Location = new System.Drawing.Point(15, 196);
             this.checkBoxRentTypeEnable.Name = "checkBoxRentTypeEnable";
             this.checkBoxRentTypeEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxRentTypeEnable.TabIndex = 8;
@@ -228,144 +228,144 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(7, 165);
+            this.label4.Location = new System.Drawing.Point(8, 175);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(61, 13);
+            this.label4.Size = new System.Drawing.Size(68, 15);
             this.label4.TabIndex = 61;
             this.label4.Text = "Тип найма";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(217, 304);
+            this.label7.Location = new System.Drawing.Point(253, 323);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(19, 13);
+            this.label7.Size = new System.Drawing.Size(21, 15);
             this.label7.TabIndex = 71;
             this.label7.Text = "по";
             // 
             // dateTimePickerBeginDateTo
             // 
             this.dateTimePickerBeginDateTo.Checked = false;
-            this.dateTimePickerBeginDateTo.Location = new System.Drawing.Point(238, 301);
+            this.dateTimePickerBeginDateTo.Location = new System.Drawing.Point(278, 319);
             this.dateTimePickerBeginDateTo.Name = "dateTimePickerBeginDateTo";
             this.dateTimePickerBeginDateTo.ShowCheckBox = true;
-            this.dateTimePickerBeginDateTo.Size = new System.Drawing.Size(170, 20);
+            this.dateTimePickerBeginDateTo.Size = new System.Drawing.Size(198, 21);
             this.dateTimePickerBeginDateTo.TabIndex = 15;
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(14, 304);
+            this.label5.Location = new System.Drawing.Point(16, 323);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(13, 13);
+            this.label5.Size = new System.Drawing.Size(13, 15);
             this.label5.TabIndex = 69;
             this.label5.Text = "с";
             // 
             // dateTimePickerBeginDateFrom
             // 
             this.dateTimePickerBeginDateFrom.Checked = false;
-            this.dateTimePickerBeginDateFrom.Location = new System.Drawing.Point(33, 301);
+            this.dateTimePickerBeginDateFrom.Location = new System.Drawing.Point(38, 319);
             this.dateTimePickerBeginDateFrom.Name = "dateTimePickerBeginDateFrom";
             this.dateTimePickerBeginDateFrom.ShowCheckBox = true;
-            this.dateTimePickerBeginDateFrom.Size = new System.Drawing.Size(170, 20);
+            this.dateTimePickerBeginDateFrom.Size = new System.Drawing.Size(198, 21);
             this.dateTimePickerBeginDateFrom.TabIndex = 14;
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 286);
+            this.label6.Location = new System.Drawing.Point(7, 302);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(144, 13);
+            this.label6.Size = new System.Drawing.Size(165, 15);
             this.label6.TabIndex = 67;
             this.label6.Text = "Начало действия договора";
             // 
             // dateTimePickerRegistrationTo
             // 
             this.dateTimePickerRegistrationTo.Checked = false;
-            this.dateTimePickerRegistrationTo.Location = new System.Drawing.Point(238, 262);
+            this.dateTimePickerRegistrationTo.Location = new System.Drawing.Point(278, 278);
             this.dateTimePickerRegistrationTo.Name = "dateTimePickerRegistrationTo";
             this.dateTimePickerRegistrationTo.ShowCheckBox = true;
-            this.dateTimePickerRegistrationTo.Size = new System.Drawing.Size(170, 20);
+            this.dateTimePickerRegistrationTo.Size = new System.Drawing.Size(198, 21);
             this.dateTimePickerRegistrationTo.TabIndex = 13;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(217, 265);
+            this.label9.Location = new System.Drawing.Point(253, 282);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(19, 13);
+            this.label9.Size = new System.Drawing.Size(21, 15);
             this.label9.TabIndex = 65;
             this.label9.Text = "по";
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(14, 265);
+            this.label10.Location = new System.Drawing.Point(16, 282);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(13, 13);
+            this.label10.Size = new System.Drawing.Size(13, 15);
             this.label10.TabIndex = 64;
             this.label10.Text = "с";
             // 
             // dateTimePickerRegistrationFrom
             // 
             this.dateTimePickerRegistrationFrom.Checked = false;
-            this.dateTimePickerRegistrationFrom.Location = new System.Drawing.Point(33, 262);
+            this.dateTimePickerRegistrationFrom.Location = new System.Drawing.Point(38, 278);
             this.dateTimePickerRegistrationFrom.Name = "dateTimePickerRegistrationFrom";
             this.dateTimePickerRegistrationFrom.ShowCheckBox = true;
-            this.dateTimePickerRegistrationFrom.Size = new System.Drawing.Size(170, 20);
+            this.dateTimePickerRegistrationFrom.Size = new System.Drawing.Size(198, 21);
             this.dateTimePickerRegistrationFrom.TabIndex = 12;
             // 
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(6, 247);
+            this.label11.Location = new System.Drawing.Point(7, 261);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(100, 13);
+            this.label11.Size = new System.Drawing.Size(114, 15);
             this.label11.TabIndex = 62;
             this.label11.Text = "Дата регистрации";
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(217, 343);
+            this.label12.Location = new System.Drawing.Point(253, 364);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(19, 13);
+            this.label12.Size = new System.Drawing.Size(21, 15);
             this.label12.TabIndex = 76;
             this.label12.Text = "по";
             // 
             // dateTimePickerEndDateTo
             // 
             this.dateTimePickerEndDateTo.Checked = false;
-            this.dateTimePickerEndDateTo.Location = new System.Drawing.Point(238, 340);
+            this.dateTimePickerEndDateTo.Location = new System.Drawing.Point(278, 360);
             this.dateTimePickerEndDateTo.Name = "dateTimePickerEndDateTo";
             this.dateTimePickerEndDateTo.ShowCheckBox = true;
-            this.dateTimePickerEndDateTo.Size = new System.Drawing.Size(170, 20);
+            this.dateTimePickerEndDateTo.Size = new System.Drawing.Size(198, 21);
             this.dateTimePickerEndDateTo.TabIndex = 17;
             // 
             // label13
             // 
             this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(14, 343);
+            this.label13.Location = new System.Drawing.Point(16, 364);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(13, 13);
+            this.label13.Size = new System.Drawing.Size(13, 15);
             this.label13.TabIndex = 74;
             this.label13.Text = "с";
             // 
             // dateTimePickerEndDateFrom
             // 
             this.dateTimePickerEndDateFrom.Checked = false;
-            this.dateTimePickerEndDateFrom.Location = new System.Drawing.Point(33, 340);
+            this.dateTimePickerEndDateFrom.Location = new System.Drawing.Point(38, 360);
             this.dateTimePickerEndDateFrom.Name = "dateTimePickerEndDateFrom";
             this.dateTimePickerEndDateFrom.ShowCheckBox = true;
-            this.dateTimePickerEndDateFrom.Size = new System.Drawing.Size(170, 20);
+            this.dateTimePickerEndDateFrom.Size = new System.Drawing.Size(198, 21);
             this.dateTimePickerEndDateFrom.TabIndex = 16;
             // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(6, 325);
+            this.label14.Location = new System.Drawing.Point(7, 343);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(162, 13);
+            this.label14.Size = new System.Drawing.Size(185, 15);
             this.label14.TabIndex = 72;
             this.label14.Text = "Окончание действия договора";
             // 
@@ -374,15 +374,15 @@
             this.comboBoxReasonType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxReasonType.Enabled = false;
             this.comboBoxReasonType.FormattingEnabled = true;
-            this.comboBoxReasonType.Location = new System.Drawing.Point(34, 222);
+            this.comboBoxReasonType.Location = new System.Drawing.Point(40, 235);
             this.comboBoxReasonType.Name = "comboBoxReasonType";
-            this.comboBoxReasonType.Size = new System.Drawing.Size(375, 21);
+            this.comboBoxReasonType.Size = new System.Drawing.Size(437, 23);
             this.comboBoxReasonType.TabIndex = 11;
             // 
             // checkBoxReasonTypeEnable
             // 
             this.checkBoxReasonTypeEnable.AutoSize = true;
-            this.checkBoxReasonTypeEnable.Location = new System.Drawing.Point(13, 225);
+            this.checkBoxReasonTypeEnable.Location = new System.Drawing.Point(15, 239);
             this.checkBoxReasonTypeEnable.Name = "checkBoxReasonTypeEnable";
             this.checkBoxReasonTypeEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxReasonTypeEnable.TabIndex = 10;
@@ -392,18 +392,18 @@
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(7, 206);
+            this.label15.Location = new System.Drawing.Point(8, 218);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(83, 13);
+            this.label15.Size = new System.Drawing.Size(93, 15);
             this.label15.TabIndex = 79;
             this.label15.Text = "Тип основания";
             // 
             // TenancyStatisticFilterForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
-            this.ClientSize = new System.Drawing.Size(421, 402);
+            this.ClientSize = new System.Drawing.Size(491, 434);
             this.Controls.Add(this.comboBoxReasonType);
             this.Controls.Add(this.checkBoxReasonTypeEnable);
             this.Controls.Add(this.label15);
@@ -439,6 +439,7 @@
             this.Controls.Add(this.comboBoxStreet);
             this.Controls.Add(this.vButtonOk);
             this.Controls.Add(this.vButtonCancel);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;

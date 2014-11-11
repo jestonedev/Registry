@@ -11,6 +11,7 @@ namespace Registry.CalcDataModels
         All,
         Building,
         Premise,
-        Tenancy
+        Tenancy,
+        SubPremise
     }
 }

@@ -3,19 +3,40 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Configuration;
+using System.Security.Cryptography;
 
 namespace Registry
 {
     public static class RegistrySettings
     {
+        private static string key = "Z33wYQs+rZOGMUH0RGj8GIKggOB82xwhACg9JCA6/kw=";
+        private static string IV = "E0Ci3P9JPj43jUdKNSvtmQ==";
+        private static Aes aes = Aes.Create();
 
         public static string ConnectionString {
             get {
-                return Settings.Properties.Settings.Default.ConnectionString;
+                try
+                {
+                    byte[] inputBuffer = Convert.FromBase64String(Settings.Properties.Settings.Default.ConnectionString);
+                    var decryptor = aes.CreateDecryptor(Convert.FromBase64String(key), Convert.FromBase64String(IV));
+                    byte[] outputBuffer = decryptor.TransformFinalBlock(inputBuffer, 0, inputBuffer.Length);
+                    return Encoding.UTF8.GetString(outputBuffer);
+                }
+                catch (CryptographicException)
+                {
+                    return null;
+                }
+                catch (FormatException)
+                {
+                    return null;
+                }
             }
             set
             {
-                Settings.Properties.Settings.Default.ConnectionString = value;
+                byte[] inputBuffer = Encoding.UTF8.GetBytes(value);
+                var encryptor = aes.CreateEncryptor(Convert.FromBase64String(key), Convert.FromBase64String(IV));
+                byte[] outputBuffer = encryptor.TransformFinalBlock(inputBuffer, 0, inputBuffer.Length);
+                Settings.Properties.Settings.Default.ConnectionString = Convert.ToBase64String(outputBuffer);
             }
         }
 
@@ -35,13 +56,28 @@ namespace Registry
         {
             get
             {
-                string encrypted_password = Settings.Properties.Settings.Default.LDAPEncryptedPassword;
-                string decrypted_password = encrypted_password;
-                return decrypted_password;
+                try
+                {
+                    byte[] inputBuffer = Convert.FromBase64String(Settings.Properties.Settings.Default.LDAPEncryptedPassword);
+                    var decryptor = aes.CreateDecryptor(Convert.FromBase64String(key), Convert.FromBase64String(IV));
+                    byte[] outputBuffer = decryptor.TransformFinalBlock(inputBuffer, 0, inputBuffer.Length);
+                    return Encoding.UTF8.GetString(outputBuffer);
+                }
+                catch (CryptographicException)
+                {
+                    return null;
+                }
+                catch (FormatException)
+                {
+                    return null;
+                }
             }
             set
             {
-                Settings.Properties.Settings.Default.LDAPEncryptedPassword = value;
+                byte[] inputBuffer = Encoding.UTF8.GetBytes(value);
+                var encryptor = aes.CreateEncryptor(Convert.FromBase64String(key), Convert.FromBase64String(IV));
+                byte[] outputBuffer = encryptor.TransformFinalBlock(inputBuffer, 0, inputBuffer.Length);
+                Settings.Properties.Settings.Default.LDAPEncryptedPassword = Convert.ToBase64String(outputBuffer);
             }
         }
 

@@ -8,10 +8,8 @@ namespace Registry.Viewport
     public interface IMenuCallback
     {
         void TabsStateUpdate();
-        void RegistryStateUpdate();
         void NavigationStateUpdate();
         void EditingStateUpdate();
-        void RibbonTabsStateUpdate();
         void RelationsStateUpdate();
         void TenancyRefsStateUpdate();
         void StatusBarStateUpdate();

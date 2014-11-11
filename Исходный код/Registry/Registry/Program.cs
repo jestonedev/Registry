@@ -19,8 +19,10 @@ namespace Registry
             Application.SetCompatibleTextRenderingDefault(false);
             if (args.Length > 0 && args.Contains("--config"))
             {
-                SettingsForm sf = new SettingsForm();
-                sf.ShowDialog();
+                using (SettingsForm sf = new SettingsForm())
+                {
+                    sf.ShowDialog();
+                }
             }
             try
             {

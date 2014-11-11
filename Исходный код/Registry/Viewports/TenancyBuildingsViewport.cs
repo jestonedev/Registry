@@ -9,6 +9,7 @@ using System.Data;
 using Registry.Entities;
 using System.Text.RegularExpressions;
 using Registry.CalcDataModels;
+using Security;
 
 namespace Registry.Viewport
 {
@@ -267,17 +268,14 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            if (v_buildings.Position == -1)
-                return false;
-            else
-                return true;
+            return (v_buildings.Position > -1) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void DeleteRecord()
         {
             if (MessageBox.Show("Вы действительно хотите удалить это здание?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                if (buildings.Delete((int)((DataRowView)v_buildings.Current)["id_building"]) == -1)
+                if (BuildingsDataModel.Delete((int)((DataRowView)v_buildings.Current)["id_building"]) == -1)
                     return;
                 ((DataRowView)v_buildings[v_buildings.Position]).Delete();
                 menuCallback.ForceCloseDetachedViewports();
@@ -331,10 +329,7 @@ namespace Registry.Viewport
 
         public override bool CanOpenDetails()
         {
-            if (v_buildings.Position == -1)
-                return false;
-            else
-                return true;
+            return (v_buildings.Position != -1) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void OpenDetails()
@@ -355,10 +350,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            if (!buildings.EditingNewRecord)
-                return true;
-            else
-                return false;
+            return (!buildings.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void InsertRecord()
@@ -377,10 +369,8 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            if ((v_buildings.Position != -1) && (!buildings.EditingNewRecord))
-                return true;
-            else
-                return false;
+            return (v_buildings.Position != -1) && (!buildings.EditingNewRecord)
+                && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
         }
 
         public override void CopyRecord()
@@ -415,7 +405,7 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return SnapshotHasChanges();
+            return SnapshotHasChanges() && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void SaveRecord()
@@ -434,7 +424,7 @@ namespace Registry.Viewport
                     row = tenancy_buildings.Select().Rows.Find(list[i].id_assoc);
                 if (row == null)
                 {
-                    int id_assoc = tenancy_buildings.Insert(list[i]);
+                    int id_assoc = TenancyBuildingsAssocDataModel.Insert(list[i]);
                     if (id_assoc == -1)
                     {
                         sync_views = true;
@@ -450,7 +440,7 @@ namespace Registry.Viewport
                 {
                     if (RowToTenancyBuilding(row) == list[i])
                         continue;
-                    if (tenancy_buildings.Update(list[i]) == -1)
+                    if (TenancyBuildingsAssocDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         return;
@@ -474,7 +464,7 @@ namespace Registry.Viewport
                 }
                 if (row_index == -1)
                 {
-                    if (tenancy_buildings.Delete(list[i].id_assoc.Value) == -1)
+                    if (TenancyBuildingsAssocDataModel.Delete(list[i].id_assoc.Value) == -1)
                     {
                         sync_views = true;
                         return;
@@ -831,7 +821,7 @@ namespace Registry.Viewport
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
-            if (dataGridView.Size.Width > 1530)
+            if (dataGridView.Size.Width > 1400)
             {
                 if (dataGridView.Columns["id_street"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     dataGridView.Columns["id_street"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -874,7 +864,7 @@ namespace Registry.Viewport
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
             dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
             dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
@@ -895,7 +885,7 @@ namespace Registry.Viewport
             this.startup_year});
             dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle6.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             dataGridViewCellStyle6.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle6.SelectionBackColor = System.Drawing.SystemColors.Highlight;
             dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
@@ -925,6 +915,7 @@ namespace Registry.Viewport
             dataGridViewCellStyle2.NullValue = false;
             this.is_checked.DefaultCellStyle = dataGridViewCellStyle2;
             this.is_checked.HeaderText = "";
+            this.is_checked.MinimumWidth = 30;
             this.is_checked.Name = "is_checked";
             this.is_checked.Resizable = System.Windows.Forms.DataGridViewTriState.False;
             this.is_checked.Width = 30;
@@ -935,10 +926,10 @@ namespace Registry.Viewport
             dataGridViewCellStyle3.Format = "#0.0## м²";
             this.rent_total_area.DefaultCellStyle = dataGridViewCellStyle3;
             this.rent_total_area.HeaderText = "Арендуемая S общ.";
-            this.rent_total_area.MinimumWidth = 130;
+            this.rent_total_area.MinimumWidth = 140;
             this.rent_total_area.Name = "rent_total_area";
             this.rent_total_area.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.rent_total_area.Width = 130;
+            this.rent_total_area.Width = 140;
             // 
             // rent_living_area
             // 
@@ -946,14 +937,15 @@ namespace Registry.Viewport
             dataGridViewCellStyle4.Format = "#0.0## м²";
             this.rent_living_area.DefaultCellStyle = dataGridViewCellStyle4;
             this.rent_living_area.HeaderText = "Арендуемая S жил.";
-            this.rent_living_area.MinimumWidth = 130;
+            this.rent_living_area.MinimumWidth = 140;
             this.rent_living_area.Name = "rent_living_area";
-            this.rent_living_area.Width = 130;
+            this.rent_living_area.Width = 140;
             // 
             // id_building
             // 
             this.id_building.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.id_building.HeaderText = "№";
+            this.id_building.MinimumWidth = 100;
             this.id_building.Name = "id_building";
             this.id_building.ReadOnly = true;
             // 
@@ -962,16 +954,17 @@ namespace Registry.Viewport
             this.id_street.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.id_street.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
             this.id_street.HeaderText = "Адрес";
-            this.id_street.MinimumWidth = 300;
+            this.id_street.MinimumWidth = 250;
             this.id_street.Name = "id_street";
             this.id_street.ReadOnly = true;
             this.id_street.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.id_street.Width = 300;
+            this.id_street.Width = 250;
             // 
             // house
             // 
             this.house.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.house.HeaderText = "Дом";
+            this.house.MinimumWidth = 100;
             this.house.Name = "house";
             this.house.ReadOnly = true;
             // 
@@ -979,6 +972,7 @@ namespace Registry.Viewport
             // 
             this.floors.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.floors.HeaderText = "Этажность";
+            this.floors.MinimumWidth = 100;
             this.floors.Name = "floors";
             this.floors.ReadOnly = true;
             // 
@@ -997,25 +991,25 @@ namespace Registry.Viewport
             // 
             this.cadastral_num.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.cadastral_num.HeaderText = "Кадастровый номер";
-            this.cadastral_num.MinimumWidth = 150;
+            this.cadastral_num.MinimumWidth = 170;
             this.cadastral_num.Name = "cadastral_num";
             this.cadastral_num.ReadOnly = true;
-            this.cadastral_num.Width = 150;
+            this.cadastral_num.Width = 170;
             // 
             // startup_year
             // 
             this.startup_year.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.startup_year.HeaderText = "Год ввода в эксплуатацию";
-            this.startup_year.MinimumWidth = 200;
+            this.startup_year.MinimumWidth = 190;
             this.startup_year.Name = "startup_year";
             this.startup_year.ReadOnly = true;
-            this.startup_year.Width = 200;
+            this.startup_year.Width = 190;
             // 
             // TenancyBuildingsViewport
             // 
             this.ClientSize = new System.Drawing.Size(1537, 729);
             this.Controls.Add(this.dataGridView);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "TenancyBuildingsViewport";
             this.Padding = new System.Windows.Forms.Padding(3);
