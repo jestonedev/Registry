@@ -59,7 +59,7 @@
             this.vButton2.TabIndex = 4;
             this.vButton2.Text = "Сохранить";
             this.vButton2.UseVisualStyleBackColor = false;
-            this.vButton2.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE;
+            this.vButton2.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
             this.vButton2.Click += new System.EventHandler(this.vButton2_Click);
             // 
             // vButton1
@@ -74,7 +74,7 @@
             this.vButton1.TabIndex = 5;
             this.vButton1.Text = "Отменить";
             this.vButton1.UseVisualStyleBackColor = false;
-            this.vButton1.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE;
+            this.vButton1.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
             // 
             // numericUpDownMaxDBConnectionCount
             // 
@@ -209,7 +209,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
             this.ClientSize = new System.Drawing.Size(456, 344);
             this.Controls.Add(this.textBoxActivityManagerConfigsPath);
             this.Controls.Add(this.label5);

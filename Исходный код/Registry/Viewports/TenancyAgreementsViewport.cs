@@ -1148,7 +1148,7 @@ namespace Registry.Viewport
             this.vButtonSelectWarrant.TabIndex = 2;
             this.vButtonSelectWarrant.Text = "...";
             this.vButtonSelectWarrant.UseVisualStyleBackColor = false;
-            this.vButtonSelectWarrant.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE;
+            this.vButtonSelectWarrant.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
             this.vButtonSelectWarrant.Click += new System.EventHandler(this.vButtonSelectWarrant_Click);
             // 
             // textBoxAgreementWarrant
@@ -1286,7 +1286,7 @@ namespace Registry.Viewport
             this.vButtonExcludePaste.TabIndex = 1;
             this.vButtonExcludePaste.Text = "→";
             this.vButtonExcludePaste.UseVisualStyleBackColor = false;
-            this.vButtonExcludePaste.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE;
+            this.vButtonExcludePaste.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
             this.vButtonExcludePaste.Click += new System.EventHandler(this.vButtonExcludePaste_Click);
             // 
             // textBoxExcludePoint
@@ -1403,7 +1403,7 @@ namespace Registry.Viewport
             this.vButtonIncludePaste.TabIndex = 4;
             this.vButtonIncludePaste.Text = "→";
             this.vButtonIncludePaste.UseVisualStyleBackColor = false;
-            this.vButtonIncludePaste.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE;
+            this.vButtonIncludePaste.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
             this.vButtonIncludePaste.Click += new System.EventHandler(this.vButtonIncludePaste_Click);
             // 
             // label75
@@ -1460,7 +1460,7 @@ namespace Registry.Viewport
             this.vButtonExplainPaste.TabIndex = 2;
             this.vButtonExplainPaste.Text = "→";
             this.vButtonExplainPaste.UseVisualStyleBackColor = false;
-            this.vButtonExplainPaste.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE;
+            this.vButtonExplainPaste.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
             this.vButtonExplainPaste.Click += new System.EventHandler(this.vButtonExplainPaste_Click);
             // 
             // label79
@@ -1496,7 +1496,7 @@ namespace Registry.Viewport
             this.vButtonTerminatePaste.TabIndex = 1;
             this.vButtonTerminatePaste.Text = "→";
             this.vButtonTerminatePaste.UseVisualStyleBackColor = false;
-            this.vButtonTerminatePaste.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE;
+            this.vButtonTerminatePaste.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
             this.vButtonTerminatePaste.Click += new System.EventHandler(this.vButtonTerminatePaste_Click);
             // 
             // textBoxTerminateAgreement

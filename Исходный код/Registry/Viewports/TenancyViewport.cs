@@ -1709,7 +1709,7 @@ namespace Registry.Viewport
             this.vButtonWarrant.TabIndex = 24;
             this.vButtonWarrant.Text = "...";
             this.vButtonWarrant.UseVisualStyleBackColor = false;
-            this.vButtonWarrant.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE;
+            this.vButtonWarrant.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
             this.vButtonWarrant.Click += new System.EventHandler(this.vButtonWarrant_Click);
             // 
             // textBoxSelectedWarrant

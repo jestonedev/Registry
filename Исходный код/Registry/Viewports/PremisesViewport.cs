@@ -1016,6 +1016,11 @@ namespace Registry.Viewport
             return (v_premises.Position != -1);
         }
 
+        public override bool HasAssocTenancies()
+        {
+            return (v_premises.Position > -1);
+        }
+
         public override void ShowOwnerships()
         {
             ShowAssocViewport(ViewportType.OwnershipListViewport);
@@ -1034,6 +1039,11 @@ namespace Registry.Viewport
         public override void ShowFundHistory()
         {
             ShowAssocViewport(ViewportType.FundsHistoryViewport);
+        }
+
+        public override void ShowTenancies()
+        {
+            ShowAssocViewport(ViewportType.TenancyListViewport);
         }
 
         private void ShowAssocViewport(ViewportType viewportType)
