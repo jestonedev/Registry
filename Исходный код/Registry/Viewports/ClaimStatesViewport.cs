@@ -81,9 +81,6 @@ namespace Registry.Viewport
         {
             string filter = "";
             IEnumerable<int> included_states = null;
-            // Фильтруем удаленные строки
-            var claim_state_types = DataModelHelper.FilterRows(ClaimStateTypesDataModel.GetInstance().Select());
-            var claim_state_type_relations = DataModelHelper.FilterRows(ClaimStateTypesRelationsDataModel.GetInstance().Select());
             // Если текущая позиция - первый элемент, и количество элементов 1 то он может иметь только начальное состояние (любое)
             if ((v_claim_states.Position == 0) && (v_claim_states.Count == 1))
                 included_states = DataModelHelper.ClaimStartStateTypeIds();
@@ -564,7 +561,7 @@ namespace Registry.Viewport
                 return;
             is_editable = false;
             ClaimState claimState = ClaimStateFromView();
-            DataRowView row = (DataRowView)v_claim_states.AddNew();
+            v_claim_states.AddNew();
             dataGridView.Enabled = false;
             claim_states.EditingNewRecord = true;
             ViewportFromClaimState(claimState);
@@ -584,7 +581,7 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             is_editable = false;
-            DataRowView row = (DataRowView)v_claim_states.AddNew();
+            v_claim_states.AddNew();
             is_editable = true;
             dataGridView.Enabled = false;
             claim_states.EditingNewRecord = true; 

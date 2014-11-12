@@ -14,7 +14,7 @@
            <Accessors>
             <Accessor Name="#get_Current()" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
              <Messages>
-              <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Status="Active" Created="2014-11-11 07:50:51Z" FixCategory="NonBreaking">
+              <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Status="Active" Created="2014-11-13 03:12:51Z" FixCategory="NonBreaking">
                <Issue Certainty="95" Level="CriticalError" Path="D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Settings" File="UserDomain.cs" Line="32">Измените 'UserDomain.Current.get()' так, чтобы перехватывались более специфические, чем 'object', исключения, либо обеспечьте повторное порождение исключения.</Issue>
               </Message>
              </Messages>

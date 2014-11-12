@@ -644,8 +644,6 @@ namespace Registry.Viewport
                 return;
             if (e.Action == DataRowAction.Delete)
             {
-                int id_state_to = Convert.ToInt32(
-                    ((DataRowView)v_snapshot_claim_state_types[v_snapshot_claim_state_types.Position])["id_state_type"], CultureInfo.CurrentCulture);
                 var rows = from rel_row in snapshot_claim_state_types_relations.AsEnumerable()
                            where rel_row.Field<int>("id_state_from") == (int)e.Row["id_state_from"] &&
                             rel_row.Field<int>("id_state_to") == (int)e.Row["id_state_to"]

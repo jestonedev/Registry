@@ -60,7 +60,7 @@
             this.vButton2.TabIndex = 23;
             this.vButton2.Text = "Отмена";
             this.vButton2.UseVisualStyleBackColor = false;
-            this.vButton2.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE;
+            this.vButton2.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
             // 
             // vButton1
             // 
@@ -75,7 +75,7 @@
             this.vButton1.TabIndex = 22;
             this.vButton1.Text = "Выбрать";
             this.vButton1.UseVisualStyleBackColor = false;
-            this.vButton1.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE;
+            this.vButton1.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
             // 
             // panel1
             // 
@@ -200,7 +200,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
             this.ClientSize = new System.Drawing.Size(846, 576);
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);

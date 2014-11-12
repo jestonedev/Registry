@@ -196,3 +196,4 @@
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1300:SpecifyMessageBoxOptions", Scope = "member", Target = "Registry.Viewport.BuildingViewport.#ChangeViewportStateTo(Registry.Viewport.ViewportState)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1300:SpecifyMessageBoxOptions", Scope = "member", Target = "Registry.Viewport.BuildingListViewport.#ShowAssocViewport(Registry.Viewport.ViewportType)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1300:SpecifyMessageBoxOptions", Scope = "member", Target = "Registry.Viewport.BuildingListViewport.#DeleteRecord()")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1500:VariableNamesShouldNotMatchFieldNames", MessageId = "claim_state_types", Scope = "member", Target = "Registry.Viewport.ClaimStatesViewport.#RebuildFilter()")]

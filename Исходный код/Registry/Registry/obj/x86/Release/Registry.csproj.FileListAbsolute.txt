@@ -171,7 +171,6 @@ D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Registry\bin\Release\Reporting.dll
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Registry\bin\Release\Security.dll
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Registry\bin\Release\Settings.dll
-D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Registry\bin\Release\System.Windows.Forms.Ribbon.dll
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Registry\bin\Release\VIBlend.WinForms.Controls.dll
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Registry\bin\Release\VIBlend.WinForms.Utilities.dll
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Registry\bin\Release\Viewports.dll
@@ -185,7 +184,6 @@ D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Registry\bin\Release\Viewports.pdb
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Registry\bin\Release\MBToolStrip.pdb
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Registry\bin\Release\MBToolStrip.xml
-D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Registry\bin\Release\System.Windows.Forms.Ribbon.pdb
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Registry\bin\Release\VIBlend.WinForms.Controls.pdb
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Registry\bin\Release\VIBlend.WinForms.Controls.xml
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Registry\bin\Release\VIBlend.WinForms.Utilities.pdb
@@ -201,3 +199,5 @@ D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Registry\bin\Release\Registry.pdb
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Registry\bin\Release\Registry.exe.CodeAnalysisLog.xml
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Registry\bin\Release\Registry.exe.lastcodeanalysissucceeded
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Registry\bin\Release\System.Windows.Forms.Ribbon35.dll
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Registry\bin\Release\System.Windows.Forms.Ribbon35.pdb

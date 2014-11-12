@@ -783,7 +783,7 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             is_editable = false;
-            DataRowView row = (DataRowView)v_tenancies.AddNew();
+            v_tenancies.AddNew();
             int index = v_executors.Find("executor_login", System.Security.Principal.WindowsIdentity.GetCurrent().Name);
             if (index != -1)
                 comboBoxExecutor.SelectedValue = ((DataRowView)v_executors[index])["id_executor"];
@@ -803,7 +803,7 @@ namespace Registry.Viewport
                 return;
             is_editable = false;
             TenancyProcess tenancy = TenancyFromView();
-            DataRowView row = (DataRowView)v_tenancies.AddNew();
+            v_tenancies.AddNew();
             tenancies.EditingNewRecord = true;
             ViewportFromTenancy(tenancy);
             checkBoxContractEnable.Checked = (tenancy.RegistrationDate != null) || (tenancy.RegistrationNum != null);
@@ -1709,7 +1709,7 @@ namespace Registry.Viewport
             this.vButtonWarrant.TabIndex = 24;
             this.vButtonWarrant.Text = "...";
             this.vButtonWarrant.UseVisualStyleBackColor = false;
-            this.vButtonWarrant.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE;
+            this.vButtonWarrant.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
             this.vButtonWarrant.Click += new System.EventHandler(this.vButtonWarrant_Click);
             // 
             // textBoxSelectedWarrant

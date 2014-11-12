@@ -939,7 +939,7 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             is_editable = false;
-            DataRowView row = (DataRowView)v_buildings.AddNew();
+            v_buildings.AddNew();
             is_editable = true;
             buildings.EditingNewRecord = true;
         }
@@ -956,7 +956,7 @@ namespace Registry.Viewport
                 return;
             is_editable = false;
             Building building = BuildingFromView();
-            DataRowView row = (DataRowView)v_buildings.AddNew();
+            v_buildings.AddNew();
             buildings.EditingNewRecord = true;
             ViewportFromBuilding(building);
             is_editable = true;

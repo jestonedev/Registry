@@ -334,7 +334,6 @@ namespace Registry.Viewport
             if (v_sub_premises.Count <= e.RowIndex || v_sub_premises.Count == 0) return;
             int id_sub_premises = Convert.ToInt32(((DataRowView)v_sub_premises[e.RowIndex])["id_sub_premises"], CultureInfo.CurrentCulture);
             int row_index = v_snapshot_tenancy_sub_premises.Find("id_sub_premises", id_sub_premises);
-            DataRowView row = ((DataRowView)v_sub_premises[e.RowIndex]);
             switch (dataGridView.Columns[e.ColumnIndex].Name)
             {
                 case "is_checked":

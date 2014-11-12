@@ -498,7 +498,7 @@ namespace Registry.Viewport
                 return;
             is_editable = false;
             dataGridViewClaims.RowCount = dataGridViewClaims.RowCount + 1;
-            DataRowView row = (DataRowView)v_claims.AddNew();
+            v_claims.AddNew();
             if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
                 numericUpDownProcessID.Value = (int)ParentRow["id_process"];
             is_editable = true;
@@ -519,7 +519,7 @@ namespace Registry.Viewport
             is_editable = false;
             Claim claim = ClaimFromView();
             dataGridViewClaims.RowCount = dataGridViewClaims.RowCount + 1;
-            DataRowView row = (DataRowView)v_claims.AddNew();
+            v_claims.AddNew();
             dataGridViewClaims.Enabled = false;
             claims.EditingNewRecord = true;
             ViewportFromClaim(claim);

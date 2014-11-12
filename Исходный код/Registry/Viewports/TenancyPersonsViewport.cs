@@ -627,7 +627,7 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             is_editable = false;
-            DataRowView row = (DataRowView)v_tenancy_persons.AddNew();
+            v_tenancy_persons.AddNew();
             dataGridViewTenancyPersons.Enabled = false;
             is_editable = true;
             tenancy_persons.EditingNewRecord = true;
@@ -645,7 +645,7 @@ namespace Registry.Viewport
                 return;
             is_editable = false;
             TenancyPerson tenancyPerson = TenancyPersonFromView();
-            DataRowView row = (DataRowView)v_tenancy_persons.AddNew();
+            v_tenancy_persons.AddNew();
             dataGridViewTenancyPersons.Enabled = false;
             tenancy_persons.EditingNewRecord = true;
             ViewportFromTenancyPerson(tenancyPerson);

@@ -750,7 +750,7 @@ namespace Registry.Viewport
                 return;
             is_editable = false;
             Premise premise = PremiseFromView();
-            DataRowView row = (DataRowView)v_premises.AddNew();
+            v_premises.AddNew();
             premises.EditingNewRecord = true;
             if (premise.IdBuilding != null)
             {
@@ -771,7 +771,7 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             is_editable = false;
-            DataRowView row = (DataRowView)v_premises.AddNew();
+            v_premises.AddNew();
             is_editable = true;
             premises.EditingNewRecord = true;
         }
@@ -1016,6 +1016,11 @@ namespace Registry.Viewport
             return (v_premises.Position != -1);
         }
 
+        public override bool HasAssocTenancies()
+        {
+            return (v_premises.Position > -1);
+        }
+
         public override void ShowOwnerships()
         {
             ShowAssocViewport(ViewportType.OwnershipListViewport);
@@ -1034,6 +1039,11 @@ namespace Registry.Viewport
         public override void ShowFundHistory()
         {
             ShowAssocViewport(ViewportType.FundsHistoryViewport);
+        }
+
+        public override void ShowTenancies()
+        {
+            ShowAssocViewport(ViewportType.TenancyListViewport);
         }
 
         private void ShowAssocViewport(ViewportType viewportType)

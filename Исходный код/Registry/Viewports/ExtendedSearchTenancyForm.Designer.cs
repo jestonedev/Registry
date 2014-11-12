@@ -102,7 +102,7 @@
             this.vButtonCancel.TabIndex = 41;
             this.vButtonCancel.Text = "Отмена";
             this.vButtonCancel.UseVisualStyleBackColor = false;
-            this.vButtonCancel.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE;
+            this.vButtonCancel.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
             // 
             // vButtonSearch
             // 
@@ -115,7 +115,7 @@
             this.vButtonSearch.TabIndex = 40;
             this.vButtonSearch.Text = "Поиск";
             this.vButtonSearch.UseVisualStyleBackColor = false;
-            this.vButtonSearch.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.ULTRABLUE;
+            this.vButtonSearch.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
             this.vButtonSearch.Click += new System.EventHandler(this.vButtonSearch_Click);
             // 
             // textBoxRegistrationNum
@@ -679,7 +679,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(191)))), ((int)(((byte)(219)))), ((int)(((byte)(255)))));
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
             this.ClientSize = new System.Drawing.Size(758, 470);
             this.Controls.Add(this.comboBoxKumiOrderDateExpr);
             this.Controls.Add(this.dateTimePickerKumiOrderDate);

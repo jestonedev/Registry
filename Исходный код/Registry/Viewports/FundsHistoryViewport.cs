@@ -622,7 +622,7 @@ namespace Registry.Viewport
                 return;
             is_editable = false;
             FundHistory fundHistory = FundHistoryFromView();
-            DataRowView row = (DataRowView)v_funds_history.AddNew();
+            v_funds_history.AddNew();
             dataGridView.Enabled = false;
             funds_history.EditingNewRecord = true;
             ViewportFromFundHistory(fundHistory);
@@ -641,7 +641,7 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             is_editable = false;
-            DataRowView row = (DataRowView)v_funds_history.AddNew();
+            v_funds_history.AddNew();
             dataGridView.Enabled = false;
             is_editable = true;
             funds_history.EditingNewRecord = true;

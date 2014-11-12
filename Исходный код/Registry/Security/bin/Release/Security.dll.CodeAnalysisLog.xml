@@ -1,44 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <?xml-stylesheet type="text/xsl" href="c:\program files\microsoft visual studio 10.0\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
 <FxCopReport Version="10.0">
- <Targets>
-  <Target Name="D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Security\bin\Release\Security.dll">
-   <Modules>
-    <Module Name="security.dll">
-     <Namespaces>
-      <Namespace Name="Security">
-       <Types>
-        <Type Name="AccessControl" Kind="Class" Accessibility="Public" ExternallyVisible="True">
-         <Members>
-          <Member Name="#LoadPriveleges()" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
-           <Messages>
-            <Message TypeName="SpecifyMessageBoxOptions" Category="Microsoft.Globalization" CheckId="CA1300" Status="Active" Created="2014-11-12 01:11:24Z" FixCategory="NonBreaking">
-             <Issue Certainty="95" Level="Error" Path="D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Security" File="AccessControl.cs" Line="30">Измените 'AccessControl.LoadPriveleges()', чтобы вызвать перегрузку MessageBox.Show, указывающую MessageBoxOptions, и убедитесь, что установлены значения MessageBoxOptions.RightAlign и MessageBoxOptions.RtlReading, если в родительском элементе управления для RightToLeft задано значение RightToLeft.Yes.</Issue>
-             <Issue Certainty="95" Level="Error" Path="D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Security" File="AccessControl.cs" Line="39">Измените 'AccessControl.LoadPriveleges()', чтобы вызвать перегрузку MessageBox.Show, указывающую MessageBoxOptions, и убедитесь, что установлены значения MessageBoxOptions.RightAlign и MessageBoxOptions.RtlReading, если в родительском элементе управления для RightToLeft задано значение RightToLeft.Yes.</Issue>
-            </Message>
-           </Messages>
-          </Member>
-         </Members>
-        </Type>
-       </Types>
-      </Namespace>
-     </Namespaces>
-    </Module>
-   </Modules>
-  </Target>
- </Targets>
- <Rules>
-  <Rule TypeName="SpecifyMessageBoxOptions" Category="Microsoft.Globalization" CheckId="CA1300">
-   <Name>Укажите MessageBoxOptions</Name>
-   <Description>Для корректной работы в системах с расположением текста справа налево все вызовы MessageBox.Show должны осуществлять перегрузку, указывающую в качестве аргумента MessageBoxOptions. Для правильного отображения программы должны во время выполнения определить, запущены ли они в системе с расположением текста справа налево, и передать соответствующее значение MessageBoxOptions.</Description>
-   <Resolution Name="Default">Измените {0}, чтобы вызвать перегрузку MessageBox.Show, указывающую MessageBoxOptions, и убедитесь, что установлены значения MessageBoxOptions.RightAlign и MessageBoxOptions.RtlReading, если в родительском элементе управления для RightToLeft задано значение RightToLeft.Yes.</Resolution>
-   <Owner />
-   <Url>http://msdn.microsoft.com/library/ms182191(VS.100).aspx</Url>
-   <Email>[none]</Email>
-   <MessageLevel Certainty="95">Error</MessageLevel>
-   <File Name="globalizationrules.dll" Version="10.0.0.0" />
-  </Rule>
- </Rules>
  <Localized>
   <String Key="Category">Категория</String>
   <String Key="Certainty">Достоверность</String>

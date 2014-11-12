@@ -37,12 +37,11 @@ namespace Registry.CalcDataModels
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelBuildingsCurrentFunds");
             CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;
             // Фильтруем удаленные строки
-            var buildings = from buildings_row in DataModelHelper.FilterRows(BuildingsDataModel.GetInstance().Select())
-                            where (config.Entity == CalcDataModelFilterEnity.Building ? buildings_row.Field<int>("id_building") == config.IdObject :
-                                   config.Entity == CalcDataModelFilterEnity.All ? true : false)
-                            select buildings_row;
             var funds_history = DataModelHelper.FilterRows(FundsHistoryDataModel.GetInstance().Select());
-            var funds_buildings_assoc = DataModelHelper.FilterRows(FundsBuildingsAssocDataModel.GetInstance().Select());
+            var funds_buildings_assoc = from funds_buildings_assoc_row in DataModelHelper.FilterRows(FundsBuildingsAssocDataModel.GetInstance().Select())
+                                        where (config.Entity == CalcDataModelFilterEnity.Building ? funds_buildings_assoc_row.Field<int>("id_building") == config.IdObject :
+                                               config.Entity == CalcDataModelFilterEnity.All ? true : false)
+                                        select funds_buildings_assoc_row;
             // Вычисляем агрегационную информацию
             var max_id_by_buldings = from funds_buildings_assoc_row in funds_buildings_assoc
                                      join fund_history_row in funds_history

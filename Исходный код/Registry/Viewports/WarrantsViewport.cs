@@ -399,7 +399,7 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             is_editable = false;
-            DataRowView row = (DataRowView)v_warrants.AddNew();
+            v_warrants.AddNew();
             dataGridView.Enabled = false;
             is_editable = true;
             warrants.EditingNewRecord = true;
@@ -417,7 +417,7 @@ namespace Registry.Viewport
                 return;
             is_editable = false;
             Warrant warrant = WarrantFromView();
-            DataRowView row = (DataRowView)v_warrants.AddNew();
+            v_warrants.AddNew();
             dataGridView.Enabled = false;
             warrants.EditingNewRecord = true;
             ViewportFromWarrant(warrant);
