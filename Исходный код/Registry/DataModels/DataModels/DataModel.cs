@@ -13,10 +13,13 @@ namespace Registry.DataModels
 {
     public abstract class DataModel
     {
-        protected DataTable table = null;
+        private DataTable table = null;
+        private DataModelLoadState dmLoadState = DataModelLoadState.BeforeLoad;
+        private DataModelLoadSyncType dmLoadType = DataModelLoadSyncType.Syncronize; // По умолчанию загрузка синхронная
 
-        public DataModelLoadState dmLoadState = DataModelLoadState.BeforeLoad;
-        public DataModelLoadSyncType dmLoadType = DataModelLoadSyncType.Syncronize; // По умолчанию загрузка синхронная
+        public DataModelLoadState DMLoadState { get { return dmLoadState; } set { dmLoadState = value; } }
+        public DataModelLoadSyncType DMLoadType { get { return dmLoadType; } set { dmLoadType = value; } }
+        protected DataTable Table { get { return table; } set { table = value; } }
 
         private static object lock_obj = new object();
         // Не больше MaxDBConnectionCount потоков одновременно делают запросы к БД
@@ -30,12 +33,12 @@ namespace Registry.DataModels
         protected DataModel(ToolStripProgressBar progressBar, int incrementor, string selectQuery, string tableName)
         {
             SynchronizationContext context = SynchronizationContext.Current;
-            dmLoadType = DataModelLoadSyncType.Asyncronize;
+            DMLoadType = DataModelLoadSyncType.Asyncronize;
             ThreadPool.QueueUserWorkItem((progress) =>
             {
                 try
                 {
-                    dmLoadState = DataModelLoadState.Loading;
+                    DMLoadState = DataModelLoadState.Loading;
                     using (DBConnection connection = new DBConnection())
                     using (DbCommand command = DBConnection.CreateCommand())
                     {
@@ -47,9 +50,9 @@ namespace Registry.DataModels
                     ConfigureTable();
                     lock (lock_obj)
                     {
-                        DataSetManager.AddTable(table);
+                        DataSetManager.AddTable(Table);
                     }
-                    dmLoadState = DataModelLoadState.SuccessLoad;
+                    DMLoadState = DataModelLoadState.SuccessLoad;
                     if (progress != null)
                     {
                         context.Post(_ => {
@@ -65,16 +68,16 @@ namespace Registry.DataModels
                     {
                         MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                             "Произошла ошибка при загрузке данных из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                        dmLoadState = DataModelLoadState.ErrorLoad;
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        DMLoadState = DataModelLoadState.ErrorLoad;
                         Application.Exit();
                     }
                 }
                 catch (DataModelException e)
                 {
                     MessageBox.Show(e.Message, "Ошибка", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
-                    dmLoadState = DataModelLoadState.ErrorLoad;
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    DMLoadState = DataModelLoadState.ErrorLoad;
                 }
             }, progressBar); 
         }
@@ -85,23 +88,23 @@ namespace Registry.DataModels
 
         public virtual DataTable Select()
         {
-            if (dmLoadType == DataModelLoadSyncType.Syncronize)
-                return table;
-            while (dmLoadState != DataModelLoadState.SuccessLoad)
+            if (DMLoadType == DataModelLoadSyncType.Syncronize)
+                return Table;
+            while (DMLoadState != DataModelLoadState.SuccessLoad)
             {
-                if (dmLoadState == DataModelLoadState.ErrorLoad)
+                if (DMLoadState == DataModelLoadState.ErrorLoad)
                 {
                     lock (lock_obj)
                     {
                         MessageBox.Show("Произошла ошибка при загрузке данных из базы данных. Дальнейшая работа приложения невозможна", "Ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         Application.Exit();
                         return null;
                     }
                 }
                 Application.DoEvents();
             }
-            return table;
+            return Table;
         }
     }
 }

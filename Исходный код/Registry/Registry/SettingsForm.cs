@@ -19,7 +19,7 @@ namespace Registry
         private void SettingsForm_Load(object sender, EventArgs e)
         {
             textBoxActivityManagerConfigsPath.Text = RegistrySettings.ActivityManagerConfigsPath;
-            textBoxActivityManagerOutputCodepage.Text = RegistrySettings.ActivityManagerOutputCodepage;
+            textBoxActivityManagerOutputCodepage.Text = RegistrySettings.ActivityManagerOutputCodePage;
             textBoxActivityManagerPath.Text = RegistrySettings.ActivityManagerPath;
             textBoxConnectionString.Text = RegistrySettings.ConnectionString;
             textBoxLDAPPassword.Text = RegistrySettings.LDAPPassword;
@@ -30,7 +30,7 @@ namespace Registry
         private void vButton2_Click(object sender, EventArgs e)
         {
             RegistrySettings.ActivityManagerConfigsPath = textBoxActivityManagerConfigsPath.Text;
-            RegistrySettings.ActivityManagerOutputCodepage = textBoxActivityManagerOutputCodepage.Text;
+            RegistrySettings.ActivityManagerOutputCodePage = textBoxActivityManagerOutputCodepage.Text;
             RegistrySettings.ActivityManagerPath = textBoxActivityManagerPath.Text;
             RegistrySettings.ConnectionString = textBoxConnectionString.Text;
             RegistrySettings.LDAPPassword = textBoxLDAPPassword.Text;

@@ -30,7 +30,7 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_restriction"] };
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_restriction"] };
         }
 
         public static RestrictionsDataModel GetInstance()
@@ -45,7 +45,7 @@ namespace Registry.DataModels
             return dataModel;
         }
 
-        public static int Insert(Entities.Restriction restriction, ParentTypeEnum parentType, int idParent)
+        public static int Insert(Restriction restriction, ParentTypeEnum parentType, int idParent)
         {
             using (DBConnection connection = new DBConnection())
             using (DbCommand command = DBConnection.CreateCommand())
@@ -54,10 +54,16 @@ namespace Registry.DataModels
             {
                 last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
                 command.CommandText = insertQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_restriction_type", restriction.id_restriction_type));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("number", restriction.number));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date", restriction.date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", restriction.description));
+                if (restriction == null)
+                {
+                    MessageBox.Show("В метод Insert не передана ссылка на объект реквизита", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_restriction_type", restriction.IdRestrictionType));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("number", restriction.Number));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date", restriction.Date));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", restriction.Description));
                 if (parentType == ParentTypeEnum.Building)
                     command_assoc.CommandText = "INSERT INTO restrictions_buildings_assoc (id_building, id_restriction) VALUES (?, ?)";
                 else
@@ -66,7 +72,7 @@ namespace Registry.DataModels
                     else
                     {
                         MessageBox.Show("Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
-                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return -1;
                     }
                 try
@@ -77,7 +83,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", 
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         connection.SqlRollbackTransaction();
                         return -1;
                     }
@@ -93,23 +99,29 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось добавить наименование реквизита в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
         }
 
-        public static int Update(Entities.Restriction restriction)
+        public static int Update(Restriction restriction)
         {
             using (DBConnection connection = new DBConnection())
             using (DbCommand command = DBConnection.CreateCommand())
             {
                 command.CommandText = updateQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_restriction_type", restriction.id_restriction_type));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("number", restriction.number));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date", restriction.date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", restriction.description));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_restriction", restriction.id_restriction));
+                if (restriction == null)
+                {
+                    MessageBox.Show("В метод Update не передана ссылка на объект реквизита", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_restriction_type", restriction.IdRestrictionType));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("number", restriction.Number));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date", restriction.Date));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", restriction.Description));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_restriction", restriction.IdRestriction));
                 try
                 {
                     return connection.SqlModifyQuery(command);
@@ -119,7 +131,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось изменить наименование реквизита в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -140,7 +152,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось удалить реквизит из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

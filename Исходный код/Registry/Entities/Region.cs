@@ -7,17 +7,17 @@ namespace Registry.Entities
 {
     public sealed class Region
     {
-        public string id_region { get; set; }
-        public string region { get; set; }
-        public Region(string id_region, string region)
+        public string IdRegion { get; set; }
+        public string RegionName { get; set; }
+        public Region(string idRegion, string region)
         {
-            this.id_region = id_region;
-            this.region = region;
+            this.IdRegion = idRegion;
+            this.RegionName = region;
         }
 
         public override string ToString()
         {
-            return region;
+            return RegionName;
         }
     }
 }

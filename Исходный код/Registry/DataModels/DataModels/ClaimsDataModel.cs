@@ -38,14 +38,14 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_claim"] };
-            table.Columns["id_process"].DefaultValue = 0;
-            table.Columns["amount_of_debt_rent"].DefaultValue = 0;
-            table.Columns["amount_of_debt_fine"].DefaultValue = 0;
-            table.Columns["amount_of_rent"].DefaultValue = 0;
-            table.Columns["amount_of_fine"].DefaultValue = 0;
-            table.Columns["amount_of_rent_recover"].DefaultValue = 0;
-            table.Columns["amount_of_fine_recover"].DefaultValue = 0;
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_claim"] };
+            Table.Columns["id_process"].DefaultValue = 0;
+            Table.Columns["amount_of_debt_rent"].DefaultValue = 0;
+            Table.Columns["amount_of_debt_fine"].DefaultValue = 0;
+            Table.Columns["amount_of_rent"].DefaultValue = 0;
+            Table.Columns["amount_of_fine"].DefaultValue = 0;
+            Table.Columns["amount_of_rent_recover"].DefaultValue = 0;
+            Table.Columns["amount_of_fine_recover"].DefaultValue = 0;
         }
 
         public static ClaimsDataModel GetInstance()
@@ -75,7 +75,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось удалить запись о претензионно-исковой работе из базы данных. Подробная ошибка: {0}",
-                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -87,20 +87,25 @@ namespace Registry.DataModels
             using (DbCommand command = DBConnection.CreateCommand())
             {
                 command.CommandText = updateQuery;
-
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", claim.id_process));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_of_transfer", claim.date_of_transfer));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_debt_rent", claim.amount_of_debt_rent));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_debt_fine", claim.amount_of_debt_fine));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("at_date", claim.at_date));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_rent", claim.amount_of_rent));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_fine", claim.amount_of_fine));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_rent_recover", claim.amount_of_rent_recover));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_fine_recover", claim.amount_of_fine_recover));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("start_dept_period", claim.start_dept_period));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("end_dept_period", claim.end_dept_period));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", claim.description));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_claim", claim.id_claim));
+                if (claim == null)
+                {
+                    MessageBox.Show("В метод Update не передана ссылка на объект претензионно-исковой работы", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", claim.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_of_transfer", claim.DateOfTransfer));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_debt_rent", claim.AmountOfDebtRent));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_debt_fine", claim.AmountOfDebtFine));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("at_date", claim.AtDate));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_rent", claim.AmountOfRent));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_fine", claim.AmountOfFine));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_rent_recover", claim.AmountOfRentRecover));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_fine_recover", claim.AmountOfFineRecover));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("start_dept_period", claim.StartDeptPeriod));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("end_dept_period", claim.EndDeptPeriod));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", claim.Description));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_claim", claim.IdClaim));
 
                 try
                 {
@@ -111,7 +116,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture,
                         "Не удалось изменить запись о претензионно-исковой работе в базе данных. Подробная ошибка: {0}",
-                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -125,19 +130,24 @@ namespace Registry.DataModels
             {
                 last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
                 command.CommandText = insertQuery;
-
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", claim.id_process));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_of_transfer", claim.date_of_transfer));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_debt_rent", claim.amount_of_debt_rent));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_debt_fine", claim.amount_of_debt_fine));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("at_date", claim.at_date));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_rent", claim.amount_of_rent));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_fine", claim.amount_of_fine));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_rent_recover", claim.amount_of_rent_recover));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_fine_recover", claim.amount_of_fine_recover));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("start_dept_period", claim.start_dept_period));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("end_dept_period", claim.end_dept_period));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", claim.description));
+                if (claim == null)
+                {
+                    MessageBox.Show("В метод Insert не передана ссылка на объект претензионно-исковой работы", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", claim.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_of_transfer", claim.DateOfTransfer));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_debt_rent", claim.AmountOfDebtRent));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_debt_fine", claim.AmountOfDebtFine));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("at_date", claim.AtDate));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_rent", claim.AmountOfRent));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_fine", claim.AmountOfFine));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_rent_recover", claim.AmountOfRentRecover));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("amount_of_fine_recover", claim.AmountOfFineRecover));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("start_dept_period", claim.StartDeptPeriod));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("end_dept_period", claim.EndDeptPeriod));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", claim.Description));
 
                 try
                 {
@@ -147,7 +157,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         connection.SqlRollbackTransaction();
                         return -1;
                     }
@@ -159,7 +169,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось добавить запись о претензионно-исковой работе в базу данных. Подробная ошибка: {0}",
-                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

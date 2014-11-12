@@ -30,7 +30,7 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_agreement"] };
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_agreement"] };
         }
 
         public static TenancyAgreementsDataModel GetInstance()
@@ -62,7 +62,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось удалить соглашение из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -74,12 +74,18 @@ namespace Registry.DataModels
             using (DbCommand command = DBConnection.CreateCommand())
             {
                 command.CommandText = updateQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyAgreement.id_process));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("agreement_date", tenancyAgreement.agreement_date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("agreement_content", tenancyAgreement.agreement_content));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancyAgreement.id_executor));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", tenancyAgreement.id_warrant));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_agreement", tenancyAgreement.id_agreement));
+                if (tenancyAgreement == null)
+                {
+                    MessageBox.Show("В метод Update не передана ссылка на объект соглашения процесса найма", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyAgreement.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("agreement_date", tenancyAgreement.AgreementDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("agreement_content", tenancyAgreement.AgreementContent));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancyAgreement.IdExecutor));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", tenancyAgreement.IdWarrant));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_agreement", tenancyAgreement.IdAgreement));
                 try
                 {
                     return connection.SqlModifyQuery(command);
@@ -89,7 +95,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось изменить информацию о соглашении в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -103,11 +109,17 @@ namespace Registry.DataModels
             {
                 last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
                 command.CommandText = insertQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyAgreement.id_process));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("agreement_date", tenancyAgreement.agreement_date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("agreement_content", tenancyAgreement.agreement_content));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancyAgreement.id_executor));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", tenancyAgreement.id_warrant));
+                if (tenancyAgreement == null)
+                {
+                    MessageBox.Show("В метод Insert не передана ссылка на объект соглашения процесса найма", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyAgreement.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("agreement_date", tenancyAgreement.AgreementDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("agreement_content", tenancyAgreement.AgreementContent));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancyAgreement.IdExecutor));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", tenancyAgreement.IdWarrant));
                 try
                 {
                     connection.SqlBeginTransaction();
@@ -117,7 +129,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", 
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return -1;
                     }
                     return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
@@ -127,7 +139,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось добавить соглашение в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

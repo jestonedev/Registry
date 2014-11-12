@@ -7,19 +7,13 @@ namespace Registry.Entities
 {
     public sealed class ClaimStateTypeRelation
     {
-        public int? id_relation { get; set; }
-        public int? id_state_from { get; set; }
-        public int? id_state_to { get; set; }
+        public int? IdRelation { get; set; }
+        public int? IdStateFrom { get; set; }
+        public int? IdStateTo { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is ClaimStateTypeRelation))
-                return false;
-            ClaimStateTypeRelation obj_claim_state_type_relation = (ClaimStateTypeRelation)obj;
-            if (this == obj_claim_state_type_relation)
-                return true;
-            else
-                return false;
+            return (this == (obj as ClaimStateTypeRelation));
         }
 
         public bool Equals(ClaimStateTypeRelation other)
@@ -29,9 +23,15 @@ namespace Registry.Entities
 
         public static bool operator ==(ClaimStateTypeRelation first, ClaimStateTypeRelation second)
         {
-            return first.id_relation == second.id_relation &&
-                first.id_state_from == second.id_state_from &&
-                first.id_state_to == second.id_state_to;
+            if ((object)first == null && (object)second == null)
+                return true;
+            else
+                if ((object)first == null || (object)second == null)
+                    return false;
+                else
+            return first.IdRelation == second.IdRelation &&
+                first.IdStateFrom == second.IdStateFrom &&
+                first.IdStateTo == second.IdStateTo;
         }
 
         public static bool operator !=(ClaimStateTypeRelation first, ClaimStateTypeRelation second)

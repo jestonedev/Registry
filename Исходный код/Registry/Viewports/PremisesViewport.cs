@@ -10,6 +10,7 @@ using System.Drawing;
 using Registry.SearchForms;
 using Registry.CalcDataModels;
 using Security;
+using System.Globalization;
 
 namespace Registry.Viewport
 {
@@ -177,7 +178,7 @@ namespace Registry.Viewport
             {
                 if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
                 {
-                    this.Text = String.Format("Новое помещение здания №{0}", ParentRow["id_building"]);
+                    this.Text = String.Format(CultureInfo.CurrentCulture, "Новое помещение здания №{0}", ParentRow["id_building"]);
                 }
                 else
                     this.Text = "Новое помещение";
@@ -186,15 +187,15 @@ namespace Registry.Viewport
                 if (v_premises.Position != -1)
                 {
                     if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                        this.Text = String.Format("Помещение №{0} здания №{1}",
+                        this.Text = String.Format(CultureInfo.CurrentCulture, "Помещение №{0} здания №{1}",
                             ((DataRowView)v_premises[v_premises.Position])["id_premises"], ParentRow["id_building"]);
                     else
-                        this.Text = String.Format("Помещение №{0}", ((DataRowView)v_premises[v_premises.Position])["id_premises"]);
+                        this.Text = String.Format(CultureInfo.CurrentCulture, "Помещение №{0}", ((DataRowView)v_premises[v_premises.Position])["id_premises"]);
                 }
                 else
                 {
                     if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                        this.Text = String.Format("Помещения в здании №{0} отсутствуют", ParentRow["id_building"]);
+                        this.Text = String.Format(CultureInfo.CurrentCulture, "Помещения в здании №{0} отсутствуют", ParentRow["id_building"]);
                     else
                         this.Text = "Помещения отсутствуют";
                 }
@@ -220,10 +221,10 @@ namespace Registry.Viewport
             {
                 int? id_building = null;
                 if ((v_premises.Position != -1) && (((DataRowView)v_premises[v_premises.Position])["id_building"] != DBNull.Value))
-                    id_building = Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_building"]);
+                    id_building = Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_building"], CultureInfo.CurrentCulture);
                 else 
                 if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                    id_building = Convert.ToInt32(ParentRow["id_building"]);
+                    id_building = Convert.ToInt32(ParentRow["id_building"], CultureInfo.CurrentCulture);
                 string id_street = null;
                 if (id_building != null)
                 {
@@ -332,7 +333,7 @@ namespace Registry.Viewport
                         case ViewportState.NewRowState:
                         case ViewportState.ModifyRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения о помещениях в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -360,7 +361,7 @@ namespace Registry.Viewport
                             return true;
                         case ViewportState.ModifyRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения о помещениях в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -384,7 +385,7 @@ namespace Registry.Viewport
                             return true;
                         case ViewportState.NewRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения о помещениях в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -418,7 +419,7 @@ namespace Registry.Viewport
                 if (viewportState == ViewportState.ModifyRowState)
                     viewportState = ViewportState.ReadState;
             }
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         public void LocatePremisesBy(int id)
@@ -432,21 +433,21 @@ namespace Registry.Viewport
 
         private bool ValidatePremise(Premise premise)
         {
-            if (premise.id_building == null)
+            if (premise.IdBuilding == null)
             {
-                MessageBox.Show("Необходимо выбрать здание","Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Необходимо выбрать здание","Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxHouse.Focus();
                 return false;
             }
-            if (premise.premises_num == null)
+            if (premise.PremisesNum == null)
             {
-                MessageBox.Show("Необходимо указать номер помещения", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Необходимо указать номер помещения", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxPremisesNumber.Focus();
                 return false;
             }
-            if (premise.id_state == null)
+            if (premise.IdState == null)
             {
-                MessageBox.Show("Необходимо выбрать текущее состояние помещения", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Необходимо выбрать текущее состояние помещения", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxState.Focus();
                 return false;
             }
@@ -457,22 +458,22 @@ namespace Registry.Viewport
         {
             Premise premise = new Premise();
             DataRowView row = (DataRowView)v_premises[v_premises.Position];
-            premise.id_premises = ViewportHelper.ValueOrNull<int>(row, "id_premises");
-            premise.id_building = ViewportHelper.ValueOrNull<int>(row, "id_building");
-            premise.id_state = ViewportHelper.ValueOrNull<int>(row, "id_state");
-            premise.premises_num = ViewportHelper.ValueOrNull(row, "premises_num");
-            premise.living_area = ViewportHelper.ValueOrNull<double>(row, "living_area");
-            premise.total_area = ViewportHelper.ValueOrNull<double>(row, "total_area");
-            premise.height = ViewportHelper.ValueOrNull<double>(row, "height");
-            premise.num_rooms = ViewportHelper.ValueOrNull<short>(row, "num_rooms");
-            premise.num_beds = ViewportHelper.ValueOrNull<short>(row, "num_beds");
-            premise.id_premises_type = ViewportHelper.ValueOrNull<int>(row, "id_premises_type");
-            premise.id_premises_kind = ViewportHelper.ValueOrNull<int>(row, "id_premises_kind");
-            premise.floor = ViewportHelper.ValueOrNull<short>(row, "floor");
-            premise.cadastral_num = ViewportHelper.ValueOrNull(row, "cadastral_num");
-            premise.cadastral_cost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost");
-            premise.balance_cost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost");
-            premise.description = ViewportHelper.ValueOrNull(row, "description");
+            premise.IdPremises = ViewportHelper.ValueOrNull<int>(row, "id_premises");
+            premise.IdBuilding = ViewportHelper.ValueOrNull<int>(row, "id_building");
+            premise.IdState = ViewportHelper.ValueOrNull<int>(row, "id_state");
+            premise.PremisesNum = ViewportHelper.ValueOrNull(row, "premises_num");
+            premise.LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area");
+            premise.TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area");
+            premise.Height = ViewportHelper.ValueOrNull<double>(row, "height");
+            premise.NumRooms = ViewportHelper.ValueOrNull<short>(row, "num_rooms");
+            premise.NumBeds = ViewportHelper.ValueOrNull<short>(row, "num_beds");
+            premise.IdPremisesType = ViewportHelper.ValueOrNull<int>(row, "id_premises_type");
+            premise.IdPremisesKind = ViewportHelper.ValueOrNull<int>(row, "id_premises_kind");
+            premise.Floor = ViewportHelper.ValueOrNull<short>(row, "floor");
+            premise.CadastralNum = ViewportHelper.ValueOrNull(row, "cadastral_num");
+            premise.CadastralCost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost");
+            premise.BalanceCost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost");
+            premise.Description = ViewportHelper.ValueOrNull(row, "description");
             return premise;
         }
 
@@ -480,74 +481,74 @@ namespace Registry.Viewport
         {
             Premise premise = new Premise();
             if (v_premises.Position == -1)
-                premise.id_premises = null;
+                premise.IdPremises = null;
             else
-                premise.id_premises = ViewportHelper.ValueOrNull<int>((DataRowView)v_premises[v_premises.Position],"id_premises");
-            premise.id_building = ViewportHelper.ValueOrNull<int>(comboBoxHouse);
-            premise.id_state = ViewportHelper.ValueOrNull<int>(comboBoxState);
-            premise.premises_num = ViewportHelper.ValueOrNull(textBoxPremisesNumber);
-            premise.total_area = Convert.ToDouble(numericUpDownTotalArea.Value);
-            premise.living_area = Convert.ToDouble(numericUpDownLivingArea.Value);
-            premise.height = Convert.ToDouble(numericUpDownHeight.Value);
-            premise.num_rooms = Convert.ToInt16(numericUpDownNumRooms.Value);
-            premise.num_beds = Convert.ToInt16(numericUpDownNumBeds.Value);
-            premise.id_premises_type = ViewportHelper.ValueOrNull<int>(comboBoxPremisesType);
-            premise.id_premises_kind = ViewportHelper.ValueOrNull<int>(comboBoxPremisesKind);
-            premise.floor = Convert.ToInt16(numericUpDownFloor.Value);
-            premise.cadastral_num = ViewportHelper.ValueOrNull(textBoxCadastralNum);
-            premise.cadastral_cost = numericUpDownCadastralCost.Value;
-            premise.balance_cost = numericUpDownBalanceCost.Value;
-            premise.description = ViewportHelper.ValueOrNull(textBoxDescription);
+                premise.IdPremises = ViewportHelper.ValueOrNull<int>((DataRowView)v_premises[v_premises.Position],"id_premises");
+            premise.IdBuilding = ViewportHelper.ValueOrNull<int>(comboBoxHouse);
+            premise.IdState = ViewportHelper.ValueOrNull<int>(comboBoxState);
+            premise.PremisesNum = ViewportHelper.ValueOrNull(textBoxPremisesNumber);
+            premise.TotalArea = Convert.ToDouble(numericUpDownTotalArea.Value);
+            premise.LivingArea = Convert.ToDouble(numericUpDownLivingArea.Value);
+            premise.Height = Convert.ToDouble(numericUpDownHeight.Value);
+            premise.NumRooms = Convert.ToInt16(numericUpDownNumRooms.Value);
+            premise.NumBeds = Convert.ToInt16(numericUpDownNumBeds.Value);
+            premise.IdPremisesType = ViewportHelper.ValueOrNull<int>(comboBoxPremisesType);
+            premise.IdPremisesKind = ViewportHelper.ValueOrNull<int>(comboBoxPremisesKind);
+            premise.Floor = Convert.ToInt16(numericUpDownFloor.Value);
+            premise.CadastralNum = ViewportHelper.ValueOrNull(textBoxCadastralNum);
+            premise.CadastralCost = numericUpDownCadastralCost.Value;
+            premise.BalanceCost = numericUpDownBalanceCost.Value;
+            premise.Description = ViewportHelper.ValueOrNull(textBoxDescription);
             return premise;
         }
 
         private void ViewportFromPremise(Premise premise)
         {
-            if (premise.id_building != null)
+            if (premise.IdBuilding != null)
             {
-                DataRow building_row = buildings.Select().Rows.Find(premise.id_building);
+                DataRow building_row = buildings.Select().Rows.Find(premise.IdBuilding);
                 if (building_row != null)
                 {
                     v_kladr.Filter = "";
                     comboBoxStreet.SelectedValue = building_row["id_street"];
-                    comboBoxHouse.SelectedValue = ViewportHelper.ValueOrDBNull(premise.id_building);
+                    comboBoxHouse.SelectedValue = ViewportHelper.ValueOrDBNull(premise.IdBuilding);
                 }
             }
-            comboBoxState.SelectedValue = ViewportHelper.ValueOrDBNull(premise.id_state);
-            comboBoxPremisesType.SelectedValue = ViewportHelper.ValueOrDBNull(premise.id_premises_type);
-            comboBoxPremisesKind.SelectedValue = ViewportHelper.ValueOrDBNull(premise.id_premises_kind);
-            numericUpDownFloor.Value = ViewportHelper.ValueOrDefault(premise.floor);
-            numericUpDownCadastralCost.Value = ViewportHelper.ValueOrDefault(premise.cadastral_cost);
-            numericUpDownBalanceCost.Value = ViewportHelper.ValueOrDefault(premise.balance_cost);
-            numericUpDownNumBeds.Value = ViewportHelper.ValueOrDefault(premise.num_beds);
-            numericUpDownNumRooms.Value = ViewportHelper.ValueOrDefault(premise.num_rooms);
-            numericUpDownHeight.Value = (decimal)ViewportHelper.ValueOrDefault(premise.height);
-            numericUpDownLivingArea.Value = (decimal)ViewportHelper.ValueOrDefault(premise.living_area);
-            numericUpDownTotalArea.Value = (decimal)ViewportHelper.ValueOrDefault(premise.total_area);
-            textBoxPremisesNumber.Text = premise.premises_num;
-            textBoxCadastralNum.Text = premise.cadastral_num;
-            textBoxDescription.Text = premise.description;
+            comboBoxState.SelectedValue = ViewportHelper.ValueOrDBNull(premise.IdState);
+            comboBoxPremisesType.SelectedValue = ViewportHelper.ValueOrDBNull(premise.IdPremisesType);
+            comboBoxPremisesKind.SelectedValue = ViewportHelper.ValueOrDBNull(premise.IdPremisesKind);
+            numericUpDownFloor.Value = ViewportHelper.ValueOrDefault(premise.Floor);
+            numericUpDownCadastralCost.Value = ViewportHelper.ValueOrDefault(premise.CadastralCost);
+            numericUpDownBalanceCost.Value = ViewportHelper.ValueOrDefault(premise.BalanceCost);
+            numericUpDownNumBeds.Value = ViewportHelper.ValueOrDefault(premise.NumBeds);
+            numericUpDownNumRooms.Value = ViewportHelper.ValueOrDefault(premise.NumRooms);
+            numericUpDownHeight.Value = (decimal)ViewportHelper.ValueOrDefault(premise.Height);
+            numericUpDownLivingArea.Value = (decimal)ViewportHelper.ValueOrDefault(premise.LivingArea);
+            numericUpDownTotalArea.Value = (decimal)ViewportHelper.ValueOrDefault(premise.TotalArea);
+            textBoxPremisesNumber.Text = premise.PremisesNum;
+            textBoxCadastralNum.Text = premise.CadastralNum;
+            textBoxDescription.Text = premise.Description;
         }
 
         private static void FillRowFromPremise(Premise premise, DataRowView row)
         {
             row.BeginEdit();
-            row["id_premises"] = ViewportHelper.ValueOrDBNull(premise.id_premises);
-            row["id_building"] = ViewportHelper.ValueOrDBNull(premise.id_building);
-            row["id_state"] = ViewportHelper.ValueOrDBNull(premise.id_state);
-            row["premises_num"] = ViewportHelper.ValueOrDBNull(premise.premises_num);
-            row["total_area"] = ViewportHelper.ValueOrDBNull(premise.total_area);
-            row["living_area"] = ViewportHelper.ValueOrDBNull(premise.living_area);
-            row["height"] = ViewportHelper.ValueOrDBNull(premise.height);
-            row["num_rooms"] = ViewportHelper.ValueOrDBNull(premise.num_rooms);
-            row["num_beds"] = ViewportHelper.ValueOrDBNull(premise.num_beds);
-            row["id_premises_type"] = ViewportHelper.ValueOrDBNull(premise.id_premises_type);
-            row["id_premises_kind"] = ViewportHelper.ValueOrDBNull(premise.id_premises_kind);
-            row["floor"] = ViewportHelper.ValueOrDBNull(premise.floor);
-            row["cadastral_num"] = ViewportHelper.ValueOrDBNull(premise.cadastral_num);
-            row["cadastral_cost"] = ViewportHelper.ValueOrDBNull(premise.cadastral_cost);
-            row["balance_cost"] = ViewportHelper.ValueOrDBNull(premise.balance_cost);
-            row["description"] = ViewportHelper.ValueOrDBNull(premise.description);
+            row["id_premises"] = ViewportHelper.ValueOrDBNull(premise.IdPremises);
+            row["id_building"] = ViewportHelper.ValueOrDBNull(premise.IdBuilding);
+            row["id_state"] = ViewportHelper.ValueOrDBNull(premise.IdState);
+            row["premises_num"] = ViewportHelper.ValueOrDBNull(premise.PremisesNum);
+            row["total_area"] = ViewportHelper.ValueOrDBNull(premise.TotalArea);
+            row["living_area"] = ViewportHelper.ValueOrDBNull(premise.LivingArea);
+            row["height"] = ViewportHelper.ValueOrDBNull(premise.Height);
+            row["num_rooms"] = ViewportHelper.ValueOrDBNull(premise.NumRooms);
+            row["num_beds"] = ViewportHelper.ValueOrDBNull(premise.NumBeds);
+            row["id_premises_type"] = ViewportHelper.ValueOrDBNull(premise.IdPremisesType);
+            row["id_premises_kind"] = ViewportHelper.ValueOrDBNull(premise.IdPremisesKind);
+            row["floor"] = ViewportHelper.ValueOrDBNull(premise.Floor);
+            row["cadastral_num"] = ViewportHelper.ValueOrDBNull(premise.CadastralNum);
+            row["cadastral_cost"] = ViewportHelper.ValueOrDBNull(premise.CadastralCost);
+            row["balance_cost"] = ViewportHelper.ValueOrDBNull(premise.BalanceCost);
+            row["description"] = ViewportHelper.ValueOrDBNull(premise.Description);
             row.EndEdit();
         }
 
@@ -656,7 +657,7 @@ namespace Registry.Viewport
             fundTypes.Select();
             object_states.Select();
 
-            DataSet ds = DataSetManager.GetDataSet();
+            DataSet ds = DataSetManager.DataSet;
 
             v_kladr = new BindingSource();
             v_kladr.DataMember = "kladr";
@@ -682,7 +683,7 @@ namespace Registry.Viewport
             v_premises.CurrentItemChanged += new EventHandler(v_premises_CurrentItemChanged);
             v_premises.DataMember = "premises";
             v_premises.Filter = StaticFilter;
-            if (StaticFilter != "" && DynamicFilter != "")
+            if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
                 v_premises.Filter += " AND ";
             v_premises.Filter += DynamicFilter;
             v_premises.DataSource = ds;
@@ -751,10 +752,10 @@ namespace Registry.Viewport
             Premise premise = PremiseFromView();
             DataRowView row = (DataRowView)v_premises.AddNew();
             premises.EditingNewRecord = true;
-            if (premise.id_building != null)
+            if (premise.IdBuilding != null)
             {
-                comboBoxStreet.SelectedValue = premise.id_building;
-                comboBoxHouse.SelectedValue = premise.id_building;
+                comboBoxStreet.SelectedValue = premise.IdBuilding;
+                comboBoxHouse.SelectedValue = premise.IdBuilding;
             }
             ViewportFromPremise(premise);
             is_editable = true;
@@ -782,7 +783,7 @@ namespace Registry.Viewport
 
         public override bool SearchedRecords()
         {
-            if (DynamicFilter != "")
+            if (!String.IsNullOrEmpty(DynamicFilter))
                 return true;
             else
                 return false;
@@ -810,7 +811,7 @@ namespace Registry.Viewport
                     break;
             }
             string Filter = StaticFilter;
-            if (StaticFilter != "" && DynamicFilter != "")
+            if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
                 Filter += " AND ";
             Filter += DynamicFilter;
             is_editable = false;
@@ -835,7 +836,8 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите удалить это помещение?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Вы действительно хотите удалить это помещение?", "Внимание",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 int id_building = (int)((DataRowView)v_premises[v_premises.Position])["id_building"];
                 if (PremisesDataModel.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
@@ -843,7 +845,9 @@ namespace Registry.Viewport
                 is_editable = false;
                 ((DataRowView)v_premises[v_premises.Position]).Delete();
                 is_editable = true;
-                menuCallback.ForceCloseDetachedViewports();
+                viewportState = ViewportState.ReadState;
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.ForceCloseDetachedViewports();
                 CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building);
                 CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building);
                 CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
@@ -857,7 +861,7 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            PremisesViewport viewport = new PremisesViewport(this, menuCallback);
+            PremisesViewport viewport = new PremisesViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             if (v_premises.Count > 0)
@@ -877,10 +881,11 @@ namespace Registry.Viewport
             bool updateSubPremisesState = false;
             if (!ValidatePremise(premise))
                 return;
-            if ((viewportState == ViewportState.ModifyRowState) && (premise.id_state != PremiseFromView().id_state))
+            if ((viewportState == ViewportState.ModifyRowState) && (premise.IdState != PremiseFromView().IdState))
             {
                 if (MessageBox.Show("Вы пытаетесь изменить состояние помещения. В результате всем комнатам данного помещения будет назначено то же состояние. " +
-                    "Вы уверены, что хотите сохранить данные?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                    "Вы уверены, что хотите сохранить данные?", "Внимание",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                     return;
                 updateSubPremisesState = true;
             }
@@ -888,14 +893,14 @@ namespace Registry.Viewport
             {
                 case ViewportState.ReadState:
                     MessageBox.Show("Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
                     int id_premise = PremisesDataModel.Insert(premise);
                     if (id_premise == -1)
                         return;
                     DataRowView newRow;
-                    premise.id_premises = id_premise;
+                    premise.IdPremises = id_premise;
                     is_editable = false;
                     if (v_premises.Position == -1)
                         newRow = (DataRowView)v_premises.AddNew();
@@ -904,18 +909,19 @@ namespace Registry.Viewport
                     FillRowFromPremise(premise, newRow);
                     premises.EditingNewRecord = false;
                     if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                        this.Text = String.Format("Помещение №{0} здания №{1}",
-                            id_premise.ToString(), ParentRow["id_building"]);
+                        this.Text = String.Format(CultureInfo.CurrentCulture, "Помещение №{0} здания №{1}",
+                            id_premise.ToString(CultureInfo.CurrentCulture), ParentRow["id_building"]);
                     else
-                        this.Text = String.Format("Помещение №{0}", id_premise.ToString());
+                        this.Text = String.Format(CultureInfo.CurrentCulture, "Помещение №{0}", id_premise.ToString(CultureInfo.CurrentCulture));
                     viewportState = ViewportState.ReadState;
                     is_editable = true;
                     break;
                 case ViewportState.ModifyRowState:
-                    if (premise.id_premises == null)
+                    if (premise.IdPremises == null)
                     {
                         MessageBox.Show("Вы пытаетесь изменить помещение без внутренного номера. " +
-                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
                     if (PremisesDataModel.Update(premise) == -1)
@@ -928,17 +934,18 @@ namespace Registry.Viewport
                         for (int i = 0; i < v_sub_premises.Count; i++)
                         {
                             DataRowView subPremiseRow = (DataRowView)v_sub_premises[i];
-                            subPremiseRow["id_state"] = premise.id_state;
+                            subPremiseRow["id_state"] = premise.IdState;
                             subPremiseRow.EndEdit();
                         }
                     }
                     viewportState = ViewportState.ReadState;
-                    CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, premise.id_premises);
+                    CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, premise.IdPremises);
                     break;
             }
             is_editable = true;
-            menuCallback.EditingStateUpdate();
-            CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building, premise.id_building);
+            MenuCallback.EditingStateUpdate();
+            SetViewportCaption();
+            CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building, premise.IdBuilding);
         }
 
         public override bool CanCancelRecord()
@@ -970,12 +977,14 @@ namespace Registry.Viewport
                     break;
             }
             is_editable = true;
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
             SetViewportCaption();
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            if (e == null)
+                return;
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
         }
@@ -1033,11 +1042,12 @@ namespace Registry.Viewport
                 return;
             if (v_premises.Position == -1)
             {
-                MessageBox.Show("Не выбрано помещение", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Не выбрано помещение", "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport(menuCallback, viewportType,
-                "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"]),
+            ShowAssocViewport(MenuCallback, viewportType,
+                "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"], CultureInfo.CurrentCulture),
                 ((DataRowView)v_premises[v_premises.Position]).Row,
                 ParentTypeEnum.Premises);
         }
@@ -1228,7 +1238,7 @@ namespace Registry.Viewport
             FiltersRebuild();
             SelectCurrentBuilding();
             if (Selected)
-                menuCallback.NavigationStateUpdate();
+                MenuCallback.NavigationStateUpdate();
             if (v_premises.Position == -1)
                 return;
             if (viewportState == ViewportState.NewRowState)

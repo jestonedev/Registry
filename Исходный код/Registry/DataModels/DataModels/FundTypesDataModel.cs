@@ -21,7 +21,7 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_fund_type"] };
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_fund_type"] };
         }
 
         public static FundTypesDataModel GetInstance()

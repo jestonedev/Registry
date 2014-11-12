@@ -7,32 +7,26 @@ namespace Registry.Entities
 {
     public sealed class Premise
     {
-        public int? id_premises { get; set; }
-        public int? id_building { get; set; }
-        public int? id_state { get; set; }
-        public string premises_num { get; set; }
-        public double? total_area { get; set; }
-        public double? living_area { get; set; }
-        public double? height { get; set; }
-        public short? num_rooms { get; set; }
-        public short? num_beds { get; set; }
-        public int? id_premises_type { get; set; }
-        public int? id_premises_kind { get; set; }
-        public short? floor { get; set; }
-        public string cadastral_num { get; set; }
-        public decimal? cadastral_cost { get; set; }
-        public decimal? balance_cost { get; set; }
-        public string description { get; set; }
+        public int? IdPremises { get; set; }
+        public int? IdBuilding { get; set; }
+        public int? IdState { get; set; }
+        public string PremisesNum { get; set; }
+        public double? TotalArea { get; set; }
+        public double? LivingArea { get; set; }
+        public double? Height { get; set; }
+        public short? NumRooms { get; set; }
+        public short? NumBeds { get; set; }
+        public int? IdPremisesType { get; set; }
+        public int? IdPremisesKind { get; set; }
+        public short? Floor { get; set; }
+        public string CadastralNum { get; set; }
+        public decimal? CadastralCost { get; set; }
+        public decimal? BalanceCost { get; set; }
+        public string Description { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is Premise))
-                return false;
-            Premise obj_premise = (Premise)obj;
-            if (this == obj_premise)
-                return true;
-            else
-                return false;
+            return (this == (obj as Premise));
         }
 
         public bool Equals(Premise other)
@@ -42,22 +36,28 @@ namespace Registry.Entities
 
         public static bool operator ==(Premise first, Premise second)
         {
-            return first.id_premises == second.id_premises &&
-                first.id_building == second.id_building &&
-                first.premises_num == second.premises_num &&
-                first.total_area == second.total_area &&
-                first.living_area == second.living_area &&
-                first.height == second.height &&
-                first.num_rooms == second.num_rooms &&
-                first.num_beds == second.num_beds &&
-                first.id_premises_type == second.id_premises_type &&
-                first.id_premises_kind == second.id_premises_kind &&
-                first.floor == second.floor &&
-                first.description == second.description &&
-                first.cadastral_num == second.cadastral_num &&
-                first.cadastral_cost == second.cadastral_cost &&
-                first.balance_cost == second.balance_cost &&
-                first.id_state == second.id_state;
+            if ((object)first == null && (object)second == null)
+                return true;
+            else
+                if ((object)first == null || (object)second == null)
+                    return false;
+                else
+            return first.IdPremises == second.IdPremises &&
+                first.IdBuilding == second.IdBuilding &&
+                first.PremisesNum == second.PremisesNum &&
+                first.TotalArea == second.TotalArea &&
+                first.LivingArea == second.LivingArea &&
+                first.Height == second.Height &&
+                first.NumRooms == second.NumRooms &&
+                first.NumBeds == second.NumBeds &&
+                first.IdPremisesType == second.IdPremisesType &&
+                first.IdPremisesKind == second.IdPremisesKind &&
+                first.Floor == second.Floor &&
+                first.Description == second.Description &&
+                first.CadastralNum == second.CadastralNum &&
+                first.CadastralCost == second.CadastralCost &&
+                first.BalanceCost == second.BalanceCost &&
+                first.IdState == second.IdState;
         }
 
         public static bool operator !=(Premise first, Premise second)

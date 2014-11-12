@@ -7,6 +7,7 @@ using Registry.DataModels;
 using System.Data;
 using Registry.Entities;
 using Security;
+using System.Globalization;
 
 namespace Registry.Viewport
 {
@@ -39,6 +40,7 @@ namespace Registry.Viewport
         public StructureTypeListViewport(IMenuCallback menuCallback): base(menuCallback)
         {
             InitializeComponent();
+            snapshot_structure_types.Locale = CultureInfo.CurrentCulture;
         }
 
         public StructureTypeListViewport(StructureTypeListViewport structureTypeListViewport, IMenuCallback menuCallback)
@@ -65,7 +67,7 @@ namespace Registry.Viewport
             return false;
         }
 
-        private object[] DataRowViewToArray(DataRowView dataRowView)
+        private static object[] DataRowViewToArray(DataRowView dataRowView)
         {
             return new object[] { 
                 dataRowView["id_structure_type"], 
@@ -73,30 +75,30 @@ namespace Registry.Viewport
             };
         }
 
-        private bool ValidateViewportData(List<StructureType> list)
+        private static bool ValidateViewportData(List<StructureType> list)
         {
             foreach (StructureType structureType in list)
             {
-                if (structureType.structure_type == null)
+                if (structureType.StructureTypeName == null)
                 {
-                    MessageBox.Show("Не заполнено наименование структуры здания", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Не заполнено наименование структуры здания", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
-                if (structureType.structure_type != null && structureType.structure_type.Length > 255)
+                if (structureType.StructureTypeName != null && structureType.StructureTypeName.Length > 255)
                 {
                     MessageBox.Show("Длина названия структуры здания не может превышать 255 символов",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
             }
             return true;
         }
 
-        private StructureType RowToStructureType(DataRow row)
+        private static StructureType RowToStructureType(DataRow row)
         {
             StructureType structureType = new StructureType();
-            structureType.id_structure_type = ViewportHelper.ValueOrNull<int>(row, "id_structure_type");
-            structureType.structure_type = ViewportHelper.ValueOrNull(row, "structure_type");
+            structureType.IdStructureType = ViewportHelper.ValueOrNull<int>(row, "id_structure_type");
+            structureType.StructureTypeName = ViewportHelper.ValueOrNull(row, "structure_type");
             return structureType;
         }
 
@@ -109,8 +111,8 @@ namespace Registry.Viewport
                 {
                     StructureType st = new StructureType();
                     DataGridViewRow row = dataGridView.Rows[i];
-                    st.id_structure_type = ViewportHelper.ValueOrNull<int>(row, "id_structure_type");
-                    st.structure_type = ViewportHelper.ValueOrNull(row, "structure_type");
+                    st.IdStructureType = ViewportHelper.ValueOrNull<int>(row, "id_structure_type");
+                    st.StructureTypeName = ViewportHelper.ValueOrNull(row, "structure_type");
                     list.Add(st);
                 }
             }
@@ -124,8 +126,8 @@ namespace Registry.Viewport
             {
                 StructureType st = new StructureType();
                 DataRowView row = ((DataRowView)v_structure_types[i]);
-                st.id_structure_type = ViewportHelper.ValueOrNull<int>(row, "id_structure_type");
-                st.structure_type = ViewportHelper.ValueOrNull(row, "structure_type");
+                st.IdStructureType = ViewportHelper.ValueOrNull<int>(row, "id_structure_type");
+                st.StructureTypeName = ViewportHelper.ValueOrNull(row, "structure_type");
                 list.Add(st);
             }
             return list;
@@ -191,7 +193,7 @@ namespace Registry.Viewport
 
             v_structure_types = new BindingSource();
             v_structure_types.DataMember = "structure_types";
-            v_structure_types.DataSource = DataSetManager.GetDataSet();
+            v_structure_types.DataSource = DataSetManager.DataSet;
 
             //Инициируем колонки snapshot-модели
             for (int i = 0; i < structure_types.Select().Columns.Count; i++)
@@ -247,7 +249,7 @@ namespace Registry.Viewport
             snapshot_structure_types.Clear();
             for (int i = 0; i < v_structure_types.Count; i++)
                 snapshot_structure_types.Rows.Add(DataRowViewToArray(((DataRowView)v_structure_types[i])));
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanSaveRecord()
@@ -266,7 +268,7 @@ namespace Registry.Viewport
             }
             for (int i = 0; i < list.Count; i++)
             {
-                DataRow row = structure_types.Select().Rows.Find(((StructureType)list[i]).id_structure_type);
+                DataRow row = structure_types.Select().Rows.Find(((StructureType)list[i]).IdStructureType);
                 if (row == null)
                 {
                     int id_structure_type = StructureTypesDataModel.Insert(list[i]);
@@ -287,7 +289,7 @@ namespace Registry.Viewport
                         sync_views = true;
                         return;
                     }
-                    row["structure_type"] = list[i].structure_type == null ? DBNull.Value : (object)list[i].structure_type;
+                    row["structure_type"] = list[i].StructureTypeName == null ? DBNull.Value : (object)list[i].StructureTypeName;
                 }
             }
             list = StructureTypesFromView();
@@ -296,21 +298,21 @@ namespace Registry.Viewport
                 int row_index = -1;
                 for (int j = 0; j < dataGridView.Rows.Count; j++)
                     if ((dataGridView.Rows[j].Cells["id_structure_type"].Value != null) &&
-                        (dataGridView.Rows[j].Cells["id_structure_type"].Value.ToString() != "") &&
-                        ((int)dataGridView.Rows[j].Cells["id_structure_type"].Value == list[i].id_structure_type))
+                        !String.IsNullOrEmpty(dataGridView.Rows[j].Cells["id_structure_type"].Value.ToString()) &&
+                        ((int)dataGridView.Rows[j].Cells["id_structure_type"].Value == list[i].IdStructureType))
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (StructureTypesDataModel.Delete(list[i].id_structure_type.Value) == -1)
+                    if (StructureTypesDataModel.Delete(list[i].IdStructureType.Value) == -1)
                     {
                         sync_views = true;
                         return;
                     }
-                    structure_types.Select().Rows.Find(((StructureType)list[i]).id_structure_type).Delete();
+                    structure_types.Select().Rows.Find(((StructureType)list[i]).IdStructureType).Delete();
                 }
             }
             sync_views = true;
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanDuplicate()
@@ -320,7 +322,7 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            StructureTypeListViewport viewport = new StructureTypeListViewport(this, menuCallback);
+            StructureTypeListViewport viewport = new StructureTypeListViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             return viewport;
@@ -328,10 +330,12 @@ namespace Registry.Viewport
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            if (e == null)
+                return;
             if (SnapshotHasChanges())
             {
                 DialogResult result = MessageBox.Show("Сохранить изменения о структуре зданий в базу данных?", "Внимание",
-                                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                 if (result == DialogResult.Yes)
                     SaveRecord();
                 else
@@ -384,7 +388,7 @@ namespace Registry.Viewport
 
         void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
@@ -396,7 +400,7 @@ namespace Registry.Viewport
                     if (cell.Value.ToString().Trim().Length > 255)
                         cell.ErrorText = "Длина названия структуры здания не может превышать 255 символов";
                     else
-                        if (cell.Value.ToString().Trim() == "")
+                        if (String.IsNullOrEmpty(cell.Value.ToString().Trim()))
                             cell.ErrorText = "Название структуры здания не может быть пустым";
                         else
                             cell.ErrorText = "";
@@ -407,7 +411,7 @@ namespace Registry.Viewport
         void v_snapshot_structure_types_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
-                menuCallback.NavigationStateUpdate();
+                MenuCallback.NavigationStateUpdate();
         }
 
         private void InitializeComponent()

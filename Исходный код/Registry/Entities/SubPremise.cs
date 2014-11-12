@@ -7,22 +7,16 @@ namespace Registry.Entities
 {
     public sealed class SubPremise
     {
-        public int? id_sub_premises { get; set; }
-        public int? id_premises { get; set; }
-        public int? id_state { get; set; }
-        public string sub_premises_num { get; set; }
-        public string description { get; set; }
-        public double? total_area { get; set; }
+        public int? IdSubPremises { get; set; }
+        public int? IdPremises { get; set; }
+        public int? IdState { get; set; }
+        public string SubPremisesNum { get; set; }
+        public string Description { get; set; }
+        public double? TotalArea { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is SubPremise))
-                return false;
-            SubPremise obj_sub_premise = (SubPremise)obj;
-            if (this == obj_sub_premise)
-                return true;
-            else
-                return false;
+            return (this == (obj as SubPremise));
         }
 
         public bool Equals(SubPremise other)
@@ -32,12 +26,18 @@ namespace Registry.Entities
 
         public static bool operator ==(SubPremise first, SubPremise second)
         {
-            return first.id_sub_premises == second.id_sub_premises &&
-                first.id_premises == second.id_premises &&
-                first.sub_premises_num == second.sub_premises_num &&
-                first.total_area == second.total_area &&
-                first.description == second.description &&
-                first.id_state == second.id_state;
+            if ((object)first == null && (object)second == null)
+                return true;
+            else
+                if ((object)first == null || (object)second == null)
+                    return false;
+                else
+            return first.IdSubPremises == second.IdSubPremises &&
+                first.IdPremises == second.IdPremises &&
+                first.SubPremisesNum == second.SubPremisesNum &&
+                first.TotalArea == second.TotalArea &&
+                first.Description == second.Description &&
+                first.IdState == second.IdState;
         }
 
         public static bool operator !=(SubPremise first, SubPremise second)

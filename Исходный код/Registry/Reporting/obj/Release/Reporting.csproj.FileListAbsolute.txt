@@ -122,3 +122,5 @@ D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\obj\Release\Reporting.csproj.GenerateResource.Cache
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\obj\Release\Reporting.dll
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\obj\Release\Reporting.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\bin\Release\Reporting.dll.CodeAnalysisLog.xml
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Reporting\bin\Release\Reporting.dll.lastcodeanalysissucceeded

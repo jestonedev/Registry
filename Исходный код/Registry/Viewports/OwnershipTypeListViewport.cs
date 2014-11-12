@@ -7,6 +7,7 @@ using Registry.DataModels;
 using System.Data;
 using Registry.Entities;
 using Security;
+using System.Globalization;
 
 namespace Registry.Viewport
 {
@@ -39,6 +40,7 @@ namespace Registry.Viewport
         public OwnershipTypeListViewport(IMenuCallback menuCallback): base(menuCallback)
         {
             InitializeComponent();
+            snapshot_ownership_right_types.Locale = CultureInfo.CurrentCulture;
         }
 
         public OwnershipTypeListViewport(OwnershipTypeListViewport ownershipTypeListViewport, IMenuCallback menuCallback)
@@ -65,7 +67,7 @@ namespace Registry.Viewport
             return false;
         }
 
-        private object[] DataRowViewToArray(DataRowView dataRowView)
+        private static object[] DataRowViewToArray(DataRowView dataRowView)
         {
             return new object[] { 
                 dataRowView["id_ownership_right_type"], 
@@ -73,30 +75,31 @@ namespace Registry.Viewport
             };
         }
 
-        private bool ValidateViewportData(List<OwnershipRightType> list)
+        private static bool ValidateViewportData(List<OwnershipRightType> list)
         {
             foreach (OwnershipRightType ownershipRightType in list)
             {
-                if (ownershipRightType.ownership_right_type == null)
+                if (ownershipRightType.OwnershipRightTypeName == null)
                 {
-                    MessageBox.Show("Не заполнено наименование типа ограничения", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Не заполнено наименование типа ограничения", "Ошибка", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
-                if (ownershipRightType.ownership_right_type != null && ownershipRightType.ownership_right_type.Length > 255)
+                if (ownershipRightType.OwnershipRightTypeName != null && ownershipRightType.OwnershipRightTypeName.Length > 255)
                 {
-                    MessageBox.Show("Длина названия типа ограничения не может превышать 255 символов",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Длина названия типа ограничения не может превышать 255 символов", "Ошибка", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
             }
             return true;
         }
 
-        private OwnershipRightType RowToOwnershipRightType(DataRow row)
+        private static OwnershipRightType RowToOwnershipRightType(DataRow row)
         {
             OwnershipRightType ownershipRightType = new OwnershipRightType();
-            ownershipRightType.id_ownership_right_type = ViewportHelper.ValueOrNull<int>(row, "id_ownership_right_type");
-            ownershipRightType.ownership_right_type = ViewportHelper.ValueOrNull(row, "ownership_right_type");
+            ownershipRightType.IdOwnershipRightType = ViewportHelper.ValueOrNull<int>(row, "id_ownership_right_type");
+            ownershipRightType.OwnershipRightTypeName = ViewportHelper.ValueOrNull(row, "ownership_right_type");
             return ownershipRightType;
         }
 
@@ -109,8 +112,8 @@ namespace Registry.Viewport
                 {
                     OwnershipRightType ort = new OwnershipRightType();
                     DataGridViewRow row = dataGridView.Rows[i];
-                    ort.id_ownership_right_type = ViewportHelper.ValueOrNull<int>(row, "id_ownership_right_type");
-                    ort.ownership_right_type = ViewportHelper.ValueOrNull(row, "ownership_right_type");
+                    ort.IdOwnershipRightType = ViewportHelper.ValueOrNull<int>(row, "id_ownership_right_type");
+                    ort.OwnershipRightTypeName = ViewportHelper.ValueOrNull(row, "ownership_right_type");
                     list.Add(ort);
                 }
             }
@@ -124,8 +127,8 @@ namespace Registry.Viewport
             {
                 OwnershipRightType ort = new OwnershipRightType();
                 DataRowView row = ((DataRowView)v_ownership_right_types[i]);
-                ort.id_ownership_right_type = ViewportHelper.ValueOrNull<int>(row, "id_ownership_right_type");
-                ort.ownership_right_type = ViewportHelper.ValueOrNull(row, "ownership_right_type");
+                ort.IdOwnershipRightType = ViewportHelper.ValueOrNull<int>(row, "id_ownership_right_type");
+                ort.OwnershipRightTypeName = ViewportHelper.ValueOrNull(row, "ownership_right_type");
                 list.Add(ort);
             }
             return list;
@@ -190,7 +193,7 @@ namespace Registry.Viewport
 
             v_ownership_right_types = new BindingSource();
             v_ownership_right_types.DataMember = "ownership_right_types";
-            v_ownership_right_types.DataSource = DataSetManager.GetDataSet();
+            v_ownership_right_types.DataSource = DataSetManager.DataSet;
 
             //Инициируем колонки snapshot-модели
             for (int i = 0; i < ownership_right_types.Select().Columns.Count; i++)
@@ -246,7 +249,7 @@ namespace Registry.Viewport
             snapshot_ownership_right_types.Clear();
             for (int i = 0; i < v_ownership_right_types.Count; i++)
                 snapshot_ownership_right_types.Rows.Add(DataRowViewToArray(((DataRowView)v_ownership_right_types[i])));
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanSaveRecord()
@@ -265,7 +268,7 @@ namespace Registry.Viewport
             }
             for (int i = 0; i < list.Count; i++)
             {
-                DataRow row = ownership_right_types.Select().Rows.Find(((OwnershipRightType)list[i]).id_ownership_right_type);
+                DataRow row = ownership_right_types.Select().Rows.Find(((OwnershipRightType)list[i]).IdOwnershipRightType);
                 if (row == null)
                 {
                     int id_ownership_right_type = OwnershipRightTypesDataModel.Insert(list[i]);
@@ -286,7 +289,7 @@ namespace Registry.Viewport
                         sync_views = true;
                         return;
                     }
-                    row["ownership_right_type"] = list[i].ownership_right_type == null ? DBNull.Value : (object)list[i].ownership_right_type;
+                    row["ownership_right_type"] = list[i].OwnershipRightTypeName == null ? DBNull.Value : (object)list[i].OwnershipRightTypeName;
                 }
             }
             list = OwnershipRightTypesFromView();
@@ -295,21 +298,21 @@ namespace Registry.Viewport
                 int row_index = -1;
                 for (int j = 0; j < dataGridView.Rows.Count; j++)
                     if ((dataGridView.Rows[j].Cells["id_ownership_right_type"].Value != null) &&
-                        (dataGridView.Rows[j].Cells["id_ownership_right_type"].Value.ToString() != "") &&
-                        ((int)dataGridView.Rows[j].Cells["id_ownership_right_type"].Value == list[i].id_ownership_right_type))
+                        !String.IsNullOrEmpty(dataGridView.Rows[j].Cells["id_ownership_right_type"].Value.ToString()) &&
+                        ((int)dataGridView.Rows[j].Cells["id_ownership_right_type"].Value == list[i].IdOwnershipRightType))
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (OwnershipRightTypesDataModel.Delete(list[i].id_ownership_right_type.Value) == -1)
+                    if (OwnershipRightTypesDataModel.Delete(list[i].IdOwnershipRightType.Value) == -1)
                     {
                         sync_views = true;
                         return;
                     }
-                    ownership_right_types.Select().Rows.Find(((OwnershipRightType)list[i]).id_ownership_right_type).Delete();
+                    ownership_right_types.Select().Rows.Find(((OwnershipRightType)list[i]).IdOwnershipRightType).Delete();
                 }
             }
             sync_views = true;
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanDuplicate()
@@ -319,7 +322,7 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            OwnershipTypeListViewport viewport = new OwnershipTypeListViewport(this, menuCallback);
+            OwnershipTypeListViewport viewport = new OwnershipTypeListViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             return viewport;
@@ -327,10 +330,12 @@ namespace Registry.Viewport
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            if (e == null)
+                return;
             if (SnapshotHasChanges())
             {
                 DialogResult result = MessageBox.Show("Сохранить изменения о типах ограничений в базу данных?", "Внимание",
-                                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                 if (result == DialogResult.Yes)
                     SaveRecord();
                 else
@@ -384,12 +389,12 @@ namespace Registry.Viewport
         void v_snapshot_ownership_right_types_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
-                menuCallback.NavigationStateUpdate();
+                MenuCallback.NavigationStateUpdate();
         }
 
         void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
@@ -401,7 +406,7 @@ namespace Registry.Viewport
                     if (cell.Value.ToString().Trim().Length > 255)
                         cell.ErrorText = "Длина названия типа ограничения не может превышать 255 символов";
                     else
-                        if (cell.Value.ToString().Trim() == "")
+                        if (String.IsNullOrEmpty(cell.Value.ToString().Trim()))
                             cell.ErrorText = "Название типа ограничения не может быть пустым";
                         else
                             cell.ErrorText = "";

@@ -33,7 +33,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Произошла ошибка при установке соединения с базой данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     Application.Exit();
                 }
         }
@@ -69,6 +69,8 @@ namespace Registry.DataModels
 
         public DataTable SqlSelectTable(string resultTableName, DbCommand command)
         {
+            if (command == null)
+                throw new DataModelException("Не передана ссылка на исполняемую команду SQL");
             command.Connection = connection;
             if (transaction != null)
                 command.Transaction = transaction;
@@ -84,6 +86,8 @@ namespace Registry.DataModels
 
         public int SqlModifyQuery(DbCommand command)
         {
+            if (command == null)
+                throw new DataModelException("Не передана ссылка на исполняемую команду SQL");
             command.Connection = connection;
             if (transaction != null)
                 command.Transaction = transaction;

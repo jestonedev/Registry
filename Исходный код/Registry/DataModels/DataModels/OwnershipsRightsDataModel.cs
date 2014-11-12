@@ -30,7 +30,7 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_ownership_right"] };
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_ownership_right"] };
         }
 
         public static OwnershipsRightsDataModel GetInstance()
@@ -45,7 +45,7 @@ namespace Registry.DataModels
             return dataModel;
         }
 
-        public static int Insert(Entities.OwnershipRight ownershipRight, ParentTypeEnum parentType, int idParent)
+        public static int Insert(OwnershipRight ownershipRight, ParentTypeEnum parentType, int idParent)
         {
             using (DBConnection connection = new DBConnection())
             using (DbCommand command = DBConnection.CreateCommand())
@@ -54,11 +54,16 @@ namespace Registry.DataModels
             {
                 last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
                 command.CommandText = insertQuery;
-
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right_type", ownershipRight.id_ownership_right_type));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("number", ownershipRight.number));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date", ownershipRight.date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", ownershipRight.description));
+                if (ownershipRight == null)
+                {
+                    MessageBox.Show("В метод Insert не передана ссылка на объект ограничения права", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right_type", ownershipRight.IdOwnershipRightType));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("number", ownershipRight.Number));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date", ownershipRight.Date));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", ownershipRight.Description));
 
                 if (parentType == ParentTypeEnum.Building)
                     command_assoc.CommandText = "INSERT INTO ownership_buildings_assoc (id_building, id_ownership_right) VALUES (?, ?)";
@@ -68,7 +73,7 @@ namespace Registry.DataModels
                     else
                     {
                         MessageBox.Show("Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
-                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return -1;
                     }
                 try
@@ -79,7 +84,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         connection.SqlRollbackTransaction();
                         return -1;
                     }
@@ -95,24 +100,29 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture,
                         "Не удалось добавить наименование ограничения в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
         }
 
-        public static int Update(Entities.OwnershipRight ownershipRight)
+        public static int Update(OwnershipRight ownershipRight)
         {
             using (DBConnection connection = new DBConnection())
             using (DbCommand command = DBConnection.CreateCommand())
             {
                 command.CommandText = updateQuery;
-
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right_type", ownershipRight.id_ownership_right_type));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("number", ownershipRight.number));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date", ownershipRight.date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", ownershipRight.description));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right", ownershipRight.id_ownership_right));
+                if (ownershipRight == null)
+                {
+                    MessageBox.Show("В метод Update не передана ссылка на объект ограничения права", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right_type", ownershipRight.IdOwnershipRightType));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("number", ownershipRight.Number));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date", ownershipRight.Date));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", ownershipRight.Description));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right", ownershipRight.IdOwnershipRight));
 
                 try
                 {
@@ -123,7 +133,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось изменить наименование ограничения в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -144,7 +154,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось удалить ограничение из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

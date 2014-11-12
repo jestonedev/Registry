@@ -114,7 +114,7 @@ namespace Registry.Viewport
                 if (viewportState == ViewportState.ReadState)
                 {
                     viewportState = ViewportState.ModifyRowState;
-                    menuCallback.EditingStateUpdate();
+                    MenuCallback.EditingStateUpdate();
                     dataGridView.Enabled = false;
                 }
             }
@@ -123,7 +123,7 @@ namespace Registry.Viewport
                 if (viewportState == ViewportState.ModifyRowState)
                 {
                     viewportState = ViewportState.ReadState;
-                    menuCallback.EditingStateUpdate();
+                    MenuCallback.EditingStateUpdate();
                     dataGridView.Enabled = true;
                 }
             }
@@ -141,7 +141,7 @@ namespace Registry.Viewport
                         case ViewportState.NewRowState:
                         case ViewportState.ModifyRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -169,7 +169,7 @@ namespace Registry.Viewport
                             return true;
                         case ViewportState.ModifyRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -193,7 +193,7 @@ namespace Registry.Viewport
                             return true;
                         case ViewportState.NewRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -222,29 +222,29 @@ namespace Registry.Viewport
 
         private void ViewportFromWarrant(Warrant warrant)
         {
-            comboBoxWarrantDocType.SelectedValue = ViewportHelper.ValueOrDBNull(warrant.id_warrant_doc_type);
-            dateTimePickerWarrantDate.Value = ViewportHelper.ValueOrDefault(warrant.registration_date);
-            textBoxWarrantDescription.Text = warrant.description;
-            textBoxWarrantRegNum.Text = warrant.registration_num;
-            textBoxWarrantNotary.Text = warrant.notary;
-            textBoxWarrantDistrict.Text = warrant.notary_district;
-            textBoxWarrantOnBehalfOf.Text = warrant.on_behalf_of;
+            comboBoxWarrantDocType.SelectedValue = ViewportHelper.ValueOrDBNull(warrant.IdWarrantDocType);
+            dateTimePickerWarrantDate.Value = ViewportHelper.ValueOrDefault(warrant.RegistrationDate);
+            textBoxWarrantDescription.Text = warrant.Description;
+            textBoxWarrantRegNum.Text = warrant.RegistrationNum;
+            textBoxWarrantNotary.Text = warrant.Notary;
+            textBoxWarrantDistrict.Text = warrant.NotaryDistrict;
+            textBoxWarrantOnBehalfOf.Text = warrant.OnBehalfOf;
         }
 
         private Warrant WarrantFromViewport()
         {
             Warrant warrant = new Warrant();
             if (v_warrants.Position == -1)
-                warrant.id_warrant = null;
+                warrant.IdWarrant = null;
             else
-                warrant.id_warrant = ViewportHelper.ValueOrNull<int>((DataRowView)v_warrants[v_warrants.Position],"id_warrant");
-            warrant.id_warrant_doc_type = ViewportHelper.ValueOrNull<int>(comboBoxWarrantDocType);
-            warrant.registration_num = ViewportHelper.ValueOrNull(textBoxWarrantRegNum);
-            warrant.on_behalf_of = ViewportHelper.ValueOrNull(textBoxWarrantOnBehalfOf);
-            warrant.notary = ViewportHelper.ValueOrNull(textBoxWarrantNotary);
-            warrant.notary_district = ViewportHelper.ValueOrNull(textBoxWarrantDistrict);
-            warrant.description = ViewportHelper.ValueOrNull(textBoxWarrantDescription);
-            warrant.registration_date = dateTimePickerWarrantDate.Value;
+                warrant.IdWarrant = ViewportHelper.ValueOrNull<int>((DataRowView)v_warrants[v_warrants.Position],"id_warrant");
+            warrant.IdWarrantDocType = ViewportHelper.ValueOrNull<int>(comboBoxWarrantDocType);
+            warrant.RegistrationNum = ViewportHelper.ValueOrNull(textBoxWarrantRegNum);
+            warrant.OnBehalfOf = ViewportHelper.ValueOrNull(textBoxWarrantOnBehalfOf);
+            warrant.Notary = ViewportHelper.ValueOrNull(textBoxWarrantNotary);
+            warrant.NotaryDistrict = ViewportHelper.ValueOrNull(textBoxWarrantDistrict);
+            warrant.Description = ViewportHelper.ValueOrNull(textBoxWarrantDescription);
+            warrant.RegistrationDate = dateTimePickerWarrantDate.Value;
             return warrant;
         }
 
@@ -252,44 +252,44 @@ namespace Registry.Viewport
         {
             Warrant warrant = new Warrant();
             DataRowView row = (DataRowView)v_warrants[v_warrants.Position];
-            warrant.id_warrant = ViewportHelper.ValueOrNull<int>(row, "id_warrant");
-            warrant.id_warrant_doc_type = ViewportHelper.ValueOrNull<int>(row, "id_warrant_doc_type");
-            warrant.registration_num = ViewportHelper.ValueOrNull(row, "registration_num");
-            warrant.registration_date = ViewportHelper.ValueOrNull<DateTime>(row, "registration_date");
-            warrant.on_behalf_of = ViewportHelper.ValueOrNull(row, "on_behalf_of");
-            warrant.notary = ViewportHelper.ValueOrNull(row, "notary");
-            warrant.notary_district = ViewportHelper.ValueOrNull(row, "notary_district");
-            warrant.description = ViewportHelper.ValueOrNull(row, "description");
+            warrant.IdWarrant = ViewportHelper.ValueOrNull<int>(row, "id_warrant");
+            warrant.IdWarrantDocType = ViewportHelper.ValueOrNull<int>(row, "id_warrant_doc_type");
+            warrant.RegistrationNum = ViewportHelper.ValueOrNull(row, "registration_num");
+            warrant.RegistrationDate = ViewportHelper.ValueOrNull<DateTime>(row, "registration_date");
+            warrant.OnBehalfOf = ViewportHelper.ValueOrNull(row, "on_behalf_of");
+            warrant.Notary = ViewportHelper.ValueOrNull(row, "notary");
+            warrant.NotaryDistrict = ViewportHelper.ValueOrNull(row, "notary_district");
+            warrant.Description = ViewportHelper.ValueOrNull(row, "description");
             return warrant;
         }
 
-        private void FillRowFromWarrant(Warrant warrant, DataRowView row)
+        private static void FillRowFromWarrant(Warrant warrant, DataRowView row)
         {
             row.BeginEdit();
-            row["id_warrant"] = warrant.id_warrant == null ? DBNull.Value : (object)warrant.id_warrant;
-            row["id_warrant_doc_type"] = warrant.id_warrant_doc_type == null ? DBNull.Value : (object)warrant.id_warrant_doc_type;
-            row["registration_num"] = warrant.registration_num == null ? DBNull.Value : (object)warrant.registration_num;
-            row["registration_date"] = warrant.registration_date == null ? DBNull.Value : (object)warrant.registration_date;
-            row["on_behalf_of"] = warrant.on_behalf_of == null ? DBNull.Value : (object)warrant.on_behalf_of;
-            row["notary"] = warrant.notary == null ? DBNull.Value : (object)warrant.notary;
-            row["notary_district"] = warrant.notary_district == null ? DBNull.Value : (object)warrant.notary_district;
-            row["description"] = warrant.description == null ? DBNull.Value : (object)warrant.description;
+            row["id_warrant"] = warrant.IdWarrant == null ? DBNull.Value : (object)warrant.IdWarrant;
+            row["id_warrant_doc_type"] = warrant.IdWarrantDocType == null ? DBNull.Value : (object)warrant.IdWarrantDocType;
+            row["registration_num"] = warrant.RegistrationNum == null ? DBNull.Value : (object)warrant.RegistrationNum;
+            row["registration_date"] = warrant.RegistrationDate == null ? DBNull.Value : (object)warrant.RegistrationDate;
+            row["on_behalf_of"] = warrant.OnBehalfOf == null ? DBNull.Value : (object)warrant.OnBehalfOf;
+            row["notary"] = warrant.Notary == null ? DBNull.Value : (object)warrant.Notary;
+            row["notary_district"] = warrant.NotaryDistrict == null ? DBNull.Value : (object)warrant.NotaryDistrict;
+            row["description"] = warrant.Description == null ? DBNull.Value : (object)warrant.Description;
             row.EndEdit();
         }
 
         private bool ValidateWarrant(Warrant warrant)
         {
-            if (warrant.id_warrant_doc_type == null)
+            if (warrant.IdWarrantDocType == null)
             {
                 MessageBox.Show("Необходимо выбрать тип документа", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxWarrantDocType.Focus();
                 return false;
             }
-            if (warrant.registration_num == null)
+            if (warrant.RegistrationNum == null)
             {
                 MessageBox.Show("Регистрационный номер не может быть пустым", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxWarrantRegNum.Focus();
                 return false;
             }
@@ -373,7 +373,7 @@ namespace Registry.Viewport
             warrants.Select();
             warrant_doc_types.Select();
 
-            DataSet ds = DataSetManager.GetDataSet();
+            DataSet ds = DataSetManager.DataSet;
 
             v_warrant_doc_types = new BindingSource();
             v_warrant_doc_types.DataMember = "warrant_doc_types";
@@ -426,14 +426,17 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание", 
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 if (WarrantsDataModel.Delete((int)((DataRowView)v_warrants.Current)["id_warrant"]) == -1)
                     return;
                 is_editable = false;
                 ((DataRowView)v_warrants[v_warrants.Position]).Delete();
                 is_editable = true;
-                menuCallback.ForceCloseDetachedViewports();
+                viewportState = ViewportState.ReadState;
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.ForceCloseDetachedViewports();
             }
         }
 
@@ -451,7 +454,7 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            WarrantsViewport viewport = new WarrantsViewport(this, menuCallback);
+            WarrantsViewport viewport = new WarrantsViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             if (v_warrants.Count > 0)
@@ -479,14 +482,14 @@ namespace Registry.Viewport
             {
                 case ViewportState.ReadState:
                     MessageBox.Show("Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
                     int id_warrant = WarrantsDataModel.Insert(warrant);
                     if (id_warrant == -1)
                         return;
                     DataRowView newRow;
-                    warrant.id_warrant = id_warrant;
+                    warrant.IdWarrant = id_warrant;
                     is_editable = false;
                     if (v_warrants.Position == -1)
                         newRow = (DataRowView)v_warrants.AddNew();
@@ -497,10 +500,11 @@ namespace Registry.Viewport
                     is_editable = true;
                     break;
                 case ViewportState.ModifyRowState:
-                    if (warrant.id_warrant == null)
+                    if (warrant.IdWarrant == null)
                     {
                         MessageBox.Show("Вы пытаетесь изменить запись о принадлежности фонду без внутренного номера. " +
-                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
                     if (WarrantsDataModel.Update(warrant) == -1)
@@ -513,7 +517,7 @@ namespace Registry.Viewport
             dataGridView.Enabled = true;
             is_editable = true;
             viewportState = ViewportState.ReadState;
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         public override void CancelRecord()
@@ -539,11 +543,13 @@ namespace Registry.Viewport
                     break;
             }
             is_editable = true;
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            if (e == null)
+                return;
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
         }
@@ -557,8 +563,16 @@ namespace Registry.Viewport
 
         void v_warrants_CurrentItemChanged(object sender, EventArgs e)
         {
+            if (v_warrants.Position == -1 || dataGridView.RowCount == 0)
+                dataGridView.ClearSelection();
+            else
+                if (v_warrants.Position >= dataGridView.RowCount)
+                    dataGridView.Rows[dataGridView.RowCount - 1].Selected = true;
+                else
+                    if (dataGridView.Rows[v_warrants.Position].Selected != true)
+                        dataGridView.Rows[v_warrants.Position].Selected = true;
             if (Selected)
-                menuCallback.NavigationStateUpdate();
+                MenuCallback.NavigationStateUpdate();
             if (v_warrants.Position == -1)
                 return;
             if (viewportState == ViewportState.NewRowState)

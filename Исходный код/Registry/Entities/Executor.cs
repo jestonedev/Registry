@@ -7,21 +7,15 @@ namespace Registry.Entities
 {
     public sealed class Executor
     {
-        public int? id_executor { get; set; }
-        public string executor_name { get; set; }
-        public string executor_login { get; set; }
-        public string phone { get; set; }
-        public bool? is_inactive { get; set; }
+        public int? IdExecutor { get; set; }
+        public string ExecutorName { get; set; }
+        public string ExecutorLogin { get; set; }
+        public string Phone { get; set; }
+        public bool? IsInactive { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is Executor))
-                return false;
-            Executor obj_executor = (Executor)obj;
-            if (this == obj_executor)
-                return true;
-            else
-                return false;
+            return (this == (obj as Executor));
         }
 
         public bool Equals(Executor other)
@@ -31,11 +25,17 @@ namespace Registry.Entities
 
         public static bool operator ==(Executor first, Executor second)
         {
-            return first.id_executor == second.id_executor &&
-                first.executor_name == second.executor_name &&
-                first.executor_login == second.executor_login &&
-                first.phone == second.phone &&
-                first.is_inactive == second.is_inactive;
+            if ((object)first == null && (object)second == null)
+                return true;
+            else
+                if ((object)first == null || (object)second == null)
+                    return false;
+                else
+            return first.IdExecutor == second.IdExecutor &&
+                first.ExecutorName == second.ExecutorName &&
+                first.ExecutorLogin == second.ExecutorLogin &&
+                first.Phone == second.Phone &&
+                first.IsInactive == second.IsInactive;
         }
 
         public static bool operator !=(Executor first, Executor second)

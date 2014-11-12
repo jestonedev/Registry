@@ -7,21 +7,15 @@ namespace Registry.Entities
 {
     public class OwnershipRight
     {
-        public int? id_ownership_right { get; set; }
-        public int? id_ownership_right_type { get; set; }
-        public string number { get; set; }
-        public DateTime? date { get; set; }
-        public string description { get; set; }
+        public int? IdOwnershipRight { get; set; }
+        public int? IdOwnershipRightType { get; set; }
+        public string Number { get; set; }
+        public DateTime? Date { get; set; }
+        public string Description { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is OwnershipRight))
-                return false;
-            OwnershipRight obj_ownership_right = (OwnershipRight)obj;
-            if (this == obj_ownership_right)
-                return true;
-            else
-                return false;
+            return (this == (obj as OwnershipRight));
         }
 
         public bool Equals(OwnershipRight other)
@@ -31,11 +25,17 @@ namespace Registry.Entities
 
         public static bool operator ==(OwnershipRight first, OwnershipRight second)
         {
-            return first.id_ownership_right == second.id_ownership_right &&
-                first.id_ownership_right_type == second.id_ownership_right_type &&
-                first.number == second.number &&
-                first.date == second.date &&
-                first.description == second.description;
+            if ((object)first == null && (object)second == null)
+                return true;
+            else
+                if ((object)first == null || (object)second == null)
+                    return false;
+                else
+            return first.IdOwnershipRight == second.IdOwnershipRight &&
+                first.IdOwnershipRightType == second.IdOwnershipRightType &&
+                first.Number == second.Number &&
+                first.Date == second.Date &&
+                first.Description == second.Description;
         }
 
         public static bool operator !=(OwnershipRight first, OwnershipRight second)

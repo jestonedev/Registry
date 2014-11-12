@@ -10,6 +10,7 @@ using Registry.Entities;
 using System.Drawing;
 using Registry.CalcDataModels;
 using Security;
+using System.Globalization;
 
 namespace Registry.Viewport
 {
@@ -176,7 +177,7 @@ namespace Registry.Viewport
                 if (viewportState == ViewportState.ReadState)
                 {
                     viewportState = ViewportState.ModifyRowState;
-                    menuCallback.EditingStateUpdate();
+                    MenuCallback.EditingStateUpdate();
                     dataGridView.Enabled = false;
                 }
             }
@@ -185,7 +186,7 @@ namespace Registry.Viewport
                 if (viewportState == ViewportState.ModifyRowState)
                 {
                     viewportState = ViewportState.ReadState;
-                    menuCallback.EditingStateUpdate();
+                    MenuCallback.EditingStateUpdate();
                     dataGridView.Enabled = true;
                 }
             }
@@ -203,7 +204,7 @@ namespace Registry.Viewport
                         case ViewportState.NewRowState:
                         case ViewportState.ModifyRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -231,7 +232,7 @@ namespace Registry.Viewport
                             return true;
                         case ViewportState.ModifyRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -255,7 +256,7 @@ namespace Registry.Viewport
                             return true;
                         case ViewportState.NewRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -284,22 +285,22 @@ namespace Registry.Viewport
 
         private bool ValidateFundHistory(FundHistory fundHistory)
         {
-            if (checkBoxIncludeRest.Checked && fundHistory.include_restriction_number == null)
+            if (checkBoxIncludeRest.Checked && fundHistory.IncludeRestrictionNumber == null)
             {
                 MessageBox.Show("Необходимо задать номер реквизитов НПА по включению в фонд или отключить реквизит", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (checkBoxExcludeRest.Checked && fundHistory.exclude_restriction_number == null)
+            if (checkBoxExcludeRest.Checked && fundHistory.ExcludeRestrictionNumber == null)
             {
                 MessageBox.Show("Необходимо задать номер реквизитов НПА по исключению из фонда или отключить реквизит", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (fundHistory.id_fund_type == null)
+            if (fundHistory.IdFundType == null)
             {
                 MessageBox.Show("Необходимо выбрать тип найма", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             return true;
@@ -309,44 +310,44 @@ namespace Registry.Viewport
         {
             FundHistory fundHistory = new FundHistory();
             if (v_funds_history.Position == -1)
-                fundHistory.id_fund = null;
+                fundHistory.IdFund = null;
             else
-                fundHistory.id_fund = ViewportHelper.ValueOrNull<int>((DataRowView)v_funds_history[v_funds_history.Position], "id_fund");
-            fundHistory.id_fund_type = ViewportHelper.ValueOrNull<int>(comboBoxFundType);
-            if (fundHistory.id_fund_type == null || fundHistory.id_fund_type == 1)
+                fundHistory.IdFund = ViewportHelper.ValueOrNull<int>((DataRowView)v_funds_history[v_funds_history.Position], "id_fund");
+            fundHistory.IdFundType = ViewportHelper.ValueOrNull<int>(comboBoxFundType);
+            if (fundHistory.IdFundType == null || fundHistory.IdFundType == 1)
             {
-                fundHistory.protocol_number = null;
-                fundHistory.protocol_date = null;
+                fundHistory.ProtocolNumber = null;
+                fundHistory.ProtocolDate = null;
             }
             else
             {
-                fundHistory.protocol_number = ViewportHelper.ValueOrNull(textBoxProtocolNumber);
-                fundHistory.protocol_date = ViewportHelper.ValueOrNull(dateTimePickerProtocolDate);
+                fundHistory.ProtocolNumber = ViewportHelper.ValueOrNull(textBoxProtocolNumber);
+                fundHistory.ProtocolDate = ViewportHelper.ValueOrNull(dateTimePickerProtocolDate);
             }
-            fundHistory.description = ViewportHelper.ValueOrNull(textBoxDescription);
+            fundHistory.Description = ViewportHelper.ValueOrNull(textBoxDescription);
             if (checkBoxIncludeRest.Checked)
             {
-                fundHistory.include_restriction_number = ViewportHelper.ValueOrNull(textBoxIncludeRestNum);
-                fundHistory.include_restriction_description = ViewportHelper.ValueOrNull(textBoxIncludeRestDesc);
-                fundHistory.include_restriction_date = dateTimePickerIncludeRestDate.Value;
+                fundHistory.IncludeRestrictionNumber = ViewportHelper.ValueOrNull(textBoxIncludeRestNum);
+                fundHistory.IncludeRestrictionDescription = ViewportHelper.ValueOrNull(textBoxIncludeRestDesc);
+                fundHistory.IncludeRestrictionDate = dateTimePickerIncludeRestDate.Value;
             }
             else
             {
-                fundHistory.include_restriction_date = null;
-                fundHistory.include_restriction_description = null;
-                fundHistory.include_restriction_number = null;
+                fundHistory.IncludeRestrictionDate = null;
+                fundHistory.IncludeRestrictionDescription = null;
+                fundHistory.IncludeRestrictionNumber = null;
             }
             if (checkBoxExcludeRest.Checked)
             {
-                fundHistory.exclude_restriction_number = ViewportHelper.ValueOrNull(textBoxExcludeRestNum);
-                fundHistory.exclude_restriction_description = ViewportHelper.ValueOrNull(textBoxExcludeRestDesc);
-                fundHistory.exclude_restriction_date = dateTimePickerExcludeRestDate.Value;
+                fundHistory.ExcludeRestrictionNumber = ViewportHelper.ValueOrNull(textBoxExcludeRestNum);
+                fundHistory.ExcludeRestrictionDescription = ViewportHelper.ValueOrNull(textBoxExcludeRestDesc);
+                fundHistory.ExcludeRestrictionDate = dateTimePickerExcludeRestDate.Value;
             }
             else
             {
-                fundHistory.exclude_restriction_date = null;
-                fundHistory.exclude_restriction_description = null;
-                fundHistory.exclude_restriction_number = null;
+                fundHistory.ExcludeRestrictionDate = null;
+                fundHistory.ExcludeRestrictionDescription = null;
+                fundHistory.ExcludeRestrictionNumber = null;
             }      
             return fundHistory;
         }
@@ -355,47 +356,47 @@ namespace Registry.Viewport
         {
             FundHistory fundHistory = new FundHistory();
             DataRowView row = (DataRowView)v_funds_history[v_funds_history.Position];
-            fundHistory.id_fund = ViewportHelper.ValueOrNull<int>(row, "id_fund");
-            fundHistory.id_fund_type = ViewportHelper.ValueOrNull<int>(row, "id_fund_type");
-            fundHistory.protocol_number = ViewportHelper.ValueOrNull(row, "protocol_number");
-            fundHistory.protocol_date = ViewportHelper.ValueOrNull<DateTime>(row, "protocol_date");
-            fundHistory.include_restriction_number = ViewportHelper.ValueOrNull(row, "include_restriction_number");
-            fundHistory.include_restriction_date = ViewportHelper.ValueOrNull<DateTime>(row, "include_restriction_date");
-            fundHistory.include_restriction_description = ViewportHelper.ValueOrNull(row, "include_restriction_description");
-            fundHistory.exclude_restriction_number = ViewportHelper.ValueOrNull(row, "exclude_restriction_number");
-            fundHistory.exclude_restriction_date = ViewportHelper.ValueOrNull<DateTime>(row, "exclude_restriction_date");
-            fundHistory.exclude_restriction_description = ViewportHelper.ValueOrNull(row, "exclude_restriction_description");
-            fundHistory.description = ViewportHelper.ValueOrNull(row, "description");         
+            fundHistory.IdFund = ViewportHelper.ValueOrNull<int>(row, "id_fund");
+            fundHistory.IdFundType = ViewportHelper.ValueOrNull<int>(row, "id_fund_type");
+            fundHistory.ProtocolNumber = ViewportHelper.ValueOrNull(row, "protocol_number");
+            fundHistory.ProtocolDate = ViewportHelper.ValueOrNull<DateTime>(row, "protocol_date");
+            fundHistory.IncludeRestrictionNumber = ViewportHelper.ValueOrNull(row, "include_restriction_number");
+            fundHistory.IncludeRestrictionDate = ViewportHelper.ValueOrNull<DateTime>(row, "include_restriction_date");
+            fundHistory.IncludeRestrictionDescription = ViewportHelper.ValueOrNull(row, "include_restriction_description");
+            fundHistory.ExcludeRestrictionNumber = ViewportHelper.ValueOrNull(row, "exclude_restriction_number");
+            fundHistory.ExcludeRestrictionDate = ViewportHelper.ValueOrNull<DateTime>(row, "exclude_restriction_date");
+            fundHistory.ExcludeRestrictionDescription = ViewportHelper.ValueOrNull(row, "exclude_restriction_description");
+            fundHistory.Description = ViewportHelper.ValueOrNull(row, "description");         
             return fundHistory;
         }
 
         private void ViewportFromFundHistory(FundHistory fundHistory)
         {
-            comboBoxFundType.SelectedValue = ViewportHelper.ValueOrDBNull(fundHistory.id_fund_type);
-            dateTimePickerProtocolDate.Value = ViewportHelper.ValueOrDefault(fundHistory.protocol_date);
-            dateTimePickerIncludeRestDate.Value = ViewportHelper.ValueOrDefault(fundHistory.include_restriction_date);
-            dateTimePickerExcludeRestDate.Value = ViewportHelper.ValueOrDefault(fundHistory.exclude_restriction_date);
-            textBoxProtocolNumber.Text = fundHistory.protocol_number;
-            textBoxIncludeRestNum.Text = fundHistory.include_restriction_number;
-            textBoxIncludeRestDesc.Text = fundHistory.include_restriction_description;
-            textBoxExcludeRestNum.Text = fundHistory.exclude_restriction_number;
-            textBoxExcludeRestDesc.Text = fundHistory.exclude_restriction_description;
+            comboBoxFundType.SelectedValue = ViewportHelper.ValueOrDBNull(fundHistory.IdFundType);
+            dateTimePickerProtocolDate.Value = ViewportHelper.ValueOrDefault(fundHistory.ProtocolDate);
+            dateTimePickerIncludeRestDate.Value = ViewportHelper.ValueOrDefault(fundHistory.IncludeRestrictionDate);
+            dateTimePickerExcludeRestDate.Value = ViewportHelper.ValueOrDefault(fundHistory.ExcludeRestrictionDate);
+            textBoxProtocolNumber.Text = fundHistory.ProtocolNumber;
+            textBoxIncludeRestNum.Text = fundHistory.IncludeRestrictionNumber;
+            textBoxIncludeRestDesc.Text = fundHistory.IncludeRestrictionDescription;
+            textBoxExcludeRestNum.Text = fundHistory.ExcludeRestrictionNumber;
+            textBoxExcludeRestDesc.Text = fundHistory.ExcludeRestrictionDescription;
         }
 
-        private void FillRowFromFundHistory(FundHistory fundHistory, DataRowView row)
+        private static void FillRowFromFundHistory(FundHistory fundHistory, DataRowView row)
         {
             row.BeginEdit();
-            row["id_fund"] = ViewportHelper.ValueOrDBNull(fundHistory.id_fund);
-            row["id_fund_type"] = ViewportHelper.ValueOrDBNull(fundHistory.id_fund_type);
-            row["protocol_number"] = ViewportHelper.ValueOrDBNull(fundHistory.protocol_number);
-            row["protocol_date"] = ViewportHelper.ValueOrDBNull(fundHistory.protocol_date);
-            row["include_restriction_number"] = ViewportHelper.ValueOrDBNull(fundHistory.include_restriction_number);
-            row["include_restriction_date"] = ViewportHelper.ValueOrDBNull(fundHistory.include_restriction_date);
-            row["include_restriction_description"] = ViewportHelper.ValueOrDBNull(fundHistory.include_restriction_description);
-            row["exclude_restriction_number"] = ViewportHelper.ValueOrDBNull(fundHistory.exclude_restriction_number);
-            row["exclude_restriction_date"] = ViewportHelper.ValueOrDBNull(fundHistory.exclude_restriction_date);
-            row["exclude_restriction_description"] = ViewportHelper.ValueOrDBNull(fundHistory.exclude_restriction_description);
-            row["description"] = ViewportHelper.ValueOrDBNull(fundHistory.description);
+            row["id_fund"] = ViewportHelper.ValueOrDBNull(fundHistory.IdFund);
+            row["id_fund_type"] = ViewportHelper.ValueOrDBNull(fundHistory.IdFundType);
+            row["protocol_number"] = ViewportHelper.ValueOrDBNull(fundHistory.ProtocolNumber);
+            row["protocol_date"] = ViewportHelper.ValueOrDBNull(fundHistory.ProtocolDate);
+            row["include_restriction_number"] = ViewportHelper.ValueOrDBNull(fundHistory.IncludeRestrictionNumber);
+            row["include_restriction_date"] = ViewportHelper.ValueOrDBNull(fundHistory.IncludeRestrictionDate);
+            row["include_restriction_description"] = ViewportHelper.ValueOrDBNull(fundHistory.IncludeRestrictionDescription);
+            row["exclude_restriction_number"] = ViewportHelper.ValueOrDBNull(fundHistory.ExcludeRestrictionNumber);
+            row["exclude_restriction_date"] = ViewportHelper.ValueOrDBNull(fundHistory.ExcludeRestrictionDate);
+            row["exclude_restriction_description"] = ViewportHelper.ValueOrDBNull(fundHistory.ExcludeRestrictionDescription);
+            row["description"] = ViewportHelper.ValueOrDBNull(fundHistory.Description);
             row.EndEdit();
         }
 
@@ -487,14 +488,14 @@ namespace Registry.Viewport
                     else
                         throw new ViewportException("Неизвестный тип родительского объекта");
 
-            DataSet ds = DataSetManager.GetDataSet();
+            DataSet ds = DataSetManager.DataSet;
 
             v_fund_assoc = new BindingSource();
             if ((ParentType == ParentTypeEnum.SubPremises) && (ParentRow != null))
             {
                 v_fund_assoc.DataMember = "funds_sub_premises_assoc";
                 v_fund_assoc.Filter = "id_sub_premises = " + ParentRow["id_sub_premises"].ToString();
-                this.Text = String.Format("История найма комнаты №{0} помещения №{1}", ParentRow["sub_premises_num"].ToString(),
+                this.Text = String.Format(CultureInfo.CurrentCulture, "История найма комнаты №{0} помещения №{1}", ParentRow["sub_premises_num"].ToString(),
                     ParentRow["id_premises"].ToString());
             }
             else
@@ -502,14 +503,14 @@ namespace Registry.Viewport
                 {
                     v_fund_assoc.DataMember = "funds_premises_assoc";
                     v_fund_assoc.Filter = "id_premises = " + ParentRow["id_premises"].ToString();
-                    this.Text = String.Format("История найма помещения №{0}", ParentRow["id_premises"].ToString());
+                    this.Text = String.Format(CultureInfo.CurrentCulture, "История найма помещения №{0}", ParentRow["id_premises"].ToString());
                 }
                 else
                     if ((ParentType == ParentTypeEnum.Building) && (ParentRow != null))
                     {
                         v_fund_assoc.DataMember = "funds_buildings_assoc";
                         v_fund_assoc.Filter = "id_building = " + ParentRow["id_building"].ToString();
-                        this.Text = String.Format("История найма здания №{0}", ParentRow["id_building"].ToString());
+                        this.Text = String.Format(CultureInfo.CurrentCulture, "История найма здания №{0}", ParentRow["id_building"].ToString());
                     }
                     else
                         throw new ViewportException("Неизвестный тип родительского объекта");
@@ -551,7 +552,7 @@ namespace Registry.Viewport
             {
                 case ViewportState.ReadState:
                     MessageBox.Show("Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
                     int id_parent =
@@ -562,14 +563,14 @@ namespace Registry.Viewport
                     if (id_parent == -1)
                     {
                         MessageBox.Show("Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
-                            "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
                     int id_fund = FundsHistoryDataModel.Insert(fundHistory, ParentType, id_parent);
                     if (id_fund == -1)
                         return;
                     DataRowView newRow;
-                    fundHistory.id_fund = id_fund;
+                    fundHistory.IdFund = id_fund;
                     is_editable = false;
                     if (v_funds_history.Position == -1)
                         newRow = (DataRowView)v_funds_history.AddNew();
@@ -582,10 +583,10 @@ namespace Registry.Viewport
                     v_funds_history.Position = v_funds_history.Count - 1;
                     break;
                 case ViewportState.ModifyRowState:
-                    if (fundHistory.id_fund == null)
+                    if (fundHistory.IdFund == null)
                     {
                         MessageBox.Show("Вы пытаетесь изменить запись о принадлежности фонду без внутренного номера. " +
-                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
                     if (FundsHistoryDataModel.Update(fundHistory) == -1)
@@ -606,7 +607,7 @@ namespace Registry.Viewport
             else
                 if (ParentType == ParentTypeEnum.Premises)
                     CalcDataModelPremisesCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, (int)ParentRow["id_premises"]);
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanCopyRecord()
@@ -625,8 +626,8 @@ namespace Registry.Viewport
             dataGridView.Enabled = false;
             funds_history.EditingNewRecord = true;
             ViewportFromFundHistory(fundHistory);
-            checkBoxIncludeRest.Checked = (fundHistory.include_restriction_date != null);
-            checkBoxExcludeRest.Checked = (fundHistory.exclude_restriction_date != null);
+            checkBoxIncludeRest.Checked = (fundHistory.IncludeRestrictionDate != null);
+            checkBoxExcludeRest.Checked = (fundHistory.ExcludeRestrictionDate != null);
             is_editable = true;
         }
 
@@ -655,7 +656,8 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 if (FundsHistoryDataModel.Delete((int)((DataRowView)v_funds_history.Current)["id_fund"]) == -1)
                     return;
@@ -663,7 +665,9 @@ namespace Registry.Viewport
                 ((DataRowView)v_funds_history[v_funds_history.Position]).Delete();
                 is_editable = true;
                 RedrawDataGridRows();
-                menuCallback.ForceCloseDetachedViewports();
+                viewportState = ViewportState.ReadState;
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.ForceCloseDetachedViewports();
                 CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"]);
                 if (ParentType == ParentTypeEnum.Building)
                     CalcDataModelBuildingsCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"]);
@@ -705,7 +709,7 @@ namespace Registry.Viewport
             }
             UnbindedCheckBoxesUpdate();
             is_editable = true;
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanDuplicate()
@@ -715,7 +719,7 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            FundsHistoryViewport viewport = new FundsHistoryViewport(this, menuCallback);
+            FundsHistoryViewport viewport = new FundsHistoryViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             if (v_funds_history.Count > 0)
@@ -725,6 +729,8 @@ namespace Registry.Viewport
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            if (e == null)
+                return;
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
             else
@@ -749,9 +755,16 @@ namespace Registry.Viewport
 
         void v_funds_history_CurrentItemChanged(object sender, EventArgs e)
         {
+            if (v_funds_history.Position == -1 || dataGridView.RowCount == 0)
+                dataGridView.ClearSelection();
+            else
+                if (v_funds_history.Position >= dataGridView.RowCount)
+                    dataGridView.Rows[dataGridView.RowCount - 1].Selected = true;
+                else
+                    if (dataGridView.Rows[v_funds_history.Position].Selected != true)
+                        dataGridView.Rows[v_funds_history.Position].Selected = true;
             if (Selected)
-                menuCallback.NavigationStateUpdate();
-            dataGridView.Enabled = true;
+                MenuCallback.NavigationStateUpdate();
             UnbindedCheckBoxesUpdate();
             if (v_funds_history.Position == -1)
                 return;
@@ -832,8 +845,10 @@ namespace Registry.Viewport
 
         void comboBoxFundType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            textBoxProtocolNumber.Enabled = ((comboBoxFundType.SelectedValue) != null && (Convert.ToInt32(comboBoxFundType.SelectedValue) != 1));
-            dateTimePickerProtocolDate.Enabled = ((comboBoxFundType.SelectedValue) != null && (Convert.ToInt32(comboBoxFundType.SelectedValue) != 1));
+            textBoxProtocolNumber.Enabled = ((comboBoxFundType.SelectedValue) != null &&
+                (Convert.ToInt32(comboBoxFundType.SelectedValue, CultureInfo.CurrentCulture) != 1));
+            dateTimePickerProtocolDate.Enabled = ((comboBoxFundType.SelectedValue) != null &&
+                (Convert.ToInt32(comboBoxFundType.SelectedValue, CultureInfo.CurrentCulture) != 1));
             CheckViewportModifications();
         }
 

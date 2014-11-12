@@ -7,22 +7,16 @@ namespace Registry.Entities
 {
     public sealed class TenancyAgreement
     {
-        public int? id_agreement { get; set; }
-        public int? id_process { get; set; }
-        public DateTime? agreement_date { get; set; }
-        public string agreement_content { get; set; }
-        public int? id_executor { get; set; }
-        public int? id_warrant { get; set; }
+        public int? IdAgreement { get; set; }
+        public int? IdProcess { get; set; }
+        public DateTime? AgreementDate { get; set; }
+        public string AgreementContent { get; set; }
+        public int? IdExecutor { get; set; }
+        public int? IdWarrant { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is TenancyAgreement))
-                return false;
-            TenancyAgreement obj_agreement = (TenancyAgreement)obj;
-            if (this == obj_agreement)
-                return true;
-            else
-                return false;
+            return (this == (obj as TenancyAgreement));
         }
 
         public bool Equals(TenancyAgreement other)
@@ -32,12 +26,18 @@ namespace Registry.Entities
 
         public static bool operator ==(TenancyAgreement first, TenancyAgreement second)
         {
-            return first.id_agreement == second.id_agreement &&
-                first.id_process == second.id_process &&
-                first.id_executor == second.id_executor &&
-                first.id_warrant == second.id_warrant &&
-                first.agreement_date == second.agreement_date &&
-                first.agreement_content == second.agreement_content;
+            if ((object)first == null && (object)second == null)
+                return true;
+            else
+                if ((object)first == null || (object)second == null)
+                    return false;
+                else
+            return first.IdAgreement == second.IdAgreement &&
+                first.IdProcess == second.IdProcess &&
+                first.IdExecutor == second.IdExecutor &&
+                first.IdWarrant == second.IdWarrant &&
+                first.AgreementDate == second.AgreementDate &&
+                first.AgreementContent == second.AgreementContent;
         }
 
         public static bool operator !=(TenancyAgreement first, TenancyAgreement second)

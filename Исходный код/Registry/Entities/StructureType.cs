@@ -7,18 +7,12 @@ namespace Registry.Entities
 {
     public sealed class StructureType
     {
-        public int? id_structure_type { get; set; }
-        public string structure_type { get; set; }
+        public int? IdStructureType { get; set; }
+        public string StructureTypeName { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is StructureType))
-                return false;
-            StructureType obj_structure_type = (StructureType)obj;
-            if (this == obj_structure_type)
-                return true;
-            else
-                return false;
+            return (this == (obj as StructureType));
         }
 
         public bool Equals(StructureType other)
@@ -28,8 +22,14 @@ namespace Registry.Entities
 
         public static bool operator ==(StructureType first, StructureType second)
         {
-            return first.id_structure_type == second.id_structure_type &&
-                first.structure_type == second.structure_type;
+            if ((object)first == null && (object)second == null)
+                return true;
+            else
+                if ((object)first == null || (object)second == null)
+                    return false;
+                else
+            return first.IdStructureType == second.IdStructureType &&
+                first.StructureTypeName == second.StructureTypeName;
         }
 
         public static bool operator !=(StructureType first, StructureType second)

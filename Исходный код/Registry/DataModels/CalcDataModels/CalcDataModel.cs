@@ -9,14 +9,14 @@ using System.Windows.Forms;
 
 namespace Registry.CalcDataModels
 {
-    public class CalcDataModel: DataModel
+    public class CalcDataModel: DataModel, IDisposable
     {
         private BackgroundWorker worker = new BackgroundWorker();
         public event EventHandler<EventArgs> RefreshEvent;
 
         protected CalcDataModel()
         {
-            dmLoadType = DataModelLoadSyncType.Asyncronize;
+            DMLoadType = DataModelLoadSyncType.Asyncronize;
             worker.DoWork += new DoWorkEventHandler(Calculate);
             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CalculationComplete);
         }
@@ -37,16 +37,24 @@ namespace Registry.CalcDataModels
         protected void CalculationComplete(object sender, RunWorkerCompletedEventArgs e)
         {
             // Делаем слияние результатов с текущей таблицей
+            if (e == null)
+                throw new DataModelException("Не передана ссылка на объект RunWorkerCompletedEventArgs в классе CalcDataModel");
             if (e.Error != null)
             {
-                dmLoadState = DataModelLoadState.ErrorLoad;
+                DMLoadState = DataModelLoadState.ErrorLoad;
                 return;
             }
             if (e.Result is DataTable)
-                table.Merge((DataTable)e.Result);
-            dmLoadState = DataModelLoadState.SuccessLoad;
+                Table.Merge((DataTable)e.Result);
+            DMLoadState = DataModelLoadState.SuccessLoad;
             if (RefreshEvent != null)
                 RefreshEvent(this, new EventArgs());
+        }
+
+        public void Dispose()
+        {
+            worker.Dispose();
+            GC.SuppressFinalize(this);
         }
     }
 }

@@ -7,18 +7,12 @@ namespace Registry.Entities
 {
     public sealed class DocumentIssuedBy
     {
-        public int? id_document_issued_by { get; set; }
-        public string document_issued_by { get; set; }
+        public int? IdDocumentIssuedBy { get; set; }
+        public string DocumentIssuedByName { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is DocumentIssuedBy))
-                return false;
-            DocumentIssuedBy obj_document = (DocumentIssuedBy)obj;
-            if (this == obj_document)
-                return true;
-            else
-                return false;
+            return (this == (obj as DocumentIssuedBy));
         }
 
         public bool Equals(DocumentIssuedBy other)
@@ -28,8 +22,14 @@ namespace Registry.Entities
 
         public static bool operator ==(DocumentIssuedBy first, DocumentIssuedBy second)
         {
-            return first.id_document_issued_by == second.id_document_issued_by &&
-                first.document_issued_by == second.document_issued_by;
+            if ((object)first == null && (object)second == null)
+                return true;
+            else
+                if ((object)first == null || (object)second == null)
+                    return false;
+                else
+            return first.IdDocumentIssuedBy == second.IdDocumentIssuedBy &&
+                first.DocumentIssuedByName == second.DocumentIssuedByName;
         }
 
         public static bool operator !=(DocumentIssuedBy first, DocumentIssuedBy second)

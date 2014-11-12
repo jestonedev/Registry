@@ -27,7 +27,7 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_assoc"] };
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_assoc"] };
         }
 
         public static TenancyPremisesAssocDataModel GetInstance()
@@ -53,13 +53,13 @@ namespace Registry.DataModels
                 if (tenancyObject == null)
                 {
                     MessageBox.Show("В метод Insert не передана ссылка на сущность объекта найма", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", tenancyObject.id_object));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyObject.id_process));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("rent_total_area", tenancyObject.rent_total_area));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("rent_living_area", tenancyObject.rent_living_area));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", tenancyObject.IdObject));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyObject.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("rent_total_area", tenancyObject.RentTotalArea));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("rent_living_area", tenancyObject.RentLivingArea));
                 try
                 {
                     connection.SqlBeginTransaction();
@@ -69,7 +69,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return -1;
                     }
                     return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
@@ -79,7 +79,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось добавить связь помещения с процессом найма в базу данных. Подробная ошибка: {0}",
-                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -94,14 +94,14 @@ namespace Registry.DataModels
                 if (tenancyObject == null)
                 {
                     MessageBox.Show("В метод Update не передана ссылка на сущность объекта найма", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", tenancyObject.id_object));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyObject.id_process));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("rent_total_area", tenancyObject.rent_total_area));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("rent_living_area", tenancyObject.rent_living_area));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_assoc", tenancyObject.id_assoc));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", tenancyObject.IdObject));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyObject.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("rent_total_area", tenancyObject.RentTotalArea));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("rent_living_area", tenancyObject.RentLivingArea));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_assoc", tenancyObject.IdAssoc));
                 try
                 {
                     return connection.SqlModifyQuery(command);
@@ -111,7 +111,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось изменить связь помещения с процессом найма в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -132,7 +132,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture,
                         "Не удалось удалить связь помещения с процесссом найма из базы данных. Подробная ошибка: {0}",
-                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

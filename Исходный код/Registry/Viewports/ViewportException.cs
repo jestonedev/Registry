@@ -2,11 +2,31 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Runtime.Serialization;
 
 namespace Registry.Viewport
 {
-    public class ViewportException: Exception
+    [Serializable]
+    public class ViewportException : Exception
     {
-        public ViewportException(string message):base(message) {}
+        public ViewportException(string message)
+            : base(message)
+        {
+        }
+
+        public ViewportException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+
+        public ViewportException()
+            : base()
+        {
+        }
+
+        protected ViewportException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+        }
     }
 }

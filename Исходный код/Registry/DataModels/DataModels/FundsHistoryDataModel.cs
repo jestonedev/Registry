@@ -36,7 +36,7 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_fund"] };
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_fund"] };
         }
 
         public static FundsHistoryDataModel GetInstance()
@@ -60,17 +60,22 @@ namespace Registry.DataModels
             {
                 last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
                 command.CommandText = insertQuery;
-
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_fund_type", fundHistory.id_fund_type));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("protocol_number", fundHistory.protocol_number));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("protocol_date", fundHistory.protocol_date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("include_restriction_number", fundHistory.include_restriction_number));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("include_restriction_date", fundHistory.include_restriction_date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("include_restriction_description", fundHistory.include_restriction_description));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("exclude_restriction_number", fundHistory.exclude_restriction_number));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("exclude_restriction_date", fundHistory.exclude_restriction_date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("exclude_restriction_description", fundHistory.exclude_restriction_description));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", fundHistory.description));
+                if (fundHistory == null)
+                {
+                    MessageBox.Show("В метод Insert не передана ссылка на объект истории фонда", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_fund_type", fundHistory.IdFundType));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("protocol_number", fundHistory.ProtocolNumber));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("protocol_date", fundHistory.ProtocolDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("include_restriction_number", fundHistory.IncludeRestrictionNumber));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("include_restriction_date", fundHistory.IncludeRestrictionDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("include_restriction_description", fundHistory.IncludeRestrictionDescription));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("exclude_restriction_number", fundHistory.ExcludeRestrictionNumber));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("exclude_restriction_date", fundHistory.ExcludeRestrictionDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("exclude_restriction_description", fundHistory.ExcludeRestrictionDescription));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", fundHistory.Description));
 
                 if (parentType == ParentTypeEnum.Building)
                     command_assoc.CommandText = "INSERT INTO funds_buildings_assoc (id_building, id_fund) VALUES (?, ?)";
@@ -83,7 +88,7 @@ namespace Registry.DataModels
                         else
                         {
                             MessageBox.Show("Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
-                                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                             return -1;
                         }
                 try
@@ -94,7 +99,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", 
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         connection.SqlRollbackTransaction();
                         return -1;
                     }
@@ -110,7 +115,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось добавить запись о найме в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -122,17 +127,23 @@ namespace Registry.DataModels
             using (DbCommand command = DBConnection.CreateCommand())
             {
                 command.CommandText = updateQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_fund_type", fundHistory.id_fund_type));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("protocol_number", fundHistory.protocol_number));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("protocol_date", fundHistory.protocol_date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("include_restriction_number", fundHistory.include_restriction_number));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("include_restriction_date", fundHistory.include_restriction_date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("include_restriction_description", fundHistory.include_restriction_description));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("exclude_restriction_number", fundHistory.exclude_restriction_number));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("exclude_restriction_date", fundHistory.exclude_restriction_date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("exclude_restriction_description", fundHistory.exclude_restriction_description));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", fundHistory.description));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_fund", fundHistory.id_fund));
+                if (fundHistory == null)
+                {
+                    MessageBox.Show("В метод Update не передана ссылка на объект истории фонда", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_fund_type", fundHistory.IdFundType));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("protocol_number", fundHistory.ProtocolNumber));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("protocol_date", fundHistory.ProtocolDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("include_restriction_number", fundHistory.IncludeRestrictionNumber));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("include_restriction_date", fundHistory.IncludeRestrictionDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("include_restriction_description", fundHistory.IncludeRestrictionDescription));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("exclude_restriction_number", fundHistory.ExcludeRestrictionNumber));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("exclude_restriction_date", fundHistory.ExcludeRestrictionDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("exclude_restriction_description", fundHistory.ExcludeRestrictionDescription));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", fundHistory.Description));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_fund", fundHistory.IdFund));
                 try
                 {
                     return connection.SqlModifyQuery(command);
@@ -142,7 +153,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось изменить запись о найме в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -163,7 +174,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось удалить запись о найме из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

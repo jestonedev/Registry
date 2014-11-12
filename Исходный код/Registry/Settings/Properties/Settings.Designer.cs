@@ -86,12 +86,12 @@ namespace Settings.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("cp866")]
-        public string ActivityManagerOutputCodepage {
+        public string ActivityManagerOutputCodePage {
             get {
-                return ((string)(this["ActivityManagerOutputCodepage"]));
+                return ((string)(this["ActivityManagerOutputCodePage"]));
             }
             set {
-                this["ActivityManagerOutputCodepage"] = value;
+                this["ActivityManagerOutputCodePage"] = value;
             }
         }
         

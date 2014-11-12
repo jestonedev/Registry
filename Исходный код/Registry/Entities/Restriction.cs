@@ -7,21 +7,15 @@ namespace Registry.Entities
 {
     public class Restriction
     {
-        public int? id_restriction { get; set; }
-        public int? id_restriction_type { get; set; }
-        public string number { get; set; }
-        public DateTime? date { get; set; }
-        public string description { get; set; }
+        public int? IdRestriction { get; set; }
+        public int? IdRestrictionType { get; set; }
+        public string Number { get; set; }
+        public DateTime? Date { get; set; }
+        public string Description { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is Restriction))
-                return false;
-            Restriction obj_restriction = (Restriction)obj;
-            if (this == obj_restriction)
-                return true;
-            else
-                return false;
+            return (this == (obj as Restriction));
         }
 
         public bool Equals(Restriction other)
@@ -31,11 +25,17 @@ namespace Registry.Entities
 
         public static bool operator ==(Restriction first, Restriction second)
         {
-            return first.id_restriction == second.id_restriction &&
-                first.id_restriction_type == second.id_restriction_type &&
-                first.number == second.number &&
-                first.date == second.date &&
-                first.description == second.description;
+            if ((object)first == null && (object)second == null)
+                return true;
+            else
+                if ((object)first == null || (object)second == null)
+                    return false;
+                else
+            return first.IdRestriction == second.IdRestriction &&
+                first.IdRestrictionType == second.IdRestrictionType &&
+                first.Number == second.Number &&
+                first.Date == second.Date &&
+                first.Description == second.Description;
         }
 
         public static bool operator !=(Restriction first, Restriction second)

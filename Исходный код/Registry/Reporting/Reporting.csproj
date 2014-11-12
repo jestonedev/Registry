@@ -29,9 +29,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\analize.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>Reporting.snk</AssemblyOriginatorKeyFile>
@@ -67,6 +69,7 @@
       <DependentUpon>ClaimsFilterForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ClaimsReporters\ClaimsStatisticReporter.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="RegistryReporters\FullStatisticReporter.cs" />
     <Compile Include="RegistryReporters\MunicipalPremisesReporter.cs" />
     <Compile Include="RegistryReporters\PremisesByDonationReporter.cs" />

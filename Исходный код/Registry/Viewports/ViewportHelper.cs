@@ -5,6 +5,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Reflection;
 using System.Data;
+using System.Globalization;
 
 namespace Registry.Viewport
 {
@@ -14,7 +15,7 @@ namespace Registry.Viewport
         {
             typeof(Control).InvokeMember("DoubleBuffered",
             BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
-            null, control, new object[] { true });
+            null, control, new object[] { true }, CultureInfo.CurrentCulture);
         }
 
         internal static DateTime ValueOrDefault(DateTime? value)
@@ -59,7 +60,7 @@ namespace Registry.Viewport
 
         internal static string ValueOrNull(TextBox control)
         {
-            if (control.Text.Trim() == "")
+            if (String.IsNullOrEmpty(control.Text.Trim()))
                 return null;
             else
                 return control.Text.Trim().Trim();
@@ -94,7 +95,7 @@ namespace Registry.Viewport
             if (row[property] is DBNull)
                 return null;
             else
-                return (T?)Convert.ChangeType(row[property], typeof(T));
+                return (T?)Convert.ChangeType(row[property], typeof(T), CultureInfo.CurrentCulture);
         }
 
         internal static string ValueOrNull(DataRowView row, string property)
@@ -110,7 +111,7 @@ namespace Registry.Viewport
             if (row[property] is DBNull)
                 return null;
             else
-                return (T?)Convert.ChangeType(row[property], typeof(T));
+                return (T?)Convert.ChangeType(row[property], typeof(T), CultureInfo.CurrentCulture);
         }
 
         internal static string ValueOrNull(DataRow row, string property)
@@ -126,7 +127,7 @@ namespace Registry.Viewport
             if (row.Cells[property].Value is DBNull)
                 return null;
             else
-                return (T?)Convert.ChangeType(row.Cells[property].Value, typeof(T));
+                return (T?)Convert.ChangeType(row.Cells[property].Value, typeof(T), CultureInfo.CurrentCulture);
         }
 
         internal static string ValueOrNull(DataGridViewRow row, string property)

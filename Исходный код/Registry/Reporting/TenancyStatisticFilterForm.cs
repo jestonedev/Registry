@@ -7,15 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Registry.DataModels;
+using System.Globalization;
 
 namespace Registry.Reporting
 {
     public partial class TenancyStatisticFilterForm : Form
     {
-        KladrStreetsDataModel kladr = null;
         KladrRegionsDataModel regions = null;
-        RentTypesDataModel rent_types = null;
-        TenancyReasonTypesDataModel reason_types = null;
 
         BindingSource v_kladr = null;
         BindingSource v_regions = null;
@@ -25,12 +23,12 @@ namespace Registry.Reporting
         public TenancyStatisticFilterForm()
         {
             InitializeComponent();
-            kladr = KladrStreetsDataModel.GetInstance();
+            KladrStreetsDataModel.GetInstance().Select();
             regions = KladrRegionsDataModel.GetInstance();
-            rent_types = RentTypesDataModel.GetInstance();
-            reason_types = TenancyReasonTypesDataModel.GetInstance();
+            RentTypesDataModel.GetInstance().Select();
+            TenancyReasonTypesDataModel.GetInstance().Select();
 
-            DataSet ds = DataSetManager.GetDataSet();
+            DataSet ds = DataSetManager.DataSet;
 
             v_kladr = new BindingSource();
             v_kladr.DataSource = ds;
@@ -66,7 +64,8 @@ namespace Registry.Reporting
             foreach (Control control in this.Controls)
                 control.KeyDown += (sender, e) =>
                 {
-                    if (sender is ComboBox && ((ComboBox)sender).DroppedDown)
+                    ComboBox comboBox = sender as ComboBox;
+                    if (comboBox != null && comboBox.DroppedDown)
                         return;
                     if (e.KeyCode == Keys.Enter)
                         vButtonOk_Click(sender, e);
@@ -81,82 +80,82 @@ namespace Registry.Reporting
             string filter = "";
             if (checkBoxRegionEnable.Checked && (comboBoxRegion.SelectedValue != null))
             {
-                if (filter.Trim() != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format("SUBSTRING(v.id_street, 1, 13) = '{0}'", comboBoxRegion.SelectedValue.ToString());
+                filter += String.Format(CultureInfo.CurrentCulture, "SUBSTRING(v.id_street, 1, 13) = '{0}'", comboBoxRegion.SelectedValue.ToString());
             }
             if (checkBoxStreetEnable.Checked && (comboBoxStreet.SelectedValue != null))
             {
-                if (filter.Trim() != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format("v.id_street = '{0}'", comboBoxStreet.SelectedValue.ToString());
+                filter += String.Format(CultureInfo.CurrentCulture, "v.id_street = '{0}'", comboBoxStreet.SelectedValue.ToString());
             }
-            if (checkBoxHouseEnable.Checked)
+            if (checkBoxHouseEnable.Checked && (!String.IsNullOrEmpty(textBoxHouse.Text.Trim())))
             {
-                if (filter.Trim() != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                if (textBoxPremisesNum.Text.Trim() != "")
-                    filter += String.Format("v.house = '{0}'", textBoxHouse.Text.Trim().Replace("'", ""));
+                filter += String.Format(CultureInfo.CurrentCulture, "v.house = '{0}'", textBoxHouse.Text.Trim().Replace("'", ""));
             }
-            if (checkBoxPremisesNumEnable.Checked)
+            if (checkBoxPremisesNumEnable.Checked && (!String.IsNullOrEmpty(textBoxPremisesNum.Text.Trim())))
             {
-                if (filter.Trim() != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                if (textBoxPremisesNum.Text.Trim() != "")
-                    filter += String.Format("(v.premises_num = '{0}' OR v.sub_premises_num = '{0}')", textBoxPremisesNum.Text.Trim().Replace("'", ""));
+                filter += String.Format(CultureInfo.CurrentCulture, "(v.premises_num = '{0}' OR v.sub_premises_num = '{0}')", 
+                    textBoxPremisesNum.Text.Trim().Replace("'", ""));
             }
             if (checkBoxRentTypeEnable.Checked && (comboBoxRentType.SelectedValue != null))
             {
-                if (filter.Trim() != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format("rt.id_rent_type = {0}", comboBoxRentType.SelectedValue.ToString());
+                filter += String.Format(CultureInfo.CurrentCulture, "rt.id_rent_type = {0}", comboBoxRentType.SelectedValue.ToString());
             }
             if (checkBoxReasonTypeEnable.Checked && (comboBoxReasonType.SelectedValue != null))
             {
-                if (filter.Trim() != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format("tp.id_process IN (SELECT id_process FROM tenancy_reasons tr WHERE rt.id_rent_type = {0})",
+                filter += String.Format(CultureInfo.CurrentCulture, "tp.id_process IN (SELECT id_process FROM tenancy_reasons tr WHERE rt.id_rent_type = {0})",
                     comboBoxReasonType.SelectedValue.ToString());
             }
             if (dateTimePickerRegistrationFrom.Checked || dateTimePickerRegistrationTo.Checked)
             {
-                if (filter != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 filter += FilterByDateRange(dateTimePickerRegistrationFrom, dateTimePickerRegistrationTo, "registration_date");
             }
             if (dateTimePickerBeginDateFrom.Checked || dateTimePickerBeginDateTo.Checked)
             {
-                if (filter != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 filter += FilterByDateRange(dateTimePickerBeginDateFrom, dateTimePickerBeginDateTo, "begin_date");
             }
             if (dateTimePickerEndDateFrom.Checked || dateTimePickerEndDateTo.Checked)
             {
-                if (filter != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 filter += FilterByDateRange(dateTimePickerEndDateFrom, dateTimePickerEndDateTo, "end_date");
             }
             return filter;
         }
 
-        private string FilterByDateRange(DateTimePicker dateFrom, DateTimePicker dateTo, string name)
+        private static string FilterByDateRange(DateTimePicker dateFrom, DateTimePicker dateTo, string name)
         {
             if (dateFrom.Checked && dateTo.Checked)
             {
-                return String.Format("tp.{0} BETWEEN STR_TO_DATE('{1}','%d.%m.%Y') AND STR_TO_DATE('{2}','%d.%m.%Y')",
-                    name, dateFrom.Value.ToString("dd.MM.yyyy"), dateTo.Value.ToString("dd.MM.yyyy"));
+                return String.Format(CultureInfo.CurrentCulture, "tp.{0} BETWEEN STR_TO_DATE('{1}','%d.%m.%Y') AND STR_TO_DATE('{2}','%d.%m.%Y')",
+                    name, dateFrom.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture), 
+                    dateTo.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
             }
             else
                 if (dateFrom.Checked)
                 {
-                    return String.Format("tp.{0} >= STR_TO_DATE('{1}','%d.%m.%Y')",
-                    name, dateFrom.Value.ToString("dd.MM.yyyy"));
+                    return String.Format(CultureInfo.CurrentCulture, "tp.{0} >= STR_TO_DATE('{1}','%d.%m.%Y')",
+                    name, dateFrom.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
                 }
                 else
                     if (dateTo.Checked)
                     {
-                        return String.Format("tp.{0} <= STR_TO_DATE('{1}','%d.%m.%Y')",
-                        name, dateTo.Value.ToString("dd.MM.yyyy"));
+                        return String.Format(CultureInfo.CurrentCulture, "tp.{0} <= STR_TO_DATE('{1}','%d.%m.%Y')",
+                        name, dateTo.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
                     }
             throw new ReporterException("Невозможно построить фильтр для формирования статистики найма");
         }
@@ -165,19 +164,22 @@ namespace Registry.Reporting
         {
             if ((checkBoxStreetEnable.Checked) && (comboBoxStreet.SelectedValue == null))
             {
-                MessageBox.Show("Выберите улицу или уберите галочку поиска по улице", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Выберите улицу или уберите галочку поиска по улице", "Ошибка", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxStreet.Focus();
                 return;
             }
-            if ((checkBoxHouseEnable.Checked) && (textBoxHouse.Text.Trim() == ""))
+            if ((checkBoxHouseEnable.Checked) && (String.IsNullOrEmpty(textBoxHouse.Text.Trim())))
             {
-                MessageBox.Show("Введите номер дома или уберите галочку поиска по номеру дома", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Введите номер дома или уберите галочку поиска по номеру дома", "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxHouse.Focus();
                 return;
             }
-            if ((checkBoxPremisesNumEnable.Checked) && (textBoxPremisesNum.Text.Trim() == ""))
+            if ((checkBoxPremisesNumEnable.Checked) && (String.IsNullOrEmpty(textBoxPremisesNum.Text.Trim())))
             {
-                MessageBox.Show("Введите номер помещения или уберите галочку поиска по номеру помещения", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Введите номер помещения или уберите галочку поиска по номеру помещения", "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxPremisesNum.Focus();
                 return;
             }

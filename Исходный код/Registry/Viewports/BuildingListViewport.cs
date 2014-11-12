@@ -10,6 +10,7 @@ using System.Threading;
 using Registry.SearchForms;
 using Registry.CalcDataModels;
 using Security;
+using System.Globalization;
 
 namespace Registry.Viewport
 {
@@ -125,14 +126,14 @@ namespace Registry.Viewport
             buildings.Select();
             kladr.Select();
 
-            DataSet ds = DataSetManager.GetDataSet();
+            DataSet ds = DataSetManager.DataSet;
 
             v_buildings = new BindingSource();
             v_buildings.DataMember = "buildings";
             v_buildings.CurrentItemChanged += new EventHandler(v_buildings_CurrentItemChanged);
             v_buildings.DataSource = ds;
             v_buildings.Filter = StaticFilter;
-            if (StaticFilter != "" && DynamicFilter != "")
+            if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
                 v_buildings.Filter += " AND ";
             v_buildings.Filter += DynamicFilter;
 
@@ -157,7 +158,7 @@ namespace Registry.Viewport
 
         public override bool SearchedRecords()
         {
-            if (DynamicFilter != "")
+            if (!String.IsNullOrEmpty(DynamicFilter))
                 return true;
             else
                 return false;
@@ -183,13 +184,12 @@ namespace Registry.Viewport
                     break;
             }
             string Filter = StaticFilter;
-            if (StaticFilter != "" && DynamicFilter != "")
+            if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
                 Filter += " AND ";
             Filter += DynamicFilter;
             dataGridView.RowCount = 0;
             v_buildings.Filter = Filter;
             dataGridView.RowCount = v_buildings.Count;
-
         }
 
         public override void ClearSearch()
@@ -209,7 +209,7 @@ namespace Registry.Viewport
 
         public override void OpenDetails()
         {
-            BuildingViewport viewport = new BuildingViewport(menuCallback);
+            BuildingViewport viewport = new BuildingViewport(MenuCallback);
             viewport.StaticFilter = StaticFilter;
             viewport.DynamicFilter = DynamicFilter;
             viewport.ParentRow = ParentRow;
@@ -220,7 +220,7 @@ namespace Registry.Viewport
                 return;
             if (v_buildings.Count > 0)
                 viewport.LocateBuildingBy((((DataRowView)v_buildings[v_buildings.Position])["id_building"] as Int32?) ?? -1);
-            menuCallback.AddViewport(viewport);
+            MenuCallback.AddViewport(viewport);
         }
 
         public override bool CanDeleteRecord()
@@ -230,12 +230,13 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите удалить это здание?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Вы действительно хотите удалить это здание?", "Внимание",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 if (BuildingsDataModel.Delete((int)((DataRowView)v_buildings.Current)["id_building"]) == -1)
                     return;
                 ((DataRowView)v_buildings[v_buildings.Position]).Delete();
-                menuCallback.ForceCloseDetachedViewports();
+                MenuCallback.ForceCloseDetachedViewports();
                 if (ParentType == ParentTypeEnum.Tenancy)
                     CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
             }
@@ -248,7 +249,7 @@ namespace Registry.Viewport
 
         public override void InsertRecord()
         {
-            BuildingViewport viewport = new BuildingViewport(menuCallback);
+            BuildingViewport viewport = new BuildingViewport(MenuCallback);
             viewport.StaticFilter = StaticFilter;
             viewport.DynamicFilter = DynamicFilter;
             viewport.ParentRow = ParentRow;
@@ -258,7 +259,7 @@ namespace Registry.Viewport
             else
                 return;
             viewport.InsertRecord();
-            menuCallback.AddViewport(viewport);
+            MenuCallback.AddViewport(viewport);
         }
 
         public override bool CanCopyRecord()
@@ -268,7 +269,7 @@ namespace Registry.Viewport
 
         public override void CopyRecord()
         {
-            BuildingViewport viewport = new BuildingViewport(menuCallback);
+            BuildingViewport viewport = new BuildingViewport(MenuCallback);
             viewport.StaticFilter = StaticFilter;
             viewport.DynamicFilter = DynamicFilter;
             viewport.ParentRow = ParentRow;
@@ -279,7 +280,7 @@ namespace Registry.Viewport
                 return;
             if (v_buildings.Count > 0)
                 viewport.LocateBuildingBy((((DataRowView)v_buildings[v_buildings.Position])["id_building"] as Int32?) ?? -1);
-            menuCallback.AddViewport(viewport);
+            MenuCallback.AddViewport(viewport);
             viewport.CopyRecord();
         }
 
@@ -290,7 +291,7 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            BuildingListViewport viewport = new BuildingListViewport(this, menuCallback);
+            BuildingListViewport viewport = new BuildingListViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             if (v_buildings.Count > 0)
@@ -352,11 +353,11 @@ namespace Registry.Viewport
         {
             if (v_buildings.Position == -1)
             {
-                MessageBox.Show("Не выбрано здание для отображения истории найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Не выбрано здание для отображения истории найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport(menuCallback, viewportType,
-                "id_building = " + Convert.ToInt32(((DataRowView)v_buildings[v_buildings.Position])["id_building"]),
+            ShowAssocViewport(MenuCallback, viewportType,
+                "id_building = " + Convert.ToInt32(((DataRowView)v_buildings[v_buildings.Position])["id_building"], CultureInfo.CurrentCulture),
                 ((DataRowView)v_buildings[v_buildings.Position]).Row,
                 ParentTypeEnum.Building);
         }
@@ -462,7 +463,7 @@ namespace Registry.Viewport
                 dataGridView.CurrentCell = dataGridView.Rows[v_buildings.Position].Cells[0];
             }
             if (Selected)
-                menuCallback.NavigationStateUpdate();
+                MenuCallback.NavigationStateUpdate();
         }
 
         private void dataGridView_Resize(object sender, EventArgs e)

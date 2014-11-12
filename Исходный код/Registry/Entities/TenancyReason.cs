@@ -7,22 +7,16 @@ namespace Registry.Entities
 {
     public sealed class TenancyReason
     {
-        public int? id_reason { get; set; }
-        public int? id_process { get; set; }
-        public int? id_reason_type { get; set; }
-        public string reason_number { get; set; }
-        public DateTime? reason_date { get; set; }
-        public string reason_prepared { get; set; }
+        public int? IdReason { get; set; }
+        public int? IdProcess { get; set; }
+        public int? IdReasonType { get; set; }
+        public string ReasonNumber { get; set; }
+        public DateTime? ReasonDate { get; set; }
+        public string ReasonPrepared { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is TenancyReason))
-                return false;
-            TenancyReason obj_reason = (TenancyReason)obj;
-            if (this == obj_reason)
-                return true;
-            else
-                return false;
+            return (this == (obj as TenancyReason));
         }
 
         public bool Equals(TenancyReason other)
@@ -32,12 +26,18 @@ namespace Registry.Entities
 
         public static bool operator ==(TenancyReason first, TenancyReason second)
         {
-            return first.id_reason == second.id_reason &&
-                first.id_process == second.id_process &&
-                first.id_reason_type == second.id_reason_type &&
-                first.reason_number == second.reason_number &&
-                first.reason_date == second.reason_date &&
-                first.reason_prepared == second.reason_prepared;
+            if ((object)first == null && (object)second == null)
+                return true;
+            else
+                if ((object)first == null || (object)second == null)
+                    return false;
+                else
+            return first.IdReason == second.IdReason &&
+                first.IdProcess == second.IdProcess &&
+                first.IdReasonType == second.IdReasonType &&
+                first.ReasonNumber == second.ReasonNumber &&
+                first.ReasonDate == second.ReasonDate &&
+                first.ReasonPrepared == second.ReasonPrepared;
         }
 
         public static bool operator !=(TenancyReason first, TenancyReason second)

@@ -8,22 +8,28 @@ using System.Globalization;
 
 namespace Registry.DataModels
 {
-    public class DataSetManager
+    public static class DataSetManager
     {
-        private static DataSet ds = new DataSet();
+        private static DataSet dataSet = new DataSet();
+
+        public static DataSet DataSet { get { return dataSet; }}
 
         public static void AddModel(DataModel model)
         {
+            if (model == null)
+                throw new DataModelException("DataSetManager: Не передана ссылка на модель данных");
             DataTable table = model.Select();
-            if (!ds.Tables.Contains(table.TableName))
-                ds.Tables.Add(table);
+            if (!dataSet.Tables.Contains(table.TableName))
+                dataSet.Tables.Add(table);
             RebuildRelations();
         }
 
         public static void AddTable(DataTable table)
         {
-            if (!ds.Tables.Contains(table.TableName))
-                ds.Tables.Add(table);
+            if (table == null)
+                throw new DataModelException("DataSetManager: Не передана ссылка на таблицу");
+            if (!dataSet.Tables.Contains(table.TableName))
+                dataSet.Tables.Add(table);
             RebuildRelations();
         }
 
@@ -87,22 +93,17 @@ namespace Registry.DataModels
         private static void AddRelation(string master_table_name, string master_column_name, string slave_table_name, 
             string slave_column_name, bool create_constraints)
         {
-            if (!ds.Tables.Contains(master_table_name))
+            if (!dataSet.Tables.Contains(master_table_name))
                 return;
-            if (!ds.Tables.Contains(slave_table_name))
+            if (!dataSet.Tables.Contains(slave_table_name))
                 return;
-            if (!ds.Relations.Contains(master_table_name+"_"+slave_table_name))
+            if (!dataSet.Relations.Contains(master_table_name+"_"+slave_table_name))
             {
                 DataRelation relation = new DataRelation(master_table_name + "_" + slave_table_name, 
-                    ds.Tables[master_table_name].Columns[master_column_name], 
-                    ds.Tables[slave_table_name].Columns[slave_column_name], create_constraints);
-                ds.Relations.Add(relation);
+                    dataSet.Tables[master_table_name].Columns[master_column_name], 
+                    dataSet.Tables[slave_table_name].Columns[slave_column_name], create_constraints);
+                dataSet.Relations.Add(relation);
             }
-        }
-
-        public static DataSet GetDataSet()
-        {
-            return ds;
         }
     }
 }

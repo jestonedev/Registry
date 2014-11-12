@@ -14,8 +14,8 @@ namespace Registry.DataModels
     public sealed class ExecutorsDataModel: DataModel
     {
         private static ExecutorsDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM executors";
-        private static string deleteQuery = "DELETE FROM executors WHERE id_executor = ?";
+        private static string selectQuery = "SELECT * FROM executors WHERE deleted <> 1";
+        private static string deleteQuery = "UPDATE executors SET deleted = 1 WHERE id_executor = ?";
         private static string insertQuery = @"INSERT INTO executors
                             (executor_name, executor_login, phone, is_inactive) VALUES (?, ?, ?, ?)";
         private static string updateQuery = @"UPDATE executors SET executor_name = ?, executor_login = ?, phone = ?, is_inactive = ? WHERE id_executor = ?";
@@ -28,8 +28,8 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_executor"] };
-            table.Columns["is_inactive"].DefaultValue = false;
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_executor"] };
+            Table.Columns["is_inactive"].DefaultValue = false;
         }
 
         public static ExecutorsDataModel GetInstance()
@@ -52,11 +52,16 @@ namespace Registry.DataModels
             {
                 last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
                 command.CommandText = insertQuery;
-
-                command.Parameters.Add(DBConnection.CreateParameter<string>("executor_name", executor.executor_name));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("executor_login", executor.executor_login));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("phone", executor.phone));
-                command.Parameters.Add(DBConnection.CreateParameter<bool?>("is_inactive", executor.is_inactive));
+                if (executor == null)
+                {
+                    MessageBox.Show("В метод Insert не передана ссылка на объект исполнителя", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<string>("executor_name", executor.ExecutorName));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("executor_login", executor.ExecutorLogin));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("phone", executor.Phone));
+                command.Parameters.Add(DBConnection.CreateParameter<bool?>("is_inactive", executor.IsInactive));
 
                 try
                 {
@@ -67,7 +72,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         connection.SqlRollbackTransaction();
                         return -1;
                     }
@@ -80,7 +85,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось добавить запись об исполнителе в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -92,12 +97,17 @@ namespace Registry.DataModels
             using (DbCommand command = DBConnection.CreateCommand())
             {
                 command.CommandText = updateQuery;
-
-                command.Parameters.Add(DBConnection.CreateParameter<string>("executor_name", executor.executor_name));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("executor_login", executor.executor_login));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("phone", executor.phone));
-                command.Parameters.Add(DBConnection.CreateParameter<bool?>("is_inactive", executor.is_inactive));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", executor.id_executor));
+                if (executor == null)
+                {
+                    MessageBox.Show("В метод Update не передана ссылка на объект исполнителя", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<string>("executor_name", executor.ExecutorName));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("executor_login", executor.ExecutorLogin));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("phone", executor.Phone));
+                command.Parameters.Add(DBConnection.CreateParameter<bool?>("is_inactive", executor.IsInactive));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", executor.IdExecutor));
 
                 try
                 {
@@ -108,7 +118,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось изменить запись об исполнителе в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -129,7 +139,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось удалить исполнителя из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

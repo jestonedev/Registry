@@ -18,7 +18,7 @@ namespace Registry.CalcDataModels
         private CalcDataModelBuildingsPremisesSumArea()
             : base()
         {
-            table = InitializeTable();
+            Table = InitializeTable();
             Refresh(CalcDataModelFilterEnity.All, null);
         }
 
@@ -34,7 +34,9 @@ namespace Registry.CalcDataModels
 
         protected override void Calculate(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            dmLoadState = DataModelLoadState.Loading;
+            DMLoadState = DataModelLoadState.Loading;
+            if (e == null)
+                throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelBuildingsPremisesSumArea");
             CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;
             // Фильтруем удаленные строки
             var buildings = from buildings_row in DataModelHelper.FilterRows(BuildingsDataModel.GetInstance().Select())

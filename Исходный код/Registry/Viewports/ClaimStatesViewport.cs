@@ -8,6 +8,7 @@ using System.Data;
 using Registry.Entities;
 using System.Drawing;
 using Security;
+using System.Globalization;
 
 namespace Registry.Viewport
 {
@@ -79,7 +80,7 @@ namespace Registry.Viewport
         private void RebuildFilter()
         {
             string filter = "";
-            List<int> included_states = null;
+            IEnumerable<int> included_states = null;
             // Фильтруем удаленные строки
             var claim_state_types = DataModelHelper.FilterRows(ClaimStateTypesDataModel.GetInstance().Select());
             var claim_state_type_relations = DataModelHelper.FilterRows(ClaimStateTypesRelationsDataModel.GetInstance().Select());
@@ -91,31 +92,35 @@ namespace Registry.Viewport
             // (не противоречащее следующей позиции)
             if ((v_claim_states.Position == 0) && (v_claim_states.Count > 1))
             {
-                int next_claim_state_type = Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"]);
+                int next_claim_state_type = Convert.ToInt32(
+                    ((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.CurrentCulture);
                 included_states = DataModelHelper.ClaimStateTypeIdsByNextStateType(next_claim_state_type);
             }
             else
             // Если текущая позиция - последний элемент, то выбрать состояние, в которое можно перейти из состояния предыдущего элемента
             if ((v_claim_states.Position != -1) && (v_claim_states.Position == (v_claim_states.Count - 1)))
             {
-                int prev_claim_state_type = Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position - 1])["id_state_type"]);
+                int prev_claim_state_type = Convert.ToInt32(
+                    ((DataRowView)v_claim_states[v_claim_states.Position - 1])["id_state_type"], CultureInfo.CurrentCulture);
                 included_states = DataModelHelper.ClaimStateTypeIdsByPrevStateType(prev_claim_state_type);
             }
             else
             // Мы находимся не в конце списка и не в начале и необходимо выбрать только те состояния, в которые можно перейти с учетом окружающих состояний
             if (v_claim_states.Position != -1)
             {
-                int prev_claim_state_type = Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position - 1])["id_state_type"]);
-                int next_claim_state_type = Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"]);
+                int prev_claim_state_type = 
+                    Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position - 1])["id_state_type"], CultureInfo.CurrentCulture);
+                int next_claim_state_type = 
+                    Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.CurrentCulture);
                 included_states = DataModelHelper.ClaimStateTypeIdsByNextAndPrevStateTypes(next_claim_state_type, prev_claim_state_type); 
             }
             if (included_states != null)
             {
-                if (filter.Trim() != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 filter += "id_state_type IN (0";
-                for (int i = 0; i < included_states.Count; i++)
-                    filter += included_states[i].ToString() + ",";
+                foreach (int id in included_states)
+                    filter += id.ToString(CultureInfo.CurrentCulture) + ",";
                 filter = filter.TrimEnd(new char[] { ',' }) + ")";
             }
             v_claim_state_types.Filter = filter;
@@ -206,7 +211,7 @@ namespace Registry.Viewport
                 if (viewportState == ViewportState.ReadState)
                 {
                     viewportState = ViewportState.ModifyRowState;
-                    menuCallback.EditingStateUpdate();
+                    MenuCallback.EditingStateUpdate();
                     dataGridView.Enabled = false;
                 }
             }
@@ -215,7 +220,7 @@ namespace Registry.Viewport
                 if (viewportState == ViewportState.ModifyRowState)
                 {
                     viewportState = ViewportState.ReadState;
-                    menuCallback.EditingStateUpdate();
+                    MenuCallback.EditingStateUpdate();
                     dataGridView.Enabled = true;
                 }
             }
@@ -233,7 +238,7 @@ namespace Registry.Viewport
                         case ViewportState.NewRowState:
                         case ViewportState.ModifyRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -261,7 +266,7 @@ namespace Registry.Viewport
                             return true;
                         case ViewportState.ModifyRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -285,7 +290,7 @@ namespace Registry.Viewport
                             return true;
                         case ViewportState.NewRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -312,55 +317,55 @@ namespace Registry.Viewport
             is_editable = true;
         }
 
-        private bool ValidateClaimState(ClaimState claimState)
+        private static bool ValidateClaimState(ClaimState claimState)
         {
-            if (claimState.id_state_type == null)
+            if (claimState.IdStateType == null)
             {
                 MessageBox.Show("Необходимо выбрать тип состояния претензионно-исковой работы", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             return true;
         }
 
-        private void FillRowFromClaimState(ClaimState claimState, DataRowView row)
+        private static void FillRowFromClaimState(ClaimState claimState, DataRowView row)
         {
             row.BeginEdit();
-            row["id_state"] = ViewportHelper.ValueOrDBNull(claimState.id_state);
-            row["id_claim"] = ViewportHelper.ValueOrDBNull(claimState.id_claim);
-            row["id_state_type"] = ViewportHelper.ValueOrDBNull(claimState.id_state_type);
-            row["date_start_state"] = ViewportHelper.ValueOrDBNull(claimState.date_start_state);
-            row["date_end_state"] = ViewportHelper.ValueOrDBNull(claimState.date_end_state);
-            row["document_num"] = ViewportHelper.ValueOrDBNull(claimState.document_num);
-            row["document_date"] = ViewportHelper.ValueOrDBNull(claimState.document_date);
-            row["description"] = ViewportHelper.ValueOrDBNull(claimState.description);
+            row["id_state"] = ViewportHelper.ValueOrDBNull(claimState.IdState);
+            row["id_claim"] = ViewportHelper.ValueOrDBNull(claimState.IdClaim);
+            row["id_state_type"] = ViewportHelper.ValueOrDBNull(claimState.IdStateType);
+            row["date_start_state"] = ViewportHelper.ValueOrDBNull(claimState.DateStartState);
+            row["date_end_state"] = ViewportHelper.ValueOrDBNull(claimState.DateEndState);
+            row["document_num"] = ViewportHelper.ValueOrDBNull(claimState.DocumentNum);
+            row["document_date"] = ViewportHelper.ValueOrDBNull(claimState.DocumentDate);
+            row["description"] = ViewportHelper.ValueOrDBNull(claimState.Description);
             row.EndEdit();
         }
 
         private void ViewportFromClaimState(ClaimState claimState)
         {
-            comboBoxClaimStateType.SelectedValue = ViewportHelper.ValueOrDBNull(claimState.id_state_type);
-            textBoxDocumentNumber.Text = claimState.document_num;
-            textBoxDescription.Text = claimState.description;
-            dateTimePickerDocDate.Value = ViewportHelper.ValueOrDefault(claimState.document_date);
-            dateTimePickerStartState.Value = ViewportHelper.ValueOrDefault(claimState.date_start_state);
-            dateTimePickerEndState.Value = ViewportHelper.ValueOrDefault(claimState.date_end_state);
+            comboBoxClaimStateType.SelectedValue = ViewportHelper.ValueOrDBNull(claimState.IdStateType);
+            textBoxDocumentNumber.Text = claimState.DocumentNum;
+            textBoxDescription.Text = claimState.Description;
+            dateTimePickerDocDate.Value = ViewportHelper.ValueOrDefault(claimState.DocumentDate);
+            dateTimePickerStartState.Value = ViewportHelper.ValueOrDefault(claimState.DateStartState);
+            dateTimePickerEndState.Value = ViewportHelper.ValueOrDefault(claimState.DateEndState);
         }
 
         private ClaimState ClaimStateFromViewport()
         {
             ClaimState claimState = new ClaimState();
             if (v_claim_states.Position == -1)
-                claimState.id_state = null;
+                claimState.IdState = null;
             else
-                claimState.id_state = ViewportHelper.ValueOrNull<int>((DataRowView)v_claim_states[v_claim_states.Position], "id_state");
-            claimState.id_state_type = ViewportHelper.ValueOrNull<int>(comboBoxClaimStateType);
-            claimState.id_claim = ViewportHelper.ValueOrNull<int>(ParentRow, "id_claim");
-            claimState.document_num = ViewportHelper.ValueOrNull(textBoxDocumentNumber);
-            claimState.description = ViewportHelper.ValueOrNull(textBoxDescription);
-            claimState.date_start_state = ViewportHelper.ValueOrNull(dateTimePickerStartState);
-            claimState.date_end_state = ViewportHelper.ValueOrNull(dateTimePickerEndState);
-            claimState.document_date = ViewportHelper.ValueOrNull(dateTimePickerDocDate);
+                claimState.IdState = ViewportHelper.ValueOrNull<int>((DataRowView)v_claim_states[v_claim_states.Position], "id_state");
+            claimState.IdStateType = ViewportHelper.ValueOrNull<int>(comboBoxClaimStateType);
+            claimState.IdClaim = ViewportHelper.ValueOrNull<int>(ParentRow, "id_claim");
+            claimState.DocumentNum = ViewportHelper.ValueOrNull(textBoxDocumentNumber);
+            claimState.Description = ViewportHelper.ValueOrNull(textBoxDescription);
+            claimState.DateStartState = ViewportHelper.ValueOrNull(dateTimePickerStartState);
+            claimState.DateEndState = ViewportHelper.ValueOrNull(dateTimePickerEndState);
+            claimState.DocumentDate = ViewportHelper.ValueOrNull(dateTimePickerDocDate);
             return claimState;
         }
 
@@ -368,14 +373,14 @@ namespace Registry.Viewport
         {
             ClaimState claimState = new ClaimState();
             DataRowView row = (DataRowView)v_claim_states[v_claim_states.Position];
-            claimState.id_state = ViewportHelper.ValueOrNull<int>(row, "id_state");
-            claimState.id_state_type = ViewportHelper.ValueOrNull<int>(row, "id_state_type");
-            claimState.id_claim = ViewportHelper.ValueOrNull<int>(row, "id_claim");
-            claimState.document_num = ViewportHelper.ValueOrNull(row, "document_num");
-            claimState.description = ViewportHelper.ValueOrNull(row, "description");
-            claimState.date_start_state = ViewportHelper.ValueOrNull<DateTime>(row, "date_start_state");
-            claimState.date_end_state = ViewportHelper.ValueOrNull<DateTime>(row, "date_end_state");
-            claimState.document_date = ViewportHelper.ValueOrNull<DateTime>(row, "document_date");
+            claimState.IdState = ViewportHelper.ValueOrNull<int>(row, "id_state");
+            claimState.IdStateType = ViewportHelper.ValueOrNull<int>(row, "id_state_type");
+            claimState.IdClaim = ViewportHelper.ValueOrNull<int>(row, "id_claim");
+            claimState.DocumentNum = ViewportHelper.ValueOrNull(row, "document_num");
+            claimState.Description = ViewportHelper.ValueOrNull(row, "description");
+            claimState.DateStartState = ViewportHelper.ValueOrNull<DateTime>(row, "date_start_state");
+            claimState.DateEndState = ViewportHelper.ValueOrNull<DateTime>(row, "date_end_state");
+            claimState.DocumentDate = ViewportHelper.ValueOrNull<DateTime>(row, "document_date");
             return claimState;
         }
 
@@ -458,10 +463,10 @@ namespace Registry.Viewport
             claim_state_types.Select();
             claim_state_types_relations.Select();
 
-            DataSet ds = DataSetManager.GetDataSet();
+            DataSet ds = DataSetManager.DataSet;
 
             if (ParentType == ParentTypeEnum.Claim && ParentRow != null)
-                this.Text = String.Format("Состояния иск. работы №{0}", ParentRow["id_claim"]);
+                this.Text = String.Format(CultureInfo.CurrentCulture, "Состояния иск. работы №{0}", ParentRow["id_claim"]);
             else
                 throw new ViewportException("Неизвестный тип родительского объекта");
 
@@ -509,14 +514,14 @@ namespace Registry.Viewport
             {
                 case ViewportState.ReadState:
                     MessageBox.Show("Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
                     int id_state = ClaimStatesDataModel.Insert(claimState);
                     if (id_state == -1)
                         return;
                     DataRowView newRow;
-                    claimState.id_state = id_state;
+                    claimState.IdState = id_state;
                     is_editable = false;
                     if (v_claim_states.Position == -1)
                         newRow = (DataRowView)v_claim_states.AddNew();
@@ -527,10 +532,10 @@ namespace Registry.Viewport
                     claim_states.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
-                    if (claimState.id_state == null)
+                    if (claimState.IdState == null)
                     {
                         MessageBox.Show("Вы пытаетесь изменить запись о состоянии претензионно-исковой работы без внутреннего номера. " +
-                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
                     if (ClaimStatesDataModel.Update(claimState) == -1)
@@ -544,7 +549,7 @@ namespace Registry.Viewport
             dataGridView.Enabled = true;
             is_editable = true;
             viewportState = ViewportState.ReadState;
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanCopyRecord()
@@ -563,9 +568,9 @@ namespace Registry.Viewport
             dataGridView.Enabled = false;
             claim_states.EditingNewRecord = true;
             ViewportFromClaimState(claimState);
-            dateTimePickerDocDate.Checked = (claimState.document_date != null);
-            dateTimePickerStartState.Checked = (claimState.date_start_state != null);
-            dateTimePickerEndState.Checked = (claimState.date_end_state != null);
+            dateTimePickerDocDate.Checked = (claimState.DocumentDate != null);
+            dateTimePickerStartState.Checked = (claimState.DateStartState != null);
+            dateTimePickerEndState.Checked = (claimState.DateEndState != null);
             is_editable = true;
         }
 
@@ -594,15 +599,17 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 int stateCount = -1;
                 // Мы находимся в начале списка и текущий элемент не последний
                 if ((v_claim_states.Position == 0) && (v_claim_states.Count > 1))
                 {
-                    int next_claim_state_type = Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"]);
+                    int next_claim_state_type = 
+                        Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.CurrentCulture);
                     stateCount = (from claim_state_types_row in DataModelHelper.FilterRows(claim_state_types.Select())
-                                    where Convert.ToBoolean(claim_state_types_row.Field<object>("is_start_state_type")) &&
+                                  where Convert.ToBoolean(claim_state_types_row.Field<object>("is_start_state_type"), CultureInfo.CurrentCulture) &&
                                         (claim_state_types_row.Field<int>("id_state_type") == next_claim_state_type)
                                     select claim_state_types_row.Field<int>("id_state_type")).Count();
                 }
@@ -610,8 +617,10 @@ namespace Registry.Viewport
                     // Мы находимся не в конце списка и не в начале
                     if ((v_claim_states.Position != -1) && (v_claim_states.Position != (v_claim_states.Count - 1)))
                     {
-                        int previos_claim_state_type = Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position - 1])["id_state_type"]);
-                        int next_claim_state_type = Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"]);
+                        int previos_claim_state_type = 
+                            Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position - 1])["id_state_type"], CultureInfo.CurrentCulture);
+                        int next_claim_state_type = 
+                            Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.CurrentCulture);
                         stateCount = (from claim_state_types_rel_row in DataModelHelper.FilterRows(claim_state_types_relations.Select())
                                            where claim_state_types_rel_row.Field<int>("id_state_from") == previos_claim_state_type &&
                                                  claim_state_types_rel_row.Field<int>("id_state_to") == next_claim_state_type
@@ -620,15 +629,18 @@ namespace Registry.Viewport
                 if (stateCount == 0)
                 {
                     MessageBox.Show("Вы не можете удалить это состояние, так как это нарушит цепочку зависимости состояний претензионно-исковой работы."+
-                        "Чтобы удалить данное состояние, необходимо сначала удалить все состояния после него", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        "Чтобы удалить данное состояние, необходимо сначала удалить все состояния после него", "Ошибка", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
                 if (ClaimStatesDataModel.Delete((int)((DataRowView)v_claim_states.Current)["id_state"]) == -1)
                     return;
                 is_editable = false;
                 ((DataRowView)v_claim_states[v_claim_states.Position]).Delete();
+                viewportState = ViewportState.ReadState;
+                MenuCallback.EditingStateUpdate();
                 is_editable = true;
-                menuCallback.ForceCloseDetachedViewports();
+                MenuCallback.ForceCloseDetachedViewports();
             }
         }
 
@@ -663,7 +675,7 @@ namespace Registry.Viewport
             }
             UnbindedCheckBoxesUpdate();
             is_editable = true;
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanDuplicate()
@@ -673,7 +685,7 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            ClaimStatesViewport viewport = new ClaimStatesViewport(this, menuCallback);
+            ClaimStatesViewport viewport = new ClaimStatesViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             if (v_claim_states.Count > 0)
@@ -683,6 +695,8 @@ namespace Registry.Viewport
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            if (e == null)
+                return;
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
             else
@@ -711,8 +725,16 @@ namespace Registry.Viewport
 
         void v_claim_states_CurrentItemChanged(object sender, EventArgs e)
         {
+            if (v_claim_states.Position == -1 || dataGridView.RowCount == 0)
+                dataGridView.ClearSelection();
+            else
+                if (v_claim_states.Position >= dataGridView.RowCount)
+                    dataGridView.Rows[dataGridView.RowCount - 1].Selected = true;
+                else
+                    if (dataGridView.Rows[v_claim_states.Position].Selected != true)
+                        dataGridView.Rows[v_claim_states.Position].Selected = true;
             if (Selected)
-                menuCallback.NavigationStateUpdate();
+                MenuCallback.NavigationStateUpdate();
             UnbindedCheckBoxesUpdate();
             RebuildFilter();
             if (v_claim_states.Position == -1)

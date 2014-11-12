@@ -7,30 +7,24 @@ namespace Registry.Entities
 {
     public sealed class TenancyProcess
     {
-        public int? id_process { get; set; }
-        public int? id_rent_type { get; set; }
-        public int? id_warrant { get; set; }
-        public int? id_executor { get; set; }
-        public string registration_num { get; set; }
-        public DateTime? registration_date { get; set; }
-        public DateTime? issue_date { get; set; }
-        public DateTime? begin_date { get; set; }
-        public DateTime? end_date { get; set; }
-        public string residence_warrant_num { get; set; }
-        public DateTime? residence_warrant_date { get; set; }
-        public string kumi_order_num { get; set; }
-        public DateTime? kumi_order_date { get; set; }     
-        public string description { get; set; }
+        public int? IdProcess { get; set; }
+        public int? IdRentType { get; set; }
+        public int? IdWarrant { get; set; }
+        public int? IdExecutor { get; set; }
+        public string RegistrationNum { get; set; }
+        public DateTime? RegistrationDate { get; set; }
+        public DateTime? IssueDate { get; set; }
+        public DateTime? BeginDate { get; set; }
+        public DateTime? EndDate { get; set; }
+        public string ResidenceWarrantNum { get; set; }
+        public DateTime? ResidenceWarrantDate { get; set; }
+        public string KumiOrderNum { get; set; }
+        public DateTime? KumiOrderDate { get; set; }     
+        public string Description { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is TenancyProcess))
-                return false;
-            TenancyProcess obj_premise = (TenancyProcess)obj;
-            if (this == obj_premise)
-                return true;
-            else
-                return false;
+            return (this == (obj as TenancyProcess));
         }
 
         public bool Equals(TenancyProcess other)
@@ -40,20 +34,26 @@ namespace Registry.Entities
 
         public static bool operator ==(TenancyProcess first, TenancyProcess second)
         {
-            return first.id_process == second.id_process &&
-                first.id_rent_type == second.id_rent_type &&
-                first.id_warrant == second.id_warrant &&
-                first.id_executor == second.id_executor &&
-                first.registration_num == second.registration_num &&
-                first.registration_date == second.registration_date &&
-                first.issue_date == second.issue_date &&
-                first.begin_date == second.begin_date &&
-                first.end_date == second.end_date &&
-                first.residence_warrant_num == second.residence_warrant_num &&
-                first.residence_warrant_date == second.residence_warrant_date &&
-                first.kumi_order_num == second.kumi_order_num &&
-                first.kumi_order_date == second.kumi_order_date &&
-                first.description == second.description;
+            if ((object)first == null && (object)second == null)
+                return true;
+            else
+                if ((object)first == null || (object)second == null)
+                    return false;
+                else
+            return first.IdProcess == second.IdProcess &&
+                first.IdRentType == second.IdRentType &&
+                first.IdWarrant == second.IdWarrant &&
+                first.IdExecutor == second.IdExecutor &&
+                first.RegistrationNum == second.RegistrationNum &&
+                first.RegistrationDate == second.RegistrationDate &&
+                first.IssueDate == second.IssueDate &&
+                first.BeginDate == second.BeginDate &&
+                first.EndDate == second.EndDate &&
+                first.ResidenceWarrantNum == second.ResidenceWarrantNum &&
+                first.ResidenceWarrantDate == second.ResidenceWarrantDate &&
+                first.KumiOrderNum == second.KumiOrderNum &&
+                first.KumiOrderDate == second.KumiOrderDate &&
+                first.Description == second.Description;
         }
 
         public static bool operator !=(TenancyProcess first, TenancyProcess second)

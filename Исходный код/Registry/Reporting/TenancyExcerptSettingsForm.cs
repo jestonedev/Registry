@@ -11,7 +11,7 @@ namespace Registry.Reporting
 {
     public partial class TenancyExcerptSettingsForm : Form
     {
-        public DateTime excerpt_date_from
+        public DateTime ExcerptDateFrom
         {
             get
             {
@@ -19,7 +19,7 @@ namespace Registry.Reporting
             }
         }
 
-        public DateTime registry_insert_date
+        public DateTime RegistryInsertDate
         {
             get
             {
@@ -27,7 +27,7 @@ namespace Registry.Reporting
             }
         }
 
-        public bool is_culture_memorial
+        public bool IsCultureMemorial
         {
             get
             {
@@ -35,7 +35,7 @@ namespace Registry.Reporting
             }
         }
 
-        public string excerpt_number
+        public string ExcerptNumber
         {
             get
             {
@@ -49,7 +49,8 @@ namespace Registry.Reporting
             foreach (Control control in this.Controls)
                 control.KeyDown += (sender, e) =>
                 {
-                    if (sender is ComboBox && ((ComboBox)sender).DroppedDown)
+                    ComboBox comboBox = sender as ComboBox;
+                    if (comboBox != null && comboBox.DroppedDown)
                         return;
                     if (e.KeyCode == Keys.Enter)
                         this.DialogResult = System.Windows.Forms.DialogResult.OK;

@@ -6,7 +6,7 @@
    <Modules>
     <Module Name="registry.exe">
      <Messages>
-      <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Status="Active" Created="2014-11-10 09:58:19Z" FixCategory="NonBreaking">
+      <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Status="Active" Created="2014-11-12 06:47:22Z" FixCategory="NonBreaking">
        <Issue Name="NoStrongName" Certainty="95" Level="CriticalError">Подпишите 'Registry.exe' с использованием ключа строгого имени.</Issue>
       </Message>
      </Messages>

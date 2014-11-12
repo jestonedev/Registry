@@ -14,8 +14,8 @@ namespace Registry.DataModels
     public sealed class WarrantsDataModel: DataModel
     {
         private static WarrantsDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM warrants";
-        private static string deleteQuery = "DELETE FROM warrants WHERE id_warrant = ?";
+        private static string selectQuery = "SELECT * FROM warrants WHERE deleted <> 1";
+        private static string deleteQuery = "UPDATE warrants SET deleted = 1 WHERE id_warrant = ?";
         private static string insertQuery = @"INSERT INTO warrants
                             (id_warrant_doc_type, registration_num, 
                             registration_date, on_behalf_of, notary,
@@ -34,7 +34,7 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_warrant"] };
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_warrant"] };
         }
 
 
@@ -64,7 +64,7 @@ namespace Registry.DataModels
                 catch (OdbcException e)
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, "Не удалось удалить доверенность из базы данных. Подробная ошибка: {0}", 
-                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -81,17 +81,17 @@ namespace Registry.DataModels
                 if (warrant == null)
                 {
                     MessageBox.Show("В метод Insert не передана ссылка на сущность доверенности", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant_doc_type", warrant.id_warrant_doc_type));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_num", warrant.registration_num));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", warrant.registration_date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("on_behalf_of", warrant.on_behalf_of));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("notary", warrant.notary));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("notary", warrant.notary));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("notary_district", warrant.notary_district));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", warrant.description));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant_doc_type", warrant.IdWarrantDocType));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_num", warrant.RegistrationNum));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", warrant.RegistrationDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("on_behalf_of", warrant.OnBehalfOf));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("notary", warrant.Notary));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("notary", warrant.Notary));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("notary_district", warrant.NotaryDistrict));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", warrant.Description));
                 try
                 {
                     connection.SqlBeginTransaction();
@@ -101,7 +101,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, 
-                            MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxDefaultButton.Button1);
                         connection.SqlRollbackTransaction();
                         return -1;
                     }
@@ -113,7 +113,7 @@ namespace Registry.DataModels
                 {
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, "Не удалось добавить запись о доверенности в базу данных. Подробная ошибка: {0}", 
-                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -127,19 +127,19 @@ namespace Registry.DataModels
                 if (warrant == null)
                 {
                     MessageBox.Show("В метод Update не передана ссылка на сущность доверенности", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
                 command.CommandText = updateQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant_doc_type", warrant.id_warrant_doc_type));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_num", warrant.registration_num));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", warrant.registration_date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("on_behalf_of", warrant.on_behalf_of));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("notary", warrant.notary));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("notary", warrant.notary));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("notary_district", warrant.notary_district));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", warrant.description));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", warrant.id_warrant));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant_doc_type", warrant.IdWarrantDocType));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_num", warrant.RegistrationNum));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", warrant.RegistrationDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("on_behalf_of", warrant.OnBehalfOf));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("notary", warrant.Notary));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("notary", warrant.Notary));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("notary_district", warrant.NotaryDistrict));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", warrant.Description));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", warrant.IdWarrant));
 
                 try
                 {
@@ -150,7 +150,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось изменить запись о доверенности в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
                 

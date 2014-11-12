@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using Registry.DataModels;
 using Registry.Entities;
 using System.Drawing;
+using System.Globalization;
 
 namespace Registry.Viewport
 {
@@ -60,6 +61,7 @@ namespace Registry.Viewport
 
             // Инициализируем snapshot-модель
             snapshot_tenancy_sub_premises = new DataTable("selected_sub_premises");
+            snapshot_tenancy_sub_premises.Locale = CultureInfo.CurrentCulture;
             snapshot_tenancy_sub_premises.Columns.Add("id_assoc").DataType = typeof(int);
             snapshot_tenancy_sub_premises.Columns.Add("id_sub_premises").DataType = typeof(int);
             snapshot_tenancy_sub_premises.Columns.Add("is_checked").DataType = typeof(bool);
@@ -68,7 +70,7 @@ namespace Registry.Viewport
             tenancy_sub_premises = TenancySubPremisesAssocDataModel.GetInstance();
             tenancy_sub_premises.Select();
 
-            DataSet ds = DataSetManager.GetDataSet();
+            DataSet ds = DataSetManager.DataSet;
 
             v_tenancy_sub_premises = new BindingSource();
             v_tenancy_sub_premises.DataMember = "tenancy_sub_premises_assoc";
@@ -108,13 +110,13 @@ namespace Registry.Viewport
             base.Dispose(disposing);
         }
 
-        private TenancyObject RowToTenancySubPremises(DataRow row)
+        private static TenancyObject RowToTenancySubPremises(DataRow row)
         {
             TenancyObject to = new TenancyObject();
-            to.id_assoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
-            to.id_process = ViewportHelper.ValueOrNull<int>(row, "id_process");
-            to.id_object = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises");
-            to.rent_total_area = ViewportHelper.ValueOrNull<double>(row, "rent_total_area");
+            to.IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
+            to.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
+            to.IdObject = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises");
+            to.RentTotalArea = ViewportHelper.ValueOrNull<double>(row, "rent_total_area");
             return to;
         }
 
@@ -124,13 +126,13 @@ namespace Registry.Viewport
             for (int i = 0; i < snapshot_tenancy_sub_premises.Rows.Count; i++)
             {
                 DataRow row = snapshot_tenancy_sub_premises.Rows[i];
-                if (Convert.ToBoolean(row["is_checked"]) == false)
+                if (Convert.ToBoolean(row["is_checked"], CultureInfo.CurrentCulture) == false)
                     continue;
                 TenancyObject to = new TenancyObject();
-                to.id_assoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
-                to.id_process = ViewportHelper.ValueOrNull<int>(ParentRow, "id_process");
-                to.id_object = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises");
-                to.rent_total_area = ViewportHelper.ValueOrNull<double>(row, "rent_total_area");
+                to.IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
+                to.IdProcess = ViewportHelper.ValueOrNull<int>(ParentRow, "id_process");
+                to.IdObject = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises");
+                to.RentTotalArea = ViewportHelper.ValueOrNull<double>(row, "rent_total_area");
                 list.Add(to);
             }
             return list;
@@ -143,21 +145,21 @@ namespace Registry.Viewport
             {
                 TenancyObject to = new TenancyObject();
                 DataRowView row = ((DataRowView)v_tenancy_sub_premises[i]);
-                to.id_assoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
-                to.id_process = ViewportHelper.ValueOrNull<int>(row, "id_process");
-                to.id_object = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises");
-                to.rent_total_area = ViewportHelper.ValueOrNull<double>(row, "rent_total_area");
+                to.IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
+                to.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
+                to.IdObject = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises");
+                to.RentTotalArea = ViewportHelper.ValueOrNull<double>(row, "rent_total_area");
                 list.Add(to);
             }
             return list;
         }
 
-        public bool ValidateTenancySubPremises(List<TenancyObject> tenancySubPremises)
+        public static bool ValidateTenancySubPremises(List<TenancyObject> tenancySubPremises)
         {
             return true;
         }
 
-        private object[] DataRowViewToArray(DataRowView dataRowView)
+        private static object[] DataRowViewToArray(DataRowView dataRowView)
         {
             return new object[] { 
                 dataRowView["id_assoc"],
@@ -170,11 +172,6 @@ namespace Registry.Viewport
         public void SetControlWidth(int width)
         {
             dataGridView.Width = width;
-        }
-
-        public void SetRowHeaderWidth(int width)
-        {
-            dataGridView.RowHeadersWidth = width;
         }
 
         public void CalcControlHeight()
@@ -203,8 +200,8 @@ namespace Registry.Viewport
             for (int i = 0; i < list.Count; i++)
             {
                 DataRow row = null;
-                if (((TenancyObject)list[i]).id_assoc != null)
-                    row = tenancy_sub_premises.Select().Rows.Find(list[i].id_assoc);
+                if (((TenancyObject)list[i]).IdAssoc != null)
+                    row = tenancy_sub_premises.Select().Rows.Find(list[i].IdAssoc);
                 if (row == null)
                 {
                     int id_assoc = TenancySubPremisesAssocDataModel.Insert(list[i]);
@@ -214,9 +211,9 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)v_snapshot_tenancy_sub_premises[
-                        v_snapshot_tenancy_sub_premises.Find("id_sub_premises", list[i].id_object)])["id_assoc"] = id_assoc;
+                        v_snapshot_tenancy_sub_premises.Find("id_sub_premises", list[i].IdObject)])["id_assoc"] = id_assoc;
                     tenancy_sub_premises.Select().Rows.Add(new object[] { 
-                        id_assoc, list[i].id_object, list[i].id_process, list[i].rent_total_area, 0
+                        id_assoc, list[i].IdObject, list[i].IdProcess, list[i].RentTotalArea, 0
                     });
                 }
                 else
@@ -228,7 +225,7 @@ namespace Registry.Viewport
                         sync_views = true;
                         return;
                     }
-                    row["rent_total_area"] = list[i].rent_total_area == null ? DBNull.Value : (object)list[i].rent_total_area;
+                    row["rent_total_area"] = list[i].RentTotalArea == null ? DBNull.Value : (object)list[i].RentTotalArea;
                 }
             }
             list = TenancySubPremisesFromView();
@@ -239,14 +236,14 @@ namespace Registry.Viewport
                 {
                     DataRowView row = (DataRowView)v_snapshot_tenancy_sub_premises[j];
                     if ((row["id_assoc"] != DBNull.Value) &&
-                        (row["id_assoc"].ToString() != "") &&
-                        ((int)row["id_assoc"] == list[i].id_assoc) &&
-                        (Convert.ToBoolean(row["is_checked"]) == true))
+                        !String.IsNullOrEmpty(row["id_assoc"].ToString()) &&
+                        ((int)row["id_assoc"] == list[i].IdAssoc) &&
+                        (Convert.ToBoolean(row["is_checked"], CultureInfo.CurrentCulture) == true))
                         row_index = j;
                 }
                 if (row_index == -1)
                 {
-                    if (TenancySubPremisesAssocDataModel.Delete(list[i].id_assoc.Value) == -1)
+                    if (TenancySubPremisesAssocDataModel.Delete(list[i].IdAssoc.Value) == -1)
                     {
                         sync_views = true;
                         return;
@@ -254,16 +251,16 @@ namespace Registry.Viewport
                     int snapshot_row_index = -1;
                     for (int j = 0; j < v_snapshot_tenancy_sub_premises.Count; j++)
                         if (((DataRowView)v_snapshot_tenancy_sub_premises[j])["id_assoc"] != DBNull.Value &&
-                            Convert.ToInt32(((DataRowView)v_snapshot_tenancy_sub_premises[j])["id_assoc"]) == list[i].id_assoc)
+                            Convert.ToInt32(((DataRowView)v_snapshot_tenancy_sub_premises[j])["id_assoc"], CultureInfo.CurrentCulture) == list[i].IdAssoc)
                             snapshot_row_index = j;
                     if (snapshot_row_index != -1)
                     {
-                        int sub_premises_row_index = v_sub_premises.Find("id_sub_premises", list[i].id_object);
+                        int sub_premises_row_index = v_sub_premises.Find("id_sub_premises", list[i].IdObject);
                         ((DataRowView)v_snapshot_tenancy_sub_premises[snapshot_row_index]).Delete();
                         if (sub_premises_row_index != -1)
                             dataGridView.InvalidateRow(sub_premises_row_index);
                     }
-                    tenancy_sub_premises.Select().Rows.Find(((TenancyObject)list[i]).id_assoc).Delete();
+                    tenancy_sub_premises.Select().Rows.Find(((TenancyObject)list[i]).IdAssoc).Delete();
                 }
             }
             sync_views = true;
@@ -306,7 +303,7 @@ namespace Registry.Viewport
         void dataGridView_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)
         {
             if (v_sub_premises.Count <= e.RowIndex || v_sub_premises.Count == 0) return;
-            int id_sub_premises = Convert.ToInt32(((DataRowView)v_sub_premises[e.RowIndex])["id_sub_premises"]);
+            int id_sub_premises = Convert.ToInt32(((DataRowView)v_sub_premises[e.RowIndex])["id_sub_premises"], CultureInfo.CurrentCulture);
             int row_index = v_snapshot_tenancy_sub_premises.Find("id_sub_premises", id_sub_premises);
             sync_views = false;
             switch (dataGridView.Columns[e.ColumnIndex].Name)
@@ -335,7 +332,7 @@ namespace Registry.Viewport
         void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (v_sub_premises.Count <= e.RowIndex || v_sub_premises.Count == 0) return;
-            int id_sub_premises = Convert.ToInt32(((DataRowView)v_sub_premises[e.RowIndex])["id_sub_premises"]);
+            int id_sub_premises = Convert.ToInt32(((DataRowView)v_sub_premises[e.RowIndex])["id_sub_premises"], CultureInfo.CurrentCulture);
             int row_index = v_snapshot_tenancy_sub_premises.Find("id_sub_premises", id_sub_premises);
             DataRowView row = ((DataRowView)v_sub_premises[e.RowIndex]);
             switch (dataGridView.Columns[e.ColumnIndex].Name)
@@ -367,7 +364,7 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            if (Convert.ToInt32(e.Row["id_process"]) != Convert.ToInt32(ParentRow["id_process"]))
+            if (Convert.ToInt32(e.Row["id_process"], CultureInfo.CurrentCulture) != Convert.ToInt32(ParentRow["id_process"], CultureInfo.CurrentCulture))
                 return;
             if (e.Action == DataRowAction.Delete)
             {
@@ -382,7 +379,7 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            if (Convert.ToInt32(e.Row["id_process"]) != Convert.ToInt32(ParentRow["id_process"]))
+            if (Convert.ToInt32(e.Row["id_process"], CultureInfo.CurrentCulture) != Convert.ToInt32(ParentRow["id_process"], CultureInfo.CurrentCulture))
                 return;
             if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
             {
@@ -416,7 +413,7 @@ namespace Registry.Viewport
             {
                 dataGridView.EditingControl.KeyPress -= new KeyPressEventHandler(EditingControl_KeyPress);
                 dataGridView.EditingControl.KeyPress += new KeyPressEventHandler(EditingControl_KeyPress);
-                if (((TextBox)e.Control).Text.Trim() == "")
+                if (String.IsNullOrEmpty(((TextBox)e.Control).Text.Trim()))
                     ((TextBox)e.Control).Text = ((TextBox)e.Control).Text = "0";
                 else
                     ((TextBox)e.Control).Text = ((TextBox)e.Control).Text.Substring(0, ((TextBox)e.Control).Text.Length - 3);

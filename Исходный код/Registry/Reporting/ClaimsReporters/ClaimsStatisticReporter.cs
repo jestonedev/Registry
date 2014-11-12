@@ -14,19 +14,21 @@ namespace Registry.Reporting.ClaimsReporters
             Dictionary<string, string> arguments = new Dictionary<string, string>();
             arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "claims\\claims_statistic.xml"));
             arguments.Add("connectionString", RegistrySettings.ConnectionString);
-            ClaimsFilterForm cfForm = new ClaimsFilterForm();
-            if (cfForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            using (ClaimsFilterForm cfForm = new ClaimsFilterForm())
             {
-                string filter = "";
-                filter = cfForm.GetFilter();
-                if (filter == "")
-                    arguments.Add("filter", "1=1");
+                if (cfForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    string filter = "";
+                    filter = cfForm.GetFilter();
+                    if (String.IsNullOrEmpty(filter.Trim()))
+                        arguments.Add("filter", "1=1");
+                    else
+                        arguments.Add("filter", filter);
+                    base.Run(arguments);
+                }
                 else
-                    arguments.Add("filter", filter);
-                base.Run(arguments);
+                    base.Cancel();
             }
-            else
-                base.Cancel();
         }
     }
 }

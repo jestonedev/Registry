@@ -8,6 +8,7 @@ using Registry.Entities;
 using Registry.DataModels;
 using System.Text.RegularExpressions;
 using Security;
+using System.Globalization;
 
 namespace Registry.Viewport
 {
@@ -42,6 +43,7 @@ namespace Registry.Viewport
             : base(menuCallback)
         {
             InitializeComponent();
+            snapshot_reason_types.Locale = CultureInfo.CurrentCulture;
         }
 
         public TenancyReasonTypesViewport(TenancyReasonTypesViewport reasonTypesViewport, IMenuCallback menuCallback)
@@ -72,7 +74,7 @@ namespace Registry.Viewport
             return false;
         }
 
-        private object[] DataRowViewToArray(DataRowView dataRowView)
+        private static object[] DataRowViewToArray(DataRowView dataRowView)
         {
             return new object[] { 
                 dataRowView["id_reason_type"], 
@@ -81,49 +83,49 @@ namespace Registry.Viewport
             };
         }
 
-        private bool ValidateViewportData(List<ReasonType> list)
+        private static bool ValidateViewportData(List<ReasonType> list)
         {
             foreach (ReasonType reasonType in list)
             {
-                if (reasonType.reason_name == null)
+                if (reasonType.ReasonName == null)
                 {
-                    MessageBox.Show("Имя вида основания не может быть пустым", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Имя вида основания не может быть пустым", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
-                if (reasonType.reason_name != null && reasonType.reason_name.Length > 50)
+                if (reasonType.ReasonName != null && reasonType.ReasonName.Length > 150)
                 {
-                    MessageBox.Show("Длина имени типа основания не может превышать 50 символов",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Длина имени типа основания не может превышать 150 символов",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
-                if (reasonType.reason_template == null)
+                if (reasonType.ReasonTemplate == null)
                 {
-                    MessageBox.Show("Шаблон основания не может быть пустым", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Шаблон основания не может быть пустым", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
-                if (reasonType.reason_template != null && reasonType.reason_template.Length > 4000)
+                if (reasonType.ReasonTemplate != null && reasonType.ReasonTemplate.Length > 4000)
                 {
                     MessageBox.Show("Длина шаблона вида основания не может превышать 4000 символов",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
-                if (!(Regex.IsMatch(reasonType.reason_template, "@reason_number@") &&
-                     (Regex.IsMatch(reasonType.reason_template, "@reason_date@"))))
+                if (!(Regex.IsMatch(reasonType.ReasonTemplate, "@reason_number@") &&
+                     (Regex.IsMatch(reasonType.ReasonTemplate, "@reason_date@"))))
                 {
                     MessageBox.Show("Шаблон основания имеет неверный формат. В шаблоне должны быть указаны номер (в виде шаблона @reason_number@) и" +
-                        " дата (в виде шаблона @reason_date@) основания", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        " дата (в виде шаблона @reason_date@) основания", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
             }
             return true;
         }
 
-        private ReasonType RowToReasonType(DataRow row)
+        private static ReasonType RowToReasonType(DataRow row)
         {
             ReasonType reasonType = new ReasonType();
-            reasonType.id_reason_type = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
-            reasonType.reason_name = ViewportHelper.ValueOrNull(row, "reason_name");
-            reasonType.reason_template = ViewportHelper.ValueOrNull(row, "reason_template"); 
+            reasonType.IdReasonType = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
+            reasonType.ReasonName = ViewportHelper.ValueOrNull(row, "reason_name");
+            reasonType.ReasonTemplate = ViewportHelper.ValueOrNull(row, "reason_template"); 
             return reasonType;
         }
 
@@ -136,9 +138,9 @@ namespace Registry.Viewport
                 {
                     ReasonType rt = new ReasonType();
                     DataGridViewRow row = dataGridView.Rows[i];
-                    rt.id_reason_type = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
-                    rt.reason_name = ViewportHelper.ValueOrNull(row, "reason_name");
-                    rt.reason_template = ViewportHelper.ValueOrNull(row, "reason_template"); 
+                    rt.IdReasonType = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
+                    rt.ReasonName = ViewportHelper.ValueOrNull(row, "reason_name");
+                    rt.ReasonTemplate = ViewportHelper.ValueOrNull(row, "reason_template"); 
                     list.Add(rt);
                 }
             }
@@ -152,9 +154,9 @@ namespace Registry.Viewport
             {
                 ReasonType rt = new ReasonType();
                 DataRowView row = ((DataRowView)v_tenancy_reason_types[i]);
-                rt.id_reason_type = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
-                rt.reason_name = ViewportHelper.ValueOrNull(row, "reason_name");
-                rt.reason_template = ViewportHelper.ValueOrNull(row, "reason_template"); 
+                rt.IdReasonType = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
+                rt.ReasonName = ViewportHelper.ValueOrNull(row, "reason_name");
+                rt.ReasonTemplate = ViewportHelper.ValueOrNull(row, "reason_template"); 
                 list.Add(rt);
             }
             return list;
@@ -221,9 +223,10 @@ namespace Registry.Viewport
 
             v_tenancy_reason_types = new BindingSource();
             v_tenancy_reason_types.DataMember = "tenancy_reason_types";
-            v_tenancy_reason_types.DataSource = DataSetManager.GetDataSet();
+            v_tenancy_reason_types.DataSource = DataSetManager.DataSet;
 
             //Инициируем колонки snapshot-модели
+            snapshot_reason_types.Locale = CultureInfo.CurrentCulture;
             for (int i = 0; i < tenancy_reason_types.Select().Columns.Count; i++)
                 snapshot_reason_types.Columns.Add(new DataColumn(
                     tenancy_reason_types.Select().Columns[i].ColumnName, tenancy_reason_types.Select().Columns[i].DataType));
@@ -280,7 +283,7 @@ namespace Registry.Viewport
             snapshot_reason_types.Clear();
             for (int i = 0; i < v_tenancy_reason_types.Count; i++)
                 snapshot_reason_types.Rows.Add(DataRowViewToArray(((DataRowView)v_tenancy_reason_types[i])));
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanSaveRecord()
@@ -299,7 +302,7 @@ namespace Registry.Viewport
             }
             for (int i = 0; i < list.Count; i++)
             {
-                DataRow row = tenancy_reason_types.Select().Rows.Find(((ReasonType)list[i]).id_reason_type);
+                DataRow row = tenancy_reason_types.Select().Rows.Find(((ReasonType)list[i]).IdReasonType);
                 if (row == null)
                 {
                     int id_reason_type = TenancyReasonTypesDataModel.Insert(list[i]);
@@ -321,8 +324,8 @@ namespace Registry.Viewport
                         sync_views = true;
                         return;
                     }
-                    row["reason_name"] = list[i].reason_name == null ? DBNull.Value : (object)list[i].reason_name;
-                    row["reason_template"] = list[i].reason_template == null ? DBNull.Value : (object)list[i].reason_template;
+                    row["reason_name"] = list[i].ReasonName == null ? DBNull.Value : (object)list[i].ReasonName;
+                    row["reason_template"] = list[i].ReasonTemplate == null ? DBNull.Value : (object)list[i].ReasonTemplate;
                 }
             }
             list = ReasonTypesFromView();
@@ -331,21 +334,21 @@ namespace Registry.Viewport
                 int row_index = -1;
                 for (int j = 0; j < dataGridView.Rows.Count; j++)
                     if ((dataGridView.Rows[j].Cells["id_reason_type"].Value != null) &&
-                        (dataGridView.Rows[j].Cells["id_reason_type"].Value.ToString() != "") &&
-                        ((int)dataGridView.Rows[j].Cells["id_reason_type"].Value == list[i].id_reason_type))
+                        !String.IsNullOrEmpty(dataGridView.Rows[j].Cells["id_reason_type"].Value.ToString()) &&
+                        ((int)dataGridView.Rows[j].Cells["id_reason_type"].Value == list[i].IdReasonType))
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (TenancyReasonTypesDataModel.Delete(list[i].id_reason_type.Value) == -1)
+                    if (TenancyReasonTypesDataModel.Delete(list[i].IdReasonType.Value) == -1)
                     {
                         sync_views = true;
                         return;
                     }
-                    tenancy_reason_types.Select().Rows.Find(((ReasonType)list[i]).id_reason_type).Delete();
+                    tenancy_reason_types.Select().Rows.Find(((ReasonType)list[i]).IdReasonType).Delete();
                 }
             }
             sync_views = true;
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanDuplicate()
@@ -355,7 +358,7 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            TenancyReasonTypesViewport viewport = new TenancyReasonTypesViewport(this, menuCallback);
+            TenancyReasonTypesViewport viewport = new TenancyReasonTypesViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             return viewport;
@@ -363,10 +366,12 @@ namespace Registry.Viewport
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            if (e == null)
+                return;
             if (SnapshotHasChanges())
             {
                 DialogResult result = MessageBox.Show("Сохранить изменения о виде основания в базу данных?", "Внимание",
-                                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                 if (result == DialogResult.Yes)
                     SaveRecord();
                 else
@@ -388,10 +393,10 @@ namespace Registry.Viewport
             switch (cell.OwningColumn.Name)
             {
                 case "reason_name":
-                    if (cell.Value.ToString().Trim().Length > 50)
-                        cell.ErrorText = "Длина названия вида основания не может превышать 50 символов";
+                    if (cell.Value.ToString().Trim().Length > 150)
+                        cell.ErrorText = "Длина названия вида основания не может превышать 150 символов";
                     else
-                        if (cell.Value.ToString().Trim() == "")
+                        if (String.IsNullOrEmpty(cell.Value.ToString().Trim()))
                             cell.ErrorText = "Название вида основания не может быть пустым";
                         else
                             cell.ErrorText = "";
@@ -412,7 +417,7 @@ namespace Registry.Viewport
 
         void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         void ReasonTypesViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
@@ -455,7 +460,7 @@ namespace Registry.Viewport
         void v_snapshot_reason_types_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
-                menuCallback.NavigationStateUpdate();
+                MenuCallback.NavigationStateUpdate();
         }
 
         private void InitializeComponent()

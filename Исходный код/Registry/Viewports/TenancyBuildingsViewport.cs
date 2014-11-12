@@ -10,6 +10,7 @@ using Registry.Entities;
 using System.Text.RegularExpressions;
 using Registry.CalcDataModels;
 using Security;
+using System.Globalization;
 
 namespace Registry.Viewport
 {
@@ -88,7 +89,7 @@ namespace Registry.Viewport
             return false;
         }
 
-        private object[] DataRowViewToArray(DataRowView dataRowView)
+        private static object[] DataRowViewToArray(DataRowView dataRowView)
         {
             return new object[] { 
                 dataRowView["id_assoc"],
@@ -104,14 +105,14 @@ namespace Registry.Viewport
             v_buildings.Position = v_buildings.Find("id_building", id);
         }
 
-        private TenancyObject RowToTenancyBuilding(DataRow row)
+        private static TenancyObject RowToTenancyBuilding(DataRow row)
         {
             TenancyObject to = new TenancyObject();
-            to.id_assoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
-            to.id_process = ViewportHelper.ValueOrNull<int>(row, "id_process");
-            to.id_object = ViewportHelper.ValueOrNull<int>(row, "id_building");
-            to.rent_total_area = ViewportHelper.ValueOrNull<double>(row, "rent_total_area");
-            to.rent_living_area = ViewportHelper.ValueOrNull<double>(row, "rent_living_area");
+            to.IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
+            to.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
+            to.IdObject = ViewportHelper.ValueOrNull<int>(row, "id_building");
+            to.RentTotalArea = ViewportHelper.ValueOrNull<double>(row, "rent_total_area");
+            to.RentLivingArea = ViewportHelper.ValueOrNull<double>(row, "rent_living_area");
             return to;
         }
 
@@ -121,14 +122,14 @@ namespace Registry.Viewport
             for (int i = 0; i < snapshot_tenancy_buildings.Rows.Count; i++)
             {
                 DataRow row = snapshot_tenancy_buildings.Rows[i];
-                if (Convert.ToBoolean(row["is_checked"]) == false)
+                if (Convert.ToBoolean(row["is_checked"], CultureInfo.CurrentCulture) == false)
                     continue;
                 TenancyObject to = new TenancyObject();
-                to.id_assoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
-                to.id_process = ViewportHelper.ValueOrNull<int>(ParentRow, "id_process");
-                to.id_object = ViewportHelper.ValueOrNull<int>(row, "id_building");
-                to.rent_total_area = ViewportHelper.ValueOrNull<double>(row, "rent_total_area");
-                to.rent_living_area = ViewportHelper.ValueOrNull<double>(row, "rent_living_area");
+                to.IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
+                to.IdProcess = ViewportHelper.ValueOrNull<int>(ParentRow, "id_process");
+                to.IdObject = ViewportHelper.ValueOrNull<int>(row, "id_building");
+                to.RentTotalArea = ViewportHelper.ValueOrNull<double>(row, "rent_total_area");
+                to.RentLivingArea = ViewportHelper.ValueOrNull<double>(row, "rent_living_area");
                 list.Add(to);
             }
             return list;
@@ -141,17 +142,17 @@ namespace Registry.Viewport
             {
                 TenancyObject to = new TenancyObject();
                 DataRowView row = ((DataRowView)v_tenancy_buildings[i]);
-                to.id_assoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
-                to.id_process = ViewportHelper.ValueOrNull<int>(row, "id_process");
-                to.id_object = ViewportHelper.ValueOrNull<int>(row, "id_building");
-                to.rent_total_area = ViewportHelper.ValueOrNull<double>(row, "rent_total_area");
-                to.rent_living_area = ViewportHelper.ValueOrNull<double>(row, "rent_living_area");
+                to.IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
+                to.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
+                to.IdObject = ViewportHelper.ValueOrNull<int>(row, "id_building");
+                to.RentTotalArea = ViewportHelper.ValueOrNull<double>(row, "rent_total_area");
+                to.RentLivingArea = ViewportHelper.ValueOrNull<double>(row, "rent_living_area");
                 list.Add(to);
             }
             return list;
         }
 
-        private bool ValidateTenancyBuildings(List<TenancyObject> tenancyBuildings)
+        private static bool ValidateTenancyBuildings(List<TenancyObject> tenancyBuildings)
         {
             return true;
         }
@@ -220,13 +221,14 @@ namespace Registry.Viewport
 
             // Инициализируем snapshot-модель
             snapshot_tenancy_buildings = new DataTable("selected_buildings");
+            snapshot_tenancy_buildings.Locale = CultureInfo.CurrentCulture;
             snapshot_tenancy_buildings.Columns.Add("id_assoc").DataType = typeof(int);
             snapshot_tenancy_buildings.Columns.Add("id_building").DataType = typeof(int);
             snapshot_tenancy_buildings.Columns.Add("is_checked").DataType = typeof(bool);
             snapshot_tenancy_buildings.Columns.Add("rent_total_area").DataType = typeof(double);
             snapshot_tenancy_buildings.Columns.Add("rent_living_area").DataType = typeof(double);
 
-            DataSet ds = DataSetManager.GetDataSet();
+            DataSet ds = DataSetManager.DataSet;
 
             v_buildings = new BindingSource();
             v_buildings.DataMember = "buildings";
@@ -273,12 +275,13 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите удалить это здание?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Вы действительно хотите удалить это здание?", "Внимание",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 if (BuildingsDataModel.Delete((int)((DataRowView)v_buildings.Current)["id_building"]) == -1)
                     return;
                 ((DataRowView)v_buildings[v_buildings.Position]).Delete();
-                menuCallback.ForceCloseDetachedViewports();
+                MenuCallback.ForceCloseDetachedViewports();
             }
         }
 
@@ -289,7 +292,7 @@ namespace Registry.Viewport
 
         public override bool SearchedRecords()
         {
-            if (DynamicFilter != "")
+            if (!String.IsNullOrEmpty(DynamicFilter))
                 return true;
             else
                 return false;
@@ -334,7 +337,7 @@ namespace Registry.Viewport
 
         public override void OpenDetails()
         {
-            BuildingViewport viewport = new BuildingViewport(menuCallback);
+            BuildingViewport viewport = new BuildingViewport(MenuCallback);
             viewport.StaticFilter = "";
             viewport.DynamicFilter = DynamicFilter;
             viewport.ParentRow = ParentRow;
@@ -345,7 +348,7 @@ namespace Registry.Viewport
                 return;
             if (v_buildings.Count > 0)
                 viewport.LocateBuildingBy((((DataRowView)v_buildings[v_buildings.Position])["id_building"] as Int32?) ?? -1);
-            menuCallback.AddViewport(viewport);
+            MenuCallback.AddViewport(viewport);
         }
 
         public override bool CanInsertRecord()
@@ -355,7 +358,7 @@ namespace Registry.Viewport
 
         public override void InsertRecord()
         {
-            BuildingViewport viewport = new BuildingViewport(menuCallback);
+            BuildingViewport viewport = new BuildingViewport(MenuCallback);
             viewport.DynamicFilter = DynamicFilter;
             viewport.ParentRow = ParentRow;
             viewport.ParentType = ParentType;
@@ -364,7 +367,7 @@ namespace Registry.Viewport
             else
                 return;
             viewport.InsertRecord();
-            menuCallback.AddViewport(viewport);
+            MenuCallback.AddViewport(viewport);
         }
 
         public override bool CanCopyRecord()
@@ -375,7 +378,7 @@ namespace Registry.Viewport
 
         public override void CopyRecord()
         {
-            BuildingViewport viewport = new BuildingViewport(menuCallback);
+            BuildingViewport viewport = new BuildingViewport(MenuCallback);
             viewport.DynamicFilter = DynamicFilter;
             viewport.ParentRow = ParentRow;
             viewport.ParentType = ParentType;
@@ -385,7 +388,7 @@ namespace Registry.Viewport
                 return;
             if (v_buildings.Count > 0)
                 viewport.LocateBuildingBy((((DataRowView)v_buildings[v_buildings.Position])["id_building"] as Int32?) ?? -1);
-            menuCallback.AddViewport(viewport);
+            MenuCallback.AddViewport(viewport);
             viewport.CopyRecord();
         }
 
@@ -400,7 +403,7 @@ namespace Registry.Viewport
             for (int i = 0; i < v_tenancy_buildings.Count; i++)
                 snapshot_tenancy_buildings.Rows.Add(DataRowViewToArray(((DataRowView)v_tenancy_buildings[i])));
             dataGridView.Refresh();
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanSaveRecord()
@@ -420,8 +423,8 @@ namespace Registry.Viewport
             for (int i = 0; i < list.Count; i++)
             {
                 DataRow row = null;
-                if (((TenancyObject)list[i]).id_assoc != null)
-                    row = tenancy_buildings.Select().Rows.Find(list[i].id_assoc);
+                if (((TenancyObject)list[i]).IdAssoc != null)
+                    row = tenancy_buildings.Select().Rows.Find(list[i].IdAssoc);
                 if (row == null)
                 {
                     int id_assoc = TenancyBuildingsAssocDataModel.Insert(list[i]);
@@ -431,9 +434,9 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)v_snapshot_tenancy_buildings[
-                        v_snapshot_tenancy_buildings.Find("id_building", list[i].id_object)])["id_assoc"] = id_assoc;
+                        v_snapshot_tenancy_buildings.Find("id_building", list[i].IdObject)])["id_assoc"] = id_assoc;
                     tenancy_buildings.Select().Rows.Add(new object[] { 
-                        id_assoc, list[i].id_object, list[i].id_process, list[i].rent_total_area, list[i].rent_living_area, 0
+                        id_assoc, list[i].IdObject, list[i].IdProcess, list[i].RentTotalArea, list[i].RentLivingArea, 0
                     });
                 }
                 else
@@ -445,8 +448,8 @@ namespace Registry.Viewport
                         sync_views = true;
                         return;
                     }
-                    row["rent_total_area"] = list[i].rent_total_area == null ? DBNull.Value : (object)list[i].rent_total_area;
-                    row["rent_living_area"] = list[i].rent_living_area == null ? DBNull.Value : (object)list[i].rent_living_area;
+                    row["rent_total_area"] = list[i].RentTotalArea == null ? DBNull.Value : (object)list[i].RentTotalArea;
+                    row["rent_living_area"] = list[i].RentLivingArea == null ? DBNull.Value : (object)list[i].RentLivingArea;
                 }
             }
             list = TenancyBuildingsFromView();
@@ -457,14 +460,14 @@ namespace Registry.Viewport
                 {
                     DataRowView row = (DataRowView)v_snapshot_tenancy_buildings[j];
                     if ((row["id_assoc"] != DBNull.Value) &&
-                        (row["id_assoc"].ToString() != "") &&
-                        ((int)row["id_assoc"] == list[i].id_assoc) &&
-                        (Convert.ToBoolean(row["is_checked"]) == true))
+                        !String.IsNullOrEmpty(row["id_assoc"].ToString()) &&
+                        ((int)row["id_assoc"] == list[i].IdAssoc) &&
+                        (Convert.ToBoolean(row["is_checked"], CultureInfo.CurrentCulture) == true))
                         row_index = j;
                 }
                 if (row_index == -1)
                 {
-                    if (TenancyBuildingsAssocDataModel.Delete(list[i].id_assoc.Value) == -1)
+                    if (TenancyBuildingsAssocDataModel.Delete(list[i].IdAssoc.Value) == -1)
                     {
                         sync_views = true;
                         return;
@@ -472,20 +475,20 @@ namespace Registry.Viewport
                     int snapshot_row_index = -1;
                     for (int j = 0; j < v_snapshot_tenancy_buildings.Count; j++)
                         if (((DataRowView)v_snapshot_tenancy_buildings[j])["id_assoc"] != DBNull.Value &&
-                            Convert.ToInt32(((DataRowView)v_snapshot_tenancy_buildings[j])["id_assoc"]) == list[i].id_assoc)
+                            Convert.ToInt32(((DataRowView)v_snapshot_tenancy_buildings[j])["id_assoc"], CultureInfo.CurrentCulture) == list[i].IdAssoc)
                             snapshot_row_index = j;
                     if (snapshot_row_index != -1)
                     {
-                        int building_row_index = v_buildings.Find("id_building", list[i].id_object);
+                        int building_row_index = v_buildings.Find("id_building", list[i].IdObject);
                         ((DataRowView)v_snapshot_tenancy_buildings[snapshot_row_index]).Delete();
                         if (building_row_index != -1)
                             dataGridView.InvalidateRow(building_row_index);
                     }
-                    tenancy_buildings.Select().Rows.Find(((TenancyObject)list[i]).id_assoc).Delete();
+                    tenancy_buildings.Select().Rows.Find(((TenancyObject)list[i]).IdAssoc).Delete();
                 }
             }
             sync_views = true;
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
             if (ParentType == ParentTypeEnum.Tenancy)
                 CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Tenancy, (int)ParentRow["id_process"]);
         }
@@ -497,7 +500,7 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            TenancyBuildingsViewport viewport = new TenancyBuildingsViewport(this, menuCallback);
+            TenancyBuildingsViewport viewport = new TenancyBuildingsViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             if (v_buildings.Count > 0)
@@ -549,21 +552,23 @@ namespace Registry.Viewport
         {
             if (v_buildings.Position == -1)
             {
-                MessageBox.Show("Не выбрано здание для отображения истории найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Не выбрано здание для отображения истории найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport(menuCallback, viewportType,
-                "id_building = " + Convert.ToInt32(((DataRowView)v_buildings[v_buildings.Position])["id_building"]),
+            ShowAssocViewport(MenuCallback, viewportType,
+                "id_building = " + Convert.ToInt32(((DataRowView)v_buildings[v_buildings.Position])["id_building"], CultureInfo.CurrentCulture),
                 ((DataRowView)v_buildings[v_buildings.Position]).Row,
                 ParentTypeEnum.Building);
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            if (e == null)
+                return;
             if (SnapshotHasChanges())
             {
                 DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                 if (result == DialogResult.Yes)
                     SaveRecord();
                 else
@@ -594,7 +599,7 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            if (Convert.ToInt32(e.Row["id_process"]) != Convert.ToInt32(ParentRow["id_process"]))
+            if (Convert.ToInt32(e.Row["id_process"], CultureInfo.CurrentCulture) != Convert.ToInt32(ParentRow["id_process"], CultureInfo.CurrentCulture))
                 return;
             if (e.Action == DataRowAction.Delete)
             {
@@ -609,7 +614,7 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            if (Convert.ToInt32(e.Row["id_process"]) != Convert.ToInt32(ParentRow["id_process"]))
+            if (Convert.ToInt32(e.Row["id_process"], CultureInfo.CurrentCulture) != Convert.ToInt32(ParentRow["id_process"], CultureInfo.CurrentCulture))
                 return;
             if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
             {
@@ -657,7 +662,7 @@ namespace Registry.Viewport
                 dataGridView.CurrentCell = dataGridView.Rows[v_buildings.Position].Cells[0];
             }
             if (Selected)
-                menuCallback.NavigationStateUpdate();
+                MenuCallback.NavigationStateUpdate();
         }
 
         void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -706,7 +711,7 @@ namespace Registry.Viewport
 
         void dataGridView_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)
         {
-            int id_building = Convert.ToInt32(((DataRowView)v_buildings[e.RowIndex])["id_building"]);
+            int id_building = Convert.ToInt32(((DataRowView)v_buildings[e.RowIndex])["id_building"], CultureInfo.CurrentCulture);
             int row_index = v_snapshot_tenancy_buildings.Find("id_building", id_building);
             double value = 0;
             sync_views = false;
@@ -738,13 +743,13 @@ namespace Registry.Viewport
                     break;
             }
             sync_views = true;
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (v_buildings.Count <= e.RowIndex || v_buildings.Count == 0) return;
-            int id_building = Convert.ToInt32(((DataRowView)v_buildings[e.RowIndex])["id_building"]);
+            int id_building = Convert.ToInt32(((DataRowView)v_buildings[e.RowIndex])["id_building"], CultureInfo.CurrentCulture);
             int row_index = v_snapshot_tenancy_buildings.Find("id_building", id_building);
             switch (this.dataGridView.Columns[e.ColumnIndex].Name)
             {
@@ -791,7 +796,7 @@ namespace Registry.Viewport
             {
                 dataGridView.EditingControl.KeyPress -= new KeyPressEventHandler(EditingControl_KeyPress);
                 dataGridView.EditingControl.KeyPress += new KeyPressEventHandler(EditingControl_KeyPress);
-                if (((TextBox)e.Control).Text.Trim() == "")
+                if (String.IsNullOrEmpty(((TextBox)e.Control).Text.Trim()))
                     ((TextBox)e.Control).Text = ((TextBox)e.Control).Text = "0";
                 else
                     ((TextBox)e.Control).Text = ((TextBox)e.Control).Text.Substring(0, ((TextBox)e.Control).Text.Length - 3);

@@ -275,8 +275,6 @@ D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.RestrictionListViewport.resources
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.RestrictionTypeListViewport.resources
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SelectWarrantForm.resources
-D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SimpleSearchBuildingForm.resources
-D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SimpleSearchPremiseForm.resources
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.SearchForms.SimpleSearchTenancyForm.resources
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.StructureTypeListViewport.resources
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.Viewport.SubPremisesDetailsControl.resources
@@ -296,3 +294,7 @@ D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Viewports.pdb
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\bin\Release\Security.dll
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\bin\Release\Security.pdb
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\bin\Release\Viewports.dll.CodeAnalysisLog.xml
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\bin\Release\Viewports.dll.lastcodeanalysissucceeded
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.SearchForms.SimpleSearchBuildingForm.resources
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Viewports\obj\Release\Registry.SearchForms.SimpleSearchPremiseForm.resources

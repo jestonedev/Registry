@@ -14,8 +14,8 @@ namespace Registry.DataModels
     public sealed class StructureTypesDataModel : DataModel
     {
         private static StructureTypesDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM structure_types";
-        private static string deleteQuery = "DELETE FROM structure_types WHERE id_structure_type = ?";
+        private static string selectQuery = "SELECT * FROM structure_types WHERE deleted <> 1";
+        private static string deleteQuery = "UPDATE structure_types SET deleted = 1 WHERE id_structure_type = ?";
         private static string insertQuery = @"INSERT INTO structure_types
                             (structure_type)
                             VALUES (?)";
@@ -29,7 +29,7 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_structure_type"] };
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_structure_type"] };
         }
 
         public static StructureTypesDataModel GetInstance()
@@ -59,7 +59,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось удалить наименование структуры из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -73,7 +73,13 @@ namespace Registry.DataModels
             {
                 last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
                 command.CommandText = insertQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<string>("structure_type", structureType.structure_type));
+                if (structureType == null)
+                {
+                    MessageBox.Show("В метод Insert не передана ссылка на объект вида материала здания", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<string>("structure_type", structureType.StructureTypeName));
                 try
                 {
                     connection.SqlBeginTransaction();
@@ -83,7 +89,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return -1;
                     }
                     return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
@@ -93,7 +99,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось добавить наименование структуры в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -105,8 +111,14 @@ namespace Registry.DataModels
             using (DbCommand command = DBConnection.CreateCommand())
             {
                 command.CommandText = updateQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<string>("structure_type", structureType.structure_type));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_structure_type", structureType.id_structure_type));
+                if (structureType == null)
+                {
+                    MessageBox.Show("В метод Update не передана ссылка на объект вида материала здания", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<string>("structure_type", structureType.StructureTypeName));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_structure_type", structureType.IdStructureType));
                 try
                 {
                     return connection.SqlModifyQuery(command);
@@ -116,7 +128,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось изменить наименование структуры в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

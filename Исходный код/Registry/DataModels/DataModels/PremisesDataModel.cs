@@ -39,18 +39,18 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_premise"] };
-            table.Columns["id_state"].DefaultValue = 1;
-            table.Columns["living_area"].DefaultValue = 0;
-            table.Columns["total_area"].DefaultValue = 0;
-            table.Columns["height"].DefaultValue = 0;
-            table.Columns["num_rooms"].DefaultValue = 0;
-            table.Columns["num_beds"].DefaultValue = 0;
-            table.Columns["id_premises_type"].DefaultValue = 1;
-            table.Columns["id_premises_kind"].DefaultValue = 1;
-            table.Columns["floor"].DefaultValue = 0;
-            table.Columns["cadastral_cost"].DefaultValue = 0;
-            table.Columns["balance_cost"].DefaultValue = 0;
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_premise"] };
+            Table.Columns["id_state"].DefaultValue = 1;
+            Table.Columns["living_area"].DefaultValue = 0;
+            Table.Columns["total_area"].DefaultValue = 0;
+            Table.Columns["height"].DefaultValue = 0;
+            Table.Columns["num_rooms"].DefaultValue = 0;
+            Table.Columns["num_beds"].DefaultValue = 0;
+            Table.Columns["id_premises_type"].DefaultValue = 1;
+            Table.Columns["id_premises_kind"].DefaultValue = 1;
+            Table.Columns["floor"].DefaultValue = 0;
+            Table.Columns["cadastral_cost"].DefaultValue = 0;
+            Table.Columns["balance_cost"].DefaultValue = 0;
         }
 
         public static PremisesDataModel GetInstance()
@@ -80,7 +80,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось удалить помещение из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -92,23 +92,28 @@ namespace Registry.DataModels
             using (DbCommand command = DBConnection.CreateCommand())
             {
                 command.CommandText = updateQuery;
-
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_building", premise.id_building));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", premise.id_state));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_kind", premise.id_premises_kind));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_type", premise.id_premises_type));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("premises_num", premise.premises_num));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("floor", premise.floor));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_rooms", premise.num_rooms));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_beds", premise.num_beds));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", premise.total_area));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("living_area", premise.living_area));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("height", premise.height));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("cadastral_num", premise.cadastral_num));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("cadastral_cost", premise.cadastral_cost));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("balance_cost", premise.balance_cost));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", premise.description));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", premise.id_premises));
+                if (premise == null)
+                {
+                    MessageBox.Show("В метод Update не передана ссылка на объект помещения", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_building", premise.IdBuilding));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", premise.IdState));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_kind", premise.IdPremisesKind));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_type", premise.IdPremisesType));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("premises_num", premise.PremisesNum));
+                command.Parameters.Add(DBConnection.CreateParameter<short?>("floor", premise.Floor));
+                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_rooms", premise.NumRooms));
+                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_beds", premise.NumBeds));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", premise.TotalArea));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("living_area", premise.LivingArea));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("height", premise.Height));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("cadastral_num", premise.CadastralNum));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("cadastral_cost", premise.CadastralCost));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("balance_cost", premise.BalanceCost));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", premise.Description));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", premise.IdPremises));
                 try
                 {
                     return connection.SqlModifyQuery(command);
@@ -117,7 +122,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось изменить данные о помещении. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -131,22 +136,27 @@ namespace Registry.DataModels
             {
                 last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
                 command.CommandText = insertQuery;
-
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_building", premise.id_building));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", premise.id_state));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_kind", premise.id_premises_kind));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_type", premise.id_premises_type));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("premises_num", premise.premises_num));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("floor", premise.floor));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_rooms", premise.num_rooms));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_beds", premise.num_beds));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", premise.total_area));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("living_area", premise.living_area));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("height", premise.height));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("cadastral_num", premise.cadastral_num));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("cadastral_cost", premise.cadastral_cost));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("balance_cost", premise.balance_cost));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", premise.description));
+                if (premise == null)
+                {
+                    MessageBox.Show("В метод Insert не передана ссылка на объект помещения", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_building", premise.IdBuilding));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", premise.IdState));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_kind", premise.IdPremisesKind));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_type", premise.IdPremisesType));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("premises_num", premise.PremisesNum));
+                command.Parameters.Add(DBConnection.CreateParameter<short?>("floor", premise.Floor));
+                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_rooms", premise.NumRooms));
+                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_beds", premise.NumBeds));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", premise.TotalArea));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("living_area", premise.LivingArea));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("height", premise.Height));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("cadastral_num", premise.CadastralNum));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("cadastral_cost", premise.CadastralCost));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("balance_cost", premise.BalanceCost));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", premise.Description));
 
                 try
                 {
@@ -157,7 +167,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", 
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return -1;
                     }
                     return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
@@ -167,7 +177,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось добавить помещение в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

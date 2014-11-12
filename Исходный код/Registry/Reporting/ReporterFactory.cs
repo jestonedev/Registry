@@ -5,6 +5,7 @@ using System.Text;
 using Registry.Reporting.RegistryReporters;
 using Registry.Reporting.ClaimsReporters;
 using Registry.Reporting.TenancyReporters;
+using System.Globalization;
 
 namespace Registry.Reporting
 {
@@ -58,7 +59,7 @@ namespace Registry.Reporting
                     return new TenancyExcerptReporter();
             }
             throw new ReporterException(
-                String.Format("В фабрику ReporterFactory передан неизвестный тип {0}", reporterType.ToString()));
+                String.Format(CultureInfo.CurrentCulture, "В фабрику ReporterFactory передан неизвестный тип {0}", reporterType.ToString()));
         }
     }
 }

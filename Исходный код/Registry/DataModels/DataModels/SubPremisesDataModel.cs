@@ -31,10 +31,10 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_sub_premises"] };
-            table.Columns["total_area"].DefaultValue = 0;
-            table.Columns["deleted"].DefaultValue = 0;
-            table.Columns["id_state"].DefaultValue = 1;
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_sub_premises"] };
+            Table.Columns["total_area"].DefaultValue = 0;
+            Table.Columns["deleted"].DefaultValue = 0;
+            Table.Columns["id_state"].DefaultValue = 1;
         }
 
         public static SubPremisesDataModel GetInstance()
@@ -64,7 +64,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось удалить комнату из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -78,11 +78,17 @@ namespace Registry.DataModels
             {
                 last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
                 command.CommandText = insertQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", subPremise.id_premises));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", subPremise.id_state));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("sub_premises_num", subPremise.sub_premises_num));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", subPremise.total_area));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", subPremise.description));
+                if (subPremise == null)
+                {
+                    MessageBox.Show("В метод Insert не передана ссылка на объект комнаты", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", subPremise.IdPremises));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", subPremise.IdState));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("sub_premises_num", subPremise.SubPremisesNum));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", subPremise.TotalArea));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", subPremise.Description));
                 try
                 {
                     connection.SqlBeginTransaction();
@@ -92,7 +98,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return -1;
                     }
                     return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
@@ -102,7 +108,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось добавить комнату в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -114,12 +120,18 @@ namespace Registry.DataModels
             using (DbCommand command = DBConnection.CreateCommand())
             {
                 command.CommandText = updateQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", subPremise.id_premises));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", subPremise.id_state));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("sub_premises_num", subPremise.sub_premises_num));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", subPremise.total_area));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", subPremise.description));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_sub_premises", subPremise.id_sub_premises));
+                if (subPremise == null)
+                {
+                    MessageBox.Show("В метод Update не передана ссылка на объект комнаты", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", subPremise.IdPremises));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", subPremise.IdState));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("sub_premises_num", subPremise.SubPremisesNum));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", subPremise.TotalArea));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", subPremise.Description));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_sub_premises", subPremise.IdSubPremises));
                 try
                 {
                     return connection.SqlModifyQuery(command);
@@ -129,7 +141,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось изменить комнату в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

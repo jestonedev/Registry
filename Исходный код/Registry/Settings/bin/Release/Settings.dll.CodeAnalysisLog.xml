@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="c:\program files\microsoft visual studio 10.0\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
+<FxCopReport Version="10.0">
+ <Targets>
+  <Target Name="D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Settings\bin\Release\Settings.dll">
+   <Modules>
+    <Module Name="settings.dll">
+     <Namespaces>
+      <Namespace Name="Registry">
+       <Types>
+        <Type Name="UserDomain" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Current" Kind="Property" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Accessors>
+            <Accessor Name="#get_Current()" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+             <Messages>
+              <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Status="Active" Created="2014-11-11 07:50:51Z" FixCategory="NonBreaking">
+               <Issue Certainty="95" Level="CriticalError" Path="D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Settings" File="UserDomain.cs" Line="32">Измените 'UserDomain.Current.get()' так, чтобы перехватывались более специфические, чем 'object', исключения, либо обеспечьте повторное порождение исключения.</Issue>
+              </Message>
+             </Messages>
+            </Accessor>
+           </Accessors>
+          </Member>
+         </Members>
+        </Type>
+       </Types>
+      </Namespace>
+     </Namespaces>
+    </Module>
+   </Modules>
+  </Target>
+ </Targets>
+ <Rules>
+  <Rule TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031">
+   <Name>Не перехватывайте типы общих исключений</Name>
+   <Description>Не следует перехватывать исключения типа Exception или SystemException. Перехватывание исключений общего назначения может скрыть от пользователя библиотеки ошибки времени выполнения и осложнить процесс отладки. Перехватывать следует только те исключения, которые вы можете правильно обработать.</Description>
+   <Resolution Name="Default">Измените {0} так, чтобы перехватывались более специфические, чем {1}, исключения, либо обеспечьте повторное порождение исключения.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182137(VS.100).aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="95">CriticalError</MessageLevel>
+   <File Name="designrules.dll" Version="10.0.0.0" />
+  </Rule>
+ </Rules>
+ <Localized>
+  <String Key="Category">Категория</String>
+  <String Key="Certainty">Достоверность</String>
+  <String Key="CollapseAll">Свернуть все</String>
+  <String Key="CheckId">ИД проверки</String>
+  <String Key="Error">Ошибка</String>
+  <String Key="Errors">ошибки</String>
+  <String Key="ExpandAll">Развернуть все</String>
+  <String Key="Help">Справка</String>
+  <String Key="Line">Строка</String>
+  <String Key="Messages">сообщения</String>
+  <String Key="LocationNotStoredInPdb">[расположение не сохранено в PDB]</String>
+  <String Key="Project">Проект</String>
+  <String Key="Resolution">Разрешение</String>
+  <String Key="Rule">Правило</String>
+  <String Key="RuleFile">Файл правил</String>
+  <String Key="RuleDescription">Описание правила</String>
+  <String Key="Source">Источник</String>
+  <String Key="Status">Состояние</String>
+  <String Key="Target">Цель</String>
+  <String Key="Warning">Предупреждение</String>
+  <String Key="Warnings">предупреждения</String>
+  <String Key="ReportTitle">Отчет по анализу кода</String>
+ </Localized>
+</FxCopReport>

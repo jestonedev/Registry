@@ -21,7 +21,7 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_state"] };
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_state"] };
         }
 
         public static ObjectStatesDataModel GetInstance()

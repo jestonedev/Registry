@@ -30,8 +30,8 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_reason"] };
-            table.Columns["reason_date"].DefaultValue = DateTime.Now.Date;
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_reason"] };
+            Table.Columns["reason_date"].DefaultValue = DateTime.Now.Date;
         }
 
         public static TenancyReasonsDataModel GetInstance()
@@ -57,14 +57,14 @@ namespace Registry.DataModels
                 if (tenancyReason == null)
                 {
                     MessageBox.Show("В метод Insert не передана ссылка на сущность основания найма", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyReason.id_process));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_reason_type", tenancyReason.id_reason_type));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_number", tenancyReason.reason_number));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("reason_date", tenancyReason.reason_date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_prepared", tenancyReason.reason_prepared));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyReason.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_reason_type", tenancyReason.IdReasonType));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_number", tenancyReason.ReasonNumber));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("reason_date", tenancyReason.ReasonDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_prepared", tenancyReason.ReasonPrepared));
                 try
                 {
                     connection.SqlBeginTransaction();
@@ -74,7 +74,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return -1;
                     }
                     return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
@@ -84,7 +84,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось добавить основание найма в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -99,15 +99,15 @@ namespace Registry.DataModels
                 if (tenancyReason == null)
                 {
                     MessageBox.Show("В метод Update не передана ссылка на сущность основания найма", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyReason.id_process));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_reason_type", tenancyReason.id_reason_type));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_number", tenancyReason.reason_number));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("reason_date", tenancyReason.reason_date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_prepared", tenancyReason.reason_prepared));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_reason", tenancyReason.id_reason));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyReason.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_reason_type", tenancyReason.IdReasonType));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_number", tenancyReason.ReasonNumber));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("reason_date", tenancyReason.ReasonDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_prepared", tenancyReason.ReasonPrepared));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_reason", tenancyReason.IdReason));
 
                 try
                 {
@@ -118,7 +118,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось изменить основание найма в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -139,7 +139,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось удалить основание найма из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

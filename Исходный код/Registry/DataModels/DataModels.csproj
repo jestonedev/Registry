@@ -63,7 +63,7 @@
     <Compile Include="DataModels\ClaimStateTypesRelationsDataModel.cs" />
     <Compile Include="DataModels\TenancyReasonsDataModel.cs" />
     <Compile Include="DataModels\DataModelCalculateEnity.cs" />
-    <Compile Include="DataModels\DataModelException.cs" />
+    <Compile Include="DataModelException.cs" />
     <Compile Include="DataModels\DataModel.cs" />
     <Compile Include="DataModels\DataModelLoadState.cs" />
     <Compile Include="DataModels\DataModelLoadSyncType.cs" />
@@ -91,7 +91,7 @@
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DataModels\TenancyReasonTypesDataModel.cs" />
-    <Compile Include="RelationsManager.cs" />
+    <Compile Include="DataSetManager.cs" />
     <Compile Include="DataModels\RentTypesDataModel.cs" />
     <Compile Include="DataModels\RestrictionsBuildingsAssocDataModel.cs" />
     <Compile Include="DataModels\RestrictionsDataModel.cs" />

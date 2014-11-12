@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Globalization;
 
 namespace Registry.Reporting.TenancyReporters
 {
@@ -10,19 +11,23 @@ namespace Registry.Reporting.TenancyReporters
     {
         public override void Run(Dictionary<string, string> arguments)
         {
+            if (arguments == null)
+                arguments = new Dictionary<string, string>();
             arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "tenancy\\excerpt.xml"));
             arguments.Add("connectionString", RegistrySettings.ConnectionString);
-            TenancyExcerptSettingsForm tesForm = new TenancyExcerptSettingsForm();
-            if (tesForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            using (TenancyExcerptSettingsForm tesForm = new TenancyExcerptSettingsForm())
             {
-                arguments.Add("is_culture_memorial", tesForm.is_culture_memorial.ToString());
-                arguments.Add("registry_insert_date", tesForm.registry_insert_date.ToString("dd.MM.yyyy"));
-                arguments.Add("excerpt_date_from", tesForm.excerpt_date_from.ToString("dd.MM.yyyy"));
-                arguments.Add("excerpt_number", tesForm.excerpt_number);
-                base.Run(arguments);
+                if (tesForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    arguments.Add("is_culture_memorial", tesForm.IsCultureMemorial.ToString());
+                    arguments.Add("registry_insert_date", tesForm.RegistryInsertDate.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
+                    arguments.Add("excerpt_date_from", tesForm.ExcerptDateFrom.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
+                    arguments.Add("excerpt_number", tesForm.ExcerptNumber);
+                    base.Run(arguments);
+                }
+                else
+                    base.Cancel();
             }
-            else
-                base.Cancel();
         }
     }
 }

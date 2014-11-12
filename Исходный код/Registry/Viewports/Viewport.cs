@@ -6,14 +6,18 @@ using System.Data;
 using Registry.Entities;
 using WeifenLuo.WinFormsUI.Docking;
 using Registry.Reporting;
+using Registry.SearchForms;
 
 namespace Registry.Viewport
 {
     public class Viewport: DockContent, IMenuController
     {
-        protected readonly IMenuCallback menuCallback;
+        private IMenuCallback menuCallback;
+
+        protected IMenuCallback MenuCallback { get { return menuCallback; } set { menuCallback = value; } }
         private bool selected_ = false;
 
+        
         public string StaticFilter { get; set; }
         public string DynamicFilter { get; set; }
         public DataRow ParentRow { get; set; }
@@ -21,30 +25,26 @@ namespace Registry.Viewport
 
         protected Viewport(): this(null)
         {
-            InitializeComponent();
         }
 
-        private void InitializeComponent()
-        {
-        }
         protected Viewport(IMenuCallback menuCallback)
         {
             StaticFilter = "";
             DynamicFilter = "";
             ParentRow = null;
             ParentType = ParentTypeEnum.None;
-            this.menuCallback = menuCallback;
+            this.MenuCallback = menuCallback;
         }
 
         public new virtual void Close()
         {
-            menuCallback.SwitchToPreviousViewport();
+            MenuCallback.SwitchToPreviousViewport();
             base.Close();
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            menuCallback.SwitchToPreviousViewport();
+            MenuCallback.SwitchToPreviousViewport();
             base.OnClosing(e);
         }
 
@@ -226,6 +226,8 @@ namespace Registry.Viewport
         protected virtual Viewport ShowAssocViewport(IMenuCallback menuCallback, ViewportType viewportType, 
             string staticFilter, DataRow parentRow, ParentTypeEnum parentType)
         {
+            if (menuCallback == null)
+                throw new ViewportException("Не заданна ссылка на интерфейс menuCallback");
             Viewport viewport = ViewportFactory.CreateViewport(menuCallback, viewportType);
             viewport.StaticFilter = staticFilter;
             viewport.ParentRow = parentRow;

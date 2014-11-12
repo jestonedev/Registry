@@ -21,7 +21,7 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_premises_kind"] };
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_premises_kind"] };
         }
 
         public static PremisesKindsDataModel GetInstance()

@@ -17,7 +17,7 @@
     <Setting Name="ActivityManagerPath" Type="System.String" Scope="User">
       <Value Profile="(Default)">\\nas\media$\ActivityManager\ActivityManager.exe</Value>
     </Setting>
-    <Setting Name="ActivityManagerOutputCodepage" Type="System.String" Scope="User">
+    <Setting Name="ActivityManagerOutputCodePage" Type="System.String" Scope="User">
       <Value Profile="(Default)">cp866</Value>
     </Setting>
     <Setting Name="ActivityManagerConfigsPath" Type="System.String" Scope="User">

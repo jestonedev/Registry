@@ -7,6 +7,7 @@ using Registry.DataModels;
 using System.Data;
 using Registry.Entities;
 using Security;
+using System.Globalization;
 
 namespace Registry.Viewport
 {
@@ -96,7 +97,7 @@ namespace Registry.Viewport
             {
                 if ((ParentRow != null) && (ParentType == ParentTypeEnum.Tenancy))
                 {
-                    this.Text = String.Format("Новая исковая работа найма №{0}", ParentRow["id_process"]);
+                    this.Text = String.Format(CultureInfo.CurrentCulture, "Новая исковая работа найма №{0}", ParentRow["id_process"]);
                 }
                 else
                     this.Text = "Новая исковая работа";
@@ -105,15 +106,15 @@ namespace Registry.Viewport
                 if (v_claims.Position != -1)
                 {
                     if ((ParentRow != null) && (ParentType == ParentTypeEnum.Tenancy))
-                        this.Text = String.Format("Исковая работа №{0} найма №{1}",
+                        this.Text = String.Format(CultureInfo.CurrentCulture, "Исковая работа №{0} найма №{1}",
                             ((DataRowView)v_claims[v_claims.Position])["id_claim"], ParentRow["id_process"]);
                     else
-                        this.Text = String.Format("Исковая работа №{0}", ((DataRowView)v_claims[v_claims.Position])["id_claim"]);
+                        this.Text = String.Format(CultureInfo.CurrentCulture, "Исковая работа №{0}", ((DataRowView)v_claims[v_claims.Position])["id_claim"]);
                 }
                 else
                 {
                     if ((ParentRow != null) && (ParentType == ParentTypeEnum.Tenancy))
-                        this.Text = String.Format("Исковые работы в найме №{0} отсутствуют", ParentRow["id_process"]);
+                        this.Text = String.Format(CultureInfo.CurrentCulture, "Исковые работы в найме №{0} отсутствуют", ParentRow["id_process"]);
                     else
                         this.Text = "Исковые работы отсутствуют";
                 }
@@ -191,7 +192,7 @@ namespace Registry.Viewport
                 if (viewportState == ViewportState.ReadState)
                 {
                     viewportState = ViewportState.ModifyRowState;
-                    menuCallback.EditingStateUpdate();
+                    MenuCallback.EditingStateUpdate();
                     dataGridViewClaims.Enabled = false;
                 }
             }
@@ -200,7 +201,7 @@ namespace Registry.Viewport
                 if (viewportState == ViewportState.ModifyRowState)
                 {
                     viewportState = ViewportState.ReadState;
-                    menuCallback.EditingStateUpdate();
+                    MenuCallback.EditingStateUpdate();
                     dataGridViewClaims.Enabled = true;
                 }
             }
@@ -218,7 +219,7 @@ namespace Registry.Viewport
                         case ViewportState.NewRowState:
                         case ViewportState.ModifyRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -246,7 +247,7 @@ namespace Registry.Viewport
                             return true;
                         case ViewportState.ModifyRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -270,7 +271,7 @@ namespace Registry.Viewport
                             return true;
                         case ViewportState.NewRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -290,19 +291,19 @@ namespace Registry.Viewport
 
         private bool ValidateClaim(Claim claim)
         {
-            if (claim.id_process == null)
+            if (claim.IdProcess == null)
             {
                 MessageBox.Show("Необходимо задать внутренний номер процесса найм. Если вы видите это сообщение, обратитесь к системному администратору",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             var tenancy_rows = from tenancy_row in DataModelHelper.FilterRows(TenancyProcessesDataModel.GetInstance().Select())
-                               where tenancy_row.Field<int>("id_process") == claim.id_process
+                               where tenancy_row.Field<int>("id_process") == claim.IdProcess
                                select tenancy_row;
             if (tenancy_rows.Count() == 0)
             {
                 MessageBox.Show("Процесса найма с указаннным внутренним номером не существует",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 numericUpDownProcessID.Focus();
                 return false;
             }
@@ -313,19 +314,19 @@ namespace Registry.Viewport
         {
             Claim claim = new Claim();
             DataRowView row = (DataRowView)v_claims[v_claims.Position];
-            claim.id_claim = ViewportHelper.ValueOrNull<int>(row, "id_claim");
-            claim.id_process = ViewportHelper.ValueOrNull<int>(row, "id_process");
-            claim.amount_of_debt_rent = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_debt_rent");
-            claim.amount_of_debt_fine = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_debt_fine");
-            claim.amount_of_rent = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_rent");
-            claim.amount_of_fine = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_fine");
-            claim.amount_of_rent_recover = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_rent_recover");
-            claim.amount_of_fine_recover = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_fine_recover");
-            claim.date_of_transfer = ViewportHelper.ValueOrNull<DateTime>(row, "date_of_transfer");
-            claim.at_date = ViewportHelper.ValueOrNull<DateTime>(row, "at_date");
-            claim.start_dept_period = ViewportHelper.ValueOrNull<DateTime>(row, "start_dept_period");
-            claim.end_dept_period = ViewportHelper.ValueOrNull<DateTime>(row, "end_dept_period");
-            claim.description = ViewportHelper.ValueOrNull(row, "description");
+            claim.IdClaim = ViewportHelper.ValueOrNull<int>(row, "id_claim");
+            claim.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
+            claim.AmountOfDebtRent = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_debt_rent");
+            claim.AmountOfDebtFine = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_debt_fine");
+            claim.AmountOfRent = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_rent");
+            claim.AmountOfFine = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_fine");
+            claim.AmountOfRentRecover = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_rent_recover");
+            claim.AmountOfFineRecover = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_fine_recover");
+            claim.DateOfTransfer = ViewportHelper.ValueOrNull<DateTime>(row, "date_of_transfer");
+            claim.AtDate = ViewportHelper.ValueOrNull<DateTime>(row, "at_date");
+            claim.StartDeptPeriod = ViewportHelper.ValueOrNull<DateTime>(row, "start_dept_period");
+            claim.EndDeptPeriod = ViewportHelper.ValueOrNull<DateTime>(row, "end_dept_period");
+            claim.Description = ViewportHelper.ValueOrNull(row, "description");
             return claim;
         }
 
@@ -333,55 +334,56 @@ namespace Registry.Viewport
         {
             Claim claim = new Claim();
             if ((v_claims.Position == -1) || ((DataRowView)v_claims[v_claims.Position])["id_claim"] is DBNull)
-                claim.id_claim = null;
+                claim.IdClaim = null;
             else
-                claim.id_claim = Convert.ToInt32(((DataRowView)v_claims[v_claims.Position])["id_claim"]);
-            claim.id_process = Convert.ToInt32(numericUpDownProcessID.Value);
-            claim.amount_of_debt_rent = numericUpDownAmountOfDebtRent.Value;
-            claim.amount_of_debt_fine = numericUpDownAmountOfDebtFine.Value;
-            claim.amount_of_rent = numericUpDownAmountOfRent.Value;
-            claim.amount_of_fine = numericUpDownAmountOfFine.Value;
-            claim.amount_of_rent_recover = numericUpDownAmountOfRentRecover.Value;
-            claim.amount_of_fine_recover = numericUpDownAmountOfFineRecover.Value;
-            claim.date_of_transfer = ViewportHelper.ValueOrNull(dateTimePickerDateOfTransfer);
-            claim.at_date = ViewportHelper.ValueOrNull(dateTimePickerAtDate);
-            claim.start_dept_period = ViewportHelper.ValueOrNull(dateTimePickerStartDeptPeriod);
-            claim.end_dept_period = ViewportHelper.ValueOrNull(dateTimePickerEndDeptPeriod);
-            claim.description = ViewportHelper.ValueOrNull(textBoxDescription);
+                claim.IdClaim = Convert.ToInt32(((DataRowView)v_claims[v_claims.Position])["id_claim"], CultureInfo.CurrentCulture);
+            claim.IdProcess = Convert.ToInt32(numericUpDownProcessID.Value);
+            claim.AmountOfDebtRent = numericUpDownAmountOfDebtRent.Value;
+            claim.AmountOfDebtFine = numericUpDownAmountOfDebtFine.Value;
+            claim.AmountOfRent = numericUpDownAmountOfRent.Value;
+            claim.AmountOfFine = numericUpDownAmountOfFine.Value;
+            claim.AmountOfRentRecover = numericUpDownAmountOfRentRecover.Value;
+            claim.AmountOfFineRecover = numericUpDownAmountOfFineRecover.Value;
+            claim.DateOfTransfer = ViewportHelper.ValueOrNull(dateTimePickerDateOfTransfer);
+            claim.AtDate = ViewportHelper.ValueOrNull(dateTimePickerAtDate);
+            claim.StartDeptPeriod = ViewportHelper.ValueOrNull(dateTimePickerStartDeptPeriod);
+            claim.EndDeptPeriod = ViewportHelper.ValueOrNull(dateTimePickerEndDeptPeriod);
+            claim.Description = ViewportHelper.ValueOrNull(textBoxDescription);
             return claim;
         }
 
         private void ViewportFromClaim(Claim claim)
         {
-            numericUpDownAmountOfDebtFine.Value = ViewportHelper.ValueOrDefault(claim.amount_of_debt_fine);
-            numericUpDownAmountOfDebtRent.Value = ViewportHelper.ValueOrDefault(claim.amount_of_debt_rent);
-            numericUpDownAmountOfFine.Value = ViewportHelper.ValueOrDefault(claim.amount_of_fine);
-            numericUpDownAmountOfRent.Value = ViewportHelper.ValueOrDefault(claim.amount_of_rent);
-            numericUpDownAmountOfFineRecover.Value = ViewportHelper.ValueOrDefault(claim.amount_of_fine_recover);
-            numericUpDownAmountOfRentRecover.Value = ViewportHelper.ValueOrDefault(claim.amount_of_rent_recover);
-            dateTimePickerDateOfTransfer.Value = ViewportHelper.ValueOrDefault(claim.date_of_transfer);
-            dateTimePickerAtDate.Value = ViewportHelper.ValueOrDefault(claim.at_date);
-            dateTimePickerStartDeptPeriod.Value = ViewportHelper.ValueOrDefault(claim.start_dept_period);
-            dateTimePickerEndDeptPeriod.Value = ViewportHelper.ValueOrDefault(claim.end_dept_period);
-            textBoxDescription.Text = claim.description;
+            numericUpDownProcessID.Value = ViewportHelper.ValueOrDefault(claim.IdProcess);
+            numericUpDownAmountOfDebtFine.Value = ViewportHelper.ValueOrDefault(claim.AmountOfDebtFine);
+            numericUpDownAmountOfDebtRent.Value = ViewportHelper.ValueOrDefault(claim.AmountOfDebtRent);
+            numericUpDownAmountOfFine.Value = ViewportHelper.ValueOrDefault(claim.AmountOfFine);
+            numericUpDownAmountOfRent.Value = ViewportHelper.ValueOrDefault(claim.AmountOfRent);
+            numericUpDownAmountOfFineRecover.Value = ViewportHelper.ValueOrDefault(claim.AmountOfFineRecover);
+            numericUpDownAmountOfRentRecover.Value = ViewportHelper.ValueOrDefault(claim.AmountOfRentRecover);
+            dateTimePickerDateOfTransfer.Value = ViewportHelper.ValueOrDefault(claim.DateOfTransfer);
+            dateTimePickerAtDate.Value = ViewportHelper.ValueOrDefault(claim.AtDate);
+            dateTimePickerStartDeptPeriod.Value = ViewportHelper.ValueOrDefault(claim.StartDeptPeriod);
+            dateTimePickerEndDeptPeriod.Value = ViewportHelper.ValueOrDefault(claim.EndDeptPeriod);
+            textBoxDescription.Text = claim.Description;
         }
 
-        private void FillRowFromClaim(Claim claim, DataRowView row)
+        private static void FillRowFromClaim(Claim claim, DataRowView row)
         {
             row.BeginEdit();
-            row["id_claim"] = ViewportHelper.ValueOrDBNull(claim.id_claim);
-            row["id_process"] = ViewportHelper.ValueOrDBNull(claim.id_process);
-            row["date_of_transfer"] = ViewportHelper.ValueOrDBNull(claim.date_of_transfer);
-            row["at_date"] = ViewportHelper.ValueOrDBNull(claim.at_date);
-            row["start_dept_period"] = ViewportHelper.ValueOrDBNull(claim.start_dept_period);
-            row["end_dept_period"] = ViewportHelper.ValueOrDBNull(claim.end_dept_period);
-            row["amount_of_debt_rent"] = ViewportHelper.ValueOrDBNull(claim.amount_of_debt_rent);
-            row["amount_of_debt_fine"] = ViewportHelper.ValueOrDBNull(claim.amount_of_debt_fine);
-            row["amount_of_rent"] = ViewportHelper.ValueOrDBNull(claim.amount_of_rent);
-            row["amount_of_fine"] = ViewportHelper.ValueOrDBNull(claim.amount_of_fine);
-            row["amount_of_rent_recover"] = ViewportHelper.ValueOrDBNull(claim.amount_of_rent_recover);
-            row["amount_of_fine_recover"] = ViewportHelper.ValueOrDBNull(claim.amount_of_fine_recover);
-            row["description"] = ViewportHelper.ValueOrDBNull(claim.description);
+            row["id_claim"] = ViewportHelper.ValueOrDBNull(claim.IdClaim);
+            row["id_process"] = ViewportHelper.ValueOrDBNull(claim.IdProcess);
+            row["date_of_transfer"] = ViewportHelper.ValueOrDBNull(claim.DateOfTransfer);
+            row["at_date"] = ViewportHelper.ValueOrDBNull(claim.AtDate);
+            row["start_dept_period"] = ViewportHelper.ValueOrDBNull(claim.StartDeptPeriod);
+            row["end_dept_period"] = ViewportHelper.ValueOrDBNull(claim.EndDeptPeriod);
+            row["amount_of_debt_rent"] = ViewportHelper.ValueOrDBNull(claim.AmountOfDebtRent);
+            row["amount_of_debt_fine"] = ViewportHelper.ValueOrDBNull(claim.AmountOfDebtFine);
+            row["amount_of_rent"] = ViewportHelper.ValueOrDBNull(claim.AmountOfRent);
+            row["amount_of_fine"] = ViewportHelper.ValueOrDBNull(claim.AmountOfFine);
+            row["amount_of_rent_recover"] = ViewportHelper.ValueOrDBNull(claim.AmountOfRentRecover);
+            row["amount_of_fine_recover"] = ViewportHelper.ValueOrDBNull(claim.AmountOfFineRecover);
+            row["description"] = ViewportHelper.ValueOrDBNull(claim.Description);
             row.EndEdit();
         }
 
@@ -460,14 +462,14 @@ namespace Registry.Viewport
             // Ожидаем дозагрузки, если это необходимо
             claims.Select();
 
-            DataSet ds = DataSetManager.GetDataSet();
+            DataSet ds = DataSetManager.DataSet;
 
             v_claims = new BindingSource();
             v_claims.CurrentItemChanged += new EventHandler(v_claims_CurrentItemChanged);
             v_claims.DataMember = "claims";
             v_claims.DataSource = ds;
             v_claims.Filter = StaticFilter;
-            if (StaticFilter != "" && DynamicFilter != "")
+            if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
                 v_claims.Filter += " AND ";
             v_claims.Filter += DynamicFilter;
 
@@ -521,10 +523,10 @@ namespace Registry.Viewport
             dataGridViewClaims.Enabled = false;
             claims.EditingNewRecord = true;
             ViewportFromClaim(claim);
-            dateTimePickerDateOfTransfer.Checked = (claim.date_of_transfer != null);
-            dateTimePickerAtDate.Checked = (claim.at_date != null);
-            dateTimePickerStartDeptPeriod.Checked = (claim.start_dept_period != null);
-            dateTimePickerEndDeptPeriod.Checked = (claim.end_dept_period != null);
+            dateTimePickerDateOfTransfer.Checked = (claim.DateOfTransfer != null);
+            dateTimePickerAtDate.Checked = (claim.AtDate != null);
+            dateTimePickerStartDeptPeriod.Checked = (claim.StartDeptPeriod != null);
+            dateTimePickerEndDeptPeriod.Checked = (claim.EndDeptPeriod != null);
             if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
                 numericUpDownProcessID.Value = (int)ParentRow["id_process"];
             is_editable = true;
@@ -538,14 +540,17 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 if (ClaimsDataModel.Delete((int)((DataRowView)v_claims.Current)["id_claim"]) == -1)
                     return;
                 is_editable = false;
                 ((DataRowView)v_claims[v_claims.Position]).Delete();
                 is_editable = true;
-                menuCallback.ForceCloseDetachedViewports();
+                viewportState = ViewportState.ReadState;
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.ForceCloseDetachedViewports();
             }
         }
 
@@ -564,14 +569,14 @@ namespace Registry.Viewport
             {
                 case ViewportState.ReadState:
                     MessageBox.Show("Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
                     int id_claim = ClaimsDataModel.Insert(claim);
                     if (id_claim == -1)
                         return;
                     DataRowView newRow;
-                    claim.id_claim = id_claim;
+                    claim.IdClaim = id_claim;
                     is_editable = false;
                     if (v_claims.Position == -1)
                         newRow = (DataRowView)v_claims.AddNew();
@@ -581,10 +586,11 @@ namespace Registry.Viewport
                     claims.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
-                    if (claim.id_claim == null)
+                    if (claim.IdClaim == null)
                     {
                         MessageBox.Show("Вы пытаетесь изменить запись о претензионно-исковой работе без внутреннего номера. " +
-                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
                     if (ClaimsDataModel.Update(claim) == -1)
@@ -598,7 +604,8 @@ namespace Registry.Viewport
             dataGridViewClaims.Enabled = true;
             is_editable = true;
             viewportState = ViewportState.ReadState;
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
+            SetViewportCaption();
         }
 
         public override bool CanCancelRecord()
@@ -633,7 +640,7 @@ namespace Registry.Viewport
             }
             UnbindedCheckBoxesUpdate();
             is_editable = true;
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
             SetViewportCaption();
         }
 
@@ -644,7 +651,7 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            ClaimListViewport viewport = new ClaimListViewport(this, menuCallback);
+            ClaimListViewport viewport = new ClaimListViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             if (v_claims.Count > 0)
@@ -654,6 +661,8 @@ namespace Registry.Viewport
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            if (e == null)
+                return;
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
             else
@@ -683,11 +692,11 @@ namespace Registry.Viewport
                 return;
             if (v_claims.Position == -1)
             {
-                MessageBox.Show("Не выбрана протензионно-исковая работа для отображения ее состояний", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Не выбрана протензионно-исковая работа для отображения ее состояний", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport(menuCallback, ViewportType.ClaimStatesViewport,
-                "id_claim = " + Convert.ToInt32(((DataRowView)v_claims[v_claims.Position])["id_claim"]),
+            ShowAssocViewport(MenuCallback, ViewportType.ClaimStatesViewport,
+                "id_claim = " + Convert.ToInt32(((DataRowView)v_claims[v_claims.Position])["id_claim"], CultureInfo.CurrentCulture),
                 ((DataRowView)v_claims[v_claims.Position]).Row, ParentTypeEnum.Claim);
         }
 
@@ -695,22 +704,15 @@ namespace Registry.Viewport
         {
             SetViewportCaption();
             if (v_claims.Position == -1 || dataGridViewClaims.RowCount == 0)
-            {
                 dataGridViewClaims.ClearSelection();
-                return;
-            }
-            if (v_claims.Position >= dataGridViewClaims.RowCount)
-            {
-                dataGridViewClaims.Rows[dataGridViewClaims.RowCount - 1].Selected = true;
-                dataGridViewClaims.CurrentCell = dataGridViewClaims.Rows[dataGridViewClaims.RowCount - 1].Cells[0];
-            }
             else
-            {
-                dataGridViewClaims.Rows[v_claims.Position].Selected = true;
-                dataGridViewClaims.CurrentCell = dataGridViewClaims.Rows[v_claims.Position].Cells[0];
-            }
+                if (v_claims.Position >= dataGridViewClaims.RowCount)
+                    dataGridViewClaims.Rows[dataGridViewClaims.RowCount - 1].Selected = true;
+            else
+                    if (dataGridViewClaims.Rows[v_claims.Position].Selected != true)
+                        dataGridViewClaims.Rows[v_claims.Position].Selected = true;
             if (Selected)
-                menuCallback.NavigationStateUpdate();
+                MenuCallback.NavigationStateUpdate();
             UnbindedCheckBoxesUpdate();
             if (v_claims.Position == -1)
                 return;
@@ -758,7 +760,7 @@ namespace Registry.Viewport
                     break;
                 case "date_of_transfer":
                     e.Value = ((DataRowView)v_claims[e.RowIndex])["date_of_transfer"] == DBNull.Value ? "" :
-                        ((DateTime)((DataRowView)v_claims[e.RowIndex])["date_of_transfer"]).ToString("dd.MM.yyyy");
+                        ((DateTime)((DataRowView)v_claims[e.RowIndex])["date_of_transfer"]).ToString("dd.MM.yyyy", CultureInfo.CurrentCulture);
                     break;
                 case "amount_of_debt_rent":
                     e.Value = ((DataRowView)v_claims[e.RowIndex])["amount_of_debt_rent"];
@@ -768,7 +770,7 @@ namespace Registry.Viewport
                     break;
                 case "at_date":
                     e.Value = ((DataRowView)v_claims[e.RowIndex])["at_date"] == DBNull.Value ? "" :
-                        ((DateTime)((DataRowView)v_claims[e.RowIndex])["at_date"]).ToString("dd.MM.yyyy");
+                        ((DateTime)((DataRowView)v_claims[e.RowIndex])["at_date"]).ToString("dd.MM.yyyy", CultureInfo.CurrentCulture);
                     break;
                 case "description":
                     e.Value = ((DataRowView)v_claims[e.RowIndex])["description"];

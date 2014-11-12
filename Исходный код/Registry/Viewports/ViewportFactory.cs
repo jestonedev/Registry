@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Globalization;
 
 namespace Registry.Viewport
 {
@@ -61,7 +62,7 @@ namespace Registry.Viewport
                     return new FundsHistoryViewport(menuCallback);
             }
             throw new ViewportException(
-                String.Format("В фабрику ViewportFactory передан неизвестный тип {0}", viewportType.ToString()));
+                String.Format(CultureInfo.CurrentCulture, "В фабрику ViewportFactory передан неизвестный тип {0}", viewportType.ToString()));
         }
     }
 }

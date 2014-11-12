@@ -7,24 +7,18 @@ namespace Registry.Entities
 {
     public sealed class ClaimState
     {
-        public int? id_state { get; set; }
-        public int? id_claim { get; set; }
-        public int? id_state_type { get; set; }
-        public DateTime? date_start_state { get; set; }
-        public DateTime? date_end_state { get; set; }
-        public string document_num { get; set; }
-        public DateTime? document_date { get; set; }
-        public string description { get; set; }
+        public int? IdState { get; set; }
+        public int? IdClaim { get; set; }
+        public int? IdStateType { get; set; }
+        public DateTime? DateStartState { get; set; }
+        public DateTime? DateEndState { get; set; }
+        public string DocumentNum { get; set; }
+        public DateTime? DocumentDate { get; set; }
+        public string Description { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is ClaimState))
-                return false;
-            ClaimState obj_claim_state = (ClaimState)obj;
-            if (this == obj_claim_state)
-                return true;
-            else
-                return false;
+            return (this == (obj as ClaimState));
         }
 
         public bool Equals(ClaimState other)
@@ -34,14 +28,20 @@ namespace Registry.Entities
 
         public static bool operator ==(ClaimState first, ClaimState second)
         {
-            return first.id_state == second.id_state &&
-                first.id_claim == second.id_claim &&
-                first.id_state_type == second.id_state_type &&
-                first.date_start_state == second.date_start_state &&
-                first.date_end_state == second.date_end_state &&
-                first.document_num == second.document_num &&
-                first.document_date == second.document_date &&
-                first.description == second.description;
+            if ((object)first == null && (object)second == null)
+                return true;
+            else
+                if ((object)first == null || (object)second == null)
+                    return false;
+                else
+            return first.IdState == second.IdState &&
+                first.IdClaim == second.IdClaim &&
+                first.IdStateType == second.IdStateType &&
+                first.DateStartState == second.DateStartState &&
+                first.DateEndState == second.DateEndState &&
+                first.DocumentNum == second.DocumentNum &&
+                first.DocumentDate == second.DocumentDate &&
+                first.Description == second.Description;
         }
 
         public static bool operator !=(ClaimState first, ClaimState second)

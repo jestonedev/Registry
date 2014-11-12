@@ -93,15 +93,15 @@ namespace Registry
             }
         }
 
-        public static string ActivityManagerOutputCodepage
+        public static string ActivityManagerOutputCodePage
         {
             get
             {
-                return Settings.Properties.Settings.Default.ActivityManagerOutputCodepage;
+                return Settings.Properties.Settings.Default.ActivityManagerOutputCodePage;
             }
             set
             {
-                Settings.Properties.Settings.Default.ActivityManagerOutputCodepage = value;
+                Settings.Properties.Settings.Default.ActivityManagerOutputCodePage = value;
             }
         }
 
@@ -121,14 +121,7 @@ namespace Registry
         {
             get
             {
-                try
-                {
-                    return Settings.Properties.Settings.Default.MaxDBConnectionCount;
-                }
-                catch
-                {
-                    return 10;
-                }
+                return Settings.Properties.Settings.Default.MaxDBConnectionCount;
             }
             set
             {

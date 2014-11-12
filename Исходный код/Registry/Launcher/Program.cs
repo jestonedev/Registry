@@ -10,13 +10,15 @@ namespace Launcher
     static class Program
     {
         [STAThread]
-        static void Main(string[] args)
+        static void Main()
         {
             string exeApp = ConfigurationManager.AppSettings["exeApp"];
-            Process process = new Process();
-            ProcessStartInfo psi = new ProcessStartInfo(exeApp);
-            process.StartInfo = psi;
-            process.Start();
+            using (Process process = new Process())
+            {
+                ProcessStartInfo psi = new ProcessStartInfo(exeApp);
+                process.StartInfo = psi;
+                process.Start();
+            }
         }
     }
 }

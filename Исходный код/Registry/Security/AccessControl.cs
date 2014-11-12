@@ -7,35 +7,37 @@ using System.Data;
 using System.Data.Common;
 using System.Windows.Forms;
 using System.Data.Odbc;
+using System.Globalization;
 
 namespace Security
 {
     public static class AccessControl
     {
         private static int priveleges;
-        private static string query = @"SELECT f_user_privileges('{0}')";
+        private static string query = @"SELECT f_user_privileges()";
 
         public static void LoadPriveleges()
         {
             using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
             {
-                DbCommand command = DBConnection.CreateCommand();
-                command.CommandText = String.Format(query, System.Security.Principal.WindowsIdentity.GetCurrent().Name.Replace("'", "").Replace("\\", "\\\\"));
+                command.CommandText = query;
                 try
                 {
                     DataTable table = connection.SqlSelectTable("privileges", command);
                     if (table.Rows.Count == 0)
                     {
-                        MessageBox.Show("Запрос не вернул привелегии для данного пользователя", "Неизвестная ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("Запрос не вернул привелегии для данного пользователя", "Неизвестная ошибка",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         priveleges = 0;
                     }
-                    priveleges = Convert.ToInt32(table.Rows[0][0]);
+                    priveleges = Convert.ToInt32(table.Rows[0][0], CultureInfo.CurrentCulture);
                 }
                 catch (OdbcException e)
                 {
                     priveleges = 0;
-                    MessageBox.Show(String.Format("Не удалось загрузить привелегии пользователя", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, "Не удалось загрузить привелегии пользователя. Подробная ошибка: {0}", 
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
             }
         }

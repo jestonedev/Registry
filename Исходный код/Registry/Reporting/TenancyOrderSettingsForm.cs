@@ -7,40 +7,39 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Registry.DataModels;
+using System.Globalization;
 
 namespace Registry.Reporting
 {
     public partial class TenancyOrderSettingsForm : Form
     {
-        ExecutorsDataModel executors = null;
-        RentTypesDataModel rent_types = null;
 
         BindingSource v_rent_types = null;
         BindingSource v_executors = null;
 
-        public int id_rent_type
+        public int IdRentType
         {
             get
             {
                 if (comboBoxRentType.SelectedValue != null)
-                    return Convert.ToInt32(comboBoxRentType.SelectedValue);
+                    return Convert.ToInt32(comboBoxRentType.SelectedValue, CultureInfo.CurrentCulture);
                 else
                     return -1;
             }
         }
 
-        public int id_executor
+        public int IdExecutor
         {
             get
             {
                 if (comboBoxRentType.SelectedValue != null)
-                    return Convert.ToInt32(comboBoxExecutor.SelectedValue);
+                    return Convert.ToInt32(comboBoxExecutor.SelectedValue, CultureInfo.CurrentCulture);
                 else
                     return -1;
             }
         }
 
-        public string protocol_num
+        public string ProtocolNum
         {
             get
             {
@@ -48,7 +47,7 @@ namespace Registry.Reporting
             }
         }
 
-        public DateTime protocol_date
+        public DateTime ProtocolDate
         {
             get
             {
@@ -56,7 +55,7 @@ namespace Registry.Reporting
             }
         }
 
-        public DateTime registration_date_from
+        public DateTime RegistrationDateFrom
         {
             get
             {
@@ -64,7 +63,7 @@ namespace Registry.Reporting
             }
         }
 
-        public DateTime registration_date_to
+        public DateTime RegistrationDateTo
         {
             get
             {
@@ -72,7 +71,7 @@ namespace Registry.Reporting
             }
         }
 
-        public DateTime order_date_from
+        public DateTime OrderDateFrom
         {
             get
             {
@@ -83,10 +82,10 @@ namespace Registry.Reporting
         public TenancyOrderSettingsForm()
         {
             InitializeComponent();
-            rent_types = RentTypesDataModel.GetInstance();
-            executors = ExecutorsDataModel.GetInstance();
+            RentTypesDataModel.GetInstance().Select();
+            ExecutorsDataModel.GetInstance().Select();
 
-            DataSet ds = DataSetManager.GetDataSet();
+            DataSet ds = DataSetManager.DataSet;
 
             v_rent_types = new BindingSource();
             v_rent_types.DataSource = ds;
@@ -108,7 +107,8 @@ namespace Registry.Reporting
             foreach (Control control in this.Controls)
                 control.KeyDown += (sender, e) =>
                 {
-                    if (sender is ComboBox && ((ComboBox)sender).DroppedDown)
+                    ComboBox comboBox = sender as ComboBox;
+                    if (comboBox != null && comboBox.DroppedDown)
                         return;
                     if (e.KeyCode == Keys.Enter)
                         this.DialogResult = System.Windows.Forms.DialogResult.OK;

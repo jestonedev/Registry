@@ -3,3 +3,5 @@ D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Launcher\obj\x86\Release\Launcher.exe
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Launcher\obj\x86\Release\Launcher.pdb
 D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Launcher\bin\Release\Launcher.exe.config
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Launcher\bin\Release\Launcher.exe.CodeAnalysisLog.xml
+D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\Launcher\bin\Release\Launcher.exe.lastcodeanalysissucceeded

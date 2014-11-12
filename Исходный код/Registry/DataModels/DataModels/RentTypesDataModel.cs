@@ -20,7 +20,7 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_rent_type"] };
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_rent_type"] };
         }
 
         public static RentTypesDataModel GetInstance()

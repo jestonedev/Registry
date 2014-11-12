@@ -7,35 +7,29 @@ namespace Registry.Entities
 {
     public sealed class Building
     {
-        public int? id_building { get; set; }
-        public int? id_state { get; set; } 
-        public int? id_structure_type {get; set;} 
-        public string id_street {get; set;} 
-        public string house {get; set;}
-        public short? floors {get;set;} 
-        public int? num_premises {get;set;} 
-        public int? num_rooms {get;set;} 
-        public int? num_apartments {get;set;}
-        public int? num_shared_apartments {get;set;}
-        public double? living_area { get; set; }
-        public double? total_area { get; set; } 
-        public string cadastral_num {get;set;}
-        public decimal? cadastral_cost {get;set;} 
-        public decimal? balance_cost {get;set;} 
-        public string description {get;set;} 
-        public int? startup_year {get;set;}
-        public bool? improvement {get;set;}
-        public bool? elevator { get; set; }
+        public int? IdBuilding { get; set; }
+        public int? IdState { get; set; } 
+        public int? IdStructureType {get; set;} 
+        public string IdStreet {get; set;} 
+        public string House {get; set;}
+        public short? Floors {get;set;} 
+        public int? NumPremises {get;set;} 
+        public int? NumRooms {get;set;} 
+        public int? NumApartments {get;set;}
+        public int? NumSharedApartments {get;set;}
+        public double? LivingArea { get; set; }
+        public double? TotalArea { get; set; } 
+        public string CadastralNum {get;set;}
+        public decimal? CadastralCost {get;set;} 
+        public decimal? BalanceCost {get;set;} 
+        public string Description {get;set;} 
+        public int? StartupYear {get;set;}
+        public bool? Improvement {get;set;}
+        public bool? Elevator { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is Building))
-                return false;
-            Building obj_building = (Building)obj;
-            if (this == obj_building)
-                return true;
-            else
-                return false;
+            return (this == (obj as Building));
         }
 
         public bool Equals(Building other)
@@ -45,25 +39,31 @@ namespace Registry.Entities
 
         public static bool operator==(Building first, Building second)
         {
-            return first.id_building == second.id_building &&
-                first.id_street == second.id_street &&
-                first.id_structure_type == second.id_structure_type &&
-                first.house == second.house &&
-                first.floors == second.floors &&
-                first.num_premises == second.num_premises &&
-                first.num_rooms == second.num_rooms &&
-                first.num_apartments == second.num_apartments &&
-                first.num_shared_apartments == second.num_shared_apartments &&
-                first.total_area == second.total_area &&
-                first.living_area == second.living_area &&
-                first.cadastral_num == second.cadastral_num &&
-                first.cadastral_cost == second.cadastral_cost &&
-                first.balance_cost == second.balance_cost &&
-                first.description == second.description &&
-                first.startup_year == second.startup_year &&
-                first.improvement == second.improvement &&
-                first.elevator == second.elevator &&
-                first.id_state == second.id_state;
+            if ((object)first == null && (object)second == null)
+                return true;
+            else
+                if ((object)first == null || (object)second == null)
+                    return false;
+                else
+            return first.IdBuilding == second.IdBuilding &&
+                first.IdStreet == second.IdStreet &&
+                first.IdStructureType == second.IdStructureType &&
+                first.House == second.House &&
+                first.Floors == second.Floors &&
+                first.NumPremises == second.NumPremises &&
+                first.NumRooms == second.NumRooms &&
+                first.NumApartments == second.NumApartments &&
+                first.NumSharedApartments == second.NumSharedApartments &&
+                first.TotalArea == second.TotalArea &&
+                first.LivingArea == second.LivingArea &&
+                first.CadastralNum == second.CadastralNum &&
+                first.CadastralCost == second.CadastralCost &&
+                first.BalanceCost == second.BalanceCost &&
+                first.Description == second.Description &&
+                first.StartupYear == second.StartupYear &&
+                first.Improvement == second.Improvement &&
+                first.Elevator == second.Elevator &&
+                first.IdState == second.IdState;
         }
 
         public static bool operator !=(Building first, Building second)

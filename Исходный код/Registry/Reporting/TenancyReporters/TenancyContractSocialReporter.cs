@@ -10,6 +10,8 @@ namespace Registry.Reporting.TenancyReporters
     {
         public override void Run(Dictionary<string, string> arguments)
         {
+            if (arguments == null)
+                arguments = new Dictionary<string, string>();
             arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "tenancy\\contract_social.xml"));
             arguments.Add("connectionString", RegistrySettings.ConnectionString);
             base.Run(arguments);

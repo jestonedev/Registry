@@ -16,7 +16,7 @@ namespace Registry.CalcDataModels
 
         private CalcDataModelPremisesCurrentFunds()
         {
-            table = InitializeTable();
+            Table = InitializeTable();
             Refresh(CalcDataModelFilterEnity.All, null);
         }
 
@@ -32,7 +32,9 @@ namespace Registry.CalcDataModels
 
         protected override void Calculate(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            dmLoadState = DataModelLoadState.Loading;
+            DMLoadState = DataModelLoadState.Loading;
+            if (e == null)
+                throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelPremisesCurrentFunds");
             CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;
             // Фильтруем удаленные строки
             var premises = from premises_row in DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select()) 

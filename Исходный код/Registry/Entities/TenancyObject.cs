@@ -7,21 +7,15 @@ namespace Registry.Entities
 {
     public sealed class TenancyObject
     {
-        public int? id_assoc { get; set; }
-        public int? id_object { get; set; }
-        public int? id_process { get; set; }
-        public double? rent_total_area { get; set; }
-        public double? rent_living_area { get; set; }
+        public int? IdAssoc { get; set; }
+        public int? IdObject { get; set; }
+        public int? IdProcess { get; set; }
+        public double? RentTotalArea { get; set; }
+        public double? RentLivingArea { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is TenancyObject))
-                return false;
-            TenancyObject obj_tenancy = (TenancyObject)obj;
-            if (this == obj_tenancy)
-                return true;
-            else
-                return false;
+            return (this == (obj as TenancyObject));
         }
 
         public bool Equals(TenancyObject other)
@@ -31,10 +25,16 @@ namespace Registry.Entities
 
         public static bool operator ==(TenancyObject first, TenancyObject second)
         {
-            return first.id_object == second.id_object &&
-                first.id_process == second.id_process &&
-                first.rent_total_area == second.rent_total_area &&
-                first.rent_living_area == second.rent_living_area;
+            if ((object)first == null && (object)second == null)
+                return true;
+            else
+                if ((object)first == null || (object)second == null)
+                    return false;
+                else
+            return first.IdObject == second.IdObject &&
+                first.IdProcess == second.IdProcess &&
+                first.RentTotalArea == second.RentTotalArea &&
+                first.RentLivingArea == second.RentLivingArea;
         }
 
         public static bool operator !=(TenancyObject first, TenancyObject second)

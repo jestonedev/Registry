@@ -1,4 +1,4 @@
-﻿namespace Registry.Viewport
+﻿namespace Registry.SearchForms
 {
     partial class SimpleSearchBuildingForm
     {

@@ -40,20 +40,20 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_building"] };
-            table.Columns["id_state"].DefaultValue = 1;
-            table.Columns["num_premises"].DefaultValue = 0;
-            table.Columns["num_rooms"].DefaultValue = 0;
-            table.Columns["num_apartments"].DefaultValue = 0;
-            table.Columns["num_shared_apartments"].DefaultValue = 0;
-            table.Columns["startup_year"].DefaultValue = DateTime.Now.Year;
-            table.Columns["improvement"].DefaultValue = true;
-            table.Columns["elevator"].DefaultValue = false;
-            table.Columns["living_area"].DefaultValue = 0;
-            table.Columns["total_area"].DefaultValue = 0;
-            table.Columns["floors"].DefaultValue = 5;
-            table.Columns["cadastral_cost"].DefaultValue = 0;
-            table.Columns["balance_cost"].DefaultValue = 0;
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_building"] };
+            Table.Columns["id_state"].DefaultValue = 1;
+            Table.Columns["num_premises"].DefaultValue = 0;
+            Table.Columns["num_rooms"].DefaultValue = 0;
+            Table.Columns["num_apartments"].DefaultValue = 0;
+            Table.Columns["num_shared_apartments"].DefaultValue = 0;
+            Table.Columns["startup_year"].DefaultValue = DateTime.Now.Year;
+            Table.Columns["improvement"].DefaultValue = true;
+            Table.Columns["elevator"].DefaultValue = false;
+            Table.Columns["living_area"].DefaultValue = 0;
+            Table.Columns["total_area"].DefaultValue = 0;
+            Table.Columns["floors"].DefaultValue = 5;
+            Table.Columns["cadastral_cost"].DefaultValue = 0;
+            Table.Columns["balance_cost"].DefaultValue = 0;
         }
 
         public static BuildingsDataModel GetInstance()
@@ -83,7 +83,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось удалить здание из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -95,26 +95,31 @@ namespace Registry.DataModels
             using (DbCommand command = DBConnection.CreateCommand())
             {
                 command.CommandText = updateQuery;
-
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", building.id_state));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_structure_type", building.id_structure_type));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("id_street", building.id_street));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("house", building.house));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("floors", building.floors));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("num_premises", building.num_premises));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("num_rooms", building.num_rooms));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("num_apartments", building.num_apartments));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("num_shared_apartments", building.num_shared_apartments));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", building.total_area));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("living_area", building.living_area));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("cadastral_num", building.cadastral_num));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("cadastral_cost", building.cadastral_cost));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("balance_cost", building.balance_cost));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", building.description));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("startup_year", building.startup_year));
-                command.Parameters.Add(DBConnection.CreateParameter<bool?>("improvement", building.improvement));
-                command.Parameters.Add(DBConnection.CreateParameter<bool?>("elevator", building.elevator));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_building", building.id_building));
+                if (building == null)
+                {
+                    MessageBox.Show("В метод Update не передана ссылка на объект здания", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", building.IdState));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_structure_type", building.IdStructureType));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("id_street", building.IdStreet));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("house", building.House));
+                command.Parameters.Add(DBConnection.CreateParameter<short?>("floors", building.Floors));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("num_premises", building.NumPremises));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("num_rooms", building.NumRooms));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("num_apartments", building.NumApartments));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("num_shared_apartments", building.NumSharedApartments));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", building.TotalArea));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("living_area", building.LivingArea));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("cadastral_num", building.CadastralNum));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("cadastral_cost", building.CadastralCost));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("balance_cost", building.BalanceCost));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", building.Description));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("startup_year", building.StartupYear));
+                command.Parameters.Add(DBConnection.CreateParameter<bool?>("improvement", building.Improvement));
+                command.Parameters.Add(DBConnection.CreateParameter<bool?>("elevator", building.Elevator));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_building", building.IdBuilding));
 
                 try
                 {
@@ -124,7 +129,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось изменить данные о здание. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -138,25 +143,30 @@ namespace Registry.DataModels
             {
                 last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
                 command.CommandText = insertQuery;
-
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", building.id_state));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_structure_type", building.id_structure_type));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("id_street", building.id_street));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("house", building.house));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("floors", building.floors));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("num_premises", building.num_premises));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("num_rooms", building.num_rooms));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("num_apartments", building.num_apartments));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("num_shared_apartments", building.num_shared_apartments));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", building.total_area));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("living_area", building.living_area));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("cadastral_num", building.cadastral_num));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("cadastral_cost", building.cadastral_cost));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("balance_cost", building.balance_cost));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", building.description));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("startup_year", building.startup_year));
-                command.Parameters.Add(DBConnection.CreateParameter<bool?>("improvement", building.improvement));
-                command.Parameters.Add(DBConnection.CreateParameter<bool?>("elevator", building.elevator));
+                if (building == null)
+                {
+                    MessageBox.Show("В метод Insert не передана ссылка на объект здания", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", building.IdState));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_structure_type", building.IdStructureType));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("id_street", building.IdStreet));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("house", building.House));
+                command.Parameters.Add(DBConnection.CreateParameter<short?>("floors", building.Floors));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("num_premises", building.NumPremises));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("num_rooms", building.NumRooms));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("num_apartments", building.NumApartments));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("num_shared_apartments", building.NumSharedApartments));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", building.TotalArea));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("living_area", building.LivingArea));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("cadastral_num", building.CadastralNum));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("cadastral_cost", building.CadastralCost));
+                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("balance_cost", building.BalanceCost));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", building.Description));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("startup_year", building.StartupYear));
+                command.Parameters.Add(DBConnection.CreateParameter<bool?>("improvement", building.Improvement));
+                command.Parameters.Add(DBConnection.CreateParameter<bool?>("elevator", building.Elevator));
 
                 try
                 {
@@ -167,7 +177,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return -1;
                     }
                     return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
@@ -177,7 +187,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось добавить здание в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

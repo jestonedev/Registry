@@ -14,8 +14,8 @@ namespace Registry.DataModels
     public sealed class DocumentsIssuedByDataModel: DataModel
     {
         private static DocumentsIssuedByDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM documents_issued_by";
-        private static string deleteQuery = "DELETE FROM documents_issued_by WHERE id_document_issued_by = ?";
+        private static string selectQuery = "SELECT * FROM documents_issued_by WHERE deleted <> 1";
+        private static string deleteQuery = "UPDATE documents_issued_by SET deleted = 1 WHERE id_document_issued_by = ?";
         private static string insertQuery = @"INSERT INTO documents_issued_by
                             (document_issued_by) VALUES (?)";
         private static string updateQuery = @"UPDATE documents_issued_by SET document_issued_by = ? WHERE id_document_issued_by = ?";
@@ -28,7 +28,7 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_document_issued_by"] };
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_document_issued_by"] };
         }
 
         public static DocumentsIssuedByDataModel GetInstance()
@@ -51,9 +51,13 @@ namespace Registry.DataModels
             {
                 last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
                 command.CommandText = insertQuery;
-
-                command.Parameters.Add(DBConnection.CreateParameter<string>("document_issued_by", documentIssuedBy.document_issued_by));
-
+                if (documentIssuedBy == null)
+                {
+                    MessageBox.Show("В метод Insert не передана ссылка на объект органа, выдающего документы, удостоверяющие личность", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<string>("document_issued_by", documentIssuedBy.DocumentIssuedByName));
                 try
                 {
                     connection.SqlBeginTransaction();
@@ -63,7 +67,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         connection.SqlRollbackTransaction();
                         return -1;
                     }
@@ -76,22 +80,26 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось добавить запись об органе, выдающем документы, удостоверяющие личность. Подробная ошибка: {0}",
-                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
         }
 
-        public static int Update(Entities.DocumentIssuedBy documentIssuedBy)
+        public static int Update(DocumentIssuedBy documentIssuedBy)
         {
             using (DBConnection connection = new DBConnection())
             using (DbCommand command = DBConnection.CreateCommand())
             {
                 command.CommandText = updateQuery;
-
-                command.Parameters.Add(DBConnection.CreateParameter<string>("document_issued_by", documentIssuedBy.document_issued_by));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_document_issued_by", documentIssuedBy.id_document_issued_by));
-
+                if (documentIssuedBy == null)
+                {
+                    MessageBox.Show("В метод Update не передана ссылка на объект органа, выдающего документы, удостоверяющие личность", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<string>("document_issued_by", documentIssuedBy.DocumentIssuedByName));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_document_issued_by", documentIssuedBy.IdDocumentIssuedBy));
                 try
                 {
                     return connection.SqlModifyQuery(command);
@@ -102,7 +110,7 @@ namespace Registry.DataModels
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось изменить запись в базе данных об органе, выдающем документы, удостоверяющие личность" +
                         ". Подробная ошибка: {0}", e.Message), "Ошибка", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -123,7 +131,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось удалить орган, выдающий документы, удостоверяющие личность, из базы данных. Подробная ошибка: {0}",
-                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

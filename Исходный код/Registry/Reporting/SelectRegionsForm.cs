@@ -31,7 +31,8 @@ namespace Registry.Reporting
             foreach (Control control in this.Controls)
                 control.KeyDown += (sender, e) =>
                 {
-                    if (sender is ComboBox && ((ComboBox)sender).DroppedDown)
+                    ComboBox comboBox = sender as ComboBox;
+                    if (comboBox != null && comboBox.DroppedDown)
                         return;
                     if (e.KeyCode == Keys.Enter)
                         vButton2_Click(null, new EventArgs());
@@ -45,7 +46,7 @@ namespace Registry.Reporting
         {
             List<string> regionIDs = new List<string>();
             foreach (object region in checkedListBoxRegions.CheckedItems)
-                regionIDs.Add(((Entities.Region)region).id_region);
+                regionIDs.Add(((Entities.Region)region).IdRegion);
             return regionIDs;
         }
 
@@ -53,7 +54,8 @@ namespace Registry.Reporting
         {
             if (checkedListBoxRegions.CheckedItems.Count == 0)
             {
-                MessageBox.Show("Необходимо выбрать хотя бы один жилой район", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Необходимо выбрать хотя бы один жилой район", "Ошибка", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             this.DialogResult = System.Windows.Forms.DialogResult.OK;

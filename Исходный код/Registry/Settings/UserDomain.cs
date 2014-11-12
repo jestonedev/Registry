@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.DirectoryServices.ActiveDirectory;
 using System.DirectoryServices;
+using System.Globalization;
 
 namespace Registry
 {
@@ -60,8 +61,11 @@ namespace Registry
                         searcher.SearchScope = SearchScope.Subtree;
                         searcher.PropertiesToLoad.Add("samAccountName");
                         searcher.PropertiesToLoad.Add("displayName");
+                        if (String.IsNullOrEmpty(login))
+                            throw new ArgumentNullException("login","Не задано имя пользователя");
                         string[] loginParts = login.Split('\\');
-                        searcher.Filter = string.Format("(&(objectClass=user)(samAccountName={0}))", loginParts[loginParts.Count() - 1]);
+                        searcher.Filter = string.Format(CultureInfo.CurrentCulture, 
+                            "(&(objectClass=user)(samAccountName={0}))", loginParts[loginParts.Count() - 1]);
                         try
                         {
                             SearchResultCollection results = searcher.FindAll();
@@ -74,7 +78,6 @@ namespace Registry
                         }
                         finally
                         {
-                            searcher.Dispose();
                             domain.Dispose();
                         }
                     }

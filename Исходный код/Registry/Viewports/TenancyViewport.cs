@@ -11,6 +11,7 @@ using System.Drawing;
 using Registry.Reporting;
 using Security;
 using Registry.CalcDataModels;
+using System.Globalization;
 
 namespace Registry.Viewport
 {
@@ -132,19 +133,19 @@ namespace Registry.Viewport
 
         private void RebuildStaticFilter()
         {
-            List<int> ids = null;
+            IEnumerable<int> ids = null;
             if (ParentRow == null)
                 return;
             switch (ParentType)
             {
                 case ParentTypeEnum.Building:
-                    ids = DataModelHelper.TenancyProcessIDsByBuildingID(Convert.ToInt32(ParentRow["id_building"]));
+                    ids = DataModelHelper.TenancyProcessIDsByBuildingID(Convert.ToInt32(ParentRow["id_building"], CultureInfo.CurrentCulture));
                     break;
                 case ParentTypeEnum.Premises:
-                    ids = DataModelHelper.TenancyProcessIDsByPremisesID(Convert.ToInt32(ParentRow["id_premises"]));
+                    ids = DataModelHelper.TenancyProcessIDsByPremisesID(Convert.ToInt32(ParentRow["id_premises"], CultureInfo.CurrentCulture));
                     break;
                 case ParentTypeEnum.SubPremises:
-                    ids = DataModelHelper.TenancyProcessIDsBySubPremisesID(Convert.ToInt32(ParentRow["id_sub_premises"]));
+                    ids = DataModelHelper.TenancyProcessIDsBySubPremisesID(Convert.ToInt32(ParentRow["id_sub_premises"], CultureInfo.CurrentCulture));
                     break;
                 default:
                     throw new ViewportException("Неизвестный тип родительского объекта");
@@ -152,8 +153,8 @@ namespace Registry.Viewport
             if (ids != null)
             {
                 StaticFilter = "id_process IN (0";
-                for (int i = 0; i < ids.Count; i++)
-                    StaticFilter += ids[i].ToString() + ",";
+                foreach (int id in ids)
+                    StaticFilter += id.ToString(CultureInfo.CurrentCulture) + ",";
                 StaticFilter = StaticFilter.TrimEnd(new char[] { ',' }) + ")";
             }
             v_tenancies.Filter = StaticFilter;           
@@ -167,7 +168,7 @@ namespace Registry.Viewport
                     this.Text = "Новый найм";
                 else
                     if (v_tenancies.Position != -1)
-                        this.Text = String.Format("Процесс найма №{0}", ((DataRowView)v_tenancies[v_tenancies.Position])["id_process"]);
+                        this.Text = String.Format(CultureInfo.CurrentCulture, "Процесс найма №{0}", ((DataRowView)v_tenancies[v_tenancies.Position])["id_process"]);
                     else
                         this.Text = "Процессы отсутствуют";
             }
@@ -177,33 +178,33 @@ namespace Registry.Viewport
                 {
                     case ParentTypeEnum.Building:
                         if (viewportState == ViewportState.NewRowState)
-                            this.Text = String.Format("Новый найм здания №{0}", ParentRow["id_building"]);
+                            this.Text = String.Format(CultureInfo.CurrentCulture, "Новый найм здания №{0}", ParentRow["id_building"]);
                         else
                         if (v_tenancies.Position != -1)
-                            this.Text = String.Format("Найм №{0} здания №{1}", 
+                            this.Text = String.Format(CultureInfo.CurrentCulture, "Найм №{0} здания №{1}", 
                                 ((DataRowView)v_tenancies[v_tenancies.Position])["id_process"], ParentRow["id_building"]);
                         else
-                            this.Text = String.Format("Наймы здания №{0} отсутствуют", ParentRow["id_building"]);
+                            this.Text = String.Format(CultureInfo.CurrentCulture, "Наймы здания №{0} отсутствуют", ParentRow["id_building"]);
                         break;
                     case ParentTypeEnum.Premises:
                         if (viewportState == ViewportState.NewRowState)
-                            this.Text = String.Format("Новый найм помещения №{0}", ParentRow["id_premises"]);
+                            this.Text = String.Format(CultureInfo.CurrentCulture, "Новый найм помещения №{0}", ParentRow["id_premises"]);
                         else
                             if (v_tenancies.Position != -1)
-                                this.Text = String.Format("Найм №{0} помещения №{1}",
+                                this.Text = String.Format(CultureInfo.CurrentCulture, "Найм №{0} помещения №{1}",
                                     ((DataRowView)v_tenancies[v_tenancies.Position])["id_process"], ParentRow["id_premises"]);
                             else
-                                this.Text = String.Format("Наймы помещения №{0} отсутствуют", ParentRow["id_premises"]);
+                                this.Text = String.Format(CultureInfo.CurrentCulture, "Наймы помещения №{0} отсутствуют", ParentRow["id_premises"]);
                         break;
                     case ParentTypeEnum.SubPremises:
                         if (viewportState == ViewportState.NewRowState)
-                            this.Text = String.Format("Новый найм комнаты №{0}", ParentRow["id_sub_premises"]);
+                            this.Text = String.Format(CultureInfo.CurrentCulture, "Новый найм комнаты №{0}", ParentRow["id_sub_premises"]);
                         else
                             if (v_tenancies.Position != -1)
-                                this.Text = String.Format("Найм №{0} комнаты №{1}",
+                                this.Text = String.Format(CultureInfo.CurrentCulture, "Найм №{0} комнаты №{1}",
                                     ((DataRowView)v_tenancies[v_tenancies.Position])["id_process"], ParentRow["id_sub_premises"]);
                             else
-                                this.Text = String.Format("Наймы комнаты №{0} отсутствуют", ParentRow["id_sub_premises"]);
+                                this.Text = String.Format(CultureInfo.CurrentCulture, "Наймы комнаты №{0} отсутствуют", ParentRow["id_sub_premises"]);
                         break;
                     default: throw new ViewportException("Неизвестный тип родительского объекта");
                 }
@@ -215,7 +216,8 @@ namespace Registry.Viewport
             if (dataGridViewTenancyPersons.Rows.Count == 0)
                 return;
             for (int i = 0; i < dataGridViewTenancyPersons.Rows.Count; i++)
-                if (((DataRowView)v_tenancy_persons[i])["id_kinship"] != DBNull.Value && Convert.ToInt32(((DataRowView)v_tenancy_persons[i])["id_kinship"]) == 1)
+                if (((DataRowView)v_tenancy_persons[i])["id_kinship"] != DBNull.Value &&
+                    Convert.ToInt32(((DataRowView)v_tenancy_persons[i])["id_kinship"], CultureInfo.CurrentCulture) == 1)
                     dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
                 else
                     dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.White;
@@ -230,9 +232,10 @@ namespace Registry.Viewport
                 int row_index = v_warrants.Find("id_warrant", id_warrant);
                 if (row_index == -1)
                     return null;
-                DateTime registration_date = Convert.ToDateTime(((DataRowView)v_warrants[row_index])["registration_date"]);
+                DateTime registration_date = Convert.ToDateTime(((DataRowView)v_warrants[row_index])["registration_date"], CultureInfo.CurrentCulture);
                 string registration_num = ((DataRowView)v_warrants[row_index])["registration_num"].ToString();
-                return String.Format("№ {0} от {1}", registration_num, registration_date.ToString("dd.MM.yyyy"));
+                return String.Format(CultureInfo.CurrentCulture, "№ {0} от {1}", 
+                    registration_num, registration_date.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
             }
         }
 
@@ -240,7 +243,7 @@ namespace Registry.Viewport
         {
             if ((v_tenancies.Position > -1) && ((DataRowView)v_tenancies[v_tenancies.Position])["id_warrant"] != DBNull.Value)
             {
-                id_warrant = Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_warrant"]);
+                id_warrant = Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_warrant"], CultureInfo.CurrentCulture);
                 textBoxSelectedWarrant.Text =
                     WarrantStringByID(id_warrant.Value);
                 vButtonWarrant.Text = "x";
@@ -358,7 +361,7 @@ namespace Registry.Viewport
                         case ViewportState.NewRowState:
                         case ViewportState.ModifyRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения о процессе найма в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -386,7 +389,7 @@ namespace Registry.Viewport
                             return true;
                         case ViewportState.ModifyRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения о процессе найма в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -410,7 +413,7 @@ namespace Registry.Viewport
                             return true;
                         case ViewportState.NewRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения о помещениях в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -444,7 +447,7 @@ namespace Registry.Viewport
                 if (viewportState == ViewportState.ModifyRowState)
                     viewportState = ViewportState.ReadState;
             }
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         internal void LocateTenancyBy(int id)
@@ -460,22 +463,22 @@ namespace Registry.Viewport
         {
             if (checkBoxContractEnable.Checked)
             {
-                if (tenancy.registration_num == null)
+                if (tenancy.RegistrationNum == null)
                 {
-                    MessageBox.Show("Не указан номер договора найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Не указан номер договора найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     textBoxRegistrationNumber.Focus();
                     return false;
                 }
             }
-            if (tenancy.id_executor == null)
+            if (tenancy.IdExecutor == null)
             {
-                MessageBox.Show("Необходимо выбрать составителя договора", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Необходимо выбрать составителя договора", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxExecutor.Focus();
                 return false;
             }
-            if (tenancy.id_rent_type == null)
+            if (tenancy.IdRentType == null)
             {
-                MessageBox.Show("Необходимо выбрать тип найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Необходимо выбрать тип найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxRentType.Focus();
                 return false;
             }
@@ -486,20 +489,20 @@ namespace Registry.Viewport
         {
             TenancyProcess tenancy = new TenancyProcess();
             DataRowView row = (DataRowView)v_tenancies[v_tenancies.Position];
-            tenancy.id_process = ViewportHelper.ValueOrNull<int>(row, "id_process");
-            tenancy.id_rent_type = ViewportHelper.ValueOrNull<int>(row, "id_rent_type");
-            tenancy.id_warrant = ViewportHelper.ValueOrNull<int>(row, "id_warrant");
-            tenancy.id_executor = ViewportHelper.ValueOrNull<int>(row, "id_executor");
-            tenancy.registration_num = ViewportHelper.ValueOrNull(row, "registration_num");
-            tenancy.registration_date = ViewportHelper.ValueOrNull<DateTime>(row, "registration_date");
-            tenancy.issue_date = ViewportHelper.ValueOrNull<DateTime>(row, "issue_date");
-            tenancy.begin_date = ViewportHelper.ValueOrNull<DateTime>(row, "begin_date");
-            tenancy.end_date = ViewportHelper.ValueOrNull<DateTime>(row, "end_date");
-            tenancy.residence_warrant_num = ViewportHelper.ValueOrNull(row, "residence_warrant_num");
-            tenancy.residence_warrant_date = ViewportHelper.ValueOrNull<DateTime>(row, "residence_warrant_date");
-            tenancy.kumi_order_num = ViewportHelper.ValueOrNull(row, "kumi_order_num");
-            tenancy.kumi_order_date = ViewportHelper.ValueOrNull<DateTime>(row, "kumi_order_date");
-            tenancy.description = ViewportHelper.ValueOrNull(row, "description");     
+            tenancy.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
+            tenancy.IdRentType = ViewportHelper.ValueOrNull<int>(row, "id_rent_type");
+            tenancy.IdWarrant = ViewportHelper.ValueOrNull<int>(row, "id_warrant");
+            tenancy.IdExecutor = ViewportHelper.ValueOrNull<int>(row, "id_executor");
+            tenancy.RegistrationNum = ViewportHelper.ValueOrNull(row, "registration_num");
+            tenancy.RegistrationDate = ViewportHelper.ValueOrNull<DateTime>(row, "registration_date");
+            tenancy.IssueDate = ViewportHelper.ValueOrNull<DateTime>(row, "issue_date");
+            tenancy.BeginDate = ViewportHelper.ValueOrNull<DateTime>(row, "begin_date");
+            tenancy.EndDate = ViewportHelper.ValueOrNull<DateTime>(row, "end_date");
+            tenancy.ResidenceWarrantNum = ViewportHelper.ValueOrNull(row, "residence_warrant_num");
+            tenancy.ResidenceWarrantDate = ViewportHelper.ValueOrNull<DateTime>(row, "residence_warrant_date");
+            tenancy.KumiOrderNum = ViewportHelper.ValueOrNull(row, "kumi_order_num");
+            tenancy.KumiOrderDate = ViewportHelper.ValueOrNull<DateTime>(row, "kumi_order_date");
+            tenancy.Description = ViewportHelper.ValueOrNull(row, "description");     
             return tenancy;
         }
 
@@ -507,74 +510,74 @@ namespace Registry.Viewport
         {
             TenancyProcess tenancy = new TenancyProcess();
             if (v_tenancies.Position == -1)
-                tenancy.id_process = null;
+                tenancy.IdProcess = null;
             else
-                tenancy.id_process = ViewportHelper.ValueOrNull<int>((DataRowView)v_tenancies[v_tenancies.Position], "id_process"); 
-            tenancy.id_rent_type = ViewportHelper.ValueOrNull<int>(comboBoxRentType);
-            tenancy.id_executor = ViewportHelper.ValueOrNull<int>(comboBoxExecutor);
-            tenancy.description = ViewportHelper.ValueOrNull(textBoxDescription);
+                tenancy.IdProcess = ViewportHelper.ValueOrNull<int>((DataRowView)v_tenancies[v_tenancies.Position], "id_process"); 
+            tenancy.IdRentType = ViewportHelper.ValueOrNull<int>(comboBoxRentType);
+            tenancy.IdExecutor = ViewportHelper.ValueOrNull<int>(comboBoxExecutor);
+            tenancy.Description = ViewportHelper.ValueOrNull(textBoxDescription);
             if (checkBoxContractEnable.Checked)
             {
-                tenancy.id_warrant = id_warrant;
-                tenancy.registration_num = ViewportHelper.ValueOrNull(textBoxRegistrationNumber);
-                tenancy.registration_date = dateTimePickerRegistrationDate.Value.Date;
-                tenancy.issue_date = ViewportHelper.ValueOrNull(dateTimePickerIssueDate);
-                tenancy.begin_date = ViewportHelper.ValueOrNull(dateTimePickerBeginDate);
-                tenancy.end_date = ViewportHelper.ValueOrNull(dateTimePickerEndDate);
+                tenancy.IdWarrant = id_warrant;
+                tenancy.RegistrationNum = ViewportHelper.ValueOrNull(textBoxRegistrationNumber);
+                tenancy.RegistrationDate = dateTimePickerRegistrationDate.Value.Date;
+                tenancy.IssueDate = ViewportHelper.ValueOrNull(dateTimePickerIssueDate);
+                tenancy.BeginDate = ViewportHelper.ValueOrNull(dateTimePickerBeginDate);
+                tenancy.EndDate = ViewportHelper.ValueOrNull(dateTimePickerEndDate);
             }
             else
             {
-                tenancy.id_warrant = null;
-                tenancy.registration_num = null;
-                tenancy.registration_date = null;
-                tenancy.issue_date = null;
-                tenancy.begin_date = null;
-                tenancy.end_date = null;
+                tenancy.IdWarrant = null;
+                tenancy.RegistrationNum = null;
+                tenancy.RegistrationDate = null;
+                tenancy.IssueDate = null;
+                tenancy.BeginDate = null;
+                tenancy.EndDate = null;
             }
             if (checkBoxResidenceWarrantEnable.Checked)
             {
-                tenancy.residence_warrant_num = ViewportHelper.ValueOrNull(textBoxResidenceWarrantNumber);
-                tenancy.residence_warrant_date = dateTimePickerResidenceWarrantDate.Value.Date;
+                tenancy.ResidenceWarrantNum = ViewportHelper.ValueOrNull(textBoxResidenceWarrantNumber);
+                tenancy.ResidenceWarrantDate = dateTimePickerResidenceWarrantDate.Value.Date;
             }
             else
             {
-                tenancy.residence_warrant_num = null;
-                tenancy.residence_warrant_date = null;
+                tenancy.ResidenceWarrantNum = null;
+                tenancy.ResidenceWarrantDate = null;
             }
             if (checkBoxKumiOrderEnable.Checked)
             {
-                tenancy.kumi_order_num = ViewportHelper.ValueOrNull(textBoxKumiOrderNumber);
-                tenancy.kumi_order_date = dateTimePickerKumiOrderDate.Value.Date;
+                tenancy.KumiOrderNum = ViewportHelper.ValueOrNull(textBoxKumiOrderNumber);
+                tenancy.KumiOrderDate = dateTimePickerKumiOrderDate.Value.Date;
             }
             else
             {
-                tenancy.kumi_order_num = null;
-                tenancy.kumi_order_date = null;
+                tenancy.KumiOrderNum = null;
+                tenancy.KumiOrderDate = null;
             }
             return tenancy;
         }
 
         private void ViewportFromTenancy(TenancyProcess tenancy)
         {
-            comboBoxRentType.SelectedValue = ViewportHelper.ValueOrDBNull(tenancy.id_rent_type);
-            comboBoxExecutor.SelectedValue = ViewportHelper.ValueOrDBNull(tenancy.id_executor);
-            textBoxRegistrationNumber.Text = tenancy.registration_num;
-            dateTimePickerRegistrationDate.Value = ViewportHelper.ValueOrDefault(tenancy.registration_date);
-            dateTimePickerIssueDate.Value = ViewportHelper.ValueOrDefault(tenancy.issue_date);
-            dateTimePickerIssueDate.Checked = (tenancy.issue_date != null);
-            dateTimePickerBeginDate.Value = ViewportHelper.ValueOrDefault(tenancy.begin_date);
-            dateTimePickerBeginDate.Checked = (tenancy.begin_date != null);
-            dateTimePickerEndDate.Value = ViewportHelper.ValueOrDefault(tenancy.end_date);
-            dateTimePickerEndDate.Checked = (tenancy.end_date != null);
-            textBoxResidenceWarrantNumber.Text = tenancy.residence_warrant_num;
-            dateTimePickerResidenceWarrantDate.Value = ViewportHelper.ValueOrDefault(tenancy.residence_warrant_date);
-            textBoxKumiOrderNumber.Text = tenancy.kumi_order_num;
-            dateTimePickerKumiOrderDate.Value = ViewportHelper.ValueOrDefault(tenancy.kumi_order_date);
-            textBoxDescription.Text = tenancy.description;
-            if (tenancy.id_warrant != null)
+            comboBoxRentType.SelectedValue = ViewportHelper.ValueOrDBNull(tenancy.IdRentType);
+            comboBoxExecutor.SelectedValue = ViewportHelper.ValueOrDBNull(tenancy.IdExecutor);
+            textBoxRegistrationNumber.Text = tenancy.RegistrationNum;
+            dateTimePickerRegistrationDate.Value = ViewportHelper.ValueOrDefault(tenancy.RegistrationDate);
+            dateTimePickerIssueDate.Value = ViewportHelper.ValueOrDefault(tenancy.IssueDate);
+            dateTimePickerIssueDate.Checked = (tenancy.IssueDate != null);
+            dateTimePickerBeginDate.Value = ViewportHelper.ValueOrDefault(tenancy.BeginDate);
+            dateTimePickerBeginDate.Checked = (tenancy.BeginDate != null);
+            dateTimePickerEndDate.Value = ViewportHelper.ValueOrDefault(tenancy.EndDate);
+            dateTimePickerEndDate.Checked = (tenancy.EndDate != null);
+            textBoxResidenceWarrantNumber.Text = tenancy.ResidenceWarrantNum;
+            dateTimePickerResidenceWarrantDate.Value = ViewportHelper.ValueOrDefault(tenancy.ResidenceWarrantDate);
+            textBoxKumiOrderNumber.Text = tenancy.KumiOrderNum;
+            dateTimePickerKumiOrderDate.Value = ViewportHelper.ValueOrDefault(tenancy.KumiOrderDate);
+            textBoxDescription.Text = tenancy.Description;
+            if (tenancy.IdWarrant != null)
             {
-                textBoxSelectedWarrant.Text = WarrantStringByID(tenancy.id_warrant.Value);
-                id_warrant = tenancy.id_warrant;
+                textBoxSelectedWarrant.Text = WarrantStringByID(tenancy.IdWarrant.Value);
+                id_warrant = tenancy.IdWarrant;
             }
             else
             {
@@ -583,23 +586,23 @@ namespace Registry.Viewport
             }
         }
 
-        private void FillRowFromTenancy(TenancyProcess tenancy, DataRowView row)
+        private static void FillRowFromTenancy(TenancyProcess tenancy, DataRowView row)
         {
             row.BeginEdit();
-            row["id_process"] = ViewportHelper.ValueOrDBNull(tenancy.id_process);
-            row["id_rent_type"] = ViewportHelper.ValueOrDBNull(tenancy.id_rent_type);
-            row["id_warrant"] = ViewportHelper.ValueOrDBNull(tenancy.id_warrant);
-            row["registration_num"] = ViewportHelper.ValueOrDBNull(tenancy.registration_num);
-            row["registration_date"] = ViewportHelper.ValueOrDBNull(tenancy.registration_date);
-            row["issue_date"] = ViewportHelper.ValueOrDBNull(tenancy.issue_date);
-            row["begin_date"] = ViewportHelper.ValueOrDBNull(tenancy.begin_date);
-            row["end_date"] = ViewportHelper.ValueOrDBNull(tenancy.end_date);
-            row["residence_warrant_num"] = ViewportHelper.ValueOrDBNull(tenancy.residence_warrant_num);
-            row["residence_warrant_date"] = ViewportHelper.ValueOrDBNull(tenancy.residence_warrant_date);
-            row["kumi_order_num"] = ViewportHelper.ValueOrDBNull(tenancy.kumi_order_num);
-            row["kumi_order_date"] = ViewportHelper.ValueOrDBNull(tenancy.kumi_order_date);
-            row["id_executor"] = ViewportHelper.ValueOrDBNull(tenancy.id_executor);
-            row["description"] = ViewportHelper.ValueOrDBNull(tenancy.description);
+            row["id_process"] = ViewportHelper.ValueOrDBNull(tenancy.IdProcess);
+            row["id_rent_type"] = ViewportHelper.ValueOrDBNull(tenancy.IdRentType);
+            row["id_warrant"] = ViewportHelper.ValueOrDBNull(tenancy.IdWarrant);
+            row["registration_num"] = ViewportHelper.ValueOrDBNull(tenancy.RegistrationNum);
+            row["registration_date"] = ViewportHelper.ValueOrDBNull(tenancy.RegistrationDate);
+            row["issue_date"] = ViewportHelper.ValueOrDBNull(tenancy.IssueDate);
+            row["begin_date"] = ViewportHelper.ValueOrDBNull(tenancy.BeginDate);
+            row["end_date"] = ViewportHelper.ValueOrDBNull(tenancy.EndDate);
+            row["residence_warrant_num"] = ViewportHelper.ValueOrDBNull(tenancy.ResidenceWarrantNum);
+            row["residence_warrant_date"] = ViewportHelper.ValueOrDBNull(tenancy.ResidenceWarrantDate);
+            row["kumi_order_num"] = ViewportHelper.ValueOrDBNull(tenancy.KumiOrderNum);
+            row["kumi_order_date"] = ViewportHelper.ValueOrDBNull(tenancy.KumiOrderDate);
+            row["id_executor"] = ViewportHelper.ValueOrDBNull(tenancy.IdExecutor);
+            row["description"] = ViewportHelper.ValueOrDBNull(tenancy.Description);
             row.EndEdit();
         }
 
@@ -694,7 +697,7 @@ namespace Registry.Viewport
             tenancy_reasons.Select();
             kinships.Select();
 
-            DataSet ds = DataSetManager.GetDataSet();
+            DataSet ds = DataSetManager.DataSet;
 
             v_executors = new BindingSource();
             v_executors.DataMember = "executors";
@@ -718,7 +721,7 @@ namespace Registry.Viewport
             v_tenancies.DataMember = "tenancy_processes";
             v_tenancies.DataSource = ds;
             RebuildStaticFilter();
-            if (StaticFilter != "" && DynamicFilter != "")
+            if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
                 v_tenancies.Filter += " AND ";
             v_tenancies.Filter += DynamicFilter;
 
@@ -803,18 +806,18 @@ namespace Registry.Viewport
             DataRowView row = (DataRowView)v_tenancies.AddNew();
             tenancies.EditingNewRecord = true;
             ViewportFromTenancy(tenancy);
-            checkBoxContractEnable.Checked = (tenancy.registration_date != null) || (tenancy.registration_num != null);
-            checkBoxResidenceWarrantEnable.Checked = (tenancy.residence_warrant_date != null);
-            checkBoxKumiOrderEnable.Checked = (tenancy.kumi_order_date != null);
-            dateTimePickerIssueDate.Checked = (tenancy.issue_date != null);
-            dateTimePickerBeginDate.Checked = (tenancy.begin_date != null);
-            dateTimePickerEndDate.Checked = (tenancy.end_date != null);
+            checkBoxContractEnable.Checked = (tenancy.RegistrationDate != null) || (tenancy.RegistrationNum != null);
+            checkBoxResidenceWarrantEnable.Checked = (tenancy.ResidenceWarrantDate != null);
+            checkBoxKumiOrderEnable.Checked = (tenancy.KumiOrderDate != null);
+            dateTimePickerIssueDate.Checked = (tenancy.IssueDate != null);
+            dateTimePickerBeginDate.Checked = (tenancy.BeginDate != null);
+            dateTimePickerEndDate.Checked = (tenancy.EndDate != null);
             is_editable = true;
         }
 
         public override bool SearchedRecords()
         {
-            if (DynamicFilter != "")
+            if (!String.IsNullOrEmpty(DynamicFilter))
                 return true;
             else
                 return false;
@@ -842,7 +845,7 @@ namespace Registry.Viewport
                     break;
             }
             string Filter = StaticFilter;
-            if (StaticFilter != "" && DynamicFilter != "")
+            if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
                 Filter += " AND ";
             Filter += DynamicFilter;
             is_editable = false;
@@ -869,15 +872,17 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите удалить этот процесс найма?", 
-                "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Вы действительно хотите удалить этот процесс найма?", "Внимание", 
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 if (TenancyProcessesDataModel.Delete((int)((DataRowView)v_tenancies.Current)["id_process"]) == -1)
                     return;
                 is_editable = false;
                 ((DataRowView)v_tenancies[v_tenancies.Position]).Delete();
                 is_editable = true;
-                menuCallback.ForceCloseDetachedViewports();
+                viewportState = ViewportState.ReadState;
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.ForceCloseDetachedViewports();
             }
         }
 
@@ -911,7 +916,7 @@ namespace Registry.Viewport
             }
             UnbindedCheckBoxesUpdate();
             is_editable = true;
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
             SetViewportCaption();
         }
 
@@ -930,14 +935,14 @@ namespace Registry.Viewport
             {
                 case ViewportState.ReadState:
                     MessageBox.Show("Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
                     int id_process = TenancyProcessesDataModel.Insert(tenancy);
                     if (id_process == -1)
                         return;
                     DataRowView newRow;
-                    tenancy.id_process = id_process;
+                    tenancy.IdProcess = id_process;
                     is_editable = false;
                     if (v_tenancies.Position == -1)
                         newRow = (DataRowView)v_tenancies.AddNew();
@@ -947,45 +952,45 @@ namespace Registry.Viewport
                     if (ParentRow != null)
                     {
                         TenancyObject to = new TenancyObject();
-                        to.id_process = id_process;
-                        to.rent_living_area = null;
-                        to.rent_total_area = null;
+                        to.IdProcess = id_process;
+                        to.RentLivingArea = null;
+                        to.RentTotalArea = null;
                         int id_assoc = -1;
                         switch (ParentType)
                         {
                             case ParentTypeEnum.Building:
                                 TenancyBuildingsAssocDataModel tenancy_buildings = TenancyBuildingsAssocDataModel.GetInstance();
-                                to.id_object = Convert.ToInt32(ParentRow["id_building"]);
+                                to.IdObject = Convert.ToInt32(ParentRow["id_building"], CultureInfo.CurrentCulture);
                                 id_assoc = TenancyBuildingsAssocDataModel.Insert(to);
                                 if (id_assoc == -1)
                                     return;
-                                to.id_assoc = id_assoc;
+                                to.IdAssoc = id_assoc;
                                 tenancy_buildings.Select().Rows.Add(new object[] { 
-                                    id_assoc, to.id_object, to.id_process, to.rent_total_area, to.rent_living_area, 0
+                                    id_assoc, to.IdObject, to.IdProcess, to.RentTotalArea, to.RentLivingArea, 0
                                 });
                                 CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"]);
                                 break;
                             case ParentTypeEnum.Premises:
                                 TenancyPremisesAssocDataModel tenancy_premises = TenancyPremisesAssocDataModel.GetInstance();
-                                to.id_object = Convert.ToInt32(ParentRow["id_premises"]);
+                                to.IdObject = Convert.ToInt32(ParentRow["id_premises"], CultureInfo.CurrentCulture);
                                 id_assoc = TenancyPremisesAssocDataModel.Insert(to);
                                 if (id_assoc == -1)
                                     return;
-                                to.id_assoc = id_assoc;
+                                to.IdAssoc = id_assoc;
                                 tenancy_premises.Select().Rows.Add(new object[] { 
-                                    id_assoc, to.id_object, to.id_process, to.rent_total_area, to.rent_living_area, 0
+                                    id_assoc, to.IdObject, to.IdProcess, to.RentTotalArea, to.RentLivingArea, 0
                                 });
                                 CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, (int)ParentRow["id_premises"]);
                                 break;
                             case ParentTypeEnum.SubPremises:
                                 TenancySubPremisesAssocDataModel tenancy_sub_premises = TenancySubPremisesAssocDataModel.GetInstance();
-                                to.id_object = Convert.ToInt32(ParentRow["id_sub_premises"]);
+                                to.IdObject = Convert.ToInt32(ParentRow["id_sub_premises"], CultureInfo.CurrentCulture);
                                 id_assoc = TenancySubPremisesAssocDataModel.Insert(to);
                                 if (id_assoc == -1)
                                     return;
-                                to.id_assoc = id_assoc;
+                                to.IdAssoc = id_assoc;
                                 tenancy_sub_premises.Select().Rows.Add(new object[] { 
-                                    id_assoc, to.id_object, to.id_process, to.rent_total_area, 0
+                                    id_assoc, to.IdObject, to.IdProcess, to.RentTotalArea, 0
                                 });
                                 CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.SubPremise, (int)ParentRow["id_sub_premises"]);
                                 break;
@@ -997,10 +1002,11 @@ namespace Registry.Viewport
                     v_tenancies.Position = v_tenancies.Count - 1;
                     break;
                 case ViewportState.ModifyRowState:
-                    if (tenancy.id_process == null)
+                    if (tenancy.IdProcess == null)
                     {
                         MessageBox.Show("Вы пытаетесь изменить процесс найма без внутренного номера. " +
-                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
                     if (TenancyProcessesDataModel.Update(tenancy) == -1)
@@ -1013,7 +1019,7 @@ namespace Registry.Viewport
             UnbindedCheckBoxesUpdate();
             is_editable = true;
             viewportState = ViewportState.ReadState;
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
             SetViewportCaption();
         }
 
@@ -1024,7 +1030,7 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            TenancyViewport viewport = new TenancyViewport(this, menuCallback);
+            TenancyViewport viewport = new TenancyViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             if (v_tenancies.Count > 0)
@@ -1034,6 +1040,8 @@ namespace Registry.Viewport
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            if (e == null)
+                return;
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
             else
@@ -1112,23 +1120,26 @@ namespace Registry.Viewport
                 return null;
             if (v_tenancies.Position == -1)
             {
-                MessageBox.Show("Не выбран процесс найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Не выбран процесс найма", "Ошибка", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return null;
             }
-            return ShowAssocViewport(menuCallback, viewportType,
-                "id_process = " + Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_process"]),
+            return ShowAssocViewport(MenuCallback, viewportType,
+                "id_process = " + Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_process"], CultureInfo.CurrentCulture),
                 ((DataRowView)v_tenancies[v_tenancies.Position]).Row,
                 ParentTypeEnum.Tenancy);
         }
 
         public override bool HasTenancyContract17xReport()
         {
-            return (v_tenancies.Position > -1) && Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_rent_type"]) == 2;
+            return (v_tenancies.Position > -1) &&
+                Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_rent_type"], CultureInfo.CurrentCulture) == 2;
         }
 
         public override bool HasTenancyContractReport()
         {
-            return (v_tenancies.Position > -1) && Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_rent_type"]) != 2;
+            return (v_tenancies.Position > -1) && 
+                Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_rent_type"], CultureInfo.CurrentCulture) != 2;
         }
 
         public override bool HasTenancyActReport()
@@ -1140,7 +1151,7 @@ namespace Registry.Viewport
         {
             return (v_tenancies.Position > -1) && (((DataRowView)v_tenancies[v_tenancies.Position])["id_process"] != DBNull.Value) &&
                 (DataModelHelper.TenancyAgreementsForProcess(
-                    Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_process"])) > 0);
+                    Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_process"], CultureInfo.CurrentCulture)) > 0);
         }
 
         public override bool HasTenancyExcerptReport()
@@ -1158,7 +1169,7 @@ namespace Registry.Viewport
             if (ViewportHelper.ValueOrNull<int>(row, "id_rent_type") != 2)
             {
                 MessageBox.Show("Для формирования договора по формам 1711 и 1712 необходимо, чтобы тип найма был - специализированный", 
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             if (tenancyContractType == TenancyContractTypes.SpecialContract1711Form)
@@ -1179,7 +1190,7 @@ namespace Registry.Viewport
             DataRowView row = (DataRowView)v_tenancies[v_tenancies.Position];
             if (ViewportHelper.ValueOrNull<int>(row, "id_rent_type") == 2)
                 MessageBox.Show("Для формирования договора специализированного найма необходимо выбрать форму договора: 1711 или 1712", 
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
             else
                 if (ViewportHelper.ValueOrNull<int>(row, "id_rent_type") == 1)
                     ReporterFactory.CreateReporter(ReporterType.TenancyContractCommercialReporter).
@@ -1210,7 +1221,7 @@ namespace Registry.Viewport
             if (v_tenancy_agreements.Position == -1)
             {
                 MessageBox.Show("Не выбрано соглашение для печати",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             DataRowView row = (DataRowView)v_tenancy_agreements[v_tenancy_agreements.Position];
@@ -1235,16 +1246,16 @@ namespace Registry.Viewport
             if (v_tenancies.Position == -1)
                 return false;
             DataRowView row = (DataRowView)v_tenancies[v_tenancies.Position];
-            if (!DataModelHelper.TenancyProcessHasTenant(Convert.ToInt32(row["id_process"])))
+            if (!DataModelHelper.TenancyProcessHasTenant(Convert.ToInt32(row["id_process"], CultureInfo.CurrentCulture)))
             {
                 MessageBox.Show("Для формирования отчетной документации необходимо указать нанимателя процесса найма", 
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             if (ViewportHelper.ValueOrNull<DateTime>(row, "registration_date") == null || ViewportHelper.ValueOrNull(row, "registration_num") == null)
             {
                 MessageBox.Show("Для формирования отчетной документации необходимо завести договор найма и указать его номер и дату регистрации", 
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             return true;
@@ -1267,8 +1278,8 @@ namespace Registry.Viewport
             SetViewportCaption();
             if (Selected)
             {
-                menuCallback.NavigationStateUpdate();
-                menuCallback.TenancyRefsStateUpdate();
+                MenuCallback.NavigationStateUpdate();
+                MenuCallback.TenancyRefsStateUpdate();
             }
             UnbindedCheckBoxesUpdate();
             BindWarrantID();
@@ -1332,10 +1343,10 @@ namespace Registry.Viewport
                 swForm = new SelectWarrantForm();
             if (swForm.ShowDialog() == DialogResult.OK)
             {
-                if (swForm.WarrantID != null)
+                if (swForm.WarrantId != null)
                 {
-                    id_warrant = swForm.WarrantID.Value;
-                    textBoxSelectedWarrant.Text = WarrantStringByID(swForm.WarrantID.Value);
+                    id_warrant = swForm.WarrantId.Value;
+                    textBoxSelectedWarrant.Text = WarrantStringByID(swForm.WarrantId.Value);
                     vButtonWarrant.Text = "x";
                 }
             }
@@ -1433,7 +1444,8 @@ namespace Registry.Viewport
                 return;
             Viewport viewport = ShowAssocViewport(ViewportType.TenancyAgreementsViewport);
             if (viewport != null)
-                ((TenancyAgreementsViewport)viewport).LocateAgreementBy(Convert.ToInt32(((DataRowView)v_tenancy_agreements[v_tenancy_agreements.Position])["id_agreement"]));    
+                ((TenancyAgreementsViewport)viewport).LocateAgreementBy(
+                    Convert.ToInt32(((DataRowView)v_tenancy_agreements[v_tenancy_agreements.Position])["id_agreement"], CultureInfo.CurrentCulture));    
         }
 
         private void dataGridViewTenancyPersons_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -1444,7 +1456,8 @@ namespace Registry.Viewport
                 return;
             Viewport viewport = ShowAssocViewport(ViewportType.TenancyPersonsViewport);
             if (viewport != null)
-                ((TenancyPersonsViewport)viewport).LocatePersonBy(Convert.ToInt32(((DataRowView)v_tenancy_persons[v_tenancy_persons.Position])["id_person"]));
+                ((TenancyPersonsViewport)viewport).LocatePersonBy(
+                    Convert.ToInt32(((DataRowView)v_tenancy_persons[v_tenancy_persons.Position])["id_person"], CultureInfo.CurrentCulture));
         }
 
         private void dataGridViewTenancyReasons_CellDoubleClick(object sender, DataGridViewCellEventArgs e)

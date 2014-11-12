@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Registry.DataModels;
+using System.Globalization;
 
 namespace Registry.Viewport
 {
@@ -21,14 +22,14 @@ namespace Registry.Viewport
             InitializeComponent();
         }
 
-        public int? WarrantID
+        public int? WarrantId
         {
             get
             {
                 if (v_warrants.Position == -1)
                     return null;
                 else
-                    return Convert.ToInt32(((DataRowView)v_warrants[v_warrants.Position])["id_warrant"]);
+                    return Convert.ToInt32(((DataRowView)v_warrants[v_warrants.Position])["id_warrant"], CultureInfo.CurrentCulture);
             }
         }
 
@@ -66,15 +67,15 @@ namespace Registry.Viewport
         private void BuildWarrantsFilter()
         {
             string filter = "";
-            if (textBoxRegNumber.Text.Trim() != "")
+            if (!String.IsNullOrEmpty(textBoxRegNumber.Text.Trim()))
             {
-                filter += String.Format("registration_num LIKE '{0}%'", textBoxRegNumber.Text.Trim());
+                filter += String.Format(CultureInfo.CurrentCulture, "registration_num LIKE '{0}%'", textBoxRegNumber.Text.Trim());
             }
             if (dateTimePickerDate.Checked)
             {
-                if (filter != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format("registration_date = '{0}'", dateTimePickerDate.Value.Date);
+                filter += String.Format(CultureInfo.CurrentCulture, "registration_date = '{0}'", dateTimePickerDate.Value.Date);
             }
             v_warrants.Filter = filter;
         }

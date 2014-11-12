@@ -36,7 +36,7 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_persons"] };
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_persons"] };
         }
 
         public static TenancyPersonsDataModel GetInstance()
@@ -68,7 +68,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось удалить участника договора из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -82,27 +82,32 @@ namespace Registry.DataModels
             {
                 last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
                 command.CommandText = insertQuery;
-
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyPerson.id_process));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_kinship", tenancyPerson.id_kinship));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("surname", tenancyPerson.surname));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("name", tenancyPerson.name));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("patronymic", tenancyPerson.patronymic));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_of_birth", tenancyPerson.date_of_birth));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_document_type", tenancyPerson.id_document_type));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_of_document_issue", tenancyPerson.date_of_document_issue));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("document_num", tenancyPerson.document_num));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("document_seria", tenancyPerson.document_seria));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_document_issued_by", tenancyPerson.id_document_issued_by));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_id_street", tenancyPerson.registration_id_street));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_house", tenancyPerson.registration_house));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_flat", tenancyPerson.registration_flat));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_room", tenancyPerson.registration_room));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_id_street", tenancyPerson.residence_id_street));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_house", tenancyPerson.residence_house));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_flat", tenancyPerson.residence_flat));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_room", tenancyPerson.residence_room));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("personal_account", tenancyPerson.personal_account));
+                if (tenancyPerson == null)
+                {
+                    MessageBox.Show("В метод Insert не передана ссылка на сущность участника процесса найма", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyPerson.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_kinship", tenancyPerson.IdKinship));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("surname", tenancyPerson.Surname));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("name", tenancyPerson.Name));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("patronymic", tenancyPerson.Patronymic));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_of_birth", tenancyPerson.DateOfBirth));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_document_type", tenancyPerson.IdDocumentType));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_of_document_issue", tenancyPerson.DateOfDocumentIssue));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("document_num", tenancyPerson.DocumentNum));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("document_seria", tenancyPerson.DocumentSeria));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_document_issued_by", tenancyPerson.IdDocumentIssuedBy));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_id_street", tenancyPerson.RegistrationIdStreet));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_house", tenancyPerson.RegistrationHouse));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_flat", tenancyPerson.RegistrationFlat));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_room", tenancyPerson.RegistrationRoom));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_id_street", tenancyPerson.ResidenceIdStreet));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_house", tenancyPerson.ResidenceHouse));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_flat", tenancyPerson.ResidenceFlat));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_room", tenancyPerson.ResidenceRoom));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("personal_account", tenancyPerson.PersonalAccount));
 
                 try
                 {
@@ -113,7 +118,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", 
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return -1;
                     }
                     return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
@@ -123,7 +128,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось добавить участника найма в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -135,28 +140,33 @@ namespace Registry.DataModels
             using (DbCommand command = DBConnection.CreateCommand())
             {
                 command.CommandText = updateQuery;
-
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyPerson.id_process));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_kinship", tenancyPerson.id_kinship));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("surname", tenancyPerson.surname));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("name", tenancyPerson.name));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("patronymic", tenancyPerson.patronymic));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_of_birth", tenancyPerson.date_of_birth));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_document_type", tenancyPerson.id_document_type));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_of_document_issue", tenancyPerson.date_of_document_issue));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("document_num", tenancyPerson.document_num));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("document_seria", tenancyPerson.document_seria));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_document_issued_by", tenancyPerson.id_document_issued_by));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_id_street", tenancyPerson.registration_id_street));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_house", tenancyPerson.registration_house));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_flat", tenancyPerson.registration_flat));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_room", tenancyPerson.registration_room));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_id_street", tenancyPerson.residence_id_street));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_house", tenancyPerson.residence_house));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_flat", tenancyPerson.residence_flat));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_room", tenancyPerson.residence_room));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("personal_account", tenancyPerson.personal_account));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_person", tenancyPerson.id_person));
+                if (tenancyPerson == null)
+                {
+                    MessageBox.Show("В метод Update не передана ссылка на сущность участника процесса найма", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyPerson.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_kinship", tenancyPerson.IdKinship));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("surname", tenancyPerson.Surname));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("name", tenancyPerson.Name));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("patronymic", tenancyPerson.Patronymic));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_of_birth", tenancyPerson.DateOfBirth));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_document_type", tenancyPerson.IdDocumentType));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_of_document_issue", tenancyPerson.DateOfDocumentIssue));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("document_num", tenancyPerson.DocumentNum));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("document_seria", tenancyPerson.DocumentSeria));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_document_issued_by", tenancyPerson.IdDocumentIssuedBy));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_id_street", tenancyPerson.RegistrationIdStreet));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_house", tenancyPerson.RegistrationHouse));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_flat", tenancyPerson.RegistrationFlat));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_room", tenancyPerson.RegistrationRoom));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_id_street", tenancyPerson.ResidenceIdStreet));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_house", tenancyPerson.ResidenceHouse));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_flat", tenancyPerson.ResidenceFlat));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_room", tenancyPerson.ResidenceRoom));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("personal_account", tenancyPerson.PersonalAccount));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_person", tenancyPerson.IdPerson));
 
                 try
                 {
@@ -167,7 +177,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось изменить информацию об участнике найма в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

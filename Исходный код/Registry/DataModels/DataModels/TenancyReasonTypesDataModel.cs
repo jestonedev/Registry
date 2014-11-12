@@ -14,8 +14,8 @@ namespace Registry.DataModels
     public sealed class TenancyReasonTypesDataModel: DataModel
     {
         private static TenancyReasonTypesDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM tenancy_reason_types";
-        private static string deleteQuery = "DELETE FROM tenancy_reason_types WHERE id_reason_type = ?";
+        private static string selectQuery = "SELECT * FROM tenancy_reason_types WHERE deleted <> 1";
+        private static string deleteQuery = "UPDATE tenancy_reason_types SET deleted = 1 WHERE id_reason_type = ?";
         private static string insertQuery = @"INSERT INTO tenancy_reason_types
                             (reason_name, reason_template) VALUES (?, ?)";
         private static string updateQuery = @"UPDATE tenancy_reason_types SET reason_name = ?, reason_template = ? WHERE id_reason_type = ?";
@@ -28,7 +28,7 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_reason_type"] };
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_reason_type"] };
         }
 
         public static TenancyReasonTypesDataModel GetInstance()
@@ -52,12 +52,12 @@ namespace Registry.DataModels
                 if (reasonType == null)
                 {
                     MessageBox.Show("В метод Update не передана ссылка на сущность вида основания найма", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_name", reasonType.reason_name));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_template", reasonType.reason_template));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_reason_type", reasonType.id_reason_type));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_name", reasonType.ReasonName));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_template", reasonType.ReasonTemplate));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_reason_type", reasonType.IdReasonType));
                 try
                 {
                     return connection.SqlModifyQuery(command);
@@ -67,7 +67,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось изменить запись о виде основания найма в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -84,11 +84,11 @@ namespace Registry.DataModels
                 if (reasonType == null)
                 {
                     MessageBox.Show("В метод Insert не передана ссылка на сущность вида основания найма", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_name", reasonType.reason_name));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_template", reasonType.reason_template));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_name", reasonType.ReasonName));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_template", reasonType.ReasonTemplate));
 
                 try
                 {
@@ -99,7 +99,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         connection.SqlRollbackTransaction();
                         return -1;
                     }
@@ -112,7 +112,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось добавить запись о виде основания найма в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -133,7 +133,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось удалить вид основания из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

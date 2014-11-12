@@ -29,9 +29,11 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <CodeAnalysisRuleSet>..\analize.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>Security.snk</AssemblyOriginatorKeyFile>
@@ -47,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AccessControl.cs" />
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="Priveleges.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

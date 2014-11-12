@@ -20,7 +20,7 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_warrant_doc_type"] };
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_warrant_doc_type"] };
         }
 
 

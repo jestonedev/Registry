@@ -14,8 +14,8 @@ namespace Registry.DataModels
     public sealed class RestrictionTypesDataModel : DataModel
     {
         private static RestrictionTypesDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM restriction_types";
-        private static string deleteQuery = "DELETE FROM restriction_types WHERE id_restriction_type = ?";
+        private static string selectQuery = "SELECT * FROM restriction_types WHERE deleted <> 1";
+        private static string deleteQuery = "UPDATE restriction_types SET deleted = 1 WHERE id_restriction_type = ?";
         private static string insertQuery = @"INSERT INTO restriction_types
                             (restriction_type)
                             VALUES (?)";
@@ -29,7 +29,7 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_restriction_type"] };
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_restriction_type"] };
         }
 
         public static RestrictionTypesDataModel GetInstance()
@@ -59,7 +59,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось удалить наименование реквизита из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -73,7 +73,13 @@ namespace Registry.DataModels
             {
                 last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
                 command.CommandText = insertQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<string>("restriction_type", restrictionType.restriction_type));
+                if (restrictionType == null)
+                {
+                    MessageBox.Show("В метод Insert не передана ссылка на объект типа реквизита", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<string>("restriction_type", restrictionType.RestrictionTypeName));
                 try
                 {
                     connection.SqlBeginTransaction();
@@ -83,7 +89,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", 
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return -1;
                     }
                     return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
@@ -93,7 +99,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось добавить наименование реквизита в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -105,8 +111,14 @@ namespace Registry.DataModels
             using (DbCommand command = DBConnection.CreateCommand())
             {
                 command.CommandText = updateQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<string>("restriction_type", restrictionType.restriction_type));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_restriction_type", restrictionType.id_restriction_type));
+                if (restrictionType == null)
+                {
+                    MessageBox.Show("В метод Update не передана ссылка на объект типа реквизита", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<string>("restriction_type", restrictionType.RestrictionTypeName));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_restriction_type", restrictionType.IdRestrictionType));
                 try
                 {
                     return connection.SqlModifyQuery(command);
@@ -116,7 +128,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось изменить наименование реквизита в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

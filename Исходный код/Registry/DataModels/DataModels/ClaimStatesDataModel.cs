@@ -35,7 +35,7 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_state"] };
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_state"] };
         }
 
         public static ClaimStatesDataModel GetInstance()
@@ -58,14 +58,19 @@ namespace Registry.DataModels
             {
                 last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
                 command.CommandText = insertQuery;
-
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_claim", claimState.id_claim));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state_type", claimState.id_state_type));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_start_state", claimState.date_start_state));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_end_state", claimState.date_end_state));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("document_num", claimState.document_num));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("document_date", claimState.document_date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", claimState.description));
+                if (claimState == null)
+                {
+                    MessageBox.Show("В метод Insert не передана ссылка на объект состояния претензионно-исковой работы", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_claim", claimState.IdClaim));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state_type", claimState.IdStateType));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_start_state", claimState.DateStartState));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_end_state", claimState.DateEndState));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("document_num", claimState.DocumentNum));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("document_date", claimState.DocumentDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", claimState.Description));
 
                 try
                 {
@@ -75,7 +80,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         connection.SqlRollbackTransaction();
                         return -1;
                     }
@@ -87,7 +92,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось добавить запись о состоянии претензионно-исковой работы в базу данных. Подробная ошибка: {0}",
-                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -99,15 +104,20 @@ namespace Registry.DataModels
             using (DbCommand command = DBConnection.CreateCommand())
             {
                 command.CommandText = updateQuery;
-
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_claim", claimState.id_claim));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state_type", claimState.id_state_type));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_start_state", claimState.date_start_state));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_end_state", claimState.date_end_state));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("document_num", claimState.document_num));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("document_date", claimState.document_date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", claimState.description));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", claimState.id_state));
+                if (claimState == null)
+                {
+                    MessageBox.Show("В метод Update не передана ссылка на объект состояния претензионно-исковой работы", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_claim", claimState.IdClaim));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state_type", claimState.IdStateType));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_start_state", claimState.DateStartState));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_end_state", claimState.DateEndState));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("document_num", claimState.DocumentNum));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("document_date", claimState.DocumentDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", claimState.Description));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", claimState.IdState));
 
                 try
                 {
@@ -118,7 +128,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось изменить запись о состоянии претензионно-исковой работы в базе данных. Подробная ошибка: {0}",
-                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -139,7 +149,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось удалить запись о состоянии претензионно-исковой работы из базы данных. Подробная ошибка: {0}",
-                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

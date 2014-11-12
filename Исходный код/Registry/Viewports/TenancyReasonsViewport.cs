@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using CustomControls;
 using Registry.DataModels;
 using Security;
+using System.Globalization;
 
 namespace Registry.Viewport
 {
@@ -47,6 +48,7 @@ namespace Registry.Viewport
             : base(menuCallback)
         {
             InitializeComponent();
+            snapshot_tenancy_reasons.Locale = CultureInfo.CurrentCulture;
         }
 
         public TenancyReasonsViewport(TenancyReasonsViewport tenancyReasonsViewport, IMenuCallback menuCallback)
@@ -77,7 +79,7 @@ namespace Registry.Viewport
             return false;
         }
 
-        private object[] DataRowViewToArray(DataRowView dataRowView)
+        private static object[] DataRowViewToArray(DataRowView dataRowView)
         {
             return new object[] { 
                 dataRowView["id_reason"], 
@@ -89,43 +91,47 @@ namespace Registry.Viewport
             };
         }
 
-        private bool ValidateViewportData(List<TenancyReason> list)
+        private static bool ValidateViewportData(List<TenancyReason> list)
         {
             foreach (TenancyReason tenancyReason in list)
             {
-                if (tenancyReason.id_reason_type == null)
+                if (tenancyReason.IdReasonType == null)
                 {
-                    MessageBox.Show("Не выбран вид основания", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Не выбран вид основания", "Ошибка", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
-                if (tenancyReason.reason_number == null)
+                if (tenancyReason.ReasonNumber == null)
                 {
-                    MessageBox.Show("Номер основания не может быть пустым", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Номер основания не может быть пустым", "Ошибка", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
-                if (tenancyReason.reason_number != null && tenancyReason.reason_number.Length > 50)
+                if (tenancyReason.ReasonNumber != null && tenancyReason.ReasonNumber.Length > 50)
                 {
-                    MessageBox.Show("Длина номера основания не может превышать 50 символов", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Длина номера основания не может превышать 50 символов", "Ошибка", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
-                if (tenancyReason.reason_date == null)
+                if (tenancyReason.ReasonDate == null)
                 {
-                    MessageBox.Show("Не заполнена дата основания", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Не заполнена дата основания", "Ошибка", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
             }
             return true;
         }
 
-        private TenancyReason RowToTenancyReason(DataRow row)
+        private static TenancyReason RowToTenancyReason(DataRow row)
         {
             TenancyReason tenancyReason = new TenancyReason();
-            tenancyReason.id_reason = ViewportHelper.ValueOrNull<int>(row, "id_reason");
-            tenancyReason.id_process = ViewportHelper.ValueOrNull<int>(row, "id_process");
-            tenancyReason.id_reason_type = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
-            tenancyReason.reason_number = ViewportHelper.ValueOrNull(row, "reason_number");
-            tenancyReason.reason_date = ViewportHelper.ValueOrNull<DateTime>(row, "reason_date");
-            tenancyReason.reason_prepared = ViewportHelper.ValueOrNull(row, "reason_prepared");
+            tenancyReason.IdReason = ViewportHelper.ValueOrNull<int>(row, "id_reason");
+            tenancyReason.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
+            tenancyReason.IdReasonType = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
+            tenancyReason.ReasonNumber = ViewportHelper.ValueOrNull(row, "reason_number");
+            tenancyReason.ReasonDate = ViewportHelper.ValueOrNull<DateTime>(row, "reason_date");
+            tenancyReason.ReasonPrepared = ViewportHelper.ValueOrNull(row, "reason_prepared");
             return tenancyReason;
         }
 
@@ -138,12 +144,12 @@ namespace Registry.Viewport
                 {
                     TenancyReason cr = new TenancyReason();
                     DataGridViewRow row = dataGridView.Rows[i];
-                    cr.id_reason = ViewportHelper.ValueOrNull<int>(row, "id_reason");
-                    cr.id_process = ViewportHelper.ValueOrNull<int>(row, "id_process");
-                    cr.id_reason_type = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
-                    cr.reason_number = ViewportHelper.ValueOrNull(row, "reason_number");
-                    cr.reason_date = ViewportHelper.ValueOrNull<DateTime>(row, "reason_date");
-                    cr.reason_prepared = ViewportHelper.ValueOrNull(row, "reason_prepared");
+                    cr.IdReason = ViewportHelper.ValueOrNull<int>(row, "id_reason");
+                    cr.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
+                    cr.IdReasonType = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
+                    cr.ReasonNumber = ViewportHelper.ValueOrNull(row, "reason_number");
+                    cr.ReasonDate = ViewportHelper.ValueOrNull<DateTime>(row, "reason_date");
+                    cr.ReasonPrepared = ViewportHelper.ValueOrNull(row, "reason_prepared");
                     list.Add(cr);
                 }
             }
@@ -157,12 +163,12 @@ namespace Registry.Viewport
             {
                 TenancyReason cr = new TenancyReason();
                 DataRowView row = ((DataRowView)v_tenancy_reasons[i]);
-                cr.id_reason = ViewportHelper.ValueOrNull<int>(row, "id_reason");
-                cr.id_process = ViewportHelper.ValueOrNull<int>(row, "id_process");
-                cr.id_reason_type = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
-                cr.reason_number = ViewportHelper.ValueOrNull(row, "reason_number");
-                cr.reason_date = ViewportHelper.ValueOrNull<DateTime>(row, "reason_date");
-                cr.reason_prepared = ViewportHelper.ValueOrNull(row, "reason_prepared");
+                cr.IdReason = ViewportHelper.ValueOrNull<int>(row, "id_reason");
+                cr.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
+                cr.IdReasonType = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
+                cr.ReasonNumber = ViewportHelper.ValueOrNull(row, "reason_number");
+                cr.ReasonDate = ViewportHelper.ValueOrNull<DateTime>(row, "reason_date");
+                cr.ReasonPrepared = ViewportHelper.ValueOrNull(row, "reason_prepared");
                 list.Add(cr);
             }
             return list;
@@ -231,17 +237,17 @@ namespace Registry.Viewport
             v_tenancy_reasons = new BindingSource();
             v_tenancy_reasons.DataMember = "tenancy_reasons";
             v_tenancy_reasons.Filter = StaticFilter;
-            if (StaticFilter != "" && DynamicFilter != "")
+            if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
                 v_tenancy_reasons.Filter += " AND ";
             v_tenancy_reasons.Filter += DynamicFilter;
-            v_tenancy_reasons.DataSource = DataSetManager.GetDataSet();
+            v_tenancy_reasons.DataSource = DataSetManager.DataSet;
 
             v_tenancy_reason_types = new BindingSource();
             v_tenancy_reason_types.DataMember = "tenancy_reason_types";
-            v_tenancy_reason_types.DataSource = DataSetManager.GetDataSet();
+            v_tenancy_reason_types.DataSource = DataSetManager.DataSet;
 
             if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
-                this.Text = String.Format("Основания найма №{0}", ParentRow["id_process"]);
+                this.Text = String.Format(CultureInfo.CurrentCulture, "Основания найма №{0}", ParentRow["id_process"]);
 
             //Инициируем колонки snapshot-модели
             for (int i = 0; i < tenancy_reasons.Select().Columns.Count; i++)
@@ -309,7 +315,7 @@ namespace Registry.Viewport
             snapshot_tenancy_reasons.Clear();
             for (int i = 0; i < v_tenancy_reasons.Count; i++)
                 snapshot_tenancy_reasons.Rows.Add(DataRowViewToArray(((DataRowView)v_tenancy_reasons[i])));
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanSaveRecord()
@@ -328,7 +334,7 @@ namespace Registry.Viewport
             }
             for (int i = 0; i < list.Count; i++)
             {
-                DataRow row = tenancy_reasons.Select().Rows.Find(((TenancyReason)list[i]).id_reason);
+                DataRow row = tenancy_reasons.Select().Rows.Find(((TenancyReason)list[i]).IdReason);
                 if (row == null)
                 {
                     int id_reason = TenancyReasonsDataModel.Insert(list[i]);
@@ -349,11 +355,11 @@ namespace Registry.Viewport
                         sync_views = true;
                         return;
                     }
-                    row["id_process"] = list[i].id_process == null ? DBNull.Value : (object)list[i].id_process;
-                    row["id_reason_type"] = list[i].id_reason_type == null ? DBNull.Value : (object)list[i].id_reason_type;
-                    row["reason_number"] = list[i].reason_number == null ? DBNull.Value : (object)list[i].reason_number;
-                    row["reason_date"] = list[i].reason_date == null ? DBNull.Value : (object)list[i].reason_date;
-                    row["reason_prepared"] = list[i].reason_prepared == null ? DBNull.Value : (object)list[i].reason_prepared;
+                    row["id_process"] = list[i].IdProcess == null ? DBNull.Value : (object)list[i].IdProcess;
+                    row["id_reason_type"] = list[i].IdReasonType == null ? DBNull.Value : (object)list[i].IdReasonType;
+                    row["reason_number"] = list[i].ReasonNumber == null ? DBNull.Value : (object)list[i].ReasonNumber;
+                    row["reason_date"] = list[i].ReasonDate == null ? DBNull.Value : (object)list[i].ReasonDate;
+                    row["reason_prepared"] = list[i].ReasonPrepared == null ? DBNull.Value : (object)list[i].ReasonPrepared;
                 }
             }
             list = TenancyReasonsFromView();
@@ -362,21 +368,21 @@ namespace Registry.Viewport
                 int row_index = -1;
                 for (int j = 0; j < dataGridView.Rows.Count; j++)
                     if ((dataGridView.Rows[j].Cells["id_reason"].Value != null) &&
-                        (dataGridView.Rows[j].Cells["id_reason"].Value.ToString() != "") &&
-                        ((int)dataGridView.Rows[j].Cells["id_reason"].Value == list[i].id_reason))
+                        !String.IsNullOrEmpty(dataGridView.Rows[j].Cells["id_reason"].Value.ToString()) &&
+                        ((int)dataGridView.Rows[j].Cells["id_reason"].Value == list[i].IdReason))
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (TenancyReasonsDataModel.Delete(list[i].id_reason.Value) == -1)
+                    if (TenancyReasonsDataModel.Delete(list[i].IdReason.Value) == -1)
                     {
                         sync_views = true;
                         return;
                     }
-                    tenancy_reasons.Select().Rows.Find(((TenancyReason)list[i]).id_reason).Delete();
+                    tenancy_reasons.Select().Rows.Find(((TenancyReason)list[i]).IdReason).Delete();
                 }
             }
             sync_views = true;
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanDuplicate()
@@ -386,7 +392,7 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            TenancyReasonsViewport viewport = new TenancyReasonsViewport(this, menuCallback);
+            TenancyReasonsViewport viewport = new TenancyReasonsViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             return viewport;
@@ -394,10 +400,12 @@ namespace Registry.Viewport
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            if (e == null)
+                return;
             if (SnapshotHasChanges())
             {
                 DialogResult result = MessageBox.Show("Сохранить изменения об основаниях на найм жилья в базу данных?", "Внимание",
-                                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                 if (result == DialogResult.Yes)
                     SaveRecord();
                 else
@@ -429,11 +437,12 @@ namespace Registry.Viewport
             string reason_number = dataGridView.Rows[e.RowIndex].Cells["reason_number"].Value.ToString();
             DateTime? reason_date = null;
             if (dataGridView.Rows[e.RowIndex].Cells["reason_date"].Value != DBNull.Value)
-                reason_date = Convert.ToDateTime(dataGridView.Rows[e.RowIndex].Cells["reason_date"].Value);
+                reason_date = Convert.ToDateTime(dataGridView.Rows[e.RowIndex].Cells["reason_date"].Value, CultureInfo.CurrentCulture);
             dataGridView.Rows[e.RowIndex].Cells["reason_prepared"].Value =
-                reason_template.Replace("@reason_date@", reason_date == null ? "" : reason_date.Value.ToString("dd.MM.yyyy"))
+                reason_template.Replace("@reason_date@", reason_date == null ? "" : 
+                    reason_date.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture))
                                .Replace("@reason_number@", reason_number);
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
@@ -442,7 +451,7 @@ namespace Registry.Viewport
             switch (cell.OwningColumn.Name)
             {
                 case "reason_number":
-                    if (cell.Value.ToString().Trim() == "")
+                    if (String.IsNullOrEmpty(cell.Value.ToString().Trim()))
                         cell.ErrorText = "Номер основания не может быть пустым";
                     else
                         if (cell.Value.ToString().Trim().Length > 50)
@@ -451,7 +460,7 @@ namespace Registry.Viewport
                             cell.ErrorText = "";
                     break;
                 case "reason_date":
-                    if (cell.Value.ToString().Trim().Trim() == "")
+                    if (String.IsNullOrEmpty(cell.Value.ToString().Trim()))
                         cell.ErrorText = "Не заполнена дата основания";
                     else
                         cell.ErrorText = "";
@@ -462,13 +471,13 @@ namespace Registry.Viewport
         void v_snapshot_tenancy_reasons_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
-                menuCallback.NavigationStateUpdate();
+                MenuCallback.NavigationStateUpdate();
         }
 
         void v_snapshot_restrictions_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
-                menuCallback.NavigationStateUpdate();
+                MenuCallback.NavigationStateUpdate();
         }
 
         void TenancyReasonsViewport_RowDeleting(object sender, DataRowChangeEventArgs e)

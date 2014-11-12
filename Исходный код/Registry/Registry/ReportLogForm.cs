@@ -16,14 +16,12 @@ namespace Registry
             InitializeComponent();
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Не передавать литералы в качестве локализованных параметров", MessageId = "System.Windows.Forms.TextBoxBase.AppendText(System.String)")]
         public void Log(string text)
         {
             richTextBox1.AppendText((richTextBox1.Lines.Length == 0 ? "" : Environment.NewLine) + 
                 (richTextBox1.Lines.Length + 1).ToString(CultureInfo.CurrentCulture) + ". " + text);
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1303:Не передавать литералы в качестве локализованных параметров", MessageId = "System.Windows.Forms.Control.set_Text(System.String)")]
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ReportLogForm));

@@ -7,18 +7,12 @@ namespace Registry.Entities
 {
     public sealed class OwnershipRightType
     {
-        public int? id_ownership_right_type { get; set; }
-        public string ownership_right_type { get; set; }
+        public int? IdOwnershipRightType { get; set; }
+        public string OwnershipRightTypeName { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is OwnershipRightType))
-                return false;
-            OwnershipRightType obj_ownership_right_type = (OwnershipRightType)obj;
-            if (this == obj_ownership_right_type)
-                return true;
-            else
-                return false;
+            return (this == (obj as OwnershipRightType));
         }
 
         public bool Equals(OwnershipRightType other)
@@ -28,8 +22,14 @@ namespace Registry.Entities
 
         public static bool operator ==(OwnershipRightType first, OwnershipRightType second)
         {
-            return first.id_ownership_right_type == second.id_ownership_right_type &&
-                first.ownership_right_type == second.ownership_right_type;
+            if ((object)first == null && (object)second == null)
+                return true;
+            else
+                if ((object)first == null || (object)second == null)
+                    return false;
+                else
+            return first.IdOwnershipRightType == second.IdOwnershipRightType &&
+                first.OwnershipRightTypeName == second.OwnershipRightTypeName;
         }
 
         public static bool operator !=(OwnershipRightType first, OwnershipRightType second)

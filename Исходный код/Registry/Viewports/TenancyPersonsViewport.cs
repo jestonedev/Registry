@@ -9,6 +9,7 @@ using Registry.DataModels;
 using System.Drawing;
 using Registry.CalcDataModels;
 using Security;
+using System.Globalization;
 
 namespace Registry.Viewport
 {
@@ -112,7 +113,8 @@ namespace Registry.Viewport
             if (dataGridViewTenancyPersons.Rows.Count == 0)
                 return;
             for (int i = 0; i < dataGridViewTenancyPersons.Rows.Count; i++)
-                if (((DataRowView)v_tenancy_persons[i])["id_kinship"] != DBNull.Value && Convert.ToInt32(((DataRowView)v_tenancy_persons[i])["id_kinship"]) == 1)
+                if (((DataRowView)v_tenancy_persons[i])["id_kinship"] != DBNull.Value &&
+                    Convert.ToInt32(((DataRowView)v_tenancy_persons[i])["id_kinship"], CultureInfo.CurrentCulture) == 1)
                     dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
                 else
                     dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.White;
@@ -222,7 +224,7 @@ namespace Registry.Viewport
                 if (viewportState == ViewportState.ReadState)
                 {
                     viewportState = ViewportState.ModifyRowState;
-                    menuCallback.EditingStateUpdate();
+                    MenuCallback.EditingStateUpdate();
                     dataGridViewTenancyPersons.Enabled = false;
                 }
             }
@@ -231,7 +233,7 @@ namespace Registry.Viewport
                 if (viewportState == ViewportState.ModifyRowState)
                 {
                     viewportState = ViewportState.ReadState;
-                    menuCallback.EditingStateUpdate();
+                    MenuCallback.EditingStateUpdate();
                     dataGridViewTenancyPersons.Enabled = true;
                 }
             }
@@ -249,7 +251,7 @@ namespace Registry.Viewport
                         case ViewportState.NewRowState:
                         case ViewportState.ModifyRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -277,7 +279,7 @@ namespace Registry.Viewport
                             return true;
                         case ViewportState.ModifyRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -301,7 +303,7 @@ namespace Registry.Viewport
                             return true;
                         case ViewportState.NewRowState:
                             DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
                             else
@@ -330,59 +332,59 @@ namespace Registry.Viewport
 
         private void ViewportFromTenancyPerson(TenancyPerson tenancyPerson)
         {
-            comboBoxKinship.SelectedValue = ViewportHelper.ValueOrDBNull(tenancyPerson.id_kinship);
-            comboBoxDocumentType.SelectedValue = ViewportHelper.ValueOrDBNull(tenancyPerson.id_document_type);
-            comboBoxIssuedBy.SelectedValue = ViewportHelper.ValueOrDBNull(tenancyPerson.id_document_issued_by);
-            comboBoxRegistrationStreet.SelectedValue = ViewportHelper.ValueOrDBNull(tenancyPerson.registration_id_street);
-            comboBoxResidenceStreet.SelectedValue = ViewportHelper.ValueOrDBNull(tenancyPerson.residence_id_street);
-            textBoxSurname.Text = tenancyPerson.surname;
-            textBoxName.Text = tenancyPerson.name;
-            textBoxPatronymic.Text = tenancyPerson.patronymic;
-            textBoxPersonalAccount.Text = tenancyPerson.personal_account;
-            textBoxDocumentNumber.Text = tenancyPerson.document_num;
-            textBoxDocumentSeria.Text = tenancyPerson.document_seria;
-            textBoxRegistrationHouse.Text = tenancyPerson.registration_house;
-            textBoxRegistrationFlat.Text = tenancyPerson.registration_flat;
-            textBoxRegistrationRoom.Text = tenancyPerson.registration_room;
-            textBoxResidenceHouse.Text = tenancyPerson.residence_house;
-            textBoxResidenceFlat.Text = tenancyPerson.residence_flat;
-            textBoxResidenceRoom.Text = tenancyPerson.residence_room;
-            dateTimePickerDateOfBirth.Value = ViewportHelper.ValueOrDefault(tenancyPerson.date_of_birth);
-            dateTimePickerDateOfBirth.Checked = (tenancyPerson.date_of_birth != null);
-            dateTimePickerDateOfDocumentIssue.Value = ViewportHelper.ValueOrDefault(tenancyPerson.date_of_document_issue);
-            dateTimePickerDateOfDocumentIssue.Checked = (tenancyPerson.date_of_document_issue != null);
+            comboBoxKinship.SelectedValue = ViewportHelper.ValueOrDBNull(tenancyPerson.IdKinship);
+            comboBoxDocumentType.SelectedValue = ViewportHelper.ValueOrDBNull(tenancyPerson.IdDocumentType);
+            comboBoxIssuedBy.SelectedValue = ViewportHelper.ValueOrDBNull(tenancyPerson.IdDocumentIssuedBy);
+            comboBoxRegistrationStreet.SelectedValue = ViewportHelper.ValueOrDBNull(tenancyPerson.RegistrationIdStreet);
+            comboBoxResidenceStreet.SelectedValue = ViewportHelper.ValueOrDBNull(tenancyPerson.ResidenceIdStreet);
+            textBoxSurname.Text = tenancyPerson.Surname;
+            textBoxName.Text = tenancyPerson.Name;
+            textBoxPatronymic.Text = tenancyPerson.Patronymic;
+            textBoxPersonalAccount.Text = tenancyPerson.PersonalAccount;
+            textBoxDocumentNumber.Text = tenancyPerson.DocumentNum;
+            textBoxDocumentSeria.Text = tenancyPerson.DocumentSeria;
+            textBoxRegistrationHouse.Text = tenancyPerson.RegistrationHouse;
+            textBoxRegistrationFlat.Text = tenancyPerson.RegistrationFlat;
+            textBoxRegistrationRoom.Text = tenancyPerson.RegistrationRoom;
+            textBoxResidenceHouse.Text = tenancyPerson.ResidenceHouse;
+            textBoxResidenceFlat.Text = tenancyPerson.ResidenceFlat;
+            textBoxResidenceRoom.Text = tenancyPerson.ResidenceRoom;
+            dateTimePickerDateOfBirth.Value = ViewportHelper.ValueOrDefault(tenancyPerson.DateOfBirth);
+            dateTimePickerDateOfBirth.Checked = (tenancyPerson.DateOfBirth != null);
+            dateTimePickerDateOfDocumentIssue.Value = ViewportHelper.ValueOrDefault(tenancyPerson.DateOfDocumentIssue);
+            dateTimePickerDateOfDocumentIssue.Checked = (tenancyPerson.DateOfDocumentIssue != null);
         }
 
         private TenancyPerson TenancyPersonFromViewport()
         {
             TenancyPerson tenancyPerson = new TenancyPerson();
             if (v_tenancy_persons.Position == -1)
-                tenancyPerson.id_person = null;
+                tenancyPerson.IdPerson = null;
             else
-                tenancyPerson.id_person = ViewportHelper.ValueOrNull<int>((DataRowView)v_tenancy_persons[v_tenancy_persons.Position], "id_person");
+                tenancyPerson.IdPerson = ViewportHelper.ValueOrNull<int>((DataRowView)v_tenancy_persons[v_tenancy_persons.Position], "id_person");
             if (ParentType == ParentTypeEnum.Tenancy && ParentRow != null)
-                tenancyPerson.id_process = ViewportHelper.ValueOrNull<int>(ParentRow, "id_process");
+                tenancyPerson.IdProcess = ViewportHelper.ValueOrNull<int>(ParentRow, "id_process");
             else
-                tenancyPerson.id_process = null;
-            tenancyPerson.id_kinship = ViewportHelper.ValueOrNull<int>(comboBoxKinship);
-            tenancyPerson.id_document_type = ViewportHelper.ValueOrNull<int>(comboBoxDocumentType);
-            tenancyPerson.id_document_issued_by = ViewportHelper.ValueOrNull<int>(comboBoxIssuedBy);
-            tenancyPerson.registration_id_street = ViewportHelper.ValueOrNull(comboBoxRegistrationStreet);
-            tenancyPerson.residence_id_street = ViewportHelper.ValueOrNull(comboBoxResidenceStreet);           
-            tenancyPerson.surname = ViewportHelper.ValueOrNull(textBoxSurname);
-            tenancyPerson.name = ViewportHelper.ValueOrNull(textBoxName);
-            tenancyPerson.patronymic = ViewportHelper.ValueOrNull(textBoxPatronymic);
-            tenancyPerson.personal_account = ViewportHelper.ValueOrNull(textBoxPersonalAccount);
-            tenancyPerson.document_seria = ViewportHelper.ValueOrNull(textBoxDocumentSeria);
-            tenancyPerson.document_num = ViewportHelper.ValueOrNull(textBoxDocumentNumber);
-            tenancyPerson.registration_house = ViewportHelper.ValueOrNull(textBoxRegistrationHouse);
-            tenancyPerson.registration_flat = ViewportHelper.ValueOrNull(textBoxRegistrationFlat);
-            tenancyPerson.registration_room = ViewportHelper.ValueOrNull(textBoxRegistrationRoom);
-            tenancyPerson.residence_house = ViewportHelper.ValueOrNull(textBoxResidenceHouse);
-            tenancyPerson.residence_flat = ViewportHelper.ValueOrNull(textBoxResidenceFlat);
-            tenancyPerson.residence_room = ViewportHelper.ValueOrNull(textBoxResidenceRoom);
-            tenancyPerson.date_of_birth = ViewportHelper.ValueOrNull(dateTimePickerDateOfBirth);
-            tenancyPerson.date_of_document_issue = ViewportHelper.ValueOrNull(dateTimePickerDateOfDocumentIssue);
+                tenancyPerson.IdProcess = null;
+            tenancyPerson.IdKinship = ViewportHelper.ValueOrNull<int>(comboBoxKinship);
+            tenancyPerson.IdDocumentType = ViewportHelper.ValueOrNull<int>(comboBoxDocumentType);
+            tenancyPerson.IdDocumentIssuedBy = ViewportHelper.ValueOrNull<int>(comboBoxIssuedBy);
+            tenancyPerson.RegistrationIdStreet = ViewportHelper.ValueOrNull(comboBoxRegistrationStreet);
+            tenancyPerson.ResidenceIdStreet = ViewportHelper.ValueOrNull(comboBoxResidenceStreet);           
+            tenancyPerson.Surname = ViewportHelper.ValueOrNull(textBoxSurname);
+            tenancyPerson.Name = ViewportHelper.ValueOrNull(textBoxName);
+            tenancyPerson.Patronymic = ViewportHelper.ValueOrNull(textBoxPatronymic);
+            tenancyPerson.PersonalAccount = ViewportHelper.ValueOrNull(textBoxPersonalAccount);
+            tenancyPerson.DocumentSeria = ViewportHelper.ValueOrNull(textBoxDocumentSeria);
+            tenancyPerson.DocumentNum = ViewportHelper.ValueOrNull(textBoxDocumentNumber);
+            tenancyPerson.RegistrationHouse = ViewportHelper.ValueOrNull(textBoxRegistrationHouse);
+            tenancyPerson.RegistrationFlat = ViewportHelper.ValueOrNull(textBoxRegistrationFlat);
+            tenancyPerson.RegistrationRoom = ViewportHelper.ValueOrNull(textBoxRegistrationRoom);
+            tenancyPerson.ResidenceHouse = ViewportHelper.ValueOrNull(textBoxResidenceHouse);
+            tenancyPerson.ResidenceFlat = ViewportHelper.ValueOrNull(textBoxResidenceFlat);
+            tenancyPerson.ResidenceRoom = ViewportHelper.ValueOrNull(textBoxResidenceRoom);
+            tenancyPerson.DateOfBirth = ViewportHelper.ValueOrNull(dateTimePickerDateOfBirth);
+            tenancyPerson.DateOfDocumentIssue = ViewportHelper.ValueOrNull(dateTimePickerDateOfDocumentIssue);
             return tenancyPerson;
         }
 
@@ -390,99 +392,99 @@ namespace Registry.Viewport
         {
             TenancyPerson tenancyPerson = new TenancyPerson();
             DataRowView row = (DataRowView)v_tenancy_persons[v_tenancy_persons.Position];
-            tenancyPerson.id_person = ViewportHelper.ValueOrNull<int>(row, "id_person");
-            tenancyPerson.id_process = ViewportHelper.ValueOrNull<int>(row, "id_process");
-            tenancyPerson.id_kinship = ViewportHelper.ValueOrNull<int>(row, "id_kinship");
-            tenancyPerson.id_document_type = ViewportHelper.ValueOrNull<int>(row, "id_document_type");
-            tenancyPerson.id_document_issued_by = ViewportHelper.ValueOrNull<int>(row, "id_document_issued_by");
-            tenancyPerson.surname = ViewportHelper.ValueOrNull(row, "surname");
-            tenancyPerson.name = ViewportHelper.ValueOrNull(row, "name");
-            tenancyPerson.patronymic = ViewportHelper.ValueOrNull(row, "patronymic");
-            tenancyPerson.date_of_birth = ViewportHelper.ValueOrNull<DateTime>(row, "date_of_birth");
-            tenancyPerson.date_of_document_issue = ViewportHelper.ValueOrNull<DateTime>(row, "date_of_document_issue");
-            tenancyPerson.document_num = ViewportHelper.ValueOrNull(row, "document_num");
-            tenancyPerson.document_seria = ViewportHelper.ValueOrNull(row, "document_seria");
-            tenancyPerson.registration_id_street = ViewportHelper.ValueOrNull(row, "registration_id_street");
-            tenancyPerson.registration_house = ViewportHelper.ValueOrNull(row, "registration_house");
-            tenancyPerson.registration_flat = ViewportHelper.ValueOrNull(row, "registration_flat");
-            tenancyPerson.registration_room = ViewportHelper.ValueOrNull(row, "registration_room");
-            tenancyPerson.residence_id_street = ViewportHelper.ValueOrNull(row, "residence_id_street");
-            tenancyPerson.residence_house = ViewportHelper.ValueOrNull(row, "residence_house");
-            tenancyPerson.residence_flat = ViewportHelper.ValueOrNull(row, "residence_flat");
-            tenancyPerson.residence_room = ViewportHelper.ValueOrNull(row, "residence_room");
-            tenancyPerson.personal_account = ViewportHelper.ValueOrNull(row, "personal_account");
+            tenancyPerson.IdPerson = ViewportHelper.ValueOrNull<int>(row, "id_person");
+            tenancyPerson.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
+            tenancyPerson.IdKinship = ViewportHelper.ValueOrNull<int>(row, "id_kinship");
+            tenancyPerson.IdDocumentType = ViewportHelper.ValueOrNull<int>(row, "id_document_type");
+            tenancyPerson.IdDocumentIssuedBy = ViewportHelper.ValueOrNull<int>(row, "id_document_issued_by");
+            tenancyPerson.Surname = ViewportHelper.ValueOrNull(row, "surname");
+            tenancyPerson.Name = ViewportHelper.ValueOrNull(row, "name");
+            tenancyPerson.Patronymic = ViewportHelper.ValueOrNull(row, "patronymic");
+            tenancyPerson.DateOfBirth = ViewportHelper.ValueOrNull<DateTime>(row, "date_of_birth");
+            tenancyPerson.DateOfDocumentIssue = ViewportHelper.ValueOrNull<DateTime>(row, "date_of_document_issue");
+            tenancyPerson.DocumentNum = ViewportHelper.ValueOrNull(row, "document_num");
+            tenancyPerson.DocumentSeria = ViewportHelper.ValueOrNull(row, "document_seria");
+            tenancyPerson.RegistrationIdStreet = ViewportHelper.ValueOrNull(row, "registration_id_street");
+            tenancyPerson.RegistrationHouse = ViewportHelper.ValueOrNull(row, "registration_house");
+            tenancyPerson.RegistrationFlat = ViewportHelper.ValueOrNull(row, "registration_flat");
+            tenancyPerson.RegistrationRoom = ViewportHelper.ValueOrNull(row, "registration_room");
+            tenancyPerson.ResidenceIdStreet = ViewportHelper.ValueOrNull(row, "residence_id_street");
+            tenancyPerson.ResidenceHouse = ViewportHelper.ValueOrNull(row, "residence_house");
+            tenancyPerson.ResidenceFlat = ViewportHelper.ValueOrNull(row, "residence_flat");
+            tenancyPerson.ResidenceRoom = ViewportHelper.ValueOrNull(row, "residence_room");
+            tenancyPerson.PersonalAccount = ViewportHelper.ValueOrNull(row, "personal_account");
             return tenancyPerson;
         }
 
-        private void FillRowFromTenancyPerson(TenancyPerson tenancyPerson, DataRowView row)
+        private static void FillRowFromTenancyPerson(TenancyPerson tenancyPerson, DataRowView row)
         {
             row.BeginEdit();
-            row["id_person"] = ViewportHelper.ValueOrDBNull(tenancyPerson.id_person);
-            row["id_process"] = ViewportHelper.ValueOrDBNull(tenancyPerson.id_process);
-            row["id_kinship"] = ViewportHelper.ValueOrDBNull(tenancyPerson.id_kinship);
-            row["surname"] = ViewportHelper.ValueOrDBNull(tenancyPerson.surname);
-            row["name"] = ViewportHelper.ValueOrDBNull(tenancyPerson.name);
-            row["patronymic"] = ViewportHelper.ValueOrDBNull(tenancyPerson.patronymic);
-            row["date_of_birth"] = ViewportHelper.ValueOrDBNull(tenancyPerson.date_of_birth);
-            row["id_document_type"] = ViewportHelper.ValueOrDBNull(tenancyPerson.id_document_type);
-            row["date_of_document_issue"] = ViewportHelper.ValueOrDBNull(tenancyPerson.date_of_document_issue);
-            row["document_num"] = ViewportHelper.ValueOrDBNull(tenancyPerson.document_num);
-            row["document_seria"] = ViewportHelper.ValueOrDBNull(tenancyPerson.document_seria);
-            row["id_document_issued_by"] = ViewportHelper.ValueOrDBNull(tenancyPerson.id_document_issued_by);
-            row["registration_id_street"] = ViewportHelper.ValueOrDBNull(tenancyPerson.registration_id_street);
-            row["registration_house"] = ViewportHelper.ValueOrDBNull(tenancyPerson.registration_house);
-            row["registration_flat"] = ViewportHelper.ValueOrDBNull(tenancyPerson.registration_flat);
-            row["registration_room"] = ViewportHelper.ValueOrDBNull(tenancyPerson.registration_room);
-            row["residence_id_street"] = ViewportHelper.ValueOrDBNull(tenancyPerson.residence_id_street);
-            row["residence_house"] = ViewportHelper.ValueOrDBNull(tenancyPerson.residence_house);
-            row["residence_flat"] = ViewportHelper.ValueOrDBNull(tenancyPerson.residence_flat);
-            row["residence_room"] = ViewportHelper.ValueOrDBNull(tenancyPerson.residence_room);
-            row["personal_account"] = ViewportHelper.ValueOrDBNull(tenancyPerson.personal_account);
+            row["id_person"] = ViewportHelper.ValueOrDBNull(tenancyPerson.IdPerson);
+            row["id_process"] = ViewportHelper.ValueOrDBNull(tenancyPerson.IdProcess);
+            row["id_kinship"] = ViewportHelper.ValueOrDBNull(tenancyPerson.IdKinship);
+            row["surname"] = ViewportHelper.ValueOrDBNull(tenancyPerson.Surname);
+            row["name"] = ViewportHelper.ValueOrDBNull(tenancyPerson.Name);
+            row["patronymic"] = ViewportHelper.ValueOrDBNull(tenancyPerson.Patronymic);
+            row["date_of_birth"] = ViewportHelper.ValueOrDBNull(tenancyPerson.DateOfBirth);
+            row["id_document_type"] = ViewportHelper.ValueOrDBNull(tenancyPerson.IdDocumentType);
+            row["date_of_document_issue"] = ViewportHelper.ValueOrDBNull(tenancyPerson.DateOfDocumentIssue);
+            row["document_num"] = ViewportHelper.ValueOrDBNull(tenancyPerson.DocumentNum);
+            row["document_seria"] = ViewportHelper.ValueOrDBNull(tenancyPerson.DocumentSeria);
+            row["id_document_issued_by"] = ViewportHelper.ValueOrDBNull(tenancyPerson.IdDocumentIssuedBy);
+            row["registration_id_street"] = ViewportHelper.ValueOrDBNull(tenancyPerson.RegistrationIdStreet);
+            row["registration_house"] = ViewportHelper.ValueOrDBNull(tenancyPerson.RegistrationHouse);
+            row["registration_flat"] = ViewportHelper.ValueOrDBNull(tenancyPerson.RegistrationFlat);
+            row["registration_room"] = ViewportHelper.ValueOrDBNull(tenancyPerson.RegistrationRoom);
+            row["residence_id_street"] = ViewportHelper.ValueOrDBNull(tenancyPerson.ResidenceIdStreet);
+            row["residence_house"] = ViewportHelper.ValueOrDBNull(tenancyPerson.ResidenceHouse);
+            row["residence_flat"] = ViewportHelper.ValueOrDBNull(tenancyPerson.ResidenceFlat);
+            row["residence_room"] = ViewportHelper.ValueOrDBNull(tenancyPerson.ResidenceRoom);
+            row["personal_account"] = ViewportHelper.ValueOrDBNull(tenancyPerson.PersonalAccount);
             row.EndEdit();
         }
 
         private bool ValidateTenancyPerson(TenancyPerson tenancyPerson)
         {
-            if (tenancyPerson.surname == null)
+            if (tenancyPerson.Surname == null)
             {
                 MessageBox.Show("Необходимо указать фамилию участника найма", "Ошибка",
-                               MessageBoxButtons.OK, MessageBoxIcon.Error);
+                               MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxSurname.Focus();
                 return false;
             }
-            if (tenancyPerson.name == null)
+            if (tenancyPerson.Name == null)
             {
                 MessageBox.Show("Необходимо указать имя участника найма", "Ошибка",
-                               MessageBoxButtons.OK, MessageBoxIcon.Error);
+                               MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxName.Focus();
                 return false;
             }
-            if (tenancyPerson.id_kinship == null)
+            if (tenancyPerson.IdKinship == null)
             {
                 MessageBox.Show("Необходимо выбрать родственную связь", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxKinship.Focus();
                 return false;
             }
-            if (tenancyPerson.id_kinship == 1)
+            if (tenancyPerson.IdKinship == 1)
             {
                 for (int i = 0; i < v_tenancy_persons.Count; i++)
                 {
                     if (((DataRowView)v_tenancy_persons[i])["id_kinship"] != DBNull.Value &&
-                        (Convert.ToInt32(((DataRowView)v_tenancy_persons[i])["id_kinship"]) == 1) &&
-                        (Convert.ToInt32(((DataRowView)v_tenancy_persons[i])["id_person"]) != tenancyPerson.id_person))
+                        (Convert.ToInt32(((DataRowView)v_tenancy_persons[i])["id_kinship"], CultureInfo.CurrentCulture) == 1) &&
+                        (Convert.ToInt32(((DataRowView)v_tenancy_persons[i])["id_person"], CultureInfo.CurrentCulture) != tenancyPerson.IdPerson))
                     {
                         MessageBox.Show("В процессе найма может быть только один наниматель", "Ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         comboBoxKinship.Focus();
                         return false;
                     }
                 }
             }
-            if (tenancyPerson.id_document_type == null)
+            if (tenancyPerson.IdDocumentType == null)
             {
                 MessageBox.Show("Необходимо выбрать вид документа, удостоверяющего личность", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxDocumentType.Focus();
                 return false;
             }
@@ -572,10 +574,10 @@ namespace Registry.Viewport
             document_issued_by.Select();
             kladr.Select();
 
-            DataSet ds = DataSetManager.GetDataSet();
+            DataSet ds = DataSetManager.DataSet;
 
             if ((ParentType == ParentTypeEnum.Tenancy) && (ParentRow != null))
-                this.Text = String.Format("Участники найма №{0}", ParentRow["id_process"].ToString());
+                this.Text = String.Format(CultureInfo.CurrentCulture, "Участники найма №{0}", ParentRow["id_process"].ToString());
             else
                 throw new ViewportException("Неизвестный тип родительского объекта");
 
@@ -603,7 +605,7 @@ namespace Registry.Viewport
             v_tenancy_persons.CurrentItemChanged += new EventHandler(v_tenancy_persons_CurrentItemChanged);
             v_tenancy_persons.DataMember = "tenancy_persons";
             v_tenancy_persons.Filter = StaticFilter;
-            if (StaticFilter != "" && DynamicFilter != "")
+            if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
                 v_tenancy_persons.Filter += " AND ";
             v_tenancy_persons.Filter += DynamicFilter;
             v_tenancy_persons.DataSource = ds;
@@ -647,8 +649,8 @@ namespace Registry.Viewport
             dataGridViewTenancyPersons.Enabled = false;
             tenancy_persons.EditingNewRecord = true;
             ViewportFromTenancyPerson(tenancyPerson);
-            dateTimePickerDateOfBirth.Checked = (tenancyPerson.date_of_birth != null);
-            dateTimePickerDateOfDocumentIssue.Checked = (tenancyPerson.date_of_document_issue != null);
+            dateTimePickerDateOfBirth.Checked = (tenancyPerson.DateOfBirth != null);
+            dateTimePickerDateOfDocumentIssue.Checked = (tenancyPerson.DateOfDocumentIssue != null);
             is_editable = true;
         }
 
@@ -661,7 +663,8 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите этого участника договора?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show("Вы действительно хотите этого участника договора?", "Внимание",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 if (TenancyPersonsDataModel.Delete((int)((DataRowView)v_tenancy_persons.Current)["id_person"]) == -1)
                     return;
@@ -669,7 +672,9 @@ namespace Registry.Viewport
                 ((DataRowView)v_tenancy_persons[v_tenancy_persons.Position]).Delete();
                 is_editable = true;
                 RedrawDataGridRows();
-                menuCallback.ForceCloseDetachedViewports(); 
+                viewportState = ViewportState.ReadState;
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.ForceCloseDetachedViewports(); 
                 if (ParentType == ParentTypeEnum.Tenancy)
                     CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Tenancy, 
                         (int)ParentRow["id_process"]);
@@ -683,7 +688,7 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            TenancyPersonsViewport viewport = new TenancyPersonsViewport(this, menuCallback);
+            TenancyPersonsViewport viewport = new TenancyPersonsViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             if (v_tenancy_persons.Count > 0)
@@ -723,7 +728,7 @@ namespace Registry.Viewport
             }
             UnbindedCheckBoxesUpdate();
             is_editable = true;
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanSaveRecord()
@@ -741,14 +746,14 @@ namespace Registry.Viewport
             {
                 case ViewportState.ReadState:
                     MessageBox.Show("Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 case ViewportState.NewRowState:
                     int id_person = TenancyPersonsDataModel.Insert(tenancyPerson);
                     if (id_person == -1)
                         return;
                     DataRowView newRow;
-                    tenancyPerson.id_person = id_person;
+                    tenancyPerson.IdPerson = id_person;
                     is_editable = false;
                     if (v_tenancy_persons.Position == -1)
                         newRow = (DataRowView)v_tenancy_persons.AddNew();
@@ -758,10 +763,11 @@ namespace Registry.Viewport
                     tenancy_persons.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
-                    if (tenancyPerson.id_person == null)
+                    if (tenancyPerson.IdPerson == null)
                     {
                         MessageBox.Show("Вы пытаетесь изменить запись об участнике договора без внутренного номера. " +
-                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
                     if (TenancyPersonsDataModel.Update(tenancyPerson) == -1)
@@ -776,13 +782,15 @@ namespace Registry.Viewport
             viewportState = ViewportState.ReadState;
             dataGridViewTenancyPersons.Enabled = true;
             is_editable = true;
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
             if (ParentType == ParentTypeEnum.Tenancy)
                 CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Tenancy, (int)ParentRow["id_process"]);
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            if (e == null)
+                return;
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
             else
@@ -803,8 +811,16 @@ namespace Registry.Viewport
 
         void v_tenancy_persons_CurrentItemChanged(object sender, EventArgs e)
         {
+            if (v_tenancy_persons.Position == -1 || dataGridViewTenancyPersons.RowCount == 0)
+                dataGridViewTenancyPersons.ClearSelection();
+            else
+            if (v_tenancy_persons.Position >= dataGridViewTenancyPersons.RowCount)
+                dataGridViewTenancyPersons.Rows[dataGridViewTenancyPersons.RowCount - 1].Selected = true;
+            else
+            if (dataGridViewTenancyPersons.Rows[v_tenancy_persons.Position].Selected != true)
+                dataGridViewTenancyPersons.Rows[v_tenancy_persons.Position].Selected = true;
             if (Selected)
-                menuCallback.NavigationStateUpdate();
+                MenuCallback.NavigationStateUpdate();
             v_registration_street.Filter = "";
             v_residence_street.Filter = "";
             v_document_issued_by.Filter = "";
@@ -862,7 +878,7 @@ namespace Registry.Viewport
 
         void comboBoxIssuedBy_Leave(object sender, EventArgs e)
         {
-            if (comboBoxIssuedBy.Text == "")
+            if (String.IsNullOrEmpty(comboBoxIssuedBy.Text))
             {
                 comboBoxIssuedBy.SelectedValue = DBNull.Value;
                 return;
@@ -899,7 +915,7 @@ namespace Registry.Viewport
 
         void comboBoxResidenceStreet_Leave(object sender, EventArgs e)
         {
-            if (comboBoxResidenceStreet.Text == "")
+            if (String.IsNullOrEmpty(comboBoxResidenceStreet.Text))
             {
                 comboBoxResidenceStreet.SelectedValue = DBNull.Value;
                 return;
@@ -936,7 +952,7 @@ namespace Registry.Viewport
 
         void comboBoxRegistrationStreet_Leave(object sender, EventArgs e)
         {
-            if (comboBoxRegistrationStreet.Text == "")
+            if (String.IsNullOrEmpty(comboBoxRegistrationStreet.Text))
             {
                 comboBoxRegistrationStreet.SelectedValue = DBNull.Value;
                 return;

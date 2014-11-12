@@ -7,18 +7,12 @@ namespace Registry.Entities
 {
     public sealed class RestrictionType
     {
-        public int? id_restriction_type { get; set; }
-        public string restriction_type { get; set; }
+        public int? IdRestrictionType { get; set; }
+        public string RestrictionTypeName { get; set; }
 
         public override bool Equals(object obj)
         {
-            if (!(obj is RestrictionType))
-                return false;
-            RestrictionType obj_restriction_type = (RestrictionType)obj;
-            if (this == obj_restriction_type)
-                return true;
-            else
-                return false;
+            return (this == (obj as RestrictionType));
         }
 
         public bool Equals(RestrictionType other)
@@ -28,8 +22,14 @@ namespace Registry.Entities
 
         public static bool operator ==(RestrictionType first, RestrictionType second)
         {
-            return first.id_restriction_type == second.id_restriction_type &&
-                first.restriction_type == second.restriction_type;
+            if ((object)first == null && (object)second == null)
+                return true;
+            else
+                if ((object)first == null || (object)second == null)
+                    return false;
+                else
+            return first.IdRestrictionType == second.IdRestrictionType &&
+                first.RestrictionTypeName == second.RestrictionTypeName;
         }
 
         public static bool operator !=(RestrictionType first, RestrictionType second)

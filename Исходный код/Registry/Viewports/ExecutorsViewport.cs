@@ -7,6 +7,7 @@ using Registry.DataModels;
 using System.Data;
 using Registry.Entities;
 using Security;
+using System.Globalization;
 
 namespace Registry.Viewport
 {
@@ -45,6 +46,7 @@ namespace Registry.Viewport
             : base(menuCallback)
         {
             InitializeComponent();
+            snapshot_executors.Locale = CultureInfo.CurrentCulture;
         }
 
         public ExecutorsViewport(ExecutorsViewport executorsViewport, IMenuCallback menuCallback)
@@ -75,44 +77,46 @@ namespace Registry.Viewport
             return false;
         }
 
-        private object[] DataRowViewToArray(DataRowView dataRowView)
+        private static object[] DataRowViewToArray(DataRowView dataRowView)
         {
             return new object[] { 
                 dataRowView["id_executor"], 
                 dataRowView["executor_name"],
                 dataRowView["executor_login"],
                 dataRowView["phone"],
-                dataRowView["is_inactive"]
+                ViewportHelper.ValueOrNull<bool>(dataRowView,"is_inactive") == true
             };
         }
 
-        private bool ValidateViewportData(List<Executor> list)
+        private static bool ValidateViewportData(List<Executor> list)
         {
             foreach (Executor executor in list)
             {
-                if (executor.executor_name == null)
+                if (executor.ExecutorName == null)
                 {
-                    MessageBox.Show("ФИО исполнителя не может быть пустым", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("ФИО исполнителя не может быть пустым", "Ошибка", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
-                if ((executor.executor_login != null) &&
-                    (UserDomain.GetUserDomain(executor.executor_login) == null))
+                if ((executor.ExecutorLogin != null) &&
+                    (UserDomain.GetUserDomain(executor.ExecutorLogin) == null))
                 {
-                    MessageBox.Show("Пользователя с указанным логином не существует", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Пользователя с указанным логином не существует", "Ошибка", 
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
             }
             return true;
         }
 
-        private Executor RowToExecutor(DataRow row)
+        private static Executor RowToExecutor(DataRow row)
         {
             Executor executor = new Executor();
-            executor.id_executor = ViewportHelper.ValueOrNull<int>(row, "id_executor");
-            executor.executor_name = ViewportHelper.ValueOrNull(row, "executor_name");
-            executor.executor_login = ViewportHelper.ValueOrNull(row, "executor_login");
-            executor.phone = ViewportHelper.ValueOrNull(row, "phone");
-            executor.is_inactive = ViewportHelper.ValueOrNull<bool>(row, "is_inactive");
+            executor.IdExecutor = ViewportHelper.ValueOrNull<int>(row, "id_executor");
+            executor.ExecutorName = ViewportHelper.ValueOrNull(row, "executor_name");
+            executor.ExecutorLogin = ViewportHelper.ValueOrNull(row, "executor_login");
+            executor.Phone = ViewportHelper.ValueOrNull(row, "phone");
+            executor.IsInactive = ViewportHelper.ValueOrNull<bool>(row, "is_inactive");
             return executor;
         }
 
@@ -125,11 +129,11 @@ namespace Registry.Viewport
                 {
                     Executor e = new Executor();
                     DataGridViewRow row = dataGridView.Rows[i];
-                    e.id_executor = ViewportHelper.ValueOrNull<int>(row, "id_executor");
-                    e.executor_name = ViewportHelper.ValueOrNull(row, "executor_name");
-                    e.executor_login = ViewportHelper.ValueOrNull(row, "executor_login");
-                    e.phone = ViewportHelper.ValueOrNull(row, "phone");
-                    e.is_inactive = ViewportHelper.ValueOrNull<bool>(row, "is_inactive") == true;
+                    e.IdExecutor = ViewportHelper.ValueOrNull<int>(row, "id_executor");
+                    e.ExecutorName = ViewportHelper.ValueOrNull(row, "executor_name");
+                    e.ExecutorLogin = ViewportHelper.ValueOrNull(row, "executor_login");
+                    e.Phone = ViewportHelper.ValueOrNull(row, "phone");
+                    e.IsInactive = ViewportHelper.ValueOrNull<bool>(row, "is_inactive") == true;
                     list.Add(e);
                 }
             }
@@ -143,11 +147,11 @@ namespace Registry.Viewport
             {
                 Executor e = new Executor();
                 DataRowView row = ((DataRowView)v_executors[i]);
-                e.id_executor = ViewportHelper.ValueOrNull<int>(row, "id_executor");
-                e.executor_name = ViewportHelper.ValueOrNull(row, "executor_name");
-                e.executor_login = ViewportHelper.ValueOrNull(row, "executor_login");
-                e.phone = ViewportHelper.ValueOrNull(row, "phone");
-                e.is_inactive = ViewportHelper.ValueOrNull<bool>(row, "is_inactive");
+                e.IdExecutor = ViewportHelper.ValueOrNull<int>(row, "id_executor");
+                e.ExecutorName = ViewportHelper.ValueOrNull(row, "executor_name");
+                e.ExecutorLogin = ViewportHelper.ValueOrNull(row, "executor_login");
+                e.Phone = ViewportHelper.ValueOrNull(row, "phone");
+                e.IsInactive = ViewportHelper.ValueOrNull<bool>(row, "is_inactive") == true;
                 list.Add(e);
             }
             return list;
@@ -214,7 +218,7 @@ namespace Registry.Viewport
 
             v_executors = new BindingSource();
             v_executors.DataMember = "executors";
-            v_executors.DataSource = DataSetManager.GetDataSet();
+            v_executors.DataSource = DataSetManager.DataSet;
 
             //Инициируем колонки snapshot-модели
             for (int i = 0; i < executors.Select().Columns.Count; i++)
@@ -275,7 +279,7 @@ namespace Registry.Viewport
             snapshot_executors.Clear();
             for (int i = 0; i < v_executors.Count; i++)
                 snapshot_executors.Rows.Add(DataRowViewToArray(((DataRowView)v_executors[i])));
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanSaveRecord()
@@ -294,7 +298,7 @@ namespace Registry.Viewport
             }
             for (int i = 0; i < list.Count; i++)
             {
-                DataRow row = executors.Select().Rows.Find(((Executor)list[i]).id_executor);
+                DataRow row = executors.Select().Rows.Find(((Executor)list[i]).IdExecutor);
                 if (row == null)
                 {
                     int id_executor = ExecutorsDataModel.Insert(list[i]);
@@ -316,10 +320,10 @@ namespace Registry.Viewport
                         sync_views = true;
                         return;
                     }
-                    row["executor_name"] = list[i].executor_name == null ? DBNull.Value : (object)list[i].executor_name;
-                    row["executor_login"] = list[i].executor_login == null ? DBNull.Value : (object)list[i].executor_login;
-                    row["phone"] = list[i].phone == null ? DBNull.Value : (object)list[i].phone;
-                    row["is_inactive"] = list[i].is_inactive == null ? DBNull.Value : (object)list[i].is_inactive;
+                    row["executor_name"] = list[i].ExecutorName == null ? DBNull.Value : (object)list[i].ExecutorName;
+                    row["executor_login"] = list[i].ExecutorLogin == null ? DBNull.Value : (object)list[i].ExecutorLogin;
+                    row["phone"] = list[i].Phone == null ? DBNull.Value : (object)list[i].Phone;
+                    row["is_inactive"] = list[i].IsInactive == null ? DBNull.Value : (object)list[i].IsInactive;
                 }
             }
             list = ExecutorsFromView();
@@ -328,21 +332,21 @@ namespace Registry.Viewport
                 int row_index = -1;
                 for (int j = 0; j < dataGridView.Rows.Count; j++)
                     if ((dataGridView.Rows[j].Cells["id_executor"].Value != null) &&
-                        (dataGridView.Rows[j].Cells["id_executor"].Value.ToString() != "") &&
-                        ((int)dataGridView.Rows[j].Cells["id_executor"].Value == list[i].id_executor))
+                        !String.IsNullOrEmpty(dataGridView.Rows[j].Cells["id_executor"].Value.ToString()) &&
+                        ((int)dataGridView.Rows[j].Cells["id_executor"].Value == list[i].IdExecutor))
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (ExecutorsDataModel.Delete(list[i].id_executor.Value) == -1)
+                    if (ExecutorsDataModel.Delete(list[i].IdExecutor.Value) == -1)
                     {
                         sync_views = true;
                         return;
                     }
-                    executors.Select().Rows.Find(((Executor)list[i]).id_executor).Delete();
+                    executors.Select().Rows.Find(((Executor)list[i]).IdExecutor).Delete();
                 }
             }
             sync_views = true;
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanDuplicate()
@@ -352,7 +356,7 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            ExecutorsViewport viewport = new ExecutorsViewport(this, menuCallback);
+            ExecutorsViewport viewport = new ExecutorsViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             return viewport;
@@ -360,10 +364,12 @@ namespace Registry.Viewport
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            if (e == null)
+                return;
             if (SnapshotHasChanges())
             {
                 DialogResult result = MessageBox.Show("Сохранить изменения о виде основания в базу данных?", "Внимание",
-                                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                 if (result == DialogResult.Yes)
                     SaveRecord();
                 else
@@ -385,7 +391,7 @@ namespace Registry.Viewport
             switch (cell.OwningColumn.Name)
             {
                 case "executor_name":
-                    if (cell.Value.ToString().Trim() == "")
+                    if (String.IsNullOrEmpty(cell.Value.ToString().Trim()))
                         cell.ErrorText = "ФИО исполнителя не может быть пустым";
                     else
                         cell.ErrorText = "";
@@ -395,7 +401,7 @@ namespace Registry.Viewport
 
         void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            menuCallback.EditingStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         void ExecutorsViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
@@ -442,7 +448,7 @@ namespace Registry.Viewport
         void v_snapshot_executors_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
-                menuCallback.NavigationStateUpdate();
+                MenuCallback.NavigationStateUpdate();
         }
 
         private void InitializeComponent()

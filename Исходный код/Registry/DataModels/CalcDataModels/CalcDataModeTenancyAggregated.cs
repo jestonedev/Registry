@@ -16,7 +16,7 @@ namespace Registry.CalcDataModels
 
         private CalcDataModeTenancyAggregated()
         {
-            table = InitializeTable();
+            Table = InitializeTable();
             Refresh(CalcDataModelFilterEnity.All, null);            
         }
 
@@ -33,7 +33,9 @@ namespace Registry.CalcDataModels
 
         protected override void Calculate(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            dmLoadState = DataModelLoadState.Loading;
+            DMLoadState = DataModelLoadState.Loading;
+            if (e == null)
+                throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModeTenancyAggregated");
             CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;
             // Фильтруем удаленные строки
             var tenancies = from tenancies_row in DataModelHelper.FilterRows(TenancyProcessesDataModel.GetInstance().Select()) 

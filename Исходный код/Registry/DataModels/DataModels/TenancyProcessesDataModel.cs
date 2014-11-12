@@ -37,9 +37,9 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_process"] };
-            table.Columns["id_rent_type"].DefaultValue = 1;
-            table.Columns["registration_date"].DefaultValue = DateTime.Now.Date;
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_process"] };
+            Table.Columns["id_rent_type"].DefaultValue = 1;
+            Table.Columns["registration_date"].DefaultValue = DateTime.Now.Date;
         }
 
         public static TenancyProcessesDataModel GetInstance()
@@ -69,7 +69,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось удалить процесс найма из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -84,23 +84,23 @@ namespace Registry.DataModels
                 if (tenancy == null)
                 {
                     MessageBox.Show("В метод Update не передана ссылка на сущность процесса найма", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_rent_type", tenancy.id_rent_type));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", tenancy.id_warrant));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_num", tenancy.registration_num));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", tenancy.registration_date));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("issue_date", tenancy.issue_date));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("begin_date", tenancy.begin_date));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("end_date", tenancy.end_date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_warrant_num", tenancy.residence_warrant_num));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("residence_warrant_date", tenancy.residence_warrant_date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("kumi_order_num", tenancy.kumi_order_num));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("kumi_order_date", tenancy.kumi_order_date));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancy.id_executor));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", tenancy.description));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancy.id_process));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_rent_type", tenancy.IdRentType));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", tenancy.IdWarrant));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_num", tenancy.RegistrationNum));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", tenancy.RegistrationDate));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("issue_date", tenancy.IssueDate));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("begin_date", tenancy.BeginDate));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("end_date", tenancy.EndDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_warrant_num", tenancy.ResidenceWarrantNum));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("residence_warrant_date", tenancy.ResidenceWarrantDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("kumi_order_num", tenancy.KumiOrderNum));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("kumi_order_date", tenancy.KumiOrderDate));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancy.IdExecutor));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", tenancy.Description));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancy.IdProcess));
                 try
                 {
                     return connection.SqlModifyQuery(command);
@@ -109,7 +109,7 @@ namespace Registry.DataModels
                 {
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось изменить данные о процессе найма. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -126,22 +126,22 @@ namespace Registry.DataModels
                 if (tenancy == null)
                 {
                     MessageBox.Show("В метод Insert не передана ссылка на сущность процесса найма", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_rent_type", tenancy.id_rent_type));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", tenancy.id_warrant));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_num", tenancy.registration_num));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", tenancy.registration_date));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("issue_date", tenancy.issue_date));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("begin_date", tenancy.begin_date));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("end_date", tenancy.end_date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_warrant_num", tenancy.residence_warrant_num));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("residence_warrant_date", tenancy.residence_warrant_date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("kumi_order_num", tenancy.kumi_order_num));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("kumi_order_date", tenancy.kumi_order_date));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancy.id_executor));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", tenancy.description));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_rent_type", tenancy.IdRentType));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", tenancy.IdWarrant));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_num", tenancy.RegistrationNum));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", tenancy.RegistrationDate));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("issue_date", tenancy.IssueDate));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("begin_date", tenancy.BeginDate));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("end_date", tenancy.EndDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_warrant_num", tenancy.ResidenceWarrantNum));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("residence_warrant_date", tenancy.ResidenceWarrantDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("kumi_order_num", tenancy.KumiOrderNum));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("kumi_order_date", tenancy.KumiOrderDate));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancy.IdExecutor));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("description", tenancy.Description));
                 try
                 {
                     connection.SqlBeginTransaction();
@@ -151,7 +151,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return -1;
                     }
                     return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
@@ -161,7 +161,7 @@ namespace Registry.DataModels
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось добавить информацию о процессе найма в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

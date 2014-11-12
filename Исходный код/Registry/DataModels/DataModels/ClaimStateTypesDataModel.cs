@@ -14,8 +14,8 @@ namespace Registry.DataModels
     public sealed class ClaimStateTypesDataModel: DataModel
     {
         private static ClaimStateTypesDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM claim_state_types";
-        private static string deleteQuery = "DELETE FROM claim_state_types WHERE id_state_type = ?";
+        private static string selectQuery = "SELECT * FROM claim_state_types WHERE deleted <> 1";
+        private static string deleteQuery = "UPDATE claim_state_types SET deleted = 1 WHERE id_state_type = ?";
         private static string insertQuery = @"INSERT INTO claim_state_types
                             (state_type, is_start_state_type)
                             VALUES (?, ?)";
@@ -30,7 +30,7 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_state_type"] };
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_state_type"] };
         }
 
         public static ClaimStateTypesDataModel GetInstance()
@@ -61,7 +61,7 @@ namespace Registry.DataModels
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось удалить наименование вида состояния претензионно-исковой рабоыт. Подробная ошибка: {0}",
                         e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -73,9 +73,15 @@ namespace Registry.DataModels
             using (DbCommand command = DBConnection.CreateCommand())
             {
                 command.CommandText = updateQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<string>("state_type", claimStateType.state_type));
-                command.Parameters.Add(DBConnection.CreateParameter<bool?>("is_start_state_type", claimStateType.is_start_state_type));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state_type", claimStateType.id_state_type));
+                if (claimStateType == null)
+                {
+                    MessageBox.Show("В метод Update не передана ссылка на объект типа состояния претензионно-исковой работы", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<string>("state_type", claimStateType.StateType));
+                command.Parameters.Add(DBConnection.CreateParameter<bool?>("is_start_state_type", claimStateType.IsStartStateType));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state_type", claimStateType.IdStateType));
                 try
                 {
                     return connection.SqlModifyQuery(command);
@@ -86,7 +92,7 @@ namespace Registry.DataModels
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось изменить наименование вида состояния претензионно-исковой работы в базе данных. " +
                         "Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }
@@ -100,8 +106,14 @@ namespace Registry.DataModels
             {
                 last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
                 command.CommandText = insertQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<string>("state_type", claimStateType.state_type));
-                command.Parameters.Add(DBConnection.CreateParameter<bool?>("is_start_state_type", claimStateType.is_start_state_type));
+                if (claimStateType == null)
+                {
+                    MessageBox.Show("В метод Insert не передана ссылка на объект типа состояния претензионно-исковой работы", "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+                command.Parameters.Add(DBConnection.CreateParameter<string>("state_type", claimStateType.StateType));
+                command.Parameters.Add(DBConnection.CreateParameter<bool?>("is_start_state_type", claimStateType.IsStartStateType));
                 try
                 {
                     connection.SqlBeginTransaction();
@@ -111,7 +123,7 @@ namespace Registry.DataModels
                     if (last_id.Rows.Count == 0)
                     {
                         MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return -1;
                     }
                     return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
@@ -122,7 +134,7 @@ namespace Registry.DataModels
                     MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
                         "Не удалось добавить наименование вида состояния претензионно-исковой работы в базу данных. " +
                         "Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

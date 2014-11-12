@@ -8,14 +8,13 @@ using System.Text;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.Viewport;
+using System.Globalization;
 
 namespace Registry.SearchForms
 {
     internal partial class ExtendedSearchTenancyForm : SearchForm
     {
-        KladrStreetsDataModel kladr = null;
         KladrRegionsDataModel regions = null;
-        RentTypesDataModel rentTypes = null;
 
         BindingSource v_kladr = null;
         BindingSource v_regions = null;
@@ -24,11 +23,11 @@ namespace Registry.SearchForms
         public ExtendedSearchTenancyForm()
         {
             InitializeComponent();
-            kladr = KladrStreetsDataModel.GetInstance();
-            rentTypes = RentTypesDataModel.GetInstance();
+            KladrStreetsDataModel.GetInstance().Select();
+            RentTypesDataModel.GetInstance().Select();
             regions = KladrRegionsDataModel.GetInstance();
 
-            DataSet ds = DataSetManager.GetDataSet();
+            DataSet ds = DataSetManager.DataSet;
 
             v_kladr = new BindingSource();
             v_kladr.DataSource = ds;
@@ -62,7 +61,8 @@ namespace Registry.SearchForms
             foreach (Control control in this.Controls)
                 control.KeyDown += (sender, e) =>
                 {
-                    if (sender is ComboBox && ((ComboBox)sender).DroppedDown)
+                    ComboBox comboBox = sender as ComboBox;
+                    if (comboBox != null && comboBox.DroppedDown)
                         return;
                     if (e.KeyCode == Keys.Enter)
                         vButtonSearch_Click(sender, e);
@@ -75,134 +75,140 @@ namespace Registry.SearchForms
         internal override string GetFilter()
         {
             string filter = "";
-            List<int> included_processes = null;
+            IEnumerable<int> included_processes = null;
             if (checkBoxContractNumEnable.Checked)
             {
-                if (filter.Trim() != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format("registration_num = '{0}'", textBoxRegistrationNum.Text.Trim().Replace("'", ""));
+                filter += String.Format(CultureInfo.CurrentCulture, "registration_num = '{0}'", textBoxRegistrationNum.Text.Trim().Replace("'", ""));
             }
             if (checkBoxResidenceWarrantNumEnable.Checked)
             {
-                if (filter.Trim() != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format("residence_warrant_num = '{0}'", textBoxResidenceWarrantNum.Text.Trim().Replace("'", ""));
+                filter += String.Format(CultureInfo.CurrentCulture, "residence_warrant_num = '{0}'", textBoxResidenceWarrantNum.Text.Trim().Replace("'", ""));
             }
             if (checkBoxKumiOrderEnable.Checked)
             {
-                if (filter.Trim() != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format("kumi_order_num = '{0}'", textBoxKumiOrderNum.Text.Trim().Replace("'", ""));
+                filter += String.Format(CultureInfo.CurrentCulture, "kumi_order_num = '{0}'", textBoxKumiOrderNum.Text.Trim().Replace("'", ""));
             }
             if (checkBoxRentTypeEnable.Checked && (comboBoxRentType.SelectedValue != null))
             {
-                if (filter.Trim() != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format("id_rent_type = {0}", comboBoxRentType.SelectedValue.ToString());
+                filter += String.Format(CultureInfo.CurrentCulture, "id_rent_type = {0}", comboBoxRentType.SelectedValue.ToString());
             }
             if (checkBoxRegDateEnable.Checked)
             {
-                if (filter.Trim() != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format("registration_date {0} '{1}'",
-                    ConvertDisplayEqExprToSql(comboBoxRegDateExpr.SelectedItem.ToString()), dateTimePickerRegDate.Value.ToString("dd.MM.yyyy"));
+                filter += String.Format(CultureInfo.CurrentCulture, "registration_date {0} '{1}'",
+                    ConvertDisplayEqExprToSql(
+                        comboBoxRegDateExpr.SelectedItem.ToString()),
+                        dateTimePickerRegDate.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
             }
             if (checkBoxIssueDateEnable.Checked)
             {
-                if (filter.Trim() != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format("issue_date {0} '{1}'",
-                    ConvertDisplayEqExprToSql(comboBoxIssueDateExpr.SelectedItem.ToString()), dateTimePickerIssueDate.Value.ToString("dd.MM.yyyy"));
+                filter += String.Format(CultureInfo.CurrentCulture, "issue_date {0} '{1}'",
+                    ConvertDisplayEqExprToSql(
+                        comboBoxIssueDateExpr.SelectedItem.ToString()),
+                        dateTimePickerIssueDate.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
             }
             if (checkBoxBeginDateEnable.Checked)
             {
-                if (filter.Trim() != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format("begin_date {0} '{1}'",
-                    ConvertDisplayEqExprToSql(comboBoxBeginDateExpr.SelectedItem.ToString()), dateTimePickerBeginDate.Value.ToString("dd.MM.yyyy"));
+                filter += String.Format(CultureInfo.CurrentCulture, "begin_date {0} '{1}'",
+                    ConvertDisplayEqExprToSql(
+                        comboBoxBeginDateExpr.SelectedItem.ToString()),
+                        dateTimePickerBeginDate.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
             }
             if (checkBoxEndDateEnable.Checked)
             {
-                if (filter.Trim() != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format("end_date {0} '{1}'",
-                    ConvertDisplayEqExprToSql(comboBoxEndDateExpr.SelectedItem.ToString()), dateTimePickerEndDate.Value.ToString("dd.MM.yyyy"));
+                filter += String.Format(CultureInfo.CurrentCulture, "end_date {0} '{1}'",
+                    ConvertDisplayEqExprToSql(
+                    comboBoxEndDateExpr.SelectedItem.ToString()),
+                    dateTimePickerEndDate.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
             }
             if (checkBoxResidenceWarrDateEnable.Checked)
             {
-                if (filter.Trim() != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format("residence_warrant_date {0} '{1}'",
-                    ConvertDisplayEqExprToSql(comboBoxResidenceWarrDateExpr.SelectedItem.ToString()),
-                    dateTimePickerResidenceWarrDate.Value.ToString("dd.MM.yyyy"));
+                filter += String.Format(CultureInfo.CurrentCulture, "residence_warrant_date {0} '{1}'",
+                    ConvertDisplayEqExprToSql(
+                        comboBoxResidenceWarrDateExpr.SelectedItem.ToString()),
+                        dateTimePickerResidenceWarrDate.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
             }
             if (checkBoxKumiOrderDateEnable.Checked)
             {
-                if (filter.Trim() != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format("kumi_order_date {0} '{1}'",
-                    ConvertDisplayEqExprToSql(comboBoxKumiOrderDateExpr.SelectedItem.ToString()),
-                    dateTimePickerKumiOrderDate.Value.ToString("dd.MM.yyyy"));
+                filter += String.Format(CultureInfo.CurrentCulture, "kumi_order_date {0} '{1}'",
+                    ConvertDisplayEqExprToSql(
+                    comboBoxKumiOrderDateExpr.SelectedItem.ToString()),
+                    dateTimePickerKumiOrderDate.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
             }
             if (checkBoxIDTenancyEnable.Checked)
-            {
-                if (included_processes == null)
-                    included_processes = new List<int>();
-                included_processes.Add(Convert.ToInt32(numericUpDownIDTenancy.Value));
-            }
+                included_processes = DataModelHelper.Intersect(included_processes, new List<int>() { Convert.ToInt32(numericUpDownIDTenancy.Value) });
             if (checkBoxTenantSNPEnable.Checked)
             {
                 string[] snp = textBoxTenantSNP.Text.Trim().Replace("'", "").Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                List<int> processes_ids = DataModelHelper.TenancyProcessIDsBySNP(snp, (row) => { return row.Field<int>("id_kinship") == 1; });
+                IEnumerable<int> processes_ids = DataModelHelper.TenancyProcessIDsBySNP(snp, (row) => { return row.Field<int>("id_kinship") == 1; });
                 included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
             }
             if (checkBoxPersonSNPEnable.Checked)
             {
                 string[] snp = textBoxTenantSNP.Text.Trim().Replace("'", "").Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                List<int> processes_ids = DataModelHelper.TenancyProcessIDsBySNP(snp, (row) => { return true; });
+                IEnumerable<int> processes_ids = DataModelHelper.TenancyProcessIDsBySNP(snp, (row) => { return true; });
                 included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
             }
             if (checkBoxRegionEnable.Checked && (comboBoxRegion.SelectedValue != null))
             {
-                List<int> processes_ids = DataModelHelper.TenancyProcessIDsByCondition(
-                    (row) => { return row.Field<string>("id_street").StartsWith(comboBoxRegion.SelectedValue.ToString()); }, 
+                IEnumerable<int> processes_ids = DataModelHelper.TenancyProcessIDsByCondition(
+                    (row) => { return row.Field<string>("id_street").StartsWith(comboBoxRegion.SelectedValue.ToString(), StringComparison.OrdinalIgnoreCase); }, 
                     DataModelHelper.ConditionType.BuildingCondition);
                 included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
             }
             if (checkBoxStreetEnable.Checked && (comboBoxStreet.SelectedValue != null))
             {
-                List<int> processes_ids = DataModelHelper.TenancyProcessIDsByCondition(
+                IEnumerable<int> processes_ids = DataModelHelper.TenancyProcessIDsByCondition(
                     (row) => { return row.Field<string>("id_street") == comboBoxStreet.SelectedValue.ToString(); },
                     DataModelHelper.ConditionType.BuildingCondition);
                 included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
             }
             if (checkBoxHouseEnable.Checked)
             {
-                List<int> processes_ids = DataModelHelper.TenancyProcessIDsByCondition(
+                IEnumerable<int> processes_ids = DataModelHelper.TenancyProcessIDsByCondition(
                     (row) => { return row.Field<string>("house") == textBoxHouse.Text.Trim().Replace("'", ""); }, 
                     DataModelHelper.ConditionType.BuildingCondition);
                 included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
             }
             if (checkBoxPremisesNumEnable.Checked)
             {
-                List<int> processes_ids = DataModelHelper.TenancyProcessIDsByCondition(
+                IEnumerable<int> processes_ids = DataModelHelper.TenancyProcessIDsByCondition(
                     (row) => { return row.Field<string>("premises_num") == textBoxPremisesNum.Text.Trim().Replace("'", ""); }, 
                     DataModelHelper.ConditionType.PremisesCondition);
                 included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
             }
             if (included_processes != null)
             {
-                if (filter.Trim() != "")
+                if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 filter += "id_process IN (0";
-                for (int i = 0; i < included_processes.Count; i++)
-                    filter += included_processes[i].ToString() + ",";
+                foreach (int id in included_processes)
+                    filter += id.ToString(CultureInfo.CurrentCulture) + ",";
                 filter = filter.TrimEnd(new char[] { ',' }) + ")";
             }
             return filter;
         }
 
-        private string ConvertDisplayEqExprToSql(string expr)
+        private static string ConvertDisplayEqExprToSql(string expr)
         {
             switch (expr)
             {
@@ -273,13 +279,15 @@ namespace Registry.SearchForms
         {
             if ((checkBoxStreetEnable.Checked) && (comboBoxStreet.SelectedValue == null))
             {
-                MessageBox.Show("Выберите улицу или уберите галочку поиска по улице", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Выберите улицу или уберите галочку поиска по улице", "Ошибка", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxStreet.Focus();
                 return;
             }
-            if ((checkBoxHouseEnable.Checked) && (textBoxHouse.Text.Trim() == ""))
+            if ((checkBoxHouseEnable.Checked) && String.IsNullOrEmpty(textBoxHouse.Text.Trim()))
             {
-                MessageBox.Show("Введите номер дома или уберите галочку поиска по номеру дома", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Введите номер дома или уберите галочку поиска по номеру дома", "Ошибка", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxHouse.Focus();
                 return;
             }

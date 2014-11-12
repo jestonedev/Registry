@@ -14,6 +14,7 @@ using WeifenLuo.WinFormsUI.Docking;
 using Registry.Reporting;
 using Security;
 using System.Text.RegularExpressions;
+using Registry.SearchForms;
 
 namespace Registry
 {
@@ -622,20 +623,20 @@ namespace Registry
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            UserDomain user = UserDomain.Current;
+            /*UserDomain user = UserDomain.Current;
             if (user == null)
             {
                 MessageBox.Show("Пользователь не распознан или учетная запись не включена в службу каталогов Active Directory","Ошибка", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 Application.Exit();
                 return;
             }
-            toolStripLabelHelloUser.Text = "Здравствуйте, " + user.DisplayName;
+            toolStripLabelHelloUser.Text = "Здравствуйте, " + user.DisplayName;*/
             AccessControl.LoadPriveleges();
             if (AccessControl.HasNoPriveleges())
             {
                 MessageBox.Show("У вас нет прав на использование данного приложения", "Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1, MessageBoxOptions.DefaultDesktopOnly);
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 Application.Exit();
                 return;
             }
@@ -673,7 +674,7 @@ namespace Registry
         {
             if (reportLogForm.Visible == false)
                 reportLogForm.Show(dockPanel, DockState.DockBottomAutoHide);
-            if (String.IsNullOrEmpty(e.Text.Trim()) && (!Regex.IsMatch(e.Text.Trim(), "styles.xml")))
+            if (!String.IsNullOrEmpty(e.Text.Trim()) && (!Regex.IsMatch(e.Text.Trim(), "styles.xml")))
                 reportLogForm.Log("["+((Reporter)sender).ReportTitle+"]: "+e.Text.Trim());
         }
 
