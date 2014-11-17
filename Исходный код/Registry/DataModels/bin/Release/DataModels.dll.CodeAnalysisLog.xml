@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml-stylesheet type="text/xsl" href="c:\program files\microsoft visual studio 10.0\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
+<FxCopReport Version="10.0">
+ <Targets>
+  <Target Name="D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\DataModels\bin\Release\DataModels.dll">
+   <Modules>
+    <Module Name="datamodels.dll">
+     <Namespaces>
+      <Namespace Name="Registry.DataModels">
+       <Types>
+        <Type Name="DataModelHelper+ConditionType" Kind="Enum" Accessibility="Public" ExternallyVisible="True">
+         <Messages>
+          <Message TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034" Status="Active" Created="2014-11-13 03:13:01Z" FixCategory="Breaking">
+           <Issue Certainty="90" Level="Error">Не делайте тип 'DataModelHelper.ConditionType' вложенным. Вместо этого измените режим доступа к нему так, чтобы он не был виден извне.</Issue>
+          </Message>
+         </Messages>
+        </Type>
+        <Type Name="DataSetManager" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#.cctor()" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="SetLocaleForDataTypes" Category="Microsoft.Globalization" CheckId="CA1306" Status="Active" Created="2014-11-13 03:13:01Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="Error" Path="D:\Projects\Visual Studio Projects\Реестр жилого фонда [2014-11-08]\Исходный код\Registry\DataModels" File="DataSetManager.cs" Line="13">Обязательно задавайте значение свойства Locale DataSet каждый раз, когда 'DataSetManager.DataSetManager()' создает экземпляр этого типа.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+       </Types>
+      </Namespace>
+     </Namespaces>
+    </Module>
+   </Modules>
+  </Target>
+ </Targets>
+ <Rules>
+  <Rule TypeName="NestedTypesShouldNotBeVisible" Category="Microsoft.Design" CheckId="CA1034">
+   <Name>Вложенные типы не должны быть видимыми</Name>
+   <Description>Не используйте вложенные типы с модификаторами доступа public, protected или protected internal (Protected Friend) как способ для группирования типов. Для этой цели используйте пространства имен. Существует очень ограниченное число ситуаций, когда вложенные типы можно считать оптимальным вариантом проектирования. Кроме того, режим доступа к члену вложенного типа не очевиден для всех пользователей. Исключение из этого правила - перечислители.</Description>
+   <Resolution Name="Default">Не делайте тип {0} вложенным. Вместо этого измените режим доступа к нему так, чтобы он не был виден извне.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182162(VS.100).aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="90">Error</MessageLevel>
+   <File Name="designrules.dll" Version="10.0.0.0" />
+  </Rule>
+  <Rule TypeName="SetLocaleForDataTypes" Category="Microsoft.Globalization" CheckId="CA1306">
+   <Name>Задавайте языковой стандарт для типов данных</Name>
+   <Description>В большинстве случаев значение Locale должно быть явно задано как CultureInfo.InvariantCulture для экземпляров DataSet и DataTable. При создании экземпляров DataSet или DataTable для Locale задается значение, соответствующее текущему языку и региональным настройкам. В большинстве случаев для Locale следует задать значение CultureInfo.InvariantCulture, чтобы обеспечить верное поведение при сортировке для любых языков и региональных настроек.</Description>
+   <Resolution Name="Default">Обязательно задавайте значение свойства Locale {0} каждый раз, когда {1} создает экземпляр этого типа.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182188(VS.100).aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="90">Error</MessageLevel>
+   <File Name="globalizationrules.dll" Version="10.0.0.0" />
+  </Rule>
+ </Rules>
+ <Localized>
+  <String Key="Category">Категория</String>
+  <String Key="Certainty">Достоверность</String>
+  <String Key="CollapseAll">Свернуть все</String>
+  <String Key="CheckId">ИД проверки</String>
+  <String Key="Error">Ошибка</String>
+  <String Key="Errors">ошибки</String>
+  <String Key="ExpandAll">Развернуть все</String>
+  <String Key="Help">Справка</String>
+  <String Key="Line">Строка</String>
+  <String Key="Messages">сообщения</String>
+  <String Key="LocationNotStoredInPdb">[расположение не сохранено в PDB]</String>
+  <String Key="Project">Проект</String>
+  <String Key="Resolution">Разрешение</String>
+  <String Key="Rule">Правило</String>
+  <String Key="RuleFile">Файл правил</String>
+  <String Key="RuleDescription">Описание правила</String>
+  <String Key="Source">Источник</String>
+  <String Key="Status">Состояние</String>
+  <String Key="Target">Цель</String>
+  <String Key="Warning">Предупреждение</String>
+  <String Key="Warnings">предупреждения</String>
+  <String Key="ReportTitle">Отчет по анализу кода</String>
+ </Localized>
+</FxCopReport>

@@ -30,21 +30,21 @@ namespace Registry
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
-            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin2 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient4 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient8 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient9 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient5 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient10 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient11 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient12 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient6 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient13 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient14 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
+            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin1 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient1 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient2 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient3 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient1 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient4 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient5 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient3 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient6 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient7 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             this.ribbon1 = new System.Windows.Forms.Ribbon();
             this.ribbonOrbMenuItemBuildings = new System.Windows.Forms.RibbonOrbMenuItem();
             this.ribbonOrbMenuItemPremises = new System.Windows.Forms.RibbonOrbMenuItem();
@@ -52,6 +52,19 @@ namespace Registry
             this.ribbonOrbMenuItemClaims = new System.Windows.Forms.RibbonOrbMenuItem();
             this.ribbonSeparator4 = new System.Windows.Forms.RibbonSeparator();
             this.ribbonOrbMenuItemExit = new System.Windows.Forms.RibbonOrbMenuItem();
+            this.ribbonLabelHousing = new System.Windows.Forms.RibbonLabel();
+            this.ribbonButtonMenuStructureTypes = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonMenuRestrictionTypes = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonMenuOwnershipTypes = new System.Windows.Forms.RibbonButton();
+            this.ribbonSeparator3 = new System.Windows.Forms.RibbonSeparator();
+            this.ribbonLabelTenancy = new System.Windows.Forms.RibbonLabel();
+            this.ribbonButtonMenuWarrants = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonMenuReasonTypes = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonMenuExecutors = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonMenuIssuedBy = new System.Windows.Forms.RibbonButton();
+            this.ribbonSeparator5 = new System.Windows.Forms.RibbonSeparator();
+            this.ribbonLabelClaims = new System.Windows.Forms.RibbonLabel();
+            this.ribbonButtonMenuClaimStateTypes = new System.Windows.Forms.RibbonButton();
             this.ribbonTabGeneral = new System.Windows.Forms.RibbonTab();
             this.ribbonPanel1 = new System.Windows.Forms.RibbonPanel();
             this.ribbonButtonSave = new System.Windows.Forms.RibbonButton();
@@ -143,19 +156,6 @@ namespace Registry
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripLabelRecordCount = new System.Windows.Forms.ToolStripLabel();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
-            this.ribbonLabelHousing = new System.Windows.Forms.RibbonLabel();
-            this.ribbonLabelTenancy = new System.Windows.Forms.RibbonLabel();
-            this.ribbonLabelClaims = new System.Windows.Forms.RibbonLabel();
-            this.ribbonButtonMenuStructureTypes = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonMenuRestrictionTypes = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonMenuOwnershipTypes = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonMenuWarrants = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonMenuReasonTypes = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonMenuExecutors = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonMenuIssuedBy = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonMenuClaimStateTypes = new System.Windows.Forms.RibbonButton();
-            this.ribbonSeparator3 = new System.Windows.Forms.RibbonSeparator();
-            this.ribbonSeparator5 = new System.Windows.Forms.RibbonSeparator();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -215,7 +215,7 @@ namespace Registry
             this.ribbonOrbMenuItemBuildings.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemBuildings.SmallImage")));
             this.ribbonOrbMenuItemBuildings.Text = "Реестр зданий";
             this.ribbonOrbMenuItemBuildings.ToolTip = "При нажатии на данную кнопку будет открыта вкладка с перечнем всех зданий, занесе" +
-                "нных в реестр";
+    "нных в реестр";
             this.ribbonOrbMenuItemBuildings.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemBuildings.ToolTipImage")));
             this.ribbonOrbMenuItemBuildings.ToolTipTitle = "Реестр зданий";
             this.ribbonOrbMenuItemBuildings.Click += new System.EventHandler(this.ribbonOrbMenuItemBuildings_Click);
@@ -227,7 +227,7 @@ namespace Registry
             this.ribbonOrbMenuItemPremises.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemPremises.SmallImage")));
             this.ribbonOrbMenuItemPremises.Text = "Реестр помещений";
             this.ribbonOrbMenuItemPremises.ToolTip = "При нажатии на данную кнопку будет открыта вкладка с перечнем всех помещений, зан" +
-                "есенных в реестр";
+    "есенных в реестр";
             this.ribbonOrbMenuItemPremises.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemPremises.ToolTipImage")));
             this.ribbonOrbMenuItemPremises.ToolTipTitle = "Реестр помещений";
             this.ribbonOrbMenuItemPremises.Click += new System.EventHandler(this.ribbonOrbMenuItemPremises_Click);
@@ -239,7 +239,7 @@ namespace Registry
             this.ribbonOrbMenuItemTenancy.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemTenancy.SmallImage")));
             this.ribbonOrbMenuItemTenancy.Text = "Найм жилья";
             this.ribbonOrbMenuItemTenancy.ToolTip = "При нажатии на данную кнопку будет открыта вкладка с перечнем всех процессов найм" +
-                "а, занесенных в реестр";
+    "а, занесенных в реестр";
             this.ribbonOrbMenuItemTenancy.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemTenancy.ToolTipImage")));
             this.ribbonOrbMenuItemTenancy.ToolTipTitle = "Найм жилья";
             this.ribbonOrbMenuItemTenancy.Click += new System.EventHandler(this.ribbonOrbMenuItemSocNaim_Click);
@@ -251,7 +251,7 @@ namespace Registry
             this.ribbonOrbMenuItemClaims.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemClaims.SmallImage")));
             this.ribbonOrbMenuItemClaims.Text = "Исковая работа";
             this.ribbonOrbMenuItemClaims.ToolTip = "При нажатии на данную кнопку будет открыта вкладка с перечнем всех претензионно-и" +
-                "сковых работ, занесенных в реестр";
+    "сковых работ, занесенных в реестр";
             this.ribbonOrbMenuItemClaims.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemClaims.ToolTipImage")));
             this.ribbonOrbMenuItemClaims.ToolTipTitle = "Исковая работа";
             this.ribbonOrbMenuItemClaims.Click += new System.EventHandler(this.ribbonOrbMenuItemClaims_Click);
@@ -263,10 +263,109 @@ namespace Registry
             this.ribbonOrbMenuItemExit.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemExit.SmallImage")));
             this.ribbonOrbMenuItemExit.Text = "Выход";
             this.ribbonOrbMenuItemExit.ToolTip = "При нажатии на данную кнопку программа будет закрыта. При наличии несохраненной и" +
-                "нформации будет выведено соответствующее предупреждение";
+    "нформации будет выведено соответствующее предупреждение";
             this.ribbonOrbMenuItemExit.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemExit.ToolTipImage")));
             this.ribbonOrbMenuItemExit.ToolTipTitle = "Выход из программы";
             this.ribbonOrbMenuItemExit.Click += new System.EventHandler(this.ribbonOrbMenuItemExit_Click);
+            // 
+            // ribbonLabelHousing
+            // 
+            this.ribbonLabelHousing.Text = "Жилищный фонд";
+            // 
+            // ribbonButtonMenuStructureTypes
+            // 
+            this.ribbonButtonMenuStructureTypes.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuStructureTypes.Image")));
+            this.ribbonButtonMenuStructureTypes.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuStructureTypes.SmallImage")));
+            this.ribbonButtonMenuStructureTypes.Text = "Типы материалов";
+            this.ribbonButtonMenuStructureTypes.ToolTip = "При нажатии на данную кнопку будет открыт справочник материалов конструкций здани" +
+    "й";
+            this.ribbonButtonMenuStructureTypes.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuStructureTypes.ToolTipImage")));
+            this.ribbonButtonMenuStructureTypes.ToolTipTitle = "Типы материалов";
+            this.ribbonButtonMenuStructureTypes.Click += new System.EventHandler(this.ribbonButtonStructureTypes_Click);
+            // 
+            // ribbonButtonMenuRestrictionTypes
+            // 
+            this.ribbonButtonMenuRestrictionTypes.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuRestrictionTypes.Image")));
+            this.ribbonButtonMenuRestrictionTypes.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuRestrictionTypes.SmallImage")));
+            this.ribbonButtonMenuRestrictionTypes.Text = "Типы реквизитов";
+            this.ribbonButtonMenuRestrictionTypes.ToolTip = "При нажатии на данную кнопку будет открыт справочник типов реквизитов муниципальн" +
+    "ой собственности";
+            this.ribbonButtonMenuRestrictionTypes.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuRestrictionTypes.ToolTipImage")));
+            this.ribbonButtonMenuRestrictionTypes.ToolTipTitle = "Типы реквизитов";
+            this.ribbonButtonMenuRestrictionTypes.Click += new System.EventHandler(this.ribbonButtonRestrictionTypes_Click);
+            // 
+            // ribbonButtonMenuOwnershipTypes
+            // 
+            this.ribbonButtonMenuOwnershipTypes.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuOwnershipTypes.Image")));
+            this.ribbonButtonMenuOwnershipTypes.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuOwnershipTypes.SmallImage")));
+            this.ribbonButtonMenuOwnershipTypes.Text = "Типы ограничений";
+            this.ribbonButtonMenuOwnershipTypes.ToolTip = "При нажатии на данную кнопку будет открыт справочник типов ограничений, накладыва" +
+    "емых на объекты собственности";
+            this.ribbonButtonMenuOwnershipTypes.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuOwnershipTypes.ToolTipImage")));
+            this.ribbonButtonMenuOwnershipTypes.ToolTipTitle = "Типы ограничений";
+            this.ribbonButtonMenuOwnershipTypes.Click += new System.EventHandler(this.ribbonButtonOwnershipTypes_Click);
+            // 
+            // ribbonLabelTenancy
+            // 
+            this.ribbonLabelTenancy.Text = "Найм жилья";
+            // 
+            // ribbonButtonMenuWarrants
+            // 
+            this.ribbonButtonMenuWarrants.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuWarrants.Image")));
+            this.ribbonButtonMenuWarrants.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuWarrants.SmallImage")));
+            this.ribbonButtonMenuWarrants.Text = "Реестр доверенностей";
+            this.ribbonButtonMenuWarrants.ToolTip = "При нажатии на данную кнопку будет открыт реестр доверенностей, заключаемых при н" +
+    "айме жилья";
+            this.ribbonButtonMenuWarrants.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuWarrants.ToolTipImage")));
+            this.ribbonButtonMenuWarrants.ToolTipTitle = "Реестр доверенностей";
+            this.ribbonButtonMenuWarrants.Click += new System.EventHandler(this.ribbonButtonWarrants_Click);
+            // 
+            // ribbonButtonMenuReasonTypes
+            // 
+            this.ribbonButtonMenuReasonTypes.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuReasonTypes.Image")));
+            this.ribbonButtonMenuReasonTypes.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuReasonTypes.SmallImage")));
+            this.ribbonButtonMenuReasonTypes.Text = "Виды оснований";
+            this.ribbonButtonMenuReasonTypes.ToolTip = "При нажатии на данную кнопку будет открыт справочник видов оснований найма";
+            this.ribbonButtonMenuReasonTypes.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuReasonTypes.ToolTipImage")));
+            this.ribbonButtonMenuReasonTypes.ToolTipTitle = "Виды оснований найма";
+            this.ribbonButtonMenuReasonTypes.Click += new System.EventHandler(this.ribbonButtonReasonTypes_Click);
+            // 
+            // ribbonButtonMenuExecutors
+            // 
+            this.ribbonButtonMenuExecutors.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuExecutors.Image")));
+            this.ribbonButtonMenuExecutors.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuExecutors.SmallImage")));
+            this.ribbonButtonMenuExecutors.Text = "Исполнители";
+            this.ribbonButtonMenuExecutors.ToolTip = "При нажатии на данную кнопку будет открыт справочник исполнителей, формирующих до" +
+    "кументы по найму жилья";
+            this.ribbonButtonMenuExecutors.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuExecutors.ToolTipImage")));
+            this.ribbonButtonMenuExecutors.ToolTipTitle = "Исполнители";
+            this.ribbonButtonMenuExecutors.Click += new System.EventHandler(this.ribbonButtonExecutors_Click);
+            // 
+            // ribbonButtonMenuIssuedBy
+            // 
+            this.ribbonButtonMenuIssuedBy.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuIssuedBy.Image")));
+            this.ribbonButtonMenuIssuedBy.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuIssuedBy.SmallImage")));
+            this.ribbonButtonMenuIssuedBy.Text = "ПС/ЗАГС";
+            this.ribbonButtonMenuIssuedBy.ToolTip = "При нажатии на данную кнопку будет открыт справочник органов, выдающих документы," +
+    " удостоверяющие личность: паспортные столы, ЗАГС и т.д.";
+            this.ribbonButtonMenuIssuedBy.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuIssuedBy.ToolTipImage")));
+            this.ribbonButtonMenuIssuedBy.ToolTipTitle = "ПС/ЗАГС";
+            this.ribbonButtonMenuIssuedBy.Click += new System.EventHandler(this.ribbonButtonIssuedBy_Click);
+            // 
+            // ribbonLabelClaims
+            // 
+            this.ribbonLabelClaims.Text = "Исковая работа";
+            // 
+            // ribbonButtonMenuClaimStateTypes
+            // 
+            this.ribbonButtonMenuClaimStateTypes.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuClaimStateTypes.Image")));
+            this.ribbonButtonMenuClaimStateTypes.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuClaimStateTypes.SmallImage")));
+            this.ribbonButtonMenuClaimStateTypes.Text = "Виды состояний";
+            this.ribbonButtonMenuClaimStateTypes.ToolTip = "При нажатии на данную кнопку будет открыт справочник видов состояний претензионно" +
+    "-исковых работ с возможностью настройки переходов между состояниями";
+            this.ribbonButtonMenuClaimStateTypes.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuClaimStateTypes.ToolTipImage")));
+            this.ribbonButtonMenuClaimStateTypes.ToolTipTitle = "Виды состояний исковой работы";
+            this.ribbonButtonMenuClaimStateTypes.Click += new System.EventHandler(this.ribbonButtonClaimStateTypes_Click);
             // 
             // ribbonTabGeneral
             // 
@@ -276,7 +375,7 @@ namespace Registry
             this.ribbonTabGeneral.Panels.Add(this.ribbonPanel2);
             this.ribbonTabGeneral.Text = "Главная";
             this.ribbonTabGeneral.ToolTip = "На данной вкладке расположены общие и наиболее часто используемые функции приложе" +
-                "ния";
+    "ния";
             this.ribbonTabGeneral.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonTabGeneral.ToolTipImage")));
             this.ribbonTabGeneral.ToolTipTitle = "Главная";
             // 
@@ -302,7 +401,7 @@ namespace Registry
             this.ribbonButtonSave.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonSave.SmallImage")));
             this.ribbonButtonSave.Text = "Сохранить";
             this.ribbonButtonSave.ToolTip = "При нажатие на данную кнопку происходит сохранение изменений в базу данных. Кнопк" +
-                "а активна, если есть несохраненные изменения";
+    "а активна, если есть несохраненные изменения";
             this.ribbonButtonSave.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonSave.ToolTipImage")));
             this.ribbonButtonSave.ToolTipTitle = "Сохранить изменения";
             this.ribbonButtonSave.Click += new System.EventHandler(this.ribbonButtonSave_Click);
@@ -320,8 +419,8 @@ namespace Registry
             this.ribbonButtonCancel.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonCancel.SmallImage")));
             this.ribbonButtonCancel.Text = "Отменить";
             this.ribbonButtonCancel.ToolTip = "При нажатии на данную кнопку происходит отмена изменений, которые были внесены по" +
-                "сле последнего сохранения информации в базу данных. Кнопка активна, если есть не" +
-                "сохраненные изменения";
+    "сле последнего сохранения информации в базу данных. Кнопка активна, если есть не" +
+    "сохраненные изменения";
             this.ribbonButtonCancel.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonCancel.ToolTipImage")));
             this.ribbonButtonCancel.ToolTipTitle = "Отменить изменения";
             this.ribbonButtonCancel.Click += new System.EventHandler(this.ribbonButtonCancel_Click);
@@ -333,8 +432,8 @@ namespace Registry
             this.ribbonButtonCopyRecord.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonCopyRecord.SmallImage")));
             this.ribbonButtonCopyRecord.Text = "Копировать запись";
             this.ribbonButtonCopyRecord.ToolTip = "При нажатии на данную кнопку создается новая запись и делает поверхностную копию " +
-                "информации текущей записи. Изменения не вносятся в БД до нажатия на кнопку \"Сохр" +
-                "анить\"";
+    "информации текущей записи. Изменения не вносятся в БД до нажатия на кнопку \"Сохр" +
+    "анить\"";
             this.ribbonButtonCopyRecord.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonCopyRecord.ToolTipImage")));
             this.ribbonButtonCopyRecord.ToolTipTitle = "Копировать запись";
             this.ribbonButtonCopyRecord.Click += new System.EventHandler(this.ribbonButtonCopyRecord_Click);
@@ -346,7 +445,7 @@ namespace Registry
             this.ribbonButtonInsertRecord.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonInsertRecord.SmallImage")));
             this.ribbonButtonInsertRecord.Text = "Добавить запись";
             this.ribbonButtonInsertRecord.ToolTip = "При нажатии на данную кнопку создается новая запись. Новая запись сохраняется в б" +
-                "азе данных только после нажатия кнопки \"Сохранить\"";
+    "азе данных только после нажатия кнопки \"Сохранить\"";
             this.ribbonButtonInsertRecord.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonInsertRecord.ToolTipImage")));
             this.ribbonButtonInsertRecord.ToolTipTitle = "Добавить новую запись";
             this.ribbonButtonInsertRecord.Click += new System.EventHandler(this.ribbonButtonInsertRecord_Click);
@@ -359,7 +458,7 @@ namespace Registry
             this.ribbonButtonDeleteRecord.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonDeleteRecord.SmallImage")));
             this.ribbonButtonDeleteRecord.Text = "Удалить запись";
             this.ribbonButtonDeleteRecord.ToolTip = "При нажатии на данную кнопку текущая выделенная запись будет удалена безвозвратно" +
-                ". Перед удалением будет выведено сообщение о подтверждении.";
+    ". Перед удалением будет выведено сообщение о подтверждении.";
             this.ribbonButtonDeleteRecord.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonDeleteRecord.ToolTipImage")));
             this.ribbonButtonDeleteRecord.ToolTipTitle = "Удалить текущую запись";
             this.ribbonButtonDeleteRecord.Click += new System.EventHandler(this.ribbonButtonDeleteRecord_Click);
@@ -408,7 +507,7 @@ namespace Registry
             this.ribbonButtonSearch.Style = System.Windows.Forms.RibbonButtonStyle.SplitDropDown;
             this.ribbonButtonSearch.Text = "Фильтрация";
             this.ribbonButtonSearch.ToolTip = "Данная кнопка предназначена для поиска информации по введеннным критериям. Сущест" +
-                "вует два вида поиска: простой и расширенный. По умолчанию используется простой";
+    "вует два вида поиска: простой и расширенный. По умолчанию используется простой";
             this.ribbonButtonSearch.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonSearch.ToolTipImage")));
             this.ribbonButtonSearch.ToolTipTitle = "Фильтрация (поиск) информации";
             this.ribbonButtonSearch.Click += new System.EventHandler(this.ribbonButtonSearch_Click);
@@ -420,7 +519,7 @@ namespace Registry
             this.ribbonButtonSimpleSearch.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonSimpleSearch.SmallImage")));
             this.ribbonButtonSimpleSearch.Text = "Простой фильтр";
             this.ribbonButtonSimpleSearch.ToolTip = "При нажатии на данную кнопку появится упрощенное окно для ввода критериев поиска " +
-                "информации";
+    "информации";
             this.ribbonButtonSimpleSearch.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonSimpleSearch.ToolTipImage")));
             this.ribbonButtonSimpleSearch.ToolTipTitle = "Простая фильтрация (поиск)";
             this.ribbonButtonSimpleSearch.Click += new System.EventHandler(this.ribbonButtonSimpleSearch_Click);
@@ -432,7 +531,7 @@ namespace Registry
             this.ribbonButtonExtendedSearch.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonExtendedSearch.SmallImage")));
             this.ribbonButtonExtendedSearch.Text = "Расширенный фильтр";
             this.ribbonButtonExtendedSearch.ToolTip = "При нажатии на данную кнопку появится окно для ввода параметров многокритериально" +
-                "го поиска";
+    "го поиска";
             this.ribbonButtonExtendedSearch.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonExtendedSearch.ToolTipImage")));
             this.ribbonButtonExtendedSearch.ToolTipTitle = "Расширенная фильтрация (поиск)";
             this.ribbonButtonExtendedSearch.Click += new System.EventHandler(this.ribbonButtonExtendedSearch_Click);
@@ -466,7 +565,7 @@ namespace Registry
             this.ribbonButtonOpen.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOpen.SmallImage")));
             this.ribbonButtonOpen.Text = "Открыть";
             this.ribbonButtonOpen.ToolTip = "При нажатии на данную кнопку будет открыта вкладка с подробной информацей по теку" +
-                "щей записи";
+    "щей записи";
             this.ribbonButtonOpen.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOpen.ToolTipImage")));
             this.ribbonButtonOpen.ToolTipTitle = "Открыть подробную информацию";
             this.ribbonButtonOpen.Click += new System.EventHandler(this.ribbonButtonOpen_Click);
@@ -504,7 +603,7 @@ namespace Registry
             this.ribbonButtonPremises.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPremises.SmallImage")));
             this.ribbonButtonPremises.Text = "Помещения";
             this.ribbonButtonPremises.ToolTip = "При нажатии на данную кнопку будет открыта вкладка с перечнем всех помещений, кот" +
-                "орые принадлежат текущему выделенному зданию";
+    "орые принадлежат текущему выделенному зданию";
             this.ribbonButtonPremises.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPremises.ToolTipImage")));
             this.ribbonButtonPremises.ToolTipTitle = "Помещения текущего здания";
             this.ribbonButtonPremises.Click += new System.EventHandler(this.ribbonButtonPremises_Click);
@@ -515,7 +614,7 @@ namespace Registry
             this.ribbonButtonSubPremises.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonSubPremises.SmallImage")));
             this.ribbonButtonSubPremises.Text = "Комнаты";
             this.ribbonButtonSubPremises.ToolTip = "При нажатии на данную кнопку будет открыта вкладка с перечнем всех комнат, которы" +
-                "е принадлежат текущему выделенному помещению";
+    "е принадлежат текущему выделенному помещению";
             this.ribbonButtonSubPremises.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonSubPremises.ToolTipImage")));
             this.ribbonButtonSubPremises.ToolTipTitle = "Комнаты текущего помещения";
             this.ribbonButtonSubPremises.Click += new System.EventHandler(this.ribbonButtonSubPremises_Click);
@@ -526,7 +625,7 @@ namespace Registry
             this.ribbonButtonRestrictions.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonRestrictions.SmallImage")));
             this.ribbonButtonRestrictions.Text = "Реквизиты";
             this.ribbonButtonRestrictions.ToolTip = "При нажатии на данную кнопку будет открыта вкладка с историей назначения реквизит" +
-                "ов текущему выделенному объекту найма";
+    "ов текущему выделенному объекту найма";
             this.ribbonButtonRestrictions.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonRestrictions.ToolTipImage")));
             this.ribbonButtonRestrictions.ToolTipTitle = "Реквизиты объекта собтсвенности";
             this.ribbonButtonRestrictions.Click += new System.EventHandler(this.ribbonButtonRestrictions_Click);
@@ -537,7 +636,7 @@ namespace Registry
             this.ribbonButtonOwnerships.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOwnerships.SmallImage")));
             this.ribbonButtonOwnerships.Text = "Ограничения";
             this.ribbonButtonOwnerships.ToolTip = "При нажатии на данную кнопку будет открыта вкладка с перечнем ограничений, наклад" +
-                "ываемых на данный объект собственности";
+    "ываемых на данный объект собственности";
             this.ribbonButtonOwnerships.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOwnerships.ToolTipImage")));
             this.ribbonButtonOwnerships.ToolTipTitle = "Ограничения объекта собственности";
             this.ribbonButtonOwnerships.Click += new System.EventHandler(this.ribbonButtonOwnership_Click);
@@ -548,7 +647,7 @@ namespace Registry
             this.ribbonButtonFundsHistory.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonFundsHistory.SmallImage")));
             this.ribbonButtonFundsHistory.Text = "История фонда";
             this.ribbonButtonFundsHistory.ToolTip = "При нажатии на данную кнопку будет открыта вкладка с историей принадлежности данн" +
-                "ого объекта к различным жилым фондам";
+    "ого объекта к различным жилым фондам";
             this.ribbonButtonFundsHistory.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonFundsHistory.ToolTipImage")));
             this.ribbonButtonFundsHistory.ToolTipTitle = "История принадлежности к фондам";
             this.ribbonButtonFundsHistory.Click += new System.EventHandler(this.ribbonButtonFundsHistory_Click);
@@ -562,7 +661,7 @@ namespace Registry
             this.ribbonButtonTenancyObjects.Style = System.Windows.Forms.RibbonButtonStyle.DropDown;
             this.ribbonButtonTenancyObjects.Text = "Объекты найма";
             this.ribbonButtonTenancyObjects.ToolTip = "Объекты найма - это здания, помещения и комнаты, которые сдаются в найм по текуще" +
-                "му процессу найма";
+    "му процессу найма";
             this.ribbonButtonTenancyObjects.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyObjects.ToolTipImage")));
             this.ribbonButtonTenancyObjects.ToolTipTitle = "Объекты найма";
             // 
@@ -573,7 +672,7 @@ namespace Registry
             this.ribbonButtonTenancyPremises.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyPremises.SmallImage")));
             this.ribbonButtonTenancyPremises.Text = "Помещения и комнаты";
             this.ribbonButtonTenancyPremises.ToolTip = "При нажатии на данную кнопку будет открыта вкладка, на которой вы сможете выбрать" +
-                ", какие из помещений и комнат необходимо сдать в найм";
+    ", какие из помещений и комнат необходимо сдать в найм";
             this.ribbonButtonTenancyPremises.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyPremises.ToolTipImage")));
             this.ribbonButtonTenancyPremises.ToolTipTitle = "Найм помещений и комнат";
             this.ribbonButtonTenancyPremises.Click += new System.EventHandler(this.ribbonButtonTenancyPremises_Click);
@@ -585,7 +684,7 @@ namespace Registry
             this.ribbonButtonTenancyBuildings.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyBuildings.SmallImage")));
             this.ribbonButtonTenancyBuildings.Text = "Здания";
             this.ribbonButtonTenancyBuildings.ToolTip = "При нажатии на данную кнопку будет открыта вкладка, на которой вы сможете выбрать" +
-                ", какие из зданий (жилых домов) необходимо сдать в найм";
+    ", какие из зданий (жилых домов) необходимо сдать в найм";
             this.ribbonButtonTenancyBuildings.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyBuildings.ToolTipImage")));
             this.ribbonButtonTenancyBuildings.ToolTipTitle = "Найм зданий";
             this.ribbonButtonTenancyBuildings.Click += new System.EventHandler(this.ribbonButtonTenancyBuildings_Click);
@@ -596,7 +695,7 @@ namespace Registry
             this.ribbonButtonTenancyPersons.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyPersons.SmallImage")));
             this.ribbonButtonTenancyPersons.Text = "Участники";
             this.ribbonButtonTenancyPersons.ToolTip = "При нажатии на данную кнопку будет открыта вкладка с перечнем участников текущего" +
-                " процесса найма";
+    " процесса найма";
             this.ribbonButtonTenancyPersons.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyPersons.ToolTipImage")));
             this.ribbonButtonTenancyPersons.ToolTipTitle = "Участники процесса найма";
             this.ribbonButtonTenancyPersons.Click += new System.EventHandler(this.ribbonButtonPersons_Click);
@@ -607,7 +706,7 @@ namespace Registry
             this.ribbonButtonTenancyReasons.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyReasons.SmallImage")));
             this.ribbonButtonTenancyReasons.Text = "Основания";
             this.ribbonButtonTenancyReasons.ToolTip = "При нажатии на данную кнопку будет открыта вкладка с перечнем оснований текущего " +
-                "процесса найма";
+    "процесса найма";
             this.ribbonButtonTenancyReasons.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyReasons.ToolTipImage")));
             this.ribbonButtonTenancyReasons.ToolTipTitle = "Основания найма";
             this.ribbonButtonTenancyReasons.Click += new System.EventHandler(this.ribbonButtonTenancyReasons_Click);
@@ -618,7 +717,7 @@ namespace Registry
             this.ribbonButtonTenancyAgreements.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyAgreements.SmallImage")));
             this.ribbonButtonTenancyAgreements.Text = "Соглашения";
             this.ribbonButtonTenancyAgreements.ToolTip = "При нажатии на данную кнопку будет открыта вкладка с перечнем соглашений текущего" +
-                " процесса найма";
+    " процесса найма";
             this.ribbonButtonTenancyAgreements.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyAgreements.ToolTipImage")));
             this.ribbonButtonTenancyAgreements.ToolTipTitle = "Соглашения найма";
             this.ribbonButtonTenancyAgreements.Click += new System.EventHandler(this.ribbonButtonAgreements_Click);
@@ -629,7 +728,7 @@ namespace Registry
             this.ribbonButtonClaims.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonClaims.SmallImage")));
             this.ribbonButtonClaims.Text = "Претензии и иски";
             this.ribbonButtonClaims.ToolTip = "При нажатии на данную кнопку будет открыта вкладка со списком исковых работ по те" +
-                "кущему процессу найма";
+    "кущему процессу найма";
             this.ribbonButtonClaims.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonClaims.ToolTipImage")));
             this.ribbonButtonClaims.ToolTipTitle = "Претензии и иски";
             this.ribbonButtonClaims.Click += new System.EventHandler(this.ribbonButtonClaims_Click);
@@ -640,7 +739,7 @@ namespace Registry
             this.ribbonButtonClaimStates.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonClaimStates.SmallImage")));
             this.ribbonButtonClaimStates.Text = "Состояния работы";
             this.ribbonButtonClaimStates.ToolTip = "При нажатии на данную кнопку будет открыта вкладка с историей состояний текущей п" +
-                "ретензионно-исковой работы";
+    "ретензионно-исковой работы";
             this.ribbonButtonClaimStates.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonClaimStates.ToolTipImage")));
             this.ribbonButtonClaimStates.ToolTipTitle = "Состояния исковой работы";
             this.ribbonButtonClaimStates.Click += new System.EventHandler(this.ribbonButtonClaimStates_Click);
@@ -651,7 +750,7 @@ namespace Registry
             this.ribbonButtonAssocTenancies.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAssocTenancies.SmallImage")));
             this.ribbonButtonAssocTenancies.Text = "История найма";
             this.ribbonButtonAssocTenancies.ToolTip = "При нажатии данной кнопки будет открыта вкладка с историей найма текущего объекта" +
-                " собственности (здания, помещения, комнаты)";
+    " собственности (здания, помещения, комнаты)";
             this.ribbonButtonAssocTenancies.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAssocTenancies.ToolTipImage")));
             this.ribbonButtonAssocTenancies.ToolTipTitle = "История найма";
             this.ribbonButtonAssocTenancies.Click += new System.EventHandler(this.ribbonButtonAssocTenancies_Click);
@@ -673,7 +772,7 @@ namespace Registry
             this.ribbonButtonTabClose.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTabClose.SmallImage")));
             this.ribbonButtonTabClose.Text = "Закрыть вкладку";
             this.ribbonButtonTabClose.ToolTip = "При нажатии на данную кнопку будет закрыта текущая активная вкладка. При наличии " +
-                "несохраненных данных будет выдано соответствующее сообщение";
+    "несохраненных данных будет выдано соответствующее сообщение";
             this.ribbonButtonTabClose.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTabClose.ToolTipImage")));
             this.ribbonButtonTabClose.ToolTipTitle = "Закрыть текущую вкладку";
             this.ribbonButtonTabClose.Click += new System.EventHandler(this.ribbonButtonTabClose_Click);
@@ -692,7 +791,7 @@ namespace Registry
             this.ribbonButtonTabsClose.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTabsClose.SmallImage")));
             this.ribbonButtonTabsClose.Text = "Закрыть все вкладки";
             this.ribbonButtonTabsClose.ToolTip = "При нажатии на данную кнопку будут закрыты все вкладки. При наличии несохраненных" +
-                " данных будет выдано соответствующее сообщение";
+    " данных будет выдано соответствующее сообщение";
             this.ribbonButtonTabsClose.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTabsClose.ToolTipImage")));
             this.ribbonButtonTabsClose.ToolTipTitle = "Закрыть все вкладки";
             this.ribbonButtonTabsClose.Click += new System.EventHandler(this.ribbonButtonTabsClose_Click);
@@ -741,7 +840,7 @@ namespace Registry
             this.ribbonButtonRegistryShortStatistic.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonRegistryShortStatistic.SmallImage")));
             this.ribbonButtonRegistryShortStatistic.Text = "Краткая статистика";
             this.ribbonButtonRegistryShortStatistic.ToolTip = "При нажатии на данную кнопку будет сформирован отчет в OpenOffice Calc с краткой " +
-                "статистикой по муниципальному жилью";
+    "статистикой по муниципальному жилью";
             this.ribbonButtonRegistryShortStatistic.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonRegistryShortStatistic.ToolTipImage")));
             this.ribbonButtonRegistryShortStatistic.ToolTipTitle = "Краткая статистика";
             this.ribbonButtonRegistryShortStatistic.Click += new System.EventHandler(this.ribbonButtonRegistryShortStatistic_Click);
@@ -759,7 +858,7 @@ namespace Registry
             this.ribbonButtonRegistryFullStatistic.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonRegistryFullStatistic.SmallImage")));
             this.ribbonButtonRegistryFullStatistic.Text = "Полная статистика";
             this.ribbonButtonRegistryFullStatistic.ToolTip = "При нажатии на данную кнопку будет сформирован отчет в OpenOffice Calc с полной с" +
-                "татистикой по муниципальному жилью";
+    "татистикой по муниципальному жилью";
             this.ribbonButtonRegistryFullStatistic.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonRegistryFullStatistic.ToolTipImage")));
             this.ribbonButtonRegistryFullStatistic.ToolTipTitle = "Полная статистика";
             this.ribbonButtonRegistryFullStatistic.Click += new System.EventHandler(this.ribbonButtonRegistryFullStatistic_Click);
@@ -771,7 +870,7 @@ namespace Registry
             this.ribbonButtonOwnershipReport.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOwnershipReport.SmallImage")));
             this.ribbonButtonOwnershipReport.Text = "Аварийные ЖП";
             this.ribbonButtonOwnershipReport.ToolTip = "При нажатии на данную кнопку будет сформирован отчет в OpenOffice Calc с перечнем" +
-                " аварийного и снесенного жилья";
+    " аварийного и снесенного жилья";
             this.ribbonButtonOwnershipReport.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOwnershipReport.ToolTipImage")));
             this.ribbonButtonOwnershipReport.ToolTipTitle = "Аварийные и снесенные ЖП";
             this.ribbonButtonOwnershipReport.Click += new System.EventHandler(this.ribbonButtonOwnershipReport_Click);
@@ -783,7 +882,7 @@ namespace Registry
             this.ribbonButtonCommercialFundReport.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonCommercialFundReport.SmallImage")));
             this.ribbonButtonCommercialFundReport.Text = "Коммерч. ЖФ";
             this.ribbonButtonCommercialFundReport.ToolTip = "При нажатии на данную кнопку будет сформирован отчет в OpenOffice Calc по коммерч" +
-                "ескому жилому фонду с указанием реквизитов включения и исключения";
+    "ескому жилому фонду с указанием реквизитов включения и исключения";
             this.ribbonButtonCommercialFundReport.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonCommercialFundReport.ToolTipImage")));
             this.ribbonButtonCommercialFundReport.ToolTipTitle = "Коммерческий жилой фонд";
             this.ribbonButtonCommercialFundReport.Click += new System.EventHandler(this.ribbonButtonCommercialFundReport_Click);
@@ -795,7 +894,7 @@ namespace Registry
             this.ribbonButtonSpecialFundReport.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonSpecialFundReport.SmallImage")));
             this.ribbonButtonSpecialFundReport.Text = "Спец. ЖФ";
             this.ribbonButtonSpecialFundReport.ToolTip = "При нажатии на данную кнопку будет сформирован отчет в OpenOffice Calc по специал" +
-                "изированному жилому фонду с указанием реквизитов включения и исключения";
+    "изированному жилому фонду с указанием реквизитов включения и исключения";
             this.ribbonButtonSpecialFundReport.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonSpecialFundReport.ToolTipImage")));
             this.ribbonButtonSpecialFundReport.ToolTipTitle = "Специализированный жилой фонд";
             this.ribbonButtonSpecialFundReport.Click += new System.EventHandler(this.ribbonButtonSpecialFundReport_Click);
@@ -807,7 +906,7 @@ namespace Registry
             this.ribbonButtonSocialFundReport.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonSocialFundReport.SmallImage")));
             this.ribbonButtonSocialFundReport.Text = "Социал. ЖФ";
             this.ribbonButtonSocialFundReport.ToolTip = "При нажатии на данную кнопку будет сформирован отчет в OpenOffice Calc по социаль" +
-                "ному жилому фонду с указанием реквизитов включения и исключения";
+    "ному жилому фонду с указанием реквизитов включения и исключения";
             this.ribbonButtonSocialFundReport.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonSocialFundReport.ToolTipImage")));
             this.ribbonButtonSocialFundReport.ToolTipTitle = "Социальный жилой фонд";
             this.ribbonButtonSocialFundReport.Click += new System.EventHandler(this.ribbonButtonSocialFundReport_Click);
@@ -819,7 +918,7 @@ namespace Registry
             this.ribbonButtonPremisesForOrphansReport.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPremisesForOrphansReport.SmallImage")));
             this.ribbonButtonPremisesForOrphansReport.Text = "ЖП для детей-сирот";
             this.ribbonButtonPremisesForOrphansReport.ToolTip = "При нажатии на данную кнопку будет сформирован отчет в OpenOffice Calc по муницип" +
-                "альным помещениям, приобретенным для детей-сирот";
+    "альным помещениям, приобретенным для детей-сирот";
             this.ribbonButtonPremisesForOrphansReport.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPremisesForOrphansReport.ToolTipImage")));
             this.ribbonButtonPremisesForOrphansReport.ToolTipTitle = "Жилые помещения для детей-сирот";
             this.ribbonButtonPremisesForOrphansReport.Click += new System.EventHandler(this.ribbonButtonPremisesForOrphansReport_Click);
@@ -831,7 +930,7 @@ namespace Registry
             this.ribbonButtonPremisesByExchangeReport.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPremisesByExchangeReport.SmallImage")));
             this.ribbonButtonPremisesByExchangeReport.Text = "ЖП (мена)";
             this.ribbonButtonPremisesByExchangeReport.ToolTip = "При нажатии на данную кнопку будет сформирован отчет в OpenOffice Calc по муницип" +
-                "альным помещениям, приобретенным по мене";
+    "альным помещениям, приобретенным по мене";
             this.ribbonButtonPremisesByExchangeReport.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPremisesByExchangeReport.ToolTipImage")));
             this.ribbonButtonPremisesByExchangeReport.ToolTipTitle = "Жилые помещения по мене";
             this.ribbonButtonPremisesByExchangeReport.Click += new System.EventHandler(this.ribbonButtonPremisesByExchangeReport_Click);
@@ -843,7 +942,7 @@ namespace Registry
             this.ribbonButtonPremisesByDonationReport.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPremisesByDonationReport.SmallImage")));
             this.ribbonButtonPremisesByDonationReport.Text = "ЖП (дарение)";
             this.ribbonButtonPremisesByDonationReport.ToolTip = "При нажатии на данную кнопку будет сформирован отчет в OpenOffice Calc по муницип" +
-                "альным помещениям, приобретенным по дарению";
+    "альным помещениям, приобретенным по дарению";
             this.ribbonButtonPremisesByDonationReport.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonPremisesByDonationReport.ToolTipImage")));
             this.ribbonButtonPremisesByDonationReport.ToolTipTitle = "Жилые помещения по дарению";
             this.ribbonButtonPremisesByDonationReport.Click += new System.EventHandler(this.ribbonButtonPremisesByDonationReport_Click);
@@ -855,7 +954,7 @@ namespace Registry
             this.ribbonButtonMunicipalPremises.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMunicipalPremises.SmallImage")));
             this.ribbonButtonMunicipalPremises.Text = "Муниципальные ЖП";
             this.ribbonButtonMunicipalPremises.ToolTip = "При нажатии на данную кнопку будет сформирован отчет в OpenOffice Calc по муницип" +
-                "альным жилым помещениям";
+    "альным жилым помещениям";
             this.ribbonButtonMunicipalPremises.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMunicipalPremises.ToolTipImage")));
             this.ribbonButtonMunicipalPremises.ToolTipTitle = "Муниципальные жилые помещения";
             this.ribbonButtonMunicipalPremises.Click += new System.EventHandler(this.ribbonButtonMunicipalPremises_Click);
@@ -875,7 +974,7 @@ namespace Registry
             this.ribbonButtonStructureTypes.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonStructureTypes.SmallImage")));
             this.ribbonButtonStructureTypes.Text = "Типы материалов";
             this.ribbonButtonStructureTypes.ToolTip = "При нажатии на данную кнопку будет открыт справочник материалов конструкций здани" +
-                "й";
+    "й";
             this.ribbonButtonStructureTypes.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonStructureTypes.ToolTipImage")));
             this.ribbonButtonStructureTypes.ToolTipTitle = "Типы материалов";
             this.ribbonButtonStructureTypes.Click += new System.EventHandler(this.ribbonButtonStructureTypes_Click);
@@ -886,7 +985,7 @@ namespace Registry
             this.ribbonButtonRestrictionTypes.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonRestrictionTypes.SmallImage")));
             this.ribbonButtonRestrictionTypes.Text = "Типы реквизитов";
             this.ribbonButtonRestrictionTypes.ToolTip = "При нажатии на данную кнопку будет открыт справочник типов реквизитов муниципальн" +
-                "ой собственности";
+    "ой собственности";
             this.ribbonButtonRestrictionTypes.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonRestrictionTypes.ToolTipImage")));
             this.ribbonButtonRestrictionTypes.ToolTipTitle = "Типы реквизитов";
             this.ribbonButtonRestrictionTypes.Click += new System.EventHandler(this.ribbonButtonRestrictionTypes_Click);
@@ -897,7 +996,7 @@ namespace Registry
             this.ribbonButtonOwnershipTypes.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOwnershipTypes.SmallImage")));
             this.ribbonButtonOwnershipTypes.Text = "Типы ограничений";
             this.ribbonButtonOwnershipTypes.ToolTip = "При нажатии на данную кнопку будет открыт справочник типов ограничений, накладыва" +
-                "емых на объекты собственности";
+    "емых на объекты собственности";
             this.ribbonButtonOwnershipTypes.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOwnershipTypes.ToolTipImage")));
             this.ribbonButtonOwnershipTypes.ToolTipTitle = "Типы ограничений";
             this.ribbonButtonOwnershipTypes.Click += new System.EventHandler(this.ribbonButtonOwnershipTypes_Click);
@@ -927,7 +1026,7 @@ namespace Registry
             this.ribbonButtonTenancyStatistic.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyStatistic.SmallImage")));
             this.ribbonButtonTenancyStatistic.Text = "Статистика";
             this.ribbonButtonTenancyStatistic.ToolTip = "При нажатии на данную кнопку будет сформирован отчет в OpenOffice Calc со статист" +
-                "икой по найму жилья";
+    "икой по найму жилья";
             this.ribbonButtonTenancyStatistic.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyStatistic.ToolTipImage")));
             this.ribbonButtonTenancyStatistic.ToolTipTitle = "Статистика по найму";
             this.ribbonButtonTenancyStatistic.Click += new System.EventHandler(this.ribbonButtonStatistic_Click);
@@ -938,7 +1037,7 @@ namespace Registry
             this.ribbonButtonTenancyForCoMS.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyForCoMS.SmallImage")));
             this.ribbonButtonTenancyForCoMS.Text = "МКУ ЦПМУ";
             this.ribbonButtonTenancyForCoMS.ToolTip = "При нажатии на данную кнопку будет сформирован отчет в OpenOffice Writer со стати" +
-                "стикой для МКУ \"ЦПМУ\"";
+    "стикой для МКУ \"ЦПМУ\"";
             this.ribbonButtonTenancyForCoMS.ToolTipTitle = "Статистика для МКУ \"ЦПМУ\"";
             this.ribbonButtonTenancyForCoMS.Click += new System.EventHandler(this.ribbonButtonTenancyForCoMS_Click);
             // 
@@ -950,7 +1049,7 @@ namespace Registry
             this.ribbonButtonTenancyOrder.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyOrder.SmallImage")));
             this.ribbonButtonTenancyOrder.Text = "Распоряжение";
             this.ribbonButtonTenancyOrder.ToolTip = "При нажатии на данную кнопку будет открыто окно для настройки формируемого распор" +
-                "яжения";
+    "яжения";
             this.ribbonButtonTenancyOrder.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyOrder.ToolTipImage")));
             this.ribbonButtonTenancyOrder.ToolTipTitle = "Печать распоряжения";
             this.ribbonButtonTenancyOrder.Click += new System.EventHandler(this.ribbonButtonTenancyOrder_Click);
@@ -990,7 +1089,7 @@ namespace Registry
             this.ribbonButtonTenancyContract17x.Style = System.Windows.Forms.RibbonButtonStyle.DropDown;
             this.ribbonButtonTenancyContract17x.Text = "Договор";
             this.ribbonButtonTenancyContract17x.ToolTip = "При нажатии на данную кнопку будет сформирован договор по текущему процессу найма" +
-                "";
+    "";
             this.ribbonButtonTenancyContract17x.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyContract17x.ToolTipImage")));
             this.ribbonButtonTenancyContract17x.ToolTipTitle = "Договор найма";
             // 
@@ -1022,7 +1121,7 @@ namespace Registry
             this.ribbonButtonTenancyContract.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyContract.SmallImage")));
             this.ribbonButtonTenancyContract.Text = "Договор";
             this.ribbonButtonTenancyContract.ToolTip = "При нажатии на данную кнопку будет сформирован договор по текущему процессу найма" +
-                "";
+    "";
             this.ribbonButtonTenancyContract.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyContract.ToolTipImage")));
             this.ribbonButtonTenancyContract.ToolTipTitle = "Договор найма";
             this.ribbonButtonTenancyContract.Click += new System.EventHandler(this.ribbonButtonTenancyContract_Click);
@@ -1043,7 +1142,7 @@ namespace Registry
             this.ribbonButtonTenancyAgreement.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyAgreement.SmallImage")));
             this.ribbonButtonTenancyAgreement.Text = "Соглашение";
             this.ribbonButtonTenancyAgreement.ToolTip = "При нажатии на данную кнопку будет сформировано соглашение по текущему процессу н" +
-                "айма";
+    "айма";
             this.ribbonButtonTenancyAgreement.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyAgreement.ToolTipImage")));
             this.ribbonButtonTenancyAgreement.ToolTipTitle = "Соглашение";
             this.ribbonButtonTenancyAgreement.Click += new System.EventHandler(this.ribbonButtonTenancyAgreement_Click);
@@ -1054,7 +1153,7 @@ namespace Registry
             this.ribbonButtonTenancyExcerpt.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyExcerpt.SmallImage")));
             this.ribbonButtonTenancyExcerpt.Text = "Выписка";
             this.ribbonButtonTenancyExcerpt.ToolTip = "При нажатии на данную кнопку будет сформирована выписка из реестра МС по текущему" +
-                " процессу найма";
+    " процессу найма";
             this.ribbonButtonTenancyExcerpt.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonTenancyExcerpt.ToolTipImage")));
             this.ribbonButtonTenancyExcerpt.ToolTipTitle = "Выписка из реестра МС";
             this.ribbonButtonTenancyExcerpt.Click += new System.EventHandler(this.ribbonButtonTenancyExcerpt_Click);
@@ -1078,7 +1177,7 @@ namespace Registry
             this.ribbonButtonWarrants.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonWarrants.SmallImage")));
             this.ribbonButtonWarrants.Text = "Реестр доверенностей";
             this.ribbonButtonWarrants.ToolTip = "При нажатии на данную кнопку будет открыт реестр доверенностей, заключаемых при н" +
-                "айме жилья";
+    "айме жилья";
             this.ribbonButtonWarrants.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonWarrants.ToolTipImage")));
             this.ribbonButtonWarrants.ToolTipTitle = "Реестр доверенностей";
             this.ribbonButtonWarrants.Click += new System.EventHandler(this.ribbonButtonWarrants_Click);
@@ -1117,7 +1216,7 @@ namespace Registry
             this.ribbonButtonExecutors.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonExecutors.SmallImage")));
             this.ribbonButtonExecutors.Text = "Исполнители";
             this.ribbonButtonExecutors.ToolTip = "При нажатии на данную кнопку будет открыт справочник исполнителей, формирующих до" +
-                "кументы по найму жилья";
+    "кументы по найму жилья";
             this.ribbonButtonExecutors.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonExecutors.ToolTipImage")));
             this.ribbonButtonExecutors.ToolTipTitle = "Исполнители";
             this.ribbonButtonExecutors.Click += new System.EventHandler(this.ribbonButtonExecutors_Click);
@@ -1128,7 +1227,7 @@ namespace Registry
             this.ribbonButtonIssuedBy.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonIssuedBy.SmallImage")));
             this.ribbonButtonIssuedBy.Text = "ПС/ЗАГС";
             this.ribbonButtonIssuedBy.ToolTip = "При нажатии на данную кнопку будет открыт справочник органов, выдающих документы," +
-                " удостоверяющие личность: паспортные столы, ЗАГС и т.д.";
+    " удостоверяющие личность: паспортные столы, ЗАГС и т.д.";
             this.ribbonButtonIssuedBy.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonIssuedBy.ToolTipImage")));
             this.ribbonButtonIssuedBy.ToolTipTitle = "ПС/ЗАГС";
             this.ribbonButtonIssuedBy.Click += new System.EventHandler(this.ribbonButtonIssuedBy_Click);
@@ -1139,7 +1238,7 @@ namespace Registry
             this.ribbonTabClaims.Panels.Add(this.ribbonPanel5);
             this.ribbonTabClaims.Text = "Исковая работа";
             this.ribbonTabClaims.ToolTip = "На данной вкладке расположены справочники и отчеты по претензионно-исковой работе" +
-                "";
+    "";
             this.ribbonTabClaims.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonTabClaims.ToolTipImage")));
             this.ribbonTabClaims.ToolTipTitle = "Претензионно-исковая работа";
             // 
@@ -1156,7 +1255,7 @@ namespace Registry
             this.ribbonButtonClaimsStatistic.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonClaimsStatistic.SmallImage")));
             this.ribbonButtonClaimsStatistic.Text = "Общий отчет";
             this.ribbonButtonClaimsStatistic.ToolTip = "При нажатии на данную кнопку будет сформирован общий отчет по претензионно-исково" +
-                "й работе в OpenOffice Calc";
+    "й работе в OpenOffice Calc";
             this.ribbonButtonClaimsStatistic.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonClaimsStatistic.ToolTipImage")));
             this.ribbonButtonClaimsStatistic.ToolTipTitle = "Общий отчет";
             this.ribbonButtonClaimsStatistic.Click += new System.EventHandler(this.ribbonButtonClaimsStatistic_Click);
@@ -1174,7 +1273,7 @@ namespace Registry
             this.ribbonButtonClaimStateTypes.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonClaimStateTypes.SmallImage")));
             this.ribbonButtonClaimStateTypes.Text = "Виды состояний";
             this.ribbonButtonClaimStateTypes.ToolTip = "При нажатии на данную кнопку будет открыт справочник видов состояний претензионно" +
-                "-исковых работ с возможностью настройки переходов между состояниями";
+    "-исковых работ с возможностью настройки переходов между состояниями";
             this.ribbonButtonClaimStateTypes.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonClaimStateTypes.ToolTipImage")));
             this.ribbonButtonClaimStateTypes.ToolTipTitle = "Виды состояний исковой работы";
             this.ribbonButtonClaimStateTypes.Click += new System.EventHandler(this.ribbonButtonClaimStateTypes_Click);
@@ -1231,152 +1330,53 @@ namespace Registry
             this.dockPanel.Name = "dockPanel";
             this.dockPanel.ShowDocumentIcon = true;
             this.dockPanel.Size = new System.Drawing.Size(1016, 592);
-            dockPanelGradient4.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPanelGradient4.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            autoHideStripSkin2.DockStripGradient = dockPanelGradient4;
-            tabGradient8.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient8.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient8.TextColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            autoHideStripSkin2.TabGradient = tabGradient8;
-            dockPanelSkin2.AutoHideStripSkin = autoHideStripSkin2;
-            tabGradient9.EndColor = System.Drawing.Color.White;
-            tabGradient9.StartColor = System.Drawing.Color.White;
-            tabGradient9.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient2.ActiveTabGradient = tabGradient9;
-            dockPanelGradient5.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPanelGradient5.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPaneStripGradient2.DockStripGradient = dockPanelGradient5;
-            tabGradient10.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient10.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient10.StartColor = System.Drawing.Color.White;
-            tabGradient10.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient2.InactiveTabGradient = tabGradient10;
-            dockPaneStripSkin2.DocumentGradient = dockPaneStripGradient2;
-            tabGradient11.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient11.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient11.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient11.TextColor = System.Drawing.Color.Black;
-            dockPaneStripToolWindowGradient2.ActiveCaptionGradient = tabGradient11;
-            tabGradient12.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            tabGradient12.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            tabGradient12.TextColor = System.Drawing.Color.Black;
-            dockPaneStripToolWindowGradient2.ActiveTabGradient = tabGradient12;
-            dockPanelGradient6.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPanelGradient6.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPaneStripToolWindowGradient2.DockStripGradient = dockPanelGradient6;
-            tabGradient13.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            tabGradient13.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient13.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            tabGradient13.TextColor = System.Drawing.Color.Black;
-            dockPaneStripToolWindowGradient2.InactiveCaptionGradient = tabGradient13;
-            tabGradient14.EndColor = System.Drawing.Color.Transparent;
-            tabGradient14.StartColor = System.Drawing.Color.Transparent;
-            tabGradient14.TextColor = System.Drawing.Color.Gray;
-            dockPaneStripToolWindowGradient2.InactiveTabGradient = tabGradient14;
-            dockPaneStripSkin2.ToolWindowGradient = dockPaneStripToolWindowGradient2;
-            dockPanelSkin2.DockPaneStripSkin = dockPaneStripSkin2;
-            this.dockPanel.Skin = dockPanelSkin2;
+            dockPanelGradient1.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPanelGradient1.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            autoHideStripSkin1.DockStripGradient = dockPanelGradient1;
+            tabGradient1.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient1.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient1.TextColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            autoHideStripSkin1.TabGradient = tabGradient1;
+            dockPanelSkin1.AutoHideStripSkin = autoHideStripSkin1;
+            tabGradient2.EndColor = System.Drawing.Color.White;
+            tabGradient2.StartColor = System.Drawing.Color.White;
+            tabGradient2.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient1.ActiveTabGradient = tabGradient2;
+            dockPanelGradient2.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPanelGradient2.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPaneStripGradient1.DockStripGradient = dockPanelGradient2;
+            tabGradient3.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient3.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient3.StartColor = System.Drawing.Color.White;
+            tabGradient3.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient1.InactiveTabGradient = tabGradient3;
+            dockPaneStripSkin1.DocumentGradient = dockPaneStripGradient1;
+            tabGradient4.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient4.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient4.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient4.TextColor = System.Drawing.Color.Black;
+            dockPaneStripToolWindowGradient1.ActiveCaptionGradient = tabGradient4;
+            tabGradient5.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            tabGradient5.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            tabGradient5.TextColor = System.Drawing.Color.Black;
+            dockPaneStripToolWindowGradient1.ActiveTabGradient = tabGradient5;
+            dockPanelGradient3.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPanelGradient3.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPaneStripToolWindowGradient1.DockStripGradient = dockPanelGradient3;
+            tabGradient6.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            tabGradient6.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient6.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            tabGradient6.TextColor = System.Drawing.Color.Black;
+            dockPaneStripToolWindowGradient1.InactiveCaptionGradient = tabGradient6;
+            tabGradient7.EndColor = System.Drawing.Color.Transparent;
+            tabGradient7.StartColor = System.Drawing.Color.Transparent;
+            tabGradient7.TextColor = System.Drawing.Color.Gray;
+            dockPaneStripToolWindowGradient1.InactiveTabGradient = tabGradient7;
+            dockPaneStripSkin1.ToolWindowGradient = dockPaneStripToolWindowGradient1;
+            dockPanelSkin1.DockPaneStripSkin = dockPaneStripSkin1;
+            this.dockPanel.Skin = dockPanelSkin1;
             this.dockPanel.TabIndex = 5;
             this.dockPanel.ActiveDocumentChanged += new System.EventHandler(this.dockPanel_ActiveDocumentChanged);
-            // 
-            // ribbonLabelHousing
-            // 
-            this.ribbonLabelHousing.Text = "Жилищный фонд";
-            // 
-            // ribbonLabelTenancy
-            // 
-            this.ribbonLabelTenancy.Text = "Найм жилья";
-            // 
-            // ribbonLabelClaims
-            // 
-            this.ribbonLabelClaims.Text = "Исковая работа";
-            // 
-            // ribbonButtonMenuStructureTypes
-            // 
-            this.ribbonButtonMenuStructureTypes.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuStructureTypes.Image")));
-            this.ribbonButtonMenuStructureTypes.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuStructureTypes.SmallImage")));
-            this.ribbonButtonMenuStructureTypes.Text = "Типы материалов";
-            this.ribbonButtonMenuStructureTypes.ToolTip = "При нажатии на данную кнопку будет открыт справочник материалов конструкций здани" +
-                "й";
-            this.ribbonButtonMenuStructureTypes.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuStructureTypes.ToolTipImage")));
-            this.ribbonButtonMenuStructureTypes.ToolTipTitle = "Типы материалов";
-            this.ribbonButtonMenuStructureTypes.Click += new System.EventHandler(this.ribbonButtonStructureTypes_Click);
-            // 
-            // ribbonButtonMenuRestrictionTypes
-            // 
-            this.ribbonButtonMenuRestrictionTypes.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuRestrictionTypes.Image")));
-            this.ribbonButtonMenuRestrictionTypes.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuRestrictionTypes.SmallImage")));
-            this.ribbonButtonMenuRestrictionTypes.Text = "Типы реквизитов";
-            this.ribbonButtonMenuRestrictionTypes.ToolTip = "При нажатии на данную кнопку будет открыт справочник типов реквизитов муниципальн" +
-                "ой собственности";
-            this.ribbonButtonMenuRestrictionTypes.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuRestrictionTypes.ToolTipImage")));
-            this.ribbonButtonMenuRestrictionTypes.ToolTipTitle = "Типы реквизитов";
-            this.ribbonButtonMenuRestrictionTypes.Click += new System.EventHandler(this.ribbonButtonRestrictionTypes_Click);
-            // 
-            // ribbonButtonMenuOwnershipTypes
-            // 
-            this.ribbonButtonMenuOwnershipTypes.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuOwnershipTypes.Image")));
-            this.ribbonButtonMenuOwnershipTypes.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuOwnershipTypes.SmallImage")));
-            this.ribbonButtonMenuOwnershipTypes.Text = "Типы ограничений";
-            this.ribbonButtonMenuOwnershipTypes.ToolTip = "При нажатии на данную кнопку будет открыт справочник типов ограничений, накладыва" +
-                "емых на объекты собственности";
-            this.ribbonButtonMenuOwnershipTypes.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuOwnershipTypes.ToolTipImage")));
-            this.ribbonButtonMenuOwnershipTypes.ToolTipTitle = "Типы ограничений";
-            this.ribbonButtonMenuOwnershipTypes.Click += new System.EventHandler(this.ribbonButtonOwnershipTypes_Click);
-            // 
-            // ribbonButtonMenuWarrants
-            // 
-            this.ribbonButtonMenuWarrants.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuWarrants.Image")));
-            this.ribbonButtonMenuWarrants.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuWarrants.SmallImage")));
-            this.ribbonButtonMenuWarrants.Text = "Реестр доверенностей";
-            this.ribbonButtonMenuWarrants.ToolTip = "При нажатии на данную кнопку будет открыт реестр доверенностей, заключаемых при н" +
-                "айме жилья";
-            this.ribbonButtonMenuWarrants.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuWarrants.ToolTipImage")));
-            this.ribbonButtonMenuWarrants.ToolTipTitle = "Реестр доверенностей";
-            this.ribbonButtonMenuWarrants.Click += new System.EventHandler(this.ribbonButtonWarrants_Click);
-            // 
-            // ribbonButtonMenuReasonTypes
-            // 
-            this.ribbonButtonMenuReasonTypes.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuReasonTypes.Image")));
-            this.ribbonButtonMenuReasonTypes.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuReasonTypes.SmallImage")));
-            this.ribbonButtonMenuReasonTypes.Text = "Виды оснований";
-            this.ribbonButtonMenuReasonTypes.ToolTip = "При нажатии на данную кнопку будет открыт справочник видов оснований найма";
-            this.ribbonButtonMenuReasonTypes.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuReasonTypes.ToolTipImage")));
-            this.ribbonButtonMenuReasonTypes.ToolTipTitle = "Виды оснований найма";
-            this.ribbonButtonMenuReasonTypes.Click += new System.EventHandler(this.ribbonButtonReasonTypes_Click);
-            // 
-            // ribbonButtonMenuExecutors
-            // 
-            this.ribbonButtonMenuExecutors.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuExecutors.Image")));
-            this.ribbonButtonMenuExecutors.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuExecutors.SmallImage")));
-            this.ribbonButtonMenuExecutors.Text = "Исполнители";
-            this.ribbonButtonMenuExecutors.ToolTip = "При нажатии на данную кнопку будет открыт справочник исполнителей, формирующих до" +
-                "кументы по найму жилья";
-            this.ribbonButtonMenuExecutors.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuExecutors.ToolTipImage")));
-            this.ribbonButtonMenuExecutors.ToolTipTitle = "Исполнители";
-            this.ribbonButtonMenuExecutors.Click += new System.EventHandler(this.ribbonButtonExecutors_Click);
-            // 
-            // ribbonButtonMenuIssuedBy
-            // 
-            this.ribbonButtonMenuIssuedBy.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuIssuedBy.Image")));
-            this.ribbonButtonMenuIssuedBy.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuIssuedBy.SmallImage")));
-            this.ribbonButtonMenuIssuedBy.Text = "ПС/ЗАГС";
-            this.ribbonButtonMenuIssuedBy.ToolTip = "При нажатии на данную кнопку будет открыт справочник органов, выдающих документы," +
-                " удостоверяющие личность: паспортные столы, ЗАГС и т.д.";
-            this.ribbonButtonMenuIssuedBy.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuIssuedBy.ToolTipImage")));
-            this.ribbonButtonMenuIssuedBy.ToolTipTitle = "ПС/ЗАГС";
-            this.ribbonButtonMenuIssuedBy.Click += new System.EventHandler(this.ribbonButtonIssuedBy_Click);
-            // 
-            // ribbonButtonMenuClaimStateTypes
-            // 
-            this.ribbonButtonMenuClaimStateTypes.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuClaimStateTypes.Image")));
-            this.ribbonButtonMenuClaimStateTypes.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuClaimStateTypes.SmallImage")));
-            this.ribbonButtonMenuClaimStateTypes.Text = "Виды состояний";
-            this.ribbonButtonMenuClaimStateTypes.ToolTip = "При нажатии на данную кнопку будет открыт справочник видов состояний претензионно" +
-                "-исковых работ с возможностью настройки переходов между состояниями";
-            this.ribbonButtonMenuClaimStateTypes.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonMenuClaimStateTypes.ToolTipImage")));
-            this.ribbonButtonMenuClaimStateTypes.ToolTipTitle = "Виды состояний исковой работы";
-            this.ribbonButtonMenuClaimStateTypes.Click += new System.EventHandler(this.ribbonButtonClaimStateTypes_Click);
             // 
             // MainForm
             // 

@@ -646,7 +646,7 @@ namespace Registry
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            UserDomain user = UserDomain.Current;
+            /*UserDomain user = UserDomain.Current;
             if (user == null)
             {
                 MessageBox.Show("Пользователь не распознан или учетная запись не включена в службу каталогов Active Directory","Ошибка", 
@@ -654,7 +654,7 @@ namespace Registry
                 Application.Exit();
                 return;
             }
-            toolStripLabelHelloUser.Text = "Здравствуйте, " + user.DisplayName;
+            toolStripLabelHelloUser.Text = "Здравствуйте, " + user.DisplayName;*/
             AccessControl.LoadPriveleges();
             if (AccessControl.HasNoPriveleges())
             {
