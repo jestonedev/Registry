@@ -20,18 +20,17 @@ namespace Registry.SearchForms
             comboBoxCriteriaType.SelectedIndex = 0;
             foreach (Control control in this.Controls)
             {
-                if (control.Name != "comboBoxCriteriaType")
-                    control.KeyDown += (sender, e) =>
-                    {
-                        ComboBox comboBox = sender as ComboBox;
-                        if (comboBox != null && comboBox.DroppedDown)
-                            return;
-                        if (e.KeyCode == Keys.Enter)         
-                            vButtonSearch_Click(sender, e);
-                        else
-                            if (e.KeyCode == Keys.Escape)
-                                this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-                    };
+                control.KeyDown += (sender, e) =>
+                {
+                    ComboBox comboBox = sender as ComboBox;
+                    if (comboBox != null && comboBox.DroppedDown)
+                        return;
+                    if (e.KeyCode == Keys.Enter)         
+                        vButtonSearch_Click(sender, e);
+                    else
+                        if (e.KeyCode == Keys.Escape)
+                            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+                };
             }
         }
 

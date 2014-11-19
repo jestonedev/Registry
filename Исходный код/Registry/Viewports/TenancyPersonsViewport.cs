@@ -209,8 +209,10 @@ namespace Registry.Viewport
                 dateTimePickerDateOfDocumentIssue.Value = DateTime.Now.Date;
                 dateTimePickerDateOfDocumentIssue.Checked = false;
             }
-            comboBoxRegistrationStreet.SelectedValue = row["registration_id_street"];
-            comboBoxResidenceStreet.SelectedValue = row["residence_id_street"];
+            if (comboBoxRegistrationStreet.DataSource != null)
+                comboBoxRegistrationStreet.SelectedValue = row["registration_id_street"];
+            if (comboBoxResidenceStreet.DataSource != null)
+                comboBoxResidenceStreet.SelectedValue = row["residence_id_street"];
         }
 
         private void CheckViewportModifications()

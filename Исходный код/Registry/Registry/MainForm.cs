@@ -385,29 +385,6 @@ namespace Registry
             ribbonOrbMenuItemPremises.Enabled = AccessControl.HasPrivelege(Priveleges.RegistryRead);
             ribbonOrbMenuItemTenancy.Enabled = AccessControl.HasPrivelege(Priveleges.TenancyRead);
             ribbonOrbMenuItemClaims.Enabled = AccessControl.HasPrivelege(Priveleges.ClaimsRead);
-            if (!AccessControl.HasPrivelege(Priveleges.RegistryRead))
-            {
-                ribbon1.OrbDropDown.RecentItems.Remove(ribbonLabelHousing);
-                ribbon1.OrbDropDown.RecentItems.Remove(ribbonButtonMenuStructureTypes);
-                ribbon1.OrbDropDown.RecentItems.Remove(ribbonButtonMenuRestrictionTypes);
-                ribbon1.OrbDropDown.RecentItems.Remove(ribbonButtonMenuOwnershipTypes);
-                ribbon1.OrbDropDown.RecentItems.Remove(ribbonSeparator3);
-            }
-            if (!AccessControl.HasPrivelege(Priveleges.TenancyRead))
-            {
-                ribbon1.OrbDropDown.RecentItems.Remove(ribbonLabelTenancy);
-                ribbon1.OrbDropDown.RecentItems.Remove(ribbonButtonMenuWarrants);
-                ribbon1.OrbDropDown.RecentItems.Remove(ribbonButtonMenuExecutors);
-                ribbon1.OrbDropDown.RecentItems.Remove(ribbonButtonMenuIssuedBy);
-                ribbon1.OrbDropDown.RecentItems.Remove(ribbonButtonMenuReasonTypes);
-                ribbon1.OrbDropDown.RecentItems.Remove(ribbonSeparator5);
-            }
-            if (!AccessControl.HasPrivelege(Priveleges.ClaimsRead))
-            {
-                ribbon1.OrbDropDown.RecentItems.Remove(ribbonSeparator5);
-                ribbon1.OrbDropDown.RecentItems.Remove(ribbonLabelClaims);
-                ribbon1.OrbDropDown.RecentItems.Remove(ribbonButtonMenuClaimStateTypes);
-            }
         }
 
         private void ribbonButtonSave_Click(object sender, EventArgs e)
@@ -646,7 +623,7 @@ namespace Registry
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            /*UserDomain user = UserDomain.Current;
+            UserDomain user = UserDomain.Current;
             if (user == null)
             {
                 MessageBox.Show("Пользователь не распознан или учетная запись не включена в службу каталогов Active Directory","Ошибка", 
@@ -654,7 +631,7 @@ namespace Registry
                 Application.Exit();
                 return;
             }
-            toolStripLabelHelloUser.Text = "Здравствуйте, " + user.DisplayName;*/
+            toolStripLabelHelloUser.Text = "Здравствуйте, " + user.DisplayName;
             AccessControl.LoadPriveleges();
             if (AccessControl.HasNoPriveleges())
             {
@@ -818,6 +795,77 @@ namespace Registry
             if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
                 return;
             (dockPanel.ActiveDocument as IMenuController).TenancyExcerptReportGenerate();
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == (Keys.Control | Keys.S))
+            {
+                if (ribbonButtonSave.Enabled)
+                    ribbonButtonSave_Click(this, new EventArgs());
+                return true;
+            }
+            if (keyData == (Keys.Control | Keys.N))
+            {
+                if (ribbonButtonInsertRecord.Enabled)
+                    ribbonButtonInsertRecord_Click(this, new EventArgs());
+                return true;
+            }
+            if (keyData == (Keys.Control | Keys.O))
+            {
+                if (ribbonButtonOpen.Enabled)
+                    ribbonButtonOpen_Click(this, new EventArgs());
+                return true;
+            }
+            if (keyData == (Keys.Control | Keys.Alt | Keys.Home))
+            {
+                if (ribbonButtonFirst.Enabled)
+                    ribbonButtonFirst_Click(this, new EventArgs());
+                return true;
+            }
+            if (keyData == (Keys.Control | Keys.Alt | Keys.End))
+            {
+                if (ribbonButtonLast.Enabled)
+                    ribbonButtonLast_Click(this, new EventArgs());
+                return true;
+            }
+            if (keyData == (Keys.Control | Keys.Alt | Keys.Left))
+            {
+                if (ribbonButtonPrev.Enabled)
+                    ribbonButtonPrev_Click(this, new EventArgs());
+                return true;
+            }
+            if (keyData == (Keys.Control | Keys.Alt | Keys.Right))
+            {
+                if (ribbonButtonNext.Enabled)
+                    ribbonButtonNext_Click(this, new EventArgs());
+                return true;
+            }
+            if (keyData == (Keys.Control | Keys.F))
+            {
+                if (ribbonButtonSimpleSearch.Enabled)
+                    ribbonButtonSimpleSearch_Click(this, new EventArgs());
+                return true;
+            }
+            if (keyData == (Keys.Control | Keys.Alt | Keys.F))
+            {
+                if (ribbonButtonExtendedSearch.Enabled)
+                    ribbonButtonExtendedSearch_Click(this, new EventArgs());
+                return true;
+            }
+            if (keyData == (Keys.Control | Keys.Q))
+            {
+                if (ribbonButtonTabClose.Enabled)
+                    ribbonButtonTabClose_Click(this, new EventArgs());
+                return true;
+            }
+            if (keyData == (Keys.Control | Keys.Alt | Keys.Q))
+            {
+                if (ribbonButtonTabsClose.Enabled)
+                    ribbonButtonTabsClose_Click(this, new EventArgs());
+                return true;
+            }
+            return base.ProcessCmdKey(ref msg, keyData);
         }
     }
 }
