@@ -41,7 +41,7 @@ namespace Registry.Viewport
         public RestrictionTypeListViewport(IMenuCallback menuCallback): base(menuCallback)
         {
             InitializeComponent();
-            snapshot_restriction_types.Locale = CultureInfo.CurrentCulture;
+            snapshot_restriction_types.Locale = CultureInfo.InvariantCulture;
         }
 
         public RestrictionTypeListViewport(RestrictionTypeListViewport restrictionTypeListViewport, IMenuCallback menuCallback)
@@ -412,7 +412,11 @@ namespace Registry.Viewport
         void v_snapshot_restriction_types_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
         }
 
         private void InitializeComponent()

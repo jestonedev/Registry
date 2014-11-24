@@ -39,7 +39,6 @@ namespace Registry.DataModels
         protected override void ConfigureTable()
         {
             Table.PrimaryKey = new DataColumn[] { Table.Columns["id_claim"] };
-            Table.Columns["id_process"].DefaultValue = 0;
             Table.Columns["amount_of_debt_rent"].DefaultValue = 0;
             Table.Columns["amount_of_debt_fine"].DefaultValue = 0;
             Table.Columns["amount_of_rent"].DefaultValue = 0;
@@ -73,7 +72,7 @@ namespace Registry.DataModels
                 }
                 catch (OdbcException e)
                 {
-                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
                         "Не удалось удалить запись о претензионно-исковой работе из базы данных. Подробная ошибка: {0}",
                         e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
@@ -114,7 +113,7 @@ namespace Registry.DataModels
                 catch (OdbcException e)
                 {
                     connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture,
+                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture,
                         "Не удалось изменить запись о претензионно-исковой работе в базе данных. Подробная ошибка: {0}",
                         e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
@@ -162,12 +161,12 @@ namespace Registry.DataModels
                         return -1;
                     }
                     connection.SqlCommitTransaction();
-                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
+                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.InvariantCulture);
                 }
                 catch (OdbcException e)
                 {
                     connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
                         "Не удалось добавить запись о претензионно-исковой работе в базу данных. Подробная ошибка: {0}",
                         e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;

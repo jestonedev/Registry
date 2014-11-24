@@ -31,12 +31,12 @@ namespace Security
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         priveleges = 0;
                     }
-                    priveleges = Convert.ToInt32(table.Rows[0][0], CultureInfo.CurrentCulture);
+                    priveleges = Convert.ToInt32(table.Rows[0][0], CultureInfo.InvariantCulture);
                 }
                 catch (OdbcException e)
                 {
                     priveleges = 0;
-                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, "Не удалось загрузить привелегии пользователя. Подробная ошибка: {0}", 
+                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, "Не удалось загрузить привелегии пользователя. Подробная ошибка: {0}", 
                         e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 }
             }

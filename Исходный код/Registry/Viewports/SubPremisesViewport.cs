@@ -50,7 +50,7 @@ namespace Registry.Viewport
             : base(menuCallback)
         {
             InitializeComponent();
-            snapshot_sub_premises.Locale = CultureInfo.CurrentCulture;
+            snapshot_sub_premises.Locale = CultureInfo.InvariantCulture;
         }
 
         public SubPremisesViewport(SubPremisesViewport subPremisesViewport, IMenuCallback menuCallback)
@@ -246,7 +246,7 @@ namespace Registry.Viewport
             v_sub_premises.DataSource = DataSetManager.DataSet;
 
             if (ParentRow != null && ParentType == ParentTypeEnum.Premises)
-                this.Text = String.Format(CultureInfo.CurrentCulture, "Комнаты помещения №{0}", ParentRow["id_premises"]);
+                this.Text = String.Format(CultureInfo.InvariantCulture, "Комнаты помещения №{0}", ParentRow["id_premises"]);
             else
                 throw new ViewportException("Неизвестный тип родительского объекта");
 
@@ -462,7 +462,7 @@ namespace Registry.Viewport
                 return;
             }
             ShowAssocViewport(MenuCallback, ViewportType.FundsHistoryViewport, "id_sub_premises = " +
-                Convert.ToInt32(((DataRowView)v_snapshot_sub_premises[v_snapshot_sub_premises.Position])["id_sub_premises"], CultureInfo.CurrentCulture),
+                Convert.ToInt32(((DataRowView)v_snapshot_sub_premises[v_snapshot_sub_premises.Position])["id_sub_premises"], CultureInfo.InvariantCulture),
                 ((DataRowView)v_snapshot_sub_premises[v_snapshot_sub_premises.Position]).Row, ParentTypeEnum.SubPremises);
         }
 
@@ -486,14 +486,18 @@ namespace Registry.Viewport
                 return;
             }
             ShowAssocViewport(MenuCallback, ViewportType.TenancyListViewport, "id_sub_premises = " +
-                Convert.ToInt32(((DataRowView)v_snapshot_sub_premises[v_snapshot_sub_premises.Position])["id_sub_premises"], CultureInfo.CurrentCulture),
+                Convert.ToInt32(((DataRowView)v_snapshot_sub_premises[v_snapshot_sub_premises.Position])["id_sub_premises"], CultureInfo.InvariantCulture),
                 ((DataRowView)v_snapshot_sub_premises[v_snapshot_sub_premises.Position]).Row, ParentTypeEnum.SubPremises);
         }
 
         void v_snapshot_sub_premises_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
         }
         
         void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
@@ -540,35 +544,27 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
+            int row_index = v_snapshot_sub_premises.Find("id_sub_premises", e.Row["id_sub_premises"]);
+            if (row_index == -1 && v_sub_premises.Find("id_sub_premises", e.Row["id_sub_premises"]) != -1)
             {
-                int row_index = v_snapshot_sub_premises.Find("id_sub_premises", e.Row["id_sub_premises"]);
-                if (row_index != -1)
-                {
-                    DataRowView row = ((DataRowView)v_snapshot_sub_premises[row_index]);
-                    row["id_premises"] = e.Row["id_premises"];
-                    row["id_state"] = e.Row["id_state"];
-                    row["sub_premises_num"] = e.Row["sub_premises_num"];
-                    row["total_area"] = e.Row["total_area"];
-                    row["description"] = e.Row["description"];
-                }
+                snapshot_sub_premises.Rows.Add(new object[] { 
+                        e.Row["id_sub_premises"], 
+                        e.Row["id_premises"],   
+                        e.Row["id_state"],                 
+                        e.Row["sub_premises_num"],
+                        e.Row["total_area"],
+                        e.Row["description"]
+                    });
+            } else
+            if (row_index != -1)
+            {
+                DataRowView row = ((DataRowView)v_snapshot_sub_premises[row_index]);
+                row["id_premises"] = e.Row["id_premises"];
+                row["id_state"] = e.Row["id_state"];
+                row["sub_premises_num"] = e.Row["sub_premises_num"];
+                row["total_area"] = e.Row["total_area"];
+                row["description"] = e.Row["description"];
             }
-            else
-                if (e.Action == DataRowAction.Add)
-                {
-                    //Если строка имеется в текущем контексте оригинального представления, то добавить его и в snapshot, 
-                    //иначе - объект не принадлежит текущему родителю
-                    int row_index = v_sub_premises.Find("id_sub_premises", e.Row["id_sub_premises"]);
-                    if (row_index != -1)
-                        snapshot_sub_premises.Rows.Add(new object[] { 
-                            e.Row["id_sub_premises"], 
-                            e.Row["id_premises"],   
-                            e.Row["id_state"],                 
-                            e.Row["sub_premises_num"],
-                            e.Row["total_area"],
-                            e.Row["description"]
-                        });
-                }
         }
 
         void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -600,6 +596,7 @@ namespace Registry.Viewport
                     break;
             }
         }
+        
         void EditingControl_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (dataGridView.SelectedCells[0].OwningColumn.Name == "total_area")

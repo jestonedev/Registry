@@ -22,7 +22,7 @@ namespace Registry.Reporting
             get
             {
                 if (comboBoxRentType.SelectedValue != null)
-                    return Convert.ToInt32(comboBoxRentType.SelectedValue, CultureInfo.CurrentCulture);
+                    return Convert.ToInt32(comboBoxRentType.SelectedValue, CultureInfo.InvariantCulture);
                 else
                     return -1;
             }
@@ -33,7 +33,7 @@ namespace Registry.Reporting
             get
             {
                 if (comboBoxRentType.SelectedValue != null)
-                    return Convert.ToInt32(comboBoxExecutor.SelectedValue, CultureInfo.CurrentCulture);
+                    return Convert.ToInt32(comboBoxExecutor.SelectedValue, CultureInfo.InvariantCulture);
                 else
                     return -1;
             }

@@ -80,79 +80,79 @@ namespace Registry.SearchForms
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "registration_num = '{0}'", textBoxRegistrationNum.Text.Trim().Replace("'", ""));
+                filter += String.Format(CultureInfo.InvariantCulture, "registration_num = '{0}'", textBoxRegistrationNum.Text.Trim().Replace("'", ""));
             }
             if (checkBoxResidenceWarrantNumEnable.Checked)
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "residence_warrant_num = '{0}'", textBoxResidenceWarrantNum.Text.Trim().Replace("'", ""));
+                filter += String.Format(CultureInfo.InvariantCulture, "residence_warrant_num = '{0}'", textBoxResidenceWarrantNum.Text.Trim().Replace("'", ""));
             }
             if (checkBoxKumiOrderEnable.Checked)
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "kumi_order_num = '{0}'", textBoxKumiOrderNum.Text.Trim().Replace("'", ""));
+                filter += String.Format(CultureInfo.InvariantCulture, "kumi_order_num = '{0}'", textBoxKumiOrderNum.Text.Trim().Replace("'", ""));
             }
             if (checkBoxRentTypeEnable.Checked && (comboBoxRentType.SelectedValue != null))
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "id_rent_type = {0}", comboBoxRentType.SelectedValue.ToString());
+                filter += String.Format(CultureInfo.InvariantCulture, "id_rent_type = {0}", comboBoxRentType.SelectedValue.ToString());
             }
             if (checkBoxRegDateEnable.Checked)
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "registration_date {0} '{1}'",
+                filter += String.Format(CultureInfo.InvariantCulture, "registration_date {0} '{1}'",
                     ConvertDisplayEqExprToSql(
                         comboBoxRegDateExpr.SelectedItem.ToString()),
-                        dateTimePickerRegDate.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
+                        dateTimePickerRegDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
             }
             if (checkBoxIssueDateEnable.Checked)
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "issue_date {0} '{1}'",
+                filter += String.Format(CultureInfo.InvariantCulture, "issue_date {0} '{1}'",
                     ConvertDisplayEqExprToSql(
                         comboBoxIssueDateExpr.SelectedItem.ToString()),
-                        dateTimePickerIssueDate.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
+                        dateTimePickerIssueDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
             }
             if (checkBoxBeginDateEnable.Checked)
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "begin_date {0} '{1}'",
+                filter += String.Format(CultureInfo.InvariantCulture, "begin_date {0} '{1}'",
                     ConvertDisplayEqExprToSql(
                         comboBoxBeginDateExpr.SelectedItem.ToString()),
-                        dateTimePickerBeginDate.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
+                        dateTimePickerBeginDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
             }
             if (checkBoxEndDateEnable.Checked)
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "end_date {0} '{1}'",
+                filter += String.Format(CultureInfo.InvariantCulture, "end_date {0} '{1}'",
                     ConvertDisplayEqExprToSql(
                     comboBoxEndDateExpr.SelectedItem.ToString()),
-                    dateTimePickerEndDate.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
+                    dateTimePickerEndDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
             }
             if (checkBoxResidenceWarrDateEnable.Checked)
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "residence_warrant_date {0} '{1}'",
+                filter += String.Format(CultureInfo.InvariantCulture, "residence_warrant_date {0} '{1}'",
                     ConvertDisplayEqExprToSql(
                         comboBoxResidenceWarrDateExpr.SelectedItem.ToString()),
-                        dateTimePickerResidenceWarrDate.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
+                        dateTimePickerResidenceWarrDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
             }
             if (checkBoxKumiOrderDateEnable.Checked)
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "kumi_order_date {0} '{1}'",
+                filter += String.Format(CultureInfo.InvariantCulture, "kumi_order_date {0} '{1}'",
                     ConvertDisplayEqExprToSql(
                     comboBoxKumiOrderDateExpr.SelectedItem.ToString()),
-                    dateTimePickerKumiOrderDate.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
+                    dateTimePickerKumiOrderDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
             }
             if (checkBoxIDTenancyEnable.Checked)
                 included_processes = DataModelHelper.Intersect(included_processes, new List<int>() { Convert.ToInt32(numericUpDownIDTenancy.Value) });
@@ -202,7 +202,7 @@ namespace Registry.SearchForms
                     filter += " AND ";
                 filter += "id_process IN (0";
                 foreach (int id in included_processes)
-                    filter += id.ToString(CultureInfo.CurrentCulture) + ",";
+                    filter += id.ToString(CultureInfo.InvariantCulture) + ",";
                 filter = filter.TrimEnd(new char[] { ',' }) + ")";
             }
             return filter;

@@ -46,7 +46,7 @@ namespace Registry.Viewport
             : base(menuCallback)
         {
             InitializeComponent();
-            snapshot_executors.Locale = CultureInfo.CurrentCulture;
+            snapshot_executors.Locale = CultureInfo.InvariantCulture;
         }
 
         public ExecutorsViewport(ExecutorsViewport executorsViewport, IMenuCallback menuCallback)
@@ -448,7 +448,11 @@ namespace Registry.Viewport
         void v_snapshot_executors_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
         }
 
         private void InitializeComponent()

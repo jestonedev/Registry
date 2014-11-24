@@ -57,8 +57,8 @@ namespace Registry.Viewport
             : base(menuCallback)
         {
             InitializeComponent();
-            snapshot_claim_state_types.Locale = CultureInfo.CurrentCulture;
-            snapshot_claim_state_types_relations.Locale = CultureInfo.CurrentCulture;
+            snapshot_claim_state_types.Locale = CultureInfo.InvariantCulture;
+            snapshot_claim_state_types_relations.Locale = CultureInfo.InvariantCulture;
         }
 
         public ClaimStateTypesViewport(ClaimStateTypesViewport claimStateTypesViewport, IMenuCallback menuCallback)
@@ -186,7 +186,8 @@ namespace Registry.Viewport
             for (int i = 0; i < snapshot_claim_state_types_relations.Rows.Count; i++)
             {
                 DataRow row = snapshot_claim_state_types_relations.Rows[i];
-                if (Convert.ToBoolean(row["checked"], CultureInfo.CurrentCulture) == false)
+                if (row["checked"] == DBNull.Value || 
+                    (Convert.ToBoolean(row["checked"], CultureInfo.InvariantCulture) != true))
                     continue;
                 ClaimStateTypeRelation cstr = new ClaimStateTypeRelation();
                 cstr.IdRelation = ViewportHelper.ValueOrNull<int>(row, "id_relation");
@@ -274,7 +275,7 @@ namespace Registry.Viewport
 
             // Инициализируем snapshot-модель relations
             snapshot_claim_state_types_relations = new DataTable("snapshot_claim_state_types_relations");
-            snapshot_claim_state_types_relations.Locale = CultureInfo.CurrentCulture;
+            snapshot_claim_state_types_relations.Locale = CultureInfo.InvariantCulture;
             snapshot_claim_state_types_relations.Columns.Add("id_relation").DataType = typeof(int);
             snapshot_claim_state_types_relations.Columns.Add("id_state_from").DataType = typeof(int);
             snapshot_claim_state_types_relations.Columns.Add("id_state_to").DataType = typeof(int);
@@ -430,9 +431,9 @@ namespace Registry.Viewport
                     claim_state_types.Select().Rows.Find(((ClaimStateType)list[i]).IdStateType).Delete();
                     //Рекурсивно удаляем зависимости из снапшот-модели
                     for (int j = snapshot_claim_state_types_relations.Rows.Count - 1; j >= 0; j--)
-                        if (Convert.ToInt32(snapshot_claim_state_types_relations.Rows[j]["id_state_from"], CultureInfo.CurrentCulture) == 
+                        if (Convert.ToInt32(snapshot_claim_state_types_relations.Rows[j]["id_state_from"], CultureInfo.InvariantCulture) == 
                                 ((ClaimStateType)list[i]).IdStateType ||
-                            Convert.ToInt32(snapshot_claim_state_types_relations.Rows[j]["id_state_to"], CultureInfo.CurrentCulture) == 
+                            Convert.ToInt32(snapshot_claim_state_types_relations.Rows[j]["id_state_to"], CultureInfo.InvariantCulture) == 
                                 ((ClaimStateType)list[i]).IdStateType)
                             snapshot_claim_state_types_relations.Rows[j].Delete();
                 }
@@ -471,7 +472,7 @@ namespace Registry.Viewport
                     if ((row["id_relation"] != DBNull.Value) &&
                         !String.IsNullOrEmpty(row["id_relation"].ToString()) &&
                         ((int)row["id_relation"] == list_relations[i].IdRelation) &&
-                        (Convert.ToBoolean(row["checked"], CultureInfo.CurrentCulture) == true))
+                        (Convert.ToBoolean(row["checked"], CultureInfo.InvariantCulture) == true))
                         row_index = j;
                 }
                 if (row_index == -1)
@@ -484,9 +485,9 @@ namespace Registry.Viewport
                     claim_state_types_relations.Select().Rows.Find(((ClaimStateTypeRelation)list_relations[i]).IdRelation).Delete();
                 }
             }
-            sync_views = true;
+            sync_views = true; 
             dataGridViewClaimStateTypesFrom.RowCount = v_claim_state_types_from.Count;
-            dataGridViewClaimStateTypesFrom.Refresh();
+            dataGridViewClaimStateTypesFrom.Refresh();          
             MenuCallback.EditingStateUpdate();
         }
 
@@ -550,7 +551,11 @@ namespace Registry.Viewport
         void v_snapshot_claim_state_types_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
             dataGridViewClaimStateTypesFrom.InvalidateColumn(dataGridViewClaimStateTypesFrom.Columns["state_type_checked"].Index);
         }
 
@@ -586,11 +591,11 @@ namespace Registry.Viewport
             if (v_claim_state_types_from.Count <= e.RowIndex || v_claim_state_types_from.Count == 0 ||
                 v_snapshot_claim_state_types.Position == -1) return;
             int id_state_type = Convert.ToInt32(
-                ((DataRowView)v_snapshot_claim_state_types[v_snapshot_claim_state_types.Position])["id_state_type"], CultureInfo.CurrentCulture);
+                ((DataRowView)v_snapshot_claim_state_types[v_snapshot_claim_state_types.Position])["id_state_type"], CultureInfo.InvariantCulture);
             DataRowView row = ((DataRowView)v_claim_state_types_from[e.RowIndex]);
             int row_count = (from rel_row in snapshot_claim_state_types_relations.AsEnumerable()
-                             where rel_row.Field<int>("id_state_from") == (int)row["id_state_type"]  &&
-                                rel_row.Field<int>("id_state_to") == id_state_type &&
+                             where rel_row.Field<int?>("id_state_from") == (int)row["id_state_type"]  &&
+                                rel_row.Field<int?>("id_state_to") == id_state_type &&
                                 rel_row.Field<bool>("checked") == true
                              select rel_row).Count();
                 v_snapshot_claim_state_types_relations.Find("id_state_to", id_state_type);
@@ -615,7 +620,7 @@ namespace Registry.Viewport
         {
             if (v_claim_state_types_from.Count <= e.RowIndex || v_claim_state_types_from.Count == 0) return;
             int id_state_type = Convert.ToInt32(
-                ((DataRowView)v_snapshot_claim_state_types[v_snapshot_claim_state_types.Position])["id_state_type"], CultureInfo.CurrentCulture);
+                ((DataRowView)v_snapshot_claim_state_types[v_snapshot_claim_state_types.Position])["id_state_type"], CultureInfo.InvariantCulture);
             DataRowView row = ((DataRowView)v_claim_state_types_from[e.RowIndex]);
             var rows = from rel_row in snapshot_claim_state_types_relations.AsEnumerable()
                        where rel_row.Field<int>("id_state_from") == (int)row["id_state_type"] &&
@@ -648,8 +653,8 @@ namespace Registry.Viewport
                            where rel_row.Field<int>("id_state_from") == (int)e.Row["id_state_from"] &&
                             rel_row.Field<int>("id_state_to") == (int)e.Row["id_state_to"]
                            select rel_row;
-                foreach (DataRow row in rows)
-                    row.Delete();
+                for (int i = (rows.Count() - 1); i >= 0; i--)
+                    rows.ElementAt(i).Delete();
                 dataGridViewClaimStateTypesFrom.InvalidateColumn(dataGridViewClaimStateTypesFrom.Columns["state_type_checked"].Index);
             }
         }
@@ -679,7 +684,11 @@ namespace Registry.Viewport
             {
                 int row_index = v_snapshot_claim_state_types.Find("id_state_type", e.Row["id_state_type"]);
                 if (row_index != -1)
+                {
                     ((DataRowView)v_snapshot_claim_state_types[row_index]).Delete();
+                    dataGridViewClaimStateTypesFrom.RowCount = v_claim_state_types_from.Count;
+                    dataGridViewClaimStateTypesFrom.Invalidate();
+                }
             }
         }
 
@@ -695,6 +704,7 @@ namespace Registry.Viewport
                     DataRowView row = ((DataRowView)v_snapshot_claim_state_types[row_index]);
                     row["state_type"] = e.Row["state_type"];
                     row["is_start_state_type"] = e.Row["is_start_state_type"];
+                    dataGridViewClaimStateTypesFrom.Invalidate();
                 }
             }
             else
@@ -705,6 +715,8 @@ namespace Registry.Viewport
                         e.Row["state_type"], 
                         e.Row["is_start_state_type"]
                     });
+                    dataGridViewClaimStateTypesFrom.RowCount = v_claim_state_types_from.Count;
+                    dataGridViewClaimStateTypesFrom.Invalidate();
                 }
         }
 

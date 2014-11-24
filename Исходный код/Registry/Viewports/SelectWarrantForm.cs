@@ -29,7 +29,7 @@ namespace Registry.Viewport
                 if (v_warrants.Position == -1)
                     return null;
                 else
-                    return Convert.ToInt32(((DataRowView)v_warrants[v_warrants.Position])["id_warrant"], CultureInfo.CurrentCulture);
+                    return Convert.ToInt32(((DataRowView)v_warrants[v_warrants.Position])["id_warrant"], CultureInfo.InvariantCulture);
             }
         }
 
@@ -69,13 +69,13 @@ namespace Registry.Viewport
             string filter = "";
             if (!String.IsNullOrEmpty(textBoxRegNumber.Text.Trim()))
             {
-                filter += String.Format(CultureInfo.CurrentCulture, "registration_num LIKE '{0}%'", textBoxRegNumber.Text.Trim());
+                filter += String.Format(CultureInfo.InvariantCulture, "registration_num LIKE '{0}%'", textBoxRegNumber.Text.Trim());
             }
             if (dateTimePickerDate.Checked)
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "registration_date = '{0}'", dateTimePickerDate.Value.Date);
+                filter += String.Format(CultureInfo.InvariantCulture, "registration_date = '{0}'", dateTimePickerDate.Value.Date);
             }
             v_warrants.Filter = filter;
         }

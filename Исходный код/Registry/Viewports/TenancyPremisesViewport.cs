@@ -151,7 +151,7 @@ namespace Registry.Viewport
             for (int i = 0; i < snapshot_tenancy_premises.Rows.Count; i++)
             {
                 DataRow row = snapshot_tenancy_premises.Rows[i];
-                if (Convert.ToBoolean(row["is_checked"], CultureInfo.CurrentCulture) == false)
+                if (Convert.ToBoolean(row["is_checked"], CultureInfo.InvariantCulture) == false)
                     continue;
                 TenancyObject to = new TenancyObject();
                 to.IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
@@ -257,7 +257,7 @@ namespace Registry.Viewport
 
             // Инициализируем snapshot-модель
             snapshot_tenancy_premises = new DataTable("selected_premises");
-            snapshot_tenancy_premises.Locale = CultureInfo.CurrentCulture;
+            snapshot_tenancy_premises.Locale = CultureInfo.InvariantCulture;
             snapshot_tenancy_premises.Columns.Add("id_assoc").DataType = typeof(int);
             snapshot_tenancy_premises.Columns.Add("id_premises").DataType = typeof(int);
             snapshot_tenancy_premises.Columns.Add("is_checked").DataType = typeof(bool);
@@ -486,7 +486,7 @@ namespace Registry.Viewport
                     if ((row["id_assoc"] != DBNull.Value) &&
                         !String.IsNullOrEmpty(row["id_assoc"].ToString()) &&
                         ((int)row["id_assoc"] == list[i].IdAssoc) &&
-                        (Convert.ToBoolean(row["is_checked"], CultureInfo.CurrentCulture) == true))
+                        (Convert.ToBoolean(row["is_checked"], CultureInfo.InvariantCulture) == true))
                         row_index = j;
                 }
                 if (row_index == -1)
@@ -499,7 +499,7 @@ namespace Registry.Viewport
                     int snapshot_row_index = -1;
                     for (int j = 0; j < v_snapshot_tenancy_premises.Count; j++)
                         if (((DataRowView)v_snapshot_tenancy_premises[j])["id_assoc"] != DBNull.Value &&
-                            Convert.ToInt32(((DataRowView)v_snapshot_tenancy_premises[j])["id_assoc"], CultureInfo.CurrentCulture) == list[i].IdAssoc)
+                            Convert.ToInt32(((DataRowView)v_snapshot_tenancy_premises[j])["id_assoc"], CultureInfo.InvariantCulture) == list[i].IdAssoc)
                             snapshot_row_index = j;
                     if (snapshot_row_index != -1)
                     {
@@ -658,7 +658,7 @@ namespace Registry.Viewport
                 return;
             }
             ShowAssocViewport(MenuCallback, viewportType,
-                "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"], CultureInfo.CurrentCulture),
+                "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"], CultureInfo.InvariantCulture),
                 ((DataRowView)v_premises[v_premises.Position]).Row,
                 ParentTypeEnum.Premises);
         }
@@ -681,14 +681,18 @@ namespace Registry.Viewport
                 dataGridView.CurrentCell = dataGridView.Rows[v_premises.Position].Cells[0];
             }
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
         }
 
         void TenancyPremisesViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
             if (!sync_views)
                 return;
-            if (Convert.ToInt32(e.Row["id_process"], CultureInfo.CurrentCulture) != Convert.ToInt32(ParentRow["id_process"], CultureInfo.CurrentCulture))
+            if (Convert.ToInt32(e.Row["id_process"], CultureInfo.InvariantCulture) != Convert.ToInt32(ParentRow["id_process"], CultureInfo.InvariantCulture))
                 return;
             if (e.Action == DataRowAction.Delete)
             {
@@ -703,7 +707,8 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            if (Convert.ToInt32(e.Row["id_process"], CultureInfo.CurrentCulture) != Convert.ToInt32(ParentRow["id_process"], CultureInfo.CurrentCulture))
+            if (e.Row["id_process"] == DBNull.Value || 
+                Convert.ToInt32(e.Row["id_process"], CultureInfo.InvariantCulture) != Convert.ToInt32(ParentRow["id_process"], CultureInfo.InvariantCulture))
                 return;
             if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
             {
@@ -789,10 +794,10 @@ namespace Registry.Viewport
         {
             if (dataGridView.Columns[e.ColumnIndex].Name == "image")
             {
-                if (id_expanded != Convert.ToInt32(((DataRowView)v_premises[e.RowIndex])["id_premises"], CultureInfo.CurrentCulture))
+                if (id_expanded != Convert.ToInt32(((DataRowView)v_premises[e.RowIndex])["id_premises"], CultureInfo.InvariantCulture))
                 {
                     dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = Registry.Viewport.Properties.Resource.minus;
-                    id_expanded = Convert.ToInt32(((DataRowView)v_premises[e.RowIndex])["id_premises"], CultureInfo.CurrentCulture);
+                    id_expanded = Convert.ToInt32(((DataRowView)v_premises[e.RowIndex])["id_premises"], CultureInfo.InvariantCulture);
                     dataGridView.ExpandDetails(e.RowIndex);
                 }
                 else
@@ -838,7 +843,7 @@ namespace Registry.Viewport
         void dataGridView_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)
         {
             if (v_premises.Count <= e.RowIndex || v_premises.Count == 0) return;
-            int id_premises = Convert.ToInt32(((DataRowView)v_premises[e.RowIndex])["id_premises"], CultureInfo.CurrentCulture);
+            int id_premises = Convert.ToInt32(((DataRowView)v_premises[e.RowIndex])["id_premises"], CultureInfo.InvariantCulture);
             int row_index = v_snapshot_tenancy_premises.Find("id_premises", id_premises);
             double value = 0;
             sync_views = false;
@@ -876,7 +881,7 @@ namespace Registry.Viewport
         void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (v_premises.Count <= e.RowIndex || v_premises.Count == 0) return;
-            int id_premises = Convert.ToInt32(((DataRowView)v_premises[e.RowIndex])["id_premises"], CultureInfo.CurrentCulture);
+            int id_premises = Convert.ToInt32(((DataRowView)v_premises[e.RowIndex])["id_premises"], CultureInfo.InvariantCulture);
             int row_index = v_snapshot_tenancy_premises.Find("id_premises", id_premises);
             DataRowView row = ((DataRowView)v_premises[e.RowIndex]);
             switch (this.dataGridView.Columns[e.ColumnIndex].Name)

@@ -115,7 +115,7 @@ namespace Registry.Viewport
                 return;
             for (int i = 0; i < dataGridViewTenancyPersons.Rows.Count; i++)
                 if (((DataRowView)v_tenancy_persons[i])["id_kinship"] != DBNull.Value &&
-                    Convert.ToInt32(((DataRowView)v_tenancy_persons[i])["id_kinship"], CultureInfo.CurrentCulture) == 1)
+                    Convert.ToInt32(((DataRowView)v_tenancy_persons[i])["id_kinship"], CultureInfo.InvariantCulture) == 1)
                     dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
                 else
                     dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.White;
@@ -277,10 +277,10 @@ namespace Registry.Viewport
                 int row_index = v_warrants.Find("id_warrant", id_warrant);
                 if (row_index == -1)
                     return null;
-                DateTime registration_date = Convert.ToDateTime(((DataRowView)v_warrants[row_index])["registration_date"], CultureInfo.CurrentCulture);
+                DateTime registration_date = Convert.ToDateTime(((DataRowView)v_warrants[row_index])["registration_date"], CultureInfo.InvariantCulture);
                 string registration_num = ((DataRowView)v_warrants[row_index])["registration_num"].ToString();
-                return String.Format(CultureInfo.CurrentCulture, "№ {0} от {1}",
-                    registration_num, registration_date.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
+                return String.Format(CultureInfo.InvariantCulture, "№ {0} от {1}",
+                    registration_num, registration_date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
             }
         }
 
@@ -288,7 +288,7 @@ namespace Registry.Viewport
         {
             if ((v_tenancy_agreements.Position > -1) && ((DataRowView)v_tenancy_agreements[v_tenancy_agreements.Position])["id_warrant"] != DBNull.Value)
             {
-                id_warrant = Convert.ToInt32(((DataRowView)v_tenancy_agreements[v_tenancy_agreements.Position])["id_warrant"], CultureInfo.CurrentCulture);
+                id_warrant = Convert.ToInt32(((DataRowView)v_tenancy_agreements[v_tenancy_agreements.Position])["id_warrant"], CultureInfo.InvariantCulture);
                 textBoxAgreementWarrant.Text =
                     WarrantStringByID(id_warrant.Value);
                 vButtonSelectWarrant.Text = "x";
@@ -460,7 +460,7 @@ namespace Registry.Viewport
             DataSet ds = DataSetManager.DataSet;
 
             if ((ParentType == ParentTypeEnum.Tenancy) && (ParentRow != null))
-                this.Text = String.Format(CultureInfo.CurrentCulture, "Соглашения найма №{0}", ParentRow["id_process"].ToString());
+                this.Text = String.Format(CultureInfo.InvariantCulture, "Соглашения найма №{0}", ParentRow["id_process"].ToString());
             else
                 throw new ViewportException("Неизвестный тип родительского объекта");
 
@@ -623,10 +623,10 @@ namespace Registry.Viewport
             if (index != -1)
                 comboBoxExecutor.SelectedValue = ((DataRowView)v_executors[index])["id_executor"];
             if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
-                textBoxAgreementContent.Text = String.Format(CultureInfo.CurrentCulture, "1.1 По настоящему Соглашению Стороны по договору № {0} от {1} договорились",
+                textBoxAgreementContent.Text = String.Format(CultureInfo.InvariantCulture, "1.1 По настоящему Соглашению Стороны по договору № {0} от {1} договорились",
                     ParentRow["registration_num"].ToString(),
                     ParentRow["registration_date"] != DBNull.Value ?
-                        Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.CurrentCulture).ToString("dd.MM.yyyy", CultureInfo.CurrentCulture) : "");
+                        Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "");
             is_editable = true;
             tenancy_agreements.EditingNewRecord = true;
         }
@@ -696,7 +696,7 @@ namespace Registry.Viewport
                     "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (!DataModelHelper.TenancyProcessHasTenant(Convert.ToInt32(ParentRow["id_process"], CultureInfo.CurrentCulture)))
+            if (!DataModelHelper.TenancyProcessHasTenant(Convert.ToInt32(ParentRow["id_process"], CultureInfo.InvariantCulture)))
             {
                 MessageBox.Show("Для формирования отчетной документации необходимо указать нанимателя процесса найма", 
                     "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -821,7 +821,7 @@ namespace Registry.Viewport
                     }
             }
 
-            string element = String.Format(CultureInfo.CurrentCulture, "№ соглашения {0}.", textBoxTerminateAgreement.Text);
+            string element = String.Format(CultureInfo.InvariantCulture, "№ соглашения {0}.", textBoxTerminateAgreement.Text);
             if (header_index == -1)
             {
                 contentList.Add("\u200Bрасторгнуть:");
@@ -866,7 +866,7 @@ namespace Registry.Viewport
                     }
             }
 
-            string element = String.Format(CultureInfo.CurrentCulture, "подпункт {0}. {1}", textBoxExplainPoint.Text, textBoxExplainContent.Text.Trim());
+            string element = String.Format(CultureInfo.InvariantCulture, "подпункт {0}. {1}", textBoxExplainPoint.Text, textBoxExplainContent.Text.Trim());
             if (header_index == -1)
             {
                 contentList.Add("\u200Bизложить в новой редакции:");
@@ -919,7 +919,7 @@ namespace Registry.Viewport
             }
 
             string kinship = ((DataRowView)comboBoxIncludeKinship.SelectedItem)["kinship"].ToString();
-            string element = String.Format(CultureInfo.CurrentCulture, "подпункт {0}. {1} - {2}, {3} г.р.", textBoxIncludePoint.Text,
+            string element = String.Format(CultureInfo.InvariantCulture, "подпункт {0}. {1} - {2}, {3} г.р.", textBoxIncludePoint.Text,
                 textBoxIncludeSNP.Text.Trim(),
                 kinship,
                 dateTimePickerIncludeDateOfBirth.Value);
@@ -968,13 +968,13 @@ namespace Registry.Viewport
 
             string kinship = tenancyPerson["id_kinship"] != DBNull.Value ?
                 ((DataRowView)v_kinships[v_kinships.Find("id_kinship", tenancyPerson["id_kinship"])])["kinship"].ToString() : "";
-            string element = String.Format(CultureInfo.CurrentCulture, "подпункт {0}. {1} {2} {3} - {4}, {5} г.р.", textBoxExcludePoint.Text,
+            string element = String.Format(CultureInfo.InvariantCulture, "подпункт {0}. {1} {2} {3} - {4}, {5} г.р.", textBoxExcludePoint.Text,
                 tenancyPerson["surname"].ToString(),
                 tenancyPerson["name"].ToString(),
                 tenancyPerson["patronymic"].ToString(),
                 kinship,
                 tenancyPerson["date_of_birth"] != DBNull.Value ?
-                    Convert.ToDateTime(tenancyPerson["date_of_birth"], CultureInfo.CurrentCulture).ToString("dd.MM.yyyy", CultureInfo.CurrentCulture) : "");
+                    Convert.ToDateTime(tenancyPerson["date_of_birth"], CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "");
             if (header_index == -1)
             {
                 contentList.Add("\u200Bисключить:");
@@ -997,7 +997,11 @@ namespace Registry.Viewport
                     if (dataGridView.Rows[v_tenancy_agreements.Position].Selected != true)
                         dataGridView.Rows[v_tenancy_agreements.Position].Selected = true;
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
             BindWarrantID();
             if (v_tenancy_agreements.Position == -1)
                 return;

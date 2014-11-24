@@ -75,7 +75,7 @@ namespace Registry.SearchForms
                     filter += " AND ";
                 filter += "id_process IN (0";
                 foreach (int id in included_processes)
-                    filter += id.ToString(CultureInfo.CurrentCulture) + ",";
+                    filter += id.ToString(CultureInfo.InvariantCulture) + ",";
                 filter = filter.TrimEnd(new char[] { ',' }) + ")";
             }
             return filter;

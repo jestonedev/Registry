@@ -90,7 +90,7 @@ namespace Registry.Viewport
             if ((v_claim_states.Position == 0) && (v_claim_states.Count > 1))
             {
                 int next_claim_state_type = Convert.ToInt32(
-                    ((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.CurrentCulture);
+                    ((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.InvariantCulture);
                 included_states = DataModelHelper.ClaimStateTypeIdsByNextStateType(next_claim_state_type);
             }
             else
@@ -98,7 +98,7 @@ namespace Registry.Viewport
             if ((v_claim_states.Position != -1) && (v_claim_states.Position == (v_claim_states.Count - 1)))
             {
                 int prev_claim_state_type = Convert.ToInt32(
-                    ((DataRowView)v_claim_states[v_claim_states.Position - 1])["id_state_type"], CultureInfo.CurrentCulture);
+                    ((DataRowView)v_claim_states[v_claim_states.Position - 1])["id_state_type"], CultureInfo.InvariantCulture);
                 included_states = DataModelHelper.ClaimStateTypeIdsByPrevStateType(prev_claim_state_type);
             }
             else
@@ -106,9 +106,9 @@ namespace Registry.Viewport
             if (v_claim_states.Position != -1)
             {
                 int prev_claim_state_type = 
-                    Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position - 1])["id_state_type"], CultureInfo.CurrentCulture);
+                    Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position - 1])["id_state_type"], CultureInfo.InvariantCulture);
                 int next_claim_state_type = 
-                    Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.CurrentCulture);
+                    Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.InvariantCulture);
                 included_states = DataModelHelper.ClaimStateTypeIdsByNextAndPrevStateTypes(next_claim_state_type, prev_claim_state_type); 
             }
             if (included_states != null)
@@ -117,7 +117,7 @@ namespace Registry.Viewport
                     filter += " AND ";
                 filter += "id_state_type IN (0";
                 foreach (int id in included_states)
-                    filter += id.ToString(CultureInfo.CurrentCulture) + ",";
+                    filter += id.ToString(CultureInfo.InvariantCulture) + ",";
                 filter = filter.TrimEnd(new char[] { ',' }) + ")";
             }
             v_claim_state_types.Filter = filter;
@@ -463,7 +463,7 @@ namespace Registry.Viewport
             DataSet ds = DataSetManager.DataSet;
 
             if (ParentType == ParentTypeEnum.Claim && ParentRow != null)
-                this.Text = String.Format(CultureInfo.CurrentCulture, "Состояния иск. работы №{0}", ParentRow["id_claim"]);
+                this.Text = String.Format(CultureInfo.InvariantCulture, "Состояния иск. работы №{0}", ParentRow["id_claim"]);
             else
                 throw new ViewportException("Неизвестный тип родительского объекта");
 
@@ -604,9 +604,9 @@ namespace Registry.Viewport
                 if ((v_claim_states.Position == 0) && (v_claim_states.Count > 1))
                 {
                     int next_claim_state_type = 
-                        Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.CurrentCulture);
+                        Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.InvariantCulture);
                     stateCount = (from claim_state_types_row in DataModelHelper.FilterRows(claim_state_types.Select())
-                                  where Convert.ToBoolean(claim_state_types_row.Field<object>("is_start_state_type"), CultureInfo.CurrentCulture) &&
+                                  where Convert.ToBoolean(claim_state_types_row.Field<object>("is_start_state_type"), CultureInfo.InvariantCulture) &&
                                         (claim_state_types_row.Field<int>("id_state_type") == next_claim_state_type)
                                     select claim_state_types_row.Field<int>("id_state_type")).Count();
                 }
@@ -615,9 +615,9 @@ namespace Registry.Viewport
                     if ((v_claim_states.Position != -1) && (v_claim_states.Position != (v_claim_states.Count - 1)))
                     {
                         int previos_claim_state_type = 
-                            Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position - 1])["id_state_type"], CultureInfo.CurrentCulture);
+                            Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position - 1])["id_state_type"], CultureInfo.InvariantCulture);
                         int next_claim_state_type = 
-                            Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.CurrentCulture);
+                            Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.InvariantCulture);
                         stateCount = (from claim_state_types_rel_row in DataModelHelper.FilterRows(claim_state_types_relations.Select())
                                            where claim_state_types_rel_row.Field<int>("id_state_from") == previos_claim_state_type &&
                                                  claim_state_types_rel_row.Field<int>("id_state_to") == next_claim_state_type
@@ -731,7 +731,11 @@ namespace Registry.Viewport
                     if (dataGridView.Rows[v_claim_states.Position].Selected != true)
                         dataGridView.Rows[v_claim_states.Position].Selected = true;
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
             UnbindedCheckBoxesUpdate();
             RebuildFilter();
             if (v_claim_states.Position == -1)

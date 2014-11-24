@@ -178,7 +178,7 @@ namespace Registry.Viewport
             {
                 if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
                 {
-                    this.Text = String.Format(CultureInfo.CurrentCulture, "Новое помещение здания №{0}", ParentRow["id_building"]);
+                    this.Text = String.Format(CultureInfo.InvariantCulture, "Новое помещение здания №{0}", ParentRow["id_building"]);
                 }
                 else
                     this.Text = "Новое помещение";
@@ -187,15 +187,15 @@ namespace Registry.Viewport
                 if (v_premises.Position != -1)
                 {
                     if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                        this.Text = String.Format(CultureInfo.CurrentCulture, "Помещение №{0} здания №{1}",
+                        this.Text = String.Format(CultureInfo.InvariantCulture, "Помещение №{0} здания №{1}",
                             ((DataRowView)v_premises[v_premises.Position])["id_premises"], ParentRow["id_building"]);
                     else
-                        this.Text = String.Format(CultureInfo.CurrentCulture, "Помещение №{0}", ((DataRowView)v_premises[v_premises.Position])["id_premises"]);
+                        this.Text = String.Format(CultureInfo.InvariantCulture, "Помещение №{0}", ((DataRowView)v_premises[v_premises.Position])["id_premises"]);
                 }
                 else
                 {
                     if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                        this.Text = String.Format(CultureInfo.CurrentCulture, "Помещения в здании №{0} отсутствуют", ParentRow["id_building"]);
+                        this.Text = String.Format(CultureInfo.InvariantCulture, "Помещения в здании №{0} отсутствуют", ParentRow["id_building"]);
                     else
                         this.Text = "Помещения отсутствуют";
                 }
@@ -221,10 +221,10 @@ namespace Registry.Viewport
             {
                 int? id_building = null;
                 if ((v_premises.Position != -1) && (((DataRowView)v_premises[v_premises.Position])["id_building"] != DBNull.Value))
-                    id_building = Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_building"], CultureInfo.CurrentCulture);
+                    id_building = Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_building"], CultureInfo.InvariantCulture);
                 else 
                 if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                    id_building = Convert.ToInt32(ParentRow["id_building"], CultureInfo.CurrentCulture);
+                    id_building = Convert.ToInt32(ParentRow["id_building"], CultureInfo.InvariantCulture);
                 string id_street = null;
                 if (id_building != null)
                 {
@@ -909,10 +909,10 @@ namespace Registry.Viewport
                     FillRowFromPremise(premise, newRow);
                     premises.EditingNewRecord = false;
                     if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                        this.Text = String.Format(CultureInfo.CurrentCulture, "Помещение №{0} здания №{1}",
-                            id_premise.ToString(CultureInfo.CurrentCulture), ParentRow["id_building"]);
+                        this.Text = String.Format(CultureInfo.InvariantCulture, "Помещение №{0} здания №{1}",
+                            id_premise.ToString(CultureInfo.InvariantCulture), ParentRow["id_building"]);
                     else
-                        this.Text = String.Format(CultureInfo.CurrentCulture, "Помещение №{0}", id_premise.ToString(CultureInfo.CurrentCulture));
+                        this.Text = String.Format(CultureInfo.InvariantCulture, "Помещение №{0}", id_premise.ToString(CultureInfo.InvariantCulture));
                     viewportState = ViewportState.ReadState;
                     is_editable = true;
                     break;
@@ -1057,7 +1057,7 @@ namespace Registry.Viewport
                 return;
             }
             ShowAssocViewport(MenuCallback, viewportType,
-                "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"], CultureInfo.CurrentCulture),
+                "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"], CultureInfo.InvariantCulture),
                 ((DataRowView)v_premises[v_premises.Position]).Row,
                 ParentTypeEnum.Premises);
         }
@@ -1248,7 +1248,11 @@ namespace Registry.Viewport
             FiltersRebuild();
             SelectCurrentBuilding();
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
             if (v_premises.Position == -1)
                 return;
             if (viewportState == ViewportState.NewRowState)
@@ -1832,9 +1836,9 @@ namespace Registry.Viewport
             this.label38.AutoSize = true;
             this.label38.Location = new System.Drawing.Point(16, 154);
             this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(119, 15);
+            this.label38.Size = new System.Drawing.Size(90, 15);
             this.label38.TabIndex = 2;
-            this.label38.Text = "Текущий тип найма";
+            this.label38.Text = "Текущий фонд";
             // 
             // comboBoxCurrentFundType
             // 

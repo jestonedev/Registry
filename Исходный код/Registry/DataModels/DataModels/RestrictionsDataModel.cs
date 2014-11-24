@@ -89,15 +89,15 @@ namespace Registry.DataModels
                     }
                     command_assoc.Parameters.Add(DBConnection.CreateParameter<int?>("id_object", idParent));
                     command_assoc.Parameters.Add(DBConnection.CreateParameter<int?>("id_restriction", 
-                        Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture)));
+                        Convert.ToInt32(last_id.Rows[0][0], CultureInfo.InvariantCulture)));
                     connection.SqlModifyQuery(command_assoc);
                     connection.SqlCommitTransaction();
-                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
+                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.InvariantCulture);
                 }
                 catch (OdbcException e)
                 {
                     connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
                         "Не удалось добавить наименование реквизита в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
@@ -129,7 +129,7 @@ namespace Registry.DataModels
                 catch (OdbcException e)
                 {
                     connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
                         "Не удалось изменить наименование реквизита в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
@@ -150,7 +150,7 @@ namespace Registry.DataModels
                 }
                 catch (OdbcException e)
                 {
-                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
                         "Не удалось удалить реквизит из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;

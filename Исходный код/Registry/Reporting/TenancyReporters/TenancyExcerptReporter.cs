@@ -20,8 +20,8 @@ namespace Registry.Reporting.TenancyReporters
                 if (tesForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     arguments.Add("is_culture_memorial", tesForm.IsCultureMemorial.ToString());
-                    arguments.Add("registry_insert_date", tesForm.RegistryInsertDate.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
-                    arguments.Add("excerpt_date_from", tesForm.ExcerptDateFrom.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
+                    arguments.Add("registry_insert_date", tesForm.RegistryInsertDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
+                    arguments.Add("excerpt_date_from", tesForm.ExcerptDateFrom.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
                     arguments.Add("excerpt_number", tesForm.ExcerptNumber);
                     base.Run(arguments);
                 }

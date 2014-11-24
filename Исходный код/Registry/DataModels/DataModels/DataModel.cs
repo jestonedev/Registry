@@ -58,7 +58,11 @@ namespace Registry.DataModels
                         context.Post(_ => {
                             progressBar.Value += incrementor;
                             if (progressBar.Value == progressBar.Maximum)
+                            {
                                 progressBar.Visible = false;
+                                //Если мы загрузили все данные, то запускаем CallbackUpdater
+                                DataModelCallbackUpdater.GetInstance().Run();
+                            }
                         }, null);
                     }
                 }
@@ -66,7 +70,7 @@ namespace Registry.DataModels
                 {
                     lock (lock_obj)
                     {
-                        MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                        MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
                             "Произошла ошибка при загрузке данных из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         DMLoadState = DataModelLoadState.ErrorLoad;

@@ -41,7 +41,7 @@ namespace Registry.Viewport
             : base(menuCallback)
         {
             InitializeComponent();
-            snapshot_documents_issued_by.Locale = CultureInfo.CurrentCulture;
+            snapshot_documents_issued_by.Locale = CultureInfo.InvariantCulture;
         }
 
         public DocumentIssuedByViewport(DocumentIssuedByViewport documentIssuedByViewport, IMenuCallback menuCallback)
@@ -399,7 +399,11 @@ namespace Registry.Viewport
         void v_snapshot_documents_issued_by_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
         }
 
         void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)

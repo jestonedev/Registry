@@ -23,7 +23,7 @@ namespace Registry.CalcDataModels
         private static DataTable InitializeTable()
         {
             DataTable table = new DataTable(tableName);
-            table.Locale = CultureInfo.CurrentCulture;
+            table.Locale = CultureInfo.InvariantCulture;
             table.Columns.Add("id_premises").DataType = typeof(int);
             table.Columns.Add("id_fund_type").DataType = typeof(int);
             table.PrimaryKey = new DataColumn[] { table.Columns["id_premises"] };

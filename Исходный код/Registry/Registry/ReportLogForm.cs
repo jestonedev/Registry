@@ -19,7 +19,7 @@ namespace Registry
         public void Log(string text)
         {
             richTextBox1.AppendText((richTextBox1.Lines.Length == 0 ? "" : Environment.NewLine) + 
-                (richTextBox1.Lines.Length + 1).ToString(CultureInfo.CurrentCulture) + ". " + text);
+                (richTextBox1.Lines.Length + 1).ToString(CultureInfo.InvariantCulture) + ". " + text);
         }
 
         private void InitializeComponent()

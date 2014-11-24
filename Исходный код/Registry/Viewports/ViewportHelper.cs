@@ -15,7 +15,7 @@ namespace Registry.Viewport
         {
             typeof(Control).InvokeMember("DoubleBuffered",
             BindingFlags.SetProperty | BindingFlags.Instance | BindingFlags.NonPublic,
-            null, control, new object[] { true }, CultureInfo.CurrentCulture);
+            null, control, new object[] { true }, CultureInfo.InvariantCulture);
         }
 
         internal static DateTime ValueOrDefault(DateTime? value)
@@ -95,7 +95,7 @@ namespace Registry.Viewport
             if (row[property] is DBNull)
                 return null;
             else
-                return (T?)Convert.ChangeType(row[property], typeof(T), CultureInfo.CurrentCulture);
+                return (T?)Convert.ChangeType(row[property], typeof(T), CultureInfo.InvariantCulture);
         }
 
         internal static string ValueOrNull(DataRowView row, string property)
@@ -111,7 +111,7 @@ namespace Registry.Viewport
             if (row[property] is DBNull)
                 return null;
             else
-                return (T?)Convert.ChangeType(row[property], typeof(T), CultureInfo.CurrentCulture);
+                return (T?)Convert.ChangeType(row[property], typeof(T), CultureInfo.InvariantCulture);
         }
 
         internal static string ValueOrNull(DataRow row, string property)
@@ -127,12 +127,18 @@ namespace Registry.Viewport
             if (row.Cells[property].Value is DBNull)
                 return null;
             else
-                return (T?)Convert.ChangeType(row.Cells[property].Value, typeof(T), CultureInfo.CurrentCulture);
+            if (row.Cells[property].Value == null)
+                return null;
+            else
+                return (T?)Convert.ChangeType(row.Cells[property].Value, typeof(T), CultureInfo.InvariantCulture);
         }
 
         internal static string ValueOrNull(DataGridViewRow row, string property)
         {
             if (row.Cells[property].Value is DBNull)
+                return null;
+            else
+            if (row.Cells[property].Value == null)
                 return null;
             else
                 return row.Cells[property].Value.ToString().Trim();

@@ -43,7 +43,7 @@ namespace Registry.Viewport
             : base(menuCallback)
         {
             InitializeComponent();
-            snapshot_reason_types.Locale = CultureInfo.CurrentCulture;
+            snapshot_reason_types.Locale = CultureInfo.InvariantCulture;
         }
 
         public TenancyReasonTypesViewport(TenancyReasonTypesViewport reasonTypesViewport, IMenuCallback menuCallback)
@@ -226,7 +226,7 @@ namespace Registry.Viewport
             v_tenancy_reason_types.DataSource = DataSetManager.DataSet;
 
             //Инициируем колонки snapshot-модели
-            snapshot_reason_types.Locale = CultureInfo.CurrentCulture;
+            snapshot_reason_types.Locale = CultureInfo.InvariantCulture;
             for (int i = 0; i < tenancy_reason_types.Select().Columns.Count; i++)
                 snapshot_reason_types.Columns.Add(new DataColumn(
                     tenancy_reason_types.Select().Columns[i].ColumnName, tenancy_reason_types.Select().Columns[i].DataType));
@@ -460,7 +460,11 @@ namespace Registry.Viewport
         void v_snapshot_reason_types_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
         }
 
         private void InitializeComponent()

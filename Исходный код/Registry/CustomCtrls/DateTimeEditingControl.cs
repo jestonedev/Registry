@@ -33,7 +33,7 @@ namespace CustomControls
                 {
                     try
                     {
-                        this.Value = DateTime.Parse(valueStr, CultureInfo.CurrentCulture);
+                        this.Value = DateTime.Parse(valueStr, CultureInfo.InvariantCulture);
                     }
                     catch(InvalidCastException)
                     {

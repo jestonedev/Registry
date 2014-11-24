@@ -82,38 +82,38 @@ namespace Registry.Reporting
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "SUBSTRING(v.id_street, 1, 13) = '{0}'", comboBoxRegion.SelectedValue.ToString());
+                filter += String.Format(CultureInfo.InvariantCulture, "SUBSTRING(v.id_street, 1, 13) = '{0}'", comboBoxRegion.SelectedValue.ToString());
             }
             if (checkBoxStreetEnable.Checked && (comboBoxStreet.SelectedValue != null))
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "v.id_street = '{0}'", comboBoxStreet.SelectedValue.ToString());
+                filter += String.Format(CultureInfo.InvariantCulture, "v.id_street = '{0}'", comboBoxStreet.SelectedValue.ToString());
             }
             if (checkBoxHouseEnable.Checked && (!String.IsNullOrEmpty(textBoxHouse.Text.Trim())))
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "v.house = '{0}'", textBoxHouse.Text.Trim().Replace("'", ""));
+                filter += String.Format(CultureInfo.InvariantCulture, "v.house = '{0}'", textBoxHouse.Text.Trim().Replace("'", ""));
             }
             if (checkBoxPremisesNumEnable.Checked && (!String.IsNullOrEmpty(textBoxPremisesNum.Text.Trim())))
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "(v.premises_num = '{0}' OR v.sub_premises_num = '{0}')", 
+                filter += String.Format(CultureInfo.InvariantCulture, "(v.premises_num = '{0}' OR v.sub_premises_num = '{0}')", 
                     textBoxPremisesNum.Text.Trim().Replace("'", ""));
             }
             if (checkBoxRentTypeEnable.Checked && (comboBoxRentType.SelectedValue != null))
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "rt.id_rent_type = {0}", comboBoxRentType.SelectedValue.ToString());
+                filter += String.Format(CultureInfo.InvariantCulture, "rt.id_rent_type = {0}", comboBoxRentType.SelectedValue.ToString());
             }
             if (checkBoxReasonTypeEnable.Checked && (comboBoxReasonType.SelectedValue != null))
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "tp.id_process IN (SELECT id_process FROM tenancy_reasons tr WHERE rt.id_rent_type = {0})",
+                filter += String.Format(CultureInfo.InvariantCulture, "tp.id_process IN (SELECT id_process FROM tenancy_reasons tr WHERE rt.id_rent_type = {0})",
                     comboBoxReasonType.SelectedValue.ToString());
             }
             if (dateTimePickerRegistrationFrom.Checked || dateTimePickerRegistrationTo.Checked)
@@ -141,21 +141,21 @@ namespace Registry.Reporting
         {
             if (dateFrom.Checked && dateTo.Checked)
             {
-                return String.Format(CultureInfo.CurrentCulture, "tp.{0} BETWEEN STR_TO_DATE('{1}','%d.%m.%Y') AND STR_TO_DATE('{2}','%d.%m.%Y')",
-                    name, dateFrom.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture), 
-                    dateTo.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
+                return String.Format(CultureInfo.InvariantCulture, "tp.{0} BETWEEN STR_TO_DATE('{1}','%d.%m.%Y') AND STR_TO_DATE('{2}','%d.%m.%Y')",
+                    name, dateFrom.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture), 
+                    dateTo.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
             }
             else
                 if (dateFrom.Checked)
                 {
-                    return String.Format(CultureInfo.CurrentCulture, "tp.{0} >= STR_TO_DATE('{1}','%d.%m.%Y')",
-                    name, dateFrom.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
+                    return String.Format(CultureInfo.InvariantCulture, "tp.{0} >= STR_TO_DATE('{1}','%d.%m.%Y')",
+                    name, dateFrom.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
                 }
                 else
                     if (dateTo.Checked)
                     {
-                        return String.Format(CultureInfo.CurrentCulture, "tp.{0} <= STR_TO_DATE('{1}','%d.%m.%Y')",
-                        name, dateTo.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
+                        return String.Format(CultureInfo.InvariantCulture, "tp.{0} <= STR_TO_DATE('{1}','%d.%m.%Y')",
+                        name, dateTo.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
                     }
             throw new ReporterException("Невозможно построить фильтр для формирования статистики найма");
         }

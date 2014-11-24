@@ -83,7 +83,7 @@ namespace Registry.Reporting
         {
             string argumentsString = "";
             foreach (var argument in arguments)
-                argumentsString += String.Format(CultureInfo.CurrentCulture, "{0}=\"{1}\" ", 
+                argumentsString += String.Format(CultureInfo.InvariantCulture, "{0}=\"{1}\" ", 
                     argument.Key.Replace("\"", "\\\""), 
                     argument.Value.Replace("\"", "\\\""));
             return argumentsString; ;

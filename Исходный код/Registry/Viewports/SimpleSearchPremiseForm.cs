@@ -64,7 +64,7 @@ namespace Registry.SearchForms
                 //по кадастровому номеру
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "cadastral_num = '{0}'", textBoxCriteria.Text.Trim().Replace("'", ""));
+                filter += String.Format(CultureInfo.InvariantCulture, "cadastral_num = '{0}'", textBoxCriteria.Text.Trim().Replace("'", ""));
             }
             if (comboBoxCriteriaType.SelectedIndex == 4)
             {
@@ -78,7 +78,7 @@ namespace Registry.SearchForms
                     filter += " AND ";
                 filter += "id_premises IN (0";
                 foreach (int id in included_premises)
-                    filter += id.ToString(CultureInfo.CurrentCulture) + ",";
+                    filter += id.ToString(CultureInfo.InvariantCulture) + ",";
                 filter = filter.TrimEnd(new char[] { ',' }) + ")";
             }
             return filter;

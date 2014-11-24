@@ -37,18 +37,18 @@ namespace Registry.DataModels
             (from tenancy_buildings_assoc_row in tenancy_buildings_assoc
              join tenancy_persons_row in tenancy_persons
              on tenancy_buildings_assoc_row.Field<int>("id_process") equals tenancy_persons_row.Field<int>("id_process")
-             where ((snp.Count() == 1) ? tenancy_persons_row.Field<string>("surname").ToLower(CultureInfo.CurrentCulture) == 
-                        snp[0].ToLower(CultureInfo.CurrentCulture) :
-                    (snp.Count() == 2) ? tenancy_persons_row.Field<string>("surname").ToLower(CultureInfo.CurrentCulture) == 
-                        snp[0].ToLower(CultureInfo.CurrentCulture) &&
-                    tenancy_persons_row.Field<string>("name").ToLower(CultureInfo.CurrentCulture) == 
-                        snp[1].ToLower(CultureInfo.CurrentCulture) :
-                    (snp.Count() == 3) ? tenancy_persons_row.Field<string>("surname").ToLower(CultureInfo.CurrentCulture) == 
-                        snp[0].ToLower(CultureInfo.CurrentCulture) &&
-                    tenancy_persons_row.Field<string>("name").ToLower(CultureInfo.CurrentCulture) == 
-                        snp[1].ToLower(CultureInfo.CurrentCulture) &&
-                    tenancy_persons_row.Field<string>("patronymic").ToLower(CultureInfo.CurrentCulture) == 
-                        snp[2].ToLower(CultureInfo.CurrentCulture) : false) && condition(tenancy_persons_row)
+             where ((snp.Count() == 1) ? tenancy_persons_row.Field<string>("surname").ToUpperInvariant() == 
+                        snp[0].ToUpperInvariant() :
+                    (snp.Count() == 2) ? tenancy_persons_row.Field<string>("surname").ToUpperInvariant() == 
+                        snp[0].ToUpperInvariant() &&
+                    tenancy_persons_row.Field<string>("name").ToUpperInvariant() == 
+                        snp[1].ToUpperInvariant() :
+                    (snp.Count() == 3) ? tenancy_persons_row.Field<string>("surname").ToUpperInvariant() == 
+                        snp[0].ToUpperInvariant() &&
+                    tenancy_persons_row.Field<string>("name").ToUpperInvariant() == 
+                        snp[1].ToUpperInvariant() &&
+                    tenancy_persons_row.Field<string>("patronymic").ToUpperInvariant() == 
+                        snp[2].ToUpperInvariant() : false) && condition(tenancy_persons_row)
              select tenancy_buildings_assoc_row.Field<int>("id_building")).Distinct();
         }
 
@@ -60,18 +60,18 @@ namespace Registry.DataModels
             (from tenancy_premises_assoc_row in tenancy_premises_assoc
              join tenancy_persons_row in tenancy_persons
              on tenancy_premises_assoc_row.Field<int>("id_process") equals tenancy_persons_row.Field<int>("id_process")
-             where ((snp.Count() == 1) ? tenancy_persons_row.Field<string>("surname").ToLower(CultureInfo.CurrentCulture) == 
-                        snp[0].ToLower(CultureInfo.CurrentCulture) :
-                    (snp.Count() == 2) ? tenancy_persons_row.Field<string>("surname").ToLower(CultureInfo.CurrentCulture) == 
-                        snp[0].ToLower(CultureInfo.CurrentCulture) &&
-                    tenancy_persons_row.Field<string>("name").ToLower(CultureInfo.CurrentCulture) == 
-                        snp[1].ToLower(CultureInfo.CurrentCulture) :
-                    (snp.Count() == 3) ? tenancy_persons_row.Field<string>("surname").ToLower(CultureInfo.CurrentCulture) == 
-                        snp[0].ToLower(CultureInfo.CurrentCulture) &&
-                    tenancy_persons_row.Field<string>("name").ToLower(CultureInfo.CurrentCulture) == 
-                        snp[1].ToLower(CultureInfo.CurrentCulture) &&
-                    tenancy_persons_row.Field<string>("patronymic").ToLower(CultureInfo.CurrentCulture) == 
-                        snp[2].ToLower(CultureInfo.CurrentCulture) : false) && 
+             where ((snp.Count() == 1) ? tenancy_persons_row.Field<string>("surname").ToUpperInvariant() == 
+                        snp[0].ToUpperInvariant() :
+                    (snp.Count() == 2) ? tenancy_persons_row.Field<string>("surname").ToUpperInvariant() == 
+                        snp[0].ToUpperInvariant() &&
+                    tenancy_persons_row.Field<string>("name").ToUpperInvariant() == 
+                        snp[1].ToUpperInvariant() :
+                    (snp.Count() == 3) ? tenancy_persons_row.Field<string>("surname").ToUpperInvariant() == 
+                        snp[0].ToUpperInvariant() &&
+                    tenancy_persons_row.Field<string>("name").ToUpperInvariant() == 
+                        snp[1].ToUpperInvariant() &&
+                    tenancy_persons_row.Field<string>("patronymic").ToUpperInvariant() == 
+                        snp[2].ToUpperInvariant() : false) && 
                     condition(tenancy_persons_row)
              select tenancy_premises_assoc_row.Field<int>("id_premises")).Distinct();
         }
@@ -81,18 +81,18 @@ namespace Registry.DataModels
             var tenancy_persons = DataModelHelper.FilterRows(TenancyPersonsDataModel.GetInstance().Select());
             return
             (from tenancy_persons_row in tenancy_persons
-             where ((snp.Count() == 1) ? tenancy_persons_row.Field<string>("surname").ToLower(CultureInfo.CurrentCulture) == 
-                                                snp[0].ToLower(CultureInfo.CurrentCulture) :
-                    (snp.Count() == 2) ? tenancy_persons_row.Field<string>("surname").ToLower(CultureInfo.CurrentCulture) ==
-                                                snp[0].ToLower(CultureInfo.CurrentCulture) &&
-                    tenancy_persons_row.Field<string>("name").ToLower(CultureInfo.CurrentCulture) == 
-                                                snp[1].ToLower(CultureInfo.CurrentCulture) :
-                    (snp.Count() == 3) ? tenancy_persons_row.Field<string>("surname").ToLower(CultureInfo.CurrentCulture) == 
-                                                snp[0].ToLower(CultureInfo.CurrentCulture) &&
-                    tenancy_persons_row.Field<string>("name").ToLower(CultureInfo.CurrentCulture) == 
-                                                snp[1].ToLower(CultureInfo.CurrentCulture) &&
-                    tenancy_persons_row.Field<string>("patronymic").ToLower(CultureInfo.CurrentCulture) == 
-                                                snp[2].ToLower(CultureInfo.CurrentCulture) : false) && condition(tenancy_persons_row)
+             where ((snp.Count() == 1) ? tenancy_persons_row.Field<string>("surname").ToUpperInvariant() == 
+                                                snp[0].ToUpperInvariant() :
+                    (snp.Count() == 2) ? tenancy_persons_row.Field<string>("surname").ToUpperInvariant() ==
+                                                snp[0].ToUpperInvariant() &&
+                    tenancy_persons_row.Field<string>("name").ToUpperInvariant() == 
+                                                snp[1].ToUpperInvariant() :
+                    (snp.Count() == 3) ? tenancy_persons_row.Field<string>("surname").ToUpperInvariant() == 
+                                                snp[0].ToUpperInvariant() &&
+                    tenancy_persons_row.Field<string>("name").ToUpperInvariant() == 
+                                                snp[1].ToUpperInvariant() &&
+                    tenancy_persons_row.Field<string>("patronymic").ToUpperInvariant() == 
+                                                snp[2].ToUpperInvariant() : false) && condition(tenancy_persons_row)
              select tenancy_persons_row.Field<int>("id_process")).Distinct();
         }
 
@@ -103,12 +103,12 @@ namespace Registry.DataModels
             return (from building_row in buildings
                     join kladr_row in kladr_streets
                     on building_row.Field<string>("id_street") equals kladr_row.Field<string>("id_street")
-                    where (addressParts.Count() == 1) ? kladr_row.Field<string>("street_name").ToLower(CultureInfo.CurrentCulture).
-                                Contains(addressParts[0].ToLower(CultureInfo.CurrentCulture)) :
-                            (addressParts.Count() >= 2) ? kladr_row.Field<string>("street_name").ToLower(CultureInfo.CurrentCulture).
-                                Contains(addressParts[0].ToLower(CultureInfo.CurrentCulture)) &&
-                            building_row.Field<string>("house").ToLower(CultureInfo.CurrentCulture) == 
-                                addressParts[1].ToLower(CultureInfo.CurrentCulture) : false
+                    where (addressParts.Count() == 1) ? kladr_row.Field<string>("street_name").ToUpperInvariant().
+                                Contains(addressParts[0].ToUpperInvariant()) :
+                            (addressParts.Count() >= 2) ? kladr_row.Field<string>("street_name").ToUpperInvariant().
+                                Contains(addressParts[0].ToUpperInvariant()) &&
+                            building_row.Field<string>("house").ToUpperInvariant() == 
+                                addressParts[1].ToUpperInvariant() : false
                     select building_row.Field<int>("id_building"));
         }
 
@@ -122,18 +122,18 @@ namespace Registry.DataModels
                     on premises_row.Field<int>("id_building") equals building_row.Field<int>("id_building")
                     join kladr_row in kladr_streets
                     on building_row.Field<string>("id_street") equals kladr_row.Field<string>("id_street")
-                    where (addressParts.Count() == 1) ? kladr_row.Field<string>("street_name").ToLower(CultureInfo.CurrentCulture).
-                                Contains(addressParts[0].ToLower(CultureInfo.CurrentCulture)) :
-                            (addressParts.Count() == 2) ? kladr_row.Field<string>("street_name").ToLower(CultureInfo.CurrentCulture).
-                                Contains(addressParts[0].ToLower(CultureInfo.CurrentCulture)) &&
-                            building_row.Field<string>("house").ToLower(CultureInfo.CurrentCulture) == 
-                                addressParts[1].ToLower(CultureInfo.CurrentCulture) :
-                            (addressParts.Count() == 3) ? kladr_row.Field<string>("street_name").ToLower(CultureInfo.CurrentCulture).
-                                Contains(addressParts[0].ToLower(CultureInfo.CurrentCulture)) &&
-                            building_row.Field<string>("house").ToLower(CultureInfo.CurrentCulture) == 
-                                addressParts[1].ToLower(CultureInfo.CurrentCulture) &&
-                            premises_row.Field<string>("premises_num").ToLower(CultureInfo.CurrentCulture) == 
-                                addressParts[2].ToLower(CultureInfo.CurrentCulture) : false
+                    where (addressParts.Count() == 1) ? kladr_row.Field<string>("street_name").ToUpperInvariant().
+                                Contains(addressParts[0].ToUpperInvariant()) :
+                            (addressParts.Count() == 2) ? kladr_row.Field<string>("street_name").ToUpperInvariant().
+                                Contains(addressParts[0].ToUpperInvariant()) &&
+                            building_row.Field<string>("house").ToUpperInvariant() == 
+                                addressParts[1].ToUpperInvariant() :
+                            (addressParts.Count() == 3) ? kladr_row.Field<string>("street_name").ToUpperInvariant().
+                                Contains(addressParts[0].ToUpperInvariant()) &&
+                            building_row.Field<string>("house").ToUpperInvariant() == 
+                                addressParts[1].ToUpperInvariant() &&
+                            premises_row.Field<string>("premises_num").ToUpperInvariant() == 
+                                addressParts[2].ToUpperInvariant() : false
                     select premises_row.Field<int>("id_premises"));
         }
 
@@ -151,12 +151,12 @@ namespace Registry.DataModels
                                     on tenancy_buildings_row.Field<int>("id_building") equals buildings_row.Field<int>("id_building")
                                     join kladr_row in kladr_streets
                                     on buildings_row.Field<string>("id_street") equals kladr_row.Field<string>("id_street")
-                                    where (addressParts.Count() == 1) ? kladr_row.Field<string>("street_name").ToLower(CultureInfo.CurrentCulture).
-                                                Contains(addressParts[0].ToLower(CultureInfo.CurrentCulture)) :
-                                          (addressParts.Count() >= 2) ? (kladr_row.Field<string>("street_name").ToLower(CultureInfo.CurrentCulture).
-                                                Contains(addressParts[0].ToLower(CultureInfo.CurrentCulture))) &&
-                                          (buildings_row.Field<string>("house").ToLower(CultureInfo.CurrentCulture) == 
-                                                addressParts[1].ToLower(CultureInfo.CurrentCulture)) : false
+                                    where (addressParts.Count() == 1) ? kladr_row.Field<string>("street_name").ToUpperInvariant().
+                                                Contains(addressParts[0].ToUpperInvariant()) :
+                                          (addressParts.Count() >= 2) ? (kladr_row.Field<string>("street_name").ToUpperInvariant().
+                                                Contains(addressParts[0].ToUpperInvariant())) &&
+                                          (buildings_row.Field<string>("house").ToUpperInvariant() == 
+                                                addressParts[1].ToUpperInvariant()) : false
                                     select tenancy_buildings_row.Field<int>("id_process");
             var tenancy_premises = from tenancy_premises_row in tenancy_premises_assoc
                                    join premises_row in premises
@@ -165,18 +165,18 @@ namespace Registry.DataModels
                                    on premises_row.Field<int>("id_building") equals buildings_row.Field<int>("id_building")
                                    join kladr_row in kladr_streets
                                     on buildings_row.Field<string>("id_street") equals kladr_row.Field<string>("id_street")
-                                   where (addressParts.Count() == 1) ? (kladr_row.Field<string>("street_name").ToLower(CultureInfo.CurrentCulture).
-                                                Contains(addressParts[0].ToLower(CultureInfo.CurrentCulture))) :
-                                         (addressParts.Count() == 2) ? (kladr_row.Field<string>("street_name").ToLower(CultureInfo.CurrentCulture).
-                                                Contains(addressParts[0].ToLower(CultureInfo.CurrentCulture))) &&
-                                         (buildings_row.Field<string>("house").ToLower(CultureInfo.CurrentCulture) == 
-                                                addressParts[1].ToLower(CultureInfo.CurrentCulture)) :
-                                         (addressParts.Count() == 3) ? (kladr_row.Field<string>("street_name").ToLower(CultureInfo.CurrentCulture).
-                                                Contains(addressParts[0].ToLower(CultureInfo.CurrentCulture))) &&
-                                         (buildings_row.Field<string>("house").ToLower(CultureInfo.CurrentCulture) == 
-                                                addressParts[1].ToLower(CultureInfo.CurrentCulture)) &&
-                                         (premises_row.Field<string>("premises_num").ToLower(CultureInfo.CurrentCulture) == 
-                                                addressParts[2].ToLower(CultureInfo.CurrentCulture)) : false
+                                   where (addressParts.Count() == 1) ? (kladr_row.Field<string>("street_name").ToUpperInvariant().
+                                                Contains(addressParts[0].ToUpperInvariant())) :
+                                         (addressParts.Count() == 2) ? (kladr_row.Field<string>("street_name").ToUpperInvariant().
+                                                Contains(addressParts[0].ToUpperInvariant())) &&
+                                         (buildings_row.Field<string>("house").ToUpperInvariant() == 
+                                                addressParts[1].ToUpperInvariant()) :
+                                         (addressParts.Count() == 3) ? (kladr_row.Field<string>("street_name").ToUpperInvariant().
+                                                Contains(addressParts[0].ToUpperInvariant())) &&
+                                         (buildings_row.Field<string>("house").ToUpperInvariant() == 
+                                                addressParts[1].ToUpperInvariant()) &&
+                                         (premises_row.Field<string>("premises_num").ToUpperInvariant() == 
+                                                addressParts[2].ToUpperInvariant()) : false
                                    select tenancy_premises_row.Field<int>("id_process");
             var tenancy_sub_premises = from tenancy_sub_premises_row in tenancy_sub_premises_assoc
                                        join sub_premises_row in sub_premises
@@ -187,18 +187,18 @@ namespace Registry.DataModels
                                        on premises_row.Field<int>("id_building") equals buildings_row.Field<int>("id_building")
                                        join kladr_row in kladr_streets
                                        on buildings_row.Field<string>("id_street") equals kladr_row.Field<string>("id_street")
-                                       where (addressParts.Count() == 1) ? (kladr_row.Field<string>("street_name").ToLower(CultureInfo.CurrentCulture).
-                                                Contains(addressParts[0].ToLower(CultureInfo.CurrentCulture))) :
-                                         (addressParts.Count() == 2) ? (kladr_row.Field<string>("street_name").ToLower(CultureInfo.CurrentCulture).
-                                                Contains(addressParts[0].ToLower(CultureInfo.CurrentCulture))) &&
-                                         (buildings_row.Field<string>("house").ToLower(CultureInfo.CurrentCulture) == 
-                                                addressParts[1].ToLower(CultureInfo.CurrentCulture)) :
-                                         (addressParts.Count() == 3) ? (kladr_row.Field<string>("street_name").ToLower(CultureInfo.CurrentCulture).
-                                                Contains(addressParts[0].ToLower(CultureInfo.CurrentCulture))) &&
-                                         (buildings_row.Field<string>("house").ToLower(CultureInfo.CurrentCulture) == 
-                                                addressParts[1].ToLower(CultureInfo.CurrentCulture)) &&
-                                         (premises_row.Field<string>("premises_num").ToLower(CultureInfo.CurrentCulture) == 
-                                                addressParts[2].ToLower(CultureInfo.CurrentCulture)) : false
+                                       where (addressParts.Count() == 1) ? (kladr_row.Field<string>("street_name").ToUpperInvariant().
+                                                Contains(addressParts[0].ToUpperInvariant())) :
+                                         (addressParts.Count() == 2) ? (kladr_row.Field<string>("street_name").ToUpperInvariant().
+                                                Contains(addressParts[0].ToUpperInvariant())) &&
+                                         (buildings_row.Field<string>("house").ToUpperInvariant() == 
+                                                addressParts[1].ToUpperInvariant()) :
+                                         (addressParts.Count() == 3) ? (kladr_row.Field<string>("street_name").ToUpperInvariant().
+                                                Contains(addressParts[0].ToUpperInvariant())) &&
+                                         (buildings_row.Field<string>("house").ToUpperInvariant() == 
+                                                addressParts[1].ToUpperInvariant()) &&
+                                         (premises_row.Field<string>("premises_num").ToUpperInvariant() == 
+                                                addressParts[2].ToUpperInvariant()) : false
                                        select tenancy_sub_premises_row.Field<int>("id_process");
             return tenancy_buildings.Union(tenancy_premises).Union(tenancy_sub_premises);
         }
@@ -334,7 +334,7 @@ namespace Registry.DataModels
             return (from claim_state_types_row in claim_state_types
                     join claim_state_types_rel_row in claim_state_type_relations
                     on claim_state_types_row.Field<int>("id_state_type") equals claim_state_types_rel_row.Field<int>("id_state_from")
-                    where Convert.ToBoolean(claim_state_types_row.Field<object>("is_start_state_type"), CultureInfo.CurrentCulture) &&
+                    where Convert.ToBoolean(claim_state_types_row.Field<object>("is_start_state_type"), CultureInfo.InvariantCulture) &&
                         (claim_state_types_rel_row.Field<int>("id_state_to") == nextStateType)
                     select claim_state_types_row.Field<int>("id_state_type"));
         }
@@ -366,7 +366,7 @@ namespace Registry.DataModels
         {
             var claim_state_types = DataModelHelper.FilterRows(ClaimStateTypesDataModel.GetInstance().Select());
             return (from claim_state_types_row in claim_state_types
-                    where Convert.ToBoolean(claim_state_types_row.Field<object>("is_start_state_type"), CultureInfo.CurrentCulture)
+                    where Convert.ToBoolean(claim_state_types_row.Field<object>("is_start_state_type"), CultureInfo.InvariantCulture)
                     select claim_state_types_row.Field<int>("id_state_type"));
         }
     
@@ -374,8 +374,9 @@ namespace Registry.DataModels
         {
             var persons = DataModelHelper.FilterRows(TenancyPersonsDataModel.GetInstance().Select());
             return (from persons_row in persons
-                    where (persons_row.Field<int?>("id_kinship") == 1) && (persons_row.Field<int>("id_process") == idProcess)
-                    select persons_row).Count() == 1;
+                    where (persons_row.Field<int?>("id_kinship") == 1) && (persons_row.Field<int>("id_process") == idProcess
+                        && (persons_row.Field<DateTime?>("exclude_date") == null))
+                    select persons_row).Count() > 0;
         }
 
         public static int TenancyAgreementsForProcess(int idProcess)

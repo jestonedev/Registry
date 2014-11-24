@@ -19,13 +19,13 @@ namespace Registry.Reporting.TenancyReporters
             {
                 if (tosForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
-                    arguments.Add("id_rent_type", tosForm.IdRentType.ToString(CultureInfo.CurrentCulture));
-                    arguments.Add("id_executor", tosForm.IdExecutor.ToString(CultureInfo.CurrentCulture));
+                    arguments.Add("id_rent_type", tosForm.IdRentType.ToString(CultureInfo.InvariantCulture));
+                    arguments.Add("id_executor", tosForm.IdExecutor.ToString(CultureInfo.InvariantCulture));
                     arguments.Add("protocol_num", tosForm.ProtocolNum.ToString());
-                    arguments.Add("protocol_date", tosForm.ProtocolDate.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
-                    arguments.Add("registration_date_from", tosForm.RegistrationDateFrom.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
-                    arguments.Add("registration_date_to", tosForm.RegistrationDateTo.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
-                    arguments.Add("order_date_from", tosForm.OrderDateFrom.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
+                    arguments.Add("protocol_date", tosForm.ProtocolDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
+                    arguments.Add("registration_date_from", tosForm.RegistrationDateFrom.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
+                    arguments.Add("registration_date_to", tosForm.RegistrationDateTo.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
+                    arguments.Add("order_date_from", tosForm.OrderDateFrom.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
                     base.Run(arguments);
                 }
                 else

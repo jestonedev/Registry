@@ -377,7 +377,7 @@ namespace Registry.Viewport
                 return;
             }
             ShowAssocViewport(MenuCallback, viewportType,
-                "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"], CultureInfo.CurrentCulture),
+                "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"], CultureInfo.InvariantCulture),
                 ((DataRowView)v_premises[v_premises.Position]).Row,
                 ParentTypeEnum.Premises);
         }
@@ -485,7 +485,11 @@ namespace Registry.Viewport
                 dataGridView.CurrentCell = dataGridView.Rows[v_premises.Position].Cells[0];
             }
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
         }
 
         private void dataGridView_Resize(object sender, EventArgs e)

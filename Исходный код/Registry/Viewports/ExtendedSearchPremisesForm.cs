@@ -30,20 +30,20 @@ namespace Registry.SearchForms
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "premises_num = '{0}'", textBoxPremisesNum.Text.Trim().Replace("'", ""));
+                filter += String.Format(CultureInfo.InvariantCulture, "premises_num = '{0}'", textBoxPremisesNum.Text.Trim().Replace("'", ""));
             }
             if (checkBoxFloorEnable.Checked)
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += "floor = " + numericUpDownFloor.Value.ToString(CultureInfo.CurrentCulture);
+                filter += "floor = " + numericUpDownFloor.Value.ToString(CultureInfo.InvariantCulture);
             }
             if (checkBoxCadastralNumEnable.Checked)
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 if (!String.IsNullOrEmpty(textBoxCadastralNum.Text.Trim()))
-                    filter += String.Format(CultureInfo.CurrentCulture, "cadastral_num = '{0}'", textBoxCadastralNum.Text.Trim().Replace("'", ""));
+                    filter += String.Format(CultureInfo.InvariantCulture, "cadastral_num = '{0}'", textBoxCadastralNum.Text.Trim().Replace("'", ""));
                 else
                     filter += "cadastral_num is null";
             }
@@ -73,7 +73,7 @@ namespace Registry.SearchForms
             if ((checkBoxFundTypeEnable.Checked) && (comboBoxStreet.SelectedValue != null))
             {
                 IEnumerable<int> premises_ids = DataModelHelper.PremiseIDsByCurrentFund(
-                    Convert.ToInt32(comboBoxFundType.SelectedValue, CultureInfo.CurrentCulture));
+                    Convert.ToInt32(comboBoxFundType.SelectedValue, CultureInfo.InvariantCulture));
                 included_premises = DataModelHelper.Intersect(included_premises, premises_ids);        
             }
             if (checkBoxContractNumberEnable.Checked)
@@ -93,7 +93,7 @@ namespace Registry.SearchForms
                     filter += " AND ";
                 filter += "id_premises IN (0";
                 foreach (int id in included_premises)
-                    filter += id.ToString(CultureInfo.CurrentCulture) + ",";
+                    filter += id.ToString(CultureInfo.InvariantCulture) + ",";
                 filter = filter.TrimEnd(new char[] { ',' }) + ")";
             }
             if (included_buildings != null)
@@ -102,7 +102,7 @@ namespace Registry.SearchForms
                     filter += " AND ";
                 filter += "id_building IN (0";
                 foreach (int id in included_buildings)
-                    filter += id.ToString(CultureInfo.CurrentCulture) + ",";
+                    filter += id.ToString(CultureInfo.InvariantCulture) + ",";
                 filter = filter.TrimEnd(new char[] { ',' }) + ")";
             }
             return filter;

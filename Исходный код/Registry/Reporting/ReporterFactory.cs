@@ -59,7 +59,7 @@ namespace Registry.Reporting
                     return new TenancyExcerptReporter();
             }
             throw new ReporterException(
-                String.Format(CultureInfo.CurrentCulture, "В фабрику ReporterFactory передан неизвестный тип {0}", reporterType.ToString()));
+                String.Format(CultureInfo.InvariantCulture, "В фабрику ReporterFactory передан неизвестный тип {0}", reporterType.ToString()));
         }
     }
 }

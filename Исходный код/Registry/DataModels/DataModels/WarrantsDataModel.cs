@@ -63,7 +63,7 @@ namespace Registry.DataModels
                 }
                 catch (OdbcException e)
                 {
-                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, "Не удалось удалить доверенность из базы данных. Подробная ошибка: {0}", 
+                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, "Не удалось удалить доверенность из базы данных. Подробная ошибка: {0}", 
                         e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
@@ -89,7 +89,6 @@ namespace Registry.DataModels
                 command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", warrant.RegistrationDate));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("on_behalf_of", warrant.OnBehalfOf));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("notary", warrant.Notary));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("notary", warrant.Notary));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("notary_district", warrant.NotaryDistrict));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("description", warrant.Description));
                 try
@@ -107,12 +106,12 @@ namespace Registry.DataModels
                     }
                     connection.SqlCommitTransaction();
 
-                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
+                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.InvariantCulture);
                 }
                 catch (OdbcException e)
                 {
                     connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, "Не удалось добавить запись о доверенности в базу данных. Подробная ошибка: {0}", 
+                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, "Не удалось добавить запись о доверенности в базу данных. Подробная ошибка: {0}", 
                         e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
@@ -136,7 +135,6 @@ namespace Registry.DataModels
                 command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", warrant.RegistrationDate));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("on_behalf_of", warrant.OnBehalfOf));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("notary", warrant.Notary));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("notary", warrant.Notary));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("notary_district", warrant.NotaryDistrict));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("description", warrant.Description));
                 command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", warrant.IdWarrant));
@@ -148,12 +146,11 @@ namespace Registry.DataModels
                 catch (OdbcException e)
                 {
                     connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
                         "Не удалось изменить запись о доверенности в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
-                }
-                
+                }               
             }
         }
     }

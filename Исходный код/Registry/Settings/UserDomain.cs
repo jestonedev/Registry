@@ -64,7 +64,7 @@ namespace Registry
                         if (String.IsNullOrEmpty(login))
                             throw new ArgumentNullException("login","Не задано имя пользователя");
                         string[] loginParts = login.Split('\\');
-                        searcher.Filter = string.Format(CultureInfo.CurrentCulture, 
+                        searcher.Filter = string.Format(CultureInfo.InvariantCulture, 
                             "(&(objectClass=user)(samAccountName={0}))", loginParts[loginParts.Count() - 1]);
                         try
                         {

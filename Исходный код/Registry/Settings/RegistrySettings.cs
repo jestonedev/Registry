@@ -129,6 +129,18 @@ namespace Registry
             }
         }
 
+        public static int CallbackUpdateTimeout
+        {
+            get
+            {
+                return Settings.Properties.Settings.Default.CallbackUpdateTimeout;
+            }
+            set
+            {
+                Settings.Properties.Settings.Default.CallbackUpdateTimeout = value;
+            }
+        }
+
         public static void Save()
         {
             Settings.Properties.Settings.Default.Save();

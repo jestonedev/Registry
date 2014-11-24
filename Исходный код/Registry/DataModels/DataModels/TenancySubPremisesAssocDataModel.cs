@@ -71,12 +71,12 @@ namespace Registry.DataModels
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return -1;
                     }
-                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
+                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.InvariantCulture);
                 }
                 catch (OdbcException e)
                 {
                     connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
                         "Не удалось добавить связь комнату с процессом найма в базу данных. Подробная ошибка: {0}",
                         e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
@@ -107,7 +107,7 @@ namespace Registry.DataModels
                 catch (OdbcException e)
                 {
                     connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
                         "Не удалось изменить связь комнату с процессом найма в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
@@ -128,7 +128,7 @@ namespace Registry.DataModels
                 }
                 catch (OdbcException e)
                 {
-                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
                         "Не удалось удалить связь комнату с процесссом найма из базы данных. Подробная ошибка: {0}",
                         e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;

@@ -86,6 +86,10 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn patronymic;
         private DataGridViewTextBoxColumn date_of_birth;
         private DataGridViewComboBoxColumn id_kinship;
+        private DateTimePicker dateTimePickerExcludeDate;
+        private Label label2;
+        private DateTimePicker dateTimePickerIncludeDate;
+        private Label label1;
         private bool is_editable = false;
 
         private TenancyPersonsViewport()
@@ -114,8 +118,12 @@ namespace Registry.Viewport
                 return;
             for (int i = 0; i < dataGridViewTenancyPersons.Rows.Count; i++)
                 if (((DataRowView)v_tenancy_persons[i])["id_kinship"] != DBNull.Value &&
-                    Convert.ToInt32(((DataRowView)v_tenancy_persons[i])["id_kinship"], CultureInfo.CurrentCulture) == 1)
+                    Convert.ToInt32(((DataRowView)v_tenancy_persons[i])["id_kinship"], CultureInfo.InvariantCulture) == 1 &&
+                    ((DataRowView)v_tenancy_persons[i])["exclude_date"] == DBNull.Value)
                     dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
+                else
+                if (((DataRowView)v_tenancy_persons[i])["exclude_date"] != DBNull.Value)
+                    dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.LightCoral;
                 else
                     dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.White;
         }
@@ -180,7 +188,10 @@ namespace Registry.Viewport
             textBoxResidenceFlat.DataBindings.Add("Text", v_tenancy_persons, "residence_flat", true, DataSourceUpdateMode.Never, "");
             textBoxResidenceRoom.DataBindings.Clear();
             textBoxResidenceRoom.DataBindings.Add("Text", v_tenancy_persons, "residence_room", true, DataSourceUpdateMode.Never, "");
-
+            dateTimePickerIncludeDate.DataBindings.Clear();
+            dateTimePickerIncludeDate.DataBindings.Add("Value", v_tenancy_persons, "include_date", true, DataSourceUpdateMode.Never, null);
+            dateTimePickerExcludeDate.DataBindings.Clear();
+            dateTimePickerExcludeDate.DataBindings.Add("Value", v_tenancy_persons, "exclude_date", true, DataSourceUpdateMode.Never, null);
             dataGridViewTenancyPersons.DataSource = v_tenancy_persons;
             surname.DataPropertyName = "surname";
             name.DataPropertyName = "name";
@@ -209,9 +220,23 @@ namespace Registry.Viewport
                 dateTimePickerDateOfDocumentIssue.Value = DateTime.Now.Date;
                 dateTimePickerDateOfDocumentIssue.Checked = false;
             }
-            if (comboBoxRegistrationStreet.DataSource != null)
+            if ((v_tenancy_persons.Position >= 0) && (row["include_date"] != DBNull.Value))
+                dateTimePickerIncludeDate.Checked = true;
+            else
+            {
+                dateTimePickerIncludeDate.Value = DateTime.Now.Date;
+                dateTimePickerIncludeDate.Checked = false;
+            }
+            if ((v_tenancy_persons.Position >= 0) && (row["exclude_date"] != DBNull.Value))
+                dateTimePickerExcludeDate.Checked = true;
+            else
+            {
+                dateTimePickerExcludeDate.Value = DateTime.Now.Date;
+                dateTimePickerExcludeDate.Checked = false;
+            }
+            if ((comboBoxRegistrationStreet.DataSource != null) && (row != null))
                 comboBoxRegistrationStreet.SelectedValue = row["registration_id_street"];
-            if (comboBoxResidenceStreet.DataSource != null)
+            if ((comboBoxResidenceStreet.DataSource != null) && (row != null))
                 comboBoxResidenceStreet.SelectedValue = row["residence_id_street"];
         }
 
@@ -355,6 +380,10 @@ namespace Registry.Viewport
             dateTimePickerDateOfBirth.Checked = (tenancyPerson.DateOfBirth != null);
             dateTimePickerDateOfDocumentIssue.Value = ViewportHelper.ValueOrDefault(tenancyPerson.DateOfDocumentIssue);
             dateTimePickerDateOfDocumentIssue.Checked = (tenancyPerson.DateOfDocumentIssue != null);
+            dateTimePickerIncludeDate.Value = ViewportHelper.ValueOrDefault(tenancyPerson.IncludeDate);
+            dateTimePickerIncludeDate.Checked = (tenancyPerson.IncludeDate != null);
+            dateTimePickerExcludeDate.Value = ViewportHelper.ValueOrDefault(tenancyPerson.ExcludeDate);
+            dateTimePickerExcludeDate.Checked = (tenancyPerson.ExcludeDate != null);
         }
 
         private TenancyPerson TenancyPersonFromViewport()
@@ -387,6 +416,8 @@ namespace Registry.Viewport
             tenancyPerson.ResidenceRoom = ViewportHelper.ValueOrNull(textBoxResidenceRoom);
             tenancyPerson.DateOfBirth = ViewportHelper.ValueOrNull(dateTimePickerDateOfBirth);
             tenancyPerson.DateOfDocumentIssue = ViewportHelper.ValueOrNull(dateTimePickerDateOfDocumentIssue);
+            tenancyPerson.IncludeDate = ViewportHelper.ValueOrNull(dateTimePickerIncludeDate);
+            tenancyPerson.ExcludeDate = ViewportHelper.ValueOrNull(dateTimePickerExcludeDate);
             return tenancyPerson;
         }
 
@@ -415,6 +446,8 @@ namespace Registry.Viewport
             tenancyPerson.ResidenceFlat = ViewportHelper.ValueOrNull(row, "residence_flat");
             tenancyPerson.ResidenceRoom = ViewportHelper.ValueOrNull(row, "residence_room");
             tenancyPerson.PersonalAccount = ViewportHelper.ValueOrNull(row, "personal_account");
+            tenancyPerson.IncludeDate = ViewportHelper.ValueOrNull<DateTime>(row, "include_date");
+            tenancyPerson.ExcludeDate = ViewportHelper.ValueOrNull<DateTime>(row, "exclude_date");
             return tenancyPerson;
         }
 
@@ -442,6 +475,8 @@ namespace Registry.Viewport
             row["residence_flat"] = ViewportHelper.ValueOrDBNull(tenancyPerson.ResidenceFlat);
             row["residence_room"] = ViewportHelper.ValueOrDBNull(tenancyPerson.ResidenceRoom);
             row["personal_account"] = ViewportHelper.ValueOrDBNull(tenancyPerson.PersonalAccount);
+            row["include_date"] = ViewportHelper.ValueOrDBNull(tenancyPerson.IncludeDate);
+            row["exclude_date"] = ViewportHelper.ValueOrDBNull(tenancyPerson.ExcludeDate);
             row.EndEdit();
         }
 
@@ -473,8 +508,9 @@ namespace Registry.Viewport
                 for (int i = 0; i < v_tenancy_persons.Count; i++)
                 {
                     if (((DataRowView)v_tenancy_persons[i])["id_kinship"] != DBNull.Value &&
-                        (Convert.ToInt32(((DataRowView)v_tenancy_persons[i])["id_kinship"], CultureInfo.CurrentCulture) == 1) &&
-                        (Convert.ToInt32(((DataRowView)v_tenancy_persons[i])["id_person"], CultureInfo.CurrentCulture) != tenancyPerson.IdPerson))
+                        (Convert.ToInt32(((DataRowView)v_tenancy_persons[i])["id_kinship"], CultureInfo.InvariantCulture) == 1) &&
+                        (((DataRowView)v_tenancy_persons[i])["exclude_date"] == DBNull.Value) &&
+                        (Convert.ToInt32(((DataRowView)v_tenancy_persons[i])["id_person"], CultureInfo.InvariantCulture) != tenancyPerson.IdPerson))
                     {
                         MessageBox.Show("В процессе найма может быть только один наниматель", "Ошибка",
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -579,7 +615,7 @@ namespace Registry.Viewport
             DataSet ds = DataSetManager.DataSet;
 
             if ((ParentType == ParentTypeEnum.Tenancy) && (ParentRow != null))
-                this.Text = String.Format(CultureInfo.CurrentCulture, "Участники найма №{0}", ParentRow["id_process"].ToString());
+                this.Text = String.Format(CultureInfo.InvariantCulture, "Участники найма №{0}", ParentRow["id_process"].ToString());
             else
                 throw new ViewportException("Неизвестный тип родительского объекта");
 
@@ -822,7 +858,11 @@ namespace Registry.Viewport
             if (dataGridViewTenancyPersons.Rows[v_tenancy_persons.Position].Selected != true)
                 dataGridViewTenancyPersons.Rows[v_tenancy_persons.Position].Selected = true;
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
             v_registration_street.Filter = "";
             v_residence_street.Filter = "";
             v_document_issued_by.Filter = "";
@@ -1069,6 +1109,16 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
+        private void dateTimePickerIncludeDate_ValueChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
+        }
+
+        private void dateTimePickerExcludeDate_ValueChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
+        }
+
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -1097,6 +1147,10 @@ namespace Registry.Viewport
             this.comboBoxRegistrationStreet = new System.Windows.Forms.ComboBox();
             this.textBoxRegistrationHouse = new System.Windows.Forms.TextBox();
             this.groupBox26 = new System.Windows.Forms.GroupBox();
+            this.dateTimePickerExcludeDate = new System.Windows.Forms.DateTimePicker();
+            this.label2 = new System.Windows.Forms.Label();
+            this.dateTimePickerIncludeDate = new System.Windows.Forms.DateTimePicker();
+            this.label1 = new System.Windows.Forms.Label();
             this.comboBoxIssuedBy = new System.Windows.Forms.ComboBox();
             this.label62 = new System.Windows.Forms.Label();
             this.dateTimePickerDateOfDocumentIssue = new System.Windows.Forms.DateTimePicker();
@@ -1144,10 +1198,10 @@ namespace Registry.Viewport
             this.tableLayoutPanel11.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel11.Name = "tableLayoutPanel11";
             this.tableLayoutPanel11.RowCount = 3;
-            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 200F));
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 220F));
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel11.Size = new System.Drawing.Size(758, 423);
+            this.tableLayoutPanel11.Size = new System.Drawing.Size(813, 564);
             this.tableLayoutPanel11.TabIndex = 0;
             // 
             // groupBox23
@@ -1167,7 +1221,7 @@ namespace Registry.Viewport
             this.groupBox23.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox23.Location = new System.Drawing.Point(3, 3);
             this.groupBox23.Name = "groupBox23";
-            this.groupBox23.Size = new System.Drawing.Size(373, 194);
+            this.groupBox23.Size = new System.Drawing.Size(400, 214);
             this.groupBox23.TabIndex = 0;
             this.groupBox23.TabStop = false;
             this.groupBox23.Text = "Личные данные";
@@ -1176,17 +1230,17 @@ namespace Registry.Viewport
             // 
             this.textBoxPersonalAccount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxPersonalAccount.Location = new System.Drawing.Point(164, 161);
+            this.textBoxPersonalAccount.Location = new System.Drawing.Point(164, 157);
             this.textBoxPersonalAccount.MaxLength = 255;
             this.textBoxPersonalAccount.Name = "textBoxPersonalAccount";
-            this.textBoxPersonalAccount.Size = new System.Drawing.Size(203, 21);
+            this.textBoxPersonalAccount.Size = new System.Drawing.Size(230, 21);
             this.textBoxPersonalAccount.TabIndex = 29;
             this.textBoxPersonalAccount.TextChanged += new System.EventHandler(this.textBoxPersonalAccount_TextChanged);
             // 
             // label81
             // 
             this.label81.AutoSize = true;
-            this.label81.Location = new System.Drawing.Point(17, 164);
+            this.label81.Location = new System.Drawing.Point(17, 160);
             this.label81.Name = "label81";
             this.label81.Size = new System.Drawing.Size(80, 15);
             this.label81.TabIndex = 30;
@@ -1196,10 +1250,10 @@ namespace Registry.Viewport
             // 
             this.dateTimePickerDateOfBirth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerDateOfBirth.Location = new System.Drawing.Point(164, 103);
+            this.dateTimePickerDateOfBirth.Location = new System.Drawing.Point(164, 100);
             this.dateTimePickerDateOfBirth.Name = "dateTimePickerDateOfBirth";
             this.dateTimePickerDateOfBirth.ShowCheckBox = true;
-            this.dateTimePickerDateOfBirth.Size = new System.Drawing.Size(203, 21);
+            this.dateTimePickerDateOfBirth.Size = new System.Drawing.Size(230, 21);
             this.dateTimePickerDateOfBirth.TabIndex = 3;
             this.dateTimePickerDateOfBirth.ValueChanged += new System.EventHandler(this.dateTimePickerDateOfBirth_ValueChanged);
             // 
@@ -1209,16 +1263,16 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxKinship.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxKinship.FormattingEnabled = true;
-            this.comboBoxKinship.Location = new System.Drawing.Point(164, 131);
+            this.comboBoxKinship.Location = new System.Drawing.Point(164, 127);
             this.comboBoxKinship.Name = "comboBoxKinship";
-            this.comboBoxKinship.Size = new System.Drawing.Size(203, 23);
+            this.comboBoxKinship.Size = new System.Drawing.Size(230, 23);
             this.comboBoxKinship.TabIndex = 4;
             this.comboBoxKinship.SelectedValueChanged += new System.EventHandler(this.comboBoxKinship_SelectedValueChanged);
             // 
             // label57
             // 
             this.label57.AutoSize = true;
-            this.label57.Location = new System.Drawing.Point(17, 135);
+            this.label57.Location = new System.Drawing.Point(17, 131);
             this.label57.Name = "label57";
             this.label57.Size = new System.Drawing.Size(110, 15);
             this.label57.TabIndex = 28;
@@ -1227,7 +1281,7 @@ namespace Registry.Viewport
             // label56
             // 
             this.label56.AutoSize = true;
-            this.label56.Location = new System.Drawing.Point(17, 106);
+            this.label56.Location = new System.Drawing.Point(17, 103);
             this.label56.Name = "label56";
             this.label56.Size = new System.Drawing.Size(98, 15);
             this.label56.TabIndex = 26;
@@ -1237,17 +1291,17 @@ namespace Registry.Viewport
             // 
             this.textBoxPatronymic.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxPatronymic.Location = new System.Drawing.Point(164, 75);
+            this.textBoxPatronymic.Location = new System.Drawing.Point(164, 73);
             this.textBoxPatronymic.MaxLength = 255;
             this.textBoxPatronymic.Name = "textBoxPatronymic";
-            this.textBoxPatronymic.Size = new System.Drawing.Size(203, 21);
+            this.textBoxPatronymic.Size = new System.Drawing.Size(230, 21);
             this.textBoxPatronymic.TabIndex = 2;
             this.textBoxPatronymic.TextChanged += new System.EventHandler(this.textBoxPatronymic_TextChanged);
             // 
             // label55
             // 
             this.label55.AutoSize = true;
-            this.label55.Location = new System.Drawing.Point(17, 78);
+            this.label55.Location = new System.Drawing.Point(17, 76);
             this.label55.Name = "label55";
             this.label55.Size = new System.Drawing.Size(63, 15);
             this.label55.TabIndex = 24;
@@ -1257,17 +1311,17 @@ namespace Registry.Viewport
             // 
             this.textBoxName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxName.Location = new System.Drawing.Point(164, 47);
+            this.textBoxName.Location = new System.Drawing.Point(164, 46);
             this.textBoxName.MaxLength = 50;
             this.textBoxName.Name = "textBoxName";
-            this.textBoxName.Size = new System.Drawing.Size(203, 21);
+            this.textBoxName.Size = new System.Drawing.Size(230, 21);
             this.textBoxName.TabIndex = 1;
             this.textBoxName.TextChanged += new System.EventHandler(this.textBoxName_TextChanged);
             // 
             // label54
             // 
             this.label54.AutoSize = true;
-            this.label54.Location = new System.Drawing.Point(17, 50);
+            this.label54.Location = new System.Drawing.Point(17, 49);
             this.label54.Name = "label54";
             this.label54.Size = new System.Drawing.Size(32, 15);
             this.label54.TabIndex = 22;
@@ -1280,7 +1334,7 @@ namespace Registry.Viewport
             this.textBoxSurname.Location = new System.Drawing.Point(164, 19);
             this.textBoxSurname.MaxLength = 50;
             this.textBoxSurname.Name = "textBoxSurname";
-            this.textBoxSurname.Size = new System.Drawing.Size(203, 21);
+            this.textBoxSurname.Size = new System.Drawing.Size(230, 21);
             this.textBoxSurname.TabIndex = 0;
             this.textBoxSurname.TextChanged += new System.EventHandler(this.textBoxSurname_TextChanged);
             // 
@@ -1304,9 +1358,9 @@ namespace Registry.Viewport
             this.groupBox27.Controls.Add(this.comboBoxRegistrationStreet);
             this.groupBox27.Controls.Add(this.textBoxRegistrationHouse);
             this.groupBox27.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox27.Location = new System.Drawing.Point(3, 203);
+            this.groupBox27.Location = new System.Drawing.Point(3, 223);
             this.groupBox27.Name = "groupBox27";
-            this.groupBox27.Size = new System.Drawing.Size(373, 134);
+            this.groupBox27.Size = new System.Drawing.Size(400, 134);
             this.groupBox27.TabIndex = 1;
             this.groupBox27.TabStop = false;
             this.groupBox27.Text = "Адрес регистрации";
@@ -1327,7 +1381,7 @@ namespace Registry.Viewport
             this.textBoxRegistrationRoom.Location = new System.Drawing.Point(164, 106);
             this.textBoxRegistrationRoom.MaxLength = 15;
             this.textBoxRegistrationRoom.Name = "textBoxRegistrationRoom";
-            this.textBoxRegistrationRoom.Size = new System.Drawing.Size(203, 21);
+            this.textBoxRegistrationRoom.Size = new System.Drawing.Size(230, 21);
             this.textBoxRegistrationRoom.TabIndex = 3;
             this.textBoxRegistrationRoom.TextChanged += new System.EventHandler(this.textBoxRegistrationRoom_TextChanged);
             // 
@@ -1347,7 +1401,7 @@ namespace Registry.Viewport
             this.textBoxRegistrationFlat.Location = new System.Drawing.Point(164, 78);
             this.textBoxRegistrationFlat.MaxLength = 15;
             this.textBoxRegistrationFlat.Name = "textBoxRegistrationFlat";
-            this.textBoxRegistrationFlat.Size = new System.Drawing.Size(203, 21);
+            this.textBoxRegistrationFlat.Size = new System.Drawing.Size(230, 21);
             this.textBoxRegistrationFlat.TabIndex = 2;
             this.textBoxRegistrationFlat.TextChanged += new System.EventHandler(this.textBoxRegistrationFlat_TextChanged);
             // 
@@ -1376,7 +1430,7 @@ namespace Registry.Viewport
             this.comboBoxRegistrationStreet.FormattingEnabled = true;
             this.comboBoxRegistrationStreet.Location = new System.Drawing.Point(164, 20);
             this.comboBoxRegistrationStreet.Name = "comboBoxRegistrationStreet";
-            this.comboBoxRegistrationStreet.Size = new System.Drawing.Size(203, 23);
+            this.comboBoxRegistrationStreet.Size = new System.Drawing.Size(230, 23);
             this.comboBoxRegistrationStreet.TabIndex = 0;
             this.comboBoxRegistrationStreet.DropDownClosed += new System.EventHandler(this.comboBoxRegistrationStreet_DropDownClosed);
             this.comboBoxRegistrationStreet.SelectedValueChanged += new System.EventHandler(this.comboBoxRegistrationStreet_SelectedValueChanged);
@@ -1390,12 +1444,16 @@ namespace Registry.Viewport
             this.textBoxRegistrationHouse.Location = new System.Drawing.Point(164, 50);
             this.textBoxRegistrationHouse.MaxLength = 10;
             this.textBoxRegistrationHouse.Name = "textBoxRegistrationHouse";
-            this.textBoxRegistrationHouse.Size = new System.Drawing.Size(203, 21);
+            this.textBoxRegistrationHouse.Size = new System.Drawing.Size(230, 21);
             this.textBoxRegistrationHouse.TabIndex = 1;
             this.textBoxRegistrationHouse.TextChanged += new System.EventHandler(this.textBoxRegistrationHouse_TextChanged);
             // 
             // groupBox26
             // 
+            this.groupBox26.Controls.Add(this.dateTimePickerExcludeDate);
+            this.groupBox26.Controls.Add(this.label2);
+            this.groupBox26.Controls.Add(this.dateTimePickerIncludeDate);
+            this.groupBox26.Controls.Add(this.label1);
             this.groupBox26.Controls.Add(this.comboBoxIssuedBy);
             this.groupBox26.Controls.Add(this.label62);
             this.groupBox26.Controls.Add(this.dateTimePickerDateOfDocumentIssue);
@@ -1407,21 +1465,61 @@ namespace Registry.Viewport
             this.groupBox26.Controls.Add(this.comboBoxDocumentType);
             this.groupBox26.Controls.Add(this.label58);
             this.groupBox26.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox26.Location = new System.Drawing.Point(382, 3);
+            this.groupBox26.Location = new System.Drawing.Point(409, 3);
             this.groupBox26.Name = "groupBox26";
-            this.groupBox26.Size = new System.Drawing.Size(373, 194);
+            this.groupBox26.Size = new System.Drawing.Size(401, 214);
             this.groupBox26.TabIndex = 2;
             this.groupBox26.TabStop = false;
             this.groupBox26.Text = "Документ, удостоверяющий личность";
+            // 
+            // dateTimePickerExcludeDate
+            // 
+            this.dateTimePickerExcludeDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerExcludeDate.Location = new System.Drawing.Point(164, 184);
+            this.dateTimePickerExcludeDate.Name = "dateTimePickerExcludeDate";
+            this.dateTimePickerExcludeDate.ShowCheckBox = true;
+            this.dateTimePickerExcludeDate.Size = new System.Drawing.Size(231, 21);
+            this.dateTimePickerExcludeDate.TabIndex = 41;
+            this.dateTimePickerExcludeDate.ValueChanged += new System.EventHandler(this.dateTimePickerExcludeDate_ValueChanged);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(17, 187);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(109, 15);
+            this.label2.TabIndex = 42;
+            this.label2.Text = "Дата исключения";
+            // 
+            // dateTimePickerIncludeDate
+            // 
+            this.dateTimePickerIncludeDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerIncludeDate.Location = new System.Drawing.Point(164, 157);
+            this.dateTimePickerIncludeDate.Name = "dateTimePickerIncludeDate";
+            this.dateTimePickerIncludeDate.ShowCheckBox = true;
+            this.dateTimePickerIncludeDate.Size = new System.Drawing.Size(231, 21);
+            this.dateTimePickerIncludeDate.TabIndex = 39;
+            this.dateTimePickerIncludeDate.ValueChanged += new System.EventHandler(this.dateTimePickerIncludeDate_ValueChanged);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(17, 160);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(103, 15);
+            this.label1.TabIndex = 40;
+            this.label1.Text = "Дата включения";
             // 
             // comboBoxIssuedBy
             // 
             this.comboBoxIssuedBy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxIssuedBy.FormattingEnabled = true;
-            this.comboBoxIssuedBy.Location = new System.Drawing.Point(164, 131);
+            this.comboBoxIssuedBy.Location = new System.Drawing.Point(164, 128);
             this.comboBoxIssuedBy.Name = "comboBoxIssuedBy";
-            this.comboBoxIssuedBy.Size = new System.Drawing.Size(203, 23);
+            this.comboBoxIssuedBy.Size = new System.Drawing.Size(231, 23);
             this.comboBoxIssuedBy.TabIndex = 4;
             this.comboBoxIssuedBy.DropDownClosed += new System.EventHandler(this.comboBoxIssuedBy_DropDownClosed);
             this.comboBoxIssuedBy.SelectedValueChanged += new System.EventHandler(this.comboBoxIssuedBy_SelectedValueChanged);
@@ -1431,7 +1529,7 @@ namespace Registry.Viewport
             // label62
             // 
             this.label62.AutoSize = true;
-            this.label62.Location = new System.Drawing.Point(17, 135);
+            this.label62.Location = new System.Drawing.Point(17, 132);
             this.label62.Name = "label62";
             this.label62.Size = new System.Drawing.Size(71, 15);
             this.label62.TabIndex = 38;
@@ -1441,17 +1539,17 @@ namespace Registry.Viewport
             // 
             this.dateTimePickerDateOfDocumentIssue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerDateOfDocumentIssue.Location = new System.Drawing.Point(164, 103);
+            this.dateTimePickerDateOfDocumentIssue.Location = new System.Drawing.Point(164, 101);
             this.dateTimePickerDateOfDocumentIssue.Name = "dateTimePickerDateOfDocumentIssue";
             this.dateTimePickerDateOfDocumentIssue.ShowCheckBox = true;
-            this.dateTimePickerDateOfDocumentIssue.Size = new System.Drawing.Size(203, 21);
+            this.dateTimePickerDateOfDocumentIssue.Size = new System.Drawing.Size(231, 21);
             this.dateTimePickerDateOfDocumentIssue.TabIndex = 3;
             this.dateTimePickerDateOfDocumentIssue.ValueChanged += new System.EventHandler(this.dateTimePickerDateOfDocumentIssue_ValueChanged);
             // 
             // label61
             // 
             this.label61.AutoSize = true;
-            this.label61.Location = new System.Drawing.Point(17, 106);
+            this.label61.Location = new System.Drawing.Point(17, 104);
             this.label61.Name = "label61";
             this.label61.Size = new System.Drawing.Size(83, 15);
             this.label61.TabIndex = 36;
@@ -1461,17 +1559,17 @@ namespace Registry.Viewport
             // 
             this.textBoxDocumentNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDocumentNumber.Location = new System.Drawing.Point(164, 75);
+            this.textBoxDocumentNumber.Location = new System.Drawing.Point(164, 74);
             this.textBoxDocumentNumber.MaxLength = 8;
             this.textBoxDocumentNumber.Name = "textBoxDocumentNumber";
-            this.textBoxDocumentNumber.Size = new System.Drawing.Size(203, 21);
+            this.textBoxDocumentNumber.Size = new System.Drawing.Size(231, 21);
             this.textBoxDocumentNumber.TabIndex = 2;
             this.textBoxDocumentNumber.TextChanged += new System.EventHandler(this.textBoxDocumentNumber_TextChanged);
             // 
             // label60
             // 
             this.label60.AutoSize = true;
-            this.label60.Location = new System.Drawing.Point(17, 78);
+            this.label60.Location = new System.Drawing.Point(17, 77);
             this.label60.Name = "label60";
             this.label60.Size = new System.Drawing.Size(46, 15);
             this.label60.TabIndex = 34;
@@ -1484,7 +1582,7 @@ namespace Registry.Viewport
             this.textBoxDocumentSeria.Location = new System.Drawing.Point(164, 47);
             this.textBoxDocumentSeria.MaxLength = 8;
             this.textBoxDocumentSeria.Name = "textBoxDocumentSeria";
-            this.textBoxDocumentSeria.Size = new System.Drawing.Size(203, 21);
+            this.textBoxDocumentSeria.Size = new System.Drawing.Size(231, 21);
             this.textBoxDocumentSeria.TabIndex = 1;
             this.textBoxDocumentSeria.TextChanged += new System.EventHandler(this.textBoxDocumentSeria_TextChanged);
             // 
@@ -1505,14 +1603,14 @@ namespace Registry.Viewport
             this.comboBoxDocumentType.FormattingEnabled = true;
             this.comboBoxDocumentType.Location = new System.Drawing.Point(164, 18);
             this.comboBoxDocumentType.Name = "comboBoxDocumentType";
-            this.comboBoxDocumentType.Size = new System.Drawing.Size(203, 23);
+            this.comboBoxDocumentType.Size = new System.Drawing.Size(231, 23);
             this.comboBoxDocumentType.TabIndex = 0;
             this.comboBoxDocumentType.SelectedValueChanged += new System.EventHandler(this.comboBoxDocumentType_SelectedValueChanged);
             // 
             // label58
             // 
             this.label58.AutoSize = true;
-            this.label58.Location = new System.Drawing.Point(17, 23);
+            this.label58.Location = new System.Drawing.Point(17, 22);
             this.label58.Name = "label58";
             this.label58.Size = new System.Drawing.Size(94, 15);
             this.label58.TabIndex = 30;
@@ -1529,9 +1627,9 @@ namespace Registry.Viewport
             this.groupBox28.Controls.Add(this.comboBoxResidenceStreet);
             this.groupBox28.Controls.Add(this.textBoxResidenceHouse);
             this.groupBox28.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox28.Location = new System.Drawing.Point(382, 203);
+            this.groupBox28.Location = new System.Drawing.Point(409, 223);
             this.groupBox28.Name = "groupBox28";
-            this.groupBox28.Size = new System.Drawing.Size(373, 134);
+            this.groupBox28.Size = new System.Drawing.Size(401, 134);
             this.groupBox28.TabIndex = 3;
             this.groupBox28.TabStop = false;
             this.groupBox28.Text = "Адрес проживания";
@@ -1552,7 +1650,7 @@ namespace Registry.Viewport
             this.textBoxResidenceRoom.Location = new System.Drawing.Point(164, 106);
             this.textBoxResidenceRoom.MaxLength = 15;
             this.textBoxResidenceRoom.Name = "textBoxResidenceRoom";
-            this.textBoxResidenceRoom.Size = new System.Drawing.Size(203, 21);
+            this.textBoxResidenceRoom.Size = new System.Drawing.Size(231, 21);
             this.textBoxResidenceRoom.TabIndex = 3;
             this.textBoxResidenceRoom.TextChanged += new System.EventHandler(this.textBoxResidenceRoom_TextChanged);
             // 
@@ -1572,7 +1670,7 @@ namespace Registry.Viewport
             this.textBoxResidenceFlat.Location = new System.Drawing.Point(164, 78);
             this.textBoxResidenceFlat.MaxLength = 15;
             this.textBoxResidenceFlat.Name = "textBoxResidenceFlat";
-            this.textBoxResidenceFlat.Size = new System.Drawing.Size(203, 21);
+            this.textBoxResidenceFlat.Size = new System.Drawing.Size(231, 21);
             this.textBoxResidenceFlat.TabIndex = 2;
             this.textBoxResidenceFlat.TextChanged += new System.EventHandler(this.textBoxResidenceFlat_TextChanged);
             // 
@@ -1601,7 +1699,7 @@ namespace Registry.Viewport
             this.comboBoxResidenceStreet.FormattingEnabled = true;
             this.comboBoxResidenceStreet.Location = new System.Drawing.Point(164, 20);
             this.comboBoxResidenceStreet.Name = "comboBoxResidenceStreet";
-            this.comboBoxResidenceStreet.Size = new System.Drawing.Size(203, 23);
+            this.comboBoxResidenceStreet.Size = new System.Drawing.Size(231, 23);
             this.comboBoxResidenceStreet.TabIndex = 0;
             this.comboBoxResidenceStreet.DropDownClosed += new System.EventHandler(this.comboBoxResidenceStreet_DropDownClosed);
             this.comboBoxResidenceStreet.SelectedValueChanged += new System.EventHandler(this.comboBoxResidenceStreet_SelectedValueChanged);
@@ -1615,7 +1713,7 @@ namespace Registry.Viewport
             this.textBoxResidenceHouse.Location = new System.Drawing.Point(164, 50);
             this.textBoxResidenceHouse.MaxLength = 10;
             this.textBoxResidenceHouse.Name = "textBoxResidenceHouse";
-            this.textBoxResidenceHouse.Size = new System.Drawing.Size(203, 21);
+            this.textBoxResidenceHouse.Size = new System.Drawing.Size(231, 21);
             this.textBoxResidenceHouse.TabIndex = 1;
             this.textBoxResidenceHouse.TextChanged += new System.EventHandler(this.textBoxResidenceHouse_TextChanged);
             // 
@@ -1643,11 +1741,11 @@ namespace Registry.Viewport
             this.id_kinship});
             this.tableLayoutPanel11.SetColumnSpan(this.dataGridViewTenancyPersons, 2);
             this.dataGridViewTenancyPersons.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewTenancyPersons.Location = new System.Drawing.Point(3, 343);
+            this.dataGridViewTenancyPersons.Location = new System.Drawing.Point(3, 363);
             this.dataGridViewTenancyPersons.MultiSelect = false;
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(752, 77);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(807, 198);
             this.dataGridViewTenancyPersons.TabIndex = 4;
             this.dataGridViewTenancyPersons.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridViewTenancyPersons_DataError);
             // 
@@ -1691,7 +1789,7 @@ namespace Registry.Viewport
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(660, 420);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(764, 429);
+            this.ClientSize = new System.Drawing.Size(819, 570);
             this.Controls.Add(this.tableLayoutPanel11);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1711,5 +1809,6 @@ namespace Registry.Viewport
             this.ResumeLayout(false);
 
         }
+
     }
 }

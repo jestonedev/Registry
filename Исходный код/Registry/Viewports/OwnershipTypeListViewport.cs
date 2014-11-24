@@ -40,7 +40,7 @@ namespace Registry.Viewport
         public OwnershipTypeListViewport(IMenuCallback menuCallback): base(menuCallback)
         {
             InitializeComponent();
-            snapshot_ownership_right_types.Locale = CultureInfo.CurrentCulture;
+            snapshot_ownership_right_types.Locale = CultureInfo.InvariantCulture;
         }
 
         public OwnershipTypeListViewport(OwnershipTypeListViewport ownershipTypeListViewport, IMenuCallback menuCallback)
@@ -389,7 +389,11 @@ namespace Registry.Viewport
         void v_snapshot_ownership_right_types_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
         }
 
         void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)

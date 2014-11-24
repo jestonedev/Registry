@@ -31,7 +31,7 @@ namespace Registry.DataModels
                 }
                 catch(OdbcException e)
                 {
-                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
                         "Произошла ошибка при установке соединения с базой данных. Подробная ошибка: {0}", e.Message), "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     Application.Exit();
@@ -64,7 +64,7 @@ namespace Registry.DataModels
                 if (Regex.IsMatch(provider, name, RegexOptions.IgnoreCase))
                     return provider;
             }
-            throw new DataModelException(String.Format(CultureInfo.CurrentCulture, "Провайдер {0} не найден", name));
+            throw new DataModelException(String.Format(CultureInfo.InvariantCulture, "Провайдер {0} не найден", name));
         }
 
         public DataTable SqlSelectTable(string resultTableName, DbCommand command)
@@ -79,7 +79,7 @@ namespace Registry.DataModels
             DbDataAdapter adapter = factory.CreateDataAdapter();
             adapter.SelectCommand = command;
             DataTable dt = new DataTable(resultTableName);
-            dt.Locale = CultureInfo.CurrentCulture;
+            dt.Locale = CultureInfo.InvariantCulture;
             adapter.Fill(dt);
             return dt;
         }

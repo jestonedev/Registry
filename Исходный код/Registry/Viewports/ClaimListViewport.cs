@@ -97,7 +97,7 @@ namespace Registry.Viewport
             {
                 if ((ParentRow != null) && (ParentType == ParentTypeEnum.Tenancy))
                 {
-                    this.Text = String.Format(CultureInfo.CurrentCulture, "Новая исковая работа найма №{0}", ParentRow["id_process"]);
+                    this.Text = String.Format(CultureInfo.InvariantCulture, "Новая исковая работа найма №{0}", ParentRow["id_process"]);
                 }
                 else
                     this.Text = "Новая исковая работа";
@@ -106,15 +106,15 @@ namespace Registry.Viewport
                 if (v_claims.Position != -1)
                 {
                     if ((ParentRow != null) && (ParentType == ParentTypeEnum.Tenancy))
-                        this.Text = String.Format(CultureInfo.CurrentCulture, "Исковая работа №{0} найма №{1}",
+                        this.Text = String.Format(CultureInfo.InvariantCulture, "Исковая работа №{0} найма №{1}",
                             ((DataRowView)v_claims[v_claims.Position])["id_claim"], ParentRow["id_process"]);
                     else
-                        this.Text = String.Format(CultureInfo.CurrentCulture, "Исковая работа №{0}", ((DataRowView)v_claims[v_claims.Position])["id_claim"]);
+                        this.Text = String.Format(CultureInfo.InvariantCulture, "Исковая работа №{0}", ((DataRowView)v_claims[v_claims.Position])["id_claim"]);
                 }
                 else
                 {
                     if ((ParentRow != null) && (ParentType == ParentTypeEnum.Tenancy))
-                        this.Text = String.Format(CultureInfo.CurrentCulture, "Исковые работы в найме №{0} отсутствуют", ParentRow["id_process"]);
+                        this.Text = String.Format(CultureInfo.InvariantCulture, "Исковые работы в найме №{0} отсутствуют", ParentRow["id_process"]);
                     else
                         this.Text = "Исковые работы отсутствуют";
                 }
@@ -336,7 +336,7 @@ namespace Registry.Viewport
             if ((v_claims.Position == -1) || ((DataRowView)v_claims[v_claims.Position])["id_claim"] is DBNull)
                 claim.IdClaim = null;
             else
-                claim.IdClaim = Convert.ToInt32(((DataRowView)v_claims[v_claims.Position])["id_claim"], CultureInfo.CurrentCulture);
+                claim.IdClaim = Convert.ToInt32(((DataRowView)v_claims[v_claims.Position])["id_claim"], CultureInfo.InvariantCulture);
             claim.IdProcess = Convert.ToInt32(numericUpDownProcessID.Value);
             claim.AmountOfDebtRent = numericUpDownAmountOfDebtRent.Value;
             claim.AmountOfDebtFine = numericUpDownAmountOfDebtFine.Value;
@@ -696,7 +696,7 @@ namespace Registry.Viewport
                 return;
             }
             ShowAssocViewport(MenuCallback, ViewportType.ClaimStatesViewport,
-                "id_claim = " + Convert.ToInt32(((DataRowView)v_claims[v_claims.Position])["id_claim"], CultureInfo.CurrentCulture),
+                "id_claim = " + Convert.ToInt32(((DataRowView)v_claims[v_claims.Position])["id_claim"], CultureInfo.InvariantCulture),
                 ((DataRowView)v_claims[v_claims.Position]).Row, ParentTypeEnum.Claim);
         }
 
@@ -712,7 +712,11 @@ namespace Registry.Viewport
                     if (dataGridViewClaims.Rows[v_claims.Position].Selected != true)
                         dataGridViewClaims.Rows[v_claims.Position].Selected = true;
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
             UnbindedCheckBoxesUpdate();
             if (v_claims.Position == -1)
                 return;
@@ -760,7 +764,7 @@ namespace Registry.Viewport
                     break;
                 case "date_of_transfer":
                     e.Value = ((DataRowView)v_claims[e.RowIndex])["date_of_transfer"] == DBNull.Value ? "" :
-                        ((DateTime)((DataRowView)v_claims[e.RowIndex])["date_of_transfer"]).ToString("dd.MM.yyyy", CultureInfo.CurrentCulture);
+                        ((DateTime)((DataRowView)v_claims[e.RowIndex])["date_of_transfer"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                     break;
                 case "amount_of_debt_rent":
                     e.Value = ((DataRowView)v_claims[e.RowIndex])["amount_of_debt_rent"];
@@ -770,7 +774,7 @@ namespace Registry.Viewport
                     break;
                 case "at_date":
                     e.Value = ((DataRowView)v_claims[e.RowIndex])["at_date"] == DBNull.Value ? "" :
-                        ((DateTime)((DataRowView)v_claims[e.RowIndex])["at_date"]).ToString("dd.MM.yyyy", CultureInfo.CurrentCulture);
+                        ((DateTime)((DataRowView)v_claims[e.RowIndex])["at_date"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                     break;
                 case "description":
                     e.Value = ((DataRowView)v_claims[e.RowIndex])["description"];

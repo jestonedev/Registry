@@ -572,7 +572,11 @@ namespace Registry.Viewport
                     if (dataGridView.Rows[v_warrants.Position].Selected != true)
                         dataGridView.Rows[v_warrants.Position].Selected = true;
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
             if (v_warrants.Position == -1)
                 return;
             if (viewportState == ViewportState.NewRowState)

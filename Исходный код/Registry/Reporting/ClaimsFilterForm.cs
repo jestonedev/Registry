@@ -36,13 +36,13 @@ namespace Registry.Reporting
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "c.id_claim = {0}", numericUpDownIDClaim.Value.ToString(CultureInfo.CurrentCulture));
+                filter += String.Format(CultureInfo.InvariantCulture, "c.id_claim = {0}", numericUpDownIDClaim.Value.ToString(CultureInfo.InvariantCulture));
             }
             if (checkBoxIDProcessEnable.Checked)
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "c.id_process = {0}", numericUpDownIDProcess.Value.ToString(CultureInfo.CurrentCulture));
+                filter += String.Format(CultureInfo.InvariantCulture, "c.id_process = {0}", numericUpDownIDProcess.Value.ToString(CultureInfo.InvariantCulture));
             }
             if (dateTimePickerTransferFrom.Checked || dateTimePickerTransferTo.Checked)
             {
@@ -69,21 +69,21 @@ namespace Registry.Reporting
         {
             if (dateFrom.Checked && dateTo.Checked)
             {
-                return String.Format(CultureInfo.CurrentCulture, "c.{0} BETWEEN STR_TO_DATE('{1}','%d.%m.%Y') AND STR_TO_DATE('{2}','%d.%m.%Y')",
-                    name, dateFrom.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture), 
-                    dateTo.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
+                return String.Format(CultureInfo.InvariantCulture, "c.{0} BETWEEN STR_TO_DATE('{1}','%d.%m.%Y') AND STR_TO_DATE('{2}','%d.%m.%Y')",
+                    name, dateFrom.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture), 
+                    dateTo.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
             }
             else
                 if (dateFrom.Checked)
                 {
-                    return String.Format(CultureInfo.CurrentCulture, "c.{0} >= STR_TO_DATE('{1}','%d.%m.%Y')",
-                    name, dateFrom.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
+                    return String.Format(CultureInfo.InvariantCulture, "c.{0} >= STR_TO_DATE('{1}','%d.%m.%Y')",
+                    name, dateFrom.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
                 }
                 else
                     if (dateTo.Checked)
                     {
-                        return String.Format(CultureInfo.CurrentCulture, "c.{0} <= STR_TO_DATE('{1}','%d.%m.%Y')",
-                        name, dateTo.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture));
+                        return String.Format(CultureInfo.InvariantCulture, "c.{0} <= STR_TO_DATE('{1}','%d.%m.%Y')",
+                        name, dateTo.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
                     }
             throw new ReporterException("Невозможно построить фильтр для поиска претензионно-исковых работ");
         }

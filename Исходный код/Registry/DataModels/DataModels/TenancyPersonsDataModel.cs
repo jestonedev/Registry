@@ -20,13 +20,14 @@ namespace Registry.DataModels
                             (id_process, id_kinship, surname, name, patronymic, date_of_birth, id_document_type, 
                             date_of_document_issue, document_num, document_seria, id_document_issued_by,
                             registration_id_street, registration_house, registration_flat, registration_room,
-                            residence_id_street, residence_house, residence_flat, residence_room, personal_account)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                            residence_id_street, residence_house, residence_flat, residence_room, personal_account, include_date, exclude_date)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         private static string updateQuery = @"UPDATE tenancy_persons SET id_process = ?, id_kinship = ?, surname = ?, 
                             name = ?, patronymic = ?, date_of_birth = ?, id_document_type = ?, date_of_document_issue = ?, 
                             document_num = ?, document_seria = ?, id_document_issued_by = ?, registration_id_street = ?, 
                             registration_house = ?, registration_flat = ?, registration_room = ?, residence_id_street = ?,
-                            residence_house = ?, residence_flat = ?, residence_room = ? , personal_account = ? WHERE id_person = ?";
+                            residence_house = ?, residence_flat = ?, residence_room = ? , personal_account = ?,
+                            include_date = ?, exclude_date = ? WHERE id_person = ?";
         private static string tableName = "tenancy_persons";
 
         private TenancyPersonsDataModel(ToolStripProgressBar progressBar, int incrementor)
@@ -36,7 +37,7 @@ namespace Registry.DataModels
 
         protected override void ConfigureTable()
         {
-            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_persons"] };
+            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_person"] };
         }
 
         public static TenancyPersonsDataModel GetInstance()
@@ -66,7 +67,7 @@ namespace Registry.DataModels
                 }
                 catch (OdbcException e)
                 {
-                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
                         "Не удалось удалить участника договора из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
@@ -108,6 +109,8 @@ namespace Registry.DataModels
                 command.Parameters.Add(DBConnection.CreateParameter<string>("residence_flat", tenancyPerson.ResidenceFlat));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("residence_room", tenancyPerson.ResidenceRoom));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("personal_account", tenancyPerson.PersonalAccount));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("include_date", tenancyPerson.IncludeDate));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("exclude_date", tenancyPerson.ExcludeDate));
 
                 try
                 {
@@ -121,12 +124,12 @@ namespace Registry.DataModels
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return -1;
                     }
-                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.CurrentCulture);
+                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.InvariantCulture);
                 }
                 catch (OdbcException e)
                 {
                     connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
                         "Не удалось добавить участника найма в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
@@ -166,6 +169,8 @@ namespace Registry.DataModels
                 command.Parameters.Add(DBConnection.CreateParameter<string>("residence_flat", tenancyPerson.ResidenceFlat));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("residence_room", tenancyPerson.ResidenceRoom));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("personal_account", tenancyPerson.PersonalAccount));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("include_date", tenancyPerson.IncludeDate));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("exclude_date", tenancyPerson.ExcludeDate));
                 command.Parameters.Add(DBConnection.CreateParameter<int?>("id_person", tenancyPerson.IdPerson));
 
                 try
@@ -175,7 +180,7 @@ namespace Registry.DataModels
                 catch (OdbcException e)
                 {
                     connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
                         "Не удалось изменить информацию об участнике найма в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;

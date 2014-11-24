@@ -48,7 +48,7 @@ namespace Registry.Viewport
         public OwnershipListViewport(IMenuCallback menuCallback): base(menuCallback)
         {
             InitializeComponent();
-            snapshot_ownerships_rights.Locale = CultureInfo.CurrentCulture;
+            snapshot_ownerships_rights.Locale = CultureInfo.InvariantCulture;
         }
 
         public OwnershipListViewport(OwnershipListViewport ownershipListViewport, IMenuCallback menuCallback)
@@ -213,14 +213,14 @@ namespace Registry.Viewport
             {
                 v_ownership_assoc.DataMember = "ownership_premises_assoc";
                 v_ownership_assoc.Filter = "id_premises = " + ParentRow["id_premises"].ToString();
-                this.Text = String.Format(CultureInfo.CurrentCulture, "Ограничения помещения №{0}", ParentRow["id_premises"].ToString());
+                this.Text = String.Format(CultureInfo.InvariantCulture, "Ограничения помещения №{0}", ParentRow["id_premises"].ToString());
             }
             else
                 if ((ParentType == ParentTypeEnum.Building) && (ParentRow != null))
                 {
                     v_ownership_assoc.DataMember = "ownership_buildings_assoc";
                     v_ownership_assoc.Filter = "id_building = " + ParentRow["id_building"].ToString();
-                    this.Text = String.Format(CultureInfo.CurrentCulture, "Ограничения здания №{0}", ParentRow["id_building"].ToString());
+                    this.Text = String.Format(CultureInfo.InvariantCulture, "Ограничения здания №{0}", ParentRow["id_building"].ToString());
                 }
                 else
                     throw new ViewportException("Неизвестный тип родительского объекта");
@@ -510,8 +510,24 @@ namespace Registry.Viewport
             if (!sync_views)
                 return;
             //Если добавлена новая ассоциативная связь, то перестраиваем фильтр v_ownerships_rights.Filter
-            if (e.Action == DataRowAction.Add)
-                RebuildFilter();
+            RebuildFilter();
+            //Если в модели есть запись, а в снапшоте нет, то добавляем в снапшот
+            if (e.Row["id_ownership_right"] == DBNull.Value)
+                return;
+            int row_index = v_ownership_rights.Find("id_ownership_right", e.Row["id_ownership_right"]);
+            if (row_index == -1)
+                return;
+            DataRowView row = (DataRowView)v_ownership_rights[row_index];
+            if ((v_snapshot_ownerships_rights.Find("id_ownership_right", e.Row["id_ownership_right"]) == -1) && (row_index != -1))
+            {
+                snapshot_ownerships_rights.Rows.Add(new object[] { 
+                            row["id_ownership_right"], 
+                            row["id_ownership_right_type"],
+                            row["number"],
+                            row["date"],
+                            row["description"]
+                        });
+            }
         }
 
         void OwnershipAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
@@ -571,7 +587,11 @@ namespace Registry.Viewport
         void v_snapshot_ownerships_rights_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
         }
 
         private void InitializeComponent()

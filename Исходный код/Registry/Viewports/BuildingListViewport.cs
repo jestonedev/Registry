@@ -357,7 +357,7 @@ namespace Registry.Viewport
                 return;
             }
             ShowAssocViewport(MenuCallback, viewportType,
-                "id_building = " + Convert.ToInt32(((DataRowView)v_buildings[v_buildings.Position])["id_building"], CultureInfo.CurrentCulture),
+                "id_building = " + Convert.ToInt32(((DataRowView)v_buildings[v_buildings.Position])["id_building"], CultureInfo.InvariantCulture),
                 ((DataRowView)v_buildings[v_buildings.Position]).Row,
                 ParentTypeEnum.Building);
         }
@@ -463,7 +463,11 @@ namespace Registry.Viewport
                 dataGridView.CurrentCell = dataGridView.Rows[v_buildings.Position].Cells[0];
             }
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
         }
 
         private void dataGridView_Resize(object sender, EventArgs e)

@@ -40,7 +40,7 @@ namespace Registry.Viewport
         public StructureTypeListViewport(IMenuCallback menuCallback): base(menuCallback)
         {
             InitializeComponent();
-            snapshot_structure_types.Locale = CultureInfo.CurrentCulture;
+            snapshot_structure_types.Locale = CultureInfo.InvariantCulture;
         }
 
         public StructureTypeListViewport(StructureTypeListViewport structureTypeListViewport, IMenuCallback menuCallback)
@@ -411,7 +411,11 @@ namespace Registry.Viewport
         void v_snapshot_structure_types_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
         }
 
         private void InitializeComponent()

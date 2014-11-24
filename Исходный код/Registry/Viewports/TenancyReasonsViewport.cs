@@ -48,7 +48,7 @@ namespace Registry.Viewport
             : base(menuCallback)
         {
             InitializeComponent();
-            snapshot_tenancy_reasons.Locale = CultureInfo.CurrentCulture;
+            snapshot_tenancy_reasons.Locale = CultureInfo.InvariantCulture;
         }
 
         public TenancyReasonsViewport(TenancyReasonsViewport tenancyReasonsViewport, IMenuCallback menuCallback)
@@ -247,7 +247,7 @@ namespace Registry.Viewport
             v_tenancy_reason_types.DataSource = DataSetManager.DataSet;
 
             if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
-                this.Text = String.Format(CultureInfo.CurrentCulture, "Основания найма №{0}", ParentRow["id_process"]);
+                this.Text = String.Format(CultureInfo.InvariantCulture, "Основания найма №{0}", ParentRow["id_process"]);
 
             //Инициируем колонки snapshot-модели
             for (int i = 0; i < tenancy_reasons.Select().Columns.Count; i++)
@@ -437,10 +437,10 @@ namespace Registry.Viewport
             string reason_number = dataGridView.Rows[e.RowIndex].Cells["reason_number"].Value.ToString();
             DateTime? reason_date = null;
             if (dataGridView.Rows[e.RowIndex].Cells["reason_date"].Value != DBNull.Value)
-                reason_date = Convert.ToDateTime(dataGridView.Rows[e.RowIndex].Cells["reason_date"].Value, CultureInfo.CurrentCulture);
+                reason_date = Convert.ToDateTime(dataGridView.Rows[e.RowIndex].Cells["reason_date"].Value, CultureInfo.InvariantCulture);
             dataGridView.Rows[e.RowIndex].Cells["reason_prepared"].Value =
                 reason_template.Replace("@reason_date@", reason_date == null ? "" : 
-                    reason_date.Value.ToString("dd.MM.yyyy", CultureInfo.CurrentCulture))
+                    reason_date.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture))
                                .Replace("@reason_number@", reason_number);
             MenuCallback.EditingStateUpdate();
         }
@@ -471,13 +471,11 @@ namespace Registry.Viewport
         void v_snapshot_tenancy_reasons_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
-        }
-
-        void v_snapshot_restrictions_CurrentItemChanged(object sender, EventArgs e)
-        {
-            if (Selected)
-                MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
         }
 
         void TenancyReasonsViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
@@ -486,7 +484,7 @@ namespace Registry.Viewport
                 return;
             if (e.Action == DataRowAction.Delete)
             {
-                int row_index = v_snapshot_tenancy_reasons.Find("id_process", e.Row["id_process"]);
+                int row_index = v_snapshot_tenancy_reasons.Find("id_reason", e.Row["id_reason"]);
                 if (row_index != -1)
                     ((DataRowView)v_snapshot_tenancy_reasons[row_index]).Delete();
             }
@@ -517,6 +515,7 @@ namespace Registry.Viewport
                     int row_index = v_tenancy_reasons.Find("id_reason", e.Row["id_reason"]);
                     if (row_index != -1)
                         snapshot_tenancy_reasons.Rows.Add(new object[] { 
+                            e.Row["id_reason"],
                             e.Row["id_process"], 
                             e.Row["id_reason_type"],   
                             e.Row["reason_number"],                 

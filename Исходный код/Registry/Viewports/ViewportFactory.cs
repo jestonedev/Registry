@@ -62,7 +62,7 @@ namespace Registry.Viewport
                     return new FundsHistoryViewport(menuCallback);
             }
             throw new ViewportException(
-                String.Format(CultureInfo.CurrentCulture, "В фабрику ViewportFactory передан неизвестный тип {0}", viewportType.ToString()));
+                String.Format(CultureInfo.InvariantCulture, "В фабрику ViewportFactory передан неизвестный тип {0}", viewportType.ToString()));
         }
     }
 }

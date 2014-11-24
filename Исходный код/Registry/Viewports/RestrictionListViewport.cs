@@ -49,7 +49,7 @@ namespace Registry.Viewport
         public RestrictionListViewport(IMenuCallback menuCallback): base(menuCallback)
         {
             InitializeComponent();
-            snapshot_restrictions.Locale = CultureInfo.CurrentCulture;
+            snapshot_restrictions.Locale = CultureInfo.InvariantCulture;
         }
 
         public RestrictionListViewport(RestrictionListViewport restrictionListViewport, IMenuCallback menuCallback)
@@ -255,14 +255,14 @@ namespace Registry.Viewport
             {
                 v_restriction_assoc.DataMember = "restrictions_premises_assoc";
                 v_restriction_assoc.Filter = "id_premises = " + ParentRow["id_premises"].ToString();
-                this.Text = String.Format(CultureInfo.CurrentCulture, "Реквизиты помещения №{0}", ParentRow["id_premises"].ToString());
+                this.Text = String.Format(CultureInfo.InvariantCulture, "Реквизиты помещения №{0}", ParentRow["id_premises"].ToString());
             }
             else
                 if ((ParentType == ParentTypeEnum.Building) && (ParentRow != null))
                 {
                     v_restriction_assoc.DataMember = "restrictions_buildings_assoc";
                     v_restriction_assoc.Filter = "id_building = " + ParentRow["id_building"].ToString();
-                    this.Text = String.Format(CultureInfo.CurrentCulture, "Реквизиты здания №{0}", ParentRow["id_building"].ToString());
+                    this.Text = String.Format(CultureInfo.InvariantCulture, "Реквизиты здания №{0}", ParentRow["id_building"].ToString());
                 }
                 else
                     throw new ViewportException("Неизвестный тип родительского объекта");
@@ -488,9 +488,25 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            //Если добавлена новая ассоциативная связь, то перестраиваем фильтр v_ownerships_rights.Filter
-            if (e.Action == DataRowAction.Add)
-                RebuildFilter();
+            //Если добавлена новая ассоциативная связь, то перестраиваем фильтр v_restriction.Filter
+            RebuildFilter();
+            //Если в модели есть запись, а в снапшоте нет, то добавляем в снапшот
+            if (e.Row["id_restriction"] == DBNull.Value)
+                return;
+            int row_index = v_restrictions.Find("id_restriction", e.Row["id_restriction"]);
+            if (row_index == -1)
+                return;
+            DataRowView row = (DataRowView)v_restrictions[row_index];
+            if ((v_snapshot_restrictions.Find("id_restriction", e.Row["id_restriction"]) == -1) && (row_index != -1))
+            {
+                snapshot_restrictions.Rows.Add(new object[] { 
+                            row["id_restriction"], 
+                            row["id_restriction_type"],
+                            row["number"],
+                            row["date"],
+                            row["description"]
+                        });
+            }
         }
 
         void RestrictionListViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
@@ -572,7 +588,11 @@ namespace Registry.Viewport
         void v_snapshot_restrictions_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
         }
 
         private void InitializeComponent()

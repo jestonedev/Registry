@@ -625,13 +625,10 @@ namespace Registry
         {
             UserDomain user = UserDomain.Current;
             if (user == null)
-            {
-                MessageBox.Show("Пользователь не распознан или учетная запись не включена в службу каталогов Active Directory","Ошибка", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                Application.Exit();
-                return;
-            }
-            toolStripLabelHelloUser.Text = "Здравствуйте, " + user.DisplayName;
+                toolStripLabelHelloUser.Text = "";
+            else
+                toolStripLabelHelloUser.Text = "Здравствуйте, " + user.DisplayName;
+            //Загружаем права пользователя
             AccessControl.LoadPriveleges();
             if (AccessControl.HasNoPriveleges())
             {
@@ -640,7 +637,11 @@ namespace Registry
                 Application.Exit();
                 return;
             }
+            //Инициируем начальные параметры CallbackUpdater
+            DataModelCallbackUpdater.GetInstance().Initialize();
+            //Загружаем данные в асинхронном режиме
             PreLoadData();
+            //Обновляем состояние главного меню и вкладок в соответствии с правами пользователя
             MainMenuStateUpdate();
             RibbonTabsStateUpdate();
         }
@@ -803,6 +804,12 @@ namespace Registry
             {
                 if (ribbonButtonSave.Enabled)
                     ribbonButtonSave_Click(this, new EventArgs());
+                return true;
+            }
+            if (keyData == (Keys.Control | Keys.Alt | Keys.Z))
+            {
+                if (ribbonButtonCancel.Enabled)
+                    ribbonButtonCancel_Click(this, new EventArgs());
                 return true;
             }
             if (keyData == (Keys.Control | Keys.N))

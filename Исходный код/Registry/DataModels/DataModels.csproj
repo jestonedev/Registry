@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataModelCallbackUpdater.cs" />
     <Compile Include="DataModelHelper.cs" />
     <Compile Include="DataModels\TenancyAgreementsDataModel.cs" />
     <Compile Include="CalcDataModels\CalcDataModelBuildingsPremisesFunds.cs" />

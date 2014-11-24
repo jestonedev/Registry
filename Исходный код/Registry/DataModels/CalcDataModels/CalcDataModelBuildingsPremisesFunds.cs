@@ -25,7 +25,7 @@ namespace Registry.CalcDataModels
         private static DataTable InitializeTable()
         {
             DataTable table = new DataTable(tableName);
-            table.Locale = CultureInfo.CurrentCulture;
+            table.Locale = CultureInfo.InvariantCulture;
             table.Columns.Add("id_building").DataType = typeof(int);
             table.Columns.Add("social_premises_count").DataType = typeof(int);
             table.Columns.Add("commercial_premises_count").DataType = typeof(int);

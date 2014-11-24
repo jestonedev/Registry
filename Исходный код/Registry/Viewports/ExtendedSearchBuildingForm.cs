@@ -44,20 +44,20 @@ namespace Registry.SearchForms
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.CurrentCulture, "house = '{0}'", textBoxHouse.Text.Trim().Replace("'", ""));
+                filter += String.Format(CultureInfo.InvariantCulture, "house = '{0}'", textBoxHouse.Text.Trim().Replace("'", ""));
             }
             if (checkBoxFloorsEnable.Checked)
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += "floors = " + numericUpDownFloors.Value.ToString(CultureInfo.CurrentCulture);
+                filter += "floors = " + numericUpDownFloors.Value.ToString(CultureInfo.InvariantCulture);
             }
             if (checkBoxCadastralNumEnable.Checked)
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 if (!String.IsNullOrEmpty(textBoxCadastralNum.Text.Trim()))
-                    filter += String.Format(CultureInfo.CurrentCulture, "cadastral_num = '{0}'", textBoxCadastralNum.Text.Trim().Replace("'", ""));
+                    filter += String.Format(CultureInfo.InvariantCulture, "cadastral_num = '{0}'", textBoxCadastralNum.Text.Trim().Replace("'", ""));
                 else
                     filter += "cadastral_num is null";
             }
@@ -71,13 +71,13 @@ namespace Registry.SearchForms
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += "improvement = " + (checkBoxImprovement.Checked ? 1 : 0).ToString(CultureInfo.CurrentCulture);
+                filter += "improvement = " + (checkBoxImprovement.Checked ? 1 : 0).ToString(CultureInfo.InvariantCulture);
             }
             if (checkBoxElevatorEnable.Checked)
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += "elevator = " + (checkBoxElevator.Checked ? 1 : 0).ToString(CultureInfo.CurrentCulture);
+                filter += "elevator = " + (checkBoxElevator.Checked ? 1 : 0).ToString(CultureInfo.InvariantCulture);
             }
             if ((checkBoxStateEnable.Checked) && (comboBoxState.SelectedValue != null))
             {
@@ -90,7 +90,7 @@ namespace Registry.SearchForms
             if ((checkBoxFundTypeEnable.Checked) && (comboBoxStreet.SelectedValue != null))
             {
                 IEnumerable<int> buildings_ids = DataModelHelper.BuildingIDsByCurrentFund(
-                    Convert.ToInt32(comboBoxFundType.SelectedValue, CultureInfo.CurrentCulture));
+                    Convert.ToInt32(comboBoxFundType.SelectedValue, CultureInfo.InvariantCulture));
                 included_buildings = DataModelHelper.Intersect(included_buildings, buildings_ids);
             }
             if (checkBoxContractNumberEnable.Checked)
@@ -110,7 +110,7 @@ namespace Registry.SearchForms
                     filter += " AND ";
                 filter += "id_building IN (0";
                 foreach (int id in included_buildings)
-                    filter += id.ToString(CultureInfo.CurrentCulture) + ",";
+                    filter += id.ToString(CultureInfo.InvariantCulture) + ",";
                 filter = filter.TrimEnd(new char[] { ',' }) + ")";
             }
             return filter;

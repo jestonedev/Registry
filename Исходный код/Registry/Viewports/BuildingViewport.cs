@@ -462,7 +462,7 @@ namespace Registry.Viewport
                 this.Text = "Новое здание";
             else
                 if (v_buildings.Position != -1)
-                    this.Text = String.Format(CultureInfo.CurrentCulture, "Здание №{0}", ((DataRowView)v_buildings[v_buildings.Position])["id_building"]);
+                    this.Text = String.Format(CultureInfo.InvariantCulture, "Здание №{0}", ((DataRowView)v_buildings[v_buildings.Position])["id_building"]);
                 else
                     this.Text = "Здания отсутствуют";
         }
@@ -839,7 +839,7 @@ namespace Registry.Viewport
                     FillRowFromBuilding(building, newRow);
                     is_editable = true;
                     buildings.EditingNewRecord = false;
-                    this.Text = "Здание №" + id_building.ToString(CultureInfo.CurrentCulture);
+                    this.Text = "Здание №" + id_building.ToString(CultureInfo.InvariantCulture);
                     viewportState = ViewportState.ReadState;
                     is_editable = true;
                     break;
@@ -1063,7 +1063,7 @@ namespace Registry.Viewport
                 return;
             }
             ShowAssocViewport(MenuCallback, viewportType,
-                "id_building = " + Convert.ToInt32(((DataRowView)v_buildings[v_buildings.Position])["id_building"], CultureInfo.CurrentCulture),
+                "id_building = " + Convert.ToInt32(((DataRowView)v_buildings[v_buildings.Position])["id_building"], CultureInfo.InvariantCulture),
                 ((DataRowView)v_buildings[v_buildings.Position]).Row,
                 ParentTypeEnum.Building);
         }
@@ -1119,7 +1119,11 @@ namespace Registry.Viewport
             FiltersRebuild();
             v_kladr.Filter = "";
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
             if (v_buildings.Position == -1)
                 return;
             if (viewportState == ViewportState.NewRowState)
@@ -1740,9 +1744,9 @@ namespace Registry.Viewport
             this.label19.AutoSize = true;
             this.label19.Location = new System.Drawing.Point(16, 123);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(119, 15);
+            this.label19.Size = new System.Drawing.Size(90, 15);
             this.label19.TabIndex = 35;
-            this.label19.Text = "Текущий тип найма";
+            this.label19.Text = "Текущий фонд";
             this.label19.Visible = false;
             // 
             // textBoxCadastralNum

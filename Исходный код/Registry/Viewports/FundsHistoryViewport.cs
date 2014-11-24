@@ -495,7 +495,7 @@ namespace Registry.Viewport
             {
                 v_fund_assoc.DataMember = "funds_sub_premises_assoc";
                 v_fund_assoc.Filter = "id_sub_premises = " + ParentRow["id_sub_premises"].ToString();
-                this.Text = String.Format(CultureInfo.CurrentCulture, "История найма комнаты №{0} помещения №{1}", ParentRow["sub_premises_num"].ToString(),
+                this.Text = String.Format(CultureInfo.InvariantCulture, "История найма комнаты №{0} помещения №{1}", ParentRow["sub_premises_num"].ToString(),
                     ParentRow["id_premises"].ToString());
             }
             else
@@ -503,14 +503,14 @@ namespace Registry.Viewport
                 {
                     v_fund_assoc.DataMember = "funds_premises_assoc";
                     v_fund_assoc.Filter = "id_premises = " + ParentRow["id_premises"].ToString();
-                    this.Text = String.Format(CultureInfo.CurrentCulture, "История найма помещения №{0}", ParentRow["id_premises"].ToString());
+                    this.Text = String.Format(CultureInfo.InvariantCulture, "История найма помещения №{0}", ParentRow["id_premises"].ToString());
                 }
                 else
                     if ((ParentType == ParentTypeEnum.Building) && (ParentRow != null))
                     {
                         v_fund_assoc.DataMember = "funds_buildings_assoc";
                         v_fund_assoc.Filter = "id_building = " + ParentRow["id_building"].ToString();
-                        this.Text = String.Format(CultureInfo.CurrentCulture, "История найма здания №{0}", ParentRow["id_building"].ToString());
+                        this.Text = String.Format(CultureInfo.InvariantCulture, "История найма здания №{0}", ParentRow["id_building"].ToString());
                     }
                     else
                         throw new ViewportException("Неизвестный тип родительского объекта");
@@ -764,7 +764,11 @@ namespace Registry.Viewport
                     if (dataGridView.Rows[v_funds_history.Position].Selected != true)
                         dataGridView.Rows[v_funds_history.Position].Selected = true;
             if (Selected)
+            {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
             UnbindedCheckBoxesUpdate();
             if (v_funds_history.Position == -1)
                 return;
@@ -846,9 +850,9 @@ namespace Registry.Viewport
         void comboBoxFundType_SelectedIndexChanged(object sender, EventArgs e)
         {
             textBoxProtocolNumber.Enabled = ((comboBoxFundType.SelectedValue) != null &&
-                (Convert.ToInt32(comboBoxFundType.SelectedValue, CultureInfo.CurrentCulture) != 1));
+                (Convert.ToInt32(comboBoxFundType.SelectedValue, CultureInfo.InvariantCulture) != 1));
             dateTimePickerProtocolDate.Enabled = ((comboBoxFundType.SelectedValue) != null &&
-                (Convert.ToInt32(comboBoxFundType.SelectedValue, CultureInfo.CurrentCulture) != 1));
+                (Convert.ToInt32(comboBoxFundType.SelectedValue, CultureInfo.InvariantCulture) != 1));
             CheckViewportModifications();
         }
 
@@ -864,12 +868,9 @@ namespace Registry.Viewport
 
         void FundAssoc_RowChanged(object sender, DataRowChangeEventArgs e)
         {
-            if (e.Action == DataRowAction.Add)
-            {
-                RebuildFilter();
-                UnbindedCheckBoxesUpdate();
-                RedrawDataGridRows();
-            }
+            RebuildFilter();
+            UnbindedCheckBoxesUpdate();
+            RedrawDataGridRows();
         }
 
         void checkBoxExcludeRest_CheckedChanged(object sender, EventArgs e)

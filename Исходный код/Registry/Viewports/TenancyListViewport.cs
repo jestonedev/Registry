@@ -74,13 +74,13 @@ namespace Registry.Viewport
             switch (ParentType)
             {
                 case ParentTypeEnum.Building:
-                    ids = DataModelHelper.TenancyProcessIDsByBuildingID(Convert.ToInt32(ParentRow["id_building"], CultureInfo.CurrentCulture));
+                    ids = DataModelHelper.TenancyProcessIDsByBuildingID(Convert.ToInt32(ParentRow["id_building"], CultureInfo.InvariantCulture));
                     break;
                 case ParentTypeEnum.Premises:
-                    ids = DataModelHelper.TenancyProcessIDsByPremisesID(Convert.ToInt32(ParentRow["id_premises"], CultureInfo.CurrentCulture));
+                    ids = DataModelHelper.TenancyProcessIDsByPremisesID(Convert.ToInt32(ParentRow["id_premises"], CultureInfo.InvariantCulture));
                     break;
                 case ParentTypeEnum.SubPremises:
-                    ids = DataModelHelper.TenancyProcessIDsBySubPremisesID(Convert.ToInt32(ParentRow["id_sub_premises"], CultureInfo.CurrentCulture));
+                    ids = DataModelHelper.TenancyProcessIDsBySubPremisesID(Convert.ToInt32(ParentRow["id_sub_premises"], CultureInfo.InvariantCulture));
                     break;
                 default: 
                     throw new ViewportException("Неизвестный тип родительского объекта");
@@ -89,7 +89,7 @@ namespace Registry.Viewport
             {
                 StaticFilter = "id_process IN (0";
                 foreach (int id in ids)
-                    StaticFilter += id.ToString(CultureInfo.CurrentCulture) + ",";
+                    StaticFilter += id.ToString(CultureInfo.InvariantCulture) + ",";
                 StaticFilter = StaticFilter.TrimEnd(new char[] { ',' }) + ")";
             }
             string Filter = StaticFilter;
@@ -108,13 +108,13 @@ namespace Registry.Viewport
                 switch (ParentType)
                 {
                     case ParentTypeEnum.Building:
-                        this.Text = String.Format(CultureInfo.CurrentCulture, "Найм здания №{0}", ParentRow["id_building"]);
+                        this.Text = String.Format(CultureInfo.InvariantCulture, "Найм здания №{0}", ParentRow["id_building"]);
                         break;
                     case ParentTypeEnum.Premises:
-                        this.Text = String.Format(CultureInfo.CurrentCulture, "Найм помещения №{0}", ParentRow["id_premises"]);
+                        this.Text = String.Format(CultureInfo.InvariantCulture, "Найм помещения №{0}", ParentRow["id_premises"]);
                         break;
                     case ParentTypeEnum.SubPremises:
-                        this.Text = String.Format(CultureInfo.CurrentCulture, "Найм комнаты №{0}", ParentRow["id_sub_premises"]);
+                        this.Text = String.Format(CultureInfo.InvariantCulture, "Найм комнаты №{0}", ParentRow["id_sub_premises"]);
                         break;
                     default: throw new ViewportException("Неизвестный тип родительского объекта");
                 }
@@ -449,7 +449,7 @@ namespace Registry.Viewport
                 return;
             }
             ShowAssocViewport(MenuCallback, viewportType,
-                "id_process = " + Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_process"], CultureInfo.CurrentCulture),
+                "id_process = " + Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_process"], CultureInfo.InvariantCulture),
                 ((DataRowView)v_tenancies[v_tenancies.Position]).Row,
                 ParentTypeEnum.Tenancy);
         }
@@ -457,13 +457,13 @@ namespace Registry.Viewport
         public override bool HasTenancyContract17xReport()
         {
             return (v_tenancies.Position > -1) &&
-                Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_rent_type"], CultureInfo.CurrentCulture) == 2;
+                Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_rent_type"], CultureInfo.InvariantCulture) == 2;
         }
 
         public override bool HasTenancyContractReport()
         {
             return (v_tenancies.Position > -1) &&
-                Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_rent_type"], CultureInfo.CurrentCulture) != 2;
+                Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_rent_type"], CultureInfo.InvariantCulture) != 2;
         }
 
         public override bool HasTenancyActReport()
@@ -538,7 +538,7 @@ namespace Registry.Viewport
             if (v_tenancies.Position == -1)
                 return false;
             DataRowView row = (DataRowView)v_tenancies[v_tenancies.Position];
-            if (!DataModelHelper.TenancyProcessHasTenant(Convert.ToInt32(row["id_process"], CultureInfo.CurrentCulture)))
+            if (!DataModelHelper.TenancyProcessHasTenant(Convert.ToInt32(row["id_process"], CultureInfo.InvariantCulture)))
             {
                 MessageBox.Show("Для формирования отчетной документации необходимо указать нанимателя процесса найма","Ошибка", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -687,6 +687,8 @@ namespace Registry.Viewport
             if (Selected)
             {
                 MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
                 MenuCallback.TenancyRefsStateUpdate();
             }
         }
