@@ -623,7 +623,9 @@ namespace Registry
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            UserDomain user = UserDomain.Current;
+            UserDomain user = null;
+            if (RegistrySettings.UseLDAP)
+                user = UserDomain.Current;
             if (user == null)
                 toolStripLabelHelloUser.Text = "";
             else
@@ -638,7 +640,7 @@ namespace Registry
                 return;
             }
             //Инициируем начальные параметры CallbackUpdater
-            DataModelCallbackUpdater.GetInstance().Initialize();
+            DataModelsCallbackUpdater.GetInstance().Initialize();
             //Загружаем данные в асинхронном режиме
             PreLoadData();
             //Обновляем состояние главного меню и вкладок в соответствии с правами пользователя

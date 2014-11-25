@@ -384,7 +384,7 @@ namespace Registry.Viewport
             }
             sync_views = true;
             MenuCallback.EditingStateUpdate();
-            CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
+            CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
         }
 
         public override bool CanDuplicate()

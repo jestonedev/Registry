@@ -603,10 +603,10 @@ namespace Registry.Viewport
             viewportState = ViewportState.ReadState;
             CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"]);
             if (ParentType == ParentTypeEnum.Building)
-                CalcDataModelBuildingsCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"]);
+                CalcDataModelBuildingsCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"], true);
             else
                 if (ParentType == ParentTypeEnum.Premises)
-                    CalcDataModelPremisesCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, (int)ParentRow["id_premises"]);
+                    CalcDataModelPremisesCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, (int)ParentRow["id_premises"], true);
             MenuCallback.EditingStateUpdate();
         }
 
@@ -668,12 +668,12 @@ namespace Registry.Viewport
                 viewportState = ViewportState.ReadState;
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.ForceCloseDetachedViewports();
-                CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"]);
+                CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"], true);
                 if (ParentType == ParentTypeEnum.Building)
-                    CalcDataModelBuildingsCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"]);
+                    CalcDataModelBuildingsCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"], true);
                 else
                     if (ParentType == ParentTypeEnum.Premises)
-                        CalcDataModelPremisesCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, (int)ParentRow["id_premises"]);
+                        CalcDataModelPremisesCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, (int)ParentRow["id_premises"], true);
             }
         }
 

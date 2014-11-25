@@ -338,7 +338,12 @@ namespace Registry.Viewport
                     return;
                 ((DataRowView)v_premises[v_premises.Position]).Delete();
                 MenuCallback.ForceCloseDetachedViewports();
-                CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building);
+                if (ParentType == ParentTypeEnum.Tenancy)
+                {
+                    CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building, true);
+                    CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building, true);
+                    CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
+                }
             }
         }
 
@@ -517,7 +522,7 @@ namespace Registry.Viewport
             MenuCallback.EditingStateUpdate();
             // Обновляем зависимую агрегационную модель
             if (ParentType == ParentTypeEnum.Tenancy)
-                CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Tenancy, (int)ParentRow["id_process"]);
+                CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Tenancy, (int)ParentRow["id_process"], true);
         }
 
         public override bool CanInsertRecord()
@@ -710,32 +715,25 @@ namespace Registry.Viewport
             if (e.Row["id_process"] == DBNull.Value || 
                 Convert.ToInt32(e.Row["id_process"], CultureInfo.InvariantCulture) != Convert.ToInt32(ParentRow["id_process"], CultureInfo.InvariantCulture))
                 return;
-            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
+            int row_index = v_snapshot_tenancy_premises.Find("id_premises", e.Row["id_premises"]);
+            if (row_index == -1 && v_tenancy_premises.Find("id_assoc", e.Row["id_assoc"]) != -1)
             {
-                int row_index = v_snapshot_tenancy_premises.Find("id_premises", e.Row["id_premises"]);
+                snapshot_tenancy_premises.Rows.Add(new object[] { 
+                        e.Row["id_assoc"],
+                        e.Row["id_premises"], 
+                        true,   
+                        e.Row["rent_total_area"],
+                        e.Row["rent_living_area"]
+                    });
+            }
+            else
                 if (row_index != -1)
                 {
                     DataRowView row = ((DataRowView)v_snapshot_tenancy_premises[row_index]);
                     row["rent_total_area"] = e.Row["rent_total_area"];
                     row["rent_living_area"] = e.Row["rent_living_area"];
                 }
-            }
-            else
-                if (e.Action == DataRowAction.Add)
-                {
-                    //Если строка имеется в текущем контексте оригинального представления, то добавить его и в snapshot, 
-                    //иначе - объект не принадлежит текущему родителю
-                    int row_index = v_tenancy_premises.Find("id_assoc", e.Row["id_assoc"]);
-                    if (row_index != -1)
-                        snapshot_tenancy_premises.Rows.Add(new object[] { 
-                            e.Row["id_assoc"],
-                            e.Row["id_premises"], 
-                            true,   
-                            e.Row["rent_total_area"],
-                            e.Row["rent_living_area"]
-                        });
-                }
-            dataGridView.Refresh();
+            dataGridView.Invalidate();
         }
 
         void PremisesListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
@@ -750,9 +748,8 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            if (e.Action == DataRowAction.Change || e.Action == DataRowAction.ChangeCurrentAndOriginal || e.Action == DataRowAction.ChangeOriginal)
-                dataGridView.Refresh();
             dataGridView.RowCount = v_premises.Count;
+            dataGridView.Refresh();
         }
 
         void dataGridView_BeforeCollapseDetails(object sender, DataGridViewDetailsEventArgs e)

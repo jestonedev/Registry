@@ -6,7 +6,7 @@
    <Modules>
     <Module Name="registry.exe">
      <Messages>
-      <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Status="Active" Created="2014-11-24 07:51:16Z" FixCategory="NonBreaking">
+      <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Status="Active" Created="2014-11-25 02:47:34Z" FixCategory="NonBreaking">
        <Issue Name="NoStrongName" Certainty="95" Level="CriticalError">Sign 'Registry.exe' with a strong name key.</Issue>
       </Message>
      </Messages>
@@ -17,32 +17,11 @@
          <Members>
           <Member Name="#ProcessCmdKey(System.Windows.Forms.Message&amp;,System.Windows.Forms.Keys)" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-11-24 07:51:16Z" FixCategory="NonBreaking">
-             <Issue Certainty="33" Level="CriticalError" Path="e:\Реестр жилого фонда\Исходный код\Registry\Registry" File="MainForm.cs" Line="803">'MainForm.ProcessCmdKey(ref Message, Keys)' calls into 'Form.ProcessCmdKey(ref Message, Keys)' which has a LinkDemand. By making this call, 'Form.ProcessCmdKey(ref Message, Keys)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'MainForm.ProcessCmdKey(ref Message, Keys)'&#xD;&#xA;   -&gt;'MainForm.ProcessCmdKey(ref Message, Keys)'</Issue>
+            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2014-11-25 02:47:34Z" FixCategory="NonBreaking">
+             <Issue Certainty="33" Level="CriticalError" Path="e:\Реестр жилого фонда\Исходный код\Registry\Registry" File="MainForm.cs" Line="805">'MainForm.ProcessCmdKey(ref Message, Keys)' calls into 'Form.ProcessCmdKey(ref Message, Keys)' which has a LinkDemand. By making this call, 'Form.ProcessCmdKey(ref Message, Keys)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'MainForm.ProcessCmdKey(ref Message, Keys)'&#xD;&#xA;   -&gt;'MainForm.ProcessCmdKey(ref Message, Keys)'</Issue>
             </Message>
-            <Message TypeName="OverrideLinkDemandsShouldBeIdenticalToBase" Category="Microsoft.Security" CheckId="CA2123" Status="Active" Created="2014-11-24 07:51:16Z" FixCategory="Breaking">
-             <Issue Name="BaseOnly" Certainty="33" Level="CriticalError" Path="e:\Реестр жилого фонда\Исходный код\Registry\Registry" File="MainForm.cs" Line="803">Add the following security attribute to 'MainForm.ProcessCmdKey(ref Message, Keys)' in order to match a LinkDemand on base method 'Form.ProcessCmdKey(ref Message, Keys)':  [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)].</Issue>
-            </Message>
-           </Messages>
-          </Member>
-         </Members>
-        </Type>
-        <Type Name="Program" Kind="Class" Accessibility="Assembly" ExternallyVisible="False">
-         <Members>
-          <Member Name="#m_appName" Kind="Field" Static="True" Accessibility="Private" ExternallyVisible="False">
-           <Messages>
-            <Message TypeName="ReviewMisleadingFieldNames" Category="Microsoft.Maintainability" CheckId="CA1504" Status="Active" Created="2014-11-24 07:51:16Z" FixCategory="NonBreaking">
-             <Issue Name="Static" Certainty="95" Level="Warning">The field name 'Program.m_appName' suggests that it is instance data but it is declared as static (Shared in Visual Basic). Review this member to verify that it should be static, or consider changing the field name.</Issue>
-            </Message>
-           </Messages>
-          </Member>
-          <Member Name="#m_instance" Kind="Field" Static="True" Accessibility="Private" ExternallyVisible="False">
-           <Messages>
-            <Message TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823" Status="Active" Created="2014-11-24 07:51:16Z" FixCategory="NonBreaking">
-             <Issue Certainty="75" Level="Warning">It appears that field 'Program.m_instance' is never used or is only ever assigned to. Use this field or remove it.</Issue>
-            </Message>
-            <Message TypeName="ReviewMisleadingFieldNames" Category="Microsoft.Maintainability" CheckId="CA1504" Status="Active" Created="2014-11-24 07:51:16Z" FixCategory="NonBreaking">
-             <Issue Name="Static" Certainty="95" Level="Warning">The field name 'Program.m_instance' suggests that it is instance data but it is declared as static (Shared in Visual Basic). Review this member to verify that it should be static, or consider changing the field name.</Issue>
+            <Message TypeName="OverrideLinkDemandsShouldBeIdenticalToBase" Category="Microsoft.Security" CheckId="CA2123" Status="Active" Created="2014-11-25 02:47:34Z" FixCategory="Breaking">
+             <Issue Name="BaseOnly" Certainty="33" Level="CriticalError" Path="e:\Реестр жилого фонда\Исходный код\Registry\Registry" File="MainForm.cs" Line="805">Add the following security attribute to 'MainForm.ProcessCmdKey(ref Message, Keys)' in order to match a LinkDemand on base method 'Form.ProcessCmdKey(ref Message, Keys)':  [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)].</Issue>
             </Message>
            </Messages>
           </Member>
@@ -66,16 +45,6 @@
    <MessageLevel Certainty="95">CriticalError</MessageLevel>
    <File Name="designrules.dll" Version="12.0.0.0" />
   </Rule>
-  <Rule TypeName="AvoidUnusedPrivateFields" Category="Microsoft.Performance" CheckId="CA1823">
-   <Name>Avoid unused private fields</Name>
-   <Description>Private fields were detected that do not appear to be accessed within the assembly. If this violation fires in error, please send a problem report to the Visual Studio Code Analysis team.</Description>
-   <Resolution Name="Default">It appears that field {0} is never used or is only ever assigned to. Use this field or remove it.</Resolution>
-   <Owner />
-   <Url>http://msdn.microsoft.com/library/ms245042.aspx</Url>
-   <Email>[none]</Email>
-   <MessageLevel Certainty="75">Warning</MessageLevel>
-   <File Name="performancerules.dll" Version="12.0.0.0" />
-  </Rule>
   <Rule TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122">
    <Name>Do not indirectly expose methods with link demands</Name>
    <Description>Do not wrap a method protected by a LinkDemand with a method that does not perform a security check. A LinkDemand checks the permissions of the immediate caller rather than checking the permissions of all callers in the call stack. In this case, the permissions of the wrapper method will be checked. If the wrapper method does not, itself, check the permissions of callers higher in the call stack, malicious code might be able to execute the wrapped function even though it lacks permission to do so.</Description>
@@ -95,16 +64,6 @@
    <Email>[none]</Email>
    <MessageLevel Certainty="33">CriticalError</MessageLevel>
    <File Name="securitytransparencyrules.dll" Version="4.0.0.0" />
-  </Rule>
-  <Rule TypeName="ReviewMisleadingFieldNames" Category="Microsoft.Maintainability" CheckId="CA1504">
-   <Name>Review misleading field names</Name>
-   <Description>Review field names which, by convention, appear to indicate they are instance or static but, in fact, are not. This rule fires against instance fields which have names prefixed with "s_" and static fields which are prefixed with "m_".</Description>
-   <Resolution Name="Static">The field name {0} suggests that it is instance data but it is declared as static (Shared in Visual Basic). Review this member to verify that it should be static, or consider changing the field name.</Resolution>
-   <Owner />
-   <Url>http://msdn.microsoft.com/library/bb164506.aspx</Url>
-   <Email>[none]</Email>
-   <MessageLevel Certainty="95">Warning</MessageLevel>
-   <File Name="maintainabilityrules.dll" Version="12.0.0.0" />
   </Rule>
  </Rules>
  <Localized>

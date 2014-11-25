@@ -13,6 +13,9 @@ namespace Registry.CalcDataModels
     {
         private BackgroundWorker worker = new BackgroundWorker();
         public event EventHandler<EventArgs> RefreshEvent;
+        
+        // Метка отложенного обновления. Данные будут обновлены полностью при следующем проходе диспетчера обновления вычисляемых моделей
+        public bool DefferedUpdate { get; set; }
 
         protected CalcDataModel()
         {
@@ -21,10 +24,26 @@ namespace Registry.CalcDataModels
             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CalculationComplete);
         }
 
-        public void Refresh(CalcDataModelFilterEnity entity, int? idObject)
+        public void Refresh(CalcDataModelFilterEnity entity, int? idObject, bool removeDependenceEntities = false)
         {
             while (worker.IsBusy)
                 Application.DoEvents();
+            if (removeDependenceEntities)
+            {
+                if (entity == CalcDataModelFilterEnity.All)
+                    Table.Clear();
+                else
+                {
+                    var remove_rows = (from row in Table.AsEnumerable()
+                                       where entity == CalcDataModelFilterEnity.Building ? row.Field<int?>("id_building") == idObject :
+                                             entity == CalcDataModelFilterEnity.Premise ? row.Field<int?>("id_premises") == idObject :
+                                             entity == CalcDataModelFilterEnity.SubPremise ? row.Field<int?>("id_sub_premises") == idObject :
+                                             entity == CalcDataModelFilterEnity.Tenancy ? row.Field<int?>("id_process") == idObject : false
+                                       select row);
+                    for (int i = remove_rows.Count() - 1; i >= 0; i--)
+                        remove_rows.ElementAt(i).Delete();
+                }
+            }
             worker.RunWorkerAsync(new CalcAsyncConfig(entity, idObject));
         }
 

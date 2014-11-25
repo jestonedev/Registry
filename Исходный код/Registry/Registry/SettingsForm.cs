@@ -25,6 +25,9 @@ namespace Registry
             textBoxLDAPPassword.Text = RegistrySettings.LDAPPassword;
             textBoxLDAPUserName.Text = RegistrySettings.LDAPUserName;
             numericUpDownMaxDBConnectionCount.Value = RegistrySettings.MaxDBConnectionCount;
+            numericUpDownDataModelsCallbackUpdateTimeout.Value = RegistrySettings.DataModelsCallbackUpdateTimeout;
+            numericUpDownCalcDataModelsUpdateTimeout.Value = RegistrySettings.CalcDataModelsUpdateTimeout;
+            checkBoxUseLDAP.Checked = RegistrySettings.UseLDAP;
         }
 
         private void vButton2_Click(object sender, EventArgs e)
@@ -36,6 +39,9 @@ namespace Registry
             RegistrySettings.LDAPPassword = textBoxLDAPPassword.Text;
             RegistrySettings.LDAPUserName = textBoxLDAPUserName.Text;
             RegistrySettings.MaxDBConnectionCount = Convert.ToInt32(numericUpDownMaxDBConnectionCount.Value);
+            RegistrySettings.DataModelsCallbackUpdateTimeout = Convert.ToInt32(numericUpDownDataModelsCallbackUpdateTimeout.Value);
+            RegistrySettings.CalcDataModelsUpdateTimeout = Convert.ToInt32(numericUpDownCalcDataModelsUpdateTimeout.Value);
+            RegistrySettings.UseLDAP = checkBoxUseLDAP.Checked;
             RegistrySettings.Save();
             Close();
         }

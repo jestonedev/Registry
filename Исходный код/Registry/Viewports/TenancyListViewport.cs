@@ -25,7 +25,7 @@ namespace Registry.Viewport
         private TenancyBuildingsAssocDataModel tenancy_building_assoc = null;
         private TenancyPremisesAssocDataModel tenancy_premises_assoc = null;
         private TenancySubPremisesAssocDataModel tenancy_sub_premises_assoc = null;
-        private CalcDataModeTenancyAggregated tenancies_aggregate = null;
+        private CalcDataModelTenancyAggregated tenancies_aggregate = null;
         private RentTypesDataModel rent_types = null;
         #endregion Models
 
@@ -184,7 +184,7 @@ namespace Registry.Viewport
             this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
             tenancies = TenancyProcessesDataModel.GetInstance();
             rent_types = RentTypesDataModel.GetInstance();
-            tenancies_aggregate = CalcDataModeTenancyAggregated.GetInstance();
+            tenancies_aggregate = CalcDataModelTenancyAggregated.GetInstance();
 
             //Ожидаем загрузки данных, если это необходимо
             tenancies.Select();
@@ -695,7 +695,7 @@ namespace Registry.Viewport
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
-            if (dataGridView.Size.Width > 1230)
+            if (dataGridView.Size.Width > 1430)
             {
                 if (dataGridView.Columns["address"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     dataGridView.Columns["address"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -822,11 +822,11 @@ namespace Registry.Viewport
             // 
             this.address.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.address.HeaderText = "Нанимаемое жилье";
-            this.address.MinimumWidth = 300;
+            this.address.MinimumWidth = 500;
             this.address.Name = "address";
             this.address.ReadOnly = true;
             this.address.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.address.Width = 300;
+            this.address.Width = 500;
             // 
             // TenancyListViewport
             // 

@@ -61,7 +61,8 @@ namespace Registry.DataModels
                             {
                                 progressBar.Visible = false;
                                 //Если мы загрузили все данные, то запускаем CallbackUpdater
-                                DataModelCallbackUpdater.GetInstance().Run();
+                                DataModelsCallbackUpdater.GetInstance().Run();
+                                CalcDataModelsUpdater.GetInstance().Run();
                             }
                         }, null);
                     }

@@ -98,7 +98,7 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
-                if ((executor.ExecutorLogin != null) &&
+                if ((executor.ExecutorLogin != null) && (RegistrySettings.UseLDAP) &&
                     (UserDomain.GetUserDomain(executor.ExecutorLogin) == null))
                 {
                     MessageBox.Show("Пользователя с указанным логином не существует", "Ошибка", 

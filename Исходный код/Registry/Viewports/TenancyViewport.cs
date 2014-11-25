@@ -968,7 +968,7 @@ namespace Registry.Viewport
                                 tenancy_buildings.Select().Rows.Add(new object[] { 
                                     id_assoc, to.IdObject, to.IdProcess, to.RentTotalArea, to.RentLivingArea, 0
                                 });
-                                CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"]);
+                                CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"]);
                                 break;
                             case ParentTypeEnum.Premises:
                                 TenancyPremisesAssocDataModel tenancy_premises = TenancyPremisesAssocDataModel.GetInstance();
@@ -980,7 +980,7 @@ namespace Registry.Viewport
                                 tenancy_premises.Select().Rows.Add(new object[] { 
                                     id_assoc, to.IdObject, to.IdProcess, to.RentTotalArea, to.RentLivingArea, 0
                                 });
-                                CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, (int)ParentRow["id_premises"]);
+                                CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, (int)ParentRow["id_premises"]);
                                 break;
                             case ParentTypeEnum.SubPremises:
                                 TenancySubPremisesAssocDataModel tenancy_sub_premises = TenancySubPremisesAssocDataModel.GetInstance();
@@ -992,7 +992,7 @@ namespace Registry.Viewport
                                 tenancy_sub_premises.Select().Rows.Add(new object[] { 
                                     id_assoc, to.IdObject, to.IdProcess, to.RentTotalArea, 0
                                 });
-                                CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.SubPremise, (int)ParentRow["id_sub_premises"]);
+                                CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.SubPremise, (int)ParentRow["id_sub_premises"]);
                                 break;
                             default: throw new ViewportException("Неизвестный тип родительского объекта");
                         }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Registry.CalcDataModels;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -11,9 +12,9 @@ using System.Windows.Forms;
 
 namespace Registry.DataModels
 {
-    public sealed class DataModelCallbackUpdater
+    public sealed class DataModelsCallbackUpdater
     {
-        private static DataModelCallbackUpdater instance;
+        private static DataModelsCallbackUpdater instance;
         private static string query = @"SELECT id_record, `table`, id_key, field_name, field_new_value, operation_type 
                                         FROM `log` WHERE id_record > ? AND (operation_type = 'UPDATE' OR (operation_type IN ('DELETE','INSERT') AND user_name <> ?))";
         private static string initQuery = @"SELECT IFNULL(MAX(id_record), 0) AS id_record, USER() AS user_name FROM log";
@@ -21,7 +22,7 @@ namespace Registry.DataModels
         private string user_name = "";
         private DataRow updRow = null;
 
-        private DataModelCallbackUpdater()
+        private DataModelsCallbackUpdater()
         {
         }
 
@@ -107,8 +108,8 @@ namespace Registry.DataModels
                             //При ошибке загрузки из БД мы просто игнорируем и не производим обновление локальной модели до тех пор, пока связь не установится
                         }
                     }
-                    //Обновление делаем примерно каждые CallbackUpdateTimeout милисекунд
-                    Thread.Sleep(RegistrySettings.CallbackUpdateTimeout);
+                    //Обновление делаем примерно каждые DataModelsCallbackUpdateTimeout милисекунд
+                    Thread.Sleep(RegistrySettings.DataModelsCallbackUpdateTimeout);
                 }
             }, null);
         }
@@ -135,6 +136,9 @@ namespace Registry.DataModels
                 //Если строка не закэширована, или закэширована не та строка, то надо найти и закэшировать строку по имени таблицы и id_key
                 updRow = updTable.Rows.Find(id_key);
             }
+            //Если строка в представлении пользователя существует, но помечена как удаленная, то игнорировать ее
+            if (updRow != null && (updRow.RowState == DataRowState.Deleted || updRow.RowState == DataRowState.Detached))
+                return true;
             switch (operation_type)
             {
                 case "INSERT":
@@ -149,36 +153,87 @@ namespace Registry.DataModels
                         updRow.EndEdit();
                         updTable.Rows.Add(updRow);
                     }
-                    SetValue(updRow, field_name, field_value);
+                    SetValue(updRow, field_name, field_value, operation_type);
                     return true;
                 case "UPDATE":
                     //Если строки нет, то игнорируем и возвращаем false, чтобы сохранить в кэш строку
                     if (updRow == null)
                         return false;
-                    SetValue(updRow, field_name, field_value);
+                    SetValue(updRow, field_name, field_value, operation_type);
                     return true;
                 case "DELETE":
+                    //Если строка не найдена, значит она уже удалена, возвращаем true
                     if (updRow == null)
                         return true;
                     updTable.Rows.Remove(updRow);
+                    CalcDataModelsUpdate(table, field_name, operation_type);
                     return true;
                 default:
-                    return true;    //Игнорируем все другие операции
+                    return true;
             }
         }
 
-        private static void SetValue(DataRow row, string field_name, string field_value)
+        private static void CalcDataModelsUpdate(string table, string field_name, string operation_type)
+        {
+            switch (table)
+            {
+                case "funds_history":
+                    if (CalcDataModelBuildingsCurrentFunds.HasInstance())
+                        CalcDataModelBuildingsCurrentFunds.GetInstance().DefferedUpdate = true;
+                    if (CalcDataModelPremisesCurrentFunds.HasInstance())
+                        CalcDataModelPremisesCurrentFunds.GetInstance().DefferedUpdate = true;
+                    if (CalcDataModelBuildingsPremisesFunds.HasInstance())
+                        CalcDataModelBuildingsPremisesFunds.GetInstance().DefferedUpdate = true;
+                    break;
+                case "sub_premises":
+                    if (operation_type == "DELETE" || (operation_type == "UPDATE" && (field_name == "id_premises" || field_name == "sub_premises_num")))
+                        if (CalcDataModelTenancyAggregated.HasInstance())
+                            CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate = true;
+                    break;
+                case "premises":
+                    if (CalcDataModelBuildingsPremisesSumArea.HasInstance())
+                        CalcDataModelBuildingsPremisesSumArea.GetInstance().DefferedUpdate = true;
+                    if (operation_type == "DELETE")
+                    {
+                        if (CalcDataModelBuildingsPremisesFunds.HasInstance())
+                            CalcDataModelBuildingsPremisesFunds.GetInstance().DefferedUpdate = true;
+                    }
+                    if (operation_type == "DELETE" || (operation_type == "UPDATE" && (field_name == "id_buildings" || field_name == "premises_num")))
+                        if (CalcDataModelTenancyAggregated.HasInstance())
+                            CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate = true;
+                    break;
+                case "buildings":
+                    if (operation_type == "DELETE" || (operation_type == "UPDATE" && (field_name == "id_street" || field_name == "house")))
+                        if (CalcDataModelTenancyAggregated.HasInstance())
+                            CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate = true;
+                    break;
+                case "tenancy_buildings_assoc":
+                case "tenancy_premises_assoc":
+                case "tenancy_sub_premises_assoc":
+                    if (CalcDataModelTenancyAggregated.HasInstance())
+                        CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate = true;
+                    break;
+            }
+        }
+
+        private static void SetValue(DataRow row, string field_name, string field_value, string operation_type)
         {
             if (String.IsNullOrEmpty(field_value))
             {
                 if (!row[field_name].Equals(DBNull.Value))
+                {
                     row[field_name] = DBNull.Value;
+                    CalcDataModelsUpdate(row.Table.TableName, field_name, operation_type);
+                }
             }
             else
             {
                 object value = Convert.ChangeType(field_value, row.Table.Columns[field_name].DataType, CultureInfo.InvariantCulture);
                 if (!row[field_name].Equals(value))
+                {
                     row[field_name] = value;
+                    CalcDataModelsUpdate(row.Table.TableName, field_name, operation_type);
+                }
             }
         }
 
@@ -255,10 +310,10 @@ namespace Registry.DataModels
             };
         }
 
-        public static DataModelCallbackUpdater GetInstance()
+        public static DataModelsCallbackUpdater GetInstance()
         {
             if (instance == null)
-                instance = new DataModelCallbackUpdater();
+                instance = new DataModelsCallbackUpdater();
             return instance;
         }
     }

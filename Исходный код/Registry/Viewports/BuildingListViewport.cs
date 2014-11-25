@@ -237,8 +237,7 @@ namespace Registry.Viewport
                     return;
                 ((DataRowView)v_buildings[v_buildings.Position]).Delete();
                 MenuCallback.ForceCloseDetachedViewports();
-                if (ParentType == ParentTypeEnum.Tenancy)
-                    CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
+                CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
             }
         }
 

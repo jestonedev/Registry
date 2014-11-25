@@ -8,13 +8,13 @@ using System.Globalization;
 
 namespace Registry.CalcDataModels
 {
-    public sealed class CalcDataModeTenancyAggregated : CalcDataModel
+    public sealed class CalcDataModelTenancyAggregated : CalcDataModel
     {
-        private static CalcDataModeTenancyAggregated dataModel = null;
+        private static CalcDataModelTenancyAggregated dataModel = null;
 
         private static string tableName = "tenancy_aggregated";
 
-        private CalcDataModeTenancyAggregated()
+        private CalcDataModelTenancyAggregated()
         {
             Table = InitializeTable();
             Refresh(CalcDataModelFilterEnity.All, null);            
@@ -171,11 +171,16 @@ namespace Registry.CalcDataModels
             e.Result = table;
         }
 
-        public static CalcDataModeTenancyAggregated GetInstance()
+        public static CalcDataModelTenancyAggregated GetInstance()
         {
             if (dataModel == null)
-                dataModel = new CalcDataModeTenancyAggregated();
+                dataModel = new CalcDataModelTenancyAggregated();
             return dataModel;
+        }
+
+        public static bool HasInstance()
+        {
+            return dataModel != null;
         }
     }
 }

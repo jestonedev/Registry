@@ -282,6 +282,8 @@ namespace Registry.Viewport
                     return;
                 ((DataRowView)v_buildings[v_buildings.Position]).Delete();
                 MenuCallback.ForceCloseDetachedViewports();
+                if (ParentType == ParentTypeEnum.Tenancy)
+                    CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
             }
         }
 
@@ -490,7 +492,7 @@ namespace Registry.Viewport
             sync_views = true;
             MenuCallback.EditingStateUpdate();
             if (ParentType == ParentTypeEnum.Tenancy)
-                CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Tenancy, (int)ParentRow["id_process"]);
+                CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Tenancy, (int)ParentRow["id_process"], true);
         }
 
         public override bool CanDuplicate()
@@ -617,31 +619,24 @@ namespace Registry.Viewport
             if (e.Row["id_process"] == DBNull.Value || 
                 Convert.ToInt32(e.Row["id_process"], CultureInfo.InvariantCulture) != Convert.ToInt32(ParentRow["id_process"], CultureInfo.InvariantCulture))
                 return;
-            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
+            int row_index = v_snapshot_tenancy_buildings.Find("id_building", e.Row["id_building"]);
+            if (row_index == -1 && v_tenancy_buildings.Find("id_assoc", e.Row["id_assoc"]) != -1)
             {
-                int row_index = v_snapshot_tenancy_buildings.Find("id_building", e.Row["id_building"]);
-                if (row_index != -1)
-                {
-                    DataRowView row = ((DataRowView)v_snapshot_tenancy_buildings[row_index]);
-                    row["rent_total_area"] = e.Row["rent_total_area"];
-                    row["rent_living_area"] = e.Row["rent_living_area"];
-                }
+                snapshot_tenancy_buildings.Rows.Add(new object[] { 
+                        e.Row["id_assoc"],
+                        e.Row["id_building"], 
+                        true,   
+                        e.Row["rent_total_area"],
+                        e.Row["rent_living_area"]
+                    });
             }
             else
-                if (e.Action == DataRowAction.Add)
-                {
-                    //Если строка имеется в текущем контексте оригинального представления, то добавить его и в snapshot, 
-                    //иначе - объект не принадлежит текущему родителю
-                    int row_index = v_tenancy_buildings.Find("id_assoc", e.Row["id_assoc"]);
-                    if (row_index != -1)
-                        snapshot_tenancy_buildings.Rows.Add(new object[] { 
-                            e.Row["id_assoc"],
-                            e.Row["id_building"], 
-                            true,   
-                            e.Row["rent_total_area"],
-                            e.Row["rent_living_area"]
-                        });
-                }
+            if (row_index != -1)
+            {
+                DataRowView row = ((DataRowView)v_snapshot_tenancy_buildings[row_index]);
+                row["rent_total_area"] = e.Row["rent_total_area"];
+                row["rent_living_area"] = e.Row["rent_living_area"];
+            }
             dataGridView.Invalidate();
         }
 

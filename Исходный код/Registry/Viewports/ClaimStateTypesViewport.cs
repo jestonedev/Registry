@@ -663,17 +663,25 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            if (e.Action == DataRowAction.Add)
+            int row_index = v_snapshot_claim_state_types_relations.Find("id_relation", e.Row["id_relation"]);
+            if (row_index == -1 && v_claim_state_types_relations.Find("id_relation", e.Row["id_relation"]) != -1)
             {
-                //Если строка имеется в текущем контексте оригинального представления, то добавить его и в snapshot, 
-                //иначе - объект не принадлежит текущему родителю
                 snapshot_claim_state_types_relations.Rows.Add(new object[] { 
+                    e.Row["id_relation"],
                     e.Row["id_state_from"],
                     e.Row["id_state_to"], 
                     true
-                });
-                dataGridViewClaimStateTypesFrom.InvalidateColumn(dataGridViewClaimStateTypesFrom.Columns["state_type_checked"].Index);
+                    });
+                dataGridViewClaimStateTypesFrom.RowCount = v_claim_state_types_from.Count;
             }
+            else
+                if (row_index != -1)
+                {
+                    DataRowView row = ((DataRowView)v_snapshot_claim_state_types_relations[row_index]);
+                    row["id_state_from"] = e.Row["id_state_from"];
+                    row["id_state_to"] = e.Row["id_state_to"];
+                }
+            dataGridViewClaimStateTypesFrom.InvalidateColumn(dataGridViewClaimStateTypesFrom.Columns["state_type_checked"].Index);
         }
 
         void ClaimStateTypesViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
@@ -684,11 +692,9 @@ namespace Registry.Viewport
             {
                 int row_index = v_snapshot_claim_state_types.Find("id_state_type", e.Row["id_state_type"]);
                 if (row_index != -1)
-                {
                     ((DataRowView)v_snapshot_claim_state_types[row_index]).Delete();
-                    dataGridViewClaimStateTypesFrom.RowCount = v_claim_state_types_from.Count;
-                    dataGridViewClaimStateTypesFrom.Invalidate();
-                }
+                dataGridViewClaimStateTypesFrom.RowCount = dataGridViewClaimStateTypesFrom.RowCount - 1;
+                dataGridViewClaimStateTypesFrom.Invalidate();
             }
         }
 
@@ -696,28 +702,24 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
+            int row_index = v_snapshot_claim_state_types.Find("id_state_type", e.Row["id_state_type"]);
+            if (row_index == -1 && v_claim_state_types.Find("id_state_type", e.Row["id_state_type"]) != -1)
             {
-                int row_index = v_snapshot_claim_state_types.Find("id_state_type", e.Row["id_state_type"]);
+                snapshot_claim_state_types.Rows.Add(new object[] { 
+                        e.Row["id_state_type"], 
+                        e.Row["state_type"], 
+                        e.Row["is_start_state_type"]
+                    });
+                dataGridViewClaimStateTypesFrom.RowCount = dataGridViewClaimStateTypesFrom.RowCount + 1;
+            }
+            else
                 if (row_index != -1)
                 {
                     DataRowView row = ((DataRowView)v_snapshot_claim_state_types[row_index]);
                     row["state_type"] = e.Row["state_type"];
                     row["is_start_state_type"] = e.Row["is_start_state_type"];
-                    dataGridViewClaimStateTypesFrom.Invalidate();
                 }
-            }
-            else
-                if (e.Action == DataRowAction.Add)
-                {
-                    snapshot_claim_state_types.Rows.Add(new object[] { 
-                        e.Row["id_state_type"], 
-                        e.Row["state_type"], 
-                        e.Row["is_start_state_type"]
-                    });
-                    dataGridViewClaimStateTypesFrom.RowCount = v_claim_state_types_from.Count;
-                    dataGridViewClaimStateTypesFrom.Invalidate();
-                }
+            dataGridViewClaimStateTypesFrom.Invalidate();
         }
 
         void dataGridViewClaimStateTypes_CellValueChanged(object sender, DataGridViewCellEventArgs e)

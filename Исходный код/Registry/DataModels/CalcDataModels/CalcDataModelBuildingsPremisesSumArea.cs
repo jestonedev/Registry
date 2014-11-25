@@ -74,5 +74,10 @@ namespace Registry.CalcDataModels
                 dataModel = new CalcDataModelBuildingsPremisesSumArea();
             return dataModel;
         }
+
+        public static bool HasInstance()
+        {
+            return dataModel != null;
+        }
     }
 }

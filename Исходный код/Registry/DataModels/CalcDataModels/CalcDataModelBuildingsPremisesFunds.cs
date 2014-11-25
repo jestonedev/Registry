@@ -152,5 +152,10 @@ namespace Registry.CalcDataModels
                 dataModel = new CalcDataModelBuildingsPremisesFunds();
             return dataModel;
         }
+
+        public static bool HasInstance()
+        {
+            return dataModel != null;
+        }
     }
 }

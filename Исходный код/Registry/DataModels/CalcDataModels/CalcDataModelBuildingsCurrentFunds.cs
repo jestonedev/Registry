@@ -85,5 +85,10 @@ namespace Registry.CalcDataModels
                 dataModel = new CalcDataModelBuildingsCurrentFunds();
             return dataModel;
         }
+
+        public static bool HasInstance()
+        {
+            return dataModel != null;
+        }
     }
 }

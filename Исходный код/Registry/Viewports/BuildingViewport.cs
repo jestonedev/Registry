@@ -888,7 +888,7 @@ namespace Registry.Viewport
                         }
                     }
                     viewportState = ViewportState.ReadState;
-                    CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Building, building.IdBuilding);
+                    CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Building, building.IdBuilding);
                     break;
             }
             MenuCallback.EditingStateUpdate();
@@ -982,8 +982,7 @@ namespace Registry.Viewport
                 viewportState = ViewportState.ReadState;
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.ForceCloseDetachedViewports();
-                if (ParentType == ParentTypeEnum.Tenancy)
-                    CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
+                CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
             }
         }
 

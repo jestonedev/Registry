@@ -381,30 +381,23 @@ namespace Registry.Viewport
             if (e.Row["id_process"] == DBNull.Value || 
                 Convert.ToInt32(e.Row["id_process"], CultureInfo.InvariantCulture) != Convert.ToInt32(ParentRow["id_process"], CultureInfo.InvariantCulture))
                 return;
-            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
+            int row_index = v_snapshot_tenancy_sub_premises.Find("id_sub_premises", e.Row["id_sub_premises"]);
+            if (row_index == -1 && v_tenancy_sub_premises.Find("id_assoc", e.Row["id_assoc"]) != -1)
             {
-                int row_index = v_snapshot_tenancy_sub_premises.Find("id_sub_premises", e.Row["id_sub_premises"]);
+                snapshot_tenancy_sub_premises.Rows.Add(new object[] { 
+                        e.Row["id_assoc"],
+                        e.Row["id_sub_premises"], 
+                        true,   
+                        e.Row["rent_total_area"],
+                    });
+            }
+            else
                 if (row_index != -1)
                 {
                     DataRowView row = ((DataRowView)v_snapshot_tenancy_sub_premises[row_index]);
                     row["rent_total_area"] = e.Row["rent_total_area"];
                 }
-            }
-            else
-                if (e.Action == DataRowAction.Add)
-                {
-                    //Если строка имеется в текущем контексте оригинального представления, то добавить его и в snapshot, 
-                    //иначе - объект не принадлежит текущему родителю
-                    int row_index = v_tenancy_sub_premises.Find("id_assoc", e.Row["id_assoc"]);
-                    if (row_index != -1)
-                        snapshot_tenancy_sub_premises.Rows.Add(new object[] { 
-                            e.Row["id_assoc"],
-                            e.Row["id_sub_premises"], 
-                            true,   
-                            e.Row["rent_total_area"]
-                        });
-                }
-            dataGridView.Refresh();
+            dataGridView.Invalidate();
         }
 
         private void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)

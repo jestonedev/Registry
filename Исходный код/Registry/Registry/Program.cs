@@ -11,7 +11,6 @@ namespace Registry
 {
     static class Program
     {
-        private static Mutex m_instance;
         private const string m_appName = "Registry";  
         /// <summary>
         /// Главная точка входа для приложения.
@@ -20,31 +19,33 @@ namespace Registry
         static void Main(string[] args)
         {
             bool canCreateNewApp;
-            m_instance = new Mutex(true, m_appName,
-                    out canCreateNewApp);
-            if (canCreateNewApp)
+            using (Mutex mutex = new Mutex(true, m_appName, out canCreateNewApp))
             {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                if (args.Length > 0 && args.Contains("--config"))
+                if (canCreateNewApp)
                 {
-                    using (SettingsForm sf = new SettingsForm())
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    if (args.Length > 0 && args.Contains("--config"))
                     {
-                        sf.ShowDialog();
+                        using (SettingsForm sf = new SettingsForm())
+                        {
+                            sf.ShowDialog();
+                        }
+                    }
+                    try
+                    {
+                        Application.Run(new MainForm());
+                    }
+                    catch (TargetInvocationException)
+                    {
+                        //На данный момент не знаю, чем вызвано данное исключение, скорее всего Ribbon-панелью
                     }
                 }
-                try
+                else
                 {
-                    Application.Run(new MainForm());
+                    MessageBox.Show("Приложение уже запущено", "Ошибка",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
                 }
-                catch (TargetInvocationException)
-                {
-                    //На данный момент не знаю, чем вызвано данное исключение, скорее всего Ribbon-панелью
-                }
-            } else
-            {
-                MessageBox.Show("Приложение уже запущено", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
             }
         }
     }

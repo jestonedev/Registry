@@ -714,7 +714,7 @@ namespace Registry.Viewport
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.ForceCloseDetachedViewports(); 
                 if (ParentType == ParentTypeEnum.Tenancy)
-                    CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Tenancy, 
+                    CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Tenancy, 
                         (int)ParentRow["id_process"]);
             }
         }
@@ -822,7 +822,7 @@ namespace Registry.Viewport
             is_editable = true;
             MenuCallback.EditingStateUpdate();
             if (ParentType == ParentTypeEnum.Tenancy)
-                CalcDataModeTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Tenancy, (int)ParentRow["id_process"]);
+                CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Tenancy, (int)ParentRow["id_process"]);
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)

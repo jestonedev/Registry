@@ -81,6 +81,18 @@ namespace Registry
             }
         }
 
+        public static bool UseLDAP
+        {
+            get
+            {
+                return Settings.Properties.Settings.Default.UseLDAP;
+            }
+            set
+            {
+                Settings.Properties.Settings.Default.UseLDAP = value;
+            }
+        }
+
         public static string ActivityManagerPath
         {
             get
@@ -129,15 +141,27 @@ namespace Registry
             }
         }
 
-        public static int CallbackUpdateTimeout
+        public static int DataModelsCallbackUpdateTimeout
         {
             get
             {
-                return Settings.Properties.Settings.Default.CallbackUpdateTimeout;
+                return Settings.Properties.Settings.Default.DataModelsCallbackUpdateTimeout;
             }
             set
             {
-                Settings.Properties.Settings.Default.CallbackUpdateTimeout = value;
+                Settings.Properties.Settings.Default.DataModelsCallbackUpdateTimeout = value;
+            }
+        }
+
+        public static int CalcDataModelsUpdateTimeout
+        {
+            get
+            {
+                return Settings.Properties.Settings.Default.CalcDataModelsUpdateTimeout;
+            }
+            set
+            {
+                Settings.Properties.Settings.Default.CalcDataModelsUpdateTimeout = value;
             }
         }
 

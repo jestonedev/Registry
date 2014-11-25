@@ -51,7 +51,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DataModelCallbackUpdater.cs" />
+    <Compile Include="CalcDataModelsUpdater.cs" />
+    <Compile Include="DataModelsCallbackUpdater.cs" />
     <Compile Include="DataModelHelper.cs" />
     <Compile Include="DataModels\TenancyAgreementsDataModel.cs" />
     <Compile Include="CalcDataModels\CalcDataModelBuildingsPremisesFunds.cs" />
@@ -103,7 +104,7 @@
     <Compile Include="DataModels\ObjectStatesDataModel.cs" />
     <Compile Include="DataModels\StructureTypesDataModel.cs" />
     <Compile Include="DataModels\SubPremisesDataModel.cs" />
-    <Compile Include="CalcDataModels\CalcDataModeTenancyAggregated.cs" />
+    <Compile Include="CalcDataModels\CalcDataModelTenancyAggregated.cs" />
     <Compile Include="DataModels\TenancyBuildingsAssocDataModel.cs" />
     <Compile Include="DataModels\TenancyProcessesDataModel.cs" />
     <Compile Include="DataModels\TenancyPremisesAssocDataModel.cs" />
