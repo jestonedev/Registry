@@ -12,7 +12,7 @@
          <Members>
           <Member Name="#UseLDAP" Kind="Property" Static="True" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message Id="LDAP" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2014-11-24 13:39:55Z" FixCategory="Breaking">
+            <Message Id="LDAP" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2014-12-03 15:42:07Z" FixCategory="Breaking">
              <Issue Name="Member" Certainty="85" Level="Error" Path="e:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Settings" File="RegistrySettings.cs" Line="88">Correct the casing of 'LDAP' in member name 'RegistrySettings.UseLDAP' by changing it to 'Ldap'.</Issue>
             </Message>
            </Messages>
@@ -25,7 +25,7 @@
            <Accessors>
             <Accessor Name="#get_Current()" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
              <Messages>
-              <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Status="Active" Created="2014-11-24 13:39:55Z" FixCategory="NonBreaking">
+              <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Status="Active" Created="2014-12-03 15:42:07Z" FixCategory="NonBreaking">
                <Issue Certainty="95" Level="CriticalError" Path="e:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Settings" File="UserDomain.cs" Line="32">Modify 'UserDomain.Current.get()' to catch a more specific exception than 'object' or rethrow the exception.</Issue>
               </Message>
              </Messages>

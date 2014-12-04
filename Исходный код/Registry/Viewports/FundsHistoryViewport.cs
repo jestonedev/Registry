@@ -987,8 +987,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerProtocolDate
             // 
-            this.dateTimePickerProtocolDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerProtocolDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerProtocolDate.Enabled = false;
             this.dateTimePickerProtocolDate.Location = new System.Drawing.Point(161, 77);
             this.dateTimePickerProtocolDate.Name = "dateTimePickerProtocolDate";
@@ -1017,8 +1017,8 @@ namespace Registry.Viewport
             // 
             // textBoxProtocolNumber
             // 
-            this.textBoxProtocolNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxProtocolNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxProtocolNumber.Enabled = false;
             this.textBoxProtocolNumber.Location = new System.Drawing.Point(161, 51);
             this.textBoxProtocolNumber.MaxLength = 50;
@@ -1029,8 +1029,8 @@ namespace Registry.Viewport
             // 
             // comboBoxFundType
             // 
-            this.comboBoxFundType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxFundType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxFundType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxFundType.FormattingEnabled = true;
             this.comboBoxFundType.Location = new System.Drawing.Point(161, 24);
@@ -1060,11 +1060,11 @@ namespace Registry.Viewport
             // 
             // textBoxDescription
             // 
-            this.textBoxDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxDescription.Location = new System.Drawing.Point(7, 19);
-            this.textBoxDescription.MaxLength = 255;
+            this.textBoxDescription.MaxLength = 4000;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.Size = new System.Drawing.Size(330, 78);
@@ -1125,8 +1125,8 @@ namespace Registry.Viewport
             // 
             // textBoxIncludeRestDesc
             // 
-            this.textBoxIncludeRestDesc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxIncludeRestDesc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxIncludeRestDesc.Enabled = false;
             this.textBoxIncludeRestDesc.Location = new System.Drawing.Point(161, 74);
             this.textBoxIncludeRestDesc.MaxLength = 255;
@@ -1137,8 +1137,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerIncludeRestDate
             // 
-            this.dateTimePickerIncludeRestDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerIncludeRestDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerIncludeRestDate.Enabled = false;
             this.dateTimePickerIncludeRestDate.Location = new System.Drawing.Point(161, 48);
             this.dateTimePickerIncludeRestDate.Name = "dateTimePickerIncludeRestDate";
@@ -1166,8 +1166,8 @@ namespace Registry.Viewport
             // 
             // textBoxIncludeRestNum
             // 
-            this.textBoxIncludeRestNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxIncludeRestNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxIncludeRestNum.Enabled = false;
             this.textBoxIncludeRestNum.Location = new System.Drawing.Point(161, 22);
             this.textBoxIncludeRestNum.MaxLength = 30;
@@ -1214,8 +1214,8 @@ namespace Registry.Viewport
             // 
             // textBoxExcludeRestDesc
             // 
-            this.textBoxExcludeRestDesc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxExcludeRestDesc.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxExcludeRestDesc.Enabled = false;
             this.textBoxExcludeRestDesc.Location = new System.Drawing.Point(161, 73);
             this.textBoxExcludeRestDesc.MaxLength = 255;
@@ -1226,8 +1226,8 @@ namespace Registry.Viewport
             // 
             // dateTimePickerExcludeRestDate
             // 
-            this.dateTimePickerExcludeRestDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerExcludeRestDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerExcludeRestDate.Enabled = false;
             this.dateTimePickerExcludeRestDate.Location = new System.Drawing.Point(161, 47);
             this.dateTimePickerExcludeRestDate.Name = "dateTimePickerExcludeRestDate";
@@ -1255,8 +1255,8 @@ namespace Registry.Viewport
             // 
             // textBoxExcludeRestNum
             // 
-            this.textBoxExcludeRestNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxExcludeRestNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxExcludeRestNum.Enabled = false;
             this.textBoxExcludeRestNum.Location = new System.Drawing.Point(161, 21);
             this.textBoxExcludeRestNum.MaxLength = 30;

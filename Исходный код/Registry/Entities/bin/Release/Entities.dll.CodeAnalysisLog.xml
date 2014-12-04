@@ -10,7 +10,7 @@
        <Types>
         <Type Name="ParentTypeEnum" Kind="Enum" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="IdentifiersShouldNotHaveIncorrectSuffix" Category="Microsoft.Naming" CheckId="CA1711" Status="Active" Created="2014-11-24 13:39:55Z" FixCategory="Breaking">
+          <Message TypeName="IdentifiersShouldNotHaveIncorrectSuffix" Category="Microsoft.Naming" CheckId="CA1711" Status="Active" Created="2014-12-03 15:42:07Z" FixCategory="Breaking">
            <Issue Name="TypeNoAlternate" Certainty="95" Level="CriticalError">Rename type name 'ParentTypeEnum' so that it does not end in 'Enum'.</Issue>
           </Message>
          </Messages>

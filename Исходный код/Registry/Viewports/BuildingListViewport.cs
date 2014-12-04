@@ -439,7 +439,7 @@ namespace Registry.Viewport
                     e.Value = ((DataRowView)v_buildings[e.RowIndex])["cadastral_num"];
                     break;
                 case "startup_year":
-                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["cadastral_num"];
+                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["startup_year"];
                     break;
             }
         }

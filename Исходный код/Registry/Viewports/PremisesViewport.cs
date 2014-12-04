@@ -11,6 +11,7 @@ using Registry.SearchForms;
 using Registry.CalcDataModels;
 using Security;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Registry.Viewport
 {
@@ -439,9 +440,16 @@ namespace Registry.Viewport
                 comboBoxHouse.Focus();
                 return false;
             }
-            if (premise.PremisesNum == null)
+            if (premise.PremisesNum == null || String.IsNullOrEmpty(premise.PremisesNum.Trim()))
             {
                 MessageBox.Show("Необходимо указать номер помещения", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxPremisesNumber.Focus();
+                return false;
+            }
+            if (!Regex.IsMatch(premise.PremisesNum, @"^[0-9]+[а-я]{0,1}([,][0-9]+[а-я]{0,1})*$"))
+            {
+                MessageBox.Show("Некорректно задан номер помещения. Можно использовать только цифры и не более одной строчной буквы кирилицы. Для объединенных квартир номера должны быть перечислены через запятую. Например: \"1а,2а,3\"", "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxPremisesNumber.Focus();
                 return false;
             }
@@ -1313,6 +1321,14 @@ namespace Registry.Viewport
                 ShowSubPremises();
         }
 
+        private void textBoxPremisesNumber_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar >= 'А' && e.KeyChar <= 'Я')
+                e.KeyChar = e.KeyChar.ToString().ToLower(CultureInfo.CurrentCulture)[0];
+            if (e.KeyChar == ' ')
+                e.Handled = true;
+        }
+
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -1677,6 +1693,7 @@ namespace Registry.Viewport
             this.textBoxPremisesNumber.Size = new System.Drawing.Size(177, 21);
             this.textBoxPremisesNumber.TabIndex = 3;
             this.textBoxPremisesNumber.TextChanged += new System.EventHandler(this.textBoxPremisesNumber_TextChanged);
+            this.textBoxPremisesNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxPremisesNumber_KeyPress);
             // 
             // label27
             // 
@@ -1884,7 +1901,7 @@ namespace Registry.Viewport
             this.textBoxCadastralNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCadastralNum.Location = new System.Drawing.Point(170, 8);
-            this.textBoxCadastralNum.MaxLength = 15;
+            this.textBoxCadastralNum.MaxLength = 20;
             this.textBoxCadastralNum.Name = "textBoxCadastralNum";
             this.textBoxCadastralNum.Size = new System.Drawing.Size(178, 21);
             this.textBoxCadastralNum.TabIndex = 0;

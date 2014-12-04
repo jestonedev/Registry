@@ -107,9 +107,9 @@ namespace Registry.Viewport
                     MessageBox.Show("Длина номера комнаты не может превышать 20 символов", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
-                if (subPremise.SubPremisesNum != null && !Regex.IsMatch(subPremise.SubPremisesNum, "^[0-9а-я]+$"))
+                if (subPremise.SubPremisesNum != null && !Regex.IsMatch(subPremise.SubPremisesNum, "^([0-9]+[а-я]{0,1}|[а-я])$"))
                 {
-                    MessageBox.Show("Номер комнаты может содержать в себе только цифры и строчные буквы кириллицы", 
+                    MessageBox.Show("Некорректно задан номер комнаты. Можно использовать только цифры и не более одной строчной буквы кириллицы", 
                         "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
@@ -514,10 +514,10 @@ namespace Registry.Viewport
                     if (cell.Value.ToString().Trim().Length > 20)
                         cell.ErrorText = "Длина номера комнаты не может превышать 20 символов";
                     else
-                    if ((cell.Value.ToString().Trim().Length > 0) && !Regex.IsMatch(cell.Value.ToString().Trim(), "^[0-9а-я]+$"))
-                        cell.ErrorText = "Номер комнаты может содержать в себе только цифры и строчные буквы кириллицы";
-                    else
-                        cell.ErrorText = "";
+                        if ((cell.Value.ToString().Trim().Length > 0) && !Regex.IsMatch(cell.Value.ToString().Trim(), "^([0-9]+[а-я]{0,1}|[а-я])$"))
+                            cell.ErrorText = "Номер комнаты может содержать в себе только цифры и не более одной строчной буквы кирилицы";
+                        else
+                            cell.ErrorText = "";
                     break;
                 case "description":
                     if (cell.Value.ToString().Trim().Length > 65535)
@@ -582,7 +582,12 @@ namespace Registry.Viewport
                     ((TextBox)e.Control).Text = ((TextBox)e.Control).Text = "0";
                 else
                     ((TextBox)e.Control).Text = ((TextBox)e.Control).Text.Substring(0, ((TextBox)e.Control).Text.Length - 3);
-            }
+            } else
+                if (dataGridView.SelectedCells[0].OwningColumn.Name == "sub_premises_num")
+                {
+                    dataGridView.EditingControl.KeyPress -= new KeyPressEventHandler(EditingControl_KeyPress);
+                    dataGridView.EditingControl.KeyPress += new KeyPressEventHandler(EditingControl_KeyPress);
+                }
         }
 
         void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -614,7 +619,14 @@ namespace Registry.Viewport
                     }
                     else
                         e.Handled = true;
-            }
+            } else
+                if (dataGridView.SelectedCells[0].OwningColumn.Name == "sub_premises_num")
+                {
+                    if (e.KeyChar >= 'А' && e.KeyChar <= 'Я')
+                        e.KeyChar = e.KeyChar.ToString().ToLower(CultureInfo.CurrentCulture)[0];
+                    if (e.KeyChar == ' ')
+                        e.Handled = true;
+                }
         }
 
         private void InitializeComponent()

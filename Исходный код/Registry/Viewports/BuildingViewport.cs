@@ -11,6 +11,7 @@ using Registry.SearchForms;
 using Registry.CalcDataModels;
 using Security;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Registry.Viewport
 {
@@ -433,6 +434,13 @@ namespace Registry.Viewport
             if ((building.House == null) || String.IsNullOrEmpty(building.House.Trim()))
             {
                 MessageBox.Show("Необходимо указать номер дома", "Ошибка", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxHouse.Focus();
+                return false;
+            }
+            if (!Regex.IsMatch(building.House, @"^[0-9]+[а-я]{0,1}([\/][0-9]+[а-я]{0,1}){0,1}$"))
+            {
+                MessageBox.Show("Некорректно задан номер дома. Можно использовать только цифры, строчные буквы кириллицы буквы и дробный разделитель. Например: \"11а/3\"", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxHouse.Focus();
                 return false;
@@ -1306,7 +1314,17 @@ namespace Registry.Viewport
             if (HasAssocOwnerships())
                 ShowOwnerships();
         }
-        
+
+        private void textBoxHouse_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar >= 'А' && e.KeyChar <= 'Я')
+                e.KeyChar = e.KeyChar.ToString().ToLower(CultureInfo.CurrentCulture)[0];
+            if (e.KeyChar == '\\')
+                e.KeyChar = '/';
+            if (e.KeyChar == ' ')
+                e.Handled = true;
+        }
+
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BuildingViewport));
@@ -1599,6 +1617,7 @@ namespace Registry.Viewport
             this.textBoxHouse.Size = new System.Drawing.Size(185, 21);
             this.textBoxHouse.TabIndex = 1;
             this.textBoxHouse.TextChanged += new System.EventHandler(this.textBoxHouse_TextChanged);
+            this.textBoxHouse.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxHouse_KeyPress);
             // 
             // panel2
             // 
@@ -1753,7 +1772,7 @@ namespace Registry.Viewport
             this.textBoxCadastralNum.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxCadastralNum.Location = new System.Drawing.Point(175, 7);
-            this.textBoxCadastralNum.MaxLength = 15;
+            this.textBoxCadastralNum.MaxLength = 20;
             this.textBoxCadastralNum.Name = "textBoxCadastralNum";
             this.textBoxCadastralNum.Size = new System.Drawing.Size(186, 21);
             this.textBoxCadastralNum.TabIndex = 0;
