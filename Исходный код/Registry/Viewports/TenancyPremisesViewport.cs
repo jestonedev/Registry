@@ -1115,6 +1115,7 @@ namespace Registry.Viewport
             this.id_street.MinimumWidth = 300;
             this.id_street.Name = "id_street";
             this.id_street.ReadOnly = true;
+            this.id_street.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.id_street.Width = 300;
             // 
             // house
@@ -1123,6 +1124,7 @@ namespace Registry.Viewport
             this.house.MinimumWidth = 100;
             this.house.Name = "house";
             this.house.ReadOnly = true;
+            this.house.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // premises_num
             // 
@@ -1138,7 +1140,6 @@ namespace Registry.Viewport
             this.id_premises_type.MinimumWidth = 150;
             this.id_premises_type.Name = "id_premises_type";
             this.id_premises_type.ReadOnly = true;
-            this.id_premises_type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.id_premises_type.Width = 150;
             // 
             // total_area
