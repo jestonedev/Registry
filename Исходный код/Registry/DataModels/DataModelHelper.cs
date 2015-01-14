@@ -5,6 +5,7 @@ using System.Text;
 using System.Data;
 using Registry.CalcDataModels;
 using System.Globalization;
+using Registry.Entities;
 
 namespace Registry.DataModels
 {
@@ -386,5 +387,25 @@ namespace Registry.DataModels
                     where agreements_row.Field<int>("id_process") == idProcess
                     select agreements_row).Count();
         }   
+
+        public static int BuildingsDuplicateCount(Building building)
+        {
+            var buildings = DataModelHelper.FilterRows(BuildingsDataModel.GetInstance().Select());
+            return (from buildings_row in buildings
+                    where buildings_row.Field<string>("id_street") == building.IdStreet &&
+                          buildings_row.Field<string>("house") == building.House &&
+                          buildings_row.Field<int>("id_building") != building.IdBuilding
+                    select buildings_row).Count();
+        }
+
+        public static int PremisesDuplicateCount(Premise premise)
+        {
+            var premises = DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select());
+            return (from premises_row in premises
+                    where premises_row.Field<int>("id_building") == premise.IdBuilding &&
+                          premises_row.Field<string>("premises_num") == premise.PremisesNum &&
+                          premises_row.Field<int>("id_premises") != premise.IdPremises
+                    select premises_row).Count();
+        }
     }
 }

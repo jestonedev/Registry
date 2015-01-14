@@ -452,6 +452,13 @@ namespace Registry.Viewport
                 comboBoxStructureType.Focus();
                 return false;
             }
+            // Проверяем дубликаты адресов домов
+            Building buildingFromView = BuildingFromView();
+            if ((building.House != buildingFromView.House) || (building.IdStreet != buildingFromView.IdStreet))
+                if (DataModelHelper.BuildingsDuplicateCount(building) != 0 &&
+                    MessageBox.Show("В базе уже имеется здание с таким адресом. Все равно продолжить сохранение?", "Внимание",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.No)
+                    return false;
             return true;
         }
 

@@ -459,6 +459,13 @@ namespace Registry.Viewport
                 comboBoxState.Focus();
                 return false;
             }
+            // Проверяем дубликаты квартир
+            Premise premiseFromView = PremiseFromView();
+            if ((premise.PremisesNum != premiseFromView.PremisesNum) || (premise.IdBuilding != premiseFromView.IdBuilding))
+                if (DataModelHelper.PremisesDuplicateCount(premise) != 0 &&
+                    MessageBox.Show("В указанном доме уже есть квартира с таким номером. Все равно продолжить сохранение?", "Внимание", 
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.No)
+                    return false;
             return true;
         }
 

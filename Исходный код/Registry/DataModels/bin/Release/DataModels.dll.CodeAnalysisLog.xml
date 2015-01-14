@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="c:\program files (x86)\microsoft visual studio 12.0\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
+<?xml-stylesheet type="text/xsl" href="c:\program files\microsoft visual studio 12.0\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
 <FxCopReport Version="12.0">
  <Targets>
-  <Target Name="E:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\DataModels\bin\Release\DataModels.dll">
+  <Target Name="E:\Реестр жилого фонда\Исходный код\Registry\DataModels\bin\Release\DataModels.dll">
    <Modules>
     <Module Name="datamodels.dll">
      <Namespaces>
@@ -12,8 +12,8 @@
          <Members>
           <Member Name="#Refresh(Registry.CalcDataModels.CalcDataModelFilterEnity,System.Nullable`1&lt;System.Int32&gt;,System.Boolean)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Status="Active" Created="2014-12-03 15:42:13Z" FixCategory="Breaking">
-             <Issue Certainty="75" Level="Error" Path="e:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModel.cs" Line="30">Replace method 'CalcDataModel.Refresh(CalcDataModelFilterEnity, int?, bool)' with an overload that supplies all default arguments.</Issue>
+            <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Status="Active" Created="2015-01-14 03:44:36Z" FixCategory="Breaking">
+             <Issue Certainty="75" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModel.cs" Line="30">Replace method 'CalcDataModel.Refresh(CalcDataModelFilterEnity, int?, bool)' with an overload that supplies all default arguments.</Issue>
             </Message>
            </Messages>
           </Member>
@@ -27,8 +27,8 @@
          <Members>
           <Member Name="#.cctor()" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="SetLocaleForDataTypes" Category="Microsoft.Globalization" CheckId="CA1306" Status="Active" Created="2014-12-03 15:42:13Z" FixCategory="NonBreaking">
-             <Issue Certainty="90" Level="Error" Path="e:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\DataModels" File="DataSetManager.cs" Line="13">Be sure to set the DataSet Locale property wherever 'DataSetManager.DataSetManager()' creates an instance of that type.</Issue>
+            <Message TypeName="SetLocaleForDataTypes" Category="Microsoft.Globalization" CheckId="CA1306" Status="Active" Created="2015-01-14 03:44:36Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels" File="DataSetManager.cs" Line="13">Be sure to set the DataSet Locale property wherever 'DataSetManager.DataSetManager()' creates an instance of that type.</Issue>
             </Message>
            </Messages>
           </Member>
