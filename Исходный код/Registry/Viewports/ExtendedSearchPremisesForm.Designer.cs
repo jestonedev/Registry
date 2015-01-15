@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExtendedSearchPremisesForm));
             this.vButtonCancel = new VIBlend.WinForms.Controls.vButton();
             this.vButtonSearch = new VIBlend.WinForms.Controls.vButton();
             this.checkBoxHouseEnable = new System.Windows.Forms.CheckBox();
@@ -63,6 +64,9 @@
             this.checkBoxContractNumberEnable = new System.Windows.Forms.CheckBox();
             this.textBoxContractNumber = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
+            this.comboBoxOwnershipType = new System.Windows.Forms.ComboBox();
+            this.checkBoxOwnershipTypeEnable = new System.Windows.Forms.CheckBox();
+            this.label12 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownIDPremises)).BeginInit();
             this.SuspendLayout();
@@ -72,11 +76,11 @@
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(257, 474);
+            this.vButtonCancel.Location = new System.Drawing.Point(257, 518);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
-            this.vButtonCancel.TabIndex = 21;
+            this.vButtonCancel.TabIndex = 25;
             this.vButtonCancel.Text = "Отмена";
             this.vButtonCancel.UseVisualStyleBackColor = false;
             this.vButtonCancel.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -85,11 +89,11 @@
             // 
             this.vButtonSearch.AllowAnimations = true;
             this.vButtonSearch.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSearch.Location = new System.Drawing.Point(119, 474);
+            this.vButtonSearch.Location = new System.Drawing.Point(119, 518);
             this.vButtonSearch.Name = "vButtonSearch";
             this.vButtonSearch.RoundedCornersMask = ((byte)(15));
             this.vButtonSearch.Size = new System.Drawing.Size(117, 35);
-            this.vButtonSearch.TabIndex = 20;
+            this.vButtonSearch.TabIndex = 24;
             this.vButtonSearch.Text = "Поиск";
             this.vButtonSearch.UseVisualStyleBackColor = false;
             this.vButtonSearch.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -101,7 +105,7 @@
             this.checkBoxHouseEnable.Location = new System.Drawing.Point(17, 155);
             this.checkBoxHouseEnable.Name = "checkBoxHouseEnable";
             this.checkBoxHouseEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxHouseEnable.TabIndex = 2;
+            this.checkBoxHouseEnable.TabIndex = 6;
             this.checkBoxHouseEnable.UseVisualStyleBackColor = true;
             this.checkBoxHouseEnable.CheckedChanged += new System.EventHandler(this.checkBoxHouseEnable_CheckedChanged);
             // 
@@ -111,7 +115,7 @@
             this.checkBoxStreetEnable.Location = new System.Drawing.Point(17, 113);
             this.checkBoxStreetEnable.Name = "checkBoxStreetEnable";
             this.checkBoxStreetEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxStreetEnable.TabIndex = 0;
+            this.checkBoxStreetEnable.TabIndex = 4;
             this.checkBoxStreetEnable.UseVisualStyleBackColor = true;
             this.checkBoxStreetEnable.CheckedChanged += new System.EventHandler(this.checkBoxStreetEnable_CheckedChanged);
             // 
@@ -140,7 +144,7 @@
             this.comboBoxStreet.Location = new System.Drawing.Point(42, 109);
             this.comboBoxStreet.Name = "comboBoxStreet";
             this.comboBoxStreet.Size = new System.Drawing.Size(437, 23);
-            this.comboBoxStreet.TabIndex = 1;
+            this.comboBoxStreet.TabIndex = 5;
             this.comboBoxStreet.DropDownClosed += new System.EventHandler(this.comboBoxStreet_DropDownClosed);
             this.comboBoxStreet.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxStreet_KeyUp);
             this.comboBoxStreet.Leave += new System.EventHandler(this.comboBoxStreet_Leave);
@@ -151,7 +155,7 @@
             this.checkBoxPremisesNumEnable.Location = new System.Drawing.Point(17, 196);
             this.checkBoxPremisesNumEnable.Name = "checkBoxPremisesNumEnable";
             this.checkBoxPremisesNumEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxPremisesNumEnable.TabIndex = 4;
+            this.checkBoxPremisesNumEnable.TabIndex = 8;
             this.checkBoxPremisesNumEnable.UseVisualStyleBackColor = true;
             this.checkBoxPremisesNumEnable.CheckedChanged += new System.EventHandler(this.checkBoxPremisesNumEnable_CheckedChanged);
             // 
@@ -162,7 +166,7 @@
             this.textBoxPremisesNum.MaxLength = 4;
             this.textBoxPremisesNum.Name = "textBoxPremisesNum";
             this.textBoxPremisesNum.Size = new System.Drawing.Size(437, 21);
-            this.textBoxPremisesNum.TabIndex = 5;
+            this.textBoxPremisesNum.TabIndex = 9;
             // 
             // label3
             // 
@@ -179,7 +183,7 @@
             this.checkBoxFloorEnable.Location = new System.Drawing.Point(17, 237);
             this.checkBoxFloorEnable.Name = "checkBoxFloorEnable";
             this.checkBoxFloorEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxFloorEnable.TabIndex = 6;
+            this.checkBoxFloorEnable.TabIndex = 10;
             this.checkBoxFloorEnable.UseVisualStyleBackColor = true;
             this.checkBoxFloorEnable.CheckedChanged += new System.EventHandler(this.checkBoxFloorEnable_CheckedChanged);
             // 
@@ -203,7 +207,7 @@
             0});
             this.numericUpDownFloor.Name = "numericUpDownFloor";
             this.numericUpDownFloor.Size = new System.Drawing.Size(437, 21);
-            this.numericUpDownFloor.TabIndex = 7;
+            this.numericUpDownFloor.TabIndex = 11;
             // 
             // checkBoxCadastralNumEnable
             // 
@@ -211,7 +215,7 @@
             this.checkBoxCadastralNumEnable.Location = new System.Drawing.Point(17, 278);
             this.checkBoxCadastralNumEnable.Name = "checkBoxCadastralNumEnable";
             this.checkBoxCadastralNumEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxCadastralNumEnable.TabIndex = 8;
+            this.checkBoxCadastralNumEnable.TabIndex = 12;
             this.checkBoxCadastralNumEnable.UseVisualStyleBackColor = true;
             this.checkBoxCadastralNumEnable.CheckedChanged += new System.EventHandler(this.checkBoxCadastralNumEnable_CheckedChanged);
             // 
@@ -222,7 +226,7 @@
             this.textBoxCadastralNum.MaxLength = 15;
             this.textBoxCadastralNum.Name = "textBoxCadastralNum";
             this.textBoxCadastralNum.Size = new System.Drawing.Size(437, 21);
-            this.textBoxCadastralNum.TabIndex = 9;
+            this.textBoxCadastralNum.TabIndex = 13;
             // 
             // label5
             // 
@@ -241,7 +245,7 @@
             this.comboBoxFundType.Location = new System.Drawing.Point(42, 398);
             this.comboBoxFundType.Name = "comboBoxFundType";
             this.comboBoxFundType.Size = new System.Drawing.Size(437, 23);
-            this.comboBoxFundType.TabIndex = 11;
+            this.comboBoxFundType.TabIndex = 19;
             // 
             // checkBoxFundTypeEnable
             // 
@@ -249,7 +253,7 @@
             this.checkBoxFundTypeEnable.Location = new System.Drawing.Point(17, 402);
             this.checkBoxFundTypeEnable.Name = "checkBoxFundTypeEnable";
             this.checkBoxFundTypeEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxFundTypeEnable.TabIndex = 10;
+            this.checkBoxFundTypeEnable.TabIndex = 18;
             this.checkBoxFundTypeEnable.UseVisualStyleBackColor = true;
             this.checkBoxFundTypeEnable.CheckedChanged += new System.EventHandler(this.checkBoxFundTypeEnable_CheckedChanged);
             // 
@@ -268,7 +272,7 @@
             this.textBoxHouse.Location = new System.Drawing.Point(42, 152);
             this.textBoxHouse.Name = "textBoxHouse";
             this.textBoxHouse.Size = new System.Drawing.Size(437, 21);
-            this.textBoxHouse.TabIndex = 38;
+            this.textBoxHouse.TabIndex = 7;
             // 
             // comboBoxState
             // 
@@ -278,7 +282,7 @@
             this.comboBoxState.Location = new System.Drawing.Point(42, 441);
             this.comboBoxState.Name = "comboBoxState";
             this.comboBoxState.Size = new System.Drawing.Size(437, 23);
-            this.comboBoxState.TabIndex = 40;
+            this.comboBoxState.TabIndex = 21;
             // 
             // checkBoxStateEnable
             // 
@@ -286,7 +290,7 @@
             this.checkBoxStateEnable.Location = new System.Drawing.Point(17, 445);
             this.checkBoxStateEnable.Name = "checkBoxStateEnable";
             this.checkBoxStateEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxStateEnable.TabIndex = 39;
+            this.checkBoxStateEnable.TabIndex = 20;
             this.checkBoxStateEnable.UseVisualStyleBackColor = true;
             this.checkBoxStateEnable.CheckedChanged += new System.EventHandler(this.checkBoxStateEnable_CheckedChanged);
             // 
@@ -310,7 +314,7 @@
             0});
             this.numericUpDownIDPremises.Name = "numericUpDownIDPremises";
             this.numericUpDownIDPremises.Size = new System.Drawing.Size(437, 21);
-            this.numericUpDownIDPremises.TabIndex = 43;
+            this.numericUpDownIDPremises.TabIndex = 1;
             // 
             // checkBoxIDPremisesEnable
             // 
@@ -318,7 +322,7 @@
             this.checkBoxIDPremisesEnable.Location = new System.Drawing.Point(17, 28);
             this.checkBoxIDPremisesEnable.Name = "checkBoxIDPremisesEnable";
             this.checkBoxIDPremisesEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxIDPremisesEnable.TabIndex = 42;
+            this.checkBoxIDPremisesEnable.TabIndex = 0;
             this.checkBoxIDPremisesEnable.UseVisualStyleBackColor = true;
             this.checkBoxIDPremisesEnable.CheckedChanged += new System.EventHandler(this.checkBoxIDBuildingEnable_CheckedChanged);
             // 
@@ -339,7 +343,7 @@
             this.comboBoxRegion.Location = new System.Drawing.Point(42, 66);
             this.comboBoxRegion.Name = "comboBoxRegion";
             this.comboBoxRegion.Size = new System.Drawing.Size(437, 23);
-            this.comboBoxRegion.TabIndex = 45;
+            this.comboBoxRegion.TabIndex = 3;
             // 
             // checkBoxRegionEnable
             // 
@@ -347,7 +351,7 @@
             this.checkBoxRegionEnable.Location = new System.Drawing.Point(17, 70);
             this.checkBoxRegionEnable.Name = "checkBoxRegionEnable";
             this.checkBoxRegionEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxRegionEnable.TabIndex = 44;
+            this.checkBoxRegionEnable.TabIndex = 2;
             this.checkBoxRegionEnable.UseVisualStyleBackColor = true;
             this.checkBoxRegionEnable.CheckedChanged += new System.EventHandler(this.checkBoxRegionEnable_CheckedChanged);
             // 
@@ -366,7 +370,7 @@
             this.checkBoxTenantSNPEnable.Location = new System.Drawing.Point(17, 360);
             this.checkBoxTenantSNPEnable.Name = "checkBoxTenantSNPEnable";
             this.checkBoxTenantSNPEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxTenantSNPEnable.TabIndex = 51;
+            this.checkBoxTenantSNPEnable.TabIndex = 16;
             this.checkBoxTenantSNPEnable.UseVisualStyleBackColor = true;
             this.checkBoxTenantSNPEnable.CheckedChanged += new System.EventHandler(this.checkBoxTenantSNPEnable_CheckedChanged);
             // 
@@ -377,7 +381,7 @@
             this.textBoxTenantSNP.MaxLength = 255;
             this.textBoxTenantSNP.Name = "textBoxTenantSNP";
             this.textBoxTenantSNP.Size = new System.Drawing.Size(437, 21);
-            this.textBoxTenantSNP.TabIndex = 53;
+            this.textBoxTenantSNP.TabIndex = 17;
             // 
             // label11
             // 
@@ -394,7 +398,7 @@
             this.checkBoxContractNumberEnable.Location = new System.Drawing.Point(17, 319);
             this.checkBoxContractNumberEnable.Name = "checkBoxContractNumberEnable";
             this.checkBoxContractNumberEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxContractNumberEnable.TabIndex = 48;
+            this.checkBoxContractNumberEnable.TabIndex = 14;
             this.checkBoxContractNumberEnable.UseVisualStyleBackColor = true;
             this.checkBoxContractNumberEnable.CheckedChanged += new System.EventHandler(this.checkBoxContractNumberEnable_CheckedChanged);
             // 
@@ -405,7 +409,7 @@
             this.textBoxContractNumber.MaxLength = 16;
             this.textBoxContractNumber.Name = "textBoxContractNumber";
             this.textBoxContractNumber.Size = new System.Drawing.Size(437, 21);
-            this.textBoxContractNumber.TabIndex = 50;
+            this.textBoxContractNumber.TabIndex = 15;
             // 
             // label10
             // 
@@ -416,12 +420,44 @@
             this.label10.TabIndex = 49;
             this.label10.Text = "Номер договора найма";
             // 
+            // comboBoxOwnershipType
+            // 
+            this.comboBoxOwnershipType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxOwnershipType.Enabled = false;
+            this.comboBoxOwnershipType.FormattingEnabled = true;
+            this.comboBoxOwnershipType.Location = new System.Drawing.Point(42, 484);
+            this.comboBoxOwnershipType.Name = "comboBoxOwnershipType";
+            this.comboBoxOwnershipType.Size = new System.Drawing.Size(437, 23);
+            this.comboBoxOwnershipType.TabIndex = 23;
+            // 
+            // checkBoxOwnershipTypeEnable
+            // 
+            this.checkBoxOwnershipTypeEnable.AutoSize = true;
+            this.checkBoxOwnershipTypeEnable.Location = new System.Drawing.Point(17, 488);
+            this.checkBoxOwnershipTypeEnable.Name = "checkBoxOwnershipTypeEnable";
+            this.checkBoxOwnershipTypeEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxOwnershipTypeEnable.TabIndex = 22;
+            this.checkBoxOwnershipTypeEnable.UseVisualStyleBackColor = true;
+            this.checkBoxOwnershipTypeEnable.CheckedChanged += new System.EventHandler(this.checkBoxOwnershipTypeEnable_CheckedChanged);
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(12, 467);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(105, 15);
+            this.label12.TabIndex = 56;
+            this.label12.Text = "Тип ограничения";
+            // 
             // ExtendedSearchPremisesForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(493, 517);
+            this.ClientSize = new System.Drawing.Size(493, 557);
+            this.Controls.Add(this.comboBoxOwnershipType);
+            this.Controls.Add(this.checkBoxOwnershipTypeEnable);
+            this.Controls.Add(this.label12);
             this.Controls.Add(this.checkBoxTenantSNPEnable);
             this.Controls.Add(this.textBoxTenantSNP);
             this.Controls.Add(this.label11);
@@ -459,6 +495,7 @@
             this.Controls.Add(this.vButtonSearch);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ExtendedSearchPremisesForm";
@@ -508,5 +545,8 @@
         private System.Windows.Forms.CheckBox checkBoxContractNumberEnable;
         private System.Windows.Forms.TextBox textBoxContractNumber;
         private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.ComboBox comboBoxOwnershipType;
+        private System.Windows.Forms.CheckBox checkBoxOwnershipTypeEnable;
+        private System.Windows.Forms.Label label12;
     }
 }

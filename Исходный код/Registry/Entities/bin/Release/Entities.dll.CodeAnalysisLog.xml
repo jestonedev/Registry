@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="c:\program files (x86)\microsoft visual studio 12.0\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
+<?xml-stylesheet type="text/xsl" href="c:\program files\microsoft visual studio 12.0\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
 <FxCopReport Version="12.0">
  <Targets>
-  <Target Name="E:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Entities\bin\Release\Entities.dll">
+  <Target Name="E:\Реестр жилого фонда\Исходный код\Registry\Entities\bin\Release\Entities.dll">
    <Modules>
     <Module Name="entities.dll">
      <Namespaces>
@@ -10,7 +10,7 @@
        <Types>
         <Type Name="ParentTypeEnum" Kind="Enum" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="IdentifiersShouldNotHaveIncorrectSuffix" Category="Microsoft.Naming" CheckId="CA1711" Status="Active" Created="2014-12-03 15:42:07Z" FixCategory="Breaking">
+          <Message TypeName="IdentifiersShouldNotHaveIncorrectSuffix" Category="Microsoft.Naming" CheckId="CA1711" Status="Active" Created="2015-01-15 06:33:38Z" FixCategory="Breaking">
            <Issue Name="TypeNoAlternate" Certainty="95" Level="CriticalError">Rename type name 'ParentTypeEnum' so that it does not end in 'Enum'.</Issue>
           </Message>
          </Messages>

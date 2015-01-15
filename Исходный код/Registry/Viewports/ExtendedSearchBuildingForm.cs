@@ -18,11 +18,13 @@ namespace Registry.SearchForms
         KladrRegionsDataModel regions = null;
         FundTypesDataModel fundTypes = null;
         ObjectStatesDataModel object_states = null;
+        OwnershipRightTypesDataModel ownership_right_types = null;
 
         BindingSource v_kladr = null;
         BindingSource v_regions = null;
         BindingSource v_fundTypes = null;
         BindingSource v_object_states = null;
+        BindingSource v_ownership_right_types = null;
 
         internal override string GetFilter()
         {
@@ -104,6 +106,11 @@ namespace Registry.SearchForms
                 IEnumerable<int> buildings_ids = DataModelHelper.BuildingIDsBySNP(snp, (row) => { return row.Field<int>("id_kinship") == 1; });
                 included_buildings = DataModelHelper.Intersect(included_buildings, buildings_ids);
             }
+            if ((checkBoxOwnershipTypeEnable.Checked) && (comboBoxOwnershipType.SelectedValue != null))
+            {
+                IEnumerable<int> buildings_ids = DataModelHelper.BuildingIDsByOwnershipType(Int32.Parse(comboBoxOwnershipType.SelectedValue.ToString()));
+                included_buildings = DataModelHelper.Intersect(included_buildings, buildings_ids);
+            }
             if (included_buildings != null)
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
@@ -123,6 +130,7 @@ namespace Registry.SearchForms
             fundTypes = FundTypesDataModel.GetInstance();
             object_states = ObjectStatesDataModel.GetInstance();
             regions = KladrRegionsDataModel.GetInstance();
+            ownership_right_types = OwnershipRightTypesDataModel.GetInstance();
 
             v_kladr = new BindingSource();
             v_kladr.DataSource = kladr.Select();
@@ -135,6 +143,9 @@ namespace Registry.SearchForms
 
             v_object_states = new BindingSource();
             v_object_states.DataSource = object_states.Select();
+
+            v_ownership_right_types = new BindingSource();
+            v_ownership_right_types.DataSource = ownership_right_types.Select();
 
             comboBoxStreet.DataSource = v_kladr;
             comboBoxStreet.ValueMember = "id_street";
@@ -151,6 +162,10 @@ namespace Registry.SearchForms
             comboBoxRegion.DataSource = v_regions;
             comboBoxRegion.ValueMember = "id_region";
             comboBoxRegion.DisplayMember = "region";
+
+            comboBoxOwnershipType.DataSource = v_ownership_right_types;
+            comboBoxOwnershipType.ValueMember = "id_ownership_right_type";
+            comboBoxOwnershipType.DisplayMember = "ownership_right_type";
 
             numericUpDownStartupYear.Maximum = DateTime.Now.Year;
             foreach (Control control in this.Controls)
@@ -295,6 +310,11 @@ namespace Registry.SearchForms
         private void checkBoxTenantSNPEnable_CheckedChanged(object sender, EventArgs e)
         {
             textBoxTenantSNP.Enabled = checkBoxTenantSNPEnable.Checked;
+        }
+
+        private void checkBoxOwnershipTypeEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            comboBoxOwnershipType.Enabled = checkBoxOwnershipTypeEnable.Checked;
         }
     }
 }

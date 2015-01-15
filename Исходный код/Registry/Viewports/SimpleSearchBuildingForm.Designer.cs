@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SimpleSearchBuildingForm));
             this.textBoxCriteria = new System.Windows.Forms.TextBox();
             this.comboBoxCriteriaType = new System.Windows.Forms.ComboBox();
             this.vButtonCancel = new VIBlend.WinForms.Controls.vButton();
@@ -97,6 +98,7 @@
             this.Controls.Add(this.vButtonSearch);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "SimpleSearchBuildingForm";

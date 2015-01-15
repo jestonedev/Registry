@@ -126,6 +126,8 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn ownership_date;
         private DataGridViewTextBoxColumn ownership_description;
         private DataGridViewComboBoxColumn id_ownership_type;
+        private NumericUpDown numericUpDownWear;
+        private Label label21;
 
         private bool is_editable = false;
 
@@ -202,7 +204,6 @@ namespace Registry.Viewport
                 comboBoxCurrentFundType.Visible = true;
                 checkBoxImprovement.Location = new System.Drawing.Point(175, 151);
                 checkBoxElevator.Location = new System.Drawing.Point(19, 151);
-                this.tableLayoutPanel.RowStyles[0].Height = 210F;
             }
             else
             {
@@ -210,7 +211,6 @@ namespace Registry.Viewport
                 comboBoxCurrentFundType.Visible = false;
                 checkBoxImprovement.Location = new System.Drawing.Point(175, 123);
                 checkBoxElevator.Location = new System.Drawing.Point(19, 123);
-                this.tableLayoutPanel.RowStyles[0].Height = 185F;
             }
         }
 
@@ -253,6 +253,8 @@ namespace Registry.Viewport
             numericUpDownLivingArea.DataBindings.Add("Value", v_buildings, "living_area", true, DataSourceUpdateMode.Never, 0);
             numericUpDownTotalArea.DataBindings.Clear();
             numericUpDownTotalArea.DataBindings.Add("Value", v_buildings, "total_area", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownWear.DataBindings.Clear();
+            numericUpDownWear.DataBindings.Add("Value", v_buildings, "wear", true, DataSourceUpdateMode.Never, 0);
 
             comboBoxStructureType.DataSource = v_structureTypes;
             comboBoxStructureType.ValueMember = "id_structure_type";
@@ -453,6 +455,13 @@ namespace Registry.Viewport
                 comboBoxStructureType.Focus();
                 return false;
             }
+            if (building.Wear > 100)
+                if (MessageBox.Show("Вы задали износ здания выше 100%. Все равно продолжить сохранение?", "Внимание",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.No)
+                {
+                    numericUpDownWear.Focus();
+                    return false;
+                }
             // Проверяем дубликаты адресов домов
             Building buildingFromView = BuildingFromView();
             if ((building.House != buildingFromView.House) || (building.IdStreet != buildingFromView.IdStreet))
@@ -508,6 +517,7 @@ namespace Registry.Viewport
             building.NumSharedApartments = Convert.ToInt32(numericUpDownSharedApartmentsCount.Value);
             building.LivingArea = Convert.ToDouble(numericUpDownLivingArea.Value);
             building.TotalArea = Convert.ToDouble(numericUpDownTotalArea.Value);
+            building.Wear = Convert.ToDouble(numericUpDownWear.Value);
             return building;
         }
 
@@ -534,6 +544,7 @@ namespace Registry.Viewport
             building.StartupYear = ViewportHelper.ValueOrNull<int>(row, "startup_year");
             building.Improvement = ViewportHelper.ValueOrNull<bool>(row, "improvement");
             building.Elevator = ViewportHelper.ValueOrNull<bool>(row, "elevator");
+            building.Wear = ViewportHelper.ValueOrNull<double>(row, "wear");
             return building;
         }
 
@@ -553,6 +564,7 @@ namespace Registry.Viewport
             numericUpDownTotalArea.Value = (decimal)ViewportHelper.ValueOrDefault(building.TotalArea);
             numericUpDownCadastralCost.Value = ViewportHelper.ValueOrDefault(building.CadastralCost);
             numericUpDownBalanceCost.Value = ViewportHelper.ValueOrDefault(building.BalanceCost);
+            numericUpDownWear.Value = (decimal)ViewportHelper.ValueOrDefault(building.Wear);
             textBoxHouse.Text = building.House;
             textBoxCadastralNum.Text = building.CadastralNum;
             textBoxDescription.Text = building.Description;
@@ -580,6 +592,7 @@ namespace Registry.Viewport
             row["elevator"] = ViewportHelper.ValueOrDBNull(building.Elevator);
             row["living_area"] = ViewportHelper.ValueOrDBNull(building.LivingArea);
             row["total_area"] = ViewportHelper.ValueOrDBNull(building.TotalArea);
+            row["wear"] = ViewportHelper.ValueOrDBNull(building.Wear);
             row.EndEdit();
         }
 
@@ -1333,6 +1346,11 @@ namespace Registry.Viewport
                 e.Handled = true;
         }
 
+        private void numericUpDownWear_ValueChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
+        }
+
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BuildingViewport));
@@ -1340,6 +1358,8 @@ namespace Registry.Viewport
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.numericUpDownWear = new System.Windows.Forms.NumericUpDown();
+            this.label21 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -1406,6 +1426,7 @@ namespace Registry.Viewport
             this.groupBox4.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
             this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWear)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloors)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStartupYear)).BeginInit();
             this.panel2.SuspendLayout();
@@ -1488,6 +1509,8 @@ namespace Registry.Viewport
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.numericUpDownWear);
+            this.panel1.Controls.Add(this.label21);
             this.panel1.Controls.Add(this.label1);
             this.panel1.Controls.Add(this.label2);
             this.panel1.Controls.Add(this.label3);
@@ -1503,6 +1526,32 @@ namespace Registry.Viewport
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(364, 178);
             this.panel1.TabIndex = 0;
+            // 
+            // numericUpDownWear
+            // 
+            this.numericUpDownWear.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownWear.DecimalPlaces = 2;
+            this.numericUpDownWear.Location = new System.Drawing.Point(174, 149);
+            this.numericUpDownWear.Maximum = new decimal(new int[] {
+            999,
+            0,
+            0,
+            0});
+            this.numericUpDownWear.Name = "numericUpDownWear";
+            this.numericUpDownWear.Size = new System.Drawing.Size(186, 21);
+            this.numericUpDownWear.TabIndex = 5;
+            this.numericUpDownWear.ThousandsSeparator = true;
+            this.numericUpDownWear.ValueChanged += new System.EventHandler(this.numericUpDownWear_ValueChanged);
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(10, 152);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(59, 15);
+            this.label21.TabIndex = 36;
+            this.label21.Text = "Износ, %";
             // 
             // label1
             // 
@@ -2271,6 +2320,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownWear)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloors)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStartupYear)).EndInit();
             this.panel2.ResumeLayout(false);

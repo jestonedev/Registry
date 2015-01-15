@@ -6,6 +6,7 @@ using System.Threading;
 using System.Diagnostics;
 using System.IO;
 using System.Globalization;
+using System.Windows.Forms;
 
 namespace Registry.Reporting
 {
@@ -28,6 +29,14 @@ namespace Registry.Reporting
 
         public virtual void Run(Dictionary<string, string> arguments)
         {
+            if (!File.Exists(RegistrySettings.ActivityManagerPath))
+            {
+                MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                    "Не удалось найти генератор отчетов ActivityManager. Возможно указанный путь {0} является некорректным.",
+                    RegistrySettings.ActivityManagerPath), 
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
             SynchronizationContext context = SynchronizationContext.Current;
             ThreadPool.QueueUserWorkItem((args) =>
             {

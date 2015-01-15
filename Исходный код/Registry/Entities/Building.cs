@@ -27,6 +27,8 @@ namespace Registry.Entities
         public bool? Improvement {get;set;}
         public bool? Elevator { get; set; }
 
+        public double? Wear { get; set; }
+
         public override bool Equals(object obj)
         {
             return (this == (obj as Building));
@@ -63,7 +65,8 @@ namespace Registry.Entities
                 first.StartupYear == second.StartupYear &&
                 first.Improvement == second.Improvement &&
                 first.Elevator == second.Elevator &&
-                first.IdState == second.IdState;
+                first.IdState == second.IdState &&
+                first.Wear == second.Wear;
         }
 
         public static bool operator !=(Building first, Building second)
