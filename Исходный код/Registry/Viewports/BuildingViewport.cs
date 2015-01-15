@@ -227,6 +227,7 @@ namespace Registry.Viewport
             numericUpDownFloors.DataBindings.Clear();
             numericUpDownFloors.DataBindings.Add("Value", v_buildings, "floors", true, DataSourceUpdateMode.Never, 5);
             numericUpDownStartupYear.DataBindings.Clear();
+            numericUpDownStartupYear.Maximum = DateTime.Now.Year;
             numericUpDownStartupYear.DataBindings.Add("Value", v_buildings, "startup_year", true, DataSourceUpdateMode.Never, DateTime.Now.Year);
             textBoxCadastralNum.DataBindings.Clear();
             textBoxCadastralNum.DataBindings.Add("Text", v_buildings, "cadastral_num", true, DataSourceUpdateMode.Never, "");
