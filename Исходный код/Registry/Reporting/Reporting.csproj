@@ -96,6 +96,13 @@
     <Compile Include="TenancyExcerptSettingsForm.Designer.cs">
       <DependentUpon>TenancyExcerptSettingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TenancyNotifiesSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TenancyNotifiesSettingsForm.Designer.cs">
+      <DependentUpon>TenancyNotifiesSettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TenancyReporters\TenancyNotifiesReporter.cs" />
     <Compile Include="TenancyOrderSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -143,6 +150,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TenancyExcerptSettingsForm.resx">
       <DependentUpon>TenancyExcerptSettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TenancyNotifiesSettingsForm.resx">
+      <DependentUpon>TenancyNotifiesSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TenancyOrderSettingsForm.resx">
       <DependentUpon>TenancyOrderSettingsForm.cs</DependentUpon>

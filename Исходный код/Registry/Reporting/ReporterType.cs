@@ -27,6 +27,7 @@ namespace Registry.Reporting
         TenancyStatisticReporter,
         TenancyStatisticForCoMSReporter,
         TenancyOrderReporter,
-        TenancyExcerptReporter
+        TenancyExcerptReporter,
+        TenancyNotifiesReporter
     }
 }

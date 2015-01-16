@@ -88,6 +88,7 @@ namespace Registry.DataModels
             DataSetManager.AddRelation("claim_state_types", "id_state_type", "claim_states", "id_state_type", true);
             DataSetManager.AddRelation("claim_state_types", "id_state_type", "claim_state_types_relations", "id_state_from", true);
             DataSetManager.AddRelation("claim_state_types", "id_state_type", "claim_state_types_relations", "id_state_to", true);
+            DataSetManager.AddRelation("tenancy_processes", "id_process", "tenancy_notifies", "id_process", true);
         }
 
         private static void AddRelation(string master_table_name, string master_column_name, string slave_table_name, 

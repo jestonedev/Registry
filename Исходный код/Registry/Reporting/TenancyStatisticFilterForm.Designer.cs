@@ -70,7 +70,7 @@
             // 
             this.vButtonOk.AllowAnimations = true;
             this.vButtonOk.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonOk.Location = new System.Drawing.Point(118, 389);
+            this.vButtonOk.Location = new System.Drawing.Point(118, 391);
             this.vButtonOk.Name = "vButtonOk";
             this.vButtonOk.RoundedCornersMask = ((byte)(15));
             this.vButtonOk.Size = new System.Drawing.Size(117, 35);
@@ -85,7 +85,7 @@
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(253, 389);
+            this.vButtonCancel.Location = new System.Drawing.Point(253, 391);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);

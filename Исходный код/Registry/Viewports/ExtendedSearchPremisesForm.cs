@@ -91,7 +91,8 @@ namespace Registry.SearchForms
             }
             if ((checkBoxOwnershipTypeEnable.Checked) && (comboBoxOwnershipType.SelectedValue != null))
             {
-                IEnumerable<int> premises_ids = DataModelHelper.PremiseIDsByOwnershipType(Int32.Parse(comboBoxOwnershipType.SelectedValue.ToString()));
+                IEnumerable<int> premises_ids = DataModelHelper.PremiseIDsByOwnershipType(
+                    Int32.Parse(comboBoxOwnershipType.SelectedValue.ToString(), CultureInfo.InvariantCulture));
                 included_premises = DataModelHelper.Intersect(included_premises, premises_ids);
             }
             if (included_premises != null)

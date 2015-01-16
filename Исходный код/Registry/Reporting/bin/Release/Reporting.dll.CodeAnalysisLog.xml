@@ -10,7 +10,7 @@
        <Types>
         <Type Name="TenancyContractTypes" Kind="Enum" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="OnlyFlagsEnumsShouldHavePluralNames" Category="Microsoft.Naming" CheckId="CA1717" Status="Active" Created="2015-01-15 07:38:10Z" FixCategory="Breaking">
+          <Message TypeName="OnlyFlagsEnumsShouldHavePluralNames" Category="Microsoft.Naming" CheckId="CA1717" Status="Active" Created="2015-01-16 06:47:52Z" FixCategory="Breaking">
            <Issue Certainty="75" Level="Error">If the name 'TenancyContractTypes' is plural, change it to its singular form.</Issue>
           </Message>
          </Messages>

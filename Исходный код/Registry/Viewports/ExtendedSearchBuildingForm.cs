@@ -108,7 +108,8 @@ namespace Registry.SearchForms
             }
             if ((checkBoxOwnershipTypeEnable.Checked) && (comboBoxOwnershipType.SelectedValue != null))
             {
-                IEnumerable<int> buildings_ids = DataModelHelper.BuildingIDsByOwnershipType(Int32.Parse(comboBoxOwnershipType.SelectedValue.ToString()));
+                IEnumerable<int> buildings_ids = DataModelHelper.BuildingIDsByOwnershipType(
+                    Int32.Parse(comboBoxOwnershipType.SelectedValue.ToString(), CultureInfo.InvariantCulture));
                 included_buildings = DataModelHelper.Intersect(included_buildings, buildings_ids);
             }
             if (included_buildings != null)

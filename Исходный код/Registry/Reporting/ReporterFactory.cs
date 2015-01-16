@@ -57,6 +57,8 @@ namespace Registry.Reporting
                     return new TenancyOrderReporter();
                 case ReporterType.TenancyExcerptReporter:
                     return new TenancyExcerptReporter();
+                case ReporterType.TenancyNotifiesReporter:
+                    return new TenancyNotifiesReporter();
             }
             throw new ReporterException(
                 String.Format(CultureInfo.InvariantCulture, "В фабрику ReporterFactory передан неизвестный тип {0}", reporterType.ToString()));

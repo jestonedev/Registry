@@ -12,7 +12,7 @@
          <Members>
           <Member Name="#Refresh(Registry.CalcDataModels.CalcDataModelFilterEnity,System.Nullable`1&lt;System.Int32&gt;,System.Boolean)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Status="Active" Created="2015-01-15 07:28:12Z" FixCategory="Breaking">
+            <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Status="Active" Created="2015-01-16 06:05:20Z" FixCategory="Breaking">
              <Issue Certainty="75" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModel.cs" Line="30">Replace method 'CalcDataModel.Refresh(CalcDataModelFilterEnity, int?, bool)' with an overload that supplies all default arguments.</Issue>
             </Message>
            </Messages>
@@ -23,34 +23,11 @@
       </Namespace>
       <Namespace Name="Registry.DataModels">
        <Types>
-        <Type Name="DataModelHelper" Kind="Class" Accessibility="Public" ExternallyVisible="True">
-         <Messages>
-          <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-01-15 07:28:12Z" FixCategory="Breaking">
-           <Issue Name="Type" Certainty="75" Level="Warning">'DataModelHelper' is coupled with 83 different types from 9 different namespaces. Rewrite or refactor this class's methods to decrease its class coupling, or consider moving some of the class's methods to some of the other types it is tightly coupled with. A class coupling above 95 indicates poor maintainability, a class coupling between 95 and 80 indicates moderate maintainability, and a class coupling below 80 indicates good maintainability.</Issue>
-          </Message>
-         </Messages>
-         <Members>
-          <Member Name="#BuildingIDsByOwnershipType(System.Int32)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
-           <Messages>
-            <Message Id="IDs" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2015-01-15 07:28:12Z" FixCategory="Breaking">
-             <Issue Name="MemberAbbreviation" Certainty="85" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels" File="DataModelHelper.cs" Line="413">Correct the casing of 'IDs' in member name 'DataModelHelper.BuildingIDsByOwnershipType(int)' by changing it to 'Ids'. 'Ids' is an abbreviation and therefore is not subject to acronym casing guidelines.</Issue>
-            </Message>
-           </Messages>
-          </Member>
-          <Member Name="#PremiseIDsByOwnershipType(System.Int32)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
-           <Messages>
-            <Message Id="IDs" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2015-01-15 07:28:12Z" FixCategory="Breaking">
-             <Issue Name="MemberAbbreviation" Certainty="85" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels" File="DataModelHelper.cs" Line="424">Correct the casing of 'IDs' in member name 'DataModelHelper.PremiseIDsByOwnershipType(int)' by changing it to 'Ids'. 'Ids' is an abbreviation and therefore is not subject to acronym casing guidelines.</Issue>
-            </Message>
-           </Messages>
-          </Member>
-         </Members>
-        </Type>
         <Type Name="DataSetManager" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Members>
           <Member Name="#.cctor()" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="SetLocaleForDataTypes" Category="Microsoft.Globalization" CheckId="CA1306" Status="Active" Created="2015-01-15 07:28:12Z" FixCategory="NonBreaking">
+            <Message TypeName="SetLocaleForDataTypes" Category="Microsoft.Globalization" CheckId="CA1306" Status="Active" Created="2015-01-16 06:05:20Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels" File="DataSetManager.cs" Line="13">Be sure to set the DataSet Locale property wherever 'DataSetManager.DataSetManager()' creates an instance of that type.</Issue>
             </Message>
            </Messages>
@@ -65,17 +42,6 @@
   </Target>
  </Targets>
  <Rules>
-  <Rule TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506">
-   <Name>Avoid excessive class coupling</Name>
-   <Description>Types and methods with a high degree of class coupling can be difficult to maintain.</Description>
-   <Resolution Name="Method">{0} is coupled with {1} different types from {2} different namespaces. Rewrite or refactor the method to decrease its class coupling, or consider moving the method to one of the other types it is tightly coupled with. A class coupling above {3} indicates poor maintainability, a class coupling between {3} and {4} indicates moderate maintainability, and a class coupling below {4} indicates good maintainability.</Resolution>
-   <Resolution Name="Type">{0} is coupled with {1} different types from {2} different namespaces. Rewrite or refactor this class's methods to decrease its class coupling, or consider moving some of the class's methods to some of the other types it is tightly coupled with. A class coupling above {3} indicates poor maintainability, a class coupling between {3} and {4} indicates moderate maintainability, and a class coupling below {4} indicates good maintainability.</Resolution>
-   <Owner />
-   <Url>http://msdn.microsoft.com/library/bb397994.aspx</Url>
-   <Email>[none]</Email>
-   <MessageLevel Certainty="90">Warning</MessageLevel>
-   <File Name="maintainabilityrules.dll" Version="12.0.0.0" />
-  </Rule>
   <Rule TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026">
    <Name>Default parameters should not be used</Name>
    <Description>Some programming languages do not support default parameters. Replace default parameters with method overloads that supply the default argument.</Description>
@@ -85,17 +51,6 @@
    <Email>[none]</Email>
    <MessageLevel Certainty="75">Error</MessageLevel>
    <File Name="designrules.dll" Version="12.0.0.0" />
-  </Rule>
-  <Rule TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709">
-   <Name>Identifiers should be cased correctly</Name>
-   <Description>Type, namespace, and member identifiers are Pascal-cased. Parameter identifiers are camel-cased. Two letter acronyms within these identifiers should be upper-cased, for example, use System.IO instead of System.Io. Acronyms of three or more letters should be Pascal-cased, for example, use System.Xml instead of System.XML. The pascal-casing convention capitalizes the first letter of each word, as in BackColor. The camel-casing convention formats the first letter of the first word in lowercase and capitalizes the first letter of all subsequent words, as in backgroundColor. Although it may be common practice for some two letter acronyms to not be fully capitalized, violations of this rule should not be excluded for this reason. For example, 'DbConnection', is common but incorrect; use DBConnection. A violation of this rule might be required for compatibility with existing, non-managed symbol schemes. In general, however, these symbols should not be visible outside the assembly that uses them.</Description>
-   <Resolution Name="Member">Correct the casing of '{0}' in member name {1} by changing it to '{2}'.</Resolution>
-   <Resolution Name="MemberAbbreviation">Correct the casing of '{0}' in member name {1} by changing it to '{2}'. '{2}' is an abbreviation and therefore is not subject to acronym casing guidelines.</Resolution>
-   <Owner />
-   <Url>http://msdn.microsoft.com/library/ms182240.aspx</Url>
-   <Email>[none]</Email>
-   <MessageLevel Certainty="85">Error</MessageLevel>
-   <File Name="namingrules.dll" Version="12.0.0.0" />
   </Rule>
   <Rule TypeName="SetLocaleForDataTypes" Category="Microsoft.Globalization" CheckId="CA1306">
    <Name>Set locale for data types</Name>

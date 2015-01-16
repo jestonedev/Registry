@@ -16,7 +16,7 @@ namespace Registry.DataModels
     {
         private static DataModelsCallbackUpdater instance;
         private static string query = @"SELECT id_record, `table`, id_key, field_name, field_new_value, operation_type 
-                                        FROM `log` WHERE id_record > ? AND (operation_type = 'UPDATE' OR (operation_type IN ('DELETE','INSERT') AND user_name <> ?))";
+                                        FROM `log` WHERE id_record > ? AND (operation_type = 'UPDATE' OR (operation_type IN ('DELETE','INSERT') AND (user_name <> ? OR `table` = 'tenancy_notifies')))";
         private static string initQuery = @"SELECT IFNULL(MAX(id_record), 0) AS id_record, USER() AS user_name FROM log";
         private int id_record = -1;
         private string user_name = "";
@@ -207,6 +207,10 @@ namespace Registry.DataModels
                         if (CalcDataModelTenancyAggregated.HasInstance())
                             CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate = true;
                     break;
+                case "tenancy_notifies":
+                    if ((operation_type == "DELETE" || operation_type == "INSERT") && CalcDataModelTenancyNotifiesMaxDate.HasInstance())
+                        CalcDataModelTenancyNotifiesMaxDate.GetInstance().DefferedUpdate = true;
+                    break;
                 case "tenancy_buildings_assoc":
                 case "tenancy_premises_assoc":
                 case "tenancy_sub_premises_assoc":
@@ -284,6 +288,7 @@ namespace Registry.DataModels
                 case "tenancy_reasons":
                 case "tenancy_reason_types":
                 case "tenancy_sub_premises_assoc":
+                case "tenancy_notifies":
                     return false;
                 default:
                     throw new NotImplementedException();

@@ -816,6 +816,7 @@ namespace Registry.Viewport
             this.rent_type.MinimumWidth = 150;
             this.rent_type.Name = "rent_type";
             this.rent_type.ReadOnly = true;
+            this.rent_type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.rent_type.Width = 150;
             // 
             // address

@@ -31,7 +31,7 @@ namespace Registry.Reporting
         {
             if (!File.Exists(RegistrySettings.ActivityManagerPath))
             {
-                MessageBox.Show(String.Format(CultureInfo.CurrentCulture, 
+                MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
                     "Не удалось найти генератор отчетов ActivityManager. Возможно указанный путь {0} является некорректным.",
                     RegistrySettings.ActivityManagerPath), 
                     "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);

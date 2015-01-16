@@ -66,7 +66,7 @@ namespace Registry
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead) || AccessControl.HasPrivelege(Priveleges.ClaimsRead))
                 toolStripProgressBar.Maximum += 1;
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
-                toolStripProgressBar.Maximum += 14;
+                toolStripProgressBar.Maximum += 15;
             if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
                 toolStripProgressBar.Maximum += 4;
             //Общие таблицы для реестра жилого фонда и процессов найма
@@ -119,6 +119,7 @@ namespace Registry
                 WarrantsDataModel.GetInstance(toolStripProgressBar, 1);
                 WarrantDocTypesDataModel.GetInstance(toolStripProgressBar, 1);
                 DocumentsIssuedByDataModel.GetInstance(toolStripProgressBar, 1);
+                TenancyNotifiesDataModel.GetInstance(toolStripProgressBar, 1);
             }
             // Претензионно-исковая работа
             if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
@@ -749,6 +750,11 @@ namespace Registry
         private void ribbonButtonTenancyOrder_Click(object sender, EventArgs e)
         {
             RunReport(Reporting.ReporterType.TenancyOrderReporter);
+        }
+
+        private void ribbonButtonNotifies_Click(object sender, EventArgs e)
+        {
+            RunReport(Reporting.ReporterType.TenancyNotifiesReporter);
         }
 
         private void ribbonButton1711_Click(object sender, EventArgs e)
