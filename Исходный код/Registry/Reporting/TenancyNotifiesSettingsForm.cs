@@ -39,9 +39,6 @@ namespace Registry.Reporting
         {
             get
             {
-                for (int i = checked_tenancies.Count - 1; i >= 0; i--)
-                    if (v_tenancies.Find("id_process", checked_tenancies[i]) == -1)
-                        checked_tenancies.Remove(checked_tenancies[i]);
                 return checked_tenancies;
             }
         }
@@ -177,11 +174,7 @@ namespace Registry.Reporting
 
         private void vButtonExport_Click(object sender, EventArgs e)
         {
-            bool has_items = false;
-            for (int i = checked_tenancies.Count - 1; i >= 0; i--)
-                if (v_tenancies.Find("id_process", checked_tenancies[i]) != -1)
-                    has_items = true;
-            if (!has_items)
+            if (checked_tenancies.Count == 0)
             {
                 MessageBox.Show("Необходимо выбрать хотя бы один договор", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
@@ -192,11 +185,7 @@ namespace Registry.Reporting
 
         private void vButtonNotify_Click(object sender, EventArgs e)
         {
-            bool has_items = false;
-            for (int i = checked_tenancies.Count - 1; i >= 0; i--)
-                if (v_tenancies.Find("id_process", checked_tenancies[i]) != -1)
-                    has_items = true;
-            if (!has_items)
+            if (checked_tenancies.Count == 0)
             {
                 MessageBox.Show("Необходимо выбрать хотя бы один договор", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
@@ -318,11 +307,15 @@ namespace Registry.Reporting
         private void checkBoxExpiring_CheckedChanged(object sender, EventArgs e)
         {
             RebuildFilter();
+            checked_tenancies.Clear();
+            checkBoxCheckAll.CheckState = CheckState.Indeterminate;
         }
 
         private void checkBoxExpired_CheckedChanged(object sender, EventArgs e)
         {
             RebuildFilter();
+            checked_tenancies.Clear();
+            checkBoxCheckAll.CheckState = CheckState.Indeterminate;
         }
 
         private void checkBoxCheckAll_CheckedChanged(object sender, EventArgs e)
@@ -331,8 +324,8 @@ namespace Registry.Reporting
             {
                 checked_tenancies.Clear();
                 if (checkBoxCheckAll.CheckState == CheckState.Checked)
-                    for (int i = 0; i < tenancies.Select().Rows.Count; i++)
-                        checked_tenancies.Add(Int32.Parse(tenancies.Select().Rows[i]["id_process"].ToString(), CultureInfo.InvariantCulture));
+                    for (int i = 0; i < v_tenancies.Count; i++)
+                        checked_tenancies.Add(Int32.Parse(((DataRowView)v_tenancies[i])["id_process"].ToString(), CultureInfo.InvariantCulture));
                 dataGridView.Refresh();
             }
         }
