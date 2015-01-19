@@ -732,7 +732,7 @@ namespace Registry.Viewport
             v_buildingsCurrentFund.DataSource = buildingsCurrentFund.Select();
 
             v_buildingsPremisesSumArea = new BindingSource();
-            v_buildingsPremisesSumArea.DataMember = "buildings_sum_area";
+            v_buildingsPremisesSumArea.DataMember = "buildings_premises_sum_area";
             v_buildingsPremisesSumArea.DataSource = buildingsPremisesSumArea.Select();
 
             v_fundType = new BindingSource();

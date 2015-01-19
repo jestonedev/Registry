@@ -79,6 +79,7 @@ namespace Registry.Viewport
         private OwnershipPremisesAssocDataModel ownershipPremisesAssoc = null;
         private FundTypesDataModel fundTypes = null;
         private ObjectStatesDataModel object_states = null;
+        private CalcDataModelPremiseSubPremisesSumArea premiseSubPremisesSumArea = null;
         #endregion Models
 
         #region Views
@@ -97,6 +98,8 @@ namespace Registry.Viewport
         private BindingSource v_ownershipPremisesAssoc = null;
         private BindingSource v_fundType = null;
         private BindingSource v_object_states = null;
+        private BindingSource v_sub_premises_object_states = null;
+        private BindingSource v_premisesSubPremisesSumArea = null;
         #endregion Views
 
         //Forms
@@ -108,7 +111,7 @@ namespace Registry.Viewport
         private bool is_editable = false;
         private Label label1;
         private NumericUpDown numericUpDownNumRooms;
-        private NumericUpDown numericUpDownHeight;
+        private NumericUpDown numericUpDownMunicapalArea;
         private Label label2;
         private DataGridViewTextBoxColumn restriction_number;
         private DataGridViewTextBoxColumn restriction_date;
@@ -120,6 +123,9 @@ namespace Registry.Viewport
         private DataGridViewComboBoxColumn id_ownership_type;
         private DataGridViewTextBoxColumn sub_premises_num;
         private DataGridViewTextBoxColumn sub_premises_total_area;
+        private DataGridViewComboBoxColumn sub_premises_id_state;
+        private NumericUpDown numericUpDownHeight;
+        private Label label3;
         private bool is_first_visibility = true;
 
         private PremisesViewport()
@@ -170,6 +176,13 @@ namespace Registry.Viewport
                 else
                     v_premisesCurrentFund.Filter = "id_premises = 0";
                 ShowOrHideCurrentFund();
+            }
+            if (v_premisesSubPremisesSumArea != null)
+            {
+                if ((v_premises.Position != -1) && !(((DataRowView)v_premises[v_premises.Position])["id_premises"] is DBNull))
+                    v_premisesSubPremisesSumArea.Filter = "id_premises = " + ((DataRowView)v_premises[v_premises.Position])["id_premises"].ToString();
+                else
+                    v_premisesSubPremisesSumArea.Filter = "id_premises = 0";
             }
         }
 
@@ -283,8 +296,13 @@ namespace Registry.Viewport
             numericUpDownTotalArea.DataBindings.Add("Value", v_premises, "total_area", true, DataSourceUpdateMode.Never, 0);
             numericUpDownLivingArea.DataBindings.Clear();
             numericUpDownLivingArea.DataBindings.Add("Value", v_premises, "living_area", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownHeight.DataBindings.Clear();
-            numericUpDownHeight.DataBindings.Add("Value", v_premises, "height", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownMunicapalArea.DataBindings.Clear();
+            numericUpDownMunicapalArea.DataBindings.Add("Value", v_premises, "height", true, DataSourceUpdateMode.Never, 0);
+
+            numericUpDownMunicapalArea.DataBindings.Clear();
+            numericUpDownMunicapalArea.DataBindings.Add("Minimum", v_premisesSubPremisesSumArea, "sum_area", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownMunicapalArea.DataBindings.Add("Maximum", v_premisesSubPremisesSumArea, "sum_area", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownMunicapalArea.DataBindings.Add("Value", v_premisesSubPremisesSumArea, "sum_area", true, DataSourceUpdateMode.Never, 0);
 
             comboBoxCurrentFundType.DataSource = v_fundType;
             comboBoxCurrentFundType.ValueMember = "id_fund_type";
@@ -320,6 +338,11 @@ namespace Registry.Viewport
             dataGridViewRooms.DataSource = v_sub_premises;
             sub_premises_num.DataPropertyName = "sub_premises_num";
             sub_premises_total_area.DataPropertyName = "total_area";
+            sub_premises_id_state.DataSource = v_sub_premises_object_states;
+            sub_premises_id_state.DataPropertyName = "id_state";
+            sub_premises_id_state.ValueMember = "id_state";
+            sub_premises_id_state.DisplayMember = "state_female";
+
         }
 
         private bool ChangeViewportStateTo(ViewportState state)
@@ -504,7 +527,7 @@ namespace Registry.Viewport
             premise.PremisesNum = ViewportHelper.ValueOrNull(textBoxPremisesNumber);
             premise.TotalArea = Convert.ToDouble(numericUpDownTotalArea.Value);
             premise.LivingArea = Convert.ToDouble(numericUpDownLivingArea.Value);
-            premise.Height = Convert.ToDouble(numericUpDownHeight.Value);
+            premise.Height = Convert.ToDouble(numericUpDownMunicapalArea.Value);
             premise.NumRooms = Convert.ToInt16(numericUpDownNumRooms.Value);
             premise.NumBeds = Convert.ToInt16(numericUpDownNumBeds.Value);
             premise.IdPremisesType = ViewportHelper.ValueOrNull<int>(comboBoxPremisesType);
@@ -537,7 +560,7 @@ namespace Registry.Viewport
             numericUpDownBalanceCost.Value = ViewportHelper.ValueOrDefault(premise.BalanceCost);
             numericUpDownNumBeds.Value = ViewportHelper.ValueOrDefault(premise.NumBeds);
             numericUpDownNumRooms.Value = ViewportHelper.ValueOrDefault(premise.NumRooms);
-            numericUpDownHeight.Value = (decimal)ViewportHelper.ValueOrDefault(premise.Height);
+            numericUpDownMunicapalArea.Value = (decimal)ViewportHelper.ValueOrDefault(premise.Height);
             numericUpDownLivingArea.Value = (decimal)ViewportHelper.ValueOrDefault(premise.LivingArea);
             numericUpDownTotalArea.Value = (decimal)ViewportHelper.ValueOrDefault(premise.TotalArea);
             textBoxPremisesNumber.Text = premise.PremisesNum;
@@ -654,7 +677,10 @@ namespace Registry.Viewport
             ownershipPremisesAssoc = OwnershipPremisesAssocDataModel.GetInstance();
             fundTypes = FundTypesDataModel.GetInstance();
             object_states = ObjectStatesDataModel.GetInstance();
+
+            // Вычисляемые модели
             premisesCurrentFund = CalcDataModelPremisesCurrentFunds.GetInstance();
+            premiseSubPremisesSumArea = CalcDataModelPremiseSubPremisesSumArea.GetInstance();
 
             // Ожидаем дозагрузки, если это необходмо
             premises.Select();
@@ -686,6 +712,10 @@ namespace Registry.Viewport
             v_premisesCurrentFund.DataMember = "premises_current_funds";
             v_premisesCurrentFund.DataSource = premisesCurrentFund.Select();
 
+            v_premisesSubPremisesSumArea = new BindingSource();
+            v_premisesSubPremisesSumArea.DataMember = "premise_sub_premises_sum_area";
+            v_premisesSubPremisesSumArea.DataSource = premiseSubPremisesSumArea.Select();
+
             v_fundType = new BindingSource();
             v_fundType.DataMember = "fund_types";
             v_fundType.DataSource = ds;
@@ -693,6 +723,10 @@ namespace Registry.Viewport
             v_object_states = new BindingSource();
             v_object_states.DataMember = "object_states";
             v_object_states.DataSource = ds;
+
+            v_sub_premises_object_states = new BindingSource();
+            v_sub_premises_object_states.DataMember = "object_states";
+            v_sub_premises_object_states.DataSource = ds;
 
             v_premises = new BindingSource();
             v_premises.CurrentItemChanged += new EventHandler(v_premises_CurrentItemChanged);
@@ -1319,6 +1353,20 @@ namespace Registry.Viewport
             }
         }
 
+        private void dataGridViewRooms_Resize(object sender, EventArgs e)
+        {
+            if (dataGridViewRooms.Size.Width > 280)
+            {
+                if (dataGridViewRooms.Columns["sub_premises_id_state"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
+                    dataGridViewRooms.Columns["sub_premises_id_state"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            }
+            else
+            {
+                if (dataGridViewRooms.Columns["sub_premises_id_state"].AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
+                    dataGridViewRooms.Columns["sub_premises_id_state"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            }
+        }
+
         private void dataGridViewRestrictions_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1)
@@ -1403,6 +1451,8 @@ namespace Registry.Viewport
             this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.numericUpDownHeight = new System.Windows.Forms.NumericUpDown();
+            this.label3 = new System.Windows.Forms.Label();
+            this.numericUpDownMunicapalArea = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.numericUpDownLivingArea = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownTotalArea = new System.Windows.Forms.NumericUpDown();
@@ -1412,6 +1462,7 @@ namespace Registry.Viewport
             this.dataGridViewRooms = new System.Windows.Forms.DataGridView();
             this.sub_premises_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sub_premises_total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sub_premises_id_state = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.tableLayoutPanel3.SuspendLayout();
             this.groupBox13.SuspendLayout();
             this.groupBox9.SuspendLayout();
@@ -1430,6 +1481,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel5.SuspendLayout();
             this.groupBox11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMunicapalArea)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLivingArea)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalArea)).BeginInit();
             this.groupBoxRooms.SuspendLayout();
@@ -1468,19 +1520,19 @@ namespace Registry.Viewport
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 3;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 100F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 70F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(729, 561);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(858, 561);
             this.tableLayoutPanel3.TabIndex = 0;
             // 
             // groupBox13
             // 
             this.groupBox13.Controls.Add(this.textBoxDescription);
             this.groupBox13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox13.Location = new System.Drawing.Point(3, 323);
+            this.groupBox13.Location = new System.Drawing.Point(3, 353);
             this.groupBox13.Name = "groupBox13";
-            this.groupBox13.Size = new System.Drawing.Size(358, 94);
+            this.groupBox13.Size = new System.Drawing.Size(423, 64);
             this.groupBox13.TabIndex = 4;
             this.groupBox13.TabStop = false;
             this.groupBox13.Text = "Дополнительные сведения";
@@ -1492,7 +1544,7 @@ namespace Registry.Viewport
             this.textBoxDescription.MaxLength = 65535;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
-            this.textBoxDescription.Size = new System.Drawing.Size(352, 74);
+            this.textBoxDescription.Size = new System.Drawing.Size(417, 44);
             this.textBoxDescription.TabIndex = 0;
             this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxDescription_TextChanged);
             // 
@@ -1502,7 +1554,7 @@ namespace Registry.Viewport
             this.groupBox9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox9.Location = new System.Drawing.Point(3, 423);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(358, 135);
+            this.groupBox9.Size = new System.Drawing.Size(423, 135);
             this.groupBox9.TabIndex = 5;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Реквизиты";
@@ -1523,7 +1575,7 @@ namespace Registry.Viewport
             this.dataGridViewRestrictions.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewRestrictions.Name = "dataGridViewRestrictions";
             this.dataGridViewRestrictions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewRestrictions.Size = new System.Drawing.Size(352, 115);
+            this.dataGridViewRestrictions.Size = new System.Drawing.Size(417, 115);
             this.dataGridViewRestrictions.TabIndex = 0;
             this.dataGridViewRestrictions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewRestrictions_CellDoubleClick);
             this.dataGridViewRestrictions.Resize += new System.EventHandler(this.dataGridViewRestrictions_Resize);
@@ -1563,9 +1615,9 @@ namespace Registry.Viewport
             // 
             this.groupBox10.Controls.Add(this.dataGridViewOwnerships);
             this.groupBox10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox10.Location = new System.Drawing.Point(367, 423);
+            this.groupBox10.Location = new System.Drawing.Point(432, 423);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(359, 135);
+            this.groupBox10.Size = new System.Drawing.Size(423, 135);
             this.groupBox10.TabIndex = 6;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Ограничения";
@@ -1586,7 +1638,7 @@ namespace Registry.Viewport
             this.dataGridViewOwnerships.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewOwnerships.Name = "dataGridViewOwnerships";
             this.dataGridViewOwnerships.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewOwnerships.Size = new System.Drawing.Size(353, 115);
+            this.dataGridViewOwnerships.Size = new System.Drawing.Size(417, 115);
             this.dataGridViewOwnerships.TabIndex = 0;
             this.dataGridViewOwnerships.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOwnerships_CellDoubleClick);
             this.dataGridViewOwnerships.Resize += new System.EventHandler(this.dataGridViewOwnerships_Resize);
@@ -1629,7 +1681,7 @@ namespace Registry.Viewport
             this.groupBox8.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox8.Location = new System.Drawing.Point(3, 3);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(723, 204);
+            this.groupBox8.Size = new System.Drawing.Size(852, 204);
             this.groupBox8.TabIndex = 0;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Общие сведения";
@@ -1647,7 +1699,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(717, 184);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(846, 184);
             this.tableLayoutPanel4.TabIndex = 0;
             // 
             // panel3
@@ -1667,7 +1719,7 @@ namespace Registry.Viewport
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 3);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(352, 178);
+            this.panel3.Size = new System.Drawing.Size(417, 178);
             this.panel3.TabIndex = 1;
             // 
             // label1
@@ -1690,7 +1742,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownNumRooms.Name = "numericUpDownNumRooms";
-            this.numericUpDownNumRooms.Size = new System.Drawing.Size(177, 21);
+            this.numericUpDownNumRooms.Size = new System.Drawing.Size(242, 21);
             this.numericUpDownNumRooms.TabIndex = 5;
             this.numericUpDownNumRooms.ValueChanged += new System.EventHandler(this.numericUpDownNumRooms_ValueChanged);
             // 
@@ -1714,7 +1766,7 @@ namespace Registry.Viewport
             this.textBoxPremisesNumber.Location = new System.Drawing.Point(169, 67);
             this.textBoxPremisesNumber.MaxLength = 25;
             this.textBoxPremisesNumber.Name = "textBoxPremisesNumber";
-            this.textBoxPremisesNumber.Size = new System.Drawing.Size(177, 21);
+            this.textBoxPremisesNumber.Size = new System.Drawing.Size(242, 21);
             this.textBoxPremisesNumber.TabIndex = 3;
             this.textBoxPremisesNumber.TextChanged += new System.EventHandler(this.textBoxPremisesNumber_TextChanged);
             this.textBoxPremisesNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxPremisesNumber_KeyPress);
@@ -1748,7 +1800,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownNumBeds.Name = "numericUpDownNumBeds";
-            this.numericUpDownNumBeds.Size = new System.Drawing.Size(177, 21);
+            this.numericUpDownNumBeds.Size = new System.Drawing.Size(242, 21);
             this.numericUpDownNumBeds.TabIndex = 6;
             this.numericUpDownNumBeds.ValueChanged += new System.EventHandler(this.numericUpDownNumBeds_ValueChanged);
             // 
@@ -1763,7 +1815,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownFloor.Name = "numericUpDownFloor";
-            this.numericUpDownFloor.Size = new System.Drawing.Size(177, 21);
+            this.numericUpDownFloor.Size = new System.Drawing.Size(242, 21);
             this.numericUpDownFloor.TabIndex = 4;
             this.numericUpDownFloor.ValueChanged += new System.EventHandler(this.numericUpDownFloor_ValueChanged);
             // 
@@ -1773,7 +1825,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxStreet.Location = new System.Drawing.Point(169, 7);
             this.comboBoxStreet.Name = "comboBoxStreet";
-            this.comboBoxStreet.Size = new System.Drawing.Size(177, 23);
+            this.comboBoxStreet.Size = new System.Drawing.Size(242, 23);
             this.comboBoxStreet.TabIndex = 0;
             this.comboBoxStreet.SelectedIndexChanged += new System.EventHandler(this.comboBoxStreet_SelectedIndexChanged);
             this.comboBoxStreet.DropDownClosed += new System.EventHandler(this.comboBoxStreet_DropDownClosed);
@@ -1797,7 +1849,7 @@ namespace Registry.Viewport
             this.comboBoxHouse.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxHouse.Location = new System.Drawing.Point(169, 37);
             this.comboBoxHouse.Name = "comboBoxHouse";
-            this.comboBoxHouse.Size = new System.Drawing.Size(177, 23);
+            this.comboBoxHouse.Size = new System.Drawing.Size(242, 23);
             this.comboBoxHouse.TabIndex = 1;
             this.comboBoxHouse.SelectedIndexChanged += new System.EventHandler(this.comboBoxHouse_SelectedIndexChanged);
             // 
@@ -1825,9 +1877,9 @@ namespace Registry.Viewport
             this.panel4.Controls.Add(this.label23);
             this.panel4.Controls.Add(this.label24);
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel4.Location = new System.Drawing.Point(361, 3);
+            this.panel4.Location = new System.Drawing.Point(426, 3);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(353, 178);
+            this.panel4.Size = new System.Drawing.Size(417, 178);
             this.panel4.TabIndex = 2;
             // 
             // comboBoxPremisesKind
@@ -1838,7 +1890,7 @@ namespace Registry.Viewport
             this.comboBoxPremisesKind.FormattingEnabled = true;
             this.comboBoxPremisesKind.Location = new System.Drawing.Point(170, 94);
             this.comboBoxPremisesKind.Name = "comboBoxPremisesKind";
-            this.comboBoxPremisesKind.Size = new System.Drawing.Size(178, 23);
+            this.comboBoxPremisesKind.Size = new System.Drawing.Size(242, 23);
             this.comboBoxPremisesKind.TabIndex = 3;
             this.comboBoxPremisesKind.SelectedIndexChanged += new System.EventHandler(this.comboBoxPremisesKind_SelectedIndexChanged);
             // 
@@ -1868,7 +1920,7 @@ namespace Registry.Viewport
             this.comboBoxState.FormattingEnabled = true;
             this.comboBoxState.Location = new System.Drawing.Point(170, 122);
             this.comboBoxState.Name = "comboBoxState";
-            this.comboBoxState.Size = new System.Drawing.Size(178, 23);
+            this.comboBoxState.Size = new System.Drawing.Size(242, 23);
             this.comboBoxState.TabIndex = 4;
             this.comboBoxState.SelectedIndexChanged += new System.EventHandler(this.comboBoxState_SelectedIndexChanged);
             // 
@@ -1891,7 +1943,7 @@ namespace Registry.Viewport
             this.comboBoxCurrentFundType.FormattingEnabled = true;
             this.comboBoxCurrentFundType.Location = new System.Drawing.Point(170, 150);
             this.comboBoxCurrentFundType.Name = "comboBoxCurrentFundType";
-            this.comboBoxCurrentFundType.Size = new System.Drawing.Size(178, 23);
+            this.comboBoxCurrentFundType.Size = new System.Drawing.Size(242, 23);
             this.comboBoxCurrentFundType.TabIndex = 5;
             // 
             // numericUpDownBalanceCost
@@ -1906,7 +1958,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownBalanceCost.Name = "numericUpDownBalanceCost";
-            this.numericUpDownBalanceCost.Size = new System.Drawing.Size(178, 21);
+            this.numericUpDownBalanceCost.Size = new System.Drawing.Size(242, 21);
             this.numericUpDownBalanceCost.TabIndex = 2;
             this.numericUpDownBalanceCost.ThousandsSeparator = true;
             this.numericUpDownBalanceCost.ValueChanged += new System.EventHandler(this.numericUpDownBalanceCost_ValueChanged);
@@ -1927,7 +1979,7 @@ namespace Registry.Viewport
             this.textBoxCadastralNum.Location = new System.Drawing.Point(170, 8);
             this.textBoxCadastralNum.MaxLength = 20;
             this.textBoxCadastralNum.Name = "textBoxCadastralNum";
-            this.textBoxCadastralNum.Size = new System.Drawing.Size(178, 21);
+            this.textBoxCadastralNum.Size = new System.Drawing.Size(242, 21);
             this.textBoxCadastralNum.TabIndex = 0;
             this.textBoxCadastralNum.TextChanged += new System.EventHandler(this.textBoxCadastralNum_TextChanged);
             // 
@@ -1943,7 +1995,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownCadastralCost.Name = "numericUpDownCadastralCost";
-            this.numericUpDownCadastralCost.Size = new System.Drawing.Size(178, 21);
+            this.numericUpDownCadastralCost.Size = new System.Drawing.Size(242, 21);
             this.numericUpDownCadastralCost.TabIndex = 1;
             this.numericUpDownCadastralCost.ThousandsSeparator = true;
             this.numericUpDownCadastralCost.ValueChanged += new System.EventHandler(this.numericUpDownCadastralCost_ValueChanged);
@@ -1977,12 +2029,14 @@ namespace Registry.Viewport
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 1;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(358, 104);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(423, 134);
             this.tableLayoutPanel5.TabIndex = 1;
             // 
             // groupBox11
             // 
             this.groupBox11.Controls.Add(this.numericUpDownHeight);
+            this.groupBox11.Controls.Add(this.label3);
+            this.groupBox11.Controls.Add(this.numericUpDownMunicapalArea);
             this.groupBox11.Controls.Add(this.label2);
             this.groupBox11.Controls.Add(this.numericUpDownLivingArea);
             this.groupBox11.Controls.Add(this.numericUpDownTotalArea);
@@ -1992,7 +2046,7 @@ namespace Registry.Viewport
             this.groupBox11.Location = new System.Drawing.Point(0, 0);
             this.groupBox11.Margin = new System.Windows.Forms.Padding(0);
             this.groupBox11.Name = "groupBox11";
-            this.groupBox11.Size = new System.Drawing.Size(358, 104);
+            this.groupBox11.Size = new System.Drawing.Size(423, 134);
             this.groupBox11.TabIndex = 1;
             this.groupBox11.TabStop = false;
             this.groupBox11.Text = "Геометрия помещения";
@@ -2001,27 +2055,53 @@ namespace Registry.Viewport
             // 
             this.numericUpDownHeight.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownHeight.DecimalPlaces = 2;
-            this.numericUpDownHeight.Location = new System.Drawing.Point(175, 76);
+            this.numericUpDownHeight.DecimalPlaces = 3;
+            this.numericUpDownHeight.Location = new System.Drawing.Point(175, 105);
             this.numericUpDownHeight.Maximum = new decimal(new int[] {
             9999,
             0,
             0,
             0});
             this.numericUpDownHeight.Name = "numericUpDownHeight";
-            this.numericUpDownHeight.Size = new System.Drawing.Size(177, 21);
-            this.numericUpDownHeight.TabIndex = 2;
+            this.numericUpDownHeight.Size = new System.Drawing.Size(242, 21);
+            this.numericUpDownHeight.TabIndex = 3;
             this.numericUpDownHeight.ThousandsSeparator = true;
             this.numericUpDownHeight.ValueChanged += new System.EventHandler(this.numericUpDownHeight_ValueChanged);
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(16, 108);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(121, 15);
+            this.label3.TabIndex = 17;
+            this.label3.Text = "Высота помещения";
+            // 
+            // numericUpDownMunicapalArea
+            // 
+            this.numericUpDownMunicapalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownMunicapalArea.DecimalPlaces = 2;
+            this.numericUpDownMunicapalArea.Location = new System.Drawing.Point(175, 76);
+            this.numericUpDownMunicapalArea.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numericUpDownMunicapalArea.Name = "numericUpDownMunicapalArea";
+            this.numericUpDownMunicapalArea.ReadOnly = true;
+            this.numericUpDownMunicapalArea.Size = new System.Drawing.Size(242, 21);
+            this.numericUpDownMunicapalArea.TabIndex = 2;
+            this.numericUpDownMunicapalArea.ThousandsSeparator = true;
             // 
             // label2
             // 
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(15, 79);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(121, 15);
+            this.label2.Size = new System.Drawing.Size(133, 15);
             this.label2.TabIndex = 15;
-            this.label2.Text = "Высота помещения";
+            this.label2.Text = "Площадь мун. комнат";
             // 
             // numericUpDownLivingArea
             // 
@@ -2035,7 +2115,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownLivingArea.Name = "numericUpDownLivingArea";
-            this.numericUpDownLivingArea.Size = new System.Drawing.Size(177, 21);
+            this.numericUpDownLivingArea.Size = new System.Drawing.Size(242, 21);
             this.numericUpDownLivingArea.TabIndex = 1;
             this.numericUpDownLivingArea.ThousandsSeparator = true;
             this.numericUpDownLivingArea.ValueChanged += new System.EventHandler(this.numericUpDownLivingArea_ValueChanged);
@@ -2052,7 +2132,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownTotalArea.Name = "numericUpDownTotalArea";
-            this.numericUpDownTotalArea.Size = new System.Drawing.Size(177, 21);
+            this.numericUpDownTotalArea.Size = new System.Drawing.Size(242, 21);
             this.numericUpDownTotalArea.TabIndex = 0;
             this.numericUpDownTotalArea.ThousandsSeparator = true;
             this.numericUpDownTotalArea.ValueChanged += new System.EventHandler(this.numericUpDownTotalArea_ValueChanged);
@@ -2079,10 +2159,10 @@ namespace Registry.Viewport
             // 
             this.groupBoxRooms.Controls.Add(this.dataGridViewRooms);
             this.groupBoxRooms.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxRooms.Location = new System.Drawing.Point(367, 213);
+            this.groupBoxRooms.Location = new System.Drawing.Point(432, 213);
             this.groupBoxRooms.Name = "groupBoxRooms";
             this.tableLayoutPanel3.SetRowSpan(this.groupBoxRooms, 2);
-            this.groupBoxRooms.Size = new System.Drawing.Size(359, 204);
+            this.groupBoxRooms.Size = new System.Drawing.Size(423, 204);
             this.groupBoxRooms.TabIndex = 3;
             this.groupBoxRooms.TabStop = false;
             this.groupBoxRooms.Text = "Комнаты";
@@ -2096,14 +2176,16 @@ namespace Registry.Viewport
             this.dataGridViewRooms.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewRooms.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.sub_premises_num,
-            this.sub_premises_total_area});
+            this.sub_premises_total_area,
+            this.sub_premises_id_state});
             this.dataGridViewRooms.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewRooms.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewRooms.Name = "dataGridViewRooms";
             this.dataGridViewRooms.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewRooms.Size = new System.Drawing.Size(353, 184);
+            this.dataGridViewRooms.Size = new System.Drawing.Size(417, 184);
             this.dataGridViewRooms.TabIndex = 0;
             this.dataGridViewRooms.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewRooms_CellDoubleClick);
+            this.dataGridViewRooms.Resize += new System.EventHandler(this.dataGridViewRooms_Resize);
             // 
             // sub_premises_num
             // 
@@ -2114,20 +2196,31 @@ namespace Registry.Viewport
             // 
             // sub_premises_total_area
             // 
-            this.sub_premises_total_area.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             dataGridViewCellStyle1.Format = "#0.0## м²";
             this.sub_premises_total_area.DefaultCellStyle = dataGridViewCellStyle1;
             this.sub_premises_total_area.HeaderText = "Общая площадь";
-            this.sub_premises_total_area.MinimumWidth = 100;
+            this.sub_premises_total_area.MinimumWidth = 125;
             this.sub_premises_total_area.Name = "sub_premises_total_area";
             this.sub_premises_total_area.ReadOnly = true;
+            this.sub_premises_total_area.Width = 125;
+            // 
+            // sub_premises_id_state
+            // 
+            this.sub_premises_id_state.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
+            this.sub_premises_id_state.HeaderText = "Текущее состояние";
+            this.sub_premises_id_state.MinimumWidth = 150;
+            this.sub_premises_id_state.Name = "sub_premises_id_state";
+            this.sub_premises_id_state.ReadOnly = true;
+            this.sub_premises_id_state.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.sub_premises_id_state.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
+            this.sub_premises_id_state.Width = 150;
             // 
             // PremisesViewport
             // 
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(665, 520);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(735, 567);
+            this.ClientSize = new System.Drawing.Size(864, 567);
             this.Controls.Add(this.tableLayoutPanel3);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -2156,6 +2249,7 @@ namespace Registry.Viewport
             this.groupBox11.ResumeLayout(false);
             this.groupBox11.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMunicapalArea)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLivingArea)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalArea)).EndInit();
             this.groupBoxRooms.ResumeLayout(false);

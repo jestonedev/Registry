@@ -44,11 +44,18 @@ namespace Registry.CalcDataModels
                                    config.Entity == CalcDataModelFilterEnity.All ? true : false)
                             select buildings_row;
             var premises = DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select());
+            var sub_premises_sum_area = DataModelHelper.FilterRows(CalcDataModelPremiseSubPremisesSumArea.GetInstance().Select());
             // Вычисляем агрегационную информацию
             var result = from buildings_row in buildings
                          join premises_row in premises
                          on buildings_row.Field<int>("id_building") equals premises_row.Field<int>("id_building")
-                         group premises_row.Field<double>("total_area") by buildings_row.Field<int>("id_building") into gs
+                         join sub_premises_sum_area_row in sub_premises_sum_area
+                         on premises_row.Field<int>("id_premises") equals sub_premises_sum_area_row.Field<int>("id_premises") into spg
+                         from spg_row in spg.DefaultIfEmpty()
+                         group new int[] { 4, 5 }.Contains(premises_row.Field<int>("id_state")) ? 
+                                premises_row.Field<double>("total_area") :
+                                spg_row == null ? 0 : spg_row.Field<double>("sum_area") by 
+                                buildings_row.Field<int>("id_building") into gs
                          select new
                          {
                              id_building = gs.Key,

@@ -386,6 +386,7 @@ namespace Registry.Viewport
             sync_views = true;
             MenuCallback.EditingStateUpdate();
             CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
+            CalcDataModelPremiseSubPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, Int32.Parse(ParentRow["id_premises"].ToString()), true);
         }
 
         public override bool CanDuplicate()

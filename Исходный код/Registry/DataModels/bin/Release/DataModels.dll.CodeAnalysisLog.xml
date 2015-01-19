@@ -12,8 +12,37 @@
          <Members>
           <Member Name="#Refresh(Registry.CalcDataModels.CalcDataModelFilterEnity,System.Nullable`1&lt;System.Int32&gt;,System.Boolean)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Status="Active" Created="2015-01-19 04:30:43Z" FixCategory="Breaking">
+            <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Status="Active" Created="2015-01-19 09:22:39Z" FixCategory="Breaking">
              <Issue Certainty="75" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModel.cs" Line="30">Replace method 'CalcDataModel.Refresh(CalcDataModelFilterEnity, int?, bool)' with an overload that supplies all default arguments.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="CalcDataModelBuildingsPremisesSumArea" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Calculate(System.Object,System.ComponentModel.DoWorkEventArgs)" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-01-19 09:22:39Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModelBuildingsPremisesSumArea.cs" Line="37">'CalcDataModelBuildingsPremisesSumArea.Calculate(object, DoWorkEventArgs)' has a cyclomatic complexity of 31. Rewrite or refactor the method to reduce complexity to 25.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="CalcDataModelPremiseSubPremisesSumArea" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#GetInstance()" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024" Status="Active" Created="2015-01-19 09:22:39Z" FixCategory="Breaking">
+             <Issue Certainty="50" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModelPremiseSubPremisesSumArea.cs" Line="74">Change 'CalcDataModelPremiseSubPremisesSumArea.GetInstance()' to a property if appropriate.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#InitializeTable()" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000" Status="Active" Created="2015-01-19 09:22:39Z" FixCategory="DependsOnFix">
+             <Issue Name="ExceptionEdge" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModelPremiseSubPremisesSumArea.cs" Line="27">In method 'CalcDataModelPremiseSubPremisesSumArea.InitializeTable()', object 'table' is not disposed along all exception paths. Call System.IDisposable.Dispose on object 'table' before all references to it are out of scope.</Issue>
             </Message>
            </Messages>
           </Member>
@@ -27,7 +56,7 @@
          <Members>
           <Member Name="#.cctor()" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="SetLocaleForDataTypes" Category="Microsoft.Globalization" CheckId="CA1306" Status="Active" Created="2015-01-19 04:30:43Z" FixCategory="NonBreaking">
+            <Message TypeName="SetLocaleForDataTypes" Category="Microsoft.Globalization" CheckId="CA1306" Status="Active" Created="2015-01-19 09:22:39Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels" File="DataSetManager.cs" Line="13">Be sure to set the DataSet Locale property wherever 'DataSetManager.DataSetManager()' creates an instance of that type.</Issue>
             </Message>
            </Messages>
@@ -42,6 +71,16 @@
   </Target>
  </Targets>
  <Rules>
+  <Rule TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502">
+   <Name>Avoid excessive complexity</Name>
+   <Description>Method implementations that are exceedingly complex increase the challenge of understanding and maintaining code.</Description>
+   <Resolution Name="Default">{0} has a cyclomatic complexity of {1}. Rewrite or refactor the method to reduce complexity to {2}.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182212.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="90">Warning</MessageLevel>
+   <File Name="maintainabilityrules.dll" Version="12.0.0.0" />
+  </Rule>
   <Rule TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026">
    <Name>Default parameters should not be used</Name>
    <Description>Some programming languages do not support default parameters. Replace default parameters with method overloads that supply the default argument.</Description>
@@ -52,6 +91,16 @@
    <MessageLevel Certainty="75">Error</MessageLevel>
    <File Name="designrules.dll" Version="12.0.0.0" />
   </Rule>
+  <Rule TypeName="Dispose objects before losing scope" Category="Microsoft.Reliability" CheckId="CA2000">
+   <Name>Dispose objects before losing scope</Name>
+   <Description>If a disposable object is not explicitly disposed before all references to it are out of scope, the object will be disposed at some indeterminate time when the garbage collector runs the finalizer of the object. Because an exceptional event might occur that will prevent the finalizer of the object from running, the object should be explicitly disposed instead.</Description>
+   <Resolution Name="ExceptionEdge">In method {0}, object {1} is not disposed along all exception paths. Call System.IDisposable.Dispose on object {1} before all references to it are out of scope.</Resolution>
+   <Owner>RuleOwner</Owner>
+   <Url>http://msdn.microsoft.com/library/ms182289.aspx</Url>
+   <Email />
+   <MessageLevel Certainty="75">Warning</MessageLevel>
+   <File Name="dataflowrules.dll" Version="12.0.0.0" />
+  </Rule>
   <Rule TypeName="SetLocaleForDataTypes" Category="Microsoft.Globalization" CheckId="CA1306">
    <Name>Set locale for data types</Name>
    <Description>In most cases, Locale should be explicitly set to CultureInfo.InvariantCulture on DataSet and DataTable instances. Upon creation of a DataSet or DataTable instance, the Locale is set to the current culture. In most cases, the Locale should be set to CultureInfo.InvariantCulture to guarantee proper sorting behavior in all cultures.</Description>
@@ -61,6 +110,16 @@
    <Email>[none]</Email>
    <MessageLevel Certainty="90">Error</MessageLevel>
    <File Name="globalizationrules.dll" Version="12.0.0.0" />
+  </Rule>
+  <Rule TypeName="UsePropertiesWhereAppropriate" Category="Microsoft.Design" CheckId="CA1024">
+   <Name>Use properties where appropriate</Name>
+   <Description>Properties should be used instead of Get/Set methods in most situations. Methods are preferable to properties in the following situations: the operation is a conversion, is expensive or has an observable side-effect; the order of execution is important; calling the member twice in succession creates different results; a member is static but returns a mutable value; or the member returns an array.</Description>
+   <Resolution Name="Default">Change {0} to a property if appropriate.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/ms182181.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="75">Warning</MessageLevel>
+   <File Name="designrules.dll" Version="12.0.0.0" />
   </Rule>
  </Rules>
  <Localized>
