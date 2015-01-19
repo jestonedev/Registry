@@ -12,7 +12,7 @@
          <Members>
           <Member Name="#Refresh(Registry.CalcDataModels.CalcDataModelFilterEnity,System.Nullable`1&lt;System.Int32&gt;,System.Boolean)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Status="Active" Created="2015-01-16 06:05:20Z" FixCategory="Breaking">
+            <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Status="Active" Created="2015-01-19 04:30:43Z" FixCategory="Breaking">
              <Issue Certainty="75" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModel.cs" Line="30">Replace method 'CalcDataModel.Refresh(CalcDataModelFilterEnity, int?, bool)' with an overload that supplies all default arguments.</Issue>
             </Message>
            </Messages>
@@ -27,7 +27,7 @@
          <Members>
           <Member Name="#.cctor()" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="SetLocaleForDataTypes" Category="Microsoft.Globalization" CheckId="CA1306" Status="Active" Created="2015-01-16 06:05:20Z" FixCategory="NonBreaking">
+            <Message TypeName="SetLocaleForDataTypes" Category="Microsoft.Globalization" CheckId="CA1306" Status="Active" Created="2015-01-19 04:30:43Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels" File="DataSetManager.cs" Line="13">Be sure to set the DataSet Locale property wherever 'DataSetManager.DataSetManager()' creates an instance of that type.</Issue>
             </Message>
            </Messages>

@@ -280,6 +280,7 @@ namespace Registry.Viewport
             //Синхронизация данных исходные->текущие
             tenancy_reasons.Select().RowChanged += new DataRowChangeEventHandler(TenancyReasonsViewport_RowChanged);
             tenancy_reasons.Select().RowDeleting += new DataRowChangeEventHandler(TenancyReasonsViewport_RowDeleting);
+            tenancy_reasons.Select().RowDeleted += TenancyReasonsViewport_RowDeleted;
         }
 
         public override bool CanInsertRecord()
@@ -419,12 +420,14 @@ namespace Registry.Viewport
             }
             tenancy_reasons.Select().RowChanged -= new DataRowChangeEventHandler(TenancyReasonsViewport_RowChanged);
             tenancy_reasons.Select().RowDeleting -= new DataRowChangeEventHandler(TenancyReasonsViewport_RowDeleting);
+            tenancy_reasons.Select().RowDeleted -= new DataRowChangeEventHandler(TenancyReasonsViewport_RowDeleted);
         }
 
         public override void ForceClose()
         {
             tenancy_reasons.Select().RowChanged -= new DataRowChangeEventHandler(TenancyReasonsViewport_RowChanged);
             tenancy_reasons.Select().RowDeleting -= new DataRowChangeEventHandler(TenancyReasonsViewport_RowDeleting);
+            tenancy_reasons.Select().RowDeleted -= new DataRowChangeEventHandler(TenancyReasonsViewport_RowDeleted);
             base.Close();
         }
 
@@ -474,7 +477,16 @@ namespace Registry.Viewport
             {
                 MenuCallback.NavigationStateUpdate();
                 MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
+            }
+        }
+
+        void TenancyReasonsViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            if (Selected)
+            {
+                MenuCallback.NavigationStateUpdate();
+                MenuCallback.StatusBarStateUpdate();
+                MenuCallback.EditingStateUpdate();
             }
         }
 
@@ -494,9 +506,19 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
+            int row_index = v_snapshot_tenancy_reasons.Find("id_reason", e.Row["id_reason"]);
+            if (row_index == -1 && v_tenancy_reasons.Find("id_reason", e.Row["id_reason"]) != -1)
             {
-                int row_index = v_snapshot_tenancy_reasons.Find("id_reason", e.Row["id_reason"]);
+                snapshot_tenancy_reasons.Rows.Add(new object[] { 
+                        e.Row["id_reason"], 
+                        e.Row["id_process"],   
+                        e.Row["id_reason_type"],                 
+                        e.Row["reason_number"],
+                        e.Row["reason_date"],
+                        e.Row["reason_prepared"]
+                    });
+            }
+            else
                 if (row_index != -1)
                 {
                     DataRowView row = ((DataRowView)v_snapshot_tenancy_reasons[row_index]);
@@ -506,23 +528,12 @@ namespace Registry.Viewport
                     row["reason_date"] = e.Row["reason_date"];
                     row["reason_prepared"] = e.Row["reason_prepared"];
                 }
+            if (Selected)
+            {
+                MenuCallback.NavigationStateUpdate();
+                MenuCallback.StatusBarStateUpdate();
+                MenuCallback.EditingStateUpdate();
             }
-            else
-                if (e.Action == DataRowAction.Add)
-                {
-                    //Если строка имеется в текущем контексте оригинального представления, то добавить его и в snapshot, 
-                    //иначе - объект не принадлежит текущему родителю
-                    int row_index = v_tenancy_reasons.Find("id_reason", e.Row["id_reason"]);
-                    if (row_index != -1)
-                        snapshot_tenancy_reasons.Rows.Add(new object[] { 
-                            e.Row["id_reason"],
-                            e.Row["id_process"], 
-                            e.Row["id_reason_type"],   
-                            e.Row["reason_number"],                 
-                            e.Row["reason_date"],
-                            e.Row["reason_prepared"]
-                        });
-                }
         }
 
         private void InitializeComponent()
@@ -543,6 +554,8 @@ namespace Registry.Viewport
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
+            this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;

@@ -393,6 +393,9 @@ namespace Registry.Viewport
         {
             dataGridView.RowCount = v_premises.Count;
             dataGridView.Refresh();
+            MenuCallback.ForceCloseDetachedViewports();
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
         }
 
         void PremisesListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
@@ -400,6 +403,8 @@ namespace Registry.Viewport
             if (e.Action == DataRowAction.Change || e.Action == DataRowAction.ChangeCurrentAndOriginal || e.Action == DataRowAction.ChangeOriginal)
                 dataGridView.Refresh();
             dataGridView.RowCount = v_premises.Count;
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
         }
 
         void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -527,6 +532,7 @@ namespace Registry.Viewport
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
             this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;

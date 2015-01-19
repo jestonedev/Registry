@@ -250,6 +250,7 @@ namespace Registry.Viewport
             //Синхронизация данных исходные->текущие
             tenancy_reason_types.Select().RowChanged += new DataRowChangeEventHandler(ReasonTypesViewport_RowChanged);
             tenancy_reason_types.Select().RowDeleting += new DataRowChangeEventHandler(ReasonTypesViewport_RowDeleting);
+            tenancy_reason_types.Select().RowDeleted += new DataRowChangeEventHandler(ReasonTypesViewport_RowDeleted);
         }
 
         public override bool CanInsertRecord()
@@ -385,6 +386,7 @@ namespace Registry.Viewport
             }
             tenancy_reason_types.Select().RowChanged -= new DataRowChangeEventHandler(ReasonTypesViewport_RowChanged);
             tenancy_reason_types.Select().RowDeleting -= new DataRowChangeEventHandler(ReasonTypesViewport_RowDeleting);
+            tenancy_reason_types.Select().RowDeleted -= new DataRowChangeEventHandler(ReasonTypesViewport_RowDeleted);
         }
 
         void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
@@ -420,6 +422,16 @@ namespace Registry.Viewport
             MenuCallback.EditingStateUpdate();
         }
 
+        private void ReasonTypesViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            if (Selected)
+            {
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.NavigationStateUpdate();
+                MenuCallback.StatusBarStateUpdate();
+            }
+        }
+
         void ReasonTypesViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
             if (!sync_views)
@@ -436,25 +448,28 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
+            int row_index = v_snapshot_tenancy_reason_types.Find("id_reason_type", e.Row["id_reason_type"]);
+            if (row_index == -1 && v_tenancy_reason_types.Find("id_reason_type", e.Row["id_reason_type"]) != -1)
             {
-                int row_index = v_snapshot_tenancy_reason_types.Find("id_reason_type", e.Row["id_reason_type"]);
+                snapshot_reason_types.Rows.Add(new object[] { 
+                        e.Row["id_reason_type"], 
+                        e.Row["reason_name"],   
+                        e.Row["reason_template"]
+                    });
+            }
+            else
                 if (row_index != -1)
                 {
                     DataRowView row = ((DataRowView)v_snapshot_tenancy_reason_types[row_index]);
                     row["reason_name"] = e.Row["reason_name"];
                     row["reason_template"] = e.Row["reason_template"];
                 }
+            if (Selected)
+            {
+                MenuCallback.NavigationStateUpdate();
+                MenuCallback.StatusBarStateUpdate();
+                MenuCallback.EditingStateUpdate();
             }
-            else
-                if (e.Action == DataRowAction.Add)
-                {
-                    snapshot_reason_types.Rows.Add(new object[] { 
-                        e.Row["id_reason_type"], 
-                        e.Row["reason_name"], 
-                        e.Row["reason_template"]
-                    });
-                }
         }
 
         void v_snapshot_reason_types_CurrentItemChanged(object sender, EventArgs e)
@@ -463,7 +478,6 @@ namespace Registry.Viewport
             {
                 MenuCallback.NavigationStateUpdate();
                 MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
             }
         }
 
@@ -481,6 +495,8 @@ namespace Registry.Viewport
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
+            this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;

@@ -490,10 +490,12 @@ namespace Registry.Viewport
                 v_tenancy_agreements.Filter += " AND ";
             v_tenancy_agreements.Filter += DynamicFilter;
             v_tenancy_agreements.DataSource = ds;
+            tenancy_agreements.Select().RowDeleted += TenancyAgreementsViewport_RowDeleted;
+            tenancy_agreements.Select().RowChanged += TenancyAgreementsViewport_RowChanged;
 
             DataBind();
-            tenancy_persons.Select().RowDeleted += new DataRowChangeEventHandler(TenancyAgreementsViewport_RowDeleted);
-            tenancy_persons.Select().RowChanged += new DataRowChangeEventHandler(TenancyAgreementsViewport_RowChanged);
+            tenancy_persons.Select().RowDeleted += new DataRowChangeEventHandler(TenancyPersonsViewport_RowDeleted);
+            tenancy_persons.Select().RowChanged += new DataRowChangeEventHandler(TenancyPersonsViewport_RowChanged);
             is_editable = true;
         }
 
@@ -719,8 +721,10 @@ namespace Registry.Viewport
                 e.Cancel = true;
             else
             {
-                tenancy_persons.Select().RowDeleted -= new DataRowChangeEventHandler(TenancyAgreementsViewport_RowDeleted);
-                tenancy_persons.Select().RowChanged -= new DataRowChangeEventHandler(TenancyAgreementsViewport_RowChanged);
+                tenancy_persons.Select().RowDeleted -= new DataRowChangeEventHandler(TenancyPersonsViewport_RowDeleted);
+                tenancy_persons.Select().RowChanged -= new DataRowChangeEventHandler(TenancyPersonsViewport_RowChanged);
+                tenancy_agreements.Select().RowDeleted -= new DataRowChangeEventHandler(TenancyAgreementsViewport_RowDeleted);
+                tenancy_agreements.Select().RowChanged -= new DataRowChangeEventHandler(TenancyAgreementsViewport_RowChanged);
             }
         }
 
@@ -728,8 +732,10 @@ namespace Registry.Viewport
         {
             if (viewportState == ViewportState.NewRowState)
                 tenancy_agreements.EditingNewRecord = false;
-            tenancy_persons.Select().RowDeleted -= new DataRowChangeEventHandler(TenancyAgreementsViewport_RowDeleted);
-            tenancy_persons.Select().RowChanged -= new DataRowChangeEventHandler(TenancyAgreementsViewport_RowChanged);
+            tenancy_persons.Select().RowDeleted -= new DataRowChangeEventHandler(TenancyPersonsViewport_RowDeleted);
+            tenancy_persons.Select().RowChanged -= new DataRowChangeEventHandler(TenancyPersonsViewport_RowChanged);
+            tenancy_agreements.Select().RowDeleted -= new DataRowChangeEventHandler(TenancyAgreementsViewport_RowDeleted);
+            tenancy_agreements.Select().RowChanged -= new DataRowChangeEventHandler(TenancyAgreementsViewport_RowChanged);
             base.Close();
         }
 
@@ -768,10 +774,22 @@ namespace Registry.Viewport
 
         void TenancyAgreementsViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
-            RedrawDataGridTenancyPersonsRows();
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
         }
 
         void TenancyAgreementsViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
+        }
+        void TenancyPersonsViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            RedrawDataGridTenancyPersonsRows();
+        }
+
+        void TenancyPersonsViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             RedrawDataGridTenancyPersonsRows();
         }
@@ -1031,6 +1049,10 @@ namespace Registry.Viewport
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPageExclude = new System.Windows.Forms.TabPage();
             this.dataGridViewTenancyPersons = new System.Windows.Forms.DataGridView();
+            this.surname = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.patronymic = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.date_of_birth = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.vButtonExcludePaste = new VIBlend.WinForms.Controls.vButton();
             this.textBoxExcludePoint = new System.Windows.Forms.TextBox();
             this.label74 = new System.Windows.Forms.Label();
@@ -1057,10 +1079,6 @@ namespace Registry.Viewport
             this.id_agreement = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.agreement_date = new CustomControls.DataGridViewDateTimeColumn();
             this.agreement_content = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.surname = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.patronymic = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.date_of_birth = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel12.SuspendLayout();
             this.panel7.SuspendLayout();
             this.groupBox29.SuspendLayout();
@@ -1275,8 +1293,36 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(430, 92);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(430, 90);
             this.dataGridViewTenancyPersons.TabIndex = 2;
+            // 
+            // surname
+            // 
+            this.surname.HeaderText = "Фамилия";
+            this.surname.MinimumWidth = 100;
+            this.surname.Name = "surname";
+            this.surname.ReadOnly = true;
+            // 
+            // name
+            // 
+            this.name.HeaderText = "Имя";
+            this.name.MinimumWidth = 100;
+            this.name.Name = "name";
+            this.name.ReadOnly = true;
+            // 
+            // patronymic
+            // 
+            this.patronymic.HeaderText = "Отчество";
+            this.patronymic.MinimumWidth = 100;
+            this.patronymic.Name = "patronymic";
+            this.patronymic.ReadOnly = true;
+            // 
+            // date_of_birth
+            // 
+            this.date_of_birth.HeaderText = "Дата рождения";
+            this.date_of_birth.MinimumWidth = 140;
+            this.date_of_birth.Name = "date_of_birth";
+            this.date_of_birth.ReadOnly = true;
             // 
             // vButtonExcludePaste
             // 
@@ -1323,10 +1369,10 @@ namespace Registry.Viewport
             this.tabPageInclude.Controls.Add(this.label78);
             this.tabPageInclude.Controls.Add(this.vButtonIncludePaste);
             this.tabPageInclude.Controls.Add(this.label75);
-            this.tabPageInclude.Location = new System.Drawing.Point(4, 24);
+            this.tabPageInclude.Location = new System.Drawing.Point(4, 22);
             this.tabPageInclude.Name = "tabPageInclude";
             this.tabPageInclude.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInclude.Size = new System.Drawing.Size(436, 127);
+            this.tabPageInclude.Size = new System.Drawing.Size(436, 129);
             this.tabPageInclude.TabIndex = 1;
             this.tabPageInclude.Text = "Включить";
             // 
@@ -1426,9 +1472,9 @@ namespace Registry.Viewport
             this.tabPageExplain.Controls.Add(this.textBoxExplainPoint);
             this.tabPageExplain.Controls.Add(this.vButtonExplainPaste);
             this.tabPageExplain.Controls.Add(this.label79);
-            this.tabPageExplain.Location = new System.Drawing.Point(4, 24);
+            this.tabPageExplain.Location = new System.Drawing.Point(4, 22);
             this.tabPageExplain.Name = "tabPageExplain";
-            this.tabPageExplain.Size = new System.Drawing.Size(436, 127);
+            this.tabPageExplain.Size = new System.Drawing.Size(436, 129);
             this.tabPageExplain.TabIndex = 2;
             this.tabPageExplain.Text = "Изложить";
             // 
@@ -1482,9 +1528,9 @@ namespace Registry.Viewport
             this.tabPageTerminate.Controls.Add(this.vButtonTerminatePaste);
             this.tabPageTerminate.Controls.Add(this.textBoxTerminateAgreement);
             this.tabPageTerminate.Controls.Add(this.label80);
-            this.tabPageTerminate.Location = new System.Drawing.Point(4, 24);
+            this.tabPageTerminate.Location = new System.Drawing.Point(4, 22);
             this.tabPageTerminate.Name = "tabPageTerminate";
-            this.tabPageTerminate.Size = new System.Drawing.Size(436, 127);
+            this.tabPageTerminate.Size = new System.Drawing.Size(436, 129);
             this.tabPageTerminate.TabIndex = 3;
             this.tabPageTerminate.Text = "Расторгнуть";
             // 
@@ -1524,6 +1570,8 @@ namespace Registry.Viewport
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
+            this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -1571,34 +1619,6 @@ namespace Registry.Viewport
             this.agreement_content.MinimumWidth = 100;
             this.agreement_content.Name = "agreement_content";
             this.agreement_content.ReadOnly = true;
-            // 
-            // surname
-            // 
-            this.surname.HeaderText = "Фамилия";
-            this.surname.MinimumWidth = 100;
-            this.surname.Name = "surname";
-            this.surname.ReadOnly = true;
-            // 
-            // name
-            // 
-            this.name.HeaderText = "Имя";
-            this.name.MinimumWidth = 100;
-            this.name.Name = "name";
-            this.name.ReadOnly = true;
-            // 
-            // patronymic
-            // 
-            this.patronymic.HeaderText = "Отчество";
-            this.patronymic.MinimumWidth = 100;
-            this.patronymic.Name = "patronymic";
-            this.patronymic.ReadOnly = true;
-            // 
-            // date_of_birth
-            // 
-            this.date_of_birth.HeaderText = "Дата рождения";
-            this.date_of_birth.MinimumWidth = 140;
-            this.date_of_birth.Name = "date_of_birth";
-            this.date_of_birth.ReadOnly = true;
             // 
             // TenancyAgreementsViewport
             // 

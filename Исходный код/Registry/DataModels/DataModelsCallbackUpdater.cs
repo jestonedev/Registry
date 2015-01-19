@@ -71,6 +71,7 @@ namespace Registry.DataModels
                     tableCacheLvl2.Clear();
                     context.Send(__ =>
                     {
+                        DataTable workTable = tableCacheLvl1;
                         foreach (DataRow row in tableCacheLvl1.Rows)
                         {
                             if (!UpdateModelFromRow(row))
@@ -94,7 +95,8 @@ namespace Registry.DataModels
                             tableDB.Locale = CultureInfo.InvariantCulture;
                             context.Send(__ =>
                             {
-                                foreach (DataRow row in tableDB.Rows)
+                                DataTable workTable = tableDB;
+                                foreach (DataRow row in workTable.Rows)
                                 {
                                     if (!UpdateModelFromRow(row))
                                         tableCacheLvl1.Rows.Add(RowToCacheObject(row));

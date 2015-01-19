@@ -288,6 +288,8 @@ namespace Registry.Viewport
             v_snapshot_restrictions = new BindingSource();
             v_snapshot_restrictions.DataSource = snapshot_restrictions;
             v_snapshot_restrictions.CurrentItemChanged += new EventHandler(v_snapshot_restrictions_CurrentItemChanged);
+            snapshot_restrictions.RowChanged += snapshot_restrictions_RowChanged;
+            snapshot_restrictions.RowDeleted += snapshot_restrictions_RowDeleted;
 
             dataGridView.DataSource = v_snapshot_restrictions;
 
@@ -475,6 +477,26 @@ namespace Registry.Viewport
             base.Close();
         }
 
+        void snapshot_restrictions_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            if (Selected)
+            {
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.NavigationStateUpdate();
+                MenuCallback.StatusBarStateUpdate();
+            }
+        }
+
+        void snapshot_restrictions_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action == DataRowAction.Add && Selected)
+            {
+                MenuCallback.StatusBarStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.NavigationStateUpdate();
+            }
+        }
+
         void RestrictionAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (!sync_views)
@@ -591,7 +613,6 @@ namespace Registry.Viewport
             {
                 MenuCallback.NavigationStateUpdate();
                 MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
             }
         }
 

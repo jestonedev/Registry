@@ -1297,11 +1297,16 @@ namespace Registry.Viewport
         {
             if (e.Action == DataRowAction.Delete)
                 UnbindedCheckBoxesUpdate();
+            MenuCallback.ForceCloseDetachedViewports();
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
         }
 
         void TenancyViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             UnbindedCheckBoxesUpdate();
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
         }
 
         void TenancyPersons_RowDeleted(object sender, DataRowChangeEventArgs e)
@@ -1516,6 +1521,11 @@ namespace Registry.Viewport
             this.checkBoxKumiOrderEnable = new System.Windows.Forms.CheckBox();
             this.groupBox21 = new System.Windows.Forms.GroupBox();
             this.dataGridViewTenancyPersons = new System.Windows.Forms.DataGridView();
+            this.surname = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.patronymic = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.date_of_birth = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_kinship = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.tableLayoutPanel13 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox22 = new System.Windows.Forms.GroupBox();
             this.comboBoxExecutor = new System.Windows.Forms.ComboBox();
@@ -1524,11 +1534,6 @@ namespace Registry.Viewport
             this.label46 = new System.Windows.Forms.Label();
             this.groupBox31 = new System.Windows.Forms.GroupBox();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
-            this.surname = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.patronymic = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.date_of_birth = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_kinship = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.tableLayoutPanel9.SuspendLayout();
             this.groupBoxTenancyContract.SuspendLayout();
             this.tableLayoutPanel10.SuspendLayout();
@@ -1800,6 +1805,7 @@ namespace Registry.Viewport
             // 
             this.dataGridViewTenancyAgreements.AllowUserToAddRows = false;
             this.dataGridViewTenancyAgreements.AllowUserToDeleteRows = false;
+            this.dataGridViewTenancyAgreements.AllowUserToResizeRows = false;
             this.dataGridViewTenancyAgreements.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewTenancyAgreements.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewTenancyAgreements.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -1843,6 +1849,7 @@ namespace Registry.Viewport
             // 
             this.dataGridViewTenancyReasons.AllowUserToAddRows = false;
             this.dataGridViewTenancyReasons.AllowUserToDeleteRows = false;
+            this.dataGridViewTenancyReasons.AllowUserToResizeRows = false;
             this.dataGridViewTenancyReasons.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewTenancyReasons.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewTenancyReasons.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -2025,6 +2032,7 @@ namespace Registry.Viewport
             // 
             this.dataGridViewTenancyPersons.AllowUserToAddRows = false;
             this.dataGridViewTenancyPersons.AllowUserToDeleteRows = false;
+            this.dataGridViewTenancyPersons.AllowUserToResizeRows = false;
             this.dataGridViewTenancyPersons.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewTenancyPersons.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewTenancyPersons.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
@@ -2043,6 +2051,42 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(367, 169);
             this.dataGridViewTenancyPersons.TabIndex = 0;
             this.dataGridViewTenancyPersons.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyPersons_CellDoubleClick);
+            // 
+            // surname
+            // 
+            this.surname.HeaderText = "Фамилия";
+            this.surname.MinimumWidth = 100;
+            this.surname.Name = "surname";
+            this.surname.ReadOnly = true;
+            // 
+            // name
+            // 
+            this.name.HeaderText = "Имя";
+            this.name.MinimumWidth = 100;
+            this.name.Name = "name";
+            this.name.ReadOnly = true;
+            // 
+            // patronymic
+            // 
+            this.patronymic.HeaderText = "Отчество";
+            this.patronymic.MinimumWidth = 100;
+            this.patronymic.Name = "patronymic";
+            this.patronymic.ReadOnly = true;
+            // 
+            // date_of_birth
+            // 
+            this.date_of_birth.HeaderText = "Дата рождения";
+            this.date_of_birth.MinimumWidth = 130;
+            this.date_of_birth.Name = "date_of_birth";
+            this.date_of_birth.ReadOnly = true;
+            // 
+            // id_kinship
+            // 
+            this.id_kinship.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
+            this.id_kinship.HeaderText = "Отношение/связь";
+            this.id_kinship.MinimumWidth = 120;
+            this.id_kinship.Name = "id_kinship";
+            this.id_kinship.ReadOnly = true;
             // 
             // tableLayoutPanel13
             // 
@@ -2138,42 +2182,6 @@ namespace Registry.Viewport
             this.textBoxDescription.Size = new System.Drawing.Size(361, 78);
             this.textBoxDescription.TabIndex = 18;
             this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxDescription_TextChanged);
-            // 
-            // surname
-            // 
-            this.surname.HeaderText = "Фамилия";
-            this.surname.MinimumWidth = 100;
-            this.surname.Name = "surname";
-            this.surname.ReadOnly = true;
-            // 
-            // name
-            // 
-            this.name.HeaderText = "Имя";
-            this.name.MinimumWidth = 100;
-            this.name.Name = "name";
-            this.name.ReadOnly = true;
-            // 
-            // patronymic
-            // 
-            this.patronymic.HeaderText = "Отчество";
-            this.patronymic.MinimumWidth = 100;
-            this.patronymic.Name = "patronymic";
-            this.patronymic.ReadOnly = true;
-            // 
-            // date_of_birth
-            // 
-            this.date_of_birth.HeaderText = "Дата рождения";
-            this.date_of_birth.MinimumWidth = 130;
-            this.date_of_birth.Name = "date_of_birth";
-            this.date_of_birth.ReadOnly = true;
-            // 
-            // id_kinship
-            // 
-            this.id_kinship.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
-            this.id_kinship.HeaderText = "Отношение/связь";
-            this.id_kinship.MinimumWidth = 120;
-            this.id_kinship.Name = "id_kinship";
-            this.id_kinship.ReadOnly = true;
             // 
             // TenancyViewport
             // 

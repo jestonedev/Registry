@@ -177,6 +177,7 @@ namespace Registry.Viewport
             //Синхронизация данных исходные->текущие
             restriction_types.Select().RowChanged += new DataRowChangeEventHandler(RestrictionTypeListViewport_RowChanged);
             restriction_types.Select().RowDeleting += new DataRowChangeEventHandler(RestrictionTypeListViewport_RowDeleting);
+            restriction_types.Select().RowDeleted += new DataRowChangeEventHandler(RestrictionTypeListViewport_RowDeleted);
         }
 
         public override void MoveFirst()
@@ -350,6 +351,17 @@ namespace Registry.Viewport
             }
             restriction_types.Select().RowChanged -= new DataRowChangeEventHandler(RestrictionTypeListViewport_RowChanged);
             restriction_types.Select().RowDeleting -= new DataRowChangeEventHandler(RestrictionTypeListViewport_RowDeleting);
+            restriction_types.Select().RowDeleted -= new DataRowChangeEventHandler(RestrictionTypeListViewport_RowDeleted);
+        }
+
+        private void RestrictionTypeListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            if (Selected)
+            {
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.NavigationStateUpdate();
+                MenuCallback.StatusBarStateUpdate();
+            }
         }
 
         void RestrictionTypeListViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
@@ -368,23 +380,26 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
+            int row_index = v_snapshot_restriction_types.Find("id_restriction_type", e.Row["id_restriction_type"]);
+            if (row_index == -1 && v_restriction_types.Find("id_restriction_type", e.Row["id_restriction_type"]) != -1)
             {
-                int row_index = v_snapshot_restriction_types.Find("id_restriction_type", e.Row["id_restriction_type"]);
+                snapshot_restriction_types.Rows.Add(new object[] { 
+                        e.Row["id_restriction_type"], 
+                        e.Row["restriction_type"]
+                    });
+            }
+            else
                 if (row_index != -1)
                 {
                     DataRowView row = ((DataRowView)v_snapshot_restriction_types[row_index]);
                     row["restriction_type"] = e.Row["restriction_type"];
                 }
+            if (Selected)
+            {
+                MenuCallback.NavigationStateUpdate();
+                MenuCallback.StatusBarStateUpdate();
+                MenuCallback.EditingStateUpdate();
             }
-            else
-                if (e.Action == DataRowAction.Add)
-                {
-                    snapshot_restriction_types.Rows.Add(new object[] { 
-                        e.Row["id_restriction_type"], 
-                        e.Row["restriction_type"]
-                    });
-                }
         }
 
         void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
@@ -415,7 +430,6 @@ namespace Registry.Viewport
             {
                 MenuCallback.NavigationStateUpdate();
                 MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
             }
         }
 
@@ -432,6 +446,7 @@ namespace Registry.Viewport
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
             this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;

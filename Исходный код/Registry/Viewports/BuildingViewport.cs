@@ -751,6 +751,8 @@ namespace Registry.Viewport
             if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
                 v_buildings.Filter += " AND ";
             v_buildings.Filter += DynamicFilter;
+            buildings.Select().RowDeleted += BuildingViewport_RowDeleted;
+            buildings.Select().RowChanged += BuildingViewport_RowChanged;
 
             v_restrictionBuildingsAssoc = new BindingSource();
             v_restrictionBuildingsAssoc.CurrentItemChanged += new EventHandler(v_restrictionBuildingsAssoc_CurrentItemChanged);
@@ -1115,6 +1117,19 @@ namespace Registry.Viewport
         void buildingsCurrentFund_RefreshEvent(object sender, EventArgs e)
         {
             ShowOrHideCurrentFund();
+        }
+
+        void BuildingViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            MenuCallback.ForceCloseDetachedViewports();
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
+        }
+
+        void BuildingViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
         }
 
         void RestrictionsAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
@@ -2194,6 +2209,7 @@ namespace Registry.Viewport
             // 
             this.dataGridViewRestrictions.AllowUserToAddRows = false;
             this.dataGridViewRestrictions.AllowUserToDeleteRows = false;
+            this.dataGridViewRestrictions.AllowUserToResizeRows = false;
             this.dataGridViewRestrictions.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewRestrictions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewRestrictions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -2256,6 +2272,7 @@ namespace Registry.Viewport
             // 
             this.dataGridViewOwnerships.AllowUserToAddRows = false;
             this.dataGridViewOwnerships.AllowUserToDeleteRows = false;
+            this.dataGridViewOwnerships.AllowUserToResizeRows = false;
             this.dataGridViewOwnerships.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewOwnerships.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewOwnerships.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {

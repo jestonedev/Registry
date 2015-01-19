@@ -279,6 +279,7 @@ namespace Registry.Viewport
             //Синхронизация данных исходные->текущие
             sub_premises.Select().RowChanged += new DataRowChangeEventHandler(SubPremisesViewport_RowChanged);
             sub_premises.Select().RowDeleting += new DataRowChangeEventHandler(SubPremisesViewport_RowDeleting);
+            sub_premises.Select().RowDeleted += SubPremisesViewport_RowDeleted;
         }
 
         public override bool CanInsertRecord()
@@ -421,12 +422,14 @@ namespace Registry.Viewport
             }
             sub_premises.Select().RowChanged -= new DataRowChangeEventHandler(SubPremisesViewport_RowChanged);
             sub_premises.Select().RowDeleting -= new DataRowChangeEventHandler(SubPremisesViewport_RowDeleting);
+            sub_premises.Select().RowDeleted -= new DataRowChangeEventHandler(SubPremisesViewport_RowDeleted);
         }
 
         public override void ForceClose()
         {
             sub_premises.Select().RowChanged -= new DataRowChangeEventHandler(SubPremisesViewport_RowChanged);
             sub_premises.Select().RowDeleting -= new DataRowChangeEventHandler(SubPremisesViewport_RowDeleting);
+            sub_premises.Select().RowDeleted -= new DataRowChangeEventHandler(SubPremisesViewport_RowDeleted);
             base.Close();
         }
 
@@ -528,6 +531,18 @@ namespace Registry.Viewport
             }
         }
 
+        void SubPremisesViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            MenuCallback.ForceCloseDetachedViewports();
+            if (Selected)
+            {
+                MenuCallback.NavigationStateUpdate();
+                MenuCallback.StatusBarStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
+            }
+        }
+
         void SubPremisesViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
             if (!sync_views)
@@ -564,6 +579,13 @@ namespace Registry.Viewport
                 row["sub_premises_num"] = e.Row["sub_premises_num"];
                 row["total_area"] = e.Row["total_area"];
                 row["description"] = e.Row["description"];
+            }
+            if (Selected)
+            {
+                MenuCallback.NavigationStateUpdate();
+                MenuCallback.StatusBarStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.RelationsStateUpdate();
             }
         }
 

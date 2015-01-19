@@ -216,6 +216,7 @@ namespace Registry.Viewport
             //Синхронизация данных исходные->текущие
             ownership_right_types.Select().RowChanged += new DataRowChangeEventHandler(OwnershipTypeListViewport_RowChanged);
             ownership_right_types.Select().RowDeleting += new DataRowChangeEventHandler(OwnershipTypeListViewport_RowDeleting);
+            ownership_right_types.Select().RowDeleted += new DataRowChangeEventHandler(OwnershipTypeListViewport_RowDeleted);
         }
         
         public override bool CanInsertRecord()
@@ -349,6 +350,17 @@ namespace Registry.Viewport
             }
             ownership_right_types.Select().RowChanged -= new DataRowChangeEventHandler(OwnershipTypeListViewport_RowChanged);
             ownership_right_types.Select().RowDeleting -= new DataRowChangeEventHandler(OwnershipTypeListViewport_RowDeleting);
+            ownership_right_types.Select().RowDeleted -= new DataRowChangeEventHandler(OwnershipTypeListViewport_RowDeleted);
+        }
+
+        private void OwnershipTypeListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            if (Selected)
+            {
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.NavigationStateUpdate();
+                MenuCallback.StatusBarStateUpdate();
+            }
         }
 
         void OwnershipTypeListViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
@@ -367,23 +379,26 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
+            int row_index = v_snapshot_ownership_right_types.Find("id_ownership_right_type", e.Row["id_ownership_right_type"]);
+            if (row_index == -1 && v_ownership_right_types.Find("id_ownership_right_type", e.Row["id_ownership_right_type"]) != -1)
             {
-                int row_index = v_snapshot_ownership_right_types.Find("id_ownership_right_type", e.Row["id_ownership_right_type"]);
+                snapshot_ownership_right_types.Rows.Add(new object[] { 
+                        e.Row["id_ownership_right_type"], 
+                        e.Row["ownership_right_type"]
+                    });
+            }
+            else
                 if (row_index != -1)
                 {
                     DataRowView row = ((DataRowView)v_snapshot_ownership_right_types[row_index]);
                     row["ownership_right_type"] = e.Row["ownership_right_type"];
                 }
+            if (Selected)
+            {
+                MenuCallback.NavigationStateUpdate();
+                MenuCallback.StatusBarStateUpdate();
+                MenuCallback.EditingStateUpdate();
             }
-            else
-                if (e.Action == DataRowAction.Add)
-                {
-                    snapshot_ownership_right_types.Rows.Add(new object[] { 
-                        e.Row["id_ownership_right_type"], 
-                        e.Row["ownership_right_type"]
-                    });
-                }
         }
 
         void v_snapshot_ownership_right_types_CurrentItemChanged(object sender, EventArgs e)
@@ -392,7 +407,6 @@ namespace Registry.Viewport
             {
                 MenuCallback.NavigationStateUpdate();
                 MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
             }
         }
 
@@ -431,6 +445,7 @@ namespace Registry.Viewport
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
             this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;

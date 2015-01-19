@@ -880,6 +880,8 @@ namespace Registry.Viewport
         {
             UnbindedCheckBoxesUpdate();
             RedrawDataGridRows();
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
         }
 
         void TenancyPersonsViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
@@ -888,6 +890,8 @@ namespace Registry.Viewport
             {
                 UnbindedCheckBoxesUpdate();
                 RedrawDataGridRows();
+                if (Selected)
+                    MenuCallback.StatusBarStateUpdate();
             }
         }
 
@@ -1720,6 +1724,8 @@ namespace Registry.Viewport
             // dataGridViewTenancyPersons
             // 
             this.dataGridViewTenancyPersons.AllowUserToAddRows = false;
+            this.dataGridViewTenancyPersons.AllowUserToDeleteRows = false;
+            this.dataGridViewTenancyPersons.AllowUserToResizeRows = false;
             this.dataGridViewTenancyPersons.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridViewTenancyPersons.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewTenancyPersons.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;

@@ -216,6 +216,7 @@ namespace Registry.Viewport
             //Синхронизация данных исходные->текущие
             structure_types.Select().RowChanged += new DataRowChangeEventHandler(StructureTypeListViewport_RowChanged);
             structure_types.Select().RowDeleting += new DataRowChangeEventHandler(StructureTypeListViewport_RowDeleting);
+            structure_types.Select().RowDeleted += new DataRowChangeEventHandler(StructureTypeListViewport_RowDeleted);
         }
 
         public override bool CanInsertRecord()
@@ -349,6 +350,17 @@ namespace Registry.Viewport
             }
             structure_types.Select().RowChanged -= new DataRowChangeEventHandler(StructureTypeListViewport_RowChanged);
             structure_types.Select().RowDeleting -= new DataRowChangeEventHandler(StructureTypeListViewport_RowDeleting);
+            structure_types.Select().RowDeleted -= new DataRowChangeEventHandler(StructureTypeListViewport_RowDeleted);
+        }
+
+        private void StructureTypeListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            if (Selected)
+            {
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.NavigationStateUpdate();
+                MenuCallback.StatusBarStateUpdate();
+            }
         }
 
         void StructureTypeListViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
@@ -367,23 +379,26 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
+            int row_index = v_snapshot_structure_types.Find("id_structure_type", e.Row["id_structure_type"]);
+            if (row_index == -1 && v_structure_types.Find("id_structure_type", e.Row["id_structure_type"]) != -1)
             {
-                int row_index = v_snapshot_structure_types.Find("id_structure_type", e.Row["id_structure_type"]);
+                snapshot_structure_types.Rows.Add(new object[] { 
+                        e.Row["id_structure_type"], 
+                        e.Row["structure_type"]
+                    });
+            }
+            else
                 if (row_index != -1)
                 {
                     DataRowView row = ((DataRowView)v_snapshot_structure_types[row_index]);
                     row["structure_type"] = e.Row["structure_type"];
                 }
+            if (Selected)
+            {
+                MenuCallback.NavigationStateUpdate();
+                MenuCallback.StatusBarStateUpdate();
+                MenuCallback.EditingStateUpdate();
             }
-            else
-                if (e.Action == DataRowAction.Add)
-                {
-                    snapshot_structure_types.Rows.Add(new object[] { 
-                        e.Row["id_structure_type"], 
-                        e.Row["structure_type"]
-                    });
-                }
         }
 
         void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -414,7 +429,6 @@ namespace Registry.Viewport
             {
                 MenuCallback.NavigationStateUpdate();
                 MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
             }
         }
 
@@ -431,6 +445,7 @@ namespace Registry.Viewport
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
             this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;

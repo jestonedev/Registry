@@ -782,12 +782,18 @@ namespace Registry.Viewport
         void FundsHistoryViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
+            {
                 UnbindedCheckBoxesUpdate();
+                if (Selected)
+                    MenuCallback.StatusBarStateUpdate();
+            }
         }
 
         void FundsHistoryViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             UnbindedCheckBoxesUpdate();
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
         }
 
         void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
@@ -1268,6 +1274,7 @@ namespace Registry.Viewport
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
             this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;

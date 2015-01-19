@@ -323,8 +323,10 @@ namespace Registry.Viewport
             //Синхронизация данных исходные->текущие
             claim_state_types.Select().RowChanged += new DataRowChangeEventHandler(ClaimStateTypesViewport_RowChanged);
             claim_state_types.Select().RowDeleting += new DataRowChangeEventHandler(ClaimStateTypesViewport_RowDeleting);
+            claim_state_types.Select().RowDeleted += ClaimStateTypesViewport_RowDeleted;
             claim_state_types_relations.Select().RowChanged += new DataRowChangeEventHandler(ClaimStateTypesRelationsViewport_RowChanged);
             claim_state_types_relations.Select().RowDeleting += new DataRowChangeEventHandler(ClaimStateTypesRelationsViewport_RowDeleting);
+            claim_state_types_relations.Select().RowDeleted += ClaimStateTypesRelationsViewport_RowDeleted;
         }
 
         public override bool CanInsertRecord()
@@ -525,8 +527,10 @@ namespace Registry.Viewport
             }
             claim_state_types.Select().RowChanged -= new DataRowChangeEventHandler(ClaimStateTypesViewport_RowChanged);
             claim_state_types.Select().RowDeleting -= new DataRowChangeEventHandler(ClaimStateTypesViewport_RowDeleting);
+            claim_state_types.Select().RowDeleted -= new DataRowChangeEventHandler(ClaimStateTypesViewport_RowDeleted);
             claim_state_types_relations.Select().RowChanged -= new DataRowChangeEventHandler(ClaimStateTypesRelationsViewport_RowChanged);
             claim_state_types_relations.Select().RowDeleting -= new DataRowChangeEventHandler(ClaimStateTypesRelationsViewport_RowDeleting);
+            claim_state_types_relations.Select().RowDeleted -= new DataRowChangeEventHandler(ClaimStateTypesRelationsViewport_RowDeleted);
         }
 
         void v_claim_state_types_from_CurrentItemChanged(object sender, EventArgs e)
@@ -554,7 +558,6 @@ namespace Registry.Viewport
             {
                 MenuCallback.NavigationStateUpdate();
                 MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
             }
             dataGridViewClaimStateTypesFrom.InvalidateColumn(dataGridViewClaimStateTypesFrom.Columns["state_type_checked"].Index);
         }
@@ -643,6 +646,12 @@ namespace Registry.Viewport
             MenuCallback.EditingStateUpdate();
         }
 
+        private void ClaimStateTypesRelationsViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            if (Selected)
+                MenuCallback.EditingStateUpdate();
+        }
+
         void ClaimStateTypesRelationsViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
             if (!sync_views)
@@ -684,6 +693,16 @@ namespace Registry.Viewport
             dataGridViewClaimStateTypesFrom.InvalidateColumn(dataGridViewClaimStateTypesFrom.Columns["state_type_checked"].Index);
         }
 
+        void ClaimStateTypesViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            if (Selected)
+            {
+                MenuCallback.NavigationStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.StatusBarStateUpdate();
+            }
+        }
+
         void ClaimStateTypesViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
             if (!sync_views)
@@ -720,6 +739,12 @@ namespace Registry.Viewport
                     row["is_start_state_type"] = e.Row["is_start_state_type"];
                 }
             dataGridViewClaimStateTypesFrom.Invalidate();
+            if (Selected)
+            {
+                MenuCallback.NavigationStateUpdate();
+                MenuCallback.StatusBarStateUpdate();
+                MenuCallback.EditingStateUpdate();
+            }
         }
 
         void dataGridViewClaimStateTypes_CellValueChanged(object sender, DataGridViewCellEventArgs e)
@@ -803,6 +828,7 @@ namespace Registry.Viewport
             // 
             this.dataGridViewClaimStateTypes.AllowUserToAddRows = false;
             this.dataGridViewClaimStateTypes.AllowUserToDeleteRows = false;
+            this.dataGridViewClaimStateTypes.AllowUserToResizeRows = false;
             this.dataGridViewClaimStateTypes.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewClaimStateTypes.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewClaimStateTypes.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -854,6 +880,7 @@ namespace Registry.Viewport
             // 
             this.dataGridViewClaimStateTypesFrom.AllowUserToAddRows = false;
             this.dataGridViewClaimStateTypesFrom.AllowUserToDeleteRows = false;
+            this.dataGridViewClaimStateTypesFrom.AllowUserToResizeRows = false;
             this.dataGridViewClaimStateTypesFrom.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewClaimStateTypesFrom.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewClaimStateTypesFrom.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {

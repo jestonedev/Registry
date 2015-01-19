@@ -185,6 +185,7 @@ namespace Registry.Viewport
             //Синхронизация данных исходные->текущие
             documents_issued_by.Select().RowChanged += new DataRowChangeEventHandler(DocumentIssuedByViewport_RowChanged);
             documents_issued_by.Select().RowDeleting += new DataRowChangeEventHandler(DocumentIssuedByViewport_RowDeleting);
+            documents_issued_by.Select().RowDeleted += DocumentIssuedByViewport_RowDeleted;
         }
 
         public override void MoveFirst()
@@ -259,6 +260,7 @@ namespace Registry.Viewport
             }
             documents_issued_by.Select().RowChanged -= new DataRowChangeEventHandler(DocumentIssuedByViewport_RowChanged);
             documents_issued_by.Select().RowDeleting -= new DataRowChangeEventHandler(DocumentIssuedByViewport_RowDeleting);
+            documents_issued_by.Select().RowDeleted -= new DataRowChangeEventHandler(DocumentIssuedByViewport_RowDeleted);
         }
 
         public override bool CanDeleteRecord()
@@ -361,6 +363,16 @@ namespace Registry.Viewport
             return viewport;
         }
 
+        void DocumentIssuedByViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            if (Selected)
+            {
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.NavigationStateUpdate();
+                MenuCallback.StatusBarStateUpdate();
+            }
+        }
+
         void DocumentIssuedByViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
             if (!sync_views)
@@ -377,23 +389,26 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
+            int row_index = v_snapshot_documents_issued_by.Find("id_document_issued_by", e.Row["id_document_issued_by"]);
+            if (row_index == -1 && v_documents_issued_by.Find("id_document_issued_by", e.Row["id_document_issued_by"]) != -1)
             {
-                int row_index = v_snapshot_documents_issued_by.Find("id_document_issued_by", e.Row["id_document_issued_by"]);
+                snapshot_documents_issued_by.Rows.Add(new object[] { 
+                        e.Row["id_document_issued_by"], 
+                        e.Row["document_issued_by"]
+                    });
+            }
+            else
                 if (row_index != -1)
                 {
                     DataRowView row = ((DataRowView)v_snapshot_documents_issued_by[row_index]);
                     row["document_issued_by"] = e.Row["document_issued_by"];
                 }
+            if (Selected)
+            {
+                MenuCallback.NavigationStateUpdate();
+                MenuCallback.StatusBarStateUpdate();
+                MenuCallback.EditingStateUpdate();
             }
-            else
-                if (e.Action == DataRowAction.Add)
-                {
-                    snapshot_documents_issued_by.Rows.Add(new object[] { 
-                        e.Row["id_document_issued_by"], 
-                        e.Row["document_issued_by"]
-                    });
-                }
         }
 
         void v_snapshot_documents_issued_by_CurrentItemChanged(object sender, EventArgs e)
@@ -402,7 +417,6 @@ namespace Registry.Viewport
             {
                 MenuCallback.NavigationStateUpdate();
                 MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
             }
         }
 
@@ -441,6 +455,8 @@ namespace Registry.Viewport
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
+            this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;

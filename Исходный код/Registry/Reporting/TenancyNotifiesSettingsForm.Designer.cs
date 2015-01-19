@@ -31,6 +31,8 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyNotifiesSettingsForm));
             this.panel1 = new System.Windows.Forms.Panel();
+            this.comboBoxExecutor = new System.Windows.Forms.ComboBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.vButtonExport = new VIBlend.WinForms.Controls.vButton();
             this.checkBoxExpired = new System.Windows.Forms.CheckBox();
             this.checkBoxExpiring = new System.Windows.Forms.CheckBox();
@@ -48,8 +50,6 @@
             this.tenant = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.rent_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.address = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.comboBoxExecutor = new System.Windows.Forms.ComboBox();
-            this.label4 = new System.Windows.Forms.Label();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -68,6 +68,24 @@
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(994, 54);
             this.panel1.TabIndex = 0;
+            // 
+            // comboBoxExecutor
+            // 
+            this.comboBoxExecutor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxExecutor.FormattingEnabled = true;
+            this.comboBoxExecutor.Location = new System.Drawing.Point(298, 24);
+            this.comboBoxExecutor.Name = "comboBoxExecutor";
+            this.comboBoxExecutor.Size = new System.Drawing.Size(286, 21);
+            this.comboBoxExecutor.TabIndex = 2;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(295, 9);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(74, 13);
+            this.label4.TabIndex = 75;
+            this.label4.Text = "Исполнитель";
             // 
             // vButtonExport
             // 
@@ -186,8 +204,6 @@
             // 
             this.checkBoxCheckAll.AutoSize = true;
             this.checkBoxCheckAll.BackColor = System.Drawing.Color.White;
-            this.checkBoxCheckAll.Checked = true;
-            this.checkBoxCheckAll.CheckState = System.Windows.Forms.CheckState.Indeterminate;
             this.checkBoxCheckAll.Location = new System.Drawing.Point(9, 7);
             this.checkBoxCheckAll.Name = "checkBoxCheckAll";
             this.checkBoxCheckAll.Size = new System.Drawing.Size(15, 14);
@@ -208,6 +224,7 @@
             // 
             this.id_process.HeaderText = "id_process";
             this.id_process.Name = "id_process";
+            this.id_process.ReadOnly = true;
             this.id_process.Visible = false;
             // 
             // registration_num
@@ -216,6 +233,7 @@
             this.registration_num.HeaderText = "№ договора";
             this.registration_num.MinimumWidth = 120;
             this.registration_num.Name = "registration_num";
+            this.registration_num.ReadOnly = true;
             this.registration_num.Width = 120;
             // 
             // registration_date
@@ -223,6 +241,7 @@
             this.registration_date.HeaderText = "Дата регистрации";
             this.registration_date.MinimumWidth = 140;
             this.registration_date.Name = "registration_date";
+            this.registration_date.ReadOnly = true;
             this.registration_date.Width = 140;
             // 
             // begin_date
@@ -230,6 +249,7 @@
             this.begin_date.HeaderText = "Срок действия с";
             this.begin_date.MinimumWidth = 135;
             this.begin_date.Name = "begin_date";
+            this.begin_date.ReadOnly = true;
             this.begin_date.Width = 135;
             // 
             // end_date
@@ -237,6 +257,7 @@
             this.end_date.HeaderText = "Срок действия по";
             this.end_date.MinimumWidth = 135;
             this.end_date.Name = "end_date";
+            this.end_date.ReadOnly = true;
             this.end_date.Width = 135;
             // 
             // notify_date
@@ -244,6 +265,7 @@
             this.notify_date.HeaderText = "Дата уведомления";
             this.notify_date.MinimumWidth = 140;
             this.notify_date.Name = "notify_date";
+            this.notify_date.ReadOnly = true;
             this.notify_date.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.notify_date.Width = 140;
             // 
@@ -253,6 +275,7 @@
             this.tenant.HeaderText = "Наниматель";
             this.tenant.MinimumWidth = 250;
             this.tenant.Name = "tenant";
+            this.tenant.ReadOnly = true;
             this.tenant.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.tenant.Width = 250;
             // 
@@ -262,6 +285,7 @@
             this.rent_type.HeaderText = "Тип найма";
             this.rent_type.MinimumWidth = 150;
             this.rent_type.Name = "rent_type";
+            this.rent_type.ReadOnly = true;
             this.rent_type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.rent_type.Width = 150;
             // 
@@ -271,26 +295,9 @@
             this.address.HeaderText = "Нанимаемое жилье";
             this.address.MinimumWidth = 500;
             this.address.Name = "address";
+            this.address.ReadOnly = true;
             this.address.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.address.Width = 500;
-            // 
-            // comboBoxExecutor
-            // 
-            this.comboBoxExecutor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxExecutor.FormattingEnabled = true;
-            this.comboBoxExecutor.Location = new System.Drawing.Point(298, 24);
-            this.comboBoxExecutor.Name = "comboBoxExecutor";
-            this.comboBoxExecutor.Size = new System.Drawing.Size(286, 21);
-            this.comboBoxExecutor.TabIndex = 2;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(295, 9);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(74, 13);
-            this.label4.TabIndex = 75;
-            this.label4.Text = "Исполнитель";
             // 
             // TenancyNotifiesSettingsForm
             // 
@@ -324,6 +331,8 @@
         private System.Windows.Forms.CheckBox checkBoxExpired;
         private System.Windows.Forms.CheckBox checkBoxExpiring;
         private VIBlend.WinForms.Controls.vButton vButtonExport;
+        private System.Windows.Forms.ComboBox comboBoxExecutor;
+        private System.Windows.Forms.Label label4;
         private System.Windows.Forms.DataGridViewCheckBoxColumn is_checked;
         private System.Windows.Forms.DataGridViewTextBoxColumn id_process;
         private System.Windows.Forms.DataGridViewTextBoxColumn registration_num;
@@ -334,8 +343,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn tenant;
         private System.Windows.Forms.DataGridViewTextBoxColumn rent_type;
         private System.Windows.Forms.DataGridViewTextBoxColumn address;
-        private System.Windows.Forms.ComboBox comboBoxExecutor;
-        private System.Windows.Forms.Label label4;
 
 
     }

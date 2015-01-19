@@ -742,6 +742,9 @@ namespace Registry.Viewport
                 return;
             dataGridView.RowCount = v_premises.Count;
             dataGridView.Refresh();
+            MenuCallback.ForceCloseDetachedViewports();
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
         }
 
         void PremisesListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
@@ -750,11 +753,13 @@ namespace Registry.Viewport
                 return;
             dataGridView.RowCount = v_premises.Count;
             dataGridView.Refresh();
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
         }
 
         void dataGridView_BeforeCollapseDetails(object sender, DataGridViewDetailsEventArgs e)
         {
-            dataGridView.Rows[e.RowIndex].Cells["is_checked"].Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dataGridView.Rows[e.RowIndex].Cells["is_checked"].Style.Alignment = DataGridViewContentAlignment.TopCenter;
         }
 
         void dataGridView_BeforeExpandDetails(object sender, DataGridViewDetailsEventArgs e)
@@ -971,7 +976,7 @@ namespace Registry.Viewport
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle14 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyPremisesViewport));
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -979,6 +984,12 @@ namespace Registry.Viewport
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle6 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle7 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle8 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle9 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle10 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle11 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle12 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle13 = new System.Windows.Forms.DataGridViewCellStyle();
             this.dataGridView = new Microsoft.TeamFoundation.Client.DataGridViewWithDetails();
             this.image = new System.Windows.Forms.DataGridViewImageColumn();
             this.is_checked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
@@ -998,6 +1009,7 @@ namespace Registry.Viewport
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
             this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
@@ -1024,14 +1036,14 @@ namespace Registry.Viewport
             this.total_area,
             this.living_area,
             this.cadastral_num});
-            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle8.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            dataGridViewCellStyle8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle8.ForeColor = System.Drawing.SystemColors.ControlText;
-            dataGridViewCellStyle8.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle8.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle8.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dataGridView.DefaultCellStyle = dataGridViewCellStyle8;
+            dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle14.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle14.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle14.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle14.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dataGridView.DefaultCellStyle = dataGridViewCellStyle14;
             this.dataGridView.DetailsBackColor = System.Drawing.SystemColors.Window;
             this.dataGridView.DetailsCollapsedImage = null;
             this.dataGridView.DetailsExpandedImage = null;
@@ -1057,7 +1069,7 @@ namespace Registry.Viewport
             // 
             // image
             // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
             dataGridViewCellStyle2.BackColor = System.Drawing.Color.LightGray;
             dataGridViewCellStyle2.NullValue = ((object)(resources.GetObject("dataGridViewCellStyle2.NullValue")));
             this.image.DefaultCellStyle = dataGridViewCellStyle2;
@@ -1070,9 +1082,10 @@ namespace Registry.Viewport
             // 
             // is_checked
             // 
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopCenter;
             dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle3.NullValue = false;
+            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(0, 2, 0, 0);
             this.is_checked.DefaultCellStyle = dataGridViewCellStyle3;
             this.is_checked.HeaderText = "";
             this.is_checked.MinimumWidth = 30;
@@ -1082,6 +1095,7 @@ namespace Registry.Viewport
             // 
             // rent_total_area
             // 
+            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle4.Format = "#0.0## м²";
             this.rent_total_area.DefaultCellStyle = dataGridViewCellStyle4;
@@ -1093,6 +1107,7 @@ namespace Registry.Viewport
             // 
             // rent_living_area
             // 
+            dataGridViewCellStyle5.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
             dataGridViewCellStyle5.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle5.Format = "#0.0## м²";
             this.rent_living_area.DefaultCellStyle = dataGridViewCellStyle5;
@@ -1104,6 +1119,8 @@ namespace Registry.Viewport
             // 
             // id_premises
             // 
+            dataGridViewCellStyle6.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.id_premises.DefaultCellStyle = dataGridViewCellStyle6;
             this.id_premises.HeaderText = "№";
             this.id_premises.MinimumWidth = 100;
             this.id_premises.Name = "id_premises";
@@ -1111,6 +1128,8 @@ namespace Registry.Viewport
             // 
             // id_street
             // 
+            dataGridViewCellStyle7.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.id_street.DefaultCellStyle = dataGridViewCellStyle7;
             this.id_street.HeaderText = "Адрес";
             this.id_street.MinimumWidth = 300;
             this.id_street.Name = "id_street";
@@ -1120,6 +1139,8 @@ namespace Registry.Viewport
             // 
             // house
             // 
+            dataGridViewCellStyle8.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.house.DefaultCellStyle = dataGridViewCellStyle8;
             this.house.HeaderText = "Дом";
             this.house.MinimumWidth = 100;
             this.house.Name = "house";
@@ -1128,6 +1149,8 @@ namespace Registry.Viewport
             // 
             // premises_num
             // 
+            dataGridViewCellStyle9.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.premises_num.DefaultCellStyle = dataGridViewCellStyle9;
             this.premises_num.HeaderText = "Помещение";
             this.premises_num.MinimumWidth = 100;
             this.premises_num.Name = "premises_num";
@@ -1135,6 +1158,8 @@ namespace Registry.Viewport
             // 
             // id_premises_type
             // 
+            dataGridViewCellStyle10.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.id_premises_type.DefaultCellStyle = dataGridViewCellStyle10;
             this.id_premises_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
             this.id_premises_type.HeaderText = "Тип помещения";
             this.id_premises_type.MinimumWidth = 150;
@@ -1144,8 +1169,9 @@ namespace Registry.Viewport
             // 
             // total_area
             // 
-            dataGridViewCellStyle6.Format = "#0.0## м²";
-            this.total_area.DefaultCellStyle = dataGridViewCellStyle6;
+            dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle11.Format = "#0.0## м²";
+            this.total_area.DefaultCellStyle = dataGridViewCellStyle11;
             this.total_area.HeaderText = "Общая площадь";
             this.total_area.MinimumWidth = 130;
             this.total_area.Name = "total_area";
@@ -1154,8 +1180,9 @@ namespace Registry.Viewport
             // 
             // living_area
             // 
-            dataGridViewCellStyle7.Format = "#0.0## м²";
-            this.living_area.DefaultCellStyle = dataGridViewCellStyle7;
+            dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            dataGridViewCellStyle12.Format = "#0.0## м²";
+            this.living_area.DefaultCellStyle = dataGridViewCellStyle12;
             this.living_area.HeaderText = "Жилая площадь";
             this.living_area.MinimumWidth = 130;
             this.living_area.Name = "living_area";
@@ -1164,6 +1191,8 @@ namespace Registry.Viewport
             // 
             // cadastral_num
             // 
+            dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
+            this.cadastral_num.DefaultCellStyle = dataGridViewCellStyle13;
             this.cadastral_num.HeaderText = "Кадастровый номер";
             this.cadastral_num.MinimumWidth = 170;
             this.cadastral_num.Name = "cadastral_num";

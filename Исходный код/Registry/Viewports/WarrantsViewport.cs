@@ -384,6 +384,8 @@ namespace Registry.Viewport
             v_warrants.DataMember = "warrants";
             v_warrants.DataSource = ds;
             v_warrants.Sort = "registration_date DESC";
+            warrants.Select().RowChanged += WarrantsViewport_RowChanged;
+            warrants.Select().RowDeleted += WarrantsViewport_RowDeleted;
 
             DataBind();
             is_editable = true;
@@ -552,13 +554,29 @@ namespace Registry.Viewport
                 return;
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
+            warrants.Select().RowChanged -= WarrantsViewport_RowChanged;
+            warrants.Select().RowDeleted -= WarrantsViewport_RowDeleted;
         }
 
         public override void ForceClose()
         {
             if (viewportState == ViewportState.NewRowState)
                 warrants.EditingNewRecord = false;
+            warrants.Select().RowChanged -= WarrantsViewport_RowChanged;
+            warrants.Select().RowDeleted -= WarrantsViewport_RowDeleted;
             base.Close();
+        }
+
+        void WarrantsViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
+        }
+
+        void WarrantsViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
         }
 
         void v_warrants_CurrentItemChanged(object sender, EventArgs e)
@@ -843,6 +861,8 @@ namespace Registry.Viewport
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
+            this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;

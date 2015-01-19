@@ -750,12 +750,18 @@ namespace Registry.Viewport
         void ClaimStatesViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
+            {
                 UnbindedCheckBoxesUpdate();
+                if (Selected)
+                    MenuCallback.StatusBarStateUpdate();
+            }
         }
 
         void ClaimStatesViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             UnbindedCheckBoxesUpdate();
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
         }
 
         void ClaimStateTypesViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
@@ -1050,6 +1056,7 @@ namespace Registry.Viewport
             // 
             this.dataGridView.AllowUserToAddRows = false;
             this.dataGridView.AllowUserToDeleteRows = false;
+            this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {

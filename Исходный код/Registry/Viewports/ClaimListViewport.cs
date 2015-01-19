@@ -854,6 +854,9 @@ namespace Registry.Viewport
                 dataGridViewClaims.RowCount = v_claims.Count;
                 dataGridViewClaims.Refresh();
                 UnbindedCheckBoxesUpdate();
+                MenuCallback.ForceCloseDetachedViewports();
+                if (Selected)
+                    MenuCallback.StatusBarStateUpdate();
             }
         }
 
@@ -863,6 +866,8 @@ namespace Registry.Viewport
                 dataGridViewClaims.Refresh();
             dataGridViewClaims.RowCount = v_claims.Count;
             UnbindedCheckBoxesUpdate();
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
         }
 
         protected override void OnVisibleChanged(EventArgs e)

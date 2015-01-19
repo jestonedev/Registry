@@ -299,23 +299,29 @@ namespace Registry.Reporting
                     else
                         if (((bool)e.Value) == false && checked_tenancies.Contains(id_process))
                             checked_tenancies.Remove(id_process);
-                    checkBoxCheckAll.CheckState = CheckState.Indeterminate;
+                    if (checked_tenancies.Count == 0)
+                        checkBoxCheckAll.CheckState = CheckState.Unchecked;
+                    else
+                    if (checked_tenancies.Count == v_tenancies.Count)
+                        checkBoxCheckAll.CheckState = CheckState.Checked;
+                    else
+                        checkBoxCheckAll.CheckState = CheckState.Indeterminate;
                     break;
             }
         }
 
         private void checkBoxExpiring_CheckedChanged(object sender, EventArgs e)
         {
-            RebuildFilter();
             checked_tenancies.Clear();
-            checkBoxCheckAll.CheckState = CheckState.Indeterminate;
+            checkBoxCheckAll.CheckState = CheckState.Unchecked;
+            RebuildFilter();
         }
 
         private void checkBoxExpired_CheckedChanged(object sender, EventArgs e)
         {
-            RebuildFilter();
             checked_tenancies.Clear();
-            checkBoxCheckAll.CheckState = CheckState.Indeterminate;
+            checkBoxCheckAll.CheckState = CheckState.Unchecked;
+            RebuildFilter();
         }
 
         private void checkBoxCheckAll_CheckedChanged(object sender, EventArgs e)

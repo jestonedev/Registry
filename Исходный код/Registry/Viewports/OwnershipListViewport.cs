@@ -246,6 +246,8 @@ namespace Registry.Viewport
             v_snapshot_ownerships_rights = new BindingSource();
             v_snapshot_ownerships_rights.DataSource = snapshot_ownerships_rights;
             v_snapshot_ownerships_rights.CurrentItemChanged += new EventHandler(v_snapshot_ownerships_rights_CurrentItemChanged);
+            snapshot_ownerships_rights.RowChanged += snapshot_ownerships_rights_RowChanged;
+            snapshot_ownerships_rights.RowDeleted += snapshot_ownerships_rights_RowDeleted;
 
             dataGridView.DataSource = v_snapshot_ownerships_rights;
 
@@ -505,6 +507,26 @@ namespace Registry.Viewport
             }
         }
 
+        void snapshot_ownerships_rights_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            if (Selected)
+            {
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.NavigationStateUpdate();
+                MenuCallback.StatusBarStateUpdate();
+            }
+        }
+
+        void snapshot_ownerships_rights_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action == DataRowAction.Add && Selected)
+            {
+                MenuCallback.StatusBarStateUpdate();
+                MenuCallback.EditingStateUpdate();
+                MenuCallback.NavigationStateUpdate();
+            }
+        }
+
         void OwnershipAssoc_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (!sync_views)
@@ -590,7 +612,6 @@ namespace Registry.Viewport
             {
                 MenuCallback.NavigationStateUpdate();
                 MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
             }
         }
 
@@ -610,6 +631,7 @@ namespace Registry.Viewport
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
             this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
