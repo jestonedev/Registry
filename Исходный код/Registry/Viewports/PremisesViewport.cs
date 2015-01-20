@@ -2081,7 +2081,7 @@ namespace Registry.Viewport
             // 
             this.numericUpDownMunicapalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownMunicapalArea.DecimalPlaces = 2;
+            this.numericUpDownMunicapalArea.DecimalPlaces = 3;
             this.numericUpDownMunicapalArea.Location = new System.Drawing.Point(175, 76);
             this.numericUpDownMunicapalArea.Maximum = new decimal(new int[] {
             9999,

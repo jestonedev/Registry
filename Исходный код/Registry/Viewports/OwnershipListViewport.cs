@@ -9,6 +9,7 @@ using Registry.DataModels;
 using Registry.Entities;
 using Security;
 using System.Globalization;
+using Registry.CalcDataModels;
 
 namespace Registry.Viewport
 {
@@ -427,6 +428,9 @@ namespace Registry.Viewport
             RebuildFilter();
             sync_views = true;
             MenuCallback.EditingStateUpdate();
+            if (ParentType == ParentTypeEnum.Premises || ParentType == ParentTypeEnum.Building)
+                CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building,
+                    Int32.Parse(ParentRow["id_building"].ToString(), CultureInfo.InvariantCulture), true);
         }
 
         public override bool CanDuplicate()
