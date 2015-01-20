@@ -408,14 +408,39 @@ namespace Registry.DataModels
                     select premises_row).Count();
         }
 
+        public static IEnumerable<int> DemolishedBuildingIDs()
+        {
+            var ownership_rights = DataModelHelper.FilterRows(OwnershipsRightsDataModel.GetInstance().Select());
+            var ownership_buildingds_assoc = DataModelHelper.FilterRows(OwnershipBuildingsAssocDataModel.GetInstance().Select());
+            return from ownership_buildings_assoc_row in ownership_buildingds_assoc
+                   join ownership_rights_row in ownership_rights
+                   on ownership_buildings_assoc_row.Field<int>("id_ownership_right") equals ownership_rights_row.Field<int>("id_ownership_right")
+                   where ownership_rights_row.Field<int>("id_ownership_right_type") == 1
+                   select ownership_buildings_assoc_row.Field<int>("id_building");
+        }
+
+        public static IEnumerable<int> DemolishedPremisesIDs()
+        {
+            var ownership_rights = DataModelHelper.FilterRows(OwnershipsRightsDataModel.GetInstance().Select());
+            var ownership_premises_assoc = DataModelHelper.FilterRows(OwnershipPremisesAssocDataModel.GetInstance().Select());
+            return from ownership_premises_assoc_row in ownership_premises_assoc
+                   join ownership_rights_row in ownership_rights
+                   on ownership_premises_assoc_row.Field<int>("id_ownership_right") equals ownership_rights_row.Field<int>("id_ownership_right")
+                   where ownership_rights_row.Field<int>("id_ownership_right_type") == 1
+                   select ownership_premises_assoc_row.Field<int>("id_premises");
+        }
+
         public static IEnumerable<int> BuildingIDsByOwnershipType(int idOwnershipType)
         {
             var ownership_rights = DataModelHelper.FilterRows(OwnershipsRightsDataModel.GetInstance().Select());
             var ownership_buildingds_assoc = DataModelHelper.FilterRows(OwnershipBuildingsAssocDataModel.GetInstance().Select());
+            // Если используется непользовательское ограничение "Аварийное", то не выводить здания еще и снесеные
+            var demolished_buildings = DemolishedBuildingIDs();
             return from ownership_rights_row in ownership_rights
                    join ownership_buildingds_assoc_row in ownership_buildingds_assoc
                    on ownership_rights_row.Field<int>("id_ownership_right") equals ownership_buildingds_assoc_row.Field<int>("id_ownership_right")
-                   where ownership_rights_row.Field<int>("id_ownership_right_type") == idOwnershipType
+                   where (idOwnershipType == 2 ? !demolished_buildings.Contains(ownership_buildingds_assoc_row.Field<int>("id_building")) : true) && 
+                        ownership_rights_row.Field<int>("id_ownership_right_type") == idOwnershipType
                    select ownership_buildingds_assoc_row.Field<int>("id_building");
         }
 
@@ -425,14 +450,17 @@ namespace Registry.DataModels
             var ownership_premises_assoc = DataModelHelper.FilterRows(OwnershipPremisesAssocDataModel.GetInstance().Select());
             var premises = DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select());
             IEnumerable<int> buildingdIds = BuildingIDsByOwnershipType(idOwnershipType);
+            // Если используется непользовательское ограничение "Аварийное", то не выводить помещения еще и снесеные
+            var demolished_premises = DemolishedPremisesIDs();
             //Выбираются помещения с установленным ограничением и помещения, находящиеся в зданиях с установленным ограничением
             return from ownership_rights_row in ownership_rights
                    join ownership_premises_assoc_row in ownership_premises_assoc
                    on ownership_rights_row.Field<int>("id_ownership_right") equals ownership_premises_assoc_row.Field<int>("id_ownership_right")
                    join premises_row in premises
                    on ownership_premises_assoc_row.Field<int>("id_premises") equals premises_row.Field<int>("id_premises")
-                   where (ownership_rights_row.Field<int>("id_ownership_right_type") == idOwnershipType)
-                    || buildingdIds.Contains(premises_row.Field<int>("id_building"))
+                   where (idOwnershipType == 2 ? !demolished_premises.Contains(ownership_premises_assoc_row.Field<int>("id_premises")) : true) &&
+                         (ownership_rights_row.Field<int>("id_ownership_right_type") == idOwnershipType) || 
+                          buildingdIds.Contains(premises_row.Field<int>("id_building"))
                    select ownership_premises_assoc_row.Field<int>("id_premises");
         }
     }

@@ -48,7 +48,7 @@ namespace Registry.CalcDataModels
                                   config.Entity == CalcDataModelFilterEnity.All ? true : false)
                            select premises_row;
             var sub_premises_sum_area = DataModelHelper.FilterRows(CalcDataModelPremiseSubPremisesSumArea.GetInstance().Select());
-            var ownership_buildigns_assoc = from ownership_buildigns_assoc_row in DataModelHelper.FilterRows(OwnershipBuildingsAssocDataModel.GetInstance().Select())
+            var ownership_buildings_assoc = from ownership_buildigns_assoc_row in DataModelHelper.FilterRows(OwnershipBuildingsAssocDataModel.GetInstance().Select())
                                             where (config.Entity == CalcDataModelFilterEnity.Building ? 
                                                    ownership_buildigns_assoc_row.Field<int>("id_building") == config.IdObject :
                                                    config.Entity == CalcDataModelFilterEnity.All ? true : false)
@@ -76,7 +76,7 @@ namespace Registry.CalcDataModels
             var restrictions = DataModelHelper.FilterRows(RestrictionsDataModel.GetInstance().Select());
             // Вычисляем агрегационную информацию
             // Определяем снесеные здания и снесеные (на всякий случай) квартиры
-            var demolished_buildings = from ownership_buildings_assoc_row in ownership_buildigns_assoc
+            var demolished_buildings = from ownership_buildings_assoc_row in ownership_buildings_assoc
                                        join ownership_rights_row in ownership_rights
                                        on ownership_buildings_assoc_row.Field<int>("id_ownership_right") equals ownership_rights_row.Field<int>("id_ownership_right")
                                        where ownership_rights_row.Field<int>("id_ownership_right_type") == 1
