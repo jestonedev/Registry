@@ -223,6 +223,36 @@ namespace Registry.Viewport
             throw new ViewportException("Не реализовано");
         }
 
+        public void ShowResettles()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+        public void ShowResettlePersons()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+        public void ShowResettleFromBuildings()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+        public void ShowResettleFromPremises()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+        public void ShowResettleToBuildings()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+        public void ShowResettleToPremises()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
         protected virtual Viewport ShowAssocViewport(IMenuCallback menuCallback, ViewportType viewportType, 
             string staticFilter, DataRow parentRow, ParentTypeEnum parentType)
         {
@@ -354,6 +384,26 @@ namespace Registry.Viewport
         }
 
         public virtual bool HasAssocClaimStates()
+        {
+            return false;
+        }
+
+        public virtual bool HasAssocResettlePersons()
+        {
+            return false;
+        }
+
+        public virtual bool HasAssocResettleFromObjects()
+        {
+            return false;
+        }
+
+        public virtual bool HasAssocResettleToObjects()
+        {
+            return false;
+        }
+
+        public virtual bool HasAssocResettles()
         {
             return false;
         }

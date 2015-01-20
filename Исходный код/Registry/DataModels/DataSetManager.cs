@@ -74,6 +74,7 @@ namespace Registry.DataModels
             DataSetManager.AddRelation("tenancy_processes", "id_process", "tenancy_persons", "id_process", true);
             DataSetManager.AddRelation("tenancy_processes", "id_process", "tenancy_agreements", "id_process", true);
             DataSetManager.AddRelation("tenancy_processes", "id_process", "claims", "id_process", true);
+            DataSetManager.AddRelation("tenancy_processes", "id_process", "tenancy_notifies", "id_process", true);
             DataSetManager.AddRelation("rent_types", "id_rent_type", "tenancy_processes", "id_rent_type", true);
             DataSetManager.AddRelation("tenancy_reason_types", "id_reason_type", "tenancy_reasons", "id_reason_type", true);
             DataSetManager.AddRelation("executors", "id_executor", "tenancy_processes", "id_executor", true);
@@ -88,7 +89,14 @@ namespace Registry.DataModels
             DataSetManager.AddRelation("claim_state_types", "id_state_type", "claim_states", "id_state_type", true);
             DataSetManager.AddRelation("claim_state_types", "id_state_type", "claim_state_types_relations", "id_state_from", true);
             DataSetManager.AddRelation("claim_state_types", "id_state_type", "claim_state_types_relations", "id_state_to", true);
-            DataSetManager.AddRelation("tenancy_processes", "id_process", "tenancy_notifies", "id_process", true);
+            DataSetManager.AddRelation("documents_residence", "id_document_residence", "resettle_processes", "id_document_residence", true);
+            DataSetManager.AddRelation("resettle_processes", "id_process", "resettle_buildings_from_assoc", "id_process", true);
+            DataSetManager.AddRelation("resettle_processes", "id_process", "resettle_buildings_to_assoc", "id_process", true);
+            DataSetManager.AddRelation("resettle_processes", "id_process", "resettle_premises_from_assoc", "id_process", true);
+            DataSetManager.AddRelation("resettle_processes", "id_process", "resettle_premises_to_assoc", "id_process", true);
+            DataSetManager.AddRelation("resettle_processes", "id_process", "resettle_sub_premises_from_assoc", "id_process", true);
+            DataSetManager.AddRelation("resettle_processes", "id_process", "resettle_sub_premises_to_assoc", "id_process", true);
+            DataSetManager.AddRelation("resettle_processes", "id_process", "resettle_persons", "id_process", true);
         }
 
         private static void AddRelation(string master_table_name, string master_column_name, string slave_table_name, 

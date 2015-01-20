@@ -12,7 +12,7 @@
          <Members>
           <Member Name="#Refresh(Registry.CalcDataModels.CalcDataModelFilterEnity,System.Nullable`1&lt;System.Int32&gt;,System.Boolean)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Status="Active" Created="2015-01-20 02:52:34Z" FixCategory="Breaking">
+            <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="Breaking">
              <Issue Certainty="75" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModel.cs" Line="30">Replace method 'CalcDataModel.Refresh(CalcDataModelFilterEnity, int?, bool)' with an overload that supplies all default arguments.</Issue>
             </Message>
            </Messages>
@@ -23,7 +23,7 @@
          <Members>
           <Member Name="#Calculate(System.Object,System.ComponentModel.DoWorkEventArgs)" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidUnmaintainableCode" Category="Microsoft.Maintainability" CheckId="CA1505" Status="Active" Created="2015-01-20 02:52:34Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidUnmaintainableCode" Category="Microsoft.Maintainability" CheckId="CA1505" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="NonBreaking">
              <Issue Name="Method" Certainty="90" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModelBuildingsPremisesSumArea.cs" Line="37">'CalcDataModelBuildingsPremisesSumArea.Calculate(object, DoWorkEventArgs)' has a maintainability index of 0. Rewrite or refactor the method to increase its maintainability index (MI). An MI below 10 indicates poor maintainability, an MI between 10 and 20 indicates moderate maintainability, and an MI above 20 indicates good maintainability.</Issue>
             </Message>
            </Messages>
@@ -38,14 +38,14 @@
          <Members>
           <Member Name="#DemolishedBuildingIDs()" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message Id="IDs" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2015-01-20 02:52:34Z" FixCategory="Breaking">
+            <Message Id="IDs" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="Breaking">
              <Issue Name="MemberAbbreviation" Certainty="85" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels" File="DataModelHelper.cs" Line="413">Correct the casing of 'IDs' in member name 'DataModelHelper.DemolishedBuildingIDs()' by changing it to 'Ids'. 'Ids' is an abbreviation and therefore is not subject to acronym casing guidelines.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#DemolishedPremisesIDs()" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message Id="IDs" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2015-01-20 02:52:34Z" FixCategory="Breaking">
+            <Message Id="IDs" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="Breaking">
              <Issue Name="MemberAbbreviation" Certainty="85" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels" File="DataModelHelper.cs" Line="424">Correct the casing of 'IDs' in member name 'DataModelHelper.DemolishedPremisesIDs()' by changing it to 'Ids'. 'Ids' is an abbreviation and therefore is not subject to acronym casing guidelines.</Issue>
             </Message>
            </Messages>
@@ -56,8 +56,233 @@
          <Members>
           <Member Name="#.cctor()" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="SetLocaleForDataTypes" Category="Microsoft.Globalization" CheckId="CA1306" Status="Active" Created="2015-01-20 02:52:34Z" FixCategory="NonBreaking">
+            <Message TypeName="SetLocaleForDataTypes" Category="Microsoft.Globalization" CheckId="CA1306" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels" File="DataSetManager.cs" Line="13">Be sure to set the DataSet Locale property wherever 'DataSetManager.DataSetManager()' creates an instance of that type.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="DocumentsResidenceDataModel" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Delete(System.Int32)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="DocumentsResidenceDataModel.cs" Line="124">The query string passed to 'DbCommand.CommandText.set(string)' in 'DocumentsResidenceDataModel.Delete(int)' could contain the following variables 'DocumentsResidenceDataModel.deleteQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Insert(Registry.Entities.DocumentResidence)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="DocumentsResidenceDataModel.cs" Line="53">The query string passed to 'DbCommand.CommandText.set(string)' in 'DocumentsResidenceDataModel.Insert(DocumentResidence)' could contain the following variables 'DocumentsResidenceDataModel.insertQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Update(Registry.Entities.DocumentResidence)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="DocumentsResidenceDataModel.cs" Line="94">The query string passed to 'DbCommand.CommandText.set(string)' in 'DocumentsResidenceDataModel.Update(DocumentResidence)' could contain the following variables 'DocumentsResidenceDataModel.updateQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="ResettleBuildingsFromAssocDataModel" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Delete(System.Int32)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettleBuildingsFromAssocDataModel.cs" Line="121">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettleBuildingsFromAssocDataModel.Delete(int)' could contain the following variables 'ResettleBuildingsFromAssocDataModel.deleteQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Insert(Registry.Entities.ResettleObject)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettleBuildingsFromAssocDataModel.cs" Line="52">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettleBuildingsFromAssocDataModel.Insert(ResettleObject)' could contain the following variables 'ResettleBuildingsFromAssocDataModel.insertQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Update(Registry.Entities.ResettleObject)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettleBuildingsFromAssocDataModel.cs" Line="91">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettleBuildingsFromAssocDataModel.Update(ResettleObject)' could contain the following variables 'ResettleBuildingsFromAssocDataModel.updateQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="ResettleBuildingsToAssocDataModel" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Delete(System.Int32)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettleBuildingsToAssocDataModel.cs" Line="121">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettleBuildingsToAssocDataModel.Delete(int)' could contain the following variables 'ResettleBuildingsToAssocDataModel.deleteQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Insert(Registry.Entities.ResettleObject)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettleBuildingsToAssocDataModel.cs" Line="52">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettleBuildingsToAssocDataModel.Insert(ResettleObject)' could contain the following variables 'ResettleBuildingsToAssocDataModel.insertQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Update(Registry.Entities.ResettleObject)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettleBuildingsToAssocDataModel.cs" Line="91">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettleBuildingsToAssocDataModel.Update(ResettleObject)' could contain the following variables 'ResettleBuildingsToAssocDataModel.updateQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="ResettlePersonsDataModel" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Delete(System.Int32)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettlePersonsDataModel.cs" Line="55">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettlePersonsDataModel.Delete(int)' could contain the following variables 'ResettlePersonsDataModel.deleteQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Insert(Registry.Entities.ResettlePerson)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettlePersonsDataModel.cs" Line="78">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettlePersonsDataModel.Insert(ResettlePerson)' could contain the following variables 'ResettlePersonsDataModel.insertQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Update(Registry.Entities.ResettlePerson)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettlePersonsDataModel.cs" Line="120">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettlePersonsDataModel.Update(ResettlePerson)' could contain the following variables 'ResettlePersonsDataModel.updateQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="ResettlePremisesFromAssocDataModel" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Delete(System.Int32)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettlePremisesFromAssocDataModel.cs" Line="121">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettlePremisesFromAssocDataModel.Delete(int)' could contain the following variables 'ResettlePremisesFromAssocDataModel.deleteQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Insert(Registry.Entities.ResettleObject)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettlePremisesFromAssocDataModel.cs" Line="52">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettlePremisesFromAssocDataModel.Insert(ResettleObject)' could contain the following variables 'ResettlePremisesFromAssocDataModel.insertQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Update(Registry.Entities.ResettleObject)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettlePremisesFromAssocDataModel.cs" Line="91">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettlePremisesFromAssocDataModel.Update(ResettleObject)' could contain the following variables 'ResettlePremisesFromAssocDataModel.updateQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="ResettlePremisesToAssocDataModel" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Delete(System.Int32)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettlePremisesToAssocDataModel.cs" Line="121">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettlePremisesToAssocDataModel.Delete(int)' could contain the following variables 'ResettlePremisesToAssocDataModel.deleteQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Insert(Registry.Entities.ResettleObject)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettlePremisesToAssocDataModel.cs" Line="52">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettlePremisesToAssocDataModel.Insert(ResettleObject)' could contain the following variables 'ResettlePremisesToAssocDataModel.insertQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Update(Registry.Entities.ResettleObject)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettlePremisesToAssocDataModel.cs" Line="91">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettlePremisesToAssocDataModel.Update(ResettleObject)' could contain the following variables 'ResettlePremisesToAssocDataModel.updateQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="ResettleProcessesDataModel" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Delete(System.Int32)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettleProcessesDataModel.cs" Line="55">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettleProcessesDataModel.Delete(int)' could contain the following variables 'ResettleProcessesDataModel.deleteQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Insert(Registry.Entities.ResettleProcess)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettleProcessesDataModel.cs" Line="109">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettleProcessesDataModel.Insert(ResettleProcess)' could contain the following variables 'ResettleProcessesDataModel.insertQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Update(Registry.Entities.ResettleProcess)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettleProcessesDataModel.cs" Line="76">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettleProcessesDataModel.Update(ResettleProcess)' could contain the following variables 'ResettleProcessesDataModel.updateQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="ResettleSubPremisesFromAssocDataModel" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Delete(System.Int32)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettleSubPremisesFromAssocDataModel.cs" Line="121">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettleSubPremisesFromAssocDataModel.Delete(int)' could contain the following variables 'ResettleSubPremisesFromAssocDataModel.deleteQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Insert(Registry.Entities.ResettleObject)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettleSubPremisesFromAssocDataModel.cs" Line="52">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettleSubPremisesFromAssocDataModel.Insert(ResettleObject)' could contain the following variables 'ResettleSubPremisesFromAssocDataModel.insertQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Update(Registry.Entities.ResettleObject)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettleSubPremisesFromAssocDataModel.cs" Line="91">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettleSubPremisesFromAssocDataModel.Update(ResettleObject)' could contain the following variables 'ResettleSubPremisesFromAssocDataModel.updateQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="ResettleSubPremisesToAssocDataModel" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Delete(System.Int32)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettleSubPremisesToAssocDataModel.cs" Line="121">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettleSubPremisesToAssocDataModel.Delete(int)' could contain the following variables 'ResettleSubPremisesToAssocDataModel.deleteQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Insert(Registry.Entities.ResettleObject)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettleSubPremisesToAssocDataModel.cs" Line="52">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettleSubPremisesToAssocDataModel.Insert(ResettleObject)' could contain the following variables 'ResettleSubPremisesToAssocDataModel.insertQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#Update(Registry.Entities.ResettleObject)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100" Status="Active" Created="2015-01-20 09:12:13Z" FixCategory="DependsOnFix">
+             <Issue Name="WithNonLiterals" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\DataModels" File="ResettleSubPremisesToAssocDataModel.cs" Line="91">The query string passed to 'DbCommand.CommandText.set(string)' in 'ResettleSubPremisesToAssocDataModel.Update(ResettleObject)' could contain the following variables 'ResettleSubPremisesToAssocDataModel.updateQuery'. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Issue>
             </Message>
            </Messages>
           </Member>
@@ -101,6 +326,16 @@
    <Email>[none]</Email>
    <MessageLevel Certainty="85">Error</MessageLevel>
    <File Name="namingrules.dll" Version="12.0.0.0" />
+  </Rule>
+  <Rule TypeName="Review SQL queries for security vulnerabilities" Category="Microsoft.Security" CheckId="CA2100">
+   <Name>Review SQL queries for security vulnerabilities</Name>
+   <Description>A SQL command string built from user input is vulnerable to SQL injection attacks. Microsoft SQL Server and other database servers support stored procedures and parameterized SQL queries, which reduce the risk of injection attacks.</Description>
+   <Resolution Name="WithNonLiterals">The query string passed to {0} in {1} could contain the following variables {2}. If any of these variables could come from user input, consider using a stored procedure or a parameterized SQL query instead of building the query with string concatenations.</Resolution>
+   <Owner>RuleOwner</Owner>
+   <Url>http://msdn.microsoft.com/library/ms182310.aspx</Url>
+   <Email />
+   <MessageLevel Certainty="75">Warning</MessageLevel>
+   <File Name="dataflowrules.dll" Version="12.0.0.0" />
   </Rule>
   <Rule TypeName="SetLocaleForDataTypes" Category="Microsoft.Globalization" CheckId="CA1306">
    <Name>Set locale for data types</Name>

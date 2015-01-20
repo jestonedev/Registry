@@ -49,7 +49,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DocumentResidence.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="ResettleObject.cs" />
+    <Compile Include="ResettlePerson.cs" />
+    <Compile Include="ResettleProcess.cs" />
     <Compile Include="TenancyAgreement.cs" />
     <Compile Include="Building.cs" />
     <Compile Include="Claim.cs" />

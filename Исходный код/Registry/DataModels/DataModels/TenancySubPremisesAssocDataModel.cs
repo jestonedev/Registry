@@ -77,7 +77,7 @@ namespace Registry.DataModels
                 {
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось добавить связь комнату с процессом найма в базу данных. Подробная ошибка: {0}",
+                        "Не удалось добавить связь комнаты с процессом найма в базу данных. Подробная ошибка: {0}",
                         e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
@@ -108,7 +108,7 @@ namespace Registry.DataModels
                 {
                     connection.SqlRollbackTransaction();
                     MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось изменить связь комнату с процессом найма в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        "Не удалось изменить связь комнаты с процессом найма в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
@@ -129,7 +129,7 @@ namespace Registry.DataModels
                 catch (OdbcException e)
                 {
                     MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось удалить связь комнату с процесссом найма из базы данных. Подробная ошибка: {0}",
+                        "Не удалось удалить связь комнаты с процесссом найма из базы данных. Подробная ошибка: {0}",
                         e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }

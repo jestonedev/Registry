@@ -59,7 +59,8 @@ namespace Registry
         private void PreLoadData()
         {
             toolStripProgressBar.Maximum = 0;
-            if (AccessControl.HasPrivelege(Priveleges.RegistryRead) || AccessControl.HasPrivelege(Priveleges.TenancyRead))
+            if (AccessControl.HasPrivelege(Priveleges.RegistryRead) || AccessControl.HasPrivelege(Priveleges.TenancyRead)
+                || AccessControl.HasPrivelege(Priveleges.ResettleRead))
                 toolStripProgressBar.Maximum += 6;   
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
                 toolStripProgressBar.Maximum += 16;
@@ -69,8 +70,11 @@ namespace Registry
                 toolStripProgressBar.Maximum += 15;
             if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
                 toolStripProgressBar.Maximum += 4;
-            //Общие таблицы для реестра жилого фонда и процессов найма
-            if (AccessControl.HasPrivelege(Priveleges.RegistryRead) || AccessControl.HasPrivelege(Priveleges.TenancyRead))
+            if (AccessControl.HasPrivelege(Priveleges.ResettleRead))
+                toolStripProgressBar.Maximum += 8;
+            //Общие таблицы для реестра жилого фонда, процессов найма и процессов переселения
+            if (AccessControl.HasPrivelege(Priveleges.RegistryRead) || AccessControl.HasPrivelege(Priveleges.TenancyRead)
+                || AccessControl.HasPrivelege(Priveleges.ResettleRead))
             {
                 BuildingsDataModel.GetInstance(toolStripProgressBar, 1);
                 PremisesDataModel.GetInstance(toolStripProgressBar, 1);
@@ -102,7 +106,7 @@ namespace Registry
             //Общие таблицы для претензионно-исковой работы и процессов найма
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead) || AccessControl.HasPrivelege(Priveleges.ClaimsRead))
                 TenancyProcessesDataModel.GetInstance(toolStripProgressBar, 1);
-            // Процесс найма
+            // Процессы найма
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
             {
                 TenancyPersonsDataModel.GetInstance(toolStripProgressBar, 1);
@@ -128,6 +132,18 @@ namespace Registry
                 ClaimStatesDataModel.GetInstance(toolStripProgressBar, 1);
                 ClaimStateTypesDataModel.GetInstance(toolStripProgressBar, 1);
                 ClaimStateTypesRelationsDataModel.GetInstance(toolStripProgressBar, 1);
+            }
+            // Процессы переселения
+            if (AccessControl.HasPrivelege(Priveleges.ResettleRead))
+            {
+                ResettleProcessesDataModel.GetInstance(toolStripProgressBar, 1);
+                ResettlePersonsDataModel.GetInstance(toolStripProgressBar, 1);
+                ResettleBuildingsFromAssocDataModel.GetInstance(toolStripProgressBar, 1);
+                ResettleBuildingsToAssocDataModel.GetInstance(toolStripProgressBar, 1);
+                ResettlePremisesFromAssocDataModel.GetInstance(toolStripProgressBar, 1);
+                ResettlePremisesToAssocDataModel.GetInstance(toolStripProgressBar, 1);
+                ResettleSubPremisesFromAssocDataModel.GetInstance(toolStripProgressBar, 1);
+                ResettleSubPremisesToAssocDataModel.GetInstance(toolStripProgressBar, 1);
             }
         }
 
@@ -287,7 +303,8 @@ namespace Registry
             ribbon1.SuspendUpdating();
             RegistryRelationsStateUpdate(hasActiveDocument);
             TenancyRelationsStateUpdate(hasActiveDocument);
-            ClaimRelationgsStateUpdate(hasActiveDocument);
+            ClaimRelationsStateUpdate(hasActiveDocument);
+            ResettleRelationsStateUpdate(hasActiveDocument);
             if (ribbonPanelRelations.Items.Count == 0)
                 ribbonTabGeneral.Panels.Remove(ribbonPanelRelations);
             else
@@ -296,7 +313,22 @@ namespace Registry
             ribbon1.ResumeUpdating(true);
         }
 
-        private void ClaimRelationgsStateUpdate(bool hasActiveDocument)
+        private void ResettleRelationsStateUpdate(bool hasActiveDocument)
+        {
+            if (AccessControl.HasPrivelege(Priveleges.ResettleRead))
+            {
+                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocResettlePersons())
+                    ribbonPanelRelations.Items.Add(ribbonButtonResettlePersons);
+                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocResettleFromObjects())
+                    ribbonPanelRelations.Items.Add(ribbonButtonResettleFromObjects);
+                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocResettleToObjects())
+                    ribbonPanelRelations.Items.Add(ribbonButtonResettleToObjects);
+                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocResettles())
+                    ribbonPanelRelations.Items.Add(ribbonButtonAssocResettles);
+            }
+        }
+
+        private void ClaimRelationsStateUpdate(bool hasActiveDocument)
         {
             if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
             {
@@ -378,6 +410,8 @@ namespace Registry
                 ribbon1.Tabs.Remove(ribbonTabTenancyProcesses);
             if (!AccessControl.HasPrivelege(Priveleges.ClaimsRead))
                 ribbon1.Tabs.Remove(ribbonTabClaims);
+            if (!AccessControl.HasPrivelege(Priveleges.ResettleRead))
+                ribbon1.Tabs.Remove(ribbonTabResettle);
         }
 
         private void MainMenuStateUpdate()
@@ -386,6 +420,7 @@ namespace Registry
             ribbonOrbMenuItemPremises.Enabled = AccessControl.HasPrivelege(Priveleges.RegistryRead);
             ribbonOrbMenuItemTenancy.Enabled = AccessControl.HasPrivelege(Priveleges.TenancyRead);
             ribbonOrbMenuItemClaims.Enabled = AccessControl.HasPrivelege(Priveleges.ClaimsRead);
+            ribbonOrbMenuItemResettles.Enabled = AccessControl.HasPrivelege(Priveleges.ResettleRead);
         }
 
         private void ribbonButtonSave_Click(object sender, EventArgs e)

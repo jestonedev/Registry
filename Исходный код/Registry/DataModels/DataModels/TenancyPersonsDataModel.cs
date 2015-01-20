@@ -68,7 +68,7 @@ namespace Registry.DataModels
                 catch (OdbcException e)
                 {
                     MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось удалить участника договора из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        "Не удалось удалить участника найма из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }

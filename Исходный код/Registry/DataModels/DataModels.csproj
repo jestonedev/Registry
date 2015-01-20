@@ -56,6 +56,15 @@
     <Compile Include="CalcDataModels\CalcDataModelTenancyNotifiesMaxDate.cs" />
     <Compile Include="DataModelsCallbackUpdater.cs" />
     <Compile Include="DataModelHelper.cs" />
+    <Compile Include="DataModels\DocumentsResidenceDataModel.cs" />
+    <Compile Include="DataModels\ResettleBuildingsFromAssocDataModel.cs" />
+    <Compile Include="DataModels\ResettleBuildingsToAssocDataModel.cs" />
+    <Compile Include="DataModels\ResettlePersonsDataModel.cs" />
+    <Compile Include="DataModels\ResettlePremisesFromAssocDataModel.cs" />
+    <Compile Include="DataModels\ResettlePremisesToAssocDataModel.cs" />
+    <Compile Include="DataModels\ResettleProcessesDataModel.cs" />
+    <Compile Include="DataModels\ResettleSubPremisesFromAssocDataModel.cs" />
+    <Compile Include="DataModels\ResettleSubPremisesToAssocDataModel.cs" />
     <Compile Include="DataModels\TenancyAgreementsDataModel.cs" />
     <Compile Include="CalcDataModels\CalcDataModelBuildingsPremisesFunds.cs" />
     <Compile Include="CalcDataModels\CalcDataModelBuildingsCurrentFunds.cs" />

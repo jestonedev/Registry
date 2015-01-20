@@ -50,7 +50,14 @@ namespace Security
         GeneralDirectoriesWrite = 4194304,
         GeneralDirectoriesReadWrite = 5242880,
         GeneralAnalize = 9437184,
+        ResettleRead = 16777216,
+        ResettleWrite = 33554432,
+        ResettleReadWrite = 50331648,
+        ResettleDirectoriesWrite = 67108864,
+        ResettleDirectoriesReadWrite = 83886080,
+        ResettleAnalize = 150994944,
+        ResettleAll = Priveleges.ResettleReadWrite | Priveleges.ResettleDirectoriesReadWrite | Priveleges.ResettleAnalize,
         GeneralAll = Priveleges.GeneralReadWrite | Priveleges.GeneralDirectoriesReadWrite | Priveleges.GeneralAnalize,
-        All = Priveleges.RegistryAll | Priveleges.TenancyAll | Priveleges.ClaimsAll | Priveleges.PrivAll | Priveleges.ExchangeAll | Priveleges.GeneralAll
+        All = Priveleges.RegistryAll | Priveleges.TenancyAll | Priveleges.ClaimsAll | Priveleges.PrivAll | Priveleges.ExchangeAll | Priveleges.GeneralAll | Priveleges.ResettleAll
     }
 }

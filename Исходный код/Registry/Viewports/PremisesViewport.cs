@@ -296,8 +296,8 @@ namespace Registry.Viewport
             numericUpDownTotalArea.DataBindings.Add("Value", v_premises, "total_area", true, DataSourceUpdateMode.Never, 0);
             numericUpDownLivingArea.DataBindings.Clear();
             numericUpDownLivingArea.DataBindings.Add("Value", v_premises, "living_area", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownMunicapalArea.DataBindings.Clear();
-            numericUpDownMunicapalArea.DataBindings.Add("Value", v_premises, "height", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownHeight.DataBindings.Clear();
+            numericUpDownHeight.DataBindings.Add("Value", v_premises, "height", true, DataSourceUpdateMode.Never, 0);
 
             numericUpDownMunicapalArea.DataBindings.Clear();
             numericUpDownMunicapalArea.DataBindings.Add("Minimum", v_premisesSubPremisesSumArea, "sum_area", true, DataSourceUpdateMode.Never, 0);
@@ -527,7 +527,7 @@ namespace Registry.Viewport
             premise.PremisesNum = ViewportHelper.ValueOrNull(textBoxPremisesNumber);
             premise.TotalArea = Convert.ToDouble(numericUpDownTotalArea.Value);
             premise.LivingArea = Convert.ToDouble(numericUpDownLivingArea.Value);
-            premise.Height = Convert.ToDouble(numericUpDownMunicapalArea.Value);
+            premise.Height = Convert.ToDouble(numericUpDownHeight.Value);
             premise.NumRooms = Convert.ToInt16(numericUpDownNumRooms.Value);
             premise.NumBeds = Convert.ToInt16(numericUpDownNumBeds.Value);
             premise.IdPremisesType = ViewportHelper.ValueOrNull<int>(comboBoxPremisesType);
@@ -560,7 +560,7 @@ namespace Registry.Viewport
             numericUpDownBalanceCost.Value = ViewportHelper.ValueOrDefault(premise.BalanceCost);
             numericUpDownNumBeds.Value = ViewportHelper.ValueOrDefault(premise.NumBeds);
             numericUpDownNumRooms.Value = ViewportHelper.ValueOrDefault(premise.NumRooms);
-            numericUpDownMunicapalArea.Value = (decimal)ViewportHelper.ValueOrDefault(premise.Height);
+            numericUpDownHeight.Value = (decimal)ViewportHelper.ValueOrDefault(premise.Height);
             numericUpDownLivingArea.Value = (decimal)ViewportHelper.ValueOrDefault(premise.LivingArea);
             numericUpDownTotalArea.Value = (decimal)ViewportHelper.ValueOrDefault(premise.TotalArea);
             textBoxPremisesNumber.Text = premise.PremisesNum;
