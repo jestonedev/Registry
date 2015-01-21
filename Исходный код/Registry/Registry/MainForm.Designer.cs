@@ -30,21 +30,21 @@ namespace Registry
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin3 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
-            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin3 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient7 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient15 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin3 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient3 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient16 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient8 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient17 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient3 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient18 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient19 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient9 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient20 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient21 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
+            WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin2 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient4 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient8 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin dockPaneStripSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripSkin();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient dockPaneStripGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient9 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient5 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient10 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient dockPaneStripToolWindowGradient2 = new WeifenLuo.WinFormsUI.Docking.DockPaneStripToolWindowGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient11 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient12 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient6 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient13 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
+            WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient14 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             this.ribbon1 = new System.Windows.Forms.Ribbon();
             this.ribbonOrbMenuItemBuildings = new System.Windows.Forms.RibbonOrbMenuItem();
             this.ribbonOrbMenuItemPremises = new System.Windows.Forms.RibbonOrbMenuItem();
@@ -92,6 +92,10 @@ namespace Registry
             this.ribbonButtonResettleFromObjects = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonResettleFromPremises = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonResettleFromBuildings = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonResettleToObjects = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonResettleToPremises = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonResettleToBuildings = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonAssocResettles = new System.Windows.Forms.RibbonButton();
             this.ribbonPanel2 = new System.Windows.Forms.RibbonPanel();
             this.ribbonButtonTabClose = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonList1 = new System.Windows.Forms.RibbonButtonList();
@@ -151,17 +155,13 @@ namespace Registry
             this.ribbonButton10 = new System.Windows.Forms.RibbonButton();
             this.ribbonButton11 = new System.Windows.Forms.RibbonButton();
             this.ribbonPanel11 = new System.Windows.Forms.RibbonPanel();
-            this.ribbonButton3 = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonDocumentResidence = new System.Windows.Forms.RibbonButton();
             this.mbStatusStrip1 = new MBToolStrip.MBStatusStrip();
             this.toolStripLabelHelloUser = new System.Windows.Forms.ToolStripLabel();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripLabelRecordCount = new System.Windows.Forms.ToolStripLabel();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
-            this.ribbonButtonResettleToObjects = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonResettleToBuildings = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonResettleToPremises = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonAssocResettles = new System.Windows.Forms.RibbonButton();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -710,6 +710,51 @@ namespace Registry
     ", из какого здания производится переселение";
             this.ribbonButtonResettleFromBuildings.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonResettleFromBuildings.ToolTipImage")));
             this.ribbonButtonResettleFromBuildings.ToolTipTitle = "Переселение из здания";
+            // 
+            // ribbonButtonResettleToObjects
+            // 
+            this.ribbonButtonResettleToObjects.DropDownItems.Add(this.ribbonButtonResettleToPremises);
+            this.ribbonButtonResettleToObjects.DropDownItems.Add(this.ribbonButtonResettleToBuildings);
+            this.ribbonButtonResettleToObjects.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonResettleToObjects.Image")));
+            this.ribbonButtonResettleToObjects.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonResettleToObjects.SmallImage")));
+            this.ribbonButtonResettleToObjects.Style = System.Windows.Forms.RibbonButtonStyle.DropDown;
+            this.ribbonButtonResettleToObjects.Text = "Переселение    в";
+            this.ribbonButtonResettleToObjects.ToolTip = "Данная кнопка позволяет выбрать куда производится переселение граждан (здание, кв" +
+    "артира, комната или их комбинация)";
+            this.ribbonButtonResettleToObjects.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonResettleToObjects.ToolTipImage")));
+            this.ribbonButtonResettleToObjects.ToolTipTitle = "Переселение в объект недвижимости";
+            // 
+            // ribbonButtonResettleToPremises
+            // 
+            this.ribbonButtonResettleToPremises.DropDownArrowDirection = System.Windows.Forms.RibbonArrowDirection.Left;
+            this.ribbonButtonResettleToPremises.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonResettleToPremises.Image")));
+            this.ribbonButtonResettleToPremises.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonResettleToPremises.SmallImage")));
+            this.ribbonButtonResettleToPremises.Text = "Помещения и комнаты";
+            this.ribbonButtonResettleToPremises.ToolTip = "При нажатии на данную кнопку будет открыта вкладка, на которой вы сможете выбрать" +
+    ", в какое помещение или комнату производится переселение граждан";
+            this.ribbonButtonResettleToPremises.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonResettleToPremises.ToolTipImage")));
+            this.ribbonButtonResettleToPremises.ToolTipTitle = "Переселение в помещение";
+            // 
+            // ribbonButtonResettleToBuildings
+            // 
+            this.ribbonButtonResettleToBuildings.DropDownArrowDirection = System.Windows.Forms.RibbonArrowDirection.Left;
+            this.ribbonButtonResettleToBuildings.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonResettleToBuildings.Image")));
+            this.ribbonButtonResettleToBuildings.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonResettleToBuildings.SmallImage")));
+            this.ribbonButtonResettleToBuildings.Text = "Здания";
+            this.ribbonButtonResettleToBuildings.ToolTip = "При нажатии на данную кнопку будет открыта вкладка, на которой вы сможете выбрать" +
+    ", в какое здание производится переселение";
+            this.ribbonButtonResettleToBuildings.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonResettleToBuildings.ToolTipImage")));
+            this.ribbonButtonResettleToBuildings.ToolTipTitle = "Переселение в здание";
+            // 
+            // ribbonButtonAssocResettles
+            // 
+            this.ribbonButtonAssocResettles.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAssocResettles.Image")));
+            this.ribbonButtonAssocResettles.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAssocResettles.SmallImage")));
+            this.ribbonButtonAssocResettles.Text = "Переселение";
+            this.ribbonButtonAssocResettles.ToolTip = "При нажатии данной кнопки будет открыта вкладка с информацией по переселениям, в " +
+    "которых участвовал данный объект недвижимости";
+            this.ribbonButtonAssocResettles.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAssocResettles.ToolTipImage")));
+            this.ribbonButtonAssocResettles.ToolTipTitle = "Информация по переселениям";
             // 
             // ribbonPanel2
             // 
@@ -1314,17 +1359,18 @@ namespace Registry
             // 
             // ribbonPanel11
             // 
-            this.ribbonPanel11.Items.Add(this.ribbonButton3);
+            this.ribbonPanel11.Items.Add(this.ribbonButtonDocumentResidence);
             this.ribbonPanel11.Text = "Справочники";
             // 
-            // ribbonButton3
+            // ribbonButtonDocumentResidence
             // 
-            this.ribbonButton3.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButton3.Image")));
-            this.ribbonButton3.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButton3.SmallImage")));
-            this.ribbonButton3.Text = "Виды документов на проживание";
-            this.ribbonButton3.ToolTip = "Виды документов-оснований на проживание";
-            this.ribbonButton3.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButton3.ToolTipImage")));
-            this.ribbonButton3.ToolTipTitle = "Виды документов на проживание";
+            this.ribbonButtonDocumentResidence.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonDocumentResidence.Image")));
+            this.ribbonButtonDocumentResidence.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonDocumentResidence.SmallImage")));
+            this.ribbonButtonDocumentResidence.Text = "Виды документов на проживание";
+            this.ribbonButtonDocumentResidence.ToolTip = "Виды документов-оснований на проживание";
+            this.ribbonButtonDocumentResidence.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonDocumentResidence.ToolTipImage")));
+            this.ribbonButtonDocumentResidence.ToolTipTitle = "Виды документов на проживание";
+            this.ribbonButtonDocumentResidence.Click += new System.EventHandler(this.ribbonButtonDocumentResidence_Click);
             // 
             // mbStatusStrip1
             // 
@@ -1378,98 +1424,53 @@ namespace Registry
             this.dockPanel.Name = "dockPanel";
             this.dockPanel.ShowDocumentIcon = true;
             this.dockPanel.Size = new System.Drawing.Size(1016, 592);
-            dockPanelGradient7.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPanelGradient7.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            autoHideStripSkin3.DockStripGradient = dockPanelGradient7;
-            tabGradient15.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient15.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient15.TextColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            autoHideStripSkin3.TabGradient = tabGradient15;
-            dockPanelSkin3.AutoHideStripSkin = autoHideStripSkin3;
-            tabGradient16.EndColor = System.Drawing.Color.White;
-            tabGradient16.StartColor = System.Drawing.Color.White;
-            tabGradient16.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient3.ActiveTabGradient = tabGradient16;
-            dockPanelGradient8.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPanelGradient8.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPaneStripGradient3.DockStripGradient = dockPanelGradient8;
-            tabGradient17.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient17.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient17.StartColor = System.Drawing.Color.White;
-            tabGradient17.TextColor = System.Drawing.SystemColors.ControlText;
-            dockPaneStripGradient3.InactiveTabGradient = tabGradient17;
-            dockPaneStripSkin3.DocumentGradient = dockPaneStripGradient3;
-            tabGradient18.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient18.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient18.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            tabGradient18.TextColor = System.Drawing.Color.Black;
-            dockPaneStripToolWindowGradient3.ActiveCaptionGradient = tabGradient18;
-            tabGradient19.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            tabGradient19.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            tabGradient19.TextColor = System.Drawing.Color.Black;
-            dockPaneStripToolWindowGradient3.ActiveTabGradient = tabGradient19;
-            dockPanelGradient9.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPanelGradient9.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            dockPaneStripToolWindowGradient3.DockStripGradient = dockPanelGradient9;
-            tabGradient20.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            tabGradient20.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
-            tabGradient20.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
-            tabGradient20.TextColor = System.Drawing.Color.Black;
-            dockPaneStripToolWindowGradient3.InactiveCaptionGradient = tabGradient20;
-            tabGradient21.EndColor = System.Drawing.Color.Transparent;
-            tabGradient21.StartColor = System.Drawing.Color.Transparent;
-            tabGradient21.TextColor = System.Drawing.Color.Gray;
-            dockPaneStripToolWindowGradient3.InactiveTabGradient = tabGradient21;
-            dockPaneStripSkin3.ToolWindowGradient = dockPaneStripToolWindowGradient3;
-            dockPanelSkin3.DockPaneStripSkin = dockPaneStripSkin3;
-            this.dockPanel.Skin = dockPanelSkin3;
+            dockPanelGradient4.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPanelGradient4.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            autoHideStripSkin2.DockStripGradient = dockPanelGradient4;
+            tabGradient8.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient8.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient8.TextColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            autoHideStripSkin2.TabGradient = tabGradient8;
+            dockPanelSkin2.AutoHideStripSkin = autoHideStripSkin2;
+            tabGradient9.EndColor = System.Drawing.Color.White;
+            tabGradient9.StartColor = System.Drawing.Color.White;
+            tabGradient9.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient2.ActiveTabGradient = tabGradient9;
+            dockPanelGradient5.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPanelGradient5.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPaneStripGradient2.DockStripGradient = dockPanelGradient5;
+            tabGradient10.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient10.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient10.StartColor = System.Drawing.Color.White;
+            tabGradient10.TextColor = System.Drawing.SystemColors.ControlText;
+            dockPaneStripGradient2.InactiveTabGradient = tabGradient10;
+            dockPaneStripSkin2.DocumentGradient = dockPaneStripGradient2;
+            tabGradient11.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient11.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient11.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            tabGradient11.TextColor = System.Drawing.Color.Black;
+            dockPaneStripToolWindowGradient2.ActiveCaptionGradient = tabGradient11;
+            tabGradient12.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            tabGradient12.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            tabGradient12.TextColor = System.Drawing.Color.Black;
+            dockPaneStripToolWindowGradient2.ActiveTabGradient = tabGradient12;
+            dockPanelGradient6.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPanelGradient6.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
+            dockPaneStripToolWindowGradient2.DockStripGradient = dockPanelGradient6;
+            tabGradient13.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            tabGradient13.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
+            tabGradient13.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            tabGradient13.TextColor = System.Drawing.Color.Black;
+            dockPaneStripToolWindowGradient2.InactiveCaptionGradient = tabGradient13;
+            tabGradient14.EndColor = System.Drawing.Color.Transparent;
+            tabGradient14.StartColor = System.Drawing.Color.Transparent;
+            tabGradient14.TextColor = System.Drawing.Color.Gray;
+            dockPaneStripToolWindowGradient2.InactiveTabGradient = tabGradient14;
+            dockPaneStripSkin2.ToolWindowGradient = dockPaneStripToolWindowGradient2;
+            dockPanelSkin2.DockPaneStripSkin = dockPaneStripSkin2;
+            this.dockPanel.Skin = dockPanelSkin2;
             this.dockPanel.TabIndex = 5;
             this.dockPanel.ActiveDocumentChanged += new System.EventHandler(this.dockPanel_ActiveDocumentChanged);
-            // 
-            // ribbonButtonResettleToObjects
-            // 
-            this.ribbonButtonResettleToObjects.DropDownItems.Add(this.ribbonButtonResettleToPremises);
-            this.ribbonButtonResettleToObjects.DropDownItems.Add(this.ribbonButtonResettleToBuildings);
-            this.ribbonButtonResettleToObjects.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonResettleToObjects.Image")));
-            this.ribbonButtonResettleToObjects.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonResettleToObjects.SmallImage")));
-            this.ribbonButtonResettleToObjects.Style = System.Windows.Forms.RibbonButtonStyle.DropDown;
-            this.ribbonButtonResettleToObjects.Text = "Переселение    в";
-            this.ribbonButtonResettleToObjects.ToolTip = "Данная кнопка позволяет выбрать куда производится переселение граждан (здание, кв" +
-    "артира, комната или их комбинация)";
-            this.ribbonButtonResettleToObjects.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonResettleToObjects.ToolTipImage")));
-            this.ribbonButtonResettleToObjects.ToolTipTitle = "Переселение в объект недвижимости";
-            // 
-            // ribbonButtonResettleToBuildings
-            // 
-            this.ribbonButtonResettleToBuildings.DropDownArrowDirection = System.Windows.Forms.RibbonArrowDirection.Left;
-            this.ribbonButtonResettleToBuildings.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonResettleToBuildings.Image")));
-            this.ribbonButtonResettleToBuildings.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonResettleToBuildings.SmallImage")));
-            this.ribbonButtonResettleToBuildings.Text = "Здания";
-            this.ribbonButtonResettleToBuildings.ToolTip = "При нажатии на данную кнопку будет открыта вкладка, на которой вы сможете выбрать" +
-    ", в какое здание производится переселение";
-            this.ribbonButtonResettleToBuildings.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonResettleToBuildings.ToolTipImage")));
-            this.ribbonButtonResettleToBuildings.ToolTipTitle = "Переселение в здание";
-            // 
-            // ribbonButtonResettleToPremises
-            // 
-            this.ribbonButtonResettleToPremises.DropDownArrowDirection = System.Windows.Forms.RibbonArrowDirection.Left;
-            this.ribbonButtonResettleToPremises.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonResettleToPremises.Image")));
-            this.ribbonButtonResettleToPremises.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonResettleToPremises.SmallImage")));
-            this.ribbonButtonResettleToPremises.Text = "Помещения и комнаты";
-            this.ribbonButtonResettleToPremises.ToolTip = "При нажатии на данную кнопку будет открыта вкладка, на которой вы сможете выбрать" +
-    ", в какое помещение или комнату производится переселение граждан";
-            this.ribbonButtonResettleToPremises.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonResettleToPremises.ToolTipImage")));
-            this.ribbonButtonResettleToPremises.ToolTipTitle = "Переселение в помещение";
-            // 
-            // ribbonButtonAssocResettles
-            // 
-            this.ribbonButtonAssocResettles.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAssocResettles.Image")));
-            this.ribbonButtonAssocResettles.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAssocResettles.SmallImage")));
-            this.ribbonButtonAssocResettles.Text = "Переселение";
-            this.ribbonButtonAssocResettles.ToolTip = "При нажатии данной кнопки будет открыта вкладка с информацией по переселениям, в " +
-    "которых участвовал данный объект недвижимости";
-            this.ribbonButtonAssocResettles.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAssocResettles.ToolTipImage")));
-            this.ribbonButtonAssocResettles.ToolTipTitle = "Информация по переселениям";
             // 
             // MainForm
             // 
@@ -1604,7 +1605,7 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButton10;
         private System.Windows.Forms.RibbonButton ribbonButton11;
         private System.Windows.Forms.RibbonPanel ribbonPanel11;
-        private System.Windows.Forms.RibbonButton ribbonButton3;
+        private System.Windows.Forms.RibbonButton ribbonButtonDocumentResidence;
         private System.Windows.Forms.RibbonButton ribbonButtonResettlePersons;
         private System.Windows.Forms.RibbonButton ribbonButtonResettleFromObjects;
         private System.Windows.Forms.RibbonButton ribbonButtonResettleFromPremises;

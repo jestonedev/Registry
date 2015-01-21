@@ -601,7 +601,8 @@ namespace Registry.Viewport
             dataGridView.Enabled = true;
             is_editable = true;
             viewportState = ViewportState.ReadState;
-            CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"]);
+            if (ParentType == ParentTypeEnum.Building || ParentType == ParentTypeEnum.Premises)
+                CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"], true);
             if (ParentType == ParentTypeEnum.Building)
                 CalcDataModelBuildingsCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"], true);
             else
@@ -668,7 +669,8 @@ namespace Registry.Viewport
                 viewportState = ViewportState.ReadState;
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.ForceCloseDetachedViewports();
-                CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"], true);
+                if (ParentType == ParentTypeEnum.Building || ParentType == ParentTypeEnum.Premises)
+                    CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"], true);
                 if (ParentType == ParentTypeEnum.Building)
                     CalcDataModelBuildingsCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"], true);
                 else

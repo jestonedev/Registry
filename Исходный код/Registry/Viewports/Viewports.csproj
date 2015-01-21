@@ -81,6 +81,9 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DocumentsResidenceViewport.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="TenancyAgreementsViewport.cs">
       <SubType>Form</SubType>
@@ -267,6 +270,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DocumentIssuedByViewport.resx">
       <DependentUpon>DocumentIssuedByViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DocumentsResidenceViewport.resx">
+      <DependentUpon>DocumentsResidenceViewport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ExecutorsViewport.resx">
       <DependentUpon>ExecutorsViewport.cs</DependentUpon>

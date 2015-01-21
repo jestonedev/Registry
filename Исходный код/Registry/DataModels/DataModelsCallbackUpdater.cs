@@ -271,29 +271,8 @@ namespace Registry.DataModels
                     return TenancyProcessesDataModel.GetInstance().EditingNewRecord;
                 case "warrants":
                     return WarrantsDataModel.GetInstance().EditingNewRecord;
-                case "documents_issued_by":
-                case "executors":
-                case "claim_state_types":
-                case "claim_state_types_relations":
-                case "ownership_buildings_assoc":
-                case "ownership_premises_assoc":
-                case "ownership_right_types":
-                case "ownership_rights":
-                case "restriction_types":
-                case "restrictions":
-                case "restrictions_buildings_assoc":
-                case "restrictions_premises_assoc":
-                case "structure_types":
-                case "sub_premises":
-                case "tenancy_buildings_assoc":
-                case "tenancy_premises_assoc":
-                case "tenancy_reasons":
-                case "tenancy_reason_types":
-                case "tenancy_sub_premises_assoc":
-                case "tenancy_notifies":
-                    return false;
                 default:
-                    throw new NotImplementedException();
+                    return false;
             }
         }
 

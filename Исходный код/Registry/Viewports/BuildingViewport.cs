@@ -1684,7 +1684,7 @@ namespace Registry.Viewport
             this.textBoxHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxHouse.Location = new System.Drawing.Point(175, 37);
-            this.textBoxHouse.MaxLength = 4;
+            this.textBoxHouse.MaxLength = 20;
             this.textBoxHouse.Name = "textBoxHouse";
             this.textBoxHouse.Size = new System.Drawing.Size(185, 21);
             this.textBoxHouse.TabIndex = 1;

@@ -640,6 +640,11 @@ namespace Registry
             CreateViewport(ViewportType.ClaimStateTypesViewport);
         }
 
+        private void ribbonButtonDocumentResidence_Click(object sender, EventArgs e)
+        {
+            CreateViewport(ViewportType.DocumentsResidenceViewport);
+        }
+
         private void CreateViewport(ViewportType viewportType)
         {
             Registry.Viewport.Viewport viewport = Registry.Viewport.ViewportFactory.CreateViewport(this, viewportType);

@@ -30,6 +30,7 @@ namespace Registry.Viewport
         TenancyReasonTypesViewport,
         WarrantsViewport,
         ExecutorsViewport,
-        DocumentIssuedByViewport
+        DocumentIssuedByViewport,
+        DocumentsResidenceViewport
     }
 }

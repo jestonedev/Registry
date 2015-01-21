@@ -60,6 +60,8 @@ namespace Registry.Viewport
                     return new ClaimStateTypesViewport(menuCallback);
                 case ViewportType.FundsHistoryViewport:
                     return new FundsHistoryViewport(menuCallback);
+                case ViewportType.DocumentsResidenceViewport:
+                    return new DocumentsResidenceViewport(menuCallback);
             }
             throw new ViewportException(
                 String.Format(CultureInfo.InvariantCulture, "В фабрику ViewportFactory передан неизвестный тип {0}", viewportType.ToString()));
