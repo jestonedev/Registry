@@ -6,7 +6,7 @@
    <Modules>
     <Module Name="registry.exe">
      <Messages>
-      <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Status="Active" Created="2015-01-21 09:35:40Z" FixCategory="NonBreaking">
+      <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Status="Active" Created="2015-01-22 09:43:36Z" FixCategory="NonBreaking">
        <Issue Name="NoStrongName" Certainty="95" Level="CriticalError">Sign 'Registry.exe' with a strong name key.</Issue>
       </Message>
      </Messages>
@@ -14,14 +14,16 @@
       <Namespace Name="Registry">
        <Types>
         <Type Name="MainForm" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Messages>
+          <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-01-22 09:43:36Z" FixCategory="Breaking">
+           <Issue Name="UIType" Certainty="90" Level="Error">'MainForm' is coupled with 103 different (non-IComponent) types from 15 different namespaces. Rewrite or refactor this class's methods to decrease its class coupling, or consider moving some of the class's methods to some of the other types it is tightly coupled with. A class coupling above 95 indicates poor maintainability, a class coupling between 95 and 80 indicates moderate maintainability, and a class coupling below 80 indicates good maintainability.</Issue>
+          </Message>
+         </Messages>
          <Members>
-          <Member Name="#ProcessCmdKey(System.Windows.Forms.Message&amp;,System.Windows.Forms.Keys)" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="True">
+          <Member Name="#PreLoadData()" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122" Status="Active" Created="2015-01-21 09:35:40Z" FixCategory="NonBreaking">
-             <Issue Certainty="33" Level="CriticalError" Path="e:\Реестр жилого фонда\Исходный код\Registry\Registry" File="MainForm.cs" Line="851">'MainForm.ProcessCmdKey(ref Message, Keys)' calls into 'Form.ProcessCmdKey(ref Message, Keys)' which has a LinkDemand. By making this call, 'Form.ProcessCmdKey(ref Message, Keys)' is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: &#xD;&#xA;   -&gt;'MainForm.ProcessCmdKey(ref Message, Keys)'&#xD;&#xA;   -&gt;'MainForm.ProcessCmdKey(ref Message, Keys)'</Issue>
-            </Message>
-            <Message TypeName="OverrideLinkDemandsShouldBeIdenticalToBase" Category="Microsoft.Security" CheckId="CA2123" Status="Active" Created="2015-01-21 09:35:40Z" FixCategory="Breaking">
-             <Issue Name="BaseOnly" Certainty="33" Level="CriticalError" Path="e:\Реестр жилого фонда\Исходный код\Registry\Registry" File="MainForm.cs" Line="851">Add the following security attribute to 'MainForm.ProcessCmdKey(ref Message, Keys)' in order to match a LinkDemand on base method 'Form.ProcessCmdKey(ref Message, Keys)':  [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)].</Issue>
+            <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-01-22 09:43:36Z" FixCategory="Breaking">
+             <Issue Name="UIMethod" Certainty="90" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\Registry" File="MainForm.cs" Line="61">'MainForm.PreLoadData()' is coupled with 51 different (non-IComponent) types from 2 different namespaces. Rewrite or refactor the method to decrease its class coupling, or consider moving the method to one of the other types it is tightly coupled with. A class coupling above 40 indicates poor maintainability, a class coupling between 40 and 30 indicates moderate maintainability, and a class coupling below 30 indicates good maintainability.</Issue>
             </Message>
            </Messages>
           </Member>
@@ -45,25 +47,16 @@
    <MessageLevel Certainty="95">CriticalError</MessageLevel>
    <File Name="designrules.dll" Version="12.0.0.0" />
   </Rule>
-  <Rule TypeName="DoNotIndirectlyExposeMethodsWithLinkDemands" Category="Microsoft.Security" CheckId="CA2122">
-   <Name>Do not indirectly expose methods with link demands</Name>
-   <Description>Do not wrap a method protected by a LinkDemand with a method that does not perform a security check. A LinkDemand checks the permissions of the immediate caller rather than checking the permissions of all callers in the call stack. In this case, the permissions of the wrapper method will be checked. If the wrapper method does not, itself, check the permissions of callers higher in the call stack, malicious code might be able to execute the wrapped function even though it lacks permission to do so.</Description>
-   <Resolution Name="Default">{0} calls into {1} which has a LinkDemand. By making this call, {1} is indirectly exposed to user code. Review the following call stack that might expose a way to circumvent security protection: {2}</Resolution>
+  <Rule TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506">
+   <Name>Avoid excessive class coupling</Name>
+   <Description>Types and methods with a high degree of class coupling can be difficult to maintain.</Description>
+   <Resolution Name="UIMethod">{0} is coupled with {1} different (non-IComponent) types from {2} different namespaces. Rewrite or refactor the method to decrease its class coupling, or consider moving the method to one of the other types it is tightly coupled with. A class coupling above {3} indicates poor maintainability, a class coupling between {3} and {4} indicates moderate maintainability, and a class coupling below {4} indicates good maintainability.</Resolution>
+   <Resolution Name="UIType">{0} is coupled with {1} different (non-IComponent) types from {2} different namespaces. Rewrite or refactor this class's methods to decrease its class coupling, or consider moving some of the class's methods to some of the other types it is tightly coupled with. A class coupling above {3} indicates poor maintainability, a class coupling between {3} and {4} indicates moderate maintainability, and a class coupling below {4} indicates good maintainability.</Resolution>
    <Owner />
-   <Url>http://msdn.microsoft.com/library/ms182303.aspx</Url>
+   <Url>http://msdn.microsoft.com/library/bb397994.aspx</Url>
    <Email>[none]</Email>
-   <MessageLevel Certainty="33">CriticalError</MessageLevel>
-   <File Name="securityrules.dll" Version="12.0.0.0" />
-  </Rule>
-  <Rule TypeName="OverrideLinkDemandsShouldBeIdenticalToBase" Category="Microsoft.Security" CheckId="CA2123">
-   <Name>Override link demands should be identical to base</Name>
-   <Description>If a virtual method has a LinkDemand, in many cases, so should any override of it, and if an override has a LinkDemand, so should the overridden virtual method. Because it is possible to call any of the overrides of a virtual method explicitly, they should all have the same LinkDemand status or, if not, should be reviewed. This also applies to LinkDemand security checks for methods that part of an interface implementation, because the caller might use an interface-typed reference to access the method.</Description>
-   <Resolution Name="BaseOnly">Add the following security attribute to {0} in order to match a LinkDemand on base method {1}:  {2}.</Resolution>
-   <Owner />
-   <Url>http://msdn.microsoft.com/library/ms182305(VS.100).aspx</Url>
-   <Email>[none]</Email>
-   <MessageLevel Certainty="33">CriticalError</MessageLevel>
-   <File Name="securitytransparencyrules.dll" Version="4.0.0.0" />
+   <MessageLevel Certainty="90">Warning</MessageLevel>
+   <File Name="maintainabilityrules.dll" Version="12.0.0.0" />
   </Rule>
  </Rules>
  <Localized>

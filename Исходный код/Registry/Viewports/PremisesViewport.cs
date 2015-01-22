@@ -111,7 +111,7 @@ namespace Registry.Viewport
         private bool is_editable = false;
         private Label label1;
         private NumericUpDown numericUpDownNumRooms;
-        private NumericUpDown numericUpDownMunicapalArea;
+        private NumericUpDown numericUpDownMunicipalArea;
         private Label label2;
         private DataGridViewTextBoxColumn restriction_number;
         private DataGridViewTextBoxColumn restriction_date;
@@ -171,18 +171,34 @@ namespace Registry.Viewport
         {
             if (v_premisesCurrentFund != null)
             {
+                int position = -1;
                 if ((v_premises.Position != -1) && !(((DataRowView)v_premises[v_premises.Position])["id_premises"] is DBNull))
-                    v_premisesCurrentFund.Filter = "id_premises = " + ((DataRowView)v_premises[v_premises.Position])["id_premises"].ToString();
+                    position = 
+                        v_premisesCurrentFund.Find("id_premises", ((DataRowView)v_premises[v_premises.Position])["id_premises"]);
+                if (position != -1)
+                    comboBoxCurrentFundType.SelectedValue = ((DataRowView)v_premisesCurrentFund[position])["id_fund_type"];
                 else
-                    v_premisesCurrentFund.Filter = "id_premises = 0";
+                    comboBoxCurrentFundType.SelectedValue = DBNull.Value;
                 ShowOrHideCurrentFund();
             }
             if (v_premisesSubPremisesSumArea != null)
             {
+                int position = -1;
                 if ((v_premises.Position != -1) && !(((DataRowView)v_premises[v_premises.Position])["id_premises"] is DBNull))
-                    v_premisesSubPremisesSumArea.Filter = "id_premises = " + ((DataRowView)v_premises[v_premises.Position])["id_premises"].ToString();
+                    position = v_premisesSubPremisesSumArea.Find("id_premises", ((DataRowView)v_premises[v_premises.Position])["id_premises"]);
+                if (position != -1)
+                {
+                    decimal value = Convert.ToDecimal((double)((DataRowView)v_premisesSubPremisesSumArea[position])["sum_area"]);
+                    numericUpDownMunicipalArea.Minimum = value;
+                    numericUpDownMunicipalArea.Maximum = value;
+                    numericUpDownMunicipalArea.Value = value;
+                }
                 else
-                    v_premisesSubPremisesSumArea.Filter = "id_premises = 0";
+                {
+                    numericUpDownMunicipalArea.Minimum = 0;
+                    numericUpDownMunicipalArea.Maximum = 0;
+                    numericUpDownMunicipalArea.Value = 0;
+                }
             }
         }
 
@@ -217,7 +233,7 @@ namespace Registry.Viewport
 
         private void ShowOrHideCurrentFund()
         {
-            if (v_premisesCurrentFund.Count > 0)
+            if (comboBoxCurrentFundType.SelectedValue != null)
             {
                 label38.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
@@ -299,16 +315,9 @@ namespace Registry.Viewport
             numericUpDownHeight.DataBindings.Clear();
             numericUpDownHeight.DataBindings.Add("Value", v_premises, "height", true, DataSourceUpdateMode.Never, 0);
 
-            numericUpDownMunicapalArea.DataBindings.Clear();
-            numericUpDownMunicapalArea.DataBindings.Add("Minimum", v_premisesSubPremisesSumArea, "sum_area", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownMunicapalArea.DataBindings.Add("Maximum", v_premisesSubPremisesSumArea, "sum_area", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownMunicapalArea.DataBindings.Add("Value", v_premisesSubPremisesSumArea, "sum_area", true, DataSourceUpdateMode.Never, 0);
-
             comboBoxCurrentFundType.DataSource = v_fundType;
             comboBoxCurrentFundType.ValueMember = "id_fund_type";
             comboBoxCurrentFundType.DisplayMember = "fund_type";
-            comboBoxCurrentFundType.DataBindings.Clear();
-            comboBoxCurrentFundType.DataBindings.Add("SelectedValue", v_premisesCurrentFund, "id_fund_type", true, DataSourceUpdateMode.Never, DBNull.Value);
 
             comboBoxState.DataSource = v_object_states;
             comboBoxState.ValueMember = "id_state";
@@ -786,6 +795,8 @@ namespace Registry.Viewport
             DataBind();
 
             premisesCurrentFund.RefreshEvent += new EventHandler<EventArgs>(premisesCurrentFund_RefreshEvent);
+            premiseSubPremisesSumArea.RefreshEvent += premiseSubPremisesSumArea_RefreshEvent;
+            FiltersRebuild();
             SetViewportCaption();
         }
         
@@ -902,6 +913,7 @@ namespace Registry.Viewport
                 CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building, true);
                 CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building, true);
                 CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
+                CalcDataModelResettleAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
             }
         }
 
@@ -990,13 +1002,15 @@ namespace Registry.Viewport
                         }
                     }
                     viewportState = ViewportState.ReadState;
-                    CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, premise.IdPremises);
+                    CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
+                    CalcDataModelResettleAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
                     break;
             }
             is_editable = true;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
             CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building, premise.IdBuilding);
+            CalcDataModelPremiseSubPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, premise.IdPremises);
         }
 
         public override bool CanCancelRecord()
@@ -1115,7 +1129,12 @@ namespace Registry.Viewport
 
         void premisesCurrentFund_RefreshEvent(object sender, EventArgs e)
         {
-            ShowOrHideCurrentFund();
+            FiltersRebuild();
+        }
+
+        void premiseSubPremisesSumArea_RefreshEvent(object sender, EventArgs e)
+        {
+            FiltersRebuild();
         }
 
         void textBoxDescription_TextChanged(object sender, EventArgs e)
@@ -1452,7 +1471,7 @@ namespace Registry.Viewport
             this.groupBox11 = new System.Windows.Forms.GroupBox();
             this.numericUpDownHeight = new System.Windows.Forms.NumericUpDown();
             this.label3 = new System.Windows.Forms.Label();
-            this.numericUpDownMunicapalArea = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownMunicipalArea = new System.Windows.Forms.NumericUpDown();
             this.label2 = new System.Windows.Forms.Label();
             this.numericUpDownLivingArea = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownTotalArea = new System.Windows.Forms.NumericUpDown();
@@ -1481,7 +1500,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel5.SuspendLayout();
             this.groupBox11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMunicapalArea)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMunicipalArea)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLivingArea)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalArea)).BeginInit();
             this.groupBoxRooms.SuspendLayout();
@@ -2036,7 +2055,7 @@ namespace Registry.Viewport
             // 
             this.groupBox11.Controls.Add(this.numericUpDownHeight);
             this.groupBox11.Controls.Add(this.label3);
-            this.groupBox11.Controls.Add(this.numericUpDownMunicapalArea);
+            this.groupBox11.Controls.Add(this.numericUpDownMunicipalArea);
             this.groupBox11.Controls.Add(this.label2);
             this.groupBox11.Controls.Add(this.numericUpDownLivingArea);
             this.groupBox11.Controls.Add(this.numericUpDownTotalArea);
@@ -2079,20 +2098,20 @@ namespace Registry.Viewport
             // 
             // numericUpDownMunicapalArea
             // 
-            this.numericUpDownMunicapalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.numericUpDownMunicipalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownMunicapalArea.DecimalPlaces = 3;
-            this.numericUpDownMunicapalArea.Location = new System.Drawing.Point(175, 76);
-            this.numericUpDownMunicapalArea.Maximum = new decimal(new int[] {
+            this.numericUpDownMunicipalArea.DecimalPlaces = 3;
+            this.numericUpDownMunicipalArea.Location = new System.Drawing.Point(175, 76);
+            this.numericUpDownMunicipalArea.Maximum = new decimal(new int[] {
             9999,
             0,
             0,
             0});
-            this.numericUpDownMunicapalArea.Name = "numericUpDownMunicapalArea";
-            this.numericUpDownMunicapalArea.ReadOnly = true;
-            this.numericUpDownMunicapalArea.Size = new System.Drawing.Size(242, 21);
-            this.numericUpDownMunicapalArea.TabIndex = 2;
-            this.numericUpDownMunicapalArea.ThousandsSeparator = true;
+            this.numericUpDownMunicipalArea.Name = "numericUpDownMunicapalArea";
+            this.numericUpDownMunicipalArea.ReadOnly = true;
+            this.numericUpDownMunicipalArea.Size = new System.Drawing.Size(242, 21);
+            this.numericUpDownMunicipalArea.TabIndex = 2;
+            this.numericUpDownMunicipalArea.ThousandsSeparator = true;
             // 
             // label2
             // 
@@ -2249,7 +2268,7 @@ namespace Registry.Viewport
             this.groupBox11.ResumeLayout(false);
             this.groupBox11.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownHeight)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMunicapalArea)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMunicipalArea)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLivingArea)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalArea)).EndInit();
             this.groupBoxRooms.ResumeLayout(false);

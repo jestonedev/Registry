@@ -62,6 +62,16 @@ namespace Registry.Viewport
                     return new FundsHistoryViewport(menuCallback);
                 case ViewportType.DocumentsResidenceViewport:
                     return new DocumentsResidenceViewport(menuCallback);
+                case ViewportType.ResettleProcessListViewport:
+                    return new ResettleProcessListViewport(menuCallback);
+                case ViewportType.ResettlePersonsViewport:
+                    return new ResettlePersonsViewport(menuCallback);
+                case ViewportType.ResettleFromBuildingsViewport:
+                case ViewportType.ResettleToBuildingsViewport:
+                    return new ResettleBuildingsViewport(menuCallback);
+                case ViewportType.ResettleFromPremisesViewport:
+                case ViewportType.ResettleToPremisesViewport:
+                    return new ResettlePremisesViewport(menuCallback);
             }
             throw new ViewportException(
                 String.Format(CultureInfo.InvariantCulture, "В фабрику ViewportFactory передан неизвестный тип {0}", viewportType.ToString()));

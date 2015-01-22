@@ -33,6 +33,7 @@ namespace Registry.DataModels
         protected override void ConfigureTable()
         {
             Table.PrimaryKey = new DataColumn[] { Table.Columns["id_process"] };
+            Table.Columns["debts"].DefaultValue = 0;
         }
 
         public static ResettleProcessesDataModel GetInstance()

@@ -282,8 +282,8 @@ namespace Registry.Viewport
                     return;
                 ((DataRowView)v_buildings[v_buildings.Position]).Delete();
                 MenuCallback.ForceCloseDetachedViewports();
-                if (ParentType == ParentTypeEnum.Tenancy)
-                    CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
+                CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
+                CalcDataModelResettleAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
             }
         }
 
@@ -355,7 +355,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return (!buildings.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return (!buildings.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.RegistryRead);
         }
 
         public override void InsertRecord()
@@ -909,7 +909,7 @@ namespace Registry.Viewport
             this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.ShowCellToolTips = false;
-            this.dataGridView.Size = new System.Drawing.Size(1531, 723);
+            this.dataGridView.Size = new System.Drawing.Size(1410, 723);
             this.dataGridView.TabIndex = 0;
             this.dataGridView.VirtualMode = true;
             this.dataGridView.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView_CellValueNeeded);
@@ -1018,7 +1018,7 @@ namespace Registry.Viewport
             // 
             // TenancyBuildingsViewport
             // 
-            this.ClientSize = new System.Drawing.Size(1537, 729);
+            this.ClientSize = new System.Drawing.Size(1416, 729);
             this.Controls.Add(this.dataGridView);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

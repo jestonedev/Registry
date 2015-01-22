@@ -9,8 +9,3 @@
 // Нет необходимости вручную добавлять подавления к этому файлу.
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1726:UsePreferredTerms", MessageId = "Login", Scope = "member", Target = "Registry.Entities.Executor.#ExecutorLogin")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Scope = "member", Target = "Registry.Entities.TenancyProcess.#op_Equality(Registry.Entities.TenancyProcess,Registry.Entities.TenancyProcess)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Scope = "member", Target = "Registry.Entities.TenancyPerson.#op_Equality(Registry.Entities.TenancyPerson,Registry.Entities.TenancyPerson)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Scope = "member", Target = "Registry.Entities.Premise.#op_Equality(Registry.Entities.Premise,Registry.Entities.Premise)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Scope = "member", Target = "Registry.Entities.Claim.#op_Equality(Registry.Entities.Claim,Registry.Entities.Claim)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Scope = "member", Target = "Registry.Entities.Building.#op_Equality(Registry.Entities.Building,Registry.Entities.Building)")]

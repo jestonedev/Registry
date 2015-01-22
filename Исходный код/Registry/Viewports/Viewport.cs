@@ -223,32 +223,27 @@ namespace Registry.Viewport
             throw new ViewportException("Не реализовано");
         }
 
-        public void ShowResettles()
+        public virtual void ShowResettlePersons()
         {
             throw new ViewportException("Не реализовано");
         }
 
-        public void ShowResettlePersons()
+        public virtual void ShowResettleFromBuildings()
         {
             throw new ViewportException("Не реализовано");
         }
 
-        public void ShowResettleFromBuildings()
+        public virtual void ShowResettleFromPremises()
         {
             throw new ViewportException("Не реализовано");
         }
 
-        public void ShowResettleFromPremises()
+        public virtual void ShowResettleToBuildings()
         {
             throw new ViewportException("Не реализовано");
         }
 
-        public void ShowResettleToBuildings()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public void ShowResettleToPremises()
+        public virtual void ShowResettleToPremises()
         {
             throw new ViewportException("Не реализовано");
         }
@@ -399,11 +394,6 @@ namespace Registry.Viewport
         }
 
         public virtual bool HasAssocResettleToObjects()
-        {
-            return false;
-        }
-
-        public virtual bool HasAssocResettles()
         {
             return false;
         }

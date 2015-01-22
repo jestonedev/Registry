@@ -61,9 +61,9 @@ namespace Registry
             toolStripProgressBar.Maximum = 0;
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead) || AccessControl.HasPrivelege(Priveleges.TenancyRead)
                 || AccessControl.HasPrivelege(Priveleges.ResettleRead))
-                toolStripProgressBar.Maximum += 6;   
+                toolStripProgressBar.Maximum += 9;   
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
-                toolStripProgressBar.Maximum += 16;
+                toolStripProgressBar.Maximum += 13;
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead) || AccessControl.HasPrivelege(Priveleges.ClaimsRead))
                 toolStripProgressBar.Maximum += 1;
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
@@ -82,14 +82,15 @@ namespace Registry
                 KladrStreetsDataModel.GetInstance(toolStripProgressBar, 1);
                 KladrRegionsDataModel.GetInstance(toolStripProgressBar, 1);
                 PremisesTypesDataModel.GetInstance(toolStripProgressBar, 1);
+                FundTypesDataModel.GetInstance(toolStripProgressBar, 1);
+                ObjectStatesDataModel.GetInstance(toolStripProgressBar, 1);
+                OwnershipRightTypesDataModel.GetInstance(toolStripProgressBar, 1);
             }
             // Реестр жилого фонда
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
             {
                 StructureTypesDataModel.GetInstance(toolStripProgressBar, 1);
                 PremisesKindsDataModel.GetInstance(toolStripProgressBar, 1);
-                FundTypesDataModel.GetInstance(toolStripProgressBar, 1);
-                ObjectStatesDataModel.GetInstance(toolStripProgressBar, 1);
                 FundsBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 1);
                 FundsPremisesAssocDataModel.GetInstance(toolStripProgressBar, 1);
                 FundsSubPremisesAssocDataModel.GetInstance(toolStripProgressBar, 1);
@@ -97,7 +98,6 @@ namespace Registry
                 OwnershipBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 1);
                 OwnershipPremisesAssocDataModel.GetInstance(toolStripProgressBar, 1);
                 OwnershipsRightsDataModel.GetInstance(toolStripProgressBar, 1);
-                OwnershipRightTypesDataModel.GetInstance(toolStripProgressBar, 1);
                 RestrictionsBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 1);
                 RestrictionsPremisesAssocDataModel.GetInstance(toolStripProgressBar, 1);
                 RestrictionsDataModel.GetInstance(toolStripProgressBar, 1);
@@ -109,6 +109,8 @@ namespace Registry
             // Процессы найма
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
             {
+                // При поиске здания или помещения по нанимателю предварительная подгрузка не производится 
+                // Данные подгружаются по необходимости
                 TenancyPersonsDataModel.GetInstance(toolStripProgressBar, 1);
                 KinshipsDataModel.GetInstance(toolStripProgressBar, 1);
                 TenancyBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 1);
@@ -323,8 +325,6 @@ namespace Registry
                     ribbonPanelRelations.Items.Add(ribbonButtonResettleFromObjects);
                 if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocResettleToObjects())
                     ribbonPanelRelations.Items.Add(ribbonButtonResettleToObjects);
-                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocResettles())
-                    ribbonPanelRelations.Items.Add(ribbonButtonAssocResettles);
             }
         }
 
@@ -580,6 +580,36 @@ namespace Registry
                 (dockPanel.ActiveDocument as IMenuController).ShowTenancies();
         }
 
+        private void ribbonButtonResettlePersons_Click(object sender, EventArgs e)
+        {
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).ShowResettlePersons();
+        }
+
+        private void ribbonButtonResettleFromPremises_Click(object sender, EventArgs e)
+        {
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).ShowResettleFromPremises();
+        }
+
+        private void ribbonButtonResettleFromBuildings_Click(object sender, EventArgs e)
+        {
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).ShowResettleFromBuildings();
+        }
+
+        private void ribbonButtonResettleToPremises_Click(object sender, EventArgs e)
+        {
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).ShowResettleToPremises();
+        }
+
+        private void ribbonButtonResettleToBuildings_Click(object sender, EventArgs e)
+        {
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
+                (dockPanel.ActiveDocument as IMenuController).ShowResettleToBuildings();
+        }
+
         private void ribbonOrbMenuItemBuildings_Click(object sender, EventArgs e)
         {
             CreateViewport(ViewportType.BuildingListViewport);
@@ -593,6 +623,11 @@ namespace Registry
         private void ribbonOrbMenuItemSocNaim_Click(object sender, EventArgs e)
         {
             CreateViewport(ViewportType.TenancyListViewport);
+        }
+
+        private void ribbonOrbMenuItemResettles_Click(object sender, EventArgs e)
+        {
+            CreateViewport(ViewportType.ResettleProcessListViewport);
         }
 
         private void ribbonButtonStructureTypes_Click(object sender, EventArgs e)

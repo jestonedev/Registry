@@ -12,7 +12,7 @@ using System.Globalization;
 
 namespace Registry.Viewport
 {
-    internal sealed class SubPremisesDetailsControl : System.Windows.Forms.UserControl
+    internal sealed class TenancySubPremisesDetails : System.Windows.Forms.UserControl
     {
         #region Components
         private DataGridView dataGridView;
@@ -30,12 +30,10 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn total_area;
         private DataGridViewTextBoxColumn description;
 
-
         #region Views
         public BindingSource v_sub_premises { get; set; }
         private BindingSource v_tenancy_sub_premises = null;
         #endregion Views
-
         //Начальные настройки компонента. Задавать необходимо их все.
         public string StaticFilter { get; set; }
         public DataRow ParentRow { get; set; }
@@ -94,7 +92,7 @@ namespace Registry.Viewport
             ViewportHelper.SetDoubleBuffered(dataGridView);
         }
 
-        public SubPremisesDetailsControl()
+        public TenancySubPremisesDetails()
         {
             this.ParentType = ParentTypeEnum.None;
             InitializeComponent();

@@ -629,17 +629,16 @@ namespace Registry.Viewport
                         if (v_claims.Position != -1)
                             dataGridViewClaims.Rows[v_claims.Position].Selected = true;
                     }
-                    viewportState = ViewportState.ReadState;
                     break;
                 case ViewportState.ModifyRowState:
                     dataGridViewClaims.Enabled = true;
                     is_editable = false;
                     DataBind();
-                    viewportState = ViewportState.ReadState;
                     break;
             }
             UnbindedCheckBoxesUpdate();
             is_editable = true;
+            viewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
         }
@@ -1343,8 +1342,10 @@ namespace Registry.Viewport
             // id_claim
             // 
             this.id_claim.HeaderText = "№";
+            this.id_claim.MinimumWidth = 50;
             this.id_claim.Name = "id_claim";
             this.id_claim.ReadOnly = true;
+            this.id_claim.Width = 50;
             // 
             // date_of_transfer
             // 

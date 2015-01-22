@@ -12,6 +12,7 @@ namespace Registry.Entities
         Premises,
         SubPremises,
         Tenancy,
-        Claim
+        Claim,
+        ResettleProcess
     }
 }

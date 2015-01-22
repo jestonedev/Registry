@@ -444,7 +444,7 @@ namespace Registry.Viewport
         {
             if (v_tenancies.Position == -1)
             {
-                MessageBox.Show("Не выбран процесс найма для отображения претензионно-исковой работы", "Ошибка", 
+                MessageBox.Show("Не выбран процесс найма", "Ошибка", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }

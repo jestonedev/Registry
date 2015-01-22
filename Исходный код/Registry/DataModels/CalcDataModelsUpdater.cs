@@ -39,10 +39,20 @@ namespace Registry.DataModels
                             CalcDataModelPremisesCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
                             CalcDataModelPremisesCurrentFunds.GetInstance().DefferedUpdate = false;
                         }
+                        if (CalcDataModelPremiseSubPremisesSumArea.HasInstance() && CalcDataModelPremiseSubPremisesSumArea.GetInstance().DefferedUpdate)
+                        {
+                            CalcDataModelPremiseSubPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
+                            CalcDataModelPremiseSubPremisesSumArea.GetInstance().DefferedUpdate = false;
+                        }
                         if (CalcDataModelTenancyAggregated.HasInstance() && CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate)
                         {
                             CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
                             CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate = false;
+                        }
+                        if (CalcDataModelResettleAggregated.HasInstance() && CalcDataModelResettleAggregated.GetInstance().DefferedUpdate)
+                        {
+                            CalcDataModelResettleAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
+                            CalcDataModelResettleAggregated.GetInstance().DefferedUpdate = false;
                         }
                         if (CalcDataModelTenancyNotifiesMaxDate.HasInstance() && CalcDataModelTenancyNotifiesMaxDate.GetInstance().DefferedUpdate)
                         {

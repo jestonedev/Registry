@@ -99,8 +99,8 @@ namespace Registry.Viewport
                     return true;
             }
             //Проверяем комнаты
-            list_from_view = ((SubPremisesDetailsControl)dataGridView.DetailsControl).TenancySubPremisesFromView();
-            list_from_viewport = ((SubPremisesDetailsControl)dataGridView.DetailsControl).TenancySubPremisesFromViewport();
+            list_from_view = ((TenancySubPremisesDetails)dataGridView.DetailsControl).TenancySubPremisesFromView();
+            list_from_viewport = ((TenancySubPremisesDetails)dataGridView.DetailsControl).TenancySubPremisesFromViewport();
             if (list_from_view.Count != list_from_viewport.Count)
                 return true;
             founded = false;
@@ -305,7 +305,7 @@ namespace Registry.Viewport
             id_premises_type.DisplayMember = "premises_type";
 
             // Настраивем компонент отображения комнат
-            SubPremisesDetailsControl details = new SubPremisesDetailsControl();
+            TenancySubPremisesDetails details = new TenancySubPremisesDetails();
             details.v_sub_premises = v_sub_premises;
             details.sub_premises = sub_premises.Select();
             details.StaticFilter = StaticFilter;
@@ -342,7 +342,8 @@ namespace Registry.Viewport
                 {
                     CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building, true);
                     CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building, true);
-                    CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
+                    CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
+                    CalcDataModelResettleAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
                 }
             }
         }
@@ -422,7 +423,7 @@ namespace Registry.Viewport
             for (int i = 0; i < v_tenancy_premises.Count; i++)
                 snapshot_tenancy_premises.Rows.Add(DataRowViewToArray(((DataRowView)v_tenancy_premises[i])));
             dataGridView.Refresh();
-            ((SubPremisesDetailsControl)dataGridView.DetailsControl).CancelRecord();
+            ((TenancySubPremisesDetails)dataGridView.DetailsControl).CancelRecord();
             MenuCallback.EditingStateUpdate();
         }
 
@@ -442,8 +443,8 @@ namespace Registry.Viewport
                 return;
             }
             // Проверяем данные о комнатах
-            if (!SubPremisesDetailsControl.ValidateTenancySubPremises(
-                ((SubPremisesDetailsControl)dataGridView.DetailsControl).TenancySubPremisesFromViewport()))
+            if (!TenancySubPremisesDetails.ValidateTenancySubPremises(
+                ((TenancySubPremisesDetails)dataGridView.DetailsControl).TenancySubPremisesFromViewport()))
             {
                 sync_views = true;
                 return;
@@ -518,7 +519,7 @@ namespace Registry.Viewport
             }
             sync_views = true;
             // Сохраняем комнаты в базу данных
-            ((SubPremisesDetailsControl)dataGridView.DetailsControl).SaveRecord();
+            ((TenancySubPremisesDetails)dataGridView.DetailsControl).SaveRecord();
             MenuCallback.EditingStateUpdate();
             // Обновляем зависимую агрегационную модель
             if (ParentType == ParentTypeEnum.Tenancy)
@@ -765,12 +766,12 @@ namespace Registry.Viewport
         void dataGridView_BeforeExpandDetails(object sender, DataGridViewDetailsEventArgs e)
         {
             dataGridView.Rows[e.RowIndex].Cells["is_checked"].Style.Alignment = DataGridViewContentAlignment.TopCenter;
-            ((SubPremisesDetailsControl)dataGridView.DetailsControl).CalcControlHeight();
+            ((TenancySubPremisesDetails)dataGridView.DetailsControl).CalcControlHeight();
             int width = 0;
             for (int i = 0; i < dataGridView.Columns.Count; i++)
                 width += dataGridView.Columns[i].Width;
             width += dataGridView.RowHeadersWidth;
-            ((SubPremisesDetailsControl)dataGridView.DetailsControl).SetControlWidth(width);
+            ((TenancySubPremisesDetails)dataGridView.DetailsControl).SetControlWidth(width);
         }
 
         void dataGridView_Resize(object sender, EventArgs e)
@@ -779,7 +780,7 @@ namespace Registry.Viewport
             for (int i = 0; i < dataGridView.Columns.Count; i++)
                 width += dataGridView.Columns[i].Width;
             width += dataGridView.RowHeadersWidth;
-            ((SubPremisesDetailsControl)dataGridView.DetailsControl).SetControlWidth(width);
+            ((TenancySubPremisesDetails)dataGridView.DetailsControl).SetControlWidth(width);
             if (dataGridView.Size.Width > 1500)
             {
                 if (dataGridView.Columns["id_street"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)

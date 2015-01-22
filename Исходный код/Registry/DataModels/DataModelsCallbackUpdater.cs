@@ -179,6 +179,11 @@ namespace Registry.DataModels
         {
             switch (table)
             {
+                case "ownership_rights":
+                case "restrictions":
+                    if (CalcDataModelBuildingsPremisesSumArea.HasInstance())
+                        CalcDataModelBuildingsPremisesSumArea.GetInstance().DefferedUpdate = true;
+                    break;
                 case "funds_history":
                     if (CalcDataModelBuildingsCurrentFunds.HasInstance())
                         CalcDataModelBuildingsCurrentFunds.GetInstance().DefferedUpdate = true;
@@ -188,9 +193,17 @@ namespace Registry.DataModels
                         CalcDataModelBuildingsPremisesFunds.GetInstance().DefferedUpdate = true;
                     break;
                 case "sub_premises":
+                    if (CalcDataModelPremiseSubPremisesSumArea.HasInstance())
+                        CalcDataModelPremiseSubPremisesSumArea.GetInstance().DefferedUpdate = true;
+                    if (CalcDataModelBuildingsPremisesSumArea.HasInstance())
+                        CalcDataModelBuildingsPremisesSumArea.GetInstance().DefferedUpdate = true;
                     if (operation_type == "DELETE" || (operation_type == "UPDATE" && (field_name == "id_premises" || field_name == "sub_premises_num")))
+                    {
                         if (CalcDataModelTenancyAggregated.HasInstance())
                             CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate = true;
+                        if (CalcDataModelResettleAggregated.HasInstance())
+                            CalcDataModelResettleAggregated.GetInstance().DefferedUpdate = true;
+                    }
                     break;
                 case "premises":
                     if (CalcDataModelBuildingsPremisesSumArea.HasInstance())
@@ -201,13 +214,21 @@ namespace Registry.DataModels
                             CalcDataModelBuildingsPremisesFunds.GetInstance().DefferedUpdate = true;
                     }
                     if (operation_type == "DELETE" || (operation_type == "UPDATE" && (field_name == "id_buildings" || field_name == "premises_num")))
+                    {
                         if (CalcDataModelTenancyAggregated.HasInstance())
                             CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate = true;
+                        if (CalcDataModelResettleAggregated.HasInstance())
+                            CalcDataModelResettleAggregated.GetInstance().DefferedUpdate = true;
+                    }
                     break;
                 case "buildings":
                     if (operation_type == "DELETE" || (operation_type == "UPDATE" && (field_name == "id_street" || field_name == "house")))
+                    {
                         if (CalcDataModelTenancyAggregated.HasInstance())
                             CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate = true;
+                        if (CalcDataModelResettleAggregated.HasInstance())
+                            CalcDataModelResettleAggregated.GetInstance().DefferedUpdate = true;
+                    }
                     break;
                 case "tenancy_notifies":
                     if ((operation_type == "DELETE" || operation_type == "INSERT") && CalcDataModelTenancyNotifiesMaxDate.HasInstance())
@@ -219,11 +240,23 @@ namespace Registry.DataModels
                     if (CalcDataModelTenancyAggregated.HasInstance())
                         CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate = true;
                     break;
+                case "resettle_buildings_from_assoc":
+                case "resettle_buildings_to_assoc":
+                case "resettle_premises_from_assoc":
+                case "resettle_premises_to_assoc":
+                case "resettle_sub_premises_from_assoc":
+                case "resettle_sub_premises_to_assoc":
+                    if (CalcDataModelResettleAggregated.HasInstance())
+                        CalcDataModelResettleAggregated.GetInstance().DefferedUpdate = true;
+                    break;
             }
         }
 
         private static void SetValue(DataRow row, string field_name, string field_value, string operation_type)
         {
+            // Если поле не найдено, то возможно оно новое в базе и надо его проигнорировать
+            if (!row.Table.Columns.Contains(field_name))
+                return;
             if (String.IsNullOrEmpty(field_value))
             {
                 if (!row[field_name].Equals(DBNull.Value))
@@ -271,6 +304,8 @@ namespace Registry.DataModels
                     return TenancyProcessesDataModel.GetInstance().EditingNewRecord;
                 case "warrants":
                     return WarrantsDataModel.GetInstance().EditingNewRecord;
+                case "resettle_processes":
+                    return ResettleProcessesDataModel.GetInstance().EditingNewRecord;
                 default:
                     return false;
             }

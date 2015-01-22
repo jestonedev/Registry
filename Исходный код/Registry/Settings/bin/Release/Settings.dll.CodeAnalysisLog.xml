@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="c:\program files (x86)\microsoft visual studio 12.0\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
+<?xml-stylesheet type="text/xsl" href="c:\program files\microsoft visual studio 12.0\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
 <FxCopReport Version="12.0">
  <Targets>
-  <Target Name="E:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Settings\bin\Release\Settings.dll">
+  <Target Name="E:\Реестр жилого фонда\Исходный код\Registry\Settings\bin\Release\Settings.dll">
    <Modules>
     <Module Name="settings.dll">
      <Namespaces>
@@ -12,8 +12,8 @@
          <Members>
           <Member Name="#UseLDAP" Kind="Property" Static="True" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message Id="LDAP" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2014-12-03 15:42:07Z" FixCategory="Breaking">
-             <Issue Name="Member" Certainty="85" Level="Error" Path="e:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Settings" File="RegistrySettings.cs" Line="88">Correct the casing of 'LDAP' in member name 'RegistrySettings.UseLDAP' by changing it to 'Ldap'.</Issue>
+            <Message Id="LDAP" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2015-01-22 08:46:54Z" FixCategory="Breaking">
+             <Issue Name="Member" Certainty="85" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\Settings" File="RegistrySettings.cs" Line="88">Correct the casing of 'LDAP' in member name 'RegistrySettings.UseLDAP' by changing it to 'Ldap'.</Issue>
             </Message>
            </Messages>
           </Member>
@@ -25,8 +25,8 @@
            <Accessors>
             <Accessor Name="#get_Current()" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
              <Messages>
-              <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Status="Active" Created="2014-12-03 15:42:07Z" FixCategory="NonBreaking">
-               <Issue Certainty="95" Level="CriticalError" Path="e:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Settings" File="UserDomain.cs" Line="32">Modify 'UserDomain.Current.get()' to catch a more specific exception than 'object' or rethrow the exception.</Issue>
+              <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Status="Active" Created="2015-01-22 08:46:54Z" FixCategory="NonBreaking">
+               <Issue Certainty="95" Level="CriticalError" Path="e:\Реестр жилого фонда\Исходный код\Registry\Settings" File="UserDomain.cs" Line="32">Modify 'UserDomain.Current.get()' to catch a more specific exception than 'object' or rethrow the exception.</Issue>
               </Message>
              </Messages>
             </Accessor>

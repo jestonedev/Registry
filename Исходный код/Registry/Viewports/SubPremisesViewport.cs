@@ -385,7 +385,8 @@ namespace Registry.Viewport
             }
             sync_views = true;
             MenuCallback.EditingStateUpdate();
-            CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
+            CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
+            CalcDataModelResettleAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
             CalcDataModelPremiseSubPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Premise,
                 Int32.Parse(ParentRow["id_premises"].ToString(), CultureInfo.InvariantCulture), true);
             CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building,

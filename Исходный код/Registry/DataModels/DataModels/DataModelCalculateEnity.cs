@@ -12,6 +12,7 @@ namespace Registry.CalcDataModels
         Building,
         Premise,
         Tenancy,
-        SubPremise
+        SubPremise,
+        Resettle
     }
 }

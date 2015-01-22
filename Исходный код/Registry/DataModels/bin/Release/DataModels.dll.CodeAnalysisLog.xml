@@ -8,12 +8,82 @@
      <Namespaces>
       <Namespace Name="Registry.CalcDataModels">
        <Types>
-        <Type Name="CalcDataModel" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+        <Type Name="CalcDataModelBuildingsCurrentFunds" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Members>
-          <Member Name="#Refresh(Registry.CalcDataModels.CalcDataModelFilterEnity,System.Nullable`1&lt;System.Int32&gt;,System.Boolean)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
+          <Member Name="#Calculate(System.Object,System.ComponentModel.DoWorkEventArgs)" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026" Status="Active" Created="2015-01-21 09:34:50Z" FixCategory="Breaking">
-             <Issue Certainty="75" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModel.cs" Line="30">Replace method 'CalcDataModel.Refresh(CalcDataModelFilterEnity, int?, bool)' with an overload that supplies all default arguments.</Issue>
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-01-22 08:47:09Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModelBuildingsCurrentFunds.cs" Line="35">'CalcDataModelBuildingsCurrentFunds.Calculate(object, DoWorkEventArgs)' has a cyclomatic complexity of 27. Rewrite or refactor the method to reduce complexity to 25.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="CalcDataModelBuildingsPremisesFunds" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Calculate(System.Object,System.ComponentModel.DoWorkEventArgs)" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-01-22 08:47:09Z" FixCategory="Breaking">
+             <Issue Name="Method" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModelBuildingsPremisesFunds.cs" Line="40">'CalcDataModelBuildingsPremisesFunds.Calculate(object, DoWorkEventArgs)' is coupled with 39 different types from 8 different namespaces. Rewrite or refactor the method to decrease its class coupling, or consider moving the method to one of the other types it is tightly coupled with. A class coupling above 40 indicates poor maintainability, a class coupling between 40 and 30 indicates moderate maintainability, and a class coupling below 30 indicates good maintainability.</Issue>
+            </Message>
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-01-22 08:47:09Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="CriticalError" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModelBuildingsPremisesFunds.cs" Line="40">'CalcDataModelBuildingsPremisesFunds.Calculate(object, DoWorkEventArgs)' has a cyclomatic complexity of 127. Rewrite or refactor the method to reduce complexity to 25.</Issue>
+            </Message>
+            <Message TypeName="AvoidUnmaintainableCode" Category="Microsoft.Maintainability" CheckId="CA1505" Status="Active" Created="2015-01-22 08:47:09Z" FixCategory="NonBreaking">
+             <Issue Name="Method" Certainty="90" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModelBuildingsPremisesFunds.cs" Line="40">'CalcDataModelBuildingsPremisesFunds.Calculate(object, DoWorkEventArgs)' has a maintainability index of 6. Rewrite or refactor the method to increase its maintainability index (MI). An MI below 10 indicates poor maintainability, an MI between 10 and 20 indicates moderate maintainability, and an MI above 20 indicates good maintainability.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="CalcDataModelBuildingsPremisesSumArea" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Calculate(System.Object,System.ComponentModel.DoWorkEventArgs)" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-01-22 08:47:09Z" FixCategory="Breaking">
+             <Issue Name="Method" Certainty="90" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModelBuildingsPremisesSumArea.cs" Line="37">'CalcDataModelBuildingsPremisesSumArea.Calculate(object, DoWorkEventArgs)' is coupled with 51 different types from 8 different namespaces. Rewrite or refactor the method to decrease its class coupling, or consider moving the method to one of the other types it is tightly coupled with. A class coupling above 40 indicates poor maintainability, a class coupling between 40 and 30 indicates moderate maintainability, and a class coupling below 30 indicates good maintainability.</Issue>
+            </Message>
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-01-22 08:47:09Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="CriticalError" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModelBuildingsPremisesSumArea.cs" Line="37">'CalcDataModelBuildingsPremisesSumArea.Calculate(object, DoWorkEventArgs)' has a cyclomatic complexity of 188. Rewrite or refactor the method to reduce complexity to 25.</Issue>
+            </Message>
+            <Message TypeName="AvoidUnmaintainableCode" Category="Microsoft.Maintainability" CheckId="CA1505" Status="Active" Created="2015-01-22 08:47:09Z" FixCategory="NonBreaking">
+             <Issue Name="Method" Certainty="90" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModelBuildingsPremisesSumArea.cs" Line="37">'CalcDataModelBuildingsPremisesSumArea.Calculate(object, DoWorkEventArgs)' has a maintainability index of 0. Rewrite or refactor the method to increase its maintainability index (MI). An MI below 10 indicates poor maintainability, an MI between 10 and 20 indicates moderate maintainability, and an MI above 20 indicates good maintainability.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="CalcDataModelPremisesCurrentFunds" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Calculate(System.Object,System.ComponentModel.DoWorkEventArgs)" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-01-22 08:47:09Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModelPremisesCurrentFunds.cs" Line="35">'CalcDataModelPremisesCurrentFunds.Calculate(object, DoWorkEventArgs)' has a cyclomatic complexity of 27. Rewrite or refactor the method to reduce complexity to 25.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="CalcDataModelResettleAggregated" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Calculate(System.Object,System.ComponentModel.DoWorkEventArgs)" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-01-22 08:47:09Z" FixCategory="Breaking">
+             <Issue Name="Method" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModelResettleAggregated.cs" Line="37">'CalcDataModelResettleAggregated.Calculate(object, DoWorkEventArgs)' is coupled with 34 different types from 9 different namespaces. Rewrite or refactor the method to decrease its class coupling, or consider moving the method to one of the other types it is tightly coupled with. A class coupling above 40 indicates poor maintainability, a class coupling between 40 and 30 indicates moderate maintainability, and a class coupling below 30 indicates good maintainability.</Issue>
+            </Message>
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-01-22 08:47:09Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="CriticalWarning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModelResettleAggregated.cs" Line="37">'CalcDataModelResettleAggregated.Calculate(object, DoWorkEventArgs)' has a cyclomatic complexity of 52. Rewrite or refactor the method to reduce complexity to 25.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="CalcDataModelTenancyAggregated" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#Calculate(System.Object,System.ComponentModel.DoWorkEventArgs)" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-01-22 08:47:09Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels\CalcDataModels" File="CalcDataModelTenancyAggregated.cs" Line="36">'CalcDataModelTenancyAggregated.Calculate(object, DoWorkEventArgs)' has a cyclomatic complexity of 39. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
           </Member>
@@ -23,12 +93,42 @@
       </Namespace>
       <Namespace Name="Registry.DataModels">
        <Types>
-        <Type Name="DataSetManager" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+        <Type Name="DataModelHelper" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Messages>
+          <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-01-22 08:47:09Z" FixCategory="Breaking">
+           <Issue Name="Type" Certainty="90" Level="Error">'DataModelHelper' is coupled with 98 different types from 9 different namespaces. Rewrite or refactor this class's methods to decrease its class coupling, or consider moving some of the class's methods to some of the other types it is tightly coupled with. A class coupling above 95 indicates poor maintainability, a class coupling between 95 and 80 indicates moderate maintainability, and a class coupling below 80 indicates good maintainability.</Issue>
+          </Message>
+         </Messages>
          <Members>
-          <Member Name="#.cctor()" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
+          <Member Name="#AggregateAddressByIdProcess(Registry.DataModels.DataModel,Registry.DataModels.DataModel,Registry.DataModels.DataModel,System.Nullable`1&lt;System.Int32&gt;)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="SetLocaleForDataTypes" Category="Microsoft.Globalization" CheckId="CA1306" Status="Active" Created="2015-01-21 09:34:50Z" FixCategory="NonBreaking">
-             <Issue Certainty="90" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels" File="DataSetManager.cs" Line="13">Be sure to set the DataSet Locale property wherever 'DataSetManager.DataSetManager()' creates an instance of that type.</Issue>
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-01-22 08:47:09Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels" File="DataModelHelper.cs" Line="476">'DataModelHelper.AggregateAddressByIdProcess(DataModel, DataModel, DataModel, int?)' has a cyclomatic complexity of 76. Rewrite or refactor the method to reduce complexity to 25.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#TenancyProcessIDsByAddress(System.String[])" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-01-22 08:47:09Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels" File="DataModelHelper.cs" Line="143">'DataModelHelper.TenancyProcessIDsByAddress(string[])' has a cyclomatic complexity of 79. Rewrite or refactor the method to reduce complexity to 25.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+          <Member Name="#TenancyProcessIDsByCondition(System.Func`2&lt;System.Data.DataRow,System.Boolean&gt;,Registry.DataModels.DataModelHelper+ConditionType)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-01-22 08:47:09Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels" File="DataModelHelper.cs" Line="211">'DataModelHelper.TenancyProcessIDsByCondition(Func&lt;DataRow, bool&gt;, DataModelHelper.ConditionType)' has a cyclomatic complexity of 49. Rewrite or refactor the method to reduce complexity to 25.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
+        <Type Name="DataModelsCallbackUpdater" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#CalcDataModelsUpdate(System.String,System.String,System.String)" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
+           <Messages>
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-01-22 08:47:09Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\DataModels" File="DataModelsCallbackUpdater.cs" Line="180">'DataModelsCallbackUpdater.CalcDataModelsUpdate(string, string, string)' has a cyclomatic complexity of 44. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
           </Member>
@@ -42,25 +142,36 @@
   </Target>
  </Targets>
  <Rules>
-  <Rule TypeName="DefaultParametersShouldNotBeUsed" Category="Microsoft.Design" CheckId="CA1026">
-   <Name>Default parameters should not be used</Name>
-   <Description>Some programming languages do not support default parameters. Replace default parameters with method overloads that supply the default argument.</Description>
-   <Resolution Name="Default">Replace method {0} with an overload that supplies all default arguments.</Resolution>
+  <Rule TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506">
+   <Name>Avoid excessive class coupling</Name>
+   <Description>Types and methods with a high degree of class coupling can be difficult to maintain.</Description>
+   <Resolution Name="Method">{0} is coupled with {1} different types from {2} different namespaces. Rewrite or refactor the method to decrease its class coupling, or consider moving the method to one of the other types it is tightly coupled with. A class coupling above {3} indicates poor maintainability, a class coupling between {3} and {4} indicates moderate maintainability, and a class coupling below {4} indicates good maintainability.</Resolution>
+   <Resolution Name="Type">{0} is coupled with {1} different types from {2} different namespaces. Rewrite or refactor this class's methods to decrease its class coupling, or consider moving some of the class's methods to some of the other types it is tightly coupled with. A class coupling above {3} indicates poor maintainability, a class coupling between {3} and {4} indicates moderate maintainability, and a class coupling below {4} indicates good maintainability.</Resolution>
    <Owner />
-   <Url>http://msdn.microsoft.com/library/ms182135.aspx</Url>
+   <Url>http://msdn.microsoft.com/library/bb397994.aspx</Url>
    <Email>[none]</Email>
-   <MessageLevel Certainty="75">Error</MessageLevel>
-   <File Name="designrules.dll" Version="12.0.0.0" />
+   <MessageLevel Certainty="90">Warning</MessageLevel>
+   <File Name="maintainabilityrules.dll" Version="12.0.0.0" />
   </Rule>
-  <Rule TypeName="SetLocaleForDataTypes" Category="Microsoft.Globalization" CheckId="CA1306">
-   <Name>Set locale for data types</Name>
-   <Description>In most cases, Locale should be explicitly set to CultureInfo.InvariantCulture on DataSet and DataTable instances. Upon creation of a DataSet or DataTable instance, the Locale is set to the current culture. In most cases, the Locale should be set to CultureInfo.InvariantCulture to guarantee proper sorting behavior in all cultures.</Description>
-   <Resolution Name="Default">Be sure to set the {0} Locale property wherever {1} creates an instance of that type.</Resolution>
+  <Rule TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502">
+   <Name>Avoid excessive complexity</Name>
+   <Description>Method implementations that are exceedingly complex increase the challenge of understanding and maintaining code.</Description>
+   <Resolution Name="Default">{0} has a cyclomatic complexity of {1}. Rewrite or refactor the method to reduce complexity to {2}.</Resolution>
    <Owner />
-   <Url>http://msdn.microsoft.com/library/ms182188.aspx</Url>
+   <Url>http://msdn.microsoft.com/library/ms182212.aspx</Url>
    <Email>[none]</Email>
-   <MessageLevel Certainty="90">Error</MessageLevel>
-   <File Name="globalizationrules.dll" Version="12.0.0.0" />
+   <MessageLevel Certainty="90">Warning</MessageLevel>
+   <File Name="maintainabilityrules.dll" Version="12.0.0.0" />
+  </Rule>
+  <Rule TypeName="AvoidUnmaintainableCode" Category="Microsoft.Maintainability" CheckId="CA1505">
+   <Name>Avoid unmaintainable code</Name>
+   <Description>Types and methods with a high degree of class coupling, cyclomatic complexity and/or program length can be difficult to maintain.</Description>
+   <Resolution Name="Method">{0} has a maintainability index of {1}. Rewrite or refactor the method to increase its maintainability index (MI). An MI below {2} indicates poor maintainability, an MI between {2} and {3} indicates moderate maintainability, and an MI above {3} indicates good maintainability.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/bb386043.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="90">Warning</MessageLevel>
+   <File Name="maintainabilityrules.dll" Version="12.0.0.0" />
   </Rule>
  </Rules>
  <Localized>

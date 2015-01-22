@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AggregatedAddress.cs" />
     <Compile Include="DocumentResidence.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ResettleObject.cs" />

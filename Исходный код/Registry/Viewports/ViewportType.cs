@@ -31,6 +31,12 @@ namespace Registry.Viewport
         WarrantsViewport,
         ExecutorsViewport,
         DocumentIssuedByViewport,
-        DocumentsResidenceViewport
+        DocumentsResidenceViewport,
+        ResettlePersonsViewport,
+        ResettleProcessListViewport,
+        ResettleFromBuildingsViewport,
+        ResettleToBuildingsViewport,
+        ResettleFromPremisesViewport,
+        ResettleToPremisesViewport
     }
 }

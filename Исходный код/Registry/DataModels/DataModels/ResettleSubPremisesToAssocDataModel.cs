@@ -17,7 +17,6 @@ namespace Registry.DataModels
         private static string selectQuery = "SELECT * FROM resettle_sub_premises_to_assoc WHERE deleted = 0";
         private static string deleteQuery = "UPDATE resettle_sub_premises_to_assoc SET deleted = 1 WHERE id_assoc = ?";
         private static string insertQuery = @"INSERT INTO resettle_sub_premises_to_assoc (id_sub_premises, id_process) VALUES (?,?)";
-        private static string updateQuery = @"UPDATE resettle_sub_premises_to_assoc SET id_sub_premises = ?, id_process = ? WHERE id_assoc = ?";
         private static string tableName = "resettle_sub_premises_to_assoc";
 
         private ResettleSubPremisesToAssocDataModel(ToolStripProgressBar progressBar, int incrementor)
@@ -78,36 +77,6 @@ namespace Registry.DataModels
                     MessageBox.Show(String.Format(CultureInfo.InvariantCulture,
                         "Не удалось добавить связь комнаты с процессом переселения в базу данных. Подробная ошибка: {0}",
                         e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
-        }
-
-        public static int Update(ResettleObject resettleObject)
-        {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                command.CommandText = updateQuery;
-                if (resettleObject == null)
-                {
-                    MessageBox.Show("В метод Update не передана ссылка на сущность объекта переселения", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_sub_premises", resettleObject.IdObject));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", resettleObject.IdProcess));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_assoc", resettleObject.IdAssoc));
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture,
-                        "Не удалось изменить связь комнаты с процессом переселения в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
             }

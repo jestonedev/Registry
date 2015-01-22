@@ -37,7 +37,6 @@ namespace Registry.Viewport
         void ShowClaims();
         void ShowClaimStates();
         void ShowTenancies();
-        void ShowResettles();
         void ShowResettlePersons();
         void ShowResettleFromBuildings();
         void ShowResettleFromPremises();
@@ -82,7 +81,6 @@ namespace Registry.Viewport
         bool HasAssocResettlePersons();
         bool HasAssocResettleFromObjects();
         bool HasAssocResettleToObjects();
-        bool HasAssocResettles();
 
         bool CanFilterSocialFund();
         bool CanFilterCommercialFundFund();

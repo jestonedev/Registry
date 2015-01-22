@@ -85,6 +85,16 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="ResettleBuildingsViewport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ResettleEstateObjectWay.cs" />
+    <Compile Include="ResettlePersonsViewport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ResettleProcessListViewport.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="TenancyAgreementsViewport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -101,6 +111,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ClaimStateTypesViewport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ResettlePremisesViewport.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="TenancyReasonsViewport.cs">
@@ -196,7 +209,10 @@
     <Compile Include="StructureTypeListViewport.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SubPremisesDetailsControl.cs">
+    <Compile Include="ResettleSubPremisesDetails.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="TenancySubPremisesDetails.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SubPremisesViewport.cs">
@@ -305,6 +321,15 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="ResettleBuildingsViewport.resx">
+      <DependentUpon>ResettleBuildingsViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResettlePersonsViewport.resx">
+      <DependentUpon>ResettlePersonsViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResettleProcessListViewport.resx">
+      <DependentUpon>ResettleProcessListViewport.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="RestrictionListViewport.resx">
       <DependentUpon>RestrictionListViewport.cs</DependentUpon>
     </EmbeddedResource>
@@ -326,8 +351,14 @@
     <EmbeddedResource Include="StructureTypeListViewport.resx">
       <DependentUpon>StructureTypeListViewport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SubPremisesDetailsControl.resx">
-      <DependentUpon>SubPremisesDetailsControl.cs</DependentUpon>
+    <EmbeddedResource Include="ResettleSubPremisesDetails.resx">
+      <DependentUpon>ResettleSubPremisesDetails.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ResettlePremisesViewport.resx">
+      <DependentUpon>ResettlePremisesViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TenancySubPremisesDetails.resx">
+      <DependentUpon>TenancySubPremisesDetails.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SubPremisesViewport.resx">
       <DependentUpon>SubPremisesViewport.cs</DependentUpon>

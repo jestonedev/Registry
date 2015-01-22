@@ -463,5 +463,107 @@ namespace Registry.DataModels
                           buildingdIds.Contains(premises_row.Field<int>("id_building"))
                    select ownership_premises_assoc_row.Field<int>("id_premises");
         }
+
+        /// <summary>
+        /// Агрегатор адреса для различных процессов: найма, приватизации, переселения и т.д.
+        /// </summary>
+        /// <param name="buildingDataModel">Ассоциативная модель зданий</param>
+        /// <param name="premisesAssocDataModel">Ассоциативная модель помещений</param>
+        /// <param name="subPremisesAssocDataModel">Ассоциативная модель комнат</param>
+        /// <returns>Возвращает перечисление вида id_process, address</returns>
+        public static IEnumerable<AggregatedAddress> AggregateAddressByIdProcess(DataModel buildingAssocDataModel, DataModel premisesAssocDataModel, DataModel subPremisesAssocDataModel, int? idProcess)
+        {
+            if (buildingAssocDataModel == null || premisesAssocDataModel == null || subPremisesAssocDataModel == null)
+                throw new DataModelException("Не переданы все ссылки на ассоциативные модели");
+            var assoc_sub_premises = from assoc_sub_premises_row in DataModelHelper.FilterRows(subPremisesAssocDataModel.Select())
+                                       where (idProcess != null ?
+                                            assoc_sub_premises_row.Field<int>("id_process") == idProcess : true)
+                                       select assoc_sub_premises_row;
+            var assoc_premises = from assoc_premises_row in DataModelHelper.FilterRows(premisesAssocDataModel.Select())
+                                   where (idProcess != null ?
+                                          assoc_premises_row.Field<int>("id_process") == idProcess : true)
+                                   select assoc_premises_row;
+            var assoc_buildings = from assoc_buildings_row in DataModelHelper.FilterRows(buildingAssocDataModel.Select())
+                                    where (idProcess != null ?
+                                           assoc_buildings_row.Field<int>("id_process") == idProcess : true)
+                                  select assoc_buildings_row;
+            var kladr_street = DataModelHelper.FilterRows(KladrStreetsDataModel.GetInstance().Select());
+            var buildings = DataModelHelper.FilterRows(BuildingsDataModel.GetInstance().Select());
+            var premises = DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select());
+            var sub_premises = DataModelHelper.FilterRows(SubPremisesDataModel.GetInstance().Select());
+            var a_sub_premises_gc = from assoc_sub_premises_row in assoc_sub_premises
+                                    join sub_premises_row in sub_premises
+                                    on assoc_sub_premises_row.Field<int>("id_sub_premises") equals sub_premises_row.Field<int>("id_sub_premises")
+                                    join premises_row in premises.AsEnumerable()
+                                    on sub_premises_row.Field<int>("id_premises") equals premises_row.Field<int>("id_premises")
+                                    group sub_premises_row.Field<string>("sub_premises_num") by
+                                        new
+                                        {
+                                            id_process = assoc_sub_premises_row.Field<int>("id_process"),
+                                            id_building = premises_row.Field<int>("id_building"),
+                                            id_premises = sub_premises_row.Field<int>("id_premises"),
+                                            premises_num = premises_row.Field<string>("premises_num")
+                                        } into gs
+                                    select new
+                                    {
+                                        id_process = gs.Key.id_process,
+                                        id_building = gs.Key.id_building,
+                                        id_premises = gs.Key.id_premises,
+                                        result_str = " пом " + gs.Key.premises_num + ((gs.Count() > 0) ?
+                                        (" ком " + gs.Aggregate((a, b) =>
+                                        {
+                                            return a + ", " + b;
+                                        })) : "")
+                                    };
+            var a_premises = from assoc_premises_row in assoc_premises
+                             join premises_row in premises
+                             on assoc_premises_row.Field<int>("id_premises") equals premises_row.Field<int>("id_premises")
+                             select new
+                             {
+                                 id_process = assoc_premises_row.Field<int>("id_process"),
+                                 id_building = premises_row.Field<int>("id_building"),
+                                 id_premises = assoc_premises_row.Field<int>("id_premises"),
+                                 result_str = " пом " + premises_row.Field<string>("premises_num")
+                             };
+            var a_buildings = from assoc_buildings_row in assoc_buildings
+                              select new
+                              {
+                                  id_process = assoc_buildings_row.Field<int>("id_process"),
+                                  id_building = assoc_buildings_row.Field<int>("id_building"),
+                                  result_str = ""
+                              };
+            var assoc_premises_gc = from assoc_premises_row in a_premises.Union(a_sub_premises_gc)
+                                      join premises_row in premises
+                                      on assoc_premises_row.id_premises equals premises_row.Field<int>("id_premises")
+                                      group
+                                          assoc_premises_row.result_str
+                                          by new
+                                          {
+                                              assoc_premises_row.id_process,
+                                              assoc_premises_row.id_building
+                                          } into gs
+                                      select new
+                                      {
+                                          id_process = gs.Key.id_process,
+                                          id_building = gs.Key.id_building,
+                                          result_str = gs.Aggregate((a, b) =>
+                                          {
+                                              return a + ", " + b.Trim();
+                                          })
+                                      };
+            var addresses = from a_buildings_row in a_buildings.Union(assoc_premises_gc)
+                            join buildings_row in buildings
+                            on a_buildings_row.id_building equals buildings_row.Field<int>("id_building")
+                            join kladr_row in kladr_street
+                            on buildings_row.Field<string>("id_street") equals kladr_row.Field<string>("id_street")
+                            group
+                               kladr_row.Field<string>("street_name") + ", дом " + buildings_row.Field<string>("house") + a_buildings_row.result_str
+                            by a_buildings_row.id_process into gs
+                            select new AggregatedAddress(gs.Key, gs.Aggregate((a, b) =>
+                                {
+                                    return a + ", " + b.Trim();
+                                }));
+            return addresses;
+        }
     }
 }

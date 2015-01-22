@@ -174,31 +174,81 @@ namespace Registry.Viewport
         {
             if (v_buildingsPremisesFunds != null)
             {
+                int position = -1;
                 if ((v_buildings.Position != -1) && !(((DataRowView)v_buildings[v_buildings.Position])["id_building"] is DBNull))
-                    v_buildingsPremisesFunds.Filter = "id_building = " + ((DataRowView)v_buildings[v_buildings.Position])["id_building"].ToString();
+                    position =
+                        v_buildingsPremisesFunds.Find("id_building", ((DataRowView)v_buildings[v_buildings.Position])["id_building"]);
+                if (position != -1)
+                {
+                    decimal social_count = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["social_premises_count"]);
+                    decimal special_count = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["special_premises_count"]);
+                    decimal commercial_count = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["commercial_premises_count"]);
+                    decimal other_count = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["other_premises_count"]);
+                    numericUpDownSocialPremisesCount.Minimum = social_count;
+                    numericUpDownSpecialPremisesCount.Minimum = special_count;
+                    numericUpDownOtherPremisesCount.Minimum = other_count;
+                    numericUpDownCommercialPremisesCount.Minimum = commercial_count;
+                    numericUpDownSocialPremisesCount.Maximum = social_count;
+                    numericUpDownSpecialPremisesCount.Maximum = special_count;
+                    numericUpDownOtherPremisesCount.Maximum = other_count;
+                    numericUpDownCommercialPremisesCount.Maximum = commercial_count;
+                    numericUpDownSocialPremisesCount.Value = social_count;
+                    numericUpDownSpecialPremisesCount.Value = special_count;
+                    numericUpDownOtherPremisesCount.Value = other_count;
+                    numericUpDownCommercialPremisesCount.Value = commercial_count;
+                }
                 else
-                    v_buildingsPremisesFunds.Filter = "id_building = 0";
+                {
+                    numericUpDownSocialPremisesCount.Minimum = 0;
+                    numericUpDownSpecialPremisesCount.Minimum = 0;
+                    numericUpDownOtherPremisesCount.Minimum = 0;
+                    numericUpDownCommercialPremisesCount.Minimum = 0;
+                    numericUpDownSocialPremisesCount.Maximum = 0;
+                    numericUpDownSpecialPremisesCount.Maximum = 0;
+                    numericUpDownOtherPremisesCount.Maximum = 0;
+                    numericUpDownCommercialPremisesCount.Maximum = 0;
+                    numericUpDownSocialPremisesCount.Value = 0;
+                    numericUpDownSpecialPremisesCount.Value = 0;
+                    numericUpDownOtherPremisesCount.Value = 0;
+                    numericUpDownCommercialPremisesCount.Value = 0;
+                }
             }
             if (v_buildingsCurrentFund != null)
             {
+                int position = -1;
                 if ((v_buildings.Position != -1) && !(((DataRowView)v_buildings[v_buildings.Position])["id_building"] is DBNull))
-                    v_buildingsCurrentFund.Filter = "id_building = " + ((DataRowView)v_buildings[v_buildings.Position])["id_building"].ToString();
+                    position =
+                        v_buildingsCurrentFund.Find("id_building", ((DataRowView)v_buildings[v_buildings.Position])["id_building"]);
+                if (position != -1)
+                    comboBoxCurrentFundType.SelectedValue = ((DataRowView)v_buildingsCurrentFund[position])["id_fund_type"];
                 else
-                    v_buildingsCurrentFund.Filter = "id_building = 0";
+                    comboBoxCurrentFundType.SelectedValue = DBNull.Value;
                 ShowOrHideCurrentFund();
             }
             if (v_buildingsPremisesSumArea != null)
             {
+                int position = -1;
                 if ((v_buildings.Position != -1) && !(((DataRowView)v_buildings[v_buildings.Position])["id_building"] is DBNull))
-                    v_buildingsPremisesSumArea.Filter = "id_building = " + ((DataRowView)v_buildings[v_buildings.Position])["id_building"].ToString();
+                    position = v_buildingsPremisesSumArea.Find("id_building", ((DataRowView)v_buildings[v_buildings.Position])["id_building"]);
+                if (position != -1)
+                {
+                    decimal value = Convert.ToDecimal((double)((DataRowView)v_buildingsPremisesSumArea[position])["sum_area"]);
+                    numericUpDownMunicipalArea.Minimum = value;
+                    numericUpDownMunicipalArea.Maximum = value;
+                    numericUpDownMunicipalArea.Value = value;
+                }
                 else
-                    v_buildingsPremisesSumArea.Filter = "id_building = 0";
+                {
+                    numericUpDownMunicipalArea.Maximum = 0;
+                    numericUpDownMunicipalArea.Minimum = 0;
+                    numericUpDownMunicipalArea.Value = 0;
+                }
             }
         }
 
         private void ShowOrHideCurrentFund()
         {
-            if (v_buildingsCurrentFund.Count > 0)
+            if (comboBoxCurrentFundType.SelectedValue != null)
             {
                 label19.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
@@ -265,38 +315,12 @@ namespace Registry.Viewport
             comboBoxCurrentFundType.DataSource = v_fundType;
             comboBoxCurrentFundType.ValueMember = "id_fund_type";
             comboBoxCurrentFundType.DisplayMember = "fund_type";
-            comboBoxCurrentFundType.DataBindings.Clear();
-            comboBoxCurrentFundType.DataBindings.Add("SelectedValue", v_buildingsCurrentFund, "id_fund_type", true, DataSourceUpdateMode.Never, DBNull.Value);
 
             comboBoxState.DataSource = v_object_states;
             comboBoxState.ValueMember = "id_state";
             comboBoxState.DisplayMember = "state_neutral";
             comboBoxState.DataBindings.Clear();
             comboBoxState.DataBindings.Add("SelectedValue", v_buildings, "id_state", true, DataSourceUpdateMode.Never, DBNull.Value);
-
-            numericUpDownSocialPremisesCount.DataBindings.Clear();
-            numericUpDownSocialPremisesCount.DataBindings.Add("Minimum", v_buildingsPremisesFunds, "social_premises_count", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownSocialPremisesCount.DataBindings.Add("Maximum", v_buildingsPremisesFunds, "social_premises_count", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownSocialPremisesCount.DataBindings.Add("Value", v_buildingsPremisesFunds, "social_premises_count", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownCommercialPremisesCount.DataBindings.Clear();
-            numericUpDownCommercialPremisesCount.DataBindings.Add("Minimum", v_buildingsPremisesFunds, "commercial_premises_count", 
-                true, DataSourceUpdateMode.Never, 0);
-            numericUpDownCommercialPremisesCount.DataBindings.Add("Maximum", v_buildingsPremisesFunds, "commercial_premises_count", 
-                true, DataSourceUpdateMode.Never, 0);
-            numericUpDownCommercialPremisesCount.DataBindings.Add("Value", v_buildingsPremisesFunds, "commercial_premises_count", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownSpecialPremisesCount.DataBindings.Clear();
-            numericUpDownSpecialPremisesCount.DataBindings.Add("Minimum", v_buildingsPremisesFunds, "special_premises_count", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownSpecialPremisesCount.DataBindings.Add("Maximum", v_buildingsPremisesFunds, "special_premises_count", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownSpecialPremisesCount.DataBindings.Add("Value", v_buildingsPremisesFunds, "special_premises_count", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownOtherPremisesCount.DataBindings.Clear();
-            numericUpDownOtherPremisesCount.DataBindings.Add("Minimum", v_buildingsPremisesFunds, "other_premises_count", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownOtherPremisesCount.DataBindings.Add("Maximum", v_buildingsPremisesFunds, "other_premises_count", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownOtherPremisesCount.DataBindings.Add("Value", v_buildingsPremisesFunds, "other_premises_count", true, DataSourceUpdateMode.Never, 0);
-
-            numericUpDownMunicipalArea.DataBindings.Clear();
-            numericUpDownMunicipalArea.DataBindings.Add("Minimum", v_buildingsPremisesSumArea, "sum_area", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownMunicipalArea.DataBindings.Add("Maximum", v_buildingsPremisesSumArea, "sum_area", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownMunicipalArea.DataBindings.Add("Value", v_buildingsPremisesSumArea, "sum_area", true, DataSourceUpdateMode.Never, 0);
 
             dataGridViewRestrictions.DataSource = v_restrictions;
             id_restriction_type.DataSource = v_restrictonTypes;
@@ -774,6 +798,9 @@ namespace Registry.Viewport
             DataBind();
 
             buildingsCurrentFund.RefreshEvent += new EventHandler<EventArgs>(buildingsCurrentFund_RefreshEvent);
+            buildingsPremisesFunds.RefreshEvent += buildingsPremisesFunds_RefreshEvent;
+            buildingsPremisesSumArea.RefreshEvent += buildingsPremisesSumArea_RefreshEvent; 
+            FiltersRebuild();
             SetViewportCaption();
         }
         
@@ -919,7 +946,8 @@ namespace Registry.Viewport
                         }
                     }
                     viewportState = ViewportState.ReadState;
-                    CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Building, building.IdBuilding);
+                    CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
+                    CalcDataModelResettleAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
                     break;
             }
             MenuCallback.EditingStateUpdate();
@@ -1013,7 +1041,8 @@ namespace Registry.Viewport
                 viewportState = ViewportState.ReadState;
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.ForceCloseDetachedViewports();
-                CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
+                CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
+                CalcDataModelResettleAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
             }
         }
 
@@ -1113,10 +1142,20 @@ namespace Registry.Viewport
                 buildingsCurrentFund.RefreshEvent -= new EventHandler<EventArgs>(buildingsCurrentFund_RefreshEvent);
             }
         }
+        
+        void buildingsPremisesSumArea_RefreshEvent(object sender, EventArgs e)
+        {
+            FiltersRebuild();
+        }
 
+        void buildingsPremisesFunds_RefreshEvent(object sender, EventArgs e)
+        {
+            FiltersRebuild();
+        }
+        
         void buildingsCurrentFund_RefreshEvent(object sender, EventArgs e)
         {
-            ShowOrHideCurrentFund();
+            FiltersRebuild();
         }
 
         void BuildingViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
