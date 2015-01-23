@@ -39,7 +39,6 @@
             this.vButtonNotify = new VIBlend.WinForms.Controls.vButton();
             this.vButtonCancel = new VIBlend.WinForms.Controls.vButton();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.checkBoxCheckAll = new System.Windows.Forms.CheckBox();
             this.is_checked = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.id_process = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.registration_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -50,6 +49,7 @@
             this.tenant = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.rent_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.address = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.checkBoxCheckAll = new System.Windows.Forms.CheckBox();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -200,17 +200,6 @@
             this.dataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_ColumnHeaderMouseClick);
             this.dataGridView.Resize += new System.EventHandler(this.dataGridView_Resize);
             // 
-            // checkBoxCheckAll
-            // 
-            this.checkBoxCheckAll.AutoSize = true;
-            this.checkBoxCheckAll.BackColor = System.Drawing.Color.White;
-            this.checkBoxCheckAll.Location = new System.Drawing.Point(9, 7);
-            this.checkBoxCheckAll.Name = "checkBoxCheckAll";
-            this.checkBoxCheckAll.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxCheckAll.TabIndex = 8;
-            this.checkBoxCheckAll.UseVisualStyleBackColor = false;
-            this.checkBoxCheckAll.CheckedChanged += new System.EventHandler(this.checkBoxCheckAll_CheckedChanged);
-            // 
             // is_checked
             // 
             this.is_checked.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
@@ -299,6 +288,17 @@
             this.address.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.address.Width = 500;
             // 
+            // checkBoxCheckAll
+            // 
+            this.checkBoxCheckAll.AutoSize = true;
+            this.checkBoxCheckAll.BackColor = System.Drawing.Color.White;
+            this.checkBoxCheckAll.Location = new System.Drawing.Point(9, 7);
+            this.checkBoxCheckAll.Name = "checkBoxCheckAll";
+            this.checkBoxCheckAll.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxCheckAll.TabIndex = 8;
+            this.checkBoxCheckAll.UseVisualStyleBackColor = false;
+            this.checkBoxCheckAll.CheckedChanged += new System.EventHandler(this.checkBoxCheckAll_CheckedChanged);
+            // 
             // TenancyNotifiesSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -309,6 +309,7 @@
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.MinimizeBox = false;
             this.MinimumSize = new System.Drawing.Size(1010, 300);
             this.Name = "TenancyNotifiesSettingsForm";
             this.Text = "Печать уведомлений";

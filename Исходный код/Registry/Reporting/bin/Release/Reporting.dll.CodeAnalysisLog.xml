@@ -8,9 +8,23 @@
      <Namespaces>
       <Namespace Name="Registry.Reporting">
        <Types>
+        <Type Name="ReporterFactory" Kind="Class" Accessibility="Public" ExternallyVisible="True">
+         <Members>
+          <Member Name="#CreateReporter(Registry.Reporting.ReporterType)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
+           <Messages>
+            <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-01-23 02:23:58Z" FixCategory="Breaking">
+             <Issue Name="Method" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Reporting" File="ReporterFactory.cs" Line="17">'ReporterFactory.CreateReporter(ReporterType)' is coupled with 31 different types from 6 different namespaces. Rewrite or refactor the method to decrease its class coupling, or consider moving the method to one of the other types it is tightly coupled with. A class coupling above 40 indicates poor maintainability, a class coupling between 40 and 30 indicates moderate maintainability, and a class coupling below 30 indicates good maintainability.</Issue>
+            </Message>
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-01-23 02:23:58Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Reporting" File="ReporterFactory.cs" Line="17">'ReporterFactory.CreateReporter(ReporterType)' has a cyclomatic complexity of 28. Rewrite or refactor the method to reduce complexity to 25.</Issue>
+            </Message>
+           </Messages>
+          </Member>
+         </Members>
+        </Type>
         <Type Name="TenancyContractTypes" Kind="Enum" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="OnlyFlagsEnumsShouldHavePluralNames" Category="Microsoft.Naming" CheckId="CA1717" Status="Active" Created="2015-01-23 01:09:28Z" FixCategory="Breaking">
+          <Message TypeName="OnlyFlagsEnumsShouldHavePluralNames" Category="Microsoft.Naming" CheckId="CA1717" Status="Active" Created="2015-01-23 02:23:58Z" FixCategory="Breaking">
            <Issue Certainty="75" Level="Error">If the name 'TenancyContractTypes' is plural, change it to its singular form.</Issue>
           </Message>
          </Messages>
@@ -19,7 +33,7 @@
          <Members>
           <Member Name="#GetFilter()" Kind="Method" Static="False" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-01-23 01:09:28Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-01-23 02:23:58Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Reporting" File="TenancyStatisticFilterForm.cs" Line="80">'TenancyStatisticFilterForm.GetFilter()' has a cyclomatic complexity of 28. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
@@ -34,6 +48,16 @@
   </Target>
  </Targets>
  <Rules>
+  <Rule TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506">
+   <Name>Avoid excessive class coupling</Name>
+   <Description>Types and methods with a high degree of class coupling can be difficult to maintain.</Description>
+   <Resolution Name="Method">{0} is coupled with {1} different types from {2} different namespaces. Rewrite or refactor the method to decrease its class coupling, or consider moving the method to one of the other types it is tightly coupled with. A class coupling above {3} indicates poor maintainability, a class coupling between {3} and {4} indicates moderate maintainability, and a class coupling below {4} indicates good maintainability.</Resolution>
+   <Owner />
+   <Url>http://msdn.microsoft.com/library/bb397994.aspx</Url>
+   <Email>[none]</Email>
+   <MessageLevel Certainty="90">Warning</MessageLevel>
+   <File Name="maintainabilityrules.dll" Version="12.0.0.0" />
+  </Rule>
   <Rule TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502">
    <Name>Avoid excessive complexity</Name>
    <Description>Method implementations that are exceedingly complex increase the challenge of understanding and maintaining code.</Description>

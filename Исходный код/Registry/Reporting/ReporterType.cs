@@ -28,6 +28,11 @@ namespace Registry.Reporting
         TenancyStatisticForCoMSReporter,
         TenancyOrderReporter,
         TenancyExcerptReporter,
-        TenancyNotifiesReporter
+        TenancyNotifiesReporter,
+        ResettleTotalStatisticReporter,
+        ResettleBuildingDemolishingReporter,
+        ResettleEmergencyBuildingsReporter,
+        ResettleShortProcessingReporter,
+        ResettleFullProcessingReporter
     }
 }

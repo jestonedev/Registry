@@ -6,6 +6,7 @@ using Registry.Reporting.RegistryReporters;
 using Registry.Reporting.ClaimsReporters;
 using Registry.Reporting.TenancyReporters;
 using System.Globalization;
+using Registry.Reporting.ResettleReporters;
 
 namespace Registry.Reporting
 {
@@ -59,6 +60,16 @@ namespace Registry.Reporting
                     return new TenancyExcerptReporter();
                 case ReporterType.TenancyNotifiesReporter:
                     return new TenancyNotifiesReporter();
+                case ReporterType.ResettleBuildingDemolishingReporter:
+                    return new ResettleBuildingDemolishingReporter();
+                case ReporterType.ResettleEmergencyBuildingsReporter:
+                    return new ResettleEmergencyBuildingsReporter();
+                case ReporterType.ResettleFullProcessingReporter:
+                    return new ResettleFullProcessingReporter();
+                case ReporterType.ResettleShortProcessingReporter:
+                    return new ResettleShortProcessingReporter();
+                case ReporterType.ResettleTotalStatisticReporter:
+                    return new ResettleTotalStatisticReporter();
             }
             throw new ReporterException(
                 String.Format(CultureInfo.InvariantCulture, "В фабрику ReporterFactory передан неизвестный тип {0}", reporterType.ToString()));

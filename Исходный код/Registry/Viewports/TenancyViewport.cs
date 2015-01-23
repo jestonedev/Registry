@@ -1154,7 +1154,9 @@ namespace Registry.Viewport
 
         public override bool HasTenancyExcerptReport()
         {
-            return (v_tenancies.Position > -1);
+            return false;
+            //временно убрал доступ к выписке, необходимо согласование
+            //return (v_tenancies.Position > -1);
         }
 
         public override void TenancyContract17xReportGenerate(Reporting.TenancyContractTypes tenancyContractType)

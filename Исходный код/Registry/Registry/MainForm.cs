@@ -832,6 +832,31 @@ namespace Registry
             RunReport(Reporting.ReporterType.TenancyNotifiesReporter);
         }
 
+        private void ribbonButtonResettleTotalStatistic_Click(object sender, EventArgs e)
+        {
+            RunReport(Reporting.ReporterType.ResettleTotalStatisticReporter);
+        }
+
+        private void ribbonButtonResettleBuildingDemolishing_Click(object sender, EventArgs e)
+        {
+            RunReport(Reporting.ReporterType.ResettleBuildingDemolishingReporter);
+        }
+
+        private void ribbonButtonEmergencyBuildings_Click(object sender, EventArgs e)
+        {
+            RunReport(Reporting.ReporterType.ResettleEmergencyBuildingsReporter);
+        }
+
+        private void ribbonButtonResettleShortProcessing_Click(object sender, EventArgs e)
+        {
+            RunReport(Reporting.ReporterType.ResettleShortProcessingReporter);
+        }
+
+        private void ribbonButtonResettleFullProcessing_Click(object sender, EventArgs e)
+        {
+            RunReport(Reporting.ReporterType.ResettleFullProcessingReporter);
+        }
+
         private void ribbonButton1711_Click(object sender, EventArgs e)
         {
             if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
