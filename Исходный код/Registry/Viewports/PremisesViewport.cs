@@ -910,10 +910,10 @@ namespace Registry.Viewport
                 viewportState = ViewportState.ReadState;
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.ForceCloseDetachedViewports();
-                CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building, true);
-                CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building, true);
-                CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
-                CalcDataModelResettleAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
+                CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(EntityType.Building, id_building, true);
+                CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building, id_building, true);
+                CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, true);
+                CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, true);
             }
         }
 
@@ -1002,15 +1002,15 @@ namespace Registry.Viewport
                         }
                     }
                     viewportState = ViewportState.ReadState;
-                    CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
-                    CalcDataModelResettleAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
+                    CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
+                    CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
                     break;
             }
             is_editable = true;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
-            CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building, premise.IdBuilding);
-            CalcDataModelPremiseSubPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, premise.IdPremises);
+            CalcDataModelPremiseSubPremisesSumArea.GetInstance().Refresh(EntityType.Premise, premise.IdPremises, true);
+            CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building, premise.IdBuilding, true);
         }
 
         public override bool CanCancelRecord()

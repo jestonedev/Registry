@@ -430,7 +430,7 @@ namespace Registry.Viewport
             sync_views = true;
             MenuCallback.EditingStateUpdate();
             if (ParentType == ParentTypeEnum.Premises || ParentType == ParentTypeEnum.Building)
-                CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building,
+                CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building,
                     Int32.Parse(ParentRow["id_building"].ToString(), CultureInfo.InvariantCulture), true);
         }
 

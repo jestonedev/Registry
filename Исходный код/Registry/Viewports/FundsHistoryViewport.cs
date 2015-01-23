@@ -602,12 +602,12 @@ namespace Registry.Viewport
             is_editable = true;
             viewportState = ViewportState.ReadState;
             if (ParentType == ParentTypeEnum.Building || ParentType == ParentTypeEnum.Premises)
-                CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"], true);
+                CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(EntityType.Building, (int)ParentRow["id_building"], true);
             if (ParentType == ParentTypeEnum.Building)
-                CalcDataModelBuildingsCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"], true);
+                CalcDataModelBuildingsCurrentFunds.GetInstance().Refresh(EntityType.Building, (int)ParentRow["id_building"], true);
             else
                 if (ParentType == ParentTypeEnum.Premises)
-                    CalcDataModelPremisesCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, (int)ParentRow["id_premises"], true);
+                    CalcDataModelPremisesCurrentFunds.GetInstance().Refresh(EntityType.Premise, (int)ParentRow["id_premises"], true);
             MenuCallback.EditingStateUpdate();
         }
 
@@ -670,12 +670,12 @@ namespace Registry.Viewport
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.ForceCloseDetachedViewports();
                 if (ParentType == ParentTypeEnum.Building || ParentType == ParentTypeEnum.Premises)
-                    CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"], true);
+                    CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(EntityType.Building, (int)ParentRow["id_building"], true);
                 if (ParentType == ParentTypeEnum.Building)
-                    CalcDataModelBuildingsCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, (int)ParentRow["id_building"], true);
+                    CalcDataModelBuildingsCurrentFunds.GetInstance().Refresh(EntityType.Building, (int)ParentRow["id_building"], true);
                 else
                     if (ParentType == ParentTypeEnum.Premises)
-                        CalcDataModelPremisesCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Premise, (int)ParentRow["id_premises"], true);
+                        CalcDataModelPremisesCurrentFunds.GetInstance().Refresh(EntityType.Premise, (int)ParentRow["id_premises"], true);
             }
         }
 

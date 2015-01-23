@@ -385,11 +385,11 @@ namespace Registry.Viewport
             }
             sync_views = true;
             MenuCallback.EditingStateUpdate();
-            CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
-            CalcDataModelResettleAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
-            CalcDataModelPremiseSubPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Premise,
+            CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
+            CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
+            CalcDataModelPremiseSubPremisesSumArea.GetInstance().Refresh(EntityType.Premise,
                 Int32.Parse(ParentRow["id_premises"].ToString(), CultureInfo.InvariantCulture), true);
-            CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building,
+            CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building,
                 Int32.Parse(ParentRow["id_building"].ToString(), CultureInfo.InvariantCulture), true);
         }
 

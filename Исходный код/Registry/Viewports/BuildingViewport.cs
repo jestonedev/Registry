@@ -180,10 +180,10 @@ namespace Registry.Viewport
                         v_buildingsPremisesFunds.Find("id_building", ((DataRowView)v_buildings[v_buildings.Position])["id_building"]);
                 if (position != -1)
                 {
-                    decimal social_count = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["social_premises_count"]);
-                    decimal special_count = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["special_premises_count"]);
-                    decimal commercial_count = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["commercial_premises_count"]);
-                    decimal other_count = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["other_premises_count"]);
+                    decimal social_count = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["social_premises_count"], CultureInfo.InvariantCulture);
+                    decimal special_count = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["special_premises_count"], CultureInfo.InvariantCulture);
+                    decimal commercial_count = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["commercial_premises_count"], CultureInfo.InvariantCulture);
+                    decimal other_count = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["other_premises_count"], CultureInfo.InvariantCulture);
                     numericUpDownSocialPremisesCount.Minimum = social_count;
                     numericUpDownSpecialPremisesCount.Minimum = special_count;
                     numericUpDownOtherPremisesCount.Minimum = other_count;
@@ -232,7 +232,7 @@ namespace Registry.Viewport
                     position = v_buildingsPremisesSumArea.Find("id_building", ((DataRowView)v_buildings[v_buildings.Position])["id_building"]);
                 if (position != -1)
                 {
-                    decimal value = Convert.ToDecimal((double)((DataRowView)v_buildingsPremisesSumArea[position])["sum_area"]);
+                    decimal value = Convert.ToDecimal((double)((DataRowView)v_buildingsPremisesSumArea[position])["sum_area"], CultureInfo.InvariantCulture);
                     numericUpDownMunicipalArea.Minimum = value;
                     numericUpDownMunicipalArea.Maximum = value;
                     numericUpDownMunicipalArea.Value = value;
@@ -946,8 +946,8 @@ namespace Registry.Viewport
                         }
                     }
                     viewportState = ViewportState.ReadState;
-                    CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
-                    CalcDataModelResettleAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
+                    CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
+                    CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
                     break;
             }
             MenuCallback.EditingStateUpdate();
@@ -1041,8 +1041,8 @@ namespace Registry.Viewport
                 viewportState = ViewportState.ReadState;
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.ForceCloseDetachedViewports();
-                CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
-                CalcDataModelResettleAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
+                CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
+                CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
             }
         }
 

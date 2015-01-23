@@ -19,6 +19,18 @@ namespace Registry.DataModels
                    select table_row;
         }
 
+        public static IEnumerable<DataRow> FilterRows(DataTable table, EntityType entity, int? idObject)
+        {
+            return from row in FilterRows(table)
+                   where entity == EntityType.Unknown ? true :
+                         entity == EntityType.Building ? row.Field<int?>("id_building") == idObject :
+                         entity == EntityType.Premise ? row.Field<int?>("id_premises") == idObject :
+                         entity == EntityType.SubPremise ? row.Field<int?>("id_sub_premises") == idObject :
+                         entity == EntityType.TenancyProcess ? row.Field<int?>("id_process") == idObject : 
+                         entity == EntityType.ResettleProcess ? row.Field<int?>("id_process") == idObject : false
+                   select row;
+        }
+
         public static IEnumerable<int> Intersect(IEnumerable<int> list1, IEnumerable<int> list2)
         {
             if (list1 != null && list2 != null)
@@ -462,6 +474,82 @@ namespace Registry.DataModels
                          (ownership_rights_row.Field<int>("id_ownership_right_type") == idOwnershipType) || 
                           buildingdIds.Contains(premises_row.Field<int>("id_building"))
                    select ownership_premises_assoc_row.Field<int>("id_premises");
+        }
+
+        /// <summary>
+        /// Идентификаторы объектов недвижимости, исключенных из муниципальной собственности
+        /// </summary>
+        /// <param name="objectAssocDataRows">Список строк из ассоциативной модели реквизитов</param>
+        /// <param name="entity">Тип ассоциативной модели</param>
+        /// <returns>Перечень идентификаторов муниципальных объектов</returns>
+        public static IEnumerable<int> ObjectIDsExcludedFromMunicipal(IEnumerable<DataRow> objectAssocDataRows, EntityType entity)
+        {
+            var restrictions = DataModelHelper.FilterRows(RestrictionsDataModel.GetInstance().Select());
+            string fieldName = null;
+            if (entity == EntityType.Premise)
+                fieldName = "id_premises";
+            else
+                if (entity == EntityType.Building)
+                    fieldName = "id_building";
+                else
+                    if (entity == EntityType.SubPremise)
+                        fieldName = "id_sub_premises";
+            var restrictions_max_date = from restrictions_assoc_row in objectAssocDataRows
+                                                 join restrictions_row in restrictions
+                                                 on restrictions_assoc_row.Field<int>("id_restriction") equals restrictions_row.Field<int>("id_restriction")
+                                                 where new int[] { 1, 2 }.Contains(restrictions_row.Field<int>("id_restriction_type"))
+                                                 group restrictions_row.Field<DateTime>("date") by restrictions_assoc_row.Field<int>(fieldName) into gs
+                                                 select new
+                                                 {
+                                                     id = gs.Key,
+                                                     date = gs.Max()
+                                                 };
+            var exclude_from_municipal = from restrictions_row in restrictions
+                                         join restrictions__assoc_row in objectAssocDataRows
+                                         on restrictions_row.Field<int>("id_restriction")
+                                         equals restrictions__assoc_row.Field<int>("id_restriction")
+                                         join rmd_row in restrictions_max_date
+                                         on new
+                                         {
+                                             id = restrictions__assoc_row.Field<int>(fieldName),
+                                             date = restrictions_row.Field<DateTime>("date")
+                                         } equals
+                                         new
+                                         {
+                                             id = rmd_row.id,
+                                             date = rmd_row.date
+                                         }
+                                         where restrictions_row.Field<int>("id_restriction_type") == 2
+                                         select restrictions__assoc_row.Field<int>(fieldName);
+            return exclude_from_municipal;
+        }
+
+        /// <summary>
+        /// Максимальные идентификаторы фонда объектов недвижимости
+        /// </summary>
+        /// <param name="objectAssocDataRows">Список строк из ассоциативной модели фондов</param>
+        /// <param name="entity">Тип ассоциативной модели</param>
+        /// <returns>Возвращает максимальные id_fund, не имеющий реквизита исключения</returns>
+        public static IEnumerable<FundObjectAssoc> MaxFundIDsByObject(IEnumerable<DataRow> objectAssocDataRows, EntityType entity)
+        {
+            string fieldName = null;
+            if (entity == EntityType.Premise)
+                fieldName = "id_premises";
+            else
+                if (entity == EntityType.Building)
+                    fieldName = "id_building";
+                else
+                    if (entity == EntityType.SubPremise)
+                        fieldName = "id_sub_premises";
+            var funds_history = DataModelHelper.FilterRows(FundsHistoryDataModel.GetInstance().Select());
+            var max_id_by_object = from assoc_row in objectAssocDataRows
+                                     join fund_history_row in funds_history
+                                        on assoc_row.Field<int>("id_fund") equals fund_history_row.Field<int>("id_fund")
+                                     where fund_history_row.Field<DateTime?>("exclude_restriction_date") == null
+                                     group assoc_row.Field<int>("id_fund") by
+                                             assoc_row.Field<int>(fieldName) into gs
+                                     select new FundObjectAssoc(gs.Key, gs.Max());
+            return max_id_by_object;
         }
 
         /// <summary>

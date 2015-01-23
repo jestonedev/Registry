@@ -6,6 +6,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using Registry.Entities;
 
 namespace Registry.CalcDataModels
 {
@@ -18,7 +19,7 @@ namespace Registry.CalcDataModels
         private CalcDataModelTenancyNotifiesMaxDate()
         {
             Table = InitializeTable();
-            Refresh(CalcDataModelFilterEnity.All, null);
+            Refresh(EntityType.Unknown, null, false);
         }
 
         private static DataTable InitializeTable()
@@ -38,11 +39,7 @@ namespace Registry.CalcDataModels
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelTenancyNotifiesMaxDate");
             CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;
             // Фильтруем удаленные строки
-            var tenancy_notifies = from tenancy_notifies_row in DataModelHelper.FilterRows(TenancyNotifiesDataModel.GetInstance().Select())
-                                   where (config.Entity == CalcDataModelFilterEnity.Tenancy ? tenancy_notifies_row.Field<int>("id_process") == config.IdObject :
-                                            config.Entity == CalcDataModelFilterEnity.All ? true : false)
-                                   select tenancy_notifies_row;
-
+            var tenancy_notifies = DataModelHelper.FilterRows(TenancyNotifiesDataModel.GetInstance().Select(), config.Entity, config.IdObject);    
             // Вычисляем агрегационную информацию
             var result = from tenancy_notifies_row in tenancy_notifies
                          group tenancy_notifies_row.Field<DateTime>("notify_date") by

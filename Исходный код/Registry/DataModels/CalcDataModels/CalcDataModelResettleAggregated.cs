@@ -5,6 +5,7 @@ using System.Text;
 using System.Data;
 using Registry.DataModels;
 using System.Globalization;
+using Registry.Entities;
 
 namespace Registry.CalcDataModels
 {
@@ -17,7 +18,7 @@ namespace Registry.CalcDataModels
         private CalcDataModelResettleAggregated()
         {
             Table = InitializeTable();
-            Refresh(CalcDataModelFilterEnity.All, null);            
+            Refresh(EntityType.Unknown, null, false);            
         }
 
         private static DataTable InitializeTable()
@@ -39,14 +40,8 @@ namespace Registry.CalcDataModels
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModeTenancyAggregated");
             CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;
             // Фильтруем удаленные строки
-            var resettles = from resettles_row in DataModelHelper.FilterRows(ResettleProcessesDataModel.GetInstance().Select())
-                            where (config.Entity == CalcDataModelFilterEnity.Resettle ?
-                                  resettles_row.Field<int>("id_process") == config.IdObject : true)
-                            select resettles_row;
-            var resettle_persons = from resettle_persons_row in DataModelHelper.FilterRows(ResettlePersonsDataModel.GetInstance().Select())
-                                   where (config.Entity == CalcDataModelFilterEnity.Tenancy ?
-                                           resettle_persons_row.Field<int>("id_process") == config.IdObject : true)
-                                   select resettle_persons_row;
+            var resettles = DataModelHelper.FilterRows(ResettleProcessesDataModel.GetInstance().Select(), config.Entity, config.IdObject);
+            var resettle_persons = DataModelHelper.FilterRows(ResettlePersonsDataModel.GetInstance().Select(), config.Entity, config.IdObject);
             // Вычисляем агрегационную информацию
             var resettlers = from resettle_persons_row in resettle_persons
                              group (resettle_persons_row.Field<string>("surname") + " " + 
@@ -61,10 +56,10 @@ namespace Registry.CalcDataModels
                              };
             var addresses_from = DataModelHelper.AggregateAddressByIdProcess(ResettleBuildingsFromAssocDataModel.GetInstance(),
                 ResettlePremisesFromAssocDataModel.GetInstance(),
-                ResettleSubPremisesFromAssocDataModel.GetInstance(), config.Entity == CalcDataModelFilterEnity.Resettle ? config.IdObject : null);
+                ResettleSubPremisesFromAssocDataModel.GetInstance(), config.Entity == EntityType.ResettleProcess ? config.IdObject : null);
             var addresses_to = DataModelHelper.AggregateAddressByIdProcess(ResettleBuildingsToAssocDataModel.GetInstance(),
                 ResettlePremisesToAssocDataModel.GetInstance(),
-                ResettleSubPremisesToAssocDataModel.GetInstance(), config.Entity == CalcDataModelFilterEnity.Resettle ? config.IdObject : null);
+                ResettleSubPremisesToAssocDataModel.GetInstance(), config.Entity == EntityType.ResettleProcess ? config.IdObject : null);
             var result = from resettles_row in resettles
                          join resettlers_row in resettlers
                          on resettles_row.Field<int>("id_process") equals resettlers_row.id_process into a

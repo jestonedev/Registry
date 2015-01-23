@@ -6,6 +6,7 @@ using Registry.DataModels;
 using System.Data;
 using System.ComponentModel;
 using System.Windows.Forms;
+using Registry.Entities;
 
 namespace Registry.CalcDataModels
 {
@@ -24,21 +25,22 @@ namespace Registry.CalcDataModels
             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CalculationComplete);
         }
 
-        public void Refresh(CalcDataModelFilterEnity entity, int? idObject, bool removeDependenceEntities = false)
+        public void Refresh(EntityType entity, int? idObject, bool removeDependenceEntities)
         {
             while (worker.IsBusy)
                 Application.DoEvents();
             if (removeDependenceEntities)
             {
-                if (entity == CalcDataModelFilterEnity.All)
+                if (entity == EntityType.Unknown)
                     Table.Clear();
                 else
                 {
                     var remove_rows = (from row in Table.AsEnumerable()
-                                       where entity == CalcDataModelFilterEnity.Building ? row.Field<int?>("id_building") == idObject :
-                                             entity == CalcDataModelFilterEnity.Premise ? row.Field<int?>("id_premises") == idObject :
-                                             entity == CalcDataModelFilterEnity.SubPremise ? row.Field<int?>("id_sub_premises") == idObject :
-                                             entity == CalcDataModelFilterEnity.Tenancy ? row.Field<int?>("id_process") == idObject : false
+                                       where entity == EntityType.Building ? row.Field<int?>("id_building") == idObject :
+                                             entity == EntityType.Premise ? row.Field<int?>("id_premises") == idObject :
+                                             entity == EntityType.SubPremise ? row.Field<int?>("id_sub_premises") == idObject :
+                                             entity == EntityType.TenancyProcess ? row.Field<int?>("id_process") == idObject : 
+                                             entity == EntityType.ResettleProcess ? row.Field<int?>("id_process") == idObject : false
                                        select row);
                     for (int i = remove_rows.Count() - 1; i >= 0; i--)
                         remove_rows.ElementAt(i).Delete();

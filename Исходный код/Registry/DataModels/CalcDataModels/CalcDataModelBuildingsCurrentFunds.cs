@@ -5,6 +5,7 @@ using System.Text;
 using System.Data;
 using Registry.DataModels;
 using System.Globalization;
+using Registry.Entities;
 
 namespace Registry.CalcDataModels
 {
@@ -17,7 +18,7 @@ namespace Registry.CalcDataModels
         private CalcDataModelBuildingsCurrentFunds(): base()
         {
             Table = InitializeTable();
-            Refresh(CalcDataModelFilterEnity.All, null);
+            Refresh(EntityType.Unknown, null, false);
         }
 
         private static DataTable InitializeTable()
@@ -38,32 +39,17 @@ namespace Registry.CalcDataModels
             CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;
             // Фильтруем удаленные строки
             var funds_history = DataModelHelper.FilterRows(FundsHistoryDataModel.GetInstance().Select());
-            var funds_buildings_assoc = from funds_buildings_assoc_row in DataModelHelper.FilterRows(FundsBuildingsAssocDataModel.GetInstance().Select())
-                                        where (config.Entity == CalcDataModelFilterEnity.Building ? funds_buildings_assoc_row.Field<int>("id_building") == config.IdObject :
-                                               config.Entity == CalcDataModelFilterEnity.All ? true : false)
-                                        select funds_buildings_assoc_row;
+            var funds_buildings_assoc = DataModelHelper.FilterRows(FundsBuildingsAssocDataModel.GetInstance().Select(), config.Entity, config.IdObject);
             // Вычисляем агрегационную информацию
-            var max_id_by_buldings = from funds_buildings_assoc_row in funds_buildings_assoc
-                                     join fund_history_row in funds_history
-                                     on funds_buildings_assoc_row.Field<int>("id_fund") equals fund_history_row.Field<int>("id_fund")
-                                     where fund_history_row.Field<DateTime?>("exclude_restriction_date") == null
-                                     group funds_buildings_assoc_row.Field<int>("id_fund") by
-                                             funds_buildings_assoc_row.Field<int>("id_building") into gs
-                                     select new
-                                     {
-                                         id_building = gs.Key,
-                                         id_fund = gs.Max()
-                                     };
+            var max_id_by_buldings = DataModelHelper.MaxFundIDsByObject(funds_buildings_assoc, EntityType.Building);          
             var result = from fund_history_row in funds_history
                          join max_id_by_building_row in max_id_by_buldings
-                                       on fund_history_row.Field<int>("id_fund") equals max_id_by_building_row.id_fund
+                                       on fund_history_row.Field<int>("id_fund") equals max_id_by_building_row.IdFund
                          select new
                          {
-                             id_building = max_id_by_building_row.id_building,
-                             id_fund = max_id_by_building_row.id_fund,
-                             id_fund_type = fund_history_row.Field<int>("id_fund_type"),
-                             protocol_number = fund_history_row.Field<string>("protocol_number"),
-                             protocol_date = fund_history_row.Field<DateTime?>("protocol_date"),
+                             id_building = max_id_by_building_row.IdObject,
+                             id_fund = max_id_by_building_row.IdFund,
+                             id_fund_type = fund_history_row.Field<int>("id_fund_type")
                          };
             // Заполняем таблицу изменений
             DataTable table = InitializeTable();

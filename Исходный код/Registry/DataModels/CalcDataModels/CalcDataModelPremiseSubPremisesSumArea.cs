@@ -5,6 +5,7 @@ using System.Text;
 using Registry.DataModels;
 using System.Data;
 using System.Globalization;
+using Registry.Entities;
 
 namespace Registry.CalcDataModels
 {
@@ -19,7 +20,7 @@ namespace Registry.CalcDataModels
             : base()
         {
             Table = InitializeTable();
-            Refresh(CalcDataModelFilterEnity.All, null);
+            Refresh(EntityType.Unknown, null, false);
         }
 
         private static DataTable InitializeTable()
@@ -39,10 +40,7 @@ namespace Registry.CalcDataModels
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelPremiseSubPremisesSumArea");
             CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;
             // Фильтруем удаленные строки
-            var premises = from premises_row in DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select())
-                            where (config.Entity == CalcDataModelFilterEnity.Premise ? premises_row.Field<int>("id_premises") == config.IdObject :
-                                   config.Entity == CalcDataModelFilterEnity.All ? true : false)
-                            select premises_row;
+            var premises = DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select(), config.Entity, config.IdObject);
             var sub_premises = DataModelHelper.FilterRows(SubPremisesDataModel.GetInstance().Select());
             // Вычисляем агрегационную информацию
             var result = from premises_row in premises

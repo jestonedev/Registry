@@ -286,8 +286,8 @@ namespace Registry.Viewport
                     return;
                 ((DataRowView)v_buildings[v_buildings.Position]).Delete();
                 MenuCallback.ForceCloseDetachedViewports();
-                CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
-                CalcDataModelResettleAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
+                CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
+                CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
             }
         }
 
@@ -493,7 +493,7 @@ namespace Registry.Viewport
             sync_views = true;
             MenuCallback.EditingStateUpdate();
             if (ParentType == ParentTypeEnum.ResettleProcess)
-                CalcDataModelResettleAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Resettle, (int)ParentRow["id_process"], true);
+                CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.ResettleProcess, (int)ParentRow["id_process"], true);
         }
 
         public override bool CanDuplicate()

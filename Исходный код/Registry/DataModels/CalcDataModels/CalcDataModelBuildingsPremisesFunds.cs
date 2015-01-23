@@ -7,6 +7,7 @@ using System.Data.Common;
 using System.Windows.Forms;
 using Registry.DataModels;
 using System.Globalization;
+using Registry.Entities;
 
 namespace Registry.CalcDataModels
 {
@@ -19,7 +20,7 @@ namespace Registry.CalcDataModels
         private CalcDataModelBuildingsPremisesFunds()
         {
             Table = InitializeTable();
-            Refresh(CalcDataModelFilterEnity.All, null);
+            Refresh(EntityType.Unknown, null, false);
         }
 
         private static DataTable InitializeTable()
@@ -42,38 +43,23 @@ namespace Registry.CalcDataModels
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelBuildingsPremisesFunds");
             CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;
             // Фильтруем удаленные строки
-            var buildings = from buildings_row in DataModelHelper.FilterRows(BuildingsDataModel.GetInstance().Select())
-                            where (config.Entity == CalcDataModelFilterEnity.Building ? buildings_row.Field<int>("id_building") == config.IdObject :
-                                   config.Entity == CalcDataModelFilterEnity.All ? true : false)
-                            select buildings_row;
+            var buildings = DataModelHelper.FilterRows(BuildingsDataModel.GetInstance().Select(), config.Entity, config.IdObject);
             var premises = DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select());
             var funds_history = DataModelHelper.FilterRows(FundsHistoryDataModel.GetInstance().Select());
             var funds_premises_assoc = DataModelHelper.FilterRows(FundsPremisesAssocDataModel.GetInstance().Select());
             // Вычисляем агрегационную информацию
-            var max_id_by_premises = from funds_premises_assoc_row in funds_premises_assoc
-                                     join fund_history_row in funds_history
-                                        on funds_premises_assoc_row.Field<int>("id_fund") equals fund_history_row.Field<int>("id_fund")
-                                     where fund_history_row.Field<DateTime?>("exclude_restriction_date") == null
-                                     group funds_premises_assoc_row.Field<int>("id_fund") by
-                                             funds_premises_assoc_row.Field<int>("id_premises") into gs
-                                     select new
-                                     {
-                                         id_premises = gs.Key,
-                                         id_fund = gs.Max()
-                                     };
-            var current_documents = from fund_history_row in funds_history
+            var max_id_by_premises = DataModelHelper.MaxFundIDsByObject(funds_premises_assoc, EntityType.Premise);  
+            var current_funds = from fund_history_row in funds_history
                                     join max_id_by_premises_row in max_id_by_premises
-                                       on fund_history_row.Field<int>("id_fund") equals max_id_by_premises_row.id_fund
+                                       on fund_history_row.Field<int>("id_fund") equals max_id_by_premises_row.IdFund
                                     select new
                                     {
-                                        id_premises = max_id_by_premises_row.id_premises,
-                                        id_fund = max_id_by_premises_row.id_fund,
+                                        id_premises = max_id_by_premises_row.IdObject,
+                                        id_fund = max_id_by_premises_row.IdFund,
                                         id_fund_type = fund_history_row.Field<int>("id_fund_type"),
-                                        protocol_number = fund_history_row.Field<string>("protocol_number"),
-                                        protocol_date = fund_history_row.Field<DateTime?>("protocol_date"),
                                     };
             var social_premises = from premises_row in premises
-                                  join agg_row in current_documents
+                                  join agg_row in current_funds
                                   on premises_row.Field<int>("id_premises") equals agg_row.id_premises
                                   where agg_row.id_fund_type == 1
                                   group premises_row.Field<int>("id_premises") by premises_row.Field<int>("id_building") into gs
@@ -83,8 +69,8 @@ namespace Registry.CalcDataModels
                                       social_premises_count = gs.Count()
                                   };
             var commercial_premises = from premises_row in premises
-                                      join agg_row in current_documents
-                                  on premises_row.Field<int>("id_premises") equals agg_row.id_premises
+                                      join agg_row in current_funds
+                                      on premises_row.Field<int>("id_premises") equals agg_row.id_premises
                                       where agg_row.id_fund_type == 2
                                       group premises_row.Field<int>("id_premises") by premises_row.Field<int>("id_building") into gs
                                       select new
@@ -93,8 +79,8 @@ namespace Registry.CalcDataModels
                                           commercial_premises_count = gs.Count()
                                       };
             var special_premises = from premises_row in premises
-                                   join agg_row in current_documents
-                                  on premises_row.Field<int>("id_premises") equals agg_row.id_premises
+                                   join agg_row in current_funds
+                                   on premises_row.Field<int>("id_premises") equals agg_row.id_premises
                                    where agg_row.id_fund_type == 3
                                    group premises_row.Field<int>("id_premises") by premises_row.Field<int>("id_building") into gs
                                    select new
@@ -103,8 +89,8 @@ namespace Registry.CalcDataModels
                                        special_premises_count = gs.Count()
                                    };
             var other_premises = from premises_row in premises
-                                 join agg_row in current_documents
-                                  on premises_row.Field<int>("id_premises") equals agg_row.id_premises
+                                 join agg_row in current_funds
+                                 on premises_row.Field<int>("id_premises") equals agg_row.id_premises
                                  where agg_row.id_fund_type == 4
                                  group premises_row.Field<int>("id_premises") by premises_row.Field<int>("id_building") into gs
                                  select new

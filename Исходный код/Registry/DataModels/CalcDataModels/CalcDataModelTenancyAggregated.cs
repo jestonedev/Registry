@@ -5,6 +5,7 @@ using System.Text;
 using System.Data;
 using Registry.DataModels;
 using System.Globalization;
+using Registry.Entities;
 
 namespace Registry.CalcDataModels
 {
@@ -17,7 +18,7 @@ namespace Registry.CalcDataModels
         private CalcDataModelTenancyAggregated()
         {
             Table = InitializeTable();
-            Refresh(CalcDataModelFilterEnity.All, null);            
+            Refresh(EntityType.Unknown, null, false);            
         }
 
         private static DataTable InitializeTable()
@@ -38,14 +39,8 @@ namespace Registry.CalcDataModels
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModeTenancyAggregated");
             CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;
             // Фильтруем удаленные строки
-            var tenancies = from tenancies_row in DataModelHelper.FilterRows(TenancyProcessesDataModel.GetInstance().Select()) 
-                            where (config.Entity == CalcDataModelFilterEnity.Tenancy ?
-                                  tenancies_row.Field<int>("id_process") == config.IdObject : true)
-                            select tenancies_row;
-            var tenancy_persons = from tenancy_persons_row in DataModelHelper.FilterRows(TenancyPersonsDataModel.GetInstance().Select())
-                                  where (config.Entity == CalcDataModelFilterEnity.Tenancy ?
-                                          tenancy_persons_row.Field<int>("id_process") == config.IdObject : true)
-                                  select tenancy_persons_row; 
+            var tenancies = DataModelHelper.FilterRows(TenancyProcessesDataModel.GetInstance().Select(), config.Entity, config.IdObject);    
+            var tenancy_persons = DataModelHelper.FilterRows(TenancyPersonsDataModel.GetInstance().Select(), config.Entity, config.IdObject);
             // Вычисляем агрегационную информацию
             var tenants = from tenancy_persons_row in tenancy_persons
                           where tenancy_persons_row.Field<int?>("id_kinship") == 1
@@ -56,7 +51,7 @@ namespace Registry.CalcDataModels
                               tenant = (gs.First().Field<string>("surname")+" "+gs.First().Field<string>("name")+" "+gs.First().Field<string>("patronymic")).Trim()
                           };         
             var addresses = DataModelHelper.AggregateAddressByIdProcess(TenancyBuildingsAssocDataModel.GetInstance(), TenancyPremisesAssocDataModel.GetInstance(),
-                TenancySubPremisesAssocDataModel.GetInstance(), config.Entity == CalcDataModelFilterEnity.Tenancy ? config.IdObject : null);
+                TenancySubPremisesAssocDataModel.GetInstance(), config.Entity == EntityType.TenancyProcess ? config.IdObject : null);
             var result = from tenancies_row in tenancies
                          join tenants_row in tenants
                          on tenancies_row.Field<int>("id_process") equals tenants_row.id_process into sp_t

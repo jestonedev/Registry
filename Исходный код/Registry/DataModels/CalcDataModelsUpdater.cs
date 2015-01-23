@@ -1,4 +1,5 @@
 ﻿using Registry.CalcDataModels;
+using Registry.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,42 +22,42 @@ namespace Registry.DataModels
                     {
                         if (CalcDataModelBuildingsCurrentFunds.HasInstance() && CalcDataModelBuildingsCurrentFunds.GetInstance().DefferedUpdate)
                         {
-                            CalcDataModelBuildingsCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
+                            CalcDataModelBuildingsCurrentFunds.GetInstance().Refresh(EntityType.Unknown, null, true);
                             CalcDataModelBuildingsCurrentFunds.GetInstance().DefferedUpdate = false;
-                        }
-                        if (CalcDataModelBuildingsPremisesFunds.HasInstance() && CalcDataModelBuildingsPremisesFunds.GetInstance().DefferedUpdate)
-                        {
-                            CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
-                            CalcDataModelBuildingsPremisesFunds.GetInstance().DefferedUpdate = false;
-                        }
-                        if (CalcDataModelBuildingsPremisesSumArea.HasInstance() && CalcDataModelBuildingsPremisesSumArea.GetInstance().DefferedUpdate)
-                        {
-                            CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
-                            CalcDataModelBuildingsPremisesSumArea.GetInstance().DefferedUpdate = false;
                         }
                         if (CalcDataModelPremisesCurrentFunds.HasInstance() && CalcDataModelPremisesCurrentFunds.GetInstance().DefferedUpdate)
                         {
-                            CalcDataModelPremisesCurrentFunds.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
+                            CalcDataModelPremisesCurrentFunds.GetInstance().Refresh(EntityType.Unknown, null, true);
                             CalcDataModelPremisesCurrentFunds.GetInstance().DefferedUpdate = false;
+                        }
+                        if (CalcDataModelBuildingsPremisesFunds.HasInstance() && CalcDataModelBuildingsPremisesFunds.GetInstance().DefferedUpdate)
+                        {
+                            CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(EntityType.Unknown, null, true);
+                            CalcDataModelBuildingsPremisesFunds.GetInstance().DefferedUpdate = false;
                         }
                         if (CalcDataModelPremiseSubPremisesSumArea.HasInstance() && CalcDataModelPremiseSubPremisesSumArea.GetInstance().DefferedUpdate)
                         {
-                            CalcDataModelPremiseSubPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
+                            CalcDataModelPremiseSubPremisesSumArea.GetInstance().Refresh(EntityType.Unknown, null, true);
                             CalcDataModelPremiseSubPremisesSumArea.GetInstance().DefferedUpdate = false;
+                        }
+                        if (CalcDataModelBuildingsPremisesSumArea.HasInstance() && CalcDataModelBuildingsPremisesSumArea.GetInstance().DefferedUpdate)
+                        {
+                            CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Unknown, null, true);
+                            CalcDataModelBuildingsPremisesSumArea.GetInstance().DefferedUpdate = false;
                         }
                         if (CalcDataModelTenancyAggregated.HasInstance() && CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate)
                         {
-                            CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
+                            CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, true);
                             CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate = false;
                         }
                         if (CalcDataModelResettleAggregated.HasInstance() && CalcDataModelResettleAggregated.GetInstance().DefferedUpdate)
                         {
-                            CalcDataModelResettleAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
+                            CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, true);
                             CalcDataModelResettleAggregated.GetInstance().DefferedUpdate = false;
                         }
                         if (CalcDataModelTenancyNotifiesMaxDate.HasInstance() && CalcDataModelTenancyNotifiesMaxDate.GetInstance().DefferedUpdate)
                         {
-                            CalcDataModelTenancyNotifiesMaxDate.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
+                            CalcDataModelTenancyNotifiesMaxDate.GetInstance().Refresh(EntityType.Unknown, null, true);
                             CalcDataModelTenancyNotifiesMaxDate.GetInstance().DefferedUpdate = false;
                         }
                     }, null);

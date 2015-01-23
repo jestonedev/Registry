@@ -345,10 +345,10 @@ namespace Registry.Viewport
                 MenuCallback.ForceCloseDetachedViewports();
                 if (ParentType == ParentTypeEnum.ResettleProcess)
                 {
-                    CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building, true);
-                    CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building, id_building, true);
-                    CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
-                    CalcDataModelResettleAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null);
+                    CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(EntityType.Building, id_building, true);
+                    CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building, id_building, true);
+                    CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
+                    CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
                 }
             }
         }
@@ -526,7 +526,7 @@ namespace Registry.Viewport
             MenuCallback.EditingStateUpdate();
             // Обновляем зависимую агрегационную модель
             if (ParentType == ParentTypeEnum.ResettleProcess)
-                CalcDataModelResettleAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.Resettle, (int)ParentRow["id_process"], true);
+                CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.ResettleProcess, (int)ParentRow["id_process"], true);
         }
 
         public override bool CanInsertRecord()

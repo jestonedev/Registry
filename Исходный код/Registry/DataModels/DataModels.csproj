@@ -79,7 +79,6 @@
     <Compile Include="DataModels\ClaimStateTypesRelationsDataModel.cs" />
     <Compile Include="DataModels\TenancyNotifiesDataModel.cs" />
     <Compile Include="DataModels\TenancyReasonsDataModel.cs" />
-    <Compile Include="DataModels\DataModelCalculateEnity.cs" />
     <Compile Include="DataModelException.cs" />
     <Compile Include="DataModels\DataModel.cs" />
     <Compile Include="DataModels\DataModelLoadState.cs" />
