@@ -13,7 +13,7 @@ namespace Security
 {
     public static class AccessControl
     {
-        private static int priveleges;
+        private static uint priveleges;
         private static string query = @"SELECT f_user_privileges()";
 
         public static void LoadPriveleges()
@@ -31,7 +31,7 @@ namespace Security
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         priveleges = 0;
                     }
-                    priveleges = Convert.ToInt32(table.Rows[0][0], CultureInfo.InvariantCulture);
+                    priveleges = Convert.ToUInt32(table.Rows[0][0], CultureInfo.InvariantCulture);
                 }
                 catch (OdbcException e)
                 {
@@ -44,12 +44,12 @@ namespace Security
 
         public static bool HasPrivelege(Priveleges privelege)
         {
-            return ((int)priveleges & (int)privelege) == (int)privelege;
+            return ((uint)priveleges & (uint)privelege) == (uint)privelege;
         }
 
         public static bool HasNoPriveleges()
         {
-            return (int)priveleges == 0;
+            return (uint)priveleges == 0;
         }
     }
 }

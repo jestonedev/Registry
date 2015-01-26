@@ -283,8 +283,48 @@ namespace Registry.Viewport
             is_editable = true;
         }
 
+        private bool ValidatePermissions()
+        {
+            EntityType entity = EntityType.Unknown;
+            string fieldName = null;
+            if (ParentType == ParentTypeEnum.Building)
+            {
+                entity = EntityType.Building;
+                fieldName = "id_building";
+            }
+            else
+                if (ParentType == ParentTypeEnum.Premises)
+                {
+                    entity = EntityType.Premise;
+                    fieldName = "id_premises";
+                }
+                else
+                    if (ParentType == ParentTypeEnum.SubPremises)
+                    {
+                        entity = EntityType.SubPremise;
+                        fieldName = "id_sub_premises";
+                    }
+            if (DataModelHelper.HasMunicipal((int)ParentRow[fieldName], entity)
+                && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+            {
+                MessageBox.Show("У вас нет прав на изменение информации об истории фондов муниципальных объектов",
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return false;
+            }
+            if (DataModelHelper.HasNotMunicipal((int)ParentRow[fieldName], entity)
+                && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+            {
+                MessageBox.Show("У вас нет прав на изменение информации об истории фондов немуниципальных объектов",
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return false;
+            }
+            return true;
+        }
+
         private bool ValidateFundHistory(FundHistory fundHistory)
         {
+            if (ValidatePermissions() == false)
+                return false;
             if (checkBoxIncludeRest.Checked && fundHistory.IncludeRestrictionNumber == null)
             {
                 MessageBox.Show("Необходимо задать номер реквизитов НПА по включению в фонд или отключить реквизит", "Ошибка",
@@ -539,8 +579,8 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return ((viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState))
-                && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return ((viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState)) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void SaveRecord()
@@ -613,8 +653,8 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            return (v_funds_history.Position != -1) && (!funds_history.EditingNewRecord)
-                && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return (v_funds_history.Position != -1) && (!funds_history.EditingNewRecord) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void CopyRecord()
@@ -634,7 +674,8 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return (!funds_history.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return (!funds_history.EditingNewRecord) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void InsertRecord()
@@ -650,9 +691,9 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            return (v_funds_history.Position > -1) 
-                && (viewportState != ViewportState.NewRowState)
-                && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return (v_funds_history.Position > -1)
+                && (viewportState != ViewportState.NewRowState) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void DeleteRecord()
@@ -660,6 +701,8 @@ namespace Registry.Viewport
             if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
+                if (ValidatePermissions() == false)
+                    return;
                 if (FundsHistoryDataModel.Delete((int)((DataRowView)v_funds_history.Current)["id_fund"]) == -1)
                     return;
                 is_editable = false;

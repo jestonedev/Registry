@@ -491,8 +491,35 @@ namespace Registry.Viewport
                 comboBoxState.Focus();
                 return false;
             }
-            // Проверяем дубликаты квартир
+            // Проверяем права на модификацию муниципального или не муниципального здания
             Premise premiseFromView = PremiseFromView();
+            if (premiseFromView.IdPremises != null && DataModelHelper.HasMunicipal(premiseFromView.IdPremises.Value, EntityType.Premise)
+                && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+            {
+                MessageBox.Show("Вы не можете изменить информацию по данному помещению, т.к. оно является муниципальным или содержит в себе муниципальные комнаты",
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return false;
+            }
+            if (premiseFromView.IdPremises != null && DataModelHelper.HasNotMunicipal(premiseFromView.IdPremises.Value, EntityType.Premise)
+                && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+            {
+                MessageBox.Show("Вы не можете изменить информацию по данному помещения, т.к. оно является немуниципальным или содержит в себе немуниципальные комнаты",
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return false;
+            }
+            if (new int[] { 4, 5 }.Contains(premise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+            {
+                MessageBox.Show("У вас нет прав на добавление в базу муниципальных жилых помещений", "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return false;
+            }
+            if (new int[] { 1, 3 }.Contains(premise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+            {
+                MessageBox.Show("У вас нет прав на добавление в базу немуниципальных жилых помещений", "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return false;
+            }
+            // Проверяем дубликаты квартир
             if ((premise.PremisesNum != premiseFromView.PremisesNum) || (premise.IdBuilding != premiseFromView.IdBuilding))
                 if (DataModelHelper.PremisesDuplicateCount(premise) != 0 &&
                     MessageBox.Show("В указанном доме уже есть квартира с таким номером. Все равно продолжить сохранение?", "Внимание", 
@@ -802,8 +829,8 @@ namespace Registry.Viewport
         
         public override bool CanCopyRecord()
         {
-            return ((v_premises.Position != -1) && (!premises.EditingNewRecord))
-                && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return ((v_premises.Position != -1) && (!premises.EditingNewRecord)) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void CopyRecord()
@@ -825,7 +852,8 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return (!premises.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return (!premises.EditingNewRecord) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void InsertRecord()
@@ -892,8 +920,8 @@ namespace Registry.Viewport
         public override bool CanDeleteRecord()
         {
             return (v_premises.Position > -1)
-                && (viewportState != ViewportState.NewRowState)
-                && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+                && (viewportState != ViewportState.NewRowState) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void DeleteRecord()
@@ -901,6 +929,20 @@ namespace Registry.Viewport
             if (MessageBox.Show("Вы действительно хотите удалить это помещение?", "Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
+                if (DataModelHelper.HasMunicipal((int)((DataRowView)v_premises.Current)["id_premises"], EntityType.Premise)
+                    && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+                {
+                    MessageBox.Show("У вас нет прав на удаление муниципальных жилых помещений и помещений, в которых присутствуют муниципальные комнаты",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return;
+                }
+                if (DataModelHelper.HasNotMunicipal((int)((DataRowView)v_premises.Current)["id_premises"], EntityType.Premise)
+                    && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+                {
+                    MessageBox.Show("У вас нет прав на удаление немуниципальных жилых помещений и помещений, в которых присутствуют немуниципальные комнаты",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return;
+                }
                 int id_building = (int)((DataRowView)v_premises[v_premises.Position])["id_building"];
                 if (PremisesDataModel.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
                     return;
@@ -934,8 +976,8 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return ((viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState))
-                && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return ((viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState)) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void SaveRecord()

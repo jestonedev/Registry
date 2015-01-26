@@ -270,7 +270,8 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            return (v_buildings.Position > -1) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return (v_buildings.Position > -1) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void DeleteRecord()
@@ -278,6 +279,20 @@ namespace Registry.Viewport
             if (MessageBox.Show("Вы действительно хотите удалить это здание?", "Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
+                if (DataModelHelper.HasMunicipal((int)((DataRowView)v_buildings.Current)["id_building"], EntityType.Building)
+                    && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+                {
+                    MessageBox.Show("У вас нет прав на удаление муниципальных жилых зданий и зданий, в которых присутствуют муниципальные помещения",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return;
+                }
+                if (DataModelHelper.HasNotMunicipal((int)((DataRowView)v_buildings.Current)["id_building"], EntityType.Building)
+                    && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+                {
+                    MessageBox.Show("У вас нет прав на удаление немуниципальных жилых зданий и зданий, в которых присутствуют немуниципальные помещения",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return;
+                }
                 if (BuildingsDataModel.Delete((int)((DataRowView)v_buildings.Current)["id_building"]) == -1)
                     return;
                 ((DataRowView)v_buildings[v_buildings.Position]).Delete();
@@ -334,7 +349,7 @@ namespace Registry.Viewport
 
         public override bool CanOpenDetails()
         {
-            return (v_buildings.Position != -1) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return (v_buildings.Position != -1) && AccessControl.HasPrivelege(Priveleges.RegistryRead);
         }
 
         public override void OpenDetails()
@@ -355,7 +370,8 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return (!buildings.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.RegistryRead);
+            return (!buildings.EditingNewRecord) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void InsertRecord()
@@ -374,8 +390,8 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            return (v_buildings.Position != -1) && (!buildings.EditingNewRecord)
-                && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return (v_buildings.Position != -1) && (!buildings.EditingNewRecord) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void CopyRecord()

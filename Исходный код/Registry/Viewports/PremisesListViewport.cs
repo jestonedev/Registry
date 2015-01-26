@@ -171,7 +171,8 @@ namespace Registry.Viewport
         
         public override bool CanDeleteRecord()
         {
-            return (v_premises.Position > -1) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return (v_premises.Position > -1) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void DeleteRecord()
@@ -179,6 +180,20 @@ namespace Registry.Viewport
             if (MessageBox.Show("Вы действительно хотите удалить это помещение?", "Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
+                if (DataModelHelper.HasMunicipal((int)((DataRowView)v_premises.Current)["id_premises"], EntityType.Premise)
+                    && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+                {
+                    MessageBox.Show("У вас нет прав на удаление муниципальных жилых помещений и помещений, в которых присутствуют муниципальные комнаты",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return;
+                }
+                if (DataModelHelper.HasNotMunicipal((int)((DataRowView)v_premises.Current)["id_premises"], EntityType.Premise)
+                    && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+                {
+                    MessageBox.Show("У вас нет прав на удаление немуниципальных жилых помещений и помещений, в которых присутствуют немуниципальные комнаты",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return;
+                }
                 int id_building = (int)((DataRowView)v_premises[v_premises.Position])["id_building"];
                 if (PremisesDataModel.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
                     return;
@@ -265,7 +280,8 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return (!premises.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return (!premises.EditingNewRecord) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void InsertRecord()
@@ -285,7 +301,8 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            return (v_premises.Position != -1) && (!premises.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return (v_premises.Position != -1) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void CopyRecord()

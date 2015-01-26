@@ -101,8 +101,42 @@ namespace Registry.Viewport
             };
         }
 
-        private static bool ValidateViewportData(List<OwnershipRight> list)
+        private bool ValidatePermissions()
         {
+            EntityType entity = EntityType.Unknown;
+            string fieldName = null;
+            if (ParentType == ParentTypeEnum.Building)
+            {
+                entity = EntityType.Building;
+                fieldName = "id_building";
+            }
+            else
+                if (ParentType == ParentTypeEnum.Premises)
+                {
+                    entity = EntityType.Premise;
+                    fieldName = "id_premises";
+                }
+            if (DataModelHelper.HasMunicipal((int)ParentRow[fieldName], entity)
+                && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+            {
+                MessageBox.Show("У вас нет прав на изменение информации об ограничениях муниципальных объектов",
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return false;
+            }
+            if (DataModelHelper.HasNotMunicipal((int)ParentRow[fieldName], entity)
+                && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+            {
+                MessageBox.Show("У вас нет прав на изменение информации об ограничениях немуниципальных объектов",
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return false;
+            }
+            return true;
+        }
+
+        private bool ValidateViewportData(List<OwnershipRight> list)
+        {
+            if (ValidatePermissions() == false)
+                return false;
             foreach (OwnershipRight ownershipRight in list)
             {
                 if (ownershipRight.Number != null && ownershipRight.Number.Length > 10)
@@ -315,7 +349,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void InsertRecord()
@@ -326,7 +360,8 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            return (v_snapshot_ownerships_rights.Position != -1) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return (v_snapshot_ownerships_rights.Position != -1) && 
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void DeleteRecord()
@@ -349,7 +384,8 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return SnapshotHasChanges() && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return SnapshotHasChanges() && 
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void SaveRecord()

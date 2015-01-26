@@ -479,6 +479,35 @@ namespace Registry.Viewport
                 comboBoxStructureType.Focus();
                 return false;
             }
+            // Проверяем права на модификацию муниципального или не муниципального здания
+            Building buildingFromView = BuildingFromView();
+            if (buildingFromView.IdBuilding != null && DataModelHelper.HasMunicipal(buildingFromView.IdBuilding.Value, EntityType.Building)
+                && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+            {
+                MessageBox.Show("Вы не можете изменить информацию по данному зданию, т.к. оно является муниципальным или содержит в себе муниципальные помещения", 
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return false;
+            }
+            if (buildingFromView.IdBuilding != null && DataModelHelper.HasNotMunicipal(buildingFromView.IdBuilding.Value, EntityType.Building)
+                && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+            {
+                MessageBox.Show("Вы не можете изменить информацию по данному зданию, т.к. оно является немуниципальным или содержит в себе немуниципальные помещения",
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return false;
+            }
+            if (new int[] { 4, 5 }.Contains(building.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+            {
+                MessageBox.Show("У вас нет прав на добавление в базу муниципальных жилых зданий", "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return false;
+            }
+            if (new int[] { 1, 3 }.Contains(building.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+            {
+                MessageBox.Show("У вас нет прав на добавление в базу немуниципальных жилых зданий", "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return false;
+            }
+            // Подверждение на износ выше 100%
             if (building.Wear > 100)
                 if (MessageBox.Show("Вы задали износ здания выше 100%. Все равно продолжить сохранение?", "Внимание",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.No)
@@ -487,7 +516,6 @@ namespace Registry.Viewport
                     return false;
                 }
             // Проверяем дубликаты адресов домов
-            Building buildingFromView = BuildingFromView();
             if ((building.House != buildingFromView.House) || (building.IdStreet != buildingFromView.IdStreet))
                 if (DataModelHelper.BuildingsDuplicateCount(building) != 0 &&
                     MessageBox.Show("В базе уже имеется здание с таким адресом. Все равно продолжить сохранение?", "Внимание",
@@ -859,8 +887,8 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return ((viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState))
-                && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return ((viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState)) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void SaveRecord()
@@ -990,7 +1018,8 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return (!buildings.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return (!buildings.EditingNewRecord) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void InsertRecord()
@@ -1005,8 +1034,8 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            return (v_buildings.Position != -1) && (!buildings.EditingNewRecord) 
-                && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return (v_buildings.Position != -1) && (!buildings.EditingNewRecord) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void CopyRecord()
@@ -1023,9 +1052,9 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            return (v_buildings.Position > -1) 
-                && (viewportState != ViewportState.NewRowState) 
-                && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return (v_buildings.Position > -1)
+                && (viewportState != ViewportState.NewRowState) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void DeleteRecord()
@@ -1033,6 +1062,20 @@ namespace Registry.Viewport
             if (MessageBox.Show("Вы действительно хотите удалить это здание?", "Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
+                if (DataModelHelper.HasMunicipal((int)((DataRowView)v_buildings.Current)["id_building"], EntityType.Building)
+                    && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+                {
+                    MessageBox.Show("У вас нет прав на удаление муниципальных жилых зданий и зданий, в которых присутствуют муниципальные помещения",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return;
+                }
+                if (DataModelHelper.HasNotMunicipal((int)((DataRowView)v_buildings.Current)["id_building"], EntityType.Building)
+                    && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+                {
+                    MessageBox.Show("У вас нет прав на удаление немуниципальных жилых зданий и зданий, в которых присутствуют немуниципальные помещения",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return;
+                }
                 if (BuildingsDataModel.Delete((int)((DataRowView)v_buildings.Current)["id_building"]) == -1)
                     return;
                 is_editable = false;

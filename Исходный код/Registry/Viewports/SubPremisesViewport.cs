@@ -284,7 +284,8 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return (ParentType == ParentTypeEnum.Premises) && (ParentRow != null) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return (ParentType == ParentTypeEnum.Premises) && (ParentRow != null) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void InsertRecord()
@@ -299,7 +300,8 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            return (v_snapshot_sub_premises.Position != -1) && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return (v_snapshot_sub_premises.Position != -1) &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void DeleteRecord()
@@ -322,7 +324,8 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return SnapshotHasChanges() && AccessControl.HasPrivelege(Priveleges.RegistryWrite);
+            return SnapshotHasChanges() &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void SaveRecord()
@@ -339,6 +342,20 @@ namespace Registry.Viewport
                 DataRow row = sub_premises.Select().Rows.Find(((SubPremise)list[i]).IdSubPremises);
                 if (row == null)
                 {
+                    if (new int[] { 4, 5 }.Contains(list[i].IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+                    {
+                        MessageBox.Show("У вас нет прав на добавление в базу муниципальных жилых помещений", "Ошибка",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        sync_views = true;
+                        return;
+                    }
+                    if (new int[] { 1, 3 }.Contains(list[i].IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+                    {
+                        MessageBox.Show("У вас нет прав на добавление в базу немуниципальных жилых помещений", "Ошибка",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        sync_views = true;
+                        return;
+                    }
                     int id_sub_premises = SubPremisesDataModel.Insert(list[i]);
                     if (id_sub_premises == -1)
                     {
@@ -350,8 +367,25 @@ namespace Registry.Viewport
                 }
                 else
                 {
-                    if (RowToSubPremise(row) == list[i])
+                    SubPremise subPremiseFromView = RowToSubPremise(row);
+                    if (subPremiseFromView == list[i])
                         continue;
+                    if (DataModelHelper.HasMunicipal(subPremiseFromView.IdSubPremises.Value, EntityType.SubPremise)
+                        && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+                    {
+                        MessageBox.Show("Вы не можете изменить информацию по данной комнате, т.к. она является муниципальной",
+                            "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        sync_views = true;
+                        return;
+                    }
+                    if (DataModelHelper.HasNotMunicipal(subPremiseFromView.IdSubPremises.Value, EntityType.SubPremise)
+                        && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+                    {
+                        MessageBox.Show("Вы не можете изменить информацию по данной комнате, т.к. она является немуниципальной",
+                            "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        sync_views = true;
+                        return;
+                    }
                     if (SubPremisesDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
@@ -375,6 +409,22 @@ namespace Registry.Viewport
                         row_index = j;
                 if (row_index == -1)
                 {
+                    if (DataModelHelper.HasMunicipal(list[i].IdSubPremises.Value, EntityType.SubPremise)
+                        && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+                    {
+                        MessageBox.Show("Вы не можете удалить муниципальную комнату, т.к. не имеете на это прав",
+                            "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        sync_views = true;
+                        return;
+                    }
+                    if (DataModelHelper.HasNotMunicipal(list[i].IdSubPremises.Value, EntityType.SubPremise)
+                        && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+                    {
+                        MessageBox.Show("Вы не можете удалить немуниципальную комнату, т.к. не имеете на это прав",
+                            "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        sync_views = true;
+                        return;
+                    }
                     if (SubPremisesDataModel.Delete(list[i].IdSubPremises.Value) == -1)
                     {
                         sync_views = true;
