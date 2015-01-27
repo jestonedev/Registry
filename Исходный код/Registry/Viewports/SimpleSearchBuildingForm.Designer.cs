@@ -104,7 +104,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(556, 76);
+            this.ClientSize = new System.Drawing.Size(556, 85);
             this.Controls.Add(this.checkBoxMunicipalOnly);
             this.Controls.Add(this.textBoxCriteria);
             this.Controls.Add(this.comboBoxCriteriaType);
