@@ -33,6 +33,7 @@
             this.comboBoxCriteriaType = new System.Windows.Forms.ComboBox();
             this.vButtonCancel = new VIBlend.WinForms.Controls.vButton();
             this.vButtonSearch = new VIBlend.WinForms.Controls.vButton();
+            this.checkBoxMunicipalOnly = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // textBoxCriteria
@@ -63,7 +64,7 @@
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(288, 41);
+            this.vButtonCancel.Location = new System.Drawing.Point(379, 39);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
@@ -76,7 +77,7 @@
             // 
             this.vButtonSearch.AllowAnimations = true;
             this.vButtonSearch.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSearch.Location = new System.Drawing.Point(150, 41);
+            this.vButtonSearch.Location = new System.Drawing.Point(241, 39);
             this.vButtonSearch.Name = "vButtonSearch";
             this.vButtonSearch.RoundedCornersMask = ((byte)(15));
             this.vButtonSearch.Size = new System.Drawing.Size(117, 35);
@@ -86,12 +87,25 @@
             this.vButtonSearch.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
             this.vButtonSearch.Click += new System.EventHandler(this.vButtonSearch_Click);
             // 
+            // checkBoxMunicipalOnly
+            // 
+            this.checkBoxMunicipalOnly.AutoSize = true;
+            this.checkBoxMunicipalOnly.Checked = true;
+            this.checkBoxMunicipalOnly.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxMunicipalOnly.Location = new System.Drawing.Point(12, 46);
+            this.checkBoxMunicipalOnly.Name = "checkBoxMunicipalOnly";
+            this.checkBoxMunicipalOnly.Size = new System.Drawing.Size(163, 19);
+            this.checkBoxMunicipalOnly.TabIndex = 4;
+            this.checkBoxMunicipalOnly.Text = "Только муниципальные";
+            this.checkBoxMunicipalOnly.UseVisualStyleBackColor = true;
+            // 
             // SimpleSearchBuildingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(556, 85);
+            this.ClientSize = new System.Drawing.Size(556, 76);
+            this.Controls.Add(this.checkBoxMunicipalOnly);
             this.Controls.Add(this.textBoxCriteria);
             this.Controls.Add(this.comboBoxCriteriaType);
             this.Controls.Add(this.vButtonCancel);
@@ -115,5 +129,6 @@
         private VIBlend.WinForms.Controls.vButton vButtonSearch;
         private System.Windows.Forms.TextBox textBoxCriteria;
         private System.Windows.Forms.ComboBox comboBoxCriteriaType;
+        private System.Windows.Forms.CheckBox checkBoxMunicipalOnly;
     }
 }

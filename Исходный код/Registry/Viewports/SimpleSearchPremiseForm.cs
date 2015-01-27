@@ -81,6 +81,12 @@ namespace Registry.SearchForms
                     filter += id.ToString(CultureInfo.InvariantCulture) + ",";
                 filter = filter.TrimEnd(new char[] { ',' }) + ")";
             }
+            if (checkBoxMunicipalOnly.Checked)
+            {
+                if (!String.IsNullOrEmpty(filter.Trim()))
+                    filter += " AND ";
+                filter += "id_state IN (4, 5)";
+            }
             return filter;
         }
 
