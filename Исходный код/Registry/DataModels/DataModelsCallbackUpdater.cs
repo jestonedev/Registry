@@ -72,7 +72,7 @@ namespace Registry.DataModels
                     context.Send(__ =>
                     {
                         DataTable workTable = tableCacheLvl1;
-                        foreach (DataRow row in tableCacheLvl1.Rows)
+                        foreach (DataRow row in workTable.Rows)
                         {
                             if (!UpdateModelFromRow(row))
                                 tableCacheLvl2.Rows.Add(RowToCacheObject(row));

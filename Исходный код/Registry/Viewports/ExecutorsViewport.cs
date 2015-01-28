@@ -369,7 +369,7 @@ namespace Registry.Viewport
                 return;
             if (SnapshotHasChanges())
             {
-                DialogResult result = MessageBox.Show("Сохранить изменения о виде основания в базу данных?", "Внимание",
+                DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                 if (result == DialogResult.Yes)
                     SaveRecord();
