@@ -504,7 +504,7 @@ namespace Registry.Viewport
                 case ViewportState.ModifyRowState:
                     if (warrant.IdWarrant == null)
                     {
-                        MessageBox.Show("Вы пытаетесь изменить запись о принадлежности фонду без внутренного номера. " +
+                        MessageBox.Show("Вы пытаетесь изменить запись о доверенности без внутренного номера. " +
                             "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", 
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;

@@ -30,6 +30,7 @@ namespace Security
                         MessageBox.Show("Запрос не вернул привелегии для данного пользователя", "Неизвестная ошибка",
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         priveleges = 0;
+						return;
                     }
                     priveleges = Convert.ToUInt32(table.Rows[0][0], CultureInfo.InvariantCulture);
                 }
