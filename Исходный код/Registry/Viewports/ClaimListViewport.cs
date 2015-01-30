@@ -603,6 +603,7 @@ namespace Registry.Viewport
             UnbindedCheckBoxesUpdate();
             dataGridViewClaims.Enabled = true;
             is_editable = true;
+            dataGridViewClaims.RowCount = v_claims.Count;
             viewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
@@ -706,10 +707,18 @@ namespace Registry.Viewport
                 dataGridViewClaims.ClearSelection();
             else
                 if (v_claims.Position >= dataGridViewClaims.RowCount)
+				{
                     dataGridViewClaims.Rows[dataGridViewClaims.RowCount - 1].Selected = true;
+					dataGridViewClaims.CurrentCell = dataGridViewClaims.Rows[dataGridViewClaims.RowCount - 1].
+						Cells[1];
+				}
             else
                     if (dataGridViewClaims.Rows[v_claims.Position].Selected != true)
+					{
                         dataGridViewClaims.Rows[v_claims.Position].Selected = true;
+						dataGridViewClaims.CurrentCell = dataGridViewClaims.Rows[v_claims.Position].
+							Cells[1];
+					}
             if (Selected)
             {
                 MenuCallback.NavigationStateUpdate();
