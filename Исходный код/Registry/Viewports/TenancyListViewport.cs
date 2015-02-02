@@ -471,13 +471,6 @@ namespace Registry.Viewport
             return (v_tenancies.Position > -1);
         }
 
-        public override bool HasTenancyExcerptReport()
-        {
-            return false;
-            //временно убрал доступ к выписке, необходимо согласование
-            //return (v_tenancies.Position > -1);
-        }
-
         public override void TenancyContract17xReportGenerate(Reporting.TenancyContractTypes tenancyContractType)
         {
             if (!TenancyValidForReportGenerate())
@@ -522,15 +515,6 @@ namespace Registry.Viewport
                 return;
             DataRowView row = (DataRowView)v_tenancies[v_tenancies.Position];
             ReporterFactory.CreateReporter(ReporterType.TenancyActReporter).
-                Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
-        }
-
-        public override void TenancyExcerptReportGenerate()
-        {
-            if (!TenancyValidForReportGenerate())
-                return;
-            DataRowView row = (DataRowView)v_tenancies[v_tenancies.Position];
-            ReporterFactory.CreateReporter(ReporterType.TenancyExcerptReporter).
                 Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
         }
 
@@ -696,7 +680,7 @@ namespace Registry.Viewport
                 MenuCallback.NavigationStateUpdate();
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.RelationsStateUpdate();
-                MenuCallback.TenancyRefsStateUpdate();
+                MenuCallback.DocumentsStateUpdate();
             }
         }
 

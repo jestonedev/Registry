@@ -96,13 +96,23 @@ namespace Registry.Viewport
         bool HasTenancyActReport();
         bool HasTenancyAgreementReport();
         bool HasTenancyOrderReport();     
-        bool HasTenancyExcerptReport();
 
         void TenancyContract17xReportGenerate(TenancyContractTypes tenancyContractType);
         void TenancyContractReportGenerate();
         void TenancyActReportGenerate();
         void TenancyAgreementReportGenerate();
         void TenancyOrderReportGenerate();
-        void TenancyExcerptReportGenerate();
+
+        void RegistryExcerptPremiseReportGenerate();
+
+        void RegistryExcerptSubPremiseReportGenerate();
+
+        void RegistryExcerptSubPremisesReportGenerate();
+
+        bool HasRegistryExcerptSubPremisesReport();
+
+        bool HasRegistryExcerptSubPremiseReport();
+
+        bool HasRegistryExcerptPremiseReport();
     }
 }

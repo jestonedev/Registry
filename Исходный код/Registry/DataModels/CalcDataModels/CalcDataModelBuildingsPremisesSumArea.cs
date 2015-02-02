@@ -60,7 +60,9 @@ namespace Registry.CalcDataModels
             var demolished_premises = DataModelHelper.DemolishedPremisesIDs();
             // Определяем исключенные здания и квартиры из муниципальной собственности
             var buildings_exclude_from_municipal = DataModelHelper.ObjectIDsExcludedFromMunicipal(restrictions_buildigns_assoc, EntityType.Building);
+            var buildings_included_into_municipal = DataModelHelper.ObjectIDsIncludedIntoMunicipal(restrictions_buildigns_assoc, EntityType.Building);
             var premises_exclude_from_municipal = DataModelHelper.ObjectIDsExcludedFromMunicipal(restrictions_premises_assoc, EntityType.Premise);
+            var premises_included_into_municipal = DataModelHelper.ObjectIDsIncludedIntoMunicipal(restrictions_premises_assoc, EntityType.Premise);
             // Возвращаем сумму площадей только муниципальных помещений
             var result = from premises_row in premises
                          join sub_premises_sum_area_row in sub_premises_sum_area
@@ -72,15 +74,21 @@ namespace Registry.CalcDataModels
                          join demolished_premises_id in demolished_premises
                          on premises_row.Field<int>("id_premises") equals demolished_premises_id into dpr
                          from dpr_row in dpr.DefaultIfEmpty()
-                         join buildings_exclude_from_municipal_id in buildings_exclude_from_municipal
-                         on premises_row.Field<int>("id_building") equals buildings_exclude_from_municipal_id into befmr
+                         join buildings_exclude_from_municipal_row in buildings_exclude_from_municipal
+                         on premises_row.Field<int>("id_building") equals buildings_exclude_from_municipal_row.IdObject into befmr
                          from befmr_row in befmr.DefaultIfEmpty()
-                         join premises_exclude_from_municipal_id in premises_exclude_from_municipal
-                         on premises_row.Field<int>("id_premises") equals premises_exclude_from_municipal_id into pefmr
+                         join premises_exclude_from_municipal_row in premises_exclude_from_municipal
+                         on premises_row.Field<int>("id_premises") equals premises_exclude_from_municipal_row.IdObject into pefmr
                          from pefmr_row in pefmr.DefaultIfEmpty()
+                         join buildings_included_into_municipal_row in buildings_included_into_municipal
+                         on premises_row.Field<int>("id_building") equals buildings_included_into_municipal_row.IdObject into biimr
+                         from biimr_row in biimr.DefaultIfEmpty()
+                         join premises_included_into_municipal_row in premises_included_into_municipal
+                         on premises_row.Field<int>("id_premises") equals premises_included_into_municipal_row.IdObject into piimr
+                         from piimr_row in piimr.DefaultIfEmpty()
                          where dbr_row == 0 && dpr_row == 0 &&
-                               (befmr_row == 0 || premises_row.Field<int>("id_state") == 4) && 
-                               pefmr_row == 0
+                               (befmr_row == null || (piimr_row != null && befmr_row.date <= piimr_row.date)) && 
+                               (pefmr_row == null || (biimr_row != null && pefmr_row.date <= biimr_row.date))
                          group new int[] { 4, 5 }.Contains(premises_row.Field<int>("id_state")) ? 
                                 premises_row.Field<double>("total_area") :
                                 premises_row.Field<int>("id_state") == 1 ?

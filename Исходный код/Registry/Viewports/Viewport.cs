@@ -470,7 +470,17 @@ namespace Registry.Viewport
             return false;
         }
 
-        public virtual bool HasTenancyExcerptReport()
+        public virtual bool HasRegistryExcerptSubPremisesReport()
+        {
+            return false;
+        }
+
+        public virtual bool HasRegistryExcerptSubPremiseReport()
+        {
+            return false;
+        }
+
+        public virtual bool HasRegistryExcerptPremiseReport()
         {
             return false;
         }
@@ -500,7 +510,17 @@ namespace Registry.Viewport
             throw new ViewportException("Не реализовано");
         }
 
-        public virtual void TenancyExcerptReportGenerate()
+        public virtual void RegistryExcerptPremiseReportGenerate()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+        public virtual void RegistryExcerptSubPremiseReportGenerate()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+        public virtual void RegistryExcerptSubPremisesReportGenerate()
         {
             throw new ViewportException("Не реализовано");
         }

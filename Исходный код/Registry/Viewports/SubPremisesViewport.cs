@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using CustomControls;
 using Security;
 using System.Globalization;
+using Registry.Reporting;
 
 namespace Registry.Viewport
 {
@@ -498,6 +499,84 @@ namespace Registry.Viewport
             return (v_snapshot_sub_premises.Count > 0);
         }
 
+        public override bool HasRegistryExcerptPremiseReport()
+        {
+            return true;
+        }
+
+        public override bool HasRegistryExcerptSubPremiseReport()
+        {
+            return (v_snapshot_sub_premises.Count > 0);
+        }
+
+        public override bool HasRegistryExcerptSubPremisesReport()
+        {
+            return true;
+        }
+
+        public override void RegistryExcerptPremiseReportGenerate()
+        {
+            Reporter reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
+            Dictionary<string, string> arguments = new Dictionary<string, string>();
+            arguments.Add("ids", ParentRow["id_premises"].ToString());
+            arguments.Add("excerpt_type", "1");
+            reporter.Run(arguments);
+        }
+
+        public override void RegistryExcerptSubPremiseReportGenerate()
+        {
+            if (SnapshotHasChanges())
+            {
+                DialogResult result = MessageBox.Show("Перед формированием выписки по комнате необходимо сохранить изменения в базу данных. " +
+                    "Вы хотите это сделать?", "Внимание",
+                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                if (result == DialogResult.Yes)
+                    SaveRecord();
+                else
+                    if (result == DialogResult.No)
+                        CancelRecord();
+                    else
+                        return;
+            }
+            if (SnapshotHasChanges())
+                return;
+            if (v_snapshot_sub_premises.Position == -1)
+            {
+                MessageBox.Show("Не выбрана комната для формирования выписки", "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            Reporter reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
+            Dictionary<string, string> arguments = new Dictionary<string, string>();
+            arguments.Add("ids", ((DataRowView)v_snapshot_sub_premises[v_snapshot_sub_premises.Position])["id_sub_premises"].ToString());
+            arguments.Add("excerpt_type", "2");
+            reporter.Run(arguments);
+        }
+
+        public override void RegistryExcerptSubPremisesReportGenerate()
+        {
+            if (SnapshotHasChanges())
+            {
+                DialogResult result = MessageBox.Show("Перед формированием выписки по муниципальным комнатам необходимо сохранить изменения в базу данных. " +
+                    "Вы хотите это сделать?", "Внимание",
+                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                if (result == DialogResult.Yes)
+                    SaveRecord();
+                else
+                    if (result == DialogResult.No)
+                        CancelRecord();
+                    else
+                        return;
+            }
+            if (SnapshotHasChanges())
+                return;
+            Reporter reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
+            Dictionary<string, string> arguments = new Dictionary<string, string>();
+            arguments.Add("ids", ParentRow["id_premises"].ToString());
+            arguments.Add("excerpt_type", "3");
+            reporter.Run(arguments);
+        }
+
         public override void ShowFundHistory()
         {
             if (SnapshotHasChanges())
@@ -513,6 +592,8 @@ namespace Registry.Viewport
                     else
                         return;
             }
+            if (SnapshotHasChanges())
+                return;
             if (v_snapshot_sub_premises.Position == -1)
             {
                 MessageBox.Show("Не выбрана комната для отображения истории принадлежности к фондам", "Ошибка", 
@@ -538,6 +619,8 @@ namespace Registry.Viewport
                     else
                         return;
             }
+            if (SnapshotHasChanges())
+                return;
             if (v_snapshot_sub_premises.Position == -1)
             {
                 MessageBox.Show("Не выбрана комната для отображения истории найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -555,6 +638,7 @@ namespace Registry.Viewport
                 MenuCallback.NavigationStateUpdate();
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.RelationsStateUpdate();
+                MenuCallback.DocumentsStateUpdate();
             }
         }
         

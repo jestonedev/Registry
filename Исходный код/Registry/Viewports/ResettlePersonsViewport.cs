@@ -8,6 +8,7 @@ using Registry.DataModels;
 using Registry.Entities;
 using System.Globalization;
 using Security;
+using Registry.CalcDataModels;
 
 namespace Registry.Viewport
 {
@@ -371,13 +372,8 @@ namespace Registry.Viewport
             }
             sync_views = true;
             MenuCallback.EditingStateUpdate();
-            /*
-             * TODO: CalcResettleAggregated
-            CalcDataModelTenancyAggregated.GetInstance().Refresh(CalcDataModelFilterEnity.All, null, true);
-            CalcDataModelPremiseSubPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Premise,
-                Int32.Parse(ParentRow["id_premises"].ToString(), CultureInfo.InvariantCulture), true);
-            CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(CalcDataModelFilterEnity.Building,
-                Int32.Parse(ParentRow["id_building"].ToString(), CultureInfo.InvariantCulture), true);*/
+            if (ParentType == ParentTypeEnum.ResettleProcess)
+                CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.ResettleProcess, (int)ParentRow["id_process"], true);
         }
 
         public override bool CanDuplicate()

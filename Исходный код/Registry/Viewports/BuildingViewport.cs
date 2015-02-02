@@ -1359,7 +1359,7 @@ namespace Registry.Viewport
 
         void comboBoxStreet_KeyUp(object sender, KeyEventArgs e)
         {
-            if ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode == Keys.Back))
+            if (e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z)
             {
                 string text = comboBoxStreet.Text;
                 int selectionStart = comboBoxStreet.SelectionStart;

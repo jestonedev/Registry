@@ -38,7 +38,7 @@ namespace Registry
             NavigationStateUpdate();
             EditingStateUpdate();
             RelationsStateUpdate();
-            TenancyRefsStateUpdate();
+            DocumentsStateUpdate();
         }
 
         public void StatusBarStateUpdate()
@@ -220,7 +220,7 @@ namespace Registry
             NavigationStateUpdate();
             EditingStateUpdate();
             RelationsStateUpdate();
-            TenancyRefsStateUpdate();
+            DocumentsStateUpdate();
             StatusBarStateUpdate();
         }
 
@@ -232,7 +232,7 @@ namespace Registry
             NavigationStateUpdate();
             EditingStateUpdate();
             RelationsStateUpdate();
-            TenancyRefsStateUpdate();
+            DocumentsStateUpdate();
             StatusBarStateUpdate();
         }
 
@@ -244,7 +244,7 @@ namespace Registry
             NavigationStateUpdate();
             EditingStateUpdate();
             RelationsStateUpdate();
-            TenancyRefsStateUpdate();
+            DocumentsStateUpdate();
             StatusBarStateUpdate();
         }
 
@@ -375,31 +375,33 @@ namespace Registry
             }
         }
 
-        public void TenancyRefsStateUpdate()
+        public void DocumentsStateUpdate()
         {
-            ribbonPanelTenancyDocs.Items.Clear();
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && 
-                (dockPanel.ActiveDocument as IMenuController).HasTenancyContract17xReport())
-                ribbonPanelTenancyDocs.Items.Add(ribbonButtonTenancyContract17x);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && 
-                (dockPanel.ActiveDocument as IMenuController).HasTenancyContractReport())
-                ribbonPanelTenancyDocs.Items.Add(ribbonButtonTenancyContract);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && 
-                (dockPanel.ActiveDocument as IMenuController).HasTenancyActReport())
-                ribbonPanelTenancyDocs.Items.Add(ribbonButtonTenancyAct);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && 
-                (dockPanel.ActiveDocument as IMenuController).HasTenancyAgreementReport())
-                ribbonPanelTenancyDocs.Items.Add(ribbonButtonTenancyAgreement);
+            ribbon1.OrbDropDown.RecentItems.Clear();
             if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasTenancyExcerptReport())
-                ribbonPanelTenancyDocs.Items.Add(ribbonButtonTenancyExcerpt);
-            ribbon1.SuspendUpdating();
-            if (ribbonPanelTenancyDocs.Items.Count == 0)
-                ribbonTabTenancyProcesses.Panels.Remove(ribbonPanelTenancyDocs);
-            else
-                if (!ribbonTabTenancyProcesses.Panels.Contains(ribbonPanelTenancyDocs))
-                    ribbonTabTenancyProcesses.Panels.Insert(1, ribbonPanelTenancyDocs);
-            ribbon1.ResumeUpdating(true);
+                (dockPanel.ActiveDocument as IMenuController).HasTenancyContract17xReport())
+            {
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyContract1711);
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyContract1712);
+            }
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
+                (dockPanel.ActiveDocument as IMenuController).HasTenancyContractReport())
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyContract);
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
+                (dockPanel.ActiveDocument as IMenuController).HasTenancyActReport())
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyAct);
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
+                (dockPanel.ActiveDocument as IMenuController).HasTenancyAgreementReport())
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyAgreement);
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
+                (dockPanel.ActiveDocument as IMenuController).HasRegistryExcerptPremiseReport())
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptPremise);
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
+                (dockPanel.ActiveDocument as IMenuController).HasRegistryExcerptSubPremiseReport())
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptSubPremise);
+            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
+                (dockPanel.ActiveDocument as IMenuController).HasRegistryExcerptSubPremisesReport())
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptSubPremises);
         }
 
         private void RibbonTabsStateUpdate()
@@ -429,7 +431,7 @@ namespace Registry
                 (dockPanel.ActiveDocument as IMenuController).SaveRecord();
             NavigationStateUpdate();
             RelationsStateUpdate();
-            TenancyRefsStateUpdate();
+            DocumentsStateUpdate();
         }
 
         private void ribbonButtonDeleteRecord_Click(object sender, EventArgs e)
@@ -439,7 +441,7 @@ namespace Registry
             NavigationStateUpdate();
             EditingStateUpdate();
             RelationsStateUpdate();
-            TenancyRefsStateUpdate();
+            DocumentsStateUpdate();
             StatusBarStateUpdate();
         }
 
@@ -450,7 +452,7 @@ namespace Registry
             EditingStateUpdate();
             NavigationStateUpdate();
             RelationsStateUpdate();
-            TenancyRefsStateUpdate();
+            DocumentsStateUpdate();
             StatusBarStateUpdate();
         }
 
@@ -460,7 +462,7 @@ namespace Registry
                 (dockPanel.ActiveDocument as IMenuController).CancelRecord();
             NavigationStateUpdate();
             RelationsStateUpdate();
-            TenancyRefsStateUpdate();
+            DocumentsStateUpdate();
             StatusBarStateUpdate();
         }
 
@@ -471,7 +473,7 @@ namespace Registry
             EditingStateUpdate();
             NavigationStateUpdate();
             RelationsStateUpdate();
-            TenancyRefsStateUpdate();
+            DocumentsStateUpdate();
             StatusBarStateUpdate();
         }
 
@@ -899,11 +901,25 @@ namespace Registry
             (dockPanel.ActiveDocument as IMenuController).TenancyOrderReportGenerate();
         }
 
-        private void ribbonButtonTenancyExcerpt_Click(object sender, EventArgs e)
+        private void ribbonButtonOrbRegistryExcerptPremise_Click(object sender, EventArgs e)
         {
             if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
                 return;
-            (dockPanel.ActiveDocument as IMenuController).TenancyExcerptReportGenerate();
+            (dockPanel.ActiveDocument as IMenuController).RegistryExcerptPremiseReportGenerate();
+        }
+
+        private void ribbonButtonOrbRegistryExcerptSubPremise_Click(object sender, EventArgs e)
+        {
+            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+                return;
+            (dockPanel.ActiveDocument as IMenuController).RegistryExcerptSubPremiseReportGenerate();
+        }
+
+        private void ribbonButtonOrbRegistryExcerptSubPremises_Click(object sender, EventArgs e)
+        {
+            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+                return;
+            (dockPanel.ActiveDocument as IMenuController).RegistryExcerptSubPremisesReportGenerate();
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -958,13 +974,13 @@ namespace Registry
             }
             if (keyData == (Keys.Control | Keys.F))
             {
-                if (ribbonButtonSimpleSearch.Enabled)
+                if (ribbonButtonSearch.Enabled)
                     ribbonButtonSimpleSearch_Click(this, new EventArgs());
                 return true;
             }
             if (keyData == (Keys.Control | Keys.Alt | Keys.F))
             {
-                if (ribbonButtonExtendedSearch.Enabled)
+                if (ribbonButtonSearch.Enabled)
                     ribbonButtonExtendedSearch_Click(this, new EventArgs());
                 return true;
             }

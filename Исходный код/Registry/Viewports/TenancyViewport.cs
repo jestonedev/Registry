@@ -789,6 +789,7 @@ namespace Registry.Viewport
                 comboBoxExecutor.SelectedValue = ((DataRowView)v_executors[index])["id_executor"];
             is_editable = true;
             tenancies.EditingNewRecord = true;
+            UnbindedCheckBoxesUpdate();
         }
 
         public override bool CanCopyRecord()
@@ -1152,13 +1153,6 @@ namespace Registry.Viewport
                     Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_process"], CultureInfo.InvariantCulture)) > 0);
         }
 
-        public override bool HasTenancyExcerptReport()
-        {
-            return false;
-            //временно убрал доступ к выписке, необходимо согласование
-            //return (v_tenancies.Position > -1);
-        }
-
         public override void TenancyContract17xReportGenerate(Reporting.TenancyContractTypes tenancyContractType)
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
@@ -1229,17 +1223,6 @@ namespace Registry.Viewport
                 new Dictionary<string, string>() { { "id_agreement", row["id_agreement"].ToString() } });
         }
 
-        public override void TenancyExcerptReportGenerate()
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            if (!TenancyValidForReportGenerate())
-                return;
-            DataRowView row = (DataRowView)v_tenancies[v_tenancies.Position];
-            ReporterFactory.CreateReporter(ReporterType.TenancyExcerptReporter).
-                Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
-        }
-
         private bool TenancyValidForReportGenerate()
         {
             //Проверить наличие нанимателя (и только одного) и наличия номера и даты договора найма
@@ -1281,9 +1264,10 @@ namespace Registry.Viewport
                 MenuCallback.NavigationStateUpdate();
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.RelationsStateUpdate();
-                MenuCallback.TenancyRefsStateUpdate();
+                MenuCallback.DocumentsStateUpdate();
             }
-            UnbindedCheckBoxesUpdate();
+            if (is_editable)
+                UnbindedCheckBoxesUpdate();
             BindWarrantID();
             if (v_tenancies.Position == -1)
                 return;

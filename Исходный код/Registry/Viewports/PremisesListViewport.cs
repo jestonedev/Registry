@@ -12,6 +12,7 @@ using Registry.SearchForms;
 using Registry.CalcDataModels;
 using Security;
 using System.Globalization;
+using Registry.Reporting;
 
 namespace Registry.Viewport
 {
@@ -362,6 +363,34 @@ namespace Registry.Viewport
             return (v_premises.Position > -1);
         }
 
+        public override bool HasRegistryExcerptPremiseReport()
+        {
+            return (v_premises.Position > -1);
+        }
+
+        public override bool HasRegistryExcerptSubPremisesReport()
+        {
+            return (v_premises.Position > -1);
+        }
+
+        public override void RegistryExcerptPremiseReportGenerate()
+        {
+            Reporter reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
+            Dictionary<string, string> arguments = new Dictionary<string, string>();
+            arguments.Add("ids", ((DataRowView)v_premises[v_premises.Position])["id_premises"].ToString());
+            arguments.Add("excerpt_type", "1");
+            reporter.Run(arguments);
+        }
+
+        public override void RegistryExcerptSubPremisesReportGenerate()
+        {
+            Reporter reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
+            Dictionary<string, string> arguments = new Dictionary<string, string>();
+            arguments.Add("ids", ((DataRowView)v_premises[v_premises.Position])["id_premises"].ToString());
+            arguments.Add("excerpt_type", "3");
+            reporter.Run(arguments);
+        }
+
         public override void ShowOwnerships()
         {
             ShowAssocViewport(ViewportType.OwnershipListViewport);
@@ -512,6 +541,7 @@ namespace Registry.Viewport
                 MenuCallback.NavigationStateUpdate();
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.RelationsStateUpdate();
+                MenuCallback.DocumentsStateUpdate();
             }
         }
 

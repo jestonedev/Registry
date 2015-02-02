@@ -266,14 +266,14 @@ namespace Registry.Viewport
         private static void FillRowFromWarrant(Warrant warrant, DataRowView row)
         {
             row.BeginEdit();
-            row["id_warrant"] = warrant.IdWarrant == null ? DBNull.Value : (object)warrant.IdWarrant;
-            row["id_warrant_doc_type"] = warrant.IdWarrantDocType == null ? DBNull.Value : (object)warrant.IdWarrantDocType;
-            row["registration_num"] = warrant.RegistrationNum == null ? DBNull.Value : (object)warrant.RegistrationNum;
-            row["registration_date"] = warrant.RegistrationDate == null ? DBNull.Value : (object)warrant.RegistrationDate;
-            row["on_behalf_of"] = warrant.OnBehalfOf == null ? DBNull.Value : (object)warrant.OnBehalfOf;
-            row["notary"] = warrant.Notary == null ? DBNull.Value : (object)warrant.Notary;
-            row["notary_district"] = warrant.NotaryDistrict == null ? DBNull.Value : (object)warrant.NotaryDistrict;
-            row["description"] = warrant.Description == null ? DBNull.Value : (object)warrant.Description;
+            row["id_warrant"] = ViewportHelper.ValueOrDBNull(warrant.IdWarrant);
+            row["id_warrant_doc_type"] = ViewportHelper.ValueOrDBNull(warrant.IdWarrantDocType);
+            row["registration_num"] = ViewportHelper.ValueOrDBNull(warrant.RegistrationNum);
+            row["registration_date"] = ViewportHelper.ValueOrDBNull(warrant.RegistrationDate);
+            row["on_behalf_of"] = ViewportHelper.ValueOrDBNull(warrant.OnBehalfOf);
+            row["notary"] = ViewportHelper.ValueOrDBNull(warrant.Notary);
+            row["notary_district"] = ViewportHelper.ValueOrDBNull(warrant.NotaryDistrict);
+            row["description"] = ViewportHelper.ValueOrDBNull(warrant.Description);
             row.EndEdit();
         }
 

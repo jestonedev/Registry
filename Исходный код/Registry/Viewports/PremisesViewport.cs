@@ -12,6 +12,7 @@ using Registry.CalcDataModels;
 using Security;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using Registry.Reporting;
 
 namespace Registry.Viewport
 {
@@ -74,9 +75,11 @@ namespace Registry.Viewport
         private RestrictionsDataModel restrictions = null;
         private RestrictionTypesDataModel restrictionTypes = null;
         private RestrictionsPremisesAssocDataModel restrictionPremisesAssoc = null;
+        private RestrictionsBuildingsAssocDataModel restrictionBuildingsAssoc = null;
         private OwnershipsRightsDataModel ownershipRights = null;
         private OwnershipRightTypesDataModel ownershipRightTypes = null;
         private OwnershipPremisesAssocDataModel ownershipPremisesAssoc = null;
+        private OwnershipBuildingsAssocDataModel ownershipBuildingsAssoc = null;
         private FundTypesDataModel fundTypes = null;
         private ObjectStatesDataModel object_states = null;
         private CalcDataModelPremiseSubPremisesSumArea premiseSubPremisesSumArea = null;
@@ -93,9 +96,11 @@ namespace Registry.Viewport
         private BindingSource v_restrictions = null;
         private BindingSource v_restrictonTypes = null;
         private BindingSource v_restrictionPremisesAssoc = null;
+        private BindingSource v_restrictionBuildingsAssoc = null;
         private BindingSource v_ownershipRights = null;
         private BindingSource v_ownershipRightTypes = null;
         private BindingSource v_ownershipPremisesAssoc = null;
+        private BindingSource v_ownershipBuildingsAssoc = null;
         private BindingSource v_fundType = null;
         private BindingSource v_object_states = null;
         private BindingSource v_sub_premises_object_states = null;
@@ -113,19 +118,24 @@ namespace Registry.Viewport
         private NumericUpDown numericUpDownNumRooms;
         private NumericUpDown numericUpDownMunicipalArea;
         private Label label2;
-        private DataGridViewTextBoxColumn restriction_number;
-        private DataGridViewTextBoxColumn restriction_date;
-        private DataGridViewTextBoxColumn restriction_description;
-        private DataGridViewComboBoxColumn id_restriction_type;
-        private DataGridViewTextBoxColumn ownership_number;
-        private DataGridViewTextBoxColumn ownership_date;
-        private DataGridViewTextBoxColumn ownership_description;
-        private DataGridViewComboBoxColumn id_ownership_type;
         private DataGridViewTextBoxColumn sub_premises_num;
         private DataGridViewTextBoxColumn sub_premises_total_area;
         private DataGridViewComboBoxColumn sub_premises_id_state;
         private NumericUpDown numericUpDownHeight;
         private Label label3;
+        private DataGridViewTextBoxColumn id_restriction;
+        private DataGridViewTextBoxColumn restriction_number;
+        private DataGridViewTextBoxColumn restriction_date;
+        private DataGridViewTextBoxColumn restriction_description;
+        private DataGridViewComboBoxColumn id_restriction_type;
+        private DataGridViewTextBoxColumn id_ownership_right;
+        private DataGridViewTextBoxColumn ownership_number;
+        private DataGridViewTextBoxColumn ownership_date;
+        private DataGridViewTextBoxColumn ownership_description;
+        private DataGridViewComboBoxColumn id_ownership_type;
+        private DateTimePicker dateTimePickerRegDate;
+        private Label label4;
+        private CheckBox checkBoxIsMemorial;
         private bool is_first_visibility = true;
 
         private PremisesViewport()
@@ -154,7 +164,22 @@ namespace Registry.Viewport
                 restrictionsFilter += ((DataRowView)v_restrictionPremisesAssoc[i])["id_restriction"].ToString() + ",";
             restrictionsFilter = restrictionsFilter.TrimEnd(new char[] { ',' });
             restrictionsFilter += ")";
+            if (v_premises.Position > -1 && v_restrictionBuildingsAssoc != null && ((DataRowView)v_premises[v_premises.Position])["id_building"] != DBNull.Value)
+            {
+                v_restrictionBuildingsAssoc.Filter = "id_building = " + ((DataRowView)v_premises[v_premises.Position])["id_building"].ToString();
+                restrictionsFilter += " OR id_restriction IN (0";
+                for (int i = 0; i < v_restrictionBuildingsAssoc.Count; i++)
+                    restrictionsFilter += ((DataRowView)v_restrictionBuildingsAssoc[i])["id_restriction"].ToString() + ",";
+                restrictionsFilter = restrictionsFilter.TrimEnd(new char[] { ',' });
+                restrictionsFilter += ")";
+            }
             v_restrictions.Filter = restrictionsFilter;
+            for (int i = 0; i < dataGridViewRestrictions.Rows.Count; i++)
+                if (v_restrictionBuildingsAssoc.Find("id_restriction", dataGridViewRestrictions.Rows[i].Cells["id_restriction"].Value) != -1)
+                    dataGridViewRestrictions.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
+                else
+                    dataGridViewRestrictions.Rows[i].DefaultCellStyle.BackColor = Color.White;
+            dataGridViewRestrictions.Columns["id_restriction"].Visible = false;
         }
 
         private void OwnershipsFilterRebuild()
@@ -164,7 +189,22 @@ namespace Registry.Viewport
                 ownershipFilter += ((DataRowView)v_ownershipPremisesAssoc[i])["id_ownership_right"].ToString() + ",";
             ownershipFilter = ownershipFilter.TrimEnd(new char[] { ',' });
             ownershipFilter += ")";
+            if (v_premises.Position > -1 && v_ownershipBuildingsAssoc != null && ((DataRowView)v_premises[v_premises.Position])["id_building"] != DBNull.Value)
+            {
+                v_ownershipBuildingsAssoc.Filter = "id_building = " + ((DataRowView)v_premises[v_premises.Position])["id_building"].ToString();
+                ownershipFilter += " OR id_ownership_right IN (0";
+                for (int i = 0; i < v_ownershipBuildingsAssoc.Count; i++)
+                    ownershipFilter += ((DataRowView)v_ownershipBuildingsAssoc[i])["id_ownership_right"].ToString() + ",";
+                ownershipFilter = ownershipFilter.TrimEnd(new char[] { ',' });
+                ownershipFilter += ")";
+            }
             v_ownershipRights.Filter = ownershipFilter;
+            for (int i = 0; i < dataGridViewOwnerships.Rows.Count; i++)
+                if (v_ownershipBuildingsAssoc.Find("id_ownership_right", dataGridViewOwnerships.Rows[i].Cells["id_ownership_right"].Value) != -1)
+                    dataGridViewOwnerships.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
+                else
+                    dataGridViewOwnerships.Rows[i].DefaultCellStyle.BackColor = Color.White;
+            dataGridViewOwnerships.Columns["id_ownership_right"].Visible = false;
         }
 
         private void FiltersRebuild()
@@ -237,11 +277,13 @@ namespace Registry.Viewport
             {
                 label38.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
+                checkBoxIsMemorial.Location = new System.Drawing.Point(19, 181);
             }
             else
             {
                 label38.Visible = false;
                 comboBoxCurrentFundType.Visible = false;
+                checkBoxIsMemorial.Location = new System.Drawing.Point(19, 153);
             }
         }
 
@@ -325,8 +367,14 @@ namespace Registry.Viewport
             comboBoxState.DataBindings.Clear();
             comboBoxState.DataBindings.Add("SelectedValue", v_premises, "id_state", true, DataSourceUpdateMode.Never, DBNull.Value);
 
+            checkBoxIsMemorial.DataBindings.Clear();
+            checkBoxIsMemorial.DataBindings.Add("Checked", v_premises, "is_memorial", true, DataSourceUpdateMode.Never, true);
+
+            dateTimePickerRegDate.DataBindings.Clear();
+            dateTimePickerRegDate.DataBindings.Add("Value", v_premises, "reg_date", true, DataSourceUpdateMode.Never, null);
 
             dataGridViewRestrictions.DataSource = v_restrictions;
+            id_restriction.DataPropertyName = "id_restriction";
             id_restriction_type.DataSource = v_restrictonTypes;
             id_restriction_type.DataPropertyName = "id_restriction_type";
             id_restriction_type.ValueMember = "id_restriction_type";
@@ -336,6 +384,7 @@ namespace Registry.Viewport
             restriction_description.DataPropertyName = "description";
 
             dataGridViewOwnerships.DataSource = v_ownershipRights;
+            id_ownership_right.DataPropertyName = "id_ownership_right";
             id_ownership_type.DataSource = v_ownershipRightTypes;
             id_ownership_type.DataPropertyName = "id_ownership_right_type";
             id_ownership_type.ValueMember = "id_ownership_right_type";
@@ -548,6 +597,8 @@ namespace Registry.Viewport
             premise.CadastralCost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost");
             premise.BalanceCost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost");
             premise.Description = ViewportHelper.ValueOrNull(row, "description");
+            premise.IsMemorial = ViewportHelper.ValueOrNull<bool>(row, "is_memorial");
+            premise.RegDate = ViewportHelper.ValueOrNull<DateTime>(row, "reg_date");
             return premise;
         }
 
@@ -573,6 +624,8 @@ namespace Registry.Viewport
             premise.CadastralCost = numericUpDownCadastralCost.Value;
             premise.BalanceCost = numericUpDownBalanceCost.Value;
             premise.Description = ViewportHelper.ValueOrNull(textBoxDescription);
+            premise.IsMemorial = checkBoxIsMemorial.Checked;
+            premise.RegDate = ViewportHelper.ValueOrNull(dateTimePickerRegDate);
             return premise;
         }
 
@@ -599,6 +652,8 @@ namespace Registry.Viewport
             numericUpDownHeight.Value = (decimal)ViewportHelper.ValueOrDefault(premise.Height);
             numericUpDownLivingArea.Value = (decimal)ViewportHelper.ValueOrDefault(premise.LivingArea);
             numericUpDownTotalArea.Value = (decimal)ViewportHelper.ValueOrDefault(premise.TotalArea);
+            dateTimePickerRegDate.Value = ViewportHelper.ValueOrDefault(premise.RegDate);
+            checkBoxIsMemorial.Checked = ViewportHelper.ValueOrDefault(premise.IsMemorial);
             textBoxPremisesNumber.Text = premise.PremisesNum;
             textBoxCadastralNum.Text = premise.CadastralNum;
             textBoxDescription.Text = premise.Description;
@@ -623,6 +678,8 @@ namespace Registry.Viewport
             row["cadastral_cost"] = ViewportHelper.ValueOrDBNull(premise.CadastralCost);
             row["balance_cost"] = ViewportHelper.ValueOrDBNull(premise.BalanceCost);
             row["description"] = ViewportHelper.ValueOrDBNull(premise.Description);
+            row["reg_date"] = ViewportHelper.ValueOrDBNull(premise.RegDate);
+            row["is_memorial"] = ViewportHelper.ValueOrDBNull(premise.IsMemorial);
             row.EndEdit();
         }
 
@@ -708,9 +765,11 @@ namespace Registry.Viewport
             restrictions = RestrictionsDataModel.GetInstance();
             restrictionTypes = RestrictionTypesDataModel.GetInstance();
             restrictionPremisesAssoc = RestrictionsPremisesAssocDataModel.GetInstance();
+            restrictionBuildingsAssoc = RestrictionsBuildingsAssocDataModel.GetInstance();
             ownershipRights = OwnershipsRightsDataModel.GetInstance();
             ownershipRightTypes = OwnershipRightTypesDataModel.GetInstance();
             ownershipPremisesAssoc = OwnershipPremisesAssocDataModel.GetInstance();
+            ownershipBuildingsAssoc = OwnershipBuildingsAssocDataModel.GetInstance();
             fundTypes = FundTypesDataModel.GetInstance();
             object_states = ObjectStatesDataModel.GetInstance();
 
@@ -728,9 +787,11 @@ namespace Registry.Viewport
             restrictions.Select();
             restrictionTypes.Select();
             restrictionPremisesAssoc.Select();
+            restrictionBuildingsAssoc.Select();
             ownershipRights.Select();
             ownershipRightTypes.Select();
             ownershipPremisesAssoc.Select();
+            ownershipBuildingsAssoc.Select();
             fundTypes.Select();
             object_states.Select();
 
@@ -802,22 +863,39 @@ namespace Registry.Viewport
             v_sub_premises = new BindingSource();
             v_sub_premises.DataMember = "premises_sub_premises";
             v_sub_premises.DataSource = v_premises;
+            v_sub_premises.CurrentItemChanged += v_sub_premises_CurrentItemChanged;
 
             v_restrictionPremisesAssoc = new BindingSource();
             v_restrictionPremisesAssoc.DataMember = "premises_restrictions_premises_assoc";
             v_restrictionPremisesAssoc.CurrentItemChanged += new EventHandler(v_restrictionPremisesAssoc_CurrentItemChanged);
             v_restrictionPremisesAssoc.DataSource = v_premises;
+
+            v_restrictionBuildingsAssoc = new BindingSource();
+            v_restrictionBuildingsAssoc.DataMember = "restrictions_buildings_assoc";
+            v_restrictionBuildingsAssoc.CurrentItemChanged += v_restrictionBuildingsAssoc_CurrentItemChanged;
+            v_restrictionBuildingsAssoc.DataSource = ds;
+
             RestrictionsFilterRebuild();
             restrictionPremisesAssoc.Select().RowChanged += new DataRowChangeEventHandler(RestrictionsAssoc_RowChanged);
             restrictionPremisesAssoc.Select().RowDeleted += new DataRowChangeEventHandler(RestrictionsAssoc_RowDeleted);
+            restrictionBuildingsAssoc.Select().RowChanged += restrictionBuildingsAssoc_RowChanged;
+            restrictionBuildingsAssoc.Select().RowDeleted += restrictionBuildingsAssoc_RowDeleted;
 
             v_ownershipPremisesAssoc = new BindingSource();
             v_ownershipPremisesAssoc.DataMember = "premises_ownership_premises_assoc";
             v_ownershipPremisesAssoc.CurrentItemChanged += new EventHandler(v_ownershipPremisesAssoc_CurrentItemChanged);
             v_ownershipPremisesAssoc.DataSource = v_premises;
+
+            v_ownershipBuildingsAssoc = new BindingSource();
+            v_ownershipBuildingsAssoc.DataMember = "ownership_buildings_assoc";
+            v_ownershipBuildingsAssoc.CurrentItemChanged += v_ownershipBuildingsAssoc_CurrentItemChanged;
+            v_ownershipBuildingsAssoc.DataSource = ds;
+
             OwnershipsFilterRebuild();
             ownershipPremisesAssoc.Select().RowChanged += new DataRowChangeEventHandler(OwnershipsAssoc_RowChanged);
             ownershipPremisesAssoc.Select().RowDeleted += new DataRowChangeEventHandler(OwnershipsAssoc_RowDeleted);
+            ownershipBuildingsAssoc.Select().RowChanged += new DataRowChangeEventHandler(ownershipBuildingsAssoc_RowChanged);
+            ownershipBuildingsAssoc.Select().RowDeleted += new DataRowChangeEventHandler(ownershipBuildingsAssoc_RowDeleted);
 
             DataBind();
 
@@ -1094,12 +1172,31 @@ namespace Registry.Viewport
                 return;
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
+            else
+            {
+                ownershipPremisesAssoc.Select().RowChanged -= new DataRowChangeEventHandler(OwnershipsAssoc_RowChanged);
+                ownershipPremisesAssoc.Select().RowDeleted -= new DataRowChangeEventHandler(OwnershipsAssoc_RowDeleted);
+                ownershipBuildingsAssoc.Select().RowChanged -= new DataRowChangeEventHandler(ownershipBuildingsAssoc_RowChanged);
+                ownershipBuildingsAssoc.Select().RowDeleted -= new DataRowChangeEventHandler(ownershipBuildingsAssoc_RowDeleted);
+                restrictionPremisesAssoc.Select().RowChanged -= new DataRowChangeEventHandler(RestrictionsAssoc_RowChanged);
+                restrictionPremisesAssoc.Select().RowDeleted -= new DataRowChangeEventHandler(RestrictionsAssoc_RowDeleted);
+                restrictionBuildingsAssoc.Select().RowChanged -= restrictionBuildingsAssoc_RowChanged;
+                restrictionBuildingsAssoc.Select().RowDeleted -= restrictionBuildingsAssoc_RowDeleted;
+            }
         }
 
         public override void ForceClose()
         {
             if (viewportState == ViewportState.NewRowState)
                 premises.EditingNewRecord = false;
+            ownershipPremisesAssoc.Select().RowChanged -= new DataRowChangeEventHandler(OwnershipsAssoc_RowChanged);
+            ownershipPremisesAssoc.Select().RowDeleted -= new DataRowChangeEventHandler(OwnershipsAssoc_RowDeleted);
+            ownershipBuildingsAssoc.Select().RowChanged -= new DataRowChangeEventHandler(ownershipBuildingsAssoc_RowChanged);
+            ownershipBuildingsAssoc.Select().RowDeleted -= new DataRowChangeEventHandler(ownershipBuildingsAssoc_RowDeleted);
+            restrictionPremisesAssoc.Select().RowChanged -= new DataRowChangeEventHandler(RestrictionsAssoc_RowChanged);
+            restrictionPremisesAssoc.Select().RowDeleted -= new DataRowChangeEventHandler(RestrictionsAssoc_RowDeleted);
+            restrictionBuildingsAssoc.Select().RowChanged -= restrictionBuildingsAssoc_RowChanged;
+            restrictionBuildingsAssoc.Select().RowDeleted -= restrictionBuildingsAssoc_RowDeleted;
             base.Close();
         }
 
@@ -1126,6 +1223,54 @@ namespace Registry.Viewport
         public override bool HasAssocTenancies()
         {
             return (v_premises.Position > -1);
+        }
+
+        public override bool HasRegistryExcerptPremiseReport()
+        {
+            return (v_premises.Position > -1);
+        }
+
+        public override bool HasRegistryExcerptSubPremiseReport()
+        {
+            return (v_sub_premises.Position > -1);
+        }
+
+        public override bool HasRegistryExcerptSubPremisesReport()
+        {
+            return (v_premises.Position > -1);
+        }
+
+        public override void RegistryExcerptPremiseReportGenerate()
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            Reporter reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
+            Dictionary<string, string> arguments = new Dictionary<string, string>();
+            arguments.Add("ids", ((DataRowView)v_premises[v_premises.Position])["id_premises"].ToString());
+            arguments.Add("excerpt_type", "1");
+            reporter.Run(arguments);
+        }
+
+        public override void RegistryExcerptSubPremiseReportGenerate()
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            Reporter reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
+            Dictionary<string, string> arguments = new Dictionary<string, string>();
+            arguments.Add("ids", ((DataRowView)v_sub_premises[v_sub_premises.Position])["id_sub_premises"].ToString());
+            arguments.Add("excerpt_type", "2");
+            reporter.Run(arguments);
+        }
+
+        public override void RegistryExcerptSubPremisesReportGenerate()
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            Reporter reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
+            Dictionary<string, string> arguments = new Dictionary<string, string>();
+            arguments.Add("ids", ((DataRowView)v_premises[v_premises.Position])["id_premises"].ToString());
+            arguments.Add("excerpt_type", "3");
+            reporter.Run(arguments);
         }
 
         public override void ShowOwnerships()
@@ -1197,6 +1342,31 @@ namespace Registry.Viewport
                 MenuCallback.StatusBarStateUpdate();
         }
 
+
+        private void ownershipBuildingsAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action == DataRowAction.Delete)
+                OwnershipsFilterRebuild();
+        }
+
+        private void ownershipBuildingsAssoc_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action == DataRowAction.Add)
+                OwnershipsFilterRebuild();
+        }
+
+        private void restrictionBuildingsAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action == DataRowAction.Delete)
+                RestrictionsFilterRebuild();
+        }
+
+        private void restrictionBuildingsAssoc_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action == DataRowAction.Add)
+                RestrictionsFilterRebuild();
+        }
+
         void RestrictionsAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
@@ -1227,6 +1397,16 @@ namespace Registry.Viewport
         }
 
         void v_restrictionPremisesAssoc_CurrentItemChanged(object sender, EventArgs e)
+        {
+            RestrictionsFilterRebuild();
+        }
+
+        void v_ownershipBuildingsAssoc_CurrentItemChanged(object sender, EventArgs e)
+        {
+            OwnershipsFilterRebuild();
+        }
+
+        void v_restrictionBuildingsAssoc_CurrentItemChanged(object sender, EventArgs e)
         {
             RestrictionsFilterRebuild();
         }
@@ -1367,6 +1547,16 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
+        private void dateTimePickerRegDate_ValueChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
+        }
+
+        private void checkBoxIsMemorial_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
+        }
+
         void v_premises_CurrentItemChanged(object sender, EventArgs e)
         {
             SetViewportCaption();
@@ -1384,6 +1574,11 @@ namespace Registry.Viewport
                 return;
             viewportState = ViewportState.ReadState;
             is_editable = true;
+        }
+        void v_sub_premises_CurrentItemChanged(object sender, EventArgs e)
+        {
+            if (Selected)
+                MenuCallback.DocumentsStateUpdate();
         }
 
         private void dataGridViewRestrictions_Resize(object sender, EventArgs e)
@@ -1471,12 +1666,14 @@ namespace Registry.Viewport
             this.textBoxDescription = new System.Windows.Forms.TextBox();
             this.groupBox9 = new System.Windows.Forms.GroupBox();
             this.dataGridViewRestrictions = new System.Windows.Forms.DataGridView();
+            this.id_restriction = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.restriction_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.restriction_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.restriction_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_restriction_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.dataGridViewOwnerships = new System.Windows.Forms.DataGridView();
+            this.id_ownership_right = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ownership_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ownership_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ownership_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -1484,6 +1681,8 @@ namespace Registry.Viewport
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.panel3 = new System.Windows.Forms.Panel();
+            this.dateTimePickerRegDate = new System.Windows.Forms.DateTimePicker();
+            this.label4 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.numericUpDownNumRooms = new System.Windows.Forms.NumericUpDown();
             this.comboBoxPremisesType = new System.Windows.Forms.ComboBox();
@@ -1497,6 +1696,7 @@ namespace Registry.Viewport
             this.comboBoxHouse = new System.Windows.Forms.ComboBox();
             this.label19 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.checkBoxIsMemorial = new System.Windows.Forms.CheckBox();
             this.comboBoxPremisesKind = new System.Windows.Forms.ComboBox();
             this.label28 = new System.Windows.Forms.Label();
             this.label39 = new System.Windows.Forms.Label();
@@ -1580,20 +1780,20 @@ namespace Registry.Viewport
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 3;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 70F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(858, 561);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(858, 581);
             this.tableLayoutPanel3.TabIndex = 0;
             // 
             // groupBox13
             // 
             this.groupBox13.Controls.Add(this.textBoxDescription);
             this.groupBox13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox13.Location = new System.Drawing.Point(3, 353);
+            this.groupBox13.Location = new System.Drawing.Point(3, 383);
             this.groupBox13.Name = "groupBox13";
-            this.groupBox13.Size = new System.Drawing.Size(423, 64);
+            this.groupBox13.Size = new System.Drawing.Size(423, 74);
             this.groupBox13.TabIndex = 4;
             this.groupBox13.TabStop = false;
             this.groupBox13.Text = "Дополнительные сведения";
@@ -1605,7 +1805,7 @@ namespace Registry.Viewport
             this.textBoxDescription.MaxLength = 65535;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
-            this.textBoxDescription.Size = new System.Drawing.Size(417, 44);
+            this.textBoxDescription.Size = new System.Drawing.Size(417, 54);
             this.textBoxDescription.TabIndex = 0;
             this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxDescription_TextChanged);
             // 
@@ -1613,9 +1813,9 @@ namespace Registry.Viewport
             // 
             this.groupBox9.Controls.Add(this.dataGridViewRestrictions);
             this.groupBox9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox9.Location = new System.Drawing.Point(3, 423);
+            this.groupBox9.Location = new System.Drawing.Point(3, 463);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(423, 135);
+            this.groupBox9.Size = new System.Drawing.Size(423, 115);
             this.groupBox9.TabIndex = 5;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Реквизиты";
@@ -1628,6 +1828,7 @@ namespace Registry.Viewport
             this.dataGridViewRestrictions.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewRestrictions.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewRestrictions.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.id_restriction,
             this.restriction_number,
             this.restriction_date,
             this.restriction_description,
@@ -1636,10 +1837,16 @@ namespace Registry.Viewport
             this.dataGridViewRestrictions.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewRestrictions.Name = "dataGridViewRestrictions";
             this.dataGridViewRestrictions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewRestrictions.Size = new System.Drawing.Size(417, 115);
+            this.dataGridViewRestrictions.Size = new System.Drawing.Size(417, 95);
             this.dataGridViewRestrictions.TabIndex = 0;
             this.dataGridViewRestrictions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewRestrictions_CellDoubleClick);
             this.dataGridViewRestrictions.Resize += new System.EventHandler(this.dataGridViewRestrictions_Resize);
+            // 
+            // id_restriction
+            // 
+            this.id_restriction.HeaderText = "Идентификатор";
+            this.id_restriction.Name = "id_restriction";
+            this.id_restriction.Visible = false;
             // 
             // restriction_number
             // 
@@ -1676,9 +1883,9 @@ namespace Registry.Viewport
             // 
             this.groupBox10.Controls.Add(this.dataGridViewOwnerships);
             this.groupBox10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox10.Location = new System.Drawing.Point(432, 423);
+            this.groupBox10.Location = new System.Drawing.Point(432, 463);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(423, 135);
+            this.groupBox10.Size = new System.Drawing.Size(423, 115);
             this.groupBox10.TabIndex = 6;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Ограничения";
@@ -1691,6 +1898,7 @@ namespace Registry.Viewport
             this.dataGridViewOwnerships.BackgroundColor = System.Drawing.Color.White;
             this.dataGridViewOwnerships.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewOwnerships.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.id_ownership_right,
             this.ownership_number,
             this.ownership_date,
             this.ownership_description,
@@ -1699,10 +1907,16 @@ namespace Registry.Viewport
             this.dataGridViewOwnerships.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewOwnerships.Name = "dataGridViewOwnerships";
             this.dataGridViewOwnerships.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewOwnerships.Size = new System.Drawing.Size(417, 115);
+            this.dataGridViewOwnerships.Size = new System.Drawing.Size(417, 95);
             this.dataGridViewOwnerships.TabIndex = 0;
             this.dataGridViewOwnerships.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOwnerships_CellDoubleClick);
             this.dataGridViewOwnerships.Resize += new System.EventHandler(this.dataGridViewOwnerships_Resize);
+            // 
+            // id_ownership_right
+            // 
+            this.id_ownership_right.HeaderText = "Идентификатор";
+            this.id_ownership_right.Name = "id_ownership_right";
+            this.id_ownership_right.Visible = false;
             // 
             // ownership_number
             // 
@@ -1742,7 +1956,7 @@ namespace Registry.Viewport
             this.groupBox8.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox8.Location = new System.Drawing.Point(3, 3);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(852, 204);
+            this.groupBox8.Size = new System.Drawing.Size(852, 234);
             this.groupBox8.TabIndex = 0;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Общие сведения";
@@ -1760,11 +1974,13 @@ namespace Registry.Viewport
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(846, 184);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(846, 214);
             this.tableLayoutPanel4.TabIndex = 0;
             // 
             // panel3
             // 
+            this.panel3.Controls.Add(this.dateTimePickerRegDate);
+            this.panel3.Controls.Add(this.label4);
             this.panel3.Controls.Add(this.label1);
             this.panel3.Controls.Add(this.numericUpDownNumRooms);
             this.panel3.Controls.Add(this.comboBoxPremisesType);
@@ -1780,8 +1996,27 @@ namespace Registry.Viewport
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 3);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(417, 178);
+            this.panel3.Size = new System.Drawing.Size(417, 208);
             this.panel3.TabIndex = 1;
+            // 
+            // dateTimePickerRegDate
+            // 
+            this.dateTimePickerRegDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerRegDate.Location = new System.Drawing.Point(169, 180);
+            this.dateTimePickerRegDate.Name = "dateTimePickerRegDate";
+            this.dateTimePickerRegDate.Size = new System.Drawing.Size(242, 21);
+            this.dateTimePickerRegDate.TabIndex = 7;
+            this.dateTimePickerRegDate.ValueChanged += new System.EventHandler(this.dateTimePickerRegDate_ValueChanged);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(10, 183);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(114, 15);
+            this.label4.TabIndex = 10;
+            this.label4.Text = "Дата регистрации";
             // 
             // label1
             // 
@@ -1925,6 +2160,7 @@ namespace Registry.Viewport
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.checkBoxIsMemorial);
             this.panel4.Controls.Add(this.comboBoxPremisesKind);
             this.panel4.Controls.Add(this.label28);
             this.panel4.Controls.Add(this.label39);
@@ -1940,8 +2176,19 @@ namespace Registry.Viewport
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(426, 3);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(417, 178);
+            this.panel4.Size = new System.Drawing.Size(417, 208);
             this.panel4.TabIndex = 2;
+            // 
+            // checkBoxIsMemorial
+            // 
+            this.checkBoxIsMemorial.AutoSize = true;
+            this.checkBoxIsMemorial.Location = new System.Drawing.Point(19, 181);
+            this.checkBoxIsMemorial.Name = "checkBoxIsMemorial";
+            this.checkBoxIsMemorial.Size = new System.Drawing.Size(141, 19);
+            this.checkBoxIsMemorial.TabIndex = 6;
+            this.checkBoxIsMemorial.Text = "Памятник культуры";
+            this.checkBoxIsMemorial.UseVisualStyleBackColor = true;
+            this.checkBoxIsMemorial.CheckedChanged += new System.EventHandler(this.checkBoxIsMemorial_CheckedChanged);
             // 
             // comboBoxPremisesKind
             // 
@@ -2086,7 +2333,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel5.Controls.Add(this.groupBox11, 0, 0);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 213);
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 243);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 1;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -2138,7 +2385,7 @@ namespace Registry.Viewport
             this.label3.TabIndex = 17;
             this.label3.Text = "Высота помещения";
             // 
-            // numericUpDownMunicapalArea
+            // numericUpDownMunicipalArea
             // 
             this.numericUpDownMunicipalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -2149,7 +2396,7 @@ namespace Registry.Viewport
             0,
             0,
             0});
-            this.numericUpDownMunicipalArea.Name = "numericUpDownMunicapalArea";
+            this.numericUpDownMunicipalArea.Name = "numericUpDownMunicipalArea";
             this.numericUpDownMunicipalArea.ReadOnly = true;
             this.numericUpDownMunicipalArea.Size = new System.Drawing.Size(242, 21);
             this.numericUpDownMunicipalArea.TabIndex = 2;
@@ -2220,10 +2467,10 @@ namespace Registry.Viewport
             // 
             this.groupBoxRooms.Controls.Add(this.dataGridViewRooms);
             this.groupBoxRooms.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxRooms.Location = new System.Drawing.Point(432, 213);
+            this.groupBoxRooms.Location = new System.Drawing.Point(432, 243);
             this.groupBoxRooms.Name = "groupBoxRooms";
             this.tableLayoutPanel3.SetRowSpan(this.groupBoxRooms, 2);
-            this.groupBoxRooms.Size = new System.Drawing.Size(423, 204);
+            this.groupBoxRooms.Size = new System.Drawing.Size(423, 214);
             this.groupBoxRooms.TabIndex = 3;
             this.groupBoxRooms.TabStop = false;
             this.groupBoxRooms.Text = "Комнаты";
@@ -2243,7 +2490,7 @@ namespace Registry.Viewport
             this.dataGridViewRooms.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewRooms.Name = "dataGridViewRooms";
             this.dataGridViewRooms.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewRooms.Size = new System.Drawing.Size(417, 184);
+            this.dataGridViewRooms.Size = new System.Drawing.Size(417, 194);
             this.dataGridViewRooms.TabIndex = 0;
             this.dataGridViewRooms.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewRooms_CellDoubleClick);
             this.dataGridViewRooms.Resize += new System.EventHandler(this.dataGridViewRooms_Resize);
@@ -2279,9 +2526,9 @@ namespace Registry.Viewport
             // PremisesViewport
             // 
             this.AutoScroll = true;
-            this.AutoScrollMinSize = new System.Drawing.Size(665, 520);
+            this.AutoScrollMinSize = new System.Drawing.Size(665, 580);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(864, 567);
+            this.ClientSize = new System.Drawing.Size(864, 587);
             this.Controls.Add(this.tableLayoutPanel3);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

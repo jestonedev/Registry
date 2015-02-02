@@ -152,12 +152,12 @@ namespace Registry.Viewport
 
         private void UnbindedCheckBoxesUpdate()
         {
-            DataRowView row = (v_funds_history.Position >= 0) ? (DataRowView)v_funds_history[v_funds_history.Position] : null;
             checkBoxIncludeRest.Checked = (v_funds_history.Position >= 0) &&
                 (((DataRowView)v_funds_history[v_funds_history.Position])["include_restriction_date"] != DBNull.Value);
             checkBoxExcludeRest.Checked = (v_funds_history.Position >= 0) &&
                 (((DataRowView)v_funds_history[v_funds_history.Position])["exclude_restriction_date"] != DBNull.Value);
-            if ((v_funds_history.Position >= 0) && (row["protocol_date"] != DBNull.Value))
+            if ((v_funds_history.Position >= 0) &&
+                (((DataRowView)v_funds_history[v_funds_history.Position])["protocol_date"] != DBNull.Value))
                 dateTimePickerProtocolDate.Checked = true;
             else
             {
@@ -687,6 +687,7 @@ namespace Registry.Viewport
             dataGridView.Enabled = false;
             is_editable = true;
             funds_history.EditingNewRecord = true;
+            UnbindedCheckBoxesUpdate();
         }
 
         public override bool CanDeleteRecord()
@@ -814,7 +815,8 @@ namespace Registry.Viewport
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.RelationsStateUpdate();
             }
-            UnbindedCheckBoxesUpdate();
+            if (is_editable)
+                UnbindedCheckBoxesUpdate();
             if (v_funds_history.Position == -1)
                 return;
             if (viewportState == ViewportState.NewRowState)

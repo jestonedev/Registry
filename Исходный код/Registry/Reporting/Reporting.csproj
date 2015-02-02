@@ -74,6 +74,7 @@
       <DependentUpon>DateRangeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="RegistryReporters\ExcerptReporter.cs" />
     <Compile Include="RegistryReporters\FullStatisticReporter.cs" />
     <Compile Include="RegistryReporters\MunicipalPremisesReporter.cs" />
     <Compile Include="RegistryReporters\PremisesByDonationReporter.cs" />
@@ -130,7 +131,6 @@
     <Compile Include="TenancyReporters\TenancyOrderReporter.cs" />
     <Compile Include="TenancyReporters\TenancyStatisticForCoMSReporter.cs" />
     <Compile Include="TenancyReporters\TenancyStatisticReporter.cs" />
-    <Compile Include="TenancyReporters\TenancyExcerptReporter.cs" />
     <Compile Include="TenancyStatisticFilterForm.cs">
       <SubType>Form</SubType>
     </Compile>

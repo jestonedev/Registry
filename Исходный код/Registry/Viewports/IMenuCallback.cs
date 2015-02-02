@@ -11,7 +11,7 @@ namespace Registry.Viewport
         void NavigationStateUpdate();
         void EditingStateUpdate();
         void RelationsStateUpdate();
-        void TenancyRefsStateUpdate();
+        void DocumentsStateUpdate();
         void StatusBarStateUpdate();
         void ForceCloseDetachedViewports();
         void AddViewport(Viewport viewport);

@@ -36,6 +36,8 @@ namespace Registry.Reporting
                     return new PremisesByDonationReporter();
                 case ReporterType.RegistryMunicipalPremisesReporter:
                     return new MunicipalPremisesReporter();
+                case ReporterType.RegistryExcerptReporter:
+                    return new ExcerptReporter();
                 case ReporterType.ClaimsStatisticReporter:
                     return new ClaimsStatisticReporter();
                 case ReporterType.TenancyContractCommercialReporter:
@@ -56,8 +58,6 @@ namespace Registry.Reporting
                     return new TenancyStatisticForCoMSReporter();
                 case ReporterType.TenancyOrderReporter:
                     return new TenancyOrderReporter();
-                case ReporterType.TenancyExcerptReporter:
-                    return new TenancyExcerptReporter();
                 case ReporterType.TenancyNotifiesReporter:
                     return new TenancyNotifiesReporter();
                 case ReporterType.ResettleBuildingDemolishingReporter:

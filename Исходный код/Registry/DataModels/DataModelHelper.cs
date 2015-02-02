@@ -577,12 +577,12 @@ namespace Registry.DataModels
         }
 
         /// <summary>
-        /// Идентификаторы объектов недвижимости, исключенных из муниципальной собственности
+        /// Объекты недвижимости, исключенные из муниципальной собственности
         /// </summary>
         /// <param name="objectAssocDataRows">Список строк из ассоциативной модели реквизитов</param>
         /// <param name="entity">Тип ассоциативной модели</param>
-        /// <returns>Перечень идентификаторов муниципальных объектов</returns>
-        public static IEnumerable<int> ObjectIDsExcludedFromMunicipal(IEnumerable<DataRow> objectAssocDataRows, EntityType entity)
+        /// <returns>Перечень объектов</returns>
+        public static IEnumerable<RestrictionObjectAssoc> ObjectIDsExcludedFromMunicipal(IEnumerable<DataRow> objectAssocDataRows, EntityType entity)
         {
             var restrictions = DataModelHelper.FilterRows(RestrictionsDataModel.GetInstance().Select());
             string fieldName = null;
@@ -620,8 +620,56 @@ namespace Registry.DataModels
                                              date = rmd_row.date
                                          }
                                          where restrictions_row.Field<int>("id_restriction_type") == 2
-                                         select restrictions__assoc_row.Field<int>(fieldName);
+                                         select new RestrictionObjectAssoc(restrictions__assoc_row.Field<int?>(fieldName), restrictions_row.Field<int?>("id_restriction"), restrictions_row.Field<DateTime?>("date"));
             return exclude_from_municipal;
+        }
+
+        /// <summary>
+        /// Объекты недвижимости, включенные в муниципальную собственность
+        /// </summary>
+        /// <param name="objectAssocDataRows">Список строк из ассоциативной модели реквизитов</param>
+        /// <param name="entity">Тип ассоциативной модели</param>
+        /// <returns>Перечень объектов</returns>
+        public static IEnumerable<RestrictionObjectAssoc> ObjectIDsIncludedIntoMunicipal(IEnumerable<DataRow> objectAssocDataRows, EntityType entity)
+        {
+            var restrictions = DataModelHelper.FilterRows(RestrictionsDataModel.GetInstance().Select());
+            string fieldName = null;
+            if (entity == EntityType.Premise)
+                fieldName = "id_premises";
+            else
+                if (entity == EntityType.Building)
+                    fieldName = "id_building";
+                else
+                    if (entity == EntityType.SubPremise)
+                        fieldName = "id_sub_premises";
+            var restrictions_max_date = from restrictions_assoc_row in objectAssocDataRows
+                                        join restrictions_row in restrictions
+                                        on restrictions_assoc_row.Field<int>("id_restriction") equals restrictions_row.Field<int>("id_restriction")
+                                        where new int[] { 1, 2 }.Contains(restrictions_row.Field<int>("id_restriction_type"))
+                                        group restrictions_row.Field<DateTime>("date") by restrictions_assoc_row.Field<int>(fieldName) into gs
+                                        select new
+                                        {
+                                            id = gs.Key,
+                                            date = gs.Max()
+                                        };
+            var included_into_municipal = from restrictions_row in restrictions
+                                         join restrictions__assoc_row in objectAssocDataRows
+                                         on restrictions_row.Field<int>("id_restriction")
+                                         equals restrictions__assoc_row.Field<int>("id_restriction")
+                                         join rmd_row in restrictions_max_date
+                                         on new
+                                         {
+                                             id = restrictions__assoc_row.Field<int>(fieldName),
+                                             date = restrictions_row.Field<DateTime>("date")
+                                         } equals
+                                         new
+                                         {
+                                             id = rmd_row.id,
+                                             date = rmd_row.date
+                                         }
+                                         where restrictions_row.Field<int>("id_restriction_type") == 1
+                                         select new RestrictionObjectAssoc(restrictions__assoc_row.Field<int?>(fieldName), restrictions_row.Field<int?>("id_restriction"), restrictions_row.Field<DateTime?>("date"));
+            return included_into_municipal;
         }
 
         /// <summary>

@@ -454,7 +454,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(493, 557);
+            this.ClientSize = new System.Drawing.Size(493, 563);
             this.Controls.Add(this.comboBoxOwnershipType);
             this.Controls.Add(this.checkBoxOwnershipTypeEnable);
             this.Controls.Add(this.label12);

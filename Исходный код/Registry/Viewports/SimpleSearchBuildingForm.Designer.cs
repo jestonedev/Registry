@@ -90,8 +90,6 @@
             // checkBoxMunicipalOnly
             // 
             this.checkBoxMunicipalOnly.AutoSize = true;
-            this.checkBoxMunicipalOnly.Checked = true;
-            this.checkBoxMunicipalOnly.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxMunicipalOnly.Location = new System.Drawing.Point(12, 46);
             this.checkBoxMunicipalOnly.Name = "checkBoxMunicipalOnly";
             this.checkBoxMunicipalOnly.Size = new System.Drawing.Size(163, 19);
