@@ -9,29 +9,13 @@ using System.Windows.Forms;
 
 namespace Registry.Reporting
 {
-    public partial class TenancyExcerptSettingsForm : Form
+    public partial class RegistryExcerptSettingsForm : Form
     {
         public DateTime ExcerptDateFrom
         {
             get
             {
                 return dateTimePickerExcertFrom.Value;
-            }
-        }
-
-        public DateTime RegistryInsertDate
-        {
-            get
-            {
-                return dateTimePickerRegistryInsert.Value;
-            }
-        }
-
-        public bool IsCultureMemorial
-        {
-            get
-            {
-                return checkBoxIsCultureMemorial.Checked;
             }
         }
 
@@ -43,7 +27,7 @@ namespace Registry.Reporting
             }
         }
 
-        public TenancyExcerptSettingsForm()
+        public RegistryExcerptSettingsForm()
         {
             InitializeComponent();
             foreach (Control control in this.Controls)

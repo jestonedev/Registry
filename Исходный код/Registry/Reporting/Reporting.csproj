@@ -102,11 +102,11 @@
     </Compile>
     <Compile Include="RegistryReporters\SocialFundReporter.cs" />
     <Compile Include="RegistryReporters\SpecialFundReporter.cs" />
-    <Compile Include="TenancyExcerptSettingsForm.cs">
+    <Compile Include="RegistryExcerptSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TenancyExcerptSettingsForm.Designer.cs">
-      <DependentUpon>TenancyExcerptSettingsForm.cs</DependentUpon>
+    <Compile Include="RegistryExcerptSettingsForm.Designer.cs">
+      <DependentUpon>RegistryExcerptSettingsForm.cs</DependentUpon>
     </Compile>
     <Compile Include="TenancyNotifiesSettingsForm.cs">
       <SubType>Form</SubType>
@@ -162,8 +162,8 @@
     <EmbeddedResource Include="SelectRegionsForm.resx">
       <DependentUpon>SelectRegionsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TenancyExcerptSettingsForm.resx">
-      <DependentUpon>TenancyExcerptSettingsForm.cs</DependentUpon>
+    <EmbeddedResource Include="RegistryExcerptSettingsForm.resx">
+      <DependentUpon>RegistryExcerptSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TenancyNotifiesSettingsForm.resx">
       <DependentUpon>TenancyNotifiesSettingsForm.cs</DependentUpon>

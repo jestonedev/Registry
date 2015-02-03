@@ -53,6 +53,14 @@ namespace Registry
             this.ribbonOrbMenuItemResettles = new System.Windows.Forms.RibbonOrbMenuItem();
             this.ribbonSeparator4 = new System.Windows.Forms.RibbonSeparator();
             this.ribbonOrbMenuItemExit = new System.Windows.Forms.RibbonOrbMenuItem();
+            this.ribbonButtonOrbTenancyContract = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonOrbTenancyContract1711 = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonOrbTenancyContract1712 = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonOrbTenancyAct = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonOrbTenancyAgreement = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonOrbRegistryExcerptPremise = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonOrbRegistryExcerptSubPremise = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonOrbRegistryExcerptSubPremises = new System.Windows.Forms.RibbonButton();
             this.ribbonTabGeneral = new System.Windows.Forms.RibbonTab();
             this.ribbonPanel1 = new System.Windows.Forms.RibbonPanel();
             this.ribbonButtonSave = new System.Windows.Forms.RibbonButton();
@@ -153,14 +161,6 @@ namespace Registry
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripLabelRecordCount = new System.Windows.Forms.ToolStripLabel();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
-            this.ribbonButtonOrbTenancyContract = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonOrbTenancyContract1711 = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonOrbTenancyContract1712 = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonOrbTenancyAct = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonOrbTenancyAgreement = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonOrbRegistryExcerptPremise = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonOrbRegistryExcerptSubPremise = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonOrbRegistryExcerptSubPremises = new System.Windows.Forms.RibbonButton();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -281,6 +281,91 @@ namespace Registry
             this.ribbonOrbMenuItemExit.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemExit.ToolTipImage")));
             this.ribbonOrbMenuItemExit.ToolTipTitle = "Выход из программы";
             this.ribbonOrbMenuItemExit.Click += new System.EventHandler(this.ribbonOrbMenuItemExit_Click);
+            // 
+            // ribbonButtonOrbTenancyContract
+            // 
+            this.ribbonButtonOrbTenancyContract.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract.Image")));
+            this.ribbonButtonOrbTenancyContract.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract.SmallImage")));
+            this.ribbonButtonOrbTenancyContract.Text = "Договор";
+            this.ribbonButtonOrbTenancyContract.ToolTip = "При нажатии на данную кнопку будет сформирован договор по текущему процессу найма" +
+    "";
+            this.ribbonButtonOrbTenancyContract.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract.ToolTipImage")));
+            this.ribbonButtonOrbTenancyContract.ToolTipTitle = "Договор";
+            this.ribbonButtonOrbTenancyContract.Click += new System.EventHandler(this.ribbonButtonTenancyContract_Click);
+            // 
+            // ribbonButtonOrbTenancyContract1711
+            // 
+            this.ribbonButtonOrbTenancyContract1711.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract1711.Image")));
+            this.ribbonButtonOrbTenancyContract1711.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract1711.SmallImage")));
+            this.ribbonButtonOrbTenancyContract1711.Text = "Договор (форма 1711)";
+            this.ribbonButtonOrbTenancyContract1711.ToolTip = "Сформировать договор по форме 1711";
+            this.ribbonButtonOrbTenancyContract1711.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract1711.ToolTipImage")));
+            this.ribbonButtonOrbTenancyContract1711.ToolTipTitle = "Договор (форма 1711)";
+            this.ribbonButtonOrbTenancyContract1711.Click += new System.EventHandler(this.ribbonButton1711_Click);
+            // 
+            // ribbonButtonOrbTenancyContract1712
+            // 
+            this.ribbonButtonOrbTenancyContract1712.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract1712.Image")));
+            this.ribbonButtonOrbTenancyContract1712.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract1712.SmallImage")));
+            this.ribbonButtonOrbTenancyContract1712.Text = "Договор (форма 1712)";
+            this.ribbonButtonOrbTenancyContract1712.ToolTip = "Сформировать договор по форме 1712";
+            this.ribbonButtonOrbTenancyContract1712.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract1712.ToolTipImage")));
+            this.ribbonButtonOrbTenancyContract1712.ToolTipTitle = "Договор (форма 1712)";
+            this.ribbonButtonOrbTenancyContract1712.Click += new System.EventHandler(this.ribbonButton1712_Click);
+            // 
+            // ribbonButtonOrbTenancyAct
+            // 
+            this.ribbonButtonOrbTenancyAct.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyAct.Image")));
+            this.ribbonButtonOrbTenancyAct.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyAct.SmallImage")));
+            this.ribbonButtonOrbTenancyAct.Text = "Акт";
+            this.ribbonButtonOrbTenancyAct.ToolTip = "При нажатии на данную кнопку будет сформирован акт по текущему процессу найма";
+            this.ribbonButtonOrbTenancyAct.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyAct.ToolTipImage")));
+            this.ribbonButtonOrbTenancyAct.ToolTipTitle = "Акт";
+            this.ribbonButtonOrbTenancyAct.Click += new System.EventHandler(this.ribbonButtonTenancyAct_Click);
+            // 
+            // ribbonButtonOrbTenancyAgreement
+            // 
+            this.ribbonButtonOrbTenancyAgreement.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyAgreement.Image")));
+            this.ribbonButtonOrbTenancyAgreement.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyAgreement.SmallImage")));
+            this.ribbonButtonOrbTenancyAgreement.Text = "Соглашение";
+            this.ribbonButtonOrbTenancyAgreement.ToolTip = "При нажатии на данную кнопку будет сформировано соглашение по текущему процессу н" +
+    "айма";
+            this.ribbonButtonOrbTenancyAgreement.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyAgreement.ToolTipImage")));
+            this.ribbonButtonOrbTenancyAgreement.ToolTipTitle = "Соглашение";
+            this.ribbonButtonOrbTenancyAgreement.Click += new System.EventHandler(this.ribbonButtonTenancyAgreement_Click);
+            // 
+            // ribbonButtonOrbRegistryExcerptPremise
+            // 
+            this.ribbonButtonOrbRegistryExcerptPremise.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryExcerptPremise.Image")));
+            this.ribbonButtonOrbRegistryExcerptPremise.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryExcerptPremise.SmallImage")));
+            this.ribbonButtonOrbRegistryExcerptPremise.Text = "Выписка (на помещение)";
+            this.ribbonButtonOrbRegistryExcerptPremise.ToolTip = "При нажатии на данную кнопку будет сформирована выписка на текущую выбранную квар" +
+    "тиру";
+            this.ribbonButtonOrbRegistryExcerptPremise.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryExcerptPremise.ToolTipImage")));
+            this.ribbonButtonOrbRegistryExcerptPremise.ToolTipTitle = "Выписка (на помещение)";
+            this.ribbonButtonOrbRegistryExcerptPremise.Click += new System.EventHandler(this.ribbonButtonOrbRegistryExcerptPremise_Click);
+            // 
+            // ribbonButtonOrbRegistryExcerptSubPremise
+            // 
+            this.ribbonButtonOrbRegistryExcerptSubPremise.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryExcerptSubPremise.Image")));
+            this.ribbonButtonOrbRegistryExcerptSubPremise.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryExcerptSubPremise.SmallImage")));
+            this.ribbonButtonOrbRegistryExcerptSubPremise.Text = "Выписка (на текущую комнату)";
+            this.ribbonButtonOrbRegistryExcerptSubPremise.ToolTip = "При нажатии на данную кнопку будет сформирована выписка на текущую выбранную комн" +
+    "ату. Разрешено выбирать и немуниципальные комнаты";
+            this.ribbonButtonOrbRegistryExcerptSubPremise.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryExcerptSubPremise.ToolTipImage")));
+            this.ribbonButtonOrbRegistryExcerptSubPremise.ToolTipTitle = "Выписка (на текущую комнату)";
+            this.ribbonButtonOrbRegistryExcerptSubPremise.Click += new System.EventHandler(this.ribbonButtonOrbRegistryExcerptSubPremise_Click);
+            // 
+            // ribbonButtonOrbRegistryExcerptSubPremises
+            // 
+            this.ribbonButtonOrbRegistryExcerptSubPremises.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryExcerptSubPremises.Image")));
+            this.ribbonButtonOrbRegistryExcerptSubPremises.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryExcerptSubPremises.SmallImage")));
+            this.ribbonButtonOrbRegistryExcerptSubPremises.Text = "Выписка (на все муниципальные комнаты)";
+            this.ribbonButtonOrbRegistryExcerptSubPremises.ToolTip = "При нажатии на данную комнату будет сформирована выписка на все муниципальные ком" +
+    "наты данного помещения";
+            this.ribbonButtonOrbRegistryExcerptSubPremises.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryExcerptSubPremises.ToolTipImage")));
+            this.ribbonButtonOrbRegistryExcerptSubPremises.ToolTipTitle = "Выписка (на все муниципальные комнаты)";
+            this.ribbonButtonOrbRegistryExcerptSubPremises.Click += new System.EventHandler(this.ribbonButtonOrbRegistryExcerptSubPremises_Click);
             // 
             // ribbonTabGeneral
             // 
@@ -1388,85 +1473,6 @@ namespace Registry
             this.dockPanel.Skin = dockPanelSkin1;
             this.dockPanel.TabIndex = 5;
             this.dockPanel.ActiveDocumentChanged += new System.EventHandler(this.dockPanel_ActiveDocumentChanged);
-            // 
-            // ribbonButtonOrbTenancyContract
-            // 
-            this.ribbonButtonOrbTenancyContract.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract.Image")));
-            this.ribbonButtonOrbTenancyContract.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract.SmallImage")));
-            this.ribbonButtonOrbTenancyContract.Text = "Договор";
-            this.ribbonButtonOrbTenancyContract.ToolTip = "При нажатии на данную кнопку будет сформирован договор по текущему процессу найма" +
-    "";
-            this.ribbonButtonOrbTenancyContract.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract.ToolTipImage")));
-            this.ribbonButtonOrbTenancyContract.ToolTipTitle = "Договор";
-            this.ribbonButtonOrbTenancyContract.Click += new System.EventHandler(this.ribbonButtonTenancyContract_Click);
-            // 
-            // ribbonButtonOrbTenancyContract1711
-            // 
-            this.ribbonButtonOrbTenancyContract1711.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract1711.Image")));
-            this.ribbonButtonOrbTenancyContract1711.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract1711.SmallImage")));
-            this.ribbonButtonOrbTenancyContract1711.Text = "Договор (форма 1711)";
-            this.ribbonButtonOrbTenancyContract1711.ToolTip = "Сформировать договор по форме 1711";
-            this.ribbonButtonOrbTenancyContract1711.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract1711.ToolTipImage")));
-            this.ribbonButtonOrbTenancyContract1711.ToolTipTitle = "Договор (форма 1711)";
-            this.ribbonButtonOrbTenancyContract1711.Click += new System.EventHandler(this.ribbonButton1711_Click);
-            // 
-            // ribbonButtonOrbTenancyContract1712
-            // 
-            this.ribbonButtonOrbTenancyContract1712.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract1712.Image")));
-            this.ribbonButtonOrbTenancyContract1712.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract1712.SmallImage")));
-            this.ribbonButtonOrbTenancyContract1712.Text = "Договор (форма 1712)";
-            this.ribbonButtonOrbTenancyContract1712.ToolTip = "Сформировать договор по форме 1712";
-            this.ribbonButtonOrbTenancyContract1712.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyContract1712.ToolTipImage")));
-            this.ribbonButtonOrbTenancyContract1712.ToolTipTitle = "Договор (форма 1712)";
-            this.ribbonButtonOrbTenancyContract1712.Click += new System.EventHandler(this.ribbonButton1712_Click);
-            // 
-            // ribbonButtonOrbTenancyAct
-            // 
-            this.ribbonButtonOrbTenancyAct.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyAct.Image")));
-            this.ribbonButtonOrbTenancyAct.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyAct.SmallImage")));
-            this.ribbonButtonOrbTenancyAct.Text = "Акт";
-            this.ribbonButtonOrbTenancyAct.ToolTip = "При нажатии на данную кнопку будет сформирован акт по текущему процессу найма";
-            this.ribbonButtonOrbTenancyAct.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyAct.ToolTipImage")));
-            this.ribbonButtonOrbTenancyAct.ToolTipTitle = "Акт";
-            this.ribbonButtonOrbTenancyAct.Click += new System.EventHandler(this.ribbonButtonTenancyAct_Click);
-            // 
-            // ribbonButtonOrbTenancyAgreement
-            // 
-            this.ribbonButtonOrbTenancyAgreement.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyAgreement.Image")));
-            this.ribbonButtonOrbTenancyAgreement.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyAgreement.SmallImage")));
-            this.ribbonButtonOrbTenancyAgreement.Text = "Соглашение";
-            this.ribbonButtonOrbTenancyAgreement.ToolTip = "При нажатии на данную кнопку будет сформировано соглашение по текущему процессу н" +
-    "айма";
-            this.ribbonButtonOrbTenancyAgreement.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyAgreement.ToolTipImage")));
-            this.ribbonButtonOrbTenancyAgreement.ToolTipTitle = "Соглашение";
-            this.ribbonButtonOrbTenancyAgreement.Click += new System.EventHandler(this.ribbonButtonTenancyAgreement_Click);
-            // 
-            // ribbonButtonOrbRegistryExcerptPremise
-            // 
-            this.ribbonButtonOrbRegistryExcerptPremise.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryExcerptPremise.Image")));
-            this.ribbonButtonOrbRegistryExcerptPremise.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryExcerptPremise.SmallImage")));
-            this.ribbonButtonOrbRegistryExcerptPremise.Text = "Выписка (на квартиру)";
-            this.ribbonButtonOrbRegistryExcerptPremise.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryExcerptPremise.ToolTipImage")));
-            this.ribbonButtonOrbRegistryExcerptPremise.ToolTipTitle = "Выписка (на квартиру)";
-            this.ribbonButtonOrbRegistryExcerptPremise.Click += new System.EventHandler(this.ribbonButtonOrbRegistryExcerptPremise_Click);
-            // 
-            // ribbonButtonOrbRegistryExcerptSubPremise
-            // 
-            this.ribbonButtonOrbRegistryExcerptSubPremise.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryExcerptSubPremise.Image")));
-            this.ribbonButtonOrbRegistryExcerptSubPremise.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryExcerptSubPremise.SmallImage")));
-            this.ribbonButtonOrbRegistryExcerptSubPremise.Text = "Выписка (на тек. комнату)";
-            this.ribbonButtonOrbRegistryExcerptSubPremise.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryExcerptSubPremise.ToolTipImage")));
-            this.ribbonButtonOrbRegistryExcerptSubPremise.ToolTipTitle = "Выписка (на тек. комнату)";
-            this.ribbonButtonOrbRegistryExcerptSubPremise.Click += new System.EventHandler(this.ribbonButtonOrbRegistryExcerptSubPremise_Click);
-            // 
-            // ribbonButtonOrbRegistryExcerptSubPremises
-            // 
-            this.ribbonButtonOrbRegistryExcerptSubPremises.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryExcerptSubPremises.Image")));
-            this.ribbonButtonOrbRegistryExcerptSubPremises.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryExcerptSubPremises.SmallImage")));
-            this.ribbonButtonOrbRegistryExcerptSubPremises.Text = "Выписка (на все мун. комнаты)";
-            this.ribbonButtonOrbRegistryExcerptSubPremises.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryExcerptSubPremises.ToolTipImage")));
-            this.ribbonButtonOrbRegistryExcerptSubPremises.ToolTipTitle = "Выписка (на все мун. комнаты)";
-            this.ribbonButtonOrbRegistryExcerptSubPremises.Click += new System.EventHandler(this.ribbonButtonOrbRegistryExcerptSubPremises_Click);
             // 
             // MainForm
             // 

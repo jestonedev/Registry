@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -14,7 +15,15 @@ namespace Registry.Reporting.RegistryReporters
                 arguments = new Dictionary<string, string>();
             arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "registry\\excerpt.xml"));
             arguments.Add("connectionString", RegistrySettings.ConnectionString);
-            base.Run(arguments);
+            using (RegistryExcerptSettingsForm resForm = new RegistryExcerptSettingsForm())
+            {
+                if (resForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    arguments.Add("excerpt_date_from", resForm.ExcerptDateFrom.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
+                    arguments.Add("excerpt_number", resForm.ExcerptNumber);
+                    base.Run(arguments);
+                }
+            }
         }
     }
 }

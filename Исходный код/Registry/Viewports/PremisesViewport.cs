@@ -1342,7 +1342,6 @@ namespace Registry.Viewport
                 MenuCallback.StatusBarStateUpdate();
         }
 
-
         private void ownershipBuildingsAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
