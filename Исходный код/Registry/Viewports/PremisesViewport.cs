@@ -1429,7 +1429,7 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
-        void comboBoxStreet_SelectedIndexChanged(object sender, EventArgs e)
+        private void comboBoxStreet_SelectedValueChanged(object sender, EventArgs e)
         {
             CheckViewportModifications();
         }
@@ -2122,8 +2122,8 @@ namespace Registry.Viewport
             this.comboBoxStreet.Name = "comboBoxStreet";
             this.comboBoxStreet.Size = new System.Drawing.Size(242, 23);
             this.comboBoxStreet.TabIndex = 0;
-            this.comboBoxStreet.SelectedIndexChanged += new System.EventHandler(this.comboBoxStreet_SelectedIndexChanged);
             this.comboBoxStreet.DropDownClosed += new System.EventHandler(this.comboBoxStreet_DropDownClosed);
+            this.comboBoxStreet.SelectedValueChanged += new System.EventHandler(this.comboBoxStreet_SelectedValueChanged);
             this.comboBoxStreet.VisibleChanged += new System.EventHandler(this.comboBoxStreet_VisibleChanged);
             this.comboBoxStreet.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxStreet_KeyUp);
             this.comboBoxStreet.Leave += new System.EventHandler(this.comboBoxStreet_Leave);
