@@ -179,6 +179,11 @@ namespace Registry.Viewport
 
         private bool ChangeViewportStateTo(ViewportState state)
         {
+            if (!AccessControl.HasPrivelege(Priveleges.TenancyWrite))
+            {
+                viewportState = ViewportState.ReadState;
+                return true;
+            }
             switch (state)
             {
                 case ViewportState.ReadState:

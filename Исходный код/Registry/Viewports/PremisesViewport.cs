@@ -405,6 +405,11 @@ namespace Registry.Viewport
 
         private bool ChangeViewportStateTo(ViewportState state)
         {
+            if (!(AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))))
+            {
+                viewportState = ViewportState.ReadState;
+                return true;
+            }
             switch (state)
             {
                 case ViewportState.ReadState:

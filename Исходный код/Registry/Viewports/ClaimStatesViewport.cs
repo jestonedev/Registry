@@ -225,6 +225,11 @@ namespace Registry.Viewport
 
         private bool ChangeViewportStateTo(ViewportState state)
         {
+            if (!AccessControl.HasPrivelege(Priveleges.ClaimsWrite))
+            {
+                viewportState = ViewportState.ReadState;
+                return true;
+            }
             switch (state)
             {
                 case ViewportState.ReadState:
