@@ -38,12 +38,20 @@ namespace Registry.SearchForms
         {
             string filter = "";
             IEnumerable<int> included_premises = null;
+            IEnumerable<int> included_buildings = null;
             if (comboBoxCriteriaType.SelectedIndex == 0)
             {
                 //по адресу
                 string[] addressParts = textBoxCriteria.Text.Trim().Replace("'", "").Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                IEnumerable<int> premises_ids = DataModelHelper.PremiseIDsByAddress(addressParts);
-                included_premises = DataModelHelper.Intersect(included_premises, premises_ids);
+                if (addressParts.Count() == 3)
+                {
+                    IEnumerable<int> premises_ids = DataModelHelper.PremiseIDsByAddress(addressParts);
+                    included_premises = DataModelHelper.Intersect(included_premises, premises_ids);
+                } else
+                {
+                    IEnumerable<int> building_ids = DataModelHelper.BuildingIDsByAddress(addressParts);
+                    included_buildings = DataModelHelper.Intersect(included_premises, building_ids);
+                }
             }
             if (comboBoxCriteriaType.SelectedIndex == 1)
             {
@@ -78,6 +86,15 @@ namespace Registry.SearchForms
                     filter += " AND ";
                 filter += "id_premises IN (0";
                 foreach (int id in included_premises)
+                    filter += id.ToString(CultureInfo.InvariantCulture) + ",";
+                filter = filter.TrimEnd(new char[] { ',' }) + ")";
+            }
+            if (included_buildings != null)
+            {
+                if (!String.IsNullOrEmpty(filter.Trim()))
+                    filter += " AND ";
+                filter += "id_building IN (0";
+                foreach (int id in included_buildings)
                     filter += id.ToString(CultureInfo.InvariantCulture) + ",";
                 filter = filter.TrimEnd(new char[] { ',' }) + ")";
             }

@@ -179,7 +179,8 @@ namespace Registry.Viewport
                     dataGridViewRestrictions.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
                 else
                     dataGridViewRestrictions.Rows[i].DefaultCellStyle.BackColor = Color.White;
-            dataGridViewRestrictions.Columns["id_restriction"].Visible = false;
+            if (dataGridViewRestrictions.Columns.Contains("id_restriction"))
+                dataGridViewRestrictions.Columns["id_restriction"].Visible = false;
         }
 
         private void OwnershipsFilterRebuild()
@@ -204,7 +205,8 @@ namespace Registry.Viewport
                     dataGridViewOwnerships.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
                 else
                     dataGridViewOwnerships.Rows[i].DefaultCellStyle.BackColor = Color.White;
-            dataGridViewOwnerships.Columns["id_ownership_right"].Visible = false;
+            if (dataGridViewOwnerships.Columns.Contains("id_ownership_right"))
+                dataGridViewOwnerships.Columns["id_ownership_right"].Visible = false;
         }
 
         private void FiltersRebuild()
