@@ -246,6 +246,7 @@ namespace Registry.DataModels
                 case "resettle_premises_to_assoc":
                 case "resettle_sub_premises_from_assoc":
                 case "resettle_sub_premises_to_assoc":
+                case "resettle_persons":
                     if (CalcDataModelResettleAggregated.HasInstance())
                         CalcDataModelResettleAggregated.GetInstance().DefferedUpdate = true;
                     break;

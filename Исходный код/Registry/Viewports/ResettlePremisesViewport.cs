@@ -879,6 +879,9 @@ namespace Registry.Viewport
             int id_premises = Convert.ToInt32(((DataRowView)v_premises[e.RowIndex])["id_premises"], CultureInfo.InvariantCulture);
             int row_index = v_snapshot_resettle_premises.Find("id_premises", id_premises);
             DataRowView row = ((DataRowView)v_premises[e.RowIndex]);
+            DataRow building_row = buildings.Select().Rows.Find(row["id_building"]);
+            if (building_row == null)
+                return;
             switch (this.dataGridView.Columns[e.ColumnIndex].Name)
             {
                 case "image":
@@ -895,7 +898,6 @@ namespace Registry.Viewport
                     e.Value = row["id_premises"];
                     break;
                 case "id_street":
-                    DataRow building_row = buildings.Select().Rows.Find(row["id_building"]);
                     DataRow kladr_row = kladr.Select().Rows.Find(building_row["id_street"]);
                     string street_name = null;
                     if (kladr_row != null)
@@ -903,7 +905,7 @@ namespace Registry.Viewport
                     e.Value = street_name;
                     break;
                 case "house":
-                    e.Value = buildings.Select().Rows.Find(row["id_building"])["house"];
+                    e.Value = building_row["house"];
                     break;
                 case "premises_num":
                     e.Value = row["premises_num"];
