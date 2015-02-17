@@ -485,13 +485,15 @@ namespace Registry.Viewport
         {
             if (v_premises.Count <= e.RowIndex) return;
             DataRowView row = ((DataRowView)v_premises[e.RowIndex]);
+            DataRow building_row = buildings.Select().Rows.Find(row["id_building"]);
+            if (building_row == null)
+                return;
             switch (this.dataGridView.Columns[e.ColumnIndex].Name)
             {
                 case "id_premises":
                     e.Value = row["id_premises"];
                     break;
                 case "id_street":
-                    DataRow building_row = buildings.Select().Rows.Find(row["id_building"]);
                     DataRow kladr_row = kladr.Select().Rows.Find(building_row["id_street"]);
                     string street_name = null;
                     if (kladr_row != null)
@@ -499,7 +501,7 @@ namespace Registry.Viewport
                     e.Value = street_name;
                     break;
                 case "house":
-                    e.Value = buildings.Select().Rows.Find(row["id_building"])["house"];
+                    e.Value = building_row["house"];
                     break;
                 case "premises_num":
                     e.Value = row["premises_num"];
