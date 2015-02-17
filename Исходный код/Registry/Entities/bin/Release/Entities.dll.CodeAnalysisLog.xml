@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="c:\program files (x86)\microsoft visual studio 12.0\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
+<?xml-stylesheet type="text/xsl" href="c:\program files\microsoft visual studio 12.0\team tools\static analysis tools\fxcop\Xml\CodeAnalysisReport.xsl"?>
 <FxCopReport Version="12.0">
  <Targets>
-  <Target Name="E:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Entities\bin\Release\Entities.dll">
+  <Target Name="E:\Реестр жилого фонда\Исходный код\Registry\Entities\bin\Release\Entities.dll">
    <Modules>
     <Module Name="entities.dll">
      <Namespaces>
@@ -12,8 +12,8 @@
          <Members>
           <Member Name="#op_Equality(Registry.Entities.Building,Registry.Entities.Building)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-02-01 09:21:23Z" FixCategory="NonBreaking">
-             <Issue Certainty="90" Level="Warning" Path="e:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Entities" File="Building.cs" Line="44">'Building.operator ==(Building, Building)' has a cyclomatic complexity of 40. Rewrite or refactor the method to reduce complexity to 25.</Issue>
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-02-17 02:10:59Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Entities" File="Building.cs" Line="44">'Building.operator ==(Building, Building)' has a cyclomatic complexity of 40. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
           </Member>
@@ -23,8 +23,8 @@
          <Members>
           <Member Name="#op_Equality(Registry.Entities.Claim,Registry.Entities.Claim)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-02-01 09:21:23Z" FixCategory="NonBreaking">
-             <Issue Certainty="90" Level="Warning" Path="e:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Entities" File="Claim.cs" Line="36">'Claim.operator ==(Claim, Claim)' has a cyclomatic complexity of 33. Rewrite or refactor the method to reduce complexity to 25.</Issue>
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-02-17 02:10:59Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Entities" File="Claim.cs" Line="36">'Claim.operator ==(Claim, Claim)' has a cyclomatic complexity of 33. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
           </Member>
@@ -32,7 +32,7 @@
         </Type>
         <Type Name="ParentTypeEnum" Kind="Enum" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="IdentifiersShouldNotHaveIncorrectSuffix" Category="Microsoft.Naming" CheckId="CA1711" Status="Active" Created="2015-02-01 09:21:23Z" FixCategory="Breaking">
+          <Message TypeName="IdentifiersShouldNotHaveIncorrectSuffix" Category="Microsoft.Naming" CheckId="CA1711" Status="Active" Created="2015-02-17 02:10:59Z" FixCategory="Breaking">
            <Issue Name="TypeNoAlternate" Certainty="95" Level="CriticalError">Rename type name 'ParentTypeEnum' so that it does not end in 'Enum'.</Issue>
           </Message>
          </Messages>
@@ -41,8 +41,8 @@
          <Members>
           <Member Name="#op_Equality(Registry.Entities.Premise,Registry.Entities.Premise)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-02-01 09:21:23Z" FixCategory="NonBreaking">
-             <Issue Certainty="90" Level="Warning" Path="e:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Entities" File="Premise.cs" Line="42">'Premise.operator ==(Premise, Premise)' has a cyclomatic complexity of 38. Rewrite or refactor the method to reduce complexity to 25.</Issue>
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-02-17 02:10:59Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Entities" File="Premise.cs" Line="42">'Premise.operator ==(Premise, Premise)' has a cyclomatic complexity of 38. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
           </Member>
@@ -52,7 +52,7 @@
          <Members>
           <Member Name="#date" Kind="Property" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message Id="date" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2015-02-01 09:21:23Z" FixCategory="Breaking">
+            <Message Id="date" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2015-02-17 02:10:59Z" FixCategory="Breaking">
              <Issue Name="Member" Certainty="85" Level="Error">Correct the casing of 'date' in member name 'RestrictionObjectAssoc.date' by changing it to 'Date'.</Issue>
             </Message>
            </Messages>
@@ -63,8 +63,8 @@
          <Members>
           <Member Name="#op_Equality(Registry.Entities.TenancyPerson,Registry.Entities.TenancyPerson)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-02-01 09:21:23Z" FixCategory="NonBreaking">
-             <Issue Certainty="90" Level="Warning" Path="e:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Entities" File="TenancyPerson.cs" Line="46">'TenancyPerson.operator ==(TenancyPerson, TenancyPerson)' has a cyclomatic complexity of 40. Rewrite or refactor the method to reduce complexity to 25.</Issue>
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-02-17 02:10:59Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Entities" File="TenancyPerson.cs" Line="46">'TenancyPerson.operator ==(TenancyPerson, TenancyPerson)' has a cyclomatic complexity of 40. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
           </Member>
@@ -74,8 +74,8 @@
          <Members>
           <Member Name="#op_Equality(Registry.Entities.TenancyProcess,Registry.Entities.TenancyProcess)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-02-01 09:21:23Z" FixCategory="NonBreaking">
-             <Issue Certainty="90" Level="Warning" Path="e:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\Entities" File="TenancyProcess.cs" Line="37">'TenancyProcess.operator ==(TenancyProcess, TenancyProcess)' has a cyclomatic complexity of 34. Rewrite or refactor the method to reduce complexity to 25.</Issue>
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-02-17 02:10:59Z" FixCategory="NonBreaking">
+             <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Entities" File="TenancyProcess.cs" Line="37">'TenancyProcess.operator ==(TenancyProcess, TenancyProcess)' has a cyclomatic complexity of 34. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
           </Member>

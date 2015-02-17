@@ -441,7 +441,7 @@ namespace Registry.Viewport
             if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                if (ClaimsDataModel.Delete((int)((DataRowView)v_resettle_processes.Current)["id_process"]) == -1)
+                if (ResettleProcessesDataModel.Delete((int)((DataRowView)v_resettle_processes.Current)["id_process"]) == -1)
                     return;
                 is_editable = false;
                 ((DataRowView)v_resettle_processes[v_resettle_processes.Position]).Delete();
@@ -620,6 +620,8 @@ namespace Registry.Viewport
 
         private void ShowAssocViewport(ViewportType viewportType)
         {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
             if (v_resettle_processes.Position == -1)
             {
                 MessageBox.Show("Не выбран процесс переселения", "Ошибка",
