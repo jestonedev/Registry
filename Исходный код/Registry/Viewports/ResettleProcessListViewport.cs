@@ -696,10 +696,16 @@ namespace Registry.Viewport
                 dataGridView.ClearSelection();
             else
                 if (v_resettle_processes.Position >= dataGridView.RowCount)
+                {
                     dataGridView.Rows[dataGridView.RowCount - 1].Selected = true;
+                    dataGridView.CurrentCell = dataGridView.Rows[dataGridView.RowCount - 1].Cells[0];
+                }
                 else
                     if (dataGridView.Rows[v_resettle_processes.Position].Selected != true)
+                    {
                         dataGridView.Rows[v_resettle_processes.Position].Selected = true;
+                        dataGridView.CurrentCell = dataGridView.Rows[v_resettle_processes.Position].Cells[0];
+                    }
             if (Selected)
             {
                 MenuCallback.NavigationStateUpdate();
