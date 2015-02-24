@@ -1253,7 +1253,7 @@ namespace Registry.Viewport
             this.tabControl1.Padding = new System.Drawing.Point(0, 0);
             this.tabControl1.SelectedIndex = 0;
             this.tabControl1.Size = new System.Drawing.Size(444, 155);
-            this.tabControl1.TabIndex = 1;
+            this.tabControl1.TabIndex = 0;
             // 
             // tabPageExclude
             // 
@@ -1298,7 +1298,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(430, 90);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(430, 88);
             this.dataGridViewTenancyPersons.TabIndex = 2;
             // 
             // surname

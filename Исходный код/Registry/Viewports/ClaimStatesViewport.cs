@@ -886,7 +886,7 @@ namespace Registry.Viewport
             this.groupBox35.Margin = new System.Windows.Forms.Padding(0);
             this.groupBox35.Name = "groupBox35";
             this.groupBox35.Size = new System.Drawing.Size(703, 110);
-            this.groupBox35.TabIndex = 0;
+            this.groupBox35.TabIndex = 1;
             this.groupBox35.TabStop = false;
             this.groupBox35.Text = "Общие сведения";
             // 
@@ -1074,7 +1074,7 @@ namespace Registry.Viewport
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.Size = new System.Drawing.Size(697, 89);
-            this.dataGridView.TabIndex = 1;
+            this.dataGridView.TabIndex = 0;
             this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridViewClaimStates_DataError);
             // 
             // id_state_type

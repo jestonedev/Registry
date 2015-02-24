@@ -1231,7 +1231,7 @@ namespace Registry.Viewport
             this.groupBox23.Location = new System.Drawing.Point(3, 3);
             this.groupBox23.Name = "groupBox23";
             this.groupBox23.Size = new System.Drawing.Size(400, 214);
-            this.groupBox23.TabIndex = 0;
+            this.groupBox23.TabIndex = 1;
             this.groupBox23.TabStop = false;
             this.groupBox23.Text = "Личные данные";
             // 
@@ -1370,7 +1370,7 @@ namespace Registry.Viewport
             this.groupBox27.Location = new System.Drawing.Point(3, 223);
             this.groupBox27.Name = "groupBox27";
             this.groupBox27.Size = new System.Drawing.Size(400, 134);
-            this.groupBox27.TabIndex = 1;
+            this.groupBox27.TabIndex = 3;
             this.groupBox27.TabStop = false;
             this.groupBox27.Text = "Адрес регистрации";
             // 
@@ -1639,7 +1639,7 @@ namespace Registry.Viewport
             this.groupBox28.Location = new System.Drawing.Point(409, 223);
             this.groupBox28.Name = "groupBox28";
             this.groupBox28.Size = new System.Drawing.Size(401, 134);
-            this.groupBox28.TabIndex = 3;
+            this.groupBox28.TabIndex = 4;
             this.groupBox28.TabStop = false;
             this.groupBox28.Text = "Адрес проживания";
             // 
@@ -1757,7 +1757,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(807, 198);
-            this.dataGridViewTenancyPersons.TabIndex = 4;
+            this.dataGridViewTenancyPersons.TabIndex = 0;
             this.dataGridViewTenancyPersons.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridViewTenancyPersons_DataError);
             // 
             // surname

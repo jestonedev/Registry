@@ -964,7 +964,7 @@ namespace Registry.Viewport
             this.groupBox34.Margin = new System.Windows.Forms.Padding(0);
             this.groupBox34.Name = "groupBox34";
             this.groupBox34.Size = new System.Drawing.Size(773, 196);
-            this.groupBox34.TabIndex = 0;
+            this.groupBox34.TabIndex = 1;
             this.groupBox34.TabStop = false;
             this.groupBox34.Text = "Общие сведения";
             // 
@@ -1341,7 +1341,7 @@ namespace Registry.Viewport
             this.dataGridViewClaims.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewClaims.ShowCellToolTips = false;
             this.dataGridViewClaims.Size = new System.Drawing.Size(767, 289);
-            this.dataGridViewClaims.TabIndex = 1;
+            this.dataGridViewClaims.TabIndex = 0;
             this.dataGridViewClaims.VirtualMode = true;
             this.dataGridViewClaims.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridViewClaims_CellValueNeeded);
             this.dataGridViewClaims.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewClaims_ColumnHeaderMouseClick);

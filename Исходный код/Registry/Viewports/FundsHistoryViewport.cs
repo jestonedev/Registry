@@ -1025,7 +1025,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel8.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel8.Size = new System.Drawing.Size(348, 224);
-            this.tableLayoutPanel8.TabIndex = 0;
+            this.tableLayoutPanel8.TabIndex = 1;
             // 
             // groupBox14
             // 
@@ -1039,7 +1039,7 @@ namespace Registry.Viewport
             this.groupBox14.Location = new System.Drawing.Point(3, 3);
             this.groupBox14.Name = "groupBox14";
             this.groupBox14.Size = new System.Drawing.Size(342, 106);
-            this.groupBox14.TabIndex = 1;
+            this.groupBox14.TabIndex = 0;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "Общие сведения";
             // 
@@ -1112,7 +1112,7 @@ namespace Registry.Viewport
             this.groupBox17.Location = new System.Drawing.Point(3, 115);
             this.groupBox17.Name = "groupBox17";
             this.groupBox17.Size = new System.Drawing.Size(342, 106);
-            this.groupBox17.TabIndex = 2;
+            this.groupBox17.TabIndex = 1;
             this.groupBox17.TabStop = false;
             this.groupBox17.Text = "Дополнительные сведения";
             // 
@@ -1353,7 +1353,7 @@ namespace Registry.Viewport
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.ShowCellToolTips = false;
             this.dataGridView.Size = new System.Drawing.Size(702, 100);
-            this.dataGridView.TabIndex = 13;
+            this.dataGridView.TabIndex = 0;
             this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView_DataError);
             // 
             // id_fund

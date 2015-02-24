@@ -717,7 +717,7 @@ namespace Registry.Viewport
             this.groupBox32.Location = new System.Drawing.Point(3, 3);
             this.groupBox32.Name = "groupBox32";
             this.groupBox32.Size = new System.Drawing.Size(320, 194);
-            this.groupBox32.TabIndex = 0;
+            this.groupBox32.TabIndex = 1;
             this.groupBox32.TabStop = false;
             this.groupBox32.Text = "Основные сведения";
             // 
@@ -848,7 +848,7 @@ namespace Registry.Viewport
             this.groupBox33.Location = new System.Drawing.Point(329, 3);
             this.groupBox33.Name = "groupBox33";
             this.groupBox33.Size = new System.Drawing.Size(321, 194);
-            this.groupBox33.TabIndex = 1;
+            this.groupBox33.TabIndex = 2;
             this.groupBox33.TabStop = false;
             this.groupBox33.Text = "Дополнительные сведения";
             // 
@@ -896,7 +896,7 @@ namespace Registry.Viewport
             this.dataGridView.ReadOnly = true;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.Size = new System.Drawing.Size(647, 164);
-            this.dataGridView.TabIndex = 6;
+            this.dataGridView.TabIndex = 0;
             this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView_DataError);
             // 
             // id_warrant
