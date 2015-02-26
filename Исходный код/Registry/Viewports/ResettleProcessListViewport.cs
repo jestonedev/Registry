@@ -11,6 +11,7 @@ using System.Drawing;
 using Registry.CalcDataModels;
 using Security;
 using System.Globalization;
+using Registry.SearchForms;
 
 namespace Registry.Viewport
 {
@@ -28,6 +29,11 @@ namespace Registry.Viewport
         private ComboBox comboBoxDocumentResidence;
         private Label label35;
         private DataGridView dataGridView;
+        private DataGridViewTextBoxColumn id_process;
+        private DataGridViewTextBoxColumn resettle_date;
+        private DataGridViewTextBoxColumn resettle_persons;
+        private DataGridViewTextBoxColumn address_from;
+        private DataGridViewTextBoxColumn address_to;
         #endregion Components
 
         #region Models
@@ -43,12 +49,9 @@ namespace Registry.Viewport
         #endregion Views
 
         private ViewportState viewportState = ViewportState.ReadState;
-        private DataGridViewTextBoxColumn id_process;
-        private DataGridViewTextBoxColumn resettle_date;
-        private DataGridViewTextBoxColumn resettle_persons;
-        private DataGridViewTextBoxColumn address_from;
-        private DataGridViewTextBoxColumn address_to;
-        private bool is_editable = false;
+        private bool is_editable = false; 
+        private SearchForm spExtendedSearchForm = null;
+        private SearchForm spSimpleSearchForm = null;
 
         private ResettleProcessListViewport()
             : this(null)
@@ -450,6 +453,54 @@ namespace Registry.Viewport
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.ForceCloseDetachedViewports();
             }
+        }
+
+        public override bool CanSearchRecord()
+        {
+            return true;
+        }
+
+        public override bool SearchedRecords()
+        {
+            if (!String.IsNullOrEmpty(DynamicFilter))
+                return true;
+            else
+                return false;
+        }
+
+        public override void SearchRecord(SearchFormType searchFormType)
+        {
+            switch (searchFormType)
+            {
+                case SearchFormType.SimpleSearchForm:
+                    if (spSimpleSearchForm == null)
+                        spSimpleSearchForm = new SimpleSearchResettleForm();
+                    if (spSimpleSearchForm.ShowDialog() != DialogResult.OK)
+                        return;
+                    DynamicFilter = spSimpleSearchForm.GetFilter();
+                    break;
+                case SearchFormType.ExtendedSearchForm:
+                    if (spExtendedSearchForm == null)
+                        spExtendedSearchForm = new ExtendedSearchResettleForm();
+                    if (spExtendedSearchForm.ShowDialog() != DialogResult.OK)
+                        return;
+                    DynamicFilter = spExtendedSearchForm.GetFilter();
+                    break;
+            }
+            string Filter = StaticFilter;
+            if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
+                Filter += " AND ";
+            Filter += DynamicFilter;
+            dataGridView.RowCount = 0;
+            v_resettle_processes.Filter = Filter;
+            dataGridView.RowCount = v_resettle_processes.Count;
+        }
+
+        public override void ClearSearch()
+        {
+            v_resettle_processes.Filter = StaticFilter;
+            dataGridView.RowCount = v_resettle_processes.Count;
+            DynamicFilter = "";
         }
 
         public override bool CanSaveRecord()

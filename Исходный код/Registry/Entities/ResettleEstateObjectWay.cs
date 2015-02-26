@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Registry.Viewport
+namespace Registry.Entities
 {
-    internal enum ResettleEstateObjectWay
+    public enum ResettleEstateObjectWay
     {
         From,
         To

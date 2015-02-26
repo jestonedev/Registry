@@ -49,7 +49,7 @@ namespace Registry.SearchForms
             {
                 //по ФИО нанимателя
                 string[] snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                IEnumerable<int> building_ids = DataModelHelper.BuildingIDsBySNP(snp, (row) => { return row.Field<int>("id_kinship") == 1; });
+                IEnumerable<int> building_ids = DataModelHelper.BuildingIDsBySNP(snp, (row) => { return row.Field<int?>("id_kinship") == 1; });
                 included_buildings = DataModelHelper.Intersect(included_buildings, building_ids);
             }
             if (comboBoxCriteriaType.SelectedIndex == 2)

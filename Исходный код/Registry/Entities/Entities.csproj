@@ -54,6 +54,7 @@
     <Compile Include="EntityType.cs" />
     <Compile Include="FundObjectAssoc.cs" />
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="ResettleEstateObjectWay.cs" />
     <Compile Include="ResettleObject.cs" />
     <Compile Include="ResettlePerson.cs" />
     <Compile Include="ResettleProcess.cs" />

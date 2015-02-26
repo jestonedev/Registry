@@ -12,11 +12,11 @@ using System.Globalization;
 
 namespace Registry.SearchForms
 {
-    public partial class SimpleSearchTenancyForm : SearchForm
+    public partial class SimpleSearchResettleForm : SearchForm
     {
         private enum ConditionType { BuildingCondition, PremisesCondition, KladrCondition };
 
-        public SimpleSearchTenancyForm()
+        public SimpleSearchResettleForm()
         {
             InitializeComponent();
             comboBoxCriteriaType.SelectedIndex = 0;
@@ -42,30 +42,23 @@ namespace Registry.SearchForms
             IEnumerable<int> included_processes = null;
             if (comboBoxCriteriaType.SelectedIndex == 0)
             {
-                //по номеру договора
-                if (!String.IsNullOrEmpty(filter.Trim()))
-                    filter += " AND ";
-                filter += "registration_num = '"+textBoxCriteria.Text.Trim()+"'";
+                //по ФИО участника переселения
+                string[] snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+                IEnumerable<int> processes_ids = DataModelHelper.ResettleProcessIDsBySNP(snp);
+                included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
             }
             if (comboBoxCriteriaType.SelectedIndex == 1)
             {
-                //по ФИО нанимателя
-                string[] snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                IEnumerable<int> processes_ids = DataModelHelper.TenancyProcessIDsBySNP(snp, (row) => { return row.Field<int?>("id_kinship") == 1; });
+                //по адресу переселения (откуда)
+                string[] addressParts = textBoxCriteria.Text.Trim().Replace("'", "").Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+                IEnumerable<int> processes_ids = DataModelHelper.ResettleProcessIDsByAddress(addressParts, Entities.ResettleEstateObjectWay.From);
                 included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
             }
             if (comboBoxCriteriaType.SelectedIndex == 2)
             {
-                //по ФИО участника
-                string[] snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                IEnumerable<int> processes_ids = DataModelHelper.TenancyProcessIDsBySNP(snp, (row) => { return true; });
-                included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
-            }
-            if (comboBoxCriteriaType.SelectedIndex == 3)
-            {
-                //по адресу
+                //по адресу переселения (куда)
                 string[] addressParts = textBoxCriteria.Text.Trim().Replace("'", "").Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                IEnumerable<int> processes_ids = DataModelHelper.TenancyProcessIDsByAddress(addressParts);
+                IEnumerable<int> processes_ids = DataModelHelper.ResettleProcessIDsByAddress(addressParts, Entities.ResettleEstateObjectWay.To);
                 included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
             }
 

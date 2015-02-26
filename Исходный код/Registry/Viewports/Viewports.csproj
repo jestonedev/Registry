@@ -84,16 +84,27 @@
     <Compile Include="DocumentsResidenceViewport.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ExtendedSearchResettleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExtendedSearchResettleForm.Designer.cs">
+      <DependentUpon>ExtendedSearchResettleForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ResettleBuildingsViewport.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ResettleEstateObjectWay.cs" />
     <Compile Include="ResettlePersonsViewport.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="ResettleProcessListViewport.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SimpleSearchResettleForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SimpleSearchResettleForm.Designer.cs">
+      <DependentUpon>SimpleSearchResettleForm.cs</DependentUpon>
     </Compile>
     <Compile Include="TenancyAgreementsViewport.cs">
       <SubType>Form</SubType>
@@ -299,6 +310,9 @@
     <EmbeddedResource Include="ExtendedSearchPremisesForm.resx">
       <DependentUpon>ExtendedSearchPremisesForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ExtendedSearchResettleForm.resx">
+      <DependentUpon>ExtendedSearchResettleForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ExtendedSearchTenancyForm.resx">
       <DependentUpon>ExtendedSearchTenancyForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -344,6 +358,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="SimpleSearchPremiseForm.resx">
       <DependentUpon>SimpleSearchPremiseForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SimpleSearchResettleForm.resx">
+      <DependentUpon>SimpleSearchResettleForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SimpleSearchTenancyForm.resx">
       <DependentUpon>SimpleSearchTenancyForm.cs</DependentUpon>
