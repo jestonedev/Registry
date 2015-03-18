@@ -574,56 +574,40 @@ namespace Registry.DataModels
                     select premises_row).Count();
         }
 
-        public static bool HasMunicipal(int id, EntityType entity)
+        public static IEnumerable<int> ObjectIdsByStates(EntityType entity, int[] states)
         {
             if (entity == EntityType.Building)
             {
-                var buildings = DataModelHelper.FilterRows(BuildingsDataModel.GetInstance().Select(), entity, id);
-                var premises = DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select(), entity, id);
+                var buildings = DataModelHelper.FilterRows(BuildingsDataModel.GetInstance().Select());
+                var premises = DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select());
                 var sub_premises = DataModelHelper.FilterRows(SubPremisesDataModel.GetInstance().Select());
-                bool m_building = (from building_row in buildings
-                                   where building_row.Field<int>("id_building") == id &&
-                                   new int[] { 4, 5 }.Contains(building_row.Field<int>("id_state"))
-                                   select building_row).Count() > 0;
-                bool m_premises = (from premises_row in premises
-                                   where premises_row.Field<int>("id_building") == id &&
-                                   new int[] { 4, 5 }.Contains(premises_row.Field<int>("id_state"))
-                                   select premises_row).Count() > 0;
-                bool m_sub_premises = (from premises_row in premises
-                                       join sub_premises_row in sub_premises
-                                       on premises_row.Field<int>("id_premises") equals sub_premises_row.Field<int>("id_premises")
-                                       where premises_row.Field<int>("id_building") == id &&
-                                       new int[] { 4, 5 }.Contains(sub_premises_row.Field<int>("id_state"))
-                                       select sub_premises_row).Count() > 0;
-                return m_building || m_premises || m_sub_premises;
-            } else
-            if (entity == EntityType.Premise)
-            {
-                var premises = DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select(), entity, id);
-                var sub_premises = DataModelHelper.FilterRows(SubPremisesDataModel.GetInstance().Select());
-                bool m_premises = (from premises_row in premises
-                                   where premises_row.Field<int>("id_premises") == id &&
-                                   new int[] { 4, 5 }.Contains(premises_row.Field<int>("id_state"))
-                                   select premises_row).Count() > 0;
-                bool m_sub_premises = (from sub_premises_row in sub_premises
-                                       where sub_premises_row.Field<int>("id_premises") == id &&
-                                       new int[] { 4, 5 }.Contains(sub_premises_row.Field<int>("id_state"))
-                                       select sub_premises_row).Count() > 0;
-                return m_premises || m_sub_premises;
+                var result = from buildings_row in buildings
+                             join premises_row in premises
+                             on buildings_row.Field<int>("id_building") equals premises_row.Field<int>("id_building") into bp
+                             from bp_row in bp.DefaultIfEmpty()
+                             join sub_premises_row in sub_premises
+                             on bp_row.Field<int?>("id_premises") equals sub_premises_row.Field<int?>("id_premises") into ps
+                             from ps_row in ps.DefaultIfEmpty()
+                             where (bp_row != null && states.Contains(bp_row.Field<int>("id_state"))) ||
+                                   (ps_row != null && states.Contains(ps_row.Field<int>("id_state")))
+                             select buildings_row.Field<int>("id_building");
+                return result;
             }
             else
-            if (entity == EntityType.SubPremise)
             {
-                var sub_premises = DataModelHelper.FilterRows(SubPremisesDataModel.GetInstance().Select(), entity, id);
-                return (from sub_premises_row in sub_premises
-                        where sub_premises_row.Field<int>("id_sub_premises") == id &&
-                        new int[] { 4, 5 }.Contains(sub_premises_row.Field<int>("id_state"))
-                        select sub_premises_row).Count() > 0;
-            } else
-                return false;
+                var premises = DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select());
+                var sub_premises = DataModelHelper.FilterRows(SubPremisesDataModel.GetInstance().Select());
+                var result = from premises_row in premises
+                             join sub_premises_row in sub_premises
+                             on premises_row.Field<int>("id_premises") equals sub_premises_row.Field<int>("id_premises") into ps
+                             from ps_row in ps.DefaultIfEmpty()
+                             where (ps_row != null && states.Contains(ps_row.Field<int>("id_state")))
+                             select premises_row.Field<int>("id_premises");
+                return result;
+            }
         }
 
-        public static bool HasNotMunicipal(int id, EntityType entity)
+        private static bool HasObjectState(int id, EntityType entity, int[] states)
         {
             if (entity == EntityType.Building)
             {
@@ -632,17 +616,17 @@ namespace Registry.DataModels
                 var sub_premises = DataModelHelper.FilterRows(SubPremisesDataModel.GetInstance().Select());
                 bool m_building = (from building_row in buildings
                                    where building_row.Field<int>("id_building") == id &&
-                                   new int[] { 1, 3 }.Contains(building_row.Field<int>("id_state"))
+                                   states.Contains(building_row.Field<int>("id_state"))
                                    select building_row).Count() > 0;
                 bool m_premises = (from premises_row in premises
                                    where premises_row.Field<int>("id_building") == id &&
-                                   new int[] { 1, 3 }.Contains(premises_row.Field<int>("id_state"))
+                                   states.Contains(premises_row.Field<int>("id_state"))
                                    select premises_row).Count() > 0;
                 bool m_sub_premises = (from premises_row in premises
                                        join sub_premises_row in sub_premises
                                        on premises_row.Field<int>("id_premises") equals sub_premises_row.Field<int>("id_premises")
                                        where premises_row.Field<int>("id_building") == id &&
-                                       new int[] { 1, 3 }.Contains(sub_premises_row.Field<int>("id_state"))
+                                       states.Contains(sub_premises_row.Field<int>("id_state"))
                                        select sub_premises_row).Count() > 0;
                 return m_building || m_premises || m_sub_premises;
             }
@@ -653,11 +637,11 @@ namespace Registry.DataModels
                     var sub_premises = DataModelHelper.FilterRows(SubPremisesDataModel.GetInstance().Select());
                     bool m_premises = (from premises_row in premises
                                        where premises_row.Field<int>("id_premises") == id &&
-                                       new int[] { 1, 3 }.Contains(premises_row.Field<int>("id_state"))
+                                       states.Contains(premises_row.Field<int>("id_state"))
                                        select premises_row).Count() > 0;
                     bool m_sub_premises = (from sub_premises_row in sub_premises
                                            where sub_premises_row.Field<int>("id_premises") == id &&
-                                           new int[] { 1, 3 }.Contains(sub_premises_row.Field<int>("id_state"))
+                                           states.Contains(sub_premises_row.Field<int>("id_state"))
                                            select sub_premises_row).Count() > 0;
                     return m_premises || m_sub_premises;
                 }
@@ -667,11 +651,22 @@ namespace Registry.DataModels
                         var sub_premises = DataModelHelper.FilterRows(SubPremisesDataModel.GetInstance().Select(), entity, id);
                         return (from sub_premises_row in sub_premises
                                 where sub_premises_row.Field<int>("id_sub_premises") == id &&
-                                new int[] { 1, 3 }.Contains(sub_premises_row.Field<int>("id_state"))
+                                states.Contains(sub_premises_row.Field<int>("id_state"))
                                 select sub_premises_row).Count() > 0;
                     }
                     else
                         return false;
+        }
+
+        public static bool HasMunicipal(int id, EntityType entity)
+        {
+            return HasObjectState(id, entity, new int[] { 4, 5 });
+        }
+
+        public static bool HasNotMunicipal(int id, EntityType entity)
+        {
+
+            return HasObjectState(id, entity, new int[] { 1, 3 });
         }
 
         public static IEnumerable<int> DemolishedBuildingIDs()

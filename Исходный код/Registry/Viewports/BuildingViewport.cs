@@ -248,7 +248,10 @@ namespace Registry.Viewport
 
         private void ShowOrHideCurrentFund()
         {
-            if (comboBoxCurrentFundType.SelectedValue != null)
+            if (comboBoxCurrentFundType.SelectedValue != null && v_buildings.Position != -1 &&
+                ((DataRowView)v_buildings[v_buildings.Position])["id_state"] != DBNull.Value &&
+                ((int)((DataRowView)v_buildings[v_buildings.Position])["id_state"] == 4 ||
+                 (int)((DataRowView)v_buildings[v_buildings.Position])["id_state"] == 5))
             {
                 label19.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
@@ -902,7 +905,7 @@ namespace Registry.Viewport
             bool updatePremisesState = false;
             if (!ValidateBuilding(building))
                 return;
-            if ((viewportState == ViewportState.ModifyRowState) && (building.IdState != BuildingFromView().IdState))
+            if ((viewportState == ViewportState.ModifyRowState) && (building.IdState != BuildingFromView().IdState) && (building.IdState != 1))
             {
                 if (MessageBox.Show("Вы пытаетесь изменить состояние здания. В результате всем помещениям данного здания будет назначено то же состояние. " +
                     "Вы уверены, что хотите сохранить данные?", "Внимание",
@@ -985,6 +988,7 @@ namespace Registry.Viewport
             }
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
+            ShowOrHideCurrentFund();
         }
 
         public override bool CanCancelRecord()
@@ -1215,6 +1219,7 @@ namespace Registry.Viewport
 
         void BuildingViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
+            ShowOrHideCurrentFund();
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
         }

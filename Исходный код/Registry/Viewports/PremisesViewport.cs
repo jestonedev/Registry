@@ -275,7 +275,10 @@ namespace Registry.Viewport
 
         private void ShowOrHideCurrentFund()
         {
-            if (comboBoxCurrentFundType.SelectedValue != null)
+            if (comboBoxCurrentFundType.SelectedValue != null && v_premises.Position != -1 &&
+                ((DataRowView)v_premises[v_premises.Position])["id_state"] != DBNull.Value &&
+                ((int)((DataRowView)v_premises[v_premises.Position])["id_state"] == 4 || 
+                 (int)((DataRowView)v_premises[v_premises.Position])["id_state"] == 5))
             {
                 label38.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
@@ -1071,7 +1074,7 @@ namespace Registry.Viewport
             bool updateSubPremisesState = false;
             if (!ValidatePremise(premise))
                 return;
-            if ((viewportState == ViewportState.ModifyRowState) && (premise.IdState != PremiseFromView().IdState))
+            if ((viewportState == ViewportState.ModifyRowState) && (premise.IdState != PremiseFromView().IdState) && (premise.IdState != 1))
             {
                 if (MessageBox.Show("Вы пытаетесь изменить состояние помещения. В результате всем комнатам данного помещения будет назначено то же состояние. " +
                     "Вы уверены, что хотите сохранить данные?", "Внимание",
@@ -1098,11 +1101,6 @@ namespace Registry.Viewport
                         newRow = ((DataRowView)v_premises[v_premises.Position]);
                     FillRowFromPremise(premise, newRow);
                     premises.EditingNewRecord = false;
-                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                        this.Text = String.Format(CultureInfo.InvariantCulture, "Помещение №{0} здания №{1}",
-                            id_premise.ToString(CultureInfo.InvariantCulture), ParentRow["id_building"]);
-                    else
-                        this.Text = String.Format(CultureInfo.InvariantCulture, "Помещение №{0}", id_premise.ToString(CultureInfo.InvariantCulture));
                     viewportState = ViewportState.ReadState;
                     is_editable = true;
                     break;
@@ -1136,6 +1134,7 @@ namespace Registry.Viewport
             is_editable = true;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
+            ShowOrHideCurrentFund();
             CalcDataModelPremiseSubPremisesSumArea.GetInstance().Refresh(EntityType.Premise, premise.IdPremises, true);
             CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building, premise.IdBuilding, true);
         }
@@ -1345,6 +1344,7 @@ namespace Registry.Viewport
 
         void PremisesViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
+            ShowOrHideCurrentFund();
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
         }
@@ -1581,6 +1581,7 @@ namespace Registry.Viewport
             viewportState = ViewportState.ReadState;
             is_editable = true;
         }
+
         void v_sub_premises_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
