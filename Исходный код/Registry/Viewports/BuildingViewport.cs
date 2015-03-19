@@ -250,8 +250,7 @@ namespace Registry.Viewport
         {
             if (comboBoxCurrentFundType.SelectedValue != null && v_buildings.Position != -1 &&
                 ((DataRowView)v_buildings[v_buildings.Position])["id_state"] != DBNull.Value &&
-                ((int)((DataRowView)v_buildings[v_buildings.Position])["id_state"] == 4 ||
-                 (int)((DataRowView)v_buildings[v_buildings.Position])["id_state"] == 5))
+                (int)((DataRowView)v_buildings[v_buildings.Position])["id_state"] != 3)
             {
                 label19.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
