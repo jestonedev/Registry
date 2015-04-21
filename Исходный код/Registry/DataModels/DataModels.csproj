@@ -54,6 +54,7 @@
     <Compile Include="CalcDataModelsUpdater.cs" />
     <Compile Include="CalcDataModels\CalcDataModelPremiseSubPremisesSumArea.cs" />
     <Compile Include="CalcDataModels\CalcDataModelResettleAggregated.cs" />
+    <Compile Include="CalcDataModels\CalcDataModelTenancyPremisesInfo.cs" />
     <Compile Include="CalcDataModels\CalcDataModelTenancyNotifiesMaxDate.cs" />
     <Compile Include="DataModelsCallbackUpdater.cs" />
     <Compile Include="DataModelHelper.cs" />

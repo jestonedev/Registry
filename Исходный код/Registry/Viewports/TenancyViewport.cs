@@ -20,18 +20,15 @@ namespace Registry.Viewport
         #region Components
         private TableLayoutPanel tableLayoutPanel9;
         private TableLayoutPanel tableLayoutPanel10;
-        private TableLayoutPanel tableLayoutPanel13;
         private GroupBox groupBoxTenancyContract;
         private GroupBox groupBoxResidenceWarrant;
-        private GroupBox groupBoxKumiOrder;
+        private GroupBox groupBoxProtocol;
         private GroupBox groupBox21;
-        private GroupBox groupBox22;
         private GroupBox groupBox24;
         private GroupBox groupBox25;
-        private GroupBox groupBox31;
         private Panel panel5;
         private Panel panel6;
-        private DataGridView dataGridViewTenancyPersons;
+        private DataGridView dataGridViewTenancyAddress;
         private DataGridView dataGridViewTenancyReasons;
         private DataGridViewTextBoxColumn reason_prepared;
         private DataGridViewTextBoxColumn reason_number;
@@ -41,13 +38,11 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn agreement_content;
         private CheckBox checkBoxContractEnable;
         private CheckBox checkBoxResidenceWarrantEnable;
-        private CheckBox checkBoxKumiOrderEnable;
-        private Label label41;
+        private CheckBox checkBoxProtocolEnable;
         private Label label42;
         private Label label43;
         private Label label44;
         private Label label45;
-        private Label label46;
         private Label label47;
         private Label label48;
         private Label label49;
@@ -56,18 +51,15 @@ namespace Registry.Viewport
         private Label label52;
         private Label label82;
         private TextBox textBoxResidenceWarrantNumber;
-        private TextBox textBoxKumiOrderNumber;
-        private TextBox textBoxDescription;
+        private TextBox textBoxProtocolNumber;
         private TextBox textBoxRegistrationNumber;
         private TextBox textBoxSelectedWarrant = new System.Windows.Forms.TextBox();
         private DateTimePicker dateTimePickerResidenceWarrantDate;
-        private DateTimePicker dateTimePickerKumiOrderDate;
+        private DateTimePicker dateTimePickerProtocolDate;
         private DateTimePicker dateTimePickerRegistrationDate;
         private DateTimePicker dateTimePickerIssueDate;
         private DateTimePicker dateTimePickerBeginDate;
         private DateTimePicker dateTimePickerEndDate;
-        private ComboBox comboBoxExecutor;
-        private ComboBox comboBoxRentType;
         private VIBlend.WinForms.Controls.vButton vButtonWarrant = new VIBlend.WinForms.Controls.vButton();
         #endregion Components
 
@@ -92,6 +84,7 @@ namespace Registry.Viewport
         private BindingSource v_tenancy_agreements = null;
         private BindingSource v_warrants = null;
         private BindingSource v_tenancy_persons = null;
+        private BindingSource v_tenancy_addresses = null;
         private BindingSource v_tenancy_reasons = null;
         private BindingSource v_kinships = null;
         #endregion Views
@@ -104,11 +97,23 @@ namespace Registry.Viewport
         //State
         private ViewportState viewportState = ViewportState.ReadState;
         private bool is_editable = false;
+        private GroupBox groupBox31;
+        private TextBox textBoxDescription;
+        private GroupBox groupBox22;
+        private ComboBox comboBoxExecutor;
+        private Label label41;
+        private ComboBox comboBoxRentType;
+        private Label label46;
+        private GroupBox groupBox1;
+        private DataGridView dataGridViewTenancyPersons;
         private DataGridViewTextBoxColumn surname;
         private DataGridViewTextBoxColumn name;
         private DataGridViewTextBoxColumn patronymic;
         private DataGridViewTextBoxColumn date_of_birth;
         private DataGridViewComboBoxColumn id_kinship;
+        private DataGridViewTextBoxColumn address;
+        private DataGridViewTextBoxColumn total_area;
+        private DataGridViewTextBoxColumn living_area;
         private int? id_warrant = null;
 
         private TenancyViewport()
@@ -129,6 +134,13 @@ namespace Registry.Viewport
             this.StaticFilter = tenancyViewport.StaticFilter;
             this.ParentRow = tenancyViewport.ParentRow;
             this.ParentType = tenancyViewport.ParentType;
+        }
+
+        private void FiltersRebuild()
+        {
+            if (v_tenancy_addresses == null)
+                return;
+            v_tenancy_addresses.Filter = (v_tenancies.Position >= 0 ? "id_process = 0" + ((DataRowView)v_tenancies[v_tenancies.Position])["id_process"] : "");
         }
 
         private void RebuildStaticFilter()
@@ -217,10 +229,14 @@ namespace Registry.Viewport
                 return;
             for (int i = 0; i < dataGridViewTenancyPersons.Rows.Count; i++)
                 if (((DataRowView)v_tenancy_persons[i])["id_kinship"] != DBNull.Value &&
-                    Convert.ToInt32(((DataRowView)v_tenancy_persons[i])["id_kinship"], CultureInfo.InvariantCulture) == 1)
+                    Convert.ToInt32(((DataRowView)v_tenancy_persons[i])["id_kinship"], CultureInfo.InvariantCulture) == 1 &&
+                    ((DataRowView)v_tenancy_persons[i])["exclude_date"] == DBNull.Value)
                     dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
                 else
-                    dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                    if (((DataRowView)v_tenancy_persons[i])["exclude_date"] != DBNull.Value)
+                        dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.LightCoral;
+                    else
+                        dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.White;
         }
 
         private string WarrantStringByID(int id_warrant)
@@ -262,7 +278,7 @@ namespace Registry.Viewport
             checkBoxContractEnable.Checked = (v_tenancies.Position >= 0) &&
                 ((row["registration_date"] != DBNull.Value) || (row["registration_num"] != DBNull.Value));
             checkBoxResidenceWarrantEnable.Checked = (v_tenancies.Position >= 0) && (row["residence_warrant_date"] != DBNull.Value);
-            checkBoxKumiOrderEnable.Checked = (v_tenancies.Position >= 0) && (row["kumi_order_date"] != DBNull.Value);
+            checkBoxProtocolEnable.Checked = (v_tenancies.Position >= 0) && (row["protocol_date"] != DBNull.Value);
             if ((v_tenancies.Position >= 0) && (row["issue_date"] != DBNull.Value))
                 dateTimePickerIssueDate.Checked = true;
             else
@@ -318,6 +334,7 @@ namespace Registry.Viewport
             id_kinship.DisplayMember = "kinship";
             id_kinship.DataPropertyName = "id_kinship";
 
+
             dataGridViewTenancyAgreements.DataSource = v_tenancy_agreements;
             agreement_date.DataPropertyName = "agreement_date";
             agreement_content.DataPropertyName = "agreement_content";
@@ -327,17 +344,22 @@ namespace Registry.Viewport
             reason_number.DataPropertyName = "reason_number";
             reason_prepared.DataPropertyName = "reason_prepared";
 
+            dataGridViewTenancyAddress.DataSource = v_tenancy_addresses;
+            address.DataPropertyName = "address";
+            total_area.DataPropertyName = "total_area";
+            living_area.DataPropertyName = "living_area";
+
             textBoxResidenceWarrantNumber.DataBindings.Clear();
             textBoxResidenceWarrantNumber.DataBindings.Add("Text", v_tenancies, "residence_warrant_num", true, DataSourceUpdateMode.Never, "");
 
             dateTimePickerResidenceWarrantDate.DataBindings.Clear();
             dateTimePickerResidenceWarrantDate.DataBindings.Add("Value", v_tenancies, "residence_warrant_date", true, DataSourceUpdateMode.Never, DateTime.Now.Date);
 
-            textBoxKumiOrderNumber.DataBindings.Clear();
-            textBoxKumiOrderNumber.DataBindings.Add("Text", v_tenancies, "kumi_order_num", true, DataSourceUpdateMode.Never, "");
+            textBoxProtocolNumber.DataBindings.Clear();
+            textBoxProtocolNumber.DataBindings.Add("Text", v_tenancies, "protocol_num", true, DataSourceUpdateMode.Never, "");
 
-            dateTimePickerKumiOrderDate.DataBindings.Clear();
-            dateTimePickerKumiOrderDate.DataBindings.Add("Value", v_tenancies, "kumi_order_date", true, DataSourceUpdateMode.Never, DateTime.Now.Date);
+            dateTimePickerProtocolDate.DataBindings.Clear();
+            dateTimePickerProtocolDate.DataBindings.Add("Value", v_tenancies, "protocol_date", true, DataSourceUpdateMode.Never, DateTime.Now.Date);
 
             textBoxDescription.DataBindings.Clear();
             textBoxDescription.DataBindings.Add("Text", v_tenancies, "description", true, DataSourceUpdateMode.Never, "");
@@ -475,6 +497,24 @@ namespace Registry.Viewport
                     return false;
                 }
             }
+            if (checkBoxProtocolEnable.Checked)
+            {
+                if (tenancy.ProtocolNum == null)
+                {
+                    MessageBox.Show("Не указан номер протокола жилищной комиссии", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    textBoxProtocolNumber.Focus();
+                    return false;
+                }
+            }
+            if (checkBoxResidenceWarrantEnable.Checked)
+            {
+                if (tenancy.ResidenceWarrantNum == null)
+                {
+                    MessageBox.Show("Не указан номер ордера на проживание", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    textBoxResidenceWarrantNumber.Focus();
+                    return false;
+                }
+            }
             if (tenancy.IdExecutor == null)
             {
                 MessageBox.Show("Необходимо выбрать составителя договора", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -505,8 +545,8 @@ namespace Registry.Viewport
             tenancy.EndDate = ViewportHelper.ValueOrNull<DateTime>(row, "end_date");
             tenancy.ResidenceWarrantNum = ViewportHelper.ValueOrNull(row, "residence_warrant_num");
             tenancy.ResidenceWarrantDate = ViewportHelper.ValueOrNull<DateTime>(row, "residence_warrant_date");
-            tenancy.KumiOrderNum = ViewportHelper.ValueOrNull(row, "kumi_order_num");
-            tenancy.KumiOrderDate = ViewportHelper.ValueOrNull<DateTime>(row, "kumi_order_date");
+            tenancy.ProtocolNum = ViewportHelper.ValueOrNull(row, "protocol_num");
+            tenancy.ProtocolDate = ViewportHelper.ValueOrNull<DateTime>(row, "protocol_date");
             tenancy.Description = ViewportHelper.ValueOrNull(row, "description");     
             return tenancy;
         }
@@ -549,15 +589,15 @@ namespace Registry.Viewport
                 tenancy.ResidenceWarrantNum = null;
                 tenancy.ResidenceWarrantDate = null;
             }
-            if (checkBoxKumiOrderEnable.Checked)
+            if (checkBoxProtocolEnable.Checked)
             {
-                tenancy.KumiOrderNum = ViewportHelper.ValueOrNull(textBoxKumiOrderNumber);
-                tenancy.KumiOrderDate = dateTimePickerKumiOrderDate.Value.Date;
+                tenancy.ProtocolNum = ViewportHelper.ValueOrNull(textBoxProtocolNumber);
+                tenancy.ProtocolDate = dateTimePickerProtocolDate.Value.Date;
             }
             else
             {
-                tenancy.KumiOrderNum = null;
-                tenancy.KumiOrderDate = null;
+                tenancy.ProtocolNum = null;
+                tenancy.ProtocolDate = null;
             }
             return tenancy;
         }
@@ -576,8 +616,8 @@ namespace Registry.Viewport
             dateTimePickerEndDate.Checked = (tenancy.EndDate != null);
             textBoxResidenceWarrantNumber.Text = tenancy.ResidenceWarrantNum;
             dateTimePickerResidenceWarrantDate.Value = ViewportHelper.ValueOrDefault(tenancy.ResidenceWarrantDate);
-            textBoxKumiOrderNumber.Text = tenancy.KumiOrderNum;
-            dateTimePickerKumiOrderDate.Value = ViewportHelper.ValueOrDefault(tenancy.KumiOrderDate);
+            textBoxProtocolNumber.Text = tenancy.ProtocolNum;
+            dateTimePickerProtocolDate.Value = ViewportHelper.ValueOrDefault(tenancy.ProtocolDate);
             textBoxDescription.Text = tenancy.Description;
             if (tenancy.IdWarrant != null)
             {
@@ -604,8 +644,8 @@ namespace Registry.Viewport
             row["end_date"] = ViewportHelper.ValueOrDBNull(tenancy.EndDate);
             row["residence_warrant_num"] = ViewportHelper.ValueOrDBNull(tenancy.ResidenceWarrantNum);
             row["residence_warrant_date"] = ViewportHelper.ValueOrDBNull(tenancy.ResidenceWarrantDate);
-            row["kumi_order_num"] = ViewportHelper.ValueOrDBNull(tenancy.KumiOrderNum);
-            row["kumi_order_date"] = ViewportHelper.ValueOrDBNull(tenancy.KumiOrderDate);
+            row["protocol_num"] = ViewportHelper.ValueOrDBNull(tenancy.ProtocolNum);
+            row["protocol_date"] = ViewportHelper.ValueOrDBNull(tenancy.ProtocolDate);
             row["id_executor"] = ViewportHelper.ValueOrDBNull(tenancy.IdExecutor);
             row["description"] = ViewportHelper.ValueOrDBNull(tenancy.Description);
             row.EndEdit();
@@ -680,6 +720,7 @@ namespace Registry.Viewport
         public override void LoadData()
         {
             dataGridViewTenancyAgreements.AutoGenerateColumns = false;
+            dataGridViewTenancyAddress.AutoGenerateColumns = false;
             dataGridViewTenancyPersons.AutoGenerateColumns = false;
             dataGridViewTenancyReasons.AutoGenerateColumns = false;
             this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
@@ -742,6 +783,9 @@ namespace Registry.Viewport
             v_tenancy_reasons.DataMember = "tenancy_processes_tenancy_reasons";
             v_tenancy_reasons.DataSource = v_tenancies;
 
+            v_tenancy_addresses = new BindingSource();
+            v_tenancy_addresses.DataSource = CalcDataModelTenancyPremisesInfo.GetInstance().Select();
+
             DataBind();
 
             tenancy_persons.Select().RowChanged += new DataRowChangeEventHandler(TenancyPersons_RowChanged);
@@ -771,6 +815,8 @@ namespace Registry.Viewport
                 }
             }
             v_tenancy_persons.ListChanged += new System.ComponentModel.ListChangedEventHandler(v_persons_ListChanged);
+            
+            FiltersRebuild();
         }
 
         public override bool CanSearchRecord()
@@ -814,7 +860,7 @@ namespace Registry.Viewport
             ViewportFromTenancy(tenancy);
             checkBoxContractEnable.Checked = (tenancy.RegistrationDate != null) || (tenancy.RegistrationNum != null);
             checkBoxResidenceWarrantEnable.Checked = (tenancy.ResidenceWarrantDate != null);
-            checkBoxKumiOrderEnable.Checked = (tenancy.KumiOrderDate != null);
+            checkBoxProtocolEnable.Checked = (tenancy.ProtocolDate != null);
             dateTimePickerIssueDate.Checked = (tenancy.IssueDate != null);
             dateTimePickerBeginDate.Checked = (tenancy.BeginDate != null);
             dateTimePickerEndDate.Checked = (tenancy.EndDate != null);
@@ -1253,6 +1299,12 @@ namespace Registry.Viewport
         {
             RedrawDataGridRows();
             UnbindedCheckBoxesUpdate();
+            // Обновляем информацию по помещениям (живое обновление не реализуемо)
+            if (v_tenancy_addresses != null)
+            {
+                v_tenancy_addresses.DataSource = CalcDataModelTenancyPremisesInfo.GetInstance().Select();
+                FiltersRebuild();
+            }
             base.OnVisibleChanged(e);
         }
 
@@ -1264,6 +1316,7 @@ namespace Registry.Viewport
         void v_tenancies_CurrentItemChanged(object sender, EventArgs e)
         {
             SetViewportCaption();
+            FiltersRebuild();
             if (Selected)
             {
                 MenuCallback.NavigationStateUpdate();
@@ -1271,8 +1324,7 @@ namespace Registry.Viewport
                 MenuCallback.RelationsStateUpdate();
                 MenuCallback.DocumentsStateUpdate();
             }
-            if (is_editable)
-                UnbindedCheckBoxesUpdate();
+            UnbindedCheckBoxesUpdate();
             BindWarrantID();
             if (v_tenancies.Position == -1)
                 return;
@@ -1358,12 +1410,12 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
-        void dateTimePickerKumiOrderDate_ValueChanged(object sender, EventArgs e)
+        void dateTimePickerProtocolDate_ValueChanged(object sender, EventArgs e)
         {
             CheckViewportModifications();
         }
 
-        void textBoxKumiOrderNumber_TextChanged(object sender, EventArgs e)
+        void textBoxProtocolNumber_TextChanged(object sender, EventArgs e)
         {
             CheckViewportModifications();
         }
@@ -1416,11 +1468,11 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
-        void checkBoxKumiOrderEnable_CheckedChanged(object sender, EventArgs e)
+        void checkBoxProtocolEnable_CheckedChanged(object sender, EventArgs e)
         {
-            foreach (Control control in groupBoxKumiOrder.Controls)
-                if (control != checkBoxKumiOrderEnable)
-                    control.Enabled = checkBoxKumiOrderEnable.Checked;
+            foreach (Control control in groupBoxProtocol.Controls)
+                if (control != checkBoxProtocolEnable)
+                    control.Enabled = checkBoxProtocolEnable.Checked;
             CheckViewportModifications();
         }
 
@@ -1468,6 +1520,20 @@ namespace Registry.Viewport
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyViewport));
             this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
+            this.groupBox31 = new System.Windows.Forms.GroupBox();
+            this.textBoxDescription = new System.Windows.Forms.TextBox();
+            this.groupBox22 = new System.Windows.Forms.GroupBox();
+            this.comboBoxExecutor = new System.Windows.Forms.ComboBox();
+            this.label41 = new System.Windows.Forms.Label();
+            this.comboBoxRentType = new System.Windows.Forms.ComboBox();
+            this.label46 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.dataGridViewTenancyPersons = new System.Windows.Forms.DataGridView();
+            this.surname = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.patronymic = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.date_of_birth = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_kinship = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.groupBoxTenancyContract = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
             this.panel6 = new System.Windows.Forms.Panel();
@@ -1502,28 +1568,22 @@ namespace Registry.Viewport
             this.textBoxResidenceWarrantNumber = new System.Windows.Forms.TextBox();
             this.dateTimePickerResidenceWarrantDate = new System.Windows.Forms.DateTimePicker();
             this.checkBoxResidenceWarrantEnable = new System.Windows.Forms.CheckBox();
-            this.groupBoxKumiOrder = new System.Windows.Forms.GroupBox();
+            this.groupBoxProtocol = new System.Windows.Forms.GroupBox();
             this.label45 = new System.Windows.Forms.Label();
-            this.dateTimePickerKumiOrderDate = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePickerProtocolDate = new System.Windows.Forms.DateTimePicker();
             this.label42 = new System.Windows.Forms.Label();
-            this.textBoxKumiOrderNumber = new System.Windows.Forms.TextBox();
-            this.checkBoxKumiOrderEnable = new System.Windows.Forms.CheckBox();
+            this.textBoxProtocolNumber = new System.Windows.Forms.TextBox();
+            this.checkBoxProtocolEnable = new System.Windows.Forms.CheckBox();
             this.groupBox21 = new System.Windows.Forms.GroupBox();
-            this.dataGridViewTenancyPersons = new System.Windows.Forms.DataGridView();
-            this.surname = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.patronymic = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.date_of_birth = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_kinship = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.tableLayoutPanel13 = new System.Windows.Forms.TableLayoutPanel();
-            this.groupBox22 = new System.Windows.Forms.GroupBox();
-            this.comboBoxExecutor = new System.Windows.Forms.ComboBox();
-            this.label41 = new System.Windows.Forms.Label();
-            this.comboBoxRentType = new System.Windows.Forms.ComboBox();
-            this.label46 = new System.Windows.Forms.Label();
-            this.groupBox31 = new System.Windows.Forms.GroupBox();
-            this.textBoxDescription = new System.Windows.Forms.TextBox();
+            this.dataGridViewTenancyAddress = new System.Windows.Forms.DataGridView();
+            this.address = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.living_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel9.SuspendLayout();
+            this.groupBox31.SuspendLayout();
+            this.groupBox22.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyPersons)).BeginInit();
             this.groupBoxTenancyContract.SuspendLayout();
             this.tableLayoutPanel10.SuspendLayout();
             this.panel6.SuspendLayout();
@@ -1533,12 +1593,9 @@ namespace Registry.Viewport
             this.groupBox24.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyReasons)).BeginInit();
             this.groupBoxResidenceWarrant.SuspendLayout();
-            this.groupBoxKumiOrder.SuspendLayout();
+            this.groupBoxProtocol.SuspendLayout();
             this.groupBox21.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyPersons)).BeginInit();
-            this.tableLayoutPanel13.SuspendLayout();
-            this.groupBox22.SuspendLayout();
-            this.groupBox31.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyAddress)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel9
@@ -1546,476 +1603,116 @@ namespace Registry.Viewport
             this.tableLayoutPanel9.ColumnCount = 2;
             this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel9.Controls.Add(this.groupBoxTenancyContract, 0, 0);
-            this.tableLayoutPanel9.Controls.Add(this.groupBox25, 0, 1);
-            this.tableLayoutPanel9.Controls.Add(this.groupBox24, 1, 1);
+            this.tableLayoutPanel9.Controls.Add(this.groupBox31, 1, 3);
+            this.tableLayoutPanel9.Controls.Add(this.groupBox22, 0, 0);
+            this.tableLayoutPanel9.Controls.Add(this.groupBox1, 0, 4);
+            this.tableLayoutPanel9.Controls.Add(this.groupBoxTenancyContract, 0, 1);
+            this.tableLayoutPanel9.Controls.Add(this.groupBox25, 1, 1);
+            this.tableLayoutPanel9.Controls.Add(this.groupBox24, 0, 1);
             this.tableLayoutPanel9.Controls.Add(this.groupBoxResidenceWarrant, 0, 2);
-            this.tableLayoutPanel9.Controls.Add(this.groupBoxKumiOrder, 1, 2);
-            this.tableLayoutPanel9.Controls.Add(this.groupBox21, 0, 3);
-            this.tableLayoutPanel9.Controls.Add(this.tableLayoutPanel13, 1, 3);
+            this.tableLayoutPanel9.Controls.Add(this.groupBoxProtocol, 1, 0);
+            this.tableLayoutPanel9.Controls.Add(this.groupBox21, 0, 4);
             this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel9.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel9.Name = "tableLayoutPanel9";
-            this.tableLayoutPanel9.RowCount = 4;
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 113F));
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 40F));
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 83F));
-            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 60F));
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(758, 521);
+            this.tableLayoutPanel9.RowCount = 5;
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 85F));
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 115F));
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 85F));
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(867, 502);
             this.tableLayoutPanel9.TabIndex = 0;
             // 
-            // groupBoxTenancyContract
+            // groupBox31
             // 
-            this.tableLayoutPanel9.SetColumnSpan(this.groupBoxTenancyContract, 2);
-            this.groupBoxTenancyContract.Controls.Add(this.tableLayoutPanel10);
-            this.groupBoxTenancyContract.Controls.Add(this.checkBoxContractEnable);
-            this.groupBoxTenancyContract.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxTenancyContract.Location = new System.Drawing.Point(3, 3);
-            this.groupBoxTenancyContract.Name = "groupBoxTenancyContract";
-            this.groupBoxTenancyContract.Size = new System.Drawing.Size(752, 107);
-            this.groupBoxTenancyContract.TabIndex = 0;
-            this.groupBoxTenancyContract.TabStop = false;
-            this.groupBoxTenancyContract.Text = "      Договор найма";
+            this.groupBox31.Controls.Add(this.textBoxDescription);
+            this.groupBox31.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox31.Location = new System.Drawing.Point(436, 311);
+            this.groupBox31.Name = "groupBox31";
+            this.groupBox31.Size = new System.Drawing.Size(428, 79);
+            this.groupBox31.TabIndex = 6;
+            this.groupBox31.TabStop = false;
+            this.groupBox31.Text = "Дополнительные сведения";
             // 
-            // tableLayoutPanel10
+            // textBoxDescription
             // 
-            this.tableLayoutPanel10.ColumnCount = 2;
-            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel10.Controls.Add(this.panel6, 1, 0);
-            this.tableLayoutPanel10.Controls.Add(this.panel5, 0, 0);
-            this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel10.Location = new System.Drawing.Point(3, 17);
-            this.tableLayoutPanel10.Name = "tableLayoutPanel10";
-            this.tableLayoutPanel10.RowCount = 1;
-            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-            this.tableLayoutPanel10.Size = new System.Drawing.Size(746, 87);
-            this.tableLayoutPanel10.TabIndex = 1;
+            this.textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxDescription.Location = new System.Drawing.Point(3, 17);
+            this.textBoxDescription.MaxLength = 4000;
+            this.textBoxDescription.Multiline = true;
+            this.textBoxDescription.Name = "textBoxDescription";
+            this.textBoxDescription.Size = new System.Drawing.Size(422, 59);
+            this.textBoxDescription.TabIndex = 0;
             // 
-            // panel6
+            // groupBox22
             // 
-            this.panel6.Controls.Add(this.label52);
-            this.panel6.Controls.Add(this.label51);
-            this.panel6.Controls.Add(this.dateTimePickerEndDate);
-            this.panel6.Controls.Add(this.label50);
-            this.panel6.Controls.Add(this.dateTimePickerBeginDate);
-            this.panel6.Controls.Add(this.label49);
-            this.panel6.Controls.Add(this.dateTimePickerIssueDate);
-            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(373, 0);
-            this.panel6.Margin = new System.Windows.Forms.Padding(0);
-            this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(373, 90);
-            this.panel6.TabIndex = 1;
+            this.groupBox22.Controls.Add(this.comboBoxExecutor);
+            this.groupBox22.Controls.Add(this.label41);
+            this.groupBox22.Controls.Add(this.comboBoxRentType);
+            this.groupBox22.Controls.Add(this.label46);
+            this.groupBox22.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox22.Location = new System.Drawing.Point(3, 3);
+            this.groupBox22.Name = "groupBox22";
+            this.groupBox22.Size = new System.Drawing.Size(427, 79);
+            this.groupBox22.TabIndex = 0;
+            this.groupBox22.TabStop = false;
+            this.groupBox22.Text = "Общие сведения";
             // 
-            // label52
+            // comboBoxExecutor
             // 
-            this.label52.AutoSize = true;
-            this.label52.Location = new System.Drawing.Point(150, 65);
-            this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(21, 15);
-            this.label52.TabIndex = 28;
-            this.label52.Text = "по";
-            // 
-            // label51
-            // 
-            this.label51.AutoSize = true;
-            this.label51.Location = new System.Drawing.Point(158, 36);
-            this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size(13, 15);
-            this.label51.TabIndex = 27;
-            this.label51.Text = "с";
-            // 
-            // dateTimePickerEndDate
-            // 
-            this.dateTimePickerEndDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.comboBoxExecutor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerEndDate.Location = new System.Drawing.Point(174, 62);
-            this.dateTimePickerEndDate.Name = "dateTimePickerEndDate";
-            this.dateTimePickerEndDate.ShowCheckBox = true;
-            this.dateTimePickerEndDate.Size = new System.Drawing.Size(191, 21);
-            this.dateTimePickerEndDate.TabIndex = 3;
-            this.dateTimePickerEndDate.ValueChanged += new System.EventHandler(this.dateTimePickerEndDate_ValueChanged);
+            this.comboBoxExecutor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxExecutor.FormattingEnabled = true;
+            this.comboBoxExecutor.Location = new System.Drawing.Point(168, 48);
+            this.comboBoxExecutor.Name = "comboBoxExecutor";
+            this.comboBoxExecutor.Size = new System.Drawing.Size(250, 23);
+            this.comboBoxExecutor.TabIndex = 1;
+            this.comboBoxExecutor.SelectedValueChanged += new System.EventHandler(this.comboBoxExecutor_SelectedValueChanged);
             // 
-            // label50
+            // label41
             // 
-            this.label50.AutoSize = true;
-            this.label50.Location = new System.Drawing.Point(15, 36);
-            this.label50.Name = "label50";
-            this.label50.Size = new System.Drawing.Size(93, 15);
-            this.label50.TabIndex = 25;
-            this.label50.Text = "Срок действия";
-            // 
-            // dateTimePickerBeginDate
-            // 
-            this.dateTimePickerBeginDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.label41.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerBeginDate.Location = new System.Drawing.Point(174, 33);
-            this.dateTimePickerBeginDate.Name = "dateTimePickerBeginDate";
-            this.dateTimePickerBeginDate.ShowCheckBox = true;
-            this.dateTimePickerBeginDate.Size = new System.Drawing.Size(191, 21);
-            this.dateTimePickerBeginDate.TabIndex = 1;
-            this.dateTimePickerBeginDate.ValueChanged += new System.EventHandler(this.dateTimePickerBeginDate_ValueChanged);
+            this.label41.AutoSize = true;
+            this.label41.Location = new System.Drawing.Point(12, 51);
+            this.label41.Name = "label41";
+            this.label41.Size = new System.Drawing.Size(141, 15);
+            this.label41.TabIndex = 1;
+            this.label41.Text = "Составитель договора";
             // 
-            // label49
+            // comboBoxRentType
             // 
-            this.label49.AutoSize = true;
-            this.label49.Location = new System.Drawing.Point(15, 7);
-            this.label49.Name = "label49";
-            this.label49.Size = new System.Drawing.Size(83, 15);
-            this.label49.TabIndex = 23;
-            this.label49.Text = "Дата выдачи";
-            // 
-            // dateTimePickerIssueDate
-            // 
-            this.dateTimePickerIssueDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.comboBoxRentType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerIssueDate.Location = new System.Drawing.Point(174, 4);
-            this.dateTimePickerIssueDate.Name = "dateTimePickerIssueDate";
-            this.dateTimePickerIssueDate.ShowCheckBox = true;
-            this.dateTimePickerIssueDate.Size = new System.Drawing.Size(191, 21);
-            this.dateTimePickerIssueDate.TabIndex = 0;
-            this.dateTimePickerIssueDate.ValueChanged += new System.EventHandler(this.dateTimePickerIssueDate_ValueChanged);
+            this.comboBoxRentType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxRentType.FormattingEnabled = true;
+            this.comboBoxRentType.Location = new System.Drawing.Point(168, 19);
+            this.comboBoxRentType.Name = "comboBoxRentType";
+            this.comboBoxRentType.Size = new System.Drawing.Size(250, 23);
+            this.comboBoxRentType.TabIndex = 0;
+            this.comboBoxRentType.SelectedValueChanged += new System.EventHandler(this.comboBoxRentType_SelectedValueChanged);
             // 
-            // panel5
+            // label46
             // 
-            this.panel5.Controls.Add(this.vButtonWarrant);
-            this.panel5.Controls.Add(this.textBoxSelectedWarrant);
-            this.panel5.Controls.Add(this.label82);
-            this.panel5.Controls.Add(this.label48);
-            this.panel5.Controls.Add(this.dateTimePickerRegistrationDate);
-            this.panel5.Controls.Add(this.textBoxRegistrationNumber);
-            this.panel5.Controls.Add(this.label47);
-            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel5.Location = new System.Drawing.Point(0, 0);
-            this.panel5.Margin = new System.Windows.Forms.Padding(0);
-            this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(373, 90);
-            this.panel5.TabIndex = 0;
+            this.label46.AutoSize = true;
+            this.label46.Location = new System.Drawing.Point(12, 22);
+            this.label46.Name = "label46";
+            this.label46.Size = new System.Drawing.Size(108, 15);
+            this.label46.TabIndex = 16;
+            this.label46.Text = "Тип найма жилья";
             // 
-            // vButtonWarrant
+            // groupBox1
             // 
-            this.vButtonWarrant.AllowAnimations = true;
-            this.vButtonWarrant.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.vButtonWarrant.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonWarrant.Location = new System.Drawing.Point(337, 62);
-            this.vButtonWarrant.Name = "vButtonWarrant";
-            this.vButtonWarrant.RoundedCornersMask = ((byte)(15));
-            this.vButtonWarrant.Size = new System.Drawing.Size(27, 20);
-            this.vButtonWarrant.TabIndex = 24;
-            this.vButtonWarrant.Text = "...";
-            this.vButtonWarrant.UseVisualStyleBackColor = false;
-            this.vButtonWarrant.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
-            this.vButtonWarrant.Click += new System.EventHandler(this.vButtonWarrant_Click);
-            // 
-            // textBoxSelectedWarrant
-            // 
-            this.textBoxSelectedWarrant.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxSelectedWarrant.Location = new System.Drawing.Point(172, 62);
-            this.textBoxSelectedWarrant.Name = "textBoxSelectedWarrant";
-            this.textBoxSelectedWarrant.ReadOnly = true;
-            this.textBoxSelectedWarrant.Size = new System.Drawing.Size(159, 21);
-            this.textBoxSelectedWarrant.TabIndex = 22;
-            this.textBoxSelectedWarrant.TextChanged += new System.EventHandler(this.textBoxSelectedWarrant_TextChanged);
-            // 
-            // label82
-            // 
-            this.label82.AutoSize = true;
-            this.label82.Location = new System.Drawing.Point(14, 65);
-            this.label82.Name = "label82";
-            this.label82.Size = new System.Drawing.Size(92, 15);
-            this.label82.TabIndex = 23;
-            this.label82.Text = "Доверенность";
-            // 
-            // label48
-            // 
-            this.label48.AutoSize = true;
-            this.label48.Location = new System.Drawing.Point(14, 36);
-            this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(114, 15);
-            this.label48.TabIndex = 21;
-            this.label48.Text = "Дата регистрации";
-            // 
-            // dateTimePickerRegistrationDate
-            // 
-            this.dateTimePickerRegistrationDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerRegistrationDate.Location = new System.Drawing.Point(172, 33);
-            this.dateTimePickerRegistrationDate.Name = "dateTimePickerRegistrationDate";
-            this.dateTimePickerRegistrationDate.Size = new System.Drawing.Size(192, 21);
-            this.dateTimePickerRegistrationDate.TabIndex = 2;
-            this.dateTimePickerRegistrationDate.ValueChanged += new System.EventHandler(this.dateTimePickerRegistrationDate_ValueChanged);
-            // 
-            // textBoxRegistrationNumber
-            // 
-            this.textBoxRegistrationNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxRegistrationNumber.Location = new System.Drawing.Point(172, 4);
-            this.textBoxRegistrationNumber.MaxLength = 16;
-            this.textBoxRegistrationNumber.Name = "textBoxRegistrationNumber";
-            this.textBoxRegistrationNumber.Size = new System.Drawing.Size(192, 21);
-            this.textBoxRegistrationNumber.TabIndex = 1;
-            this.textBoxRegistrationNumber.TextChanged += new System.EventHandler(this.textBoxRegistrationNumber_TextChanged);
-            // 
-            // label47
-            // 
-            this.label47.AutoSize = true;
-            this.label47.Location = new System.Drawing.Point(14, 7);
-            this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(152, 15);
-            this.label47.TabIndex = 18;
-            this.label47.Text = "Регистрационный номер";
-            // 
-            // checkBoxContractEnable
-            // 
-            this.checkBoxContractEnable.AutoSize = true;
-            this.checkBoxContractEnable.Checked = true;
-            this.checkBoxContractEnable.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxContractEnable.Location = new System.Drawing.Point(11, 0);
-            this.checkBoxContractEnable.Name = "checkBoxContractEnable";
-            this.checkBoxContractEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxContractEnable.TabIndex = 0;
-            this.checkBoxContractEnable.UseVisualStyleBackColor = true;
-            this.checkBoxContractEnable.CheckedChanged += new System.EventHandler(this.checkBoxProcessEnable_CheckedChanged);
-            // 
-            // groupBox25
-            // 
-            this.groupBox25.Controls.Add(this.dataGridViewTenancyAgreements);
-            this.groupBox25.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox25.Location = new System.Drawing.Point(3, 116);
-            this.groupBox25.Name = "groupBox25";
-            this.groupBox25.Size = new System.Drawing.Size(373, 124);
-            this.groupBox25.TabIndex = 1;
-            this.groupBox25.TabStop = false;
-            this.groupBox25.Text = "Соглашения найма";
-            // 
-            // dataGridViewTenancyAgreements
-            // 
-            this.dataGridViewTenancyAgreements.AllowUserToAddRows = false;
-            this.dataGridViewTenancyAgreements.AllowUserToDeleteRows = false;
-            this.dataGridViewTenancyAgreements.AllowUserToResizeRows = false;
-            this.dataGridViewTenancyAgreements.BackgroundColor = System.Drawing.Color.White;
-            this.dataGridViewTenancyAgreements.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewTenancyAgreements.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.agreement_date,
-            this.agreement_content});
-            this.dataGridViewTenancyAgreements.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewTenancyAgreements.Location = new System.Drawing.Point(3, 17);
-            this.dataGridViewTenancyAgreements.MultiSelect = false;
-            this.dataGridViewTenancyAgreements.Name = "dataGridViewTenancyAgreements";
-            this.dataGridViewTenancyAgreements.ReadOnly = true;
-            this.dataGridViewTenancyAgreements.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyAgreements.Size = new System.Drawing.Size(367, 104);
-            this.dataGridViewTenancyAgreements.TabIndex = 0;
-            this.dataGridViewTenancyAgreements.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyAgreements_CellDoubleClick);
-            // 
-            // agreement_date
-            // 
-            this.agreement_date.HeaderText = "Дата";
-            this.agreement_date.Name = "agreement_date";
-            this.agreement_date.ReadOnly = true;
-            // 
-            // agreement_content
-            // 
-            this.agreement_content.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.agreement_content.HeaderText = "Содержание";
-            this.agreement_content.Name = "agreement_content";
-            this.agreement_content.ReadOnly = true;
-            // 
-            // groupBox24
-            // 
-            this.groupBox24.Controls.Add(this.dataGridViewTenancyReasons);
-            this.groupBox24.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox24.Location = new System.Drawing.Point(382, 116);
-            this.groupBox24.Name = "groupBox24";
-            this.groupBox24.Size = new System.Drawing.Size(373, 124);
-            this.groupBox24.TabIndex = 2;
-            this.groupBox24.TabStop = false;
-            this.groupBox24.Text = "Основания найма";
-            // 
-            // dataGridViewTenancyReasons
-            // 
-            this.dataGridViewTenancyReasons.AllowUserToAddRows = false;
-            this.dataGridViewTenancyReasons.AllowUserToDeleteRows = false;
-            this.dataGridViewTenancyReasons.AllowUserToResizeRows = false;
-            this.dataGridViewTenancyReasons.BackgroundColor = System.Drawing.Color.White;
-            this.dataGridViewTenancyReasons.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewTenancyReasons.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.reason_prepared,
-            this.reason_number,
-            this.reason_date});
-            this.dataGridViewTenancyReasons.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewTenancyReasons.Location = new System.Drawing.Point(3, 17);
-            this.dataGridViewTenancyReasons.MultiSelect = false;
-            this.dataGridViewTenancyReasons.Name = "dataGridViewTenancyReasons";
-            this.dataGridViewTenancyReasons.ReadOnly = true;
-            this.dataGridViewTenancyReasons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyReasons.Size = new System.Drawing.Size(367, 104);
-            this.dataGridViewTenancyReasons.TabIndex = 0;
-            this.dataGridViewTenancyReasons.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyReasons_CellDoubleClick);
-            // 
-            // reason_prepared
-            // 
-            this.reason_prepared.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.reason_prepared.HeaderText = "Основание";
-            this.reason_prepared.Name = "reason_prepared";
-            this.reason_prepared.ReadOnly = true;
-            // 
-            // reason_number
-            // 
-            this.reason_number.HeaderText = "№";
-            this.reason_number.Name = "reason_number";
-            this.reason_number.ReadOnly = true;
-            // 
-            // reason_date
-            // 
-            this.reason_date.HeaderText = "Дата";
-            this.reason_date.Name = "reason_date";
-            this.reason_date.ReadOnly = true;
-            // 
-            // groupBoxResidenceWarrant
-            // 
-            this.groupBoxResidenceWarrant.Controls.Add(this.label44);
-            this.groupBoxResidenceWarrant.Controls.Add(this.label43);
-            this.groupBoxResidenceWarrant.Controls.Add(this.textBoxResidenceWarrantNumber);
-            this.groupBoxResidenceWarrant.Controls.Add(this.dateTimePickerResidenceWarrantDate);
-            this.groupBoxResidenceWarrant.Controls.Add(this.checkBoxResidenceWarrantEnable);
-            this.groupBoxResidenceWarrant.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxResidenceWarrant.Location = new System.Drawing.Point(3, 246);
-            this.groupBoxResidenceWarrant.Name = "groupBoxResidenceWarrant";
-            this.groupBoxResidenceWarrant.Size = new System.Drawing.Size(373, 77);
-            this.groupBoxResidenceWarrant.TabIndex = 3;
-            this.groupBoxResidenceWarrant.TabStop = false;
-            this.groupBoxResidenceWarrant.Text = "      Ордер на проживание";
-            // 
-            // label44
-            // 
-            this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(17, 54);
-            this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(82, 15);
-            this.label44.TabIndex = 16;
-            this.label44.Text = "Дата ордера";
-            // 
-            // label43
-            // 
-            this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(17, 22);
-            this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(91, 15);
-            this.label43.TabIndex = 14;
-            this.label43.Text = "Номер ордера";
-            // 
-            // textBoxResidenceWarrantNumber
-            // 
-            this.textBoxResidenceWarrantNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxResidenceWarrantNumber.Location = new System.Drawing.Point(175, 19);
-            this.textBoxResidenceWarrantNumber.MaxLength = 50;
-            this.textBoxResidenceWarrantNumber.Name = "textBoxResidenceWarrantNumber";
-            this.textBoxResidenceWarrantNumber.Size = new System.Drawing.Size(192, 21);
-            this.textBoxResidenceWarrantNumber.TabIndex = 1;
-            this.textBoxResidenceWarrantNumber.TextChanged += new System.EventHandler(this.textBoxResidenceWarrantNumber_TextChanged);
-            // 
-            // dateTimePickerResidenceWarrantDate
-            // 
-            this.dateTimePickerResidenceWarrantDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerResidenceWarrantDate.Location = new System.Drawing.Point(175, 48);
-            this.dateTimePickerResidenceWarrantDate.Name = "dateTimePickerResidenceWarrantDate";
-            this.dateTimePickerResidenceWarrantDate.Size = new System.Drawing.Size(192, 21);
-            this.dateTimePickerResidenceWarrantDate.TabIndex = 2;
-            this.dateTimePickerResidenceWarrantDate.ValueChanged += new System.EventHandler(this.dateTimePickerResidenceWarrantDate_ValueChanged);
-            // 
-            // checkBoxResidenceWarrantEnable
-            // 
-            this.checkBoxResidenceWarrantEnable.AutoSize = true;
-            this.checkBoxResidenceWarrantEnable.Checked = true;
-            this.checkBoxResidenceWarrantEnable.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxResidenceWarrantEnable.Location = new System.Drawing.Point(11, 0);
-            this.checkBoxResidenceWarrantEnable.Name = "checkBoxResidenceWarrantEnable";
-            this.checkBoxResidenceWarrantEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxResidenceWarrantEnable.TabIndex = 0;
-            this.checkBoxResidenceWarrantEnable.UseVisualStyleBackColor = true;
-            this.checkBoxResidenceWarrantEnable.CheckedChanged += new System.EventHandler(this.checkBoxResidenceWarrantEnable_CheckedChanged);
-            // 
-            // groupBoxKumiOrder
-            // 
-            this.groupBoxKumiOrder.Controls.Add(this.label45);
-            this.groupBoxKumiOrder.Controls.Add(this.dateTimePickerKumiOrderDate);
-            this.groupBoxKumiOrder.Controls.Add(this.label42);
-            this.groupBoxKumiOrder.Controls.Add(this.textBoxKumiOrderNumber);
-            this.groupBoxKumiOrder.Controls.Add(this.checkBoxKumiOrderEnable);
-            this.groupBoxKumiOrder.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxKumiOrder.Location = new System.Drawing.Point(382, 246);
-            this.groupBoxKumiOrder.Name = "groupBoxKumiOrder";
-            this.groupBoxKumiOrder.Size = new System.Drawing.Size(373, 77);
-            this.groupBoxKumiOrder.TabIndex = 4;
-            this.groupBoxKumiOrder.TabStop = false;
-            this.groupBoxKumiOrder.Text = "      Распоряжение КУМИ";
-            // 
-            // label45
-            // 
-            this.label45.AutoSize = true;
-            this.label45.Location = new System.Drawing.Point(12, 54);
-            this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(125, 15);
-            this.label45.TabIndex = 18;
-            this.label45.Text = "Дата распоряжения";
-            // 
-            // dateTimePickerKumiOrderDate
-            // 
-            this.dateTimePickerKumiOrderDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerKumiOrderDate.Location = new System.Drawing.Point(171, 48);
-            this.dateTimePickerKumiOrderDate.Name = "dateTimePickerKumiOrderDate";
-            this.dateTimePickerKumiOrderDate.Size = new System.Drawing.Size(191, 21);
-            this.dateTimePickerKumiOrderDate.TabIndex = 2;
-            this.dateTimePickerKumiOrderDate.ValueChanged += new System.EventHandler(this.dateTimePickerKumiOrderDate_ValueChanged);
-            // 
-            // label42
-            // 
-            this.label42.AutoSize = true;
-            this.label42.Location = new System.Drawing.Point(12, 22);
-            this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(134, 15);
-            this.label42.TabIndex = 12;
-            this.label42.Text = "Номер распоряжения";
-            // 
-            // textBoxKumiOrderNumber
-            // 
-            this.textBoxKumiOrderNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxKumiOrderNumber.Location = new System.Drawing.Point(171, 19);
-            this.textBoxKumiOrderNumber.MaxLength = 50;
-            this.textBoxKumiOrderNumber.Name = "textBoxKumiOrderNumber";
-            this.textBoxKumiOrderNumber.Size = new System.Drawing.Size(191, 21);
-            this.textBoxKumiOrderNumber.TabIndex = 1;
-            this.textBoxKumiOrderNumber.TextChanged += new System.EventHandler(this.textBoxKumiOrderNumber_TextChanged);
-            // 
-            // checkBoxKumiOrderEnable
-            // 
-            this.checkBoxKumiOrderEnable.AutoSize = true;
-            this.checkBoxKumiOrderEnable.Checked = true;
-            this.checkBoxKumiOrderEnable.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxKumiOrderEnable.Location = new System.Drawing.Point(11, 0);
-            this.checkBoxKumiOrderEnable.Name = "checkBoxKumiOrderEnable";
-            this.checkBoxKumiOrderEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxKumiOrderEnable.TabIndex = 0;
-            this.checkBoxKumiOrderEnable.UseVisualStyleBackColor = true;
-            this.checkBoxKumiOrderEnable.CheckedChanged += new System.EventHandler(this.checkBoxKumiOrderEnable_CheckedChanged);
-            // 
-            // groupBox21
-            // 
-            this.groupBox21.Controls.Add(this.dataGridViewTenancyPersons);
-            this.groupBox21.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox21.Location = new System.Drawing.Point(3, 329);
-            this.groupBox21.Name = "groupBox21";
-            this.groupBox21.Size = new System.Drawing.Size(373, 189);
-            this.groupBox21.TabIndex = 5;
-            this.groupBox21.TabStop = false;
-            this.groupBox21.Text = "Участники найма";
+            this.groupBox1.Controls.Add(this.dataGridViewTenancyPersons);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox1.Location = new System.Drawing.Point(436, 396);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(428, 103);
+            this.groupBox1.TabIndex = 8;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Участники найма";
             // 
             // dataGridViewTenancyPersons
             // 
@@ -2037,9 +1734,8 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(367, 169);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(422, 83);
             this.dataGridViewTenancyPersons.TabIndex = 0;
-            this.dataGridViewTenancyPersons.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyPersons_CellDoubleClick);
             // 
             // surname
             // 
@@ -2077,107 +1773,508 @@ namespace Registry.Viewport
             this.id_kinship.Name = "id_kinship";
             this.id_kinship.ReadOnly = true;
             // 
-            // tableLayoutPanel13
+            // groupBoxTenancyContract
             // 
-            this.tableLayoutPanel13.ColumnCount = 1;
-            this.tableLayoutPanel13.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel13.Controls.Add(this.groupBox22, 0, 0);
-            this.tableLayoutPanel13.Controls.Add(this.groupBox31, 0, 1);
-            this.tableLayoutPanel13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel13.Location = new System.Drawing.Point(382, 329);
-            this.tableLayoutPanel13.Name = "tableLayoutPanel13";
-            this.tableLayoutPanel13.RowCount = 2;
-            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 85F));
-            this.tableLayoutPanel13.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel13.Size = new System.Drawing.Size(373, 189);
-            this.tableLayoutPanel13.TabIndex = 6;
+            this.tableLayoutPanel9.SetColumnSpan(this.groupBoxTenancyContract, 2);
+            this.groupBoxTenancyContract.Controls.Add(this.tableLayoutPanel10);
+            this.groupBoxTenancyContract.Controls.Add(this.checkBoxContractEnable);
+            this.groupBoxTenancyContract.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxTenancyContract.Location = new System.Drawing.Point(3, 88);
+            this.groupBoxTenancyContract.Name = "groupBoxTenancyContract";
+            this.groupBoxTenancyContract.Size = new System.Drawing.Size(861, 109);
+            this.groupBoxTenancyContract.TabIndex = 2;
+            this.groupBoxTenancyContract.TabStop = false;
+            this.groupBoxTenancyContract.Text = "      Договор найма";
             // 
-            // groupBox22
+            // tableLayoutPanel10
             // 
-            this.groupBox22.Controls.Add(this.comboBoxExecutor);
-            this.groupBox22.Controls.Add(this.label41);
-            this.groupBox22.Controls.Add(this.comboBoxRentType);
-            this.groupBox22.Controls.Add(this.label46);
-            this.groupBox22.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox22.Location = new System.Drawing.Point(3, 3);
-            this.groupBox22.Name = "groupBox22";
-            this.groupBox22.Size = new System.Drawing.Size(367, 79);
-            this.groupBox22.TabIndex = 9;
-            this.groupBox22.TabStop = false;
-            this.groupBox22.Text = "Общие сведения";
+            this.tableLayoutPanel10.ColumnCount = 2;
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel10.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel10.Controls.Add(this.panel6, 1, 0);
+            this.tableLayoutPanel10.Controls.Add(this.panel5, 0, 0);
+            this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel10.Location = new System.Drawing.Point(3, 17);
+            this.tableLayoutPanel10.Name = "tableLayoutPanel10";
+            this.tableLayoutPanel10.RowCount = 1;
+            this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
+            this.tableLayoutPanel10.Size = new System.Drawing.Size(855, 89);
+            this.tableLayoutPanel10.TabIndex = 1;
             // 
-            // comboBoxExecutor
+            // panel6
             // 
-            this.comboBoxExecutor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.panel6.Controls.Add(this.label52);
+            this.panel6.Controls.Add(this.label51);
+            this.panel6.Controls.Add(this.dateTimePickerEndDate);
+            this.panel6.Controls.Add(this.label50);
+            this.panel6.Controls.Add(this.dateTimePickerBeginDate);
+            this.panel6.Controls.Add(this.label49);
+            this.panel6.Controls.Add(this.dateTimePickerIssueDate);
+            this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel6.Location = new System.Drawing.Point(427, 0);
+            this.panel6.Margin = new System.Windows.Forms.Padding(0);
+            this.panel6.Name = "panel6";
+            this.panel6.Size = new System.Drawing.Size(428, 90);
+            this.panel6.TabIndex = 1;
+            // 
+            // label52
+            // 
+            this.label52.AutoSize = true;
+            this.label52.Location = new System.Drawing.Point(150, 65);
+            this.label52.Name = "label52";
+            this.label52.Size = new System.Drawing.Size(21, 15);
+            this.label52.TabIndex = 28;
+            this.label52.Text = "по";
+            // 
+            // label51
+            // 
+            this.label51.AutoSize = true;
+            this.label51.Location = new System.Drawing.Point(158, 36);
+            this.label51.Name = "label51";
+            this.label51.Size = new System.Drawing.Size(13, 15);
+            this.label51.TabIndex = 27;
+            this.label51.Text = "с";
+            // 
+            // dateTimePickerEndDate
+            // 
+            this.dateTimePickerEndDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxExecutor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxExecutor.FormattingEnabled = true;
-            this.comboBoxExecutor.Location = new System.Drawing.Point(168, 48);
-            this.comboBoxExecutor.Name = "comboBoxExecutor";
-            this.comboBoxExecutor.Size = new System.Drawing.Size(190, 23);
-            this.comboBoxExecutor.TabIndex = 1;
-            this.comboBoxExecutor.SelectedValueChanged += new System.EventHandler(this.comboBoxExecutor_SelectedValueChanged);
+            this.dateTimePickerEndDate.Location = new System.Drawing.Point(174, 62);
+            this.dateTimePickerEndDate.Name = "dateTimePickerEndDate";
+            this.dateTimePickerEndDate.ShowCheckBox = true;
+            this.dateTimePickerEndDate.Size = new System.Drawing.Size(246, 21);
+            this.dateTimePickerEndDate.TabIndex = 2;
+            this.dateTimePickerEndDate.ValueChanged += new System.EventHandler(this.dateTimePickerEndDate_ValueChanged);
             // 
-            // label41
+            // label50
             // 
-            this.label41.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.label50.AutoSize = true;
+            this.label50.Location = new System.Drawing.Point(15, 36);
+            this.label50.Name = "label50";
+            this.label50.Size = new System.Drawing.Size(93, 15);
+            this.label50.TabIndex = 25;
+            this.label50.Text = "Срок действия";
+            // 
+            // dateTimePickerBeginDate
+            // 
+            this.dateTimePickerBeginDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.label41.AutoSize = true;
-            this.label41.Location = new System.Drawing.Point(12, 51);
-            this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(141, 15);
-            this.label41.TabIndex = 1;
-            this.label41.Text = "Составитель договора";
+            this.dateTimePickerBeginDate.Location = new System.Drawing.Point(174, 33);
+            this.dateTimePickerBeginDate.Name = "dateTimePickerBeginDate";
+            this.dateTimePickerBeginDate.ShowCheckBox = true;
+            this.dateTimePickerBeginDate.Size = new System.Drawing.Size(246, 21);
+            this.dateTimePickerBeginDate.TabIndex = 1;
+            this.dateTimePickerBeginDate.ValueChanged += new System.EventHandler(this.dateTimePickerBeginDate_ValueChanged);
             // 
-            // comboBoxRentType
+            // label49
             // 
-            this.comboBoxRentType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.label49.AutoSize = true;
+            this.label49.Location = new System.Drawing.Point(15, 7);
+            this.label49.Name = "label49";
+            this.label49.Size = new System.Drawing.Size(83, 15);
+            this.label49.TabIndex = 23;
+            this.label49.Text = "Дата выдачи";
+            // 
+            // dateTimePickerIssueDate
+            // 
+            this.dateTimePickerIssueDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxRentType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxRentType.FormattingEnabled = true;
-            this.comboBoxRentType.Location = new System.Drawing.Point(168, 19);
-            this.comboBoxRentType.Name = "comboBoxRentType";
-            this.comboBoxRentType.Size = new System.Drawing.Size(190, 23);
-            this.comboBoxRentType.TabIndex = 0;
-            this.comboBoxRentType.SelectedValueChanged += new System.EventHandler(this.comboBoxRentType_SelectedValueChanged);
+            this.dateTimePickerIssueDate.Location = new System.Drawing.Point(174, 4);
+            this.dateTimePickerIssueDate.Name = "dateTimePickerIssueDate";
+            this.dateTimePickerIssueDate.ShowCheckBox = true;
+            this.dateTimePickerIssueDate.Size = new System.Drawing.Size(246, 21);
+            this.dateTimePickerIssueDate.TabIndex = 0;
+            this.dateTimePickerIssueDate.ValueChanged += new System.EventHandler(this.dateTimePickerIssueDate_ValueChanged);
             // 
-            // label46
+            // panel5
             // 
-            this.label46.AutoSize = true;
-            this.label46.Location = new System.Drawing.Point(12, 22);
-            this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(108, 15);
-            this.label46.TabIndex = 16;
-            this.label46.Text = "Тип найма жилья";
+            this.panel5.Controls.Add(this.vButtonWarrant);
+            this.panel5.Controls.Add(this.textBoxSelectedWarrant);
+            this.panel5.Controls.Add(this.label82);
+            this.panel5.Controls.Add(this.label48);
+            this.panel5.Controls.Add(this.dateTimePickerRegistrationDate);
+            this.panel5.Controls.Add(this.textBoxRegistrationNumber);
+            this.panel5.Controls.Add(this.label47);
+            this.panel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel5.Location = new System.Drawing.Point(0, 0);
+            this.panel5.Margin = new System.Windows.Forms.Padding(0);
+            this.panel5.Name = "panel5";
+            this.panel5.Size = new System.Drawing.Size(427, 90);
+            this.panel5.TabIndex = 0;
             // 
-            // groupBox31
+            // vButtonWarrant
             // 
-            this.groupBox31.Controls.Add(this.textBoxDescription);
-            this.groupBox31.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox31.Location = new System.Drawing.Point(3, 88);
-            this.groupBox31.Name = "groupBox31";
-            this.groupBox31.Size = new System.Drawing.Size(367, 98);
-            this.groupBox31.TabIndex = 10;
-            this.groupBox31.TabStop = false;
-            this.groupBox31.Text = "Дополнительные сведения";
+            this.vButtonWarrant.AllowAnimations = true;
+            this.vButtonWarrant.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.vButtonWarrant.BackColor = System.Drawing.Color.Transparent;
+            this.vButtonWarrant.Location = new System.Drawing.Point(391, 62);
+            this.vButtonWarrant.Name = "vButtonWarrant";
+            this.vButtonWarrant.RoundedCornersMask = ((byte)(15));
+            this.vButtonWarrant.Size = new System.Drawing.Size(27, 20);
+            this.vButtonWarrant.TabIndex = 24;
+            this.vButtonWarrant.Text = "...";
+            this.vButtonWarrant.UseVisualStyleBackColor = false;
+            this.vButtonWarrant.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonWarrant.Click += new System.EventHandler(this.vButtonWarrant_Click);
             // 
-            // textBoxDescription
+            // textBoxSelectedWarrant
             // 
-            this.textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxDescription.Location = new System.Drawing.Point(3, 17);
-            this.textBoxDescription.MaxLength = 4000;
-            this.textBoxDescription.Multiline = true;
-            this.textBoxDescription.Name = "textBoxDescription";
-            this.textBoxDescription.Size = new System.Drawing.Size(361, 78);
-            this.textBoxDescription.TabIndex = 18;
-            this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxDescription_TextChanged);
+            this.textBoxSelectedWarrant.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSelectedWarrant.Location = new System.Drawing.Point(172, 62);
+            this.textBoxSelectedWarrant.Name = "textBoxSelectedWarrant";
+            this.textBoxSelectedWarrant.ReadOnly = true;
+            this.textBoxSelectedWarrant.Size = new System.Drawing.Size(213, 21);
+            this.textBoxSelectedWarrant.TabIndex = 2;
+            this.textBoxSelectedWarrant.TextChanged += new System.EventHandler(this.textBoxSelectedWarrant_TextChanged);
+            // 
+            // label82
+            // 
+            this.label82.AutoSize = true;
+            this.label82.Location = new System.Drawing.Point(14, 65);
+            this.label82.Name = "label82";
+            this.label82.Size = new System.Drawing.Size(92, 15);
+            this.label82.TabIndex = 23;
+            this.label82.Text = "Доверенность";
+            // 
+            // label48
+            // 
+            this.label48.AutoSize = true;
+            this.label48.Location = new System.Drawing.Point(14, 36);
+            this.label48.Name = "label48";
+            this.label48.Size = new System.Drawing.Size(114, 15);
+            this.label48.TabIndex = 21;
+            this.label48.Text = "Дата регистрации";
+            // 
+            // dateTimePickerRegistrationDate
+            // 
+            this.dateTimePickerRegistrationDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerRegistrationDate.Location = new System.Drawing.Point(172, 33);
+            this.dateTimePickerRegistrationDate.Name = "dateTimePickerRegistrationDate";
+            this.dateTimePickerRegistrationDate.Size = new System.Drawing.Size(246, 21);
+            this.dateTimePickerRegistrationDate.TabIndex = 1;
+            this.dateTimePickerRegistrationDate.ValueChanged += new System.EventHandler(this.dateTimePickerRegistrationDate_ValueChanged);
+            // 
+            // textBoxRegistrationNumber
+            // 
+            this.textBoxRegistrationNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxRegistrationNumber.Location = new System.Drawing.Point(172, 4);
+            this.textBoxRegistrationNumber.MaxLength = 16;
+            this.textBoxRegistrationNumber.Name = "textBoxRegistrationNumber";
+            this.textBoxRegistrationNumber.Size = new System.Drawing.Size(246, 21);
+            this.textBoxRegistrationNumber.TabIndex = 0;
+            this.textBoxRegistrationNumber.TextChanged += new System.EventHandler(this.textBoxRegistrationNumber_TextChanged);
+            // 
+            // label47
+            // 
+            this.label47.AutoSize = true;
+            this.label47.Location = new System.Drawing.Point(14, 7);
+            this.label47.Name = "label47";
+            this.label47.Size = new System.Drawing.Size(152, 15);
+            this.label47.TabIndex = 18;
+            this.label47.Text = "Регистрационный номер";
+            // 
+            // checkBoxContractEnable
+            // 
+            this.checkBoxContractEnable.AutoSize = true;
+            this.checkBoxContractEnable.Checked = true;
+            this.checkBoxContractEnable.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxContractEnable.Location = new System.Drawing.Point(11, 0);
+            this.checkBoxContractEnable.Name = "checkBoxContractEnable";
+            this.checkBoxContractEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxContractEnable.TabIndex = 0;
+            this.checkBoxContractEnable.UseVisualStyleBackColor = true;
+            this.checkBoxContractEnable.CheckedChanged += new System.EventHandler(this.checkBoxProcessEnable_CheckedChanged);
+            // 
+            // groupBox25
+            // 
+            this.groupBox25.Controls.Add(this.dataGridViewTenancyAgreements);
+            this.groupBox25.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox25.Location = new System.Drawing.Point(436, 203);
+            this.groupBox25.Name = "groupBox25";
+            this.groupBox25.Size = new System.Drawing.Size(428, 102);
+            this.groupBox25.TabIndex = 4;
+            this.groupBox25.TabStop = false;
+            this.groupBox25.Text = "Соглашения найма";
+            // 
+            // dataGridViewTenancyAgreements
+            // 
+            this.dataGridViewTenancyAgreements.AllowUserToAddRows = false;
+            this.dataGridViewTenancyAgreements.AllowUserToDeleteRows = false;
+            this.dataGridViewTenancyAgreements.AllowUserToResizeRows = false;
+            this.dataGridViewTenancyAgreements.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridViewTenancyAgreements.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewTenancyAgreements.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.agreement_date,
+            this.agreement_content});
+            this.dataGridViewTenancyAgreements.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewTenancyAgreements.Location = new System.Drawing.Point(3, 17);
+            this.dataGridViewTenancyAgreements.MultiSelect = false;
+            this.dataGridViewTenancyAgreements.Name = "dataGridViewTenancyAgreements";
+            this.dataGridViewTenancyAgreements.ReadOnly = true;
+            this.dataGridViewTenancyAgreements.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewTenancyAgreements.Size = new System.Drawing.Size(422, 82);
+            this.dataGridViewTenancyAgreements.TabIndex = 0;
+            this.dataGridViewTenancyAgreements.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyAgreements_CellDoubleClick);
+            // 
+            // agreement_date
+            // 
+            this.agreement_date.HeaderText = "Дата";
+            this.agreement_date.Name = "agreement_date";
+            this.agreement_date.ReadOnly = true;
+            // 
+            // agreement_content
+            // 
+            this.agreement_content.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.agreement_content.HeaderText = "Содержание";
+            this.agreement_content.Name = "agreement_content";
+            this.agreement_content.ReadOnly = true;
+            // 
+            // groupBox24
+            // 
+            this.groupBox24.Controls.Add(this.dataGridViewTenancyReasons);
+            this.groupBox24.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox24.Location = new System.Drawing.Point(3, 203);
+            this.groupBox24.Name = "groupBox24";
+            this.groupBox24.Size = new System.Drawing.Size(427, 102);
+            this.groupBox24.TabIndex = 3;
+            this.groupBox24.TabStop = false;
+            this.groupBox24.Text = "Основания найма";
+            // 
+            // dataGridViewTenancyReasons
+            // 
+            this.dataGridViewTenancyReasons.AllowUserToAddRows = false;
+            this.dataGridViewTenancyReasons.AllowUserToDeleteRows = false;
+            this.dataGridViewTenancyReasons.AllowUserToResizeRows = false;
+            this.dataGridViewTenancyReasons.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridViewTenancyReasons.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewTenancyReasons.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.reason_prepared,
+            this.reason_number,
+            this.reason_date});
+            this.dataGridViewTenancyReasons.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewTenancyReasons.Location = new System.Drawing.Point(3, 17);
+            this.dataGridViewTenancyReasons.MultiSelect = false;
+            this.dataGridViewTenancyReasons.Name = "dataGridViewTenancyReasons";
+            this.dataGridViewTenancyReasons.ReadOnly = true;
+            this.dataGridViewTenancyReasons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewTenancyReasons.Size = new System.Drawing.Size(421, 82);
+            this.dataGridViewTenancyReasons.TabIndex = 0;
+            this.dataGridViewTenancyReasons.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyReasons_CellDoubleClick);
+            // 
+            // reason_prepared
+            // 
+            this.reason_prepared.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.reason_prepared.HeaderText = "Основание";
+            this.reason_prepared.Name = "reason_prepared";
+            this.reason_prepared.ReadOnly = true;
+            // 
+            // reason_number
+            // 
+            this.reason_number.HeaderText = "№";
+            this.reason_number.Name = "reason_number";
+            this.reason_number.ReadOnly = true;
+            // 
+            // reason_date
+            // 
+            this.reason_date.HeaderText = "Дата";
+            this.reason_date.Name = "reason_date";
+            this.reason_date.ReadOnly = true;
+            // 
+            // groupBoxResidenceWarrant
+            // 
+            this.groupBoxResidenceWarrant.Controls.Add(this.label44);
+            this.groupBoxResidenceWarrant.Controls.Add(this.label43);
+            this.groupBoxResidenceWarrant.Controls.Add(this.textBoxResidenceWarrantNumber);
+            this.groupBoxResidenceWarrant.Controls.Add(this.dateTimePickerResidenceWarrantDate);
+            this.groupBoxResidenceWarrant.Controls.Add(this.checkBoxResidenceWarrantEnable);
+            this.groupBoxResidenceWarrant.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxResidenceWarrant.Location = new System.Drawing.Point(3, 311);
+            this.groupBoxResidenceWarrant.Name = "groupBoxResidenceWarrant";
+            this.groupBoxResidenceWarrant.Size = new System.Drawing.Size(427, 79);
+            this.groupBoxResidenceWarrant.TabIndex = 5;
+            this.groupBoxResidenceWarrant.TabStop = false;
+            this.groupBoxResidenceWarrant.Text = "      Ордер на проживание";
+            // 
+            // label44
+            // 
+            this.label44.AutoSize = true;
+            this.label44.Location = new System.Drawing.Point(17, 53);
+            this.label44.Name = "label44";
+            this.label44.Size = new System.Drawing.Size(82, 15);
+            this.label44.TabIndex = 16;
+            this.label44.Text = "Дата ордера";
+            // 
+            // label43
+            // 
+            this.label43.AutoSize = true;
+            this.label43.Location = new System.Drawing.Point(17, 22);
+            this.label43.Name = "label43";
+            this.label43.Size = new System.Drawing.Size(91, 15);
+            this.label43.TabIndex = 14;
+            this.label43.Text = "Номер ордера";
+            // 
+            // textBoxResidenceWarrantNumber
+            // 
+            this.textBoxResidenceWarrantNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxResidenceWarrantNumber.Location = new System.Drawing.Point(175, 19);
+            this.textBoxResidenceWarrantNumber.MaxLength = 50;
+            this.textBoxResidenceWarrantNumber.Name = "textBoxResidenceWarrantNumber";
+            this.textBoxResidenceWarrantNumber.Size = new System.Drawing.Size(246, 21);
+            this.textBoxResidenceWarrantNumber.TabIndex = 1;
+            this.textBoxResidenceWarrantNumber.TextChanged += new System.EventHandler(this.textBoxResidenceWarrantNumber_TextChanged);
+            // 
+            // dateTimePickerResidenceWarrantDate
+            // 
+            this.dateTimePickerResidenceWarrantDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerResidenceWarrantDate.Location = new System.Drawing.Point(175, 48);
+            this.dateTimePickerResidenceWarrantDate.Name = "dateTimePickerResidenceWarrantDate";
+            this.dateTimePickerResidenceWarrantDate.Size = new System.Drawing.Size(246, 21);
+            this.dateTimePickerResidenceWarrantDate.TabIndex = 2;
+            this.dateTimePickerResidenceWarrantDate.ValueChanged += new System.EventHandler(this.dateTimePickerResidenceWarrantDate_ValueChanged);
+            // 
+            // checkBoxResidenceWarrantEnable
+            // 
+            this.checkBoxResidenceWarrantEnable.AutoSize = true;
+            this.checkBoxResidenceWarrantEnable.Checked = true;
+            this.checkBoxResidenceWarrantEnable.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxResidenceWarrantEnable.Location = new System.Drawing.Point(11, 0);
+            this.checkBoxResidenceWarrantEnable.Name = "checkBoxResidenceWarrantEnable";
+            this.checkBoxResidenceWarrantEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxResidenceWarrantEnable.TabIndex = 0;
+            this.checkBoxResidenceWarrantEnable.UseVisualStyleBackColor = true;
+            this.checkBoxResidenceWarrantEnable.CheckedChanged += new System.EventHandler(this.checkBoxResidenceWarrantEnable_CheckedChanged);
+            // 
+            // groupBoxProtocol
+            // 
+            this.groupBoxProtocol.Controls.Add(this.label45);
+            this.groupBoxProtocol.Controls.Add(this.dateTimePickerProtocolDate);
+            this.groupBoxProtocol.Controls.Add(this.label42);
+            this.groupBoxProtocol.Controls.Add(this.textBoxProtocolNumber);
+            this.groupBoxProtocol.Controls.Add(this.checkBoxProtocolEnable);
+            this.groupBoxProtocol.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxProtocol.Location = new System.Drawing.Point(436, 3);
+            this.groupBoxProtocol.Name = "groupBoxProtocol";
+            this.groupBoxProtocol.Size = new System.Drawing.Size(428, 79);
+            this.groupBoxProtocol.TabIndex = 1;
+            this.groupBoxProtocol.TabStop = false;
+            this.groupBoxProtocol.Text = "      Протокол жилищной комиссии";
+            // 
+            // label45
+            // 
+            this.label45.AutoSize = true;
+            this.label45.Location = new System.Drawing.Point(12, 52);
+            this.label45.Name = "label45";
+            this.label45.Size = new System.Drawing.Size(102, 15);
+            this.label45.TabIndex = 18;
+            this.label45.Text = "Дата протокола";
+            // 
+            // dateTimePickerProtocolDate
+            // 
+            this.dateTimePickerProtocolDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerProtocolDate.Location = new System.Drawing.Point(171, 48);
+            this.dateTimePickerProtocolDate.Name = "dateTimePickerProtocolDate";
+            this.dateTimePickerProtocolDate.Size = new System.Drawing.Size(246, 21);
+            this.dateTimePickerProtocolDate.TabIndex = 2;
+            this.dateTimePickerProtocolDate.ValueChanged += new System.EventHandler(this.dateTimePickerProtocolDate_ValueChanged);
+            // 
+            // label42
+            // 
+            this.label42.AutoSize = true;
+            this.label42.Location = new System.Drawing.Point(12, 22);
+            this.label42.Name = "label42";
+            this.label42.Size = new System.Drawing.Size(111, 15);
+            this.label42.TabIndex = 12;
+            this.label42.Text = "Номер протокола";
+            // 
+            // textBoxProtocolNumber
+            // 
+            this.textBoxProtocolNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxProtocolNumber.Location = new System.Drawing.Point(171, 19);
+            this.textBoxProtocolNumber.MaxLength = 50;
+            this.textBoxProtocolNumber.Name = "textBoxProtocolNumber";
+            this.textBoxProtocolNumber.Size = new System.Drawing.Size(246, 21);
+            this.textBoxProtocolNumber.TabIndex = 1;
+            this.textBoxProtocolNumber.TextChanged += new System.EventHandler(this.textBoxProtocolNumber_TextChanged);
+            // 
+            // checkBoxProtocolEnable
+            // 
+            this.checkBoxProtocolEnable.AutoSize = true;
+            this.checkBoxProtocolEnable.Checked = true;
+            this.checkBoxProtocolEnable.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBoxProtocolEnable.Location = new System.Drawing.Point(11, 0);
+            this.checkBoxProtocolEnable.Name = "checkBoxProtocolEnable";
+            this.checkBoxProtocolEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxProtocolEnable.TabIndex = 0;
+            this.checkBoxProtocolEnable.UseVisualStyleBackColor = true;
+            this.checkBoxProtocolEnable.CheckedChanged += new System.EventHandler(this.checkBoxProtocolEnable_CheckedChanged);
+            // 
+            // groupBox21
+            // 
+            this.groupBox21.Controls.Add(this.dataGridViewTenancyAddress);
+            this.groupBox21.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox21.Location = new System.Drawing.Point(3, 396);
+            this.groupBox21.Name = "groupBox21";
+            this.groupBox21.Size = new System.Drawing.Size(427, 103);
+            this.groupBox21.TabIndex = 7;
+            this.groupBox21.TabStop = false;
+            this.groupBox21.Text = "Нанимаемое жилье";
+            // 
+            // dataGridViewTenancyAddress
+            // 
+            this.dataGridViewTenancyAddress.AllowUserToAddRows = false;
+            this.dataGridViewTenancyAddress.AllowUserToDeleteRows = false;
+            this.dataGridViewTenancyAddress.AllowUserToResizeRows = false;
+            this.dataGridViewTenancyAddress.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridViewTenancyAddress.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridViewTenancyAddress.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewTenancyAddress.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.address,
+            this.total_area,
+            this.living_area});
+            this.dataGridViewTenancyAddress.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewTenancyAddress.Location = new System.Drawing.Point(3, 17);
+            this.dataGridViewTenancyAddress.MultiSelect = false;
+            this.dataGridViewTenancyAddress.Name = "dataGridViewTenancyAddress";
+            this.dataGridViewTenancyAddress.ReadOnly = true;
+            this.dataGridViewTenancyAddress.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewTenancyAddress.Size = new System.Drawing.Size(421, 83);
+            this.dataGridViewTenancyAddress.TabIndex = 0;
+            this.dataGridViewTenancyAddress.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyPersons_CellDoubleClick);
+            // 
+            // address
+            // 
+            this.address.HeaderText = "Адрес";
+            this.address.MinimumWidth = 400;
+            this.address.Name = "address";
+            this.address.ReadOnly = true;
+            // 
+            // total_area
+            // 
+            this.total_area.HeaderText = "Общая площадь";
+            this.total_area.MinimumWidth = 150;
+            this.total_area.Name = "total_area";
+            this.total_area.ReadOnly = true;
+            // 
+            // living_area
+            // 
+            this.living_area.HeaderText = "Жилая площадь";
+            this.living_area.MinimumWidth = 150;
+            this.living_area.Name = "living_area";
+            this.living_area.ReadOnly = true;
             // 
             // TenancyViewport
             // 
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(720, 480);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(764, 527);
+            this.ClientSize = new System.Drawing.Size(873, 508);
             this.Controls.Add(this.tableLayoutPanel9);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -2185,6 +2282,12 @@ namespace Registry.Viewport
             this.Padding = new System.Windows.Forms.Padding(3);
             this.Text = "Процесс найма №{0}";
             this.tableLayoutPanel9.ResumeLayout(false);
+            this.groupBox31.ResumeLayout(false);
+            this.groupBox31.PerformLayout();
+            this.groupBox22.ResumeLayout(false);
+            this.groupBox22.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyPersons)).EndInit();
             this.groupBoxTenancyContract.ResumeLayout(false);
             this.groupBoxTenancyContract.PerformLayout();
             this.tableLayoutPanel10.ResumeLayout(false);
@@ -2198,17 +2301,11 @@ namespace Registry.Viewport
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyReasons)).EndInit();
             this.groupBoxResidenceWarrant.ResumeLayout(false);
             this.groupBoxResidenceWarrant.PerformLayout();
-            this.groupBoxKumiOrder.ResumeLayout(false);
-            this.groupBoxKumiOrder.PerformLayout();
+            this.groupBoxProtocol.ResumeLayout(false);
+            this.groupBoxProtocol.PerformLayout();
             this.groupBox21.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyPersons)).EndInit();
-            this.tableLayoutPanel13.ResumeLayout(false);
-            this.groupBox22.ResumeLayout(false);
-            this.groupBox22.PerformLayout();
-            this.groupBox31.ResumeLayout(false);
-            this.groupBox31.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyAddress)).EndInit();
             this.ResumeLayout(false);
-
         }
     }
 }

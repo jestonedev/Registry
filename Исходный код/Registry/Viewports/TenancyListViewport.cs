@@ -40,7 +40,6 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn id_process;
         private DataGridViewTextBoxColumn registration_num;
         private DataGridViewTextBoxColumn residence_warrant_num;
-        private DataGridViewTextBoxColumn kumi_order_num;
         private DataGridViewTextBoxColumn tenant;
         private DataGridViewTextBoxColumn rent_type;
         private DataGridViewTextBoxColumn address;
@@ -602,9 +601,6 @@ namespace Registry.Viewport
                 case "residence_warrant_num":
                     e.Value = ((DataRowView)v_tenancies[e.RowIndex])["residence_warrant_num"];
                     break;
-                case "kumi_order_num":
-                    e.Value = ((DataRowView)v_tenancies[e.RowIndex])["kumi_order_num"];
-                    break;
                 case "tenant":
                     int row_index = v_tenancies_aggregate.Find("id_process", ((DataRowView)v_tenancies[e.RowIndex])["id_process"]);
                     if (row_index != -1)
@@ -686,7 +682,7 @@ namespace Registry.Viewport
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
-            if (dataGridView.Size.Width > 1430)
+            if (dataGridView.Size.Width > 1260)
             {
                 if (dataGridView.Columns["address"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     dataGridView.Columns["address"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -706,7 +702,6 @@ namespace Registry.Viewport
             this.id_process = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.registration_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.residence_warrant_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.kumi_order_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tenant = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.rent_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.address = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -734,7 +729,6 @@ namespace Registry.Viewport
             this.id_process,
             this.registration_num,
             this.residence_warrant_num,
-            this.kumi_order_num,
             this.tenant,
             this.rent_type,
             this.address});
@@ -781,15 +775,6 @@ namespace Registry.Viewport
             this.residence_warrant_num.Name = "residence_warrant_num";
             this.residence_warrant_num.ReadOnly = true;
             this.residence_warrant_num.Width = 130;
-            // 
-            // kumi_order_num
-            // 
-            this.kumi_order_num.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.kumi_order_num.HeaderText = "№ распоряжения";
-            this.kumi_order_num.MinimumWidth = 130;
-            this.kumi_order_num.Name = "kumi_order_num";
-            this.kumi_order_num.ReadOnly = true;
-            this.kumi_order_num.Width = 130;
             // 
             // tenant
             // 

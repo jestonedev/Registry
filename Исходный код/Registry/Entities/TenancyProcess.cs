@@ -18,8 +18,8 @@ namespace Registry.Entities
         public DateTime? EndDate { get; set; }
         public string ResidenceWarrantNum { get; set; }
         public DateTime? ResidenceWarrantDate { get; set; }
-        public string KumiOrderNum { get; set; }
-        public DateTime? KumiOrderDate { get; set; }     
+        public string ProtocolNum { get; set; }
+        public DateTime? ProtocolDate { get; set; }     
         public string Description { get; set; }
 
         public override bool Equals(object obj)
@@ -51,8 +51,8 @@ namespace Registry.Entities
                 first.EndDate == second.EndDate &&
                 first.ResidenceWarrantNum == second.ResidenceWarrantNum &&
                 first.ResidenceWarrantDate == second.ResidenceWarrantDate &&
-                first.KumiOrderNum == second.KumiOrderNum &&
-                first.KumiOrderDate == second.KumiOrderDate &&
+                first.ProtocolNum == second.ProtocolNum &&
+                first.ProtocolDate == second.ProtocolDate &&
                 first.Description == second.Description;
         }
 

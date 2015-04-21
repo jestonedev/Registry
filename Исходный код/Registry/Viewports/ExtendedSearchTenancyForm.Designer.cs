@@ -37,8 +37,8 @@
             this.textBoxResidenceWarrantNum = new System.Windows.Forms.TextBox();
             this.checkBoxResidenceWarrantNumEnable = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
-            this.textBoxKumiOrderNum = new System.Windows.Forms.TextBox();
-            this.checkBoxKumiOrderEnable = new System.Windows.Forms.CheckBox();
+            this.textBoxProtocolNum = new System.Windows.Forms.TextBox();
+            this.checkBoxProtocolEnable = new System.Windows.Forms.CheckBox();
             this.label3 = new System.Windows.Forms.Label();
             this.textBoxTenantSNP = new System.Windows.Forms.TextBox();
             this.checkBoxTenantSNPEnable = new System.Windows.Forms.CheckBox();
@@ -84,9 +84,9 @@
             this.dateTimePickerResidenceWarrDate = new System.Windows.Forms.DateTimePicker();
             this.checkBoxResidenceWarrDateEnable = new System.Windows.Forms.CheckBox();
             this.label16 = new System.Windows.Forms.Label();
-            this.comboBoxKumiOrderDateExpr = new System.Windows.Forms.ComboBox();
-            this.dateTimePickerKumiOrderDate = new System.Windows.Forms.DateTimePicker();
-            this.checkBoxKumiOrderDateEnable = new System.Windows.Forms.CheckBox();
+            this.comboBoxProtocolDateExpr = new System.Windows.Forms.ComboBox();
+            this.dateTimePickerProtocolDate = new System.Windows.Forms.DateTimePicker();
+            this.checkBoxProtocolDateEnable = new System.Windows.Forms.CheckBox();
             this.label17 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownIDTenancy)).BeginInit();
             this.SuspendLayout();
@@ -173,32 +173,32 @@
             this.label1.TabIndex = 43;
             this.label1.Text = "Номер ордера на проживание";
             // 
-            // textBoxKumiOrderNum
+            // textBoxProtocolNum
             // 
-            this.textBoxKumiOrderNum.Enabled = false;
-            this.textBoxKumiOrderNum.Location = new System.Drawing.Point(42, 148);
-            this.textBoxKumiOrderNum.Name = "textBoxKumiOrderNum";
-            this.textBoxKumiOrderNum.Size = new System.Drawing.Size(437, 21);
-            this.textBoxKumiOrderNum.TabIndex = 7;
+            this.textBoxProtocolNum.Enabled = false;
+            this.textBoxProtocolNum.Location = new System.Drawing.Point(42, 148);
+            this.textBoxProtocolNum.Name = "textBoxProtocolNum";
+            this.textBoxProtocolNum.Size = new System.Drawing.Size(437, 21);
+            this.textBoxProtocolNum.TabIndex = 7;
             // 
-            // checkBoxKumiOrderEnable
+            // checkBoxProtocolEnable
             // 
-            this.checkBoxKumiOrderEnable.AutoSize = true;
-            this.checkBoxKumiOrderEnable.Location = new System.Drawing.Point(17, 151);
-            this.checkBoxKumiOrderEnable.Name = "checkBoxKumiOrderEnable";
-            this.checkBoxKumiOrderEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxKumiOrderEnable.TabIndex = 6;
-            this.checkBoxKumiOrderEnable.UseVisualStyleBackColor = true;
-            this.checkBoxKumiOrderEnable.CheckedChanged += new System.EventHandler(this.checkBoxKumiOrderEnable_CheckedChanged);
+            this.checkBoxProtocolEnable.AutoSize = true;
+            this.checkBoxProtocolEnable.Location = new System.Drawing.Point(17, 151);
+            this.checkBoxProtocolEnable.Name = "checkBoxProtocolEnable";
+            this.checkBoxProtocolEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxProtocolEnable.TabIndex = 6;
+            this.checkBoxProtocolEnable.UseVisualStyleBackColor = true;
+            this.checkBoxProtocolEnable.CheckedChanged += new System.EventHandler(this.checkBoxProtocolEnable_CheckedChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(10, 131);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(173, 15);
+            this.label3.Size = new System.Drawing.Size(232, 15);
             this.label3.TabIndex = 46;
-            this.label3.Text = "Номер распоряжения КУМИ";
+            this.label3.Text = "Номер протокола жилищной комиссии";
             // 
             // textBoxTenantSNP
             // 
@@ -635,46 +635,46 @@
             this.label16.TabIndex = 90;
             this.label16.Text = "Дата ордера на проживание";
             // 
-            // comboBoxKumiOrderDateExpr
+            // comboBoxProtocolDateExpr
             // 
-            this.comboBoxKumiOrderDateExpr.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxKumiOrderDateExpr.Enabled = false;
-            this.comboBoxKumiOrderDateExpr.FormattingEnabled = true;
-            this.comboBoxKumiOrderDateExpr.Items.AddRange(new object[] {
+            this.comboBoxProtocolDateExpr.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxProtocolDateExpr.Enabled = false;
+            this.comboBoxProtocolDateExpr.FormattingEnabled = true;
+            this.comboBoxProtocolDateExpr.Items.AddRange(new object[] {
             "≥",
             "≤",
             "="});
-            this.comboBoxKumiOrderDateExpr.Location = new System.Drawing.Point(532, 230);
-            this.comboBoxKumiOrderDateExpr.Name = "comboBoxKumiOrderDateExpr";
-            this.comboBoxKumiOrderDateExpr.Size = new System.Drawing.Size(48, 23);
-            this.comboBoxKumiOrderDateExpr.TabIndex = 38;
+            this.comboBoxProtocolDateExpr.Location = new System.Drawing.Point(532, 230);
+            this.comboBoxProtocolDateExpr.Name = "comboBoxProtocolDateExpr";
+            this.comboBoxProtocolDateExpr.Size = new System.Drawing.Size(48, 23);
+            this.comboBoxProtocolDateExpr.TabIndex = 38;
             // 
-            // dateTimePickerKumiOrderDate
+            // dateTimePickerProtocolDate
             // 
-            this.dateTimePickerKumiOrderDate.Enabled = false;
-            this.dateTimePickerKumiOrderDate.Location = new System.Drawing.Point(588, 230);
-            this.dateTimePickerKumiOrderDate.Name = "dateTimePickerKumiOrderDate";
-            this.dateTimePickerKumiOrderDate.Size = new System.Drawing.Size(159, 21);
-            this.dateTimePickerKumiOrderDate.TabIndex = 39;
+            this.dateTimePickerProtocolDate.Enabled = false;
+            this.dateTimePickerProtocolDate.Location = new System.Drawing.Point(588, 230);
+            this.dateTimePickerProtocolDate.Name = "dateTimePickerProtocolDate";
+            this.dateTimePickerProtocolDate.Size = new System.Drawing.Size(159, 21);
+            this.dateTimePickerProtocolDate.TabIndex = 39;
             // 
-            // checkBoxKumiOrderDateEnable
+            // checkBoxProtocolDateEnable
             // 
-            this.checkBoxKumiOrderDateEnable.AutoSize = true;
-            this.checkBoxKumiOrderDateEnable.Location = new System.Drawing.Point(507, 234);
-            this.checkBoxKumiOrderDateEnable.Name = "checkBoxKumiOrderDateEnable";
-            this.checkBoxKumiOrderDateEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxKumiOrderDateEnable.TabIndex = 37;
-            this.checkBoxKumiOrderDateEnable.UseVisualStyleBackColor = true;
-            this.checkBoxKumiOrderDateEnable.CheckedChanged += new System.EventHandler(this.checkBoxKumiOrderDateEnable_CheckedChanged);
+            this.checkBoxProtocolDateEnable.AutoSize = true;
+            this.checkBoxProtocolDateEnable.Location = new System.Drawing.Point(507, 234);
+            this.checkBoxProtocolDateEnable.Name = "checkBoxProtocolDateEnable";
+            this.checkBoxProtocolDateEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxProtocolDateEnable.TabIndex = 37;
+            this.checkBoxProtocolDateEnable.UseVisualStyleBackColor = true;
+            this.checkBoxProtocolDateEnable.CheckedChanged += new System.EventHandler(this.checkBoxProtocolDateEnable_CheckedChanged);
             // 
             // label17
             // 
             this.label17.AutoSize = true;
             this.label17.Location = new System.Drawing.Point(500, 213);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(169, 15);
+            this.label17.Size = new System.Drawing.Size(124, 15);
             this.label17.TabIndex = 94;
-            this.label17.Text = "Дата постановления КУМИ";
+            this.label17.Text = "Дата протокола ЖК";
             // 
             // ExtendedSearchTenancyForm
             // 
@@ -682,9 +682,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
             this.ClientSize = new System.Drawing.Size(758, 470);
-            this.Controls.Add(this.comboBoxKumiOrderDateExpr);
-            this.Controls.Add(this.dateTimePickerKumiOrderDate);
-            this.Controls.Add(this.checkBoxKumiOrderDateEnable);
+            this.Controls.Add(this.comboBoxProtocolDateExpr);
+            this.Controls.Add(this.dateTimePickerProtocolDate);
+            this.Controls.Add(this.checkBoxProtocolDateEnable);
             this.Controls.Add(this.label17);
             this.Controls.Add(this.comboBoxResidenceWarrDateExpr);
             this.Controls.Add(this.dateTimePickerResidenceWarrDate);
@@ -730,8 +730,8 @@
             this.Controls.Add(this.textBoxTenantSNP);
             this.Controls.Add(this.checkBoxTenantSNPEnable);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.textBoxKumiOrderNum);
-            this.Controls.Add(this.checkBoxKumiOrderEnable);
+            this.Controls.Add(this.textBoxProtocolNum);
+            this.Controls.Add(this.checkBoxProtocolEnable);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBoxResidenceWarrantNum);
             this.Controls.Add(this.checkBoxResidenceWarrantNumEnable);
@@ -765,8 +765,8 @@
         private System.Windows.Forms.TextBox textBoxResidenceWarrantNum;
         private System.Windows.Forms.CheckBox checkBoxResidenceWarrantNumEnable;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBoxKumiOrderNum;
-        private System.Windows.Forms.CheckBox checkBoxKumiOrderEnable;
+        private System.Windows.Forms.TextBox textBoxProtocolNum;
+        private System.Windows.Forms.CheckBox checkBoxProtocolEnable;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBoxTenantSNP;
         private System.Windows.Forms.CheckBox checkBoxTenantSNPEnable;
@@ -812,9 +812,9 @@
         private System.Windows.Forms.DateTimePicker dateTimePickerResidenceWarrDate;
         private System.Windows.Forms.CheckBox checkBoxResidenceWarrDateEnable;
         private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.ComboBox comboBoxKumiOrderDateExpr;
-        private System.Windows.Forms.DateTimePicker dateTimePickerKumiOrderDate;
-        private System.Windows.Forms.CheckBox checkBoxKumiOrderDateEnable;
+        private System.Windows.Forms.ComboBox comboBoxProtocolDateExpr;
+        private System.Windows.Forms.DateTimePicker dateTimePickerProtocolDate;
+        private System.Windows.Forms.CheckBox checkBoxProtocolDateEnable;
         private System.Windows.Forms.Label label17;
     }
 }

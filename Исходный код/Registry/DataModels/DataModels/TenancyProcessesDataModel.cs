@@ -20,12 +20,12 @@ namespace Registry.DataModels
                             (id_rent_type, id_warrant, registration_num
                              , registration_date, issue_date, begin_date, end_date
                              , residence_warrant_num, residence_warrant_date
-                             , kumi_order_num, kumi_order_date, id_executor, description)
+                             , protocol_num, protocol_date, id_executor, description)
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         private static string updateQuery = @"UPDATE tenancy_processes SET id_rent_type = ?, id_warrant = ?, registration_num = ?, 
                             registration_date = ?, issue_date = ?, begin_date = ?, end_date = ?,
-                            residence_warrant_num = ?, residence_warrant_date = ?, kumi_order_num = ?, 
-                            kumi_order_date = ?, id_executor = ?, description = ? WHERE id_process = ?";
+                            residence_warrant_num = ?, residence_warrant_date = ?, protocol_num = ?, 
+                            protocol_date = ?, id_executor = ?, description = ? WHERE id_process = ?";
         private static string tableName = "tenancy_processes";
 
         public bool EditingNewRecord { get; set; }
@@ -96,8 +96,8 @@ namespace Registry.DataModels
                 command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("end_date", tenancy.EndDate));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("residence_warrant_num", tenancy.ResidenceWarrantNum));
                 command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("residence_warrant_date", tenancy.ResidenceWarrantDate));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("kumi_order_num", tenancy.KumiOrderNum));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("kumi_order_date", tenancy.KumiOrderDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("protocol_num", tenancy.ProtocolNum));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("protocol_date", tenancy.ProtocolDate));
                 command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancy.IdExecutor));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("description", tenancy.Description));
                 command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancy.IdProcess));
@@ -138,8 +138,8 @@ namespace Registry.DataModels
                 command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("end_date", tenancy.EndDate));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("residence_warrant_num", tenancy.ResidenceWarrantNum));
                 command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("residence_warrant_date", tenancy.ResidenceWarrantDate));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("kumi_order_num", tenancy.KumiOrderNum));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("kumi_order_date", tenancy.KumiOrderDate));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("protocol_num", tenancy.ProtocolNum));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("protocol_date", tenancy.ProtocolDate));
                 command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancy.IdExecutor));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("description", tenancy.Description));
                 try

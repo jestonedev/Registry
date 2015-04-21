@@ -57,7 +57,7 @@ namespace Registry.SearchForms
             comboBoxBeginDateExpr.SelectedIndex = 2;
             comboBoxEndDateExpr.SelectedIndex = 2;
             comboBoxResidenceWarrDateExpr.SelectedIndex = 2;
-            comboBoxKumiOrderDateExpr.SelectedIndex = 2;
+            comboBoxProtocolDateExpr.SelectedIndex = 2;
             foreach (Control control in this.Controls)
                 control.KeyDown += (sender, e) =>
                 {
@@ -88,11 +88,11 @@ namespace Registry.SearchForms
                     filter += " AND ";
                 filter += String.Format(CultureInfo.InvariantCulture, "residence_warrant_num = '{0}'", textBoxResidenceWarrantNum.Text.Trim().Replace("'", ""));
             }
-            if (checkBoxKumiOrderEnable.Checked)
+            if (checkBoxProtocolEnable.Checked)
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.InvariantCulture, "kumi_order_num = '{0}'", textBoxKumiOrderNum.Text.Trim().Replace("'", ""));
+                filter += String.Format(CultureInfo.InvariantCulture, "protocol_num = '{0}'", textBoxProtocolNum.Text.Trim().Replace("'", ""));
             }
             if (checkBoxRentTypeEnable.Checked && (comboBoxRentType.SelectedValue != null))
             {
@@ -145,14 +145,14 @@ namespace Registry.SearchForms
                         comboBoxResidenceWarrDateExpr.SelectedItem.ToString()),
                         dateTimePickerResidenceWarrDate.Value.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture));
             }
-            if (checkBoxKumiOrderDateEnable.Checked)
+            if (checkBoxProtocolDateEnable.Checked)
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.InvariantCulture, "kumi_order_date {0} '{1}'",
+                filter += String.Format(CultureInfo.InvariantCulture, "protocol_date {0} '{1}'",
                     ConvertDisplayEqExprToSql(
-                    comboBoxKumiOrderDateExpr.SelectedItem.ToString()),
-                    dateTimePickerKumiOrderDate.Value.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture));
+                    comboBoxProtocolDateExpr.SelectedItem.ToString()),
+                    dateTimePickerProtocolDate.Value.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture));
             }
             if (checkBoxIDTenancyEnable.Checked)
                 included_processes = DataModelHelper.Intersect(included_processes, new List<int>() { Convert.ToInt32(numericUpDownIDTenancy.Value) });
@@ -235,9 +235,9 @@ namespace Registry.SearchForms
             textBoxResidenceWarrantNum.Enabled = checkBoxResidenceWarrantNumEnable.Checked;
         }
 
-        private void checkBoxKumiOrderEnable_CheckedChanged(object sender, EventArgs e)
+        private void checkBoxProtocolEnable_CheckedChanged(object sender, EventArgs e)
         {
-            textBoxKumiOrderNum.Enabled = checkBoxKumiOrderEnable.Checked;
+            textBoxProtocolNum.Enabled = checkBoxProtocolEnable.Checked;
         }
 
         private void checkBoxTenantSNPEnable_CheckedChanged(object sender, EventArgs e)
@@ -291,11 +291,11 @@ namespace Registry.SearchForms
                 textBoxResidenceWarrantNum.Focus();
                 return;
             }
-            if ((checkBoxKumiOrderEnable.Checked) && String.IsNullOrEmpty(textBoxKumiOrderNum.Text.Trim()))
+            if ((checkBoxProtocolEnable.Checked) && String.IsNullOrEmpty(textBoxProtocolNum.Text.Trim()))
             {
                 MessageBox.Show("Введите номер распоряжения КУМИ или уберите галочку поиска по номеру распоряжения", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                textBoxKumiOrderNum.Focus();
+                textBoxProtocolNum.Focus();
                 return;
             }
             if ((checkBoxTenantSNPEnable.Checked) && String.IsNullOrEmpty(textBoxTenantSNP.Text.Trim()))
@@ -398,10 +398,10 @@ namespace Registry.SearchForms
             dateTimePickerResidenceWarrDate.Enabled = checkBoxResidenceWarrDateEnable.Checked;
         }
 
-        private void checkBoxKumiOrderDateEnable_CheckedChanged(object sender, EventArgs e)
+        private void checkBoxProtocolDateEnable_CheckedChanged(object sender, EventArgs e)
         {
-            comboBoxKumiOrderDateExpr.Enabled = checkBoxKumiOrderDateEnable.Checked;
-            dateTimePickerKumiOrderDate.Enabled = checkBoxKumiOrderDateEnable.Checked;
+            comboBoxProtocolDateExpr.Enabled = checkBoxProtocolDateEnable.Checked;
+            dateTimePickerProtocolDate.Enabled = checkBoxProtocolDateEnable.Checked;
         }
     }
 }

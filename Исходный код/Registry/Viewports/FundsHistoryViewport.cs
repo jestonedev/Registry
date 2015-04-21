@@ -820,8 +820,7 @@ namespace Registry.Viewport
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.RelationsStateUpdate();
             }
-            if (is_editable)
-                UnbindedCheckBoxesUpdate();
+            UnbindedCheckBoxesUpdate();
             if (v_funds_history.Position == -1)
                 return;
             if (viewportState == ViewportState.NewRowState)
