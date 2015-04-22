@@ -951,5 +951,76 @@ namespace Registry.DataModels
                                 }));
             return addresses;
         }
+    
+        /// <summary>
+        /// Возвращает список идентификаторов старых процессов найма
+        /// </summary>
+        /// <returns>Список идентификаторов</returns>
+        public static IEnumerable<int> OldTenancyProcessIDs()
+        {
+            // Собираем строку проверки уникальности сдаваемой группы помещений. Выглядеть эта строка будет примерно подобным образом з1з12п23п122к32 и т.п.
+            var assoc_sub_premises = from assoc_sub_premises_row in DataModelHelper.FilterRows(TenancySubPremisesAssocDataModel.GetInstance().Select())
+                                     group assoc_sub_premises_row.Field<int>("id_sub_premises").ToString()
+                                     by assoc_sub_premises_row.Field<int>("id_process") into gs
+                                     select new
+                                     {
+                                         id_process = gs.Key,
+                                         value = gs.Count() > 1 ? gs.OrderBy(val => val).Aggregate((str1, str2) => { return 'к'+str1+'к'+str2; }) : 'к'+gs.First()
+                                     };
+            var assoc_premises = from assoc_premises_row in DataModelHelper.FilterRows(TenancyPremisesAssocDataModel.GetInstance().Select())
+                                     group assoc_premises_row.Field<int>("id_premises").ToString()
+                                     by assoc_premises_row.Field<int>("id_process") into gs
+                                     select new
+                                     {
+                                         id_process = gs.Key,
+                                         value = gs.Count() > 1 ? gs.OrderBy(val => val).Aggregate((str1, str2) => { return 'п' + str1 + 'п' + str2; }) : 'п' + gs.First()
+                                     };
+            var assoc_buildings = from assoc_buildings_row in DataModelHelper.FilterRows(TenancyBuildingsAssocDataModel.GetInstance().Select())
+                                 group assoc_buildings_row.Field<int>("id_building").ToString()
+                                 by assoc_buildings_row.Field<int>("id_process") into gs
+                                 select new
+                                 {
+                                     id_process = gs.Key,
+                                     value = gs.Count() > 1 ? gs.OrderBy(val => val).Aggregate((str1, str2) => { return 'з' + str1 + 'з' + str2; }) : 'з' + gs.First()
+                                 };
+            var assoc_objects = assoc_sub_premises.Union(assoc_premises).Union(assoc_buildings);
+            var ident_strings = from assoc_objects_row in assoc_objects
+                                group assoc_objects_row.value by assoc_objects_row.id_process into gs
+                                select new
+                                {
+                                    id_process = gs.Key,
+                                    value = gs.Count() > 1 ? gs.OrderBy(val => val).Aggregate((str1, str2) => { return str1 + str2; }) : gs.First()
+                                };
+            var more_one_ident_strings = from ident_row in ident_strings
+                                         group ident_row.id_process by ident_row.value into gs
+                                         where gs.Count() > 1
+                                         select gs.Key;
+            var duplicate_processes = from ident_row in ident_strings
+                                        join tenancy_row in DataModelHelper.FilterRows(TenancyProcessesDataModel.GetInstance().Select())
+                                        on ident_row.id_process equals tenancy_row.Field<int>("id_process")
+                                        where more_one_ident_strings.Contains(ident_row.value) &&
+                                            tenancy_row.Field<string>("registration_num") != null
+                                        select new
+                                        {
+                                            id_process = tenancy_row.Field<int>("id_process"),
+                                            ident_value = ident_row.value,
+                                            registration_date = tenancy_row.Field<DateTime?>("registration_date")
+                                        };
+            var max_dates = from row in duplicate_processes
+                            group row.registration_date by row.ident_value into gs
+                            select new
+                            {
+                                ident_value = gs.Key,
+                                max_date = gs.Max()
+                            };
+            var max_process_ids = from process_row in duplicate_processes
+                                  join max_dates_row in max_dates
+                                  on new { ident_value = process_row.ident_value, date = process_row.registration_date } equals
+                                  new { ident_value = max_dates_row.ident_value, date = max_dates_row.max_date }
+                                  select process_row.id_process;
+            var duplicate_process_ids = from row in duplicate_processes
+                                        select row.id_process;
+            return duplicate_process_ids.Except(max_process_ids);
+        }
     }
 }

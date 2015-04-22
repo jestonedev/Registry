@@ -33,7 +33,7 @@ namespace Registry.Reporting
         private BindingSource v_executors = null;
         #endregion Views
 
-        private string StaticFilter = "registration_num IS NOT NULL AND end_date IS NOT NULL";
+        private string StaticFilter = "registration_num IS NOT NULL AND end_date IS NOT NULL AND registration_num NOT LIKE '%н'";
 
         public Collection<int> TenancyProcessIds
         {
@@ -77,6 +77,14 @@ namespace Registry.Reporting
             v_tenancies.DataMember = "tenancy_processes";
             v_tenancies.CurrentItemChanged += new EventHandler(v_tenancies_CurrentItemChanged);
             v_tenancies.DataSource = ds;
+            IEnumerable<int> exclude_processes = DataModelHelper.OldTenancyProcessIDs();
+            if (exclude_processes.Count() > 0)
+            {
+                StaticFilter += " AND id_process NOT IN (0";
+                foreach (int id in exclude_processes)
+                    StaticFilter += "," + id.ToString();
+                StaticFilter += ")";
+            }   
             RebuildFilter();
             v_tenancies.Sort = "end_date DESC";
             dataGridView.Columns["end_date"].HeaderCell.SortGlyphDirection = SortOrder.Descending;
@@ -210,7 +218,11 @@ namespace Registry.Reporting
                     e.Value = ((DataRowView)v_tenancies[e.RowIndex])["registration_num"];
                     break;
                 case "registration_date":
-                    e.Value = ((DataRowView)v_tenancies[e.RowIndex])["registration_date"];
+                    DateTime registration_date;
+                    if (DateTime.TryParse(((DataRowView)v_tenancies[e.RowIndex])["registration_date"].ToString(), out registration_date))
+                        e.Value = registration_date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+                    else
+                        e.Value = "";
                     break;
                 case "begin_date":
                     DateTime begin_date;
