@@ -956,7 +956,7 @@ namespace Registry.DataModels
         /// Возвращает список идентификаторов старых процессов найма
         /// </summary>
         /// <returns>Список идентификаторов</returns>
-        public static IEnumerable<int> OldTenancyProcessIDs()
+        public static IEnumerable<int> OldTenancyProcesses()
         {
             // Собираем строку проверки уникальности сдаваемой группы помещений. Выглядеть эта строка будет примерно подобным образом з1з12п23п122к32 и т.п.
             var assoc_sub_premises = from assoc_sub_premises_row in DataModelHelper.FilterRows(TenancySubPremisesAssocDataModel.GetInstance().Select())
@@ -998,8 +998,9 @@ namespace Registry.DataModels
             var duplicate_processes = from ident_row in ident_strings
                                         join tenancy_row in DataModelHelper.FilterRows(TenancyProcessesDataModel.GetInstance().Select())
                                         on ident_row.id_process equals tenancy_row.Field<int>("id_process")
-                                        where more_one_ident_strings.Contains(ident_row.value) &&
-                                            tenancy_row.Field<string>("registration_num") != null
+                                        join more_one_ident_strings_row in more_one_ident_strings
+                                        on ident_row.value equals more_one_ident_strings_row
+                                        where tenancy_row.Field<string>("registration_num") != null
                                         select new
                                         {
                                             id_process = tenancy_row.Field<int>("id_process"),

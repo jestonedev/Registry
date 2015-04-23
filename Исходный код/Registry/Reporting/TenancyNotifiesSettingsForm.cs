@@ -77,14 +77,14 @@ namespace Registry.Reporting
             v_tenancies.DataMember = "tenancy_processes";
             v_tenancies.CurrentItemChanged += new EventHandler(v_tenancies_CurrentItemChanged);
             v_tenancies.DataSource = ds;
-            /*IEnumerable<int> exclude_processes = DataModelHelper.OldTenancyProcessIDs();
+            IEnumerable<int> exclude_processes = DataModelHelper.OldTenancyProcesses();
             if (exclude_processes.Count() > 0)
             {
                 StaticFilter += " AND id_process NOT IN (0";
                 foreach (int id in exclude_processes)
                     StaticFilter += "," + id.ToString();
                 StaticFilter += ")";
-            }   */
+            }   
             RebuildFilter();
             v_tenancies.Sort = "end_date DESC";
             dataGridView.Columns["end_date"].HeaderCell.SortGlyphDirection = SortOrder.Descending;
