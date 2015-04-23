@@ -1961,7 +1961,7 @@ namespace Registry.Viewport
             this.textBoxRegistrationNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxRegistrationNumber.Location = new System.Drawing.Point(172, 4);
-            this.textBoxRegistrationNumber.MaxLength = 16;
+            this.textBoxRegistrationNumber.MaxLength = 255;
             this.textBoxRegistrationNumber.Name = "textBoxRegistrationNumber";
             this.textBoxRegistrationNumber.Size = new System.Drawing.Size(246, 21);
             this.textBoxRegistrationNumber.TabIndex = 0;
@@ -2306,6 +2306,7 @@ namespace Registry.Viewport
             this.groupBox21.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyAddress)).EndInit();
             this.ResumeLayout(false);
+
         }
     }
 }
