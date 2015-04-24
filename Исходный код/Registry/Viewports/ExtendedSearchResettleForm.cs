@@ -293,7 +293,8 @@ namespace Registry.SearchForms
 
         private void comboBoxStreet_KeyUp(object sender, KeyEventArgs e)
         {
-            if ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode == Keys.Back))
+            if ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode == Keys.Back) || (e.KeyCode == Keys.Delete) ||
+                (e.KeyCode >= Keys.D0 && e.KeyCode <= Keys.D9) || (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9))
             {
                 string text = comboBoxStreetFrom.Text;
                 int selectionStart = comboBoxStreetFrom.SelectionStart;

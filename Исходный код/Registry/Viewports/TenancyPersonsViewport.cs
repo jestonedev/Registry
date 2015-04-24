@@ -952,7 +952,8 @@ namespace Registry.Viewport
 
         void comboBoxResidenceStreet_KeyUp(object sender, KeyEventArgs e)
         {
-            if ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode == Keys.Back))
+            if ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode == Keys.Back) || (e.KeyCode == Keys.Delete) ||
+                (e.KeyCode >= Keys.D0 && e.KeyCode <= Keys.D9) || (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9))
             {
                 string text = comboBoxResidenceStreet.Text;
                 int selectionStart = comboBoxResidenceStreet.SelectionStart;
@@ -989,7 +990,8 @@ namespace Registry.Viewport
 
         void comboBoxRegistrationStreet_KeyUp(object sender, KeyEventArgs e)
         {
-            if ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode == Keys.Back))
+            if ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode == Keys.Back) || (e.KeyCode == Keys.Delete) ||
+                (e.KeyCode >= Keys.D0 && e.KeyCode <= Keys.D9) || (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9))
             {
                 string text = comboBoxRegistrationStreet.Text;
                 int selectionStart = comboBoxRegistrationStreet.SelectionStart;
