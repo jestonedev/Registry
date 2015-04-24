@@ -841,6 +841,7 @@ namespace Registry.Viewport
                 tenancy_persons.Select().RowDeleted -= new DataRowChangeEventHandler(TenancyPersonsViewport_RowDeleted);
                 tenancy_persons.Select().RowChanged -= new DataRowChangeEventHandler(TenancyPersonsViewport_RowChanged);
             }
+            base.OnClosing(e);
         }
 
         public override void ForceClose()

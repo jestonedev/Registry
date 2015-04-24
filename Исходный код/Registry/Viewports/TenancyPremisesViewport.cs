@@ -621,6 +621,7 @@ namespace Registry.Viewport
             premises.Select().RowDeleted -= new DataRowChangeEventHandler(PremisesListViewport_RowDeleted);
             tenancy_premises.Select().RowChanged -= new DataRowChangeEventHandler(TenancyPremisesViewport_RowChanged);
             tenancy_premises.Select().RowDeleting -= new DataRowChangeEventHandler(TenancyPremisesViewport_RowDeleting);
+            base.OnClosing(e);
         }
 
         public override void ForceClose()
@@ -858,6 +859,7 @@ namespace Registry.Viewport
                 v_premises.Position = -1;
             id_expanded = -1;
             dataGridView.CollapseDetails();
+            dataGridView.Refresh();
         }
 
         void dataGridView_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)

@@ -387,6 +387,7 @@ namespace Registry.Viewport
             tenancy_reason_types.Select().RowChanged -= new DataRowChangeEventHandler(ReasonTypesViewport_RowChanged);
             tenancy_reason_types.Select().RowDeleting -= new DataRowChangeEventHandler(ReasonTypesViewport_RowDeleting);
             tenancy_reason_types.Select().RowDeleted -= new DataRowChangeEventHandler(ReasonTypesViewport_RowDeleted);
+            base.OnClosing(e);
         }
 
         void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)

@@ -479,6 +479,7 @@ namespace Registry.Viewport
                 v_premises.Position = dataGridView.SelectedRows[0].Index;
             else
                 v_premises.Position = -1;
+            dataGridView.Refresh();
         }
 
         void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)

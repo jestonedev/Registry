@@ -602,6 +602,7 @@ namespace Registry.Viewport
             buildings.Select().RowDeleted -= new DataRowChangeEventHandler(BuildingsViewport_RowDeleted);
             tenancy_buildings.Select().RowChanged -= new DataRowChangeEventHandler(TenancyBuildingsViewport_RowChanged);
             tenancy_buildings.Select().RowDeleting -= new DataRowChangeEventHandler(TenancyBuildingsViewport_RowDeleting);
+            base.OnClosing(e);
         }
 
         public override void ForceClose()
@@ -728,6 +729,7 @@ namespace Registry.Viewport
                 v_buildings.Position = dataGridView.SelectedRows[0].Index;
             else
                 v_buildings.Position = -1;
+            dataGridView.Refresh();
         }
 
         void dataGridView_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)

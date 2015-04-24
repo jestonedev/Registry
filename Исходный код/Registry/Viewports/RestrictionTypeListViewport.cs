@@ -352,6 +352,7 @@ namespace Registry.Viewport
             restriction_types.Select().RowChanged -= new DataRowChangeEventHandler(RestrictionTypeListViewport_RowChanged);
             restriction_types.Select().RowDeleting -= new DataRowChangeEventHandler(RestrictionTypeListViewport_RowDeleting);
             restriction_types.Select().RowDeleted -= new DataRowChangeEventHandler(RestrictionTypeListViewport_RowDeleted);
+            base.OnClosing(e);
         }
 
         private void RestrictionTypeListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)

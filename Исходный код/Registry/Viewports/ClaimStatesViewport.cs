@@ -710,6 +710,7 @@ namespace Registry.Viewport
                 claim_state_types_relations.Select().RowChanged -= new DataRowChangeEventHandler(ClaimStateTypesRelationsViewport_RowChanged);
                 claim_state_types_relations.Select().RowDeleted -= new DataRowChangeEventHandler(ClaimStateTypesRelationsViewport_RowDeleted);
             }
+            base.OnClosing(e);
         }
 
         public override void ForceClose()

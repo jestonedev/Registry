@@ -791,6 +791,7 @@ namespace Registry.Viewport
                 funds_history.Select().RowChanged -= new DataRowChangeEventHandler(FundsHistoryViewport_RowChanged);
                 funds_history.Select().RowDeleted -= new DataRowChangeEventHandler(FundsHistoryViewport_RowDeleted);
             }
+            base.OnClosing(e);
         }
 
         public override void ForceClose()

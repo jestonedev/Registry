@@ -351,6 +351,7 @@ namespace Registry.Viewport
             structure_types.Select().RowChanged -= new DataRowChangeEventHandler(StructureTypeListViewport_RowChanged);
             structure_types.Select().RowDeleting -= new DataRowChangeEventHandler(StructureTypeListViewport_RowDeleting);
             structure_types.Select().RowDeleted -= new DataRowChangeEventHandler(StructureTypeListViewport_RowDeleted);
+            base.OnClosing(e);
         }
 
         private void StructureTypeListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)

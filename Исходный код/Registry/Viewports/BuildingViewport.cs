@@ -1192,6 +1192,7 @@ namespace Registry.Viewport
                 ownershipBuildingsAssoc.Select().RowDeleted -= new DataRowChangeEventHandler(OwnershipsAssoc_RowDeleted);
                 buildingsCurrentFund.RefreshEvent -= new EventHandler<EventArgs>(buildingsCurrentFund_RefreshEvent);
             }
+            base.OnClosing(e);
         }
         
         void buildingsPremisesSumArea_RefreshEvent(object sender, EventArgs e)

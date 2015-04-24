@@ -618,6 +618,7 @@ namespace Registry.Viewport
                 resettle_processes.Select().RowChanged -= new DataRowChangeEventHandler(ResettleProcessListViewport_RowChanged);
                 resettle_processes.Select().RowDeleted -= new DataRowChangeEventHandler(ResettleProcessListViewport_RowDeleted);
             }
+            base.OnClosing(e);
         }
 
         public override void ForceClose()
@@ -798,6 +799,7 @@ namespace Registry.Viewport
                 v_resettle_processes.Position = dataGridView.SelectedRows[0].Index;
             else
                 v_resettle_processes.Position = -1;
+            dataGridView.Refresh();
         }
 
         void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)

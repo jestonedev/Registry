@@ -543,6 +543,7 @@ namespace Registry.Viewport
             tenancies.Select().RowChanged -= new DataRowChangeEventHandler(TenancyListViewport_RowChanged);
             tenancies.Select().RowDeleted -= new DataRowChangeEventHandler(TenancyListViewport_RowDeleted);
             tenancies_aggregate.RefreshEvent -= new EventHandler<EventArgs>(tenancies_aggregate_RefreshEvent);
+            base.OnClosing(e);
         }
 
         public override void ForceClose()
@@ -585,6 +586,7 @@ namespace Registry.Viewport
                 v_tenancies.Position = dataGridView.SelectedRows[0].Index;
             else
                 v_tenancies.Position = -1;
+            dataGridView.Refresh();
         }
 
         void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)

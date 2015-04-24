@@ -561,6 +561,7 @@ namespace Registry.Viewport
                 e.Cancel = true;
             warrants.Select().RowChanged -= WarrantsViewport_RowChanged;
             warrants.Select().RowDeleted -= WarrantsViewport_RowDeleted;
+            base.OnClosing(e);
         }
 
         public override void ForceClose()

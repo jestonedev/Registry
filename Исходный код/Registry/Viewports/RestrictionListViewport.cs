@@ -506,6 +506,7 @@ namespace Registry.Viewport
             restrictions.Select().RowDeleting -= new DataRowChangeEventHandler(RestrictionListViewport_RowDeleting);
             restriction_assoc.Select().RowChanged -= new DataRowChangeEventHandler(RestrictionAssoc_RowChanged);
             restriction_assoc.Select().RowDeleted -= new DataRowChangeEventHandler(RestrictionAssoc_RowDeleted);
+            base.OnClosing(e);
         }
 
         public override void ForceClose()

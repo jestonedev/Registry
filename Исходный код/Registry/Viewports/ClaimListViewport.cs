@@ -670,6 +670,7 @@ namespace Registry.Viewport
                 claims.Select().RowChanged -= new DataRowChangeEventHandler(ClaimListViewport_RowChanged);
                 claims.Select().RowDeleted -= new DataRowChangeEventHandler(ClaimListViewport_RowDeleted);
             }
+            base.OnClosing(e);
         }
 
         public override void ForceClose()
@@ -760,6 +761,7 @@ namespace Registry.Viewport
                 v_claims.Position = dataGridViewClaims.SelectedRows[0].Index;
             else
                 v_claims.Position = -1;
+            dataGridViewClaims.Refresh();
         }
 
         void dataGridViewClaims_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)

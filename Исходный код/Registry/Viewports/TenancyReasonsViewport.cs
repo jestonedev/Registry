@@ -421,6 +421,7 @@ namespace Registry.Viewport
             tenancy_reasons.Select().RowChanged -= new DataRowChangeEventHandler(TenancyReasonsViewport_RowChanged);
             tenancy_reasons.Select().RowDeleting -= new DataRowChangeEventHandler(TenancyReasonsViewport_RowDeleting);
             tenancy_reasons.Select().RowDeleted -= new DataRowChangeEventHandler(TenancyReasonsViewport_RowDeleted);
+            base.OnClosing(e);
         }
 
         public override void ForceClose()

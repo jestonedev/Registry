@@ -261,6 +261,7 @@ namespace Registry.Viewport
             documents_issued_by.Select().RowChanged -= new DataRowChangeEventHandler(DocumentIssuedByViewport_RowChanged);
             documents_issued_by.Select().RowDeleting -= new DataRowChangeEventHandler(DocumentIssuedByViewport_RowDeleting);
             documents_issued_by.Select().RowDeleted -= new DataRowChangeEventHandler(DocumentIssuedByViewport_RowDeleted);
+            base.OnClosing(e);
         }
 
         public override bool CanDeleteRecord()

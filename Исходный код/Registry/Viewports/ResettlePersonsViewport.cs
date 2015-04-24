@@ -411,6 +411,7 @@ namespace Registry.Viewport
             resettle_persons.Select().RowChanged -= new DataRowChangeEventHandler(ResettlePersonsViewport_RowChanged);
             resettle_persons.Select().RowDeleting -= new DataRowChangeEventHandler(ResettlePersonsViewport_RowDeleting);
             resettle_persons.Select().RowDeleted -= new DataRowChangeEventHandler(ResettlePersonsViewport_RowDeleted);
+            base.OnClosing(e);
         }
 
         public override void ForceClose()

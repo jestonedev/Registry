@@ -351,6 +351,7 @@ namespace Registry.Viewport
             ownership_right_types.Select().RowChanged -= new DataRowChangeEventHandler(OwnershipTypeListViewport_RowChanged);
             ownership_right_types.Select().RowDeleting -= new DataRowChangeEventHandler(OwnershipTypeListViewport_RowDeleting);
             ownership_right_types.Select().RowDeleted -= new DataRowChangeEventHandler(OwnershipTypeListViewport_RowDeleted);
+            base.OnClosing(e);
         }
 
         private void OwnershipTypeListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)

@@ -1188,6 +1188,7 @@ namespace Registry.Viewport
                 restrictionBuildingsAssoc.Select().RowChanged -= restrictionBuildingsAssoc_RowChanged;
                 restrictionBuildingsAssoc.Select().RowDeleted -= restrictionBuildingsAssoc_RowDeleted;
             }
+            base.OnClosing(e);
         }
 
         public override void ForceClose()

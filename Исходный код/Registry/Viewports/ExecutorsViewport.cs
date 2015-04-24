@@ -385,6 +385,7 @@ namespace Registry.Viewport
             executors.Select().RowChanged -= new DataRowChangeEventHandler(ExecutorsViewport_RowChanged);
             executors.Select().RowDeleting -= new DataRowChangeEventHandler(ExecutorsViewport_RowDeleting);
             executors.Select().RowDeleted -= new DataRowChangeEventHandler(ExecutorsViewport_RowDeleted);
+            base.OnClosing(e);
         }
 
         void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)

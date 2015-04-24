@@ -505,6 +505,7 @@ namespace Registry.Viewport
             ownership_rights.Select().RowDeleting -= new DataRowChangeEventHandler(OwnershipListViewport_RowDeleting);
             ownership_assoc.Select().RowChanged -= new DataRowChangeEventHandler(OwnershipAssoc_RowChanged);
             ownership_assoc.Select().RowDeleted -= new DataRowChangeEventHandler(OwnershipAssoc_RowDeleted);
+            base.OnClosing(e);
         }
 
         public override void ForceClose()

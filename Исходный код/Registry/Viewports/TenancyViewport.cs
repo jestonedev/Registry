@@ -140,7 +140,7 @@ namespace Registry.Viewport
         {
             if (v_tenancy_addresses == null)
                 return;
-            v_tenancy_addresses.Filter = (v_tenancies.Position >= 0 ? "id_process = 0" + ((DataRowView)v_tenancies[v_tenancies.Position])["id_process"] : "");
+            v_tenancy_addresses.Filter = (v_tenancies.Position >= 0 ? "id_process = 0" + ((DataRowView)v_tenancies[v_tenancies.Position])["id_process"] : "id_process = 0");
         }
 
         private void RebuildStaticFilter()
@@ -1101,6 +1101,7 @@ namespace Registry.Viewport
                 tenancies.Select().RowChanged -= new DataRowChangeEventHandler(TenancyViewport_RowChanged);
                 tenancies.Select().RowDeleted -= new DataRowChangeEventHandler(TenancyViewport_RowDeleted);
             }
+            base.OnClosing(e);
         }
 
         public override void ForceClose()

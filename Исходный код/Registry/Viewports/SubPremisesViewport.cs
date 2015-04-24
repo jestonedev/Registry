@@ -479,6 +479,7 @@ namespace Registry.Viewport
             sub_premises.Select().RowChanged -= new DataRowChangeEventHandler(SubPremisesViewport_RowChanged);
             sub_premises.Select().RowDeleting -= new DataRowChangeEventHandler(SubPremisesViewport_RowDeleting);
             sub_premises.Select().RowDeleted -= new DataRowChangeEventHandler(SubPremisesViewport_RowDeleted);
+            base.OnClosing(e);
         }
 
         public override void ForceClose()
