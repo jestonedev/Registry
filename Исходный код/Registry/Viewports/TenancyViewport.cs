@@ -1505,7 +1505,15 @@ namespace Registry.Viewport
             Viewport viewport = ShowAssocViewport(ViewportType.TenancyPersonsViewport);
             if (viewport != null)
                 ((TenancyPersonsViewport)viewport).LocatePersonBy(
-                    Convert.ToInt32(((DataRowView)v_tenancy_persons[v_tenancy_persons.Position])["id_person"], CultureInfo.InvariantCulture));
+                    Convert.ToInt32(((DataRowView)v_tenancy_persons[v_tenancy_persons.Position])["id_person"], CultureInfo.InvariantCulture)); 
+        }
+
+        private void dataGridViewTenancyAddress_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex == -1)
+                return;
+            if (HasAssocTenancyObjects())
+                ShowAssocViewport(ViewportType.TenancyPremisesViewport);
         }
 
         private void dataGridViewTenancyReasons_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -1736,6 +1744,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(422, 83);
             this.dataGridViewTenancyPersons.TabIndex = 0;
+            this.dataGridViewTenancyPersons.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyPersons_CellDoubleClick);
             // 
             // surname
             // 
@@ -2246,7 +2255,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyAddress.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewTenancyAddress.Size = new System.Drawing.Size(421, 83);
             this.dataGridViewTenancyAddress.TabIndex = 0;
-            this.dataGridViewTenancyAddress.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyPersons_CellDoubleClick);
+            this.dataGridViewTenancyAddress.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyAddress_CellDoubleClick);
             // 
             // address
             // 
