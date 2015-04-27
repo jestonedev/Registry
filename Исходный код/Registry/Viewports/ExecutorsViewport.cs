@@ -470,6 +470,12 @@ namespace Registry.Viewport
             }
         }
 
+        void dataGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dataGridView.CurrentCell is DataGridViewCheckBoxCell)
+                dataGridView.EndEdit();
+        }
+
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -514,6 +520,7 @@ namespace Registry.Viewport
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.Size = new System.Drawing.Size(648, 281);
             this.dataGridView.TabIndex = 8;
+            this.dataGridView.CurrentCellDirtyStateChanged += new System.EventHandler(this.dataGridView_CurrentCellDirtyStateChanged);
             // 
             // id_executor
             // 

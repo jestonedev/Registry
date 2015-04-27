@@ -750,6 +750,20 @@ namespace Registry.Viewport
                     dataGridView.EditingControl.KeyPress -= new KeyPressEventHandler(EditingControl_KeyPress);
                     dataGridView.EditingControl.KeyPress += new KeyPressEventHandler(EditingControl_KeyPress);
                 }
+                else
+                if (dataGridView.SelectedCells[0].OwningColumn.Name == "id_state")
+                {
+                    DataGridViewComboBoxEditingControl editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
+                    editingControl.DropDownClosed -= editingControl_DropDownClosed;
+                    editingControl.DropDownClosed += editingControl_DropDownClosed;
+                }
+        }
+
+        void editingControl_DropDownClosed(object sender, EventArgs e)
+        {
+            DataGridViewComboBoxEditingControl editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
+            dataGridView.CurrentCell.Value = editingControl.SelectedValue;
+            dataGridView.EndEdit();
         }
 
         void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)

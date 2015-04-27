@@ -382,6 +382,12 @@ namespace Registry.Viewport
             dataGridView.Invalidate();
         }
 
+        void dataGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dataGridView.CurrentCell is DataGridViewCheckBoxCell)
+                dataGridView.EndEdit();
+        }
+
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -428,6 +434,7 @@ namespace Registry.Viewport
             this.dataGridView.Size = new System.Drawing.Size(769, 192);
             this.dataGridView.TabIndex = 0;
             this.dataGridView.VirtualMode = true;
+            this.dataGridView.CurrentCellDirtyStateChanged += new System.EventHandler(this.dataGridView_CurrentCellDirtyStateChanged);
             // 
             // is_checked
             // 

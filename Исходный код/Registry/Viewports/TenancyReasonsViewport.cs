@@ -537,6 +537,23 @@ namespace Registry.Viewport
             }
         }
 
+        void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            if (dataGridView.SelectedCells[0].OwningColumn.Name == "id_reason_type")
+            {
+                DataGridViewComboBoxEditingControl editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
+                editingControl.DropDownClosed -= editingControl_DropDownClosed;
+                editingControl.DropDownClosed += editingControl_DropDownClosed;
+            }
+        }
+
+        void editingControl_DropDownClosed(object sender, EventArgs e)
+        {
+            DataGridViewComboBoxEditingControl editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
+            dataGridView.CurrentCell.Value = editingControl.SelectedValue;
+            dataGridView.EndEdit();
+        }
+
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -584,6 +601,7 @@ namespace Registry.Viewport
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.Size = new System.Drawing.Size(843, 255);
             this.dataGridView.TabIndex = 5;
+            this.dataGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridView_EditingControlShowing);
             // 
             // id_reason
             // 

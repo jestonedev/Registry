@@ -656,6 +656,23 @@ namespace Registry.Viewport
             }
         }
 
+        void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        {
+            if (dataGridView.SelectedCells[0].OwningColumn.Name == "id_ownership_right_type")
+            {
+                DataGridViewComboBoxEditingControl editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
+                editingControl.DropDownClosed -= editingControl_DropDownClosed;
+                editingControl.DropDownClosed += editingControl_DropDownClosed;
+            }
+        }
+
+        void editingControl_DropDownClosed(object sender, EventArgs e)
+        {
+            DataGridViewComboBoxEditingControl editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
+            dataGridView.CurrentCell.Value = editingControl.SelectedValue;
+            dataGridView.EndEdit();
+        }
+
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -701,6 +718,7 @@ namespace Registry.Viewport
             this.dataGridView.ShowCellToolTips = false;
             this.dataGridView.Size = new System.Drawing.Size(819, 328);
             this.dataGridView.TabIndex = 2;
+            this.dataGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridView_EditingControlShowing);
             // 
             // id_ownership_right
             // 

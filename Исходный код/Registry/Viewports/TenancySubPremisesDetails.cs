@@ -431,6 +431,12 @@ namespace Registry.Viewport
             }
         }
 
+        void dataGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        {
+            if (dataGridView.CurrentCell is DataGridViewCheckBoxCell)
+                dataGridView.EndEdit();
+        }
+
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -480,6 +486,7 @@ namespace Registry.Viewport
             this.dataGridView.Size = new System.Drawing.Size(769, 192);
             this.dataGridView.TabIndex = 0;
             this.dataGridView.VirtualMode = true;
+            this.dataGridView.CurrentCellDirtyStateChanged += new System.EventHandler(this.dataGridView_CurrentCellDirtyStateChanged);
             this.dataGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridView_EditingControlShowing);
             // 
             // is_checked
@@ -546,11 +553,11 @@ namespace Registry.Viewport
             this.description.Name = "description";
             this.description.ReadOnly = true;
             // 
-            // SubPremisesDetailsControl
+            // TenancySubPremisesDetails
             // 
             this.Controls.Add(this.dataGridView);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Name = "SubPremisesDetailsControl";
+            this.Name = "TenancySubPremisesDetails";
             this.Size = new System.Drawing.Size(772, 192);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
