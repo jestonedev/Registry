@@ -329,6 +329,7 @@ namespace Registry.Viewport
             surname.DataPropertyName = "surname";
             name.DataPropertyName = "name";
             patronymic.DataPropertyName = "patronymic";
+            date_of_birth.DataPropertyName = "date_of_birth";
             id_kinship.DataSource = v_kinships;
             id_kinship.ValueMember = "id_kinship";
             id_kinship.DisplayMember = "kinship";

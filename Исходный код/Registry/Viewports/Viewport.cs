@@ -38,7 +38,6 @@ namespace Registry.Viewport
 
         public new virtual void Close()
         {
-            MenuCallback.SwitchToPreviousViewport();
             base.Close();
         }
 
