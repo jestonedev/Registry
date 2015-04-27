@@ -658,6 +658,8 @@ namespace Registry.Viewport
             tenancy_persons.Select().RowDeleted += new DataRowChangeEventHandler(TenancyPersonsViewport_RowDeleted);
             tenancy_persons.Select().RowChanged += new DataRowChangeEventHandler(TenancyPersonsViewport_RowChanged);
             is_editable = true;
+            if (v_tenancy_persons.Count == 0)
+                InsertRecord();
         }
 
         public override bool CanInsertRecord()

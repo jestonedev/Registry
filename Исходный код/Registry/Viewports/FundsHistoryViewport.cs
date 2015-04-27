@@ -580,6 +580,8 @@ namespace Registry.Viewport
             fund_assoc.Select().RowDeleted += new DataRowChangeEventHandler(FundAssoc_RowDeleted);
             comboBoxFundType.SelectedIndexChanged += new EventHandler(comboBoxFundType_SelectedIndexChanged);
             is_editable = true;
+            if (v_funds_history.Count == 0)
+                InsertRecord();
         }
 
         public override bool CanSaveRecord()
