@@ -736,7 +736,7 @@ namespace Registry.Viewport
 
         void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            if (dataGridView.SelectedCells[0].OwningColumn.Name == "total_area")
+            if (dataGridView.CurrentCell.OwningColumn.Name == "total_area")
             {
                 dataGridView.EditingControl.KeyPress -= new KeyPressEventHandler(EditingControl_KeyPress);
                 dataGridView.EditingControl.KeyPress += new KeyPressEventHandler(EditingControl_KeyPress);
@@ -745,13 +745,13 @@ namespace Registry.Viewport
                 else
                     ((TextBox)e.Control).Text = ((TextBox)e.Control).Text.Substring(0, ((TextBox)e.Control).Text.Length - 3);
             } else
-                if (dataGridView.SelectedCells[0].OwningColumn.Name == "sub_premises_num")
+                if (dataGridView.CurrentCell.OwningColumn.Name == "sub_premises_num")
                 {
                     dataGridView.EditingControl.KeyPress -= new KeyPressEventHandler(EditingControl_KeyPress);
                     dataGridView.EditingControl.KeyPress += new KeyPressEventHandler(EditingControl_KeyPress);
                 }
                 else
-                if (dataGridView.SelectedCells[0].OwningColumn.Name == "id_state")
+                    if (dataGridView.CurrentCell.OwningColumn.Name == "id_state")
                 {
                     DataGridViewComboBoxEditingControl editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
                     editingControl.DropDownClosed -= editingControl_DropDownClosed;

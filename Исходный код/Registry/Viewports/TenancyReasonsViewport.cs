@@ -539,7 +539,7 @@ namespace Registry.Viewport
 
         void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            if (dataGridView.SelectedCells[0].OwningColumn.Name == "id_reason_type")
+            if (dataGridView.CurrentCell.OwningColumn.Name == "id_reason_type")
             {
                 DataGridViewComboBoxEditingControl editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
                 editingControl.DropDownClosed -= editingControl_DropDownClosed;
