@@ -574,6 +574,15 @@ namespace Registry.DataModels
                     select premises_row).Count();
         }
 
+        public static int TenancyProcessesDuplicateCount(TenancyProcess process)
+        {
+            var tenancy_processes = DataModelHelper.FilterRows(TenancyProcessesDataModel.GetInstance().Select());
+            return (from tenancy_processes_row in tenancy_processes
+                    where tenancy_processes_row.Field<string>("registration_num") == process.RegistrationNum &&
+                          tenancy_processes_row.Field<int>("id_process") != process.IdProcess
+                    select tenancy_processes_row).Count();
+        }
+
         public static IEnumerable<int> ObjectIdsByStates(EntityType entity, int[] states)
         {
             if (entity == EntityType.Building)

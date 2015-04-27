@@ -528,6 +528,12 @@ namespace Registry.Viewport
                 comboBoxRentType.Focus();
                 return false;
             }
+            TenancyProcess tenancyFromView = TenancyFromView();
+            if (tenancy.RegistrationNum != tenancyFromView.RegistrationNum)
+                if (DataModelHelper.TenancyProcessesDuplicateCount(tenancy) != 0 &&
+                    MessageBox.Show("В базе уже имеется договор с таким номером. Все равно продолжить сохранение?", "Внимание",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.No)
+                    return false;
             return true;
         }
 
