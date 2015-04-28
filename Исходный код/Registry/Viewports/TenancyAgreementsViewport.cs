@@ -88,6 +88,7 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn patronymic;
         private DataGridViewTextBoxColumn date_of_birth;
         private int? id_warrant = null;
+        private bool is_first_visible = true;   // первое отображение формы
 
         private TenancyAgreementsViewport()
             : this(null)
@@ -748,6 +749,12 @@ namespace Registry.Viewport
         protected override void OnVisibleChanged(EventArgs e)
         {
             RedrawDataGridTenancyPersonsRows();
+            if (is_first_visible)
+            {
+                is_first_visible = false;
+                if (v_tenancy_agreements.Count == 0)
+                    InsertRecord();
+            }
             base.OnVisibleChanged(e);
         }
 
