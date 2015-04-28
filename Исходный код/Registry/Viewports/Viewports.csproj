@@ -91,6 +91,11 @@
       <DependentUpon>ExtendedSearchResettleForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="ResettleBuildingsViewport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -99,6 +104,24 @@
     </Compile>
     <Compile Include="ResettleProcessListViewport.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OwnershipsEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="OwnershipsEditor.Designer.cs">
+      <DependentUpon>OwnershipsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SubPremisesEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SubPremisesEditor.Designer.cs">
+      <DependentUpon>SubPremisesEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RestrictionsEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RestrictionsEditor.Designer.cs">
+      <DependentUpon>RestrictionsEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="SimpleSearchResettleForm.cs">
       <SubType>Form</SubType>
@@ -335,6 +358,10 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resource.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="ResettleBuildingsViewport.resx">
       <DependentUpon>ResettleBuildingsViewport.cs</DependentUpon>
     </EmbeddedResource>
@@ -346,6 +373,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="RestrictionListViewport.resx">
       <DependentUpon>RestrictionListViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="OwnershipsEditor.resx">
+      <DependentUpon>OwnershipsEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SubPremisesEditor.resx">
+      <DependentUpon>SubPremisesEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RestrictionsEditor.resx">
+      <DependentUpon>RestrictionsEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RestrictionTypeListViewport.resx">
       <DependentUpon>RestrictionTypeListViewport.cs</DependentUpon>
