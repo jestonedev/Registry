@@ -123,16 +123,6 @@ namespace Registry.Viewport
         private DataGridViewComboBoxColumn sub_premises_id_state;
         private NumericUpDown numericUpDownHeight;
         private Label label3;
-        private DataGridViewTextBoxColumn id_restriction;
-        private DataGridViewTextBoxColumn restriction_number;
-        private DataGridViewTextBoxColumn restriction_date;
-        private DataGridViewTextBoxColumn restriction_description;
-        private DataGridViewComboBoxColumn id_restriction_type;
-        private DataGridViewTextBoxColumn id_ownership_right;
-        private DataGridViewTextBoxColumn ownership_number;
-        private DataGridViewTextBoxColumn ownership_date;
-        private DataGridViewTextBoxColumn ownership_description;
-        private DataGridViewComboBoxColumn id_ownership_type;
         private DateTimePicker dateTimePickerRegDate;
         private Label label4;
         private CheckBox checkBoxIsMemorial;
@@ -148,6 +138,18 @@ namespace Registry.Viewport
         private VIBlend.WinForms.Controls.vButton vButtonRoomEdit;
         private VIBlend.WinForms.Controls.vButton vButtonRoomDelete;
         private VIBlend.WinForms.Controls.vButton vButtonRoomAdd;
+        private DataGridViewTextBoxColumn id_restriction;
+        private DataGridViewTextBoxColumn restriction_number;
+        private DataGridViewTextBoxColumn restriction_date;
+        private DataGridViewTextBoxColumn restriction_description;
+        private DataGridViewComboBoxColumn id_restriction_type;
+        private DataGridViewTextBoxColumn restriction_relation;
+        private DataGridViewTextBoxColumn id_ownership_right;
+        private DataGridViewTextBoxColumn ownership_number;
+        private DataGridViewTextBoxColumn ownership_date;
+        private DataGridViewTextBoxColumn ownership_description;
+        private DataGridViewComboBoxColumn id_ownership_type;
+        private DataGridViewTextBoxColumn ownership_relation;
         private bool is_first_visibility = true;
 
         private PremisesViewport()
@@ -186,13 +188,9 @@ namespace Registry.Viewport
                 restrictionsFilter += ")";
             }
             v_restrictions.Filter = restrictionsFilter;
-            for (int i = 0; i < dataGridViewRestrictions.Rows.Count; i++)
-                if (v_restrictionBuildingsAssoc.Find("id_restriction", dataGridViewRestrictions.Rows[i].Cells["id_restriction"].Value) != -1)
-                    dataGridViewRestrictions.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
-                else
-                    dataGridViewRestrictions.Rows[i].DefaultCellStyle.BackColor = Color.White;
             if (dataGridViewRestrictions.Columns.Contains("id_restriction"))
                 dataGridViewRestrictions.Columns["id_restriction"].Visible = false;
+            RedrawRestrictionDataGridRows();
         }
 
         private void OwnershipsFilterRebuild()
@@ -212,13 +210,10 @@ namespace Registry.Viewport
                 ownershipFilter += ")";
             }
             v_ownershipRights.Filter = ownershipFilter;
-            for (int i = 0; i < dataGridViewOwnerships.Rows.Count; i++)
-                if (v_ownershipBuildingsAssoc.Find("id_ownership_right", dataGridViewOwnerships.Rows[i].Cells["id_ownership_right"].Value) != -1)
-                    dataGridViewOwnerships.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
-                else
-                    dataGridViewOwnerships.Rows[i].DefaultCellStyle.BackColor = Color.White;
+            
             if (dataGridViewOwnerships.Columns.Contains("id_ownership_right"))
                 dataGridViewOwnerships.Columns["id_ownership_right"].Visible = false;
+            RedrawOwnershipDataGridRows();
         }
 
         private void FiltersRebuild()
@@ -254,6 +249,40 @@ namespace Registry.Viewport
                     numericUpDownMunicipalArea.Value = 0;
                 }
             }
+        }
+
+        private void RedrawRestrictionDataGridRows()
+        {
+            for (int i = 0; i < dataGridViewRestrictions.Rows.Count; i++)
+                if (v_restrictionBuildingsAssoc.Find("id_restriction", dataGridViewRestrictions.Rows[i].Cells["id_restriction"].Value) != -1)
+                {
+                    dataGridViewRestrictions.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
+                    dataGridViewRestrictions.Rows[i].DefaultCellStyle.SelectionBackColor = Color.Green;
+                    dataGridViewRestrictions.Rows[i].Cells["restriction_relation"].Value = "Здание";
+                }
+                else
+                {
+                    dataGridViewRestrictions.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                    dataGridViewRestrictions.Rows[i].DefaultCellStyle.SelectionBackColor = SystemColors.Highlight;
+                    dataGridViewRestrictions.Rows[i].Cells["restriction_relation"].Value = "Помещение";
+                }
+        }
+
+        private void RedrawOwnershipDataGridRows()
+        {
+            for (int i = 0; i < dataGridViewOwnerships.Rows.Count; i++)
+                if (v_ownershipBuildingsAssoc.Find("id_ownership_right", dataGridViewOwnerships.Rows[i].Cells["id_ownership_right"].Value) != -1)
+                {
+                    dataGridViewOwnerships.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
+                    dataGridViewOwnerships.Rows[i].DefaultCellStyle.SelectionBackColor = Color.Green;
+                    dataGridViewOwnerships.Rows[i].Cells["ownership_relation"].Value = "Здание";
+                }
+                else
+                {
+                    dataGridViewOwnerships.Rows[i].DefaultCellStyle.BackColor = Color.White;
+                    dataGridViewOwnerships.Rows[i].DefaultCellStyle.SelectionBackColor = SystemColors.Highlight;
+                    dataGridViewOwnerships.Rows[i].Cells["ownership_relation"].Value = "Помещение";
+                }
         }
 
         private void SetViewportCaption()
@@ -1341,6 +1370,13 @@ namespace Registry.Viewport
                 ParentTypeEnum.Premises);
         }
 
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            RedrawRestrictionDataGridRows();
+            RedrawOwnershipDataGridRows();
+            base.OnVisibleChanged(e);
+        }
+
         void premisesCurrentFund_RefreshEvent(object sender, EventArgs e)
         {
             FiltersRebuild();
@@ -1612,7 +1648,7 @@ namespace Registry.Viewport
 
         private void dataGridViewRestrictions_Resize(object sender, EventArgs e)
         {
-            if (dataGridViewRestrictions.Size.Width > 600)
+            if (dataGridViewRestrictions.Size.Width > 700)
             {
                 if (dataGridViewRestrictions.Columns["restriction_description"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     dataGridViewRestrictions.Columns["restriction_description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -1626,7 +1662,7 @@ namespace Registry.Viewport
 
         private void dataGridViewOwnerships_Resize(object sender, EventArgs e)
         {
-            if (dataGridViewOwnerships.Size.Width > 600)
+            if (dataGridViewOwnerships.Size.Width > 700)
             {
                 if (dataGridViewOwnerships.Columns["ownership_description"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     dataGridViewOwnerships.Columns["ownership_description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -1958,22 +1994,12 @@ namespace Registry.Viewport
             this.vButtonRestrictionDelete = new VIBlend.WinForms.Controls.vButton();
             this.vButtonRestrictionAdd = new VIBlend.WinForms.Controls.vButton();
             this.dataGridViewRestrictions = new System.Windows.Forms.DataGridView();
-            this.id_restriction = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.restriction_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.restriction_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.restriction_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_restriction_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.vButtonOwnershipEdit = new VIBlend.WinForms.Controls.vButton();
             this.vButtonOwnershipDelete = new VIBlend.WinForms.Controls.vButton();
             this.vButtonOwnershipAdd = new VIBlend.WinForms.Controls.vButton();
             this.dataGridViewOwnerships = new System.Windows.Forms.DataGridView();
-            this.id_ownership_right = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ownership_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ownership_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ownership_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_ownership_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -2024,6 +2050,18 @@ namespace Registry.Viewport
             this.sub_premises_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sub_premises_total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sub_premises_id_state = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.id_restriction = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.restriction_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.restriction_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.restriction_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_restriction_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.restriction_relation = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_ownership_right = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ownership_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ownership_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ownership_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_ownership_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.ownership_relation = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel3.SuspendLayout();
             this.groupBox13.SuspendLayout();
             this.groupBox9.SuspendLayout();
@@ -2196,7 +2234,8 @@ namespace Registry.Viewport
             this.restriction_number,
             this.restriction_date,
             this.restriction_description,
-            this.id_restriction_type});
+            this.id_restriction_type,
+            this.restriction_relation});
             this.dataGridViewRestrictions.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewRestrictions.Name = "dataGridViewRestrictions";
             this.dataGridViewRestrictions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -2204,43 +2243,6 @@ namespace Registry.Viewport
             this.dataGridViewRestrictions.TabIndex = 0;
             this.dataGridViewRestrictions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewRestrictions_CellDoubleClick);
             this.dataGridViewRestrictions.Resize += new System.EventHandler(this.dataGridViewRestrictions_Resize);
-            // 
-            // id_restriction
-            // 
-            this.id_restriction.HeaderText = "Идентификатор";
-            this.id_restriction.Name = "id_restriction";
-            this.id_restriction.Visible = false;
-            // 
-            // restriction_number
-            // 
-            this.restriction_number.HeaderText = "Номер";
-            this.restriction_number.MinimumWidth = 100;
-            this.restriction_number.Name = "restriction_number";
-            this.restriction_number.ReadOnly = true;
-            // 
-            // restriction_date
-            // 
-            this.restriction_date.HeaderText = "Дата";
-            this.restriction_date.MinimumWidth = 100;
-            this.restriction_date.Name = "restriction_date";
-            this.restriction_date.ReadOnly = true;
-            // 
-            // restriction_description
-            // 
-            this.restriction_description.HeaderText = "Наименование";
-            this.restriction_description.MinimumWidth = 200;
-            this.restriction_description.Name = "restriction_description";
-            this.restriction_description.ReadOnly = true;
-            this.restriction_description.Width = 200;
-            // 
-            // id_restriction_type
-            // 
-            this.id_restriction_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
-            this.id_restriction_type.HeaderText = "Тип права собственности";
-            this.id_restriction_type.MinimumWidth = 200;
-            this.id_restriction_type.Name = "id_restriction_type";
-            this.id_restriction_type.ReadOnly = true;
-            this.id_restriction_type.Width = 200;
             // 
             // groupBox10
             // 
@@ -2326,7 +2328,8 @@ namespace Registry.Viewport
             this.ownership_number,
             this.ownership_date,
             this.ownership_description,
-            this.id_ownership_type});
+            this.id_ownership_type,
+            this.ownership_relation});
             this.dataGridViewOwnerships.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewOwnerships.Name = "dataGridViewOwnerships";
             this.dataGridViewOwnerships.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -2334,43 +2337,6 @@ namespace Registry.Viewport
             this.dataGridViewOwnerships.TabIndex = 0;
             this.dataGridViewOwnerships.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOwnerships_CellDoubleClick);
             this.dataGridViewOwnerships.Resize += new System.EventHandler(this.dataGridViewOwnerships_Resize);
-            // 
-            // id_ownership_right
-            // 
-            this.id_ownership_right.HeaderText = "Идентификатор";
-            this.id_ownership_right.Name = "id_ownership_right";
-            this.id_ownership_right.Visible = false;
-            // 
-            // ownership_number
-            // 
-            this.ownership_number.HeaderText = "Номер";
-            this.ownership_number.MinimumWidth = 100;
-            this.ownership_number.Name = "ownership_number";
-            this.ownership_number.ReadOnly = true;
-            // 
-            // ownership_date
-            // 
-            this.ownership_date.HeaderText = "Дата";
-            this.ownership_date.MinimumWidth = 100;
-            this.ownership_date.Name = "ownership_date";
-            this.ownership_date.ReadOnly = true;
-            // 
-            // ownership_description
-            // 
-            this.ownership_description.HeaderText = "Наименование";
-            this.ownership_description.MinimumWidth = 200;
-            this.ownership_description.Name = "ownership_description";
-            this.ownership_description.ReadOnly = true;
-            this.ownership_description.Width = 200;
-            // 
-            // id_ownership_type
-            // 
-            this.id_ownership_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
-            this.id_ownership_type.HeaderText = "Тип ограничения";
-            this.id_ownership_type.MinimumWidth = 200;
-            this.id_ownership_type.Name = "id_ownership_type";
-            this.id_ownership_type.ReadOnly = true;
-            this.id_ownership_type.Width = 200;
             // 
             // groupBox8
             // 
@@ -3005,6 +2971,96 @@ namespace Registry.Viewport
             this.sub_premises_id_state.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.sub_premises_id_state.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.sub_premises_id_state.Width = 150;
+            // 
+            // id_restriction
+            // 
+            this.id_restriction.HeaderText = "Идентификатор";
+            this.id_restriction.Name = "id_restriction";
+            this.id_restriction.Visible = false;
+            // 
+            // restriction_number
+            // 
+            this.restriction_number.HeaderText = "Номер";
+            this.restriction_number.MinimumWidth = 100;
+            this.restriction_number.Name = "restriction_number";
+            this.restriction_number.ReadOnly = true;
+            // 
+            // restriction_date
+            // 
+            this.restriction_date.HeaderText = "Дата";
+            this.restriction_date.MinimumWidth = 100;
+            this.restriction_date.Name = "restriction_date";
+            this.restriction_date.ReadOnly = true;
+            // 
+            // restriction_description
+            // 
+            this.restriction_description.HeaderText = "Наименование";
+            this.restriction_description.MinimumWidth = 200;
+            this.restriction_description.Name = "restriction_description";
+            this.restriction_description.ReadOnly = true;
+            this.restriction_description.Width = 200;
+            // 
+            // id_restriction_type
+            // 
+            this.id_restriction_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
+            this.id_restriction_type.HeaderText = "Тип права собственности";
+            this.id_restriction_type.MinimumWidth = 200;
+            this.id_restriction_type.Name = "id_restriction_type";
+            this.id_restriction_type.ReadOnly = true;
+            this.id_restriction_type.Width = 200;
+            // 
+            // restriction_relation
+            // 
+            this.restriction_relation.HeaderText = "Принадлежность";
+            this.restriction_relation.MinimumWidth = 150;
+            this.restriction_relation.Name = "restriction_relation";
+            this.restriction_relation.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.restriction_relation.Width = 150;
+            // 
+            // id_ownership_right
+            // 
+            this.id_ownership_right.HeaderText = "Идентификатор";
+            this.id_ownership_right.Name = "id_ownership_right";
+            this.id_ownership_right.Visible = false;
+            // 
+            // ownership_number
+            // 
+            this.ownership_number.HeaderText = "Номер";
+            this.ownership_number.MinimumWidth = 100;
+            this.ownership_number.Name = "ownership_number";
+            this.ownership_number.ReadOnly = true;
+            // 
+            // ownership_date
+            // 
+            this.ownership_date.HeaderText = "Дата";
+            this.ownership_date.MinimumWidth = 100;
+            this.ownership_date.Name = "ownership_date";
+            this.ownership_date.ReadOnly = true;
+            // 
+            // ownership_description
+            // 
+            this.ownership_description.HeaderText = "Наименование";
+            this.ownership_description.MinimumWidth = 200;
+            this.ownership_description.Name = "ownership_description";
+            this.ownership_description.ReadOnly = true;
+            this.ownership_description.Width = 200;
+            // 
+            // id_ownership_type
+            // 
+            this.id_ownership_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
+            this.id_ownership_type.HeaderText = "Тип ограничения";
+            this.id_ownership_type.MinimumWidth = 200;
+            this.id_ownership_type.Name = "id_ownership_type";
+            this.id_ownership_type.ReadOnly = true;
+            this.id_ownership_type.Width = 200;
+            // 
+            // ownership_relation
+            // 
+            this.ownership_relation.HeaderText = "Принадлежность";
+            this.ownership_relation.MinimumWidth = 150;
+            this.ownership_relation.Name = "ownership_relation";
+            this.ownership_relation.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.ownership_relation.Width = 150;
             // 
             // PremisesViewport
             // 
