@@ -115,6 +115,8 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn total_area;
         private DataGridViewTextBoxColumn living_area;
         private int? id_warrant = null;
+        private bool is_copy = false;
+        private int? id_copy_process = null;
 
         private TenancyViewport()
             : this(null)
@@ -845,6 +847,8 @@ namespace Registry.Viewport
             int index = v_executors.Find("executor_login", System.Security.Principal.WindowsIdentity.GetCurrent().Name);
             if (index != -1)
                 comboBoxExecutor.SelectedValue = ((DataRowView)v_executors[index])["id_executor"];
+            is_copy = false;
+            id_copy_process = null;
             is_editable = true;
             tenancies.EditingNewRecord = true;
             UnbindedCheckBoxesUpdate();
@@ -871,6 +875,8 @@ namespace Registry.Viewport
             dateTimePickerIssueDate.Checked = (tenancy.IssueDate != null);
             dateTimePickerBeginDate.Checked = (tenancy.BeginDate != null);
             dateTimePickerEndDate.Checked = (tenancy.EndDate != null);
+            is_copy = true;
+            id_copy_process = tenancy.IdProcess;
             is_editable = true;
         }
 
@@ -974,6 +980,8 @@ namespace Registry.Viewport
                     break;
             }
             UnbindedCheckBoxesUpdate();
+            is_copy = false;
+            id_copy_process = null;
             is_editable = true;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
@@ -1015,51 +1023,65 @@ namespace Registry.Viewport
                     Filter += String.Format(CultureInfo.CurrentCulture, "(id_process = {0})", tenancy.IdProcess);
                     v_tenancies.Filter += Filter;
                     FillRowFromTenancy(tenancy, newRow);
-                    if (ParentRow != null)
+                    // Если производится копирование, а не создание новой записи, то надо скопировать участников найма и нанимаемое жилье
+                    if (is_copy && id_copy_process != null)
                     {
-                        TenancyObject to = new TenancyObject();
-                        to.IdProcess = id_process;
-                        to.RentLivingArea = null;
-                        to.RentTotalArea = null;
-                        int id_assoc = -1;
-                        switch (ParentType)
+                        if (!CopyTenancyProcessRelData(id_process, id_copy_process.Value))
+                            MessageBox.Show("Произошла ошибка во время копирования данных", "Ошибка",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    }
+                    else
+                        if (ParentRow != null)
                         {
-                            case ParentTypeEnum.Building:
-                                TenancyBuildingsAssocDataModel tenancy_buildings = TenancyBuildingsAssocDataModel.GetInstance();
-                                to.IdObject = Convert.ToInt32(ParentRow["id_building"], CultureInfo.InvariantCulture);
-                                id_assoc = TenancyBuildingsAssocDataModel.Insert(to);
-                                if (id_assoc == -1)
-                                    return;
-                                to.IdAssoc = id_assoc;
-                                tenancy_buildings.Select().Rows.Add(new object[] { 
-                                    id_assoc, to.IdObject, to.IdProcess, to.RentTotalArea, to.RentLivingArea, 0
-                                });
-                                break;
-                            case ParentTypeEnum.Premises:
-                                TenancyPremisesAssocDataModel tenancy_premises = TenancyPremisesAssocDataModel.GetInstance();
-                                to.IdObject = Convert.ToInt32(ParentRow["id_premises"], CultureInfo.InvariantCulture);
-                                id_assoc = TenancyPremisesAssocDataModel.Insert(to);
-                                if (id_assoc == -1)
-                                    return;
-                                to.IdAssoc = id_assoc;
-                                tenancy_premises.Select().Rows.Add(new object[] { 
-                                    id_assoc, to.IdObject, to.IdProcess, to.RentTotalArea, to.RentLivingArea, 0
-                                });
-                                break;
-                            case ParentTypeEnum.SubPremises:
-                                TenancySubPremisesAssocDataModel tenancy_sub_premises = TenancySubPremisesAssocDataModel.GetInstance();
-                                to.IdObject = Convert.ToInt32(ParentRow["id_sub_premises"], CultureInfo.InvariantCulture);
-                                id_assoc = TenancySubPremisesAssocDataModel.Insert(to);
-                                if (id_assoc == -1)
-                                    return;
-                                to.IdAssoc = id_assoc;
-                                tenancy_sub_premises.Select().Rows.Add(new object[] { 
-                                    id_assoc, to.IdObject, to.IdProcess, to.RentTotalArea, 0
-                                });
-                                break;
-                            default: throw new ViewportException("Неизвестный тип родительского объекта");
+                            TenancyObject to = new TenancyObject();
+                            to.IdProcess = id_process;
+                            to.RentLivingArea = null;
+                            to.RentTotalArea = null;
+                            int id_assoc = -1;
+                            switch (ParentType)
+                            {
+                                case ParentTypeEnum.Building:
+                                    TenancyBuildingsAssocDataModel tenancy_buildings = TenancyBuildingsAssocDataModel.GetInstance();
+                                    to.IdObject = Convert.ToInt32(ParentRow["id_building"], CultureInfo.InvariantCulture);
+                                    id_assoc = TenancyBuildingsAssocDataModel.Insert(to);
+                                    if (id_assoc == -1)
+                                        return;
+                                    to.IdAssoc = id_assoc;
+                                    tenancy_buildings.Select().Rows.Add(new object[] { 
+                                id_assoc, to.IdObject, to.IdProcess, to.RentTotalArea, to.RentLivingArea, 0
+                            });
+                                    break;
+                                case ParentTypeEnum.Premises:
+                                    TenancyPremisesAssocDataModel tenancy_premises = TenancyPremisesAssocDataModel.GetInstance();
+                                    to.IdObject = Convert.ToInt32(ParentRow["id_premises"], CultureInfo.InvariantCulture);
+                                    id_assoc = TenancyPremisesAssocDataModel.Insert(to);
+                                    if (id_assoc == -1)
+                                        return;
+                                    to.IdAssoc = id_assoc;
+                                    tenancy_premises.Select().Rows.Add(new object[] { 
+                                id_assoc, to.IdObject, to.IdProcess, to.RentTotalArea, to.RentLivingArea, 0
+                            });
+                                    break;
+                                case ParentTypeEnum.SubPremises:
+                                    TenancySubPremisesAssocDataModel tenancy_sub_premises = TenancySubPremisesAssocDataModel.GetInstance();
+                                    to.IdObject = Convert.ToInt32(ParentRow["id_sub_premises"], CultureInfo.InvariantCulture);
+                                    id_assoc = TenancySubPremisesAssocDataModel.Insert(to);
+                                    if (id_assoc == -1)
+                                        return;
+                                    to.IdAssoc = id_assoc;
+                                    tenancy_sub_premises.Select().Rows.Add(new object[] { 
+                                id_assoc, to.IdObject, to.IdProcess, to.RentTotalArea, 0
+                            });
+                                    break;
+                                default: throw new ViewportException("Неизвестный тип родительского объекта");
+                            }
+                            CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.TenancyProcess, id_process, true);
                         }
-                        CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.TenancyProcess, id_process, true);
+                    // Обновляем информацию по помещениям (живое обновление не реализуемо)
+                    if (v_tenancy_addresses != null)
+                    {
+                        v_tenancy_addresses.DataSource = CalcDataModelTenancyPremisesInfo.GetInstance().Select();
+                        FiltersRebuild();
                     }
                     tenancies.EditingNewRecord = false;
                     RebuildStaticFilter();
@@ -1087,6 +1109,133 @@ namespace Registry.Viewport
             viewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
+        }
+
+        // Метод копирует зависимые данные по процессу найма
+        private bool CopyTenancyProcessRelData(int id_new_process, int id_copy_process)
+        {
+            var persons = from persons_row in DataModelHelper.FilterRows(TenancyPersonsDataModel.GetInstance().Select())
+                          where persons_row.Field<int>("id_process") == id_copy_process
+                          select persons_row;
+            foreach (var person_row in persons.ToList())
+            {
+                TenancyPerson person = DataRowToPerson(person_row);
+                person.IdProcess = id_new_process;
+                int id_person = TenancyPersonsDataModel.Insert(person);
+                if (id_person == -1)
+                    return false;
+                person.IdPerson = id_person;
+                TenancyPersonsDataModel.GetInstance().Select().Rows.Add(PersonToObjectArray(person));
+            }
+            var buildings = from row in DataModelHelper.FilterRows(TenancyBuildingsAssocDataModel.GetInstance().Select())
+                            where row.Field<int>("id_process") == id_copy_process
+                            select row;
+            foreach (var row in buildings.ToList())
+            {
+                TenancyObject obj = new TenancyObject();
+                obj.IdObject = row.Field<int?>("id_building");
+                obj.IdProcess = id_new_process;
+                obj.RentLivingArea = row.Field<double?>("rent_living_area");
+                obj.RentTotalArea = row.Field<double?>("rent_total_area");
+                int id_assoc = TenancyBuildingsAssocDataModel.Insert(obj);
+                if (id_assoc == -1)
+                    return false;
+                obj.IdAssoc = id_assoc;
+                TenancyBuildingsAssocDataModel.GetInstance().Select().Rows.Add(obj.IdAssoc, obj.IdObject, obj.IdProcess,
+                    obj.RentTotalArea, obj.RentLivingArea);
+            }
+            var premises = from row in DataModelHelper.FilterRows(TenancyPremisesAssocDataModel.GetInstance().Select())
+                            where row.Field<int>("id_process") == id_copy_process
+                            select row;
+            foreach (var row in premises.ToList())
+            {
+                TenancyObject obj = new TenancyObject();
+                obj.IdObject = row.Field<int?>("id_premises");
+                obj.IdProcess = id_new_process;
+                obj.RentLivingArea = row.Field<double?>("rent_living_area");
+                obj.RentTotalArea = row.Field<double?>("rent_total_area");
+                int id_assoc = TenancyPremisesAssocDataModel.Insert(obj);
+                if (id_assoc == -1)
+                    return false;
+                obj.IdAssoc = id_assoc;
+                TenancyPremisesAssocDataModel.GetInstance().Select().Rows.Add(obj.IdAssoc, obj.IdObject, obj.IdProcess,
+                    obj.RentTotalArea, obj.RentLivingArea);
+            }
+            var sub_premises = from row in DataModelHelper.FilterRows(TenancySubPremisesAssocDataModel.GetInstance().Select())
+                           where row.Field<int>("id_process") == id_copy_process
+                           select row;
+            foreach (var row in sub_premises.ToList())
+            {
+                TenancyObject obj = new TenancyObject();
+                obj.IdObject = row.Field<int?>("id_sub_premises");
+                obj.IdProcess = id_new_process;
+                obj.RentTotalArea = row.Field<double?>("rent_total_area");
+                int id_assoc = TenancySubPremisesAssocDataModel.Insert(obj);
+                if (id_assoc == -1)
+                    return false;
+                obj.IdAssoc = id_assoc;
+                TenancySubPremisesAssocDataModel.GetInstance().Select().Rows.Add(obj.IdAssoc, obj.IdObject, obj.IdProcess,
+                    obj.RentTotalArea);
+            }
+            return true;
+        }
+
+        private TenancyPerson DataRowToPerson(DataRow row)
+        {
+            TenancyPerson person = new TenancyPerson();
+            person.IdPerson = row.Field<int?>("id_person");
+            person.IdProcess = row.Field<int?>("id_process");
+            person.IdKinship = row.Field<int?>("id_kinship");
+            person.Surname = row.Field<string>("surname");
+            person.Name = row.Field<string>("name");
+            person.Patronymic = row.Field<string>("patronymic");
+            person.DateOfBirth = row.Field<DateTime?>("date_of_birth");
+            person.IdDocumentType = row.Field<int?>("id_document_type");
+            person.DateOfDocumentIssue = row.Field<DateTime?>("date_of_document_issue");
+            person.DocumentNum = row.Field<string>("document_num");
+            person.DocumentSeria = row.Field<string>("document_seria");
+            person.IdDocumentIssuedBy = row.Field<int?>("id_document_issued_by");
+            person.RegistrationIdStreet = row.Field<string>("registration_id_street");
+            person.RegistrationHouse = row.Field<string>("registration_house");
+            person.RegistrationFlat = row.Field<string>("registration_flat");
+            person.RegistrationRoom = row.Field<string>("registration_room");
+            person.ResidenceIdStreet = row.Field<string>("residence_id_street");
+            person.ResidenceHouse = row.Field<string>("residence_house");
+            person.ResidenceFlat = row.Field<string>("residence_flat");
+            person.ResidenceRoom = row.Field<string>("residence_room");
+            person.PersonalAccount = row.Field<string>("personal_account");
+            person.IncludeDate = row.Field<DateTime?>("include_date");
+            person.ExcludeDate = row.Field<DateTime?>("exclude_date");
+            return person;
+        }
+
+        private object[] PersonToObjectArray(TenancyPerson person)
+        {
+            return new object[] {
+                person.IdPerson,
+                person.IdProcess,
+                person.IdKinship,
+                person.Surname,
+                person.Name,
+                person.Patronymic,
+                person.DateOfBirth,
+                person.IdDocumentType,
+                person.DateOfDocumentIssue,
+                person.DocumentNum,
+                person.DocumentSeria,
+                person.IdDocumentIssuedBy,
+                person.RegistrationIdStreet,
+                person.RegistrationHouse,
+                person.RegistrationFlat,
+                person.RegistrationRoom,
+                person.ResidenceIdStreet,
+                person.ResidenceHouse,
+                person.ResidenceFlat,
+                person.ResidenceRoom,
+                person.PersonalAccount,
+                person.IncludeDate,
+                person.ExcludeDate
+            };
         }
 
         public override bool CanDuplicate()
