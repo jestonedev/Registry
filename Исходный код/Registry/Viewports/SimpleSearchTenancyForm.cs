@@ -36,6 +36,12 @@ namespace Registry.SearchForms
             }
         }
 
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            textBoxCriteria.Focus();
+            textBoxCriteria.SelectAll();
+        }
+
         internal override string GetFilter()
         {
             string filter = "";

@@ -47,7 +47,7 @@
             this.comboBoxCriteriaType.Location = new System.Drawing.Point(10, 9);
             this.comboBoxCriteriaType.Name = "comboBoxCriteriaType";
             this.comboBoxCriteriaType.Size = new System.Drawing.Size(178, 23);
-            this.comboBoxCriteriaType.TabIndex = 0;
+            this.comboBoxCriteriaType.TabIndex = 1;
             // 
             // vButtonCancel
             // 
@@ -83,7 +83,7 @@
             this.textBoxCriteria.MaxLength = 255;
             this.textBoxCriteria.Name = "textBoxCriteria";
             this.textBoxCriteria.Size = new System.Drawing.Size(348, 21);
-            this.textBoxCriteria.TabIndex = 1;
+            this.textBoxCriteria.TabIndex = 0;
             // 
             // SimpleSearchTenancyForm
             // 

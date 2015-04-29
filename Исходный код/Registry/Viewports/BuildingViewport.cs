@@ -920,6 +920,11 @@ namespace Registry.Viewport
                     return;
                 updatePremisesState = true;
             }
+            string Filter = "";
+            if (!String.IsNullOrEmpty(v_buildings.Filter))
+                Filter += " OR ";
+            else
+                Filter += "(1 = 1) OR ";
             switch (viewportState)
             {
                 case ViewportState.ReadState:
@@ -937,6 +942,8 @@ namespace Registry.Viewport
                         newRow = (DataRowView)v_buildings.AddNew();
                     else
                         newRow = ((DataRowView)v_buildings[v_buildings.Position]);
+                    Filter += String.Format(CultureInfo.CurrentCulture, "(id_building = {0})", building.IdBuilding);
+                    v_buildings.Filter += Filter;
                     FillRowFromBuilding(building, newRow);
                     is_editable = true;
                     buildings.EditingNewRecord = false;
@@ -956,6 +963,8 @@ namespace Registry.Viewport
                         return;
                     DataRowView row = ((DataRowView)v_buildings[v_buildings.Position]);
                     is_editable = false;
+                    Filter += String.Format(CultureInfo.CurrentCulture, "(id_building = {0})", building.IdBuilding);
+                    v_buildings.Filter += Filter;
                     FillRowFromBuilding(building, row);
                     is_editable = true;
                     if (updatePremisesState)

@@ -514,6 +514,11 @@ namespace Registry.Viewport
             ResettleProcess resettleProcess = ResettleProcessViewport();
             if (!ValidateResettleProcess(resettleProcess))
                 return;
+            string Filter = "";
+            if (!String.IsNullOrEmpty(v_resettle_processes.Filter))
+                Filter += " OR ";
+            else
+                Filter += "(1 = 1) OR ";
             switch (viewportState)
             {
                 case ViewportState.ReadState:
@@ -531,6 +536,8 @@ namespace Registry.Viewport
                         newRow = (DataRowView)v_resettle_processes.AddNew();
                     else
                         newRow = ((DataRowView)v_resettle_processes[v_resettle_processes.Position]);
+                    Filter += String.Format(CultureInfo.CurrentCulture, "(id_process = {0})", resettleProcess.IdProcess);
+                    v_resettle_processes.Filter += Filter;
                     FillRowFromResettleProcess(resettleProcess, newRow);
                     resettle_processes.EditingNewRecord = false;
                     break;
@@ -546,6 +553,8 @@ namespace Registry.Viewport
                         return;
                     DataRowView row = ((DataRowView)v_resettle_processes[v_resettle_processes.Position]);
                     is_editable = false;
+                    Filter += String.Format(CultureInfo.CurrentCulture, "(id_process = {0})", resettleProcess.IdProcess);
+                    v_resettle_processes.Filter += Filter;
                     FillRowFromResettleProcess(resettleProcess, row);
                     break;
             }

@@ -990,6 +990,11 @@ namespace Registry.Viewport
             TenancyProcess tenancy = TenancyFromViewport();
             if (!ValidateTenancy(tenancy))
                 return;
+            string Filter = "";
+            if (!String.IsNullOrEmpty(v_tenancies.Filter))
+                Filter += " OR ";
+            else
+                Filter += "(1 = 1) OR ";
             switch (viewportState)
             {
                 case ViewportState.ReadState:
@@ -1007,6 +1012,8 @@ namespace Registry.Viewport
                         newRow = (DataRowView)v_tenancies.AddNew();
                     else
                         newRow = ((DataRowView)v_tenancies[v_tenancies.Position]);
+                    Filter += String.Format(CultureInfo.CurrentCulture, "(id_process = {0})", tenancy.IdProcess);
+                    v_tenancies.Filter += Filter;
                     FillRowFromTenancy(tenancy, newRow);
                     if (ParentRow != null)
                     {
@@ -1070,6 +1077,8 @@ namespace Registry.Viewport
                         return;
                     DataRowView row = ((DataRowView)v_tenancies[v_tenancies.Position]);
                     is_editable = false;
+                    Filter += String.Format(CultureInfo.CurrentCulture, "(id_process = {0})", tenancy.IdProcess);
+                    v_tenancies.Filter += Filter;
                     FillRowFromTenancy(tenancy, row);
                     break;
             }

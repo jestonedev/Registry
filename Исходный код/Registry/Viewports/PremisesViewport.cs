@@ -1093,6 +1093,11 @@ namespace Registry.Viewport
                     return;
                 updateSubPremisesState = true;
             }
+            string Filter = "";
+            if (!String.IsNullOrEmpty(v_premises.Filter))
+                Filter += " OR ";
+            else
+                Filter += "(1 = 1) OR ";
             switch (viewportState)
             {
                 case ViewportState.ReadState:
@@ -1110,6 +1115,8 @@ namespace Registry.Viewport
                         newRow = (DataRowView)v_premises.AddNew();
                     else
                         newRow = ((DataRowView)v_premises[v_premises.Position]);
+                    Filter += String.Format(CultureInfo.CurrentCulture, "(id_premises = {0})", premise.IdPremises);
+                    v_premises.Filter += Filter;
                     FillRowFromPremise(premise, newRow);
                     premises.EditingNewRecord = false;
                     viewportState = ViewportState.ReadState;
@@ -1127,6 +1134,8 @@ namespace Registry.Viewport
                         return;
                     DataRowView row = ((DataRowView)v_premises[v_premises.Position]);
                     is_editable = false;
+                    Filter += String.Format(CultureInfo.CurrentCulture, "(id_premises = {0})", premise.IdPremises);
+                    v_premises.Filter += Filter;
                     FillRowFromPremise(premise, row);
                     if (updateSubPremisesState)
                     {
@@ -1916,10 +1925,6 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            SubPremisesEditor editor = new SubPremisesEditor();
-            editor.State = ViewportState.ModifyRowState;
-            editor.ParentType = ParentTypeEnum.Premises;
-            editor.ParentRow = ((DataRowView)v_premises[v_premises.Position]).Row;
             SubPremise subPremise = new SubPremise();
             DataRowView row = (DataRowView)v_sub_premises[v_sub_premises.Position];
             subPremise.IdSubPremises = (int?)row["id_sub_premises"];
@@ -1927,9 +1932,15 @@ namespace Registry.Viewport
             subPremise.IdState = (int?)row["id_state"];
             subPremise.SubPremisesNum = row["sub_premises_num"].ToString();
             subPremise.TotalArea = (double?)row["total_area"];
-            subPremise.Description = row["description"].ToString();     
-            editor.SubPremise_ = subPremise;
-            editor.ShowDialog();
+            subPremise.Description = row["description"].ToString();
+            using (SubPremisesEditor editor = new SubPremisesEditor())
+            {
+                editor.State = ViewportState.ModifyRowState;
+                editor.ParentType = ParentTypeEnum.Premises;
+                editor.ParentRow = ((DataRowView)v_premises[v_premises.Position]).Row;             
+                editor.SubPremise_ = subPremise;
+                editor.ShowDialog();
+            }
         }
 
         private void InitializeComponent()

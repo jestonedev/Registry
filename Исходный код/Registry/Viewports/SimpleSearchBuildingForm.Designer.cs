@@ -42,7 +42,7 @@
             this.textBoxCriteria.MaxLength = 255;
             this.textBoxCriteria.Name = "textBoxCriteria";
             this.textBoxCriteria.Size = new System.Drawing.Size(348, 21);
-            this.textBoxCriteria.TabIndex = 1;
+            this.textBoxCriteria.TabIndex = 0;
             // 
             // comboBoxCriteriaType
             // 
@@ -57,7 +57,7 @@
             this.comboBoxCriteriaType.Location = new System.Drawing.Point(10, 9);
             this.comboBoxCriteriaType.Name = "comboBoxCriteriaType";
             this.comboBoxCriteriaType.Size = new System.Drawing.Size(178, 23);
-            this.comboBoxCriteriaType.TabIndex = 0;
+            this.comboBoxCriteriaType.TabIndex = 1;
             // 
             // vButtonCancel
             // 
@@ -68,7 +68,7 @@
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
-            this.vButtonCancel.TabIndex = 3;
+            this.vButtonCancel.TabIndex = 4;
             this.vButtonCancel.Text = "Отмена";
             this.vButtonCancel.UseVisualStyleBackColor = false;
             this.vButtonCancel.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -81,7 +81,7 @@
             this.vButtonSearch.Name = "vButtonSearch";
             this.vButtonSearch.RoundedCornersMask = ((byte)(15));
             this.vButtonSearch.Size = new System.Drawing.Size(117, 35);
-            this.vButtonSearch.TabIndex = 2;
+            this.vButtonSearch.TabIndex = 3;
             this.vButtonSearch.Text = "Поиск";
             this.vButtonSearch.UseVisualStyleBackColor = false;
             this.vButtonSearch.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -93,7 +93,7 @@
             this.checkBoxMunicipalOnly.Location = new System.Drawing.Point(12, 46);
             this.checkBoxMunicipalOnly.Name = "checkBoxMunicipalOnly";
             this.checkBoxMunicipalOnly.Size = new System.Drawing.Size(163, 19);
-            this.checkBoxMunicipalOnly.TabIndex = 4;
+            this.checkBoxMunicipalOnly.TabIndex = 2;
             this.checkBoxMunicipalOnly.Text = "Только муниципальные";
             this.checkBoxMunicipalOnly.UseVisualStyleBackColor = true;
             // 
