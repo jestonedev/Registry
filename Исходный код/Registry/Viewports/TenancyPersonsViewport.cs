@@ -408,8 +408,14 @@ namespace Registry.Viewport
             tenancyPerson.RegistrationIdStreet = ViewportHelper.ValueOrNull(comboBoxRegistrationStreet);
             tenancyPerson.ResidenceIdStreet = ViewportHelper.ValueOrNull(comboBoxResidenceStreet);           
             tenancyPerson.Surname = ViewportHelper.ValueOrNull(textBoxSurname);
+            if (tenancyPerson.Surname != null)
+                tenancyPerson.Surname = tenancyPerson.Surname[0].ToString().ToUpper(CultureInfo.CurrentCulture) + tenancyPerson.Surname.Substring(1);
             tenancyPerson.Name = ViewportHelper.ValueOrNull(textBoxName);
+            if (tenancyPerson.Name != null)
+                tenancyPerson.Name = tenancyPerson.Name[0].ToString().ToUpper(CultureInfo.CurrentCulture) + tenancyPerson.Name.Substring(1);
             tenancyPerson.Patronymic = ViewportHelper.ValueOrNull(textBoxPatronymic);
+            if (tenancyPerson.Patronymic != null)
+                tenancyPerson.Patronymic = tenancyPerson.Patronymic[0].ToString().ToUpper(CultureInfo.CurrentCulture) + tenancyPerson.Patronymic.Substring(1);
             tenancyPerson.PersonalAccount = ViewportHelper.ValueOrNull(textBoxPersonalAccount);
             tenancyPerson.DocumentSeria = ViewportHelper.ValueOrNull(textBoxDocumentSeria);
             tenancyPerson.DocumentNum = ViewportHelper.ValueOrNull(textBoxDocumentNumber);
