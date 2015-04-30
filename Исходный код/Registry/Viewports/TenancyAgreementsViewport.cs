@@ -1665,5 +1665,12 @@ namespace Registry.Viewport
             this.ResumeLayout(false);
 
         }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Enter)
+                return false;
+            return base.ProcessCmdKey(ref msg, keyData);
+        }
     }
 }

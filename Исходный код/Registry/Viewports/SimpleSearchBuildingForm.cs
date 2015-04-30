@@ -112,5 +112,11 @@ namespace Registry.SearchForms
             }
             this.DialogResult = System.Windows.Forms.DialogResult.OK;
         }
+
+        private void comboBoxCriteriaType_DropDownClosed(object sender, EventArgs e)
+        {
+            textBoxCriteria.Focus();
+            textBoxCriteria.SelectAll();
+        }
     }
 }

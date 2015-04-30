@@ -1029,6 +1029,7 @@ namespace Registry.Viewport
                         if (!CopyTenancyProcessRelData(id_process, id_copy_process.Value))
                             MessageBox.Show("Произошла ошибка во время копирования данных", "Ошибка",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.TenancyProcess, id_process, false);
                     }
                     else
                         if (ParentRow != null)
@@ -1596,6 +1597,11 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
+        private void textBoxDescription_TextChanged_1(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
+        }
+
         void dateTimePickerEndDate_ValueChanged(object sender, EventArgs e)
         {
             CheckViewportModifications();
@@ -1818,6 +1824,7 @@ namespace Registry.Viewport
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.Size = new System.Drawing.Size(422, 59);
             this.textBoxDescription.TabIndex = 0;
+            this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxDescription_TextChanged_1);
             // 
             // groupBox22
             // 

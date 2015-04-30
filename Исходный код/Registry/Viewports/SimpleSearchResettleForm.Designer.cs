@@ -47,6 +47,7 @@
             this.comboBoxCriteriaType.Name = "comboBoxCriteriaType";
             this.comboBoxCriteriaType.Size = new System.Drawing.Size(178, 23);
             this.comboBoxCriteriaType.TabIndex = 0;
+            this.comboBoxCriteriaType.DropDownClosed += new System.EventHandler(this.comboBoxCriteriaType_DropDownClosed);
             // 
             // vButtonCancel
             // 

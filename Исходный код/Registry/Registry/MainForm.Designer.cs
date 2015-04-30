@@ -192,7 +192,7 @@ namespace Registry
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptPremise);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptSubPremise);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptSubPremises);
-            this.ribbon1.OrbDropDown.RecentItemsCaption = "Документы";
+            this.ribbon1.OrbDropDown.RecentItemsCaption = "Печать";
             this.ribbon1.OrbDropDown.Size = new System.Drawing.Size(527, 339);
             this.ribbon1.OrbDropDown.TabIndex = 0;
             this.ribbon1.OrbImage = null;

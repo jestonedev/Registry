@@ -996,6 +996,11 @@ namespace Registry
                     ribbonButtonTabsClose_Click(this, new EventArgs());
                 return true;
             }
+            if (keyData == Keys.Enter)
+            {
+                System.Windows.Forms.SendKeys.Send("{TAB}");
+                return true;
+            }
             return base.ProcessCmdKey(ref msg, keyData);
         }
     }
