@@ -20,14 +20,6 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridView dataGridView;
-        private DataGridViewTextBoxColumn id_premises;
-        private DataGridViewTextBoxColumn id_street;
-        private DataGridViewTextBoxColumn house;
-        private DataGridViewTextBoxColumn premises_num;
-        private DataGridViewComboBoxColumn id_premises_type;
-        private DataGridViewTextBoxColumn total_area;
-        private DataGridViewTextBoxColumn living_area;
-        private DataGridViewTextBoxColumn cadastral_num;
         #endregion Components
 
         #region Models
@@ -35,6 +27,9 @@ namespace Registry.Viewport
         private BuildingsDataModel buildings = null;
         private KladrStreetsDataModel kladr = null;
         private PremisesTypesDataModel premises_types = null;
+        private ObjectStatesDataModel object_states = null;
+        private CalcDataModelPremisesCurrentFunds premises_funds = null;
+        private FundTypesDataModel fund_types = null;
         #endregion Models
 
         #region Views
@@ -45,6 +40,14 @@ namespace Registry.Viewport
 
         //Forms
         private SearchForm spExtendedSearchForm = null;
+        private DataGridViewTextBoxColumn id_premises;
+        private DataGridViewTextBoxColumn id_street;
+        private DataGridViewTextBoxColumn house;
+        private DataGridViewTextBoxColumn premises_num;
+        private DataGridViewComboBoxColumn id_premises_type;
+        private DataGridViewTextBoxColumn total_area;
+        private DataGridViewTextBoxColumn id_state;
+        private DataGridViewTextBoxColumn current_fund;
         private SearchForm spSimpleSearchForm = null;
 
         private PremisesListViewport()
@@ -131,12 +134,18 @@ namespace Registry.Viewport
             kladr = KladrStreetsDataModel.GetInstance();
             buildings = BuildingsDataModel.GetInstance();
             premises_types = PremisesTypesDataModel.GetInstance();
+            object_states = ObjectStatesDataModel.GetInstance();
+            premises_funds = CalcDataModelPremisesCurrentFunds.GetInstance();
+            fund_types = FundTypesDataModel.GetInstance();
 
             // Ожидаем дозагрузки данных, если это необходимо
             premises.Select();
             kladr.Select();
             buildings.Select();
             premises_types.Select();
+            object_states.Select();
+            premises_funds.Select();
+            fund_types.Select();
 
             DataSet ds = DataSetManager.DataSet;
 
@@ -165,6 +174,7 @@ namespace Registry.Viewport
 
             premises.Select().RowChanged += new DataRowChangeEventHandler(PremisesListViewport_RowChanged);
             premises.Select().RowDeleted += new DataRowChangeEventHandler(PremisesListViewport_RowDeleted);
+            premises_funds.RefreshEvent += premises_funds_RefreshEvent;
             dataGridView.RowCount = v_premises.Count;
 
             ViewportHelper.SetDoubleBuffered(dataGridView);
@@ -436,6 +446,11 @@ namespace Registry.Viewport
                 OpenDetails();
         }
 
+        void premises_funds_RefreshEvent(object sender, EventArgs e)
+        {
+            dataGridView.Refresh();
+        }
+
         void PremisesListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             dataGridView.RowCount = v_premises.Count;
@@ -510,14 +525,18 @@ namespace Registry.Viewport
                 case "id_premises_type":
                     e.Value = row["id_premises_type"];
                     break;
-                case "cadastral_num":
-                    e.Value = row["cadastral_num"];
-                    break;
                 case "total_area":
                     e.Value = row["total_area"];
                     break;
-                case "living_area":
-                    e.Value = row["living_area"];
+                case "id_state":
+                    DataRow state_row = object_states.Select().Rows.Find(row["id_state"]);
+                    if (state_row != null)
+                        e.Value = state_row["state_female"];
+                    break;
+                case "current_fund":
+                    DataRow fund_row = premises_funds.Select().Rows.Find(row["id_premises"]);
+                    if (fund_row != null)
+                        e.Value = fund_types.Select().Rows.Find(fund_row["id_fund_type"])["fund_type"];
                     break;
             }
         }
@@ -550,7 +569,7 @@ namespace Registry.Viewport
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
-            if (dataGridView.Size.Width > 1120)
+            if (dataGridView.Size.Width > 1150)
             {
                 if (dataGridView.Columns["id_street"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     dataGridView.Columns["id_street"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -575,8 +594,8 @@ namespace Registry.Viewport
             this.premises_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_premises_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.living_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cadastral_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.current_fund = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -604,8 +623,8 @@ namespace Registry.Viewport
             this.premises_num,
             this.id_premises_type,
             this.total_area,
-            this.living_area,
-            this.cadastral_num});
+            this.id_state,
+            this.current_fund});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dataGridView.Location = new System.Drawing.Point(3, 3);
@@ -675,23 +694,22 @@ namespace Registry.Viewport
             this.total_area.ReadOnly = true;
             this.total_area.Width = 140;
             // 
-            // living_area
+            // id_state
             // 
-            dataGridViewCellStyle3.Format = "#0.0## м²";
-            this.living_area.DefaultCellStyle = dataGridViewCellStyle3;
-            this.living_area.HeaderText = "Жилая площадь";
-            this.living_area.MinimumWidth = 140;
-            this.living_area.Name = "living_area";
-            this.living_area.ReadOnly = true;
-            this.living_area.Width = 140;
+            this.id_state.DefaultCellStyle = dataGridViewCellStyle3;
+            this.id_state.HeaderText = "Текущее состояние";
+            this.id_state.MinimumWidth = 170;
+            this.id_state.Name = "id_state";
+            this.id_state.ReadOnly = true;
+            this.id_state.Width = 140;
             // 
-            // cadastral_num
+            // current_fund
             // 
-            this.cadastral_num.HeaderText = "Кадастровый номер";
-            this.cadastral_num.MinimumWidth = 170;
-            this.cadastral_num.Name = "cadastral_num";
-            this.cadastral_num.ReadOnly = true;
-            this.cadastral_num.Width = 170;
+            this.current_fund.HeaderText = "Текущий фонд";
+            this.current_fund.MinimumWidth = 170;
+            this.current_fund.Name = "current_fund";
+            this.current_fund.ReadOnly = true;
+            this.current_fund.Width = 170;
             // 
             // PremisesListViewport
             // 

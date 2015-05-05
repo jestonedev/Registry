@@ -491,6 +491,18 @@ namespace Registry.Viewport
 
         private bool ValidateTenancy(TenancyProcess tenancy)
         {
+            if (tenancy.IdRentType == null)
+            {
+                MessageBox.Show("Необходимо выбрать тип найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                comboBoxRentType.Focus();
+                return false;
+            }
+            if (tenancy.IdExecutor == null)
+            {
+                MessageBox.Show("Необходимо выбрать составителя договора", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                comboBoxExecutor.Focus();
+                return false;
+            }
             if (checkBoxContractEnable.Checked)
             {
                 if (tenancy.RegistrationNum == null)
@@ -517,18 +529,6 @@ namespace Registry.Viewport
                     textBoxResidenceWarrantNumber.Focus();
                     return false;
                 }
-            }
-            if (tenancy.IdExecutor == null)
-            {
-                MessageBox.Show("Необходимо выбрать составителя договора", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                comboBoxExecutor.Focus();
-                return false;
-            }
-            if (tenancy.IdRentType == null)
-            {
-                MessageBox.Show("Необходимо выбрать тип найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                comboBoxRentType.Focus();
-                return false;
             }
             TenancyProcess tenancyFromView = TenancyFromView();
             if (tenancy.RegistrationNum != tenancyFromView.RegistrationNum)
@@ -1349,13 +1349,13 @@ namespace Registry.Viewport
 
         public override bool HasTenancyContract17xReport()
         {
-            return (v_tenancies.Position > -1) &&
+            return (v_tenancies.Position > -1) && (((DataRowView)v_tenancies[v_tenancies.Position])["id_rent_type"] != DBNull.Value) &&
                 Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_rent_type"], CultureInfo.InvariantCulture) == 2;
         }
 
         public override bool HasTenancyContractReport()
         {
-            return (v_tenancies.Position > -1) && 
+            return (v_tenancies.Position > -1) && (((DataRowView)v_tenancies[v_tenancies.Position])["id_rent_type"] != DBNull.Value) && 
                 Convert.ToInt32(((DataRowView)v_tenancies[v_tenancies.Position])["id_rent_type"], CultureInfo.InvariantCulture) != 2;
         }
 

@@ -38,7 +38,6 @@ namespace Registry.DataModels
         protected override void ConfigureTable()
         {
             Table.PrimaryKey = new DataColumn[] { Table.Columns["id_process"] };
-            Table.Columns["id_rent_type"].DefaultValue = 1;
             Table.Columns["registration_date"].DefaultValue = DateTime.Now.Date;
         }
 
