@@ -4,7 +4,7 @@
  <Namespaces>
   <Namespace Name="Registry.Reporting.RegistryReporters">
    <Messages>
-    <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Status="Active" Created="2015-04-30 02:23:34Z" FixCategory="Breaking">
+    <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Status="Active" Created="2015-05-05 02:59:03Z" FixCategory="Breaking">
      <Issue Certainty="50" Level="Warning">Consider merging the types defined in 'Registry.Reporting.RegistryReporters' with another namespace.</Issue>
     </Message>
    </Messages>
@@ -21,10 +21,10 @@
          <Members>
           <Member Name="#CreateReporter(Registry.Reporting.ReporterType)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-04-30 02:23:34Z" FixCategory="Breaking">
+            <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-05-05 02:59:03Z" FixCategory="Breaking">
              <Issue Name="Method" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Reporting" File="ReporterFactory.cs" Line="17">'ReporterFactory.CreateReporter(ReporterType)' is coupled with 31 different types from 6 different namespaces. Rewrite or refactor the method to decrease its class coupling, or consider moving the method to one of the other types it is tightly coupled with. A class coupling above 40 indicates poor maintainability, a class coupling between 40 and 30 indicates moderate maintainability, and a class coupling below 30 indicates good maintainability.</Issue>
             </Message>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-04-30 02:23:34Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-05-05 02:59:03Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Reporting" File="ReporterFactory.cs" Line="17">'ReporterFactory.CreateReporter(ReporterType)' has a cyclomatic complexity of 28. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
@@ -33,7 +33,7 @@
         </Type>
         <Type Name="TenancyContractTypes" Kind="Enum" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="OnlyFlagsEnumsShouldHavePluralNames" Category="Microsoft.Naming" CheckId="CA1717" Status="Active" Created="2015-04-30 02:23:34Z" FixCategory="Breaking">
+          <Message TypeName="OnlyFlagsEnumsShouldHavePluralNames" Category="Microsoft.Naming" CheckId="CA1717" Status="Active" Created="2015-05-05 02:59:03Z" FixCategory="Breaking">
            <Issue Certainty="75" Level="Error">If the name 'TenancyContractTypes' is plural, change it to its singular form.</Issue>
           </Message>
          </Messages>
@@ -42,14 +42,14 @@
          <Members>
           <Member Name="#.ctor()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message Id="System.Int32.ToString" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Active" Created="2015-04-30 02:23:34Z" FixCategory="NonBreaking">
+            <Message Id="System.Int32.ToString" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Active" Created="2015-05-05 02:59:03Z" FixCategory="NonBreaking">
              <Issue Name="IFormatProviderAlternateString" Certainty="95" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\Reporting" File="TenancyNotifiesSettingsForm.cs" Line="85">Because the behavior of 'int.ToString()' could vary based on the current user's locale settings, replace this call in 'TenancyNotifiesSettingsForm.TenancyNotifiesSettingsForm()' with a call to 'int.ToString(IFormatProvider)'. If the result of 'int.ToString(IFormatProvider)' will be displayed to the user, specify 'CultureInfo.CurrentCulture' as the 'IFormatProvider' parameter. Otherwise, if the result will be stored and accessed by software, such as when it is persisted to disk or to a database, specify 'CultureInfo.InvariantCulture'.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#dataGridView_CellValueNeeded(System.Object,System.Windows.Forms.DataGridViewCellValueEventArgs)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message Id="registration_date" TypeName="VariableNamesShouldNotMatchFieldNames" Category="Microsoft.Maintainability" CheckId="CA1500" Status="Active" Created="2015-04-30 02:23:34Z" FixCategory="NonBreaking">
+            <Message Id="registration_date" TypeName="VariableNamesShouldNotMatchFieldNames" Category="Microsoft.Maintainability" CheckId="CA1500" Status="Active" Created="2015-05-05 02:59:03Z" FixCategory="NonBreaking">
              <Issue Name="Local" Certainty="95" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\Reporting" File="TenancyNotifiesSettingsForm.cs" Line="207">'registration_date', a variable declared in 'TenancyNotifiesSettingsForm.dataGridView_CellValueNeeded(object, DataGridViewCellValueEventArgs)', has the same name as an instance field on the type. Change the name of one of these items.</Issue>
             </Message>
            </Messages>
@@ -60,7 +60,7 @@
          <Members>
           <Member Name="#GetFilter()" Kind="Method" Static="False" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-04-30 02:23:34Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-05-05 02:59:03Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Reporting" File="TenancyStatisticFilterForm.cs" Line="80">'TenancyStatisticFilterForm.GetFilter()' has a cyclomatic complexity of 28. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
