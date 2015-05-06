@@ -85,7 +85,7 @@ namespace Registry.Viewport
         internal static DateTime? ValueOrNull(DateTimePicker control)
         {
             if (control.Checked)
-                return control.Value;
+                return control.Value.Date;
             else
                 return null;
         }

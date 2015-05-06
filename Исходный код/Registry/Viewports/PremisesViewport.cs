@@ -2032,6 +2032,7 @@ namespace Registry.Viewport
             this.panel3 = new System.Windows.Forms.Panel();
             this.dateTimePickerRegDate = new System.Windows.Forms.DateTimePicker();
             this.label4 = new System.Windows.Forms.Label();
+            this.checkBoxIsMemorial = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.numericUpDownNumRooms = new System.Windows.Forms.NumericUpDown();
             this.comboBoxPremisesType = new System.Windows.Forms.ComboBox();
@@ -2047,7 +2048,6 @@ namespace Registry.Viewport
             this.panel4 = new System.Windows.Forms.Panel();
             this.textBoxAccount = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.checkBoxIsMemorial = new System.Windows.Forms.CheckBox();
             this.comboBoxPremisesKind = new System.Windows.Forms.ComboBox();
             this.label28 = new System.Windows.Forms.Label();
             this.label39 = new System.Windows.Forms.Label();
@@ -2138,7 +2138,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 3;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 265F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 267F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -2149,7 +2149,7 @@ namespace Registry.Viewport
             // 
             this.groupBox13.Controls.Add(this.textBoxDescription);
             this.groupBox13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox13.Location = new System.Drawing.Point(3, 408);
+            this.groupBox13.Location = new System.Drawing.Point(3, 410);
             this.groupBox13.Name = "groupBox13";
             this.groupBox13.Size = new System.Drawing.Size(453, 74);
             this.groupBox13.TabIndex = 4;
@@ -2172,9 +2172,9 @@ namespace Registry.Viewport
             this.groupBox9.Controls.Add(this.panel1);
             this.groupBox9.Controls.Add(this.dataGridViewRestrictions);
             this.groupBox9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox9.Location = new System.Drawing.Point(3, 488);
+            this.groupBox9.Location = new System.Drawing.Point(3, 490);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(453, 174);
+            this.groupBox9.Size = new System.Drawing.Size(453, 172);
             this.groupBox9.TabIndex = 5;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Реквизиты";
@@ -2188,7 +2188,7 @@ namespace Registry.Viewport
             this.panel1.Location = new System.Drawing.Point(412, 17);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(38, 154);
+            this.panel1.Size = new System.Drawing.Size(38, 152);
             this.panel1.TabIndex = 1;
             // 
             // vButtonRestrictionEdit
@@ -2256,7 +2256,7 @@ namespace Registry.Viewport
             this.dataGridViewRestrictions.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewRestrictions.Name = "dataGridViewRestrictions";
             this.dataGridViewRestrictions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewRestrictions.Size = new System.Drawing.Size(408, 154);
+            this.dataGridViewRestrictions.Size = new System.Drawing.Size(408, 152);
             this.dataGridViewRestrictions.TabIndex = 0;
             this.dataGridViewRestrictions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewRestrictions_CellDoubleClick);
             this.dataGridViewRestrictions.Resize += new System.EventHandler(this.dataGridViewRestrictions_Resize);
@@ -2311,9 +2311,9 @@ namespace Registry.Viewport
             this.groupBox10.Controls.Add(this.panel2);
             this.groupBox10.Controls.Add(this.dataGridViewOwnerships);
             this.groupBox10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox10.Location = new System.Drawing.Point(462, 488);
+            this.groupBox10.Location = new System.Drawing.Point(462, 490);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(453, 174);
+            this.groupBox10.Size = new System.Drawing.Size(453, 172);
             this.groupBox10.TabIndex = 6;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Ограничения";
@@ -2327,7 +2327,7 @@ namespace Registry.Viewport
             this.panel2.Location = new System.Drawing.Point(412, 17);
             this.panel2.Margin = new System.Windows.Forms.Padding(0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(38, 154);
+            this.panel2.Size = new System.Drawing.Size(38, 152);
             this.panel2.TabIndex = 2;
             // 
             // vButtonOwnershipEdit
@@ -2395,7 +2395,7 @@ namespace Registry.Viewport
             this.dataGridViewOwnerships.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewOwnerships.Name = "dataGridViewOwnerships";
             this.dataGridViewOwnerships.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewOwnerships.Size = new System.Drawing.Size(408, 154);
+            this.dataGridViewOwnerships.Size = new System.Drawing.Size(408, 152);
             this.dataGridViewOwnerships.TabIndex = 0;
             this.dataGridViewOwnerships.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOwnerships_CellDoubleClick);
             this.dataGridViewOwnerships.Resize += new System.EventHandler(this.dataGridViewOwnerships_Resize);
@@ -2452,7 +2452,7 @@ namespace Registry.Viewport
             this.groupBox8.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox8.Location = new System.Drawing.Point(3, 3);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(912, 259);
+            this.groupBox8.Size = new System.Drawing.Size(912, 261);
             this.groupBox8.TabIndex = 0;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Общие сведения";
@@ -2470,7 +2470,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(906, 239);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(906, 241);
             this.tableLayoutPanel4.TabIndex = 0;
             // 
             // panel3
@@ -2492,14 +2492,14 @@ namespace Registry.Viewport
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 3);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(447, 233);
+            this.panel3.Size = new System.Drawing.Size(447, 235);
             this.panel3.TabIndex = 1;
             // 
             // dateTimePickerRegDate
             // 
             this.dateTimePickerRegDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerRegDate.Location = new System.Drawing.Point(169, 180);
+            this.dateTimePickerRegDate.Location = new System.Drawing.Point(169, 179);
             this.dateTimePickerRegDate.Name = "dateTimePickerRegDate";
             this.dateTimePickerRegDate.Size = new System.Drawing.Size(272, 21);
             this.dateTimePickerRegDate.TabIndex = 7;
@@ -2508,11 +2508,22 @@ namespace Registry.Viewport
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(10, 183);
+            this.label4.Location = new System.Drawing.Point(10, 182);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(114, 15);
             this.label4.TabIndex = 10;
             this.label4.Text = "Дата регистрации";
+            // 
+            // checkBoxIsMemorial
+            // 
+            this.checkBoxIsMemorial.AutoSize = true;
+            this.checkBoxIsMemorial.Location = new System.Drawing.Point(18, 208);
+            this.checkBoxIsMemorial.Name = "checkBoxIsMemorial";
+            this.checkBoxIsMemorial.Size = new System.Drawing.Size(141, 19);
+            this.checkBoxIsMemorial.TabIndex = 8;
+            this.checkBoxIsMemorial.Text = "Памятник культуры";
+            this.checkBoxIsMemorial.UseVisualStyleBackColor = true;
+            this.checkBoxIsMemorial.CheckedChanged += new System.EventHandler(this.checkBoxIsMemorial_CheckedChanged);
             // 
             // label1
             // 
@@ -2674,7 +2685,7 @@ namespace Registry.Viewport
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(456, 3);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(447, 233);
+            this.panel4.Size = new System.Drawing.Size(447, 235);
             this.panel4.TabIndex = 2;
             // 
             // textBoxAccount
@@ -2693,20 +2704,9 @@ namespace Registry.Viewport
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(16, 41);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(86, 15);
+            this.label5.Size = new System.Drawing.Size(116, 15);
             this.label5.TabIndex = 13;
-            this.label5.Text = "Лицевой счет";
-            // 
-            // checkBoxIsMemorial
-            // 
-            this.checkBoxIsMemorial.AutoSize = true;
-            this.checkBoxIsMemorial.Location = new System.Drawing.Point(19, 208);
-            this.checkBoxIsMemorial.Name = "checkBoxIsMemorial";
-            this.checkBoxIsMemorial.Size = new System.Drawing.Size(141, 19);
-            this.checkBoxIsMemorial.TabIndex = 7;
-            this.checkBoxIsMemorial.Text = "Памятник культуры";
-            this.checkBoxIsMemorial.UseVisualStyleBackColor = true;
-            this.checkBoxIsMemorial.CheckedChanged += new System.EventHandler(this.checkBoxIsMemorial_CheckedChanged);
+            this.label5.Text = "Лицевой счет ФКР";
             // 
             // comboBoxPremisesKind
             // 
@@ -2753,7 +2753,7 @@ namespace Registry.Viewport
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(16, 182);
+            this.label38.Location = new System.Drawing.Point(16, 183);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(90, 15);
             this.label38.TabIndex = 2;
@@ -2767,10 +2767,10 @@ namespace Registry.Viewport
             this.comboBoxCurrentFundType.Enabled = false;
             this.comboBoxCurrentFundType.ForeColor = System.Drawing.Color.Black;
             this.comboBoxCurrentFundType.FormattingEnabled = true;
-            this.comboBoxCurrentFundType.Location = new System.Drawing.Point(170, 178);
+            this.comboBoxCurrentFundType.Location = new System.Drawing.Point(170, 179);
             this.comboBoxCurrentFundType.Name = "comboBoxCurrentFundType";
             this.comboBoxCurrentFundType.Size = new System.Drawing.Size(272, 23);
-            this.comboBoxCurrentFundType.TabIndex = 6;
+            this.comboBoxCurrentFundType.TabIndex = 7;
             // 
             // numericUpDownBalanceCost
             // 
@@ -2851,7 +2851,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel5.Controls.Add(this.groupBox11, 0, 0);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 268);
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 270);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 1;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -2986,7 +2986,7 @@ namespace Registry.Viewport
             this.groupBoxRooms.Controls.Add(this.panel5);
             this.groupBoxRooms.Controls.Add(this.dataGridViewRooms);
             this.groupBoxRooms.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxRooms.Location = new System.Drawing.Point(462, 268);
+            this.groupBoxRooms.Location = new System.Drawing.Point(462, 270);
             this.groupBoxRooms.Name = "groupBoxRooms";
             this.tableLayoutPanel3.SetRowSpan(this.groupBoxRooms, 2);
             this.groupBoxRooms.Size = new System.Drawing.Size(453, 214);

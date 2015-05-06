@@ -258,7 +258,7 @@ namespace Registry.Viewport
         {
             if (comboBoxCurrentFundType.SelectedValue != null && v_buildings.Position != -1 &&
                 ((DataRowView)v_buildings[v_buildings.Position])["id_state"] != DBNull.Value &&
-                (int)((DataRowView)v_buildings[v_buildings.Position])["id_state"] != 3)
+                (new int[] { 1, 4, 5 }).Contains((int)((DataRowView)v_buildings[v_buildings.Position])["id_state"]))
             {
                 label19.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
