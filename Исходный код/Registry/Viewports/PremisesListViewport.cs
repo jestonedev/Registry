@@ -585,7 +585,6 @@ namespace Registry.Viewport
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PremisesListViewport));
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.id_premises = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -696,12 +695,11 @@ namespace Registry.Viewport
             // 
             // id_state
             // 
-            this.id_state.DefaultCellStyle = dataGridViewCellStyle3;
             this.id_state.HeaderText = "Текущее состояние";
             this.id_state.MinimumWidth = 170;
             this.id_state.Name = "id_state";
             this.id_state.ReadOnly = true;
-            this.id_state.Width = 140;
+            this.id_state.Width = 170;
             // 
             // current_fund
             // 
@@ -709,6 +707,7 @@ namespace Registry.Viewport
             this.current_fund.MinimumWidth = 170;
             this.current_fund.Name = "current_fund";
             this.current_fund.ReadOnly = true;
+            this.current_fund.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.current_fund.Width = 170;
             // 
             // PremisesListViewport

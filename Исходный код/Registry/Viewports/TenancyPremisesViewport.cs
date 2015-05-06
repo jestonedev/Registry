@@ -29,6 +29,9 @@ namespace Registry.Viewport
         private SubPremisesDataModel sub_premises = null;
         private TenancyPremisesAssocDataModel tenancy_premises = null;
         private DataTable snapshot_tenancy_premises = null;
+        private ObjectStatesDataModel object_states = null;
+        private CalcDataModelPremisesCurrentFunds premises_funds = null;
+        private FundTypesDataModel fund_types = null;
         #endregion Models
 
         #region Views
@@ -56,8 +59,8 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn premises_num;
         private DataGridViewComboBoxColumn id_premises_type;
         private DataGridViewTextBoxColumn total_area;
-        private DataGridViewTextBoxColumn living_area;
-        private DataGridViewTextBoxColumn cadastral_num;
+        private DataGridViewTextBoxColumn id_state;
+        private DataGridViewTextBoxColumn current_fund;
 
         //Идентификатор развернутого помещения
         private int id_expanded = -1;
@@ -246,6 +249,12 @@ namespace Registry.Viewport
             premises_types = PremisesTypesDataModel.GetInstance();
             sub_premises = SubPremisesDataModel.GetInstance();
             tenancy_premises = TenancyPremisesAssocDataModel.GetInstance();
+            object_states = ObjectStatesDataModel.GetInstance();
+            premises_funds = CalcDataModelPremisesCurrentFunds.GetInstance();
+            fund_types = FundTypesDataModel.GetInstance();
+            object_states.Select();
+            premises_funds.Select();
+            fund_types.Select();
 
             // Ожидаем дозагрузки данных, если это необходимо
             premises.Select();
@@ -319,6 +328,7 @@ namespace Registry.Viewport
             premises.Select().RowDeleted += new DataRowChangeEventHandler(PremisesListViewport_RowDeleted);
             tenancy_premises.Select().RowChanged += new DataRowChangeEventHandler(TenancyPremisesViewport_RowChanged);
             tenancy_premises.Select().RowDeleting += new DataRowChangeEventHandler(TenancyPremisesViewport_RowDeleting);
+            premises_funds.RefreshEvent += premises_funds_RefreshEvent;
 
             dataGridView.RowCount = v_premises.Count;
             ViewportHelper.SetDoubleBuffered(dataGridView);
@@ -688,6 +698,11 @@ namespace Registry.Viewport
                 ParentTypeEnum.Premises);
         }
 
+        void premises_funds_RefreshEvent(object sender, EventArgs e)
+        {
+            dataGridView.Refresh();
+        }
+        
         void v_premises_CurrentItemChanged(object sender, EventArgs e)
         {
             if (v_premises.Position == -1 || dataGridView.RowCount == 0)
@@ -800,7 +815,7 @@ namespace Registry.Viewport
                 width += dataGridView.Columns[i].Width;
             width += dataGridView.RowHeadersWidth;
             ((TenancySubPremisesDetails)dataGridView.DetailsControl).SetControlWidth(width);
-            if (dataGridView.Size.Width > 1500)
+            if (dataGridView.Size.Width > 1540)
             {
                 if (dataGridView.Columns["id_street"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     dataGridView.Columns["id_street"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -949,14 +964,18 @@ namespace Registry.Viewport
                 case "id_premises_type":
                     e.Value = row["id_premises_type"];
                     break;
-                case "cadastral_num":
-                    e.Value = row["cadastral_num"];
-                    break;
                 case "total_area":
                     e.Value = row["total_area"];
                     break;
-                case "living_area":
-                    e.Value = row["living_area"];
+                case "id_state":
+                    DataRow state_row = object_states.Select().Rows.Find(row["id_state"]);
+                    if (state_row != null)
+                        e.Value = state_row["state_female"];
+                    break;
+                case "current_fund":
+                    DataRow fund_row = premises_funds.Select().Rows.Find(row["id_premises"]);
+                    if (fund_row != null)
+                        e.Value = fund_types.Select().Rows.Find(fund_row["id_fund_type"])["fund_type"];
                     break;
             }
         }
@@ -1029,8 +1048,8 @@ namespace Registry.Viewport
             this.premises_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_premises_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.living_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.cadastral_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.current_fund = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -1062,8 +1081,8 @@ namespace Registry.Viewport
             this.premises_num,
             this.id_premises_type,
             this.total_area,
-            this.living_area,
-            this.cadastral_num});
+            this.id_state,
+            this.current_fund});
             dataGridViewCellStyle14.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle14.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             dataGridViewCellStyle14.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
@@ -1207,26 +1226,26 @@ namespace Registry.Viewport
             this.total_area.ReadOnly = true;
             this.total_area.Width = 130;
             // 
-            // living_area
+            // id_state
             // 
             dataGridViewCellStyle12.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            dataGridViewCellStyle12.Format = "#0.0## м²";
-            this.living_area.DefaultCellStyle = dataGridViewCellStyle12;
-            this.living_area.HeaderText = "Жилая площадь";
-            this.living_area.MinimumWidth = 130;
-            this.living_area.Name = "living_area";
-            this.living_area.ReadOnly = true;
-            this.living_area.Width = 130;
+            this.id_state.DefaultCellStyle = dataGridViewCellStyle12;
+            this.id_state.HeaderText = "Текущее состояние";
+            this.id_state.MinimumWidth = 170;
+            this.id_state.Name = "id_state";
+            this.id_state.ReadOnly = true;
+            this.id_state.Width = 170;
             // 
-            // cadastral_num
+            // current_fund
             // 
             dataGridViewCellStyle13.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
-            this.cadastral_num.DefaultCellStyle = dataGridViewCellStyle13;
-            this.cadastral_num.HeaderText = "Кадастровый номер";
-            this.cadastral_num.MinimumWidth = 170;
-            this.cadastral_num.Name = "cadastral_num";
-            this.cadastral_num.ReadOnly = true;
-            this.cadastral_num.Width = 170;
+            this.current_fund.DefaultCellStyle = dataGridViewCellStyle13;
+            this.current_fund.HeaderText = "Текущий фонд";
+            this.current_fund.MinimumWidth = 170;
+            this.current_fund.Name = "current_fund";
+            this.current_fund.ReadOnly = true;
+            this.current_fund.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.current_fund.Width = 170;
             // 
             // TenancyPremisesViewport
             // 
