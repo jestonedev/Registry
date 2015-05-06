@@ -20,13 +20,13 @@ namespace Registry.DataModels
                             (id_building, id_state, id_premises_kind, id_premises_type, premises_num, floor
                              , num_rooms, num_beds, total_area, living_area, height
                              , cadastral_num, cadastral_cost
-                             , balance_cost, description, reg_date, is_memorial)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                             , balance_cost, description, reg_date, is_memorial, account)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         private static string updateQuery = @"UPDATE premises SET id_building = ?, id_state = ?, id_premises_kind = ?, 
                             id_premises_type = ?,premises_num = ?, floor = ?, num_rooms = ?, num_beds = ?, 
                             total_area = ?, living_area = ?, height = ?, 
                             cadastral_num = ?, cadastral_cost = ?, 
-                            balance_cost = ?, description = ?, reg_date = ?, is_memorial = ? WHERE id_premises = ?";
+                            balance_cost = ?, description = ?, reg_date = ?, is_memorial = ?, account = ? WHERE id_premises = ?";
         private static string tableName = "premises";
         
         public bool EditingNewRecord { get; set; }
@@ -116,6 +116,7 @@ namespace Registry.DataModels
                 command.Parameters.Add(DBConnection.CreateParameter<string>("description", premise.Description));
                 command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("reg_date", premise.RegDate));
                 command.Parameters.Add(DBConnection.CreateParameter<bool?>("is_memorial", premise.IsMemorial));
+                command.Parameters.Add(DBConnection.CreateParameter<string>("account", premise.Account));
                 command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", premise.IdPremises));
                 try
                 {
@@ -162,7 +163,7 @@ namespace Registry.DataModels
                 command.Parameters.Add(DBConnection.CreateParameter<string>("description", premise.Description));
                 command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("reg_date", premise.RegDate));
                 command.Parameters.Add(DBConnection.CreateParameter<bool?>("is_memorial", premise.IsMemorial));
-
+                command.Parameters.Add(DBConnection.CreateParameter<string>("account", premise.Account));
                 try
                 {
                     connection.SqlBeginTransaction();

@@ -150,6 +150,8 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn ownership_description;
         private DataGridViewComboBoxColumn id_ownership_type;
         private DataGridViewTextBoxColumn ownership_relation;
+        private TextBox textBoxAccount;
+        private Label label5;
         private bool is_first_visibility = true;
 
         private PremisesViewport()
@@ -318,17 +320,19 @@ namespace Registry.Viewport
         {
             if (comboBoxCurrentFundType.SelectedValue != null && v_premises.Position != -1 &&
                 ((DataRowView)v_premises[v_premises.Position])["id_state"] != DBNull.Value &&
-                (int)((DataRowView)v_premises[v_premises.Position])["id_state"] != 3)
+                (new int[] { 1, 4, 5 }).Contains((int)((DataRowView)v_premises[v_premises.Position])["id_state"]))
             {
                 label38.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
-                checkBoxIsMemorial.Location = new System.Drawing.Point(19, 181);
+                checkBoxIsMemorial.Location = new System.Drawing.Point(19, 208);
+                tableLayoutPanel3.RowStyles[0].Height = 265F;
             }
             else
             {
                 label38.Visible = false;
                 comboBoxCurrentFundType.Visible = false;
-                checkBoxIsMemorial.Location = new System.Drawing.Point(19, 153);
+                checkBoxIsMemorial.Location = new System.Drawing.Point(19, 181);
+                tableLayoutPanel3.RowStyles[0].Height = 240F;
             }
         }
 
@@ -387,6 +391,8 @@ namespace Registry.Viewport
             textBoxCadastralNum.DataBindings.Add("Text", v_premises, "cadastral_num", true, DataSourceUpdateMode.Never, "");
             textBoxDescription.DataBindings.Clear();
             textBoxDescription.DataBindings.Add("Text", v_premises, "description", true, DataSourceUpdateMode.Never, "");
+            textBoxAccount.DataBindings.Clear();
+            textBoxAccount.DataBindings.Add("Text", v_premises, "account", true, DataSourceUpdateMode.Never, "");
             numericUpDownCadastralCost.DataBindings.Clear();
             numericUpDownCadastralCost.DataBindings.Add("Value", v_premises, "cadastral_cost", true, DataSourceUpdateMode.Never, 0);
             numericUpDownBalanceCost.DataBindings.Clear();
@@ -648,6 +654,7 @@ namespace Registry.Viewport
             premise.BalanceCost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost");
             premise.Description = ViewportHelper.ValueOrNull(row, "description");
             premise.IsMemorial = ViewportHelper.ValueOrNull<bool>(row, "is_memorial");
+            premise.Account = ViewportHelper.ValueOrNull(row, "account");
             premise.RegDate = ViewportHelper.ValueOrNull<DateTime>(row, "reg_date");
             return premise;
         }
@@ -675,6 +682,7 @@ namespace Registry.Viewport
             premise.BalanceCost = numericUpDownBalanceCost.Value;
             premise.Description = ViewportHelper.ValueOrNull(textBoxDescription);
             premise.IsMemorial = checkBoxIsMemorial.Checked;
+            premise.Account = ViewportHelper.ValueOrNull(textBoxAccount);
             premise.RegDate = ViewportHelper.ValueOrNull(dateTimePickerRegDate);
             return premise;
         }
@@ -707,6 +715,7 @@ namespace Registry.Viewport
             textBoxPremisesNumber.Text = premise.PremisesNum;
             textBoxCadastralNum.Text = premise.CadastralNum;
             textBoxDescription.Text = premise.Description;
+            textBoxAccount.Text = premise.Account;
         }
 
         private static void FillRowFromPremise(Premise premise, DataRowView row)
@@ -730,6 +739,7 @@ namespace Registry.Viewport
             row["description"] = ViewportHelper.ValueOrDBNull(premise.Description);
             row["reg_date"] = ViewportHelper.ValueOrDBNull(premise.RegDate);
             row["is_memorial"] = ViewportHelper.ValueOrDBNull(premise.IsMemorial);
+            row["account"] = ViewportHelper.ValueOrDBNull(premise.Account);
             row.EndEdit();
         }
 
@@ -1611,6 +1621,11 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
+        private void textBoxAccount_TextChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
+        }
+
         private void dateTimePickerRegDate_ValueChanged(object sender, EventArgs e)
         {
             CheckViewportModifications();
@@ -1994,12 +2009,24 @@ namespace Registry.Viewport
             this.vButtonRestrictionDelete = new VIBlend.WinForms.Controls.vButton();
             this.vButtonRestrictionAdd = new VIBlend.WinForms.Controls.vButton();
             this.dataGridViewRestrictions = new System.Windows.Forms.DataGridView();
+            this.id_restriction = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.restriction_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.restriction_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.restriction_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_restriction_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.restriction_relation = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox10 = new System.Windows.Forms.GroupBox();
             this.panel2 = new System.Windows.Forms.Panel();
             this.vButtonOwnershipEdit = new VIBlend.WinForms.Controls.vButton();
             this.vButtonOwnershipDelete = new VIBlend.WinForms.Controls.vButton();
             this.vButtonOwnershipAdd = new VIBlend.WinForms.Controls.vButton();
             this.dataGridViewOwnerships = new System.Windows.Forms.DataGridView();
+            this.id_ownership_right = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ownership_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ownership_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.ownership_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_ownership_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.ownership_relation = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
             this.panel3 = new System.Windows.Forms.Panel();
@@ -2018,6 +2045,8 @@ namespace Registry.Viewport
             this.comboBoxHouse = new System.Windows.Forms.ComboBox();
             this.label19 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.textBoxAccount = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.checkBoxIsMemorial = new System.Windows.Forms.CheckBox();
             this.comboBoxPremisesKind = new System.Windows.Forms.ComboBox();
             this.label28 = new System.Windows.Forms.Label();
@@ -2050,18 +2079,6 @@ namespace Registry.Viewport
             this.sub_premises_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sub_premises_total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sub_premises_id_state = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.id_restriction = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.restriction_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.restriction_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.restriction_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_restriction_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.restriction_relation = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_ownership_right = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ownership_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ownership_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.ownership_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_ownership_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.ownership_relation = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel3.SuspendLayout();
             this.groupBox13.SuspendLayout();
             this.groupBox9.SuspendLayout();
@@ -2121,18 +2138,18 @@ namespace Registry.Viewport
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 3;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 240F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 265F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(918, 627);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(918, 665);
             this.tableLayoutPanel3.TabIndex = 0;
             // 
             // groupBox13
             // 
             this.groupBox13.Controls.Add(this.textBoxDescription);
             this.groupBox13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox13.Location = new System.Drawing.Point(3, 383);
+            this.groupBox13.Location = new System.Drawing.Point(3, 408);
             this.groupBox13.Name = "groupBox13";
             this.groupBox13.Size = new System.Drawing.Size(453, 74);
             this.groupBox13.TabIndex = 4;
@@ -2155,9 +2172,9 @@ namespace Registry.Viewport
             this.groupBox9.Controls.Add(this.panel1);
             this.groupBox9.Controls.Add(this.dataGridViewRestrictions);
             this.groupBox9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox9.Location = new System.Drawing.Point(3, 463);
+            this.groupBox9.Location = new System.Drawing.Point(3, 488);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(453, 161);
+            this.groupBox9.Size = new System.Drawing.Size(453, 174);
             this.groupBox9.TabIndex = 5;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Реквизиты";
@@ -2171,7 +2188,7 @@ namespace Registry.Viewport
             this.panel1.Location = new System.Drawing.Point(412, 17);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(38, 141);
+            this.panel1.Size = new System.Drawing.Size(38, 154);
             this.panel1.TabIndex = 1;
             // 
             // vButtonRestrictionEdit
@@ -2239,19 +2256,64 @@ namespace Registry.Viewport
             this.dataGridViewRestrictions.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewRestrictions.Name = "dataGridViewRestrictions";
             this.dataGridViewRestrictions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewRestrictions.Size = new System.Drawing.Size(408, 141);
+            this.dataGridViewRestrictions.Size = new System.Drawing.Size(408, 154);
             this.dataGridViewRestrictions.TabIndex = 0;
             this.dataGridViewRestrictions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewRestrictions_CellDoubleClick);
             this.dataGridViewRestrictions.Resize += new System.EventHandler(this.dataGridViewRestrictions_Resize);
+            // 
+            // id_restriction
+            // 
+            this.id_restriction.HeaderText = "Идентификатор";
+            this.id_restriction.Name = "id_restriction";
+            this.id_restriction.Visible = false;
+            // 
+            // restriction_number
+            // 
+            this.restriction_number.HeaderText = "Номер";
+            this.restriction_number.MinimumWidth = 100;
+            this.restriction_number.Name = "restriction_number";
+            this.restriction_number.ReadOnly = true;
+            // 
+            // restriction_date
+            // 
+            this.restriction_date.HeaderText = "Дата";
+            this.restriction_date.MinimumWidth = 100;
+            this.restriction_date.Name = "restriction_date";
+            this.restriction_date.ReadOnly = true;
+            // 
+            // restriction_description
+            // 
+            this.restriction_description.HeaderText = "Наименование";
+            this.restriction_description.MinimumWidth = 200;
+            this.restriction_description.Name = "restriction_description";
+            this.restriction_description.ReadOnly = true;
+            this.restriction_description.Width = 200;
+            // 
+            // id_restriction_type
+            // 
+            this.id_restriction_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
+            this.id_restriction_type.HeaderText = "Тип права собственности";
+            this.id_restriction_type.MinimumWidth = 200;
+            this.id_restriction_type.Name = "id_restriction_type";
+            this.id_restriction_type.ReadOnly = true;
+            this.id_restriction_type.Width = 200;
+            // 
+            // restriction_relation
+            // 
+            this.restriction_relation.HeaderText = "Принадлежность";
+            this.restriction_relation.MinimumWidth = 150;
+            this.restriction_relation.Name = "restriction_relation";
+            this.restriction_relation.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.restriction_relation.Width = 150;
             // 
             // groupBox10
             // 
             this.groupBox10.Controls.Add(this.panel2);
             this.groupBox10.Controls.Add(this.dataGridViewOwnerships);
             this.groupBox10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox10.Location = new System.Drawing.Point(462, 463);
+            this.groupBox10.Location = new System.Drawing.Point(462, 488);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(453, 161);
+            this.groupBox10.Size = new System.Drawing.Size(453, 174);
             this.groupBox10.TabIndex = 6;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Ограничения";
@@ -2265,7 +2327,7 @@ namespace Registry.Viewport
             this.panel2.Location = new System.Drawing.Point(412, 17);
             this.panel2.Margin = new System.Windows.Forms.Padding(0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(38, 141);
+            this.panel2.Size = new System.Drawing.Size(38, 154);
             this.panel2.TabIndex = 2;
             // 
             // vButtonOwnershipEdit
@@ -2333,10 +2395,55 @@ namespace Registry.Viewport
             this.dataGridViewOwnerships.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewOwnerships.Name = "dataGridViewOwnerships";
             this.dataGridViewOwnerships.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewOwnerships.Size = new System.Drawing.Size(408, 141);
+            this.dataGridViewOwnerships.Size = new System.Drawing.Size(408, 154);
             this.dataGridViewOwnerships.TabIndex = 0;
             this.dataGridViewOwnerships.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOwnerships_CellDoubleClick);
             this.dataGridViewOwnerships.Resize += new System.EventHandler(this.dataGridViewOwnerships_Resize);
+            // 
+            // id_ownership_right
+            // 
+            this.id_ownership_right.HeaderText = "Идентификатор";
+            this.id_ownership_right.Name = "id_ownership_right";
+            this.id_ownership_right.Visible = false;
+            // 
+            // ownership_number
+            // 
+            this.ownership_number.HeaderText = "Номер";
+            this.ownership_number.MinimumWidth = 100;
+            this.ownership_number.Name = "ownership_number";
+            this.ownership_number.ReadOnly = true;
+            // 
+            // ownership_date
+            // 
+            this.ownership_date.HeaderText = "Дата";
+            this.ownership_date.MinimumWidth = 100;
+            this.ownership_date.Name = "ownership_date";
+            this.ownership_date.ReadOnly = true;
+            // 
+            // ownership_description
+            // 
+            this.ownership_description.HeaderText = "Наименование";
+            this.ownership_description.MinimumWidth = 200;
+            this.ownership_description.Name = "ownership_description";
+            this.ownership_description.ReadOnly = true;
+            this.ownership_description.Width = 200;
+            // 
+            // id_ownership_type
+            // 
+            this.id_ownership_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
+            this.id_ownership_type.HeaderText = "Тип ограничения";
+            this.id_ownership_type.MinimumWidth = 200;
+            this.id_ownership_type.Name = "id_ownership_type";
+            this.id_ownership_type.ReadOnly = true;
+            this.id_ownership_type.Width = 200;
+            // 
+            // ownership_relation
+            // 
+            this.ownership_relation.HeaderText = "Принадлежность";
+            this.ownership_relation.MinimumWidth = 150;
+            this.ownership_relation.Name = "ownership_relation";
+            this.ownership_relation.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.ownership_relation.Width = 150;
             // 
             // groupBox8
             // 
@@ -2345,7 +2452,7 @@ namespace Registry.Viewport
             this.groupBox8.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox8.Location = new System.Drawing.Point(3, 3);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(912, 234);
+            this.groupBox8.Size = new System.Drawing.Size(912, 259);
             this.groupBox8.TabIndex = 0;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Общие сведения";
@@ -2363,7 +2470,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(906, 214);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(906, 239);
             this.tableLayoutPanel4.TabIndex = 0;
             // 
             // panel3
@@ -2385,7 +2492,7 @@ namespace Registry.Viewport
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 3);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(447, 208);
+            this.panel3.Size = new System.Drawing.Size(447, 233);
             this.panel3.TabIndex = 1;
             // 
             // dateTimePickerRegDate
@@ -2549,6 +2656,8 @@ namespace Registry.Viewport
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.textBoxAccount);
+            this.panel4.Controls.Add(this.label5);
             this.panel4.Controls.Add(this.checkBoxIsMemorial);
             this.panel4.Controls.Add(this.comboBoxPremisesKind);
             this.panel4.Controls.Add(this.label28);
@@ -2565,16 +2674,36 @@ namespace Registry.Viewport
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(456, 3);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(447, 208);
+            this.panel4.Size = new System.Drawing.Size(447, 233);
             this.panel4.TabIndex = 2;
+            // 
+            // textBoxAccount
+            // 
+            this.textBoxAccount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxAccount.Location = new System.Drawing.Point(170, 38);
+            this.textBoxAccount.MaxLength = 20;
+            this.textBoxAccount.Name = "textBoxAccount";
+            this.textBoxAccount.Size = new System.Drawing.Size(272, 21);
+            this.textBoxAccount.TabIndex = 1;
+            this.textBoxAccount.TextChanged += new System.EventHandler(this.textBoxAccount_TextChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(16, 41);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(86, 15);
+            this.label5.TabIndex = 13;
+            this.label5.Text = "Лицевой счет";
             // 
             // checkBoxIsMemorial
             // 
             this.checkBoxIsMemorial.AutoSize = true;
-            this.checkBoxIsMemorial.Location = new System.Drawing.Point(19, 181);
+            this.checkBoxIsMemorial.Location = new System.Drawing.Point(19, 208);
             this.checkBoxIsMemorial.Name = "checkBoxIsMemorial";
             this.checkBoxIsMemorial.Size = new System.Drawing.Size(141, 19);
-            this.checkBoxIsMemorial.TabIndex = 6;
+            this.checkBoxIsMemorial.TabIndex = 7;
             this.checkBoxIsMemorial.Text = "Памятник культуры";
             this.checkBoxIsMemorial.UseVisualStyleBackColor = true;
             this.checkBoxIsMemorial.CheckedChanged += new System.EventHandler(this.checkBoxIsMemorial_CheckedChanged);
@@ -2585,16 +2714,16 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxPremisesKind.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxPremisesKind.FormattingEnabled = true;
-            this.comboBoxPremisesKind.Location = new System.Drawing.Point(170, 94);
+            this.comboBoxPremisesKind.Location = new System.Drawing.Point(170, 122);
             this.comboBoxPremisesKind.Name = "comboBoxPremisesKind";
             this.comboBoxPremisesKind.Size = new System.Drawing.Size(272, 23);
-            this.comboBoxPremisesKind.TabIndex = 3;
+            this.comboBoxPremisesKind.TabIndex = 4;
             this.comboBoxPremisesKind.SelectedIndexChanged += new System.EventHandler(this.comboBoxPremisesKind_SelectedIndexChanged);
             // 
             // label28
             // 
             this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(16, 98);
+            this.label28.Location = new System.Drawing.Point(16, 126);
             this.label28.Name = "label28";
             this.label28.Size = new System.Drawing.Size(99, 15);
             this.label28.TabIndex = 5;
@@ -2603,7 +2732,7 @@ namespace Registry.Viewport
             // label39
             // 
             this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(16, 126);
+            this.label39.Location = new System.Drawing.Point(16, 154);
             this.label39.Name = "label39";
             this.label39.Size = new System.Drawing.Size(119, 15);
             this.label39.TabIndex = 0;
@@ -2615,16 +2744,16 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxState.FormattingEnabled = true;
-            this.comboBoxState.Location = new System.Drawing.Point(170, 122);
+            this.comboBoxState.Location = new System.Drawing.Point(170, 150);
             this.comboBoxState.Name = "comboBoxState";
             this.comboBoxState.Size = new System.Drawing.Size(272, 23);
-            this.comboBoxState.TabIndex = 4;
+            this.comboBoxState.TabIndex = 5;
             this.comboBoxState.SelectedIndexChanged += new System.EventHandler(this.comboBoxState_SelectedIndexChanged);
             // 
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(16, 154);
+            this.label38.Location = new System.Drawing.Point(16, 182);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(90, 15);
             this.label38.TabIndex = 2;
@@ -2638,17 +2767,17 @@ namespace Registry.Viewport
             this.comboBoxCurrentFundType.Enabled = false;
             this.comboBoxCurrentFundType.ForeColor = System.Drawing.Color.Black;
             this.comboBoxCurrentFundType.FormattingEnabled = true;
-            this.comboBoxCurrentFundType.Location = new System.Drawing.Point(170, 150);
+            this.comboBoxCurrentFundType.Location = new System.Drawing.Point(170, 178);
             this.comboBoxCurrentFundType.Name = "comboBoxCurrentFundType";
             this.comboBoxCurrentFundType.Size = new System.Drawing.Size(272, 23);
-            this.comboBoxCurrentFundType.TabIndex = 5;
+            this.comboBoxCurrentFundType.TabIndex = 6;
             // 
             // numericUpDownBalanceCost
             // 
             this.numericUpDownBalanceCost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownBalanceCost.DecimalPlaces = 2;
-            this.numericUpDownBalanceCost.Location = new System.Drawing.Point(170, 67);
+            this.numericUpDownBalanceCost.Location = new System.Drawing.Point(170, 95);
             this.numericUpDownBalanceCost.Maximum = new decimal(new int[] {
             1410065407,
             2,
@@ -2656,14 +2785,14 @@ namespace Registry.Viewport
             0});
             this.numericUpDownBalanceCost.Name = "numericUpDownBalanceCost";
             this.numericUpDownBalanceCost.Size = new System.Drawing.Size(272, 21);
-            this.numericUpDownBalanceCost.TabIndex = 2;
+            this.numericUpDownBalanceCost.TabIndex = 3;
             this.numericUpDownBalanceCost.ThousandsSeparator = true;
             this.numericUpDownBalanceCost.ValueChanged += new System.EventHandler(this.numericUpDownBalanceCost_ValueChanged);
             // 
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(16, 70);
+            this.label22.Location = new System.Drawing.Point(16, 98);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(143, 15);
             this.label22.TabIndex = 9;
@@ -2685,7 +2814,7 @@ namespace Registry.Viewport
             this.numericUpDownCadastralCost.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownCadastralCost.DecimalPlaces = 2;
-            this.numericUpDownCadastralCost.Location = new System.Drawing.Point(170, 38);
+            this.numericUpDownCadastralCost.Location = new System.Drawing.Point(170, 68);
             this.numericUpDownCadastralCost.Maximum = new decimal(new int[] {
             1410065407,
             2,
@@ -2693,7 +2822,7 @@ namespace Registry.Viewport
             0});
             this.numericUpDownCadastralCost.Name = "numericUpDownCadastralCost";
             this.numericUpDownCadastralCost.Size = new System.Drawing.Size(272, 21);
-            this.numericUpDownCadastralCost.TabIndex = 1;
+            this.numericUpDownCadastralCost.TabIndex = 2;
             this.numericUpDownCadastralCost.ThousandsSeparator = true;
             this.numericUpDownCadastralCost.ValueChanged += new System.EventHandler(this.numericUpDownCadastralCost_ValueChanged);
             // 
@@ -2709,7 +2838,7 @@ namespace Registry.Viewport
             // label24
             // 
             this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(16, 41);
+            this.label24.Location = new System.Drawing.Point(16, 70);
             this.label24.Name = "label24";
             this.label24.Size = new System.Drawing.Size(150, 15);
             this.label24.TabIndex = 11;
@@ -2722,7 +2851,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel5.Controls.Add(this.groupBox11, 0, 0);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 243);
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 268);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 1;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -2857,7 +2986,7 @@ namespace Registry.Viewport
             this.groupBoxRooms.Controls.Add(this.panel5);
             this.groupBoxRooms.Controls.Add(this.dataGridViewRooms);
             this.groupBoxRooms.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxRooms.Location = new System.Drawing.Point(462, 243);
+            this.groupBoxRooms.Location = new System.Drawing.Point(462, 268);
             this.groupBoxRooms.Name = "groupBoxRooms";
             this.tableLayoutPanel3.SetRowSpan(this.groupBoxRooms, 2);
             this.groupBoxRooms.Size = new System.Drawing.Size(453, 214);
@@ -2972,102 +3101,12 @@ namespace Registry.Viewport
             this.sub_premises_id_state.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.sub_premises_id_state.Width = 150;
             // 
-            // id_restriction
-            // 
-            this.id_restriction.HeaderText = "Идентификатор";
-            this.id_restriction.Name = "id_restriction";
-            this.id_restriction.Visible = false;
-            // 
-            // restriction_number
-            // 
-            this.restriction_number.HeaderText = "Номер";
-            this.restriction_number.MinimumWidth = 100;
-            this.restriction_number.Name = "restriction_number";
-            this.restriction_number.ReadOnly = true;
-            // 
-            // restriction_date
-            // 
-            this.restriction_date.HeaderText = "Дата";
-            this.restriction_date.MinimumWidth = 100;
-            this.restriction_date.Name = "restriction_date";
-            this.restriction_date.ReadOnly = true;
-            // 
-            // restriction_description
-            // 
-            this.restriction_description.HeaderText = "Наименование";
-            this.restriction_description.MinimumWidth = 200;
-            this.restriction_description.Name = "restriction_description";
-            this.restriction_description.ReadOnly = true;
-            this.restriction_description.Width = 200;
-            // 
-            // id_restriction_type
-            // 
-            this.id_restriction_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
-            this.id_restriction_type.HeaderText = "Тип права собственности";
-            this.id_restriction_type.MinimumWidth = 200;
-            this.id_restriction_type.Name = "id_restriction_type";
-            this.id_restriction_type.ReadOnly = true;
-            this.id_restriction_type.Width = 200;
-            // 
-            // restriction_relation
-            // 
-            this.restriction_relation.HeaderText = "Принадлежность";
-            this.restriction_relation.MinimumWidth = 150;
-            this.restriction_relation.Name = "restriction_relation";
-            this.restriction_relation.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.restriction_relation.Width = 150;
-            // 
-            // id_ownership_right
-            // 
-            this.id_ownership_right.HeaderText = "Идентификатор";
-            this.id_ownership_right.Name = "id_ownership_right";
-            this.id_ownership_right.Visible = false;
-            // 
-            // ownership_number
-            // 
-            this.ownership_number.HeaderText = "Номер";
-            this.ownership_number.MinimumWidth = 100;
-            this.ownership_number.Name = "ownership_number";
-            this.ownership_number.ReadOnly = true;
-            // 
-            // ownership_date
-            // 
-            this.ownership_date.HeaderText = "Дата";
-            this.ownership_date.MinimumWidth = 100;
-            this.ownership_date.Name = "ownership_date";
-            this.ownership_date.ReadOnly = true;
-            // 
-            // ownership_description
-            // 
-            this.ownership_description.HeaderText = "Наименование";
-            this.ownership_description.MinimumWidth = 200;
-            this.ownership_description.Name = "ownership_description";
-            this.ownership_description.ReadOnly = true;
-            this.ownership_description.Width = 200;
-            // 
-            // id_ownership_type
-            // 
-            this.id_ownership_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
-            this.id_ownership_type.HeaderText = "Тип ограничения";
-            this.id_ownership_type.MinimumWidth = 200;
-            this.id_ownership_type.Name = "id_ownership_type";
-            this.id_ownership_type.ReadOnly = true;
-            this.id_ownership_type.Width = 200;
-            // 
-            // ownership_relation
-            // 
-            this.ownership_relation.HeaderText = "Принадлежность";
-            this.ownership_relation.MinimumWidth = 150;
-            this.ownership_relation.Name = "ownership_relation";
-            this.ownership_relation.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.ownership_relation.Width = 150;
-            // 
             // PremisesViewport
             // 
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(665, 580);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(924, 633);
+            this.ClientSize = new System.Drawing.Size(924, 671);
             this.Controls.Add(this.tableLayoutPanel3);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

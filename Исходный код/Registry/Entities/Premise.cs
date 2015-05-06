@@ -23,9 +23,9 @@ namespace Registry.Entities
         public decimal? CadastralCost { get; set; }
         public decimal? BalanceCost { get; set; }
         public string Description { get; set; }
-
         public DateTime? RegDate { get; set; }
         public bool? IsMemorial { get; set; }
+        public string Account { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -62,7 +62,8 @@ namespace Registry.Entities
                 first.BalanceCost == second.BalanceCost &&
                 first.IdState == second.IdState &&
                 first.RegDate == second.RegDate &&
-                first.IsMemorial == second.IsMemorial;
+                first.IsMemorial == second.IsMemorial &&
+                first.Account == second.Account;
         }
 
         public static bool operator !=(Premise first, Premise second)
