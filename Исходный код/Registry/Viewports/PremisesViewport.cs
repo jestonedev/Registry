@@ -152,6 +152,8 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn ownership_relation;
         private TextBox textBoxAccount;
         private Label label5;
+        private DateTimePicker dateTimePickerStateDate;
+        private Label label6;
         private bool is_first_visibility = true;
 
         private PremisesViewport()
@@ -324,15 +326,11 @@ namespace Registry.Viewport
             {
                 label38.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
-                checkBoxIsMemorial.Location = new System.Drawing.Point(19, 208);
-                tableLayoutPanel3.RowStyles[0].Height = 265F;
             }
             else
             {
                 label38.Visible = false;
                 comboBoxCurrentFundType.Visible = false;
-                checkBoxIsMemorial.Location = new System.Drawing.Point(19, 181);
-                tableLayoutPanel3.RowStyles[0].Height = 240F;
             }
         }
 
@@ -362,6 +360,18 @@ namespace Registry.Viewport
                     comboBoxHouse.SelectedValue = id_building;
                 else
                     comboBoxHouse.SelectedValue = DBNull.Value;
+            }
+        }
+
+        private void UnbindedCheckBoxesUpdate()
+        {
+            DataRowView row = (v_premises.Position >= 0) ? (DataRowView)v_premises[v_premises.Position] : null;
+            if ((v_premises.Position >= 0) && (row["state_date"] != DBNull.Value))
+                dateTimePickerStateDate.Checked = true;
+            else
+            {
+                dateTimePickerStateDate.Value = DateTime.Now.Date;
+                dateTimePickerStateDate.Checked = false;
             }
         }
 
@@ -423,6 +433,9 @@ namespace Registry.Viewport
 
             dateTimePickerRegDate.DataBindings.Clear();
             dateTimePickerRegDate.DataBindings.Add("Value", v_premises, "reg_date", true, DataSourceUpdateMode.Never, null);
+
+            dateTimePickerStateDate.DataBindings.Clear();
+            dateTimePickerStateDate.DataBindings.Add("Value", v_premises, "state_date", true, DataSourceUpdateMode.Never, null);
 
             dataGridViewRestrictions.DataSource = v_restrictions;
             id_restriction.DataPropertyName = "id_restriction";
@@ -557,7 +570,8 @@ namespace Registry.Viewport
                 if (viewportState == ViewportState.ModifyRowState)
                     viewportState = ViewportState.ReadState;
             }
-            MenuCallback.EditingStateUpdate();
+            if (Selected)
+                MenuCallback.EditingStateUpdate();
         }
 
         public void LocatePremisesBy(int id)
@@ -656,6 +670,7 @@ namespace Registry.Viewport
             premise.IsMemorial = ViewportHelper.ValueOrNull<bool>(row, "is_memorial");
             premise.Account = ViewportHelper.ValueOrNull(row, "account");
             premise.RegDate = ViewportHelper.ValueOrNull<DateTime>(row, "reg_date");
+            premise.StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date");
             return premise;
         }
 
@@ -684,6 +699,7 @@ namespace Registry.Viewport
             premise.IsMemorial = checkBoxIsMemorial.Checked;
             premise.Account = ViewportHelper.ValueOrNull(textBoxAccount);
             premise.RegDate = ViewportHelper.ValueOrNull(dateTimePickerRegDate);
+            premise.StateDate = ViewportHelper.ValueOrNull(dateTimePickerStateDate);
             return premise;
         }
 
@@ -711,6 +727,7 @@ namespace Registry.Viewport
             numericUpDownLivingArea.Value = (decimal)ViewportHelper.ValueOrDefault(premise.LivingArea);
             numericUpDownTotalArea.Value = (decimal)ViewportHelper.ValueOrDefault(premise.TotalArea);
             dateTimePickerRegDate.Value = ViewportHelper.ValueOrDefault(premise.RegDate);
+            dateTimePickerStateDate.Value = ViewportHelper.ValueOrDefault(premise.StateDate);
             checkBoxIsMemorial.Checked = ViewportHelper.ValueOrDefault(premise.IsMemorial);
             textBoxPremisesNumber.Text = premise.PremisesNum;
             textBoxCadastralNum.Text = premise.CadastralNum;
@@ -740,6 +757,7 @@ namespace Registry.Viewport
             row["reg_date"] = ViewportHelper.ValueOrDBNull(premise.RegDate);
             row["is_memorial"] = ViewportHelper.ValueOrDBNull(premise.IsMemorial);
             row["account"] = ViewportHelper.ValueOrDBNull(premise.Account);
+            row["state_date"] = ViewportHelper.ValueOrDBNull(premise.StateDate);
             row.EndEdit();
         }
 
@@ -1002,6 +1020,7 @@ namespace Registry.Viewport
             v_premises.AddNew();
             is_editable = true;
             premises.EditingNewRecord = true;
+            UnbindedCheckBoxesUpdate();
         }
 
         public override bool CanSearchRecord()
@@ -1121,12 +1140,15 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             Premise premise = PremiseFromViewport();
+            Premise premiseFromView = PremiseFromView();
             bool updateSubPremisesState = false;
             if (!ValidatePremise(premise))
                 return;
-            if ((viewportState == ViewportState.ModifyRowState) && (premise.IdState != PremiseFromView().IdState) && (premise.IdState != 1))
+            if ((viewportState == ViewportState.ModifyRowState) && (premise.IdState != premiseFromView.IdState || premise.StateDate != premiseFromView.StateDate) 
+                && (premise.IdState != 1))
             {
-                if (MessageBox.Show("Вы пытаетесь изменить состояние помещения. В результате всем комнатам данного помещения будет назначено то же состояние. " +
+                if (MessageBox.Show("Вы пытаетесь изменить состояние помещения или дату установки состояния. "+
+                    "В результате всем комнатам данного помещения будет назначено то же состояние. " +
                     "Вы уверены, что хотите сохранить данные?", "Внимание",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                     return;
@@ -1182,6 +1204,7 @@ namespace Registry.Viewport
                         {
                             DataRowView subPremiseRow = (DataRowView)v_sub_premises[i];
                             subPremiseRow["id_state"] = premise.IdState;
+                            subPremiseRow["state_date"] = ViewportHelper.ValueOrDBNull(premise.StateDate);
                             subPremiseRow.EndEdit();
                         }
                     }
@@ -1190,6 +1213,7 @@ namespace Registry.Viewport
                     CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
                     break;
             }
+            UnbindedCheckBoxesUpdate();
             is_editable = true;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
@@ -1226,6 +1250,7 @@ namespace Registry.Viewport
                     viewportState = ViewportState.ReadState;
                     break;
             }
+            UnbindedCheckBoxesUpdate();
             is_editable = true;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
@@ -1384,6 +1409,7 @@ namespace Registry.Viewport
         {
             RedrawRestrictionDataGridRows();
             RedrawOwnershipDataGridRows();
+            UnbindedCheckBoxesUpdate();
             base.OnVisibleChanged(e);
         }
 
@@ -1404,6 +1430,8 @@ namespace Registry.Viewport
 
         void PremisesViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
+            if (e.Action == DataRowAction.Delete)
+                UnbindedCheckBoxesUpdate();
             MenuCallback.ForceCloseDetachedViewports();
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
@@ -1412,8 +1440,10 @@ namespace Registry.Viewport
         void PremisesViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             ShowOrHideCurrentFund();
+            UnbindedCheckBoxesUpdate();
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
+            CheckViewportModifications();
         }
 
         private void ownershipBuildingsAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
@@ -1616,6 +1646,11 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
+        private void dateTimePickerStateDate_ValueChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
+        }
+
         void textBoxPremisesNumber_TextChanged(object sender, EventArgs e)
         {
             CheckViewportModifications();
@@ -1647,6 +1682,7 @@ namespace Registry.Viewport
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.RelationsStateUpdate();
             }
+            UnbindedCheckBoxesUpdate();
             if (v_premises.Position == -1)
                 return;
             if (viewportState == ViewportState.NewRowState)
@@ -1772,10 +1808,10 @@ namespace Registry.Viewport
             }
             Restriction restriction = new Restriction();
             DataRowView row = (DataRowView)v_restrictions[v_restrictions.Position];
-            restriction.IdRestriction = (int?)row["id_restriction"];
-            restriction.IdRestrictionType = (int?)row["id_restriction_type"];
+            restriction.IdRestriction = ViewportHelper.ValueOrNull<int>(row, "id_restriction");
+            restriction.IdRestrictionType = ViewportHelper.ValueOrNull<int>(row, "id_restriction_type");
             restriction.Number = row["number"].ToString();
-            restriction.Date = (DateTime?)row["date"];
+            restriction.Date = ViewportHelper.ValueOrNull<DateTime>(row, "date");
             restriction.Description = row["description"].ToString();
             using (RestrictionsEditor editor = new RestrictionsEditor())
             {
@@ -1886,10 +1922,10 @@ namespace Registry.Viewport
             }
             OwnershipRight ownershipRight = new OwnershipRight();
             DataRowView row = (DataRowView)v_ownershipRights[v_ownershipRights.Position];
-            ownershipRight.IdOwnershipRight = (int?)row["id_ownership_right"];
-            ownershipRight.IdOwnershipRightType = (int?)row["id_ownership_right_type"];
+            ownershipRight.IdOwnershipRight = ViewportHelper.ValueOrNull<int>(row, "id_ownership_right");
+            ownershipRight.IdOwnershipRightType = ViewportHelper.ValueOrNull<int>(row, "id_ownership_right_type");
             ownershipRight.Number = row["number"].ToString();
-            ownershipRight.Date = (DateTime?)row["date"];
+            ownershipRight.Date = ViewportHelper.ValueOrNull<DateTime>(row, "date");
             ownershipRight.Description = row["description"].ToString();
             using (OwnershipsEditor editor = new OwnershipsEditor())
             {
@@ -1978,12 +2014,13 @@ namespace Registry.Viewport
             }
             SubPremise subPremise = new SubPremise();
             DataRowView row = (DataRowView)v_sub_premises[v_sub_premises.Position];
-            subPremise.IdSubPremises = (int?)row["id_sub_premises"];
-            subPremise.IdPremises = (int?)row["id_premises"];
-            subPremise.IdState = (int?)row["id_state"];
+            subPremise.IdSubPremises = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises");
+            subPremise.IdPremises = ViewportHelper.ValueOrNull<int>(row, "id_premises");
+            subPremise.IdState = ViewportHelper.ValueOrNull<int>(row, "id_state");
             subPremise.SubPremisesNum = row["sub_premises_num"].ToString();
-            subPremise.TotalArea = (double?)row["total_area"];
+            subPremise.TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area");
             subPremise.Description = row["description"].ToString();
+            subPremise.StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date");
             using (SubPremisesEditor editor = new SubPremisesEditor())
             {
                 editor.State = ViewportState.ModifyRowState;
@@ -2046,6 +2083,8 @@ namespace Registry.Viewport
             this.comboBoxHouse = new System.Windows.Forms.ComboBox();
             this.label19 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
+            this.dateTimePickerStateDate = new System.Windows.Forms.DateTimePicker();
+            this.label6 = new System.Windows.Forms.Label();
             this.textBoxAccount = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.comboBoxPremisesKind = new System.Windows.Forms.ComboBox();
@@ -2138,7 +2177,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.RowCount = 3;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 267F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 269F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 80F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -2149,7 +2188,7 @@ namespace Registry.Viewport
             // 
             this.groupBox13.Controls.Add(this.textBoxDescription);
             this.groupBox13.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox13.Location = new System.Drawing.Point(3, 410);
+            this.groupBox13.Location = new System.Drawing.Point(3, 412);
             this.groupBox13.Name = "groupBox13";
             this.groupBox13.Size = new System.Drawing.Size(453, 74);
             this.groupBox13.TabIndex = 4;
@@ -2172,9 +2211,9 @@ namespace Registry.Viewport
             this.groupBox9.Controls.Add(this.panel1);
             this.groupBox9.Controls.Add(this.dataGridViewRestrictions);
             this.groupBox9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox9.Location = new System.Drawing.Point(3, 490);
+            this.groupBox9.Location = new System.Drawing.Point(3, 492);
             this.groupBox9.Name = "groupBox9";
-            this.groupBox9.Size = new System.Drawing.Size(453, 172);
+            this.groupBox9.Size = new System.Drawing.Size(453, 170);
             this.groupBox9.TabIndex = 5;
             this.groupBox9.TabStop = false;
             this.groupBox9.Text = "Реквизиты";
@@ -2188,7 +2227,7 @@ namespace Registry.Viewport
             this.panel1.Location = new System.Drawing.Point(412, 17);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(38, 152);
+            this.panel1.Size = new System.Drawing.Size(38, 150);
             this.panel1.TabIndex = 1;
             // 
             // vButtonRestrictionEdit
@@ -2256,7 +2295,7 @@ namespace Registry.Viewport
             this.dataGridViewRestrictions.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewRestrictions.Name = "dataGridViewRestrictions";
             this.dataGridViewRestrictions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewRestrictions.Size = new System.Drawing.Size(408, 152);
+            this.dataGridViewRestrictions.Size = new System.Drawing.Size(408, 150);
             this.dataGridViewRestrictions.TabIndex = 0;
             this.dataGridViewRestrictions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewRestrictions_CellDoubleClick);
             this.dataGridViewRestrictions.Resize += new System.EventHandler(this.dataGridViewRestrictions_Resize);
@@ -2311,9 +2350,9 @@ namespace Registry.Viewport
             this.groupBox10.Controls.Add(this.panel2);
             this.groupBox10.Controls.Add(this.dataGridViewOwnerships);
             this.groupBox10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox10.Location = new System.Drawing.Point(462, 490);
+            this.groupBox10.Location = new System.Drawing.Point(462, 492);
             this.groupBox10.Name = "groupBox10";
-            this.groupBox10.Size = new System.Drawing.Size(453, 172);
+            this.groupBox10.Size = new System.Drawing.Size(453, 170);
             this.groupBox10.TabIndex = 6;
             this.groupBox10.TabStop = false;
             this.groupBox10.Text = "Ограничения";
@@ -2327,7 +2366,7 @@ namespace Registry.Viewport
             this.panel2.Location = new System.Drawing.Point(412, 17);
             this.panel2.Margin = new System.Windows.Forms.Padding(0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(38, 152);
+            this.panel2.Size = new System.Drawing.Size(38, 150);
             this.panel2.TabIndex = 2;
             // 
             // vButtonOwnershipEdit
@@ -2395,7 +2434,7 @@ namespace Registry.Viewport
             this.dataGridViewOwnerships.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewOwnerships.Name = "dataGridViewOwnerships";
             this.dataGridViewOwnerships.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewOwnerships.Size = new System.Drawing.Size(408, 152);
+            this.dataGridViewOwnerships.Size = new System.Drawing.Size(408, 150);
             this.dataGridViewOwnerships.TabIndex = 0;
             this.dataGridViewOwnerships.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOwnerships_CellDoubleClick);
             this.dataGridViewOwnerships.Resize += new System.EventHandler(this.dataGridViewOwnerships_Resize);
@@ -2452,7 +2491,7 @@ namespace Registry.Viewport
             this.groupBox8.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox8.Location = new System.Drawing.Point(3, 3);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(912, 261);
+            this.groupBox8.Size = new System.Drawing.Size(912, 263);
             this.groupBox8.TabIndex = 0;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Общие сведения";
@@ -2470,13 +2509,14 @@ namespace Registry.Viewport
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(906, 241);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(906, 243);
             this.tableLayoutPanel4.TabIndex = 0;
             // 
             // panel3
             // 
             this.panel3.Controls.Add(this.dateTimePickerRegDate);
             this.panel3.Controls.Add(this.label4);
+            this.panel3.Controls.Add(this.checkBoxIsMemorial);
             this.panel3.Controls.Add(this.label1);
             this.panel3.Controls.Add(this.numericUpDownNumRooms);
             this.panel3.Controls.Add(this.comboBoxPremisesType);
@@ -2492,7 +2532,7 @@ namespace Registry.Viewport
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 3);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(447, 235);
+            this.panel3.Size = new System.Drawing.Size(447, 237);
             this.panel3.TabIndex = 1;
             // 
             // dateTimePickerRegDate
@@ -2517,7 +2557,7 @@ namespace Registry.Viewport
             // checkBoxIsMemorial
             // 
             this.checkBoxIsMemorial.AutoSize = true;
-            this.checkBoxIsMemorial.Location = new System.Drawing.Point(18, 208);
+            this.checkBoxIsMemorial.Location = new System.Drawing.Point(13, 209);
             this.checkBoxIsMemorial.Name = "checkBoxIsMemorial";
             this.checkBoxIsMemorial.Size = new System.Drawing.Size(141, 19);
             this.checkBoxIsMemorial.TabIndex = 8;
@@ -2667,9 +2707,10 @@ namespace Registry.Viewport
             // 
             // panel4
             // 
+            this.panel4.Controls.Add(this.dateTimePickerStateDate);
+            this.panel4.Controls.Add(this.label6);
             this.panel4.Controls.Add(this.textBoxAccount);
             this.panel4.Controls.Add(this.label5);
-            this.panel4.Controls.Add(this.checkBoxIsMemorial);
             this.panel4.Controls.Add(this.comboBoxPremisesKind);
             this.panel4.Controls.Add(this.label28);
             this.panel4.Controls.Add(this.label39);
@@ -2685,8 +2726,28 @@ namespace Registry.Viewport
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(456, 3);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(447, 235);
+            this.panel4.Size = new System.Drawing.Size(447, 237);
             this.panel4.TabIndex = 2;
+            // 
+            // dateTimePickerStateDate
+            // 
+            this.dateTimePickerStateDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerStateDate.Location = new System.Drawing.Point(172, 179);
+            this.dateTimePickerStateDate.Name = "dateTimePickerStateDate";
+            this.dateTimePickerStateDate.ShowCheckBox = true;
+            this.dateTimePickerStateDate.Size = new System.Drawing.Size(270, 21);
+            this.dateTimePickerStateDate.TabIndex = 6;
+            this.dateTimePickerStateDate.ValueChanged += new System.EventHandler(this.dateTimePickerStateDate_ValueChanged);
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(18, 182);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(147, 15);
+            this.label6.TabIndex = 15;
+            this.label6.Text = "Состояние установлено";
             // 
             // textBoxAccount
             // 
@@ -2753,7 +2814,7 @@ namespace Registry.Viewport
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(16, 183);
+            this.label38.Location = new System.Drawing.Point(18, 210);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(90, 15);
             this.label38.TabIndex = 2;
@@ -2767,7 +2828,7 @@ namespace Registry.Viewport
             this.comboBoxCurrentFundType.Enabled = false;
             this.comboBoxCurrentFundType.ForeColor = System.Drawing.Color.Black;
             this.comboBoxCurrentFundType.FormattingEnabled = true;
-            this.comboBoxCurrentFundType.Location = new System.Drawing.Point(170, 179);
+            this.comboBoxCurrentFundType.Location = new System.Drawing.Point(170, 206);
             this.comboBoxCurrentFundType.Name = "comboBoxCurrentFundType";
             this.comboBoxCurrentFundType.Size = new System.Drawing.Size(272, 23);
             this.comboBoxCurrentFundType.TabIndex = 7;
@@ -2851,7 +2912,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel5.Controls.Add(this.groupBox11, 0, 0);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 270);
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 272);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.RowCount = 1;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
@@ -2986,7 +3047,7 @@ namespace Registry.Viewport
             this.groupBoxRooms.Controls.Add(this.panel5);
             this.groupBoxRooms.Controls.Add(this.dataGridViewRooms);
             this.groupBoxRooms.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxRooms.Location = new System.Drawing.Point(462, 270);
+            this.groupBoxRooms.Location = new System.Drawing.Point(462, 272);
             this.groupBoxRooms.Name = "groupBoxRooms";
             this.tableLayoutPanel3.SetRowSpan(this.groupBoxRooms, 2);
             this.groupBoxRooms.Size = new System.Drawing.Size(453, 214);

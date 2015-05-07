@@ -251,7 +251,6 @@ namespace Registry.Viewport
                 if (viewportState == ViewportState.ReadState)
                 {
                     viewportState = ViewportState.ModifyRowState;
-                    MenuCallback.EditingStateUpdate();
                     dataGridViewTenancyPersons.Enabled = false;
                 }
             }
@@ -260,10 +259,11 @@ namespace Registry.Viewport
                 if (viewportState == ViewportState.ModifyRowState)
                 {
                     viewportState = ViewportState.ReadState;
-                    MenuCallback.EditingStateUpdate();
                     dataGridViewTenancyPersons.Enabled = true;
                 }
             }
+            if (Selected)
+                MenuCallback.EditingStateUpdate();
         }
 
         private bool ChangeViewportStateTo(ViewportState state)
@@ -896,6 +896,7 @@ namespace Registry.Viewport
             RedrawDataGridRows();
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
+            CheckViewportModifications();
         }
 
         void TenancyPersonsViewport_RowDeleted(object sender, DataRowChangeEventArgs e)

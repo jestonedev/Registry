@@ -19,12 +19,6 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridView dataGridView;
-        private DataGridViewTextBoxColumn id_sub_premises;
-        private DataGridViewTextBoxColumn id_premises;
-        private DataGridViewTextBoxColumn sub_premises_num;
-        private DataGridViewTextBoxColumn total_area;
-        private DataGridViewTextBoxColumn description;
-        private DataGridViewComboBoxColumn id_state;
         #endregion Components
 
         #region Models
@@ -38,6 +32,13 @@ namespace Registry.Viewport
         BindingSource v_object_states = null;
         BindingSource v_snapshot_sub_premises = null;
         #endregion Views
+        private DataGridViewTextBoxColumn id_sub_premises;
+        private DataGridViewTextBoxColumn id_premises;
+        private DataGridViewTextBoxColumn sub_premises_num;
+        private DataGridViewTextBoxColumn total_area;
+        private DataGridViewTextBoxColumn description;
+        private DataGridViewComboBoxColumn id_state;
+        private DataGridViewDateTimeColumn state_date;
 
         //Флаг разрешения синхронизации snapshot и original моделей
         bool sync_views = true;
@@ -90,7 +91,8 @@ namespace Registry.Viewport
                 dataRowView["id_state"], 
                 dataRowView["sub_premises_num"], 
                 dataRowView["total_area"],
-                dataRowView["description"]
+                dataRowView["description"],
+                dataRowView["state_date"]
             };
         }
 
@@ -132,6 +134,7 @@ namespace Registry.Viewport
             subPremise.SubPremisesNum = ViewportHelper.ValueOrNull(row, "sub_premises_num");
             subPremise.TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area");
             subPremise.Description = ViewportHelper.ValueOrNull(row, "description");
+            subPremise.StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date");
             return subPremise;
         }
 
@@ -150,6 +153,7 @@ namespace Registry.Viewport
                     sp.SubPremisesNum = ViewportHelper.ValueOrNull(row, "sub_premises_num");
                     sp.TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area");
                     sp.Description = ViewportHelper.ValueOrNull(row, "description");
+                    sp.StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date");
                     list.Add(sp);
                 }
             }
@@ -169,6 +173,7 @@ namespace Registry.Viewport
                 sp.SubPremisesNum = ViewportHelper.ValueOrNull(row, "sub_premises_num");
                 sp.TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area");
                 sp.Description = ViewportHelper.ValueOrNull(row, "description");
+                sp.StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date");
                 list.Add(sp);
             }
             return list;
@@ -271,6 +276,7 @@ namespace Registry.Viewport
             id_state.ValueMember = "id_state";
             id_state.DisplayMember = "state_female";
             id_state.DataPropertyName = "id_state";
+            state_date.DataPropertyName = "state_date";
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
             dataGridView.EditingControlShowing += new DataGridViewEditingControlShowingEventHandler(dataGridView_EditingControlShowing);
             dataGridView.CellValidated += new DataGridViewCellEventHandler(dataGridView_CellValidated);
@@ -397,6 +403,7 @@ namespace Registry.Viewport
                     row["sub_premises_num"] = list[i].SubPremisesNum == null ? DBNull.Value : (object)list[i].SubPremisesNum;
                     row["total_area"] = list[i].TotalArea == null ? DBNull.Value : (object)list[i].TotalArea;
                     row["description"] = list[i].Description == null ? DBNull.Value : (object)list[i].Description;
+                    row["state_date"] = list[i].StateDate == null ? DBNull.Value : (object)list[i].StateDate;
                 }
             }
             list = SubPremisesFromView();
@@ -708,7 +715,8 @@ namespace Registry.Viewport
                         e.Row["id_state"],                 
                         e.Row["sub_premises_num"],
                         e.Row["total_area"],
-                        e.Row["description"]
+                        e.Row["description"],
+                        e.Row["state_date"]
                     });
             } else
             if (row_index != -1)
@@ -719,6 +727,7 @@ namespace Registry.Viewport
                 row["sub_premises_num"] = e.Row["sub_premises_num"];
                 row["total_area"] = e.Row["total_area"];
                 row["description"] = e.Row["description"];
+                row["state_date"] = e.Row["state_date"];
             }
             if (Selected)
             {
@@ -817,6 +826,7 @@ namespace Registry.Viewport
             this.total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_state = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.state_date = new CustomControls.DataGridViewDateTimeColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -843,14 +853,15 @@ namespace Registry.Viewport
             this.sub_premises_num,
             this.total_area,
             this.description,
-            this.id_state});
+            this.id_state,
+            this.state_date});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.Location = new System.Drawing.Point(3, 3);
             this.dataGridView.MultiSelect = false;
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridView.ShowCellToolTips = false;
-            this.dataGridView.Size = new System.Drawing.Size(795, 333);
+            this.dataGridView.Size = new System.Drawing.Size(966, 333);
             this.dataGridView.TabIndex = 0;
             // 
             // id_sub_premises
@@ -898,10 +909,17 @@ namespace Registry.Viewport
             this.id_state.Name = "id_state";
             this.id_state.Width = 150;
             // 
+            // state_date
+            // 
+            this.state_date.HeaderText = "Состояние установлено";
+            this.state_date.MinimumWidth = 170;
+            this.state_date.Name = "state_date";
+            this.state_date.Width = 170;
+            // 
             // SubPremisesViewport
             // 
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(801, 339);
+            this.ClientSize = new System.Drawing.Size(972, 339);
             this.Controls.Add(this.dataGridView);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

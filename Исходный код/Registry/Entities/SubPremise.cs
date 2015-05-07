@@ -13,6 +13,7 @@ namespace Registry.Entities
         public string SubPremisesNum { get; set; }
         public string Description { get; set; }
         public double? TotalArea { get; set; }
+        public DateTime? StateDate { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -37,7 +38,8 @@ namespace Registry.Entities
                 first.SubPremisesNum == second.SubPremisesNum &&
                 first.TotalArea == second.TotalArea &&
                 first.Description == second.Description &&
-                first.IdState == second.IdState;
+                first.IdState == second.IdState &&
+                first.StateDate == second.StateDate;
         }
 
         public static bool operator !=(SubPremise first, SubPremise second)

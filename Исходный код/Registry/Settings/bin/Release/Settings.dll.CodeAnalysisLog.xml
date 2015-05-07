@@ -14,7 +14,7 @@
            <Accessors>
             <Accessor Name="#get_Current()" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
              <Messages>
-              <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Status="Active" Created="2015-04-30 02:22:57Z" FixCategory="NonBreaking">
+              <Message TypeName="DoNotCatchGeneralExceptionTypes" Category="Microsoft.Design" CheckId="CA1031" Status="Active" Created="2015-05-07 06:40:46Z" FixCategory="NonBreaking">
                <Issue Certainty="95" Level="CriticalError" Path="e:\Реестр жилого фонда\Исходный код\Registry\Settings" File="UserDomain.cs" Line="32">Modify 'UserDomain.Current.get()' to catch a more specific exception than 'object' or rethrow the exception.</Issue>
               </Message>
              </Messages>

@@ -39,6 +39,8 @@
             this.vButtonCancel = new VIBlend.WinForms.Controls.vButton();
             this.vButtonSave = new VIBlend.WinForms.Controls.vButton();
             this.numericUpDownTotalArea = new System.Windows.Forms.NumericUpDown();
+            this.dateTimePickerStateDate = new System.Windows.Forms.DateTimePicker();
+            this.label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalArea)).BeginInit();
             this.SuspendLayout();
             // 
@@ -71,7 +73,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(73, 104);
+            this.label3.Location = new System.Drawing.Point(73, 131);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(80, 15);
             this.label3.TabIndex = 4;
@@ -79,12 +81,12 @@
             // 
             // textBoxDescription
             // 
-            this.textBoxDescription.Location = new System.Drawing.Point(177, 100);
+            this.textBoxDescription.Location = new System.Drawing.Point(177, 127);
             this.textBoxDescription.MaxLength = 65535;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.Size = new System.Drawing.Size(223, 66);
-            this.textBoxDescription.TabIndex = 3;
+            this.textBoxDescription.TabIndex = 4;
             // 
             // label4
             // 
@@ -109,11 +111,11 @@
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(222, 177);
+            this.vButtonCancel.Location = new System.Drawing.Point(222, 204);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(136, 40);
-            this.vButtonCancel.TabIndex = 5;
+            this.vButtonCancel.TabIndex = 6;
             this.vButtonCancel.Text = "Отменить";
             this.vButtonCancel.UseVisualStyleBackColor = false;
             this.vButtonCancel.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -122,11 +124,11 @@
             // 
             this.vButtonSave.AllowAnimations = true;
             this.vButtonSave.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSave.Location = new System.Drawing.Point(61, 177);
+            this.vButtonSave.Location = new System.Drawing.Point(61, 204);
             this.vButtonSave.Name = "vButtonSave";
             this.vButtonSave.RoundedCornersMask = ((byte)(15));
             this.vButtonSave.Size = new System.Drawing.Size(136, 40);
-            this.vButtonSave.TabIndex = 4;
+            this.vButtonSave.TabIndex = 5;
             this.vButtonSave.Text = "Добавить";
             this.vButtonSave.UseVisualStyleBackColor = false;
             this.vButtonSave.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -138,14 +140,33 @@
             this.numericUpDownTotalArea.Location = new System.Drawing.Point(177, 40);
             this.numericUpDownTotalArea.Name = "numericUpDownTotalArea";
             this.numericUpDownTotalArea.Size = new System.Drawing.Size(223, 21);
-            this.numericUpDownTotalArea.TabIndex = 7;
+            this.numericUpDownTotalArea.TabIndex = 1;
+            // 
+            // dateTimePickerStateDate
+            // 
+            this.dateTimePickerStateDate.Location = new System.Drawing.Point(177, 99);
+            this.dateTimePickerStateDate.Name = "dateTimePickerStateDate";
+            this.dateTimePickerStateDate.ShowCheckBox = true;
+            this.dateTimePickerStateDate.Size = new System.Drawing.Size(223, 21);
+            this.dateTimePickerStateDate.TabIndex = 3;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(24, 103);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(147, 15);
+            this.label5.TabIndex = 9;
+            this.label5.Text = "Состояние установлено";
             // 
             // SubPremisesEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(415, 223);
+            this.ClientSize = new System.Drawing.Size(415, 249);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.dateTimePickerStateDate);
             this.Controls.Add(this.numericUpDownTotalArea);
             this.Controls.Add(this.vButtonCancel);
             this.Controls.Add(this.vButtonSave);
@@ -179,5 +200,7 @@
         private VIBlend.WinForms.Controls.vButton vButtonCancel;
         private VIBlend.WinForms.Controls.vButton vButtonSave;
         private System.Windows.Forms.NumericUpDown numericUpDownTotalArea;
+        private System.Windows.Forms.DateTimePicker dateTimePickerStateDate;
+        private System.Windows.Forms.Label label5;
     }
 }

@@ -477,7 +477,8 @@ namespace Registry.Viewport
                 if (viewportState == ViewportState.ModifyRowState)
                     viewportState = ViewportState.ReadState;
             }
-            MenuCallback.EditingStateUpdate();
+            if (Selected)
+                MenuCallback.EditingStateUpdate();
         }
 
         internal void LocateTenancyBy(int id)
@@ -1508,6 +1509,7 @@ namespace Registry.Viewport
             MenuCallback.ForceCloseDetachedViewports();
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
+            CheckViewportModifications();
         }
 
         void TenancyViewport_RowChanged(object sender, DataRowChangeEventArgs e)
@@ -1515,6 +1517,7 @@ namespace Registry.Viewport
             UnbindedCheckBoxesUpdate();
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
+            CheckViewportModifications();
         }
 
         void TenancyPersons_RowDeleted(object sender, DataRowChangeEventArgs e)

@@ -26,6 +26,7 @@ namespace Registry.Entities
         public DateTime? RegDate { get; set; }
         public bool? IsMemorial { get; set; }
         public string Account { get; set; }
+        public DateTime? StateDate { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -63,7 +64,8 @@ namespace Registry.Entities
                 first.IdState == second.IdState &&
                 first.RegDate == second.RegDate &&
                 first.IsMemorial == second.IsMemorial &&
-                first.Account == second.Account;
+                first.Account == second.Account &&
+                first.StateDate == second.StateDate;
         }
 
         public static bool operator !=(Premise first, Premise second)

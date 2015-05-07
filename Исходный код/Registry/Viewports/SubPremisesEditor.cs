@@ -77,6 +77,8 @@ namespace Registry.Viewport
                 subPremise_.IdState = ViewportHelper.ValueOrNull<int>(comboBoxIdState);
                 if (state == ViewportState.ModifyRowState)
                     subPremise_.IdSubPremises = subPremise.IdSubPremises;
+                if (dateTimePickerStateDate.Checked)
+                    subPremise_.StateDate = dateTimePickerStateDate.Value;
                 return subPremise_;
             }
             set
@@ -88,6 +90,15 @@ namespace Registry.Viewport
                 textBoxDescription.Text = value.Description;
                 numericUpDownTotalArea.Value = value.TotalArea == null ? 0 : (decimal)value.TotalArea;
                 comboBoxIdState.SelectedValue = value.IdState;
+                if (value.StateDate != null)
+                {
+                    dateTimePickerStateDate.Value = value.StateDate.Value;
+                    dateTimePickerStateDate.Checked = true;
+                } else
+                {
+                    dateTimePickerStateDate.Value = DateTime.Now.Date;
+                    dateTimePickerStateDate.Checked = false;
+                }
             }
         }
 
@@ -162,7 +173,8 @@ namespace Registry.Viewport
                         subPremise.IdState, 
                         subPremise.SubPremisesNum, 
                         subPremise.TotalArea, 
-                        subPremise.Description
+                        subPremise.Description,
+                        subPremise.StateDate
                     }
                 );
             } else
@@ -174,6 +186,7 @@ namespace Registry.Viewport
                 row["sub_premises_num"] = subPremise.SubPremisesNum == null ? DBNull.Value : (object)subPremise.SubPremisesNum;
                 row["total_area"] = subPremise.TotalArea == null ? DBNull.Value : (object)subPremise.TotalArea;
                 row["description"] = subPremise.Description == null ? DBNull.Value : (object)subPremise.Description;
+                row["state_date"] = subPremise.StateDate == null ? DBNull.Value : (object)subPremise.StateDate;
             }
             CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
             CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);

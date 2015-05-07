@@ -192,7 +192,6 @@ namespace Registry.Viewport
                 if (viewportState == ViewportState.ReadState)
                 {
                     viewportState = ViewportState.ModifyRowState;
-                    MenuCallback.EditingStateUpdate();
                     dataGridViewClaims.Enabled = false;
                 }
             }
@@ -201,10 +200,11 @@ namespace Registry.Viewport
                 if (viewportState == ViewportState.ModifyRowState)
                 {
                     viewportState = ViewportState.ReadState;
-                    MenuCallback.EditingStateUpdate();
                     dataGridViewClaims.Enabled = true;
                 }
             }
+            if (Selected)
+                MenuCallback.EditingStateUpdate();
         }
 
         bool ChangeViewportStateTo(ViewportState state)
@@ -878,6 +878,7 @@ namespace Registry.Viewport
             UnbindedCheckBoxesUpdate();
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
+            CheckViewportModifications();
         }
 
         protected override void OnVisibleChanged(EventArgs e)

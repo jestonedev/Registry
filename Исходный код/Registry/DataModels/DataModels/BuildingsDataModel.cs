@@ -22,13 +22,13 @@ namespace Registry.DataModels
                              , floors, num_premises, num_rooms, num_apartments
                              , num_shared_apartments, total_area, living_area, cadastral_num
                              , cadastral_cost, balance_cost, description, startup_year
-                             , improvement, elevator, wear)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                             , improvement, elevator, wear, state_date)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         private static string updateQuery = @"UPDATE buildings SET id_state = ?, id_structure_type = ?, id_street = ?, 
                             house = ?, floors = ?, num_premises = ?, num_rooms = ?,
                             num_apartments = ?, num_shared_apartments = ?, total_area = ?, living_area = ?, cadastral_num = ?, 
                             cadastral_cost = ?, balance_cost = ?, description = ?, startup_year = ?, 
-                            improvement = ?, elevator = ?, wear = ? WHERE id_building = ?";
+                            improvement = ?, elevator = ?, wear = ?, state_date = ? WHERE id_building = ?";
         private static string tableName = "buildings";
 
         public bool EditingNewRecord { get; set; }
@@ -121,6 +121,7 @@ namespace Registry.DataModels
                 command.Parameters.Add(DBConnection.CreateParameter<bool?>("improvement", building.Improvement));
                 command.Parameters.Add(DBConnection.CreateParameter<bool?>("elevator", building.Elevator));
                 command.Parameters.Add(DBConnection.CreateParameter<double?>("wear", building.Wear));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("state_date", building.StateDate));
                 command.Parameters.Add(DBConnection.CreateParameter<int?>("id_building", building.IdBuilding));
 
                 try
@@ -170,6 +171,7 @@ namespace Registry.DataModels
                 command.Parameters.Add(DBConnection.CreateParameter<bool?>("improvement", building.Improvement));
                 command.Parameters.Add(DBConnection.CreateParameter<bool?>("elevator", building.Elevator));
                 command.Parameters.Add(DBConnection.CreateParameter<double?>("wear", building.Wear));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("state_date", building.StateDate));
 
                 try
                 {

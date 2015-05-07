@@ -969,7 +969,7 @@ namespace Registry.DataModels
         {
             // Собираем строку проверки уникальности сдаваемой группы помещений. Выглядеть эта строка будет примерно подобным образом з1з12п23п122к32 и т.п.
             var assoc_sub_premises = from assoc_sub_premises_row in DataModelHelper.FilterRows(TenancySubPremisesAssocDataModel.GetInstance().Select())
-                                     group assoc_sub_premises_row.Field<int>("id_sub_premises").ToString()
+                                     group assoc_sub_premises_row.Field<int>("id_sub_premises").ToString(CultureInfo.InvariantCulture)
                                      by assoc_sub_premises_row.Field<int>("id_process") into gs
                                      select new
                                      {
@@ -977,7 +977,7 @@ namespace Registry.DataModels
                                          value = gs.Count() > 1 ? gs.OrderBy(val => val).Aggregate((str1, str2) => { return 'к'+str1+'к'+str2; }) : 'к'+gs.First()
                                      };
             var assoc_premises = from assoc_premises_row in DataModelHelper.FilterRows(TenancyPremisesAssocDataModel.GetInstance().Select())
-                                     group assoc_premises_row.Field<int>("id_premises").ToString()
+                                     group assoc_premises_row.Field<int>("id_premises").ToString(CultureInfo.InvariantCulture)
                                      by assoc_premises_row.Field<int>("id_process") into gs
                                      select new
                                      {
@@ -985,7 +985,7 @@ namespace Registry.DataModels
                                          value = gs.Count() > 1 ? gs.OrderBy(val => val).Aggregate((str1, str2) => { return 'п' + str1 + 'п' + str2; }) : 'п' + gs.First()
                                      };
             var assoc_buildings = from assoc_buildings_row in DataModelHelper.FilterRows(TenancyBuildingsAssocDataModel.GetInstance().Select())
-                                 group assoc_buildings_row.Field<int>("id_building").ToString()
+                                  group assoc_buildings_row.Field<int>("id_building").ToString(CultureInfo.InvariantCulture)
                                  by assoc_buildings_row.Field<int>("id_process") into gs
                                  select new
                                  {
