@@ -139,9 +139,9 @@ namespace Registry.Viewport
                 return false;
             foreach (OwnershipRight ownershipRight in list)
             {
-                if (ownershipRight.Number != null && ownershipRight.Number.Length > 10)
+                if (ownershipRight.Number != null && ownershipRight.Number.Length > 20)
                 {
-                    MessageBox.Show("Номер основания не может привышать 10 символов", "Ошибка", 
+                    MessageBox.Show("Длина номера основания не может превышать 20 символов", "Ошибка", 
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
@@ -528,8 +528,8 @@ namespace Registry.Viewport
             switch (cell.OwningColumn.Name)
             {
                 case "number":
-                    if (cell.Value.ToString().Trim().Length > 10)
-                        cell.ErrorText = "Длина номера ограничения не может превышать 10 символов";
+                    if (cell.Value.ToString().Trim().Length > 20)
+                        cell.ErrorText = "Длина номера основания не может превышать 20 символов";
                     else
                         cell.ErrorText = "";
                     break;
