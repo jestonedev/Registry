@@ -52,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CalcDataModelsUpdater.cs" />
+    <Compile Include="CalcDataModels\CalcDataModelSubPremisesCurrentFunds.cs" />
     <Compile Include="CalcDataModels\CalcDataModelPremiseSubPremisesSumArea.cs" />
     <Compile Include="CalcDataModels\CalcDataModelResettleAggregated.cs" />
     <Compile Include="CalcDataModels\CalcDataModelTenancyPremisesInfo.cs" />

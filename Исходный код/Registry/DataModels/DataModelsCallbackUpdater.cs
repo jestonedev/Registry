@@ -189,6 +189,8 @@ namespace Registry.DataModels
                         CalcDataModelBuildingsCurrentFunds.GetInstance().DefferedUpdate = true;
                     if (CalcDataModelPremisesCurrentFunds.HasInstance())
                         CalcDataModelPremisesCurrentFunds.GetInstance().DefferedUpdate = true;
+                    if (CalcDataModelSubPremisesCurrentFunds.HasInstance())
+                        CalcDataModelSubPremisesCurrentFunds.GetInstance().DefferedUpdate = true;
                     if (CalcDataModelBuildingsPremisesFunds.HasInstance())
                         CalcDataModelBuildingsPremisesFunds.GetInstance().DefferedUpdate = true;
                     break;

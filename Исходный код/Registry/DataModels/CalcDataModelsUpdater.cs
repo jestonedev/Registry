@@ -30,6 +30,11 @@ namespace Registry.DataModels
                             CalcDataModelPremisesCurrentFunds.GetInstance().Refresh(EntityType.Unknown, null, true);
                             CalcDataModelPremisesCurrentFunds.GetInstance().DefferedUpdate = false;
                         }
+                        if (CalcDataModelSubPremisesCurrentFunds.HasInstance() && CalcDataModelSubPremisesCurrentFunds.GetInstance().DefferedUpdate)
+                        {
+                            CalcDataModelSubPremisesCurrentFunds.GetInstance().Refresh(EntityType.Unknown, null, true);
+                            CalcDataModelSubPremisesCurrentFunds.GetInstance().DefferedUpdate = false;
+                        }
                         if (CalcDataModelBuildingsPremisesFunds.HasInstance() && CalcDataModelBuildingsPremisesFunds.GetInstance().DefferedUpdate)
                         {
                             CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(EntityType.Unknown, null, true);

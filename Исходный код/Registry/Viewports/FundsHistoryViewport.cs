@@ -655,6 +655,9 @@ namespace Registry.Viewport
             else
                 if (ParentType == ParentTypeEnum.Premises)
                     CalcDataModelPremisesCurrentFunds.GetInstance().Refresh(EntityType.Premise, (int)ParentRow["id_premises"], true);
+                else
+                    if (ParentType == ParentTypeEnum.SubPremises)
+                        CalcDataModelSubPremisesCurrentFunds.GetInstance().Refresh(EntityType.SubPremise, (int)ParentRow["id_sub_premises"], true);
             MenuCallback.EditingStateUpdate();
         }
 
@@ -727,6 +730,9 @@ namespace Registry.Viewport
                 else
                     if (ParentType == ParentTypeEnum.Premises)
                         CalcDataModelPremisesCurrentFunds.GetInstance().Refresh(EntityType.Premise, (int)ParentRow["id_premises"], true);
+                    else
+                        if (ParentType == ParentTypeEnum.SubPremises)
+                            CalcDataModelSubPremisesCurrentFunds.GetInstance().Refresh(EntityType.SubPremise, (int)ParentRow["id_sub_premises"], true);
             }
         }
 

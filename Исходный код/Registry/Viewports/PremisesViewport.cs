@@ -66,7 +66,6 @@ namespace Registry.Viewport
 
         #region Models
         private PremisesDataModel premises = null;
-        private CalcDataModelPremisesCurrentFunds premisesCurrentFund = null;
         private BuildingsDataModel buildings = null;
         private KladrStreetsDataModel kladr = null;
         private PremisesTypesDataModel premises_types = null;
@@ -82,7 +81,9 @@ namespace Registry.Viewport
         private OwnershipBuildingsAssocDataModel ownershipBuildingsAssoc = null;
         private FundTypesDataModel fundTypes = null;
         private ObjectStatesDataModel object_states = null;
+        private CalcDataModelPremisesCurrentFunds premisesCurrentFund = null;
         private CalcDataModelPremiseSubPremisesSumArea premiseSubPremisesSumArea = null;
+        private CalcDataModelSubPremisesCurrentFunds subPremisesCurrentFund = null;
         #endregion Models
 
         #region Views
@@ -105,6 +106,7 @@ namespace Registry.Viewport
         private BindingSource v_object_states = null;
         private BindingSource v_sub_premises_object_states = null;
         private BindingSource v_premisesSubPremisesSumArea = null;
+        private BindingSource v_subPremisesCurrentFund = null;
         #endregion Views
 
         //Forms
@@ -118,9 +120,6 @@ namespace Registry.Viewport
         private NumericUpDown numericUpDownNumRooms;
         private NumericUpDown numericUpDownMunicipalArea;
         private Label label2;
-        private DataGridViewTextBoxColumn sub_premises_num;
-        private DataGridViewTextBoxColumn sub_premises_total_area;
-        private DataGridViewComboBoxColumn sub_premises_id_state;
         private NumericUpDown numericUpDownHeight;
         private Label label3;
         private DateTimePicker dateTimePickerRegDate;
@@ -154,6 +153,10 @@ namespace Registry.Viewport
         private Label label5;
         private DateTimePicker dateTimePickerStateDate;
         private Label label6;
+        private DataGridViewTextBoxColumn sub_premises_num;
+        private DataGridViewTextBoxColumn sub_premises_total_area;
+        private DataGridViewComboBoxColumn sub_premises_id_state;
+        private DataGridViewTextBoxColumn current_fund;
         private bool is_first_visibility = true;
 
         private PremisesViewport()
@@ -289,6 +292,24 @@ namespace Registry.Viewport
                 }
         }
 
+        private void RedrawSubPremiseDataGridRows()
+        {
+            if (v_sub_premises == null)
+                return;
+            if (v_sub_premises.Count != dataGridViewRooms.Rows.Count)
+                return;
+            for (int i = 0; i < v_sub_premises.Count; i++)
+            {
+                int id_sub_premises = (int)((DataRowView)v_sub_premises[i])["id_sub_premises"];
+                int id = v_subPremisesCurrentFund.Find("id_sub_premises", id_sub_premises);
+                if (id == -1)
+                    continue;
+                int id_fund_type = (int)((DataRowView)v_subPremisesCurrentFund[id])["id_fund_type"];
+                string fundType = ((DataRowView)v_fundType[v_fundType.Find("id_fund_type", id_fund_type)])["fund_type"].ToString();
+                dataGridViewRooms.Rows[i].Cells["current_fund"].Value = fundType;
+            }
+        }
+
         private void SetViewportCaption()
         {
             if (viewportState == ViewportState.NewRowState)
@@ -326,11 +347,15 @@ namespace Registry.Viewport
             {
                 label38.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
+                checkBoxIsMemorial.Location = new Point(19, 209);
+                this.tableLayoutPanel3.RowStyles[0].Height = 269F;
             }
             else
             {
                 label38.Visible = false;
                 comboBoxCurrentFundType.Visible = false;
+                checkBoxIsMemorial.Location = new Point(19, 183);
+                this.tableLayoutPanel3.RowStyles[0].Height = 240F;
             }
         }
 
@@ -691,6 +716,9 @@ namespace Registry.Viewport
             premise.NumBeds = Convert.ToInt16(numericUpDownNumBeds.Value);
             premise.IdPremisesType = ViewportHelper.ValueOrNull<int>(comboBoxPremisesType);
             premise.IdPremisesKind = ViewportHelper.ValueOrNull<int>(comboBoxPremisesKind);
+            // Костыль, возникший после того, как спрятали Вид помещения. Удалять вид помещения не стал, т.к. мало ли что у пользователей на уме
+            if (premise.IdPremisesKind == null)
+                premise.IdPremisesKind = 1;
             premise.Floor = Convert.ToInt16(numericUpDownFloor.Value);
             premise.CadastralNum = ViewportHelper.ValueOrNull(textBoxCadastralNum);
             premise.CadastralCost = numericUpDownCadastralCost.Value;
@@ -854,6 +882,7 @@ namespace Registry.Viewport
             // Вычисляемые модели
             premisesCurrentFund = CalcDataModelPremisesCurrentFunds.GetInstance();
             premiseSubPremisesSumArea = CalcDataModelPremiseSubPremisesSumArea.GetInstance();
+            subPremisesCurrentFund = CalcDataModelSubPremisesCurrentFunds.GetInstance();
 
             // Ожидаем дозагрузки, если это необходмо
             premises.Select();
@@ -890,6 +919,10 @@ namespace Registry.Viewport
             v_premisesSubPremisesSumArea = new BindingSource();
             v_premisesSubPremisesSumArea.DataMember = "premise_sub_premises_sum_area";
             v_premisesSubPremisesSumArea.DataSource = premiseSubPremisesSumArea.Select();
+
+            v_subPremisesCurrentFund = new BindingSource();
+            v_subPremisesCurrentFund.DataMember = "sub_premises_current_funds";
+            v_subPremisesCurrentFund.DataSource = subPremisesCurrentFund.Select();
 
             v_fundType = new BindingSource();
             v_fundType.DataMember = "fund_types";
@@ -979,6 +1012,7 @@ namespace Registry.Viewport
 
             premisesCurrentFund.RefreshEvent += new EventHandler<EventArgs>(premisesCurrentFund_RefreshEvent);
             premiseSubPremisesSumArea.RefreshEvent += premiseSubPremisesSumArea_RefreshEvent;
+            subPremisesCurrentFund.RefreshEvent += subPremisesCurrentFund_RefreshEvent;
             FiltersRebuild();
             SetViewportCaption();
         }
@@ -1409,6 +1443,7 @@ namespace Registry.Viewport
         {
             RedrawRestrictionDataGridRows();
             RedrawOwnershipDataGridRows();
+            RedrawSubPremiseDataGridRows();
             UnbindedCheckBoxesUpdate();
             base.OnVisibleChanged(e);
         }
@@ -1421,6 +1456,11 @@ namespace Registry.Viewport
         void premiseSubPremisesSumArea_RefreshEvent(object sender, EventArgs e)
         {
             FiltersRebuild();
+        }
+
+        void subPremisesCurrentFund_RefreshEvent(object sender, EventArgs e)
+        {
+            RedrawSubPremiseDataGridRows();
         }
 
         void textBoxDescription_TextChanged(object sender, EventArgs e)
@@ -1694,7 +1734,10 @@ namespace Registry.Viewport
         void v_sub_premises_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
+            {
                 MenuCallback.DocumentsStateUpdate();
+                RedrawSubPremiseDataGridRows();
+            }
         }
 
         private void dataGridViewRestrictions_Resize(object sender, EventArgs e)
@@ -1727,7 +1770,7 @@ namespace Registry.Viewport
 
         private void dataGridViewRooms_Resize(object sender, EventArgs e)
         {
-            if (dataGridViewRooms.Size.Width > 280)
+            if (dataGridViewRooms.Size.Width > 525)
             {
                 if (dataGridViewRooms.Columns["sub_premises_id_state"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     dataGridViewRooms.Columns["sub_premises_id_state"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -2069,8 +2112,9 @@ namespace Registry.Viewport
             this.panel3 = new System.Windows.Forms.Panel();
             this.dateTimePickerRegDate = new System.Windows.Forms.DateTimePicker();
             this.label4 = new System.Windows.Forms.Label();
-            this.checkBoxIsMemorial = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
+            this.comboBoxPremisesKind = new System.Windows.Forms.ComboBox();
+            this.label28 = new System.Windows.Forms.Label();
             this.numericUpDownNumRooms = new System.Windows.Forms.NumericUpDown();
             this.comboBoxPremisesType = new System.Windows.Forms.ComboBox();
             this.textBoxPremisesNumber = new System.Windows.Forms.TextBox();
@@ -2085,10 +2129,9 @@ namespace Registry.Viewport
             this.panel4 = new System.Windows.Forms.Panel();
             this.dateTimePickerStateDate = new System.Windows.Forms.DateTimePicker();
             this.label6 = new System.Windows.Forms.Label();
+            this.checkBoxIsMemorial = new System.Windows.Forms.CheckBox();
             this.textBoxAccount = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
-            this.comboBoxPremisesKind = new System.Windows.Forms.ComboBox();
-            this.label28 = new System.Windows.Forms.Label();
             this.label39 = new System.Windows.Forms.Label();
             this.comboBoxState = new System.Windows.Forms.ComboBox();
             this.label38 = new System.Windows.Forms.Label();
@@ -2118,6 +2161,7 @@ namespace Registry.Viewport
             this.sub_premises_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sub_premises_total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sub_premises_id_state = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.current_fund = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel3.SuspendLayout();
             this.groupBox13.SuspendLayout();
             this.groupBox9.SuspendLayout();
@@ -2516,8 +2560,9 @@ namespace Registry.Viewport
             // 
             this.panel3.Controls.Add(this.dateTimePickerRegDate);
             this.panel3.Controls.Add(this.label4);
-            this.panel3.Controls.Add(this.checkBoxIsMemorial);
             this.panel3.Controls.Add(this.label1);
+            this.panel3.Controls.Add(this.comboBoxPremisesKind);
+            this.panel3.Controls.Add(this.label28);
             this.panel3.Controls.Add(this.numericUpDownNumRooms);
             this.panel3.Controls.Add(this.comboBoxPremisesType);
             this.panel3.Controls.Add(this.textBoxPremisesNumber);
@@ -2554,17 +2599,6 @@ namespace Registry.Viewport
             this.label4.TabIndex = 10;
             this.label4.Text = "Дата регистрации";
             // 
-            // checkBoxIsMemorial
-            // 
-            this.checkBoxIsMemorial.AutoSize = true;
-            this.checkBoxIsMemorial.Location = new System.Drawing.Point(13, 209);
-            this.checkBoxIsMemorial.Name = "checkBoxIsMemorial";
-            this.checkBoxIsMemorial.Size = new System.Drawing.Size(141, 19);
-            this.checkBoxIsMemorial.TabIndex = 8;
-            this.checkBoxIsMemorial.Text = "Памятник культуры";
-            this.checkBoxIsMemorial.UseVisualStyleBackColor = true;
-            this.checkBoxIsMemorial.CheckedChanged += new System.EventHandler(this.checkBoxIsMemorial_CheckedChanged);
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -2573,6 +2607,29 @@ namespace Registry.Viewport
             this.label1.Size = new System.Drawing.Size(122, 15);
             this.label1.TabIndex = 9;
             this.label1.Text = "Количество комнат";
+            // 
+            // comboBoxPremisesKind
+            // 
+            this.comboBoxPremisesKind.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxPremisesKind.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPremisesKind.FormattingEnabled = true;
+            this.comboBoxPremisesKind.Location = new System.Drawing.Point(169, 206);
+            this.comboBoxPremisesKind.Name = "comboBoxPremisesKind";
+            this.comboBoxPremisesKind.Size = new System.Drawing.Size(272, 23);
+            this.comboBoxPremisesKind.TabIndex = 4;
+            this.comboBoxPremisesKind.Visible = false;
+            this.comboBoxPremisesKind.SelectedIndexChanged += new System.EventHandler(this.comboBoxPremisesKind_SelectedIndexChanged);
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Location = new System.Drawing.Point(10, 210);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(99, 15);
+            this.label28.TabIndex = 5;
+            this.label28.Text = "Вид помещения";
+            this.label28.Visible = false;
             // 
             // numericUpDownNumRooms
             // 
@@ -2709,10 +2766,9 @@ namespace Registry.Viewport
             // 
             this.panel4.Controls.Add(this.dateTimePickerStateDate);
             this.panel4.Controls.Add(this.label6);
+            this.panel4.Controls.Add(this.checkBoxIsMemorial);
             this.panel4.Controls.Add(this.textBoxAccount);
             this.panel4.Controls.Add(this.label5);
-            this.panel4.Controls.Add(this.comboBoxPremisesKind);
-            this.panel4.Controls.Add(this.label28);
             this.panel4.Controls.Add(this.label39);
             this.panel4.Controls.Add(this.comboBoxState);
             this.panel4.Controls.Add(this.label38);
@@ -2733,21 +2789,32 @@ namespace Registry.Viewport
             // 
             this.dateTimePickerStateDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerStateDate.Location = new System.Drawing.Point(172, 179);
+            this.dateTimePickerStateDate.Location = new System.Drawing.Point(170, 152);
             this.dateTimePickerStateDate.Name = "dateTimePickerStateDate";
             this.dateTimePickerStateDate.ShowCheckBox = true;
-            this.dateTimePickerStateDate.Size = new System.Drawing.Size(270, 21);
+            this.dateTimePickerStateDate.Size = new System.Drawing.Size(272, 21);
             this.dateTimePickerStateDate.TabIndex = 6;
             this.dateTimePickerStateDate.ValueChanged += new System.EventHandler(this.dateTimePickerStateDate_ValueChanged);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(18, 182);
+            this.label6.Location = new System.Drawing.Point(16, 154);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(147, 15);
             this.label6.TabIndex = 15;
             this.label6.Text = "Состояние установлено";
+            // 
+            // checkBoxIsMemorial
+            // 
+            this.checkBoxIsMemorial.AutoSize = true;
+            this.checkBoxIsMemorial.Location = new System.Drawing.Point(19, 209);
+            this.checkBoxIsMemorial.Name = "checkBoxIsMemorial";
+            this.checkBoxIsMemorial.Size = new System.Drawing.Size(141, 19);
+            this.checkBoxIsMemorial.TabIndex = 8;
+            this.checkBoxIsMemorial.Text = "Памятник культуры";
+            this.checkBoxIsMemorial.UseVisualStyleBackColor = true;
+            this.checkBoxIsMemorial.CheckedChanged += new System.EventHandler(this.checkBoxIsMemorial_CheckedChanged);
             // 
             // textBoxAccount
             // 
@@ -2769,31 +2836,10 @@ namespace Registry.Viewport
             this.label5.TabIndex = 13;
             this.label5.Text = "Лицевой счет ФКР";
             // 
-            // comboBoxPremisesKind
-            // 
-            this.comboBoxPremisesKind.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxPremisesKind.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxPremisesKind.FormattingEnabled = true;
-            this.comboBoxPremisesKind.Location = new System.Drawing.Point(170, 122);
-            this.comboBoxPremisesKind.Name = "comboBoxPremisesKind";
-            this.comboBoxPremisesKind.Size = new System.Drawing.Size(272, 23);
-            this.comboBoxPremisesKind.TabIndex = 4;
-            this.comboBoxPremisesKind.SelectedIndexChanged += new System.EventHandler(this.comboBoxPremisesKind_SelectedIndexChanged);
-            // 
-            // label28
-            // 
-            this.label28.AutoSize = true;
-            this.label28.Location = new System.Drawing.Point(16, 126);
-            this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(99, 15);
-            this.label28.TabIndex = 5;
-            this.label28.Text = "Вид помещения";
-            // 
             // label39
             // 
             this.label39.AutoSize = true;
-            this.label39.Location = new System.Drawing.Point(16, 154);
+            this.label39.Location = new System.Drawing.Point(16, 127);
             this.label39.Name = "label39";
             this.label39.Size = new System.Drawing.Size(119, 15);
             this.label39.TabIndex = 0;
@@ -2805,7 +2851,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxState.FormattingEnabled = true;
-            this.comboBoxState.Location = new System.Drawing.Point(170, 150);
+            this.comboBoxState.Location = new System.Drawing.Point(170, 123);
             this.comboBoxState.Name = "comboBoxState";
             this.comboBoxState.Size = new System.Drawing.Size(272, 23);
             this.comboBoxState.TabIndex = 5;
@@ -2814,7 +2860,7 @@ namespace Registry.Viewport
             // label38
             // 
             this.label38.AutoSize = true;
-            this.label38.Location = new System.Drawing.Point(18, 210);
+            this.label38.Location = new System.Drawing.Point(16, 182);
             this.label38.Name = "label38";
             this.label38.Size = new System.Drawing.Size(90, 15);
             this.label38.TabIndex = 2;
@@ -2828,7 +2874,7 @@ namespace Registry.Viewport
             this.comboBoxCurrentFundType.Enabled = false;
             this.comboBoxCurrentFundType.ForeColor = System.Drawing.Color.Black;
             this.comboBoxCurrentFundType.FormattingEnabled = true;
-            this.comboBoxCurrentFundType.Location = new System.Drawing.Point(170, 206);
+            this.comboBoxCurrentFundType.Location = new System.Drawing.Point(170, 179);
             this.comboBoxCurrentFundType.Name = "comboBoxCurrentFundType";
             this.comboBoxCurrentFundType.Size = new System.Drawing.Size(272, 23);
             this.comboBoxCurrentFundType.TabIndex = 7;
@@ -3125,7 +3171,8 @@ namespace Registry.Viewport
             this.dataGridViewRooms.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.sub_premises_num,
             this.sub_premises_total_area,
-            this.sub_premises_id_state});
+            this.sub_premises_id_state,
+            this.current_fund});
             this.dataGridViewRooms.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewRooms.Name = "dataGridViewRooms";
             this.dataGridViewRooms.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -3161,6 +3208,13 @@ namespace Registry.Viewport
             this.sub_premises_id_state.Resizable = System.Windows.Forms.DataGridViewTriState.True;
             this.sub_premises_id_state.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.sub_premises_id_state.Width = 150;
+            // 
+            // current_fund
+            // 
+            this.current_fund.HeaderText = "Текущий фонд";
+            this.current_fund.MinimumWidth = 150;
+            this.current_fund.Name = "current_fund";
+            this.current_fund.Width = 150;
             // 
             // PremisesViewport
             // 
