@@ -152,8 +152,17 @@ namespace Registry.Viewport
             return list;
         }
 
-        private static bool ValidateTenancyBuildings(List<TenancyObject> tenancyBuildings)
+        private bool ValidateTenancyBuildings(List<TenancyObject> tenancyBuildings)
         {
+            foreach (TenancyObject building in tenancyBuildings)
+            {
+                if (!ViewportHelper.BuildingRentAndFundMatch(building.IdObject.Value, (int)ParentRow["id_rent_type"]) &&
+                            MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемого здания. Все равно продолжить сохранение?",
+                            "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != System.Windows.Forms.DialogResult.Yes)
+                    return false;
+                else
+                    return true;
+            }
             return true;
         }
 

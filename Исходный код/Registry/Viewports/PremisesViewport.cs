@@ -667,7 +667,7 @@ namespace Registry.Viewport
             if ((premise.PremisesNum != premiseFromView.PremisesNum) || (premise.IdBuilding != premiseFromView.IdBuilding))
                 if (DataModelHelper.PremisesDuplicateCount(premise) != 0 &&
                     MessageBox.Show("В указанном доме уже есть квартира с таким номером. Все равно продолжить сохранение?", "Внимание", 
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.No)
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != System.Windows.Forms.DialogResult.Yes)
                     return false;
             return true;
         }
@@ -716,9 +716,10 @@ namespace Registry.Viewport
             premise.NumBeds = Convert.ToInt16(numericUpDownNumBeds.Value);
             premise.IdPremisesType = ViewportHelper.ValueOrNull<int>(comboBoxPremisesType);
             premise.IdPremisesKind = ViewportHelper.ValueOrNull<int>(comboBoxPremisesKind);
-            // Костыль, возникший после того, как спрятали Вид помещения. Удалять вид помещения не стал, т.к. мало ли что у пользователей на уме
+            // Костыль, возникший после того, как спрятал Вид помещения. Удалять вид помещения не стал, т.к. мало ли что у пользователей на уме
             if (premise.IdPremisesKind == null)
                 premise.IdPremisesKind = 1;
+            // Конец костыля
             premise.Floor = Convert.ToInt16(numericUpDownFloor.Value);
             premise.CadastralNum = ViewportHelper.ValueOrNull(textBoxCadastralNum);
             premise.CadastralCost = numericUpDownCadastralCost.Value;

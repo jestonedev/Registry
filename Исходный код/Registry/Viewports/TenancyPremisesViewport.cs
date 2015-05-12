@@ -184,8 +184,22 @@ namespace Registry.Viewport
             return list;
         }
 
-        private static bool ValidateTenancyPremises(List<TenancyObject> tenancyPremises)
+        private bool ValidateTenancyPremises(List<TenancyObject> tenancyPremises)
         {
+            foreach (TenancyObject premises in tenancyPremises)
+            {
+                if (!ViewportHelper.PremiseRentAndFundMatch(premises.IdObject.Value, (int)ParentRow["id_rent_type"]))
+                {
+                    int idBuilding = (int)PremisesDataModel.GetInstance().Select().Rows.Find(premises.IdObject.Value)["id_building"];
+                    if (!ViewportHelper.BuildingRentAndFundMatch(idBuilding, (int)ParentRow["id_rent_type"]) &&
+                                MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемого помещения. Все равно продолжить сохранение?",
+                                "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != 
+                                System.Windows.Forms.DialogResult.Yes)
+                        return false;
+                    else
+                        return true;
+                }
+            }
             return true;
         }
 
@@ -469,7 +483,7 @@ namespace Registry.Viewport
                 return;
             }
             // Проверяем данные о комнатах
-            if (!TenancySubPremisesDetails.ValidateTenancySubPremises(
+            if (!((TenancySubPremisesDetails)dataGridView.DetailsControl).ValidateTenancySubPremises(
                 ((TenancySubPremisesDetails)dataGridView.DetailsControl).TenancySubPremisesFromViewport()))
             {
                 sync_views = true;

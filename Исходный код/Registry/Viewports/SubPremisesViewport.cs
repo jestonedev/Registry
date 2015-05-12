@@ -40,6 +40,7 @@ namespace Registry.Viewport
         private DataGridViewComboBoxColumn id_state;
         private DataGridViewDateTimeColumn state_date;
 
+
         //Флаг разрешения синхронизации snapshot и original моделей
         bool sync_views = true;
 
@@ -911,7 +912,7 @@ namespace Registry.Viewport
             // 
             // state_date
             // 
-            this.state_date.HeaderText = "Состояние установлено";
+            this.state_date.HeaderText = "Дата установки состояния";
             this.state_date.MinimumWidth = 170;
             this.state_date.Name = "state_date";
             this.state_date.Width = 170;

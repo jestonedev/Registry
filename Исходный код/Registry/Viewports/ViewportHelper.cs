@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using System.Reflection;
 using System.Data;
 using System.Globalization;
+using Registry.CalcDataModels;
 
 namespace Registry.Viewport
 {
@@ -147,6 +148,53 @@ namespace Registry.Viewport
         internal static object ValueOrDBNull(object value)
         {
             return value == null ? DBNull.Value : value;
+        }
+
+        internal static int TranslateFundIdToRentId(int fundId)
+        {
+            switch (fundId)
+            {
+                case 1: return 3;
+                case 2: return 1;
+                case 3: return 2;
+                default: return 0;
+            }
+        }
+
+        internal static bool BuildingRentAndFundMatch(int idBuilding, int idRentType)
+        {
+            DataRow bRow = CalcDataModelBuildingsCurrentFunds.GetInstance().Select().Rows.Find(idBuilding);
+            if (bRow != null)
+            {
+                int idFundType = (int)bRow["id_fund_type"];
+                if (idRentType == ViewportHelper.TranslateFundIdToRentId(idFundType))
+                    return true;
+            }
+            return false;
+        }
+
+        internal static bool PremiseRentAndFundMatch(int idPremise, int idRentType)
+        {
+            DataRow bRow = CalcDataModelPremisesCurrentFunds.GetInstance().Select().Rows.Find(idPremise);
+            if (bRow != null)
+            {
+                int idFundType = (int)bRow["id_fund_type"];
+                if (idRentType == ViewportHelper.TranslateFundIdToRentId(idFundType))
+                    return true;
+            }
+            return false;
+        }
+
+        internal static bool SubPremiseRentAndFundMatch(int idSubPremise, int idRentType)
+        {
+            DataRow bRow = CalcDataModelSubPremisesCurrentFunds.GetInstance().Select().Rows.Find(idSubPremise);
+            if (bRow != null)
+            {
+                int idFundType = (int)bRow["id_fund_type"];
+                if (idRentType == ViewportHelper.TranslateFundIdToRentId(idFundType))
+                    return true;
+            }
+            return false;
         }
     }
 }

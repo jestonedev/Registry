@@ -545,7 +545,7 @@ namespace Registry.Viewport
             // Подверждение на износ выше 100%
             if (building.Wear > 100)
                 if (MessageBox.Show("Вы задали износ здания выше 100%. Все равно продолжить сохранение?", "Внимание",
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.No)
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != System.Windows.Forms.DialogResult.Yes)
                 {
                     numericUpDownWear.Focus();
                     return false;
@@ -554,7 +554,7 @@ namespace Registry.Viewport
             if ((building.House != buildingFromView.House) || (building.IdStreet != buildingFromView.IdStreet))
                 if (DataModelHelper.BuildingsDuplicateCount(building) != 0 &&
                     MessageBox.Show("В базе уже имеется здание с таким адресом. Все равно продолжить сохранение?", "Внимание",
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == System.Windows.Forms.DialogResult.No)
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != System.Windows.Forms.DialogResult.Yes)
                     return false;
             return true;
         }

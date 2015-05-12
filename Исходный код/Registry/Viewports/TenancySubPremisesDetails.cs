@@ -152,8 +152,26 @@ namespace Registry.Viewport
             return list;
         }
 
-        public static bool ValidateTenancySubPremises(List<TenancyObject> tenancySubPremises)
+        public bool ValidateTenancySubPremises(List<TenancyObject> tenancySubPremises)
         {
+            foreach (TenancyObject subPremises in tenancySubPremises)
+            {
+                if (!ViewportHelper.SubPremiseRentAndFundMatch(subPremises.IdObject.Value, (int)ParentRow["id_rent_type"]))
+                {
+                    int idPremises = (int)SubPremisesDataModel.GetInstance().Select().Rows.Find(subPremises.IdObject.Value)["id_premises"];
+                    if (!ViewportHelper.PremiseRentAndFundMatch(idPremises, (int)ParentRow["id_rent_type"]))
+                    {
+                        int idBuilding = (int)PremisesDataModel.GetInstance().Select().Rows.Find(idPremises)["id_building"];
+                        if (!ViewportHelper.BuildingRentAndFundMatch(idBuilding, (int)ParentRow["id_rent_type"]) &&
+                                    MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемой комнаты. Все равно продолжить сохранение?",
+                                    "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) !=
+                                    System.Windows.Forms.DialogResult.Yes)
+                            return false;
+                        else
+                            return true;
+                    }
+                }
+            }
             return true;
         }
 
