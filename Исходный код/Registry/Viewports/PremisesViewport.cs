@@ -306,7 +306,10 @@ namespace Registry.Viewport
                     continue;
                 int id_fund_type = (int)((DataRowView)v_subPremisesCurrentFund[id])["id_fund_type"];
                 string fundType = ((DataRowView)v_fundType[v_fundType.Find("id_fund_type", id_fund_type)])["fund_type"].ToString();
-                dataGridViewRooms.Rows[i].Cells["current_fund"].Value = fundType;
+                if ((new int[] {1, 4, 5}).Contains((int)((DataRowView)v_sub_premises[i])["id_state"]))
+                    dataGridViewRooms.Rows[i].Cells["current_fund"].Value = fundType;
+                else
+                    dataGridViewRooms.Rows[i].Cells["current_fund"].Value = "";
             }
         }
 
@@ -1009,6 +1012,8 @@ namespace Registry.Viewport
             ownershipBuildingsAssoc.Select().RowChanged += new DataRowChangeEventHandler(ownershipBuildingsAssoc_RowChanged);
             ownershipBuildingsAssoc.Select().RowDeleted += new DataRowChangeEventHandler(ownershipBuildingsAssoc_RowDeleted);
 
+            sub_premises.Select().RowChanged += SubPremises_RowChanged;
+
             DataBind();
 
             premisesCurrentFund.RefreshEvent += new EventHandler<EventArgs>(premisesCurrentFund_RefreshEvent);
@@ -1307,6 +1312,10 @@ namespace Registry.Viewport
                 restrictionPremisesAssoc.Select().RowDeleted -= new DataRowChangeEventHandler(RestrictionsAssoc_RowDeleted);
                 restrictionBuildingsAssoc.Select().RowChanged -= restrictionBuildingsAssoc_RowChanged;
                 restrictionBuildingsAssoc.Select().RowDeleted -= restrictionBuildingsAssoc_RowDeleted;
+                sub_premises.Select().RowChanged -= SubPremises_RowChanged;
+                premisesCurrentFund.RefreshEvent -= new EventHandler<EventArgs>(premisesCurrentFund_RefreshEvent);
+                premiseSubPremisesSumArea.RefreshEvent -= premiseSubPremisesSumArea_RefreshEvent;
+                subPremisesCurrentFund.RefreshEvent -= subPremisesCurrentFund_RefreshEvent;
             }
             base.OnClosing(e);
         }
@@ -1323,6 +1332,10 @@ namespace Registry.Viewport
             restrictionPremisesAssoc.Select().RowDeleted -= new DataRowChangeEventHandler(RestrictionsAssoc_RowDeleted);
             restrictionBuildingsAssoc.Select().RowChanged -= restrictionBuildingsAssoc_RowChanged;
             restrictionBuildingsAssoc.Select().RowDeleted -= restrictionBuildingsAssoc_RowDeleted;
+            sub_premises.Select().RowChanged -= SubPremises_RowChanged;
+            premisesCurrentFund.RefreshEvent -= new EventHandler<EventArgs>(premisesCurrentFund_RefreshEvent);
+            premiseSubPremisesSumArea.RefreshEvent -= premiseSubPremisesSumArea_RefreshEvent;
+            subPremisesCurrentFund.RefreshEvent -= subPremisesCurrentFund_RefreshEvent;
             base.Close();
         }
 
@@ -1460,6 +1473,11 @@ namespace Registry.Viewport
         }
 
         void subPremisesCurrentFund_RefreshEvent(object sender, EventArgs e)
+        {
+            RedrawSubPremiseDataGridRows();
+        }
+
+        private void SubPremises_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             RedrawSubPremiseDataGridRows();
         }
