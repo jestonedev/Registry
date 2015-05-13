@@ -88,6 +88,8 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn patronymic;
         private DataGridViewTextBoxColumn date_of_birth;
         private int? id_warrant = null;
+        private DateTimePicker dateTimePickerTerminateDate;
+        private Label label1;
         private bool is_first_visible = true;   // первое отображение формы
 
         private TenancyAgreementsViewport()
@@ -337,7 +339,7 @@ namespace Registry.Viewport
                 tenancyAgreement.IdProcess = null;
             tenancyAgreement.IdExecutor = ViewportHelper.ValueOrNull<int>(comboBoxExecutor);
             tenancyAgreement.IdWarrant = id_warrant;
-            tenancyAgreement.AgreementContent = ViewportHelper.ValueOrNull(textBoxAgreementContent);
+            tenancyAgreement.AgreementContent = textBoxAgreementContent.Text;
             tenancyAgreement.AgreementDate = ViewportHelper.ValueOrNull(dateTimePickerAgreementDate);
             return tenancyAgreement;
         }
@@ -832,37 +834,21 @@ namespace Registry.Viewport
         {
             if (String.IsNullOrEmpty(textBoxTerminateAgreement.Text.Trim()))
             {
-                MessageBox.Show("Не указан номер соглашения", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show("Не указана причина расторжения договора", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxExplainPoint.Focus();
                 return;
             }
-            List<string> contentList = textBoxAgreementContent.Lines.ToList();
-            int header_index = -1;
-            int last_point_index = -1;
-            for (int i = 0; i < contentList.Count; i++)
-            {
-                if (Regex.IsMatch(contentList[i], "^\u200Bрасторгнуть"))
-                {
-                    header_index = i;
-                }
-                else
-                    if (header_index != -1 && Regex.IsMatch(contentList[i], "^(\u200Bисключить|\u200Bвключить|\u200Bизложить|\u200Bрасторгнуть)"))
-                    {
-                        last_point_index = i;
-                        break;
-                    }
-            }
-
-            string element = String.Format(CultureInfo.InvariantCulture, "№ соглашения {0}.", textBoxTerminateAgreement.Text);
-            if (header_index == -1)
-            {
-                contentList.Add("\u200Bрасторгнуть:");
-            }
-            if (last_point_index == -1)
-                contentList.Add(element);
-            else
-                contentList.Insert(last_point_index, element);
-            textBoxAgreementContent.Lines = contentList.ToArray();
+            textBoxAgreementContent.Clear();
+            textBoxAgreementContent.Text =
+                String.Format(CultureInfo.InvariantCulture,
+                    "1.1. По настоящему Соглашению Стороны договорились расторгнуть  с {3} договор № {0} от {1} {4} найма (далее - Договор) жилого помещения по {2}.\r\n" +
+                    "1.2.Обязательства, возникшие из указанного Договора до момента расторжения, подлежат исполнению в соответствии с указанным Договором. Стороны не имеют взаимных претензий по исполнению условий договора № {0} от {1}.",
+                    ParentRow["registration_num"].ToString(),
+                    ParentRow["registration_date"] != DBNull.Value ?
+                        Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "",
+                    textBoxTerminateAgreement.Text,
+                    dateTimePickerTerminateDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture),
+                    RentTypesDataModel.GetInstance().Select().Rows.Find(ParentRow["id_rent_type"])["rent_type_genetive"]);
         }
 
         void vButtonExplainPaste_Click(object sender, EventArgs e)
@@ -1093,6 +1079,8 @@ namespace Registry.Viewport
             this.id_agreement = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.agreement_date = new CustomControls.DataGridViewDateTimeColumn();
             this.agreement_content = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.label1 = new System.Windows.Forms.Label();
+            this.dateTimePickerTerminateDate = new System.Windows.Forms.DateTimePicker();
             this.tableLayoutPanel12.SuspendLayout();
             this.panel7.SuspendLayout();
             this.groupBox29.SuspendLayout();
@@ -1307,7 +1295,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(430, 88);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(430, 84);
             this.dataGridViewTenancyPersons.TabIndex = 2;
             // 
             // surname
@@ -1383,10 +1371,10 @@ namespace Registry.Viewport
             this.tabPageInclude.Controls.Add(this.label78);
             this.tabPageInclude.Controls.Add(this.vButtonIncludePaste);
             this.tabPageInclude.Controls.Add(this.label75);
-            this.tabPageInclude.Location = new System.Drawing.Point(4, 22);
+            this.tabPageInclude.Location = new System.Drawing.Point(4, 24);
             this.tabPageInclude.Name = "tabPageInclude";
             this.tabPageInclude.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInclude.Size = new System.Drawing.Size(436, 129);
+            this.tabPageInclude.Size = new System.Drawing.Size(436, 127);
             this.tabPageInclude.TabIndex = 1;
             this.tabPageInclude.Text = "Включить";
             // 
@@ -1486,9 +1474,9 @@ namespace Registry.Viewport
             this.tabPageExplain.Controls.Add(this.textBoxExplainPoint);
             this.tabPageExplain.Controls.Add(this.vButtonExplainPaste);
             this.tabPageExplain.Controls.Add(this.label79);
-            this.tabPageExplain.Location = new System.Drawing.Point(4, 22);
+            this.tabPageExplain.Location = new System.Drawing.Point(4, 24);
             this.tabPageExplain.Name = "tabPageExplain";
-            this.tabPageExplain.Size = new System.Drawing.Size(436, 129);
+            this.tabPageExplain.Size = new System.Drawing.Size(436, 127);
             this.tabPageExplain.TabIndex = 2;
             this.tabPageExplain.Text = "Изложить";
             // 
@@ -1500,7 +1488,7 @@ namespace Registry.Viewport
             this.textBoxExplainContent.Location = new System.Drawing.Point(7, 32);
             this.textBoxExplainContent.Multiline = true;
             this.textBoxExplainContent.Name = "textBoxExplainContent";
-            this.textBoxExplainContent.Size = new System.Drawing.Size(424, 93);
+            this.textBoxExplainContent.Size = new System.Drawing.Size(424, 89);
             this.textBoxExplainContent.TabIndex = 1;
             // 
             // textBoxExplainPoint
@@ -1539,12 +1527,14 @@ namespace Registry.Viewport
             // tabPageTerminate
             // 
             this.tabPageTerminate.BackColor = System.Drawing.Color.White;
+            this.tabPageTerminate.Controls.Add(this.dateTimePickerTerminateDate);
+            this.tabPageTerminate.Controls.Add(this.label1);
             this.tabPageTerminate.Controls.Add(this.vButtonTerminatePaste);
             this.tabPageTerminate.Controls.Add(this.textBoxTerminateAgreement);
             this.tabPageTerminate.Controls.Add(this.label80);
-            this.tabPageTerminate.Location = new System.Drawing.Point(4, 22);
+            this.tabPageTerminate.Location = new System.Drawing.Point(4, 24);
             this.tabPageTerminate.Name = "tabPageTerminate";
-            this.tabPageTerminate.Size = new System.Drawing.Size(436, 129);
+            this.tabPageTerminate.Size = new System.Drawing.Size(436, 127);
             this.tabPageTerminate.TabIndex = 3;
             this.tabPageTerminate.Text = "Расторгнуть";
             // 
@@ -1575,11 +1565,11 @@ namespace Registry.Viewport
             // label80
             // 
             this.label80.AutoSize = true;
-            this.label80.Location = new System.Drawing.Point(12, 9);
+            this.label80.Location = new System.Drawing.Point(12, 10);
             this.label80.Name = "label80";
-            this.label80.Size = new System.Drawing.Size(91, 15);
+            this.label80.Size = new System.Drawing.Size(110, 15);
             this.label80.TabIndex = 43;
-            this.label80.Text = "№ соглашения";
+            this.label80.Text = "По какой причине";
             // 
             // dataGridView
             // 
@@ -1633,6 +1623,22 @@ namespace Registry.Viewport
             this.agreement_content.MinimumWidth = 100;
             this.agreement_content.Name = "agreement_content";
             this.agreement_content.ReadOnly = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(12, 38);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(118, 15);
+            this.label1.TabIndex = 44;
+            this.label1.Text = "Дата расторжения";
+            // 
+            // dateTimePickerTerminateDate
+            // 
+            this.dateTimePickerTerminateDate.Location = new System.Drawing.Point(163, 34);
+            this.dateTimePickerTerminateDate.Name = "dateTimePickerTerminateDate";
+            this.dateTimePickerTerminateDate.Size = new System.Drawing.Size(234, 21);
+            this.dateTimePickerTerminateDate.TabIndex = 45;
             // 
             // TenancyAgreementsViewport
             // 

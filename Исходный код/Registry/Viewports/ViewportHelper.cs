@@ -64,7 +64,7 @@ namespace Registry.Viewport
             if (String.IsNullOrEmpty(control.Text.Trim()))
                 return null;
             else
-                return control.Text.Trim().Trim();
+                return control.Text.Trim();
         }
 
         internal static T? ValueOrNull<T>(ComboBox control) where T: struct
