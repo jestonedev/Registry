@@ -498,12 +498,6 @@ namespace Registry.Viewport
                 comboBoxRentType.Focus();
                 return false;
             }
-            if (tenancy.IdExecutor == null)
-            {
-                MessageBox.Show("Необходимо выбрать составителя договора", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                comboBoxExecutor.Focus();
-                return false;
-            }
             if (checkBoxContractEnable.Checked)
             {
                 if (tenancy.RegistrationNum == null)
@@ -911,6 +905,9 @@ namespace Registry.Viewport
             dateTimePickerIssueDate.Checked = (tenancy.IssueDate != null);
             dateTimePickerBeginDate.Checked = (tenancy.BeginDate != null);
             dateTimePickerEndDate.Checked = (tenancy.EndDate != null);
+            int index = v_executors.Find("executor_login", System.Security.Principal.WindowsIdentity.GetCurrent().Name);
+            if (index != -1)
+                comboBoxExecutor.SelectedValue = ((DataRowView)v_executors[index])["id_executor"];
             is_copy = true;
             id_copy_process = tenancy.IdProcess;
             is_editable = true;
