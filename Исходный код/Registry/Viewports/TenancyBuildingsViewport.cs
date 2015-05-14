@@ -156,7 +156,7 @@ namespace Registry.Viewport
         {
             foreach (TenancyObject building in tenancyBuildings)
             {
-                if (!ViewportHelper.BuildingRentAndFundMatch(building.IdObject.Value, (int)ParentRow["id_rent_type"]) &&
+                if (!ViewportHelper.BuildingFundAndRentMatch(building.IdObject.Value, (int)ParentRow["id_rent_type"]) &&
                             MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемого здания. Все равно продолжить сохранение?",
                             "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != System.Windows.Forms.DialogResult.Yes)
                     return false;

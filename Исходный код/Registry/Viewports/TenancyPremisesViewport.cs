@@ -188,10 +188,10 @@ namespace Registry.Viewport
         {
             foreach (TenancyObject premises in tenancyPremises)
             {
-                if (!ViewportHelper.PremiseRentAndFundMatch(premises.IdObject.Value, (int)ParentRow["id_rent_type"]))
+                if (!ViewportHelper.PremiseFundAndRentMatch(premises.IdObject.Value, (int)ParentRow["id_rent_type"]))
                 {
                     int idBuilding = (int)PremisesDataModel.GetInstance().Select().Rows.Find(premises.IdObject.Value)["id_building"];
-                    if (!ViewportHelper.BuildingRentAndFundMatch(idBuilding, (int)ParentRow["id_rent_type"]) &&
+                    if (!ViewportHelper.BuildingFundAndRentMatch(idBuilding, (int)ParentRow["id_rent_type"]) &&
                                 MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемого помещения. Все равно продолжить сохранение?",
                                 "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != 
                                 System.Windows.Forms.DialogResult.Yes)

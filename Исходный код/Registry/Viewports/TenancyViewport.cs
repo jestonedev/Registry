@@ -537,27 +537,27 @@ namespace Registry.Viewport
                 switch (ParentType)
                 {
                     case ParentTypeEnum.Building:
-                        if (!ViewportHelper.BuildingRentAndFundMatch((int)ParentRow["id_building"], tenancy.IdRentType.Value) &&
+                        if (!ViewportHelper.BuildingFundAndRentMatch((int)ParentRow["id_building"], tenancy.IdRentType.Value) &&
                             MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемого здания. Все равно продолжить сохранение?",
                             "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != System.Windows.Forms.DialogResult.Yes)
                             return false;
                         break;
                     case ParentTypeEnum.Premises:
-                        if (!ViewportHelper.PremiseRentAndFundMatch((int)ParentRow["id_premises"], tenancy.IdRentType.Value))
+                        if (!ViewportHelper.PremiseFundAndRentMatch((int)ParentRow["id_premises"], tenancy.IdRentType.Value))
                         {
-                            if (!ViewportHelper.BuildingRentAndFundMatch((int)ParentRow["id_building"], tenancy.IdRentType.Value) &&
+                            if (!ViewportHelper.BuildingFundAndRentMatch((int)ParentRow["id_building"], tenancy.IdRentType.Value) &&
                             MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемого помещения. Все равно продолжить сохранение?",
                             "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != System.Windows.Forms.DialogResult.Yes)
                                 return false;
                         }
                         break;
                     case ParentTypeEnum.SubPremises:
-                        if (!ViewportHelper.SubPremiseRentAndFundMatch((int)ParentRow["id_sub_premises"], tenancy.IdRentType.Value))
+                        if (!ViewportHelper.SubPremiseFundAndRentMatch((int)ParentRow["id_sub_premises"], tenancy.IdRentType.Value))
                         {
-                            if (!ViewportHelper.PremiseRentAndFundMatch((int)ParentRow["id_premises"], tenancy.IdRentType.Value))
+                            if (!ViewportHelper.PremiseFundAndRentMatch((int)ParentRow["id_premises"], tenancy.IdRentType.Value))
                             {
                                 int idBuilding = (int)PremisesDataModel.GetInstance().Select().Rows.Find((int)ParentRow["id_premises"])["id_building"];
-                                if (!ViewportHelper.BuildingRentAndFundMatch(idBuilding, tenancy.IdRentType.Value) &&
+                                if (!ViewportHelper.BuildingFundAndRentMatch(idBuilding, tenancy.IdRentType.Value) &&
                                     MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемой комнаты. Все равно продолжить сохранение?",
                                     "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != System.Windows.Forms.DialogResult.Yes)
                                         return false;

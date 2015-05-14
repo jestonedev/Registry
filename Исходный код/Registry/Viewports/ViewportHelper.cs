@@ -161,7 +161,7 @@ namespace Registry.Viewport
             }
         }
 
-        internal static bool BuildingRentAndFundMatch(int idBuilding, int idRentType)
+        internal static bool BuildingFundAndRentMatch(int idBuilding, int idRentType)
         {
             DataRow bRow = CalcDataModelBuildingsCurrentFunds.GetInstance().Select().Rows.Find(idBuilding);
             if (bRow != null)
@@ -173,7 +173,7 @@ namespace Registry.Viewport
             return false;
         }
 
-        internal static bool PremiseRentAndFundMatch(int idPremise, int idRentType)
+        internal static bool PremiseFundAndRentMatch(int idPremise, int idRentType)
         {
             DataRow bRow = CalcDataModelPremisesCurrentFunds.GetInstance().Select().Rows.Find(idPremise);
             if (bRow != null)
@@ -185,7 +185,7 @@ namespace Registry.Viewport
             return false;
         }
 
-        internal static bool SubPremiseRentAndFundMatch(int idSubPremise, int idRentType)
+        internal static bool SubPremiseFundAndRentMatch(int idSubPremise, int idRentType)
         {
             DataRow bRow = CalcDataModelSubPremisesCurrentFunds.GetInstance().Select().Rows.Find(idSubPremise);
             if (bRow != null)
