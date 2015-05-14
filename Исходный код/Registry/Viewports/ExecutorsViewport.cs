@@ -32,8 +32,6 @@ namespace Registry.Viewport
         BindingSource v_snapshot_executors = null;
         #endregion Views
 
-
-
         //Флаг разрешения синхронизации snapshot и original моделей
         bool sync_views = true;
 

@@ -16,6 +16,12 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridView dataGridView;
+        private DataGridViewTextBoxColumn id_reason;
+        private DataGridViewTextBoxColumn id_process;
+        private DataGridViewComboBoxColumn id_reason_type;
+        private DataGridViewTextBoxColumn reason_number;
+        private DataGridViewDateTimeColumn reason_date;
+        private DataGridViewTextBoxColumn reason_prepared;
         #endregion Components
 
         #region Models
@@ -29,12 +35,6 @@ namespace Registry.Viewport
         BindingSource v_tenancy_reason_types = null;
         BindingSource v_snapshot_tenancy_reasons = null;
         #endregion Views
-        private DataGridViewTextBoxColumn id_reason;
-        private DataGridViewTextBoxColumn id_process;
-        private DataGridViewComboBoxColumn id_reason_type;
-        private DataGridViewTextBoxColumn reason_number;
-        private DataGridViewDateTimeColumn reason_date;
-        private DataGridViewTextBoxColumn reason_prepared;
 
         //Флаг разрешения синхронизации snapshot и original моделей
         bool sync_views = true;

@@ -76,6 +76,26 @@ namespace Registry.Viewport
         private ComboBox comboBoxStructureType;
         private CheckBox checkBoxImprovement;
         private CheckBox checkBoxElevator;
+        private DataGridViewTextBoxColumn restriction_number;
+        private DataGridViewTextBoxColumn restriction_date;
+        private DataGridViewTextBoxColumn restriction_description;
+        private DataGridViewComboBoxColumn id_restriction_type;
+        private DataGridViewTextBoxColumn ownership_number;
+        private DataGridViewTextBoxColumn ownership_date;
+        private DataGridViewTextBoxColumn ownership_description;
+        private DataGridViewComboBoxColumn id_ownership_type;
+        private NumericUpDown numericUpDownWear;
+        private Label label21;
+        private Panel panel3;
+        private VIBlend.WinForms.Controls.vButton vButtonRestrictionEdit;
+        private VIBlend.WinForms.Controls.vButton vButtonRestrictionDelete;
+        private VIBlend.WinForms.Controls.vButton vButtonRestrictionAdd;
+        private Panel panel4;
+        private VIBlend.WinForms.Controls.vButton vButtonOwnershipEdit;
+        private VIBlend.WinForms.Controls.vButton vButtonOwnershipDelete;
+        private VIBlend.WinForms.Controls.vButton vButtonOwnershipAdd;
+        private DateTimePicker dateTimePickerStateDate;
+        private Label label22;
         #endregion Components
 
         #region Models
@@ -118,27 +138,6 @@ namespace Registry.Viewport
         
         //State
         private ViewportState viewportState = ViewportState.ReadState;
-        private DataGridViewTextBoxColumn restriction_number;
-        private DataGridViewTextBoxColumn restriction_date;
-        private DataGridViewTextBoxColumn restriction_description;
-        private DataGridViewComboBoxColumn id_restriction_type;
-        private DataGridViewTextBoxColumn ownership_number;
-        private DataGridViewTextBoxColumn ownership_date;
-        private DataGridViewTextBoxColumn ownership_description;
-        private DataGridViewComboBoxColumn id_ownership_type;
-        private NumericUpDown numericUpDownWear;
-        private Label label21;
-        private Panel panel3;
-        private VIBlend.WinForms.Controls.vButton vButtonRestrictionEdit;
-        private VIBlend.WinForms.Controls.vButton vButtonRestrictionDelete;
-        private VIBlend.WinForms.Controls.vButton vButtonRestrictionAdd;
-        private Panel panel4;
-        private VIBlend.WinForms.Controls.vButton vButtonOwnershipEdit;
-        private VIBlend.WinForms.Controls.vButton vButtonOwnershipDelete;
-        private VIBlend.WinForms.Controls.vButton vButtonOwnershipAdd;
-        private DateTimePicker dateTimePickerStateDate;
-        private Label label22;
-
         private bool is_editable = false;
 
         private BuildingViewport()

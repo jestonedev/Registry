@@ -16,18 +16,18 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridView dataGridView;
-        #endregion Components
-
-        #region Models
-        public DataTable sub_premises { get; set; }
-        private DataModel resettle_sub_premises = null;
-        #endregion Models
         private DataGridViewCheckBoxColumn is_checked;
         private DataGridViewTextBoxColumn id_sub_premises;
         private DataGridViewTextBoxColumn id_premises;
         private DataGridViewTextBoxColumn sub_premises_num;
         private DataGridViewTextBoxColumn total_area;
         private DataGridViewTextBoxColumn description;
+        #endregion Components
+
+        #region Models
+        public DataTable sub_premises { get; set; }
+        private DataModel resettle_sub_premises = null;
+        #endregion Models
 
 
         #region Views

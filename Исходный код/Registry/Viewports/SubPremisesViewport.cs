@@ -19,6 +19,13 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridView dataGridView;
+        private DataGridViewTextBoxColumn id_sub_premises;
+        private DataGridViewTextBoxColumn id_premises;
+        private DataGridViewTextBoxColumn sub_premises_num;
+        private DataGridViewTextBoxColumn total_area;
+        private DataGridViewTextBoxColumn description;
+        private DataGridViewComboBoxColumn id_state;
+        private DataGridViewDateTimeColumn state_date;
         #endregion Components
 
         #region Models
@@ -32,13 +39,6 @@ namespace Registry.Viewport
         BindingSource v_object_states = null;
         BindingSource v_snapshot_sub_premises = null;
         #endregion Views
-        private DataGridViewTextBoxColumn id_sub_premises;
-        private DataGridViewTextBoxColumn id_premises;
-        private DataGridViewTextBoxColumn sub_premises_num;
-        private DataGridViewTextBoxColumn total_area;
-        private DataGridViewTextBoxColumn description;
-        private DataGridViewComboBoxColumn id_state;
-        private DataGridViewDateTimeColumn state_date;
 
 
         //Флаг разрешения синхронизации snapshot и original моделей

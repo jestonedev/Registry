@@ -18,6 +18,16 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridView dataGridView;
+        private DataGridViewCheckBoxColumn is_checked;
+        private DataGridViewTextBoxColumn rent_total_area;
+        private DataGridViewTextBoxColumn rent_living_area;
+        private DataGridViewTextBoxColumn id_building;
+        private DataGridViewComboBoxColumn id_street;
+        private DataGridViewTextBoxColumn house;
+        private DataGridViewTextBoxColumn floors;
+        private DataGridViewTextBoxColumn living_area;
+        private DataGridViewTextBoxColumn cadastral_num;
+        private DataGridViewTextBoxColumn startup_year;
         #endregion Components
 
         #region Models
@@ -37,16 +47,6 @@ namespace Registry.Viewport
         //Forms
         private SearchForm sbSimpleSearchForm = null;
         private SearchForm sbExtendedSearchForm = null;
-        private DataGridViewCheckBoxColumn is_checked;
-        private DataGridViewTextBoxColumn rent_total_area;
-        private DataGridViewTextBoxColumn rent_living_area;
-        private DataGridViewTextBoxColumn id_building;
-        private DataGridViewComboBoxColumn id_street;
-        private DataGridViewTextBoxColumn house;
-        private DataGridViewTextBoxColumn floors;
-        private DataGridViewTextBoxColumn living_area;
-        private DataGridViewTextBoxColumn cadastral_num;
-        private DataGridViewTextBoxColumn startup_year;
 
         //Флаг разрешения синхронизации snapshot и original моделей
         bool sync_views = true;

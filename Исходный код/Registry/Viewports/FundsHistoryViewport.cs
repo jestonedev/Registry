@@ -36,7 +36,6 @@ namespace Registry.Viewport
         private DateTimePicker dateTimePickerProtocolDate;
         private TextBox textBoxProtocolNumber;
         private ComboBox comboBoxFundType;
-
         private DataGridView dataGridView;
         private CheckBox checkBoxIncludeRest;
         private CheckBox checkBoxExcludeRest;
@@ -47,6 +46,10 @@ namespace Registry.Viewport
         private DateTimePicker dateTimePickerIncludeRestDate;
         private DateTimePicker dateTimePickerExcludeRestDate;
         private TextBox textBoxDescription;
+        private DataGridViewTextBoxColumn id_fund;
+        private DataGridViewTextBoxColumn protocol_number;
+        private DataGridViewDateTimeColumn protocol_date;
+        private DataGridViewComboBoxColumn id_fund_type;
         #endregion Components
 
         #region Models
@@ -62,10 +65,6 @@ namespace Registry.Viewport
         #endregion Views
 
         private ViewportState viewportState = ViewportState.ReadState;
-        private DataGridViewTextBoxColumn id_fund;
-        private DataGridViewTextBoxColumn protocol_number;
-        private DataGridViewDateTimeColumn protocol_date;
-        private DataGridViewComboBoxColumn id_fund_type;
         private bool is_editable = false;
 
         private FundsHistoryViewport()

@@ -45,6 +45,12 @@ namespace Registry.Viewport
         DateTimePicker dateTimePickerAtDate;
         DateTimePicker dateTimePickerDateOfTransfer;
         DataGridView dataGridViewClaims;
+        private DataGridViewTextBoxColumn id_claim;
+        private DataGridViewTextBoxColumn date_of_transfer;
+        private DataGridViewTextBoxColumn amount_of_debt_rent;
+        private DataGridViewTextBoxColumn amount_of_debt_fine;
+        private DataGridViewTextBoxColumn at_date;
+        private DataGridViewTextBoxColumn description;
         #endregion Components
 
         //Modeles
@@ -54,12 +60,6 @@ namespace Registry.Viewport
         BindingSource v_claims = null;
 
         private ViewportState viewportState = ViewportState.ReadState;
-        private DataGridViewTextBoxColumn id_claim;
-        private DataGridViewTextBoxColumn date_of_transfer;
-        private DataGridViewTextBoxColumn amount_of_debt_rent;
-        private DataGridViewTextBoxColumn amount_of_debt_fine;
-        private DataGridViewTextBoxColumn at_date;
-        private DataGridViewTextBoxColumn description;
         private bool is_editable = false;
 
         private ClaimListViewport()

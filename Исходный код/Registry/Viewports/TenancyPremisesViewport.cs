@@ -19,6 +19,18 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridViewWithDetails dataGridView;
+        private DataGridViewImageColumn image;
+        private DataGridViewCheckBoxColumn is_checked;
+        private DataGridViewTextBoxColumn rent_total_area;
+        private DataGridViewTextBoxColumn rent_living_area;
+        private DataGridViewTextBoxColumn id_premises;
+        private DataGridViewTextBoxColumn id_street;
+        private DataGridViewTextBoxColumn house;
+        private DataGridViewTextBoxColumn premises_num;
+        private DataGridViewComboBoxColumn id_premises_type;
+        private DataGridViewTextBoxColumn total_area;
+        private DataGridViewTextBoxColumn id_state;
+        private DataGridViewTextBoxColumn current_fund;
         #endregion Components
 
         #region Models
@@ -49,18 +61,6 @@ namespace Registry.Viewport
 
         //Флаг разрешения синхронизации snapshot и original моделей
         bool sync_views = true;
-        private DataGridViewImageColumn image;
-        private DataGridViewCheckBoxColumn is_checked;
-        private DataGridViewTextBoxColumn rent_total_area;
-        private DataGridViewTextBoxColumn rent_living_area;
-        private DataGridViewTextBoxColumn id_premises;
-        private DataGridViewTextBoxColumn id_street;
-        private DataGridViewTextBoxColumn house;
-        private DataGridViewTextBoxColumn premises_num;
-        private DataGridViewComboBoxColumn id_premises_type;
-        private DataGridViewTextBoxColumn total_area;
-        private DataGridViewTextBoxColumn id_state;
-        private DataGridViewTextBoxColumn current_fund;
 
         //Идентификатор развернутого помещения
         private int id_expanded = -1;

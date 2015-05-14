@@ -23,6 +23,10 @@ namespace Registry.Viewport
         DataGridViewCheckBoxColumn is_start_state_type;
         DataGridViewTextBoxColumn state_type;
         DataGridView dataGridViewClaimStateTypesFrom;
+        private DataGridViewCheckBoxColumn state_type_checked;
+        private DataGridViewTextBoxColumn id_relation;
+        private DataGridViewTextBoxColumn id_state_type_from;
+        private DataGridViewTextBoxColumn state_type_from;
         #endregion Components
 
         #region Models
@@ -42,10 +46,6 @@ namespace Registry.Viewport
 
         //Флаг разрешения синхронизации snapshot и original моделей
         bool sync_views = true;
-        private DataGridViewCheckBoxColumn state_type_checked;
-        private DataGridViewTextBoxColumn id_relation;
-        private DataGridViewTextBoxColumn id_state_type_from;
-        private DataGridViewTextBoxColumn state_type_from;
         int temp_id_state_type = Int32.MaxValue;
 
         private ClaimStateTypesViewport()

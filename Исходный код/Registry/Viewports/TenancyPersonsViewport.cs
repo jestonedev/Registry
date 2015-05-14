@@ -60,6 +60,15 @@ namespace Registry.Viewport
         private ComboBox comboBoxResidenceStreet;
         private DateTimePicker dateTimePickerDateOfBirth;
         private DateTimePicker dateTimePickerDateOfDocumentIssue;
+        private DataGridViewTextBoxColumn surname;
+        private DataGridViewTextBoxColumn name;
+        private DataGridViewTextBoxColumn patronymic;
+        private DataGridViewTextBoxColumn date_of_birth;
+        private DataGridViewComboBoxColumn id_kinship;
+        private DateTimePicker dateTimePickerExcludeDate;
+        private Label label2;
+        private DateTimePicker dateTimePickerIncludeDate;
+        private Label label1;
         #endregion Components
 
         #region Models
@@ -81,15 +90,6 @@ namespace Registry.Viewport
 
         //State
         private ViewportState viewportState = ViewportState.ReadState;
-        private DataGridViewTextBoxColumn surname;
-        private DataGridViewTextBoxColumn name;
-        private DataGridViewTextBoxColumn patronymic;
-        private DataGridViewTextBoxColumn date_of_birth;
-        private DataGridViewComboBoxColumn id_kinship;
-        private DateTimePicker dateTimePickerExcludeDate;
-        private Label label2;
-        private DateTimePicker dateTimePickerIncludeDate;
-        private Label label1;
         private bool is_editable = false;
 
         private TenancyPersonsViewport()

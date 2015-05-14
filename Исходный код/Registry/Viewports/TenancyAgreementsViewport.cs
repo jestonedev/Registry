@@ -56,6 +56,15 @@ namespace Registry.Viewport
         private VIBlend.WinForms.Controls.vButton vButtonTerminatePaste;
         private DateTimePicker dateTimePickerAgreementDate;
         private DateTimePicker dateTimePickerIncludeDateOfBirth;
+        private DataGridViewTextBoxColumn id_agreement;
+        private DataGridViewDateTimeColumn agreement_date;
+        private DataGridViewTextBoxColumn agreement_content;
+        private DataGridViewTextBoxColumn surname;
+        private DataGridViewTextBoxColumn name;
+        private DataGridViewTextBoxColumn patronymic;
+        private DataGridViewTextBoxColumn date_of_birth;
+        private DateTimePicker dateTimePickerTerminateDate;
+        private Label label1;
         #endregion Components
 
         #region Modeles
@@ -80,16 +89,7 @@ namespace Registry.Viewport
         //State
         private ViewportState viewportState = ViewportState.ReadState;
         private bool is_editable = false;
-        private DataGridViewTextBoxColumn id_agreement;
-        private DataGridViewDateTimeColumn agreement_date;
-        private DataGridViewTextBoxColumn agreement_content;
-        private DataGridViewTextBoxColumn surname;
-        private DataGridViewTextBoxColumn name;
-        private DataGridViewTextBoxColumn patronymic;
-        private DataGridViewTextBoxColumn date_of_birth;
         private int? id_warrant = null;
-        private DateTimePicker dateTimePickerTerminateDate;
-        private Label label1;
         private bool is_first_visible = true;   // первое отображение формы
 
         private TenancyAgreementsViewport()

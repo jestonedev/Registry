@@ -18,6 +18,13 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridView dataGridView;
+        private DataGridViewTextBoxColumn id_building;
+        private DataGridViewComboBoxColumn id_street;
+        private DataGridViewTextBoxColumn house;
+        private DataGridViewTextBoxColumn floors;
+        private DataGridViewTextBoxColumn living_area;
+        private DataGridViewTextBoxColumn cadastral_num;
+        private DataGridViewTextBoxColumn startup_year;
         #endregion Components
 
         #region Models
@@ -32,13 +39,6 @@ namespace Registry.Viewport
 
         //Forms
         private SearchForm sbSimpleSearchForm = null;
-        private DataGridViewTextBoxColumn id_building;
-        private DataGridViewComboBoxColumn id_street;
-        private DataGridViewTextBoxColumn house;
-        private DataGridViewTextBoxColumn floors;
-        private DataGridViewTextBoxColumn living_area;
-        private DataGridViewTextBoxColumn cadastral_num;
-        private DataGridViewTextBoxColumn startup_year;
         private SearchForm sbExtendedSearchForm = null;
 
         private BuildingListViewport()

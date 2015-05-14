@@ -16,6 +16,11 @@ namespace Registry.Viewport
     {
         #region Components
         private System.Windows.Forms.DataGridView dataGridView;
+        private DataGridViewTextBoxColumn id_person;
+        private DataGridViewTextBoxColumn id_process;
+        private DataGridViewTextBoxColumn surname;
+        private DataGridViewTextBoxColumn name;
+        private DataGridViewTextBoxColumn patronymic;
         #endregion Components
 
         #region Models
@@ -27,11 +32,6 @@ namespace Registry.Viewport
         BindingSource v_resettle_persons = null;
         BindingSource v_snapshot_resettle_persons = null;
         #endregion Views
-        private DataGridViewTextBoxColumn id_person;
-        private DataGridViewTextBoxColumn id_process;
-        private DataGridViewTextBoxColumn surname;
-        private DataGridViewTextBoxColumn name;
-        private DataGridViewTextBoxColumn patronymic;
 
 
         //Флаг разрешения синхронизации snapshot и original моделей

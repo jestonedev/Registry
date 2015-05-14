@@ -17,6 +17,11 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridView dataGridView;
+        private DataGridViewTextBoxColumn id_restriction;
+        private DataGridViewTextBoxColumn number;
+        private DataGridViewDateTimeColumn date;
+        private DataGridViewTextBoxColumn description;
+        private DataGridViewComboBoxColumn id_restriction_type;
         #endregion Components
 
         #region Models
@@ -32,11 +37,6 @@ namespace Registry.Viewport
         BindingSource v_restriction_assoc = null;
         BindingSource v_snapshot_restrictions = null;
         #endregion Views
-        private DataGridViewTextBoxColumn id_restriction;
-        private DataGridViewTextBoxColumn number;
-        private DataGridViewDateTimeColumn date;
-        private DataGridViewTextBoxColumn description;
-        private DataGridViewComboBoxColumn id_restriction_type;
 
 
         //Флаг разрешения синхронизации snapshot и original моделей

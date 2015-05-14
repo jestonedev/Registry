@@ -17,6 +17,11 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridView dataGridView;
+        private DataGridViewTextBoxColumn id_ownership_right;
+        private DataGridViewTextBoxColumn number;
+        private DataGridViewDateTimeColumn date;
+        private DataGridViewTextBoxColumn description;
+        private DataGridViewComboBoxColumn id_ownership_right_type;
         #endregion Components
 
         #region Models
@@ -32,11 +37,6 @@ namespace Registry.Viewport
         BindingSource v_ownership_assoc = null;
         BindingSource v_snapshot_ownerships_rights = null;
         #endregion Views
-        private DataGridViewTextBoxColumn id_ownership_right;
-        private DataGridViewTextBoxColumn number;
-        private DataGridViewDateTimeColumn date;
-        private DataGridViewTextBoxColumn description;
-        private DataGridViewComboBoxColumn id_ownership_right_type;
 
         //Флаг разрешения синхронизации snapshot и original моделей
         bool sync_views = true;

@@ -61,6 +61,23 @@ namespace Registry.Viewport
         private DateTimePicker dateTimePickerBeginDate;
         private DateTimePicker dateTimePickerEndDate;
         private VIBlend.WinForms.Controls.vButton vButtonWarrant = new VIBlend.WinForms.Controls.vButton();
+        private GroupBox groupBox31;
+        private TextBox textBoxDescription;
+        private GroupBox groupBox22;
+        private ComboBox comboBoxExecutor;
+        private Label label41;
+        private ComboBox comboBoxRentType;
+        private Label label46;
+        private GroupBox groupBox1;
+        private DataGridView dataGridViewTenancyPersons;
+        private DataGridViewTextBoxColumn surname;
+        private DataGridViewTextBoxColumn name;
+        private DataGridViewTextBoxColumn patronymic;
+        private DataGridViewTextBoxColumn date_of_birth;
+        private DataGridViewComboBoxColumn id_kinship;
+        private DataGridViewTextBoxColumn address;
+        private DataGridViewTextBoxColumn total_area;
+        private DataGridViewTextBoxColumn living_area;
         #endregion Components
 
         #region Models
@@ -97,23 +114,6 @@ namespace Registry.Viewport
         //State
         private ViewportState viewportState = ViewportState.ReadState;
         private bool is_editable = false;
-        private GroupBox groupBox31;
-        private TextBox textBoxDescription;
-        private GroupBox groupBox22;
-        private ComboBox comboBoxExecutor;
-        private Label label41;
-        private ComboBox comboBoxRentType;
-        private Label label46;
-        private GroupBox groupBox1;
-        private DataGridView dataGridViewTenancyPersons;
-        private DataGridViewTextBoxColumn surname;
-        private DataGridViewTextBoxColumn name;
-        private DataGridViewTextBoxColumn patronymic;
-        private DataGridViewTextBoxColumn date_of_birth;
-        private DataGridViewComboBoxColumn id_kinship;
-        private DataGridViewTextBoxColumn address;
-        private DataGridViewTextBoxColumn total_area;
-        private DataGridViewTextBoxColumn living_area;
         private int? id_warrant = null;
         private bool is_copy = false;
         private int? id_copy_process = null;

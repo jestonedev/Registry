@@ -33,6 +33,10 @@ namespace Registry.Viewport
         DateTimePicker dateTimePickerStartState;
         DateTimePicker dateTimePickerEndState;
         DataGridView dataGridView;
+        private DataGridViewComboBoxColumn id_state_type;
+        private DataGridViewTextBoxColumn date_start_state;
+        private DataGridViewTextBoxColumn date_end_state;
+        private DataGridViewTextBoxColumn description;
         #endregion Components
 
         #region Models
@@ -50,10 +54,6 @@ namespace Registry.Viewport
 
         //State
         private ViewportState viewportState = ViewportState.ReadState;
-        private DataGridViewComboBoxColumn id_state_type;
-        private DataGridViewTextBoxColumn date_start_state;
-        private DataGridViewTextBoxColumn date_end_state;
-        private DataGridViewTextBoxColumn description;
         private bool is_editable = false;
 
         private ClaimStatesViewport()
