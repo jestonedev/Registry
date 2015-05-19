@@ -1593,7 +1593,7 @@ namespace Registry.Viewport
                 editor.State = ViewportState.ModifyRowState;
                 editor.ParentType = ParentTypeEnum.Building;
                 editor.ParentRow = ((DataRowView)v_buildings[v_buildings.Position]).Row;
-                editor.Restriction_ = restriction;
+                editor.RestrictionValue = restriction;
                 editor.ShowDialog();
             }
         }
@@ -1672,7 +1672,7 @@ namespace Registry.Viewport
                 editor.State = ViewportState.ModifyRowState;
                 editor.ParentType = ParentTypeEnum.Building;
                 editor.ParentRow = ((DataRowView)v_buildings[v_buildings.Position]).Row;
-                editor.OwnershipRight_ = ownershipRight;
+                editor.OwnershipRightValue = ownershipRight;
                 editor.ShowDialog();
             }
         }

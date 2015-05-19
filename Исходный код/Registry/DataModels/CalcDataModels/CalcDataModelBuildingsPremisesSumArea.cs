@@ -87,8 +87,8 @@ namespace Registry.CalcDataModels
                          on premises_row.Field<int>("id_premises") equals premises_included_into_municipal_row.IdObject into piimr
                          from piimr_row in piimr.DefaultIfEmpty()
                          where dbr_row == 0 && dpr_row == 0 &&
-                               (befmr_row == null || (piimr_row != null && befmr_row.date <= piimr_row.date)) && 
-                               (pefmr_row == null || (biimr_row != null && pefmr_row.date <= biimr_row.date))
+                               (befmr_row == null || (piimr_row != null && befmr_row.Date <= piimr_row.Date)) && 
+                               (pefmr_row == null || (biimr_row != null && pefmr_row.Date <= biimr_row.Date))
                          group new int[] { 4, 5 }.Contains(premises_row.Field<int>("id_state")) ? 
                                 premises_row.Field<double>("total_area") :
                                 premises_row.Field<int>("id_state") == 1 ?

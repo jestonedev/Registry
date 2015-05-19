@@ -1142,9 +1142,10 @@ namespace Registry.Viewport
 
         private void textBoxSNP_Leave(object sender, EventArgs e)
         {
-            string text = ((TextBox)sender).Text;
+            TextBox textBox = (TextBox)sender;
+            string text = textBox.Text;
             if (!String.IsNullOrEmpty(text))
-                ((TextBox)sender).Text = text[0].ToString().ToUpper(CultureInfo.CurrentCulture) + text.Substring(1);
+                textBox.Text = text[0].ToString().ToUpper(CultureInfo.CurrentCulture) + text.Substring(1);
         }
 
         private void InitializeComponent()

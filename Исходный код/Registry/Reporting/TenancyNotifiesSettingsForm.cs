@@ -82,7 +82,7 @@ namespace Registry.Reporting
             {
                 StaticFilter += " AND id_process NOT IN (0";
                 foreach (int id in exclude_processes)
-                    StaticFilter += "," + id.ToString();
+                    StaticFilter += "," + id.ToString(CultureInfo.InvariantCulture);
                 StaticFilter += ")";
             }   
             RebuildFilter();

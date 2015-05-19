@@ -71,18 +71,18 @@ namespace Registry.Viewport
             }
         }
 
-        public OwnershipRight OwnershipRight_
+        public OwnershipRight OwnershipRightValue
         {
             get
             {
-                OwnershipRight ownershipRight_ = new OwnershipRight();
-                ownershipRight_.Date = ViewportHelper.ValueOrNull(dateTimePickerOwnershipDate);
-                ownershipRight_.Description = ViewportHelper.ValueOrNull(textBoxOwnershipDescription);
-                ownershipRight_.Number = ViewportHelper.ValueOrNull(textBoxOwnershipNumber);
-                ownershipRight_.IdOwnershipRightType = ViewportHelper.ValueOrNull<int>(comboBoxIdOwnershipType);
+                OwnershipRight ownershipRightValue = new OwnershipRight();
+                ownershipRightValue.Date = ViewportHelper.ValueOrNull(dateTimePickerOwnershipDate);
+                ownershipRightValue.Description = ViewportHelper.ValueOrNull(textBoxOwnershipDescription);
+                ownershipRightValue.Number = ViewportHelper.ValueOrNull(textBoxOwnershipNumber);
+                ownershipRightValue.IdOwnershipRightType = ViewportHelper.ValueOrNull<int>(comboBoxIdOwnershipType);
                 if (state == ViewportState.ModifyRowState)
-                    ownershipRight_.IdOwnershipRight = ownershipRight.IdOwnershipRight;
-                return ownershipRight_;
+                    ownershipRightValue.IdOwnershipRight = ownershipRight.IdOwnershipRight;
+                return ownershipRightValue;
             }
             set
             {
@@ -154,7 +154,7 @@ namespace Registry.Viewport
 
         private void vButtonSave_Click(object sender, EventArgs e)
         {
-            OwnershipRight ownershipRight = OwnershipRight_;
+            OwnershipRight ownershipRight = OwnershipRightValue;
             if (!ValidateData(ownershipRight))
                 return;
             int id_parent = ((ParentType == ParentTypeEnum.Premises) && ParentRow != null) ? (int)ParentRow["id_premises"] :

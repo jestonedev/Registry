@@ -71,18 +71,18 @@ namespace Registry.Viewport
             }
         }
 
-        public Restriction Restriction_
+        public Restriction RestrictionValue
         {
             get
             {
-                Restriction restriction_ = new Restriction();
-                restriction_.Date = ViewportHelper.ValueOrNull(dateTimePickerRestrictionDate);
-                restriction_.Description = ViewportHelper.ValueOrNull(textBoxRestrictionDescription);
-                restriction_.Number = ViewportHelper.ValueOrNull(textBoxRestrictionNumber);
-                restriction_.IdRestrictionType = ViewportHelper.ValueOrNull<int>(comboBoxIdRestrictionType);
+                Restriction restrictionValue = new Restriction();
+                restrictionValue.Date = ViewportHelper.ValueOrNull(dateTimePickerRestrictionDate);
+                restrictionValue.Description = ViewportHelper.ValueOrNull(textBoxRestrictionDescription);
+                restrictionValue.Number = ViewportHelper.ValueOrNull(textBoxRestrictionNumber);
+                restrictionValue.IdRestrictionType = ViewportHelper.ValueOrNull<int>(comboBoxIdRestrictionType);
                 if (state == ViewportState.ModifyRowState)
-                    restriction_.IdRestriction = restriction.IdRestriction;
-                return restriction_;
+                    restrictionValue.IdRestriction = restriction.IdRestriction;
+                return restrictionValue;
             }
             set
             {
@@ -154,7 +154,7 @@ namespace Registry.Viewport
 
         private void vButtonSave_Click(object sender, EventArgs e)
         {
-            Restriction restriction = Restriction_;
+            Restriction restriction = RestrictionValue;
             if (!ValidateData(restriction))
                 return;
             int id_parent = ((ParentType == ParentTypeEnum.Premises) && ParentRow != null) ? (int)ParentRow["id_premises"] :

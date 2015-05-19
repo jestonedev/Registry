@@ -66,20 +66,20 @@ namespace Registry.Viewport
             }
         }
 
-        public SubPremise SubPremise_
+        public SubPremise SubPremiseValue
         {
             get
             {
-                SubPremise subPremise_ = new SubPremise();
-                subPremise_.TotalArea = (double)numericUpDownTotalArea.Value;
-                subPremise_.Description = ViewportHelper.ValueOrNull(textBoxDescription);
-                subPremise_.SubPremisesNum = ViewportHelper.ValueOrNull(textBoxSubPremisesNum);
-                subPremise_.IdState = ViewportHelper.ValueOrNull<int>(comboBoxIdState);
+                SubPremise subPremiseValue = new SubPremise();
+                subPremiseValue.TotalArea = (double)numericUpDownTotalArea.Value;
+                subPremiseValue.Description = ViewportHelper.ValueOrNull(textBoxDescription);
+                subPremiseValue.SubPremisesNum = ViewportHelper.ValueOrNull(textBoxSubPremisesNum);
+                subPremiseValue.IdState = ViewportHelper.ValueOrNull<int>(comboBoxIdState);
                 if (state == ViewportState.ModifyRowState)
-                    subPremise_.IdSubPremises = subPremise.IdSubPremises;
+                    subPremiseValue.IdSubPremises = subPremise.IdSubPremises;
                 if (dateTimePickerStateDate.Checked)
-                    subPremise_.StateDate = dateTimePickerStateDate.Value;
-                return subPremise_;
+                    subPremiseValue.StateDate = dateTimePickerStateDate.Value;
+                return subPremiseValue;
             }
             set
             {
@@ -150,7 +150,7 @@ namespace Registry.Viewport
 
         private void vButtonSave_Click(object sender, EventArgs e)
         {
-            SubPremise subPremise = SubPremise_;
+            SubPremise subPremise = SubPremiseValue;
             if (!ValidateData(subPremise))
                 return;
             int id_parent = ((ParentType == ParentTypeEnum.Premises) && ParentRow != null) ? (int)ParentRow["id_premises"] : -1;

@@ -9,13 +9,13 @@ namespace Registry.Entities
     {
         public int? IdObject { get; set; }
         public int? IdRestriction { get; set; }
-        public DateTime? date { get; set; }
+        public DateTime? Date { get; set; }
 
         public RestrictionObjectAssoc(int? idObject, int? idRestriction, DateTime? date)
         {
             this.IdObject = idObject;
             this.IdRestriction = idRestriction;
-            this.date = date;
+            this.Date = date;
         }
     }
 }
