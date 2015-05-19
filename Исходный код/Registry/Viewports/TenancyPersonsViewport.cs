@@ -1140,6 +1140,13 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
+        private void textBoxSNP_Leave(object sender, EventArgs e)
+        {
+            string text = ((TextBox)sender).Text;
+            if (!String.IsNullOrEmpty(text))
+                ((TextBox)sender).Text = text[0].ToString().ToUpper(CultureInfo.CurrentCulture) + text.Substring(1);
+        }
+
         private void InitializeComponent()
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
@@ -1318,6 +1325,7 @@ namespace Registry.Viewport
             this.textBoxPatronymic.Size = new System.Drawing.Size(230, 21);
             this.textBoxPatronymic.TabIndex = 2;
             this.textBoxPatronymic.TextChanged += new System.EventHandler(this.textBoxPatronymic_TextChanged);
+            this.textBoxPatronymic.Leave += new System.EventHandler(this.textBoxSNP_Leave);
             // 
             // label55
             // 
@@ -1338,6 +1346,7 @@ namespace Registry.Viewport
             this.textBoxName.Size = new System.Drawing.Size(230, 21);
             this.textBoxName.TabIndex = 1;
             this.textBoxName.TextChanged += new System.EventHandler(this.textBoxName_TextChanged);
+            this.textBoxName.Leave += new System.EventHandler(this.textBoxSNP_Leave);
             // 
             // label54
             // 
@@ -1358,6 +1367,7 @@ namespace Registry.Viewport
             this.textBoxSurname.Size = new System.Drawing.Size(230, 21);
             this.textBoxSurname.TabIndex = 0;
             this.textBoxSurname.TextChanged += new System.EventHandler(this.textBoxSurname_TextChanged);
+            this.textBoxSurname.Leave += new System.EventHandler(this.textBoxSNP_Leave);
             // 
             // label53
             // 
@@ -1832,6 +1842,5 @@ namespace Registry.Viewport
             this.ResumeLayout(false);
 
         }
-
     }
 }
