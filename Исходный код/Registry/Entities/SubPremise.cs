@@ -13,6 +13,7 @@ namespace Registry.Entities
         public string SubPremisesNum { get; set; }
         public string Description { get; set; }
         public double? TotalArea { get; set; }
+        public double? LivingArea { get; set; }
         public DateTime? StateDate { get; set; }
 
         public override bool Equals(object obj)
@@ -37,6 +38,7 @@ namespace Registry.Entities
                 first.IdPremises == second.IdPremises &&
                 first.SubPremisesNum == second.SubPremisesNum &&
                 first.TotalArea == second.TotalArea &&
+                first.LivingArea == second.LivingArea &&
                 first.Description == second.Description &&
                 first.IdState == second.IdState &&
                 first.StateDate == second.StateDate;

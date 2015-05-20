@@ -72,6 +72,10 @@ namespace Registry.Viewport
             {
                 SubPremise subPremiseValue = new SubPremise();
                 subPremiseValue.TotalArea = (double)numericUpDownTotalArea.Value;
+                if ((double)numericUpDownLivingArea.Value == 0)
+                    subPremiseValue.LivingArea = (double)numericUpDownTotalArea.Value;
+                else
+                    subPremiseValue.LivingArea = (double)numericUpDownLivingArea.Value;
                 subPremiseValue.Description = ViewportHelper.ValueOrNull(textBoxDescription);
                 subPremiseValue.SubPremisesNum = ViewportHelper.ValueOrNull(textBoxSubPremisesNum);
                 subPremiseValue.IdState = ViewportHelper.ValueOrNull<int>(comboBoxIdState);
@@ -89,6 +93,7 @@ namespace Registry.Viewport
                 textBoxSubPremisesNum.Text = value.SubPremisesNum;
                 textBoxDescription.Text = value.Description;
                 numericUpDownTotalArea.Value = value.TotalArea == null ? 0 : (decimal)value.TotalArea;
+                numericUpDownLivingArea.Value = value.LivingArea == null ? 0 : (decimal)value.LivingArea;
                 comboBoxIdState.SelectedValue = value.IdState;
                 if (value.StateDate != null)
                 {
@@ -173,6 +178,7 @@ namespace Registry.Viewport
                         subPremise.IdState, 
                         subPremise.SubPremisesNum, 
                         subPremise.TotalArea, 
+                        subPremise.LivingArea, 
                         subPremise.Description,
                         subPremise.StateDate
                     }
@@ -185,6 +191,7 @@ namespace Registry.Viewport
                 row["id_state"] = subPremise.IdState == null ? DBNull.Value : (object)subPremise.IdState;
                 row["sub_premises_num"] = subPremise.SubPremisesNum == null ? DBNull.Value : (object)subPremise.SubPremisesNum;
                 row["total_area"] = subPremise.TotalArea == null ? DBNull.Value : (object)subPremise.TotalArea;
+                row["living_area"] = subPremise.LivingArea == null ? DBNull.Value : (object)subPremise.LivingArea;
                 row["description"] = subPremise.Description == null ? DBNull.Value : (object)subPremise.Description;
                 row["state_date"] = subPremise.StateDate == null ? DBNull.Value : (object)subPremise.StateDate;
             }

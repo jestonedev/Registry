@@ -278,9 +278,9 @@ namespace Registry.Viewport
         {
             DataRowView row = (v_tenancies.Position >= 0) ? (DataRowView)v_tenancies[v_tenancies.Position] : null;
             checkBoxContractEnable.Checked = (v_tenancies.Position >= 0) &&
-                ((row["registration_date"] != DBNull.Value) || (row["registration_num"] != DBNull.Value));
-            checkBoxResidenceWarrantEnable.Checked = (v_tenancies.Position >= 0) && (row["residence_warrant_date"] != DBNull.Value);
-            checkBoxProtocolEnable.Checked = (v_tenancies.Position >= 0) && (row["protocol_date"] != DBNull.Value);
+                (row["registration_date"] != DBNull.Value) && (row["registration_num"] != DBNull.Value);
+            checkBoxResidenceWarrantEnable.Checked = (v_tenancies.Position >= 0) && (row["residence_warrant_date"] != DBNull.Value) && (row["residence_warrant_num"] != DBNull.Value);
+            checkBoxProtocolEnable.Checked = (v_tenancies.Position >= 0) && (row["protocol_date"] != DBNull.Value) && (row["protocol_num"] != DBNull.Value);
             if ((v_tenancies.Position >= 0) && (row["issue_date"] != DBNull.Value))
                 dateTimePickerIssueDate.Checked = true;
             else

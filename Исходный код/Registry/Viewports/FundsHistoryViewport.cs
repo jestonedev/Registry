@@ -151,12 +151,15 @@ namespace Registry.Viewport
 
         private void UnbindedCheckBoxesUpdate()
         {
+            DataRowView row = ((DataRowView)v_funds_history[v_funds_history.Position]);
             checkBoxIncludeRest.Checked = (v_funds_history.Position >= 0) &&
-                (((DataRowView)v_funds_history[v_funds_history.Position])["include_restriction_date"] != DBNull.Value);
+                (row["include_restriction_date"] != DBNull.Value) &&
+                (row["include_restriction_number"] != DBNull.Value);
             checkBoxExcludeRest.Checked = (v_funds_history.Position >= 0) &&
-                (((DataRowView)v_funds_history[v_funds_history.Position])["exclude_restriction_date"] != DBNull.Value);
+                (row["exclude_restriction_date"] != DBNull.Value) &&
+                (row["exclude_restriction_number"] != DBNull.Value);
             if ((v_funds_history.Position >= 0) &&
-                (((DataRowView)v_funds_history[v_funds_history.Position])["protocol_date"] != DBNull.Value))
+                (row["protocol_date"] != DBNull.Value))
                 dateTimePickerProtocolDate.Checked = true;
             else
             {

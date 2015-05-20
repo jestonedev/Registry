@@ -32,7 +32,7 @@ namespace Registry.SearchForms
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.InvariantCulture, "premises_num = '{0}'", textBoxPremisesNum.Text.Trim().Replace("'", ""));
+                filter += String.Format(CultureInfo.InvariantCulture, "premises_num LIKE '%{0}%'", textBoxPremisesNum.Text.Trim().Replace("'", ""));
             }
             if (checkBoxFloorEnable.Checked)
             {

@@ -62,7 +62,7 @@ namespace Registry.CalcDataModels
                                             (premises_row.Field<int>("id_premises_type") == 2 ? " ком. " : " кв. ") + premises_row.Field<string>("premises_num") +
                                             " ком. " + sub_premises_row.Field<string>("sub_premises_num"),
                                         total_area = sub_premises_row.Field<double>("total_area"),
-                                        living_area = sub_premises_row.Field<double>("total_area")
+                                        living_area = sub_premises_row.Field<double>("living_area")
                                     };
             var a_premises = from assoc_premises_row in assoc_premises
                                     join premises_row in premises

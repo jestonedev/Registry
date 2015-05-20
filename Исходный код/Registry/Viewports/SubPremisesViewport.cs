@@ -19,13 +19,6 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridView dataGridView;
-        private DataGridViewTextBoxColumn id_sub_premises;
-        private DataGridViewTextBoxColumn id_premises;
-        private DataGridViewTextBoxColumn sub_premises_num;
-        private DataGridViewTextBoxColumn total_area;
-        private DataGridViewTextBoxColumn description;
-        private DataGridViewComboBoxColumn id_state;
-        private DataGridViewDateTimeColumn state_date;
         #endregion Components
 
         #region Models
@@ -39,6 +32,14 @@ namespace Registry.Viewport
         BindingSource v_object_states = null;
         BindingSource v_snapshot_sub_premises = null;
         #endregion Views
+        private DataGridViewTextBoxColumn id_sub_premises;
+        private DataGridViewTextBoxColumn id_premises;
+        private DataGridViewTextBoxColumn sub_premises_num;
+        private DataGridViewTextBoxColumn total_area;
+        private DataGridViewTextBoxColumn living_area;
+        private DataGridViewTextBoxColumn description;
+        private DataGridViewComboBoxColumn id_state;
+        private DataGridViewDateTimeColumn state_date;
 
 
         //Флаг разрешения синхронизации snapshot и original моделей
@@ -92,6 +93,7 @@ namespace Registry.Viewport
                 dataRowView["id_state"], 
                 dataRowView["sub_premises_num"], 
                 dataRowView["total_area"],
+                dataRowView["living_area"],
                 dataRowView["description"],
                 dataRowView["state_date"]
             };
@@ -134,6 +136,7 @@ namespace Registry.Viewport
             subPremise.IdState = ViewportHelper.ValueOrNull<int>(row, "id_state");
             subPremise.SubPremisesNum = ViewportHelper.ValueOrNull(row, "sub_premises_num");
             subPremise.TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area");
+            subPremise.LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area");
             subPremise.Description = ViewportHelper.ValueOrNull(row, "description");
             subPremise.StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date");
             return subPremise;
@@ -153,6 +156,9 @@ namespace Registry.Viewport
                     sp.IdState = ViewportHelper.ValueOrNull<int>(row, "id_state");
                     sp.SubPremisesNum = ViewportHelper.ValueOrNull(row, "sub_premises_num");
                     sp.TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area");
+                    if (ViewportHelper.ValueOrNull<double>(row, "living_area") == 0)
+                        dataGridView.Rows[i].Cells["living_area"].Value = sp.TotalArea.Value;
+                    sp.LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area");
                     sp.Description = ViewportHelper.ValueOrNull(row, "description");
                     sp.StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date");
                     list.Add(sp);
@@ -173,6 +179,7 @@ namespace Registry.Viewport
                 sp.IdState = ViewportHelper.ValueOrNull<int>(row, "id_state");
                 sp.SubPremisesNum = ViewportHelper.ValueOrNull(row, "sub_premises_num");
                 sp.TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area");
+                sp.LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area");
                 sp.Description = ViewportHelper.ValueOrNull(row, "description");
                 sp.StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date");
                 list.Add(sp);
@@ -272,6 +279,7 @@ namespace Registry.Viewport
             id_premises.DataPropertyName = "id_premises";
             sub_premises_num.DataPropertyName = "sub_premises_num";
             total_area.DataPropertyName = "total_area";
+            living_area.DataPropertyName = "living_area";
             description.DataPropertyName = "description";
             id_state.DataSource = v_object_states;
             id_state.ValueMember = "id_state";
@@ -303,6 +311,7 @@ namespace Registry.Viewport
             DataRowView row = (DataRowView)v_snapshot_sub_premises.AddNew();
             row["id_premises"] = ParentRow["id_premises"];
             row["total_area"] = 0;
+            row["living_area"] = 0;
             row.EndEdit();
         }
 
@@ -403,6 +412,7 @@ namespace Registry.Viewport
                     row["id_state"] = list[i].IdState == null ? DBNull.Value : (object)list[i].IdState;
                     row["sub_premises_num"] = list[i].SubPremisesNum == null ? DBNull.Value : (object)list[i].SubPremisesNum;
                     row["total_area"] = list[i].TotalArea == null ? DBNull.Value : (object)list[i].TotalArea;
+                    row["living_area"] = list[i].LivingArea == null ? DBNull.Value : (object)list[i].LivingArea;
                     row["description"] = list[i].Description == null ? DBNull.Value : (object)list[i].Description;
                     row["state_date"] = list[i].StateDate == null ? DBNull.Value : (object)list[i].StateDate;
                 }
@@ -657,6 +667,7 @@ namespace Registry.Viewport
             switch (cell.OwningColumn.Name)
             {
                 case "total_area":
+                case "living_area":
                     double stub = 0;
                     if ((String.IsNullOrEmpty(cell.Value.ToString()) || (!Double.TryParse(cell.Value.ToString(), out stub))))
                         cell.Value = 0;
@@ -716,6 +727,7 @@ namespace Registry.Viewport
                         e.Row["id_state"],                 
                         e.Row["sub_premises_num"],
                         e.Row["total_area"],
+                        e.Row["living_area"],
                         e.Row["description"],
                         e.Row["state_date"]
                     });
@@ -727,6 +739,7 @@ namespace Registry.Viewport
                 row["id_state"] = e.Row["id_state"];
                 row["sub_premises_num"] = e.Row["sub_premises_num"];
                 row["total_area"] = e.Row["total_area"];
+                row["living_area"] = e.Row["living_area"];
                 row["description"] = e.Row["description"];
                 row["state_date"] = e.Row["state_date"];
             }
@@ -746,7 +759,7 @@ namespace Registry.Viewport
 
         void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            if (dataGridView.CurrentCell.OwningColumn.Name == "total_area")
+            if (dataGridView.CurrentCell.OwningColumn.Name == "total_area" || dataGridView.CurrentCell.OwningColumn.Name == "living_area")
             {
                 dataGridView.EditingControl.KeyPress -= new KeyPressEventHandler(EditingControl_KeyPress);
                 dataGridView.EditingControl.KeyPress += new KeyPressEventHandler(EditingControl_KeyPress);
@@ -785,12 +798,16 @@ namespace Registry.Viewport
                     MessageBox.Show("Значение общей площади комнаты является некорректным","Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     e.ThrowException = false;
                     break;
+                case "living_area":
+                    MessageBox.Show("Значение жилой площади комнаты является некорректным", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    e.ThrowException = false;
+                    break;
             }
         }
         
         void EditingControl_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (dataGridView.SelectedCells[0].OwningColumn.Name == "total_area")
+            if (dataGridView.SelectedCells[0].OwningColumn.Name == "total_area" || dataGridView.SelectedCells[0].OwningColumn.Name == "living_area")
             {
                 if ((e.KeyChar >= '0' && e.KeyChar <= '9') || (e.KeyChar == (char)8))
                     e.Handled = false;
@@ -825,6 +842,7 @@ namespace Registry.Viewport
             this.id_premises = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sub_premises_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.living_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_state = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.state_date = new CustomControls.DataGridViewDateTimeColumn();
@@ -853,6 +871,7 @@ namespace Registry.Viewport
             this.id_premises,
             this.sub_premises_num,
             this.total_area,
+            this.living_area,
             this.description,
             this.id_state,
             this.state_date});
@@ -894,6 +913,15 @@ namespace Registry.Viewport
             this.total_area.MinimumWidth = 150;
             this.total_area.Name = "total_area";
             this.total_area.Width = 150;
+            // 
+            // living_area
+            // 
+            this.living_area.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.living_area.DefaultCellStyle = dataGridViewCellStyle2;
+            this.living_area.HeaderText = "Жилая площадь";
+            this.living_area.MinimumWidth = 150;
+            this.living_area.Name = "living_area";
+            this.living_area.Width = 150;
             // 
             // description
             // 

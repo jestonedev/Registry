@@ -188,8 +188,8 @@ namespace Registry.DataModels
                                 Contains(addressParts[0].ToUpperInvariant()) &&
                             building_row.Field<string>("house").ToUpperInvariant() == 
                                 addressParts[1].ToUpperInvariant() &&
-                            premises_row.Field<string>("premises_num").ToUpperInvariant() == 
-                                addressParts[2].ToUpperInvariant() : false
+                            premises_row.Field<string>("premises_num").ToUpperInvariant().Contains(
+                                addressParts[2].ToUpperInvariant()) : false
                     select premises_row.Field<int>("id_premises"));
         }
 
@@ -231,8 +231,8 @@ namespace Registry.DataModels
                                                 Contains(addressParts[0].ToUpperInvariant())) &&
                                          (buildings_row.Field<string>("house").ToUpperInvariant() == 
                                                 addressParts[1].ToUpperInvariant()) &&
-                                         (premises_row.Field<string>("premises_num").ToUpperInvariant() == 
-                                                addressParts[2].ToUpperInvariant()) : false
+                                         (premises_row.Field<string>("premises_num").ToUpperInvariant().Contains(
+                                                addressParts[2].ToUpperInvariant())) : false
                                    select tenancy_premises_row.Field<int>("id_process");
             var tenancy_sub_premises = from tenancy_sub_premises_row in tenancy_sub_premises_assoc
                                        join sub_premises_row in sub_premises

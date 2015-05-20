@@ -41,7 +41,10 @@
             this.numericUpDownTotalArea = new System.Windows.Forms.NumericUpDown();
             this.dateTimePickerStateDate = new System.Windows.Forms.DateTimePicker();
             this.label5 = new System.Windows.Forms.Label();
+            this.numericUpDownLivingArea = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalArea)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLivingArea)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -73,7 +76,7 @@
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(73, 131);
+            this.label3.Location = new System.Drawing.Point(73, 158);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(80, 15);
             this.label3.TabIndex = 4;
@@ -81,7 +84,7 @@
             // 
             // textBoxDescription
             // 
-            this.textBoxDescription.Location = new System.Drawing.Point(177, 127);
+            this.textBoxDescription.Location = new System.Drawing.Point(177, 154);
             this.textBoxDescription.MaxLength = 65535;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
@@ -91,7 +94,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(48, 73);
+            this.label4.Location = new System.Drawing.Point(48, 100);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(119, 15);
             this.label4.TabIndex = 6;
@@ -101,7 +104,7 @@
             // 
             this.comboBoxIdState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxIdState.FormattingEnabled = true;
-            this.comboBoxIdState.Location = new System.Drawing.Point(177, 69);
+            this.comboBoxIdState.Location = new System.Drawing.Point(177, 96);
             this.comboBoxIdState.Name = "comboBoxIdState";
             this.comboBoxIdState.Size = new System.Drawing.Size(223, 23);
             this.comboBoxIdState.TabIndex = 2;
@@ -111,7 +114,7 @@
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(222, 204);
+            this.vButtonCancel.Location = new System.Drawing.Point(222, 231);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(136, 40);
@@ -124,7 +127,7 @@
             // 
             this.vButtonSave.AllowAnimations = true;
             this.vButtonSave.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSave.Location = new System.Drawing.Point(61, 204);
+            this.vButtonSave.Location = new System.Drawing.Point(61, 231);
             this.vButtonSave.Name = "vButtonSave";
             this.vButtonSave.RoundedCornersMask = ((byte)(15));
             this.vButtonSave.Size = new System.Drawing.Size(136, 40);
@@ -144,7 +147,7 @@
             // 
             // dateTimePickerStateDate
             // 
-            this.dateTimePickerStateDate.Location = new System.Drawing.Point(177, 99);
+            this.dateTimePickerStateDate.Location = new System.Drawing.Point(177, 126);
             this.dateTimePickerStateDate.Name = "dateTimePickerStateDate";
             this.dateTimePickerStateDate.ShowCheckBox = true;
             this.dateTimePickerStateDate.Size = new System.Drawing.Size(223, 21);
@@ -153,18 +156,37 @@
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(24, 103);
+            this.label5.Location = new System.Drawing.Point(24, 130);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(147, 15);
             this.label5.TabIndex = 9;
             this.label5.Text = "Состояние установлено";
+            // 
+            // numericUpDownLivingArea
+            // 
+            this.numericUpDownLivingArea.DecimalPlaces = 3;
+            this.numericUpDownLivingArea.Location = new System.Drawing.Point(177, 68);
+            this.numericUpDownLivingArea.Name = "numericUpDownLivingArea";
+            this.numericUpDownLivingArea.Size = new System.Drawing.Size(223, 21);
+            this.numericUpDownLivingArea.TabIndex = 10;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(68, 70);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(100, 15);
+            this.label6.TabIndex = 11;
+            this.label6.Text = "Жилая площадь";
             // 
             // SubPremisesEditor
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(415, 249);
+            this.ClientSize = new System.Drawing.Size(415, 280);
+            this.Controls.Add(this.numericUpDownLivingArea);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.dateTimePickerStateDate);
             this.Controls.Add(this.numericUpDownTotalArea);
@@ -183,6 +205,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Добавить комнату";
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalArea)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLivingArea)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -202,5 +225,7 @@
         private System.Windows.Forms.NumericUpDown numericUpDownTotalArea;
         private System.Windows.Forms.DateTimePicker dateTimePickerStateDate;
         private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.NumericUpDown numericUpDownLivingArea;
+        private System.Windows.Forms.Label label6;
     }
 }

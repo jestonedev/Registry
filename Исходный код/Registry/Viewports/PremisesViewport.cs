@@ -2081,6 +2081,7 @@ namespace Registry.Viewport
             subPremise.IdState = ViewportHelper.ValueOrNull<int>(row, "id_state");
             subPremise.SubPremisesNum = row["sub_premises_num"].ToString();
             subPremise.TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area");
+            subPremise.LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area");
             subPremise.Description = row["description"].ToString();
             subPremise.StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date");
             using (SubPremisesEditor editor = new SubPremisesEditor())

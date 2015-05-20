@@ -17,10 +17,10 @@ namespace Registry.DataModels
         private static string selectQuery = "SELECT * FROM sub_premises WHERE deleted = 0";
         private static string deleteQuery = "UPDATE sub_premises SET deleted = 1 WHERE id_sub_premises = ?";
         private static string insertQuery = @"INSERT INTO sub_premises
-                            (id_premises, id_state, sub_premises_num, total_area, description, state_date)
-                            VALUES (?, ?, ?, ?, ?, ?)";
+                            (id_premises, id_state, sub_premises_num, total_area, living_area, description, state_date)
+                            VALUES (?, ?, ?, ?, ?, ?, ?)";
         private static string updateQuery = @"UPDATE sub_premises SET id_premises = ?, id_state = ?, sub_premises_num = ?, 
-                            total_area = ?, description = ?, state_date = ? WHERE id_sub_premises = ?";
+                            total_area = ?, living_area = ?, description = ?, state_date = ? WHERE id_sub_premises = ?";
 
         private static string tableName = "sub_premises";
 
@@ -33,6 +33,7 @@ namespace Registry.DataModels
         {
             Table.PrimaryKey = new DataColumn[] { Table.Columns["id_sub_premises"] };
             Table.Columns["total_area"].DefaultValue = 0;
+            Table.Columns["living_area"].DefaultValue = 0;
             Table.Columns["deleted"].DefaultValue = 0;
             Table.Columns["id_state"].DefaultValue = 1;
         }
@@ -88,6 +89,7 @@ namespace Registry.DataModels
                 command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", subPremise.IdState));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("sub_premises_num", subPremise.SubPremisesNum));
                 command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", subPremise.TotalArea));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("living_area", subPremise.LivingArea));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("description", subPremise.Description));
                 command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("state_date", subPremise.StateDate));
                 try
@@ -131,6 +133,7 @@ namespace Registry.DataModels
                 command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", subPremise.IdState));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("sub_premises_num", subPremise.SubPremisesNum));
                 command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", subPremise.TotalArea));
+                command.Parameters.Add(DBConnection.CreateParameter<double?>("living_area", subPremise.LivingArea));
                 command.Parameters.Add(DBConnection.CreateParameter<string>("description", subPremise.Description));
                 command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("state_date", subPremise.StateDate));
                 command.Parameters.Add(DBConnection.CreateParameter<int?>("id_sub_premises", subPremise.IdSubPremises));
