@@ -4,7 +4,7 @@
  <Namespaces>
   <Namespace Name="Registry.Reporting.RegistryReporters">
    <Messages>
-    <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Status="Active" Created="2015-05-20 03:51:15Z" FixCategory="Breaking">
+    <Message TypeName="AvoidNamespacesWithFewTypes" Category="Microsoft.Design" CheckId="CA1020" Status="Active" Created="2015-05-20 04:33:15Z" FixCategory="Breaking">
      <Issue Certainty="50" Level="Warning">Consider merging the types defined in 'Registry.Reporting.RegistryReporters' with another namespace.</Issue>
     </Message>
    </Messages>
@@ -21,10 +21,10 @@
          <Members>
           <Member Name="#CreateReporter(Registry.Reporting.ReporterType)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-05-20 03:51:15Z" FixCategory="Breaking">
+            <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-05-20 04:33:15Z" FixCategory="Breaking">
              <Issue Name="Method" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Reporting" File="ReporterFactory.cs" Line="17">'ReporterFactory.CreateReporter(ReporterType)' is coupled with 31 different types from 6 different namespaces. Rewrite or refactor the method to decrease its class coupling, or consider moving the method to one of the other types it is tightly coupled with. A class coupling above 40 indicates poor maintainability, a class coupling between 40 and 30 indicates moderate maintainability, and a class coupling below 30 indicates good maintainability.</Issue>
             </Message>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-05-20 03:51:15Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-05-20 04:33:15Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Reporting" File="ReporterFactory.cs" Line="17">'ReporterFactory.CreateReporter(ReporterType)' has a cyclomatic complexity of 28. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
@@ -33,7 +33,7 @@
         </Type>
         <Type Name="TenancyContractTypes" Kind="Enum" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="OnlyFlagsEnumsShouldHavePluralNames" Category="Microsoft.Naming" CheckId="CA1717" Status="Active" Created="2015-05-20 03:51:15Z" FixCategory="Breaking">
+          <Message TypeName="OnlyFlagsEnumsShouldHavePluralNames" Category="Microsoft.Naming" CheckId="CA1717" Status="Active" Created="2015-05-20 04:33:15Z" FixCategory="Breaking">
            <Issue Certainty="75" Level="Error">If the name 'TenancyContractTypes' is plural, change it to its singular form.</Issue>
           </Message>
          </Messages>
@@ -42,7 +42,7 @@
          <Members>
           <Member Name="#GetFilter()" Kind="Method" Static="False" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-05-20 03:51:15Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-05-20 04:33:15Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Reporting" File="TenancyStatisticFilterForm.cs" Line="80">'TenancyStatisticFilterForm.GetFilter()' has a cyclomatic complexity of 28. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>

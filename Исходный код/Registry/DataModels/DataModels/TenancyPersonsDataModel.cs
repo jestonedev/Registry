@@ -38,6 +38,7 @@ namespace Registry.DataModels
         protected override void ConfigureTable()
         {
             Table.PrimaryKey = new DataColumn[] { Table.Columns["id_person"] };
+            Table.Columns["id_document_type"].DefaultValue = 255;
         }
 
         public static TenancyPersonsDataModel GetInstance()
