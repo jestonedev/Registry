@@ -19,18 +19,6 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridViewWithDetails dataGridView;
-        private DataGridViewImageColumn image;
-        private DataGridViewCheckBoxColumn is_checked;
-        private DataGridViewTextBoxColumn rent_total_area;
-        private DataGridViewTextBoxColumn rent_living_area;
-        private DataGridViewTextBoxColumn id_premises;
-        private DataGridViewTextBoxColumn id_street;
-        private DataGridViewTextBoxColumn house;
-        private DataGridViewTextBoxColumn premises_num;
-        private DataGridViewComboBoxColumn id_premises_type;
-        private DataGridViewTextBoxColumn total_area;
-        private DataGridViewTextBoxColumn id_state;
-        private DataGridViewTextBoxColumn current_fund;
         #endregion Components
 
         #region Models
@@ -61,6 +49,18 @@ namespace Registry.Viewport
 
         //Флаг разрешения синхронизации snapshot и original моделей
         bool sync_views = true;
+        private DataGridViewImageColumn image;
+        private DataGridViewCheckBoxColumn is_checked;
+        private DataGridViewTextBoxColumn rent_total_area;
+        private DataGridViewTextBoxColumn rent_living_area;
+        private DataGridViewTextBoxColumn id_premises;
+        private DataGridViewTextBoxColumn id_street;
+        private DataGridViewTextBoxColumn house;
+        private DataGridViewTextBoxColumn premises_num;
+        private DataGridViewComboBoxColumn id_premises_type;
+        private DataGridViewTextBoxColumn total_area;
+        private DataGridViewTextBoxColumn id_state;
+        private DataGridViewTextBoxColumn current_fund;
 
         //Идентификатор развернутого помещения
         private int id_expanded = -1;
@@ -293,7 +293,6 @@ namespace Registry.Viewport
             v_premises.CurrentItemChanged += new EventHandler(v_premises_CurrentItemChanged);
             v_premises.DataMember = "premises";
             v_premises.DataSource = ds;
-            v_premises.Filter += DynamicFilter;
 
             if ((ParentRow != null) && (ParentType == ParentTypeEnum.Tenancy))
                 Text = "Помещения найма №" + ParentRow["id_process"].ToString();
@@ -326,7 +325,6 @@ namespace Registry.Viewport
             id_premises_type.DataSource = v_premises_types;
             id_premises_type.ValueMember = "id_premises_type";
             id_premises_type.DisplayMember = "premises_type";
-
             // Настраивем компонент отображения комнат
             TenancySubPremisesDetails details = new TenancySubPremisesDetails();
             details.v_sub_premises = v_sub_premises;
@@ -337,6 +335,34 @@ namespace Registry.Viewport
             details.menuCallback = MenuCallback;
             details.InitializeControl();
             dataGridView.DetailsControl = details;
+
+            //Строим фильтр арендуемых квартир и комнат во время первой загрузки
+            if (String.IsNullOrEmpty(DynamicFilter))
+            {
+                if (v_tenancy_premises.Count > 0)
+                {
+                    DynamicFilter = "id_premises IN (0";
+                    for (int i = 0; i < v_tenancy_premises.Count; i++)
+                        DynamicFilter += "," + ((DataRowView)v_tenancy_premises[i])["id_premises"].ToString();
+                    DynamicFilter += ")";
+                }
+                if (details.v_snapshot_tenancy_sub_premises.Count > 0)
+                {
+                    if (!String.IsNullOrEmpty(DynamicFilter))
+                        DynamicFilter += " OR ";
+                    DynamicFilter += "id_premises IN (0";
+                    for (int i = 0; i < details.v_snapshot_tenancy_sub_premises.Count; i++)
+                    {
+                        DataRowView row = ((DataRowView)details.v_snapshot_tenancy_sub_premises[i]);
+                        DataRow subPremisesRow = sub_premises.Select().Rows.Find(row["id_sub_premises"]);
+                        if (subPremisesRow != null)
+                            DynamicFilter += "," + subPremisesRow["id_premises"].ToString();
+                    }
+                    DynamicFilter += ")";
+                }
+            }
+
+            v_premises.Filter += DynamicFilter;
 
             premises.Select().RowChanged += new DataRowChangeEventHandler(PremisesListViewport_RowChanged);
             premises.Select().RowDeleted += new DataRowChangeEventHandler(PremisesListViewport_RowDeleted);
@@ -1164,11 +1190,11 @@ namespace Registry.Viewport
             dataGridViewCellStyle4.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle4.Format = "#0.0## м²";
             this.rent_total_area.DefaultCellStyle = dataGridViewCellStyle4;
-            this.rent_total_area.HeaderText = "Арендуемая S общ.";
-            this.rent_total_area.MinimumWidth = 130;
+            this.rent_total_area.HeaderText = "Площадь койко-места";
+            this.rent_total_area.MinimumWidth = 160;
             this.rent_total_area.Name = "rent_total_area";
             this.rent_total_area.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.rent_total_area.Width = 130;
+            this.rent_total_area.Width = 160;
             // 
             // rent_living_area
             // 
@@ -1180,6 +1206,7 @@ namespace Registry.Viewport
             this.rent_living_area.MinimumWidth = 130;
             this.rent_living_area.Name = "rent_living_area";
             this.rent_living_area.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.rent_living_area.Visible = false;
             this.rent_living_area.Width = 130;
             // 
             // id_premises

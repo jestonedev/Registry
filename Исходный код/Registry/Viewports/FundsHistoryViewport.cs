@@ -151,7 +151,7 @@ namespace Registry.Viewport
 
         private void UnbindedCheckBoxesUpdate()
         {
-            DataRowView row = ((DataRowView)v_funds_history[v_funds_history.Position]);
+            DataRowView row = (v_funds_history.Position >= 0) ? ((DataRowView)v_funds_history[v_funds_history.Position]) : null;
             checkBoxIncludeRest.Checked = (v_funds_history.Position >= 0) &&
                 (row["include_restriction_date"] != DBNull.Value) &&
                 (row["include_restriction_number"] != DBNull.Value);

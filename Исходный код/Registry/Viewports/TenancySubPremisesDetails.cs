@@ -30,6 +30,7 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn total_area;
         private DataGridViewTextBoxColumn description;
 
+
         #region Views
         public BindingSource v_sub_premises { get; set; }
         private BindingSource v_tenancy_sub_premises = null;
@@ -523,11 +524,11 @@ namespace Registry.Viewport
             dataGridViewCellStyle2.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle2.Format = "#0.0## м²";
             this.rent_total_area.DefaultCellStyle = dataGridViewCellStyle2;
-            this.rent_total_area.HeaderText = "Арендуемая S общ.";
-            this.rent_total_area.MinimumWidth = 130;
+            this.rent_total_area.HeaderText = "Площадь койко-места";
+            this.rent_total_area.MinimumWidth = 160;
             this.rent_total_area.Name = "rent_total_area";
             this.rent_total_area.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.rent_total_area.Width = 130;
+            this.rent_total_area.Width = 160;
             // 
             // id_sub_premises
             // 

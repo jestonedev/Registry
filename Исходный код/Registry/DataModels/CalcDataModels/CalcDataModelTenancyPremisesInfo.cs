@@ -28,6 +28,7 @@ namespace Registry.CalcDataModels
             table.Columns.Add("address").DataType = typeof(string);
             table.Columns.Add("total_area").DataType = typeof(double);
             table.Columns.Add("living_area").DataType = typeof(double);
+            table.Columns.Add("rent_area").DataType = typeof(double);
             return table;
         }
 
@@ -62,7 +63,8 @@ namespace Registry.CalcDataModels
                                             (premises_row.Field<int>("id_premises_type") == 2 ? " ком. " : " кв. ") + premises_row.Field<string>("premises_num") +
                                             " ком. " + sub_premises_row.Field<string>("sub_premises_num"),
                                         total_area = sub_premises_row.Field<double>("total_area"),
-                                        living_area = sub_premises_row.Field<double>("living_area")
+                                        living_area = sub_premises_row.Field<double>("living_area"),
+                                        rent_area = assoc_sub_premises_row.Field<double?>("rent_total_area")
                                     };
             var a_premises = from assoc_premises_row in assoc_premises
                                     join premises_row in premises
@@ -77,7 +79,8 @@ namespace Registry.CalcDataModels
                                         address = kladr_street_row.Field<string>("street_name") + ", дом " + buildings_row.Field<string>("house") +
                                             (premises_row.Field<int>("id_premises_type") == 2 ? " ком. " : " кв. ") + premises_row.Field<string>("premises_num"),
                                         total_area = premises_row.Field<double>("total_area"),
-                                        living_area = premises_row.Field<double>("living_area")
+                                        living_area = premises_row.Field<double>("living_area"),
+                                        rent_area = assoc_premises_row.Field<double?>("rent_total_area")
                                     };
             var a_buildings = from assoc_buildings_row in assoc_buildings
                              join buildings_row in buildings
@@ -89,7 +92,8 @@ namespace Registry.CalcDataModels
                                  id_process = assoc_buildings_row.Field<int>("id_process"),
                                  address = kladr_street_row.Field<string>("street_name") + ", дом " + buildings_row.Field<string>("house"),
                                  total_area = buildings_row.Field<double>("total_area"),
-                                 living_area = buildings_row.Field<double>("living_area")
+                                 living_area = buildings_row.Field<double>("living_area"),
+                                 rent_area = assoc_buildings_row.Field<double?>("rent_total_area")
                              };
             var result = a_buildings.Union(a_premises).Union(a_sub_premises);
 
@@ -102,7 +106,8 @@ namespace Registry.CalcDataModels
                     x.id_process, 
                     x.address, 
                     x.total_area,
-                    x.living_area
+                    x.living_area,
+                    x.rent_area
                 });
             });
             table.EndLoadData();

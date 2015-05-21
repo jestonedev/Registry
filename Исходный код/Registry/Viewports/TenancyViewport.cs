@@ -75,9 +75,6 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn patronymic;
         private DataGridViewTextBoxColumn date_of_birth;
         private DataGridViewComboBoxColumn id_kinship;
-        private DataGridViewTextBoxColumn address;
-        private DataGridViewTextBoxColumn total_area;
-        private DataGridViewTextBoxColumn living_area;
         #endregion Components
 
         #region Models
@@ -116,6 +113,10 @@ namespace Registry.Viewport
         private bool is_editable = false;
         private int? id_warrant = null;
         private bool is_copy = false;
+        private DataGridViewTextBoxColumn address;
+        private DataGridViewTextBoxColumn total_area;
+        private DataGridViewTextBoxColumn living_area;
+        private DataGridViewTextBoxColumn rent_area;
         private int? id_copy_process = null;
 
         private TenancyViewport()
@@ -351,6 +352,7 @@ namespace Registry.Viewport
             address.DataPropertyName = "address";
             total_area.DataPropertyName = "total_area";
             living_area.DataPropertyName = "living_area";
+            rent_area.DataPropertyName = "rent_area";
 
             textBoxResidenceWarrantNumber.DataBindings.Clear();
             textBoxResidenceWarrantNumber.DataBindings.Add("Text", v_tenancies, "residence_warrant_num", true, DataSourceUpdateMode.Never, "");
@@ -1733,6 +1735,9 @@ namespace Registry.Viewport
 
         private void InitializeComponent()
         {
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyViewport));
             this.tableLayoutPanel9 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox31 = new System.Windows.Forms.GroupBox();
@@ -1794,6 +1799,7 @@ namespace Registry.Viewport
             this.address = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.living_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rent_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel9.SuspendLayout();
             this.groupBox31.SuspendLayout();
             this.groupBox22.SuspendLayout();
@@ -2454,7 +2460,8 @@ namespace Registry.Viewport
             this.dataGridViewTenancyAddress.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.address,
             this.total_area,
-            this.living_area});
+            this.living_area,
+            this.rent_area});
             this.dataGridViewTenancyAddress.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewTenancyAddress.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewTenancyAddress.MultiSelect = false;
@@ -2474,6 +2481,8 @@ namespace Registry.Viewport
             // 
             // total_area
             // 
+            dataGridViewCellStyle1.Format = "#0.0## м²";
+            this.total_area.DefaultCellStyle = dataGridViewCellStyle1;
             this.total_area.HeaderText = "Общая площадь";
             this.total_area.MinimumWidth = 150;
             this.total_area.Name = "total_area";
@@ -2481,10 +2490,21 @@ namespace Registry.Viewport
             // 
             // living_area
             // 
+            dataGridViewCellStyle2.Format = "#0.0## м²";
+            this.living_area.DefaultCellStyle = dataGridViewCellStyle2;
             this.living_area.HeaderText = "Жилая площадь";
             this.living_area.MinimumWidth = 150;
             this.living_area.Name = "living_area";
             this.living_area.ReadOnly = true;
+            // 
+            // rent_area
+            // 
+            dataGridViewCellStyle3.Format = "#0.0## м²";
+            this.rent_area.DefaultCellStyle = dataGridViewCellStyle3;
+            this.rent_area.HeaderText = "Площадь койко-места";
+            this.rent_area.MinimumWidth = 200;
+            this.rent_area.Name = "rent_area";
+            this.rent_area.ReadOnly = true;
             // 
             // TenancyViewport
             // 

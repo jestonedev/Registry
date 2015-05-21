@@ -18,16 +18,6 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridView dataGridView;
-        private DataGridViewCheckBoxColumn is_checked;
-        private DataGridViewTextBoxColumn rent_total_area;
-        private DataGridViewTextBoxColumn rent_living_area;
-        private DataGridViewTextBoxColumn id_building;
-        private DataGridViewComboBoxColumn id_street;
-        private DataGridViewTextBoxColumn house;
-        private DataGridViewTextBoxColumn floors;
-        private DataGridViewTextBoxColumn living_area;
-        private DataGridViewTextBoxColumn cadastral_num;
-        private DataGridViewTextBoxColumn startup_year;
         #endregion Components
 
         #region Models
@@ -47,6 +37,16 @@ namespace Registry.Viewport
         //Forms
         private SearchForm sbSimpleSearchForm = null;
         private SearchForm sbExtendedSearchForm = null;
+        private DataGridViewCheckBoxColumn is_checked;
+        private DataGridViewTextBoxColumn rent_total_area;
+        private DataGridViewTextBoxColumn rent_living_area;
+        private DataGridViewTextBoxColumn id_building;
+        private DataGridViewComboBoxColumn id_street;
+        private DataGridViewTextBoxColumn house;
+        private DataGridViewTextBoxColumn floors;
+        private DataGridViewTextBoxColumn living_area;
+        private DataGridViewTextBoxColumn cadastral_num;
+        private DataGridViewTextBoxColumn startup_year;
 
         //Флаг разрешения синхронизации snapshot и original моделей
         bool sync_views = true;
@@ -243,7 +243,6 @@ namespace Registry.Viewport
             v_buildings.DataMember = "buildings";
             v_buildings.CurrentItemChanged += new EventHandler(v_buildings_CurrentItemChanged);
             v_buildings.DataSource = ds;
-            v_buildings.Filter = DynamicFilter;
 
             if ((ParentRow != null) && (ParentType == ParentTypeEnum.Tenancy))
                 Text = "Здания найма №" + ParentRow["id_process"].ToString();
@@ -268,6 +267,19 @@ namespace Registry.Viewport
             id_street.DataSource = v_kladr;
             id_street.ValueMember = "id_street";
             id_street.DisplayMember = "street_name";
+
+            //Строим фильтр арендуемых зданий
+            if (String.IsNullOrEmpty(DynamicFilter))
+            {
+                if (v_tenancy_buildings.Count > 0)
+                {
+                    DynamicFilter = "id_building IN (0";
+                    for (int i = 0; i < v_tenancy_buildings.Count; i++)
+                        DynamicFilter += "," + ((DataRowView)v_tenancy_buildings[i])["id_building"].ToString();
+                    DynamicFilter += ")";
+                }
+            }
+            v_buildings.Filter = DynamicFilter;
 
             buildings.Select().RowChanged += new DataRowChangeEventHandler(BuildingsViewport_RowChanged);
             buildings.Select().RowDeleted += new DataRowChangeEventHandler(BuildingsViewport_RowDeleted);
@@ -858,7 +870,7 @@ namespace Registry.Viewport
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
-            if (dataGridView.Size.Width > 1400)
+            if (dataGridView.Size.Width > 1260)
             {
                 if (dataGridView.Columns["id_street"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     dataGridView.Columns["id_street"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -970,11 +982,11 @@ namespace Registry.Viewport
             dataGridViewCellStyle3.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle3.Format = "#0.0## м²";
             this.rent_total_area.DefaultCellStyle = dataGridViewCellStyle3;
-            this.rent_total_area.HeaderText = "Арендуемая S общ.";
-            this.rent_total_area.MinimumWidth = 140;
+            this.rent_total_area.HeaderText = "Площадь койко-места";
+            this.rent_total_area.MinimumWidth = 160;
             this.rent_total_area.Name = "rent_total_area";
             this.rent_total_area.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.rent_total_area.Width = 140;
+            this.rent_total_area.Width = 170;
             // 
             // rent_living_area
             // 
@@ -984,6 +996,7 @@ namespace Registry.Viewport
             this.rent_living_area.HeaderText = "Арендуемая S жил.";
             this.rent_living_area.MinimumWidth = 140;
             this.rent_living_area.Name = "rent_living_area";
+            this.rent_living_area.Visible = false;
             this.rent_living_area.Width = 140;
             // 
             // id_building
