@@ -60,7 +60,8 @@ namespace Registry.CalcDataModels
                                     {
                                         id_process = assoc_sub_premises_row.Field<int>("id_process"),
                                         address = kladr_street_row.Field<string>("street_name") + ", дом " + buildings_row.Field<string>("house") +
-                                            (premises_row.Field<int>("id_premises_type") == 2 ? " ком. " : " кв. ") + premises_row.Field<string>("premises_num") +
+                                            (premises_row.Field<int>("id_premises_type") == 2 ? " ком. " : 
+                                            (premises_row.Field<int>("id_premises_type") == 4 ? " пом. " : " кв. ")) + premises_row.Field<string>("premises_num") +
                                             " ком. " + sub_premises_row.Field<string>("sub_premises_num"),
                                         total_area = sub_premises_row.Field<double>("total_area"),
                                         living_area = sub_premises_row.Field<double>("living_area"),
@@ -77,7 +78,8 @@ namespace Registry.CalcDataModels
                                     {
                                         id_process = assoc_premises_row.Field<int>("id_process"),
                                         address = kladr_street_row.Field<string>("street_name") + ", дом " + buildings_row.Field<string>("house") +
-                                            (premises_row.Field<int>("id_premises_type") == 2 ? " ком. " : " кв. ") + premises_row.Field<string>("premises_num"),
+                                            (premises_row.Field<int>("id_premises_type") == 2 ? " ком. " :
+                                            (premises_row.Field<int>("id_premises_type") == 4 ? " пом. " : " кв. ")) + premises_row.Field<string>("premises_num"),
                                         total_area = premises_row.Field<double>("total_area"),
                                         living_area = premises_row.Field<double>("living_area"),
                                         rent_area = assoc_premises_row.Field<double?>("rent_total_area")

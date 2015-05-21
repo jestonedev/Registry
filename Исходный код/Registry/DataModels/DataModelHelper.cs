@@ -904,7 +904,8 @@ namespace Registry.DataModels
                                         id_process = gs.Key.id_process,
                                         id_building = gs.Key.id_building,
                                         id_premises = gs.Key.id_premises,
-                                        result_str = (gs.Key.id_premises_type == 2 ? " ком. " : " кв. ") + gs.Key.premises_num + ((gs.Count() > 0) ?
+                                        result_str = (gs.Key.id_premises_type == 2 ? " ком. " : (gs.Key.id_premises_type == 4 ? " пом. " : " кв. ")) + 
+                                            gs.Key.premises_num + ((gs.Count() > 0) ?
                                         (" ком. " + gs.Aggregate((a, b) =>
                                         {
                                             return a + ", " + b;
@@ -918,7 +919,8 @@ namespace Registry.DataModels
                                  id_process = assoc_premises_row.Field<int>("id_process"),
                                  id_building = premises_row.Field<int>("id_building"),
                                  id_premises = assoc_premises_row.Field<int>("id_premises"),
-                                 result_str = (premises_row.Field<int>("id_premises_type") == 2 ? " ком. " : " кв. ") + premises_row.Field<string>("premises_num")
+                                 result_str = (premises_row.Field<int>("id_premises_type") == 2 ? " ком. " :
+                                    (premises_row.Field<int>("id_premises_type") == 4 ? " пом. " : " кв. ")) + premises_row.Field<string>("premises_num")
                              };
             var a_buildings = from assoc_buildings_row in assoc_buildings
                               select new
