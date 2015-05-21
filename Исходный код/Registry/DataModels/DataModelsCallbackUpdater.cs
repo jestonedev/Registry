@@ -215,7 +215,7 @@ namespace Registry.DataModels
                         if (CalcDataModelBuildingsPremisesFunds.HasInstance())
                             CalcDataModelBuildingsPremisesFunds.GetInstance().DefferedUpdate = true;
                     }
-                    if (operation_type == "DELETE" || (operation_type == "UPDATE" && (field_name == "id_buildings" || field_name == "premises_num")))
+                    if (operation_type == "DELETE" || (operation_type == "UPDATE" && (field_name == "id_buildings" || field_name == "premises_num" || field_name == "id_premises_type")))
                     {
                         if (CalcDataModelTenancyAggregated.HasInstance())
                             CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate = true;

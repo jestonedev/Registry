@@ -542,7 +542,7 @@ namespace Registry.Viewport
             {
                 v_fund_assoc.DataMember = "funds_sub_premises_assoc";
                 v_fund_assoc.Filter = "id_sub_premises = " + ParentRow["id_sub_premises"].ToString();
-                this.Text = String.Format(CultureInfo.InvariantCulture, "История найма комнаты №{0} помещения №{1}", ParentRow["sub_premises_num"].ToString(),
+                this.Text = String.Format(CultureInfo.InvariantCulture, "История фонда комнаты №{0} помещения №{1}", ParentRow["sub_premises_num"].ToString(),
                     ParentRow["id_premises"].ToString());
             }
             else
@@ -550,14 +550,14 @@ namespace Registry.Viewport
                 {
                     v_fund_assoc.DataMember = "funds_premises_assoc";
                     v_fund_assoc.Filter = "id_premises = " + ParentRow["id_premises"].ToString();
-                    this.Text = String.Format(CultureInfo.InvariantCulture, "История найма помещения №{0}", ParentRow["id_premises"].ToString());
+                    this.Text = String.Format(CultureInfo.InvariantCulture, "История фонда помещения №{0}", ParentRow["id_premises"].ToString());
                 }
                 else
                     if ((ParentType == ParentTypeEnum.Building) && (ParentRow != null))
                     {
                         v_fund_assoc.DataMember = "funds_buildings_assoc";
                         v_fund_assoc.Filter = "id_building = " + ParentRow["id_building"].ToString();
-                        this.Text = String.Format(CultureInfo.InvariantCulture, "История найма здания №{0}", ParentRow["id_building"].ToString());
+                        this.Text = String.Format(CultureInfo.InvariantCulture, "История фонда здания №{0}", ParentRow["id_building"].ToString());
                     }
                     else
                         throw new ViewportException("Неизвестный тип родительского объекта");
@@ -1413,7 +1413,7 @@ namespace Registry.Viewport
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "FundsHistoryViewport";
             this.Padding = new System.Windows.Forms.Padding(3);
-            this.Text = "История найма";
+            this.Text = "История фонда";
             this.tableLayoutPanel6.ResumeLayout(false);
             this.tableLayoutPanel8.ResumeLayout(false);
             this.groupBox14.ResumeLayout(false);

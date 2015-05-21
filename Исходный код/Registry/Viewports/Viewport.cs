@@ -43,7 +43,8 @@ namespace Registry.Viewport
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            MenuCallback.SwitchToPreviousViewport();
+            if (e.Cancel != true)
+                MenuCallback.SwitchToPreviousViewport();
             base.OnClosing(e);
         }
 
