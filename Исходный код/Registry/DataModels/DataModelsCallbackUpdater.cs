@@ -67,6 +67,7 @@ namespace Registry.DataModels
                 InitializeColumns(tableCacheLvl2);
                 while (true)
                 {
+                    bool error = false;
                     //Пробуем обновить модель из кэша
                     tableCacheLvl2.Clear();
                     context.Send(__ =>
@@ -74,14 +75,19 @@ namespace Registry.DataModels
                         DataTable workTable = tableCacheLvl1;
                         foreach (DataRow row in workTable.Rows)
                         {
-                            if (!UpdateModelFromRow(row))
+                            if (error || !UpdateModelFromRow(row))
+                            {
                                 tableCacheLvl2.Rows.Add(RowToCacheObject(row));
+                                error = true;
+                            }
                         }
                     }, null);
                     //Переносим данные из кэша 2-го уровня в первый
                     tableCacheLvl1.Clear();
                     foreach (DataRow row in tableCacheLvl2.Rows)
                         tableCacheLvl1.Rows.Add(RowToCacheObject(row));
+                    if (error)
+                        continue;
                     //Обновляем модель из базы
                     using (DBConnection connection = new DBConnection())
                     using (DbCommand command = DBConnection.CreateCommand())
@@ -98,8 +104,11 @@ namespace Registry.DataModels
                                 DataTable workTable = tableDB;
                                 foreach (DataRow row in workTable.Rows)
                                 {
-                                    if (!UpdateModelFromRow(row))
+                                    if (error || !UpdateModelFromRow(row))
+                                    {
                                         tableCacheLvl1.Rows.Add(RowToCacheObject(row));
+                                        error = true;
+                                    }
                                 }
                             }, null);
                             if (tableDB.Rows.Count > 0)
@@ -269,6 +278,7 @@ namespace Registry.DataModels
                 if (!row[field_name].Equals(DBNull.Value))
                 {
                     row[field_name] = DBNull.Value;
+                    row.EndEdit();
                     CalcDataModelsUpdate(row.Table.TableName, field_name, operation_type);
                 }
             }
@@ -278,6 +288,7 @@ namespace Registry.DataModels
                 if (!row[field_name].Equals(value))
                 {
                     row[field_name] = value;
+                    row.EndEdit();
                     CalcDataModelsUpdate(row.Table.TableName, field_name, operation_type);
                 }
             }
