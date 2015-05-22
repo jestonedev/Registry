@@ -940,7 +940,7 @@ namespace Registry.Viewport
             string element = String.Format(CultureInfo.InvariantCulture, "подпункт {0}. {1} - {2}, {3} г.р.", textBoxIncludePoint.Text,
                 textBoxIncludeSNP.Text.Trim(),
                 kinship,
-                dateTimePickerIncludeDateOfBirth.Value);
+                dateTimePickerIncludeDateOfBirth.Value.Date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
             if (header_index == -1)
             {
                 contentList.Add("\u200Bвключить:");
