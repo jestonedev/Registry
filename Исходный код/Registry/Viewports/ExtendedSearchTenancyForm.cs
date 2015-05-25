@@ -80,7 +80,7 @@ namespace Registry.SearchForms
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.InvariantCulture, "registration_num = '{0}'", textBoxRegistrationNum.Text.Trim().Replace("'", ""));
+                filter += String.Format(CultureInfo.InvariantCulture, "registration_num = '%{0}%'", textBoxRegistrationNum.Text.Trim().Replace("'", ""));
             }
             if (checkBoxResidenceWarrantNumEnable.Checked)
             {

@@ -51,7 +51,7 @@ namespace Registry.SearchForms
                 //по номеру договора
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += "registration_num = '"+textBoxCriteria.Text.Trim()+"'";
+                filter += "registration_num LIKE '%"+textBoxCriteria.Text.Trim()+"%'";
             }
             if (comboBoxCriteriaType.SelectedIndex == 1)
             {
