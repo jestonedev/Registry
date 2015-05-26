@@ -22,7 +22,8 @@ namespace Registry.Reporting.TenancyReporters
                 if (tnsForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
                     arguments.Add("id_executor", tnsForm.IdExecutor.ToString(CultureInfo.InvariantCulture));
-                    arguments.Add("report_type", tnsForm.ReportType == TenancyNotifiesReportType.ExportAsIs ? "1" : "2");
+                    arguments.Add("report_type", tnsForm.ReportType == TenancyNotifiesReportType.ExportAsIs ? "1" : (
+                        tnsForm.ReportType == TenancyNotifiesReportType.PrintNotifiesPrimary ? "2" : "3"));
                     string processesStr = "";
                     Collection<int> processIds = tnsForm.TenancyProcessIds;
                     foreach (int processID in processIds)

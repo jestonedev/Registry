@@ -28,7 +28,8 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyNotifiesSettingsForm));
             this.panel1 = new System.Windows.Forms.Panel();
             this.comboBoxExecutor = new System.Windows.Forms.ComboBox();
@@ -50,8 +51,12 @@
             this.rent_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.address = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.checkBoxCheckAll = new System.Windows.Forms.CheckBox();
+            this.contextMenuStripNotify = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.повторноеToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.повторноеToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.panel1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.contextMenuStripNotify.SuspendLayout();
             this.SuspendLayout();
             // 
             // panel1
@@ -163,15 +168,15 @@
             this.dataGridView.AllowUserToResizeRows = false;
             this.dataGridView.BackgroundColor = System.Drawing.Color.White;
             this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.is_checked,
@@ -299,6 +304,28 @@
             this.checkBoxCheckAll.UseVisualStyleBackColor = false;
             this.checkBoxCheckAll.CheckedChanged += new System.EventHandler(this.checkBoxCheckAll_CheckedChanged);
             // 
+            // contextMenuStripNotify
+            // 
+            this.contextMenuStripNotify.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.повторноеToolStripMenuItem,
+            this.повторноеToolStripMenuItem1});
+            this.contextMenuStripNotify.Name = "contextMenuStripNotify";
+            this.contextMenuStripNotify.Size = new System.Drawing.Size(153, 70);
+            // 
+            // повторноеToolStripMenuItem
+            // 
+            this.повторноеToolStripMenuItem.Name = "повторноеToolStripMenuItem";
+            this.повторноеToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.повторноеToolStripMenuItem.Text = "Первичное";
+            this.повторноеToolStripMenuItem.Click += new System.EventHandler(this.повторноеToolStripMenuItem_Click);
+            // 
+            // повторноеToolStripMenuItem1
+            // 
+            this.повторноеToolStripMenuItem1.Name = "повторноеToolStripMenuItem1";
+            this.повторноеToolStripMenuItem1.Size = new System.Drawing.Size(152, 22);
+            this.повторноеToolStripMenuItem1.Text = "Повторное";
+            this.повторноеToolStripMenuItem1.Click += new System.EventHandler(this.повторноеToolStripMenuItem1_Click);
+            // 
             // TenancyNotifiesSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -317,6 +344,7 @@
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.contextMenuStripNotify.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -344,6 +372,9 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn tenant;
         private System.Windows.Forms.DataGridViewTextBoxColumn rent_type;
         private System.Windows.Forms.DataGridViewTextBoxColumn address;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStripNotify;
+        private System.Windows.Forms.ToolStripMenuItem повторноеToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem повторноеToolStripMenuItem1;
 
 
     }

@@ -198,8 +198,7 @@ namespace Registry.Reporting
                 MessageBox.Show("Необходимо выбрать хотя бы один договор", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ReportType = TenancyNotifiesReportType.PrintNotifies;
-            DialogResult = System.Windows.Forms.DialogResult.OK;
+            contextMenuStripNotify.Show(vButtonNotify, 0, -48);
         }
 
         private void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
@@ -347,7 +346,19 @@ namespace Registry.Reporting
                 dataGridView.Refresh();
             }
         }
+
+        private void повторноеToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ReportType = TenancyNotifiesReportType.PrintNotifiesPrimary;
+            DialogResult = System.Windows.Forms.DialogResult.OK;
+        }
+
+        private void повторноеToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            ReportType = TenancyNotifiesReportType.PrintNotifiesSecondary;
+            DialogResult = System.Windows.Forms.DialogResult.OK;
+        }
     }
 
-    public enum TenancyNotifiesReportType { ExportAsIs, PrintNotifies }
+    public enum TenancyNotifiesReportType { ExportAsIs, PrintNotifiesPrimary, PrintNotifiesSecondary }
 }
