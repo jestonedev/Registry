@@ -21,6 +21,7 @@ namespace Registry.Reporting.RegistryReporters
                 {
                     arguments.Add("excerpt_date_from", resForm.ExcerptDateFrom.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
                     arguments.Add("excerpt_number", resForm.ExcerptNumber);
+                    arguments.Add("executor", UserDomain.Current.sAMAccountName.Replace("\\","\\\\"));
                     base.Run(arguments);
                 }
             }
