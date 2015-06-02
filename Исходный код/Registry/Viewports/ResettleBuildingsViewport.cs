@@ -436,10 +436,14 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            ResettleBuildingsFromAssocDataModel.GetInstance().EditingNewRecord = true;
+            ResettleBuildingsToAssocDataModel.GetInstance().EditingNewRecord = true;
             List<ResettleObject> list = ResettleBuildingsFromViewport();
             if (!ValidateResettleBuildings(list))
             {
                 sync_views = true;
+                ResettleBuildingsFromAssocDataModel.GetInstance().EditingNewRecord = false;
+                ResettleBuildingsToAssocDataModel.GetInstance().EditingNewRecord = false;
                 return;
             }
             for (int i = 0; i < list.Count; i++)
@@ -456,7 +460,9 @@ namespace Registry.Viewport
                         id_assoc = ResettleBuildingsToAssocDataModel.Insert(list[i]);
                     if (id_assoc == -1)
                     {
-                        sync_views = true;
+                        sync_views = true; 
+                        ResettleBuildingsFromAssocDataModel.GetInstance().EditingNewRecord = false;
+                        ResettleBuildingsToAssocDataModel.GetInstance().EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)v_snapshot_resettle_buildings[
@@ -489,6 +495,8 @@ namespace Registry.Viewport
                     if (affected == -1)
                     {
                         sync_views = true;
+                        ResettleBuildingsFromAssocDataModel.GetInstance().EditingNewRecord = false;
+                        ResettleBuildingsToAssocDataModel.GetInstance().EditingNewRecord = false;
                         return;
                     }
                     int snapshot_row_index = -1;
@@ -507,6 +515,8 @@ namespace Registry.Viewport
                 }
             }
             sync_views = true;
+            ResettleBuildingsFromAssocDataModel.GetInstance().EditingNewRecord = false;
+            ResettleBuildingsToAssocDataModel.GetInstance().EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
             if (ParentType == ParentTypeEnum.ResettleProcess)
                 CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.ResettleProcess, (int)ParentRow["id_process"], true);

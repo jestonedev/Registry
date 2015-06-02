@@ -25,6 +25,7 @@ namespace Registry.DataModels
         // Не больше MaxDBConnectionCount потоков одновременно делают запросы к БД
         private static Semaphore db_access_semaphore = new Semaphore(Registry.RegistrySettings.MaxDBConnectionCount,
             Registry.RegistrySettings.MaxDBConnectionCount);
+        public bool EditingNewRecord { get; set; }
 
         protected DataModel()
         {

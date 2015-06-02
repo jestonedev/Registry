@@ -617,7 +617,10 @@ namespace Registry.Viewport
                     }
                     int id_fund = FundsHistoryDataModel.Insert(fundHistory, ParentType, id_parent);
                     if (id_fund == -1)
+                    {
+                        funds_history.EditingNewRecord = false;
                         return;
+                    }
                     DataRowView newRow;
                     fundHistory.IdFund = id_fund;
                     is_editable = false;
@@ -626,10 +629,10 @@ namespace Registry.Viewport
                     else
                         newRow = ((DataRowView)v_funds_history[v_funds_history.Position]);
                     FillRowFromFundHistory(fundHistory, newRow);
-                    funds_history.EditingNewRecord = false;
                     fund_assoc.Select().Rows.Add(new object[] { id_parent, id_fund });
                     RebuildFilter();
                     v_funds_history.Position = v_funds_history.Count - 1;
+                    funds_history.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
                     if (fundHistory.IdFund == null)

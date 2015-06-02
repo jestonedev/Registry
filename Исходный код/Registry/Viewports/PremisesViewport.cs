@@ -1208,7 +1208,10 @@ namespace Registry.Viewport
                 case ViewportState.NewRowState:
                     int id_premise = PremisesDataModel.Insert(premise);
                     if (id_premise == -1)
+                    {
+                        premises.EditingNewRecord = false;
                         return;
+                    }
                     DataRowView newRow;
                     premise.IdPremises = id_premise;
                     is_editable = false;
@@ -1219,9 +1222,9 @@ namespace Registry.Viewport
                     Filter += String.Format(CultureInfo.CurrentCulture, "(id_premises = {0})", premise.IdPremises);
                     v_premises.Filter += Filter;
                     FillRowFromPremise(premise, newRow);
-                    premises.EditingNewRecord = false;
                     viewportState = ViewportState.ReadState;
                     is_editable = true;
+                    premises.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
                     if (premise.IdPremises == null)

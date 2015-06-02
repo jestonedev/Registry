@@ -26,8 +26,6 @@ namespace Registry.DataModels
                             include_restriction_description = ?, exclude_restriction_number = ?, exclude_restriction_date = ?, 
                             exclude_restriction_description = ?, description = ? WHERE id_fund = ?";
         private static string tableName = "funds_history";
-       
-        public bool EditingNewRecord { get; set; }
 
         private FundsHistoryDataModel(ToolStripProgressBar progressBar, int incrementor)
             : base(progressBar, incrementor, selectQuery, tableName)

@@ -289,10 +289,12 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            executors.EditingNewRecord = true;
             List<Executor> list = ExecutorsFromViewport();
             if (!ValidateViewportData(list))
             {
-                sync_views = true;
+                sync_views = true; 
+                executors.EditingNewRecord = false;
                 return;
             }
             for (int i = 0; i < list.Count; i++)
@@ -304,6 +306,7 @@ namespace Registry.Viewport
                     if (id_executor == -1)
                     {
                         sync_views = true;
+                        executors.EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)v_snapshot_executors[i])["id_executor"] = id_executor;
@@ -317,6 +320,7 @@ namespace Registry.Viewport
                     if (ExecutorsDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
+                        executors.EditingNewRecord = false;
                         return;
                     }
                     row["executor_name"] = list[i].ExecutorName == null ? DBNull.Value : (object)list[i].ExecutorName;
@@ -339,12 +343,14 @@ namespace Registry.Viewport
                     if (ExecutorsDataModel.Delete(list[i].IdExecutor.Value) == -1)
                     {
                         sync_views = true;
+                        executors.EditingNewRecord = false;
                         return;
                     }
                     executors.Select().Rows.Find(((Executor)list[i]).IdExecutor).Delete();
                 }
             }
             sync_views = true;
+            executors.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
         }
 

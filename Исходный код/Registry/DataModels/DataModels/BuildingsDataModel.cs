@@ -31,8 +31,6 @@ namespace Registry.DataModels
                             improvement = ?, elevator = ?, wear = ?, state_date = ? WHERE id_building = ?";
         private static string tableName = "buildings";
 
-        public bool EditingNewRecord { get; set; }
-
         private BuildingsDataModel(ToolStripProgressBar progressBar, int incrementor): base(progressBar, incrementor, selectQuery, tableName)
         {
             EditingNewRecord = false;      

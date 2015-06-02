@@ -501,11 +501,13 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            tenancy_premises.EditingNewRecord = true;
             List<TenancyObject> list = TenancyPremisesFromViewport();
             // Проверяем данные о помещениях
             if (!ValidateTenancyPremises(list))
             {
                 sync_views = true;
+                tenancy_premises.EditingNewRecord = false;
                 return;
             }
             // Проверяем данные о комнатах
@@ -513,6 +515,7 @@ namespace Registry.Viewport
                 ((TenancySubPremisesDetails)dataGridView.DetailsControl).TenancySubPremisesFromViewport()))
             {
                 sync_views = true;
+                tenancy_premises.EditingNewRecord = false;
                 return;
             }
             // Сохраняем помещения в базу данных
@@ -527,6 +530,7 @@ namespace Registry.Viewport
                     if (id_assoc == -1)
                     {
                         sync_views = true;
+                        tenancy_premises.EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)v_snapshot_tenancy_premises[
@@ -542,6 +546,7 @@ namespace Registry.Viewport
                     if (TenancyPremisesAssocDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
+                        tenancy_premises.EditingNewRecord = false;
                         return;
                     }
                     row["rent_total_area"] = list[i].RentTotalArea == null ? DBNull.Value : (object)list[i].RentTotalArea;
@@ -566,6 +571,7 @@ namespace Registry.Viewport
                     if (TenancyPremisesAssocDataModel.Delete(list[i].IdAssoc.Value) == -1)
                     {
                         sync_views = true;
+                        tenancy_premises.EditingNewRecord = false;
                         return;
                     }
                     int snapshot_row_index = -1;
@@ -584,6 +590,7 @@ namespace Registry.Viewport
                 }
             }
             sync_views = true;
+            tenancy_premises.EditingNewRecord = false;
             // Сохраняем комнаты в базу данных
             ((TenancySubPremisesDetails)dataGridView.DetailsControl).SaveRecord();
             MenuCallback.EditingStateUpdate();

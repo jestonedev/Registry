@@ -25,8 +25,6 @@ namespace Registry.DataModels
                             notary_district = ?, description = ? WHERE id_warrant = ?";
         private static string tableName = "warrants";
 
-        public bool EditingNewRecord { get; set; }
-
         private WarrantsDataModel(ToolStripProgressBar progressBar, int incrementor)
             : base(progressBar, incrementor, selectQuery, tableName)
         {

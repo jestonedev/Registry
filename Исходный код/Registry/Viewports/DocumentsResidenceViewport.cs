@@ -295,10 +295,12 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            documents_residence.EditingNewRecord = true;
             List<DocumentResidence> list = DocumentsIssuedByFromViewport();
             if (!ValidateViewportData(list))
             {
                 sync_views = true;
+                documents_residence.EditingNewRecord = false;
                 return;
             }
             for (int i = 0; i < list.Count; i++)
@@ -310,6 +312,7 @@ namespace Registry.Viewport
                     if (id_document_residence == -1)
                     {
                         sync_views = true;
+                        documents_residence.EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)v_snapshot_documents_residence[i])["id_document_residence"] = id_document_residence;
@@ -323,6 +326,7 @@ namespace Registry.Viewport
                     if (DocumentsResidenceDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
+                        documents_residence.EditingNewRecord = false;
                         return;
                     }
                     row["document_residence"] = list[i].DocumentResidenceName == null ? DBNull.Value : (object)list[i].DocumentResidenceName;
@@ -342,12 +346,14 @@ namespace Registry.Viewport
                     if (DocumentsResidenceDataModel.Delete(list[i].IdDocumentResidence.Value) == -1)
                     {
                         sync_views = true;
+                        documents_residence.EditingNewRecord = false;
                         return;
                     }
                     documents_residence.Select().Rows.Find(((DocumentResidence)list[i]).IdDocumentResidence).Delete();
                 }
             }
             sync_views = true;
+            documents_residence.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
         }
 

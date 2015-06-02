@@ -316,10 +316,12 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            resettle_persons.EditingNewRecord = true;
             List<ResettlePerson> list = ResettlePersonsFromViewport();
             if (!ValidateResettlePersons(list))
             {
                 sync_views = true;
+                resettle_persons.EditingNewRecord = false;
                 return;
             }
             for (int i = 0; i < list.Count; i++)
@@ -330,7 +332,8 @@ namespace Registry.Viewport
                     int id_person = ResettlePersonsDataModel.Insert(list[i]);
                     if (id_person == -1)
                     {
-                        sync_views = true;
+                        sync_views = true; 
+                        resettle_persons.EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)v_snapshot_resettle_persons[i])["id_person"] = id_person;
@@ -343,6 +346,7 @@ namespace Registry.Viewport
                     if (ResettlePersonsDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
+                        resettle_persons.EditingNewRecord = false;
                         return;
                     }
                     row["id_process"] = list[i].IdProcess == null ? DBNull.Value : (object)list[i].IdProcess;
@@ -365,12 +369,14 @@ namespace Registry.Viewport
                     if (ResettlePersonsDataModel.Delete(list[i].IdPerson.Value) == -1)
                     {
                         sync_views = true;
+                        resettle_persons.EditingNewRecord = false;
                         return;
                     }
                     resettle_persons.Select().Rows.Find(((ResettlePerson)list[i]).IdPerson).Delete();
                 }
             }
             sync_views = true;
+            resettle_persons.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
             if (ParentType == ParentTypeEnum.ResettleProcess)
                 CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.ResettleProcess, (int)ParentRow["id_process"], true);

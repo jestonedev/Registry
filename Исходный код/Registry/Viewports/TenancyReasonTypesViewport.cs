@@ -295,10 +295,12 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            tenancy_reason_types.EditingNewRecord = true;
             List<ReasonType> list = ReasonTypesFromViewport();
             if (!ValidateViewportData(list))
             {
                 sync_views = true;
+                tenancy_reason_types.EditingNewRecord = false;
                 return;
             }
             for (int i = 0; i < list.Count; i++)
@@ -310,6 +312,7 @@ namespace Registry.Viewport
                     if (id_reason_type == -1)
                     {
                         sync_views = true;
+                        tenancy_reason_types.EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)v_snapshot_tenancy_reason_types[i])["id_reason_type"] = id_reason_type;
@@ -323,6 +326,7 @@ namespace Registry.Viewport
                     if (TenancyReasonTypesDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
+                        tenancy_reason_types.EditingNewRecord = false;
                         return;
                     }
                     row["reason_name"] = list[i].ReasonName == null ? DBNull.Value : (object)list[i].ReasonName;
@@ -343,12 +347,14 @@ namespace Registry.Viewport
                     if (TenancyReasonTypesDataModel.Delete(list[i].IdReasonType.Value) == -1)
                     {
                         sync_views = true;
+                        tenancy_reason_types.EditingNewRecord = false;
                         return;
                     }
                     tenancy_reason_types.Select().Rows.Find(((ReasonType)list[i]).IdReasonType).Delete();
                 }
             }
             sync_views = true;
+            tenancy_reason_types.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
         }
 

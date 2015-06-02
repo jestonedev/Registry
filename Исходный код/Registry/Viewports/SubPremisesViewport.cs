@@ -348,10 +348,12 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            sub_premises.EditingNewRecord = true;
             List<SubPremise> list = SubPremisesFromViewport();
             if (!ValidateSubPremises(list))
             {
                 sync_views = true;
+                sub_premises.EditingNewRecord = false;
                 return;
             }
             for (int i = 0; i < list.Count; i++)
@@ -364,6 +366,7 @@ namespace Registry.Viewport
                         MessageBox.Show("У вас нет прав на добавление в базу муниципальных жилых помещений", "Ошибка",
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         sync_views = true;
+                        sub_premises.EditingNewRecord = false;
                         return;
                     }
                     if (new int[] { 1, 3 }.Contains(list[i].IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
@@ -371,12 +374,14 @@ namespace Registry.Viewport
                         MessageBox.Show("У вас нет прав на добавление в базу немуниципальных жилых помещений", "Ошибка",
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         sync_views = true;
+                        sub_premises.EditingNewRecord = false;
                         return;
                     }
                     int id_sub_premises = SubPremisesDataModel.Insert(list[i]);
                     if (id_sub_premises == -1)
                     {
                         sync_views = true;
+                        sub_premises.EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)v_snapshot_sub_premises[i])["id_sub_premises"] = id_sub_premises;
@@ -393,6 +398,7 @@ namespace Registry.Viewport
                         MessageBox.Show("Вы не можете изменить информацию по данной комнате, т.к. она является муниципальной",
                             "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         sync_views = true;
+                        sub_premises.EditingNewRecord = false;
                         return;
                     }
                     if (DataModelHelper.HasNotMunicipal(subPremiseFromView.IdSubPremises.Value, EntityType.SubPremise)
@@ -401,11 +407,13 @@ namespace Registry.Viewport
                         MessageBox.Show("Вы не можете изменить информацию по данной комнате, т.к. она является немуниципальной",
                             "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         sync_views = true;
+                        sub_premises.EditingNewRecord = false;
                         return;
                     }
                     if (SubPremisesDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
+                        sub_premises.EditingNewRecord = false;
                         return;
                     }
                     row["id_premises"] = list[i].IdPremises == null ? DBNull.Value : (object)list[i].IdPremises;
@@ -434,6 +442,7 @@ namespace Registry.Viewport
                         MessageBox.Show("Вы не можете удалить муниципальную комнату, т.к. не имеете на это прав",
                             "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         sync_views = true;
+                        sub_premises.EditingNewRecord = false;
                         return;
                     }
                     if (DataModelHelper.HasNotMunicipal(list[i].IdSubPremises.Value, EntityType.SubPremise)
@@ -442,17 +451,20 @@ namespace Registry.Viewport
                         MessageBox.Show("Вы не можете удалить немуниципальную комнату, т.к. не имеете на это прав",
                             "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         sync_views = true;
+                        sub_premises.EditingNewRecord = false;
                         return;
                     }
                     if (SubPremisesDataModel.Delete(list[i].IdSubPremises.Value) == -1)
                     {
                         sync_views = true;
+                        sub_premises.EditingNewRecord = false;
                         return;
                     }
                     sub_premises.Select().Rows.Find(((SubPremise)list[i]).IdSubPremises).Delete();
                 }
             }
             sync_views = true;
+            sub_premises.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
             CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
             CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);

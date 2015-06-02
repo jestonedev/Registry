@@ -23,8 +23,6 @@ namespace Registry.DataModels
                             description = ? WHERE id_process = ?";
         private static string tableName = "resettle_processes";
 
-        public bool EditingNewRecord { get; set; }
-
         private ResettleProcessesDataModel(ToolStripProgressBar progressBar, int incrementor)
             : base(progressBar, incrementor, selectQuery, tableName)
         {

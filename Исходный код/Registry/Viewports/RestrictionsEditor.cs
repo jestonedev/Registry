@@ -170,6 +170,7 @@ namespace Registry.Viewport
                 int id_restriction = RestrictionsDataModel.Insert(restriction, ParentType, id_parent);
                 if (id_restriction == -1)
                     return;
+                restrictions.EditingNewRecord = true;
                 restrictions.Select().Rows.Add(
                     new object[] { 
                         id_restriction, 
@@ -180,6 +181,7 @@ namespace Registry.Viewport
                     }
                 );
                 restriction_assoc.Select().Rows.Add(new object[] { id_parent, id_restriction });
+                restrictions.EditingNewRecord = false;
             } else
             {
                 if (RestrictionsDataModel.Update(restriction) == -1)

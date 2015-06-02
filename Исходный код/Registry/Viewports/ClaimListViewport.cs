@@ -574,7 +574,10 @@ namespace Registry.Viewport
                 case ViewportState.NewRowState:
                     int id_claim = ClaimsDataModel.Insert(claim);
                     if (id_claim == -1)
+                    {
+                        claims.EditingNewRecord = false;
                         return;
+                    }
                     DataRowView newRow;
                     claim.IdClaim = id_claim;
                     is_editable = false;

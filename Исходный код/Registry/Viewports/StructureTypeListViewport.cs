@@ -261,10 +261,12 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            structure_types.EditingNewRecord = true;
             List<StructureType> list = StructureTypesFromViewport();
             if (!ValidateViewportData(list))
             {
                 sync_views = true;
+                structure_types.EditingNewRecord = false;
                 return;
             }
             for (int i = 0; i < list.Count; i++)
@@ -276,6 +278,7 @@ namespace Registry.Viewport
                     if (id_structure_type == -1)
                     {
                         sync_views = true;
+                        structure_types.EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)v_snapshot_structure_types[i])["id_structure_type"] = id_structure_type;
@@ -288,6 +291,7 @@ namespace Registry.Viewport
                     if (StructureTypesDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
+                        structure_types.EditingNewRecord = false;
                         return;
                     }
                     row["structure_type"] = list[i].StructureTypeName == null ? DBNull.Value : (object)list[i].StructureTypeName;
@@ -307,12 +311,14 @@ namespace Registry.Viewport
                     if (StructureTypesDataModel.Delete(list[i].IdStructureType.Value) == -1)
                     {
                         sync_views = true;
+                        structure_types.EditingNewRecord = false;
                         return;
                     }
                     structure_types.Select().Rows.Find(((StructureType)list[i]).IdStructureType).Delete();
                 }
             }
             sync_views = true;
+            structure_types.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
         }
 

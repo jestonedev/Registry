@@ -295,10 +295,12 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            documents_issued_by.EditingNewRecord = true;
             List<DocumentIssuedBy> list = DocumentsIssuedByFromViewport();
             if (!ValidateViewportData(list))
             {
                 sync_views = true;
+                documents_issued_by.EditingNewRecord = false;
                 return;
             }
             for (int i = 0; i < list.Count; i++)
@@ -310,6 +312,7 @@ namespace Registry.Viewport
                     if (id_document_issued_by == -1)
                     {
                         sync_views = true;
+                        documents_issued_by.EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)v_snapshot_documents_issued_by[i])["id_document_issued_by"] = id_document_issued_by;
@@ -323,6 +326,7 @@ namespace Registry.Viewport
                     if (DocumentsIssuedByDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
+                        documents_issued_by.EditingNewRecord = false;
                         return;
                     }
                     row["document_issued_by"] = list[i].DocumentIssuedByName == null ? DBNull.Value : (object)list[i].DocumentIssuedByName;
@@ -342,12 +346,14 @@ namespace Registry.Viewport
                     if (DocumentsIssuedByDataModel.Delete(list[i].IdDocumentIssuedBy.Value) == -1)
                     {
                         sync_views = true;
+                        documents_issued_by.EditingNewRecord = false;
                         return;
                     }
                     documents_issued_by.Select().Rows.Find(((DocumentIssuedBy)list[i]).IdDocumentIssuedBy).Delete();
                 }
             }
             sync_views = true;
+            documents_issued_by.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
         }
 

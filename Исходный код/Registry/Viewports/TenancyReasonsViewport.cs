@@ -327,10 +327,12 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            tenancy_reasons.EditingNewRecord = true;
             List<TenancyReason> list = TenancyReasonsFromViewport();
             if (!ValidateViewportData(list))
             {
-                sync_views = true;
+                sync_views = true; 
+                tenancy_reasons.EditingNewRecord = false;
                 return;
             }
             for (int i = 0; i < list.Count; i++)
@@ -341,7 +343,8 @@ namespace Registry.Viewport
                     int id_reason = TenancyReasonsDataModel.Insert(list[i]);
                     if (id_reason == -1)
                     {
-                        sync_views = true;
+                        sync_views = true; 
+                        tenancy_reasons.EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)v_snapshot_tenancy_reasons[i])["id_reason"] = id_reason;
@@ -354,6 +357,7 @@ namespace Registry.Viewport
                     if (TenancyReasonsDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
+                        tenancy_reasons.EditingNewRecord = false;
                         return;
                     }
                     row["id_process"] = list[i].IdProcess == null ? DBNull.Value : (object)list[i].IdProcess;
@@ -377,12 +381,14 @@ namespace Registry.Viewport
                     if (TenancyReasonsDataModel.Delete(list[i].IdReason.Value) == -1)
                     {
                         sync_views = true;
+                        tenancy_reasons.EditingNewRecord = false;
                         return;
                     }
                     tenancy_reasons.Select().Rows.Find(((TenancyReason)list[i]).IdReason).Delete();
                 }
             }
             sync_views = true;
+            tenancy_reasons.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
         }
 

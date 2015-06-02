@@ -298,32 +298,73 @@ namespace Registry.DataModels
         {
             switch (table)
             {
-                case "buildings": 
+                case "buildings":
                     return BuildingsDataModel.GetInstance().EditingNewRecord;
+                case "premises":
+                    return PremisesDataModel.GetInstance().EditingNewRecord;
+                case "sub_premises":
+                    return SubPremisesDataModel.GetInstance().EditingNewRecord;
                 case "claim_states":
                     return ClaimStatesDataModel.GetInstance().EditingNewRecord;
                 case "claims":
                     return ClaimsDataModel.GetInstance().EditingNewRecord;
+                case "claim_state_types":
+                    return ClaimStateTypesDataModel.GetInstance().EditingNewRecord;
+                case "claim_state_types_relations":
+                    return ClaimStateTypesDataModel.GetInstance().EditingNewRecord;
+                case "documents_issued_by":
+                    return DocumentsIssuedByDataModel.GetInstance().EditingNewRecord;
+                case "documents_residence":
+                    return DocumentsResidenceDataModel.GetInstance().EditingNewRecord;
+                case "executors":
+                    return ExecutorsDataModel.GetInstance().EditingNewRecord;
                 case "funds_buildings_assoc":
-                    return FundsHistoryDataModel.GetInstance().EditingNewRecord;
+                case "funds_premises_assoc":
+                case "funds_sub_premises_assoc":
                 case "funds_history":
                     return FundsHistoryDataModel.GetInstance().EditingNewRecord;
-                case "funds_premises_assoc":
-                    return FundsHistoryDataModel.GetInstance().EditingNewRecord;
-                case "funds_sub_premises_assoc":
-                    return FundsHistoryDataModel.GetInstance().EditingNewRecord;
-                case "premises":
-                    return PremisesDataModel.GetInstance().EditingNewRecord;
+                case "ownership_buildings_assoc":
+                case "ownership_premises_assoc":
+                case "ownership_rights":
+                    return OwnershipsRightsDataModel.GetInstance().EditingNewRecord;
+                case "restrictions_premises_assoc":
+                case "restrictions_buildings_assoc":
+                case "restrictions":
+                    return RestrictionsDataModel.GetInstance().EditingNewRecord;
                 case "tenancy_agreements":
                     return TenancyAgreementsDataModel.GetInstance().EditingNewRecord;
                 case "tenancy_persons":
                     return TenancyPersonsDataModel.GetInstance().EditingNewRecord;
                 case "tenancy_processes":
                     return TenancyProcessesDataModel.GetInstance().EditingNewRecord;
+                case "tenancy_reasons":
+                    return TenancyReasonsDataModel.GetInstance().EditingNewRecord;
+                case "tenancy_reason_types":
+                    return TenancyReasonTypesDataModel.GetInstance().EditingNewRecord;
+                case "tenancy_sub_premises_assoc":
+                    return TenancySubPremisesAssocDataModel.GetInstance().EditingNewRecord;
+                case "tenancy_premises_assoc":
+                    return TenancyPremisesAssocDataModel.GetInstance().EditingNewRecord;
+                case "tenancy_buildings_assoc":
+                    return TenancyBuildingsAssocDataModel.GetInstance().EditingNewRecord;
                 case "warrants":
                     return WarrantsDataModel.GetInstance().EditingNewRecord;
                 case "resettle_processes":
                     return ResettleProcessesDataModel.GetInstance().EditingNewRecord;
+                case "resettle_persons":
+                    return ResettlePersonsDataModel.GetInstance().EditingNewRecord;
+                case "resettle_sub_premises_from_assoc":
+                    return ResettleSubPremisesFromAssocDataModel.GetInstance().EditingNewRecord;
+                case "resettle_premises_from_assoc":
+                    return ResettlePremisesFromAssocDataModel.GetInstance().EditingNewRecord;
+                case "resettle_buildings_from_assoc":
+                    return ResettleBuildingsFromAssocDataModel.GetInstance().EditingNewRecord;
+                case "resettle_sub_premises_to_assoc":
+                    return ResettleSubPremisesToAssocDataModel.GetInstance().EditingNewRecord;
+                case "resettle_premises_to_assoc":
+                    return ResettlePremisesToAssocDataModel.GetInstance().EditingNewRecord;
+                case "resettle_buildings_to_assoc":
+                    return ResettleBuildingsToAssocDataModel.GetInstance().EditingNewRecord;
                 default:
                     return false;
             }

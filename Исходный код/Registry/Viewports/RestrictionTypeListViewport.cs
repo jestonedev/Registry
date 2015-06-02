@@ -262,10 +262,12 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            restriction_types.EditingNewRecord = true;
             List<RestrictionType> list = RestrictionTypesFromViewport();
             if (!ValidateViewportData(list))
             {
                 sync_views = true;
+                restriction_types.EditingNewRecord = false;
                 return;
             }
             for (int i = 0; i < list.Count; i++)
@@ -277,6 +279,7 @@ namespace Registry.Viewport
                     if (id_restriction_type == -1)
                     {
                         sync_views = true;
+                        restriction_types.EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)v_snapshot_restriction_types[i])["id_restriction_type"] = id_restriction_type;
@@ -289,6 +292,7 @@ namespace Registry.Viewport
                     if (RestrictionTypesDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
+                        restriction_types.EditingNewRecord = false;
                         return;
                     }
                     row["restriction_type"] = list[i].RestrictionTypeName == null ? DBNull.Value : (object)list[i].RestrictionTypeName;
@@ -308,12 +312,14 @@ namespace Registry.Viewport
                     if (RestrictionTypesDataModel.Delete(list[i].IdRestrictionType.Value) == -1)
                     {
                         sync_views = true;
+                        restriction_types.EditingNewRecord = false;
                         return;
                     }
                     restriction_types.Select().Rows.Find(((RestrictionType)list[i]).IdRestrictionType).Delete();
                 }
             }
             sync_views = true;
+            restriction_types.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
         }
 

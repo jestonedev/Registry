@@ -168,6 +168,7 @@ namespace Registry.Viewport
                         "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
+                sub_premises.EditingNewRecord = true;
                 int id_sub_premise = SubPremisesDataModel.Insert(subPremise);
                 if (id_sub_premise == -1)
                     return;
@@ -183,6 +184,7 @@ namespace Registry.Viewport
                         subPremise.StateDate
                     }
                 );
+                sub_premises.EditingNewRecord = false;
             } else
             {
                 if (SubPremisesDataModel.Update(subPremise) == -1)

@@ -959,7 +959,10 @@ namespace Registry.Viewport
                 case ViewportState.NewRowState:
                     int id_building = BuildingsDataModel.Insert(building);
                     if (id_building == -1)
+                    {
+                        buildings.EditingNewRecord = false;
                         return;
+                    }
                     DataRowView newRow;
                     building.IdBuilding = id_building;
                     is_editable = false;
@@ -970,9 +973,9 @@ namespace Registry.Viewport
                     Filter += String.Format(CultureInfo.CurrentCulture, "(id_building = {0})", building.IdBuilding);
                     v_buildings.Filter += Filter;
                     FillRowFromBuilding(building, newRow);
-                    buildings.EditingNewRecord = false;
                     this.Text = "Здание №" + id_building.ToString(CultureInfo.InvariantCulture);
                     viewportState = ViewportState.ReadState;
+                    buildings.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
                     if (building.IdBuilding == null)

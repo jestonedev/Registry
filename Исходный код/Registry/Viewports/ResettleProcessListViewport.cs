@@ -528,7 +528,10 @@ namespace Registry.Viewport
                 case ViewportState.NewRowState:
                     int id_process = ResettleProcessesDataModel.Insert(resettleProcess);
                     if (id_process == -1)
+                    {
+                        resettle_processes.EditingNewRecord = false;
                         return;
+                    }
                     DataRowView newRow;
                     resettleProcess.IdProcess = id_process;
                     is_editable = false;

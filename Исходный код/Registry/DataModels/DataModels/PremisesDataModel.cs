@@ -28,8 +28,6 @@ namespace Registry.DataModels
                             cadastral_num = ?, cadastral_cost = ?, 
                             balance_cost = ?, description = ?, reg_date = ?, is_memorial = ?, account = ?, state_date = ? WHERE id_premises = ?";
         private static string tableName = "premises";
-        
-        public bool EditingNewRecord { get; set; }
 
         private PremisesDataModel(ToolStripProgressBar progressBar, int incrementor)
             : base(progressBar, incrementor, selectQuery, tableName)

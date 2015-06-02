@@ -391,10 +391,12 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            ownership_rights.EditingNewRecord = true;
             List<OwnershipRight> list = OwnershipRightsFromViewport();
             if (!ValidateViewportData(list))
             {
                 sync_views = true;
+                ownership_rights.EditingNewRecord = false;
                 return;
             }
             for (int i = 0; i < list.Count; i++)
@@ -410,6 +412,7 @@ namespace Registry.Viewport
                         MessageBox.Show("Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору", 
                             "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         sync_views = true;
+                        ownership_rights.EditingNewRecord = false;
                         RebuildFilter();
                         return;
                     }
@@ -417,6 +420,7 @@ namespace Registry.Viewport
                     if (id_ownership_right == -1)
                     {
                         sync_views = true;
+                        ownership_rights.EditingNewRecord = false;
                         RebuildFilter();
                         return;
                     }
@@ -431,6 +435,7 @@ namespace Registry.Viewport
                     if (OwnershipsRightsDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
+                        ownership_rights.EditingNewRecord = false;
                         RebuildFilter();
                         return;
                     }
@@ -454,6 +459,7 @@ namespace Registry.Viewport
                     if (OwnershipsRightsDataModel.Delete(list[i].IdOwnershipRight.Value) == -1)
                     {
                         sync_views = true;
+                        ownership_rights.EditingNewRecord = false;
                         RebuildFilter();
                         return;
                     }
@@ -463,6 +469,7 @@ namespace Registry.Viewport
             }
             RebuildFilter();
             sync_views = true;
+            ownership_rights.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
             if (ParentType == ParentTypeEnum.Premises || ParentType == ParentTypeEnum.Building)
                 CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building,

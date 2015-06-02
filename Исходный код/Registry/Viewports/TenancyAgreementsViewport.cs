@@ -586,7 +586,10 @@ namespace Registry.Viewport
                 case ViewportState.NewRowState:
                     int id_agreement = TenancyAgreementsDataModel.Insert(tenancyAgreement);
                     if (id_agreement == -1)
+                    {
+                        tenancy_agreements.EditingNewRecord = false;
                         return;
+                    }
                     DataRowView newRow;
                     tenancyAgreement.IdAgreement = id_agreement;
                     is_editable = false;

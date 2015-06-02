@@ -494,7 +494,10 @@ namespace Registry.Viewport
                 case ViewportState.NewRowState:
                     int id_warrant = WarrantsDataModel.Insert(warrant);
                     if (id_warrant == -1)
+                    {
+                        warrants.EditingNewRecord = false;
                         return;
+                    }
                     DataRowView newRow;
                     warrant.IdWarrant = id_warrant;
                     is_editable = false;
@@ -503,8 +506,8 @@ namespace Registry.Viewport
                     else
                         newRow = ((DataRowView)v_warrants[v_warrants.Position]);
                     FillRowFromWarrant(warrant, newRow);
-                    warrants.EditingNewRecord = false;
                     is_editable = true;
+                    warrants.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
                     if (warrant.IdWarrant == null)

@@ -167,6 +167,7 @@ namespace Registry.Viewport
                         "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
+                OwnershipsRightsDataModel.GetInstance().EditingNewRecord = true;
                 int id_ownership_right = OwnershipsRightsDataModel.Insert(ownershipRight, ParentType, id_parent);
                 if (id_ownership_right == -1)
                     return;
@@ -180,6 +181,7 @@ namespace Registry.Viewport
                     }
                 );
                 ownership_assoc.Select().Rows.Add(new object[] { id_parent, id_ownership_right });
+                OwnershipsRightsDataModel.GetInstance().EditingNewRecord = false;
             } else
             {
                 if (OwnershipsRightsDataModel.Update(ownershipRight) == -1)

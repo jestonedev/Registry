@@ -261,10 +261,12 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            ownership_right_types.EditingNewRecord = true;
             List<OwnershipRightType> list = OwnershipRightTypesFromViewport();
             if (!ValidateViewportData(list))
             {
                 sync_views = true;
+                ownership_right_types.EditingNewRecord = false;
                 return;
             }
             for (int i = 0; i < list.Count; i++)
@@ -276,6 +278,7 @@ namespace Registry.Viewport
                     if (id_ownership_right_type == -1)
                     {
                         sync_views = true;
+                        ownership_right_types.EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)v_snapshot_ownership_right_types[i])["id_ownership_right_type"] = id_ownership_right_type;
@@ -288,6 +291,7 @@ namespace Registry.Viewport
                     if (OwnershipRightTypesDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
+                        ownership_right_types.EditingNewRecord = false;
                         return;
                     }
                     row["ownership_right_type"] = list[i].OwnershipRightTypeName == null ? DBNull.Value : (object)list[i].OwnershipRightTypeName;
@@ -307,12 +311,14 @@ namespace Registry.Viewport
                     if (OwnershipRightTypesDataModel.Delete(list[i].IdOwnershipRightType.Value) == -1)
                     {
                         sync_views = true;
+                        ownership_right_types.EditingNewRecord = false;
                         return;
                     }
                     ownership_right_types.Select().Rows.Find(((OwnershipRightType)list[i]).IdOwnershipRightType).Delete();
                 }
             }
             sync_views = true;
+            ownership_right_types.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
         }
 

@@ -213,6 +213,7 @@ namespace Registry.Viewport
         public void SaveRecord()
         {
             sync_views = false;
+            tenancy_sub_premises.EditingNewRecord = true;
             List<TenancyObject> list = TenancySubPremisesFromViewport();
             for (int i = 0; i < list.Count; i++)
             {
@@ -225,6 +226,7 @@ namespace Registry.Viewport
                     if (id_assoc == -1)
                     {
                         sync_views = true;
+                        tenancy_sub_premises.EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)v_snapshot_tenancy_sub_premises[
@@ -240,6 +242,7 @@ namespace Registry.Viewport
                     if (TenancySubPremisesAssocDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
+                        tenancy_sub_premises.EditingNewRecord = false;
                         return;
                     }
                     row["rent_total_area"] = list[i].RentTotalArea == null ? DBNull.Value : (object)list[i].RentTotalArea;
@@ -263,6 +266,7 @@ namespace Registry.Viewport
                     if (TenancySubPremisesAssocDataModel.Delete(list[i].IdAssoc.Value) == -1)
                     {
                         sync_views = true;
+                        tenancy_sub_premises.EditingNewRecord = false;
                         return;
                     }
                     int snapshot_row_index = -1;
@@ -281,6 +285,7 @@ namespace Registry.Viewport
                 }
             }
             sync_views = true;
+            tenancy_sub_premises.EditingNewRecord = false;
         }
 
         protected override void OnVisibleChanged(EventArgs e)

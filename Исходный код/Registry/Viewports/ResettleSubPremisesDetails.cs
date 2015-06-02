@@ -199,6 +199,8 @@ namespace Registry.Viewport
         public void SaveRecord()
         {
             sync_views = false;
+            ResettleSubPremisesFromAssocDataModel.GetInstance().EditingNewRecord = true;
+            ResettleSubPremisesToAssocDataModel.GetInstance().EditingNewRecord = true;
             List<ResettleObject> list = ResettleSubPremisesFromViewport();
             for (int i = 0; i < list.Count; i++)
             {
@@ -215,6 +217,8 @@ namespace Registry.Viewport
                     if (id_assoc == -1)
                     {
                         sync_views = true;
+                        ResettleSubPremisesFromAssocDataModel.GetInstance().EditingNewRecord = false;
+                        ResettleSubPremisesToAssocDataModel.GetInstance().EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)v_snapshot_resettle_sub_premises[
@@ -248,6 +252,8 @@ namespace Registry.Viewport
                     if (affected == -1)
                     {
                         sync_views = true;
+                        ResettleSubPremisesFromAssocDataModel.GetInstance().EditingNewRecord = false;
+                        ResettleSubPremisesToAssocDataModel.GetInstance().EditingNewRecord = false;
                         return;
                     }
                     int snapshot_row_index = -1;
@@ -266,6 +272,8 @@ namespace Registry.Viewport
                 }
             }
             sync_views = true;
+            ResettleSubPremisesFromAssocDataModel.GetInstance().EditingNewRecord = false;
+            ResettleSubPremisesToAssocDataModel.GetInstance().EditingNewRecord = false;
         }
 
         protected override void OnVisibleChanged(EventArgs e)

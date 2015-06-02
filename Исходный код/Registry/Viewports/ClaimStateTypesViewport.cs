@@ -376,11 +376,13 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            claim_state_types.EditingNewRecord = true;
             // Сохраняем общую информацию о видах состояний
             List<ClaimStateType> list = ClaimStateTypesFromViewport();
             if (!ValidateViewportData(list))
             {
                 sync_views = true;
+                claim_state_types.EditingNewRecord = false;
                 return;
             }
             for (int i = 0; i < list.Count; i++)
@@ -392,6 +394,7 @@ namespace Registry.Viewport
                     if (id_state_type == -1)
                     {
                         sync_views = true;
+                        claim_state_types.EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)v_snapshot_claim_state_types[i])["id_state_type"] = id_state_type;
@@ -407,6 +410,7 @@ namespace Registry.Viewport
                     if (ClaimStateTypesDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
+                        claim_state_types.EditingNewRecord = false;
                         return;
                     }
                     row["state_type"] = list[i].StateType == null ? DBNull.Value : (object)list[i].StateType;
@@ -428,6 +432,7 @@ namespace Registry.Viewport
                     if (ClaimStateTypesDataModel.Delete(list[i].IdStateType.Value) == -1)
                     {
                         sync_views = true;
+                        claim_state_types.EditingNewRecord = false;
                         return;
                     }
                     claim_state_types.Select().Rows.Find(((ClaimStateType)list[i]).IdStateType).Delete();
@@ -451,6 +456,7 @@ namespace Registry.Viewport
                     if (id_relation == -1)
                     {
                         sync_views = true;
+                        claim_state_types.EditingNewRecord = false;
                         return;
                     }
                     var rel_row = (from snapshot_row in DataModelHelper.FilterRows(snapshot_claim_state_types_relations)
@@ -482,12 +488,14 @@ namespace Registry.Viewport
                     if (ClaimStateTypesRelationsDataModel.Delete(list_relations[i].IdRelation.Value) == -1)
                     {
                         sync_views = true;
+                        claim_state_types.EditingNewRecord = false;
                         return;
                     }
                     claim_state_types_relations.Select().Rows.Find(((ClaimStateTypeRelation)list_relations[i]).IdRelation).Delete();
                 }
             }
-            sync_views = true; 
+            sync_views = true;
+            claim_state_types.EditingNewRecord = false;
             dataGridViewClaimStateTypesFrom.RowCount = v_claim_state_types_from.Count;
             dataGridViewClaimStateTypesFrom.Refresh();          
             MenuCallback.EditingStateUpdate();

@@ -25,8 +25,6 @@ namespace Registry.DataModels
 
         private static string tableName = "claim_states";
 
-        public bool EditingNewRecord { get; set; }
-
         private ClaimStatesDataModel(ToolStripProgressBar progressBar, int incrementor)
             : base(progressBar, incrementor, selectQuery, tableName)
         {

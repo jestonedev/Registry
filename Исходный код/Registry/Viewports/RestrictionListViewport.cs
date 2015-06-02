@@ -393,6 +393,7 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            restrictions.EditingNewRecord = true;
             List<Restriction> list = RestrictionsFromViewport();
             if (!ValidateViewportData(list))
             {
@@ -412,6 +413,7 @@ namespace Registry.Viewport
                         MessageBox.Show("Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
                             "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         sync_views = true;
+                        restrictions.EditingNewRecord = false;
                         RebuildFilter();
                         return;
                     }
@@ -419,6 +421,7 @@ namespace Registry.Viewport
                     if (id_restriction == -1)
                     {
                         sync_views = true;
+                        restrictions.EditingNewRecord = false;
                         RebuildFilter();
                         return;
                     }
@@ -433,6 +436,7 @@ namespace Registry.Viewport
                     if (RestrictionsDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
+                        restrictions.EditingNewRecord = false;
                         RebuildFilter();
                         return;
                     }
@@ -456,6 +460,7 @@ namespace Registry.Viewport
                     if (RestrictionsDataModel.Delete(list[i].IdRestriction.Value) == -1)
                     {
                         sync_views = true;
+                        restrictions.EditingNewRecord = false;
                         RebuildFilter();
                         return;
                     }
@@ -464,6 +469,7 @@ namespace Registry.Viewport
             }
             RebuildFilter();
             sync_views = true;
+            restrictions.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
             if (ParentType == ParentTypeEnum.Premises || ParentType == ParentTypeEnum.Building)
                 CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building,

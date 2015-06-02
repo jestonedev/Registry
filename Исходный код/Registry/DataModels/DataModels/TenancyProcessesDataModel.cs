@@ -28,8 +28,6 @@ namespace Registry.DataModels
                             protocol_date = ?, id_executor = ?, description = ? WHERE id_process = ?";
         private static string tableName = "tenancy_processes";
 
-        public bool EditingNewRecord { get; set; }
-
         private TenancyProcessesDataModel(ToolStripProgressBar progressBar, int incrementor)
             : base(progressBar, incrementor, selectQuery, tableName)
         {

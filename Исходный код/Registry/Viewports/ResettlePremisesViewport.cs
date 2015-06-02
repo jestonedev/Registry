@@ -455,11 +455,15 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            ResettlePremisesFromAssocDataModel.GetInstance().EditingNewRecord = true;
+            ResettlePremisesToAssocDataModel.GetInstance().EditingNewRecord = true;
             List<ResettleObject> list = ResettlePremisesFromViewport();
             // Проверяем данные о помещениях
             if (!ValidateResettlePremises(list))
             {
                 sync_views = true;
+                ResettlePremisesFromAssocDataModel.GetInstance().EditingNewRecord = false;
+                ResettlePremisesToAssocDataModel.GetInstance().EditingNewRecord = false;
                 return;
             }
             // Проверяем данные о комнатах
@@ -467,6 +471,8 @@ namespace Registry.Viewport
                 ((ResettleSubPremisesDetails)dataGridView.DetailsControl).ResettleSubPremisesFromViewport()))
             {
                 sync_views = true;
+                ResettlePremisesFromAssocDataModel.GetInstance().EditingNewRecord = false;
+                ResettlePremisesToAssocDataModel.GetInstance().EditingNewRecord = false;
                 return;
             }
             // Сохраняем помещения в базу данных
@@ -486,6 +492,8 @@ namespace Registry.Viewport
                     if (id_assoc == -1)
                     {
                         sync_views = true;
+                        ResettlePremisesFromAssocDataModel.GetInstance().EditingNewRecord = false;
+                        ResettlePremisesToAssocDataModel.GetInstance().EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)v_snapshot_resettle_premises[
@@ -518,6 +526,8 @@ namespace Registry.Viewport
                     if (affected == -1)
                     {
                         sync_views = true;
+                        ResettlePremisesFromAssocDataModel.GetInstance().EditingNewRecord = false;
+                        ResettlePremisesToAssocDataModel.GetInstance().EditingNewRecord = false;
                         return;
                     }
                     int snapshot_row_index = -1;
@@ -536,6 +546,8 @@ namespace Registry.Viewport
                 }
             }
             sync_views = true;
+            ResettlePremisesFromAssocDataModel.GetInstance().EditingNewRecord = false;
+            ResettlePremisesToAssocDataModel.GetInstance().EditingNewRecord = false;
             // Сохраняем комнаты в базу данных
             ((ResettleSubPremisesDetails)dataGridView.DetailsControl).SaveRecord();
             MenuCallback.EditingStateUpdate();

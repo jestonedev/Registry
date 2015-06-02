@@ -802,7 +802,10 @@ namespace Registry.Viewport
                 case ViewportState.NewRowState:
                     int id_person = TenancyPersonsDataModel.Insert(tenancyPerson);
                     if (id_person == -1)
+                    {
+                        tenancy_persons.EditingNewRecord = false;
                         return;
+                    }
                     DataRowView newRow;
                     tenancyPerson.IdPerson = id_person;
                     is_editable = false;
