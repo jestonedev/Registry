@@ -42,6 +42,9 @@
     <AssemblyOriginatorKeyFile>Viewports.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Declension">
+      <HintPath>..\..\Declension.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.TeamFoundation.Client, Version=12.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Release\Microsoft.TeamFoundation.Client.dll</HintPath>
