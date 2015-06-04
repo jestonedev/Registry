@@ -6,7 +6,7 @@
    <Modules>
     <Module Name="viewports.dll">
      <Messages>
-      <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+      <Message TypeName="AssembliesShouldHaveValidStrongNames" Category="Microsoft.Design" CheckId="CA2210" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
        <Issue Name="NoStrongName" Certainty="95" Level="CriticalError">Sign 'Viewports.dll' with a strong name key.</Issue>
       </Message>
      </Messages>
@@ -17,7 +17,7 @@
          <Members>
           <Member Name="#GetFilter()" Kind="Method" Static="False" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="ExtendedSearchBuildingForm.cs" Line="31">'ExtendedSearchBuildingForm.GetFilter()' has a cyclomatic complexity of 39. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
@@ -28,7 +28,7 @@
          <Members>
           <Member Name="#GetFilter()" Kind="Method" Static="False" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="ExtendedSearchPremisesForm.cs" Line="28">'ExtendedSearchPremisesForm.GetFilter()' has a cyclomatic complexity of 35. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
@@ -39,7 +39,7 @@
          <Members>
           <Member Name="#GetFilter()" Kind="Method" Static="False" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="ExtendedSearchResettleForm.cs" Line="79">'ExtendedSearchResettleForm.GetFilter()' has a cyclomatic complexity of 37. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
@@ -50,7 +50,7 @@
          <Members>
           <Member Name="#GetFilter()" Kind="Method" Static="False" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="ExtendedSearchTenancyForm.cs" Line="77">'ExtendedSearchTenancyForm.GetFilter()' has a cyclomatic complexity of 48. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
@@ -65,7 +65,7 @@
          <Members>
           <Member Name="#SaveRecord()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="BuildingViewport.cs" Line="934">'BuildingViewport.SaveRecord()' has a cyclomatic complexity of 29. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
@@ -76,7 +76,7 @@
          <Members>
           <Member Name="#SaveRecord()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="ClaimStateTypesViewport.cs" Line="378">'ClaimStateTypesViewport.SaveRecord()' has a cyclomatic complexity of 42. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
@@ -87,7 +87,7 @@
          <Members>
           <Member Name="#SaveRecord()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="OwnershipListViewport.cs" Line="393">'OwnershipListViewport.SaveRecord()' has a cyclomatic complexity of 26. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
@@ -96,7 +96,7 @@
         </Type>
         <Type Name="PremisesViewport" Kind="Class" Accessibility="Assembly" ExternallyVisible="False">
          <Messages>
-          <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="Breaking">
+          <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="Breaking">
            <Issue Name="UIType" Certainty="75" Level="Warning">'PremisesViewport' is coupled with 93 different (non-IComponent) types from 19 different namespaces. Rewrite or refactor this class's methods to decrease its class coupling, or consider moving some of the class's methods to some of the other types it is tightly coupled with. A class coupling above 95 indicates poor maintainability, a class coupling between 95 and 80 indicates moderate maintainability, and a class coupling below 80 indicates good maintainability.</Issue>
           </Message>
          </Messages>
@@ -105,7 +105,7 @@
          <Members>
           <Member Name="#SaveRecord()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="RestrictionListViewport.cs" Line="395">'RestrictionListViewport.SaveRecord()' has a cyclomatic complexity of 26. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
@@ -116,7 +116,7 @@
          <Members>
           <Member Name="#ValidatePermissions(Registry.Entities.SubPremise)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Certainty="95" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="SubPremisesEditor.cs" Line="123">The 'this' parameter (or 'Me' in Visual Basic) of 'SubPremisesEditor.ValidatePermissions(SubPremise)' is never used. Mark the member as static (or Shared in Visual Basic) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Issue>
             </Message>
            </Messages>
@@ -127,7 +127,7 @@
          <Members>
           <Member Name="#SaveRecord()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="SubPremisesViewport.cs" Line="350">'SubPremisesViewport.SaveRecord()' has a cyclomatic complexity of 34. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
@@ -138,37 +138,37 @@
          <Members>
           <Member Name="#vButtonExcludePaste_Click(System.Object,System.EventArgs)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Name="IFormatProviderAlternateString" Certainty="95" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="TenancyAgreementsViewport.cs" Line="1008">Because the behavior of 'string.Format(string, object)' could vary based on the current user's locale settings, replace this call in 'TenancyAgreementsViewport.vButtonExcludePaste_Click(object, EventArgs)' with a call to 'string.Format(IFormatProvider, string, params object[])'. If the result of 'string.Format(IFormatProvider, string, params object[])' will be displayed to the user, specify 'CultureInfo.CurrentCulture' as the 'IFormatProvider' parameter. Otherwise, if the result will be stored and accessed by software, such as when it is persisted to disk or to a database, specify 'CultureInfo.InvariantCulture'.</Issue>
             </Message>
-            <Message Id="System.String.Format(System.String,System.Object,System.Object,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message Id="System.String.Format(System.String,System.Object,System.Object,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Name="IFormatProviderAlternateString" Certainty="95" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="TenancyAgreementsViewport.cs" Line="1034">Because the behavior of 'string.Format(string, object, object, object)' could vary based on the current user's locale settings, replace this call in 'TenancyAgreementsViewport.vButtonExcludePaste_Click(object, EventArgs)' with a call to 'string.Format(IFormatProvider, string, params object[])'. If the result of 'string.Format(IFormatProvider, string, params object[])' will be displayed to the user, specify 'CultureInfo.CurrentCulture' as the 'IFormatProvider' parameter. Otherwise, if the result will be stored and accessed by software, such as when it is persisted to disk or to a database, specify 'CultureInfo.InvariantCulture'.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#vButtonExplainPaste_Click(System.Object,System.EventArgs)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Name="IFormatProviderAlternateString" Certainty="95" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="TenancyAgreementsViewport.cs" Line="904">Because the behavior of 'string.Format(string, object)' could vary based on the current user's locale settings, replace this call in 'TenancyAgreementsViewport.vButtonExplainPaste_Click(object, EventArgs)' with a call to 'string.Format(IFormatProvider, string, params object[])'. If the result of 'string.Format(IFormatProvider, string, params object[])' will be displayed to the user, specify 'CultureInfo.CurrentCulture' as the 'IFormatProvider' parameter. Otherwise, if the result will be stored and accessed by software, such as when it is persisted to disk or to a database, specify 'CultureInfo.InvariantCulture'.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#vButtonIncludePaste_Click(System.Object,System.EventArgs)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message Id="System.String.Format(System.String,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Name="IFormatProviderAlternateString" Certainty="95" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="TenancyAgreementsViewport.cs" Line="940">Because the behavior of 'string.Format(string, object)' could vary based on the current user's locale settings, replace this call in 'TenancyAgreementsViewport.vButtonIncludePaste_Click(object, EventArgs)' with a call to 'string.Format(IFormatProvider, string, params object[])'. If the result of 'string.Format(IFormatProvider, string, params object[])' will be displayed to the user, specify 'CultureInfo.CurrentCulture' as the 'IFormatProvider' parameter. Otherwise, if the result will be stored and accessed by software, such as when it is persisted to disk or to a database, specify 'CultureInfo.InvariantCulture'.</Issue>
             </Message>
-            <Message Id="System.String.Format(System.String,System.Object,System.Object,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message Id="System.String.Format(System.String,System.Object,System.Object,System.Object)" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Name="IFormatProviderAlternateString" Certainty="95" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="TenancyAgreementsViewport.cs" Line="978">Because the behavior of 'string.Format(string, object, object, object)' could vary based on the current user's locale settings, replace this call in 'TenancyAgreementsViewport.vButtonIncludePaste_Click(object, EventArgs)' with a call to 'string.Format(IFormatProvider, string, params object[])'. If the result of 'string.Format(IFormatProvider, string, params object[])' will be displayed to the user, specify 'CultureInfo.CurrentCulture' as the 'IFormatProvider' parameter. Otherwise, if the result will be stored and accessed by software, such as when it is persisted to disk or to a database, specify 'CultureInfo.InvariantCulture'.</Issue>
             </Message>
-            <Message Id="System.String.Format(System.String,System.Object[])" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message Id="System.String.Format(System.String,System.Object[])" TypeName="SpecifyIFormatProvider" Category="Microsoft.Globalization" CheckId="CA1305" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Name="IFormatProviderAlternateString" Certainty="95" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="TenancyAgreementsViewport.cs" Line="965">Because the behavior of 'string.Format(string, params object[])' could vary based on the current user's locale settings, replace this call in 'TenancyAgreementsViewport.vButtonIncludePaste_Click(object, EventArgs)' with a call to 'string.Format(IFormatProvider, string, params object[])'. If the result of 'string.Format(IFormatProvider, string, params object[])' will be displayed to the user, specify 'CultureInfo.CurrentCulture' as the 'IFormatProvider' parameter. Otherwise, if the result will be stored and accessed by software, such as when it is persisted to disk or to a database, specify 'CultureInfo.InvariantCulture'.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#vButtonTerminatePaste_Click(System.Object,System.EventArgs)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message Id="System.String.StartsWith(System.String)" TypeName="SpecifyStringComparison" Category="Microsoft.Globalization" CheckId="CA1307" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message Id="System.String.StartsWith(System.String)" TypeName="SpecifyStringComparison" Category="Microsoft.Globalization" CheckId="CA1307" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Certainty="95" Level="Error" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="TenancyAgreementsViewport.cs" Line="849">Because the behavior of 'string.StartsWith(string)' could vary based on the current user's locale settings, replace this call in 'TenancyAgreementsViewport.vButtonTerminatePaste_Click(object, EventArgs)' with a call to 'string.StartsWith(string, StringComparison)'. If the result of 'string.StartsWith(string, StringComparison)' will be displayed to the user, such as when sorting a list of items for display in a list box, specify 'StringComparison.CurrentCulture' or 'StringComparison.CurrentCultureIgnoreCase' as the 'StringComparison' parameter. If comparing case-insensitive identifiers, such as file paths, environment variables, or registry keys and values, specify 'StringComparison.OrdinalIgnoreCase'. Otherwise, if comparing case-sensitive identifiers, specify 'StringComparison.Ordinal'.</Issue>
             </Message>
            </Messages>
@@ -179,7 +179,7 @@
          <Members>
           <Member Name="#SaveRecord()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="TenancyBuildingsViewport.cs" Line="455">'TenancyBuildingsViewport.SaveRecord()' has a cyclomatic complexity of 26. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
@@ -188,21 +188,21 @@
         </Type>
         <Type Name="TenancyPremisesViewport" Kind="Class" Accessibility="Assembly" ExternallyVisible="False">
          <Messages>
-          <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="Breaking">
+          <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="Breaking">
            <Issue Name="UIType" Certainty="75" Level="Warning">'TenancyPremisesViewport' is coupled with 85 different (non-IComponent) types from 19 different namespaces. Rewrite or refactor this class's methods to decrease its class coupling, or consider moving some of the class's methods to some of the other types it is tightly coupled with. A class coupling above 95 indicates poor maintainability, a class coupling between 95 and 80 indicates moderate maintainability, and a class coupling below 80 indicates good maintainability.</Issue>
           </Message>
          </Messages>
          <Members>
           <Member Name="#dataGridView_CellValueNeeded(System.Object,System.Windows.Forms.DataGridViewCellValueEventArgs)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="TenancyPremisesViewport.cs" Line="968">'TenancyPremisesViewport.dataGridView_CellValueNeeded(object, DataGridViewCellValueEventArgs)' has a cyclomatic complexity of 27. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#SaveRecord()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="TenancyPremisesViewport.cs" Line="503">'TenancyPremisesViewport.SaveRecord()' has a cyclomatic complexity of 27. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>
@@ -211,21 +211,21 @@
         </Type>
         <Type Name="TenancyViewport" Kind="Class" Accessibility="Assembly" ExternallyVisible="False">
          <Messages>
-          <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="Breaking">
+          <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="Breaking">
            <Issue Name="UIType" Certainty="75" Level="Warning">'TenancyViewport' is coupled with 85 different (non-IComponent) types from 20 different namespaces. Rewrite or refactor this class's methods to decrease its class coupling, or consider moving some of the class's methods to some of the other types it is tightly coupled with. A class coupling above 95 indicates poor maintainability, a class coupling between 95 and 80 indicates moderate maintainability, and a class coupling below 80 indicates good maintainability.</Issue>
           </Message>
          </Messages>
          <Members>
           <Member Name="#DataRowToPerson(System.Data.DataRow)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Certainty="95" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="TenancyViewport.cs" Line="1250">The 'this' parameter (or 'Me' in Visual Basic) of 'TenancyViewport.DataRowToPerson(DataRow)' is never used. Mark the member as static (or Shared in Visual Basic) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#PersonToObjectArray(Registry.Entities.TenancyPerson)" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message TypeName="MarkMembersAsStatic" Category="Microsoft.Performance" CheckId="CA1822" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Certainty="95" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="TenancyViewport.cs" Line="1279">The 'this' parameter (or 'Me' in Visual Basic) of 'TenancyViewport.PersonToObjectArray(TenancyPerson)' is never used. Mark the member as static (or Shared in Visual Basic) or use 'this'/'Me' in the method body or at least one property accessor, if appropriate.</Issue>
             </Message>
            </Messages>
@@ -236,7 +236,7 @@
          <Members>
           <Member Name="#OnClosing(System.ComponentModel.CancelEventArgs)" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="True">
            <Messages>
-            <Message Id="0" TypeName="Validate arguments of public methods" Category="Microsoft.Design" CheckId="CA1062" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="DependsOnFix">
+            <Message Id="0" TypeName="Validate arguments of public methods" Category="Microsoft.Design" CheckId="CA1062" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="DependsOnFix">
              <Issue Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="Viewport.cs" Line="46">In externally visible method 'Viewport.OnClosing(CancelEventArgs)', validate parameter 'e' before using it.</Issue>
             </Message>
            </Messages>
@@ -247,10 +247,10 @@
          <Members>
           <Member Name="#CreateViewport(Registry.Viewport.IMenuCallback,Registry.Viewport.ViewportType)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="Breaking">
+            <Message TypeName="AvoidExcessiveClassCoupling" Category="Microsoft.Maintainability" CheckId="CA1506" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="Breaking">
              <Issue Name="Method" Certainty="75" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="ViewportFactory.cs" Line="13">'ViewportFactory.CreateViewport(IMenuCallback, ViewportType)' is coupled with 34 different types from 2 different namespaces. Rewrite or refactor the method to decrease its class coupling, or consider moving the method to one of the other types it is tightly coupled with. A class coupling above 40 indicates poor maintainability, a class coupling between 40 and 30 indicates moderate maintainability, and a class coupling below 30 indicates good maintainability.</Issue>
             </Message>
-            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-03 06:35:11Z" FixCategory="NonBreaking">
+            <Message TypeName="AvoidExcessiveComplexity" Category="Microsoft.Maintainability" CheckId="CA1502" Status="Active" Created="2015-06-04 03:12:06Z" FixCategory="NonBreaking">
              <Issue Certainty="90" Level="Warning" Path="e:\Реестр жилого фонда\Исходный код\Registry\Viewports" File="ViewportFactory.cs" Line="13">'ViewportFactory.CreateViewport(IMenuCallback, ViewportType)' has a cyclomatic complexity of 30. Rewrite or refactor the method to reduce complexity to 25.</Issue>
             </Message>
            </Messages>

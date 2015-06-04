@@ -2687,7 +2687,7 @@ namespace Registry.Viewport
             this.textBoxPremisesNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxPremisesNumber.Location = new System.Drawing.Point(169, 67);
-            this.textBoxPremisesNumber.MaxLength = 25;
+            this.textBoxPremisesNumber.MaxLength = 255;
             this.textBoxPremisesNumber.Name = "textBoxPremisesNumber";
             this.textBoxPremisesNumber.Size = new System.Drawing.Size(272, 21);
             this.textBoxPremisesNumber.TabIndex = 3;
