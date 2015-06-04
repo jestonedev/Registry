@@ -456,18 +456,50 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> BuildingIDsByCurrentFund(int idFund)
         {
-            DataTable table = CalcDataModelBuildingsCurrentFunds.GetInstance().Select();
-            return (from funds_row in table.AsEnumerable()
-                    where funds_row.Field<int>("id_fund_type") == idFund
-                    select funds_row.Field<int>("id_building"));
+            // Ищем здания указанного фонда, а также здания, в которых присутствуют помещения и комнаты указанного фонда
+            DataTable buildingsFunds = CalcDataModelBuildingsCurrentFunds.GetInstance().Select();
+            DataTable premisesFunds = CalcDataModelPremisesCurrentFunds.GetInstance().Select();
+            DataTable subPremisesFunds = CalcDataModelSubPremisesCurrentFunds.GetInstance().Select();
+            var premisesIds = from subPremisesFunds_row in subPremisesFunds.AsEnumerable()
+                              join subPremises_row in DataModelHelper.FilterRows(SubPremisesDataModel.GetInstance().Select())
+                              on subPremisesFunds_row.Field<int>("id_sub_premises") equals subPremises_row.Field<int>("id_sub_premises")
+                              where new int[] { 1, 4, 5 }.Contains(subPremises_row.Field<int>("id_state")) &&
+                              subPremisesFunds_row.Field<int>("id_fund_type") == idFund
+                              select subPremises_row.Field<int>("id_premises");
+            var buildingsIds = from premisesFunds_row in premisesFunds.AsEnumerable()
+                               join premises_row in DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select())
+                               on premisesFunds_row.Field<int>("id_premises") equals premises_row.Field<int>("id_premises")
+                               where new int[] { 1, 4, 5 }.Contains(premises_row.Field<int>("id_state")) &&
+                                premisesFunds_row.Field<int>("id_fund_type") == idFund ||
+                                (premisesFunds_row.Field<int>("id_fund_type") == 4 && premisesIds.Contains(premisesFunds_row.Field<int>("id_premises")))
+                               select premises_row.Field<int>("id_building");
+            return (from buildingsFunds_row in buildingsFunds.AsEnumerable()
+                    join buildings_row in DataModelHelper.FilterRows(BuildingsDataModel.GetInstance().Select())
+                              on buildingsFunds_row.Field<int>("id_building") equals buildings_row.Field<int>("id_building")
+                    where new int[] { 1, 4, 5 }.Contains(buildings_row.Field<int>("id_state")) && 
+                    buildingsFunds_row.Field<int>("id_fund_type") == idFund ||
+                                   (buildingsFunds_row.Field<int>("id_fund_type") == 4 && buildingsIds.Contains(buildingsFunds_row.Field<int>("id_building")))
+                    select buildingsFunds_row.Field<int>("id_building"));
         }
 
         public static IEnumerable<int> PremiseIDsByCurrentFund(int idFund)
         {
-            DataTable table = CalcDataModelPremisesCurrentFunds.GetInstance().Select();
-            return (from funds_row in table.AsEnumerable()
-                    where funds_row.Field<int>("id_fund_type") == idFund
-                    select funds_row.Field<int>("id_premises"));
+            // Ищем помещения указанного фонда, а также помещения, в которых присутствуют комнаты указанного фонда
+            DataTable premisesFunds = CalcDataModelPremisesCurrentFunds.GetInstance().Select();
+            DataTable subPremisesFunds = CalcDataModelSubPremisesCurrentFunds.GetInstance().Select();
+            var premisesIds = from subPremisesFunds_row in subPremisesFunds.AsEnumerable()
+                              join subPremises_row in DataModelHelper.FilterRows(SubPremisesDataModel.GetInstance().Select())
+                              on subPremisesFunds_row.Field<int>("id_sub_premises") equals subPremises_row.Field<int>("id_sub_premises")
+                              where new int[] { 1, 4, 5 }.Contains(subPremises_row.Field<int>("id_state")) &&
+                              subPremisesFunds_row.Field<int>("id_fund_type") == idFund
+                              select subPremises_row.Field<int>("id_premises");
+            return (from premisesFunds_row in premisesFunds.AsEnumerable()
+                    join premises_row in DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select())
+                               on premisesFunds_row.Field<int>("id_premises") equals premises_row.Field<int>("id_premises")
+                    where new int[] { 1, 4, 5 }.Contains(premises_row.Field<int>("id_state")) && 
+                        premisesFunds_row.Field<int>("id_fund_type") == idFund ||
+                        (premisesFunds_row.Field<int>("id_fund_type") == 4 && premisesIds.Contains(premisesFunds_row.Field<int>("id_premises")))
+                    select premisesFunds_row.Field<int>("id_premises"));
         }
 
         public static IEnumerable<int> BuildingIDsByRegion(string region)
