@@ -676,6 +676,7 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
+            comboBoxFundType.Focus();
             is_editable = false;
             FundHistory fundHistory = FundHistoryFromView();
             v_funds_history.AddNew();
@@ -697,6 +698,7 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
+            comboBoxFundType.Focus();
             is_editable = false;
             v_funds_history.AddNew();
             dataGridView.Enabled = false;
