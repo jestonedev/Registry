@@ -101,12 +101,6 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
-                if (tenancyReason.ReasonNumber == null)
-                {
-                    MessageBox.Show("Номер основания не может быть пустым", "Ошибка", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return false;
-                }
                 if (tenancyReason.ReasonNumber != null && tenancyReason.ReasonNumber.Length > 50)
                 {
                     MessageBox.Show("Длина номера основания не может превышать 50 символов", "Ошибка", 
@@ -448,10 +442,13 @@ namespace Registry.Viewport
             DateTime? reason_date = null;
             if (dataGridView.Rows[e.RowIndex].Cells["reason_date"].Value != DBNull.Value)
                 reason_date = Convert.ToDateTime(dataGridView.Rows[e.RowIndex].Cells["reason_date"].Value, CultureInfo.InvariantCulture);
-            dataGridView.Rows[e.RowIndex].Cells["reason_prepared"].Value =
-                reason_template.Replace("@reason_date@", reason_date == null ? "" : 
-                    reason_date.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture))
-                               .Replace("@reason_number@", reason_number);
+            reason_template = reason_template.Replace("@reason_date@", reason_date == null ? "" :
+                    reason_date.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
+            if (String.IsNullOrEmpty(reason_number))
+                reason_template = reason_template.Replace("№@reason_number@", reason_number).Replace("№ @reason_number@", reason_number);
+            else
+                reason_template = reason_template.Replace("@reason_number@", reason_number);
+            dataGridView.Rows[e.RowIndex].Cells["reason_prepared"].Value = reason_template;
             MenuCallback.EditingStateUpdate();
         }
 
@@ -461,13 +458,10 @@ namespace Registry.Viewport
             switch (cell.OwningColumn.Name)
             {
                 case "reason_number":
-                    if (String.IsNullOrEmpty(cell.Value.ToString().Trim()))
-                        cell.ErrorText = "Номер основания не может быть пустым";
+                    if (cell.Value.ToString().Trim().Length > 50)
+                        cell.ErrorText = "Длина номера основания не может превышать 50 символов";
                     else
-                        if (cell.Value.ToString().Trim().Length > 50)
-                            cell.ErrorText = "Длина номера основания не может превышать 50 символов";
-                        else
-                            cell.ErrorText = "";
+                        cell.ErrorText = "";
                     break;
                 case "reason_date":
                     if (String.IsNullOrEmpty(cell.Value.ToString().Trim()))
