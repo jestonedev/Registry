@@ -1536,6 +1536,7 @@ namespace Registry.Viewport
                 v_tenancy_addresses.DataSource = CalcDataModelTenancyPremisesInfo.GetInstance().Select();
                 FiltersRebuild();
             }
+            dataGridViewTenancyReasons.Focus();
             base.OnVisibleChanged(e);
         }
 

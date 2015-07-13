@@ -1462,6 +1462,7 @@ namespace Registry.Viewport
             RedrawOwnershipDataGridRows();
             RedrawSubPremiseDataGridRows();
             UnbindedCheckBoxesUpdate();
+            textBoxPremisesNumber.Focus();
             base.OnVisibleChanged(e);
         }
 

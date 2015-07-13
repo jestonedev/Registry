@@ -1244,7 +1244,8 @@ namespace Registry.Viewport
 
         protected override void OnVisibleChanged(EventArgs e)
         {
-            UnbindedCheckBoxesUpdate();            
+            UnbindedCheckBoxesUpdate();
+            textBoxHouse.Focus();           
             base.OnVisibleChanged(e);
         }
 

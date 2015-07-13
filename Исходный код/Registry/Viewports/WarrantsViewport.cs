@@ -576,6 +576,12 @@ namespace Registry.Viewport
             base.Close();
         }
 
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            textBoxWarrantRegNum.Focus();
+            base.OnVisibleChanged(e);
+        }
+
         void WarrantsViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (Selected)

@@ -873,6 +873,7 @@ namespace Registry.Viewport
         {
             RedrawDataGridRows();
             UnbindedCheckBoxesUpdate();
+            textBoxProtocolNumber.Focus();
             base.OnVisibleChanged(e);
         }
 

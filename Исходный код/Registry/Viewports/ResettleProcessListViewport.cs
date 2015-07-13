@@ -876,6 +876,7 @@ namespace Registry.Viewport
         protected override void OnVisibleChanged(EventArgs e)
         {
             UnbindedCheckBoxesUpdate();
+            numericUpDownDebts.Focus();
             base.OnVisibleChanged(e);
         }
 

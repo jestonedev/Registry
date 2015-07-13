@@ -764,6 +764,7 @@ namespace Registry.Viewport
                 if (v_tenancy_agreements.Count == 0)
                     InsertRecord();
             }
+            vButtonSelectWarrant.Focus();
             base.OnVisibleChanged(e);
         }
 
