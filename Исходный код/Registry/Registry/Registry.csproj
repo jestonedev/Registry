@@ -157,6 +157,10 @@
       <Project>{762222B2-0E8F-4759-A673-FCC0C5F35B8C}</Project>
       <Name>DataModels</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Entities\Entities.csproj">
+      <Project>{1d0e98aa-c11e-4c1d-ae3f-346ff7446df4}</Project>
+      <Name>Entities</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Reporting\Reporting.csproj">
       <Project>{B2856AAD-D1D2-4E10-B597-5DB1CFA80A96}</Project>
       <Name>Reporting</Name>

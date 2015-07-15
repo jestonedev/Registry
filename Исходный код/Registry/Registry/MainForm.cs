@@ -15,6 +15,7 @@ using Registry.Reporting;
 using Security;
 using System.Text.RegularExpressions;
 using Registry.SearchForms;
+using System.Globalization;
 
 namespace Registry
 {
@@ -619,7 +620,21 @@ namespace Registry
 
         private void ribbonOrbMenuItemPremises_Click(object sender, EventArgs e)
         {
-            CreateViewport(ViewportType.PremisesListViewport);
+            string filter = "";
+            IEnumerable<int> municipal_ids = DataModelHelper.ObjectIdsByStates(Entities.EntityType.Premise, new int[] { 4, 5 });
+            string ids = "";
+            foreach (int id in municipal_ids)
+                ids += id.ToString(CultureInfo.InvariantCulture) + ",";
+            ids = ids.TrimEnd(new char[] { ',' });
+            filter += "(id_state IN (4, 5) OR (id_state = 1 AND id_premises IN (0" + ids + ")))";
+            Registry.Viewport.Viewport viewport = Registry.Viewport.ViewportFactory.CreateViewport(this, ViewportType.PremisesListViewport);
+            viewport.DynamicFilter = filter;
+            if ((viewport as IMenuController).CanLoadData())
+                (viewport as IMenuController).LoadData();
+            AddViewport(viewport);
+            ChangeMainMenuState();
+            StatusBarStateUpdate();
+            ChangeViewportsSelectProprty();
         }
 
         private void ribbonOrbMenuItemSocNaim_Click(object sender, EventArgs e)
