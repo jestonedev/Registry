@@ -156,7 +156,7 @@ namespace Registry.Viewport
 
         //State
         private ViewportState viewportState = ViewportState.ReadState;
-        private bool is_editable = false;
+        private bool is_editable;
         private bool is_first_visibility = true;
 
         private PremisesViewport()
@@ -625,9 +625,9 @@ namespace Registry.Viewport
                 textBoxPremisesNumber.Focus();
                 return false;
             }
-            if (!Regex.IsMatch(premise.PremisesNum, @"^[0-9]+[а-я]{0,1}([,][0-9]+[а-я]{0,1})*$"))
+            if (!Regex.IsMatch(premise.PremisesNum, @"^[0-9]+[а-я]{0,1}([/][0-9]+[а-я]{0,1})?([,][0-9]+[а-я]{0,1}([/][0-9]+[а-я]{0,1})?)*$"))
             {
-                MessageBox.Show("Некорректно задан номер помещения. Можно использовать только цифры и не более одной строчной буквы кирилицы. Для объединенных квартир номера должны быть перечислены через запятую. Например: \"1а,2а,3\"", "Ошибка",
+                MessageBox.Show("Некорректно задан номер помещения. Можно использовать только цифры и не более одной строчной буквы кирилицы, а также знак дроби /. Для объединенных квартир номера должны быть перечислены через запятую. Например: \"1а,2а,3б/4\"", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxPremisesNumber.Focus();
                 return false;
@@ -1632,26 +1632,6 @@ namespace Registry.Viewport
             }
             if (comboBoxStreet.SelectedValue == null)
                 comboBoxStreet.Text = "";
-        }
-
-        void checkBoxForOrphans_CheckedChanged(object sender, EventArgs e)
-        {
-            CheckViewportModifications();
-        }
-
-        void checkBoxAcceptByOther_CheckedChanged(object sender, EventArgs e)
-        {
-            CheckViewportModifications();
-        }
-
-        void checkBoxAcceptByExchange_CheckedChanged(object sender, EventArgs e)
-        {
-            CheckViewportModifications();
-        }
-
-        void checkBoxAcceptByDonation_CheckedChanged(object sender, EventArgs e)
-        {
-            CheckViewportModifications();
         }
 
         void numericUpDownLivingArea_ValueChanged(object sender, EventArgs e)
