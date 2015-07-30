@@ -600,20 +600,24 @@ namespace Registry.Viewport
             }
             // Отклики из прошлого, раньше была возможность менять ордер на вкладке процесса найма, убрано из-за плохой согласованности с основаниями найма
             var row = (DataRowView)v_tenancies[v_tenancies.Position];
-            var reasons = (from reason_row in DataModelHelper.FilterRows(TenancyReasonsDataModel.GetInstance().Select())
-                           where reason_row.Field<int>("id_process") == (int)row["id_process"] &&
-                           reason_row.Field<string>("reason_prepared").ToUpper().Contains("ОРДЕР")
-                            select new
-                            {
-                                number = reason_row.Field<string>("reason_number"),
-                                date = reason_row.Field<DateTime?>("reason_date")
-                            });
-
-            var reasonsList = reasons.ToList();
-            if (reasonsList.Any())
+            if (viewportState != ViewportState.NewRowState)
             {
-                tenancy.ResidenceWarrantNum = reasonsList.First().number;
-                tenancy.ResidenceWarrantDate = reasonsList.First().date;
+                var reasons =
+                    (from reason_row in DataModelHelper.FilterRows(TenancyReasonsDataModel.GetInstance().Select())
+                        where reason_row.Field<int>("id_process") == (int) row["id_process"] &&
+                              reason_row.Field<string>("reason_prepared").ToUpper().Contains("ОРДЕР")
+                        select new
+                        {
+                            number = reason_row.Field<string>("reason_number"),
+                            date = reason_row.Field<DateTime?>("reason_date")
+                        });
+
+                var reasonsList = reasons.ToList();
+                if (reasonsList.Any())
+                {
+                    tenancy.ResidenceWarrantNum = reasonsList.First().number;
+                    tenancy.ResidenceWarrantDate = reasonsList.First().date;
+                }
             }
             //
             if (checkBoxProtocolEnable.Checked)
