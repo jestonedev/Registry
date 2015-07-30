@@ -21,7 +21,6 @@ namespace Registry.Viewport
         private TableLayoutPanel tableLayoutPanel9;
         private TableLayoutPanel tableLayoutPanel10;
         private GroupBox groupBoxTenancyContract;
-        private GroupBox groupBoxResidenceWarrant;
         private GroupBox groupBoxProtocol;
         private GroupBox groupBox21;
         private GroupBox groupBox24;
@@ -37,11 +36,8 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn agreement_date;
         private DataGridViewTextBoxColumn agreement_content;
         private CheckBox checkBoxContractEnable;
-        private CheckBox checkBoxResidenceWarrantEnable;
         private CheckBox checkBoxProtocolEnable;
         private Label label42;
-        private Label label43;
-        private Label label44;
         private Label label45;
         private Label label47;
         private Label label48;
@@ -50,31 +46,20 @@ namespace Registry.Viewport
         private Label label51;
         private Label label52;
         private Label label82;
-        private TextBox textBoxResidenceWarrantNumber;
         private TextBox textBoxProtocolNumber;
         private TextBox textBoxRegistrationNumber;
         private TextBox textBoxSelectedWarrant = new System.Windows.Forms.TextBox();
-        private DateTimePicker dateTimePickerResidenceWarrantDate;
         private DateTimePicker dateTimePickerProtocolDate;
         private DateTimePicker dateTimePickerRegistrationDate;
         private DateTimePicker dateTimePickerIssueDate;
         private DateTimePicker dateTimePickerBeginDate;
         private DateTimePicker dateTimePickerEndDate;
         private VIBlend.WinForms.Controls.vButton vButtonWarrant = new VIBlend.WinForms.Controls.vButton();
-        private GroupBox groupBox31;
-        private TextBox textBoxDescription;
         private GroupBox groupBox22;
         private ComboBox comboBoxExecutor;
         private Label label41;
         private ComboBox comboBoxRentType;
         private Label label46;
-        private GroupBox groupBox1;
-        private DataGridView dataGridViewTenancyPersons;
-        private DataGridViewTextBoxColumn surname;
-        private DataGridViewTextBoxColumn name;
-        private DataGridViewTextBoxColumn patronymic;
-        private DataGridViewTextBoxColumn date_of_birth;
-        private DataGridViewComboBoxColumn id_kinship;
         #endregion Components
 
         #region Models
@@ -117,6 +102,15 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn total_area;
         private DataGridViewTextBoxColumn living_area;
         private DataGridViewTextBoxColumn rent_area;
+        private GroupBox groupBox31;
+        private TextBox textBoxDescription;
+        private GroupBox groupBox1;
+        private DataGridView dataGridViewTenancyPersons;
+        private DataGridViewTextBoxColumn surname;
+        private DataGridViewTextBoxColumn name;
+        private DataGridViewTextBoxColumn patronymic;
+        private DataGridViewTextBoxColumn date_of_birth;
+        private DataGridViewComboBoxColumn id_kinship;
         private int? id_copy_process = null;
 
         private TenancyViewport()
@@ -280,7 +274,6 @@ namespace Registry.Viewport
             DataRowView row = (v_tenancies.Position >= 0) ? (DataRowView)v_tenancies[v_tenancies.Position] : null;
             checkBoxContractEnable.Checked = (v_tenancies.Position >= 0) &&
                 (row["registration_date"] != DBNull.Value) && (row["registration_num"] != DBNull.Value);
-            checkBoxResidenceWarrantEnable.Checked = (v_tenancies.Position >= 0) && (row["residence_warrant_date"] != DBNull.Value) && (row["residence_warrant_num"] != DBNull.Value);
             checkBoxProtocolEnable.Checked = (v_tenancies.Position >= 0) && (row["protocol_date"] != DBNull.Value) && (row["protocol_num"] != DBNull.Value);
             if ((v_tenancies.Position >= 0) && (row["issue_date"] != DBNull.Value))
                 dateTimePickerIssueDate.Checked = true;
@@ -353,12 +346,6 @@ namespace Registry.Viewport
             total_area.DataPropertyName = "total_area";
             living_area.DataPropertyName = "living_area";
             rent_area.DataPropertyName = "rent_area";
-
-            textBoxResidenceWarrantNumber.DataBindings.Clear();
-            textBoxResidenceWarrantNumber.DataBindings.Add("Text", v_tenancies, "residence_warrant_num", true, DataSourceUpdateMode.Never, "");
-
-            dateTimePickerResidenceWarrantDate.DataBindings.Clear();
-            dateTimePickerResidenceWarrantDate.DataBindings.Add("Value", v_tenancies, "residence_warrant_date", true, DataSourceUpdateMode.Never, DateTime.Now.Date);
 
             textBoxProtocolNumber.DataBindings.Clear();
             textBoxProtocolNumber.DataBindings.Add("Text", v_tenancies, "protocol_num", true, DataSourceUpdateMode.Never, "");
@@ -518,15 +505,6 @@ namespace Registry.Viewport
                     return false;
                 }
             }
-            if (checkBoxResidenceWarrantEnable.Checked)
-            {
-                if (tenancy.ResidenceWarrantNum == null)
-                {
-                    MessageBox.Show("Не указан номер ордера на проживание", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    textBoxResidenceWarrantNumber.Focus();
-                    return false;
-                }
-            }
             TenancyProcess tenancyFromView = TenancyFromView();
             if (tenancy.RegistrationNum != tenancyFromView.RegistrationNum)
                 if (DataModelHelper.TenancyProcessesDuplicateCount(tenancy) != 0 &&
@@ -620,16 +598,24 @@ namespace Registry.Viewport
                 tenancy.BeginDate = null;
                 tenancy.EndDate = null;
             }
-            if (checkBoxResidenceWarrantEnable.Checked)
+            // Отклики из прошлого, раньше была возможность менять ордер на вкладке процесса найма, убрано из-за плохой согласованности с основаниями найма
+            var row = (DataRowView)v_tenancies[v_tenancies.Position];
+            var reasons = (from reason_row in DataModelHelper.FilterRows(TenancyReasonsDataModel.GetInstance().Select())
+                           where reason_row.Field<int>("id_process") == (int)row["id_process"] &&
+                           reason_row.Field<string>("reason_prepared").ToUpper().Contains("ОРДЕР")
+                            select new
+                            {
+                                number = reason_row.Field<string>("reason_number"),
+                                date = reason_row.Field<DateTime?>("reason_date")
+                            });
+
+            var reasonsList = reasons.ToList();
+            if (reasonsList.Any())
             {
-                tenancy.ResidenceWarrantNum = ViewportHelper.ValueOrNull(textBoxResidenceWarrantNumber);
-                tenancy.ResidenceWarrantDate = dateTimePickerResidenceWarrantDate.Value.Date;
+                tenancy.ResidenceWarrantNum = reasonsList.First().number;
+                tenancy.ResidenceWarrantDate = reasonsList.First().date;
             }
-            else
-            {
-                tenancy.ResidenceWarrantNum = null;
-                tenancy.ResidenceWarrantDate = null;
-            }
+            //
             if (checkBoxProtocolEnable.Checked)
             {
                 tenancy.ProtocolNum = ViewportHelper.ValueOrNull(textBoxProtocolNumber);
@@ -655,8 +641,6 @@ namespace Registry.Viewport
             dateTimePickerBeginDate.Checked = (tenancy.BeginDate != null);
             dateTimePickerEndDate.Value = ViewportHelper.ValueOrDefault(tenancy.EndDate);
             dateTimePickerEndDate.Checked = (tenancy.EndDate != null);
-            textBoxResidenceWarrantNumber.Text = tenancy.ResidenceWarrantNum;
-            dateTimePickerResidenceWarrantDate.Value = ViewportHelper.ValueOrDefault(tenancy.ResidenceWarrantDate);
             textBoxProtocolNumber.Text = tenancy.ProtocolNum;
             dateTimePickerProtocolDate.Value = ViewportHelper.ValueOrDefault(tenancy.ProtocolDate);
             textBoxDescription.Text = tenancy.Description;
@@ -902,7 +886,6 @@ namespace Registry.Viewport
             tenancies.EditingNewRecord = true;
             ViewportFromTenancy(tenancy);
             checkBoxContractEnable.Checked = (tenancy.RegistrationDate != null) || (tenancy.RegistrationNum != null);
-            checkBoxResidenceWarrantEnable.Checked = (tenancy.ResidenceWarrantDate != null);
             checkBoxProtocolEnable.Checked = (tenancy.ProtocolDate != null);
             dateTimePickerIssueDate.Checked = (tenancy.IssueDate != null);
             dateTimePickerBeginDate.Checked = (tenancy.BeginDate != null);
@@ -1699,14 +1682,6 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
-        void checkBoxResidenceWarrantEnable_CheckedChanged(object sender, EventArgs e)
-        {
-            foreach (Control control in groupBoxResidenceWarrant.Controls)
-                if (control != checkBoxResidenceWarrantEnable)
-                    control.Enabled = checkBoxResidenceWarrantEnable.Checked;
-            CheckViewportModifications();
-        }
-
         void checkBoxProtocolEnable_CheckedChanged(object sender, EventArgs e)
         {
             foreach (Control control in groupBoxProtocol.Controls)
@@ -1812,12 +1787,6 @@ namespace Registry.Viewport
             this.reason_prepared = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.reason_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.reason_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.groupBoxResidenceWarrant = new System.Windows.Forms.GroupBox();
-            this.label44 = new System.Windows.Forms.Label();
-            this.label43 = new System.Windows.Forms.Label();
-            this.textBoxResidenceWarrantNumber = new System.Windows.Forms.TextBox();
-            this.dateTimePickerResidenceWarrantDate = new System.Windows.Forms.DateTimePicker();
-            this.checkBoxResidenceWarrantEnable = new System.Windows.Forms.CheckBox();
             this.groupBoxProtocol = new System.Windows.Forms.GroupBox();
             this.label45 = new System.Windows.Forms.Label();
             this.dateTimePickerProtocolDate = new System.Windows.Forms.DateTimePicker();
@@ -1843,7 +1812,6 @@ namespace Registry.Viewport
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyAgreements)).BeginInit();
             this.groupBox24.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyReasons)).BeginInit();
-            this.groupBoxResidenceWarrant.SuspendLayout();
             this.groupBoxProtocol.SuspendLayout();
             this.groupBox21.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyAddress)).BeginInit();
@@ -1854,13 +1822,12 @@ namespace Registry.Viewport
             this.tableLayoutPanel9.ColumnCount = 2;
             this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel9.Controls.Add(this.groupBox31, 1, 3);
+            this.tableLayoutPanel9.Controls.Add(this.groupBox31, 0, 3);
             this.tableLayoutPanel9.Controls.Add(this.groupBox22, 0, 0);
-            this.tableLayoutPanel9.Controls.Add(this.groupBox1, 0, 4);
+            this.tableLayoutPanel9.Controls.Add(this.groupBox1, 1, 3);
             this.tableLayoutPanel9.Controls.Add(this.groupBoxTenancyContract, 0, 1);
-            this.tableLayoutPanel9.Controls.Add(this.groupBox25, 1, 1);
-            this.tableLayoutPanel9.Controls.Add(this.groupBox24, 0, 1);
-            this.tableLayoutPanel9.Controls.Add(this.groupBoxResidenceWarrant, 0, 2);
+            this.tableLayoutPanel9.Controls.Add(this.groupBox25, 1, 2);
+            this.tableLayoutPanel9.Controls.Add(this.groupBox24, 0, 2);
             this.tableLayoutPanel9.Controls.Add(this.groupBoxProtocol, 1, 0);
             this.tableLayoutPanel9.Controls.Add(this.groupBox21, 0, 4);
             this.tableLayoutPanel9.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1872,6 +1839,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 85F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel9.Size = new System.Drawing.Size(867, 502);
             this.tableLayoutPanel9.TabIndex = 0;
             // 
@@ -1879,9 +1847,9 @@ namespace Registry.Viewport
             // 
             this.groupBox31.Controls.Add(this.textBoxDescription);
             this.groupBox31.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox31.Location = new System.Drawing.Point(436, 311);
+            this.groupBox31.Location = new System.Drawing.Point(3, 311);
             this.groupBox31.Name = "groupBox31";
-            this.groupBox31.Size = new System.Drawing.Size(428, 79);
+            this.groupBox31.Size = new System.Drawing.Size(427, 79);
             this.groupBox31.TabIndex = 6;
             this.groupBox31.TabStop = false;
             this.groupBox31.Text = "Дополнительные сведения";
@@ -1893,7 +1861,7 @@ namespace Registry.Viewport
             this.textBoxDescription.MaxLength = 4000;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
-            this.textBoxDescription.Size = new System.Drawing.Size(422, 59);
+            this.textBoxDescription.Size = new System.Drawing.Size(421, 59);
             this.textBoxDescription.TabIndex = 0;
             this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxDescription_TextChanged_1);
             // 
@@ -1959,9 +1927,10 @@ namespace Registry.Viewport
             // 
             this.groupBox1.Controls.Add(this.dataGridViewTenancyPersons);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(436, 396);
+            this.groupBox1.Location = new System.Drawing.Point(436, 311);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(428, 103);
+            this.tableLayoutPanel9.SetRowSpan(this.groupBox1, 2);
+            this.groupBox1.Size = new System.Drawing.Size(428, 188);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Участники найма";
@@ -1986,7 +1955,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(422, 83);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(422, 168);
             this.dataGridViewTenancyPersons.TabIndex = 0;
             this.dataGridViewTenancyPersons.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyPersons_CellDoubleClick);
             // 
@@ -2336,72 +2305,6 @@ namespace Registry.Viewport
             this.reason_date.Name = "reason_date";
             this.reason_date.ReadOnly = true;
             // 
-            // groupBoxResidenceWarrant
-            // 
-            this.groupBoxResidenceWarrant.Controls.Add(this.label44);
-            this.groupBoxResidenceWarrant.Controls.Add(this.label43);
-            this.groupBoxResidenceWarrant.Controls.Add(this.textBoxResidenceWarrantNumber);
-            this.groupBoxResidenceWarrant.Controls.Add(this.dateTimePickerResidenceWarrantDate);
-            this.groupBoxResidenceWarrant.Controls.Add(this.checkBoxResidenceWarrantEnable);
-            this.groupBoxResidenceWarrant.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxResidenceWarrant.Location = new System.Drawing.Point(3, 311);
-            this.groupBoxResidenceWarrant.Name = "groupBoxResidenceWarrant";
-            this.groupBoxResidenceWarrant.Size = new System.Drawing.Size(427, 79);
-            this.groupBoxResidenceWarrant.TabIndex = 5;
-            this.groupBoxResidenceWarrant.TabStop = false;
-            this.groupBoxResidenceWarrant.Text = "      Ордер на проживание";
-            // 
-            // label44
-            // 
-            this.label44.AutoSize = true;
-            this.label44.Location = new System.Drawing.Point(17, 53);
-            this.label44.Name = "label44";
-            this.label44.Size = new System.Drawing.Size(82, 15);
-            this.label44.TabIndex = 16;
-            this.label44.Text = "Дата ордера";
-            // 
-            // label43
-            // 
-            this.label43.AutoSize = true;
-            this.label43.Location = new System.Drawing.Point(17, 22);
-            this.label43.Name = "label43";
-            this.label43.Size = new System.Drawing.Size(91, 15);
-            this.label43.TabIndex = 14;
-            this.label43.Text = "Номер ордера";
-            // 
-            // textBoxResidenceWarrantNumber
-            // 
-            this.textBoxResidenceWarrantNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxResidenceWarrantNumber.Location = new System.Drawing.Point(175, 19);
-            this.textBoxResidenceWarrantNumber.MaxLength = 50;
-            this.textBoxResidenceWarrantNumber.Name = "textBoxResidenceWarrantNumber";
-            this.textBoxResidenceWarrantNumber.Size = new System.Drawing.Size(246, 21);
-            this.textBoxResidenceWarrantNumber.TabIndex = 1;
-            this.textBoxResidenceWarrantNumber.TextChanged += new System.EventHandler(this.textBoxResidenceWarrantNumber_TextChanged);
-            // 
-            // dateTimePickerResidenceWarrantDate
-            // 
-            this.dateTimePickerResidenceWarrantDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerResidenceWarrantDate.Location = new System.Drawing.Point(175, 48);
-            this.dateTimePickerResidenceWarrantDate.Name = "dateTimePickerResidenceWarrantDate";
-            this.dateTimePickerResidenceWarrantDate.Size = new System.Drawing.Size(246, 21);
-            this.dateTimePickerResidenceWarrantDate.TabIndex = 2;
-            this.dateTimePickerResidenceWarrantDate.ValueChanged += new System.EventHandler(this.dateTimePickerResidenceWarrantDate_ValueChanged);
-            // 
-            // checkBoxResidenceWarrantEnable
-            // 
-            this.checkBoxResidenceWarrantEnable.AutoSize = true;
-            this.checkBoxResidenceWarrantEnable.Checked = true;
-            this.checkBoxResidenceWarrantEnable.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxResidenceWarrantEnable.Location = new System.Drawing.Point(11, 0);
-            this.checkBoxResidenceWarrantEnable.Name = "checkBoxResidenceWarrantEnable";
-            this.checkBoxResidenceWarrantEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxResidenceWarrantEnable.TabIndex = 0;
-            this.checkBoxResidenceWarrantEnable.UseVisualStyleBackColor = true;
-            this.checkBoxResidenceWarrantEnable.CheckedChanged += new System.EventHandler(this.checkBoxResidenceWarrantEnable_CheckedChanged);
-            // 
             // groupBoxProtocol
             // 
             this.groupBoxProtocol.Controls.Add(this.label45);
@@ -2566,8 +2469,6 @@ namespace Registry.Viewport
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyAgreements)).EndInit();
             this.groupBox24.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyReasons)).EndInit();
-            this.groupBoxResidenceWarrant.ResumeLayout(false);
-            this.groupBoxResidenceWarrant.PerformLayout();
             this.groupBoxProtocol.ResumeLayout(false);
             this.groupBoxProtocol.PerformLayout();
             this.groupBox21.ResumeLayout(false);

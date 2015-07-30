@@ -145,9 +145,7 @@
     </Compile>
     <None Include="Registry.snk" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="icons\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <ProjectReference Include="..\CustomCtrls\CustomCtrls.csproj">
       <Project>{44CFB46D-C274-45B6-9498-879F9E3AFA44}</Project>
@@ -180,6 +178,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="icon.ico" />
+    <None Include="icons\ooo-calc %28max%29.png" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

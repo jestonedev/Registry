@@ -10,7 +10,7 @@ namespace Registry.DataModels
     public sealed class RentTypesDataModel: DataModel
     {
         private static RentTypesDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM rent_types";
+        private static string selectQuery = "SELECT * FROM rent_types rt ORDER BY rt.rent_type DESC";
         private static string tableName = "rent_types";
 
         private RentTypesDataModel(ToolStripProgressBar progressBar, int incrementor)

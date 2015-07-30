@@ -680,6 +680,7 @@ namespace Registry.Viewport
             is_editable = false;
             v_tenancy_persons.AddNew();
             dataGridViewTenancyPersons.Enabled = false;
+            textBoxSurname.Focus();
             is_editable = true;
             tenancy_persons.EditingNewRecord = true;
         }
@@ -702,6 +703,7 @@ namespace Registry.Viewport
             ViewportFromTenancyPerson(tenancyPerson);
             dateTimePickerDateOfBirth.Checked = (tenancyPerson.DateOfBirth != null);
             dateTimePickerDateOfDocumentIssue.Checked = (tenancyPerson.DateOfDocumentIssue != null);
+            textBoxSurname.Focus();
             is_editable = true;
         }
 

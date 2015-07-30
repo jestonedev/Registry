@@ -66,6 +66,7 @@
     <Compile Include="ActPremiseExtInfoForm.Designer.cs">
       <DependentUpon>ActPremiseExtInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="RegistryReporters\AllPremisesReporter.cs" />
     <Compile Include="ClaimsFilterForm.cs">
       <SubType>Form</SubType>
     </Compile>

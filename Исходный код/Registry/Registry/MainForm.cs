@@ -167,7 +167,7 @@ namespace Registry
         {
             if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
                 return;
-            Registry.Viewport.Viewport viewport = (dockPanel.ActiveDocument as IMenuController).Duplicate();
+            Viewport.Viewport viewport = (dockPanel.ActiveDocument as IMenuController).Duplicate();
             viewport.Show(dockPanel, DockState.Document);
         }
 
@@ -627,7 +627,7 @@ namespace Registry
                 ids += id.ToString(CultureInfo.InvariantCulture) + ",";
             ids = ids.TrimEnd(new char[] { ',' });
             filter += "(id_state IN (4, 5) OR (id_state = 1 AND id_premises IN (0" + ids + ")))";
-            Registry.Viewport.Viewport viewport = Registry.Viewport.ViewportFactory.CreateViewport(this, ViewportType.PremisesListViewport);
+            Viewport.Viewport viewport = ViewportFactory.CreateViewport(this, ViewportType.PremisesListViewport);
             viewport.DynamicFilter = filter;
             if ((viewport as IMenuController).CanLoadData())
                 (viewport as IMenuController).LoadData();
@@ -699,7 +699,7 @@ namespace Registry
 
         private void CreateViewport(ViewportType viewportType)
         {
-            Registry.Viewport.Viewport viewport = Registry.Viewport.ViewportFactory.CreateViewport(this, viewportType);
+            Viewport.Viewport viewport = ViewportFactory.CreateViewport(this, viewportType);
             if ((viewport as IMenuController).CanLoadData())
                 (viewport as IMenuController).LoadData();
             AddViewport(viewport);
@@ -741,9 +741,9 @@ namespace Registry
             RibbonTabsStateUpdate();
         }
 
-        private void RunReport(Reporting.ReporterType reporterType)
+        private void RunReport(ReporterType reporterType)
         {
-            Reporter reporter = Reporting.ReporterFactory.CreateReporter(reporterType);
+            Reporter reporter = ReporterFactory.CreateReporter(reporterType);
             reporter.ReportOutputStreamResponse += new EventHandler<ReportOutputStreamEventArgs>(reporter_ReportOutputStreamResponse);
             reporter.ReportComplete += new EventHandler<EventArgs>(reporter_ReportComplete);
             reporter.ReportCanceled += new EventHandler<EventArgs>(reporter_ReportCanceled);
@@ -776,102 +776,107 @@ namespace Registry
 
         private void ribbonButtonRegistryShortStatistic_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.RegistryShortStatisticReporter);
+            RunReport(ReporterType.RegistryShortStatisticReporter);
         }
 
         private void ribbonButtonOwnershipReport_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.RegistryOwnershipsReporter);
+            RunReport(ReporterType.RegistryOwnershipsReporter);
         }
 
         private void ribbonButtonCommercialFundReport_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.RegistryCommercialFundReporter);
+            RunReport(ReporterType.RegistryCommercialFundReporter);
         }
 
         private void ribbonButtonSpecialFundReport_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.RegistrySpecialFundReporter);
+            RunReport(ReporterType.RegistrySpecialFundReporter);
         }
 
         private void ribbonButtonSocialFundReport_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.RegistrySocialFundReporter);
+            RunReport(ReporterType.RegistrySocialFundReporter);
         }
 
         private void ribbonButtonPremisesForOrphansReport_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.RegistryPremisesForOrphansReporter);
+            RunReport(ReporterType.RegistryPremisesForOrphansReporter);
         }
 
         private void ribbonButtonPremisesByExchangeReport_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.RegistryPremisesByExchangeReporter);
+            RunReport(ReporterType.RegistryPremisesByExchangeReporter);
         }
 
         private void ribbonButtonPremisesByDonationReport_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.RegistryPremisesByDonationReporter);
+            RunReport(ReporterType.RegistryPremisesByDonationReporter);
         }
 
         private void ribbonButtonMunicipalPremises_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.RegistryMunicipalPremisesReporter);
+            RunReport(ReporterType.RegistryMunicipalPremisesReporter);
+        }
+
+        private void ribbonButtonAllPremises_Click(object sender, EventArgs e)
+        {
+            RunReport(ReporterType.RegistryAllPremisesReporter);
         }
 
         private void ribbonButtonRegistryFullStatistic_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.RegistryFullStatisticReporter);
+            RunReport(ReporterType.RegistryFullStatisticReporter);
         }
 
         private void ribbonButtonClaimsStatistic_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.ClaimsStatisticReporter);
+            RunReport(ReporterType.ClaimsStatisticReporter);
         }
 
         private void ribbonButtonStatistic_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.TenancyStatisticReporter);
+            RunReport(ReporterType.TenancyStatisticReporter);
         }
 
         private void ribbonButtonTenancyForCoMS_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.TenancyStatisticForCoMSReporter);
+            RunReport(ReporterType.TenancyStatisticForCoMSReporter);
         }
 
         private void ribbonButtonTenancyOrder_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.TenancyOrderReporter);
+            RunReport(ReporterType.TenancyOrderReporter);
         }
 
         private void ribbonButtonNotifies_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.TenancyNotifiesReporter);
+            RunReport(ReporterType.TenancyNotifiesReporter);
         }
 
         private void ribbonButtonResettleTotalStatistic_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.ResettleTotalStatisticReporter);
+            RunReport(ReporterType.ResettleTotalStatisticReporter);
         }
 
         private void ribbonButtonResettleBuildingDemolishing_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.ResettleBuildingDemolishingReporter);
+            RunReport(ReporterType.ResettleBuildingDemolishingReporter);
         }
 
         private void ribbonButtonEmergencyBuildings_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.ResettleEmergencyBuildingsReporter);
+            RunReport(ReporterType.ResettleEmergencyBuildingsReporter);
         }
 
         private void ribbonButtonResettleShortProcessing_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.ResettleShortProcessingReporter);
+            RunReport(ReporterType.ResettleShortProcessingReporter);
         }
 
         private void ribbonButtonResettleFullProcessing_Click(object sender, EventArgs e)
         {
-            RunReport(Reporting.ReporterType.ResettleFullProcessingReporter);
+            RunReport(ReporterType.ResettleFullProcessingReporter);
         }
 
         private void ribbonButton1711_Click(object sender, EventArgs e)
@@ -1013,7 +1018,7 @@ namespace Registry
             }
             if (keyData == Keys.Enter)
             {
-                System.Windows.Forms.SendKeys.Send("{TAB}");
+                SendKeys.Send("{TAB}");
                 return true;
             }
             return base.ProcessCmdKey(ref msg, keyData);

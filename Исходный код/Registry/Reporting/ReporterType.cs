@@ -33,6 +33,7 @@ namespace Registry.Reporting
         ResettleBuildingDemolishingReporter,
         ResettleEmergencyBuildingsReporter,
         ResettleShortProcessingReporter,
-        ResettleFullProcessingReporter
+        ResettleFullProcessingReporter,
+        RegistryAllPremisesReporter
     }
 }
