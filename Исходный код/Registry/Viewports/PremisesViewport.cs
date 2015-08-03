@@ -388,6 +388,7 @@ namespace Registry.Viewport
                     comboBoxHouse.SelectedValue = id_building;
                 else
                     comboBoxHouse.SelectedValue = DBNull.Value;
+                CheckViewportModifications();
             }
         }
 

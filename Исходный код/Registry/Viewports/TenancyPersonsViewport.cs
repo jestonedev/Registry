@@ -756,6 +756,9 @@ namespace Registry.Viewport
 
         public override void CancelRecord()
         {
+            v_registration_street.Filter = "";
+            v_residence_street.Filter = "";
+            v_document_issued_by.Filter = "";
             switch (viewportState)
             {
                 case ViewportState.ReadState: return;
@@ -792,6 +795,16 @@ namespace Registry.Viewport
 
         public override void SaveRecord()
         {
+            if (comboBoxIssuedBy.SelectedValue == null && !string.IsNullOrEmpty(comboBoxIssuedBy.Text))
+            {
+                var document = new DocumentIssuedBy {DocumentIssuedByName = comboBoxIssuedBy.Text};
+                var idDocument = DocumentsIssuedByDataModel.Insert(document);
+                if (idDocument == -1) return;
+                document.IdDocumentIssuedBy = idDocument;
+                DocumentsIssuedByDataModel.GetInstance().Select().Rows.
+                    Add(document.IdDocumentIssuedBy, document.DocumentIssuedByName);
+                comboBoxIssuedBy.SelectedValue = document.IdDocumentIssuedBy;
+            }
             TenancyPerson tenancyPerson = TenancyPersonFromViewport();
             if (!ValidateTenancyPerson(tenancyPerson))
                 return;
@@ -944,19 +957,8 @@ namespace Registry.Viewport
 
         void comboBoxIssuedBy_Leave(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(comboBoxIssuedBy.Text))
-            {
+            if (string.IsNullOrEmpty(comboBoxIssuedBy.Text))
                 comboBoxIssuedBy.SelectedValue = DBNull.Value;
-                return;
-            }
-            if (comboBoxIssuedBy.Items.Count > 0)
-            {
-                if (comboBoxIssuedBy.SelectedValue == null)
-                    comboBoxIssuedBy.SelectedValue = v_document_issued_by[v_document_issued_by.Position];
-                comboBoxIssuedBy.Text = ((DataRowView)v_document_issued_by[v_document_issued_by.Position])["document_issued_by"].ToString();
-            }
-            if (comboBoxIssuedBy.SelectedValue == null)
-                comboBoxIssuedBy.Text = "";
         }
 
         void comboBoxResidenceStreet_DropDownClosed(object sender, EventArgs e)
@@ -1276,9 +1278,9 @@ namespace Registry.Viewport
             this.label81.AutoSize = true;
             this.label81.Location = new System.Drawing.Point(17, 160);
             this.label81.Name = "label81";
-            this.label81.Size = new System.Drawing.Size(80, 15);
+            this.label81.Size = new System.Drawing.Size(86, 15);
             this.label81.TabIndex = 30;
-            this.label81.Text = "Личный счет";
+            this.label81.Text = "Лицевой счет";
             // 
             // dateTimePickerDateOfBirth
             // 
