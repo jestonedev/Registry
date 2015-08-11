@@ -750,6 +750,7 @@ namespace Registry.Viewport
             this.textBoxWarrantOnBehalfOf.Size = new System.Drawing.Size(139, 21);
             this.textBoxWarrantOnBehalfOf.TabIndex = 5;
             this.textBoxWarrantOnBehalfOf.TextChanged += new System.EventHandler(this.textBoxWarrantNotaryDistrict_TextChanged);
+            this.textBoxWarrantOnBehalfOf.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label87
             // 
@@ -770,6 +771,7 @@ namespace Registry.Viewport
             this.textBoxWarrantDistrict.Size = new System.Drawing.Size(139, 21);
             this.textBoxWarrantDistrict.TabIndex = 4;
             this.textBoxWarrantDistrict.TextChanged += new System.EventHandler(this.textBoxWarrantRegion_TextChanged);
+            this.textBoxWarrantDistrict.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label86
             // 
@@ -790,6 +792,7 @@ namespace Registry.Viewport
             this.textBoxWarrantNotary.Size = new System.Drawing.Size(139, 21);
             this.textBoxWarrantNotary.TabIndex = 3;
             this.textBoxWarrantNotary.TextChanged += new System.EventHandler(this.textBoxWarrantNotary_TextChanged);
+            this.textBoxWarrantNotary.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label85
             // 
@@ -831,6 +834,7 @@ namespace Registry.Viewport
             this.textBoxWarrantRegNum.Size = new System.Drawing.Size(139, 21);
             this.textBoxWarrantRegNum.TabIndex = 1;
             this.textBoxWarrantRegNum.TextChanged += new System.EventHandler(this.textBoxWarrantRegNum_TextChanged);
+            this.textBoxWarrantRegNum.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // dateTimePickerWarrantDate
             // 
@@ -872,6 +876,7 @@ namespace Registry.Viewport
             this.textBoxWarrantDescription.Size = new System.Drawing.Size(315, 174);
             this.textBoxWarrantDescription.TabIndex = 0;
             this.textBoxWarrantDescription.TextChanged += new System.EventHandler(this.textBoxWarrantDescription_TextChanged);
+            this.textBoxWarrantDescription.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // dataGridView
             // 
@@ -973,6 +978,11 @@ namespace Registry.Viewport
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
 
+        }
+
+        private void selectAll_Enter(object sender, EventArgs e)
+        {
+            ViewportHelper.SelectAllText(sender);
         }
     }
 }

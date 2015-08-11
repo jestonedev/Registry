@@ -79,5 +79,10 @@ namespace Registry.Viewport
             }
             v_warrants.Filter = filter;
         }
+
+        private void textBoxRegNumber_Enter(object sender, EventArgs e)
+        {
+            ViewportHelper.SelectAllText(sender);
+        }
     }
 }

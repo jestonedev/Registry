@@ -2254,6 +2254,7 @@ namespace Registry.Viewport
             this.textBoxDescription.Size = new System.Drawing.Size(447, 54);
             this.textBoxDescription.TabIndex = 0;
             this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxDescription_TextChanged);
+            this.textBoxDescription.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // groupBox9
             // 
@@ -2650,6 +2651,7 @@ namespace Registry.Viewport
             this.numericUpDownNumRooms.Size = new System.Drawing.Size(272, 21);
             this.numericUpDownNumRooms.TabIndex = 5;
             this.numericUpDownNumRooms.ValueChanged += new System.EventHandler(this.numericUpDownNumRooms_ValueChanged);
+            this.numericUpDownNumRooms.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // comboBoxPremisesType
             // 
@@ -2674,6 +2676,7 @@ namespace Registry.Viewport
             this.textBoxPremisesNumber.Size = new System.Drawing.Size(272, 21);
             this.textBoxPremisesNumber.TabIndex = 3;
             this.textBoxPremisesNumber.TextChanged += new System.EventHandler(this.textBoxPremisesNumber_TextChanged);
+            this.textBoxPremisesNumber.Enter += new System.EventHandler(this.selectAll_Enter);
             this.textBoxPremisesNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxPremisesNumber_KeyPress);
             // 
             // label27
@@ -2708,6 +2711,7 @@ namespace Registry.Viewport
             this.numericUpDownNumBeds.Size = new System.Drawing.Size(272, 21);
             this.numericUpDownNumBeds.TabIndex = 6;
             this.numericUpDownNumBeds.ValueChanged += new System.EventHandler(this.numericUpDownNumBeds_ValueChanged);
+            this.numericUpDownNumBeds.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // numericUpDownFloor
             // 
@@ -2723,6 +2727,7 @@ namespace Registry.Viewport
             this.numericUpDownFloor.Size = new System.Drawing.Size(272, 21);
             this.numericUpDownFloor.TabIndex = 4;
             this.numericUpDownFloor.ValueChanged += new System.EventHandler(this.numericUpDownFloor_ValueChanged);
+            this.numericUpDownFloor.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // comboBoxStreet
             // 
@@ -2735,6 +2740,7 @@ namespace Registry.Viewport
             this.comboBoxStreet.DropDownClosed += new System.EventHandler(this.comboBoxStreet_DropDownClosed);
             this.comboBoxStreet.SelectedValueChanged += new System.EventHandler(this.comboBoxStreet_SelectedValueChanged);
             this.comboBoxStreet.VisibleChanged += new System.EventHandler(this.comboBoxStreet_VisibleChanged);
+            this.comboBoxStreet.Enter += new System.EventHandler(this.selectAll_Enter);
             this.comboBoxStreet.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxStreet_KeyUp);
             this.comboBoxStreet.Leave += new System.EventHandler(this.comboBoxStreet_Leave);
             // 
@@ -2831,6 +2837,7 @@ namespace Registry.Viewport
             this.textBoxAccount.Size = new System.Drawing.Size(272, 21);
             this.textBoxAccount.TabIndex = 1;
             this.textBoxAccount.TextChanged += new System.EventHandler(this.textBoxAccount_TextChanged);
+            this.textBoxAccount.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label5
             // 
@@ -2900,6 +2907,7 @@ namespace Registry.Viewport
             this.numericUpDownBalanceCost.TabIndex = 3;
             this.numericUpDownBalanceCost.ThousandsSeparator = true;
             this.numericUpDownBalanceCost.ValueChanged += new System.EventHandler(this.numericUpDownBalanceCost_ValueChanged);
+            this.numericUpDownBalanceCost.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label22
             // 
@@ -2920,6 +2928,7 @@ namespace Registry.Viewport
             this.textBoxCadastralNum.Size = new System.Drawing.Size(272, 21);
             this.textBoxCadastralNum.TabIndex = 0;
             this.textBoxCadastralNum.TextChanged += new System.EventHandler(this.textBoxCadastralNum_TextChanged);
+            this.textBoxCadastralNum.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // numericUpDownCadastralCost
             // 
@@ -2937,6 +2946,7 @@ namespace Registry.Viewport
             this.numericUpDownCadastralCost.TabIndex = 2;
             this.numericUpDownCadastralCost.ThousandsSeparator = true;
             this.numericUpDownCadastralCost.ValueChanged += new System.EventHandler(this.numericUpDownCadastralCost_ValueChanged);
+            this.numericUpDownCadastralCost.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label23
             // 
@@ -3005,6 +3015,7 @@ namespace Registry.Viewport
             this.numericUpDownHeight.TabIndex = 3;
             this.numericUpDownHeight.ThousandsSeparator = true;
             this.numericUpDownHeight.ValueChanged += new System.EventHandler(this.numericUpDownHeight_ValueChanged);
+            this.numericUpDownHeight.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label3
             // 
@@ -3031,6 +3042,7 @@ namespace Registry.Viewport
             this.numericUpDownMunicipalArea.Size = new System.Drawing.Size(272, 21);
             this.numericUpDownMunicipalArea.TabIndex = 2;
             this.numericUpDownMunicipalArea.ThousandsSeparator = true;
+            this.numericUpDownMunicipalArea.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label2
             // 
@@ -3057,6 +3069,7 @@ namespace Registry.Viewport
             this.numericUpDownLivingArea.TabIndex = 1;
             this.numericUpDownLivingArea.ThousandsSeparator = true;
             this.numericUpDownLivingArea.ValueChanged += new System.EventHandler(this.numericUpDownLivingArea_ValueChanged);
+            this.numericUpDownLivingArea.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // numericUpDownTotalArea
             // 
@@ -3074,6 +3087,7 @@ namespace Registry.Viewport
             this.numericUpDownTotalArea.TabIndex = 0;
             this.numericUpDownTotalArea.ThousandsSeparator = true;
             this.numericUpDownTotalArea.ValueChanged += new System.EventHandler(this.numericUpDownTotalArea_ValueChanged);
+            this.numericUpDownTotalArea.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label25
             // 
@@ -3265,6 +3279,11 @@ namespace Registry.Viewport
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRooms)).EndInit();
             this.ResumeLayout(false);
 
+        }
+
+        private void selectAll_Enter(object sender, EventArgs e)
+        {
+            ViewportHelper.SelectAllText(sender);
         }
     }
 }

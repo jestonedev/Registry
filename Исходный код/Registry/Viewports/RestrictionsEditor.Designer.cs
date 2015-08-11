@@ -57,6 +57,7 @@
             this.textBoxRestrictionNumber.Name = "textBoxRestrictionNumber";
             this.textBoxRestrictionNumber.Size = new System.Drawing.Size(223, 21);
             this.textBoxRestrictionNumber.TabIndex = 0;
+            this.textBoxRestrictionNumber.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label2
             // 
@@ -91,6 +92,7 @@
             this.textBoxRestrictionDescription.Name = "textBoxRestrictionDescription";
             this.textBoxRestrictionDescription.Size = new System.Drawing.Size(223, 66);
             this.textBoxRestrictionDescription.TabIndex = 3;
+            this.textBoxRestrictionDescription.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label4
             // 

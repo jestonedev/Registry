@@ -146,6 +146,7 @@
             this.comboBoxStreet.Size = new System.Drawing.Size(437, 23);
             this.comboBoxStreet.TabIndex = 5;
             this.comboBoxStreet.DropDownClosed += new System.EventHandler(this.comboBoxStreet_DropDownClosed);
+            this.comboBoxStreet.Enter += new System.EventHandler(this.selectAll_Enter);
             this.comboBoxStreet.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxStreet_KeyUp);
             this.comboBoxStreet.Leave += new System.EventHandler(this.comboBoxStreet_Leave);
             // 
@@ -167,6 +168,7 @@
             this.textBoxPremisesNum.Name = "textBoxPremisesNum";
             this.textBoxPremisesNum.Size = new System.Drawing.Size(437, 21);
             this.textBoxPremisesNum.TabIndex = 9;
+            this.textBoxPremisesNum.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label3
             // 
@@ -208,6 +210,7 @@
             this.numericUpDownFloor.Name = "numericUpDownFloor";
             this.numericUpDownFloor.Size = new System.Drawing.Size(437, 21);
             this.numericUpDownFloor.TabIndex = 11;
+            this.numericUpDownFloor.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxCadastralNumEnable
             // 
@@ -227,6 +230,7 @@
             this.textBoxCadastralNum.Name = "textBoxCadastralNum";
             this.textBoxCadastralNum.Size = new System.Drawing.Size(437, 21);
             this.textBoxCadastralNum.TabIndex = 13;
+            this.textBoxCadastralNum.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label5
             // 
@@ -273,6 +277,7 @@
             this.textBoxHouse.Name = "textBoxHouse";
             this.textBoxHouse.Size = new System.Drawing.Size(437, 21);
             this.textBoxHouse.TabIndex = 7;
+            this.textBoxHouse.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // comboBoxState
             // 
@@ -315,6 +320,7 @@
             this.numericUpDownIDPremises.Name = "numericUpDownIDPremises";
             this.numericUpDownIDPremises.Size = new System.Drawing.Size(437, 21);
             this.numericUpDownIDPremises.TabIndex = 1;
+            this.numericUpDownIDPremises.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxIDPremisesEnable
             // 
@@ -382,6 +388,7 @@
             this.textBoxTenantSNP.Name = "textBoxTenantSNP";
             this.textBoxTenantSNP.Size = new System.Drawing.Size(437, 21);
             this.textBoxTenantSNP.TabIndex = 17;
+            this.textBoxTenantSNP.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label11
             // 
@@ -410,6 +417,7 @@
             this.textBoxContractNumber.Name = "textBoxContractNumber";
             this.textBoxContractNumber.Size = new System.Drawing.Size(437, 21);
             this.textBoxContractNumber.TabIndex = 15;
+            this.textBoxContractNumber.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label10
             // 

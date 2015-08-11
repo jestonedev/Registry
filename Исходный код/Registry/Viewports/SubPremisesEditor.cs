@@ -205,5 +205,10 @@ namespace Registry.Viewport
                 Int32.Parse(ParentRow["id_building"].ToString(), CultureInfo.InvariantCulture), true);
             DialogResult = System.Windows.Forms.DialogResult.OK;
         }
+
+        private void selectAll_Enter(object sender, EventArgs e)
+        {
+            ViewportHelper.SelectAllText(sender);
+        }
     }
 }

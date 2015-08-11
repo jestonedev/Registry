@@ -57,6 +57,7 @@
             this.textBoxOwnershipNumber.Name = "textBoxOwnershipNumber";
             this.textBoxOwnershipNumber.Size = new System.Drawing.Size(223, 21);
             this.textBoxOwnershipNumber.TabIndex = 0;
+            this.textBoxOwnershipNumber.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label2
             // 
@@ -91,6 +92,7 @@
             this.textBoxOwnershipDescription.Name = "textBoxOwnershipDescription";
             this.textBoxOwnershipDescription.Size = new System.Drawing.Size(223, 66);
             this.textBoxOwnershipDescription.TabIndex = 3;
+            this.textBoxOwnershipDescription.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label4
             // 

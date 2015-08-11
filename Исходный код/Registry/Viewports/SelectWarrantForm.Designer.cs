@@ -115,6 +115,7 @@
             this.textBoxRegNumber.Size = new System.Drawing.Size(161, 21);
             this.textBoxRegNumber.TabIndex = 1;
             this.textBoxRegNumber.TextChanged += new System.EventHandler(this.textBoxRegNumber_TextChanged);
+            this.textBoxRegNumber.Enter += new System.EventHandler(this.textBoxRegNumber_Enter);
             // 
             // label1
             // 

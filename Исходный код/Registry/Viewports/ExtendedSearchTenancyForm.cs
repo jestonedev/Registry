@@ -404,5 +404,10 @@ namespace Registry.SearchForms
             comboBoxProtocolDateExpr.Enabled = checkBoxProtocolDateEnable.Checked;
             dateTimePickerProtocolDate.Enabled = checkBoxProtocolDateEnable.Checked;
         }
+
+        private void selectAll_Enter(object sender, EventArgs e)
+        {
+            ViewportHelper.SelectAllText(sender);
+        }
     }
 }

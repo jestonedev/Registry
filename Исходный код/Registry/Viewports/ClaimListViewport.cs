@@ -1027,6 +1027,7 @@ namespace Registry.Viewport
             this.numericUpDownAmountOfDebtRent.TabIndex = 1;
             this.numericUpDownAmountOfDebtRent.ThousandsSeparator = true;
             this.numericUpDownAmountOfDebtRent.ValueChanged += new System.EventHandler(this.numericUpDownAmountOfDebtRent_ValueChanged);
+            this.numericUpDownAmountOfDebtRent.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label102
             // 
@@ -1053,6 +1054,7 @@ namespace Registry.Viewport
             this.numericUpDownAmountOfFine.TabIndex = 5;
             this.numericUpDownAmountOfFine.ThousandsSeparator = true;
             this.numericUpDownAmountOfFine.ValueChanged += new System.EventHandler(this.numericUpDownAmountOfFine_ValueChanged);
+            this.numericUpDownAmountOfFine.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label93
             // 
@@ -1079,6 +1081,7 @@ namespace Registry.Viewport
             this.numericUpDownAmountOfRent.TabIndex = 4;
             this.numericUpDownAmountOfRent.ThousandsSeparator = true;
             this.numericUpDownAmountOfRent.ValueChanged += new System.EventHandler(this.numericUpDownAmountOfRent_ValueChanged);
+            this.numericUpDownAmountOfRent.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label92
             // 
@@ -1145,6 +1148,7 @@ namespace Registry.Viewport
             this.numericUpDownAmountOfDebtFine.TabIndex = 2;
             this.numericUpDownAmountOfDebtFine.ThousandsSeparator = true;
             this.numericUpDownAmountOfDebtFine.ValueChanged += new System.EventHandler(this.numericUpDownAmountOfDebtFine_ValueChanged);
+            this.numericUpDownAmountOfDebtFine.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label89
             // 
@@ -1191,6 +1195,7 @@ namespace Registry.Viewport
             this.numericUpDownProcessID.Size = new System.Drawing.Size(202, 21);
             this.numericUpDownProcessID.TabIndex = 0;
             this.numericUpDownProcessID.ValueChanged += new System.EventHandler(this.numericUpDownProcessID_ValueChanged);
+            this.numericUpDownProcessID.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label103
             // 
@@ -1217,6 +1222,7 @@ namespace Registry.Viewport
             this.numericUpDownAmountOfFineRecover.TabIndex = 8;
             this.numericUpDownAmountOfFineRecover.ThousandsSeparator = true;
             this.numericUpDownAmountOfFineRecover.ValueChanged += new System.EventHandler(this.numericUpDownAmountOfFineRecover_ValueChanged);
+            this.numericUpDownAmountOfFineRecover.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label95
             // 
@@ -1237,6 +1243,7 @@ namespace Registry.Viewport
             this.textBoxDescription.Size = new System.Drawing.Size(202, 21);
             this.textBoxDescription.TabIndex = 11;
             this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxDescription_TextChanged);
+            this.textBoxDescription.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // numericUpDownAmountOfRentRecover
             // 
@@ -1254,6 +1261,7 @@ namespace Registry.Viewport
             this.numericUpDownAmountOfRentRecover.TabIndex = 7;
             this.numericUpDownAmountOfRentRecover.ThousandsSeparator = true;
             this.numericUpDownAmountOfRentRecover.ValueChanged += new System.EventHandler(this.numericUpDownAmountOfRentRecover_ValueChanged);
+            this.numericUpDownAmountOfRentRecover.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label99
             // 
@@ -1435,6 +1443,11 @@ namespace Registry.Viewport
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewClaims)).EndInit();
             this.ResumeLayout(false);
 
+        }
+
+        private void selectAll_Enter(object sender, EventArgs e)
+        {
+            ViewportHelper.SelectAllText(sender);
         }
     }
 }

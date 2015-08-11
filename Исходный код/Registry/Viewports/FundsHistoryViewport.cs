@@ -1101,6 +1101,7 @@ namespace Registry.Viewport
             this.textBoxProtocolNumber.Size = new System.Drawing.Size(175, 21);
             this.textBoxProtocolNumber.TabIndex = 1;
             this.textBoxProtocolNumber.TextChanged += new System.EventHandler(this.textBoxProtocolNumber_TextChanged);
+            this.textBoxProtocolNumber.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // comboBoxFundType
             // 
@@ -1207,6 +1208,7 @@ namespace Registry.Viewport
             this.textBoxIncludeRestDesc.Size = new System.Drawing.Size(175, 21);
             this.textBoxIncludeRestDesc.TabIndex = 8;
             this.textBoxIncludeRestDesc.TextChanged += new System.EventHandler(this.textBoxIncludeRestDesc_TextChanged);
+            this.textBoxIncludeRestDesc.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // dateTimePickerIncludeRestDate
             // 
@@ -1248,6 +1250,7 @@ namespace Registry.Viewport
             this.textBoxIncludeRestNum.Size = new System.Drawing.Size(175, 21);
             this.textBoxIncludeRestNum.TabIndex = 6;
             this.textBoxIncludeRestNum.TextChanged += new System.EventHandler(this.textBoxIncludeRestNum_TextChanged);
+            this.textBoxIncludeRestNum.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // groupBox16
             // 
@@ -1296,6 +1299,7 @@ namespace Registry.Viewport
             this.textBoxExcludeRestDesc.Size = new System.Drawing.Size(175, 21);
             this.textBoxExcludeRestDesc.TabIndex = 12;
             this.textBoxExcludeRestDesc.TextChanged += new System.EventHandler(this.textBoxExcludeRestDesc_TextChanged);
+            this.textBoxExcludeRestDesc.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // dateTimePickerExcludeRestDate
             // 
@@ -1337,6 +1341,7 @@ namespace Registry.Viewport
             this.textBoxExcludeRestNum.Size = new System.Drawing.Size(175, 21);
             this.textBoxExcludeRestNum.TabIndex = 10;
             this.textBoxExcludeRestNum.TextChanged += new System.EventHandler(this.textBoxExcludeRestNum_TextChanged);
+            this.textBoxExcludeRestNum.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // dataGridView
             // 
@@ -1434,6 +1439,11 @@ namespace Registry.Viewport
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
 
+        }
+
+        private void selectAll_Enter(object sender, EventArgs e)
+        {
+            ViewportHelper.SelectAllText(sender);
         }
 
     }

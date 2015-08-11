@@ -103,5 +103,15 @@ namespace Registry.SearchForms
             textBoxCriteria.Focus();
             textBoxCriteria.SelectAll();
         }
+
+        private void SimpleSearchTenancyForm_Enter(object sender, EventArgs e)
+        {
+            ViewportHelper.SelectAllText(sender);
+        }
+
+        private void textBoxCriteria_Enter(object sender, EventArgs e)
+        {
+            ViewportHelper.SelectAllText(sender);
+        }
     }
 }

@@ -103,6 +103,7 @@
             this.textBoxPersonSNP.Name = "textBoxPersonSNP";
             this.textBoxPersonSNP.Size = new System.Drawing.Size(437, 21);
             this.textBoxPersonSNP.TabIndex = 6;
+            this.textBoxPersonSNP.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxPersonSNPEnable
             // 
@@ -135,6 +136,7 @@
             this.numericUpDownIDResettle.Name = "numericUpDownIDResettle";
             this.numericUpDownIDResettle.Size = new System.Drawing.Size(437, 21);
             this.numericUpDownIDResettle.TabIndex = 1;
+            this.numericUpDownIDResettle.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxIDResettleEnable
             // 
@@ -232,6 +234,7 @@
             this.textBoxHouseTo.Name = "textBoxHouseTo";
             this.textBoxHouseTo.Size = new System.Drawing.Size(437, 21);
             this.textBoxHouseTo.TabIndex = 20;
+            this.textBoxHouseTo.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxPremisesNumToEnable
             // 
@@ -251,6 +254,7 @@
             this.textBoxPremisesNumTo.Name = "textBoxPremisesNumTo";
             this.textBoxPremisesNumTo.Size = new System.Drawing.Size(437, 21);
             this.textBoxPremisesNumTo.TabIndex = 22;
+            this.textBoxPremisesNumTo.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label2
             // 
@@ -308,6 +312,7 @@
             this.comboBoxStreetTo.Size = new System.Drawing.Size(437, 23);
             this.comboBoxStreetTo.TabIndex = 18;
             this.comboBoxStreetTo.DropDownClosed += new System.EventHandler(this.comboBoxStreetTo_DropDownClosed);
+            this.comboBoxStreetTo.Enter += new System.EventHandler(this.selectAll_Enter);
             this.comboBoxStreetTo.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxStreetTo_KeyUp);
             this.comboBoxStreetTo.Leave += new System.EventHandler(this.comboBoxStreetTo_Leave);
             // 
@@ -320,6 +325,7 @@
             this.comboBoxStreetFrom.Size = new System.Drawing.Size(437, 23);
             this.comboBoxStreetFrom.TabIndex = 10;
             this.comboBoxStreetFrom.DropDownClosed += new System.EventHandler(this.comboBoxStreet_DropDownClosed);
+            this.comboBoxStreetFrom.Enter += new System.EventHandler(this.selectAll_Enter);
             this.comboBoxStreetFrom.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxStreet_KeyUp);
             this.comboBoxStreetFrom.Leave += new System.EventHandler(this.comboBoxStreet_Leave);
             // 
@@ -378,6 +384,7 @@
             this.textBoxPremisesNumFrom.Name = "textBoxPremisesNumFrom";
             this.textBoxPremisesNumFrom.Size = new System.Drawing.Size(437, 21);
             this.textBoxPremisesNumFrom.TabIndex = 14;
+            this.textBoxPremisesNumFrom.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxPremisesNumFromEnable
             // 
@@ -396,6 +403,7 @@
             this.textBoxHouseFrom.Name = "textBoxHouseFrom";
             this.textBoxHouseFrom.Size = new System.Drawing.Size(437, 21);
             this.textBoxHouseFrom.TabIndex = 12;
+            this.textBoxHouseFrom.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label8
             // 

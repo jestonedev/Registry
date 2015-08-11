@@ -88,6 +88,7 @@
             this.numericUpDownIDBuilding.Name = "numericUpDownIDBuilding";
             this.numericUpDownIDBuilding.Size = new System.Drawing.Size(437, 21);
             this.numericUpDownIDBuilding.TabIndex = 1;
+            this.numericUpDownIDBuilding.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxIDBuildingEnable
             // 
@@ -278,6 +279,7 @@
             0,
             0,
             0});
+            this.numericUpDownStartupYear.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxCadastralNumEnable
             // 
@@ -297,6 +299,7 @@
             this.textBoxCadastralNum.Name = "textBoxCadastralNum";
             this.textBoxCadastralNum.Size = new System.Drawing.Size(437, 21);
             this.textBoxCadastralNum.TabIndex = 11;
+            this.textBoxCadastralNum.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label4
             // 
@@ -358,6 +361,7 @@
             this.numericUpDownFloors.Name = "numericUpDownFloors";
             this.numericUpDownFloors.Size = new System.Drawing.Size(437, 21);
             this.numericUpDownFloors.TabIndex = 9;
+            this.numericUpDownFloors.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // textBoxHouse
             // 
@@ -367,6 +371,7 @@
             this.textBoxHouse.Name = "textBoxHouse";
             this.textBoxHouse.Size = new System.Drawing.Size(437, 21);
             this.textBoxHouse.TabIndex = 7;
+            this.textBoxHouse.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label2
             // 
@@ -395,6 +400,7 @@
             this.comboBoxStreet.Size = new System.Drawing.Size(437, 23);
             this.comboBoxStreet.TabIndex = 5;
             this.comboBoxStreet.DropDownClosed += new System.EventHandler(this.comboBoxStreet_DropDownClosed);
+            this.comboBoxStreet.Enter += new System.EventHandler(this.selectAll_Enter);
             this.comboBoxStreet.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxStreet_KeyUp);
             this.comboBoxStreet.Leave += new System.EventHandler(this.comboBoxStreet_Leave);
             // 
@@ -444,6 +450,7 @@
             this.textBoxContractNumber.Name = "textBoxContractNumber";
             this.textBoxContractNumber.Size = new System.Drawing.Size(437, 21);
             this.textBoxContractNumber.TabIndex = 15;
+            this.textBoxContractNumber.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label10
             // 
@@ -472,6 +479,7 @@
             this.textBoxTenantSNP.Name = "textBoxTenantSNP";
             this.textBoxTenantSNP.Size = new System.Drawing.Size(437, 21);
             this.textBoxTenantSNP.TabIndex = 17;
+            this.textBoxTenantSNP.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label11
             // 

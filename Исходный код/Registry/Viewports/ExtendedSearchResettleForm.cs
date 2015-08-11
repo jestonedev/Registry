@@ -349,5 +349,10 @@ namespace Registry.SearchForms
             if (comboBoxStreetTo.SelectedValue == null)
                 comboBoxStreetTo.Text = "";
         }
+
+        private void selectAll_Enter(object sender, EventArgs e)
+        {
+            ViewportHelper.SelectAllText(sender);
+        }
     }
 }

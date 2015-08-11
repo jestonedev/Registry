@@ -1019,6 +1019,7 @@ namespace Registry.Viewport
             this.textBoxDescription.Size = new System.Drawing.Size(342, 90);
             this.textBoxDescription.TabIndex = 0;
             this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxDescription_TextChanged);
+            this.textBoxDescription.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // groupBox14
             // 
@@ -1052,6 +1053,7 @@ namespace Registry.Viewport
             this.numericUpDownDebts.TabIndex = 1;
             this.numericUpDownDebts.ThousandsSeparator = true;
             this.numericUpDownDebts.ValueChanged += new System.EventHandler(this.numericUpDownDebts_ValueChanged);
+            this.numericUpDownDebts.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // dateTimePickerResettleDate
             // 
@@ -1124,6 +1126,11 @@ namespace Registry.Viewport
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDebts)).EndInit();
             this.ResumeLayout(false);
 
+        }
+
+        private void selectAll_Enter(object sender, EventArgs e)
+        {
+            ViewportHelper.SelectAllText(sender);
         }
     }
 }

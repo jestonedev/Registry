@@ -63,6 +63,7 @@
             this.textBoxSubPremisesNum.Name = "textBoxSubPremisesNum";
             this.textBoxSubPremisesNum.Size = new System.Drawing.Size(223, 21);
             this.textBoxSubPremisesNum.TabIndex = 0;
+            this.textBoxSubPremisesNum.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label2
             // 
@@ -90,6 +91,7 @@
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.Size = new System.Drawing.Size(223, 66);
             this.textBoxDescription.TabIndex = 4;
+            this.textBoxDescription.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label4
             // 
@@ -144,6 +146,7 @@
             this.numericUpDownTotalArea.Name = "numericUpDownTotalArea";
             this.numericUpDownTotalArea.Size = new System.Drawing.Size(223, 21);
             this.numericUpDownTotalArea.TabIndex = 1;
+            this.numericUpDownTotalArea.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // dateTimePickerStateDate
             // 
@@ -169,6 +172,7 @@
             this.numericUpDownLivingArea.Name = "numericUpDownLivingArea";
             this.numericUpDownLivingArea.Size = new System.Drawing.Size(223, 21);
             this.numericUpDownLivingArea.TabIndex = 10;
+            this.numericUpDownLivingArea.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label6
             // 

@@ -1523,7 +1523,7 @@ namespace Registry.Viewport
                 v_tenancy_addresses.DataSource = CalcDataModelTenancyPremisesInfo.GetInstance().Select();
                 FiltersRebuild();
             }
-            dataGridViewTenancyReasons.Focus();
+            checkBoxProtocolEnable.Focus();
             base.OnVisibleChanged(e);
         }
 
@@ -1621,11 +1621,6 @@ namespace Registry.Viewport
             }
         }
 
-        void textBoxDescription_TextChanged(object sender, EventArgs e)
-        {
-            CheckViewportModifications();
-        }
-
         void comboBoxExecutor_SelectedValueChanged(object sender, EventArgs e)
         {
             CheckViewportModifications();
@@ -1637,16 +1632,6 @@ namespace Registry.Viewport
         }
 
         void textBoxProtocolNumber_TextChanged(object sender, EventArgs e)
-        {
-            CheckViewportModifications();
-        }
-
-        void dateTimePickerResidenceWarrantDate_ValueChanged(object sender, EventArgs e)
-        {
-            CheckViewportModifications();
-        }
-
-        void textBoxResidenceWarrantNumber_TextChanged(object sender, EventArgs e)
         {
             CheckViewportModifications();
         }
@@ -1868,6 +1853,7 @@ namespace Registry.Viewport
             this.textBoxDescription.Size = new System.Drawing.Size(421, 59);
             this.textBoxDescription.TabIndex = 0;
             this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxDescription_TextChanged_1);
+            this.textBoxDescription.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // groupBox22
             // 
@@ -2192,6 +2178,7 @@ namespace Registry.Viewport
             this.textBoxRegistrationNumber.Size = new System.Drawing.Size(246, 21);
             this.textBoxRegistrationNumber.TabIndex = 0;
             this.textBoxRegistrationNumber.TextChanged += new System.EventHandler(this.textBoxRegistrationNumber_TextChanged);
+            this.textBoxRegistrationNumber.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label47
             // 
@@ -2362,6 +2349,7 @@ namespace Registry.Viewport
             this.textBoxProtocolNumber.Size = new System.Drawing.Size(246, 21);
             this.textBoxProtocolNumber.TabIndex = 1;
             this.textBoxProtocolNumber.TextChanged += new System.EventHandler(this.textBoxProtocolNumber_TextChanged);
+            this.textBoxProtocolNumber.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxProtocolEnable
             // 
@@ -2479,6 +2467,11 @@ namespace Registry.Viewport
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyAddress)).EndInit();
             this.ResumeLayout(false);
 
+        }
+
+        private void selectAll_Enter(object sender, EventArgs e)
+        {
+            ViewportHelper.SelectAllText(sender);
         }
     }
 }

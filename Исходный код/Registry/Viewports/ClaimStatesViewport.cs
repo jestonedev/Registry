@@ -937,6 +937,7 @@ namespace Registry.Viewport
             this.textBoxDocumentNumber.Size = new System.Drawing.Size(179, 21);
             this.textBoxDocumentNumber.TabIndex = 0;
             this.textBoxDocumentNumber.TextChanged += new System.EventHandler(this.textBoxDocNumber_TextChanged);
+            this.textBoxDocumentNumber.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label100
             // 
@@ -957,6 +958,7 @@ namespace Registry.Viewport
             this.textBoxDescription.Size = new System.Drawing.Size(179, 21);
             this.textBoxDescription.TabIndex = 2;
             this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxClaimStateDescription_TextChanged);
+            this.textBoxDescription.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label101
             // 
@@ -1140,6 +1142,11 @@ namespace Registry.Viewport
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
             this.ResumeLayout(false);
 
+        }
+
+        private void selectAll_Enter(object sender, EventArgs e)
+        {
+            ViewportHelper.SelectAllText(sender);
         }
     }
 }

@@ -196,5 +196,23 @@ namespace Registry.Viewport
             }
             return false;
         }
+
+        internal static void SelectAllText(object sender)
+        {
+            if (sender is NumericUpDown)
+            {
+                var control = ((NumericUpDown) sender);
+                control.Select(0, control.Text.Length);
+            }
+            else if (sender is TextBox)
+            {
+                var control = ((TextBox) sender);
+                control.SelectAll();
+            } else if (sender is ComboBox)
+            {
+                var control = ((ComboBox)sender);
+                control.SelectAll();
+            }
+        }
     }
 }

@@ -1272,6 +1272,7 @@ namespace Registry.Viewport
             this.textBoxPersonalAccount.Size = new System.Drawing.Size(230, 21);
             this.textBoxPersonalAccount.TabIndex = 29;
             this.textBoxPersonalAccount.TextChanged += new System.EventHandler(this.textBoxPersonalAccount_TextChanged);
+            this.textBoxPersonalAccount.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label81
             // 
@@ -1333,6 +1334,7 @@ namespace Registry.Viewport
             this.textBoxPatronymic.Size = new System.Drawing.Size(230, 21);
             this.textBoxPatronymic.TabIndex = 2;
             this.textBoxPatronymic.TextChanged += new System.EventHandler(this.textBoxPatronymic_TextChanged);
+            this.textBoxPatronymic.Enter += new System.EventHandler(this.selectAll_Enter);
             this.textBoxPatronymic.Leave += new System.EventHandler(this.textBoxSNP_Leave);
             // 
             // label55
@@ -1354,6 +1356,7 @@ namespace Registry.Viewport
             this.textBoxName.Size = new System.Drawing.Size(230, 21);
             this.textBoxName.TabIndex = 1;
             this.textBoxName.TextChanged += new System.EventHandler(this.textBoxName_TextChanged);
+            this.textBoxName.Enter += new System.EventHandler(this.selectAll_Enter);
             this.textBoxName.Leave += new System.EventHandler(this.textBoxSNP_Leave);
             // 
             // label54
@@ -1375,6 +1378,7 @@ namespace Registry.Viewport
             this.textBoxSurname.Size = new System.Drawing.Size(230, 21);
             this.textBoxSurname.TabIndex = 0;
             this.textBoxSurname.TextChanged += new System.EventHandler(this.textBoxSurname_TextChanged);
+            this.textBoxSurname.Enter += new System.EventHandler(this.selectAll_Enter);
             this.textBoxSurname.Leave += new System.EventHandler(this.textBoxSNP_Leave);
             // 
             // label53
@@ -1423,6 +1427,7 @@ namespace Registry.Viewport
             this.textBoxRegistrationRoom.Size = new System.Drawing.Size(230, 21);
             this.textBoxRegistrationRoom.TabIndex = 3;
             this.textBoxRegistrationRoom.TextChanged += new System.EventHandler(this.textBoxRegistrationRoom_TextChanged);
+            this.textBoxRegistrationRoom.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label65
             // 
@@ -1443,6 +1448,7 @@ namespace Registry.Viewport
             this.textBoxRegistrationFlat.Size = new System.Drawing.Size(230, 21);
             this.textBoxRegistrationFlat.TabIndex = 2;
             this.textBoxRegistrationFlat.TextChanged += new System.EventHandler(this.textBoxRegistrationFlat_TextChanged);
+            this.textBoxRegistrationFlat.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label63
             // 
@@ -1473,6 +1479,7 @@ namespace Registry.Viewport
             this.comboBoxRegistrationStreet.TabIndex = 0;
             this.comboBoxRegistrationStreet.DropDownClosed += new System.EventHandler(this.comboBoxRegistrationStreet_DropDownClosed);
             this.comboBoxRegistrationStreet.SelectedValueChanged += new System.EventHandler(this.comboBoxRegistrationStreet_SelectedValueChanged);
+            this.comboBoxRegistrationStreet.Enter += new System.EventHandler(this.selectAll_Enter);
             this.comboBoxRegistrationStreet.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxRegistrationStreet_KeyUp);
             this.comboBoxRegistrationStreet.Leave += new System.EventHandler(this.comboBoxRegistrationStreet_Leave);
             // 
@@ -1486,6 +1493,7 @@ namespace Registry.Viewport
             this.textBoxRegistrationHouse.Size = new System.Drawing.Size(230, 21);
             this.textBoxRegistrationHouse.TabIndex = 1;
             this.textBoxRegistrationHouse.TextChanged += new System.EventHandler(this.textBoxRegistrationHouse_TextChanged);
+            this.textBoxRegistrationHouse.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // groupBox26
             // 
@@ -1562,6 +1570,7 @@ namespace Registry.Viewport
             this.comboBoxIssuedBy.TabIndex = 4;
             this.comboBoxIssuedBy.DropDownClosed += new System.EventHandler(this.comboBoxIssuedBy_DropDownClosed);
             this.comboBoxIssuedBy.SelectedValueChanged += new System.EventHandler(this.comboBoxIssuedBy_SelectedValueChanged);
+            this.comboBoxIssuedBy.Enter += new System.EventHandler(this.selectAll_Enter);
             this.comboBoxIssuedBy.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxIssuedBy_KeyUp);
             this.comboBoxIssuedBy.Leave += new System.EventHandler(this.comboBoxIssuedBy_Leave);
             // 
@@ -1604,6 +1613,7 @@ namespace Registry.Viewport
             this.textBoxDocumentNumber.Size = new System.Drawing.Size(231, 21);
             this.textBoxDocumentNumber.TabIndex = 2;
             this.textBoxDocumentNumber.TextChanged += new System.EventHandler(this.textBoxDocumentNumber_TextChanged);
+            this.textBoxDocumentNumber.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label60
             // 
@@ -1624,6 +1634,7 @@ namespace Registry.Viewport
             this.textBoxDocumentSeria.Size = new System.Drawing.Size(231, 21);
             this.textBoxDocumentSeria.TabIndex = 1;
             this.textBoxDocumentSeria.TextChanged += new System.EventHandler(this.textBoxDocumentSeria_TextChanged);
+            this.textBoxDocumentSeria.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label59
             // 
@@ -1692,6 +1703,7 @@ namespace Registry.Viewport
             this.textBoxResidenceRoom.Size = new System.Drawing.Size(231, 21);
             this.textBoxResidenceRoom.TabIndex = 3;
             this.textBoxResidenceRoom.TextChanged += new System.EventHandler(this.textBoxResidenceRoom_TextChanged);
+            this.textBoxResidenceRoom.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label68
             // 
@@ -1712,6 +1724,7 @@ namespace Registry.Viewport
             this.textBoxResidenceFlat.Size = new System.Drawing.Size(231, 21);
             this.textBoxResidenceFlat.TabIndex = 2;
             this.textBoxResidenceFlat.TextChanged += new System.EventHandler(this.textBoxResidenceFlat_TextChanged);
+            this.textBoxResidenceFlat.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label69
             // 
@@ -1742,6 +1755,7 @@ namespace Registry.Viewport
             this.comboBoxResidenceStreet.TabIndex = 0;
             this.comboBoxResidenceStreet.DropDownClosed += new System.EventHandler(this.comboBoxResidenceStreet_DropDownClosed);
             this.comboBoxResidenceStreet.SelectedValueChanged += new System.EventHandler(this.comboBoxResidenceStreet_SelectedValueChanged);
+            this.comboBoxResidenceStreet.Enter += new System.EventHandler(this.selectAll_Enter);
             this.comboBoxResidenceStreet.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxResidenceStreet_KeyUp);
             this.comboBoxResidenceStreet.Leave += new System.EventHandler(this.comboBoxResidenceStreet_Leave);
             // 
@@ -1755,6 +1769,7 @@ namespace Registry.Viewport
             this.textBoxResidenceHouse.Size = new System.Drawing.Size(231, 21);
             this.textBoxResidenceHouse.TabIndex = 1;
             this.textBoxResidenceHouse.TextChanged += new System.EventHandler(this.textBoxResidenceHouse_TextChanged);
+            this.textBoxResidenceHouse.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // dataGridViewTenancyPersons
             // 
@@ -1849,6 +1864,11 @@ namespace Registry.Viewport
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyPersons)).EndInit();
             this.ResumeLayout(false);
 
+        }
+
+        private void selectAll_Enter(object sender, EventArgs e)
+        {
+            ViewportHelper.SelectAllText(sender);
         }
     }
 }

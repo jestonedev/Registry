@@ -126,6 +126,7 @@
             this.textBoxRegistrationNum.Name = "textBoxRegistrationNum";
             this.textBoxRegistrationNum.Size = new System.Drawing.Size(437, 21);
             this.textBoxRegistrationNum.TabIndex = 3;
+            this.textBoxRegistrationNum.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxContractNumEnable
             // 
@@ -153,6 +154,7 @@
             this.textBoxResidenceWarrantNum.Name = "textBoxResidenceWarrantNum";
             this.textBoxResidenceWarrantNum.Size = new System.Drawing.Size(437, 21);
             this.textBoxResidenceWarrantNum.TabIndex = 5;
+            this.textBoxResidenceWarrantNum.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxResidenceWarrantNumEnable
             // 
@@ -180,6 +182,7 @@
             this.textBoxProtocolNum.Name = "textBoxProtocolNum";
             this.textBoxProtocolNum.Size = new System.Drawing.Size(437, 21);
             this.textBoxProtocolNum.TabIndex = 7;
+            this.textBoxProtocolNum.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxProtocolEnable
             // 
@@ -207,6 +210,7 @@
             this.textBoxTenantSNP.Name = "textBoxTenantSNP";
             this.textBoxTenantSNP.Size = new System.Drawing.Size(437, 21);
             this.textBoxTenantSNP.TabIndex = 9;
+            this.textBoxTenantSNP.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxTenantSNPEnable
             // 
@@ -234,6 +238,7 @@
             this.textBoxPersonSNP.Name = "textBoxPersonSNP";
             this.textBoxPersonSNP.Size = new System.Drawing.Size(437, 21);
             this.textBoxPersonSNP.TabIndex = 11;
+            this.textBoxPersonSNP.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxPersonSNPEnable
             // 
@@ -266,6 +271,7 @@
             this.numericUpDownIDTenancy.Name = "numericUpDownIDTenancy";
             this.numericUpDownIDTenancy.Size = new System.Drawing.Size(437, 21);
             this.numericUpDownIDTenancy.TabIndex = 1;
+            this.numericUpDownIDTenancy.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxIDTenancyEnable
             // 
@@ -351,6 +357,7 @@
             this.textBoxHouse.Name = "textBoxHouse";
             this.textBoxHouse.Size = new System.Drawing.Size(437, 21);
             this.textBoxHouse.TabIndex = 19;
+            this.textBoxHouse.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxPremisesNumEnable
             // 
@@ -370,6 +377,7 @@
             this.textBoxPremisesNum.Name = "textBoxPremisesNum";
             this.textBoxPremisesNum.Size = new System.Drawing.Size(437, 21);
             this.textBoxPremisesNum.TabIndex = 21;
+            this.textBoxPremisesNum.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label7
             // 
@@ -427,6 +435,7 @@
             this.comboBoxStreet.Size = new System.Drawing.Size(437, 23);
             this.comboBoxStreet.TabIndex = 17;
             this.comboBoxStreet.DropDownClosed += new System.EventHandler(this.comboBoxStreet_DropDownClosed);
+            this.comboBoxStreet.Enter += new System.EventHandler(this.selectAll_Enter);
             this.comboBoxStreet.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxStreet_KeyUp);
             this.comboBoxStreet.Leave += new System.EventHandler(this.comboBoxStreet_Leave);
             // 

@@ -43,6 +43,7 @@
             this.textBoxCriteria.Name = "textBoxCriteria";
             this.textBoxCriteria.Size = new System.Drawing.Size(348, 21);
             this.textBoxCriteria.TabIndex = 0;
+            this.textBoxCriteria.Enter += new System.EventHandler(this.textBoxCriteria_Enter);
             // 
             // vButtonCancel
             // 

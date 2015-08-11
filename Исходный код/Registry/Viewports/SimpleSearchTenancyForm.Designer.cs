@@ -85,6 +85,7 @@
             this.textBoxCriteria.Name = "textBoxCriteria";
             this.textBoxCriteria.Size = new System.Drawing.Size(348, 21);
             this.textBoxCriteria.TabIndex = 0;
+            this.textBoxCriteria.Enter += new System.EventHandler(this.textBoxCriteria_Enter);
             // 
             // SimpleSearchTenancyForm
             // 
@@ -104,6 +105,7 @@
             this.Name = "SimpleSearchTenancyForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Фильтрация процессов найма";
+            this.Enter += new System.EventHandler(this.SimpleSearchTenancyForm_Enter);
             this.ResumeLayout(false);
             this.PerformLayout();
 

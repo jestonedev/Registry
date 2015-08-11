@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Registry.SearchForms;
 using Registry.DataModels;
 using System.Globalization;
+using Registry.Viewport;
 
 namespace Registry.SearchForms
 {
@@ -133,6 +134,11 @@ namespace Registry.SearchForms
         {
             textBoxCriteria.Focus();
             textBoxCriteria.SelectAll();
+        }
+
+        private void textBoxCriteria_Enter(object sender, EventArgs e)
+        {
+            ViewportHelper.SelectAllText(sender);
         }
     }
 }

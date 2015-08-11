@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.CalcDataModels;
 using System.Globalization;
+using Registry.Viewport;
 
 namespace Registry.SearchForms
 {
@@ -317,6 +318,11 @@ namespace Registry.SearchForms
         private void checkBoxOwnershipTypeEnable_CheckedChanged(object sender, EventArgs e)
         {
             comboBoxOwnershipType.Enabled = checkBoxOwnershipTypeEnable.Checked;
+        }
+
+        private void selectAll_Enter(object sender, EventArgs e)
+        {
+            ViewportHelper.SelectAllText(sender);
         }
     }
 }
