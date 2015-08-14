@@ -18,18 +18,12 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridView dataGridView;
-        private DataGridViewTextBoxColumn id_building;
-        private DataGridViewComboBoxColumn id_street;
-        private DataGridViewTextBoxColumn house;
-        private DataGridViewTextBoxColumn floors;
-        private DataGridViewTextBoxColumn living_area;
-        private DataGridViewTextBoxColumn cadastral_num;
-        private DataGridViewTextBoxColumn startup_year;
         #endregion Components
 
         #region Models
         private BuildingsDataModel buildings = null;
         private KladrStreetsDataModel kladr = null;
+        private ObjectStatesDataModel object_states = null;
         #endregion
 
         #region Views
@@ -39,6 +33,14 @@ namespace Registry.Viewport
 
         //Forms
         private SearchForm sbSimpleSearchForm = null;
+        private DataGridViewTextBoxColumn id_building;
+        private DataGridViewComboBoxColumn id_street;
+        private DataGridViewTextBoxColumn house;
+        private DataGridViewTextBoxColumn floors;
+        private DataGridViewTextBoxColumn living_area;
+        private DataGridViewTextBoxColumn cadastral_num;
+        private DataGridViewTextBoxColumn startup_year;
+        private DataGridViewTextBoxColumn id_state;
         private SearchForm sbExtendedSearchForm = null;
 
         private BuildingListViewport()
@@ -122,9 +124,11 @@ namespace Registry.Viewport
             this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
             buildings = BuildingsDataModel.GetInstance();
             kladr = KladrStreetsDataModel.GetInstance();
+            object_states = ObjectStatesDataModel.GetInstance();
             // Ожидаем дозагрузки данных, если это необходимо
             buildings.Select();
             kladr.Select();
+            object_states.Select();
 
             DataSet ds = DataSetManager.DataSet;
 
@@ -442,28 +446,34 @@ namespace Registry.Viewport
         void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (v_buildings.Count <= e.RowIndex) return;
+            var row = ((DataRowView) v_buildings[e.RowIndex]);
             switch (this.dataGridView.Columns[e.ColumnIndex].Name)
             {
                 case "id_building":
-                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["id_building"];
+                    e.Value = row["id_building"];
                     break;
                 case "id_street":
-                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["id_street"];
+                    e.Value = row["id_street"];
                     break;
                 case "house":
-                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["house"];
+                    e.Value = row["house"];
                     break;
                 case "floors":
-                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["floors"];
+                    e.Value = row["floors"];
                     break;
                 case "living_area":
-                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["living_area"];
+                    e.Value = row["living_area"];
                     break;
                 case "cadastral_num":
-                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["cadastral_num"];
+                    e.Value = row["cadastral_num"];
                     break;
                 case "startup_year":
-                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["startup_year"];
+                    e.Value = row["startup_year"];
+                    break;
+                case "id_state":
+                    var state_row = object_states.Select().Rows.Find(row["id_state"]);
+                    if (state_row != null)
+                        e.Value = state_row["state_female"];
                     break;
             }
         }
@@ -520,6 +530,7 @@ namespace Registry.Viewport
             this.living_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cadastral_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.startup_year = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -547,7 +558,8 @@ namespace Registry.Viewport
             this.floors,
             this.living_area,
             this.cadastral_num,
-            this.startup_year});
+            this.startup_year,
+            this.id_state});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dataGridView.Location = new System.Drawing.Point(3, 3);
@@ -629,6 +641,15 @@ namespace Registry.Viewport
             this.startup_year.Name = "startup_year";
             this.startup_year.ReadOnly = true;
             this.startup_year.Width = 190;
+            // 
+            // id_state
+            // 
+            this.id_state.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.id_state.HeaderText = "Текущее состояние";
+            this.id_state.MinimumWidth = 170;
+            this.id_state.Name = "id_state";
+            this.id_state.ReadOnly = true;
+            this.id_state.Width = 170;
             // 
             // BuildingListViewport
             // 
