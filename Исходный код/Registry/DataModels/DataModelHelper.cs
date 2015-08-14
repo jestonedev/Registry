@@ -409,7 +409,7 @@ namespace Registry.DataModels
         {
             var tenancy_buildings_assoc = DataModelHelper.FilterRows(TenancyBuildingsAssocDataModel.GetInstance().Select());
             var tenancy_buildings = from tenancy_buildings_row in tenancy_buildings_assoc
-                                    where tenancy_buildings_row.Field<int>("id_building") == id
+                                    where tenancy_buildings_row.Field<int?>("id_building") == id
                                     select tenancy_buildings_row.Field<int>("id_process");
             return tenancy_buildings;
         }
@@ -418,7 +418,7 @@ namespace Registry.DataModels
         {
             var tenancy_premises_assoc = DataModelHelper.FilterRows(TenancyPremisesAssocDataModel.GetInstance().Select());
             var tenancy_premises = from tenancy_premises_row in tenancy_premises_assoc
-                                    where tenancy_premises_row.Field<int>("id_premises") == id
+                                    where tenancy_premises_row.Field<int?>("id_premises") == id
                                     select tenancy_premises_row.Field<int>("id_process");
             return tenancy_premises;
         }
@@ -427,7 +427,7 @@ namespace Registry.DataModels
         {
             var tenancy_sub_premises_assoc = DataModelHelper.FilterRows(TenancySubPremisesAssocDataModel.GetInstance().Select());
             var tenancy_sub_premises = from tenancy_sub_premises_row in tenancy_sub_premises_assoc
-                                   where tenancy_sub_premises_row.Field<int>("id_sub_premises") == id
+                                   where tenancy_sub_premises_row.Field<int?>("id_sub_premises") == id
                                    select tenancy_sub_premises_row.Field<int>("id_process");
             return tenancy_sub_premises;
         }
