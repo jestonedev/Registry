@@ -2588,11 +2588,12 @@ namespace Registry.Viewport
             // 
             // dateTimePickerRegDate
             // 
-            this.dateTimePickerRegDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerRegDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top
+            | System.Windows.Forms.AnchorStyles.Right))));
+            //| System.Windows.Forms.AnchorStyles.Left)));
             this.dateTimePickerRegDate.Location = new System.Drawing.Point(169, 179);
             this.dateTimePickerRegDate.Name = "dateTimePickerRegDate";
-            this.dateTimePickerRegDate.Size = new System.Drawing.Size(272, 21);
+            this.dateTimePickerRegDate.Size = new System.Drawing.Size(270, 21);
             this.dateTimePickerRegDate.TabIndex = 7;
             this.dateTimePickerRegDate.ValueChanged += new System.EventHandler(this.dateTimePickerRegDate_ValueChanged);
             // 
@@ -2601,9 +2602,9 @@ namespace Registry.Viewport
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(10, 182);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(114, 15);
+            this.label4.Size = new System.Drawing.Size(115, 15);
             this.label4.TabIndex = 10;
-            this.label4.Text = "Дата регистрации";
+            this.label4.Text = "Дата включения в РМИ";
             // 
             // label1
             // 
