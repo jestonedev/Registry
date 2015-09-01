@@ -939,11 +939,13 @@ namespace Registry.Viewport
             if ((viewportState == ViewportState.ModifyRowState) && (building.IdState != buildingFromView.IdState || building.StateDate != buildingFromView.StateDate) 
                 && (building.IdState != 1))
             {
-                if (MessageBox.Show("Вы пытаетесь изменить состояние здания. В результате всем помещениям данного здания будет назначено то же состояние. " +
-                    "Вы уверены, что хотите сохранить данные?", "Внимание",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                var dialogResult = MessageBox.Show("Вы пытаетесь изменить состояние здания. Также Вы можете изменить состояние помещений в этом здании. " +
+                    "Вы хотите изменить данные состояния помещений ?", "Внимание",
+                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                if (dialogResult == DialogResult.Cancel)
                     return;
-                updatePremisesState = true;
+                else if (dialogResult == DialogResult.Yes)
+                    updatePremisesState = true;
             }
             string Filter = "";
             if (!String.IsNullOrEmpty(v_buildings.Filter))
