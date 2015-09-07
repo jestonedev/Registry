@@ -933,18 +933,8 @@ namespace Registry.Viewport
         {
             Building building = BuildingFromViewport();
             Building buildingFromView = BuildingFromView();
-            bool updatePremisesState = false;
             if (!ValidateBuilding(building))
                 return;
-            if ((viewportState == ViewportState.ModifyRowState) && (building.IdState != buildingFromView.IdState || building.StateDate != buildingFromView.StateDate) 
-                && (building.IdState != 1))
-            {
-                if (MessageBox.Show("Вы пытаетесь изменить состояние здания. В результате всем помещениям данного здания будет назначено то же состояние. " +
-                    "Вы уверены, что хотите сохранить данные?", "Внимание",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
-                    return;
-                updatePremisesState = true;
-            }
             string Filter = "";
             if (!String.IsNullOrEmpty(v_buildings.Filter))
                 Filter += " OR ";
@@ -980,11 +970,17 @@ namespace Registry.Viewport
                 case ViewportState.ModifyRowState:
                     if (building.IdBuilding == null)
                     {
-                        MessageBox.Show("Вы пытаетесь изменить здание без внутренного номера. " +
-                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", 
+                        MessageBox.Show(@"Вы пытаетесь изменить здание без внутренного номера. " +
+                            @"Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка", 
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
+                    var dialogResult = DialogResult.No;
+                    if (building.IdState != buildingFromView.IdState || building.StateDate != buildingFromView.StateDate)
+                        dialogResult = MessageBox.Show(@"Хотите ли вы установить помещениям, расположенным в здании, такое же состояние?", @"Внимание",
+                                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                    if (dialogResult == DialogResult.Cancel)
+                        return;
                     if (BuildingsDataModel.Update(building) == -1)
                         return;
                     DataRowView row = ((DataRowView)v_buildings[v_buildings.Position]);
@@ -992,35 +988,19 @@ namespace Registry.Viewport
                     Filter += String.Format(CultureInfo.CurrentCulture, "(id_building = {0})", building.IdBuilding);
                     v_buildings.Filter += Filter;
                     FillRowFromBuilding(building, row);
-                    if (updatePremisesState)
+                    if (dialogResult == DialogResult.Yes)
                     {
-                        if (DataSetManager.DataSet.Tables.Contains("premises"))
+                        var premises = from premises_row in DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select())
+                                       where premises_row.Field<int>("id_building") == building.IdBuilding
+                                       select premises_row;
+                        foreach (var premise in premises)
                         {
-                            DataTable premises = DataSetManager.DataSet.Tables["premises"];
-                            List<int> idPremises = new List<int>(); //Идентификаторы помещений, включенных в каскадное обновление состояний
-                            for (int i = 0; i < premises.Rows.Count; i++)
+                            var id_premises = ViewportHelper.ValueOrNull<int>(premise, "id_premises");
+                            if (id_premises != null)
                             {
-                                if ((premises.Rows[i]["id_building"] != DBNull.Value) && ((int)premises.Rows[i]["id_building"] == building.IdBuilding))
-                                {
-                                    premises.Rows[i]["id_state"] = building.IdState;
-                                    premises.Rows[i]["state_date"] = ViewportHelper.ValueOrDBNull(building.StateDate);
-                                    premises.Rows[i].EndEdit();
-                                    idPremises.Add((int)premises.Rows[i]["id_premises"]);
-                                }
-                            }
-                            if (DataSetManager.DataSet.Tables.Contains("sub_premises"))
-                            {
-                                DataTable sub_premises = DataSetManager.DataSet.Tables["sub_premises"];
-                                for (int i = 0; i < sub_premises.Rows.Count; i++)
-                                {
-                                    if ((sub_premises.Rows[i]["id_premises"] != DBNull.Value) &&
-                                        (idPremises.Contains((int)sub_premises.Rows[i]["id_premises"])))
-                                    {
-                                        sub_premises.Rows[i]["id_state"] = building.IdState;
-                                        sub_premises.Rows[i]["state_date"] = ViewportHelper.ValueOrDBNull(building.StateDate);
-                                        sub_premises.Rows[i].EndEdit();
-                                    }
-                                }
+                                if (PremisesDataModel.UpdateState(id_premises.Value, building.IdState,
+                                    building.StateDate) == -1)
+                                    return;
                             }
                         }
                     }

@@ -752,18 +752,25 @@ namespace Registry.DataModels
             var ownership_premises_assoc = DataModelHelper.FilterRows(OwnershipPremisesAssocDataModel.GetInstance().Select());
             var premises = DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select());
             IEnumerable<int> buildingdIds = BuildingIDsByOwnershipType(idOwnershipType);
-            // Если используется непользовательское ограничение "Аварийное", то не выводить помещения еще и снесеные
+            // Если используется ограничение "Аварийное", то не выводить помещения, если они или их здание имеют ограничение "Снесено"
             var demolished_premises = DemolishedPremisesIDs();
             //Выбираются помещения с установленным ограничением и помещения, находящиеся в зданиях с установленным ограничением
-            return from ownership_rights_row in ownership_rights
-                   join ownership_premises_assoc_row in ownership_premises_assoc
-                   on ownership_rights_row.Field<int>("id_ownership_right") equals ownership_premises_assoc_row.Field<int>("id_ownership_right")
-                   join premises_row in premises
-                   on ownership_premises_assoc_row.Field<int>("id_premises") equals premises_row.Field<int>("id_premises")
-                   where (idOwnershipType == 2 ? !demolished_premises.Contains(ownership_premises_assoc_row.Field<int>("id_premises")) : true) &&
-                         (ownership_rights_row.Field<int>("id_ownership_right_type") == idOwnershipType) || 
-                          buildingdIds.Contains(premises_row.Field<int>("id_building"))
-                   select ownership_premises_assoc_row.Field<int>("id_premises");
+            var premisesIds = from ownership_rights_row in ownership_rights
+                                   join ownership_premises_assoc_row in ownership_premises_assoc
+                                   on ownership_rights_row.Field<int>("id_ownership_right") equals ownership_premises_assoc_row.Field<int>("id_ownership_right")
+                                   where (idOwnershipType == 2 ? !demolished_premises.Contains(ownership_premises_assoc_row.Field<int>("id_premises")) : true) &&
+                                        ownership_rights_row.Field<int>("id_ownership_right_type") == idOwnershipType
+                                   select ownership_premises_assoc_row.Field<int>("id_premises");
+
+
+            return
+                from premises_row in premises
+                join buildingId in buildingdIds on premises_row.Field<int>("id_building") equals buildingId into bids
+                from bid in bids.DefaultIfEmpty()
+                join premisesId in premisesIds on premises_row.Field<int>("id_premises") equals premisesId into pids
+                from pid in pids.DefaultIfEmpty()
+                where bid != 0 || pid != 0
+                select premises_row.Field<int>("id_premises");
         }
 
         /// <summary>
