@@ -2601,9 +2601,9 @@ namespace Registry.Viewport
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(10, 182);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(114, 15);
+            this.label4.Size = new System.Drawing.Size(144, 15);
             this.label4.TabIndex = 10;
-            this.label4.Text = "Дата регистрации";
+            this.label4.Text = "Дата включения в РМИ";
             // 
             // label1
             // 
