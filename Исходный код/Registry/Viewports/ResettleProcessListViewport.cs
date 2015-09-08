@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using CustomControls;
-using Registry.DataModels;
+using System.ComponentModel;
 using System.Data;
-using Registry.Entities;
 using System.Drawing;
-using Registry.CalcDataModels;
-using Security;
 using System.Globalization;
+using System.Windows.Forms;
+using Registry.CalcDataModels;
+using Registry.DataModels;
+using Registry.Entities;
 using Registry.SearchForms;
+using Security;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
@@ -37,21 +35,21 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        ResettleProcessesDataModel resettle_processes = null;
-        DocumentsResidenceDataModel documents_residence = null;
-        CalcDataModelResettleAggregated resettle_aggregate = null;
+        ResettleProcessesDataModel resettle_processes;
+        DocumentsResidenceDataModel documents_residence;
+        CalcDataModelResettleAggregated resettle_aggregate;
         #endregion Models
 
         #region Views
-        BindingSource v_resettle_processes = null;
-        BindingSource v_documents_residence = null;
-        BindingSource v_resettle_aggregate = null;
+        BindingSource v_resettle_processes;
+        BindingSource v_documents_residence;
+        BindingSource v_resettle_aggregate;
         #endregion Views
 
         private ViewportState viewportState = ViewportState.ReadState;
-        private bool is_editable = false; 
-        private SearchForm spExtendedSearchForm = null;
-        private SearchForm spSimpleSearchForm = null;
+        private bool is_editable; 
+        private SearchForm spExtendedSearchForm;
+        private SearchForm spSimpleSearchForm;
 
         private ResettleProcessListViewport()
             : this(null)
@@ -67,15 +65,15 @@ namespace Registry.Viewport
         public ResettleProcessListViewport(ResettleProcessListViewport resettleProcessListViewport, IMenuCallback menuCallback)
             : this(menuCallback)
         {
-            this.DynamicFilter = resettleProcessListViewport.DynamicFilter;
-            this.StaticFilter = resettleProcessListViewport.StaticFilter;
-            this.ParentRow = resettleProcessListViewport.ParentRow;
-            this.ParentType = resettleProcessListViewport.ParentType;
+            DynamicFilter = resettleProcessListViewport.DynamicFilter;
+            StaticFilter = resettleProcessListViewport.StaticFilter;
+            ParentRow = resettleProcessListViewport.ParentRow;
+            ParentType = resettleProcessListViewport.ParentType;
         }
 
         private void LocateResettleProcessBy(int id)
         {
-            int Position = v_resettle_processes.Find("id_process", id);
+            var Position = v_resettle_processes.Find("id_process", id);
             is_editable = false;
             if (Position > 0)
                 v_resettle_processes.Position = Position;
@@ -85,13 +83,13 @@ namespace Registry.Viewport
         private void SetViewportCaption()
         {
             if (viewportState == ViewportState.NewRowState)
-                this.Text = "Новая исковая работа";
+                Text = "Новая исковая работа";
             else
                 if (v_resettle_processes.Position != -1)
-                        this.Text = String.Format(CultureInfo.InvariantCulture, "Процесс переселения №{0}",
+                        Text = string.Format(CultureInfo.InvariantCulture, "Процесс переселения №{0}",
                             ((DataRowView)v_resettle_processes[v_resettle_processes.Position])["id_process"]);
                 else
-                        this.Text = "Процессы переселения отсутствуют";
+                        Text = "Процессы переселения отсутствуют";
         }
 
         private void DataBind()
@@ -111,7 +109,7 @@ namespace Registry.Viewport
 
         private void UnbindedCheckBoxesUpdate()
         {
-            DataRowView row = (v_resettle_processes.Position >= 0) ? (DataRowView)v_resettle_processes[v_resettle_processes.Position] : null;
+            var row = (v_resettle_processes.Position >= 0) ? (DataRowView)v_resettle_processes[v_resettle_processes.Position] : null;
             if ((v_resettle_processes.Position >= 0) && (row["resettle_date"] != DBNull.Value))
                 dateTimePickerResettleDate.Checked = true;
             else
@@ -125,7 +123,7 @@ namespace Registry.Viewport
         {
             if (!is_editable)
                 return;
-            if ((!this.ContainsFocus) || (dataGridView.Focused))
+            if ((!ContainsFocus) || (dataGridView.Focused))
                 return;
             if ((v_resettle_processes.Position != -1) && (ResettleProcessFromView() != ResettleProcessViewport()))
             {
@@ -158,7 +156,7 @@ namespace Registry.Viewport
                             return true;
                         case ViewportState.NewRowState:
                         case ViewportState.ModifyRowState:
-                            DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
+                            var result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
@@ -186,7 +184,7 @@ namespace Registry.Viewport
                         case ViewportState.NewRowState:
                             return true;
                         case ViewportState.ModifyRowState:
-                            DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
+                            var result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
@@ -210,7 +208,7 @@ namespace Registry.Viewport
                         case ViewportState.ModifyRowState:
                             return true;
                         case ViewportState.NewRowState:
-                            DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
+                            var result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
@@ -243,8 +241,8 @@ namespace Registry.Viewport
 
         private ResettleProcess ResettleProcessFromView()
         {
-            ResettleProcess resettle_process = new ResettleProcess();
-            DataRowView row = (DataRowView)v_resettle_processes[v_resettle_processes.Position];
+            var resettle_process = new ResettleProcess();
+            var row = (DataRowView)v_resettle_processes[v_resettle_processes.Position];
             resettle_process.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
             resettle_process.Debts = ViewportHelper.ValueOrNull<decimal>(row, "debts");
             resettle_process.ResettleDate = ViewportHelper.ValueOrNull<DateTime>(row, "resettle_date");
@@ -255,7 +253,7 @@ namespace Registry.Viewport
 
         private ResettleProcess ResettleProcessViewport()
         {
-            ResettleProcess resettle_process = new ResettleProcess();
+            var resettle_process = new ResettleProcess();
             if ((v_resettle_processes.Position == -1) || ((DataRowView)v_resettle_processes[v_resettle_processes.Position])["id_process"] is DBNull)
                 resettle_process.IdProcess = null;
             else
@@ -355,7 +353,7 @@ namespace Registry.Viewport
 
         public override void LoadData()
         {
-            this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
+            DockAreas = DockAreas.Document;
             dataGridView.AutoGenerateColumns = false;
             resettle_processes = ResettleProcessesDataModel.GetInstance();
             documents_residence = DocumentsResidenceDataModel.GetInstance();
@@ -365,18 +363,18 @@ namespace Registry.Viewport
             resettle_processes.Select();
             documents_residence.Select();
 
-            DataSet ds = DataSetManager.DataSet;
+            var ds = DataSetManager.DataSet;
 
             v_documents_residence = new BindingSource();
             v_documents_residence.DataMember = "documents_residence";
             v_documents_residence.DataSource = ds;
 
             v_resettle_processes = new BindingSource();
-            v_resettle_processes.CurrentItemChanged += new EventHandler(v_resettle_processes_CurrentItemChanged);
+            v_resettle_processes.CurrentItemChanged += v_resettle_processes_CurrentItemChanged;
             v_resettle_processes.DataMember = "resettle_processes";
             v_resettle_processes.DataSource = ds;
             v_resettle_processes.Filter = StaticFilter;
-            if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
+            if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 v_resettle_processes.Filter += " AND ";
             v_resettle_processes.Filter += DynamicFilter;
 
@@ -385,13 +383,13 @@ namespace Registry.Viewport
 
             DataBind();
 
-            resettle_processes.Select().RowChanged += new DataRowChangeEventHandler(ResettleProcessListViewport_RowChanged);
-            resettle_processes.Select().RowDeleted += new DataRowChangeEventHandler(ResettleProcessListViewport_RowDeleted);
+            resettle_processes.Select().RowChanged += ResettleProcessListViewport_RowChanged;
+            resettle_processes.Select().RowDeleted += ResettleProcessListViewport_RowDeleted;
 
             dataGridView.RowCount = v_resettle_processes.Count;
             SetViewportCaption();
             ViewportHelper.SetDoubleBuffered(dataGridView);
-            resettle_aggregate.RefreshEvent += new EventHandler<EventArgs>(resettles_aggregate_RefreshEvent);
+            resettle_aggregate.RefreshEvent += resettles_aggregate_RefreshEvent;
             is_editable = true;
         }
 
@@ -423,7 +421,7 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             is_editable = false;
-            ResettleProcess resettleProcess = ResettleProcessFromView();
+            var resettleProcess = ResettleProcessFromView();
             dataGridView.RowCount = dataGridView.RowCount + 1;
             v_resettle_processes.AddNew();
             dataGridView.Enabled = false;
@@ -462,7 +460,7 @@ namespace Registry.Viewport
 
         public override bool SearchedRecords()
         {
-            if (!String.IsNullOrEmpty(DynamicFilter))
+            if (!string.IsNullOrEmpty(DynamicFilter))
                 return true;
             else
                 return false;
@@ -487,8 +485,8 @@ namespace Registry.Viewport
                     DynamicFilter = spExtendedSearchForm.GetFilter();
                     break;
             }
-            string Filter = StaticFilter;
-            if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
+            var Filter = StaticFilter;
+            if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 Filter += " AND ";
             Filter += DynamicFilter;
             dataGridView.RowCount = 0;
@@ -511,11 +509,11 @@ namespace Registry.Viewport
 
         public override void SaveRecord()
         {
-            ResettleProcess resettleProcess = ResettleProcessViewport();
+            var resettleProcess = ResettleProcessViewport();
             if (!ValidateResettleProcess(resettleProcess))
                 return;
-            string Filter = "";
-            if (!String.IsNullOrEmpty(v_resettle_processes.Filter))
+            var Filter = "";
+            if (!string.IsNullOrEmpty(v_resettle_processes.Filter))
                 Filter += " OR ";
             else
                 Filter += "(1 = 1) OR ";
@@ -526,7 +524,7 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
-                    int id_process = ResettleProcessesDataModel.Insert(resettleProcess);
+                    var id_process = ResettleProcessesDataModel.Insert(resettleProcess);
                     if (id_process == -1)
                     {
                         resettle_processes.EditingNewRecord = false;
@@ -539,7 +537,7 @@ namespace Registry.Viewport
                         newRow = (DataRowView)v_resettle_processes.AddNew();
                     else
                         newRow = ((DataRowView)v_resettle_processes[v_resettle_processes.Position]);
-                    Filter += String.Format(CultureInfo.CurrentCulture, "(id_process = {0})", resettleProcess.IdProcess);
+                    Filter += string.Format(CultureInfo.CurrentCulture, "(id_process = {0})", resettleProcess.IdProcess);
                     v_resettle_processes.Filter += Filter;
                     FillRowFromResettleProcess(resettleProcess, newRow);
                     resettle_processes.EditingNewRecord = false;
@@ -554,9 +552,9 @@ namespace Registry.Viewport
                     }
                     if (ResettleProcessesDataModel.Update(resettleProcess) == -1)
                         return;
-                    DataRowView row = ((DataRowView)v_resettle_processes[v_resettle_processes.Position]);
+                    var row = ((DataRowView)v_resettle_processes[v_resettle_processes.Position]);
                     is_editable = false;
-                    Filter += String.Format(CultureInfo.CurrentCulture, "(id_process = {0})", resettleProcess.IdProcess);
+                    Filter += string.Format(CultureInfo.CurrentCulture, "(id_process = {0})", resettleProcess.IdProcess);
                     v_resettle_processes.Filter += Filter;
                     FillRowFromResettleProcess(resettleProcess, row);
                     break;
@@ -611,15 +609,15 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            ResettleProcessListViewport viewport = new ResettleProcessListViewport(this, MenuCallback);
+            var viewport = new ResettleProcessListViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             if (v_resettle_processes.Count > 0)
-                viewport.LocateResettleProcessBy((((DataRowView)v_resettle_processes[v_resettle_processes.Position])["id_process"] as Int32?) ?? -1);
+                viewport.LocateResettleProcessBy((((DataRowView)v_resettle_processes[v_resettle_processes.Position])["id_process"] as int?) ?? -1);
             return viewport;
         }
 
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
             if (e == null)
                 return;
@@ -627,8 +625,8 @@ namespace Registry.Viewport
                 e.Cancel = true;
             else
             {
-                resettle_processes.Select().RowChanged -= new DataRowChangeEventHandler(ResettleProcessListViewport_RowChanged);
-                resettle_processes.Select().RowDeleted -= new DataRowChangeEventHandler(ResettleProcessListViewport_RowDeleted);
+                resettle_processes.Select().RowChanged -= ResettleProcessListViewport_RowChanged;
+                resettle_processes.Select().RowDeleted -= ResettleProcessListViewport_RowDeleted;
             }
             base.OnClosing(e);
         }
@@ -637,9 +635,9 @@ namespace Registry.Viewport
         {
             if (viewportState == ViewportState.NewRowState)
                 resettle_processes.EditingNewRecord = false;
-            resettle_processes.Select().RowChanged -= new DataRowChangeEventHandler(ResettleProcessListViewport_RowChanged);
-            resettle_processes.Select().RowDeleted -= new DataRowChangeEventHandler(ResettleProcessListViewport_RowDeleted);
-            base.Close();
+            resettle_processes.Select().RowChanged -= ResettleProcessListViewport_RowChanged;
+            resettle_processes.Select().RowDeleted -= ResettleProcessListViewport_RowDeleted;
+            Close();
         }
 
         public override bool HasAssocResettlePersons()
@@ -710,7 +708,7 @@ namespace Registry.Viewport
             }
             if (MenuCallback == null)
                 throw new ViewportException("Не заданна ссылка на интерфейс menuCallback");
-            Viewport viewport = ViewportFactory.CreateViewport(MenuCallback, viewportType);
+            var viewport = ViewportFactory.CreateViewport(MenuCallback, viewportType);
             viewport.StaticFilter = "id_process = " + Convert.ToInt32(((DataRowView)v_resettle_processes[v_resettle_processes.Position])["id_process"], 
                 CultureInfo.InvariantCulture);
             viewport.ParentRow = ((DataRowView)v_resettle_processes[v_resettle_processes.Position]).Row;
@@ -817,7 +815,7 @@ namespace Registry.Viewport
         void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (v_resettle_processes.Count <= e.RowIndex) return;
-            switch (this.dataGridView.Columns[e.ColumnIndex].Name)
+            switch (dataGridView.Columns[e.ColumnIndex].Name)
             {
                 case "id_process":
                     e.Value = ((DataRowView)v_resettle_processes[e.RowIndex])["id_process"];
@@ -827,7 +825,7 @@ namespace Registry.Viewport
                         ((DateTime)((DataRowView)v_resettle_processes[e.RowIndex])["resettle_date"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                     break;
                 case "resettle_persons":
-                    int row_index = v_resettle_aggregate.Find("id_process", ((DataRowView)v_resettle_processes[e.RowIndex])["id_process"]);
+                    var row_index = v_resettle_aggregate.Find("id_process", ((DataRowView)v_resettle_processes[e.RowIndex])["id_process"]);
                     if (row_index != -1)
                         e.Value = ((DataRowView)v_resettle_aggregate[row_index])["resettlers"];
                     break;
@@ -882,249 +880,244 @@ namespace Registry.Viewport
 
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ResettleProcessListViewport));
-            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
-            this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.id_process = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.resettle_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.resettle_persons = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.address_from = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.address_to = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.groupBox15 = new System.Windows.Forms.GroupBox();
-            this.textBoxDescription = new System.Windows.Forms.TextBox();
-            this.groupBox14 = new System.Windows.Forms.GroupBox();
-            this.numericUpDownDebts = new System.Windows.Forms.NumericUpDown();
-            this.dateTimePickerResettleDate = new System.Windows.Forms.DateTimePicker();
-            this.label37 = new System.Windows.Forms.Label();
-            this.label36 = new System.Windows.Forms.Label();
-            this.comboBoxDocumentResidence = new System.Windows.Forms.ComboBox();
-            this.label35 = new System.Windows.Forms.Label();
-            this.tableLayoutPanel6.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
-            this.groupBox15.SuspendLayout();
-            this.groupBox14.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDebts)).BeginInit();
-            this.SuspendLayout();
+            var resources = new ComponentResourceManager(typeof(ResettleProcessListViewport));
+            tableLayoutPanel6 = new TableLayoutPanel();
+            dataGridView = new DataGridView();
+            id_process = new DataGridViewTextBoxColumn();
+            resettle_date = new DataGridViewTextBoxColumn();
+            resettle_persons = new DataGridViewTextBoxColumn();
+            address_from = new DataGridViewTextBoxColumn();
+            address_to = new DataGridViewTextBoxColumn();
+            groupBox15 = new GroupBox();
+            textBoxDescription = new TextBox();
+            groupBox14 = new GroupBox();
+            numericUpDownDebts = new NumericUpDown();
+            dateTimePickerResettleDate = new DateTimePicker();
+            label37 = new Label();
+            label36 = new Label();
+            comboBoxDocumentResidence = new ComboBox();
+            label35 = new Label();
+            tableLayoutPanel6.SuspendLayout();
+            ((ISupportInitialize)(dataGridView)).BeginInit();
+            groupBox15.SuspendLayout();
+            groupBox14.SuspendLayout();
+            ((ISupportInitialize)(numericUpDownDebts)).BeginInit();
+            SuspendLayout();
             // 
             // tableLayoutPanel6
             // 
-            this.tableLayoutPanel6.ColumnCount = 2;
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel6.Controls.Add(this.dataGridView, 0, 1);
-            this.tableLayoutPanel6.Controls.Add(this.groupBox15, 1, 0);
-            this.tableLayoutPanel6.Controls.Add(this.groupBox14, 0, 0);
-            this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
-            this.tableLayoutPanel6.RowCount = 2;
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 116F));
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(708, 336);
-            this.tableLayoutPanel6.TabIndex = 0;
+            tableLayoutPanel6.ColumnCount = 2;
+            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel6.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel6.Controls.Add(dataGridView, 0, 1);
+            tableLayoutPanel6.Controls.Add(groupBox15, 1, 0);
+            tableLayoutPanel6.Controls.Add(groupBox14, 0, 0);
+            tableLayoutPanel6.Dock = DockStyle.Fill;
+            tableLayoutPanel6.Location = new Point(3, 3);
+            tableLayoutPanel6.Name = "tableLayoutPanel6";
+            tableLayoutPanel6.RowCount = 2;
+            tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Absolute, 116F));
+            tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel6.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            tableLayoutPanel6.Size = new Size(708, 336);
+            tableLayoutPanel6.TabIndex = 0;
             // 
             // dataGridView
             // 
-            this.dataGridView.AllowUserToAddRows = false;
-            this.dataGridView.AllowUserToDeleteRows = false;
-            this.dataGridView.AllowUserToResizeRows = false;
-            this.dataGridView.BackgroundColor = System.Drawing.Color.White;
-            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.id_process,
-            this.resettle_date,
-            this.resettle_persons,
-            this.address_from,
-            this.address_to});
-            this.tableLayoutPanel6.SetColumnSpan(this.dataGridView, 2);
-            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dataGridView.Location = new System.Drawing.Point(3, 119);
-            this.dataGridView.MultiSelect = false;
-            this.dataGridView.Name = "dataGridView";
-            this.dataGridView.ReadOnly = true;
-            this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.ShowCellToolTips = false;
-            this.dataGridView.Size = new System.Drawing.Size(702, 214);
-            this.dataGridView.TabIndex = 0;
-            this.dataGridView.VirtualMode = true;
-            this.dataGridView.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView_CellValueNeeded);
-            this.dataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_ColumnHeaderMouseClick);
-            this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView_DataError);
-            this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
+            dataGridView.AllowUserToAddRows = false;
+            dataGridView.AllowUserToDeleteRows = false;
+            dataGridView.AllowUserToResizeRows = false;
+            dataGridView.BackgroundColor = Color.White;
+            dataGridView.BorderStyle = BorderStyle.None;
+            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView.Columns.AddRange(id_process, resettle_date, resettle_persons, address_from, address_to);
+            tableLayoutPanel6.SetColumnSpan(dataGridView, 2);
+            dataGridView.Dock = DockStyle.Fill;
+            dataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
+            dataGridView.Location = new Point(3, 119);
+            dataGridView.MultiSelect = false;
+            dataGridView.Name = "dataGridView";
+            dataGridView.ReadOnly = true;
+            dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView.ShowCellToolTips = false;
+            dataGridView.Size = new Size(702, 214);
+            dataGridView.TabIndex = 0;
+            dataGridView.VirtualMode = true;
+            dataGridView.CellValueNeeded += dataGridView_CellValueNeeded;
+            dataGridView.ColumnHeaderMouseClick += dataGridView_ColumnHeaderMouseClick;
+            dataGridView.DataError += dataGridView_DataError;
+            dataGridView.SelectionChanged += dataGridView_SelectionChanged;
             // 
             // id_process
             // 
-            this.id_process.HeaderText = "№";
-            this.id_process.MinimumWidth = 100;
-            this.id_process.Name = "id_process";
-            this.id_process.ReadOnly = true;
+            id_process.HeaderText = "№";
+            id_process.MinimumWidth = 100;
+            id_process.Name = "id_process";
+            id_process.ReadOnly = true;
             // 
             // resettle_date
             // 
-            this.resettle_date.HeaderText = "Дата переселения";
-            this.resettle_date.MinimumWidth = 150;
-            this.resettle_date.Name = "resettle_date";
-            this.resettle_date.ReadOnly = true;
-            this.resettle_date.Width = 150;
+            resettle_date.HeaderText = "Дата переселения";
+            resettle_date.MinimumWidth = 150;
+            resettle_date.Name = "resettle_date";
+            resettle_date.ReadOnly = true;
+            resettle_date.Width = 150;
             // 
             // resettle_persons
             // 
-            this.resettle_persons.HeaderText = "Участники";
-            this.resettle_persons.MinimumWidth = 250;
-            this.resettle_persons.Name = "resettle_persons";
-            this.resettle_persons.ReadOnly = true;
-            this.resettle_persons.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.resettle_persons.Width = 250;
+            resettle_persons.HeaderText = "Участники";
+            resettle_persons.MinimumWidth = 250;
+            resettle_persons.Name = "resettle_persons";
+            resettle_persons.ReadOnly = true;
+            resettle_persons.SortMode = DataGridViewColumnSortMode.NotSortable;
+            resettle_persons.Width = 250;
             // 
             // address_from
             // 
-            this.address_from.HeaderText = "Адрес (откуда)";
-            this.address_from.MinimumWidth = 500;
-            this.address_from.Name = "address_from";
-            this.address_from.ReadOnly = true;
-            this.address_from.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.address_from.Width = 500;
+            address_from.HeaderText = "Адрес (откуда)";
+            address_from.MinimumWidth = 500;
+            address_from.Name = "address_from";
+            address_from.ReadOnly = true;
+            address_from.SortMode = DataGridViewColumnSortMode.NotSortable;
+            address_from.Width = 500;
             // 
             // address_to
             // 
-            this.address_to.HeaderText = "Адрес (куда)";
-            this.address_to.MinimumWidth = 500;
-            this.address_to.Name = "address_to";
-            this.address_to.ReadOnly = true;
-            this.address_to.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.address_to.Width = 500;
+            address_to.HeaderText = "Адрес (куда)";
+            address_to.MinimumWidth = 500;
+            address_to.Name = "address_to";
+            address_to.ReadOnly = true;
+            address_to.SortMode = DataGridViewColumnSortMode.NotSortable;
+            address_to.Width = 500;
             // 
             // groupBox15
             // 
-            this.groupBox15.Controls.Add(this.textBoxDescription);
-            this.groupBox15.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox15.Location = new System.Drawing.Point(357, 3);
-            this.groupBox15.Name = "groupBox15";
-            this.groupBox15.Size = new System.Drawing.Size(348, 110);
-            this.groupBox15.TabIndex = 2;
-            this.groupBox15.TabStop = false;
-            this.groupBox15.Text = "Дополнительные сведения";
+            groupBox15.Controls.Add(textBoxDescription);
+            groupBox15.Dock = DockStyle.Fill;
+            groupBox15.Location = new Point(357, 3);
+            groupBox15.Name = "groupBox15";
+            groupBox15.Size = new Size(348, 110);
+            groupBox15.TabIndex = 2;
+            groupBox15.TabStop = false;
+            groupBox15.Text = "Дополнительные сведения";
             // 
             // textBoxDescription
             // 
-            this.textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxDescription.Location = new System.Drawing.Point(3, 17);
-            this.textBoxDescription.MaxLength = 4000;
-            this.textBoxDescription.Multiline = true;
-            this.textBoxDescription.Name = "textBoxDescription";
-            this.textBoxDescription.Size = new System.Drawing.Size(342, 90);
-            this.textBoxDescription.TabIndex = 0;
-            this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxDescription_TextChanged);
-            this.textBoxDescription.Enter += new System.EventHandler(this.selectAll_Enter);
+            textBoxDescription.Dock = DockStyle.Fill;
+            textBoxDescription.Location = new Point(3, 17);
+            textBoxDescription.MaxLength = 4000;
+            textBoxDescription.Multiline = true;
+            textBoxDescription.Name = "textBoxDescription";
+            textBoxDescription.Size = new Size(342, 90);
+            textBoxDescription.TabIndex = 0;
+            textBoxDescription.TextChanged += textBoxDescription_TextChanged;
+            textBoxDescription.Enter += selectAll_Enter;
             // 
             // groupBox14
             // 
-            this.groupBox14.Controls.Add(this.numericUpDownDebts);
-            this.groupBox14.Controls.Add(this.dateTimePickerResettleDate);
-            this.groupBox14.Controls.Add(this.label37);
-            this.groupBox14.Controls.Add(this.label36);
-            this.groupBox14.Controls.Add(this.comboBoxDocumentResidence);
-            this.groupBox14.Controls.Add(this.label35);
-            this.groupBox14.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox14.Location = new System.Drawing.Point(3, 3);
-            this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(348, 110);
-            this.groupBox14.TabIndex = 1;
-            this.groupBox14.TabStop = false;
-            this.groupBox14.Text = "Общие сведения";
+            groupBox14.Controls.Add(numericUpDownDebts);
+            groupBox14.Controls.Add(dateTimePickerResettleDate);
+            groupBox14.Controls.Add(label37);
+            groupBox14.Controls.Add(label36);
+            groupBox14.Controls.Add(comboBoxDocumentResidence);
+            groupBox14.Controls.Add(label35);
+            groupBox14.Dock = DockStyle.Fill;
+            groupBox14.Location = new Point(3, 3);
+            groupBox14.Name = "groupBox14";
+            groupBox14.Size = new Size(348, 110);
+            groupBox14.TabIndex = 1;
+            groupBox14.TabStop = false;
+            groupBox14.Text = "Общие сведения";
             // 
             // numericUpDownDebts
             // 
-            this.numericUpDownDebts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownDebts.DecimalPlaces = 2;
-            this.numericUpDownDebts.Location = new System.Drawing.Point(161, 51);
-            this.numericUpDownDebts.Maximum = new decimal(new int[] {
+            numericUpDownDebts.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                        | AnchorStyles.Right;
+            numericUpDownDebts.DecimalPlaces = 2;
+            numericUpDownDebts.Location = new Point(161, 51);
+            numericUpDownDebts.Maximum = new decimal(new[] {
             1410065407,
             2,
             0,
             0});
-            this.numericUpDownDebts.Name = "numericUpDownDebts";
-            this.numericUpDownDebts.Size = new System.Drawing.Size(181, 21);
-            this.numericUpDownDebts.TabIndex = 1;
-            this.numericUpDownDebts.ThousandsSeparator = true;
-            this.numericUpDownDebts.ValueChanged += new System.EventHandler(this.numericUpDownDebts_ValueChanged);
-            this.numericUpDownDebts.Enter += new System.EventHandler(this.selectAll_Enter);
+            numericUpDownDebts.Name = "numericUpDownDebts";
+            numericUpDownDebts.Size = new Size(181, 21);
+            numericUpDownDebts.TabIndex = 1;
+            numericUpDownDebts.ThousandsSeparator = true;
+            numericUpDownDebts.ValueChanged += numericUpDownDebts_ValueChanged;
+            numericUpDownDebts.Enter += selectAll_Enter;
             // 
             // dateTimePickerResettleDate
             // 
-            this.dateTimePickerResettleDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerResettleDate.Location = new System.Drawing.Point(161, 80);
-            this.dateTimePickerResettleDate.Name = "dateTimePickerResettleDate";
-            this.dateTimePickerResettleDate.ShowCheckBox = true;
-            this.dateTimePickerResettleDate.Size = new System.Drawing.Size(181, 21);
-            this.dateTimePickerResettleDate.TabIndex = 2;
-            this.dateTimePickerResettleDate.ValueChanged += new System.EventHandler(this.dateTimePickerResettleDate_ValueChanged);
+            dateTimePickerResettleDate.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                                | AnchorStyles.Right;
+            dateTimePickerResettleDate.Location = new Point(161, 80);
+            dateTimePickerResettleDate.Name = "dateTimePickerResettleDate";
+            dateTimePickerResettleDate.ShowCheckBox = true;
+            dateTimePickerResettleDate.Size = new Size(181, 21);
+            dateTimePickerResettleDate.TabIndex = 2;
+            dateTimePickerResettleDate.ValueChanged += dateTimePickerResettleDate_ValueChanged;
             // 
             // label37
             // 
-            this.label37.AutoSize = true;
-            this.label37.Location = new System.Drawing.Point(14, 82);
-            this.label37.Name = "label37";
-            this.label37.Size = new System.Drawing.Size(116, 15);
-            this.label37.TabIndex = 3;
-            this.label37.Text = "Дата переселения";
+            label37.AutoSize = true;
+            label37.Location = new Point(14, 82);
+            label37.Name = "label37";
+            label37.Size = new Size(116, 15);
+            label37.TabIndex = 3;
+            label37.Text = "Дата переселения";
             // 
             // label36
             // 
-            this.label36.AutoSize = true;
-            this.label36.Location = new System.Drawing.Point(14, 54);
-            this.label36.Name = "label36";
-            this.label36.Size = new System.Drawing.Size(86, 15);
-            this.label36.TabIndex = 4;
-            this.label36.Text = "Задолжность";
+            label36.AutoSize = true;
+            label36.Location = new Point(14, 54);
+            label36.Name = "label36";
+            label36.Size = new Size(86, 15);
+            label36.TabIndex = 4;
+            label36.Text = "Задолжность";
             // 
             // comboBoxDocumentResidence
             // 
-            this.comboBoxDocumentResidence.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxDocumentResidence.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxDocumentResidence.FormattingEnabled = true;
-            this.comboBoxDocumentResidence.Location = new System.Drawing.Point(161, 22);
-            this.comboBoxDocumentResidence.Name = "comboBoxDocumentResidence";
-            this.comboBoxDocumentResidence.Size = new System.Drawing.Size(181, 23);
-            this.comboBoxDocumentResidence.TabIndex = 0;
-            this.comboBoxDocumentResidence.SelectedValueChanged += new System.EventHandler(this.comboBoxDocumentResidence_SelectedValueChanged);
+            comboBoxDocumentResidence.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                               | AnchorStyles.Right;
+            comboBoxDocumentResidence.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBoxDocumentResidence.FormattingEnabled = true;
+            comboBoxDocumentResidence.Location = new Point(161, 22);
+            comboBoxDocumentResidence.Name = "comboBoxDocumentResidence";
+            comboBoxDocumentResidence.Size = new Size(181, 23);
+            comboBoxDocumentResidence.TabIndex = 0;
+            comboBoxDocumentResidence.SelectedValueChanged += comboBoxDocumentResidence_SelectedValueChanged;
             // 
             // label35
             // 
-            this.label35.AutoSize = true;
-            this.label35.Location = new System.Drawing.Point(14, 25);
-            this.label35.Name = "label35";
-            this.label35.Size = new System.Drawing.Size(146, 15);
-            this.label35.TabIndex = 5;
-            this.label35.Text = "Основание проживания";
+            label35.AutoSize = true;
+            label35.Location = new Point(14, 25);
+            label35.Name = "label35";
+            label35.Size = new Size(146, 15);
+            label35.TabIndex = 5;
+            label35.Text = "Основание проживания";
             // 
             // ResettleProcessListViewport
             // 
-            this.AutoScroll = true;
-            this.AutoScrollMinSize = new System.Drawing.Size(640, 320);
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(714, 342);
-            this.Controls.Add(this.tableLayoutPanel6);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "ResettleProcessListViewport";
-            this.Padding = new System.Windows.Forms.Padding(3);
-            this.Text = "Процесс переселения №{0}";
-            this.tableLayoutPanel6.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
-            this.groupBox15.ResumeLayout(false);
-            this.groupBox15.PerformLayout();
-            this.groupBox14.ResumeLayout(false);
-            this.groupBox14.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownDebts)).EndInit();
-            this.ResumeLayout(false);
+            AutoScroll = true;
+            AutoScrollMinSize = new Size(640, 320);
+            BackColor = Color.White;
+            ClientSize = new Size(714, 342);
+            Controls.Add(tableLayoutPanel6);
+            Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            Icon = ((Icon)(resources.GetObject("$this.Icon")));
+            Name = "ResettleProcessListViewport";
+            Padding = new Padding(3);
+            Text = "Процесс переселения №{0}";
+            tableLayoutPanel6.ResumeLayout(false);
+            ((ISupportInitialize)(dataGridView)).EndInit();
+            groupBox15.ResumeLayout(false);
+            groupBox15.PerformLayout();
+            groupBox14.ResumeLayout(false);
+            groupBox14.PerformLayout();
+            ((ISupportInitialize)(numericUpDownDebts)).EndInit();
+            ResumeLayout(false);
 
         }
 

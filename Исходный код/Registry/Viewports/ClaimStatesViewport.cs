@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Registry.DataModels;
-using System.Data;
 using Registry.Entities;
-using System.Drawing;
 using Security;
-using System.Globalization;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
@@ -40,21 +41,20 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        ClaimStatesDataModel claim_states = null;
-        ClaimStateTypesDataModel claim_state_types = null;
-        ClaimStateTypesRelationsDataModel claim_state_types_relations = null;
+        ClaimStatesDataModel claim_states;
+        ClaimStateTypesDataModel claim_state_types;
+        ClaimStateTypesRelationsDataModel claim_state_types_relations;
         #endregion Models
 
         #region Views
-        BindingSource v_claim_states = null;
-        BindingSource v_claim_state_types = null;
-        BindingSource v_claim_state_types_for_grid = null;
-        BindingSource v_claim_state_types_relations = null;
+        BindingSource v_claim_states;
+        BindingSource v_claim_state_types;
+        BindingSource v_claim_state_types_for_grid;
         #endregion Views
 
         //State
         private ViewportState viewportState = ViewportState.ReadState;
-        private bool is_editable = false;
+        private bool is_editable;
 
         private ClaimStatesViewport()
             : this(null)
@@ -68,74 +68,74 @@ namespace Registry.Viewport
             InitializeComponent();
         }
 
-        public ClaimStatesViewport(ClaimStatesViewport claimStatesViewport, IMenuCallback menuCallback)
+        public ClaimStatesViewport(Viewport claimStatesViewport, IMenuCallback menuCallback)
             : this(menuCallback)
         {
-            this.DynamicFilter = claimStatesViewport.DynamicFilter;
-            this.StaticFilter = claimStatesViewport.StaticFilter;
-            this.ParentRow = claimStatesViewport.ParentRow;
-            this.ParentType = claimStatesViewport.ParentType;
+            DynamicFilter = claimStatesViewport.DynamicFilter;
+            StaticFilter = claimStatesViewport.StaticFilter;
+            ParentRow = claimStatesViewport.ParentRow;
+            ParentType = claimStatesViewport.ParentType;
         }
 
         private void RebuildFilter()
         {
-            string filter = "";
-            IEnumerable<int> included_states = null;
+            var filter = "";
+            IEnumerable<int> includedStates = null;
             // Если текущая позиция - первый элемент, и количество элементов 1 то он может иметь только начальное состояние (любое)
             if ((v_claim_states.Position == 0) && (v_claim_states.Count == 1))
-                included_states = DataModelHelper.ClaimStartStateTypeIds();
+                includedStates = DataModelHelper.ClaimStartStateTypeIds();
             else
             // Если текущая позиция - первый элемент, и количество элементов 1 то он может иметь только начальное состояние 
             // (не противоречащее следующей позиции)
             if ((v_claim_states.Position == 0) && (v_claim_states.Count > 1))
             {
-                int next_claim_state_type = Convert.ToInt32(
+                var nextClaimStateType = Convert.ToInt32(
                     ((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.InvariantCulture);
-                included_states = DataModelHelper.ClaimStateTypeIdsByNextStateType(next_claim_state_type);
+                includedStates = DataModelHelper.ClaimStateTypeIdsByNextStateType(nextClaimStateType);
             }
             else
             // Если текущая позиция - последний элемент, то выбрать состояние, в которое можно перейти из состояния предыдущего элемента
             if ((v_claim_states.Position != -1) && (v_claim_states.Position == (v_claim_states.Count - 1)))
             {
-                int prev_claim_state_type = Convert.ToInt32(
+                var prevClaimStateType = Convert.ToInt32(
                     ((DataRowView)v_claim_states[v_claim_states.Position - 1])["id_state_type"], CultureInfo.InvariantCulture);
-                included_states = DataModelHelper.ClaimStateTypeIdsByPrevStateType(prev_claim_state_type);
+                includedStates = DataModelHelper.ClaimStateTypeIdsByPrevStateType(prevClaimStateType);
             }
             else
             // Мы находимся не в конце списка и не в начале и необходимо выбрать только те состояния, в которые можно перейти с учетом окружающих состояний
             if (v_claim_states.Position != -1)
             {
-                int prev_claim_state_type = 
+                var prevClaimStateType = 
                     Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position - 1])["id_state_type"], CultureInfo.InvariantCulture);
-                int next_claim_state_type = 
+                var nextClaimStateType = 
                     Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.InvariantCulture);
-                included_states = DataModelHelper.ClaimStateTypeIdsByNextAndPrevStateTypes(next_claim_state_type, prev_claim_state_type); 
+                includedStates = DataModelHelper.ClaimStateTypeIdsByNextAndPrevStateTypes(nextClaimStateType, prevClaimStateType); 
             }
-            if (included_states != null)
+            if (includedStates != null)
             {
-                if (!String.IsNullOrEmpty(filter.Trim()))
+                if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 filter += "id_state_type IN (0";
-                foreach (int id in included_states)
+                foreach (var id in includedStates)
                     filter += id.ToString(CultureInfo.InvariantCulture) + ",";
-                filter = filter.TrimEnd(new char[] { ',' }) + ")";
+                filter = filter.TrimEnd(',') + ")";
             }
             v_claim_state_types.Filter = filter;
             //Делаем перепривязку ComboboxStateType
             if (v_claim_states.Position != -1)
             {
-                object id_state_type = ((DataRowView)v_claim_states[v_claim_states.Position])["id_state_type"];
+                var idStateType = ((DataRowView)v_claim_states[v_claim_states.Position])["id_state_type"];
                 // Состояние существует, но его возможные тип определить не удалось из-за изменений в ветке зависимостей типов состояний
-                if ((v_claim_state_types.Find("id_state_type", id_state_type) == -1) && (viewportState != ViewportState.NewRowState))
+                if ((v_claim_state_types.Find("id_state_type", idStateType) == -1) && (viewportState != ViewportState.NewRowState))
                 {
                     label109.ForeColor = Color.Red;
-                    label109.Text = "Вид состояния (ошибка)";
+                    label109.Text = @"Вид состояния (ошибка)";
                     v_claim_state_types.Filter = "";
                 }
                 else
                 {
                     label109.ForeColor = SystemColors.WindowText;
-                    label109.Text = "Вид состояния";
+                    label109.Text = @"Вид состояния";
                 }
                 comboBoxClaimStateType.SelectedValue = ((DataRowView)v_claim_states[v_claim_states.Position])["id_state_type"];
             }
@@ -172,15 +172,15 @@ namespace Registry.Viewport
 
         private void UnbindedCheckBoxesUpdate()
         {
-            DataRowView row = (v_claim_states.Position >= 0) ? (DataRowView)v_claim_states[v_claim_states.Position] : null;
-            if ((v_claim_states.Position >= 0) && (row["document_date"] != DBNull.Value))
+            var row = (v_claim_states.Position >= 0) ? (DataRowView)v_claim_states[v_claim_states.Position] : null;
+            if (row != null && ((v_claim_states.Position >= 0) && (row["document_date"] != DBNull.Value)))
                 dateTimePickerDocDate.Checked = true;
             else
             {
                 dateTimePickerDocDate.Value = DateTime.Now.Date;
                 dateTimePickerDocDate.Checked = false;
             }
-            if ((v_claim_states.Position >= 0) && (row["date_start_state"] != DBNull.Value))
+            if (row != null && ((v_claim_states.Position >= 0) && (row["date_start_state"] != DBNull.Value)))
                 dateTimePickerStartState.Checked = true;
             else
             {
@@ -188,7 +188,7 @@ namespace Registry.Viewport
                 dateTimePickerStartState.Checked = false;
             }
 
-            if ((v_claim_states.Position >= 0) && (row["date_end_state"] != DBNull.Value))
+            if (row != null && ((v_claim_states.Position >= 0) && (row["date_end_state"] != DBNull.Value)))
                 dateTimePickerEndState.Checked = true;
             else
             {
@@ -201,7 +201,7 @@ namespace Registry.Viewport
         {
             if (!is_editable)
                 return;
-            if ((!this.ContainsFocus) || (dataGridView.Focused))
+            if ((!ContainsFocus) || (dataGridView.Focused))
                 return;
             if ((v_claim_states.Position != -1) && (ClaimStateFromView() != ClaimStateFromViewport()))
             {
@@ -239,18 +239,20 @@ namespace Registry.Viewport
                             return true;
                         case ViewportState.NewRowState:
                         case ViewportState.ModifyRowState:
-                            DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
+                            var result = MessageBox.Show(@"Сохранить изменения в базу данных?", @"Внимание",
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                            if (result == DialogResult.Yes)
-                                SaveRecord();
-                            else
-                                if (result == DialogResult.No)
+                            switch (result)
+                            {
+                                case DialogResult.Yes:
+                                    SaveRecord();
+                                    break;
+                                case DialogResult.No:
                                     CancelRecord();
-                                else return false;
-                            if (viewportState == ViewportState.ReadState)
-                                return true;
-                            else
-                                return false;
+                                    break;
+                                default:
+                                    return false;
+                            }
+                            return viewportState == ViewportState.ReadState;
                     }
                     break;
                 case ViewportState.NewRowState:
@@ -259,30 +261,28 @@ namespace Registry.Viewport
                         case ViewportState.ReadState:
                             if (claim_states.EditingNewRecord)
                                 return false;
-                            else
-                            {
-                                viewportState = ViewportState.NewRowState;
-                                return true;
-                            }
+                            viewportState = ViewportState.NewRowState;
+                            return true;
                         case ViewportState.NewRowState:
                             return true;
                         case ViewportState.ModifyRowState:
-                            DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
+                            var result = MessageBox.Show(@"Сохранить изменения в базу данных?", @"Внимание",
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                            if (result == DialogResult.Yes)
-                                SaveRecord();
-                            else
-                                if (result == DialogResult.No)
+                            switch (result)
+                            {
+                                case DialogResult.Yes:
+                                    SaveRecord();
+                                    break;
+                                case DialogResult.No:
                                     CancelRecord();
-                                else
+                                    break;
+                                default:
                                     return false;
-                            if (viewportState == ViewportState.ReadState)
-                                return ChangeViewportStateTo(ViewportState.NewRowState);
-                            else
-                                return false;
+                            }
+                            return viewportState == ViewportState.ReadState && ChangeViewportStateTo(ViewportState.NewRowState);
                     }
                     break;
-                case ViewportState.ModifyRowState: ;
+                case ViewportState.ModifyRowState: 
                     switch (viewportState)
                     {
                         case ViewportState.ReadState:
@@ -291,19 +291,20 @@ namespace Registry.Viewport
                         case ViewportState.ModifyRowState:
                             return true;
                         case ViewportState.NewRowState:
-                            DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
+                            var result = MessageBox.Show(@"Сохранить изменения в базу данных?", @"Внимание",
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                            if (result == DialogResult.Yes)
-                                SaveRecord();
-                            else
-                                if (result == DialogResult.No)
+                            switch (result)
+                            {
+                                case DialogResult.Yes:
+                                    SaveRecord();
+                                    break;
+                                case DialogResult.No:
                                     CancelRecord();
-                                else
+                                    break;
+                                default:
                                     return false;
-                            if (viewportState == ViewportState.ReadState)
-                                return ChangeViewportStateTo(ViewportState.ModifyRowState);
-                            else
-                                return false;
+                            }
+                            return viewportState == ViewportState.ReadState && ChangeViewportStateTo(ViewportState.ModifyRowState);
                     }
                     break;
             }
@@ -312,10 +313,10 @@ namespace Registry.Viewport
 
         private void LocateClaimStateBy(int id)
         {
-            int Position = v_claim_states.Find("id_state", id);
+            var position = v_claim_states.Find("id_state", id);
             is_editable = false;
-            if (Position > 0)
-                v_claim_states.Position = Position;
+            if (position > 0)
+                v_claim_states.Position = position;
             is_editable = true;
         }
 
@@ -323,7 +324,7 @@ namespace Registry.Viewport
         {
             if (claimState.IdStateType == null)
             {
-                MessageBox.Show("Необходимо выбрать тип состояния претензионно-исковой работы", "Ошибка",
+                MessageBox.Show(@"Необходимо выбрать тип состояния претензионно-исковой работы", @"Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
@@ -356,33 +357,38 @@ namespace Registry.Viewport
 
         private ClaimState ClaimStateFromViewport()
         {
-            ClaimState claimState = new ClaimState();
-            if (v_claim_states.Position == -1)
-                claimState.IdState = null;
-            else
-                claimState.IdState = ViewportHelper.ValueOrNull<int>((DataRowView)v_claim_states[v_claim_states.Position], "id_state");
-            claimState.IdStateType = ViewportHelper.ValueOrNull<int>(comboBoxClaimStateType);
-            claimState.IdClaim = ViewportHelper.ValueOrNull<int>(ParentRow, "id_claim");
-            claimState.DocumentNum = ViewportHelper.ValueOrNull(textBoxDocumentNumber);
-            claimState.Description = ViewportHelper.ValueOrNull(textBoxDescription);
-            claimState.DateStartState = ViewportHelper.ValueOrNull(dateTimePickerStartState);
-            claimState.DateEndState = ViewportHelper.ValueOrNull(dateTimePickerEndState);
-            claimState.DocumentDate = ViewportHelper.ValueOrNull(dateTimePickerDocDate);
+            var claimState = new ClaimState
+            {
+                IdState =
+                    v_claim_states.Position == -1
+                        ? null
+                        : ViewportHelper.ValueOrNull<int>((DataRowView) v_claim_states[v_claim_states.Position],
+                            "id_state"),
+                IdStateType = ViewportHelper.ValueOrNull<int>(comboBoxClaimStateType),
+                IdClaim = ViewportHelper.ValueOrNull<int>(ParentRow, "id_claim"),
+                DocumentNum = ViewportHelper.ValueOrNull(textBoxDocumentNumber),
+                Description = ViewportHelper.ValueOrNull(textBoxDescription),
+                DateStartState = ViewportHelper.ValueOrNull(dateTimePickerStartState),
+                DateEndState = ViewportHelper.ValueOrNull(dateTimePickerEndState),
+                DocumentDate = ViewportHelper.ValueOrNull(dateTimePickerDocDate)
+            };
             return claimState;
         }
 
         private ClaimState ClaimStateFromView()
         {
-            ClaimState claimState = new ClaimState();
-            DataRowView row = (DataRowView)v_claim_states[v_claim_states.Position];
-            claimState.IdState = ViewportHelper.ValueOrNull<int>(row, "id_state");
-            claimState.IdStateType = ViewportHelper.ValueOrNull<int>(row, "id_state_type");
-            claimState.IdClaim = ViewportHelper.ValueOrNull<int>(row, "id_claim");
-            claimState.DocumentNum = ViewportHelper.ValueOrNull(row, "document_num");
-            claimState.Description = ViewportHelper.ValueOrNull(row, "description");
-            claimState.DateStartState = ViewportHelper.ValueOrNull<DateTime>(row, "date_start_state");
-            claimState.DateEndState = ViewportHelper.ValueOrNull<DateTime>(row, "date_end_state");
-            claimState.DocumentDate = ViewportHelper.ValueOrNull<DateTime>(row, "document_date");
+            var row = (DataRowView)v_claim_states[v_claim_states.Position];
+            var claimState = new ClaimState
+            {
+                IdState = ViewportHelper.ValueOrNull<int>(row, "id_state"),
+                IdStateType = ViewportHelper.ValueOrNull<int>(row, "id_state_type"),
+                IdClaim = ViewportHelper.ValueOrNull<int>(row, "id_claim"),
+                DocumentNum = ViewportHelper.ValueOrNull(row, "document_num"),
+                Description = ViewportHelper.ValueOrNull(row, "description"),
+                DateStartState = ViewportHelper.ValueOrNull<DateTime>(row, "date_start_state"),
+                DateEndState = ViewportHelper.ValueOrNull<DateTime>(row, "date_end_state"),
+                DocumentDate = ViewportHelper.ValueOrNull<DateTime>(row, "document_date")
+            };
             return claimState;
         }
 
@@ -454,7 +460,7 @@ namespace Registry.Viewport
 
         public override void LoadData()
         {
-            this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
+            DockAreas = DockAreas.Document;
             dataGridView.AutoGenerateColumns = false;
             claim_states = ClaimStatesDataModel.GetInstance();
             claim_state_types = ClaimStateTypesDataModel.GetInstance();
@@ -465,39 +471,45 @@ namespace Registry.Viewport
             claim_state_types.Select();
             claim_state_types_relations.Select();
 
-            DataSet ds = DataSetManager.DataSet;
+            var ds = DataSetManager.DataSet;
 
             if (ParentType == ParentTypeEnum.Claim && ParentRow != null)
-                this.Text = String.Format(CultureInfo.InvariantCulture, "Состояния иск. работы №{0}", ParentRow["id_claim"]);
+                Text = string.Format(CultureInfo.InvariantCulture, "Состояния иск. работы №{0}", ParentRow["id_claim"]);
             else
                 throw new ViewportException("Неизвестный тип родительского объекта");
 
-            v_claim_state_types = new BindingSource();
-            v_claim_state_types.DataMember = "claim_state_types";
-            v_claim_state_types.DataSource = ds;
+            v_claim_state_types = new BindingSource
+            {
+                DataMember = "claim_state_types",
+                DataSource = ds
+            };
 
-            v_claim_state_types_for_grid = new BindingSource();
-            v_claim_state_types_for_grid.DataMember = "claim_state_types";
-            v_claim_state_types_for_grid.DataSource = ds;
+            v_claim_state_types_for_grid = new BindingSource
+            {
+                DataMember = "claim_state_types",
+                DataSource = ds
+            };
 
-            v_claim_state_types_relations = new BindingSource();
-            v_claim_state_types_relations.DataMember = "claim_state_types_relations";
-            v_claim_state_types_relations.DataSource = ds;
+            new BindingSource
+            {
+                DataMember = "claim_state_types_relations",
+                DataSource = ds
+            };
 
             v_claim_states = new BindingSource();
-            v_claim_states.CurrentItemChanged += new EventHandler(v_claim_states_CurrentItemChanged);
+            v_claim_states.CurrentItemChanged += v_claim_states_CurrentItemChanged;
             v_claim_states.DataMember = "claim_states";
             v_claim_states.DataSource = ds;
             v_claim_states.Filter = StaticFilter;
 
             DataBind();
 
-            claim_states.Select().RowChanged += new DataRowChangeEventHandler(ClaimStatesViewport_RowChanged);
-            claim_states.Select().RowDeleted += new DataRowChangeEventHandler(ClaimStatesViewport_RowDeleted);
-            claim_state_types.Select().RowChanged += new DataRowChangeEventHandler(ClaimStateTypesViewport_RowChanged);
-            claim_state_types.Select().RowDeleted += new DataRowChangeEventHandler(ClaimStateTypesViewport_RowDeleted);
-            claim_state_types_relations.Select().RowChanged += new DataRowChangeEventHandler(ClaimStateTypesRelationsViewport_RowChanged);
-            claim_state_types_relations.Select().RowDeleted += new DataRowChangeEventHandler(ClaimStateTypesRelationsViewport_RowDeleted);
+            claim_states.Select().RowChanged += ClaimStatesViewport_RowChanged;
+            claim_states.Select().RowDeleted += ClaimStatesViewport_RowDeleted;
+            claim_state_types.Select().RowChanged += ClaimStateTypesViewport_RowChanged;
+            claim_state_types.Select().RowDeleted += ClaimStateTypesViewport_RowDeleted;
+            claim_state_types_relations.Select().RowChanged += ClaimStateTypesRelationsViewport_RowChanged;
+            claim_state_types_relations.Select().RowDeleted += ClaimStateTypesRelationsViewport_RowDeleted;
             is_editable = true;
         }
 
@@ -509,24 +521,24 @@ namespace Registry.Viewport
 
         public override void SaveRecord()
         {
-            ClaimState claimState = ClaimStateFromViewport();
+            var claimState = ClaimStateFromViewport();
             if (!ValidateClaimState(claimState))
                 return;
             switch (viewportState)
             {
                 case ViewportState.ReadState:
-                    MessageBox.Show("Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
+                    MessageBox.Show(@"Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
-                    int id_state = ClaimStatesDataModel.Insert(claimState);
-                    if (id_state == -1)
+                    var idState = ClaimStatesDataModel.Insert(claimState);
+                    if (idState == -1)
                     {
                         claim_states.EditingNewRecord = false;
                         return;
                     }
                     DataRowView newRow;
-                    claimState.IdState = id_state;
+                    claimState.IdState = idState;
                     is_editable = false;
                     if (v_claim_states.Position == -1)
                         newRow = (DataRowView)v_claim_states.AddNew();
@@ -539,13 +551,13 @@ namespace Registry.Viewport
                 case ViewportState.ModifyRowState:
                     if (claimState.IdState == null)
                     {
-                        MessageBox.Show("Вы пытаетесь изменить запись о состоянии претензионно-исковой работы без внутреннего номера. " +
-                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        MessageBox.Show(@"Вы пытаетесь изменить запись о состоянии претензионно-исковой работы без внутреннего номера. " +
+                            @"Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
                     if (ClaimStatesDataModel.Update(claimState) == -1)
                         return;
-                    DataRowView row = ((DataRowView)v_claim_states[v_claim_states.Position]);
+                    var row = ((DataRowView)v_claim_states[v_claim_states.Position]);
                     is_editable = false;
                     FillRowFromClaimState(claimState, row);
                     break;
@@ -568,7 +580,7 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             is_editable = false;
-            ClaimState claimState = ClaimStateFromView();
+            var claimState = ClaimStateFromView();
             v_claim_states.AddNew();
             dataGridView.Enabled = false;
             claim_states.EditingNewRecord = true;
@@ -604,49 +616,48 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            if (MessageBox.Show(@"Вы действительно хотите удалить эту запись?", @"Внимание",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                return;
+            var stateCount = -1;
+            // Мы находимся в начале списка и текущий элемент не последний
+            if ((v_claim_states.Position == 0) && (v_claim_states.Count > 1))
             {
-                int stateCount = -1;
-                // Мы находимся в начале списка и текущий элемент не последний
-                if ((v_claim_states.Position == 0) && (v_claim_states.Count > 1))
-                {
-                    int next_claim_state_type = 
-                        Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.InvariantCulture);
-                    stateCount = (from claim_state_types_row in DataModelHelper.FilterRows(claim_state_types.Select())
-                                  where Convert.ToBoolean(claim_state_types_row.Field<object>("is_start_state_type"), CultureInfo.InvariantCulture) &&
-                                        (claim_state_types_row.Field<int>("id_state_type") == next_claim_state_type)
-                                    select claim_state_types_row.Field<int>("id_state_type")).Count();
-                }
-                else
-                    // Мы находимся не в конце списка и не в начале
-                    if ((v_claim_states.Position != -1) && (v_claim_states.Position != (v_claim_states.Count - 1)))
-                    {
-                        int previos_claim_state_type = 
-                            Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position - 1])["id_state_type"], CultureInfo.InvariantCulture);
-                        int next_claim_state_type = 
-                            Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.InvariantCulture);
-                        stateCount = (from claim_state_types_rel_row in DataModelHelper.FilterRows(claim_state_types_relations.Select())
-                                           where claim_state_types_rel_row.Field<int>("id_state_from") == previos_claim_state_type &&
-                                                 claim_state_types_rel_row.Field<int>("id_state_to") == next_claim_state_type
-                                           select claim_state_types_rel_row.Field<int>("id_state_to")).Count();
-                    }
-                if (stateCount == 0)
-                {
-                    MessageBox.Show("Вы не можете удалить это состояние, так как это нарушит цепочку зависимости состояний претензионно-исковой работы."+
-                        "Чтобы удалить данное состояние, необходимо сначала удалить все состояния после него", "Ошибка", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return;
-                }
-                if (ClaimStatesDataModel.Delete((int)((DataRowView)v_claim_states.Current)["id_state"]) == -1)
-                    return;
-                is_editable = false;
-                ((DataRowView)v_claim_states[v_claim_states.Position]).Delete();
-                viewportState = ViewportState.ReadState;
-                MenuCallback.EditingStateUpdate();
-                is_editable = true;
-                MenuCallback.ForceCloseDetachedViewports();
+                var nextClaimStateType = 
+                    Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.InvariantCulture);
+                stateCount = (from claimStateTypesRow in DataModelHelper.FilterRows(claim_state_types.Select())
+                    where Convert.ToBoolean(claimStateTypesRow.Field<object>("is_start_state_type"), CultureInfo.InvariantCulture) &&
+                          (claimStateTypesRow.Field<int>("id_state_type") == nextClaimStateType)
+                    select claimStateTypesRow.Field<int>("id_state_type")).Count();
             }
+            else
+            // Мы находимся не в конце списка и не в начале
+                if ((v_claim_states.Position != -1) && (v_claim_states.Position != (v_claim_states.Count - 1)))
+                {
+                    var previosClaimStateType = 
+                        Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position - 1])["id_state_type"], CultureInfo.InvariantCulture);
+                    var nextClaimStateType = 
+                        Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.InvariantCulture);
+                    stateCount = (from claimStateTypesRelRow in DataModelHelper.FilterRows(claim_state_types_relations.Select())
+                        where claimStateTypesRelRow.Field<int>("id_state_from") == previosClaimStateType &&
+                              claimStateTypesRelRow.Field<int>("id_state_to") == nextClaimStateType
+                        select claimStateTypesRelRow.Field<int>("id_state_to")).Count();
+                }
+            if (stateCount == 0)
+            {
+                MessageBox.Show(@"Вы не можете удалить это состояние, так как это нарушит цепочку зависимости состояний претензионно-исковой работы."+
+                                @"Чтобы удалить данное состояние, необходимо сначала удалить все состояния после него", @"Ошибка", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            if (ClaimStatesDataModel.Delete((int)((DataRowView)v_claim_states.Current)["id_state"]) == -1)
+                return;
+            is_editable = false;
+            ((DataRowView)v_claim_states[v_claim_states.Position]).Delete();
+            viewportState = ViewportState.ReadState;
+            MenuCallback.EditingStateUpdate();
+            is_editable = true;
+            MenuCallback.ForceCloseDetachedViewports();
         }
 
         public override bool CanCancelRecord()
@@ -690,28 +701,26 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            ClaimStatesViewport viewport = new ClaimStatesViewport(this, MenuCallback);
+            var viewport = new ClaimStatesViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             if (v_claim_states.Count > 0)
-                viewport.LocateClaimStateBy((((DataRowView)v_claim_states[v_claim_states.Position])["id_claim"] as Int32?) ?? -1);
+                viewport.LocateClaimStateBy((((DataRowView)v_claim_states[v_claim_states.Position])["id_claim"] as int?) ?? -1);
             return viewport;
         }
 
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
-            if (e == null)
-                return;
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
             else
             {
-                claim_states.Select().RowChanged -= new DataRowChangeEventHandler(ClaimStatesViewport_RowChanged);
-                claim_states.Select().RowDeleted -= new DataRowChangeEventHandler(ClaimStatesViewport_RowDeleted);
-                claim_state_types.Select().RowChanged -= new DataRowChangeEventHandler(ClaimStateTypesViewport_RowChanged);
-                claim_state_types.Select().RowDeleted -= new DataRowChangeEventHandler(ClaimStateTypesViewport_RowDeleted);
-                claim_state_types_relations.Select().RowChanged -= new DataRowChangeEventHandler(ClaimStateTypesRelationsViewport_RowChanged);
-                claim_state_types_relations.Select().RowDeleted -= new DataRowChangeEventHandler(ClaimStateTypesRelationsViewport_RowDeleted);
+                claim_states.Select().RowChanged -= ClaimStatesViewport_RowChanged;
+                claim_states.Select().RowDeleted -= ClaimStatesViewport_RowDeleted;
+                claim_state_types.Select().RowChanged -= ClaimStateTypesViewport_RowChanged;
+                claim_state_types.Select().RowDeleted -= ClaimStateTypesViewport_RowDeleted;
+                claim_state_types_relations.Select().RowChanged -= ClaimStateTypesRelationsViewport_RowChanged;
+                claim_state_types_relations.Select().RowDeleted -= ClaimStateTypesRelationsViewport_RowDeleted;
             }
             base.OnClosing(e);
         }
@@ -720,13 +729,13 @@ namespace Registry.Viewport
         {
             if (viewportState == ViewportState.NewRowState)
                 claim_states.EditingNewRecord = false;
-            claim_states.Select().RowChanged -= new DataRowChangeEventHandler(ClaimStatesViewport_RowChanged);
-            claim_states.Select().RowDeleted -= new DataRowChangeEventHandler(ClaimStatesViewport_RowDeleted);
-            claim_state_types.Select().RowChanged -= new DataRowChangeEventHandler(ClaimStateTypesViewport_RowChanged);
-            claim_state_types.Select().RowDeleted -= new DataRowChangeEventHandler(ClaimStateTypesViewport_RowDeleted);
-            claim_state_types_relations.Select().RowChanged -= new DataRowChangeEventHandler(ClaimStateTypesRelationsViewport_RowChanged);
-            claim_state_types_relations.Select().RowDeleted -= new DataRowChangeEventHandler(ClaimStateTypesRelationsViewport_RowDeleted);
-            base.Close();
+            claim_states.Select().RowChanged -= ClaimStatesViewport_RowChanged;
+            claim_states.Select().RowDeleted -= ClaimStatesViewport_RowDeleted;
+            claim_state_types.Select().RowChanged -= ClaimStateTypesViewport_RowChanged;
+            claim_state_types.Select().RowDeleted -= ClaimStateTypesViewport_RowDeleted;
+            claim_state_types_relations.Select().RowChanged -= ClaimStateTypesRelationsViewport_RowChanged;
+            claim_state_types_relations.Select().RowDeleted -= ClaimStateTypesRelationsViewport_RowDeleted;
+            Close();
         }
 
         void v_claim_states_CurrentItemChanged(object sender, EventArgs e)
@@ -838,309 +847,305 @@ namespace Registry.Viewport
 
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClaimStatesViewport));
-            this.tableLayoutPanel17 = new System.Windows.Forms.TableLayoutPanel();
-            this.groupBox35 = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel18 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel10 = new System.Windows.Forms.Panel();
-            this.textBoxDocumentNumber = new System.Windows.Forms.TextBox();
-            this.label100 = new System.Windows.Forms.Label();
-            this.textBoxDescription = new System.Windows.Forms.TextBox();
-            this.label101 = new System.Windows.Forms.Label();
-            this.dateTimePickerDocDate = new System.Windows.Forms.DateTimePicker();
-            this.label105 = new System.Windows.Forms.Label();
-            this.panel11 = new System.Windows.Forms.Panel();
-            this.dateTimePickerEndState = new System.Windows.Forms.DateTimePicker();
-            this.label110 = new System.Windows.Forms.Label();
-            this.comboBoxClaimStateType = new System.Windows.Forms.ComboBox();
-            this.dateTimePickerStartState = new System.Windows.Forms.DateTimePicker();
-            this.label108 = new System.Windows.Forms.Label();
-            this.label109 = new System.Windows.Forms.Label();
-            this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.id_state_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.date_start_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.date_end_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tableLayoutPanel17.SuspendLayout();
-            this.groupBox35.SuspendLayout();
-            this.tableLayoutPanel18.SuspendLayout();
-            this.panel10.SuspendLayout();
-            this.panel11.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
-            this.SuspendLayout();
+            var resources = new ComponentResourceManager(typeof(ClaimStatesViewport));
+            tableLayoutPanel17 = new TableLayoutPanel();
+            groupBox35 = new GroupBox();
+            tableLayoutPanel18 = new TableLayoutPanel();
+            panel10 = new Panel();
+            textBoxDocumentNumber = new TextBox();
+            label100 = new Label();
+            textBoxDescription = new TextBox();
+            label101 = new Label();
+            dateTimePickerDocDate = new DateTimePicker();
+            label105 = new Label();
+            panel11 = new Panel();
+            dateTimePickerEndState = new DateTimePicker();
+            label110 = new Label();
+            comboBoxClaimStateType = new ComboBox();
+            dateTimePickerStartState = new DateTimePicker();
+            label108 = new Label();
+            label109 = new Label();
+            dataGridView = new DataGridView();
+            id_state_type = new DataGridViewComboBoxColumn();
+            date_start_state = new DataGridViewTextBoxColumn();
+            date_end_state = new DataGridViewTextBoxColumn();
+            description = new DataGridViewTextBoxColumn();
+            tableLayoutPanel17.SuspendLayout();
+            groupBox35.SuspendLayout();
+            tableLayoutPanel18.SuspendLayout();
+            panel10.SuspendLayout();
+            panel11.SuspendLayout();
+            ((ISupportInitialize)(dataGridView)).BeginInit();
+            SuspendLayout();
             // 
             // tableLayoutPanel17
             // 
-            this.tableLayoutPanel17.ColumnCount = 1;
-            this.tableLayoutPanel17.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel17.Controls.Add(this.groupBox35, 0, 0);
-            this.tableLayoutPanel17.Controls.Add(this.dataGridView, 0, 1);
-            this.tableLayoutPanel17.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel17.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel17.Name = "tableLayoutPanel17";
-            this.tableLayoutPanel17.RowCount = 2;
-            this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 110F));
-            this.tableLayoutPanel17.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel17.Size = new System.Drawing.Size(703, 205);
-            this.tableLayoutPanel17.TabIndex = 1;
+            tableLayoutPanel17.ColumnCount = 1;
+            tableLayoutPanel17.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel17.Controls.Add(groupBox35, 0, 0);
+            tableLayoutPanel17.Controls.Add(dataGridView, 0, 1);
+            tableLayoutPanel17.Dock = DockStyle.Fill;
+            tableLayoutPanel17.Location = new Point(3, 3);
+            tableLayoutPanel17.Name = "tableLayoutPanel17";
+            tableLayoutPanel17.RowCount = 2;
+            tableLayoutPanel17.RowStyles.Add(new RowStyle(SizeType.Absolute, 110F));
+            tableLayoutPanel17.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel17.Size = new Size(703, 205);
+            tableLayoutPanel17.TabIndex = 1;
             // 
             // groupBox35
             // 
-            this.groupBox35.Controls.Add(this.tableLayoutPanel18);
-            this.groupBox35.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox35.Location = new System.Drawing.Point(0, 0);
-            this.groupBox35.Margin = new System.Windows.Forms.Padding(0);
-            this.groupBox35.Name = "groupBox35";
-            this.groupBox35.Size = new System.Drawing.Size(703, 110);
-            this.groupBox35.TabIndex = 1;
-            this.groupBox35.TabStop = false;
-            this.groupBox35.Text = "Общие сведения";
+            groupBox35.Controls.Add(tableLayoutPanel18);
+            groupBox35.Dock = DockStyle.Fill;
+            groupBox35.Location = new Point(0, 0);
+            groupBox35.Margin = new Padding(0);
+            groupBox35.Name = "groupBox35";
+            groupBox35.Size = new Size(703, 110);
+            groupBox35.TabIndex = 1;
+            groupBox35.TabStop = false;
+            groupBox35.Text = @"Общие сведения";
             // 
             // tableLayoutPanel18
             // 
-            this.tableLayoutPanel18.ColumnCount = 2;
-            this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel18.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel18.Controls.Add(this.panel10, 1, 0);
-            this.tableLayoutPanel18.Controls.Add(this.panel11, 0, 0);
-            this.tableLayoutPanel18.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel18.Location = new System.Drawing.Point(3, 17);
-            this.tableLayoutPanel18.Name = "tableLayoutPanel18";
-            this.tableLayoutPanel18.RowCount = 1;
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel18.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 148F));
-            this.tableLayoutPanel18.Size = new System.Drawing.Size(697, 90);
-            this.tableLayoutPanel18.TabIndex = 0;
+            tableLayoutPanel18.ColumnCount = 2;
+            tableLayoutPanel18.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel18.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel18.Controls.Add(panel10, 1, 0);
+            tableLayoutPanel18.Controls.Add(panel11, 0, 0);
+            tableLayoutPanel18.Dock = DockStyle.Fill;
+            tableLayoutPanel18.Location = new Point(3, 17);
+            tableLayoutPanel18.Name = "tableLayoutPanel18";
+            tableLayoutPanel18.RowCount = 1;
+            tableLayoutPanel18.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel18.RowStyles.Add(new RowStyle(SizeType.Absolute, 148F));
+            tableLayoutPanel18.Size = new Size(697, 90);
+            tableLayoutPanel18.TabIndex = 0;
             // 
             // panel10
             // 
-            this.panel10.Controls.Add(this.textBoxDocumentNumber);
-            this.panel10.Controls.Add(this.label100);
-            this.panel10.Controls.Add(this.textBoxDescription);
-            this.panel10.Controls.Add(this.label101);
-            this.panel10.Controls.Add(this.dateTimePickerDocDate);
-            this.panel10.Controls.Add(this.label105);
-            this.panel10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel10.Location = new System.Drawing.Point(348, 0);
-            this.panel10.Margin = new System.Windows.Forms.Padding(0);
-            this.panel10.Name = "panel10";
-            this.panel10.Size = new System.Drawing.Size(349, 90);
-            this.panel10.TabIndex = 1;
+            panel10.Controls.Add(textBoxDocumentNumber);
+            panel10.Controls.Add(label100);
+            panel10.Controls.Add(textBoxDescription);
+            panel10.Controls.Add(label101);
+            panel10.Controls.Add(dateTimePickerDocDate);
+            panel10.Controls.Add(label105);
+            panel10.Dock = DockStyle.Fill;
+            panel10.Location = new Point(348, 0);
+            panel10.Margin = new Padding(0);
+            panel10.Name = "panel10";
+            panel10.Size = new Size(349, 90);
+            panel10.TabIndex = 1;
             // 
             // textBoxDocumentNumber
             // 
-            this.textBoxDocumentNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDocumentNumber.Location = new System.Drawing.Point(161, 4);
-            this.textBoxDocumentNumber.MaxLength = 50;
-            this.textBoxDocumentNumber.Name = "textBoxDocumentNumber";
-            this.textBoxDocumentNumber.Size = new System.Drawing.Size(179, 21);
-            this.textBoxDocumentNumber.TabIndex = 0;
-            this.textBoxDocumentNumber.TextChanged += new System.EventHandler(this.textBoxDocNumber_TextChanged);
-            this.textBoxDocumentNumber.Enter += new System.EventHandler(this.selectAll_Enter);
+            textBoxDocumentNumber.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                           | AnchorStyles.Right;
+            textBoxDocumentNumber.Location = new Point(161, 4);
+            textBoxDocumentNumber.MaxLength = 50;
+            textBoxDocumentNumber.Name = "textBoxDocumentNumber";
+            textBoxDocumentNumber.Size = new Size(179, 21);
+            textBoxDocumentNumber.TabIndex = 0;
+            textBoxDocumentNumber.TextChanged += textBoxDocNumber_TextChanged;
+            textBoxDocumentNumber.Enter += selectAll_Enter;
             // 
             // label100
             // 
-            this.label100.AutoSize = true;
-            this.label100.Location = new System.Drawing.Point(12, 7);
-            this.label100.Name = "label100";
-            this.label100.Size = new System.Drawing.Size(111, 15);
-            this.label100.TabIndex = 51;
-            this.label100.Text = "Номер документа";
+            label100.AutoSize = true;
+            label100.Location = new Point(12, 7);
+            label100.Name = "label100";
+            label100.Size = new Size(111, 15);
+            label100.TabIndex = 51;
+            label100.Text = @"Номер документа";
             // 
             // textBoxDescription
             // 
-            this.textBoxDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDescription.Location = new System.Drawing.Point(161, 62);
-            this.textBoxDescription.MaxLength = 4000;
-            this.textBoxDescription.Name = "textBoxDescription";
-            this.textBoxDescription.Size = new System.Drawing.Size(179, 21);
-            this.textBoxDescription.TabIndex = 2;
-            this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxClaimStateDescription_TextChanged);
-            this.textBoxDescription.Enter += new System.EventHandler(this.selectAll_Enter);
+            textBoxDescription.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                        | AnchorStyles.Right;
+            textBoxDescription.Location = new Point(161, 62);
+            textBoxDescription.MaxLength = 4000;
+            textBoxDescription.Name = "textBoxDescription";
+            textBoxDescription.Size = new Size(179, 21);
+            textBoxDescription.TabIndex = 2;
+            textBoxDescription.TextChanged += textBoxClaimStateDescription_TextChanged;
+            textBoxDescription.Enter += selectAll_Enter;
             // 
             // label101
             // 
-            this.label101.AutoSize = true;
-            this.label101.Location = new System.Drawing.Point(12, 65);
-            this.label101.Name = "label101";
-            this.label101.Size = new System.Drawing.Size(80, 15);
-            this.label101.TabIndex = 49;
-            this.label101.Text = "Примечание";
+            label101.AutoSize = true;
+            label101.Location = new Point(12, 65);
+            label101.Name = "label101";
+            label101.Size = new Size(80, 15);
+            label101.TabIndex = 49;
+            label101.Text = @"Примечание";
             // 
             // dateTimePickerDocDate
             // 
-            this.dateTimePickerDocDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerDocDate.Location = new System.Drawing.Point(161, 33);
-            this.dateTimePickerDocDate.Name = "dateTimePickerDocDate";
-            this.dateTimePickerDocDate.ShowCheckBox = true;
-            this.dateTimePickerDocDate.Size = new System.Drawing.Size(179, 21);
-            this.dateTimePickerDocDate.TabIndex = 1;
-            this.dateTimePickerDocDate.ValueChanged += new System.EventHandler(this.dateTimePickerDocDate_ValueChanged);
+            dateTimePickerDocDate.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                           | AnchorStyles.Right;
+            dateTimePickerDocDate.Location = new Point(161, 33);
+            dateTimePickerDocDate.Name = "dateTimePickerDocDate";
+            dateTimePickerDocDate.ShowCheckBox = true;
+            dateTimePickerDocDate.Size = new Size(179, 21);
+            dateTimePickerDocDate.TabIndex = 1;
+            dateTimePickerDocDate.ValueChanged += dateTimePickerDocDate_ValueChanged;
             // 
             // label105
             // 
-            this.label105.AutoSize = true;
-            this.label105.Location = new System.Drawing.Point(12, 36);
-            this.label105.Name = "label105";
-            this.label105.Size = new System.Drawing.Size(102, 15);
-            this.label105.TabIndex = 44;
-            this.label105.Text = "Дата документа";
+            label105.AutoSize = true;
+            label105.Location = new Point(12, 36);
+            label105.Name = "label105";
+            label105.Size = new Size(102, 15);
+            label105.TabIndex = 44;
+            label105.Text = @"Дата документа";
             // 
             // panel11
             // 
-            this.panel11.Controls.Add(this.dateTimePickerEndState);
-            this.panel11.Controls.Add(this.label110);
-            this.panel11.Controls.Add(this.comboBoxClaimStateType);
-            this.panel11.Controls.Add(this.dateTimePickerStartState);
-            this.panel11.Controls.Add(this.label108);
-            this.panel11.Controls.Add(this.label109);
-            this.panel11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel11.Location = new System.Drawing.Point(0, 0);
-            this.panel11.Margin = new System.Windows.Forms.Padding(0);
-            this.panel11.Name = "panel11";
-            this.panel11.Size = new System.Drawing.Size(348, 90);
-            this.panel11.TabIndex = 0;
+            panel11.Controls.Add(dateTimePickerEndState);
+            panel11.Controls.Add(label110);
+            panel11.Controls.Add(comboBoxClaimStateType);
+            panel11.Controls.Add(dateTimePickerStartState);
+            panel11.Controls.Add(label108);
+            panel11.Controls.Add(label109);
+            panel11.Dock = DockStyle.Fill;
+            panel11.Location = new Point(0, 0);
+            panel11.Margin = new Padding(0);
+            panel11.Name = "panel11";
+            panel11.Size = new Size(348, 90);
+            panel11.TabIndex = 0;
             // 
             // dateTimePickerEndState
             // 
-            this.dateTimePickerEndState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerEndState.Location = new System.Drawing.Point(161, 62);
-            this.dateTimePickerEndState.Name = "dateTimePickerEndState";
-            this.dateTimePickerEndState.ShowCheckBox = true;
-            this.dateTimePickerEndState.Size = new System.Drawing.Size(178, 21);
-            this.dateTimePickerEndState.TabIndex = 2;
-            this.dateTimePickerEndState.ValueChanged += new System.EventHandler(this.dateTimePickerEndState_ValueChanged);
+            dateTimePickerEndState.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                            | AnchorStyles.Right;
+            dateTimePickerEndState.Location = new Point(161, 62);
+            dateTimePickerEndState.Name = "dateTimePickerEndState";
+            dateTimePickerEndState.ShowCheckBox = true;
+            dateTimePickerEndState.Size = new Size(178, 21);
+            dateTimePickerEndState.TabIndex = 2;
+            dateTimePickerEndState.ValueChanged += dateTimePickerEndState_ValueChanged;
             // 
             // label110
             // 
-            this.label110.AutoSize = true;
-            this.label110.Location = new System.Drawing.Point(14, 65);
-            this.label110.Name = "label110";
-            this.label110.Size = new System.Drawing.Size(86, 15);
-            this.label110.TabIndex = 38;
-            this.label110.Text = "Крайний срок";
+            label110.AutoSize = true;
+            label110.Location = new Point(14, 65);
+            label110.Name = "label110";
+            label110.Size = new Size(86, 15);
+            label110.TabIndex = 38;
+            label110.Text = @"Крайний срок";
             // 
             // comboBoxClaimStateType
             // 
-            this.comboBoxClaimStateType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxClaimStateType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxClaimStateType.FormattingEnabled = true;
-            this.comboBoxClaimStateType.Location = new System.Drawing.Point(161, 4);
-            this.comboBoxClaimStateType.Name = "comboBoxClaimStateType";
-            this.comboBoxClaimStateType.Size = new System.Drawing.Size(178, 23);
-            this.comboBoxClaimStateType.TabIndex = 0;
-            this.comboBoxClaimStateType.SelectedIndexChanged += new System.EventHandler(this.comboBoxClaimStateType_SelectedIndexChanged);
+            comboBoxClaimStateType.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                            | AnchorStyles.Right;
+            comboBoxClaimStateType.DropDownStyle = ComboBoxStyle.DropDownList;
+            comboBoxClaimStateType.FormattingEnabled = true;
+            comboBoxClaimStateType.Location = new Point(161, 4);
+            comboBoxClaimStateType.Name = "comboBoxClaimStateType";
+            comboBoxClaimStateType.Size = new Size(178, 23);
+            comboBoxClaimStateType.TabIndex = 0;
+            comboBoxClaimStateType.SelectedIndexChanged += comboBoxClaimStateType_SelectedIndexChanged;
             // 
             // dateTimePickerStartState
             // 
-            this.dateTimePickerStartState.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerStartState.Location = new System.Drawing.Point(161, 33);
-            this.dateTimePickerStartState.Name = "dateTimePickerStartState";
-            this.dateTimePickerStartState.ShowCheckBox = true;
-            this.dateTimePickerStartState.Size = new System.Drawing.Size(178, 21);
-            this.dateTimePickerStartState.TabIndex = 1;
-            this.dateTimePickerStartState.ValueChanged += new System.EventHandler(this.dateTimePickerStartState_ValueChanged);
+            dateTimePickerStartState.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                              | AnchorStyles.Right;
+            dateTimePickerStartState.Location = new Point(161, 33);
+            dateTimePickerStartState.Name = "dateTimePickerStartState";
+            dateTimePickerStartState.ShowCheckBox = true;
+            dateTimePickerStartState.Size = new Size(178, 21);
+            dateTimePickerStartState.TabIndex = 1;
+            dateTimePickerStartState.ValueChanged += dateTimePickerStartState_ValueChanged;
             // 
             // label108
             // 
-            this.label108.AutoSize = true;
-            this.label108.Location = new System.Drawing.Point(14, 36);
-            this.label108.Name = "label108";
-            this.label108.Size = new System.Drawing.Size(99, 15);
-            this.label108.TabIndex = 31;
-            this.label108.Text = "Дата установки";
+            label108.AutoSize = true;
+            label108.Location = new Point(14, 36);
+            label108.Name = "label108";
+            label108.Size = new Size(99, 15);
+            label108.TabIndex = 31;
+            label108.Text = @"Дата установки";
             // 
             // label109
             // 
-            this.label109.AutoSize = true;
-            this.label109.Location = new System.Drawing.Point(14, 7);
-            this.label109.Name = "label109";
-            this.label109.Size = new System.Drawing.Size(93, 15);
-            this.label109.TabIndex = 29;
-            this.label109.Text = "Вид состояния";
+            label109.AutoSize = true;
+            label109.Location = new Point(14, 7);
+            label109.Name = "label109";
+            label109.Size = new Size(93, 15);
+            label109.TabIndex = 29;
+            label109.Text = @"Вид состояния";
             // 
             // dataGridView
             // 
-            this.dataGridView.AllowUserToAddRows = false;
-            this.dataGridView.AllowUserToDeleteRows = false;
-            this.dataGridView.AllowUserToResizeRows = false;
-            this.dataGridView.BackgroundColor = System.Drawing.Color.White;
-            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.id_state_type,
-            this.date_start_state,
-            this.date_end_state,
-            this.description});
-            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView.Location = new System.Drawing.Point(3, 113);
-            this.dataGridView.Name = "dataGridView";
-            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.Size = new System.Drawing.Size(697, 89);
-            this.dataGridView.TabIndex = 0;
-            this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridViewClaimStates_DataError);
+            dataGridView.AllowUserToAddRows = false;
+            dataGridView.AllowUserToDeleteRows = false;
+            dataGridView.AllowUserToResizeRows = false;
+            dataGridView.BackgroundColor = Color.White;
+            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView.Columns.AddRange(id_state_type, date_start_state, date_end_state, description);
+            dataGridView.Dock = DockStyle.Fill;
+            dataGridView.Location = new Point(3, 113);
+            dataGridView.Name = "dataGridView";
+            dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView.Size = new Size(697, 89);
+            dataGridView.TabIndex = 0;
+            dataGridView.DataError += dataGridViewClaimStates_DataError;
             // 
             // id_state_type
             // 
-            this.id_state_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
-            this.id_state_type.HeaderText = "Вид состояния";
-            this.id_state_type.MinimumWidth = 150;
-            this.id_state_type.Name = "id_state_type";
-            this.id_state_type.ReadOnly = true;
-            this.id_state_type.Resizable = System.Windows.Forms.DataGridViewTriState.True;
-            this.id_state_type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.id_state_type.Width = 150;
+            id_state_type.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+            id_state_type.HeaderText = @"Вид состояния";
+            id_state_type.MinimumWidth = 150;
+            id_state_type.Name = "id_state_type";
+            id_state_type.ReadOnly = true;
+            id_state_type.Resizable = DataGridViewTriState.True;
+            id_state_type.SortMode = DataGridViewColumnSortMode.Automatic;
+            id_state_type.Width = 150;
             // 
             // date_start_state
             // 
-            this.date_start_state.HeaderText = "Дата установки";
-            this.date_start_state.MinimumWidth = 150;
-            this.date_start_state.Name = "date_start_state";
-            this.date_start_state.Width = 150;
+            date_start_state.HeaderText = @"Дата установки";
+            date_start_state.MinimumWidth = 150;
+            date_start_state.Name = "date_start_state";
+            date_start_state.Width = 150;
             // 
             // date_end_state
             // 
-            this.date_end_state.HeaderText = "Крайний срок";
-            this.date_end_state.MinimumWidth = 150;
-            this.date_end_state.Name = "date_end_state";
-            this.date_end_state.ReadOnly = true;
-            this.date_end_state.Width = 150;
+            date_end_state.HeaderText = @"Крайний срок";
+            date_end_state.MinimumWidth = 150;
+            date_end_state.Name = "date_end_state";
+            date_end_state.ReadOnly = true;
+            date_end_state.Width = 150;
             // 
             // description
             // 
-            this.description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.description.HeaderText = "Примечание";
-            this.description.MinimumWidth = 200;
-            this.description.Name = "description";
-            this.description.ReadOnly = true;
+            description.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            description.HeaderText = @"Примечание";
+            description.MinimumWidth = 200;
+            description.Name = "description";
+            description.ReadOnly = true;
             // 
             // ClaimStatesViewport
             // 
-            this.AutoScroll = true;
-            this.AutoScrollMinSize = new System.Drawing.Size(700, 190);
-            this.AutoSize = true;
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(709, 211);
-            this.Controls.Add(this.tableLayoutPanel17);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "ClaimStatesViewport";
-            this.Padding = new System.Windows.Forms.Padding(3);
-            this.Text = "Состояния иск. работы №{0}";
-            this.tableLayoutPanel17.ResumeLayout(false);
-            this.groupBox35.ResumeLayout(false);
-            this.tableLayoutPanel18.ResumeLayout(false);
-            this.panel10.ResumeLayout(false);
-            this.panel10.PerformLayout();
-            this.panel11.ResumeLayout(false);
-            this.panel11.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
-            this.ResumeLayout(false);
+            AutoScroll = true;
+            AutoScrollMinSize = new Size(700, 190);
+            AutoSize = true;
+            BackColor = Color.White;
+            ClientSize = new Size(709, 211);
+            Controls.Add(tableLayoutPanel17);
+            Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            Icon = ((Icon)(resources.GetObject("$this.Icon")));
+            Name = "ClaimStatesViewport";
+            Padding = new Padding(3);
+            Text = @"Состояния иск. работы №{0}";
+            tableLayoutPanel17.ResumeLayout(false);
+            groupBox35.ResumeLayout(false);
+            tableLayoutPanel18.ResumeLayout(false);
+            panel10.ResumeLayout(false);
+            panel10.PerformLayout();
+            panel11.ResumeLayout(false);
+            panel11.PerformLayout();
+            ((ISupportInitialize)(dataGridView)).EndInit();
+            ResumeLayout(false);
 
         }
 

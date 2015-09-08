@@ -1,32 +1,33 @@
-﻿using Registry.DataModels;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Globalization;
+using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.Entities;
 using Security;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
     internal sealed class DocumentsResidenceViewport: Viewport
     {  
         #region Components
-        private System.Windows.Forms.DataGridViewTextBoxColumn id_document_residence;
-        private System.Windows.Forms.DataGridViewTextBoxColumn document_residence;
-        private System.Windows.Forms.DataGridView dataGridView;
+        private DataGridViewTextBoxColumn id_document_residence;
+        private DataGridViewTextBoxColumn document_residence;
+        private DataGridView dataGridView;
         #endregion Components
 
         #region Models
-        DocumentsResidenceDataModel documents_residence = null;
+        DocumentsResidenceDataModel documents_residence;
         DataTable snapshot_documents_residence = new DataTable("snapshot_documents_residence");
         #endregion Models
 
         #region Views
-        BindingSource v_documents_residence = null;
-        BindingSource v_snapshot_documents_residence = null;
+        BindingSource v_documents_residence;
+        BindingSource v_snapshot_documents_residence;
         #endregion Models
 
         //Флаг разрешения синхронизации snapshot и original моделей
@@ -47,24 +48,23 @@ namespace Registry.Viewport
         public DocumentsResidenceViewport(DocumentsResidenceViewport documentResidenceViewport, IMenuCallback menuCallback)
             : this(menuCallback)
         {
-            this.DynamicFilter = documentResidenceViewport.DynamicFilter;
-            this.StaticFilter = documentResidenceViewport.StaticFilter;
-            this.ParentRow = documentResidenceViewport.ParentRow;
-            this.ParentType = documentResidenceViewport.ParentType;
+            DynamicFilter = documentResidenceViewport.DynamicFilter;
+            StaticFilter = documentResidenceViewport.StaticFilter;
+            ParentRow = documentResidenceViewport.ParentRow;
+            ParentType = documentResidenceViewport.ParentType;
         }
 
         private bool SnapshotHasChanges()
         {
-            List<DocumentResidence> list_from_view = DocumentsIssuedByFromView();
-            List<DocumentResidence> list_from_viewport = DocumentsIssuedByFromViewport();
-            if (list_from_view.Count != list_from_viewport.Count)
+            var listFromView = DocumentsIssuedByFromView();
+            var listFromViewport = DocumentsIssuedByFromViewport();
+            if (listFromView.Count != listFromViewport.Count)
                 return true;
-            bool founded = false;
-            for (int i = 0; i < list_from_view.Count; i++)
+            foreach (var documentView in listFromView)
             {
-                founded = false;
-                for (int j = 0; j < list_from_viewport.Count; j++)
-                    if (list_from_view[i] == list_from_viewport[j])
+                var founded = false;
+                foreach (var documentViewport in listFromViewport)
+                    if (documentView == documentViewport)
                         founded = true;
                 if (!founded)
                     return true;
@@ -74,7 +74,7 @@ namespace Registry.Viewport
 
         private static object[] DataRowViewToArray(DataRowView dataRowView)
         {
-            return new object[] { 
+            return new[] { 
                 dataRowView["id_document_residence"], 
                 dataRowView["document_residence"]
             };
@@ -82,58 +82,61 @@ namespace Registry.Viewport
 
         private static bool ValidateViewportData(List<DocumentResidence> list)
         {
-            foreach (DocumentResidence DocumentResidence in list)
+            foreach (var documentResidence in list)
             {
-                if (DocumentResidence.DocumentResidenceName == null)
+                if (documentResidence.DocumentResidenceName == null)
                 {
-                    MessageBox.Show("Наименование документа-основания на проживание не может быть пустым",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(@"Наименование документа-основания на проживание не может быть пустым",
+                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
-                if (DocumentResidence.DocumentResidenceName != null && DocumentResidence.DocumentResidenceName.Length > 255)
-                {
-                    MessageBox.Show("Длина наименования документа-основания на проживание не может превышать 255 символов",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return false;
-                }
+                if (documentResidence.DocumentResidenceName == null ||
+                    documentResidence.DocumentResidenceName.Length <= 255) continue;
+                MessageBox.Show(@"Длина наименования документа-основания на проживание не может превышать 255 символов",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return false;
             }
             return true;
         }
 
         private static DocumentResidence RowToDocumentResidence(DataRow row)
         {
-            DocumentResidence documentResidence = new DocumentResidence();
-            documentResidence.IdDocumentResidence = ViewportHelper.ValueOrNull<int>(row, "id_document_residence");
-            documentResidence.DocumentResidenceName = ViewportHelper.ValueOrNull(row, "document_residence");
+            var documentResidence = new DocumentResidence
+            {
+                IdDocumentResidence = ViewportHelper.ValueOrNull<int>(row, "id_document_residence"),
+                DocumentResidenceName = ViewportHelper.ValueOrNull(row, "document_residence")
+            };
             return documentResidence;
         }
 
         private List<DocumentResidence> DocumentsIssuedByFromViewport()
         {
-            List<DocumentResidence> list = new List<DocumentResidence>();
-            for (int i = 0; i < dataGridView.Rows.Count; i++)
+            var list = new List<DocumentResidence>();
+            for (var i = 0; i < dataGridView.Rows.Count; i++)
             {
-                if (!dataGridView.Rows[i].IsNewRow)
+                if (dataGridView.Rows[i].IsNewRow) continue;
+                var row = dataGridView.Rows[i];
+                var dib = new DocumentResidence
                 {
-                    DocumentResidence dib = new DocumentResidence();
-                    DataGridViewRow row = dataGridView.Rows[i];
-                    dib.IdDocumentResidence = ViewportHelper.ValueOrNull<int>(row, "id_document_residence");
-                    dib.DocumentResidenceName = ViewportHelper.ValueOrNull(row, "document_residence");
-                    list.Add(dib);
-                }
+                    IdDocumentResidence = ViewportHelper.ValueOrNull<int>(row, "id_document_residence"),
+                    DocumentResidenceName = ViewportHelper.ValueOrNull(row, "document_residence")
+                };
+                list.Add(dib);
             }
             return list;
         }
 
         private List<DocumentResidence> DocumentsIssuedByFromView()
         {
-            List<DocumentResidence> list = new List<DocumentResidence>();
-            for (int i = 0; i < v_documents_residence.Count; i++)
+            var list = new List<DocumentResidence>();
+            foreach (var document in v_documents_residence)
             {
-                DocumentResidence dib = new DocumentResidence();
-                DataRowView row = ((DataRowView)v_documents_residence[i]);
-                dib.IdDocumentResidence = ViewportHelper.ValueOrNull<int>(row, "id_document_residence");
-                dib.DocumentResidenceName = ViewportHelper.ValueOrNull(row, "document_residence");
+                var row = ((DataRowView)document);
+                var dib = new DocumentResidence
+                {
+                    IdDocumentResidence = ViewportHelper.ValueOrNull<int>(row, "id_document_residence"),
+                    DocumentResidenceName = ViewportHelper.ValueOrNull(row, "document_residence")
+                };
                 list.Add(dib);
             }
             return list;
@@ -152,26 +155,27 @@ namespace Registry.Viewport
         public override void LoadData()
         {
             dataGridView.AutoGenerateColumns = false;
-            this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
+            DockAreas = DockAreas.Document;
             documents_residence = DocumentsResidenceDataModel.GetInstance();
 
             //Ожидаем дозагрузки данных, если это необходимо
             documents_residence.Select();
 
-            v_documents_residence = new BindingSource();
-            v_documents_residence.DataMember = "documents_residence";
-            v_documents_residence.DataSource = DataSetManager.DataSet;
+            v_documents_residence = new BindingSource
+            {
+                DataMember = "documents_residence",
+                DataSource = DataSetManager.DataSet
+            };
 
             //Инициируем колонки snapshot-модели
-            for (int i = 0; i < documents_residence.Select().Columns.Count; i++)
+            for (var i = 0; i < documents_residence.Select().Columns.Count; i++)
                 snapshot_documents_residence.Columns.Add(new DataColumn(
                     documents_residence.Select().Columns[i].ColumnName, documents_residence.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
-            for (int i = 0; i < v_documents_residence.Count; i++)
-                snapshot_documents_residence.Rows.Add(DataRowViewToArray(((DataRowView)v_documents_residence[i])));
-            v_snapshot_documents_residence = new BindingSource();
-            v_snapshot_documents_residence.DataSource = snapshot_documents_residence;
-            v_snapshot_documents_residence.CurrentItemChanged += new EventHandler(v_snapshot_documents_issued_by_CurrentItemChanged);
+            foreach (var documentResidence in v_documents_residence)
+                snapshot_documents_residence.Rows.Add(DataRowViewToArray(((DataRowView)documentResidence)));
+            v_snapshot_documents_residence = new BindingSource {DataSource = snapshot_documents_residence};
+            v_snapshot_documents_residence.CurrentItemChanged += v_snapshot_documents_issued_by_CurrentItemChanged;
 
             dataGridView.DataSource = v_snapshot_documents_residence;
             id_document_residence.DataPropertyName = "id_document_residence";
@@ -179,12 +183,12 @@ namespace Registry.Viewport
 
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
 
-            dataGridView.CellValidated += new DataGridViewCellEventHandler(dataGridView_CellValidated);
+            dataGridView.CellValidated += dataGridView_CellValidated;
             //События изменения данных для проверки соответствия реальным данным в модели
-            dataGridView.CellValueChanged += new DataGridViewCellEventHandler(dataGridView_CellValueChanged);
+            dataGridView.CellValueChanged += dataGridView_CellValueChanged;
             //Синхронизация данных исходные->текущие
-            documents_residence.Select().RowChanged += new DataRowChangeEventHandler(DocumentResidenceViewport_RowChanged);
-            documents_residence.Select().RowDeleting += new DataRowChangeEventHandler(DocumentResidenceViewport_RowDeleting);
+            documents_residence.Select().RowChanged += DocumentResidenceViewport_RowChanged;
+            documents_residence.Select().RowDeleting += DocumentResidenceViewport_RowDeleting;
             documents_residence.Select().RowDeleted += DocumentResidenceViewport_RowDeleted;
         }
 
@@ -235,32 +239,32 @@ namespace Registry.Viewport
 
         public override void InsertRecord()
         {
-            DataRowView row = (DataRowView)v_snapshot_documents_residence.AddNew();
-            row.EndEdit();
+            var row = (DataRowView)v_snapshot_documents_residence.AddNew();
+            if (row != null) row.EndEdit();
         }
 
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
-            if (e == null)
-                return;
             if (SnapshotHasChanges())
             {
-                DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
+                var result = MessageBox.Show(@"Сохранить изменения в базу данных?", @"Внимание",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                if (result == DialogResult.Yes)
-                    SaveRecord();
-                else
-                    if (result == DialogResult.No)
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        SaveRecord();
+                        break;
+                    case DialogResult.No:
                         CancelRecord();
-                    else
-                    {
+                        break;
+                    default:
                         e.Cancel = true;
                         return;
-                    }
+                }
             }
-            documents_residence.Select().RowChanged -= new DataRowChangeEventHandler(DocumentResidenceViewport_RowChanged);
-            documents_residence.Select().RowDeleting -= new DataRowChangeEventHandler(DocumentResidenceViewport_RowDeleting);
-            documents_residence.Select().RowDeleted -= new DataRowChangeEventHandler(DocumentResidenceViewport_RowDeleted);
+            documents_residence.Select().RowChanged -= DocumentResidenceViewport_RowChanged;
+            documents_residence.Select().RowDeleting -= DocumentResidenceViewport_RowDeleting;
+            documents_residence.Select().RowDeleted -= DocumentResidenceViewport_RowDeleted;
             base.OnClosing(e);
         }
 
@@ -282,8 +286,8 @@ namespace Registry.Viewport
         public override void CancelRecord()
         {
             snapshot_documents_residence.Clear();
-            for (int i = 0; i < v_documents_residence.Count; i++)
-                snapshot_documents_residence.Rows.Add(DataRowViewToArray(((DataRowView)v_documents_residence[i])));
+            foreach (var document in v_documents_residence)
+                snapshot_documents_residence.Rows.Add(DataRowViewToArray(((DataRowView)document)));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -296,26 +300,26 @@ namespace Registry.Viewport
         {
             sync_views = false;
             documents_residence.EditingNewRecord = true;
-            List<DocumentResidence> list = DocumentsIssuedByFromViewport();
+            var list = DocumentsIssuedByFromViewport();
             if (!ValidateViewportData(list))
             {
                 sync_views = true;
                 documents_residence.EditingNewRecord = false;
                 return;
             }
-            for (int i = 0; i < list.Count; i++)
+            for (var i = 0; i < list.Count; i++)
             {
-                DataRow row = documents_residence.Select().Rows.Find(((DocumentResidence)list[i]).IdDocumentResidence);
+                var row = documents_residence.Select().Rows.Find(list[i].IdDocumentResidence);
                 if (row == null)
                 {
-                    int id_document_residence = DocumentsResidenceDataModel.Insert(list[i]);
-                    if (id_document_residence == -1)
+                    var idDocumentResidence = DocumentsResidenceDataModel.Insert(list[i]);
+                    if (idDocumentResidence == -1)
                     {
                         sync_views = true;
                         documents_residence.EditingNewRecord = false;
                         return;
                     }
-                    ((DataRowView)v_snapshot_documents_residence[i])["id_document_residence"] = id_document_residence;
+                    ((DataRowView)v_snapshot_documents_residence[i])["id_document_residence"] = idDocumentResidence;
                     documents_residence.Select().Rows.Add(DataRowViewToArray((DataRowView)v_snapshot_documents_residence[i]));
                 }
                 else
@@ -333,23 +337,23 @@ namespace Registry.Viewport
                 }
             }
             list = DocumentsIssuedByFromView();
-            for (int i = 0; i < list.Count; i++)
+            foreach (var document in list)
             {
-                int row_index = -1;
-                for (int j = 0; j < dataGridView.Rows.Count; j++)
+                var rowIndex = -1;
+                for (var j = 0; j < dataGridView.Rows.Count; j++)
                     if ((dataGridView.Rows[j].Cells["id_document_residence"].Value != null) &&
-                        !String.IsNullOrEmpty(dataGridView.Rows[j].Cells["id_document_residence"].Value.ToString()) &&
-                        ((int)dataGridView.Rows[j].Cells["id_document_residence"].Value == list[i].IdDocumentResidence))
-                        row_index = j;
-                if (row_index == -1)
+                        !string.IsNullOrEmpty(dataGridView.Rows[j].Cells["id_document_residence"].Value.ToString()) &&
+                        ((int)dataGridView.Rows[j].Cells["id_document_residence"].Value == document.IdDocumentResidence))
+                        rowIndex = j;
+                if (rowIndex == -1)
                 {
-                    if (DocumentsResidenceDataModel.Delete(list[i].IdDocumentResidence.Value) == -1)
+                    if (document.IdDocumentResidence != null && DocumentsResidenceDataModel.Delete(document.IdDocumentResidence.Value) == -1)
                     {
                         sync_views = true;
                         documents_residence.EditingNewRecord = false;
                         return;
                     }
-                    documents_residence.Select().Rows.Find(((DocumentResidence)list[i]).IdDocumentResidence).Delete();
+                    documents_residence.Select().Rows.Find(document.IdDocumentResidence).Delete();
                 }
             }
             sync_views = true;
@@ -364,7 +368,7 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            DocumentsResidenceViewport viewport = new DocumentsResidenceViewport(this, MenuCallback);
+            var viewport = new DocumentsResidenceViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             return viewport;
@@ -386,9 +390,9 @@ namespace Registry.Viewport
                 return;
             if (e.Action == DataRowAction.Delete)
             {
-                int row_index = v_snapshot_documents_residence.Find("id_document_residence", e.Row["id_document_residence"]);
-                if (row_index != -1)
-                    ((DataRowView)v_snapshot_documents_residence[row_index]).Delete();
+                var rowIndex = v_snapshot_documents_residence.Find("id_document_residence", e.Row["id_document_residence"]);
+                if (rowIndex != -1)
+                    ((DataRowView)v_snapshot_documents_residence[rowIndex]).Delete();
             }
         }
 
@@ -396,18 +400,15 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            int row_index = v_snapshot_documents_residence.Find("id_document_residence", e.Row["id_document_residence"]);
-            if (row_index == -1 && v_documents_residence.Find("id_document_residence", e.Row["id_document_residence"]) != -1)
+            var rowIndex = v_snapshot_documents_residence.Find("id_document_residence", e.Row["id_document_residence"]);
+            if (rowIndex == -1 && v_documents_residence.Find("id_document_residence", e.Row["id_document_residence"]) != -1)
             {
-                snapshot_documents_residence.Rows.Add(new object[] { 
-                        e.Row["id_document_residence"], 
-                        e.Row["document_residence"]
-                    });
+                snapshot_documents_residence.Rows.Add(e.Row["id_document_residence"], e.Row["document_residence"]);
             }
             else
-                if (row_index != -1)
+                if (rowIndex != -1)
                 {
-                    DataRowView row = ((DataRowView)v_snapshot_documents_residence[row_index]);
+                    var row = ((DataRowView)v_snapshot_documents_residence[rowIndex]);
                     row["document_residence"] = e.Row["document_residence"];
                 }
             if (Selected)
@@ -429,14 +430,14 @@ namespace Registry.Viewport
 
         void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
         {
-            DataGridViewCell cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            var cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
             switch (cell.OwningColumn.Name)
             {
                 case "document_residence":
                     if (cell.Value.ToString().Trim().Length > 255)
                         cell.ErrorText = "Длина наименования документа-основания на проживание не может превышать 255 символов";
                     else
-                        if (String.IsNullOrEmpty(cell.Value.ToString().Trim()))
+                        if (string.IsNullOrEmpty(cell.Value.ToString().Trim()))
                             cell.ErrorText = "Наименование документа-основания на проживание не может быть пустым";
                         else
                             cell.ErrorText = "";
@@ -451,67 +452,65 @@ namespace Registry.Viewport
 
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DocumentsResidenceViewport));
-            this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.id_document_residence = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.document_residence = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
-            this.SuspendLayout();
+            var dataGridViewCellStyle3 = new DataGridViewCellStyle();
+            var resources = new ComponentResourceManager(typeof(DocumentsResidenceViewport));
+            dataGridView = new DataGridView();
+            id_document_residence = new DataGridViewTextBoxColumn();
+            document_residence = new DataGridViewTextBoxColumn();
+            ((ISupportInitialize)(dataGridView)).BeginInit();
+            SuspendLayout();
             // 
             // dataGridView
             // 
-            this.dataGridView.AllowUserToAddRows = false;
-            this.dataGridView.AllowUserToDeleteRows = false;
-            this.dataGridView.AllowUserToResizeRows = false;
-            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridView.BackgroundColor = System.Drawing.Color.White;
-            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.id_document_residence,
-            this.document_residence});
-            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView.MultiSelect = false;
-            this.dataGridView.Name = "dataGridView";
-            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.Size = new System.Drawing.Size(671, 463);
-            this.dataGridView.TabIndex = 9;
+            dataGridView.AllowUserToAddRows = false;
+            dataGridView.AllowUserToDeleteRows = false;
+            dataGridView.AllowUserToResizeRows = false;
+            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView.BackgroundColor = Color.White;
+            dataGridView.BorderStyle = BorderStyle.Fixed3D;
+            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = SystemColors.Control;
+            dataGridViewCellStyle3.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle3.Padding = new Padding(0, 2, 0, 2);
+            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
+            dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView.Columns.AddRange(id_document_residence, document_residence);
+            dataGridView.Dock = DockStyle.Fill;
+            dataGridView.Location = new Point(0, 0);
+            dataGridView.MultiSelect = false;
+            dataGridView.Name = "dataGridView";
+            dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView.Size = new Size(671, 463);
+            dataGridView.TabIndex = 9;
             // 
             // id_document_residence
             // 
-            this.id_document_residence.Frozen = true;
-            this.id_document_residence.HeaderText = "Идентификатор органа";
-            this.id_document_residence.Name = "id_document_residence";
-            this.id_document_residence.ReadOnly = true;
-            this.id_document_residence.Visible = false;
+            id_document_residence.Frozen = true;
+            id_document_residence.HeaderText = @"Идентификатор органа";
+            id_document_residence.Name = "id_document_residence";
+            id_document_residence.ReadOnly = true;
+            id_document_residence.Visible = false;
             // 
             // document_residence
             // 
-            this.document_residence.HeaderText = "Наименование";
-            this.document_residence.MinimumWidth = 100;
-            this.document_residence.Name = "document_residence";
+            document_residence.HeaderText = @"Наименование";
+            document_residence.MinimumWidth = 100;
+            document_residence.Name = "document_residence";
             // 
             // DocumentsResidenceViewport
             // 
-            this.ClientSize = new System.Drawing.Size(671, 463);
-            this.Controls.Add(this.dataGridView);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "DocumentsResidenceViewport";
-            this.Text = "Виды документов на проживание";
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
-            this.ResumeLayout(false);
+            ClientSize = new Size(671, 463);
+            Controls.Add(dataGridView);
+            Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            Icon = ((Icon)(resources.GetObject("$this.Icon")));
+            Name = "DocumentsResidenceViewport";
+            Text = @"Виды документов на проживание";
+            ((ISupportInitialize)(dataGridView)).EndInit();
+            ResumeLayout(false);
 
         }
     }

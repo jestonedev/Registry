@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.Entities;
 using Registry.Viewport;
-using System.Globalization;
 
 namespace Registry.SearchForms
 {
@@ -20,69 +16,69 @@ namespace Registry.SearchForms
         {
             InitializeComponent();
             comboBoxCriteriaType.SelectedIndex = 0;
-            foreach (Control control in this.Controls)
+            foreach (Control control in Controls)
             {
                 control.KeyDown += (sender, e) =>
                 {
-                    ComboBox comboBox = sender as ComboBox;
+                    var comboBox = sender as ComboBox;
                     if (comboBox != null && comboBox.DroppedDown)
                         return;
                     if (e.KeyCode == Keys.Enter)
                         vButtonSearch_Click(sender, e);
                     else
                         if (e.KeyCode == Keys.Escape)
-                            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+                            DialogResult = DialogResult.Cancel;
                 };
             }
         }
 
         internal override string GetFilter()
         {
-            string filter = "";
+            var filter = "";
             IEnumerable<int> included_processes = null;
             if (comboBoxCriteriaType.SelectedIndex == 0)
             {
                 //по ФИО участника переселения
-                string[] snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                IEnumerable<int> processes_ids = DataModelHelper.ResettleProcessIDsBySNP(snp);
+                var snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+                var processes_ids = DataModelHelper.ResettleProcessIDsBySNP(snp);
                 included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
             }
             if (comboBoxCriteriaType.SelectedIndex == 1)
             {
                 //по адресу переселения (откуда)
-                string[] addressParts = textBoxCriteria.Text.Trim().Replace("'", "").Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                IEnumerable<int> processes_ids = DataModelHelper.ResettleProcessIDsByAddress(addressParts, Entities.ResettleEstateObjectWay.From);
+                var addressParts = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+                var processes_ids = DataModelHelper.ResettleProcessIDsByAddress(addressParts, ResettleEstateObjectWay.From);
                 included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
             }
             if (comboBoxCriteriaType.SelectedIndex == 2)
             {
                 //по адресу переселения (куда)
-                string[] addressParts = textBoxCriteria.Text.Trim().Replace("'", "").Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                IEnumerable<int> processes_ids = DataModelHelper.ResettleProcessIDsByAddress(addressParts, Entities.ResettleEstateObjectWay.To);
+                var addressParts = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+                var processes_ids = DataModelHelper.ResettleProcessIDsByAddress(addressParts, ResettleEstateObjectWay.To);
                 included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
             }
 
             if (included_processes != null)
             {
-                if (!String.IsNullOrEmpty(filter.Trim()))
+                if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 filter += "id_process IN (0";
-                foreach (int id in included_processes)
+                foreach (var id in included_processes)
                     filter += id.ToString(CultureInfo.InvariantCulture) + ",";
-                filter = filter.TrimEnd(new char[] { ',' }) + ")";
+                filter = filter.TrimEnd(',') + ")";
             }
             return filter;
         }
 
         private void vButtonSearch_Click(object sender, EventArgs e)
         {
-            if (String.IsNullOrEmpty(textBoxCriteria.Text.Trim()))
+            if (string.IsNullOrEmpty(textBoxCriteria.Text.Trim()))
             {
                 MessageBox.Show("Не ввиден критерий поиска","Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            this.DialogResult = System.Windows.Forms.DialogResult.OK;
+            DialogResult = DialogResult.OK;
         }
 
         private void comboBoxCriteriaType_DropDownClosed(object sender, EventArgs e)

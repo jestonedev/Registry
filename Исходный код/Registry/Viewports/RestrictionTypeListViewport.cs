@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
-using System.Data;
 using Registry.Entities;
 using Security;
-using System.Globalization;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
@@ -20,13 +21,13 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        RestrictionTypesDataModel restriction_types = null;
+        RestrictionTypesDataModel restriction_types;
         DataTable snapshot_restriction_types = new DataTable("snapshot_restriction_types");
         #endregion Models
 
         #region Views
-        BindingSource v_restriction_types = null;
-        BindingSource v_snapshot_restriction_types = null;
+        BindingSource v_restriction_types;
+        BindingSource v_snapshot_restriction_types;
         #endregion Views
 
 
@@ -51,15 +52,15 @@ namespace Registry.Viewport
 
         private bool SnapshotHasChanges()
         {
-            List<RestrictionType> list_from_view = RestrictionTypesFromView();
-            List<RestrictionType> list_from_viewport = RestrictionTypesFromViewport();
+            var list_from_view = RestrictionTypesFromView();
+            var list_from_viewport = RestrictionTypesFromViewport();
             if (list_from_view.Count != list_from_viewport.Count)
                 return true;
-            bool founded = false;
-            for (int i = 0; i < list_from_view.Count; i++)
+            var founded = false;
+            for (var i = 0; i < list_from_view.Count; i++)
             {
                 founded = false;
-                for (int j = 0; j < list_from_viewport.Count; j++)
+                for (var j = 0; j < list_from_viewport.Count; j++)
                     if (list_from_view[i] == list_from_viewport[j])
                         founded = true;
                 if (!founded)
@@ -70,7 +71,7 @@ namespace Registry.Viewport
 
         private static object[] DataRowViewToArray(DataRowView dataRowView)
         {
-            return new object[] { 
+            return new[] { 
                 dataRowView["id_restriction_type"], 
                 dataRowView["restriction_type"]
             };
@@ -78,7 +79,7 @@ namespace Registry.Viewport
 
         private static bool ValidateViewportData(List<RestrictionType> list)
         {
-            foreach (RestrictionType restrictionType in list)
+            foreach (var restrictionType in list)
             {
                 if (restrictionType.RestrictionTypeName == null)
                 {
@@ -98,7 +99,7 @@ namespace Registry.Viewport
 
         private static RestrictionType RowToRestrictionType(DataRow row)
         {
-            RestrictionType restrictionType = new RestrictionType();
+            var restrictionType = new RestrictionType();
             restrictionType.IdRestrictionType = ViewportHelper.ValueOrNull<int>(row, "id_restriction_type");
             restrictionType.RestrictionTypeName = ViewportHelper.ValueOrNull(row, "restriction_type");
             return restrictionType;
@@ -106,13 +107,13 @@ namespace Registry.Viewport
 
         private List<RestrictionType> RestrictionTypesFromViewport()
         {
-            List<RestrictionType> list = new List<RestrictionType>();
-            for (int i = 0; i < dataGridView.Rows.Count; i++)
+            var list = new List<RestrictionType>();
+            for (var i = 0; i < dataGridView.Rows.Count; i++)
             {
                 if (!dataGridView.Rows[i].IsNewRow)
                 {
-                    RestrictionType rt = new RestrictionType();
-                    DataGridViewRow row = dataGridView.Rows[i];
+                    var rt = new RestrictionType();
+                    var row = dataGridView.Rows[i];
                     rt.IdRestrictionType = ViewportHelper.ValueOrNull<int>(row, "id_restriction_type");
                     rt.RestrictionTypeName = ViewportHelper.ValueOrNull(row, "restriction_type");
                     list.Add(rt);
@@ -123,11 +124,11 @@ namespace Registry.Viewport
 
         private List<RestrictionType> RestrictionTypesFromView()
         {
-            List<RestrictionType> list = new List<RestrictionType>();
-            for (int i = 0; i < v_restriction_types.Count; i++)
+            var list = new List<RestrictionType>();
+            for (var i = 0; i < v_restriction_types.Count; i++)
             {
-                RestrictionType rt = new RestrictionType();
-                DataRowView row = ((DataRowView)v_restriction_types[i]);
+                var rt = new RestrictionType();
+                var row = ((DataRowView)v_restriction_types[i]);
                 rt.IdRestrictionType = ViewportHelper.ValueOrNull<int>(row, "id_restriction_type");
                 rt.RestrictionTypeName = ViewportHelper.ValueOrNull(row, "restriction_type");
                 list.Add(rt);
@@ -148,7 +149,7 @@ namespace Registry.Viewport
         public override void LoadData()
         {
             dataGridView.AutoGenerateColumns = false;
-            this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
+            DockAreas = DockAreas.Document;
             restriction_types = RestrictionTypesDataModel.GetInstance();
             restriction_types.Select();
 
@@ -157,27 +158,27 @@ namespace Registry.Viewport
             v_restriction_types.DataSource = DataSetManager.DataSet;
 
             //Инициируем колонки snapshot-модели
-            for (int i = 0; i < restriction_types.Select().Columns.Count; i++)
+            for (var i = 0; i < restriction_types.Select().Columns.Count; i++)
                 snapshot_restriction_types.Columns.Add(new DataColumn(restriction_types.Select().Columns[i].ColumnName, 
                     restriction_types.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
-            for (int i = 0; i < v_restriction_types.Count; i++)
+            for (var i = 0; i < v_restriction_types.Count; i++)
                 snapshot_restriction_types.Rows.Add(DataRowViewToArray(((DataRowView)v_restriction_types[i])));
             v_snapshot_restriction_types = new BindingSource();
             v_snapshot_restriction_types.DataSource = snapshot_restriction_types;
-            v_snapshot_restriction_types.CurrentItemChanged += new EventHandler(v_snapshot_restriction_types_CurrentItemChanged);
+            v_snapshot_restriction_types.CurrentItemChanged += v_snapshot_restriction_types_CurrentItemChanged;
 
             dataGridView.DataSource = v_snapshot_restriction_types;
             id_restriction_type.DataPropertyName = "id_restriction_type";
             restriction_type.DataPropertyName = "restriction_type";
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
-            dataGridView.CellValidated += new DataGridViewCellEventHandler(dataGridView_CellValidated);
+            dataGridView.CellValidated += dataGridView_CellValidated;
             //События изменения данных для проверки соответствия реальным данным в модели
-            dataGridView.CellValueChanged += new DataGridViewCellEventHandler(dataGridView_CellValueChanged);
+            dataGridView.CellValueChanged += dataGridView_CellValueChanged;
             //Синхронизация данных исходные->текущие
-            restriction_types.Select().RowChanged += new DataRowChangeEventHandler(RestrictionTypeListViewport_RowChanged);
-            restriction_types.Select().RowDeleting += new DataRowChangeEventHandler(RestrictionTypeListViewport_RowDeleting);
-            restriction_types.Select().RowDeleted += new DataRowChangeEventHandler(RestrictionTypeListViewport_RowDeleted);
+            restriction_types.Select().RowChanged += RestrictionTypeListViewport_RowChanged;
+            restriction_types.Select().RowDeleting += RestrictionTypeListViewport_RowDeleting;
+            restriction_types.Select().RowDeleted += RestrictionTypeListViewport_RowDeleted;
         }
 
         public override void MoveFirst()
@@ -227,7 +228,7 @@ namespace Registry.Viewport
 
         public override void InsertRecord()
         {
-            DataRowView row = (DataRowView)v_snapshot_restriction_types.AddNew();
+            var row = (DataRowView)v_snapshot_restriction_types.AddNew();
             row.EndEdit();
         }
 
@@ -249,7 +250,7 @@ namespace Registry.Viewport
         public override void CancelRecord()
         {
             snapshot_restriction_types.Clear();
-            for (int i = 0; i < v_restriction_types.Count; i++)
+            for (var i = 0; i < v_restriction_types.Count; i++)
                 snapshot_restriction_types.Rows.Add(DataRowViewToArray(((DataRowView)v_restriction_types[i])));
             MenuCallback.EditingStateUpdate();
         }
@@ -263,19 +264,19 @@ namespace Registry.Viewport
         {
             sync_views = false;
             restriction_types.EditingNewRecord = true;
-            List<RestrictionType> list = RestrictionTypesFromViewport();
+            var list = RestrictionTypesFromViewport();
             if (!ValidateViewportData(list))
             {
                 sync_views = true;
                 restriction_types.EditingNewRecord = false;
                 return;
             }
-            for (int i = 0; i < list.Count; i++)
+            for (var i = 0; i < list.Count; i++)
             {
-                DataRow row = restriction_types.Select().Rows.Find(((RestrictionType)list[i]).IdRestrictionType);
+                var row = restriction_types.Select().Rows.Find(list[i].IdRestrictionType);
                 if (row == null)
                 {
-                    int id_restriction_type = RestrictionTypesDataModel.Insert(list[i]);
+                    var id_restriction_type = RestrictionTypesDataModel.Insert(list[i]);
                     if (id_restriction_type == -1)
                     {
                         sync_views = true;
@@ -299,12 +300,12 @@ namespace Registry.Viewport
                 }
             }
             list = RestrictionTypesFromView();
-            for (int i = 0; i < list.Count; i++)
+            for (var i = 0; i < list.Count; i++)
             {
-                int row_index = -1;
-                for (int j = 0; j < dataGridView.Rows.Count; j++)
+                var row_index = -1;
+                for (var j = 0; j < dataGridView.Rows.Count; j++)
                     if ((dataGridView.Rows[j].Cells["id_restriction_type"].Value != null) &&
-                        !String.IsNullOrEmpty(dataGridView.Rows[j].Cells["id_restriction_type"].Value.ToString()) &&
+                        !string.IsNullOrEmpty(dataGridView.Rows[j].Cells["id_restriction_type"].Value.ToString()) &&
                         ((int)dataGridView.Rows[j].Cells["id_restriction_type"].Value == list[i].IdRestrictionType))
                         row_index = j;
                 if (row_index == -1)
@@ -315,7 +316,7 @@ namespace Registry.Viewport
                         restriction_types.EditingNewRecord = false;
                         return;
                     }
-                    restriction_types.Select().Rows.Find(((RestrictionType)list[i]).IdRestrictionType).Delete();
+                    restriction_types.Select().Rows.Find(list[i].IdRestrictionType).Delete();
                 }
             }
             sync_views = true;
@@ -330,19 +331,19 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            RestrictionTypeListViewport viewport = new RestrictionTypeListViewport(this, MenuCallback);
+            var viewport = new RestrictionTypeListViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             return viewport;
         }
 
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
             if (e == null)
                 return;
             if (SnapshotHasChanges())
             {
-                DialogResult result = MessageBox.Show("Сохранить изменения о типах реквизитов в базу данных?", "Внимание",
+                var result = MessageBox.Show("Сохранить изменения о типах реквизитов в базу данных?", "Внимание",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                 if (result == DialogResult.Yes)
                     SaveRecord();
@@ -355,9 +356,9 @@ namespace Registry.Viewport
                         return;
                     }
             }
-            restriction_types.Select().RowChanged -= new DataRowChangeEventHandler(RestrictionTypeListViewport_RowChanged);
-            restriction_types.Select().RowDeleting -= new DataRowChangeEventHandler(RestrictionTypeListViewport_RowDeleting);
-            restriction_types.Select().RowDeleted -= new DataRowChangeEventHandler(RestrictionTypeListViewport_RowDeleted);
+            restriction_types.Select().RowChanged -= RestrictionTypeListViewport_RowChanged;
+            restriction_types.Select().RowDeleting -= RestrictionTypeListViewport_RowDeleting;
+            restriction_types.Select().RowDeleted -= RestrictionTypeListViewport_RowDeleted;
             base.OnClosing(e);
         }
 
@@ -377,7 +378,7 @@ namespace Registry.Viewport
                 return;
             if (e.Action == DataRowAction.Delete)
             {
-                int row_index = v_snapshot_restriction_types.Find("id_restriction_type", e.Row["id_restriction_type"]);
+                var row_index = v_snapshot_restriction_types.Find("id_restriction_type", e.Row["id_restriction_type"]);
                 if (row_index != -1)
                     ((DataRowView)v_snapshot_restriction_types[row_index]).Delete();
             }
@@ -387,18 +388,15 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            int row_index = v_snapshot_restriction_types.Find("id_restriction_type", e.Row["id_restriction_type"]);
+            var row_index = v_snapshot_restriction_types.Find("id_restriction_type", e.Row["id_restriction_type"]);
             if (row_index == -1 && v_restriction_types.Find("id_restriction_type", e.Row["id_restriction_type"]) != -1)
             {
-                snapshot_restriction_types.Rows.Add(new object[] { 
-                        e.Row["id_restriction_type"], 
-                        e.Row["restriction_type"]
-                    });
+                snapshot_restriction_types.Rows.Add(e.Row["id_restriction_type"], e.Row["restriction_type"]);
             }
             else
                 if (row_index != -1)
                 {
-                    DataRowView row = ((DataRowView)v_snapshot_restriction_types[row_index]);
+                    var row = ((DataRowView)v_snapshot_restriction_types[row_index]);
                     row["restriction_type"] = e.Row["restriction_type"];
                 }
             if (Selected)
@@ -411,14 +409,14 @@ namespace Registry.Viewport
 
         void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
         {
-            DataGridViewCell cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            var cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
             switch (cell.OwningColumn.Name)
             {
                 case "restriction_type":
                     if (cell.Value.ToString().Trim().Length > 255)
                         cell.ErrorText = "Длина названия типа реквизита не может превышать 255 символов";
                     else
-                        if (String.IsNullOrEmpty(cell.Value.ToString().Trim()))
+                        if (string.IsNullOrEmpty(cell.Value.ToString().Trim()))
                             cell.ErrorText = "Название типа реквизита не может быть пустым";
                         else
                             cell.ErrorText = "";
@@ -442,68 +440,66 @@ namespace Registry.Viewport
 
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RestrictionTypeListViewport));
-            this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.id_restriction_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.restriction_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
-            this.SuspendLayout();
+            var dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            var resources = new ComponentResourceManager(typeof(RestrictionTypeListViewport));
+            dataGridView = new DataGridView();
+            id_restriction_type = new DataGridViewTextBoxColumn();
+            restriction_type = new DataGridViewTextBoxColumn();
+            ((ISupportInitialize)(dataGridView)).BeginInit();
+            SuspendLayout();
             // 
             // dataGridView
             // 
-            this.dataGridView.AllowUserToAddRows = false;
-            this.dataGridView.AllowUserToDeleteRows = false;
-            this.dataGridView.AllowUserToResizeRows = false;
-            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
-            this.dataGridView.BackgroundColor = System.Drawing.Color.White;
-            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.id_restriction_type,
-            this.restriction_type});
-            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView.Location = new System.Drawing.Point(3, 3);
-            this.dataGridView.MultiSelect = false;
-            this.dataGridView.Name = "dataGridView";
-            this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.ShowCellToolTips = false;
-            this.dataGridView.Size = new System.Drawing.Size(316, 255);
-            this.dataGridView.TabIndex = 4;
+            dataGridView.AllowUserToAddRows = false;
+            dataGridView.AllowUserToDeleteRows = false;
+            dataGridView.AllowUserToResizeRows = false;
+            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dataGridView.BackgroundColor = Color.White;
+            dataGridView.BorderStyle = BorderStyle.None;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Control;
+            dataGridViewCellStyle1.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.Padding = new Padding(0, 2, 0, 2);
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView.Columns.AddRange(id_restriction_type, restriction_type);
+            dataGridView.Dock = DockStyle.Fill;
+            dataGridView.Location = new Point(3, 3);
+            dataGridView.MultiSelect = false;
+            dataGridView.Name = "dataGridView";
+            dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView.ShowCellToolTips = false;
+            dataGridView.Size = new Size(316, 255);
+            dataGridView.TabIndex = 4;
             // 
             // id_restriction_type
             // 
-            this.id_restriction_type.HeaderText = "Идентификатор реквизита";
-            this.id_restriction_type.Name = "id_restriction_type";
-            this.id_restriction_type.Visible = false;
+            id_restriction_type.HeaderText = "Идентификатор реквизита";
+            id_restriction_type.Name = "id_restriction_type";
+            id_restriction_type.Visible = false;
             // 
             // restriction_type
             // 
-            this.restriction_type.HeaderText = "Наименование";
-            this.restriction_type.Name = "restriction_type";
+            restriction_type.HeaderText = "Наименование";
+            restriction_type.Name = "restriction_type";
             // 
             // RestrictionTypeListViewport
             // 
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(322, 261);
-            this.Controls.Add(this.dataGridView);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "RestrictionTypeListViewport";
-            this.Padding = new System.Windows.Forms.Padding(3);
-            this.Text = "Типы реквизитов";
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
-            this.ResumeLayout(false);
+            BackColor = Color.White;
+            ClientSize = new Size(322, 261);
+            Controls.Add(dataGridView);
+            Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            Icon = ((Icon)(resources.GetObject("$this.Icon")));
+            Name = "RestrictionTypeListViewport";
+            Padding = new Padding(3);
+            Text = "Типы реквизитов";
+            ((ISupportInitialize)(dataGridView)).EndInit();
+            ResumeLayout(false);
 
         }
     }

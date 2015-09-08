@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+using System.ComponentModel;
 using System.Data;
-using Registry.DataModels;
-using System.Collections;
-using Registry.Entities;
-using System.Threading;
-using Registry.SearchForms;
-using Registry.CalcDataModels;
-using Security;
+using System.Drawing;
 using System.Globalization;
+using System.Linq;
+using System.Windows.Forms;
+using Registry.CalcDataModels;
+using Registry.DataModels;
+using Registry.Entities;
 using Registry.Reporting;
+using Registry.SearchForms;
+using Security;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
@@ -31,24 +31,24 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        private PremisesDataModel premises = null;
-        private BuildingsDataModel buildings = null;
-        private KladrStreetsDataModel kladr = null;
-        private PremisesTypesDataModel premises_types = null;
-        private ObjectStatesDataModel object_states = null;
-        private CalcDataModelPremisesCurrentFunds premises_funds = null;
-        private FundTypesDataModel fund_types = null;
+        private PremisesDataModel premises;
+        private BuildingsDataModel buildings;
+        private KladrStreetsDataModel kladr;
+        private PremisesTypesDataModel premises_types;
+        private ObjectStatesDataModel object_states;
+        private CalcDataModelPremisesCurrentFunds premises_funds;
+        private FundTypesDataModel fund_types;
         #endregion Models
 
         #region Views
-        private BindingSource v_premises = null;
-        private BindingSource v_buildings = null;
-        private BindingSource v_premises_types = null;
+        private BindingSource v_premises;
+        private BindingSource v_buildings;
+        private BindingSource v_premises_types;
         #endregion Views
 
         //Forms
-        private SearchForm spExtendedSearchForm = null;
-        private SearchForm spSimpleSearchForm = null;
+        private SearchForm spExtendedSearchForm;
+        private SearchForm spSimpleSearchForm;
 
         private PremisesListViewport()
             : this(null)
@@ -63,15 +63,15 @@ namespace Registry.Viewport
         public PremisesListViewport(PremisesListViewport premisesListViewport, IMenuCallback menuCallback)
             : this(menuCallback)
         {
-            this.DynamicFilter = premisesListViewport.DynamicFilter;
-            this.StaticFilter = premisesListViewport.StaticFilter;
-            this.ParentRow = premisesListViewport.ParentRow;
-            this.ParentType = premisesListViewport.ParentType;
+            DynamicFilter = premisesListViewport.DynamicFilter;
+            StaticFilter = premisesListViewport.StaticFilter;
+            ParentRow = premisesListViewport.ParentRow;
+            ParentType = premisesListViewport.ParentType;
         }
 
         public void LocatePremisesBy(int id)
         {
-            int Position = v_premises.Find("id_premises", id);
+            var Position = v_premises.Find("id_premises", id);
             if (Position > 0)
                 v_premises.Position = Position;
         }
@@ -129,7 +129,7 @@ namespace Registry.Viewport
         public override void LoadData()
         {
             dataGridView.AutoGenerateColumns = false;
-            this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
+            DockAreas = DockAreas.Document;
             premises = PremisesDataModel.GetInstance();
             kladr = KladrStreetsDataModel.GetInstance();
             buildings = BuildingsDataModel.GetInstance();
@@ -147,18 +147,18 @@ namespace Registry.Viewport
             premises_funds.Select();
             fund_types.Select();
 
-            DataSet ds = DataSetManager.DataSet;
+            var ds = DataSetManager.DataSet;
 
             v_premises = new BindingSource();
-            v_premises.CurrentItemChanged += new EventHandler(v_premises_CurrentItemChanged);
+            v_premises.CurrentItemChanged += v_premises_CurrentItemChanged;
             v_premises.DataMember = "premises";
             v_premises.DataSource = ds;
             v_premises.Filter = StaticFilter;
-            if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
+            if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 v_premises.Filter += " AND ";
             v_premises.Filter += DynamicFilter;
             if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                Text = "Помещения здания №" + ParentRow["id_building"].ToString();
+                Text = "Помещения здания №" + ParentRow["id_building"];
 
             v_buildings = new BindingSource();
             v_buildings.DataMember = "buildings";
@@ -172,8 +172,8 @@ namespace Registry.Viewport
             id_premises_type.ValueMember = "id_premises_type";
             id_premises_type.DisplayMember = "premises_type";
 
-            premises.Select().RowChanged += new DataRowChangeEventHandler(PremisesListViewport_RowChanged);
-            premises.Select().RowDeleted += new DataRowChangeEventHandler(PremisesListViewport_RowDeleted);
+            premises.Select().RowChanged += PremisesListViewport_RowChanged;
+            premises.Select().RowDeleted += PremisesListViewport_RowDeleted;
             premises_funds.RefreshEvent += premises_funds_RefreshEvent;
             dataGridView.RowCount = v_premises.Count;
 
@@ -205,7 +205,7 @@ namespace Registry.Viewport
                         "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
-                int id_building = (int)((DataRowView)v_premises[v_premises.Position])["id_building"];
+                var id_building = (int)((DataRowView)v_premises[v_premises.Position])["id_building"];
                 if (PremisesDataModel.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
                     return;
                 ((DataRowView)v_premises[v_premises.Position]).Delete();
@@ -224,7 +224,7 @@ namespace Registry.Viewport
 
         public override bool SearchedRecords()
         {
-            if (!String.IsNullOrEmpty(DynamicFilter))
+            if (!string.IsNullOrEmpty(DynamicFilter))
                 return true;
             else
                 return false;
@@ -249,8 +249,8 @@ namespace Registry.Viewport
                     DynamicFilter = spExtendedSearchForm.GetFilter();
                     break;
             }
-            string Filter = StaticFilter;
-            if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
+            var Filter = StaticFilter;
+            if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 Filter += " AND ";
             Filter += DynamicFilter;
             dataGridView.RowCount = 0;
@@ -275,7 +275,7 @@ namespace Registry.Viewport
 
         public override void OpenDetails()
         {
-            PremisesViewport viewport = new PremisesViewport(MenuCallback);
+            var viewport = new PremisesViewport(MenuCallback);
             viewport.StaticFilter = StaticFilter;
             viewport.DynamicFilter = DynamicFilter;
             viewport.ParentRow = ParentRow;
@@ -285,7 +285,7 @@ namespace Registry.Viewport
             else
                 return;
             if (v_premises.Count > 0)
-                viewport.LocatePremisesBy((((DataRowView)v_premises[v_premises.Position])["id_premises"] as Int32?) ?? -1);
+                viewport.LocatePremisesBy((((DataRowView)v_premises[v_premises.Position])["id_premises"] as int?) ?? -1);
             MenuCallback.AddViewport(viewport);
         }
 
@@ -297,7 +297,7 @@ namespace Registry.Viewport
 
         public override void InsertRecord()
         {
-            PremisesViewport viewport = new PremisesViewport(MenuCallback);
+            var viewport = new PremisesViewport(MenuCallback);
             viewport.StaticFilter = StaticFilter;
             viewport.DynamicFilter = DynamicFilter;
             viewport.ParentRow = ParentRow;
@@ -318,7 +318,7 @@ namespace Registry.Viewport
 
         public override void CopyRecord()
         {
-            PremisesViewport viewport = new PremisesViewport(MenuCallback);
+            var viewport = new PremisesViewport(MenuCallback);
             viewport.StaticFilter = StaticFilter;
             viewport.DynamicFilter = DynamicFilter;
             viewport.ParentRow = ParentRow;
@@ -328,18 +328,18 @@ namespace Registry.Viewport
             else
                 return;
             if (v_premises.Count > 0)
-                viewport.LocatePremisesBy((((DataRowView)v_premises[v_premises.Position])["id_premises"] as Int32?) ?? -1);
+                viewport.LocatePremisesBy((((DataRowView)v_premises[v_premises.Position])["id_premises"] as int?) ?? -1);
             MenuCallback.AddViewport(viewport);
             viewport.CopyRecord();
         }
 
         public override Viewport Duplicate()
         {
-            PremisesListViewport viewport = new PremisesListViewport(this, MenuCallback);
+            var viewport = new PremisesListViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             if (v_premises.Count > 0)
-                viewport.LocatePremisesBy((((DataRowView)v_premises[v_premises.Position])["id_premises"] as Int32?) ?? -1);
+                viewport.LocatePremisesBy((((DataRowView)v_premises[v_premises.Position])["id_premises"] as int?) ?? -1);
             return viewport;
         }
 
@@ -385,8 +385,8 @@ namespace Registry.Viewport
 
         public override void RegistryExcerptPremiseReportGenerate()
         {
-            Reporter reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
-            Dictionary<string, string> arguments = new Dictionary<string, string>();
+            var reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
+            var arguments = new Dictionary<string, string>();
             arguments.Add("ids", ((DataRowView)v_premises[v_premises.Position])["id_premises"].ToString());
             arguments.Add("excerpt_type", "1");
             reporter.Run(arguments);
@@ -394,8 +394,8 @@ namespace Registry.Viewport
 
         public override void RegistryExcerptSubPremisesReportGenerate()
         {
-            Reporter reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
-            Dictionary<string, string> arguments = new Dictionary<string, string>();
+            var reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
+            var arguments = new Dictionary<string, string>();
             arguments.Add("ids", ((DataRowView)v_premises[v_premises.Position])["id_premises"].ToString());
             arguments.Add("excerpt_type", "3");
             reporter.Run(arguments);
@@ -500,17 +500,17 @@ namespace Registry.Viewport
         void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (v_premises.Count <= e.RowIndex) return;
-            DataRowView row = ((DataRowView)v_premises[e.RowIndex]);
-            DataRow building_row = buildings.Select().Rows.Find(row["id_building"]);
+            var row = ((DataRowView)v_premises[e.RowIndex]);
+            var building_row = buildings.Select().Rows.Find(row["id_building"]);
             if (building_row == null)
                 return;
-            switch (this.dataGridView.Columns[e.ColumnIndex].Name)
+            switch (dataGridView.Columns[e.ColumnIndex].Name)
             {
                 case "id_premises":
                     e.Value = row["id_premises"];
                     break;
                 case "id_street":
-                    DataRow kladr_row = kladr.Select().Rows.Find(building_row["id_street"]);
+                    var kladr_row = kladr.Select().Rows.Find(building_row["id_street"]);
                     string street_name = null;
                     if (kladr_row != null)
                         street_name = kladr_row["street_name"].ToString();
@@ -529,14 +529,14 @@ namespace Registry.Viewport
                     e.Value = row["total_area"];
                     break;
                 case "id_state":
-                    DataRow state_row = object_states.Select().Rows.Find(row["id_state"]);
+                    var state_row = object_states.Select().Rows.Find(row["id_state"]);
                     if (state_row != null)
                         e.Value = state_row["state_female"];
                     break;
                 case "current_fund":
                     if ((new object[] { 1, 4, 5, 9 }).Contains(row["id_state"]))
                     {
-                        DataRow fund_row = premises_funds.Select().Rows.Find(row["id_premises"]);
+                        var fund_row = premises_funds.Select().Rows.Find(row["id_premises"]);
                         if (fund_row != null)
                             e.Value = fund_types.Select().Rows.Find(fund_row["id_fund_type"])["fund_type"];
                     }
@@ -586,146 +586,138 @@ namespace Registry.Viewport
 
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PremisesListViewport));
-            this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.id_premises = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_street = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.house = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.premises_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_premises_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.current_fund = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
-            this.SuspendLayout();
+            var dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            var dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            var resources = new ComponentResourceManager(typeof(PremisesListViewport));
+            dataGridView = new DataGridView();
+            id_premises = new DataGridViewTextBoxColumn();
+            id_street = new DataGridViewTextBoxColumn();
+            house = new DataGridViewTextBoxColumn();
+            premises_num = new DataGridViewTextBoxColumn();
+            id_premises_type = new DataGridViewComboBoxColumn();
+            total_area = new DataGridViewTextBoxColumn();
+            id_state = new DataGridViewTextBoxColumn();
+            current_fund = new DataGridViewTextBoxColumn();
+            ((ISupportInitialize)(dataGridView)).BeginInit();
+            SuspendLayout();
             // 
             // dataGridView
             // 
-            this.dataGridView.AllowUserToAddRows = false;
-            this.dataGridView.AllowUserToDeleteRows = false;
-            this.dataGridView.AllowUserToResizeRows = false;
-            this.dataGridView.BackgroundColor = System.Drawing.Color.White;
-            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.id_premises,
-            this.id_street,
-            this.house,
-            this.premises_num,
-            this.id_premises_type,
-            this.total_area,
-            this.id_state,
-            this.current_fund});
-            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dataGridView.Location = new System.Drawing.Point(3, 3);
-            this.dataGridView.MultiSelect = false;
-            this.dataGridView.Name = "dataGridView";
-            this.dataGridView.ReadOnly = true;
-            this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.ShowCellToolTips = false;
-            this.dataGridView.Size = new System.Drawing.Size(1125, 704);
-            this.dataGridView.TabIndex = 0;
-            this.dataGridView.VirtualMode = true;
-            this.dataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellDoubleClick);
-            this.dataGridView.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView_CellValueNeeded);
-            this.dataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_ColumnHeaderMouseClick);
-            this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
-            this.dataGridView.Resize += new System.EventHandler(this.dataGridView_Resize);
+            dataGridView.AllowUserToAddRows = false;
+            dataGridView.AllowUserToDeleteRows = false;
+            dataGridView.AllowUserToResizeRows = false;
+            dataGridView.BackgroundColor = Color.White;
+            dataGridView.BorderStyle = BorderStyle.None;
+            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = SystemColors.Control;
+            dataGridViewCellStyle1.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
+            dataGridViewCellStyle1.Padding = new Padding(0, 2, 0, 2);
+            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
+            dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridView.Columns.AddRange(id_premises, id_street, house, premises_num, id_premises_type, total_area, id_state, current_fund);
+            dataGridView.Dock = DockStyle.Fill;
+            dataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
+            dataGridView.Location = new Point(3, 3);
+            dataGridView.MultiSelect = false;
+            dataGridView.Name = "dataGridView";
+            dataGridView.ReadOnly = true;
+            dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridView.ShowCellToolTips = false;
+            dataGridView.Size = new Size(1125, 704);
+            dataGridView.TabIndex = 0;
+            dataGridView.VirtualMode = true;
+            dataGridView.CellDoubleClick += dataGridView_CellDoubleClick;
+            dataGridView.CellValueNeeded += dataGridView_CellValueNeeded;
+            dataGridView.ColumnHeaderMouseClick += dataGridView_ColumnHeaderMouseClick;
+            dataGridView.SelectionChanged += dataGridView_SelectionChanged;
+            dataGridView.Resize += dataGridView_Resize;
             // 
             // id_premises
             // 
-            this.id_premises.HeaderText = "№";
-            this.id_premises.MinimumWidth = 100;
-            this.id_premises.Name = "id_premises";
-            this.id_premises.ReadOnly = true;
+            id_premises.HeaderText = "№";
+            id_premises.MinimumWidth = 100;
+            id_premises.Name = "id_premises";
+            id_premises.ReadOnly = true;
             // 
             // id_street
             // 
-            this.id_street.HeaderText = "Адрес";
-            this.id_street.MinimumWidth = 250;
-            this.id_street.Name = "id_street";
-            this.id_street.ReadOnly = true;
-            this.id_street.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.id_street.Width = 250;
+            id_street.HeaderText = "Адрес";
+            id_street.MinimumWidth = 250;
+            id_street.Name = "id_street";
+            id_street.ReadOnly = true;
+            id_street.SortMode = DataGridViewColumnSortMode.NotSortable;
+            id_street.Width = 250;
             // 
             // house
             // 
-            this.house.HeaderText = "Дом";
-            this.house.MinimumWidth = 100;
-            this.house.Name = "house";
-            this.house.ReadOnly = true;
-            this.house.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            house.HeaderText = "Дом";
+            house.MinimumWidth = 100;
+            house.Name = "house";
+            house.ReadOnly = true;
+            house.SortMode = DataGridViewColumnSortMode.NotSortable;
             // 
             // premises_num
             // 
-            this.premises_num.HeaderText = "Помещение";
-            this.premises_num.MinimumWidth = 100;
-            this.premises_num.Name = "premises_num";
-            this.premises_num.ReadOnly = true;
+            premises_num.HeaderText = "Помещение";
+            premises_num.MinimumWidth = 100;
+            premises_num.Name = "premises_num";
+            premises_num.ReadOnly = true;
             // 
             // id_premises_type
             // 
-            this.id_premises_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
-            this.id_premises_type.HeaderText = "Тип помещения";
-            this.id_premises_type.MinimumWidth = 150;
-            this.id_premises_type.Name = "id_premises_type";
-            this.id_premises_type.ReadOnly = true;
-            this.id_premises_type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.id_premises_type.Width = 150;
+            id_premises_type.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
+            id_premises_type.HeaderText = "Тип помещения";
+            id_premises_type.MinimumWidth = 150;
+            id_premises_type.Name = "id_premises_type";
+            id_premises_type.ReadOnly = true;
+            id_premises_type.SortMode = DataGridViewColumnSortMode.Automatic;
+            id_premises_type.Width = 150;
             // 
             // total_area
             // 
             dataGridViewCellStyle2.Format = "#0.0## м²";
-            this.total_area.DefaultCellStyle = dataGridViewCellStyle2;
-            this.total_area.HeaderText = "Общая площадь";
-            this.total_area.MinimumWidth = 140;
-            this.total_area.Name = "total_area";
-            this.total_area.ReadOnly = true;
-            this.total_area.Width = 140;
+            total_area.DefaultCellStyle = dataGridViewCellStyle2;
+            total_area.HeaderText = "Общая площадь";
+            total_area.MinimumWidth = 140;
+            total_area.Name = "total_area";
+            total_area.ReadOnly = true;
+            total_area.Width = 140;
             // 
             // id_state
             // 
-            this.id_state.HeaderText = "Текущее состояние";
-            this.id_state.MinimumWidth = 170;
-            this.id_state.Name = "id_state";
-            this.id_state.ReadOnly = true;
-            this.id_state.Width = 170;
+            id_state.HeaderText = "Текущее состояние";
+            id_state.MinimumWidth = 170;
+            id_state.Name = "id_state";
+            id_state.ReadOnly = true;
+            id_state.Width = 170;
             // 
             // current_fund
             // 
-            this.current_fund.HeaderText = "Текущий фонд";
-            this.current_fund.MinimumWidth = 170;
-            this.current_fund.Name = "current_fund";
-            this.current_fund.ReadOnly = true;
-            this.current_fund.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.current_fund.Width = 170;
+            current_fund.HeaderText = "Текущий фонд";
+            current_fund.MinimumWidth = 170;
+            current_fund.Name = "current_fund";
+            current_fund.ReadOnly = true;
+            current_fund.SortMode = DataGridViewColumnSortMode.NotSortable;
+            current_fund.Width = 170;
             // 
             // PremisesListViewport
             // 
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1131, 710);
-            this.Controls.Add(this.dataGridView);
-            this.DoubleBuffered = true;
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "PremisesListViewport";
-            this.Padding = new System.Windows.Forms.Padding(3);
-            this.Text = "Перечень помещений";
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
-            this.ResumeLayout(false);
+            BackColor = Color.White;
+            ClientSize = new Size(1131, 710);
+            Controls.Add(dataGridView);
+            DoubleBuffered = true;
+            Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            Icon = ((Icon)(resources.GetObject("$this.Icon")));
+            Name = "PremisesListViewport";
+            Padding = new Padding(3);
+            Text = "Перечень помещений";
+            ((ISupportInitialize)(dataGridView)).EndInit();
+            ResumeLayout(false);
 
         }
     }

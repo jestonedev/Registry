@@ -1,13 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Registry.DataModels;
-using System.Data;
 using Registry.Entities;
 using Security;
-using System.Globalization;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
@@ -54,13 +55,13 @@ namespace Registry.Viewport
         #endregion Components
 
         //Modeles
-        ClaimsDataModel claims = null;
+        ClaimsDataModel claims;
 
         //Views
-        BindingSource v_claims = null;
+        BindingSource v_claims;
 
         private ViewportState viewportState = ViewportState.ReadState;
-        private bool is_editable = false;
+        private bool is_editable;
 
         private ClaimListViewport()
             : this(null)
@@ -76,18 +77,18 @@ namespace Registry.Viewport
         public ClaimListViewport(ClaimListViewport claimListViewport, IMenuCallback menuCallback)
             : this(menuCallback)
         {
-            this.DynamicFilter = claimListViewport.DynamicFilter;
-            this.StaticFilter = claimListViewport.StaticFilter;
-            this.ParentRow = claimListViewport.ParentRow;
-            this.ParentType = claimListViewport.ParentType;
+            DynamicFilter = claimListViewport.DynamicFilter;
+            StaticFilter = claimListViewport.StaticFilter;
+            ParentRow = claimListViewport.ParentRow;
+            ParentType = claimListViewport.ParentType;
         }
 
         private void LocateClaimBy(int id)
         {
-            int Position = v_claims.Find("id_claim", id);
+            var position = v_claims.Find("id_claim", id);
             is_editable = false;
-            if (Position > 0)
-                v_claims.Position = Position;
+            if (position > 0)
+                v_claims.Position = position;
             is_editable = true;
         }
 
@@ -97,26 +98,26 @@ namespace Registry.Viewport
             {
                 if ((ParentRow != null) && (ParentType == ParentTypeEnum.Tenancy))
                 {
-                    this.Text = String.Format(CultureInfo.InvariantCulture, "Новая исковая работа найма №{0}", ParentRow["id_process"]);
+                    Text = string.Format(CultureInfo.InvariantCulture, "Новая исковая работа найма №{0}", ParentRow["id_process"]);
                 }
                 else
-                    this.Text = "Новая исковая работа";
+                    Text = @"Новая исковая работа";
             }
             else
                 if (v_claims.Position != -1)
                 {
                     if ((ParentRow != null) && (ParentType == ParentTypeEnum.Tenancy))
-                        this.Text = String.Format(CultureInfo.InvariantCulture, "Исковая работа №{0} найма №{1}",
+                        Text = string.Format(CultureInfo.InvariantCulture, "Исковая работа №{0} найма №{1}",
                             ((DataRowView)v_claims[v_claims.Position])["id_claim"], ParentRow["id_process"]);
                     else
-                        this.Text = String.Format(CultureInfo.InvariantCulture, "Исковая работа №{0}", ((DataRowView)v_claims[v_claims.Position])["id_claim"]);
+                        Text = string.Format(CultureInfo.InvariantCulture, "Исковая работа №{0}", ((DataRowView)v_claims[v_claims.Position])["id_claim"]);
                 }
                 else
                 {
                     if ((ParentRow != null) && (ParentType == ParentTypeEnum.Tenancy))
-                        this.Text = String.Format(CultureInfo.InvariantCulture, "Исковые работы в найме №{0} отсутствуют", ParentRow["id_process"]);
+                        Text = string.Format(CultureInfo.InvariantCulture, "Исковые работы в найме №{0} отсутствуют", ParentRow["id_process"]);
                     else
-                        this.Text = "Исковые работы отсутствуют";
+                        Text = @"Исковые работы отсутствуют";
                 }
         }
 
@@ -150,29 +151,29 @@ namespace Registry.Viewport
 
         private void UnbindedCheckBoxesUpdate()
         {
-            DataRowView row = (v_claims.Position >= 0) ? (DataRowView)v_claims[v_claims.Position] : null;
-            if ((v_claims.Position >= 0) && (row["date_of_transfer"] != DBNull.Value))
+            var row = (v_claims.Position >= 0) ? (DataRowView)v_claims[v_claims.Position] : null;
+            if (row != null && ((v_claims.Position >= 0) && (row["date_of_transfer"] != DBNull.Value)))
                 dateTimePickerDateOfTransfer.Checked = true;
             else
             {
                 dateTimePickerDateOfTransfer.Value = DateTime.Now.Date;
                 dateTimePickerDateOfTransfer.Checked = false;
             }
-            if ((v_claims.Position >= 0) && (row["at_date"] != DBNull.Value))
+            if (row != null && ((v_claims.Position >= 0) && (row["at_date"] != DBNull.Value)))
                 dateTimePickerAtDate.Checked = true;
             else
             {
                 dateTimePickerAtDate.Value = DateTime.Now.Date;
                 dateTimePickerAtDate.Checked = false;
             }
-            if ((v_claims.Position >= 0) && (row["start_dept_period"] != DBNull.Value))
+            if (row != null && ((v_claims.Position >= 0) && (row["start_dept_period"] != DBNull.Value)))
                 dateTimePickerStartDeptPeriod.Checked = true;
             else
             {
                 dateTimePickerStartDeptPeriod.Value = DateTime.Now.Date;
                 dateTimePickerStartDeptPeriod.Checked = false;
             }
-            if ((v_claims.Position >= 0) && (row["end_dept_period"] != DBNull.Value))
+            if (row != null && ((v_claims.Position >= 0) && (row["end_dept_period"] != DBNull.Value)))
                 dateTimePickerEndDeptPeriod.Checked = true;
             else
             {
@@ -185,7 +186,7 @@ namespace Registry.Viewport
         {
             if (!is_editable)
                 return;
-            if ((!this.ContainsFocus) || (dataGridViewClaims.Focused))
+            if ((!ContainsFocus) || (dataGridViewClaims.Focused))
                 return;
             if ((v_claims.Position != -1) && (ClaimFromView() != ClaimFromViewport()))
             {
@@ -218,18 +219,20 @@ namespace Registry.Viewport
                             return true;
                         case ViewportState.NewRowState:
                         case ViewportState.ModifyRowState:
-                            DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
+                            var result = MessageBox.Show(@"Сохранить изменения в базу данных?", @"Внимание",
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                            if (result == DialogResult.Yes)
-                                SaveRecord();
-                            else
-                                if (result == DialogResult.No)
+                            switch (result)
+                            {
+                                case DialogResult.Yes:
+                                    SaveRecord();
+                                    break;
+                                case DialogResult.No:
                                     CancelRecord();
-                                else return false;
-                            if (viewportState == ViewportState.ReadState)
-                                return true;
-                            else
-                                return false;
+                                    break;
+                                default:
+                                    return false;
+                            }
+                            return viewportState == ViewportState.ReadState;
                     }
                     break;
                 case ViewportState.NewRowState:
@@ -238,30 +241,28 @@ namespace Registry.Viewport
                         case ViewportState.ReadState:
                             if (claims.EditingNewRecord)
                                 return false;
-                            else
-                            {
-                                viewportState = ViewportState.NewRowState;
-                                return true;
-                            }
+                            viewportState = ViewportState.NewRowState;
+                            return true;
                         case ViewportState.NewRowState:
                             return true;
                         case ViewportState.ModifyRowState:
-                            DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
+                            var result = MessageBox.Show(@"Сохранить изменения в базу данных?", @"Внимание",
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                            if (result == DialogResult.Yes)
-                                SaveRecord();
-                            else
-                                if (result == DialogResult.No)
+                            switch (result)
+                            {
+                                case DialogResult.Yes:
+                                    SaveRecord();
+                                    break;
+                                case DialogResult.No:
                                     CancelRecord();
-                                else
+                                    break;
+                                default:
                                     return false;
-                            if (viewportState == ViewportState.ReadState)
-                                return ChangeViewportStateTo(ViewportState.NewRowState);
-                            else
-                                return false;
+                            }
+                            return viewportState == ViewportState.ReadState && ChangeViewportStateTo(ViewportState.NewRowState);
                     }
                     break;
-                case ViewportState.ModifyRowState: ;
+                case ViewportState.ModifyRowState:
                     switch (viewportState)
                     {
                         case ViewportState.ReadState:
@@ -270,19 +271,20 @@ namespace Registry.Viewport
                         case ViewportState.ModifyRowState:
                             return true;
                         case ViewportState.NewRowState:
-                            DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
+                            var result = MessageBox.Show(@"Сохранить изменения в базу данных?", @"Внимание",
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                            if (result == DialogResult.Yes)
-                                SaveRecord();
-                            else
-                                if (result == DialogResult.No)
+                            switch (result)
+                            {
+                                case DialogResult.Yes:
+                                    SaveRecord();
+                                    break;
+                                case DialogResult.No:
                                     CancelRecord();
-                                else
+                                    break;
+                                default:
                                     return false;
-                            if (viewportState == ViewportState.ReadState)
-                                return ChangeViewportStateTo(ViewportState.ModifyRowState);
-                            else
-                                return false;
+                            }
+                            return viewportState == ViewportState.ReadState && ChangeViewportStateTo(ViewportState.ModifyRowState);
                     }
                     break;
             }
@@ -293,27 +295,24 @@ namespace Registry.Viewport
         {
             if (claim.IdProcess == null)
             {
-                MessageBox.Show("Необходимо задать внутренний номер процесса найм. Если вы видите это сообщение, обратитесь к системному администратору",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Необходимо задать внутренний номер процесса найм. Если вы видите это сообщение, обратитесь к системному администратору",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            var tenancy_rows = from tenancy_row in DataModelHelper.FilterRows(TenancyProcessesDataModel.GetInstance().Select())
-                               where tenancy_row.Field<int>("id_process") == claim.IdProcess
-                               select tenancy_row;
-            if (tenancy_rows.Count() == 0)
-            {
-                MessageBox.Show("Процесса найма с указаннным внутренним номером не существует",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                numericUpDownProcessID.Focus();
-                return false;
-            }
-            return true;
+            var tenancyRows = from tenancyRow in DataModelHelper.FilterRows(TenancyProcessesDataModel.GetInstance().Select())
+                               where tenancyRow.Field<int>("id_process") == claim.IdProcess
+                               select tenancyRow;
+            if (tenancyRows.Any()) return true;
+            MessageBox.Show(@"Процесса найма с указаннным внутренним номером не существует",
+                @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+            numericUpDownProcessID.Focus();
+            return false;
         }
 
         private Claim ClaimFromView()
         {
-            Claim claim = new Claim();
-            DataRowView row = (DataRowView)v_claims[v_claims.Position];
+            var claim = new Claim();
+            var row = (DataRowView)v_claims[v_claims.Position];
             claim.IdClaim = ViewportHelper.ValueOrNull<int>(row, "id_claim");
             claim.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
             claim.AmountOfDebtRent = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_debt_rent");
@@ -332,7 +331,7 @@ namespace Registry.Viewport
 
         private Claim ClaimFromViewport()
         {
-            Claim claim = new Claim();
+            var claim = new Claim();
             if ((v_claims.Position == -1) || ((DataRowView)v_claims[v_claims.Position])["id_claim"] is DBNull)
                 claim.IdClaim = null;
             else
@@ -455,21 +454,21 @@ namespace Registry.Viewport
 
         public override void LoadData()
         {
-            this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
+            DockAreas = DockAreas.Document;
             dataGridViewClaims.AutoGenerateColumns = false;
             claims = ClaimsDataModel.GetInstance();
 
             // Ожидаем дозагрузки, если это необходимо
             claims.Select();
 
-            DataSet ds = DataSetManager.DataSet;
+            var ds = DataSetManager.DataSet;
 
             v_claims = new BindingSource();
-            v_claims.CurrentItemChanged += new EventHandler(v_claims_CurrentItemChanged);
+            v_claims.CurrentItemChanged += v_claims_CurrentItemChanged;
             v_claims.DataMember = "claims";
             v_claims.DataSource = ds;
             v_claims.Filter = StaticFilter;
-            if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
+            if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 v_claims.Filter += " AND ";
             v_claims.Filter += DynamicFilter;
 
@@ -478,8 +477,8 @@ namespace Registry.Viewport
 
             DataBind();
 
-            claims.Select().RowChanged += new DataRowChangeEventHandler(ClaimListViewport_RowChanged);
-            claims.Select().RowDeleted += new DataRowChangeEventHandler(ClaimListViewport_RowDeleted);
+            claims.Select().RowChanged += ClaimListViewport_RowChanged;
+            claims.Select().RowDeleted += ClaimListViewport_RowDeleted;
 
             dataGridViewClaims.RowCount = v_claims.Count;
             SetViewportCaption();
@@ -517,7 +516,7 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             is_editable = false;
-            Claim claim = ClaimFromView();
+            var claim = ClaimFromView();
             dataGridViewClaims.RowCount = dataGridViewClaims.RowCount + 1;
             v_claims.AddNew();
             dataGridViewClaims.Enabled = false;
@@ -540,18 +539,17 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-            {
-                if (ClaimsDataModel.Delete((int)((DataRowView)v_claims.Current)["id_claim"]) == -1)
-                    return;
-                is_editable = false;
-                ((DataRowView)v_claims[v_claims.Position]).Delete();
-                is_editable = true;
-                viewportState = ViewportState.ReadState;
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.ForceCloseDetachedViewports();
-            }
+            if (MessageBox.Show(@"Вы действительно хотите удалить эту запись?", @"Внимание",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                return;
+            if (ClaimsDataModel.Delete((int)((DataRowView)v_claims.Current)["id_claim"]) == -1)
+                return;
+            is_editable = false;
+            ((DataRowView)v_claims[v_claims.Position]).Delete();
+            is_editable = true;
+            viewportState = ViewportState.ReadState;
+            MenuCallback.EditingStateUpdate();
+            MenuCallback.ForceCloseDetachedViewports();
         }
 
         public override bool CanSaveRecord()
@@ -562,24 +560,24 @@ namespace Registry.Viewport
 
         public override void SaveRecord()
         {
-            Claim claim = ClaimFromViewport();
+            var claim = ClaimFromViewport();
             if (!ValidateClaim(claim))
                 return;
             switch (viewportState)
             {
                 case ViewportState.ReadState:
-                    MessageBox.Show("Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
+                    MessageBox.Show(@"Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
-                    int id_claim = ClaimsDataModel.Insert(claim);
-                    if (id_claim == -1)
+                    var idClaim = ClaimsDataModel.Insert(claim);
+                    if (idClaim == -1)
                     {
                         claims.EditingNewRecord = false;
                         return;
                     }
                     DataRowView newRow;
-                    claim.IdClaim = id_claim;
+                    claim.IdClaim = idClaim;
                     is_editable = false;
                     if (v_claims.Position == -1)
                         newRow = (DataRowView)v_claims.AddNew();
@@ -591,14 +589,14 @@ namespace Registry.Viewport
                 case ViewportState.ModifyRowState:
                     if (claim.IdClaim == null)
                     {
-                        MessageBox.Show("Вы пытаетесь изменить запись о претензионно-исковой работе без внутреннего номера. " +
-                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", 
+                        MessageBox.Show(@"Вы пытаетесь изменить запись о претензионно-исковой работе без внутреннего номера. " +
+                            @"Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка", 
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
                     if (ClaimsDataModel.Update(claim) == -1)
                         return;
-                    DataRowView row = ((DataRowView)v_claims[v_claims.Position]);
+                    var row = ((DataRowView)v_claims[v_claims.Position]);
                     is_editable = false;
                     FillRowFromClaim(claim, row);
                     break;
@@ -654,24 +652,22 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            ClaimListViewport viewport = new ClaimListViewport(this, MenuCallback);
+            var viewport = new ClaimListViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             if (v_claims.Count > 0)
-                viewport.LocateClaimBy((((DataRowView)v_claims[v_claims.Position])["id_claim"] as Int32?) ?? -1);
+                viewport.LocateClaimBy((((DataRowView)v_claims[v_claims.Position])["id_claim"] as int?) ?? -1);
             return viewport;
         }
 
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
-            if (e == null)
-                return;
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
             else
             {
-                claims.Select().RowChanged -= new DataRowChangeEventHandler(ClaimListViewport_RowChanged);
-                claims.Select().RowDeleted -= new DataRowChangeEventHandler(ClaimListViewport_RowDeleted);
+                claims.Select().RowChanged -= ClaimListViewport_RowChanged;
+                claims.Select().RowDeleted -= ClaimListViewport_RowDeleted;
             }
             base.OnClosing(e);
         }
@@ -680,9 +676,9 @@ namespace Registry.Viewport
         {
             if (viewportState == ViewportState.NewRowState)
                 claims.EditingNewRecord = false;
-            claims.Select().RowChanged -= new DataRowChangeEventHandler(ClaimListViewport_RowChanged);
-            claims.Select().RowDeleted -= new DataRowChangeEventHandler(ClaimListViewport_RowDeleted);
-            base.Close();
+            claims.Select().RowChanged -= ClaimListViewport_RowChanged;
+            claims.Select().RowDeleted -= ClaimListViewport_RowDeleted;
+            Close();
         }
 
         public override bool HasAssocClaimStates()
@@ -696,7 +692,8 @@ namespace Registry.Viewport
                 return;
             if (v_claims.Position == -1)
             {
-                MessageBox.Show("Не выбрана протензионно-исковая работа для отображения ее состояний", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Не выбрана протензионно-исковая работа для отображения ее состояний", @"Ошибка", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             ShowAssocViewport(MenuCallback, ViewportType.ClaimStatesViewport,
@@ -743,7 +740,7 @@ namespace Registry.Viewport
         {
             if (dataGridViewClaims.Columns[e.ColumnIndex].SortMode == DataGridViewColumnSortMode.NotSortable)
                 return;
-            Func<SortOrder, bool> changeSortColumn = (way) =>
+            Func<SortOrder, bool> changeSortColumn = way =>
             {
                 foreach (DataGridViewColumn column in dataGridViewClaims.Columns)
                     column.HeaderCell.SortGlyphDirection = SortOrder.None;
@@ -751,10 +748,10 @@ namespace Registry.Viewport
                 dataGridViewClaims.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = way;
                 return true;
             };
-            if (dataGridViewClaims.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection == SortOrder.Ascending)
-                changeSortColumn(SortOrder.Descending);
-            else
-                changeSortColumn(SortOrder.Ascending);
+            changeSortColumn(dataGridViewClaims.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection ==
+                             SortOrder.Ascending
+                ? SortOrder.Descending
+                : SortOrder.Ascending);
             dataGridViewClaims.Refresh();
         }
 
@@ -770,7 +767,7 @@ namespace Registry.Viewport
         void dataGridViewClaims_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (v_claims.Count <= e.RowIndex) return;
-            switch (this.dataGridViewClaims.Columns[e.ColumnIndex].Name)
+            switch (dataGridViewClaims.Columns[e.ColumnIndex].Name)
             {
                 case "id_claim":
                     e.Value = ((DataRowView)v_claims[e.RowIndex])["id_claim"];
@@ -892,556 +889,550 @@ namespace Registry.Viewport
 
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClaimListViewport));
-            this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
-            this.groupBox34 = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel8 = new System.Windows.Forms.Panel();
-            this.numericUpDownAmountOfDebtRent = new System.Windows.Forms.NumericUpDown();
-            this.label102 = new System.Windows.Forms.Label();
-            this.numericUpDownAmountOfFine = new System.Windows.Forms.NumericUpDown();
-            this.label93 = new System.Windows.Forms.Label();
-            this.numericUpDownAmountOfRent = new System.Windows.Forms.NumericUpDown();
-            this.label92 = new System.Windows.Forms.Label();
-            this.dateTimePickerAtDate = new System.Windows.Forms.DateTimePicker();
-            this.label91 = new System.Windows.Forms.Label();
-            this.dateTimePickerDateOfTransfer = new System.Windows.Forms.DateTimePicker();
-            this.label90 = new System.Windows.Forms.Label();
-            this.numericUpDownAmountOfDebtFine = new System.Windows.Forms.NumericUpDown();
-            this.label89 = new System.Windows.Forms.Label();
-            this.panel9 = new System.Windows.Forms.Panel();
-            this.numericUpDownProcessID = new System.Windows.Forms.NumericUpDown();
-            this.label103 = new System.Windows.Forms.Label();
-            this.numericUpDownAmountOfFineRecover = new System.Windows.Forms.NumericUpDown();
-            this.label95 = new System.Windows.Forms.Label();
-            this.textBoxDescription = new System.Windows.Forms.TextBox();
-            this.numericUpDownAmountOfRentRecover = new System.Windows.Forms.NumericUpDown();
-            this.label99 = new System.Windows.Forms.Label();
-            this.label94 = new System.Windows.Forms.Label();
-            this.label98 = new System.Windows.Forms.Label();
-            this.dateTimePickerEndDeptPeriod = new System.Windows.Forms.DateTimePicker();
-            this.label97 = new System.Windows.Forms.Label();
-            this.dateTimePickerStartDeptPeriod = new System.Windows.Forms.DateTimePicker();
-            this.label96 = new System.Windows.Forms.Label();
-            this.dataGridViewClaims = new System.Windows.Forms.DataGridView();
-            this.id_claim = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.date_of_transfer = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.amount_of_debt_rent = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.amount_of_debt_fine = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.at_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.tableLayoutPanel15.SuspendLayout();
-            this.groupBox34.SuspendLayout();
-            this.tableLayoutPanel16.SuspendLayout();
-            this.panel8.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountOfDebtRent)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountOfFine)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountOfRent)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountOfDebtFine)).BeginInit();
-            this.panel9.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownProcessID)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountOfFineRecover)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountOfRentRecover)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewClaims)).BeginInit();
-            this.SuspendLayout();
+            var dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            var dataGridViewCellStyle2 = new DataGridViewCellStyle();
+            var resources = new ComponentResourceManager(typeof(ClaimListViewport));
+            tableLayoutPanel15 = new TableLayoutPanel();
+            groupBox34 = new GroupBox();
+            tableLayoutPanel16 = new TableLayoutPanel();
+            panel8 = new Panel();
+            numericUpDownAmountOfDebtRent = new NumericUpDown();
+            label102 = new Label();
+            numericUpDownAmountOfFine = new NumericUpDown();
+            label93 = new Label();
+            numericUpDownAmountOfRent = new NumericUpDown();
+            label92 = new Label();
+            dateTimePickerAtDate = new DateTimePicker();
+            label91 = new Label();
+            dateTimePickerDateOfTransfer = new DateTimePicker();
+            label90 = new Label();
+            numericUpDownAmountOfDebtFine = new NumericUpDown();
+            label89 = new Label();
+            panel9 = new Panel();
+            numericUpDownProcessID = new NumericUpDown();
+            label103 = new Label();
+            numericUpDownAmountOfFineRecover = new NumericUpDown();
+            label95 = new Label();
+            textBoxDescription = new TextBox();
+            numericUpDownAmountOfRentRecover = new NumericUpDown();
+            label99 = new Label();
+            label94 = new Label();
+            label98 = new Label();
+            dateTimePickerEndDeptPeriod = new DateTimePicker();
+            label97 = new Label();
+            dateTimePickerStartDeptPeriod = new DateTimePicker();
+            label96 = new Label();
+            dataGridViewClaims = new DataGridView();
+            id_claim = new DataGridViewTextBoxColumn();
+            date_of_transfer = new DataGridViewTextBoxColumn();
+            amount_of_debt_rent = new DataGridViewTextBoxColumn();
+            amount_of_debt_fine = new DataGridViewTextBoxColumn();
+            at_date = new DataGridViewTextBoxColumn();
+            description = new DataGridViewTextBoxColumn();
+            tableLayoutPanel15.SuspendLayout();
+            groupBox34.SuspendLayout();
+            tableLayoutPanel16.SuspendLayout();
+            panel8.SuspendLayout();
+            ((ISupportInitialize)(numericUpDownAmountOfDebtRent)).BeginInit();
+            ((ISupportInitialize)(numericUpDownAmountOfFine)).BeginInit();
+            ((ISupportInitialize)(numericUpDownAmountOfRent)).BeginInit();
+            ((ISupportInitialize)(numericUpDownAmountOfDebtFine)).BeginInit();
+            panel9.SuspendLayout();
+            ((ISupportInitialize)(numericUpDownProcessID)).BeginInit();
+            ((ISupportInitialize)(numericUpDownAmountOfFineRecover)).BeginInit();
+            ((ISupportInitialize)(numericUpDownAmountOfRentRecover)).BeginInit();
+            ((ISupportInitialize)(dataGridViewClaims)).BeginInit();
+            SuspendLayout();
             // 
             // tableLayoutPanel15
             // 
-            this.tableLayoutPanel15.ColumnCount = 1;
-            this.tableLayoutPanel15.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel15.Controls.Add(this.groupBox34, 0, 0);
-            this.tableLayoutPanel15.Controls.Add(this.dataGridViewClaims, 0, 1);
-            this.tableLayoutPanel15.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel15.Location = new System.Drawing.Point(3, 3);
-            this.tableLayoutPanel15.Name = "tableLayoutPanel15";
-            this.tableLayoutPanel15.RowCount = 2;
-            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 196F));
-            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel15.Size = new System.Drawing.Size(773, 491);
-            this.tableLayoutPanel15.TabIndex = 0;
+            tableLayoutPanel15.ColumnCount = 1;
+            tableLayoutPanel15.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayoutPanel15.Controls.Add(groupBox34, 0, 0);
+            tableLayoutPanel15.Controls.Add(dataGridViewClaims, 0, 1);
+            tableLayoutPanel15.Dock = DockStyle.Fill;
+            tableLayoutPanel15.Location = new Point(3, 3);
+            tableLayoutPanel15.Name = "tableLayoutPanel15";
+            tableLayoutPanel15.RowCount = 2;
+            tableLayoutPanel15.RowStyles.Add(new RowStyle(SizeType.Absolute, 196F));
+            tableLayoutPanel15.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel15.Size = new Size(773, 491);
+            tableLayoutPanel15.TabIndex = 0;
             // 
             // groupBox34
             // 
-            this.groupBox34.Controls.Add(this.tableLayoutPanel16);
-            this.groupBox34.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox34.Location = new System.Drawing.Point(0, 0);
-            this.groupBox34.Margin = new System.Windows.Forms.Padding(0);
-            this.groupBox34.Name = "groupBox34";
-            this.groupBox34.Size = new System.Drawing.Size(773, 196);
-            this.groupBox34.TabIndex = 1;
-            this.groupBox34.TabStop = false;
-            this.groupBox34.Text = "Общие сведения";
+            groupBox34.Controls.Add(tableLayoutPanel16);
+            groupBox34.Dock = DockStyle.Fill;
+            groupBox34.Location = new Point(0, 0);
+            groupBox34.Margin = new Padding(0);
+            groupBox34.Name = "groupBox34";
+            groupBox34.Size = new Size(773, 196);
+            groupBox34.TabIndex = 1;
+            groupBox34.TabStop = false;
+            groupBox34.Text = @"Общие сведения";
             // 
             // tableLayoutPanel16
             // 
-            this.tableLayoutPanel16.ColumnCount = 2;
-            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel16.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel16.Controls.Add(this.panel8, 0, 0);
-            this.tableLayoutPanel16.Controls.Add(this.panel9, 1, 0);
-            this.tableLayoutPanel16.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel16.Location = new System.Drawing.Point(3, 17);
-            this.tableLayoutPanel16.Name = "tableLayoutPanel16";
-            this.tableLayoutPanel16.RowCount = 1;
-            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 155F));
-            this.tableLayoutPanel16.Size = new System.Drawing.Size(767, 176);
-            this.tableLayoutPanel16.TabIndex = 0;
+            tableLayoutPanel16.ColumnCount = 2;
+            tableLayoutPanel16.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel16.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            tableLayoutPanel16.Controls.Add(panel8, 0, 0);
+            tableLayoutPanel16.Controls.Add(panel9, 1, 0);
+            tableLayoutPanel16.Dock = DockStyle.Fill;
+            tableLayoutPanel16.Location = new Point(3, 17);
+            tableLayoutPanel16.Name = "tableLayoutPanel16";
+            tableLayoutPanel16.RowCount = 1;
+            tableLayoutPanel16.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanel16.RowStyles.Add(new RowStyle(SizeType.Absolute, 155F));
+            tableLayoutPanel16.Size = new Size(767, 176);
+            tableLayoutPanel16.TabIndex = 0;
             // 
             // panel8
             // 
-            this.panel8.Controls.Add(this.numericUpDownAmountOfDebtRent);
-            this.panel8.Controls.Add(this.label102);
-            this.panel8.Controls.Add(this.numericUpDownAmountOfFine);
-            this.panel8.Controls.Add(this.label93);
-            this.panel8.Controls.Add(this.numericUpDownAmountOfRent);
-            this.panel8.Controls.Add(this.label92);
-            this.panel8.Controls.Add(this.dateTimePickerAtDate);
-            this.panel8.Controls.Add(this.label91);
-            this.panel8.Controls.Add(this.dateTimePickerDateOfTransfer);
-            this.panel8.Controls.Add(this.label90);
-            this.panel8.Controls.Add(this.numericUpDownAmountOfDebtFine);
-            this.panel8.Controls.Add(this.label89);
-            this.panel8.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel8.Location = new System.Drawing.Point(0, 0);
-            this.panel8.Margin = new System.Windows.Forms.Padding(0);
-            this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(383, 176);
-            this.panel8.TabIndex = 0;
+            panel8.Controls.Add(numericUpDownAmountOfDebtRent);
+            panel8.Controls.Add(label102);
+            panel8.Controls.Add(numericUpDownAmountOfFine);
+            panel8.Controls.Add(label93);
+            panel8.Controls.Add(numericUpDownAmountOfRent);
+            panel8.Controls.Add(label92);
+            panel8.Controls.Add(dateTimePickerAtDate);
+            panel8.Controls.Add(label91);
+            panel8.Controls.Add(dateTimePickerDateOfTransfer);
+            panel8.Controls.Add(label90);
+            panel8.Controls.Add(numericUpDownAmountOfDebtFine);
+            panel8.Controls.Add(label89);
+            panel8.Dock = DockStyle.Fill;
+            panel8.Location = new Point(0, 0);
+            panel8.Margin = new Padding(0);
+            panel8.Name = "panel8";
+            panel8.Size = new Size(383, 176);
+            panel8.TabIndex = 0;
             // 
             // numericUpDownAmountOfDebtRent
             // 
-            this.numericUpDownAmountOfDebtRent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownAmountOfDebtRent.DecimalPlaces = 2;
-            this.numericUpDownAmountOfDebtRent.Location = new System.Drawing.Point(172, 33);
-            this.numericUpDownAmountOfDebtRent.Maximum = new decimal(new int[] {
+            numericUpDownAmountOfDebtRent.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                                   | AnchorStyles.Right;
+            numericUpDownAmountOfDebtRent.DecimalPlaces = 2;
+            numericUpDownAmountOfDebtRent.Location = new Point(172, 33);
+            numericUpDownAmountOfDebtRent.Maximum = new decimal(new[] {
             1410065407,
             2,
             0,
             0});
-            this.numericUpDownAmountOfDebtRent.Name = "numericUpDownAmountOfDebtRent";
-            this.numericUpDownAmountOfDebtRent.Size = new System.Drawing.Size(202, 21);
-            this.numericUpDownAmountOfDebtRent.TabIndex = 1;
-            this.numericUpDownAmountOfDebtRent.ThousandsSeparator = true;
-            this.numericUpDownAmountOfDebtRent.ValueChanged += new System.EventHandler(this.numericUpDownAmountOfDebtRent_ValueChanged);
-            this.numericUpDownAmountOfDebtRent.Enter += new System.EventHandler(this.selectAll_Enter);
+            numericUpDownAmountOfDebtRent.Name = "numericUpDownAmountOfDebtRent";
+            numericUpDownAmountOfDebtRent.Size = new Size(202, 21);
+            numericUpDownAmountOfDebtRent.TabIndex = 1;
+            numericUpDownAmountOfDebtRent.ThousandsSeparator = true;
+            numericUpDownAmountOfDebtRent.ValueChanged += numericUpDownAmountOfDebtRent_ValueChanged;
+            numericUpDownAmountOfDebtRent.Enter += selectAll_Enter;
             // 
             // label102
             // 
-            this.label102.AutoSize = true;
-            this.label102.Location = new System.Drawing.Point(14, 35);
-            this.label102.Name = "label102";
-            this.label102.Size = new System.Drawing.Size(100, 15);
-            this.label102.TabIndex = 37;
-            this.label102.Text = "Сумма долга АП";
+            label102.AutoSize = true;
+            label102.Location = new Point(14, 35);
+            label102.Name = "label102";
+            label102.Size = new Size(100, 15);
+            label102.TabIndex = 37;
+            label102.Text = @"Сумма долга АП";
             // 
             // numericUpDownAmountOfFine
             // 
-            this.numericUpDownAmountOfFine.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownAmountOfFine.DecimalPlaces = 2;
-            this.numericUpDownAmountOfFine.Location = new System.Drawing.Point(172, 149);
-            this.numericUpDownAmountOfFine.Maximum = new decimal(new int[] {
+            numericUpDownAmountOfFine.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                               | AnchorStyles.Right;
+            numericUpDownAmountOfFine.DecimalPlaces = 2;
+            numericUpDownAmountOfFine.Location = new Point(172, 149);
+            numericUpDownAmountOfFine.Maximum = new decimal(new[] {
             1410065407,
             2,
             0,
             0});
-            this.numericUpDownAmountOfFine.Name = "numericUpDownAmountOfFine";
-            this.numericUpDownAmountOfFine.Size = new System.Drawing.Size(202, 21);
-            this.numericUpDownAmountOfFine.TabIndex = 5;
-            this.numericUpDownAmountOfFine.ThousandsSeparator = true;
-            this.numericUpDownAmountOfFine.ValueChanged += new System.EventHandler(this.numericUpDownAmountOfFine_ValueChanged);
-            this.numericUpDownAmountOfFine.Enter += new System.EventHandler(this.selectAll_Enter);
+            numericUpDownAmountOfFine.Name = "numericUpDownAmountOfFine";
+            numericUpDownAmountOfFine.Size = new Size(202, 21);
+            numericUpDownAmountOfFine.TabIndex = 5;
+            numericUpDownAmountOfFine.ThousandsSeparator = true;
+            numericUpDownAmountOfFine.ValueChanged += numericUpDownAmountOfFine_ValueChanged;
+            numericUpDownAmountOfFine.Enter += selectAll_Enter;
             // 
             // label93
             // 
-            this.label93.AutoSize = true;
-            this.label93.Location = new System.Drawing.Point(14, 151);
-            this.label93.Name = "label93";
-            this.label93.Size = new System.Drawing.Size(120, 15);
-            this.label93.TabIndex = 35;
-            this.label93.Text = "Сумма пени по иску";
+            label93.AutoSize = true;
+            label93.Location = new Point(14, 151);
+            label93.Name = "label93";
+            label93.Size = new Size(120, 15);
+            label93.TabIndex = 35;
+            label93.Text = @"Сумма пени по иску";
             // 
             // numericUpDownAmountOfRent
             // 
-            this.numericUpDownAmountOfRent.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownAmountOfRent.DecimalPlaces = 2;
-            this.numericUpDownAmountOfRent.Location = new System.Drawing.Point(172, 120);
-            this.numericUpDownAmountOfRent.Maximum = new decimal(new int[] {
+            numericUpDownAmountOfRent.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                               | AnchorStyles.Right;
+            numericUpDownAmountOfRent.DecimalPlaces = 2;
+            numericUpDownAmountOfRent.Location = new Point(172, 120);
+            numericUpDownAmountOfRent.Maximum = new decimal(new[] {
             1410065407,
             2,
             0,
             0});
-            this.numericUpDownAmountOfRent.Name = "numericUpDownAmountOfRent";
-            this.numericUpDownAmountOfRent.Size = new System.Drawing.Size(202, 21);
-            this.numericUpDownAmountOfRent.TabIndex = 4;
-            this.numericUpDownAmountOfRent.ThousandsSeparator = true;
-            this.numericUpDownAmountOfRent.ValueChanged += new System.EventHandler(this.numericUpDownAmountOfRent_ValueChanged);
-            this.numericUpDownAmountOfRent.Enter += new System.EventHandler(this.selectAll_Enter);
+            numericUpDownAmountOfRent.Name = "numericUpDownAmountOfRent";
+            numericUpDownAmountOfRent.Size = new Size(202, 21);
+            numericUpDownAmountOfRent.TabIndex = 4;
+            numericUpDownAmountOfRent.ThousandsSeparator = true;
+            numericUpDownAmountOfRent.ValueChanged += numericUpDownAmountOfRent_ValueChanged;
+            numericUpDownAmountOfRent.Enter += selectAll_Enter;
             // 
             // label92
             // 
-            this.label92.AutoSize = true;
-            this.label92.Location = new System.Drawing.Point(14, 122);
-            this.label92.Name = "label92";
-            this.label92.Size = new System.Drawing.Size(108, 15);
-            this.label92.TabIndex = 33;
-            this.label92.Text = "Сумма АП по иску";
+            label92.AutoSize = true;
+            label92.Location = new Point(14, 122);
+            label92.Name = "label92";
+            label92.Size = new Size(108, 15);
+            label92.TabIndex = 33;
+            label92.Text = @"Сумма АП по иску";
             // 
             // dateTimePickerAtDate
             // 
-            this.dateTimePickerAtDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerAtDate.Location = new System.Drawing.Point(172, 91);
-            this.dateTimePickerAtDate.Name = "dateTimePickerAtDate";
-            this.dateTimePickerAtDate.ShowCheckBox = true;
-            this.dateTimePickerAtDate.Size = new System.Drawing.Size(202, 21);
-            this.dateTimePickerAtDate.TabIndex = 3;
-            this.dateTimePickerAtDate.ValueChanged += new System.EventHandler(this.dateTimePickerAtDate_ValueChanged);
+            dateTimePickerAtDate.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                          | AnchorStyles.Right;
+            dateTimePickerAtDate.Location = new Point(172, 91);
+            dateTimePickerAtDate.Name = "dateTimePickerAtDate";
+            dateTimePickerAtDate.ShowCheckBox = true;
+            dateTimePickerAtDate.Size = new Size(202, 21);
+            dateTimePickerAtDate.TabIndex = 3;
+            dateTimePickerAtDate.ValueChanged += dateTimePickerAtDate_ValueChanged;
             // 
             // label91
             // 
-            this.label91.AutoSize = true;
-            this.label91.Location = new System.Drawing.Point(14, 94);
-            this.label91.Name = "label91";
-            this.label91.Size = new System.Drawing.Size(52, 15);
-            this.label91.TabIndex = 31;
-            this.label91.Text = "На дату";
+            label91.AutoSize = true;
+            label91.Location = new Point(14, 94);
+            label91.Name = "label91";
+            label91.Size = new Size(52, 15);
+            label91.TabIndex = 31;
+            label91.Text = @"На дату";
             // 
             // dateTimePickerDateOfTransfer
             // 
-            this.dateTimePickerDateOfTransfer.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerDateOfTransfer.Location = new System.Drawing.Point(172, 4);
-            this.dateTimePickerDateOfTransfer.Name = "dateTimePickerDateOfTransfer";
-            this.dateTimePickerDateOfTransfer.ShowCheckBox = true;
-            this.dateTimePickerDateOfTransfer.Size = new System.Drawing.Size(202, 21);
-            this.dateTimePickerDateOfTransfer.TabIndex = 0;
-            this.dateTimePickerDateOfTransfer.ValueChanged += new System.EventHandler(this.dateTimePickerDateOfTransfer_ValueChanged);
+            dateTimePickerDateOfTransfer.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                                  | AnchorStyles.Right;
+            dateTimePickerDateOfTransfer.Location = new Point(172, 4);
+            dateTimePickerDateOfTransfer.Name = "dateTimePickerDateOfTransfer";
+            dateTimePickerDateOfTransfer.ShowCheckBox = true;
+            dateTimePickerDateOfTransfer.Size = new Size(202, 21);
+            dateTimePickerDateOfTransfer.TabIndex = 0;
+            dateTimePickerDateOfTransfer.ValueChanged += dateTimePickerDateOfTransfer_ValueChanged;
             // 
             // label90
             // 
-            this.label90.AutoSize = true;
-            this.label90.Location = new System.Drawing.Point(14, 7);
-            this.label90.Name = "label90";
-            this.label90.Size = new System.Drawing.Size(95, 15);
-            this.label90.TabIndex = 29;
-            this.label90.Text = "Дата передачи";
+            label90.AutoSize = true;
+            label90.Location = new Point(14, 7);
+            label90.Name = "label90";
+            label90.Size = new Size(95, 15);
+            label90.TabIndex = 29;
+            label90.Text = @"Дата передачи";
             // 
             // numericUpDownAmountOfDebtFine
             // 
-            this.numericUpDownAmountOfDebtFine.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownAmountOfDebtFine.DecimalPlaces = 2;
-            this.numericUpDownAmountOfDebtFine.Location = new System.Drawing.Point(172, 62);
-            this.numericUpDownAmountOfDebtFine.Maximum = new decimal(new int[] {
+            numericUpDownAmountOfDebtFine.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                                   | AnchorStyles.Right;
+            numericUpDownAmountOfDebtFine.DecimalPlaces = 2;
+            numericUpDownAmountOfDebtFine.Location = new Point(172, 62);
+            numericUpDownAmountOfDebtFine.Maximum = new decimal(new[] {
             1410065407,
             2,
             0,
             0});
-            this.numericUpDownAmountOfDebtFine.Name = "numericUpDownAmountOfDebtFine";
-            this.numericUpDownAmountOfDebtFine.Size = new System.Drawing.Size(202, 21);
-            this.numericUpDownAmountOfDebtFine.TabIndex = 2;
-            this.numericUpDownAmountOfDebtFine.ThousandsSeparator = true;
-            this.numericUpDownAmountOfDebtFine.ValueChanged += new System.EventHandler(this.numericUpDownAmountOfDebtFine_ValueChanged);
-            this.numericUpDownAmountOfDebtFine.Enter += new System.EventHandler(this.selectAll_Enter);
+            numericUpDownAmountOfDebtFine.Name = "numericUpDownAmountOfDebtFine";
+            numericUpDownAmountOfDebtFine.Size = new Size(202, 21);
+            numericUpDownAmountOfDebtFine.TabIndex = 2;
+            numericUpDownAmountOfDebtFine.ThousandsSeparator = true;
+            numericUpDownAmountOfDebtFine.ValueChanged += numericUpDownAmountOfDebtFine_ValueChanged;
+            numericUpDownAmountOfDebtFine.Enter += selectAll_Enter;
             // 
             // label89
             // 
-            this.label89.AutoSize = true;
-            this.label89.Location = new System.Drawing.Point(14, 64);
-            this.label89.Name = "label89";
-            this.label89.Size = new System.Drawing.Size(112, 15);
-            this.label89.TabIndex = 24;
-            this.label89.Text = "Сумма долга пени";
+            label89.AutoSize = true;
+            label89.Location = new Point(14, 64);
+            label89.Name = "label89";
+            label89.Size = new Size(112, 15);
+            label89.TabIndex = 24;
+            label89.Text = @"Сумма долга пени";
             // 
             // panel9
             // 
-            this.panel9.Controls.Add(this.numericUpDownProcessID);
-            this.panel9.Controls.Add(this.label103);
-            this.panel9.Controls.Add(this.numericUpDownAmountOfFineRecover);
-            this.panel9.Controls.Add(this.label95);
-            this.panel9.Controls.Add(this.textBoxDescription);
-            this.panel9.Controls.Add(this.numericUpDownAmountOfRentRecover);
-            this.panel9.Controls.Add(this.label99);
-            this.panel9.Controls.Add(this.label94);
-            this.panel9.Controls.Add(this.label98);
-            this.panel9.Controls.Add(this.dateTimePickerEndDeptPeriod);
-            this.panel9.Controls.Add(this.label97);
-            this.panel9.Controls.Add(this.dateTimePickerStartDeptPeriod);
-            this.panel9.Controls.Add(this.label96);
-            this.panel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel9.Location = new System.Drawing.Point(383, 0);
-            this.panel9.Margin = new System.Windows.Forms.Padding(0);
-            this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(384, 176);
-            this.panel9.TabIndex = 1;
+            panel9.Controls.Add(numericUpDownProcessID);
+            panel9.Controls.Add(label103);
+            panel9.Controls.Add(numericUpDownAmountOfFineRecover);
+            panel9.Controls.Add(label95);
+            panel9.Controls.Add(textBoxDescription);
+            panel9.Controls.Add(numericUpDownAmountOfRentRecover);
+            panel9.Controls.Add(label99);
+            panel9.Controls.Add(label94);
+            panel9.Controls.Add(label98);
+            panel9.Controls.Add(dateTimePickerEndDeptPeriod);
+            panel9.Controls.Add(label97);
+            panel9.Controls.Add(dateTimePickerStartDeptPeriod);
+            panel9.Controls.Add(label96);
+            panel9.Dock = DockStyle.Fill;
+            panel9.Location = new Point(383, 0);
+            panel9.Margin = new Padding(0);
+            panel9.Name = "panel9";
+            panel9.Size = new Size(384, 176);
+            panel9.TabIndex = 1;
             // 
             // numericUpDownProcessID
             // 
-            this.numericUpDownProcessID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownProcessID.Location = new System.Drawing.Point(172, 4);
-            this.numericUpDownProcessID.Maximum = new decimal(new int[] {
+            numericUpDownProcessID.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                            | AnchorStyles.Right;
+            numericUpDownProcessID.Location = new Point(172, 4);
+            numericUpDownProcessID.Maximum = new decimal(new[] {
             1410065407,
             0,
             0,
             0});
-            this.numericUpDownProcessID.Name = "numericUpDownProcessID";
-            this.numericUpDownProcessID.Size = new System.Drawing.Size(202, 21);
-            this.numericUpDownProcessID.TabIndex = 0;
-            this.numericUpDownProcessID.ValueChanged += new System.EventHandler(this.numericUpDownProcessID_ValueChanged);
-            this.numericUpDownProcessID.Enter += new System.EventHandler(this.selectAll_Enter);
+            numericUpDownProcessID.Name = "numericUpDownProcessID";
+            numericUpDownProcessID.Size = new Size(202, 21);
+            numericUpDownProcessID.TabIndex = 0;
+            numericUpDownProcessID.ValueChanged += numericUpDownProcessID_ValueChanged;
+            numericUpDownProcessID.Enter += selectAll_Enter;
             // 
             // label103
             // 
-            this.label103.AutoSize = true;
-            this.label103.Location = new System.Drawing.Point(14, 6);
-            this.label103.Name = "label103";
-            this.label103.Size = new System.Drawing.Size(96, 15);
-            this.label103.TabIndex = 51;
-            this.label103.Text = "Процесс найма";
+            label103.AutoSize = true;
+            label103.Location = new Point(14, 6);
+            label103.Name = "label103";
+            label103.Size = new Size(96, 15);
+            label103.TabIndex = 51;
+            label103.Text = @"Процесс найма";
             // 
             // numericUpDownAmountOfFineRecover
             // 
-            this.numericUpDownAmountOfFineRecover.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownAmountOfFineRecover.DecimalPlaces = 2;
-            this.numericUpDownAmountOfFineRecover.Location = new System.Drawing.Point(172, 62);
-            this.numericUpDownAmountOfFineRecover.Maximum = new decimal(new int[] {
+            numericUpDownAmountOfFineRecover.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                                      | AnchorStyles.Right;
+            numericUpDownAmountOfFineRecover.DecimalPlaces = 2;
+            numericUpDownAmountOfFineRecover.Location = new Point(172, 62);
+            numericUpDownAmountOfFineRecover.Maximum = new decimal(new[] {
             1410065407,
             2,
             0,
             0});
-            this.numericUpDownAmountOfFineRecover.Name = "numericUpDownAmountOfFineRecover";
-            this.numericUpDownAmountOfFineRecover.Size = new System.Drawing.Size(202, 21);
-            this.numericUpDownAmountOfFineRecover.TabIndex = 8;
-            this.numericUpDownAmountOfFineRecover.ThousandsSeparator = true;
-            this.numericUpDownAmountOfFineRecover.ValueChanged += new System.EventHandler(this.numericUpDownAmountOfFineRecover_ValueChanged);
-            this.numericUpDownAmountOfFineRecover.Enter += new System.EventHandler(this.selectAll_Enter);
+            numericUpDownAmountOfFineRecover.Name = "numericUpDownAmountOfFineRecover";
+            numericUpDownAmountOfFineRecover.Size = new Size(202, 21);
+            numericUpDownAmountOfFineRecover.TabIndex = 8;
+            numericUpDownAmountOfFineRecover.ThousandsSeparator = true;
+            numericUpDownAmountOfFineRecover.ValueChanged += numericUpDownAmountOfFineRecover_ValueChanged;
+            numericUpDownAmountOfFineRecover.Enter += selectAll_Enter;
             // 
             // label95
             // 
-            this.label95.AutoSize = true;
-            this.label95.Location = new System.Drawing.Point(14, 64);
-            this.label95.Name = "label95";
-            this.label95.Size = new System.Drawing.Size(152, 15);
-            this.label95.TabIndex = 39;
-            this.label95.Text = "Сумма пени к взысканию";
+            label95.AutoSize = true;
+            label95.Location = new Point(14, 64);
+            label95.Name = "label95";
+            label95.Size = new Size(152, 15);
+            label95.TabIndex = 39;
+            label95.Text = @"Сумма пени к взысканию";
             // 
             // textBoxDescription
             // 
-            this.textBoxDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDescription.Location = new System.Drawing.Point(172, 149);
-            this.textBoxDescription.MaxLength = 4000;
-            this.textBoxDescription.Name = "textBoxDescription";
-            this.textBoxDescription.Size = new System.Drawing.Size(202, 21);
-            this.textBoxDescription.TabIndex = 11;
-            this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxDescription_TextChanged);
-            this.textBoxDescription.Enter += new System.EventHandler(this.selectAll_Enter);
+            textBoxDescription.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                        | AnchorStyles.Right;
+            textBoxDescription.Location = new Point(172, 149);
+            textBoxDescription.MaxLength = 4000;
+            textBoxDescription.Name = "textBoxDescription";
+            textBoxDescription.Size = new Size(202, 21);
+            textBoxDescription.TabIndex = 11;
+            textBoxDescription.TextChanged += textBoxDescription_TextChanged;
+            textBoxDescription.Enter += selectAll_Enter;
             // 
             // numericUpDownAmountOfRentRecover
             // 
-            this.numericUpDownAmountOfRentRecover.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownAmountOfRentRecover.DecimalPlaces = 2;
-            this.numericUpDownAmountOfRentRecover.Location = new System.Drawing.Point(172, 33);
-            this.numericUpDownAmountOfRentRecover.Maximum = new decimal(new int[] {
+            numericUpDownAmountOfRentRecover.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                                      | AnchorStyles.Right;
+            numericUpDownAmountOfRentRecover.DecimalPlaces = 2;
+            numericUpDownAmountOfRentRecover.Location = new Point(172, 33);
+            numericUpDownAmountOfRentRecover.Maximum = new decimal(new[] {
             1410065407,
             2,
             0,
             0});
-            this.numericUpDownAmountOfRentRecover.Name = "numericUpDownAmountOfRentRecover";
-            this.numericUpDownAmountOfRentRecover.Size = new System.Drawing.Size(202, 21);
-            this.numericUpDownAmountOfRentRecover.TabIndex = 7;
-            this.numericUpDownAmountOfRentRecover.ThousandsSeparator = true;
-            this.numericUpDownAmountOfRentRecover.ValueChanged += new System.EventHandler(this.numericUpDownAmountOfRentRecover_ValueChanged);
-            this.numericUpDownAmountOfRentRecover.Enter += new System.EventHandler(this.selectAll_Enter);
+            numericUpDownAmountOfRentRecover.Name = "numericUpDownAmountOfRentRecover";
+            numericUpDownAmountOfRentRecover.Size = new Size(202, 21);
+            numericUpDownAmountOfRentRecover.TabIndex = 7;
+            numericUpDownAmountOfRentRecover.ThousandsSeparator = true;
+            numericUpDownAmountOfRentRecover.ValueChanged += numericUpDownAmountOfRentRecover_ValueChanged;
+            numericUpDownAmountOfRentRecover.Enter += selectAll_Enter;
             // 
             // label99
             // 
-            this.label99.AutoSize = true;
-            this.label99.Location = new System.Drawing.Point(14, 151);
-            this.label99.Name = "label99";
-            this.label99.Size = new System.Drawing.Size(80, 15);
-            this.label99.TabIndex = 49;
-            this.label99.Text = "Примечание";
+            label99.AutoSize = true;
+            label99.Location = new Point(14, 151);
+            label99.Name = "label99";
+            label99.Size = new Size(80, 15);
+            label99.TabIndex = 49;
+            label99.Text = @"Примечание";
             // 
             // label94
             // 
-            this.label94.AutoSize = true;
-            this.label94.Location = new System.Drawing.Point(14, 35);
-            this.label94.Name = "label94";
-            this.label94.Size = new System.Drawing.Size(140, 15);
-            this.label94.TabIndex = 37;
-            this.label94.Text = "Сумма АП к взысканию";
+            label94.AutoSize = true;
+            label94.Location = new Point(14, 35);
+            label94.Name = "label94";
+            label94.Size = new Size(140, 15);
+            label94.TabIndex = 37;
+            label94.Text = @"Сумма АП к взысканию";
             // 
             // label98
             // 
-            this.label98.AutoSize = true;
-            this.label98.Location = new System.Drawing.Point(145, 122);
-            this.label98.Name = "label98";
-            this.label98.Size = new System.Drawing.Size(21, 15);
-            this.label98.TabIndex = 48;
-            this.label98.Text = "по";
+            label98.AutoSize = true;
+            label98.Location = new Point(145, 122);
+            label98.Name = "label98";
+            label98.Size = new Size(21, 15);
+            label98.TabIndex = 48;
+            label98.Text = @"по";
             // 
             // dateTimePickerEndDeptPeriod
             // 
-            this.dateTimePickerEndDeptPeriod.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerEndDeptPeriod.Location = new System.Drawing.Point(172, 120);
-            this.dateTimePickerEndDeptPeriod.Name = "dateTimePickerEndDeptPeriod";
-            this.dateTimePickerEndDeptPeriod.ShowCheckBox = true;
-            this.dateTimePickerEndDeptPeriod.Size = new System.Drawing.Size(202, 21);
-            this.dateTimePickerEndDeptPeriod.TabIndex = 10;
-            this.dateTimePickerEndDeptPeriod.ValueChanged += new System.EventHandler(this.dateTimePickerEndDeptPeriod_ValueChanged);
+            dateTimePickerEndDeptPeriod.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                                 | AnchorStyles.Right;
+            dateTimePickerEndDeptPeriod.Location = new Point(172, 120);
+            dateTimePickerEndDeptPeriod.Name = "dateTimePickerEndDeptPeriod";
+            dateTimePickerEndDeptPeriod.ShowCheckBox = true;
+            dateTimePickerEndDeptPeriod.Size = new Size(202, 21);
+            dateTimePickerEndDeptPeriod.TabIndex = 10;
+            dateTimePickerEndDeptPeriod.ValueChanged += dateTimePickerEndDeptPeriod_ValueChanged;
             // 
             // label97
             // 
-            this.label97.AutoSize = true;
-            this.label97.Location = new System.Drawing.Point(151, 93);
-            this.label97.Name = "label97";
-            this.label97.Size = new System.Drawing.Size(13, 15);
-            this.label97.TabIndex = 46;
-            this.label97.Text = "с";
+            label97.AutoSize = true;
+            label97.Location = new Point(151, 93);
+            label97.Name = "label97";
+            label97.Size = new Size(13, 15);
+            label97.TabIndex = 46;
+            label97.Text = @"с";
             // 
             // dateTimePickerStartDeptPeriod
             // 
-            this.dateTimePickerStartDeptPeriod.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerStartDeptPeriod.Location = new System.Drawing.Point(172, 91);
-            this.dateTimePickerStartDeptPeriod.Name = "dateTimePickerStartDeptPeriod";
-            this.dateTimePickerStartDeptPeriod.ShowCheckBox = true;
-            this.dateTimePickerStartDeptPeriod.Size = new System.Drawing.Size(202, 21);
-            this.dateTimePickerStartDeptPeriod.TabIndex = 9;
-            this.dateTimePickerStartDeptPeriod.ValueChanged += new System.EventHandler(this.dateTimePickerStartDeptPeriod_ValueChanged);
+            dateTimePickerStartDeptPeriod.Anchor = (AnchorStyles.Top | AnchorStyles.Left) 
+                                                   | AnchorStyles.Right;
+            dateTimePickerStartDeptPeriod.Location = new Point(172, 91);
+            dateTimePickerStartDeptPeriod.Name = "dateTimePickerStartDeptPeriod";
+            dateTimePickerStartDeptPeriod.ShowCheckBox = true;
+            dateTimePickerStartDeptPeriod.Size = new Size(202, 21);
+            dateTimePickerStartDeptPeriod.TabIndex = 9;
+            dateTimePickerStartDeptPeriod.ValueChanged += dateTimePickerStartDeptPeriod_ValueChanged;
             // 
             // label96
             // 
-            this.label96.AutoSize = true;
-            this.label96.Location = new System.Drawing.Point(14, 93);
-            this.label96.Name = "label96";
-            this.label96.Size = new System.Drawing.Size(131, 15);
-            this.label96.TabIndex = 44;
-            this.label96.Text = "Период задолжности";
+            label96.AutoSize = true;
+            label96.Location = new Point(14, 93);
+            label96.Name = "label96";
+            label96.Size = new Size(131, 15);
+            label96.TabIndex = 44;
+            label96.Text = @"Период задолжности";
             // 
             // dataGridViewClaims
             // 
-            this.dataGridViewClaims.AllowUserToAddRows = false;
-            this.dataGridViewClaims.AllowUserToDeleteRows = false;
-            this.dataGridViewClaims.AllowUserToResizeRows = false;
-            this.dataGridViewClaims.BackgroundColor = System.Drawing.Color.White;
-            this.dataGridViewClaims.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.dataGridViewClaims.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewClaims.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.id_claim,
-            this.date_of_transfer,
-            this.amount_of_debt_rent,
-            this.amount_of_debt_fine,
-            this.at_date,
-            this.description});
-            this.dataGridViewClaims.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewClaims.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dataGridViewClaims.Location = new System.Drawing.Point(3, 199);
-            this.dataGridViewClaims.MultiSelect = false;
-            this.dataGridViewClaims.Name = "dataGridViewClaims";
-            this.dataGridViewClaims.ReadOnly = true;
-            this.dataGridViewClaims.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            this.dataGridViewClaims.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewClaims.ShowCellToolTips = false;
-            this.dataGridViewClaims.Size = new System.Drawing.Size(767, 289);
-            this.dataGridViewClaims.TabIndex = 0;
-            this.dataGridViewClaims.VirtualMode = true;
-            this.dataGridViewClaims.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridViewClaims_CellValueNeeded);
-            this.dataGridViewClaims.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewClaims_ColumnHeaderMouseClick);
-            this.dataGridViewClaims.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridViewClaims_DataError);
-            this.dataGridViewClaims.SelectionChanged += new System.EventHandler(this.dataGridViewClaims_SelectionChanged);
+            dataGridViewClaims.AllowUserToAddRows = false;
+            dataGridViewClaims.AllowUserToDeleteRows = false;
+            dataGridViewClaims.AllowUserToResizeRows = false;
+            dataGridViewClaims.BackgroundColor = Color.White;
+            dataGridViewClaims.BorderStyle = BorderStyle.None;
+            dataGridViewClaims.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            dataGridViewClaims.Columns.AddRange(id_claim, date_of_transfer, amount_of_debt_rent, amount_of_debt_fine, at_date, description);
+            dataGridViewClaims.Dock = DockStyle.Fill;
+            dataGridViewClaims.EditMode = DataGridViewEditMode.EditProgrammatically;
+            dataGridViewClaims.Location = new Point(3, 199);
+            dataGridViewClaims.MultiSelect = false;
+            dataGridViewClaims.Name = "dataGridViewClaims";
+            dataGridViewClaims.ReadOnly = true;
+            dataGridViewClaims.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            dataGridViewClaims.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+            dataGridViewClaims.ShowCellToolTips = false;
+            dataGridViewClaims.Size = new Size(767, 289);
+            dataGridViewClaims.TabIndex = 0;
+            dataGridViewClaims.VirtualMode = true;
+            dataGridViewClaims.CellValueNeeded += dataGridViewClaims_CellValueNeeded;
+            dataGridViewClaims.ColumnHeaderMouseClick += dataGridViewClaims_ColumnHeaderMouseClick;
+            dataGridViewClaims.DataError += dataGridViewClaims_DataError;
+            dataGridViewClaims.SelectionChanged += dataGridViewClaims_SelectionChanged;
             // 
             // id_claim
             // 
-            this.id_claim.HeaderText = "№";
-            this.id_claim.MinimumWidth = 50;
-            this.id_claim.Name = "id_claim";
-            this.id_claim.ReadOnly = true;
-            this.id_claim.Width = 50;
+            id_claim.HeaderText = @"№";
+            id_claim.MinimumWidth = 50;
+            id_claim.Name = "id_claim";
+            id_claim.ReadOnly = true;
+            id_claim.Width = 50;
             // 
             // date_of_transfer
             // 
-            this.date_of_transfer.HeaderText = "Дата передачи";
-            this.date_of_transfer.MinimumWidth = 150;
-            this.date_of_transfer.Name = "date_of_transfer";
-            this.date_of_transfer.ReadOnly = true;
-            this.date_of_transfer.Width = 150;
+            date_of_transfer.HeaderText = @"Дата передачи";
+            date_of_transfer.MinimumWidth = 150;
+            date_of_transfer.Name = "date_of_transfer";
+            date_of_transfer.ReadOnly = true;
+            date_of_transfer.Width = 150;
             // 
             // amount_of_debt_rent
             // 
             dataGridViewCellStyle1.Format = "#0.0# руб.";
-            this.amount_of_debt_rent.DefaultCellStyle = dataGridViewCellStyle1;
-            this.amount_of_debt_rent.HeaderText = "Сумма долга АП";
-            this.amount_of_debt_rent.MinimumWidth = 150;
-            this.amount_of_debt_rent.Name = "amount_of_debt_rent";
-            this.amount_of_debt_rent.ReadOnly = true;
-            this.amount_of_debt_rent.Width = 150;
+            amount_of_debt_rent.DefaultCellStyle = dataGridViewCellStyle1;
+            amount_of_debt_rent.HeaderText = @"Сумма долга АП";
+            amount_of_debt_rent.MinimumWidth = 150;
+            amount_of_debt_rent.Name = "amount_of_debt_rent";
+            amount_of_debt_rent.ReadOnly = true;
+            amount_of_debt_rent.Width = 150;
             // 
             // amount_of_debt_fine
             // 
             dataGridViewCellStyle2.Format = "#0.0# руб.";
-            this.amount_of_debt_fine.DefaultCellStyle = dataGridViewCellStyle2;
-            this.amount_of_debt_fine.HeaderText = "Сумма долга пени";
-            this.amount_of_debt_fine.MinimumWidth = 150;
-            this.amount_of_debt_fine.Name = "amount_of_debt_fine";
-            this.amount_of_debt_fine.ReadOnly = true;
-            this.amount_of_debt_fine.Width = 150;
+            amount_of_debt_fine.DefaultCellStyle = dataGridViewCellStyle2;
+            amount_of_debt_fine.HeaderText = @"Сумма долга пени";
+            amount_of_debt_fine.MinimumWidth = 150;
+            amount_of_debt_fine.Name = "amount_of_debt_fine";
+            amount_of_debt_fine.ReadOnly = true;
+            amount_of_debt_fine.Width = 150;
             // 
             // at_date
             // 
-            this.at_date.HeaderText = "На дату";
-            this.at_date.MinimumWidth = 150;
-            this.at_date.Name = "at_date";
-            this.at_date.ReadOnly = true;
-            this.at_date.Width = 150;
+            at_date.HeaderText = @"На дату";
+            at_date.MinimumWidth = 150;
+            at_date.Name = "at_date";
+            at_date.ReadOnly = true;
+            at_date.Width = 150;
             // 
             // description
             // 
-            this.description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.description.HeaderText = "Примечание";
-            this.description.MinimumWidth = 200;
-            this.description.Name = "description";
-            this.description.ReadOnly = true;
+            description.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            description.HeaderText = @"Примечание";
+            description.MinimumWidth = 200;
+            description.Name = "description";
+            description.ReadOnly = true;
             // 
             // ClaimListViewport
             // 
-            this.AutoScroll = true;
-            this.AutoScrollMinSize = new System.Drawing.Size(680, 300);
-            this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(779, 497);
-            this.Controls.Add(this.tableLayoutPanel15);
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "ClaimListViewport";
-            this.Padding = new System.Windows.Forms.Padding(3);
-            this.Text = "Исковая работа №{0}";
-            this.tableLayoutPanel15.ResumeLayout(false);
-            this.groupBox34.ResumeLayout(false);
-            this.tableLayoutPanel16.ResumeLayout(false);
-            this.panel8.ResumeLayout(false);
-            this.panel8.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountOfDebtRent)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountOfFine)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountOfRent)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountOfDebtFine)).EndInit();
-            this.panel9.ResumeLayout(false);
-            this.panel9.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownProcessID)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountOfFineRecover)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountOfRentRecover)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewClaims)).EndInit();
-            this.ResumeLayout(false);
+            AutoScroll = true;
+            AutoScrollMinSize = new Size(680, 300);
+            BackColor = Color.White;
+            ClientSize = new Size(779, 497);
+            Controls.Add(tableLayoutPanel15);
+            Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
+            Icon = ((Icon)(resources.GetObject("$this.Icon")));
+            Name = "ClaimListViewport";
+            Padding = new Padding(3);
+            Text = @"Исковая работа №{0}";
+            tableLayoutPanel15.ResumeLayout(false);
+            groupBox34.ResumeLayout(false);
+            tableLayoutPanel16.ResumeLayout(false);
+            panel8.ResumeLayout(false);
+            panel8.PerformLayout();
+            ((ISupportInitialize)(numericUpDownAmountOfDebtRent)).EndInit();
+            ((ISupportInitialize)(numericUpDownAmountOfFine)).EndInit();
+            ((ISupportInitialize)(numericUpDownAmountOfRent)).EndInit();
+            ((ISupportInitialize)(numericUpDownAmountOfDebtFine)).EndInit();
+            panel9.ResumeLayout(false);
+            panel9.PerformLayout();
+            ((ISupportInitialize)(numericUpDownProcessID)).EndInit();
+            ((ISupportInitialize)(numericUpDownAmountOfFineRecover)).EndInit();
+            ((ISupportInitialize)(numericUpDownAmountOfRentRecover)).EndInit();
+            ((ISupportInitialize)(dataGridViewClaims)).EndInit();
+            ResumeLayout(false);
 
         }
 

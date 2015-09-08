@@ -1,126 +1,121 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
-using Registry.CalcDataModels;
-using System.Globalization;
 using Registry.Viewport;
 
 namespace Registry.SearchForms
 {
     internal partial class ExtendedSearchBuildingForm : SearchForm
     {
-        KladrStreetsDataModel kladr = null;
-        KladrRegionsDataModel regions = null;
-        FundTypesDataModel fundTypes = null;
-        ObjectStatesDataModel object_states = null;
-        OwnershipRightTypesDataModel ownership_right_types = null;
+        KladrStreetsDataModel kladr;
+        KladrRegionsDataModel regions;
+        FundTypesDataModel fundTypes;
+        ObjectStatesDataModel object_states;
+        OwnershipRightTypesDataModel ownership_right_types;
 
-        BindingSource v_kladr = null;
-        BindingSource v_regions = null;
-        BindingSource v_fundTypes = null;
-        BindingSource v_object_states = null;
-        BindingSource v_ownership_right_types = null;
+        BindingSource v_kladr;
+        BindingSource v_regions;
+        BindingSource v_fundTypes;
+        BindingSource v_object_states;
+        BindingSource v_ownership_right_types;
 
         internal override string GetFilter()
         {
-            string filter = "";
-            IEnumerable<int> included_buildings = null;
+            var filter = "";
+            IEnumerable<int> includedBuildings = null;
             if ((checkBoxStreetEnable.Checked) && (comboBoxStreet.SelectedValue != null))
             {
-                if (!String.IsNullOrEmpty(filter.Trim()))
+                if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += "id_street = '" + comboBoxStreet.SelectedValue.ToString() + "'";
+                filter += "id_street = '" + comboBoxStreet.SelectedValue + "'";
             }
             if (checkBoxRegionEnable.Checked && comboBoxRegion.SelectedValue != null)
             {
-                if (!String.IsNullOrEmpty(filter.Trim()))
+                if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += "id_street LIKE '"+comboBoxRegion.SelectedValue.ToString()+"%'";
+                filter += "id_street LIKE '"+comboBoxRegion.SelectedValue+"%'";
             }
             if (checkBoxHouseEnable.Checked)
             {
-                if (!String.IsNullOrEmpty(filter.Trim()))
+                if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.InvariantCulture, "house = '{0}'", textBoxHouse.Text.Trim().Replace("'", ""));
+                filter += string.Format(CultureInfo.InvariantCulture, "house = '{0}'", textBoxHouse.Text.Trim().Replace("'", ""));
             }
             if (checkBoxFloorsEnable.Checked)
             {
-                if (!String.IsNullOrEmpty(filter.Trim()))
+                if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 filter += "floors = " + numericUpDownFloors.Value.ToString(CultureInfo.InvariantCulture);
             }
             if (checkBoxCadastralNumEnable.Checked)
             {
-                if (!String.IsNullOrEmpty(filter.Trim()))
+                if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                if (!String.IsNullOrEmpty(textBoxCadastralNum.Text.Trim()))
-                    filter += String.Format(CultureInfo.InvariantCulture, "cadastral_num = '{0}'", textBoxCadastralNum.Text.Trim().Replace("'", ""));
+                if (!string.IsNullOrEmpty(textBoxCadastralNum.Text.Trim()))
+                    filter += string.Format(CultureInfo.InvariantCulture, "cadastral_num = '{0}'", textBoxCadastralNum.Text.Trim().Replace("'", ""));
                 else
                     filter += "cadastral_num is null";
             }
             if (checkBoxStartupYearEnable.Checked)
             {
-                if (!String.IsNullOrEmpty(filter.Trim()))
+                if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 filter += "startup_year = " + numericUpDownStartupYear.Value;
             }
             if (checkBoxImprovementEnable.Checked)
             {
-                if (!String.IsNullOrEmpty(filter.Trim()))
+                if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 filter += "improvement = " + (checkBoxImprovement.Checked ? 1 : 0).ToString(CultureInfo.InvariantCulture);
             }
             if (checkBoxElevatorEnable.Checked)
             {
-                if (!String.IsNullOrEmpty(filter.Trim()))
+                if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 filter += "elevator = " + (checkBoxElevator.Checked ? 1 : 0).ToString(CultureInfo.InvariantCulture);
             }
             if ((checkBoxStateEnable.Checked) && (comboBoxState.SelectedValue != null))
             {
-                if (!String.IsNullOrEmpty(filter.Trim()))
+                if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += "id_state = " + comboBoxState.SelectedValue.ToString();
+                filter += "id_state = " + comboBoxState.SelectedValue;
             }
             if (checkBoxIDBuildingEnable.Checked)
-                included_buildings = DataModelHelper.Intersect(included_buildings, new List<int>() { Convert.ToInt32(numericUpDownIDBuilding.Value) });
+                includedBuildings = DataModelHelper.Intersect(null, new List<int>() { Convert.ToInt32(numericUpDownIDBuilding.Value) });
             if ((checkBoxFundTypeEnable.Checked) && (comboBoxStreet.SelectedValue != null))
             {
-                IEnumerable<int> buildings_ids = DataModelHelper.BuildingIDsByCurrentFund(
+                var buildingsIds = DataModelHelper.BuildingIDsByCurrentFund(
                     Convert.ToInt32(comboBoxFundType.SelectedValue, CultureInfo.InvariantCulture));
-                included_buildings = DataModelHelper.Intersect(included_buildings, buildings_ids);
+                includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingsIds);
             }
             if (checkBoxContractNumberEnable.Checked)
             {
-                IEnumerable<int> buildings_ids = DataModelHelper.BuildingIDsByRegistrationNumber(textBoxContractNumber.Text.Trim().Replace("'", ""));
-                included_buildings = DataModelHelper.Intersect(included_buildings, buildings_ids);
+                var buildingsIds = DataModelHelper.BuildingIDsByRegistrationNumber(textBoxContractNumber.Text.Trim().Replace("'", ""));
+                includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingsIds);
             }
             if (checkBoxTenantSNPEnable.Checked)
             {
-                string[] snp = textBoxTenantSNP.Text.Trim().Replace("'", "").Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                IEnumerable<int> buildings_ids = DataModelHelper.BuildingIDsBySNP(snp, (row) => { return row.Field<int?>("id_kinship") == 1; });
-                included_buildings = DataModelHelper.Intersect(included_buildings, buildings_ids);
+                var snp = textBoxTenantSNP.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
+                var buildingsIds = DataModelHelper.BuildingIDsBySNP(snp, row => row.Field<int?>("id_kinship") == 1);
+                includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingsIds);
             }
             if ((checkBoxOwnershipTypeEnable.Checked) && (comboBoxOwnershipType.SelectedValue != null))
             {
-                IEnumerable<int> buildings_ids = DataModelHelper.BuildingIDsByOwnershipType(
-                    Int32.Parse(comboBoxOwnershipType.SelectedValue.ToString(), CultureInfo.InvariantCulture));
-                included_buildings = DataModelHelper.Intersect(included_buildings, buildings_ids);
+                var buildingsIds = DataModelHelper.BuildingIDsByOwnershipType(
+                    int.Parse(comboBoxOwnershipType.SelectedValue.ToString(), CultureInfo.InvariantCulture));
+                includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingsIds);
             }
-            if (included_buildings != null)
+            if (includedBuildings != null)
             {
-                if (!String.IsNullOrEmpty(filter.Trim()))
+                if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 filter += "id_building IN (0";
-                foreach (int id in included_buildings)
+                foreach (var id in includedBuildings)
                     filter += id.ToString(CultureInfo.InvariantCulture) + ",";
-                filter = filter.TrimEnd(new char[] { ',' }) + ")";
+                filter = filter.TrimEnd(',') + ")";
             }
             return filter;
         }
@@ -134,20 +129,15 @@ namespace Registry.SearchForms
             regions = KladrRegionsDataModel.GetInstance();
             ownership_right_types = OwnershipRightTypesDataModel.GetInstance();
 
-            v_kladr = new BindingSource();
-            v_kladr.DataSource = kladr.Select();
+            v_kladr = new BindingSource {DataSource = kladr.Select()};
 
-            v_regions = new BindingSource();
-            v_regions.DataSource = regions.Select();
+            v_regions = new BindingSource {DataSource = regions.Select()};
 
-            v_fundTypes = new BindingSource();
-            v_fundTypes.DataSource = fundTypes.Select();
+            v_fundTypes = new BindingSource {DataSource = fundTypes.Select()};
 
-            v_object_states = new BindingSource();
-            v_object_states.DataSource = object_states.Select();
+            v_object_states = new BindingSource {DataSource = object_states.Select()};
 
-            v_ownership_right_types = new BindingSource();
-            v_ownership_right_types.DataSource = ownership_right_types.Select();
+            v_ownership_right_types = new BindingSource {DataSource = ownership_right_types.Select()};
 
             comboBoxStreet.DataSource = v_kladr;
             comboBoxStreet.ValueMember = "id_street";
@@ -170,17 +160,17 @@ namespace Registry.SearchForms
             comboBoxOwnershipType.DisplayMember = "ownership_right_type";
 
             numericUpDownStartupYear.Maximum = DateTime.Now.Year;
-            foreach (Control control in this.Controls)
+            foreach (Control control in Controls)
                 control.KeyDown += (sender, e) =>
                 {
-                    ComboBox comboBox = sender as ComboBox;
+                    var comboBox = sender as ComboBox;
                     if (comboBox != null && comboBox.DroppedDown)
                         return;
                     if (e.KeyCode == Keys.Enter)
                         vButtonSearch_Click(sender, e);
                     else
                         if (e.KeyCode == Keys.Escape)
-                            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+                            DialogResult = DialogResult.Cancel;
                 };
         }
 
@@ -241,9 +231,9 @@ namespace Registry.SearchForms
             if ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode == Keys.Back) || (e.KeyCode == Keys.Delete) ||
                 (e.KeyCode >= Keys.D0 && e.KeyCode <= Keys.D9) || (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9))
             {
-                string text = comboBoxStreet.Text;
-                int selectionStart = comboBoxStreet.SelectionStart;
-                int selectionLength = comboBoxStreet.SelectionLength;
+                var text = comboBoxStreet.Text;
+                var selectionStart = comboBoxStreet.SelectionStart;
+                var selectionLength = comboBoxStreet.SelectionLength;
                 v_kladr.Filter = "street_name like '%" + comboBoxStreet.Text + "%'";
                 comboBoxStreet.Text = text;
                 comboBoxStreet.SelectionStart = selectionStart;
@@ -261,33 +251,33 @@ namespace Registry.SearchForms
         {
             if ((checkBoxStreetEnable.Checked) && (comboBoxStreet.SelectedValue == null))
             {
-                MessageBox.Show("Выберите улицу или уберите галочку поиска по улице", "Ошибка", 
+                MessageBox.Show(@"Выберите улицу или уберите галочку поиска по улице", @"Ошибка", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxStreet.Focus();
                 return;
             }
-            if ((checkBoxHouseEnable.Checked) && String.IsNullOrEmpty(textBoxHouse.Text.Trim()))
+            if ((checkBoxHouseEnable.Checked) && string.IsNullOrEmpty(textBoxHouse.Text.Trim()))
             {
-                MessageBox.Show("Введите номер здания или уберите галочку поиска по номеру дома", "Ошибка", 
+                MessageBox.Show(@"Введите номер здания или уберите галочку поиска по номеру дома", @"Ошибка", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxHouse.Focus();
                 return;
             }
-            if ((checkBoxContractNumberEnable.Checked) && String.IsNullOrEmpty(textBoxContractNumber.Text.Trim()))
+            if ((checkBoxContractNumberEnable.Checked) && string.IsNullOrEmpty(textBoxContractNumber.Text.Trim()))
             {
-                MessageBox.Show("Введите номер договора найма или уберите галочку поиска по номеру договора найма", 
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Введите номер договора найма или уберите галочку поиска по номеру договора найма", 
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxContractNumber.Focus();
                 return;
             }
-            if ((checkBoxTenantSNPEnable.Checked) && String.IsNullOrEmpty(textBoxTenantSNP.Text.Trim()))
+            if ((checkBoxTenantSNPEnable.Checked) && string.IsNullOrEmpty(textBoxTenantSNP.Text.Trim()))
             {
-                MessageBox.Show("Введите ФИО нанимателя или уберите галочку поиска по ФИО нанимателя",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Введите ФИО нанимателя или уберите галочку поиска по ФИО нанимателя",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxTenantSNP.Focus();
                 return;
             }
-            this.DialogResult = System.Windows.Forms.DialogResult.OK;
+            DialogResult = DialogResult.OK;
         }
 
         private void checkBoxStateEnable_CheckedChanged(object sender, EventArgs e)
