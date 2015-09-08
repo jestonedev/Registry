@@ -306,7 +306,7 @@ namespace Registry.Viewport
                     continue;
                 int id_fund_type = (int)((DataRowView)v_subPremisesCurrentFund[id])["id_fund_type"];
                 string fundType = ((DataRowView)v_fundType[v_fundType.Find("id_fund_type", id_fund_type)])["fund_type"].ToString();
-                if ((new int[] {1, 4, 5}).Contains((int)((DataRowView)v_sub_premises[i])["id_state"]))
+                if ((new int[] {1, 4, 5, 9}).Contains((int)((DataRowView)v_sub_premises[i])["id_state"]))
                     dataGridViewRooms.Rows[i].Cells["current_fund"].Value = fundType;
                 else
                     dataGridViewRooms.Rows[i].Cells["current_fund"].Value = "";
@@ -346,7 +346,7 @@ namespace Registry.Viewport
         {
             if (comboBoxCurrentFundType.SelectedValue != null && v_premises.Position != -1 &&
                 ((DataRowView)v_premises[v_premises.Position])["id_state"] != DBNull.Value &&
-                (new int[] { 1, 4, 5 }).Contains((int)((DataRowView)v_premises[v_premises.Position])["id_state"]))
+                (new int[] { 1, 4, 5, 9 }).Contains((int)((DataRowView)v_premises[v_premises.Position])["id_state"]))
             {
                 label38.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
@@ -655,13 +655,13 @@ namespace Registry.Viewport
                     "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (new int[] { 4, 5 }.Contains(premise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+            if (new int[] { 4, 5, 9 }.Contains(premise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
                 MessageBox.Show("У вас нет прав на добавление в базу муниципальных жилых помещений", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (new int[] { 1, 3 }.Contains(premise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+            if (new int[] { 1, 3, 6, 7, 8 }.Contains(premise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
                 MessageBox.Show("У вас нет прав на добавление в базу немуниципальных жилых помещений", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);

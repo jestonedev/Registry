@@ -71,7 +71,7 @@ namespace Registry.SearchForms
             {
                 // по ФИО участника
                 string[] snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new char[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                IEnumerable<int> premises_ids = DataModelHelper.PremisesIDsBySNP(snp, (row) => { return true; });
+                IEnumerable<int> premises_ids = DataModelHelper.PremisesIDsBySNP(snp, row => true);
                 included_premises = DataModelHelper.Intersect(included_premises, premises_ids);
             }
             if (comboBoxCriteriaType.SelectedIndex == 3)
@@ -92,8 +92,7 @@ namespace Registry.SearchForms
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 filter += "id_premises IN (0";
-                foreach (int id in included_premises)
-                    filter += id.ToString(CultureInfo.InvariantCulture) + ",";
+                filter = included_premises.Aggregate(filter, (current, id) => current + (id.ToString(CultureInfo.InvariantCulture) + ","));
                 filter = filter.TrimEnd(new char[] { ',' }) + ")";
             }
             if (included_buildings != null)
@@ -105,17 +104,13 @@ namespace Registry.SearchForms
                     filter += id.ToString(CultureInfo.InvariantCulture) + ",";
                 filter = filter.TrimEnd(new char[] { ',' }) + ")";
             }
-            if (checkBoxMunicipalOnly.Checked)
-            {
-                if (!String.IsNullOrEmpty(filter.Trim()))
-                    filter += " AND ";
-                IEnumerable<int> municipal_ids = DataModelHelper.ObjectIdsByStates(Entities.EntityType.Premise, new int[] { 4, 5 });
-                string ids = "";
-                foreach (int id in municipal_ids)
-                    ids += id.ToString(CultureInfo.InvariantCulture) + ",";
-                ids = ids.TrimEnd(new char[] { ',' });
-                filter += "(id_state IN (4, 5) OR (id_state = 1 AND id_premises IN (0"+ids+")))";
-            }
+            if (!checkBoxMunicipalOnly.Checked) return filter;
+            if (!string.IsNullOrEmpty(filter.Trim()))
+                filter += " AND ";
+            var municipal_ids = DataModelHelper.ObjectIdsByStates(Entities.EntityType.Premise, new[] { 4, 5, 9 });
+            var ids = municipal_ids.Aggregate("", (current, id) => current + (id.ToString(CultureInfo.InvariantCulture) + ","));
+            ids = ids.TrimEnd(new char[] { ',' });
+            filter += "(id_state IN (4, 5, 9) OR (id_state = 1 AND id_premises IN (0"+ids+")))";
             return filter;
         }
 

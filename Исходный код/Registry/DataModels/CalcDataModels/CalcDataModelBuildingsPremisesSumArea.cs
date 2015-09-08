@@ -48,7 +48,7 @@ namespace Registry.CalcDataModels
             var sub_premises_sum_area = from premises_row in premises
                                         join sub_premises_row in sub_premises
                                         on premises_row.Field<int>("id_premises") equals sub_premises_row.Field<int>("id_premises")
-                                        where new int[] { 4, 5 }.Contains(sub_premises_row.Field<int>("id_state"))
+                                        where new int[] { 4, 5, 9 }.Contains(sub_premises_row.Field<int>("id_state"))
                                         group sub_premises_row.Field<double>("total_area") by premises_row.Field<int>("id_premises") into gs
                                         select new
                                         {
@@ -89,7 +89,7 @@ namespace Registry.CalcDataModels
                          where dbr_row == 0 && dpr_row == 0 &&
                                (befmr_row == null || (piimr_row != null && befmr_row.Date <= piimr_row.Date)) && 
                                (pefmr_row == null || (biimr_row != null && pefmr_row.Date <= biimr_row.Date))
-                         group new int[] { 4, 5 }.Contains(premises_row.Field<int>("id_state")) ? 
+                         group new int[] { 4, 5, 9 }.Contains(premises_row.Field<int>("id_state")) ? 
                                 premises_row.Field<double>("total_area") :
                                 premises_row.Field<int>("id_state") == 1 ?
                                 (spsar_row == null ? 0 : spsar_row.sum_area) : 0 

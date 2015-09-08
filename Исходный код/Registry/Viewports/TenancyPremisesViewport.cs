@@ -1020,7 +1020,7 @@ namespace Registry.Viewport
                         e.Value = state_row["state_female"];
                     break;
                 case "current_fund":
-                    if ((new object[] { 1, 4, 5 }).Contains(row["id_state"]))
+                    if ((new object[] { 1, 4, 5, 9 }).Contains(row["id_state"]))
                     {
                         DataRow fund_row = premises_funds.Select().Rows.Find(row["id_premises"]);
                         if (fund_row != null)
