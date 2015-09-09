@@ -12,6 +12,7 @@ using Registry.CalcDataModels;
 using Security;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using Registry.Reporting.RegistryReporters;
 
 namespace Registry.Viewport
 {
@@ -1203,6 +1204,40 @@ namespace Registry.Viewport
                 "id_building = " + Convert.ToInt32(((DataRowView)v_buildings[v_buildings.Position])["id_building"], CultureInfo.InvariantCulture),
                 ((DataRowView)v_buildings[v_buildings.Position]).Row,
                 ParentTypeEnum.Building);
+        }
+
+        public override bool HasAttach1Form2()
+        {
+            return true;
+        }
+
+        public override bool HasAttach1Form3()
+        {
+            return true;
+        }
+
+        public override void Attach1Form2()
+        {
+            if (v_buildings.Position == -1)
+                return;
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            var idBuilding = ((DataRowView)v_buildings[v_buildings.Position])["id_building"];
+            var arguments = new Dictionary<string, string> { { "id_building", idBuilding.ToString() } };
+            var reporter = new Attach1Form2Reporter();
+            reporter.Run(arguments);
+        }
+
+        public override void Attach1Form3()
+        {
+            if (v_buildings.Position == -1)
+                return;
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            var idBuilding = ((DataRowView)v_buildings[v_buildings.Position])["id_building"];
+            var arguments = new Dictionary<string, string> { { "id_building", idBuilding.ToString() } };
+            var reporter = new Attach1Form3Reporter();
+            reporter.Run(arguments);
         }
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)

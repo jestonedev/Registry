@@ -29,6 +29,7 @@ namespace Registry
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
             WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin2 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
             WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient4 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
@@ -44,7 +45,6 @@ namespace Registry
             WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient6 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
             WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient13 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient14 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.ribbon1 = new System.Windows.Forms.Ribbon();
             this.ribbonOrbMenuItemBuildings = new System.Windows.Forms.RibbonOrbMenuItem();
             this.ribbonOrbMenuItemPremises = new System.Windows.Forms.RibbonOrbMenuItem();
@@ -121,6 +121,7 @@ namespace Registry
             this.ribbonButtonPremisesByExchangeReport = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonPremisesByDonationReport = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonMunicipalPremises = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonAllPremises = new System.Windows.Forms.RibbonButton();
             this.ribbonPanel7 = new System.Windows.Forms.RibbonPanel();
             this.ribbonButtonStructureTypes = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonRestrictionTypes = new System.Windows.Forms.RibbonButton();
@@ -161,7 +162,8 @@ namespace Registry
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripLabelRecordCount = new System.Windows.Forms.ToolStripLabel();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
-            this.ribbonButtonAllPremises = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonOrbAttach1Form2 = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonOrbAttach1Form3 = new System.Windows.Forms.RibbonButton();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -193,6 +195,8 @@ namespace Registry
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptPremise);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptSubPremise);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptSubPremises);
+            this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbAttach1Form2);
+            this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbAttach1Form3);
             this.ribbon1.OrbDropDown.RecentItemsCaption = "Печать";
             this.ribbon1.OrbDropDown.Size = new System.Drawing.Size(527, 339);
             this.ribbon1.OrbDropDown.TabIndex = 0;
@@ -1049,6 +1053,18 @@ namespace Registry
             this.ribbonButtonMunicipalPremises.ToolTipTitle = "Муниципальные жилые помещения";
             this.ribbonButtonMunicipalPremises.Click += new System.EventHandler(this.ribbonButtonMunicipalPremises_Click);
             // 
+            // ribbonButtonAllPremises
+            // 
+            this.ribbonButtonAllPremises.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAllPremises.Image")));
+            this.ribbonButtonAllPremises.MaxSizeMode = System.Windows.Forms.RibbonElementSizeMode.Medium;
+            this.ribbonButtonAllPremises.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAllPremises.SmallImage")));
+            this.ribbonButtonAllPremises.Text = "Все ЖП";
+            this.ribbonButtonAllPremises.ToolTip = "При нажатии на данную кнопку будет сформирован отчет в OpenOffice Calc по всем жи" +
+    "лым помещениям";
+            this.ribbonButtonAllPremises.ToolTipImage = global::Registry.Properties.Resources.ooo_calc__max_;
+            this.ribbonButtonAllPremises.ToolTipTitle = "Все жилые помещения";
+            this.ribbonButtonAllPremises.Click += new System.EventHandler(this.ribbonButtonAllPremises_Click);
+            // 
             // ribbonPanel7
             // 
             this.ribbonPanel7.ButtonMoreEnabled = false;
@@ -1476,17 +1492,27 @@ namespace Registry
             this.dockPanel.TabIndex = 5;
             this.dockPanel.ActiveDocumentChanged += new System.EventHandler(this.dockPanel_ActiveDocumentChanged);
             // 
-            // ribbonButtonAllPremises
+            // ribbonButtonOrbAttach1Form2
             // 
-            this.ribbonButtonAllPremises.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAllPremises.Image")));
-            this.ribbonButtonAllPremises.MaxSizeMode = System.Windows.Forms.RibbonElementSizeMode.Medium;
-            this.ribbonButtonAllPremises.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAllPremises.SmallImage")));
-            this.ribbonButtonAllPremises.Text = "Все ЖП";
-            this.ribbonButtonAllPremises.ToolTip = "При нажатии на данную кнопку будет сформирован отчет в OpenOffice Calc по всем жи" +
-    "лым помещениям";
-            this.ribbonButtonAllPremises.ToolTipImage = global::Registry.Properties.Resources.ooo_calc__max_;
-            this.ribbonButtonAllPremises.ToolTipTitle = "Все жилые помещения";
-            this.ribbonButtonAllPremises.Click += new System.EventHandler(this.ribbonButtonAllPremises_Click);
+            this.ribbonButtonOrbAttach1Form2.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbAttach1Form2.Image")));
+            this.ribbonButtonOrbAttach1Form2.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbAttach1Form2.SmallImage")));
+            this.ribbonButtonOrbAttach1Form2.Text = "Форма 2. Сведения о ЖП аварийных домов";
+            this.ribbonButtonOrbAttach1Form2.ToolTip = "Сведения о жилых помещениях и собственниках (нанимателях) жилых помещений аварийн" +
+    "ого многоквартирного дома";
+            this.ribbonButtonOrbAttach1Form2.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbAttach1Form2.ToolTipImage")));
+            this.ribbonButtonOrbAttach1Form2.ToolTipTitle = "Форма 2";
+            this.ribbonButtonOrbAttach1Form2.Click += new System.EventHandler(this.ribbonButtonOrbAttach1Form2_Click);
+            // 
+            // ribbonButtonOrbAttach1Form3
+            // 
+            this.ribbonButtonOrbAttach1Form3.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbAttach1Form3.Image")));
+            this.ribbonButtonOrbAttach1Form3.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbAttach1Form3.SmallImage")));
+            this.ribbonButtonOrbAttach1Form3.Text = "Форма 3. Сведения для программы переселения";
+            this.ribbonButtonOrbAttach1Form3.ToolTip = "Сведения, необходимые для целей формирования программы переселения граждан из ава" +
+    "рийных многоквартирных домов";
+            this.ribbonButtonOrbAttach1Form3.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbAttach1Form3.ToolTipImage")));
+            this.ribbonButtonOrbAttach1Form3.ToolTipTitle = "Форма 3";
+            this.ribbonButtonOrbAttach1Form3.Click += new System.EventHandler(this.ribbonButtonOrbAttach1Form3_Click);
             // 
             // MainForm
             // 
@@ -1630,6 +1656,8 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButtonOrbRegistryExcerptSubPremise;
         private System.Windows.Forms.RibbonButton ribbonButtonOrbRegistryExcerptSubPremises;
         private System.Windows.Forms.RibbonButton ribbonButtonAllPremises;
+        private System.Windows.Forms.RibbonButton ribbonButtonOrbAttach1Form2;
+        private System.Windows.Forms.RibbonButton ribbonButtonOrbAttach1Form3;
     }
 }
 

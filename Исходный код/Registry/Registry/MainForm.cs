@@ -379,30 +379,29 @@ namespace Registry
         public void DocumentsStateUpdate()
         {
             ribbon1.OrbDropDown.RecentItems.Clear();
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasTenancyContract17xReport())
+            if (!(dockPanel.ActiveDocument is IMenuController))
+                return;
+            if (((IMenuController) dockPanel.ActiveDocument).HasTenancyContract17xReport())
             {
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyContract1711);
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyContract1712);
             }
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasTenancyContractReport())
+            if ((dockPanel.ActiveDocument as IMenuController).HasTenancyContractReport())
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyContract);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasTenancyActReport())
+            if ((dockPanel.ActiveDocument as IMenuController).HasTenancyActReport())
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyAct);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasTenancyAgreementReport())
+            if ((dockPanel.ActiveDocument as IMenuController).HasTenancyAgreementReport())
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyAgreement);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasRegistryExcerptPremiseReport())
+            if ((dockPanel.ActiveDocument as IMenuController).HasRegistryExcerptPremiseReport())
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptPremise);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasRegistryExcerptSubPremiseReport())
+            if ((dockPanel.ActiveDocument as IMenuController).HasRegistryExcerptSubPremiseReport())
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptSubPremise);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasRegistryExcerptSubPremisesReport())
+            if ((dockPanel.ActiveDocument as IMenuController).HasRegistryExcerptSubPremisesReport())
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptSubPremises);
+            if ((dockPanel.ActiveDocument as IMenuController).HasAttach1Form2())
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbAttach1Form2);
+            if ((dockPanel.ActiveDocument as IMenuController).HasAttach1Form3())
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbAttach1Form3);
         }
 
         private void RibbonTabsStateUpdate()
@@ -938,6 +937,20 @@ namespace Registry
             if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
                 return;
             (dockPanel.ActiveDocument as IMenuController).RegistryExcerptSubPremisesReportGenerate();
+        }
+
+        private void ribbonButtonOrbAttach1Form2_Click(object sender, EventArgs e)
+        {
+            if (!(dockPanel.ActiveDocument is IMenuController))
+                return;
+            ((IMenuController) dockPanel.ActiveDocument).Attach1Form2();
+        }
+
+        private void ribbonButtonOrbAttach1Form3_Click(object sender, EventArgs e)
+        {
+            if (!(dockPanel.ActiveDocument is IMenuController))
+                return;
+            ((IMenuController) dockPanel.ActiveDocument).Attach1Form3();
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)

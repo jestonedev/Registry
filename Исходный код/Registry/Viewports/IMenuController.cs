@@ -114,5 +114,11 @@ namespace Registry.Viewport
         bool HasRegistryExcerptSubPremiseReport();
 
         bool HasRegistryExcerptPremiseReport();
+
+        bool HasAttach1Form2();
+
+        bool HasAttach1Form3();
+        void Attach1Form2();
+        void Attach1Form3();
     }
 }

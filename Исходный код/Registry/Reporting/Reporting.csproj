@@ -81,6 +81,8 @@
       <DependentUpon>DateRangeForm.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="RegistryReporters\Attach1Form2Reporter.cs" />
+    <Compile Include="RegistryReporters\Attach1Form3Reporter.cs" />
     <Compile Include="RegistryReporters\ExcerptReporter.cs" />
     <Compile Include="RegistryReporters\FullStatisticReporter.cs" />
     <Compile Include="RegistryReporters\MunicipalPremisesReporter.cs" />

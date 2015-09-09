@@ -524,5 +524,27 @@ namespace Registry.Viewport
         {
             throw new ViewportException("Не реализовано");
         }
+
+
+        public virtual bool HasAttach1Form2()
+        {
+            return false;
+        }
+
+        public virtual bool HasAttach1Form3()
+        {
+            return false;
+        }
+
+
+        public virtual void Attach1Form2()
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+        public virtual void Attach1Form3()
+        {
+            throw new ViewportException("Не реализовано");
+        }
     }
 }

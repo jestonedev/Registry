@@ -11,6 +11,8 @@ using Registry.SearchForms;
 using Registry.CalcDataModels;
 using Security;
 using System.Globalization;
+using Registry.Reporting;
+using Registry.Reporting.RegistryReporters;
 
 namespace Registry.Viewport
 {
@@ -368,6 +370,36 @@ namespace Registry.Viewport
         public override void ShowTenancies()
         {
             ShowAssocViewport(ViewportType.TenancyListViewport);
+        }
+
+        public override bool HasAttach1Form2()
+        {
+            return true;
+        }
+
+        public override bool HasAttach1Form3()
+        {
+            return true;
+        }
+
+        public override void Attach1Form2()
+        {
+            if (v_buildings.Position == -1)
+                return;
+            var idBuilding = ((DataRowView) v_buildings[v_buildings.Position])["id_building"];
+            var arguments = new Dictionary<string, string> {{"id_building", idBuilding.ToString()}};
+            var reporter = new Attach1Form2Reporter();
+            reporter.Run(arguments);
+        }
+
+        public override void Attach1Form3()
+        {
+            if (v_buildings.Position == -1)
+                return;
+            var idBuilding = ((DataRowView)v_buildings[v_buildings.Position])["id_building"];
+            var arguments = new Dictionary<string, string> { { "id_building", idBuilding.ToString() } };
+            var reporter = new Attach1Form3Reporter();
+            reporter.Run(arguments);
         }
 
         private void ShowAssocViewport(ViewportType viewportType)
