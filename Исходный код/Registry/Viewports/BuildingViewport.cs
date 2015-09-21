@@ -945,6 +945,7 @@ namespace Registry.Viewport
                     return;
                 updatePremisesState = true;
             }
+            //sdsd
             string Filter = "";
             if (!String.IsNullOrEmpty(v_buildings.Filter))
                 Filter += " OR ";
