@@ -1,11 +1,15 @@
-﻿namespace Registry.Viewport
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+using VIBlend.WinForms.Controls;
+
+namespace Registry.Viewport
 {
     partial class OwnershipsEditor
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -28,7 +32,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OwnershipsEditor));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(OwnershipsEditor));
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxOwnershipNumber = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -168,15 +172,15 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBoxOwnershipNumber;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.DateTimePicker dateTimePickerOwnershipDate;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBoxOwnershipDescription;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox comboBoxIdOwnershipType;
-        private VIBlend.WinForms.Controls.vButton vButtonCancel;
-        private VIBlend.WinForms.Controls.vButton vButtonSave;
+        private Label label1;
+        private TextBox textBoxOwnershipNumber;
+        private Label label2;
+        private DateTimePicker dateTimePickerOwnershipDate;
+        private Label label3;
+        private TextBox textBoxOwnershipDescription;
+        private Label label4;
+        private ComboBox comboBoxIdOwnershipType;
+        private vButton vButtonCancel;
+        private vButton vButtonSave;
     }
 }

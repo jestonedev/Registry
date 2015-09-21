@@ -1,16 +1,11 @@
-﻿using Registry.CalcDataModels;
+﻿using System;
+using System.Data;
+using System.Globalization;
+using System.Windows.Forms;
+using Registry.CalcDataModels;
 using Registry.DataModels;
 using Registry.Entities;
 using Security;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 
 namespace Registry.Viewport
 {
@@ -20,9 +15,9 @@ namespace Registry.Viewport
         private OwnershipRight ownershipRight;
         private ParentTypeEnum parentType;
         private OwnershipsRightsDataModel ownership_rights = OwnershipsRightsDataModel.GetInstance();
-        private DataModel ownership_assoc = null;
-        private OwnershipRightTypesDataModel ownership_right_types = null;
-        private BindingSource v_ownership_right_types = null;
+        private DataModel ownership_assoc;
+        private OwnershipRightTypesDataModel ownership_right_types;
+        private BindingSource v_ownership_right_types;
 
         public ParentTypeEnum ParentType
         {
@@ -75,7 +70,7 @@ namespace Registry.Viewport
         {
             get
             {
-                OwnershipRight ownershipRightValue = new OwnershipRight();
+                var ownershipRightValue = new OwnershipRight();
                 ownershipRightValue.Date = ViewportHelper.ValueOrNull(dateTimePickerOwnershipDate);
                 ownershipRightValue.Description = ViewportHelper.ValueOrNull(textBoxOwnershipDescription);
                 ownershipRightValue.Number = ViewportHelper.ValueOrNull(textBoxOwnershipNumber);
@@ -109,7 +104,7 @@ namespace Registry.Viewport
 
         private bool ValidatePermissions()
         {
-            EntityType entity = EntityType.Unknown;
+            var entity = EntityType.Unknown;
             string fieldName = null;
             if (ParentType == ParentTypeEnum.Building)
             {
@@ -154,10 +149,10 @@ namespace Registry.Viewport
 
         private void vButtonSave_Click(object sender, EventArgs e)
         {
-            OwnershipRight ownershipRight = OwnershipRightValue;
+            var ownershipRight = OwnershipRightValue;
             if (!ValidateData(ownershipRight))
                 return;
-            int id_parent = ((ParentType == ParentTypeEnum.Premises) && ParentRow != null) ? (int)ParentRow["id_premises"] :
+            var id_parent = ((ParentType == ParentTypeEnum.Premises) && ParentRow != null) ? (int)ParentRow["id_premises"] :
                         ((ParentType == ParentTypeEnum.Building) && ParentRow != null) ? (int)ParentRow["id_building"] : -1;
             if (state == ViewportState.NewRowState)
             {
@@ -168,33 +163,25 @@ namespace Registry.Viewport
                     return;
                 }
                 OwnershipsRightsDataModel.GetInstance().EditingNewRecord = true;
-                int id_ownership_right = OwnershipsRightsDataModel.Insert(ownershipRight, ParentType, id_parent);
+                var id_ownership_right = OwnershipsRightsDataModel.Insert(ownershipRight, ParentType, id_parent);
                 if (id_ownership_right == -1)
                     return;
-                ownership_rights.Select().Rows.Add(
-                    new object[] { 
-                        id_ownership_right, 
-                        ownershipRight.IdOwnershipRightType, 
-                        ownershipRight.Number, 
-                        ownershipRight.Date, 
-                        ownershipRight.Description
-                    }
-                );
-                ownership_assoc.Select().Rows.Add(new object[] { id_parent, id_ownership_right });
+                ownership_rights.Select().Rows.Add(id_ownership_right, ownershipRight.IdOwnershipRightType, ownershipRight.Number, ownershipRight.Date, ownershipRight.Description);
+                ownership_assoc.Select().Rows.Add(id_parent, id_ownership_right);
                 OwnershipsRightsDataModel.GetInstance().EditingNewRecord = false;
             } else
             {
                 if (OwnershipsRightsDataModel.Update(ownershipRight) == -1)
                     return;
-                DataRow row = ownership_rights.Select().Rows.Find(ownershipRight.IdOwnershipRight);
+                var row = ownership_rights.Select().Rows.Find(ownershipRight.IdOwnershipRight);
                 row["id_ownership_right_type"] = ownershipRight.IdOwnershipRightType == null ? DBNull.Value : (object)ownershipRight.IdOwnershipRightType;
                 row["number"] = ownershipRight.Number == null ? DBNull.Value : (object)ownershipRight.Number;
                 row["date"] = ownershipRight.Date == null ? DBNull.Value : (object)ownershipRight.Date;
                 row["description"] = ownershipRight.Description == null ? DBNull.Value : (object)ownershipRight.Description;
             }
             CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building,
-                    Int32.Parse(ParentRow["id_building"].ToString(), CultureInfo.InvariantCulture), true);
-            DialogResult = System.Windows.Forms.DialogResult.OK;
+                    int.Parse(ParentRow["id_building"].ToString(), CultureInfo.InvariantCulture), true);
+            DialogResult = DialogResult.OK;
         }
 
         private void selectAll_Enter(object sender, EventArgs e)

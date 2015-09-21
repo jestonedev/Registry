@@ -1,8 +1,4 @@
 ﻿using Registry.Reporting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Registry.SearchForms;
 
 namespace Registry.Viewport

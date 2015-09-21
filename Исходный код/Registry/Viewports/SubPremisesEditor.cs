@@ -1,17 +1,13 @@
-﻿using Registry.CalcDataModels;
+﻿using System;
+using System.Data;
+using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using Registry.CalcDataModels;
 using Registry.DataModels;
 using Registry.Entities;
 using Security;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Windows.Forms;
 
 namespace Registry.Viewport
 {
@@ -21,8 +17,8 @@ namespace Registry.Viewport
         private SubPremise subPremise;
         private ParentTypeEnum parentType;
         private SubPremisesDataModel sub_premises = SubPremisesDataModel.GetInstance();
-        private ObjectStatesDataModel object_states = null;
-        private BindingSource v_object_states = null;
+        private ObjectStatesDataModel object_states;
+        private BindingSource v_object_states;
 
         public ParentTypeEnum ParentType
         {
@@ -70,7 +66,7 @@ namespace Registry.Viewport
         {
             get
             {
-                SubPremise subPremiseValue = new SubPremise();
+                var subPremiseValue = new SubPremise();
                 subPremiseValue.TotalArea = (double)numericUpDownTotalArea.Value;
                 if ((double)numericUpDownLivingArea.Value == 0)
                     subPremiseValue.LivingArea = (double)numericUpDownTotalArea.Value;
@@ -120,13 +116,13 @@ namespace Registry.Viewport
 
         private bool ValidatePermissions(SubPremise subPremise)
         {
-            if (new int[] { 4, 5 }.Contains(subPremise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+            if (new[] { 4, 5, 9 }.Contains(subPremise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
                 MessageBox.Show("У вас нет прав на добавление в базу муниципальных жилых помещений", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (new int[] { 1, 3 }.Contains(subPremise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+            if (new[] { 1, 3, 6, 7, 8 }.Contains(subPremise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
                 MessageBox.Show("У вас нет прав на добавление в базу немуниципальных жилых помещений", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -155,10 +151,10 @@ namespace Registry.Viewport
 
         private void vButtonSave_Click(object sender, EventArgs e)
         {
-            SubPremise subPremise = SubPremiseValue;
+            var subPremise = SubPremiseValue;
             if (!ValidateData(subPremise))
                 return;
-            int id_parent = ((ParentType == ParentTypeEnum.Premises) && ParentRow != null) ? (int)ParentRow["id_premises"] : -1;
+            var id_parent = ((ParentType == ParentTypeEnum.Premises) && ParentRow != null) ? (int)ParentRow["id_premises"] : -1;
             subPremise.IdPremises = id_parent;
             if (state == ViewportState.NewRowState)
             {
@@ -169,27 +165,16 @@ namespace Registry.Viewport
                     return;
                 }
                 sub_premises.EditingNewRecord = true;
-                int id_sub_premise = SubPremisesDataModel.Insert(subPremise);
+                var id_sub_premise = SubPremisesDataModel.Insert(subPremise);
                 if (id_sub_premise == -1)
                     return;
-                sub_premises.Select().Rows.Add(
-                    new object[] { 
-                        id_sub_premise, 
-                        subPremise.IdPremises,
-                        subPremise.IdState, 
-                        subPremise.SubPremisesNum, 
-                        subPremise.TotalArea, 
-                        subPremise.LivingArea, 
-                        subPremise.Description,
-                        subPremise.StateDate
-                    }
-                );
+                sub_premises.Select().Rows.Add(id_sub_premise, subPremise.IdPremises, subPremise.IdState, subPremise.SubPremisesNum, subPremise.TotalArea, subPremise.LivingArea, subPremise.Description, subPremise.StateDate);
                 sub_premises.EditingNewRecord = false;
             } else
             {
                 if (SubPremisesDataModel.Update(subPremise) == -1)
                     return;
-                DataRow row = sub_premises.Select().Rows.Find(subPremise.IdSubPremises);
+                var row = sub_premises.Select().Rows.Find(subPremise.IdSubPremises);
                 row["id_state"] = subPremise.IdState == null ? DBNull.Value : (object)subPremise.IdState;
                 row["sub_premises_num"] = subPremise.SubPremisesNum == null ? DBNull.Value : (object)subPremise.SubPremisesNum;
                 row["total_area"] = subPremise.TotalArea == null ? DBNull.Value : (object)subPremise.TotalArea;
@@ -200,10 +185,10 @@ namespace Registry.Viewport
             CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
             CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
             CalcDataModelPremiseSubPremisesSumArea.GetInstance().Refresh(EntityType.Premise,
-                Int32.Parse(ParentRow["id_premises"].ToString(), CultureInfo.InvariantCulture), true);
+                int.Parse(ParentRow["id_premises"].ToString(), CultureInfo.InvariantCulture), true);
             CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building,
-                Int32.Parse(ParentRow["id_building"].ToString(), CultureInfo.InvariantCulture), true);
-            DialogResult = System.Windows.Forms.DialogResult.OK;
+                int.Parse(ParentRow["id_building"].ToString(), CultureInfo.InvariantCulture), true);
+            DialogResult = DialogResult.OK;
         }
 
         private void selectAll_Enter(object sender, EventArgs e)

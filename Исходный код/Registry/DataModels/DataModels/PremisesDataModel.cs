@@ -27,6 +27,7 @@ namespace Registry.DataModels
                             total_area = ?, living_area = ?, height = ?, 
                             cadastral_num = ?, cadastral_cost = ?, 
                             balance_cost = ?, description = ?, reg_date = ?, is_memorial = ?, account = ?, state_date = ? WHERE id_premises = ?";
+        private static string updateState = @"UPDATE premises SET id_state = ?,  state_date = ? WHERE id_premises = ?";
         private static string tableName = "premises";
 
         private PremisesDataModel(ToolStripProgressBar progressBar, int incrementor)
@@ -124,6 +125,29 @@ namespace Registry.DataModels
                 catch (OdbcException e)
                 {
                     MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
+                        "Не удалось изменить данные о помещении. Подробная ошибка: {0}", e.Message), "Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return -1;
+                }
+            }
+        }
+
+        public static int UpdateState(int idPremise, int? idState, DateTime? stateDate)
+        {
+            using (DBConnection connection = new DBConnection())
+            using (DbCommand command = DBConnection.CreateCommand())
+            {
+                command.CommandText = updateState;
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", idState));
+                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("state_date", stateDate));
+                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", idPremise));
+                try
+                {
+                    return connection.SqlModifyQuery(command);
+                }
+                catch (OdbcException e)
+                {
+                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture,
                         "Не удалось изменить данные о помещении. Подробная ошибка: {0}", e.Message), "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;

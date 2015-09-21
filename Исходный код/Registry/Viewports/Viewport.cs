@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel;
 using System.Data;
 using Registry.Entities;
-using WeifenLuo.WinFormsUI.Docking;
 using Registry.Reporting;
 using Registry.SearchForms;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
@@ -15,7 +12,7 @@ namespace Registry.Viewport
         private IMenuCallback menuCallback;
 
         protected IMenuCallback MenuCallback { get { return menuCallback; } set { menuCallback = value; } }
-        private bool selected_ = false;
+        private bool selected_;
 
         
         public string StaticFilter { get; set; }
@@ -33,7 +30,7 @@ namespace Registry.Viewport
             DynamicFilter = "";
             ParentRow = null;
             ParentType = ParentTypeEnum.None;
-            this.MenuCallback = menuCallback;
+            MenuCallback = menuCallback;
         }
 
         public new virtual void Close()
@@ -41,7 +38,7 @@ namespace Registry.Viewport
             base.Close();
         }
 
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
             if (e.Cancel != true)
                 MenuCallback.SwitchToPreviousViewport();
@@ -253,7 +250,7 @@ namespace Registry.Viewport
         {
             if (menuCallback == null)
                 throw new ViewportException("Не заданна ссылка на интерфейс menuCallback");
-            Viewport viewport = ViewportFactory.CreateViewport(menuCallback, viewportType);
+            var viewport = ViewportFactory.CreateViewport(menuCallback, viewportType);
             viewport.StaticFilter = staticFilter;
             viewport.ParentRow = parentRow;
             viewport.ParentType = parentType;

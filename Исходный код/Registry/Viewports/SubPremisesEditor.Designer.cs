@@ -1,11 +1,15 @@
-﻿namespace Registry.Viewport
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+using VIBlend.WinForms.Controls;
+
+namespace Registry.Viewport
 {
     partial class SubPremisesEditor
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -28,7 +32,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SubPremisesEditor));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(SubPremisesEditor));
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxSubPremisesNum = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -217,19 +221,19 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBoxSubPremisesNum;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBoxDescription;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox comboBoxIdState;
-        private VIBlend.WinForms.Controls.vButton vButtonCancel;
-        private VIBlend.WinForms.Controls.vButton vButtonSave;
-        private System.Windows.Forms.NumericUpDown numericUpDownTotalArea;
-        private System.Windows.Forms.DateTimePicker dateTimePickerStateDate;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.NumericUpDown numericUpDownLivingArea;
-        private System.Windows.Forms.Label label6;
+        private Label label1;
+        private TextBox textBoxSubPremisesNum;
+        private Label label2;
+        private Label label3;
+        private TextBox textBoxDescription;
+        private Label label4;
+        private ComboBox comboBoxIdState;
+        private vButton vButtonCancel;
+        private vButton vButtonSave;
+        private NumericUpDown numericUpDownTotalArea;
+        private DateTimePicker dateTimePickerStateDate;
+        private Label label5;
+        private NumericUpDown numericUpDownLivingArea;
+        private Label label6;
     }
 }

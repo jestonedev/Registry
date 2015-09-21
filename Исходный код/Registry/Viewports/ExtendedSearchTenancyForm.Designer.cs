@@ -1,11 +1,15 @@
-﻿namespace Registry.SearchForms
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+using VIBlend.WinForms.Controls;
+
+namespace Registry.SearchForms
 {
     partial class ExtendedSearchTenancyForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -28,7 +32,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExtendedSearchTenancyForm));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(ExtendedSearchTenancyForm));
             this.vButtonCancel = new VIBlend.WinForms.Controls.vButton();
             this.vButtonSearch = new VIBlend.WinForms.Controls.vButton();
             this.textBoxRegistrationNum = new System.Windows.Forms.TextBox();
@@ -766,64 +770,64 @@
 
         #endregion
 
-        private VIBlend.WinForms.Controls.vButton vButtonCancel;
-        private VIBlend.WinForms.Controls.vButton vButtonSearch;
-        private System.Windows.Forms.TextBox textBoxRegistrationNum;
-        private System.Windows.Forms.CheckBox checkBoxContractNumEnable;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBoxResidenceWarrantNum;
-        private System.Windows.Forms.CheckBox checkBoxResidenceWarrantNumEnable;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBoxProtocolNum;
-        private System.Windows.Forms.CheckBox checkBoxProtocolEnable;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBoxTenantSNP;
-        private System.Windows.Forms.CheckBox checkBoxTenantSNPEnable;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBoxPersonSNP;
-        private System.Windows.Forms.CheckBox checkBoxPersonSNPEnable;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.NumericUpDown numericUpDownIDTenancy;
-        private System.Windows.Forms.CheckBox checkBoxIDTenancyEnable;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.ComboBox comboBoxRentType;
-        private System.Windows.Forms.CheckBox checkBoxRentTypeEnable;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ComboBox comboBoxRegion;
-        private System.Windows.Forms.CheckBox checkBoxRegionEnable;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.TextBox textBoxHouse;
-        private System.Windows.Forms.CheckBox checkBoxPremisesNumEnable;
-        private System.Windows.Forms.TextBox textBoxPremisesNum;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.CheckBox checkBoxHouseEnable;
-        private System.Windows.Forms.CheckBox checkBoxStreetEnable;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.ComboBox comboBoxStreet;
-        private System.Windows.Forms.CheckBox checkBoxRegDateEnable;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.DateTimePicker dateTimePickerRegDate;
-        private System.Windows.Forms.ComboBox comboBoxRegDateExpr;
-        private System.Windows.Forms.ComboBox comboBoxIssueDateExpr;
-        private System.Windows.Forms.DateTimePicker dateTimePickerIssueDate;
-        private System.Windows.Forms.CheckBox checkBoxIssueDateEnable;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.ComboBox comboBoxBeginDateExpr;
-        private System.Windows.Forms.DateTimePicker dateTimePickerBeginDate;
-        private System.Windows.Forms.CheckBox checkBoxBeginDateEnable;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.ComboBox comboBoxEndDateExpr;
-        private System.Windows.Forms.DateTimePicker dateTimePickerEndDate;
-        private System.Windows.Forms.CheckBox checkBoxEndDateEnable;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.ComboBox comboBoxResidenceWarrDateExpr;
-        private System.Windows.Forms.DateTimePicker dateTimePickerResidenceWarrDate;
-        private System.Windows.Forms.CheckBox checkBoxResidenceWarrDateEnable;
-        private System.Windows.Forms.Label label16;
-        private System.Windows.Forms.ComboBox comboBoxProtocolDateExpr;
-        private System.Windows.Forms.DateTimePicker dateTimePickerProtocolDate;
-        private System.Windows.Forms.CheckBox checkBoxProtocolDateEnable;
-        private System.Windows.Forms.Label label17;
+        private vButton vButtonCancel;
+        private vButton vButtonSearch;
+        private TextBox textBoxRegistrationNum;
+        private CheckBox checkBoxContractNumEnable;
+        private Label label2;
+        private TextBox textBoxResidenceWarrantNum;
+        private CheckBox checkBoxResidenceWarrantNumEnable;
+        private Label label1;
+        private TextBox textBoxProtocolNum;
+        private CheckBox checkBoxProtocolEnable;
+        private Label label3;
+        private TextBox textBoxTenantSNP;
+        private CheckBox checkBoxTenantSNPEnable;
+        private Label label4;
+        private TextBox textBoxPersonSNP;
+        private CheckBox checkBoxPersonSNPEnable;
+        private Label label5;
+        private NumericUpDown numericUpDownIDTenancy;
+        private CheckBox checkBoxIDTenancyEnable;
+        private Label label9;
+        private ComboBox comboBoxRentType;
+        private CheckBox checkBoxRentTypeEnable;
+        private Label label6;
+        private ComboBox comboBoxRegion;
+        private CheckBox checkBoxRegionEnable;
+        private Label label8;
+        private TextBox textBoxHouse;
+        private CheckBox checkBoxPremisesNumEnable;
+        private TextBox textBoxPremisesNum;
+        private Label label7;
+        private CheckBox checkBoxHouseEnable;
+        private CheckBox checkBoxStreetEnable;
+        private Label label10;
+        private Label label11;
+        private ComboBox comboBoxStreet;
+        private CheckBox checkBoxRegDateEnable;
+        private Label label12;
+        private DateTimePicker dateTimePickerRegDate;
+        private ComboBox comboBoxRegDateExpr;
+        private ComboBox comboBoxIssueDateExpr;
+        private DateTimePicker dateTimePickerIssueDate;
+        private CheckBox checkBoxIssueDateEnable;
+        private Label label13;
+        private ComboBox comboBoxBeginDateExpr;
+        private DateTimePicker dateTimePickerBeginDate;
+        private CheckBox checkBoxBeginDateEnable;
+        private Label label14;
+        private ComboBox comboBoxEndDateExpr;
+        private DateTimePicker dateTimePickerEndDate;
+        private CheckBox checkBoxEndDateEnable;
+        private Label label15;
+        private ComboBox comboBoxResidenceWarrDateExpr;
+        private DateTimePicker dateTimePickerResidenceWarrDate;
+        private CheckBox checkBoxResidenceWarrDateEnable;
+        private Label label16;
+        private ComboBox comboBoxProtocolDateExpr;
+        private DateTimePicker dateTimePickerProtocolDate;
+        private CheckBox checkBoxProtocolDateEnable;
+        private Label label17;
     }
 }

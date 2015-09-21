@@ -463,20 +463,20 @@ namespace Registry.DataModels
             var premisesIds = from subPremisesFunds_row in subPremisesFunds.AsEnumerable()
                               join subPremises_row in DataModelHelper.FilterRows(SubPremisesDataModel.GetInstance().Select())
                               on subPremisesFunds_row.Field<int>("id_sub_premises") equals subPremises_row.Field<int>("id_sub_premises")
-                              where new int[] { 1, 4, 5 }.Contains(subPremises_row.Field<int>("id_state")) &&
+                              where new int[] { 1, 4, 5, 9 }.Contains(subPremises_row.Field<int>("id_state")) &&
                               subPremisesFunds_row.Field<int>("id_fund_type") == idFund
                               select subPremises_row.Field<int>("id_premises");
             var buildingsIds = from premisesFunds_row in premisesFunds.AsEnumerable()
                                join premises_row in DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select())
                                on premisesFunds_row.Field<int>("id_premises") equals premises_row.Field<int>("id_premises")
-                               where new int[] { 1, 4, 5 }.Contains(premises_row.Field<int>("id_state")) &&
+                               where new int[] { 1, 4, 5, 9 }.Contains(premises_row.Field<int>("id_state")) &&
                                 premisesFunds_row.Field<int>("id_fund_type") == idFund ||
                                 (premisesFunds_row.Field<int>("id_fund_type") == 4 && premisesIds.Contains(premisesFunds_row.Field<int>("id_premises")))
                                select premises_row.Field<int>("id_building");
             return (from buildingsFunds_row in buildingsFunds.AsEnumerable()
                     join buildings_row in DataModelHelper.FilterRows(BuildingsDataModel.GetInstance().Select())
                               on buildingsFunds_row.Field<int>("id_building") equals buildings_row.Field<int>("id_building")
-                    where new int[] { 1, 4, 5 }.Contains(buildings_row.Field<int>("id_state")) && 
+                    where new int[] { 1, 4, 5, 9 }.Contains(buildings_row.Field<int>("id_state")) && 
                     buildingsFunds_row.Field<int>("id_fund_type") == idFund ||
                                    (buildingsFunds_row.Field<int>("id_fund_type") == 4 && buildingsIds.Contains(buildingsFunds_row.Field<int>("id_building")))
                     select buildingsFunds_row.Field<int>("id_building"));
@@ -490,13 +490,13 @@ namespace Registry.DataModels
             var premisesIds = from subPremisesFunds_row in subPremisesFunds.AsEnumerable()
                               join subPremises_row in DataModelHelper.FilterRows(SubPremisesDataModel.GetInstance().Select())
                               on subPremisesFunds_row.Field<int>("id_sub_premises") equals subPremises_row.Field<int>("id_sub_premises")
-                              where new int[] { 1, 4, 5 }.Contains(subPremises_row.Field<int>("id_state")) &&
+                              where new int[] { 1, 4, 5, 9 }.Contains(subPremises_row.Field<int>("id_state")) &&
                               subPremisesFunds_row.Field<int>("id_fund_type") == idFund
                               select subPremises_row.Field<int>("id_premises");
             return (from premisesFunds_row in premisesFunds.AsEnumerable()
                     join premises_row in DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select())
                                on premisesFunds_row.Field<int>("id_premises") equals premises_row.Field<int>("id_premises")
-                    where new int[] { 1, 4, 5 }.Contains(premises_row.Field<int>("id_state")) && 
+                    where new int[] { 1, 4, 5, 9 }.Contains(premises_row.Field<int>("id_state")) && 
                         premisesFunds_row.Field<int>("id_fund_type") == idFund ||
                         (premisesFunds_row.Field<int>("id_fund_type") == 4 && premisesIds.Contains(premisesFunds_row.Field<int>("id_premises")))
                     select premisesFunds_row.Field<int>("id_premises"));
@@ -701,7 +701,7 @@ namespace Registry.DataModels
 
         public static bool HasMunicipal(int id, EntityType entity)
         {
-            return HasObjectState(id, entity, new int[] { 4, 5 });
+            return HasObjectState(id, entity, new int[] { 4, 5, 9 });
         }
 
         public static bool HasNotMunicipal(int id, EntityType entity)
@@ -752,18 +752,25 @@ namespace Registry.DataModels
             var ownership_premises_assoc = DataModelHelper.FilterRows(OwnershipPremisesAssocDataModel.GetInstance().Select());
             var premises = DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select());
             IEnumerable<int> buildingdIds = BuildingIDsByOwnershipType(idOwnershipType);
-            // Если используется непользовательское ограничение "Аварийное", то не выводить помещения еще и снесеные
+            // Если используется ограничение "Аварийное", то не выводить помещения, если они или их здание имеют ограничение "Снесено"
             var demolished_premises = DemolishedPremisesIDs();
             //Выбираются помещения с установленным ограничением и помещения, находящиеся в зданиях с установленным ограничением
-            return from ownership_rights_row in ownership_rights
-                   join ownership_premises_assoc_row in ownership_premises_assoc
-                   on ownership_rights_row.Field<int>("id_ownership_right") equals ownership_premises_assoc_row.Field<int>("id_ownership_right")
-                   join premises_row in premises
-                   on ownership_premises_assoc_row.Field<int>("id_premises") equals premises_row.Field<int>("id_premises")
-                   where (idOwnershipType == 2 ? !demolished_premises.Contains(ownership_premises_assoc_row.Field<int>("id_premises")) : true) &&
-                         (ownership_rights_row.Field<int>("id_ownership_right_type") == idOwnershipType) || 
-                          buildingdIds.Contains(premises_row.Field<int>("id_building"))
-                   select ownership_premises_assoc_row.Field<int>("id_premises");
+            var premisesIds = from ownership_rights_row in ownership_rights
+                                   join ownership_premises_assoc_row in ownership_premises_assoc
+                                   on ownership_rights_row.Field<int>("id_ownership_right") equals ownership_premises_assoc_row.Field<int>("id_ownership_right")
+                                   where (idOwnershipType == 2 ? !demolished_premises.Contains(ownership_premises_assoc_row.Field<int>("id_premises")) : true) &&
+                                        ownership_rights_row.Field<int>("id_ownership_right_type") == idOwnershipType
+                                   select ownership_premises_assoc_row.Field<int>("id_premises");
+
+
+            return
+                from premises_row in premises
+                join buildingId in buildingdIds on premises_row.Field<int>("id_building") equals buildingId into bids
+                from bid in bids.DefaultIfEmpty()
+                join premisesId in premisesIds on premises_row.Field<int>("id_premises") equals premisesId into pids
+                from pid in pids.DefaultIfEmpty()
+                where bid != 0 || pid != 0
+                select premises_row.Field<int>("id_premises");
         }
 
         /// <summary>

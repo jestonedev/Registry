@@ -1,21 +1,16 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
-using System.Globalization;
 
 namespace Registry.Viewport
 {
     public partial class SelectWarrantForm : Form
     {
-        private WarrantsDataModel warrants = null;
+        private WarrantsDataModel warrants;
 
-        private BindingSource v_warrants = null;
+        private BindingSource v_warrants;
 
         public SelectWarrantForm()
         {
@@ -35,7 +30,7 @@ namespace Registry.Viewport
 
         private void dataGridView1_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            DialogResult = System.Windows.Forms.DialogResult.OK;
+            DialogResult = DialogResult.OK;
         }
 
         private void SelectWarrantForm_Load(object sender, EventArgs e)
@@ -66,16 +61,16 @@ namespace Registry.Viewport
 
         private void BuildWarrantsFilter()
         {
-            string filter = "";
-            if (!String.IsNullOrEmpty(textBoxRegNumber.Text.Trim()))
+            var filter = "";
+            if (!string.IsNullOrEmpty(textBoxRegNumber.Text.Trim()))
             {
-                filter += String.Format(CultureInfo.InvariantCulture, "registration_num LIKE '{0}%'", textBoxRegNumber.Text.Trim());
+                filter += string.Format(CultureInfo.InvariantCulture, "registration_num LIKE '{0}%'", textBoxRegNumber.Text.Trim());
             }
             if (dateTimePickerDate.Checked)
             {
-                if (!String.IsNullOrEmpty(filter.Trim()))
+                if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.InvariantCulture, "registration_date = '{0}'", dateTimePickerDate.Value.Date);
+                filter += string.Format(CultureInfo.InvariantCulture, "registration_date = '{0}'", dateTimePickerDate.Value.Date);
             }
             v_warrants.Filter = filter;
         }

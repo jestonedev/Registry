@@ -1,11 +1,15 @@
-﻿namespace Registry.Viewport
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+using VIBlend.WinForms.Controls;
+
+namespace Registry.Viewport
 {
     partial class SelectWarrantForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -224,19 +228,19 @@
 
         #endregion
 
-        private VIBlend.WinForms.Controls.vButton vButton2;
-        private VIBlend.WinForms.Controls.vButton vButton1;
-        private System.Windows.Forms.Panel panel1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.DateTimePicker dateTimePickerDate;
-        private System.Windows.Forms.TextBox textBoxRegNumber;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.DataGridView dataGridView1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn RegNumber;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Date;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Notary;
-        private System.Windows.Forms.DataGridViewTextBoxColumn OnBehalfOf;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Description;
+        private vButton vButton2;
+        private vButton vButton1;
+        private Panel panel1;
+        private Label label2;
+        private DateTimePicker dateTimePickerDate;
+        private TextBox textBoxRegNumber;
+        private Label label1;
+        private Panel panel2;
+        private DataGridView dataGridView1;
+        private DataGridViewTextBoxColumn RegNumber;
+        private DataGridViewTextBoxColumn Date;
+        private DataGridViewTextBoxColumn Notary;
+        private DataGridViewTextBoxColumn OnBehalfOf;
+        private DataGridViewTextBoxColumn Description;
     }
 }

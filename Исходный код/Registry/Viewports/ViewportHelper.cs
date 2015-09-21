@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Reflection;
 using System.Data;
 using System.Globalization;
+using System.Reflection;
+using System.Windows.Forms;
 using Registry.CalcDataModels;
 
 namespace Registry.Viewport
@@ -61,7 +58,7 @@ namespace Registry.Viewport
 
         internal static string ValueOrNull(TextBox control)
         {
-            if (String.IsNullOrEmpty(control.Text.Trim()))
+            if (string.IsNullOrEmpty(control.Text.Trim()))
                 return null;
             else
                 return control.Text.Trim();
@@ -163,11 +160,11 @@ namespace Registry.Viewport
 
         internal static bool BuildingFundAndRentMatch(int idBuilding, int idRentType)
         {
-            DataRow bRow = CalcDataModelBuildingsCurrentFunds.GetInstance().Select().Rows.Find(idBuilding);
+            var bRow = CalcDataModelBuildingsCurrentFunds.GetInstance().Select().Rows.Find(idBuilding);
             if (bRow != null)
             {
-                int idFundType = (int)bRow["id_fund_type"];
-                if (idRentType == ViewportHelper.TranslateFundIdToRentId(idFundType))
+                var idFundType = (int)bRow["id_fund_type"];
+                if (idRentType == TranslateFundIdToRentId(idFundType))
                     return true;
             }
             return false;
@@ -175,11 +172,11 @@ namespace Registry.Viewport
 
         internal static bool PremiseFundAndRentMatch(int idPremise, int idRentType)
         {
-            DataRow bRow = CalcDataModelPremisesCurrentFunds.GetInstance().Select().Rows.Find(idPremise);
+            var bRow = CalcDataModelPremisesCurrentFunds.GetInstance().Select().Rows.Find(idPremise);
             if (bRow != null)
             {
-                int idFundType = (int)bRow["id_fund_type"];
-                if (idRentType == ViewportHelper.TranslateFundIdToRentId(idFundType))
+                var idFundType = (int)bRow["id_fund_type"];
+                if (idRentType == TranslateFundIdToRentId(idFundType))
                     return true;
             }
             return false;
@@ -187,11 +184,11 @@ namespace Registry.Viewport
 
         internal static bool SubPremiseFundAndRentMatch(int idSubPremise, int idRentType)
         {
-            DataRow bRow = CalcDataModelSubPremisesCurrentFunds.GetInstance().Select().Rows.Find(idSubPremise);
+            var bRow = CalcDataModelSubPremisesCurrentFunds.GetInstance().Select().Rows.Find(idSubPremise);
             if (bRow != null)
             {
-                int idFundType = (int)bRow["id_fund_type"];
-                if (idRentType == ViewportHelper.TranslateFundIdToRentId(idFundType))
+                var idFundType = (int)bRow["id_fund_type"];
+                if (idRentType == TranslateFundIdToRentId(idFundType))
                     return true;
             }
             return false;
