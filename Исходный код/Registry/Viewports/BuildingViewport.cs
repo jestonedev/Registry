@@ -504,9 +504,9 @@ namespace Registry.Viewport
                 textBoxHouse.Focus();
                 return false;
             }
-            if (!Regex.IsMatch(building.House, @"^[0-9]+[а-я]{0,1}([\/][0-9]+[а-я]{0,1}){0,1}$"))
+            if (!Regex.IsMatch(building.House, @"^[0-9]+[а-яА-Я]{0,1}([\/][0-9]+[а-яА-Я]{0,1}){0,1}$"))
             {
-                MessageBox.Show("Некорректно задан номер дома. Можно использовать только цифры, строчные буквы кириллицы буквы и дробный разделитель. Например: \"11а/3\"", "Ошибка",
+                MessageBox.Show("Некорректно задан номер дома. Можно использовать только цифры, строчные и прописные буквы кириллицы буквы и дробный разделитель. Например: \"11а/3\"", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxHouse.Focus();
                 return false;
@@ -1500,8 +1500,6 @@ namespace Registry.Viewport
 
         private void textBoxHouse_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (e.KeyChar >= 'А' && e.KeyChar <= 'Я')
-                e.KeyChar = e.KeyChar.ToString().ToLower(CultureInfo.CurrentCulture)[0];
             if (e.KeyChar == '\\')
                 e.KeyChar = '/';
             if (e.KeyChar == ' ')
