@@ -22,13 +22,13 @@ namespace Registry.DataModels
                              , floors, num_premises, num_rooms, num_apartments
                              , num_shared_apartments, total_area, living_area, cadastral_num
                              , cadastral_cost, balance_cost, description, startup_year
-                             , improvement, elevator, wear, state_date)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                             , improvement, elevator, rubbish_chute, wear, state_date)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         private static string updateQuery = @"UPDATE buildings SET id_state = ?, id_structure_type = ?, id_street = ?, 
                             house = ?, floors = ?, num_premises = ?, num_rooms = ?,
                             num_apartments = ?, num_shared_apartments = ?, total_area = ?, living_area = ?, cadastral_num = ?, 
                             cadastral_cost = ?, balance_cost = ?, description = ?, startup_year = ?, 
-                            improvement = ?, elevator = ?, wear = ?, state_date = ? WHERE id_building = ?";
+                            improvement = ?, elevator = ?, rubbish_chute = ?, wear = ?, state_date = ? WHERE id_building = ?";
         private static string tableName = "buildings";
 
         private BuildingsDataModel(ToolStripProgressBar progressBar, int incrementor): base(progressBar, incrementor, selectQuery, tableName)
@@ -47,6 +47,7 @@ namespace Registry.DataModels
             Table.Columns["startup_year"].DefaultValue = DateTime.Now.Year;
             Table.Columns["improvement"].DefaultValue = true;
             Table.Columns["elevator"].DefaultValue = false;
+            Table.Columns["rubbish_chute"].DefaultValue = false;
             Table.Columns["living_area"].DefaultValue = 0;
             Table.Columns["total_area"].DefaultValue = 0;
             Table.Columns["floors"].DefaultValue = 5;
@@ -118,6 +119,7 @@ namespace Registry.DataModels
                 command.Parameters.Add(DBConnection.CreateParameter<int?>("startup_year", building.StartupYear));
                 command.Parameters.Add(DBConnection.CreateParameter<bool?>("improvement", building.Improvement));
                 command.Parameters.Add(DBConnection.CreateParameter<bool?>("elevator", building.Elevator));
+                command.Parameters.Add(DBConnection.CreateParameter<bool?>("rubbish_chute", building.RubbishChute));
                 command.Parameters.Add(DBConnection.CreateParameter<double?>("wear", building.Wear));
                 command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("state_date", building.StateDate));
                 command.Parameters.Add(DBConnection.CreateParameter<int?>("id_building", building.IdBuilding));
@@ -168,6 +170,7 @@ namespace Registry.DataModels
                 command.Parameters.Add(DBConnection.CreateParameter<int?>("startup_year", building.StartupYear));
                 command.Parameters.Add(DBConnection.CreateParameter<bool?>("improvement", building.Improvement));
                 command.Parameters.Add(DBConnection.CreateParameter<bool?>("elevator", building.Elevator));
+                command.Parameters.Add(DBConnection.CreateParameter<bool?>("rubbish_chute", building.RubbishChute));
                 command.Parameters.Add(DBConnection.CreateParameter<double?>("wear", building.Wear));
                 command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("state_date", building.StateDate));
 
