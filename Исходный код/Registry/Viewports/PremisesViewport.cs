@@ -1184,20 +1184,8 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             var premise = PremiseFromViewport();
-            var premiseFromView = PremiseFromView();
-            var updateSubPremisesState = false;
             if (!ValidatePremise(premise))
                 return;
-            if ((viewportState == ViewportState.ModifyRowState) && (premise.IdState != premiseFromView.IdState || premise.StateDate != premiseFromView.StateDate) 
-                && (premise.IdState != 1))
-            {
-                if (MessageBox.Show("Вы пытаетесь изменить состояние помещения или дату установки состояния. "+
-                    "В результате всем комнатам данного помещения будет назначено то же состояние. " +
-                    "Вы уверены, что хотите сохранить данные?", "Внимание",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
-                    return;
-                updateSubPremisesState = true;
-            }
             var Filter = "";
             if (!string.IsNullOrEmpty(v_premises.Filter))
                 Filter += " OR ";
@@ -1245,16 +1233,6 @@ namespace Registry.Viewport
                     Filter += string.Format(CultureInfo.CurrentCulture, "(id_premises = {0})", premise.IdPremises);
                     v_premises.Filter += Filter;
                     FillRowFromPremise(premise, row);
-                    if (updateSubPremisesState)
-                    {
-                        for (var i = 0; i < v_sub_premises.Count; i++)
-                        {
-                            var subPremiseRow = (DataRowView)v_sub_premises[i];
-                            subPremiseRow["id_state"] = premise.IdState;
-                            subPremiseRow["state_date"] = ViewportHelper.ValueOrDBNull(premise.StateDate);
-                            subPremiseRow.EndEdit();
-                        }
-                    }
                     viewportState = ViewportState.ReadState;
                     CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
                     CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
