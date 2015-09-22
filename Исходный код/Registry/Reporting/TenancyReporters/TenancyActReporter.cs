@@ -22,7 +22,6 @@ namespace Registry.Reporting.TenancyReporters
                     arguments.Add("hot_water", form.HasHotWater ? "$u$горячим водоснабжением$/u$" : "горячим водоснабжением");
                     arguments.Add("sewerage", form.HasSewerage ? "$u$канализацией$/u$" : "канализацией");
                     arguments.Add("lighting", form.HasLighting ? "$u$электроосвещением$/u$" : "электроосвещением");
-                    arguments.Add("chute", form.HasChute ? "$u$мусоропроводом$/u$" : "мусоропроводом");
                     arguments.Add("radio", form.HasRadio ? "$u$радиотрансляционной сетью$/u$" : "радиотрансляционной сетью");
                     arguments.Add("heating", form.HasHeating ? "$u$отоплением$/u$" : "отоплением");
                     arguments.Add("stove_heating", form.HeatingType == 1 ? "$u$печным$/u$" : "печным");

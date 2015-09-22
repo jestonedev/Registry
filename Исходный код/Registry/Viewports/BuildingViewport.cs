@@ -1,19 +1,17 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Globalization;
+using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Text;
 using System.Windows.Forms;
-using Registry.CalcDataModels;
 using Registry.DataModels;
+using System.Data;
 using Registry.Entities;
+using System.Drawing;
 using Registry.SearchForms;
+using Registry.CalcDataModels;
 using Security;
-using VIBlend.Utilities;
-using VIBlend.WinForms.Controls;
-using WeifenLuo.WinFormsUI.Docking;
+using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace Registry.Viewport
 {
@@ -89,59 +87,59 @@ namespace Registry.Viewport
         private NumericUpDown numericUpDownWear;
         private Label label21;
         private Panel panel3;
-        private vButton vButtonRestrictionEdit;
-        private vButton vButtonRestrictionDelete;
-        private vButton vButtonRestrictionAdd;
+        private VIBlend.WinForms.Controls.vButton vButtonRestrictionEdit;
+        private VIBlend.WinForms.Controls.vButton vButtonRestrictionDelete;
+        private VIBlend.WinForms.Controls.vButton vButtonRestrictionAdd;
         private Panel panel4;
-        private vButton vButtonOwnershipEdit;
-        private vButton vButtonOwnershipDelete;
-        private vButton vButtonOwnershipAdd;
+        private VIBlend.WinForms.Controls.vButton vButtonOwnershipEdit;
+        private VIBlend.WinForms.Controls.vButton vButtonOwnershipDelete;
+        private VIBlend.WinForms.Controls.vButton vButtonOwnershipAdd;
         private DateTimePicker dateTimePickerStateDate;
         private Label label22;
         #endregion Components
 
         #region Models
-        private BuildingsDataModel buildings;
-        private KladrStreetsDataModel kladr;
-        private StructureTypesDataModel structureTypes;
-        private RestrictionsDataModel restrictions;
-        private RestrictionTypesDataModel restrictionTypes;
-        private RestrictionsBuildingsAssocDataModel restrictionBuildingsAssoc;
-        private OwnershipsRightsDataModel ownershipRights;
-        private OwnershipRightTypesDataModel ownershipRightTypes;
-        private OwnershipBuildingsAssocDataModel ownershipBuildingsAssoc;
-        private FundTypesDataModel fundTypes;
-        private ObjectStatesDataModel object_states;
-        private CalcDataModelBuildingsPremisesFunds buildingsPremisesFunds;
-        private CalcDataModelBuildingsCurrentFunds buildingsCurrentFund;
-        private CalcDataModelBuildingsPremisesSumArea buildingsPremisesSumArea;
+        private BuildingsDataModel buildings = null;
+        private KladrStreetsDataModel kladr = null;
+        private StructureTypesDataModel structureTypes = null;
+        private RestrictionsDataModel restrictions = null;
+        private RestrictionTypesDataModel restrictionTypes = null;
+        private RestrictionsBuildingsAssocDataModel restrictionBuildingsAssoc = null;
+        private OwnershipsRightsDataModel ownershipRights = null;
+        private OwnershipRightTypesDataModel ownershipRightTypes = null;
+        private OwnershipBuildingsAssocDataModel ownershipBuildingsAssoc = null;
+        private FundTypesDataModel fundTypes = null;
+        private ObjectStatesDataModel object_states = null;
+        private CalcDataModelBuildingsPremisesFunds buildingsPremisesFunds = null;
+        private CalcDataModelBuildingsCurrentFunds buildingsCurrentFund = null;
+        private CalcDataModelBuildingsPremisesSumArea buildingsPremisesSumArea = null;
         #endregion Models
 
         #region Views
-        private BindingSource v_buildings;
-        private BindingSource v_kladr;
-        private BindingSource v_structureTypes;
-        private BindingSource v_restrictions;
-        private BindingSource v_restrictonTypes;
-        private BindingSource v_restrictionBuildingsAssoc;
-        private BindingSource v_ownershipRights;
-        private BindingSource v_ownershipRightTypes;
-        private BindingSource v_ownershipBuildingsAssoc;
-        private BindingSource v_fundType;
-        private BindingSource v_object_states;
-        private BindingSource v_buildingsPremisesFunds;
-        private BindingSource v_buildingsCurrentFund;
-        private BindingSource v_buildingsPremisesSumArea;
+        private BindingSource v_buildings = null;
+        private BindingSource v_kladr = null;
+        private BindingSource v_structureTypes = null;
+        private BindingSource v_restrictions = null;
+        private BindingSource v_restrictonTypes = null;
+        private BindingSource v_restrictionBuildingsAssoc = null;
+        private BindingSource v_ownershipRights = null;
+        private BindingSource v_ownershipRightTypes = null;
+        private BindingSource v_ownershipBuildingsAssoc = null;
+        private BindingSource v_fundType = null;
+        private BindingSource v_object_states = null;
+        private BindingSource v_buildingsPremisesFunds = null;
+        private BindingSource v_buildingsCurrentFund = null;
+        private BindingSource v_buildingsPremisesSumArea = null;
         #endregion Views
 
         //Forms
-        private SearchForm sbSimpleSearchForm;
-        private SearchForm sbExtendedSearchForm;
+        private SearchForm sbSimpleSearchForm = null;
+        private SearchForm sbExtendedSearchForm = null;
         
         //State
         private ViewportState viewportState = ViewportState.ReadState;
         private CheckBox checkBoxRubbishChute;
-        private bool is_editable;
+        private bool is_editable = false;
 
         private BuildingViewport()
             : this(null)
@@ -156,28 +154,28 @@ namespace Registry.Viewport
         public BuildingViewport(BuildingViewport buildingListViewport, IMenuCallback menuCallback)
             : this(menuCallback)
         {
-            DynamicFilter = buildingListViewport.DynamicFilter;
-            StaticFilter = buildingListViewport.StaticFilter;
-            ParentRow = buildingListViewport.ParentRow;
-            ParentType = buildingListViewport.ParentType;
+            this.DynamicFilter = buildingListViewport.DynamicFilter;
+            this.StaticFilter = buildingListViewport.StaticFilter;
+            this.ParentRow = buildingListViewport.ParentRow;
+            this.ParentType = buildingListViewport.ParentType;
         }
 
         private void RestrictionsFilterRebuild()
         {
-            var restrictionsFilter = "id_restriction IN (0";
-            for (var i = 0; i < v_restrictionBuildingsAssoc.Count; i++)
-                restrictionsFilter += ((DataRowView)v_restrictionBuildingsAssoc[i])["id_restriction"] + ",";
-            restrictionsFilter = restrictionsFilter.TrimEnd(',');
+            string restrictionsFilter = "id_restriction IN (0";
+            for (int i = 0; i < v_restrictionBuildingsAssoc.Count; i++)
+                restrictionsFilter += ((DataRowView)v_restrictionBuildingsAssoc[i])["id_restriction"].ToString() + ",";
+            restrictionsFilter = restrictionsFilter.TrimEnd(new char[] { ',' });
             restrictionsFilter += ")";
             v_restrictions.Filter = restrictionsFilter;
         }
 
         private void OwnershipsFilterRebuild()
         {
-            var ownershipFilter = "id_ownership_right IN (0";
-            for (var i = 0; i < v_ownershipBuildingsAssoc.Count; i++)
-                ownershipFilter += ((DataRowView)v_ownershipBuildingsAssoc[i])["id_ownership_right"] + ",";
-            ownershipFilter = ownershipFilter.TrimEnd(',');
+            string ownershipFilter = "id_ownership_right IN (0";
+            for (int i = 0; i < v_ownershipBuildingsAssoc.Count; i++)
+                ownershipFilter += ((DataRowView)v_ownershipBuildingsAssoc[i])["id_ownership_right"].ToString() + ",";
+            ownershipFilter = ownershipFilter.TrimEnd(new char[] { ',' });
             ownershipFilter += ")";
             v_ownershipRights.Filter = ownershipFilter;
         }
@@ -186,28 +184,28 @@ namespace Registry.Viewport
         {
             if (v_buildingsPremisesFunds != null)
             {
-                var position = -1;
+                int position = -1;
                 if ((v_buildings.Position != -1) && !(((DataRowView)v_buildings[v_buildings.Position])["id_building"] is DBNull))
                     position =
                         v_buildingsPremisesFunds.Find("id_building", ((DataRowView)v_buildings[v_buildings.Position])["id_building"]);
                 if (position != -1)
                 {
-                    var socialCount = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["social_premises_count"], CultureInfo.InvariantCulture);
-                    var specialCount = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["special_premises_count"], CultureInfo.InvariantCulture);
-                    var commercialCount = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["commercial_premises_count"], CultureInfo.InvariantCulture);
-                    var otherCount = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["other_premises_count"], CultureInfo.InvariantCulture);
-                    numericUpDownSocialPremisesCount.Minimum = socialCount;
-                    numericUpDownSpecialPremisesCount.Minimum = specialCount;
-                    numericUpDownOtherPremisesCount.Minimum = otherCount;
-                    numericUpDownCommercialPremisesCount.Minimum = commercialCount;
-                    numericUpDownSocialPremisesCount.Maximum = socialCount;
-                    numericUpDownSpecialPremisesCount.Maximum = specialCount;
-                    numericUpDownOtherPremisesCount.Maximum = otherCount;
-                    numericUpDownCommercialPremisesCount.Maximum = commercialCount;
-                    numericUpDownSocialPremisesCount.Value = socialCount;
-                    numericUpDownSpecialPremisesCount.Value = specialCount;
-                    numericUpDownOtherPremisesCount.Value = otherCount;
-                    numericUpDownCommercialPremisesCount.Value = commercialCount;
+                    decimal social_count = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["social_premises_count"], CultureInfo.InvariantCulture);
+                    decimal special_count = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["special_premises_count"], CultureInfo.InvariantCulture);
+                    decimal commercial_count = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["commercial_premises_count"], CultureInfo.InvariantCulture);
+                    decimal other_count = Convert.ToDecimal(((DataRowView)v_buildingsPremisesFunds[position])["other_premises_count"], CultureInfo.InvariantCulture);
+                    numericUpDownSocialPremisesCount.Minimum = social_count;
+                    numericUpDownSpecialPremisesCount.Minimum = special_count;
+                    numericUpDownOtherPremisesCount.Minimum = other_count;
+                    numericUpDownCommercialPremisesCount.Minimum = commercial_count;
+                    numericUpDownSocialPremisesCount.Maximum = social_count;
+                    numericUpDownSpecialPremisesCount.Maximum = special_count;
+                    numericUpDownOtherPremisesCount.Maximum = other_count;
+                    numericUpDownCommercialPremisesCount.Maximum = commercial_count;
+                    numericUpDownSocialPremisesCount.Value = social_count;
+                    numericUpDownSpecialPremisesCount.Value = special_count;
+                    numericUpDownOtherPremisesCount.Value = other_count;
+                    numericUpDownCommercialPremisesCount.Value = commercial_count;
                 }
                 else
                 {
@@ -227,21 +225,24 @@ namespace Registry.Viewport
             }
             if (v_buildingsCurrentFund != null)
             {
-                var position = -1;
+                int position = -1;
                 if ((v_buildings.Position != -1) && !(((DataRowView)v_buildings[v_buildings.Position])["id_building"] is DBNull))
                     position =
                         v_buildingsCurrentFund.Find("id_building", ((DataRowView)v_buildings[v_buildings.Position])["id_building"]);
-                comboBoxCurrentFundType.SelectedValue = position != -1 ? ((DataRowView)v_buildingsCurrentFund[position])["id_fund_type"] : DBNull.Value;
+                if (position != -1)
+                    comboBoxCurrentFundType.SelectedValue = ((DataRowView)v_buildingsCurrentFund[position])["id_fund_type"];
+                else
+                    comboBoxCurrentFundType.SelectedValue = DBNull.Value;
                 ShowOrHideCurrentFund();
             }
             if (v_buildingsPremisesSumArea != null)
             {
-                var position = -1;
+                int position = -1;
                 if ((v_buildings.Position != -1) && !(((DataRowView)v_buildings[v_buildings.Position])["id_building"] is DBNull))
                     position = v_buildingsPremisesSumArea.Find("id_building", ((DataRowView)v_buildings[v_buildings.Position])["id_building"]);
                 if (position != -1)
                 {
-                    var value = Convert.ToDecimal((double)((DataRowView)v_buildingsPremisesSumArea[position])["sum_area"], CultureInfo.InvariantCulture);
+                    decimal value = Convert.ToDecimal((double)((DataRowView)v_buildingsPremisesSumArea[position])["sum_area"], CultureInfo.InvariantCulture);
                     numericUpDownMunicipalArea.Minimum = value;
                     numericUpDownMunicipalArea.Maximum = value;
                     numericUpDownMunicipalArea.Value = value;
@@ -259,30 +260,30 @@ namespace Registry.Viewport
         {
             if (comboBoxCurrentFundType.SelectedValue != null && v_buildings.Position != -1 &&
                 ((DataRowView)v_buildings[v_buildings.Position])["id_state"] != DBNull.Value &&
-                (new[] { 1, 4, 5, 9 }).Contains((int)((DataRowView)v_buildings[v_buildings.Position])["id_state"]))
+                (new int[] { 1, 4, 5, 9 }).Contains((int)((DataRowView)v_buildings[v_buildings.Position])["id_state"]))
             {
                 label19.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
-                checkBoxRubbishChute.Location = new Point(331, 177);
-                checkBoxImprovement.Location = new Point(175, 177);
-                checkBoxElevator.Location = new Point(19, 177);
-                tableLayoutPanel.RowStyles[0].Height = 235F;
+                checkBoxRubbishChute.Location = new System.Drawing.Point(331, 177);
+                checkBoxImprovement.Location = new System.Drawing.Point(175, 177);
+                checkBoxElevator.Location = new System.Drawing.Point(19, 177);
+                this.tableLayoutPanel.RowStyles[0].Height = 235F;
             }
             else
             {
                 label19.Visible = false;
-                comboBoxCurrentFundType.Visible = false;
-                checkBoxRubbishChute.Location = new Point(331, 151);
-                checkBoxImprovement.Location = new Point(175, 151);
-                checkBoxElevator.Location = new Point(19, 151);
-                tableLayoutPanel.RowStyles[0].Height = 210F;
+                comboBoxCurrentFundType.Visible = false; 
+                checkBoxRubbishChute.Location = new System.Drawing.Point(331, 151);
+                checkBoxImprovement.Location = new System.Drawing.Point(175, 151);
+                checkBoxElevator.Location = new System.Drawing.Point(19, 151);
+                this.tableLayoutPanel.RowStyles[0].Height = 210F;
             }
         }
 
         private void UnbindedCheckBoxesUpdate()
         {
-            var row = (v_buildings.Position >= 0) ? (DataRowView)v_buildings[v_buildings.Position] : null;
-            if (row != null && ((v_buildings.Position >= 0) && (row["state_date"] != DBNull.Value)))
+            DataRowView row = (v_buildings.Position >= 0) ? (DataRowView)v_buildings[v_buildings.Position] : null;
+            if ((v_buildings.Position >= 0) && (row["state_date"] != DBNull.Value))
                 dateTimePickerStateDate.Checked = true;
             else
             {
@@ -377,7 +378,7 @@ namespace Registry.Viewport
         {
             if (!is_editable)
                 return;
-            if (!ContainsFocus)
+            if (!this.ContainsFocus)
                 return;
             if ((v_buildings.Position != -1) && (BuildingFromView() != BuildingFromViewport()))
             {
@@ -409,7 +410,7 @@ namespace Registry.Viewport
                             return true;
                         case ViewportState.NewRowState:
                         case ViewportState.ModifyRowState:
-                            var result = MessageBox.Show(@"Сохранить изменения в базу данных?", @"Внимание",
+                            DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
@@ -417,7 +418,10 @@ namespace Registry.Viewport
                                 if (result == DialogResult.No)
                                     CancelRecord();
                                 else return false;
-                            return viewportState == ViewportState.ReadState;
+                            if (viewportState == ViewportState.ReadState)
+                                return true;
+                            else
+                                return false;
                     }
                     break;
                 case ViewportState.NewRowState:
@@ -426,37 +430,15 @@ namespace Registry.Viewport
                         case ViewportState.ReadState:
                             if (buildings.EditingNewRecord)
                                 return false;
-                            viewportState = ViewportState.NewRowState;
-                            return true;
-                        case ViewportState.NewRowState:
-                            return true;
-                        case ViewportState.ModifyRowState:
-                            var result = MessageBox.Show(@"Сохранить изменения в базу данных?", @"Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                            switch (result)
+                            else
                             {
-                                case DialogResult.Yes:
-                                    SaveRecord();
-                                    break;
-                                case DialogResult.No:
-                                    CancelRecord();
-                                    break;
-                                default:
-                                    return false;
+                                viewportState = ViewportState.NewRowState;
+                                return true;
                             }
-                            return viewportState == ViewportState.ReadState && ChangeViewportStateTo(ViewportState.NewRowState);
-                    }
-                    break;
-                case ViewportState.ModifyRowState:
-                    switch (viewportState)
-                    {
-                        case ViewportState.ReadState:
-                            viewportState = ViewportState.ModifyRowState;
+                        case ViewportState.NewRowState:
                             return true;
                         case ViewportState.ModifyRowState:
-                            return true;
-                        case ViewportState.NewRowState:
-                            var result = MessageBox.Show(@"Сохранить изменения в базу данных?", @"Внимание",
+                            DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                             if (result == DialogResult.Yes)
                                 SaveRecord();
@@ -465,7 +447,34 @@ namespace Registry.Viewport
                                     CancelRecord();
                                 else
                                     return false;
-                            return viewportState == ViewportState.ReadState && ChangeViewportStateTo(ViewportState.ModifyRowState);
+                            if (viewportState == ViewportState.ReadState)
+                                return ChangeViewportStateTo(ViewportState.NewRowState);
+                            else
+                                return false;
+                    }
+                    break;
+                case ViewportState.ModifyRowState: ;
+                    switch (viewportState)
+                    {
+                        case ViewportState.ReadState:
+                            viewportState = ViewportState.ModifyRowState;
+                            return true;
+                        case ViewportState.ModifyRowState:
+                            return true;
+                        case ViewportState.NewRowState:
+                            DialogResult result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
+                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                            if (result == DialogResult.Yes)
+                                SaveRecord();
+                            else
+                                if (result == DialogResult.No)
+                                    CancelRecord();
+                                else
+                                    return false;
+                            if (viewportState == ViewportState.ReadState)
+                                return ChangeViewportStateTo(ViewportState.ModifyRowState);
+                            else
+                                return false;
                     }
                     break;
             }
@@ -476,164 +485,161 @@ namespace Registry.Viewport
         {
             if (building.IdStreet == null)
             {
-                MessageBox.Show(@"Необходимо выбрать улицу", @"Ошибка", 
+                MessageBox.Show("Необходимо выбрать улицу", "Ошибка", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxStreet.Focus();
                 return false;
             }
             if (building.IdState == null)
             {
-                MessageBox.Show(@"Необходимо выбрать состояние здания", @"Ошибка", 
+                MessageBox.Show("Необходимо выбрать состояние здания", "Ошибка", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxState.Focus();
                 return false;
             }
-            if ((building.House == null) || string.IsNullOrEmpty(building.House.Trim()))
+            if ((building.House == null) || String.IsNullOrEmpty(building.House.Trim()))
             {
-                MessageBox.Show(@"Необходимо указать номер дома", @"Ошибка", 
+                MessageBox.Show("Необходимо указать номер дома", "Ошибка", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxHouse.Focus();
                 return false;
             }
             if (!Regex.IsMatch(building.House, @"^[0-9]+[а-я]{0,1}([\/][0-9]+[а-я]{0,1}){0,1}$"))
             {
-                MessageBox.Show(@"Некорректно задан номер дома. Можно использовать только цифры, строчные буквы кириллицы буквы и дробный разделитель. Например: ""11а/3""", @"Ошибка",
+                MessageBox.Show("Некорректно задан номер дома. Можно использовать только цифры, строчные буквы кириллицы буквы и дробный разделитель. Например: \"11а/3\"", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxHouse.Focus();
                 return false;
             }
             if (building.IdStructureType == null)
             {
-                MessageBox.Show(@"Необходимо выбрать материал здания", @"Ошибка", 
+                MessageBox.Show("Необходимо выбрать материал здания", "Ошибка", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxStructureType.Focus();
                 return false;
             }
             // Проверяем права на модификацию муниципального или не муниципального здания
-            var buildingFromView = BuildingFromView();
+            Building buildingFromView = BuildingFromView();
             if (buildingFromView.IdBuilding != null && DataModelHelper.HasMunicipal(buildingFromView.IdBuilding.Value, EntityType.Building)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
-                MessageBox.Show(@"Вы не можете изменить информацию по данному зданию, т.к. оно является муниципальным или содержит в себе муниципальные помещения", 
-                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show("Вы не можете изменить информацию по данному зданию, т.к. оно является муниципальным или содержит в себе муниципальные помещения", 
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             if (buildingFromView.IdBuilding != null && DataModelHelper.HasNotMunicipal(buildingFromView.IdBuilding.Value, EntityType.Building)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
-                MessageBox.Show(@"Вы не можете изменить информацию по данному зданию, т.к. оно является немуниципальным или содержит в себе немуниципальные помещения",
-                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show("Вы не можете изменить информацию по данному зданию, т.к. оно является немуниципальным или содержит в себе немуниципальные помещения",
+                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (new[] { 4, 5, 9 }.Contains(building.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+            if (new int[] { 4, 5, 9 }.Contains(building.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
-                MessageBox.Show(@"У вас нет прав на добавление в базу муниципальных жилых зданий", @"Ошибка",
+                MessageBox.Show("У вас нет прав на добавление в базу муниципальных жилых зданий", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (new[] { 1, 3, 6, 7, 8 }.Contains(building.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+            if (new int[] { 1, 3, 6, 7, 8 }.Contains(building.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
-                MessageBox.Show(@"У вас нет прав на добавление в базу немуниципальных жилых зданий", @"Ошибка",
+                MessageBox.Show("У вас нет прав на добавление в базу немуниципальных жилых зданий", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             // Подверждение на износ выше 100%
             if (building.Wear > 100)
-                if (MessageBox.Show(@"Вы задали износ здания выше 100%. Все равно продолжить сохранение?", @"Внимание",
-                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                if (MessageBox.Show("Вы задали износ здания выше 100%. Все равно продолжить сохранение?", "Внимание",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != System.Windows.Forms.DialogResult.Yes)
                 {
                     numericUpDownWear.Focus();
                     return false;
                 }
             // Проверяем дубликаты адресов домов
-            if ((building.House == buildingFromView.House) && (building.IdStreet == buildingFromView.IdStreet))
-                return true;
-            return DataModelHelper.BuildingsDuplicateCount(building) == 0 || 
-                MessageBox.Show(@"В базе уже имеется здание с таким адресом. Все равно продолжить сохранение?", @"Внимание",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes;
+            if ((building.House != buildingFromView.House) || (building.IdStreet != buildingFromView.IdStreet))
+                if (DataModelHelper.BuildingsDuplicateCount(building) != 0 &&
+                    MessageBox.Show("В базе уже имеется здание с таким адресом. Все равно продолжить сохранение?", "Внимание",
+                        MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != System.Windows.Forms.DialogResult.Yes)
+                    return false;
+            return true;
         }
 
         public void LocateBuildingBy(int id)
         {
-            var position = v_buildings.Find("id_building", id);
+            int Position = v_buildings.Find("id_building", id);
             is_editable = false;
-            if (position > 0)
-                v_buildings.Position = position;
+            if (Position > 0)
+                v_buildings.Position = Position;
             is_editable = true;
         }
 
         private void SetViewportCaption()
         {
             if (viewportState == ViewportState.NewRowState)
-                Text = @"Новое здание";
+                this.Text = "Новое здание";
             else
                 if (v_buildings.Position != -1)
-                    Text = string.Format(CultureInfo.InvariantCulture, "Здание №{0}", ((DataRowView)v_buildings[v_buildings.Position])["id_building"]);
+                    this.Text = String.Format(CultureInfo.InvariantCulture, "Здание №{0}", ((DataRowView)v_buildings[v_buildings.Position])["id_building"]);
                 else
-                    Text = @"Здания отсутствуют";
+                    this.Text = "Здания отсутствуют";
         }
 
         private Building BuildingFromViewport()
         {
-            var building = new Building
-            {
-                IdBuilding =
-                    v_buildings.Position == -1
-                        ? null
-                        : ViewportHelper.ValueOrNull<int>((DataRowView) v_buildings[v_buildings.Position], "id_building"),
-                IdStreet = ViewportHelper.ValueOrNull(comboBoxStreet),
-                IdState = ViewportHelper.ValueOrNull<int>(comboBoxState),
-                House = ViewportHelper.ValueOrNull(textBoxHouse),
-                IdStructureType = ViewportHelper.ValueOrNull<int>(comboBoxStructureType),
-                CadastralNum = ViewportHelper.ValueOrNull(textBoxCadastralNum),
-                Description = ViewportHelper.ValueOrNull(textBoxDescription),
-                Floors = Convert.ToInt16(numericUpDownFloors.Value),
-                StartupYear = Convert.ToInt32(numericUpDownStartupYear.Value),
-                CadastralCost = numericUpDownCadastralCost.Value,
-                BalanceCost = numericUpDownBalanceCost.Value,
-                Improvement = checkBoxImprovement.Checked,
-                Elevator = checkBoxElevator.Checked,
-                RubbishChute = checkBoxRubbishChute.Checked,
-                NumPremises = Convert.ToInt32(numericUpDownPremisesCount.Value),
-                NumRooms = Convert.ToInt32(numericUpDownRoomsCount.Value),
-                NumApartments = Convert.ToInt32(numericUpDownApartmentsCount.Value),
-                NumSharedApartments = Convert.ToInt32(numericUpDownSharedApartmentsCount.Value),
-                LivingArea = Convert.ToDouble(numericUpDownLivingArea.Value),
-                TotalArea = Convert.ToDouble(numericUpDownTotalArea.Value),
-                Wear = Convert.ToDouble(numericUpDownWear.Value),
-                StateDate = ViewportHelper.ValueOrNull(dateTimePickerStateDate)
-            };
+            Building building = new Building();
+            if (v_buildings.Position == -1)
+                building.IdBuilding = null;
+            else
+                building.IdBuilding = ViewportHelper.ValueOrNull<int>((DataRowView)v_buildings[v_buildings.Position],"id_building");
+            building.IdStreet = ViewportHelper.ValueOrNull(comboBoxStreet);
+            building.IdState = ViewportHelper.ValueOrNull<int>(comboBoxState);
+            building.House = ViewportHelper.ValueOrNull(textBoxHouse);
+            building.IdStructureType = ViewportHelper.ValueOrNull<int>(comboBoxStructureType);
+            building.CadastralNum = ViewportHelper.ValueOrNull(textBoxCadastralNum);
+            building.Description = ViewportHelper.ValueOrNull(textBoxDescription);
+            building.Floors = Convert.ToInt16(numericUpDownFloors.Value);
+            building.StartupYear = Convert.ToInt32(numericUpDownStartupYear.Value);
+            building.CadastralCost = numericUpDownCadastralCost.Value;
+            building.BalanceCost = numericUpDownBalanceCost.Value;
+            building.Improvement = checkBoxImprovement.Checked;
+            building.Elevator = checkBoxElevator.Checked;
+            building.RubbishChute = checkBoxRubbishChute.Checked;
+            building.NumPremises = Convert.ToInt32(numericUpDownPremisesCount.Value);
+            building.NumRooms = Convert.ToInt32(numericUpDownRoomsCount.Value);
+            building.NumApartments = Convert.ToInt32(numericUpDownApartmentsCount.Value);
+            building.NumSharedApartments = Convert.ToInt32(numericUpDownSharedApartmentsCount.Value);
+            building.LivingArea = Convert.ToDouble(numericUpDownLivingArea.Value);
+            building.TotalArea = Convert.ToDouble(numericUpDownTotalArea.Value);
+            building.Wear = Convert.ToDouble(numericUpDownWear.Value);
+            building.StateDate = ViewportHelper.ValueOrNull(dateTimePickerStateDate);
             return building;
         }
 
         private Building BuildingFromView()
         {
-            var row = (DataRowView)v_buildings[v_buildings.Position];
-            var building = new Building
-            {
-                IdBuilding = ViewportHelper.ValueOrNull<int>(row, "id_building"),
-                IdStreet = ViewportHelper.ValueOrNull(row, "id_street"),
-                IdState = ViewportHelper.ValueOrNull<int>(row, "id_state"),
-                IdStructureType = ViewportHelper.ValueOrNull<int>(row, "id_structure_type"),
-                House = ViewportHelper.ValueOrNull(row, "house"),
-                Floors = ViewportHelper.ValueOrNull<short>(row, "floors"),
-                NumPremises = ViewportHelper.ValueOrNull<int>(row, "num_premises"),
-                NumRooms = ViewportHelper.ValueOrNull<int>(row, "num_rooms"),
-                NumApartments = ViewportHelper.ValueOrNull<int>(row, "num_apartments"),
-                NumSharedApartments = ViewportHelper.ValueOrNull<int>(row, "num_shared_apartments"),
-                LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area"),
-                TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area"),
-                CadastralNum = ViewportHelper.ValueOrNull(row, "cadastral_num"),
-                CadastralCost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost"),
-                BalanceCost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost"),
-                Description = ViewportHelper.ValueOrNull(row, "description"),
-                StartupYear = ViewportHelper.ValueOrNull<int>(row, "startup_year"),
-                Improvement = ViewportHelper.ValueOrNull<bool>(row, "improvement"),
-                Elevator = ViewportHelper.ValueOrNull<bool>(row, "elevator"),
-                RubbishChute = ViewportHelper.ValueOrNull<bool>(row, "rubbish_chute"),
-                Wear = ViewportHelper.ValueOrNull<double>(row, "wear"),
-                StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date")
-            };
+            Building building = new Building();
+            DataRowView row = (DataRowView)v_buildings[v_buildings.Position];
+            building.IdBuilding = ViewportHelper.ValueOrNull<int>(row, "id_building");
+            building.IdStreet = ViewportHelper.ValueOrNull(row, "id_street");
+            building.IdState = ViewportHelper.ValueOrNull<int>(row, "id_state");
+            building.IdStructureType = ViewportHelper.ValueOrNull<int>(row, "id_structure_type");
+            building.House = ViewportHelper.ValueOrNull(row, "house");
+            building.Floors = ViewportHelper.ValueOrNull<short>(row, "floors");
+            building.NumPremises = ViewportHelper.ValueOrNull<int>(row, "num_premises");
+            building.NumRooms = ViewportHelper.ValueOrNull<int>(row, "num_rooms");
+            building.NumApartments = ViewportHelper.ValueOrNull<int>(row, "num_apartments");
+            building.NumSharedApartments = ViewportHelper.ValueOrNull<int>(row, "num_shared_apartments");
+            building.LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area");
+            building.TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area");
+            building.CadastralNum = ViewportHelper.ValueOrNull(row, "cadastral_num");
+            building.CadastralCost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost");
+            building.BalanceCost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost");
+            building.Description = ViewportHelper.ValueOrNull(row, "description");
+            building.StartupYear = ViewportHelper.ValueOrNull<int>(row, "startup_year");
+            building.Improvement = ViewportHelper.ValueOrNull<bool>(row, "improvement");
+            building.Elevator = ViewportHelper.ValueOrNull<bool>(row, "elevator");
+            building.RubbishChute = ViewportHelper.ValueOrNull<bool>(row, "rubbish_chute");
+            building.Wear = ViewportHelper.ValueOrNull<double>(row, "wear");
+            building.StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date");
             return building;
         }
 
@@ -759,7 +765,7 @@ namespace Registry.Viewport
         {
             dataGridViewOwnerships.AutoGenerateColumns = false;
             dataGridViewRestrictions.AutoGenerateColumns = false;
-            DockAreas = DockAreas.Document;
+            this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
             buildings = BuildingsDataModel.GetInstance();
             kladr = KladrStreetsDataModel.GetInstance();
             structureTypes = StructureTypesDataModel.GetInstance();
@@ -790,105 +796,83 @@ namespace Registry.Viewport
             fundTypes.Select();
             object_states.Select();
 
-            var ds = DataSetManager.DataSet;
+            DataSet ds = DataSetManager.DataSet;
 
-            v_kladr = new BindingSource
-            {
-                DataMember = "kladr",
-                DataSource = ds
-            };
+            v_kladr = new BindingSource();
+            v_kladr.DataMember = "kladr";
+            v_kladr.DataSource = ds;
 
-            v_structureTypes = new BindingSource
-            {
-                DataMember = "structure_types",
-                DataSource = ds
-            };
+            v_structureTypes = new BindingSource();
+            v_structureTypes.DataMember = "structure_types";
+            v_structureTypes.DataSource = ds;
 
-            v_restrictions = new BindingSource
-            {
-                DataMember = "restrictions",
-                DataSource = ds
-            };
+            v_restrictions = new BindingSource();
+            v_restrictions.DataMember = "restrictions";
+            v_restrictions.DataSource = ds;
 
-            v_ownershipRights = new BindingSource
-            {
-                DataMember = "ownership_rights",
-                DataSource = ds
-            };
+            v_ownershipRights = new BindingSource();
+            v_ownershipRights.DataMember = "ownership_rights";
+            v_ownershipRights.DataSource = ds;
 
-            v_restrictonTypes = new BindingSource
-            {
-                DataMember = "restriction_types",
-                DataSource = ds
-            };
+            v_restrictonTypes = new BindingSource();
+            v_restrictonTypes.DataMember = "restriction_types";
+            v_restrictonTypes.DataSource = ds;
 
-            v_ownershipRightTypes = new BindingSource
-            {
-                DataMember = "ownership_right_types",
-                DataSource = ds
-            };
+            v_ownershipRightTypes = new BindingSource();
+            v_ownershipRightTypes.DataMember = "ownership_right_types";
+            v_ownershipRightTypes.DataSource = ds;
 
-            v_buildingsPremisesFunds = new BindingSource
-            {
-                DataMember = "buildings_premises_funds",
-                DataSource = buildingsPremisesFunds.Select()
-            };
+            v_buildingsPremisesFunds = new BindingSource();
+            v_buildingsPremisesFunds.DataMember = "buildings_premises_funds";
+            v_buildingsPremisesFunds.DataSource = buildingsPremisesFunds.Select();
 
-            v_buildingsCurrentFund = new BindingSource
-            {
-                DataMember = "buildings_current_funds",
-                DataSource = buildingsCurrentFund.Select()
-            };
+            v_buildingsCurrentFund = new BindingSource();
+            v_buildingsCurrentFund.DataMember = "buildings_current_funds";
+            v_buildingsCurrentFund.DataSource = buildingsCurrentFund.Select();
 
-            v_buildingsPremisesSumArea = new BindingSource
-            {
-                DataMember = "buildings_premises_sum_area",
-                DataSource = buildingsPremisesSumArea.Select()
-            };
+            v_buildingsPremisesSumArea = new BindingSource();
+            v_buildingsPremisesSumArea.DataMember = "buildings_premises_sum_area";
+            v_buildingsPremisesSumArea.DataSource = buildingsPremisesSumArea.Select();
 
-            v_fundType = new BindingSource
-            {
-                DataMember = "fund_types",
-                DataSource = ds
-            };
+            v_fundType = new BindingSource();
+            v_fundType.DataMember = "fund_types";
+            v_fundType.DataSource = ds;
 
-            v_object_states = new BindingSource
-            {
-                DataMember = "object_states",
-                DataSource = ds
-            };
+            v_object_states = new BindingSource();
+            v_object_states.DataMember = "object_states";
+            v_object_states.DataSource = ds;
 
             v_buildings = new BindingSource();
-            v_buildings.CurrentItemChanged += v_buildings_CurrentItemChanged;
+            v_buildings.CurrentItemChanged += new EventHandler(v_buildings_CurrentItemChanged);
             v_buildings.DataMember = "buildings";
             v_buildings.DataSource = ds;
             v_buildings.Filter = StaticFilter;
-            if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
+            if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
                 v_buildings.Filter += " AND ";
             v_buildings.Filter += DynamicFilter;
             buildings.Select().RowDeleted += BuildingViewport_RowDeleted;
             buildings.Select().RowChanged += BuildingViewport_RowChanged;
 
             v_restrictionBuildingsAssoc = new BindingSource();
-            v_restrictionBuildingsAssoc.CurrentItemChanged += v_restrictionBuildingsAssoc_CurrentItemChanged;
+            v_restrictionBuildingsAssoc.CurrentItemChanged += new EventHandler(v_restrictionBuildingsAssoc_CurrentItemChanged);
             v_restrictionBuildingsAssoc.DataMember = "buildings_restrictions_buildings_assoc";
             v_restrictionBuildingsAssoc.DataSource = v_buildings;
             RestrictionsFilterRebuild();
-            restrictionBuildingsAssoc.Select().RowChanged += RestrictionsAssoc_RowChanged;
-            restrictionBuildingsAssoc.Select().RowDeleted += RestrictionsAssoc_RowDeleted;
+            restrictionBuildingsAssoc.Select().RowChanged += new DataRowChangeEventHandler(RestrictionsAssoc_RowChanged);
+            restrictionBuildingsAssoc.Select().RowDeleted += new DataRowChangeEventHandler(RestrictionsAssoc_RowDeleted);
 
             v_ownershipBuildingsAssoc = new BindingSource();
-            v_ownershipBuildingsAssoc.CurrentItemChanged += v_ownershipBuildingsAssoc_CurrentItemChanged;
+            v_ownershipBuildingsAssoc.CurrentItemChanged += new EventHandler(v_ownershipBuildingsAssoc_CurrentItemChanged);
             v_ownershipBuildingsAssoc.DataMember = "buildings_ownership_buildings_assoc";
             v_ownershipBuildingsAssoc.DataSource = v_buildings;
             v_ownershipBuildingsAssoc_CurrentItemChanged(null, new EventArgs());
             OwnershipsFilterRebuild();
-            ownershipBuildingsAssoc.Select().RowChanged += OwnershipsAssoc_RowChanged;
-            ownershipBuildingsAssoc.Select().RowDeleted += OwnershipsAssoc_RowDeleted;
+            ownershipBuildingsAssoc.Select().RowChanged += new DataRowChangeEventHandler(OwnershipsAssoc_RowChanged);
+            ownershipBuildingsAssoc.Select().RowDeleted += new DataRowChangeEventHandler(OwnershipsAssoc_RowDeleted);
 
             DataBind();
 
-            buildingsCurrentFund.RefreshEvent += buildingsCurrentFund_RefreshEvent;
+            buildingsCurrentFund.RefreshEvent += new EventHandler<EventArgs>(buildingsCurrentFund_RefreshEvent);
             buildingsPremisesFunds.RefreshEvent += buildingsPremisesFunds_RefreshEvent;
             buildingsPremisesSumArea.RefreshEvent += buildingsPremisesSumArea_RefreshEvent; 
             FiltersRebuild();
@@ -912,7 +896,7 @@ namespace Registry.Viewport
 
         public override bool SearchedRecords()
         {
-            if (!string.IsNullOrEmpty(DynamicFilter))
+            if (!String.IsNullOrEmpty(DynamicFilter))
                 return true;
             else
                 return false;
@@ -939,12 +923,12 @@ namespace Registry.Viewport
                     DynamicFilter = sbExtendedSearchForm.GetFilter();
                     break;
             }
-            var filter = StaticFilter;
-            if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
-                filter += " AND ";
-            filter += DynamicFilter;
+            string Filter = StaticFilter;
+            if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
+                Filter += " AND ";
+            Filter += DynamicFilter;
             is_editable = false;
-            v_buildings.Filter = filter;
+            v_buildings.Filter = Filter;
             is_editable = true;
         }
 
@@ -960,35 +944,35 @@ namespace Registry.Viewport
             var buildingFromView = BuildingFromView();
             if (!ValidateBuilding(building))
                 return;
-            var filter = "";
-            if (!string.IsNullOrEmpty(v_buildings.Filter))
-                filter += " OR ";
+            string Filter = "";
+            if (!String.IsNullOrEmpty(v_buildings.Filter))
+                Filter += " OR ";
             else
-                filter += "(1 = 1) OR ";
+                Filter += "(1 = 1) OR ";
             switch (viewportState)
             {
                 case ViewportState.ReadState:
-                    MessageBox.Show(@"Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
+                    MessageBox.Show("Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
-                    var idBuilding = BuildingsDataModel.Insert(building);
-                    if (idBuilding == -1)
+                    int id_building = BuildingsDataModel.Insert(building);
+                    if (id_building == -1)
                     {
                         buildings.EditingNewRecord = false;
                         return;
                     }
                     DataRowView newRow;
-                    building.IdBuilding = idBuilding;
+                    building.IdBuilding = id_building;
                     is_editable = false;
                     if (v_buildings.Position == -1)
                         newRow = (DataRowView)v_buildings.AddNew();
                     else
                         newRow = ((DataRowView)v_buildings[v_buildings.Position]);
-                    filter += string.Format(CultureInfo.CurrentCulture, "(id_building = {0})", building.IdBuilding);
-                    v_buildings.Filter += filter;
+                    Filter += String.Format(CultureInfo.CurrentCulture, "(id_building = {0})", building.IdBuilding);
+                    v_buildings.Filter += Filter;
                     FillRowFromBuilding(building, newRow);
-                    Text = @"Здание №" + idBuilding.ToString(CultureInfo.InvariantCulture);
+                    this.Text = "Здание №" + id_building.ToString(CultureInfo.InvariantCulture);
                     viewportState = ViewportState.ReadState;
                     buildings.EditingNewRecord = false;
                     break;
@@ -1002,30 +986,32 @@ namespace Registry.Viewport
                     }
                     var dialogResult = DialogResult.Yes;
                     if (building.IdState != buildingFromView.IdState || building.StateDate != buildingFromView.StateDate)
-                        dialogResult = MessageBox.Show(@"Оставить состояние помещений текущего здания неизмененным? "+
-                            @"Нажмите ""Да"", если не хотите устанавливать у помещений в здании то же состоянии, что и у здания", @"Внимание",
+                        dialogResult = MessageBox.Show(@"Хотите ли вы оставить состояние помещений, расположенным в здании, неизмененным?" +
+                                        @" Если вы нажмете ""Нет"", состояние здания применится ко всем, расположенным в нем, помещениям", @"Внимание",
                                             MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                     if (dialogResult == DialogResult.Cancel)
                         return;
                     if (BuildingsDataModel.Update(building) == -1)
                         return;
-                    var row = ((DataRowView)v_buildings[v_buildings.Position]);
+                    DataRowView row = ((DataRowView)v_buildings[v_buildings.Position]);
                     is_editable = false;
-                    filter += string.Format(CultureInfo.CurrentCulture, "(id_building = {0})", building.IdBuilding);
-                    v_buildings.Filter += filter;
+                    Filter += String.Format(CultureInfo.CurrentCulture, "(id_building = {0})", building.IdBuilding);
+                    v_buildings.Filter += Filter;
                     FillRowFromBuilding(building, row);
                     if (dialogResult == DialogResult.No)
                     {
-                        var premises = from premisesRow in DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select())
-                                       where premisesRow.Field<int>("id_building") == building.IdBuilding
-                                       select premisesRow;
+                        var premises = from premises_row in DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select())
+                                       where premises_row.Field<int>("id_building") == building.IdBuilding
+                                       select premises_row;
                         foreach (var premise in premises)
                         {
-                            var idPremises = ViewportHelper.ValueOrNull<int>(premise, "id_premises");
-                            if (idPremises == null) continue;
-                            if (PremisesDataModel.UpdateState(idPremises.Value, building.IdState,
-                                building.StateDate) == -1)
-                                return;
+                            var id_premises = ViewportHelper.ValueOrNull<int>(premise, "id_premises");
+                            if (id_premises != null)
+                            {
+                                if (PremisesDataModel.UpdateState(id_premises.Value, building.IdState,
+                                    building.StateDate) == -1)
+                                    return;
+                            }
                         }
                     }
                     viewportState = ViewportState.ReadState;
@@ -1058,7 +1044,7 @@ namespace Registry.Viewport
                         ((DataRowView)v_buildings[v_buildings.Position]).Delete();
                     }
                     else
-                        Text = @"Здания отсутствуют";
+                        this.Text = "Здания отсутствуют";
                     viewportState = ViewportState.ReadState;
                     break;
                 case ViewportState.ModifyRowState:
@@ -1102,7 +1088,7 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             is_editable = false;
-            var building = BuildingFromView();
+            Building building = BuildingFromView();
             v_buildings.AddNew();
             buildings.EditingNewRecord = true;
             ViewportFromBuilding(building);
@@ -1118,21 +1104,21 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show(@"Вы действительно хотите удалить это здание?", @"Внимание",
+            if (MessageBox.Show("Вы действительно хотите удалить это здание?", "Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 if (DataModelHelper.HasMunicipal((int)((DataRowView)v_buildings.Current)["id_building"], EntityType.Building)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                 {
-                    MessageBox.Show(@"У вас нет прав на удаление муниципальных жилых зданий и зданий, в которых присутствуют муниципальные помещения",
-                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show("У вас нет прав на удаление муниципальных жилых зданий и зданий, в которых присутствуют муниципальные помещения",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
                 if (DataModelHelper.HasNotMunicipal((int)((DataRowView)v_buildings.Current)["id_building"], EntityType.Building)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                 {
-                    MessageBox.Show(@"У вас нет прав на удаление немуниципальных жилых зданий и зданий, в которых присутствуют немуниципальные помещения",
-                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show("У вас нет прав на удаление немуниципальных жилых зданий и зданий, в которых присутствуют немуниципальные помещения",
+                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
                 if (BuildingsDataModel.Delete((int)((DataRowView)v_buildings.Current)["id_building"]) == -1)
@@ -1155,11 +1141,11 @@ namespace Registry.Viewport
 
         public override Viewport Duplicate()
         {
-            var viewport = new BuildingViewport(this, MenuCallback);
+            BuildingViewport viewport = new BuildingViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
             if (v_buildings.Count > 0)
-                viewport.LocateBuildingBy((((DataRowView)v_buildings[v_buildings.Position])["id_building"] as int?) ?? -1);
+                viewport.LocateBuildingBy((((DataRowView)v_buildings[v_buildings.Position])["id_building"] as Int32?) ?? -1);
             return viewport;
         }
 
@@ -1219,7 +1205,7 @@ namespace Registry.Viewport
                 return;
             if (v_buildings.Position == -1)
             {
-                MessageBox.Show(@"Не выбрано здание", @"Ошибка", 
+                MessageBox.Show("Не выбрано здание", "Ошибка", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
@@ -1229,17 +1215,19 @@ namespace Registry.Viewport
                 ParentTypeEnum.Building);
         }
 
-        protected override void OnClosing(CancelEventArgs e)
+        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
+            if (e == null)
+                return;
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
             else
             {
-                restrictionBuildingsAssoc.Select().RowChanged -= RestrictionsAssoc_RowChanged;
-                restrictionBuildingsAssoc.Select().RowDeleted -= RestrictionsAssoc_RowDeleted;
-                ownershipBuildingsAssoc.Select().RowChanged -= OwnershipsAssoc_RowChanged;
-                ownershipBuildingsAssoc.Select().RowDeleted -= OwnershipsAssoc_RowDeleted;
-                buildingsCurrentFund.RefreshEvent -= buildingsCurrentFund_RefreshEvent;
+                restrictionBuildingsAssoc.Select().RowChanged -= new DataRowChangeEventHandler(RestrictionsAssoc_RowChanged);
+                restrictionBuildingsAssoc.Select().RowDeleted -= new DataRowChangeEventHandler(RestrictionsAssoc_RowDeleted);
+                ownershipBuildingsAssoc.Select().RowChanged -= new DataRowChangeEventHandler(OwnershipsAssoc_RowChanged);
+                ownershipBuildingsAssoc.Select().RowDeleted -= new DataRowChangeEventHandler(OwnershipsAssoc_RowDeleted);
+                buildingsCurrentFund.RefreshEvent -= new EventHandler<EventArgs>(buildingsCurrentFund_RefreshEvent);
             }
             base.OnClosing(e);
         }
@@ -1438,9 +1426,9 @@ namespace Registry.Viewport
             if ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode == Keys.Back) || (e.KeyCode == Keys.Delete) ||
                 (e.KeyCode >= Keys.D0 && e.KeyCode <= Keys.D9) || (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9))
             {
-                var text = comboBoxStreet.Text;
-                var selectionStart = comboBoxStreet.SelectionStart;
-                var selectionLength = comboBoxStreet.SelectionLength;
+                string text = comboBoxStreet.Text;
+                int selectionStart = comboBoxStreet.SelectionStart;
+                int selectionLength = comboBoxStreet.SelectionLength;
                 v_kladr.Filter = "street_name like '%" + comboBoxStreet.Text + "%'";
                 comboBoxStreet.Text = text;
                 comboBoxStreet.SelectionStart = selectionStart;
@@ -1531,11 +1519,11 @@ namespace Registry.Viewport
                 return;
             if (v_buildings.Position == -1)
             {
-                MessageBox.Show(@"Не выбрано здание", @"Ошибка",
+                MessageBox.Show("Не выбрано здание", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            using (var editor = new RestrictionsEditor())
+            using (RestrictionsEditor editor = new RestrictionsEditor())
             {
                 editor.State = ViewportState.NewRowState;
                 editor.ParentType = ParentTypeEnum.Building;
@@ -1550,25 +1538,25 @@ namespace Registry.Viewport
                 return;
             if (v_buildings.Position == -1)
             {
-                MessageBox.Show(@"Не выбрано здание", @"Ошибка",
+                MessageBox.Show("Не выбрано здание", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             if (v_restrictions.Position == -1)
             {
-                MessageBox.Show(@"Не выбран реквизит для удаления", @"Ошибка",
+                MessageBox.Show("Не выбран реквизит для удаления", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if (MessageBox.Show(@"Вы уверены, что хотите удалить этот реквизит?", @"Внимание",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+            if (MessageBox.Show("Вы уверены, что хотите удалить этот реквизит?", "Внимание",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != System.Windows.Forms.DialogResult.Yes)
                 return;
-            var idRestriction = (int)((DataRowView)v_restrictions[v_restrictions.Position])["id_restriction"];
+            int idRestriction = (int)((DataRowView)v_restrictions[v_restrictions.Position])["id_restriction"];
             if (RestrictionsDataModel.Delete(idRestriction) == -1)
                 return;
             restrictions.Select().Rows.Find(idRestriction).Delete();
             CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building,
-                    int.Parse(((DataRowView)v_buildings[v_buildings.Position])["id_building"].ToString(), CultureInfo.InvariantCulture), true);
+                    Int32.Parse(((DataRowView)v_buildings[v_buildings.Position])["id_building"].ToString(), CultureInfo.InvariantCulture), true);
         }
 
         private void vButtonRestrictionEdit_Click(object sender, EventArgs e)
@@ -1577,24 +1565,24 @@ namespace Registry.Viewport
                 return;
             if (v_buildings.Position == -1)
             {
-                MessageBox.Show(@"Не выбрано здание", @"Ошибка",
+                MessageBox.Show("Не выбрано здание", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             if (v_restrictions.Position == -1)
             {
-                MessageBox.Show(@"Не выбран реквизит для редактирования", @"Ошибка",
+                MessageBox.Show("Не выбран реквизит для редактирования", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            var restriction = new Restriction();
-            var row = (DataRowView)v_restrictions[v_restrictions.Position];
+            Restriction restriction = new Restriction();
+            DataRowView row = (DataRowView)v_restrictions[v_restrictions.Position];
             restriction.IdRestriction = (int?)row["id_restriction"];
             restriction.IdRestrictionType = (int?)row["id_restriction_type"];
             restriction.Number = row["number"].ToString();
             restriction.Date = (DateTime?)row["date"];
             restriction.Description = row["description"].ToString();
-            using (var editor = new RestrictionsEditor())
+            using (RestrictionsEditor editor = new RestrictionsEditor())
             {
                 editor.State = ViewportState.ModifyRowState;
                 editor.ParentType = ParentTypeEnum.Building;
@@ -1610,11 +1598,11 @@ namespace Registry.Viewport
                 return;
             if (v_buildings.Position == -1)
             {
-                MessageBox.Show(@"Не выбрано здание", @"Ошибка",
+                MessageBox.Show("Не выбрано здание", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            using (var editor = new OwnershipsEditor())
+            using (OwnershipsEditor editor = new OwnershipsEditor())
             {
                 editor.State = ViewportState.NewRowState;
                 editor.ParentType = ParentTypeEnum.Building;
@@ -1629,25 +1617,25 @@ namespace Registry.Viewport
                 return;
             if (v_buildings.Position == -1)
             {
-                MessageBox.Show(@"Не выбрано здание", @"Ошибка",
+                MessageBox.Show("Не выбрано здание", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             if (v_ownershipRights.Position == -1)
             {
-                MessageBox.Show(@"Не выбрано ограничение для удаления", @"Ошибка",
+                MessageBox.Show("Не выбрано ограничение для удаления", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if (MessageBox.Show(@"Вы уверены, что хотите удалить это ограничение?", @"Внимание",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+            if (MessageBox.Show("Вы уверены, что хотите удалить это ограничение?", "Внимание",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != System.Windows.Forms.DialogResult.Yes)
                 return;
-            var idOwnershipRight = (int)((DataRowView)v_ownershipRights[v_ownershipRights.Position])["id_ownership_right"];
+            int idOwnershipRight = (int)((DataRowView)v_ownershipRights[v_ownershipRights.Position])["id_ownership_right"];
             if (OwnershipsRightsDataModel.Delete(idOwnershipRight) == -1)
                 return;
             ownershipRights.Select().Rows.Find(idOwnershipRight).Delete();
             CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building,
-                    int.Parse(((DataRowView)v_buildings[v_buildings.Position])["id_building"].ToString(), CultureInfo.InvariantCulture), true);
+                    Int32.Parse(((DataRowView)v_buildings[v_buildings.Position])["id_building"].ToString(), CultureInfo.InvariantCulture), true);
         }
 
         private void vButtonOwnershipEdit_Click(object sender, EventArgs e)
@@ -1656,24 +1644,24 @@ namespace Registry.Viewport
                 return;
             if (v_buildings.Position == -1)
             {
-                MessageBox.Show(@"Не выбрано здание", @"Ошибка",
+                MessageBox.Show("Не выбрано здание", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             if (v_ownershipRights.Position == -1)
             {
-                MessageBox.Show(@"Не выбрано ограничение для редактирования", @"Ошибка",
+                MessageBox.Show("Не выбрано ограничение для редактирования", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            var ownershipRight = new OwnershipRight();
-            var row = (DataRowView)v_ownershipRights[v_ownershipRights.Position];
+            OwnershipRight ownershipRight = new OwnershipRight();
+            DataRowView row = (DataRowView)v_ownershipRights[v_ownershipRights.Position];
             ownershipRight.IdOwnershipRight = (int?)row["id_ownership_right"];
             ownershipRight.IdOwnershipRightType = (int?)row["id_ownership_right_type"];
             ownershipRight.Number = row["number"].ToString();
             ownershipRight.Date = (DateTime?)row["date"];
             ownershipRight.Description = row["description"].ToString();
-            using (var editor = new OwnershipsEditor())
+            using (OwnershipsEditor editor = new OwnershipsEditor())
             {
                 editor.State = ViewportState.ModifyRowState;
                 editor.ParentType = ParentTypeEnum.Building;
@@ -1681,6 +1669,16 @@ namespace Registry.Viewport
                 editor.OwnershipRightValue = ownershipRight;
                 editor.ShowDialog();
             }
+        }
+
+        private void selectAll_Enter(object sender, EventArgs e)
+        {
+            ViewportHelper.SelectAllText(sender);
+        }
+
+        private void checkBoxRubbishChute_CheckedChanged(object sender, EventArgs e)
+        {
+            CheckViewportModifications();
         }
 
         private void InitializeComponent()
@@ -1703,7 +1701,6 @@ namespace Registry.Viewport
             this.comboBoxStructureType = new System.Windows.Forms.ComboBox();
             this.textBoxHouse = new System.Windows.Forms.TextBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.checkBoxRubbishChute = new System.Windows.Forms.CheckBox();
             this.dateTimePickerStateDate = new System.Windows.Forms.DateTimePicker();
             this.label22 = new System.Windows.Forms.Label();
             this.label40 = new System.Windows.Forms.Label();
@@ -1765,6 +1762,7 @@ namespace Registry.Viewport
             this.ownership_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ownership_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_ownership_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.checkBoxRubbishChute = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -1887,6 +1885,8 @@ namespace Registry.Viewport
             this.numericUpDownWear.Size = new System.Drawing.Size(311, 21);
             this.numericUpDownWear.TabIndex = 5;
             this.numericUpDownWear.ThousandsSeparator = true;
+            this.numericUpDownWear.ValueChanged += new System.EventHandler(this.numericUpDownWear_ValueChanged);
+            this.numericUpDownWear.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label21
             // 
@@ -1956,6 +1956,7 @@ namespace Registry.Viewport
             this.numericUpDownFloors.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownFloors.TabIndex = 2;
             this.numericUpDownFloors.ValueChanged += new System.EventHandler(this.numericUpDownFloors_ValueChanged);
+            this.numericUpDownFloors.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // numericUpDownStartupYear
             // 
@@ -1981,6 +1982,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownStartupYear.ValueChanged += new System.EventHandler(this.numericUpDownStartupYear_ValueChanged);
+            this.numericUpDownStartupYear.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // comboBoxStreet
             // 
@@ -1993,6 +1995,8 @@ namespace Registry.Viewport
             this.comboBoxStreet.TabIndex = 0;
             this.comboBoxStreet.DropDownClosed += new System.EventHandler(this.comboBoxStreet_DropDownClosed);
             this.comboBoxStreet.SelectedValueChanged += new System.EventHandler(this.comboBoxStreet_SelectedValueChanged);
+            this.comboBoxStreet.Enter += new System.EventHandler(this.selectAll_Enter);
+            this.comboBoxStreet.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxStreet_KeyUp);
             this.comboBoxStreet.Leave += new System.EventHandler(this.comboBoxStreet_Leave);
             // 
             // comboBoxStructureType
@@ -2005,6 +2009,7 @@ namespace Registry.Viewport
             this.comboBoxStructureType.Name = "comboBoxStructureType";
             this.comboBoxStructureType.Size = new System.Drawing.Size(310, 23);
             this.comboBoxStructureType.TabIndex = 4;
+            this.comboBoxStructureType.SelectedIndexChanged += new System.EventHandler(this.comboBoxStructureType_SelectedIndexChanged);
             // 
             // textBoxHouse
             // 
@@ -2016,6 +2021,8 @@ namespace Registry.Viewport
             this.textBoxHouse.Size = new System.Drawing.Size(310, 21);
             this.textBoxHouse.TabIndex = 1;
             this.textBoxHouse.TextChanged += new System.EventHandler(this.textBoxHouse_TextChanged);
+            this.textBoxHouse.Enter += new System.EventHandler(this.selectAll_Enter);
+            this.textBoxHouse.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxHouse_KeyPress);
             // 
             // panel2
             // 
@@ -2040,16 +2047,6 @@ namespace Registry.Viewport
             this.panel2.Size = new System.Drawing.Size(489, 203);
             this.panel2.TabIndex = 1;
             // 
-            // checkBoxRubbishChute
-            // 
-            this.checkBoxRubbishChute.AutoSize = true;
-            this.checkBoxRubbishChute.Location = new System.Drawing.Point(331, 178);
-            this.checkBoxRubbishChute.Name = "checkBoxRubbishChute";
-            this.checkBoxRubbishChute.Size = new System.Drawing.Size(111, 19);
-            this.checkBoxRubbishChute.TabIndex = 38;
-            this.checkBoxRubbishChute.Text = "Мусоропровод";
-            this.checkBoxRubbishChute.UseVisualStyleBackColor = true;
-            // 
             // dateTimePickerStateDate
             // 
             this.dateTimePickerStateDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -2059,6 +2056,7 @@ namespace Registry.Viewport
             this.dateTimePickerStateDate.ShowCheckBox = true;
             this.dateTimePickerStateDate.Size = new System.Drawing.Size(310, 21);
             this.dateTimePickerStateDate.TabIndex = 4;
+            this.dateTimePickerStateDate.ValueChanged += new System.EventHandler(this.dateTimePickerStateDate_ValueChanged);
             // 
             // label22
             // 
@@ -2112,13 +2110,15 @@ namespace Registry.Viewport
             this.numericUpDownBalanceCost.Location = new System.Drawing.Point(175, 63);
             this.numericUpDownBalanceCost.Maximum = new decimal(new int[] {
             1410065407,
-            0,
+            2,
             0,
             0});
             this.numericUpDownBalanceCost.Name = "numericUpDownBalanceCost";
             this.numericUpDownBalanceCost.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownBalanceCost.TabIndex = 2;
             this.numericUpDownBalanceCost.ThousandsSeparator = true;
+            this.numericUpDownBalanceCost.ValueChanged += new System.EventHandler(this.numericUpDownBalanceCost_ValueChanged);
+            this.numericUpDownBalanceCost.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // numericUpDownCadastralCost
             // 
@@ -2128,33 +2128,37 @@ namespace Registry.Viewport
             this.numericUpDownCadastralCost.Location = new System.Drawing.Point(175, 35);
             this.numericUpDownCadastralCost.Maximum = new decimal(new int[] {
             1410065407,
-            0,
+            2,
             0,
             0});
             this.numericUpDownCadastralCost.Name = "numericUpDownCadastralCost";
             this.numericUpDownCadastralCost.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownCadastralCost.TabIndex = 1;
             this.numericUpDownCadastralCost.ThousandsSeparator = true;
+            this.numericUpDownCadastralCost.ValueChanged += new System.EventHandler(this.numericUpDownCadastralCost_ValueChanged);
+            this.numericUpDownCadastralCost.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxImprovement
             // 
             this.checkBoxImprovement.AutoSize = true;
-            this.checkBoxImprovement.Location = new System.Drawing.Point(175, 178);
+            this.checkBoxImprovement.Location = new System.Drawing.Point(175, 177);
             this.checkBoxImprovement.Name = "checkBoxImprovement";
             this.checkBoxImprovement.Size = new System.Drawing.Size(126, 19);
             this.checkBoxImprovement.TabIndex = 7;
             this.checkBoxImprovement.Text = "Благоустройство";
             this.checkBoxImprovement.UseVisualStyleBackColor = true;
+            this.checkBoxImprovement.CheckedChanged += new System.EventHandler(this.checkBoxImprovement_CheckedChanged);
             // 
             // checkBoxElevator
             // 
             this.checkBoxElevator.AutoSize = true;
-            this.checkBoxElevator.Location = new System.Drawing.Point(19, 178);
+            this.checkBoxElevator.Location = new System.Drawing.Point(19, 177);
             this.checkBoxElevator.Name = "checkBoxElevator";
             this.checkBoxElevator.Size = new System.Drawing.Size(118, 19);
             this.checkBoxElevator.TabIndex = 6;
             this.checkBoxElevator.Text = "Наличие лифта";
             this.checkBoxElevator.UseVisualStyleBackColor = true;
+            this.checkBoxElevator.CheckedChanged += new System.EventHandler(this.checkBoxElevator_CheckedChanged);
             // 
             // label14
             // 
@@ -2202,6 +2206,8 @@ namespace Registry.Viewport
             this.textBoxCadastralNum.Name = "textBoxCadastralNum";
             this.textBoxCadastralNum.Size = new System.Drawing.Size(310, 21);
             this.textBoxCadastralNum.TabIndex = 0;
+            this.textBoxCadastralNum.TextChanged += new System.EventHandler(this.textBoxCadastralNum_TextChanged);
+            this.textBoxCadastralNum.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // groupBox1
             // 
@@ -2234,6 +2240,8 @@ namespace Registry.Viewport
             this.numericUpDownPremisesCount.Name = "numericUpDownPremisesCount";
             this.numericUpDownPremisesCount.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownPremisesCount.TabIndex = 0;
+            this.numericUpDownPremisesCount.ValueChanged += new System.EventHandler(this.numericUpDownPremisesCount_ValueChanged);
+            this.numericUpDownPremisesCount.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // numericUpDownRoomsCount
             // 
@@ -2248,6 +2256,8 @@ namespace Registry.Viewport
             this.numericUpDownRoomsCount.Name = "numericUpDownRoomsCount";
             this.numericUpDownRoomsCount.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownRoomsCount.TabIndex = 1;
+            this.numericUpDownRoomsCount.ValueChanged += new System.EventHandler(this.numericUpDownRoomsCount_ValueChanged);
+            this.numericUpDownRoomsCount.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // numericUpDownApartmentsCount
             // 
@@ -2262,6 +2272,8 @@ namespace Registry.Viewport
             this.numericUpDownApartmentsCount.Name = "numericUpDownApartmentsCount";
             this.numericUpDownApartmentsCount.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownApartmentsCount.TabIndex = 2;
+            this.numericUpDownApartmentsCount.ValueChanged += new System.EventHandler(this.numericUpDownApartmentsCount_ValueChanged);
+            this.numericUpDownApartmentsCount.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // numericUpDownSharedApartmentsCount
             // 
@@ -2276,6 +2288,8 @@ namespace Registry.Viewport
             this.numericUpDownSharedApartmentsCount.Name = "numericUpDownSharedApartmentsCount";
             this.numericUpDownSharedApartmentsCount.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownSharedApartmentsCount.TabIndex = 3;
+            this.numericUpDownSharedApartmentsCount.ValueChanged += new System.EventHandler(this.numericUpDownSharedApartmentsCount_ValueChanged);
+            this.numericUpDownSharedApartmentsCount.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label4
             // 
@@ -2345,6 +2359,7 @@ namespace Registry.Viewport
             this.numericUpDownOtherPremisesCount.ReadOnly = true;
             this.numericUpDownOtherPremisesCount.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownOtherPremisesCount.TabIndex = 3;
+            this.numericUpDownOtherPremisesCount.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // numericUpDownSpecialPremisesCount
             // 
@@ -2360,6 +2375,7 @@ namespace Registry.Viewport
             this.numericUpDownSpecialPremisesCount.ReadOnly = true;
             this.numericUpDownSpecialPremisesCount.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownSpecialPremisesCount.TabIndex = 2;
+            this.numericUpDownSpecialPremisesCount.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // numericUpDownCommercialPremisesCount
             // 
@@ -2375,6 +2391,7 @@ namespace Registry.Viewport
             this.numericUpDownCommercialPremisesCount.ReadOnly = true;
             this.numericUpDownCommercialPremisesCount.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownCommercialPremisesCount.TabIndex = 1;
+            this.numericUpDownCommercialPremisesCount.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // numericUpDownSocialPremisesCount
             // 
@@ -2390,6 +2407,7 @@ namespace Registry.Viewport
             this.numericUpDownSocialPremisesCount.ReadOnly = true;
             this.numericUpDownSocialPremisesCount.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownSocialPremisesCount.TabIndex = 0;
+            this.numericUpDownSocialPremisesCount.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label10
             // 
@@ -2458,6 +2476,8 @@ namespace Registry.Viewport
             this.numericUpDownTotalArea.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownTotalArea.TabIndex = 0;
             this.numericUpDownTotalArea.ThousandsSeparator = true;
+            this.numericUpDownTotalArea.ValueChanged += new System.EventHandler(this.numericUpDownTotalArea_ValueChanged);
+            this.numericUpDownTotalArea.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label20
             // 
@@ -2483,6 +2503,8 @@ namespace Registry.Viewport
             this.numericUpDownLivingArea.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownLivingArea.TabIndex = 1;
             this.numericUpDownLivingArea.ThousandsSeparator = true;
+            this.numericUpDownLivingArea.ValueChanged += new System.EventHandler(this.numericUpDownLivingArea_ValueChanged);
+            this.numericUpDownLivingArea.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // numericUpDownMunicipalArea
             // 
@@ -2500,6 +2522,7 @@ namespace Registry.Viewport
             this.numericUpDownMunicipalArea.Size = new System.Drawing.Size(310, 21);
             this.numericUpDownMunicipalArea.TabIndex = 2;
             this.numericUpDownMunicipalArea.ThousandsSeparator = true;
+            this.numericUpDownMunicipalArea.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label8
             // 
@@ -2539,6 +2562,8 @@ namespace Registry.Viewport
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.Size = new System.Drawing.Size(489, 84);
             this.textBoxDescription.TabIndex = 0;
+            this.textBoxDescription.TextChanged += new System.EventHandler(this.textBoxDescription_TextChanged);
+            this.textBoxDescription.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // groupBox6
             // 
@@ -2577,6 +2602,7 @@ namespace Registry.Viewport
             this.vButtonRestrictionEdit.TabIndex = 2;
             this.vButtonRestrictionEdit.UseVisualStyleBackColor = false;
             this.vButtonRestrictionEdit.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonRestrictionEdit.Click += new System.EventHandler(this.vButtonRestrictionEdit_Click);
             // 
             // vButtonRestrictionDelete
             // 
@@ -2591,6 +2617,7 @@ namespace Registry.Viewport
             this.vButtonRestrictionDelete.TabIndex = 1;
             this.vButtonRestrictionDelete.UseVisualStyleBackColor = false;
             this.vButtonRestrictionDelete.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonRestrictionDelete.Click += new System.EventHandler(this.vButtonRestrictionDelete_Click);
             // 
             // vButtonRestrictionAdd
             // 
@@ -2605,6 +2632,7 @@ namespace Registry.Viewport
             this.vButtonRestrictionAdd.TabIndex = 0;
             this.vButtonRestrictionAdd.UseVisualStyleBackColor = false;
             this.vButtonRestrictionAdd.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonRestrictionAdd.Click += new System.EventHandler(this.vButtonRestrictionAdd_Click);
             // 
             // dataGridViewRestrictions
             // 
@@ -2626,6 +2654,8 @@ namespace Registry.Viewport
             this.dataGridViewRestrictions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewRestrictions.Size = new System.Drawing.Size(450, 85);
             this.dataGridViewRestrictions.TabIndex = 0;
+            this.dataGridViewRestrictions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewRestrictions_CellDoubleClick);
+            this.dataGridViewRestrictions.Resize += new System.EventHandler(this.dataGridViewRestrictions_Resize);
             // 
             // restriction_number
             // 
@@ -2695,6 +2725,7 @@ namespace Registry.Viewport
             this.vButtonOwnershipEdit.TabIndex = 2;
             this.vButtonOwnershipEdit.UseVisualStyleBackColor = false;
             this.vButtonOwnershipEdit.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonOwnershipEdit.Click += new System.EventHandler(this.vButtonOwnershipEdit_Click);
             // 
             // vButtonOwnershipDelete
             // 
@@ -2709,6 +2740,7 @@ namespace Registry.Viewport
             this.vButtonOwnershipDelete.TabIndex = 1;
             this.vButtonOwnershipDelete.UseVisualStyleBackColor = false;
             this.vButtonOwnershipDelete.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonOwnershipDelete.Click += new System.EventHandler(this.vButtonOwnershipDelete_Click);
             // 
             // vButtonOwnershipAdd
             // 
@@ -2723,6 +2755,7 @@ namespace Registry.Viewport
             this.vButtonOwnershipAdd.TabIndex = 0;
             this.vButtonOwnershipAdd.UseVisualStyleBackColor = false;
             this.vButtonOwnershipAdd.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonOwnershipAdd.Click += new System.EventHandler(this.vButtonOwnershipAdd_Click);
             // 
             // dataGridViewOwnerships
             // 
@@ -2744,6 +2777,8 @@ namespace Registry.Viewport
             this.dataGridViewOwnerships.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewOwnerships.Size = new System.Drawing.Size(450, 85);
             this.dataGridViewOwnerships.TabIndex = 0;
+            this.dataGridViewOwnerships.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOwnerships_CellDoubleClick);
+            this.dataGridViewOwnerships.Resize += new System.EventHandler(this.dataGridViewOwnerships_Resize);
             // 
             // ownership_number
             // 
@@ -2775,6 +2810,17 @@ namespace Registry.Viewport
             this.id_ownership_type.Name = "id_ownership_type";
             this.id_ownership_type.ReadOnly = true;
             this.id_ownership_type.Width = 200;
+            // 
+            // checkBoxRubbishChute
+            // 
+            this.checkBoxRubbishChute.AutoSize = true;
+            this.checkBoxRubbishChute.Location = new System.Drawing.Point(331, 177);
+            this.checkBoxRubbishChute.Name = "checkBoxRubbishChute";
+            this.checkBoxRubbishChute.Size = new System.Drawing.Size(111, 19);
+            this.checkBoxRubbishChute.TabIndex = 38;
+            this.checkBoxRubbishChute.Text = "Мусоропровод";
+            this.checkBoxRubbishChute.UseVisualStyleBackColor = true;
+            this.checkBoxRubbishChute.CheckedChanged += new System.EventHandler(this.checkBoxRubbishChute_CheckedChanged);
             // 
             // BuildingViewport
             // 
@@ -2827,11 +2873,6 @@ namespace Registry.Viewport
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOwnerships)).EndInit();
             this.ResumeLayout(false);
 
-        }
-
-        private void selectAll_Enter(object sender, EventArgs e)
-        {
-            ViewportHelper.SelectAllText(sender);
         }
     }
 }
