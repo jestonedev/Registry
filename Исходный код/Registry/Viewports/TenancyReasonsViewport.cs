@@ -10,6 +10,7 @@ using Registry.DataModels;
 using Registry.Entities;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
+using Registry.CalcDataModels;
 
 namespace Registry.Viewport
 {
@@ -365,26 +366,26 @@ namespace Registry.Viewport
             list = TenancyReasonsFromView();
             for (var i = 0; i < list.Count; i++)
             {
-                var row_index = -1;
+                var rowIndex = -1;
                 for (var j = 0; j < dataGridView.Rows.Count; j++)
                     if ((dataGridView.Rows[j].Cells["id_reason"].Value != null) &&
                         !string.IsNullOrEmpty(dataGridView.Rows[j].Cells["id_reason"].Value.ToString()) &&
                         ((int)dataGridView.Rows[j].Cells["id_reason"].Value == list[i].IdReason))
-                        row_index = j;
-                if (row_index == -1)
+                        rowIndex = j;
+                if (rowIndex != -1) continue;
+                if (TenancyReasonsDataModel.Delete(list[i].IdReason.Value) == -1)
                 {
-                    if (TenancyReasonsDataModel.Delete(list[i].IdReason.Value) == -1)
-                    {
-                        sync_views = true;
-                        tenancy_reasons.EditingNewRecord = false;
-                        return;
-                    }
-                    tenancy_reasons.Select().Rows.Find(list[i].IdReason).Delete();
+                    sync_views = true;
+                    tenancy_reasons.EditingNewRecord = false;
+                    return;
                 }
+                tenancy_reasons.Select().Rows.Find(list[i].IdReason).Delete();
             }
             sync_views = true;
             tenancy_reasons.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
+            if (CalcDataModelPremisesTenanciesInfo.HasInstance())
+                CalcDataModelPremisesTenanciesInfo.GetInstance().Refresh(EntityType.Unknown, null, true);
         }
 
         public override bool CanDuplicate()

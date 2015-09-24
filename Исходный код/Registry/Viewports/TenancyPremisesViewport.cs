@@ -597,6 +597,8 @@ namespace Registry.Viewport
             // Обновляем зависимую агрегационную модель
             if (ParentType == ParentTypeEnum.Tenancy)
                 CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.TenancyProcess, (int)ParentRow["id_process"], true);
+            if (CalcDataModelPremisesTenanciesInfo.HasInstance())
+                CalcDataModelPremisesTenanciesInfo.GetInstance().Refresh(EntityType.Unknown, null, true);
         }
 
         public override bool CanInsertRecord()

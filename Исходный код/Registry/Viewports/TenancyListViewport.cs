@@ -253,6 +253,8 @@ namespace Registry.Viewport
                     return;
                 ((DataRowView)v_tenancies[v_tenancies.Position]).Delete();
                 MenuCallback.ForceCloseDetachedViewports();
+                if (CalcDataModelPremisesTenanciesInfo.HasInstance())
+                    CalcDataModelPremisesTenanciesInfo.GetInstance().Refresh(EntityType.Unknown, null, true);
             }
         }
 
