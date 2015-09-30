@@ -155,14 +155,28 @@ namespace Registry.Viewport
                 {
                     Name = "registration_num",
                     HeaderText = @"№ договора найма",
-                    Width = 130,
+                    Width = 150,
+                    SortMode = DataGridViewColumnSortMode.NotSortable
+                };
+                var registrationDateColumn = new DataGridViewTextBoxColumn
+                {
+                    Name = "registration_date",
+                    HeaderText = @"Дата договора найма",
+                    Width = 150,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
                 var residenceWarrantNumColumn = new DataGridViewTextBoxColumn
                 {
                     Name = "residence_warrant_num",
                     HeaderText = @"№ ордера найма",
-                    Width = 130,
+                    Width = 150,
+                    SortMode = DataGridViewColumnSortMode.NotSortable
+                };
+                var residenceWarrantDateColumn = new DataGridViewTextBoxColumn
+                {
+                    Name = "residence_warrant_date",
+                    HeaderText = @"Дата ордера найма",
+                    Width = 150,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
                 var tenantColumn = new DataGridViewTextBoxColumn
@@ -173,7 +187,9 @@ namespace Registry.Viewport
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
                 dataGridView.Columns.Add(registrationNumColumn);
+                dataGridView.Columns.Add(registrationDateColumn);
                 dataGridView.Columns.Add(residenceWarrantNumColumn);
+                dataGridView.Columns.Add(residenceWarrantDateColumn);
                 dataGridView.Columns.Add(tenantColumn);
                 _premisesTenanciesInfo.RefreshEvent += _premisesTenanciesInfo_RefreshEvent;
             }
@@ -586,15 +602,30 @@ namespace Registry.Viewport
                     }
                     break;
                 case "registration_num":
+                case "registration_date":
                 case "residence_warrant_num":
+                case "residence_warrant_date":
                 case "tenant":
                     var tenancyInfoRows =
                         from tenancyInfoRow in DataModelHelper.FilterRows(_premisesTenanciesInfo.Select())
                         where tenancyInfoRow.Field<int>("id_premises") == (int?) row["id_premises"]
                         orderby tenancyInfoRow.Field<DateTime?>("registration_date") descending 
                         select tenancyInfoRow;
-                    if (tenancyInfoRows.Any())
-                        e.Value = tenancyInfoRows.First().Field<object>(dataGridView.Columns[e.ColumnIndex].Name);
+                    if (!tenancyInfoRows.Any())
+                        return;
+                    switch (dataGridView.Columns[e.ColumnIndex].Name)
+                    {
+                        case "registration_date":
+                        case "residence_warrant_date":
+                            var date = tenancyInfoRows.First().Field<DateTime?>(dataGridView.Columns[e.ColumnIndex].Name);
+                            e.Value =date != null ? date.Value.ToString("dd.MM.yyyy") : null;
+                            break;
+                        case "registration_num":
+                        case "residence_warrant_num":
+                        case "tenant":
+                                e.Value = tenancyInfoRows.First().Field<string>(dataGridView.Columns[e.ColumnIndex].Name);
+                            break;
+                    }
                     break;
             }
         }

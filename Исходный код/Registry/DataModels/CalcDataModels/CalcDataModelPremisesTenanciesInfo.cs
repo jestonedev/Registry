@@ -28,6 +28,7 @@ namespace Registry.CalcDataModels
             table.Columns.Add("registration_num").DataType = typeof(string);
             table.Columns.Add("registration_date").DataType = typeof(DateTime);
             table.Columns.Add("residence_warrant_num").DataType = typeof(string);
+            table.Columns.Add("residence_warrant_date").DataType = typeof(DateTime);
             table.Columns.Add("tenant").DataType = typeof(string);
             return table;
         }
@@ -64,6 +65,7 @@ namespace Registry.CalcDataModels
                     registration_num = processRow.Field<string>("registration_num"),
                     registration_date = processRow.Field<DateTime?>("registration_date"),
                     residence_warrant_num = processRow.Field<string>("residence_warrant_num"),
+                    residence_warrant_date = processRow.Field<DateTime?>("residence_warrant_date"),
                     tenant = pTenantsRow != null ? pTenantsRow.tenant : null
                 };
             var result = from processRow in tenancyProcessesWithTenants
@@ -75,6 +77,7 @@ namespace Registry.CalcDataModels
                                 processRow.registration_num,
                                 processRow.registration_date,
                                 processRow.residence_warrant_num,
+                                processRow.residence_warrant_date,
                                 processRow.tenant
                             };
             // Заполняем таблицу изменений
@@ -82,7 +85,7 @@ namespace Registry.CalcDataModels
             table.BeginLoadData();
             result.ToList().ForEach(x =>
             {
-                table.Rows.Add(x.id_premises, x.registration_num, x.registration_date, x.residence_warrant_num, x.tenant);
+                table.Rows.Add(x.id_premises, x.registration_num, x.registration_date, x.residence_warrant_num, x.residence_warrant_date, x.tenant);
             });
             table.EndLoadData();
             // Возвращаем результат
