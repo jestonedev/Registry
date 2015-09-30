@@ -37,6 +37,7 @@ namespace Registry.Viewport
         private PremisesTypesDataModel premises_types;
         private ObjectStatesDataModel object_states;
         private CalcDataModelPremisesCurrentFunds premises_funds;
+        private CalcDataModelPremisesTenanciesInfo _premisesTenanciesInfo;
         private FundTypesDataModel fund_types;
         #endregion Models
 
@@ -139,13 +140,27 @@ namespace Registry.Viewport
             fund_types = FundTypesDataModel.GetInstance();
 
             // Ожидаем дозагрузки данных, если это необходимо
-            premises.Select();
             kladr.Select();
             buildings.Select();
             premises_types.Select();
             object_states.Select();
             premises_funds.Select();
             fund_types.Select();
+
+            if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
+            {
+                _premisesTenanciesInfo = CalcDataModelPremisesTenanciesInfo.GetInstance();
+                _premisesTenanciesInfo.Select();
+                var tenancyInfoColumn = new DataGridViewTextBoxColumn
+                {
+                    Name = "tenancy_info",
+                    HeaderText = @"Информация по найму",
+                    Width = 800,
+                    SortMode = DataGridViewColumnSortMode.NotSortable
+                };
+                _premisesTenanciesInfo.RefreshEvent += _premisesTenanciesInfo_RefreshEvent;
+                dataGridView.Columns.Add(tenancyInfoColumn);
+            }
 
             var ds = DataSetManager.DataSet;
 
@@ -215,6 +230,20 @@ namespace Registry.Viewport
                 CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, true);
                 CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, true);
             }
+        }
+
+        public override void Close()
+        {
+            if (_premisesTenanciesInfo != null)
+                _premisesTenanciesInfo.RefreshEvent -= _premisesTenanciesInfo_RefreshEvent;
+            base.Close();
+        }
+
+        public override void ForceClose()
+        {
+            if (_premisesTenanciesInfo != null)
+                _premisesTenanciesInfo.RefreshEvent -= _premisesTenanciesInfo_RefreshEvent;
+            base.ForceClose();
         }
 
         public override bool CanSearchRecord()
@@ -501,8 +530,8 @@ namespace Registry.Viewport
         {
             if (v_premises.Count <= e.RowIndex) return;
             var row = ((DataRowView)v_premises[e.RowIndex]);
-            var building_row = buildings.Select().Rows.Find(row["id_building"]);
-            if (building_row == null)
+            var buildingRow = buildings.Select().Rows.Find(row["id_building"]);
+            if (buildingRow == null)
                 return;
             switch (dataGridView.Columns[e.ColumnIndex].Name)
             {
@@ -510,14 +539,14 @@ namespace Registry.Viewport
                     e.Value = row["id_premises"];
                     break;
                 case "id_street":
-                    var kladr_row = kladr.Select().Rows.Find(building_row["id_street"]);
-                    string street_name = null;
-                    if (kladr_row != null)
-                        street_name = kladr_row["street_name"].ToString();
-                    e.Value = street_name;
+                    var kladrRow = kladr.Select().Rows.Find(buildingRow["id_street"]);
+                    string streetName = null;
+                    if (kladrRow != null)
+                        streetName = kladrRow["street_name"].ToString();
+                    e.Value = streetName;
                     break;
                 case "house":
-                    e.Value = building_row["house"];
+                    e.Value = buildingRow["house"];
                     break;
                 case "premises_num":
                     e.Value = row["premises_num"];
@@ -529,17 +558,22 @@ namespace Registry.Viewport
                     e.Value = row["total_area"];
                     break;
                 case "id_state":
-                    var state_row = object_states.Select().Rows.Find(row["id_state"]);
-                    if (state_row != null)
-                        e.Value = state_row["state_female"];
+                    var stateRow = object_states.Select().Rows.Find(row["id_state"]);
+                    if (stateRow != null)
+                        e.Value = stateRow["state_female"];
                     break;
                 case "current_fund":
                     if ((new object[] { 1, 4, 5, 9 }).Contains(row["id_state"]))
                     {
-                        var fund_row = premises_funds.Select().Rows.Find(row["id_premises"]);
-                        if (fund_row != null)
-                            e.Value = fund_types.Select().Rows.Find(fund_row["id_fund_type"])["fund_type"];
+                        var fundRow = premises_funds.Select().Rows.Find(row["id_premises"]);
+                        if (fundRow != null)
+                            e.Value = fund_types.Select().Rows.Find(fundRow["id_fund_type"])["fund_type"];
                     }
+                    break;
+                case "tenancy_info":
+                    var tenancyInfoRow = _premisesTenanciesInfo.Select().Rows.Find(row["id_premises"]);
+                    if (tenancyInfoRow != null)
+                        e.Value = tenancyInfoRow["tenancy_info"];
                     break;
             }
         }
@@ -582,6 +616,11 @@ namespace Registry.Viewport
                 if (dataGridView.Columns["id_street"].AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
                     dataGridView.Columns["id_street"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
+        }
+
+        void _premisesTenanciesInfo_RefreshEvent(object sender, EventArgs e)
+        {
+            dataGridView.Refresh();
         }
 
         private void InitializeComponent()

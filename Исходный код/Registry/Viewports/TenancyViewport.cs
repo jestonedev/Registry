@@ -510,7 +510,7 @@ namespace Registry.Viewport
                 }
             }
             var tenancyFromView = TenancyFromView();
-            if (tenancy.RegistrationNum != tenancyFromView.RegistrationNum)
+            if (tenancy.RegistrationNum != null && tenancy.RegistrationNum != tenancyFromView.RegistrationNum)
                 if (DataModelHelper.TenancyProcessesDuplicateCount(tenancy) != 0 &&
                     MessageBox.Show("В базе уже имеется договор с таким номером. Все равно продолжить сохранение?", "Внимание",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
@@ -974,6 +974,8 @@ namespace Registry.Viewport
                 viewportState = ViewportState.ReadState;
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.ForceCloseDetachedViewports();
+                if (CalcDataModelPremisesTenanciesInfo.HasInstance())
+                    CalcDataModelPremisesTenanciesInfo.GetInstance().Refresh(EntityType.Unknown, null, true);
             }
         }
 
@@ -1139,6 +1141,8 @@ namespace Registry.Viewport
             viewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
+            if (CalcDataModelPremisesTenanciesInfo.HasInstance())
+                CalcDataModelPremisesTenanciesInfo.GetInstance().Refresh(EntityType.Unknown, null, true);
         }
 
         // Метод копирует зависимые данные по процессу найма
