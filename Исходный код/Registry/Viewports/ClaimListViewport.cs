@@ -761,7 +761,6 @@ namespace Registry.Viewport
                 v_claims.Position = dataGridViewClaims.SelectedRows[0].Index;
             else
                 v_claims.Position = -1;
-            dataGridViewClaims.Refresh();
         }
 
         void dataGridViewClaims_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)

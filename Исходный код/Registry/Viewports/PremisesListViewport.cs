@@ -151,15 +151,31 @@ namespace Registry.Viewport
             {
                 _premisesTenanciesInfo = CalcDataModelPremisesTenanciesInfo.GetInstance();
                 _premisesTenanciesInfo.Select();
-                var tenancyInfoColumn = new DataGridViewTextBoxColumn
+                var registrationNumColumn = new DataGridViewTextBoxColumn
                 {
-                    Name = "tenancy_info",
-                    HeaderText = @"Информация по найму",
-                    Width = 800,
+                    Name = "registration_num",
+                    HeaderText = @"№ договора найма",
+                    Width = 130,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
+                var residenceWarrantNumColumn = new DataGridViewTextBoxColumn
+                {
+                    Name = "residence_warrant_num",
+                    HeaderText = @"№ ордера найма",
+                    Width = 130,
+                    SortMode = DataGridViewColumnSortMode.NotSortable
+                };
+                var tenantColumn = new DataGridViewTextBoxColumn
+                {
+                    Name = "tenant",
+                    HeaderText = @"Наниматель",
+                    Width = 250,
+                    SortMode = DataGridViewColumnSortMode.NotSortable
+                };
+                dataGridView.Columns.Add(registrationNumColumn);
+                dataGridView.Columns.Add(residenceWarrantNumColumn);
+                dataGridView.Columns.Add(tenantColumn);
                 _premisesTenanciesInfo.RefreshEvent += _premisesTenanciesInfo_RefreshEvent;
-                dataGridView.Columns.Add(tenancyInfoColumn);
             }
 
             var ds = DataSetManager.DataSet;
@@ -523,7 +539,6 @@ namespace Registry.Viewport
                 v_premises.Position = dataGridView.SelectedRows[0].Index;
             else
                 v_premises.Position = -1;
-            dataGridView.Refresh();
         }
 
         void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
@@ -570,10 +585,16 @@ namespace Registry.Viewport
                             e.Value = fund_types.Select().Rows.Find(fundRow["id_fund_type"])["fund_type"];
                     }
                     break;
-                case "tenancy_info":
-                    var tenancyInfoRow = _premisesTenanciesInfo.Select().Rows.Find(row["id_premises"]);
-                    if (tenancyInfoRow != null)
-                        e.Value = tenancyInfoRow["tenancy_info"];
+                case "registration_num":
+                case "residence_warrant_num":
+                case "tenant":
+                    var tenancyInfoRows =
+                        from tenancyInfoRow in DataModelHelper.FilterRows(_premisesTenanciesInfo.Select())
+                        where tenancyInfoRow.Field<int>("id_premises") == (int?) row["id_premises"]
+                        orderby tenancyInfoRow.Field<DateTime?>("registration_date") descending 
+                        select tenancyInfoRow;
+                    if (tenancyInfoRows.Any())
+                        e.Value = tenancyInfoRows.First().Field<object>(dataGridView.Columns[e.ColumnIndex].Name);
                     break;
             }
         }
@@ -588,20 +609,24 @@ namespace Registry.Viewport
             if (v_premises.Position >= dataGridView.RowCount)
             {
                 dataGridView.Rows[dataGridView.RowCount - 1].Selected = true;
-                dataGridView.CurrentCell = dataGridView.Rows[dataGridView.RowCount - 1].Cells[0];
+                if (dataGridView.CurrentCell != null)
+                    dataGridView.CurrentCell = dataGridView.Rows[dataGridView.RowCount - 1].Cells[dataGridView.CurrentCell.ColumnIndex];
+                else
+                    dataGridView.CurrentCell = dataGridView.Rows[dataGridView.RowCount - 1].Cells[0];
             }
             else
             {
                 dataGridView.Rows[v_premises.Position].Selected = true;
-                dataGridView.CurrentCell = dataGridView.Rows[v_premises.Position].Cells[0];
+                if (dataGridView.CurrentCell != null)
+                    dataGridView.CurrentCell = dataGridView.Rows[v_premises.Position].Cells[dataGridView.CurrentCell.ColumnIndex];
+                else
+                    dataGridView.CurrentCell = dataGridView.Rows[v_premises.Position].Cells[0];
             }
-            if (Selected)
-            {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
-                MenuCallback.DocumentsStateUpdate();
-            }
+            if (!Selected) return;
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.EditingStateUpdate();
+            MenuCallback.RelationsStateUpdate();
+            MenuCallback.DocumentsStateUpdate();
         }
 
         private void dataGridView_Resize(object sender, EventArgs e)
