@@ -918,7 +918,6 @@ namespace Registry.Viewport
                 v_premises.Position = -1;
             id_expanded = -1;
             dataGridView.CollapseDetails();
-            dataGridView.Refresh();
         }
 
         void dataGridView_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)

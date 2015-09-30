@@ -539,7 +539,6 @@ namespace Registry.Viewport
                 v_premises.Position = dataGridView.SelectedRows[0].Index;
             else
                 v_premises.Position = -1;
-            dataGridView.Refresh();
         }
 
         void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
@@ -610,12 +609,18 @@ namespace Registry.Viewport
             if (v_premises.Position >= dataGridView.RowCount)
             {
                 dataGridView.Rows[dataGridView.RowCount - 1].Selected = true;
-                dataGridView.CurrentCell = dataGridView.Rows[dataGridView.RowCount - 1].Cells[dataGridView.CurrentCell.ColumnIndex];
+                if (dataGridView.CurrentCell != null)
+                    dataGridView.CurrentCell = dataGridView.Rows[dataGridView.RowCount - 1].Cells[dataGridView.CurrentCell.ColumnIndex];
+                else
+                    dataGridView.CurrentCell = dataGridView.Rows[dataGridView.RowCount - 1].Cells[0];
             }
             else
             {
                 dataGridView.Rows[v_premises.Position].Selected = true;
-                dataGridView.CurrentCell = dataGridView.Rows[v_premises.Position].Cells[dataGridView.CurrentCell.ColumnIndex];
+                if (dataGridView.CurrentCell != null)
+                    dataGridView.CurrentCell = dataGridView.Rows[v_premises.Position].Cells[dataGridView.CurrentCell.ColumnIndex];
+                else
+                    dataGridView.CurrentCell = dataGridView.Rows[v_premises.Position].Cells[0];
             }
             if (!Selected) return;
             MenuCallback.NavigationStateUpdate();

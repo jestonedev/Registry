@@ -256,6 +256,8 @@ namespace Registry.DataModels
                 case "tenancy_persons":
                     if (CalcDataModelTenancyAggregated.HasInstance())
                         CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate = true;
+                    if (CalcDataModelPremisesTenanciesInfo.HasInstance())
+                        CalcDataModelPremisesTenanciesInfo.GetInstance().DefferedUpdate = true;
                     break;
                 case "resettle_buildings_from_assoc":
                 case "resettle_buildings_to_assoc":
