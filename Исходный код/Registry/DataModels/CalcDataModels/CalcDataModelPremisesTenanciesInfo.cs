@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.IO;
@@ -24,8 +25,10 @@ namespace Registry.CalcDataModels
         {
             var table = new DataTable(tableName) {Locale = CultureInfo.InvariantCulture};
             table.Columns.Add("id_premises").DataType = typeof(int);
-            table.Columns.Add("tenancy_info").DataType = typeof(string);
-            table.PrimaryKey = new[] { table.Columns["id_premises"] };
+            table.Columns.Add("registration_num").DataType = typeof(string);
+            table.Columns.Add("registration_date").DataType = typeof(DateTime);
+            table.Columns.Add("residence_warrant_num").DataType = typeof(string);
+            table.Columns.Add("tenant").DataType = typeof(string);
             return table;
         }
 
@@ -33,46 +36,53 @@ namespace Registry.CalcDataModels
         {
             DMLoadState = DataModelLoadState.Loading;
             if (e == null)
-                throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelPremisesTenanciesRegNumbers");
-            var config = (CalcAsyncConfig)e.Argument;
+                throw new DataModelException(
+                    "Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelPremisesTenanciesRegNumbers");
+            var config = (CalcAsyncConfig) e.Argument;
             // Фильтруем удаленные строки
             var tenancyPremises = DataModelHelper.FilterRows(TenancyPremisesAssocDataModel.GetInstance().Select());
             var tenancyProcesses = DataModelHelper.FilterRows(TenancyProcessesDataModel.GetInstance().Select());
+            var tenancyPersons = DataModelHelper.FilterRows(TenancyPersonsDataModel.GetInstance().Select());
             // Вычисляем агрегационную информацию
-            var regNumbers = from tenancyPremisesRow in tenancyPremises
-                         join tenancyProcessesRow in tenancyProcesses
-                            on tenancyPremisesRow.Field<int>("id_process") equals tenancyProcessesRow.Field<int>("id_process")
-                         where tenancyProcessesRow.Field<string>("registration_num") != null
-                        group tenancyProcessesRow.Field<string>("registration_num") by tenancyPremisesRow.Field<int>("id_premises") into gs
-                         select new
-                         {
-                             id_premises = gs.Key,
-                             tenancy_info = "Договоры: "+gs.Aggregate((acc, val) => val == "" ? acc : acc + ", " + val)
-                         };
-            var orders = from tenancyPremisesRow in tenancyPremises
-                             join tenancyProcessesRow in tenancyProcesses
-                                on tenancyPremisesRow.Field<int>("id_process") equals tenancyProcessesRow.Field<int>("id_process")
-                         where tenancyProcessesRow.Field<string>("residence_warrant_num") != null
-                         group tenancyProcessesRow.Field<string>("residence_warrant_num") by tenancyPremisesRow.Field<int>("id_premises") into gs
-                             select new
-                             {
-                                 id_premises = gs.Key,
-                                 tenancy_info = "Ордера: " + gs.Aggregate((acc, val) => val == "" ? acc : acc + ", " + val)
-                             };
-            var result = from row in regNumbers.Union(orders)
-                group row.tenancy_info by row.id_premises
-                into gs
+            var tenants = from row in tenancyPersons
+                where row.Field<int?>("id_kinship") == 1
                 select new
                 {
-                    id_premises = gs.Key,
-                    tenancy_info = gs.Aggregate((acc, val) => acc + "; " + val)
+                    id_process = row.Field<int>("id_process"),
+                    tenant =
+                        row.Field<string>("surname") +
+                        (row.Field<string>("name") != null ? " " + row.Field<string>("name") : "") +
+                        (row.Field<string>("patronymic") != null ? " " + row.Field<string>("patronymic") : "")
                 };
+            var tenancyProcessesWithTenants = from processRow in tenancyProcesses
+                join tenantRow in tenants
+                    on processRow.Field<int>("id_process") equals tenantRow.id_process into pTenants
+                from pTenantsRow in pTenants.DefaultIfEmpty()
+                select new
+                {
+                    id_process = processRow.Field<int>("id_process"),
+                    registration_num = processRow.Field<string>("registration_num"),
+                    registration_date = processRow.Field<DateTime?>("registration_date"),
+                    residence_warrant_num = processRow.Field<string>("residence_warrant_num"),
+                    tenant = pTenantsRow != null ? pTenantsRow.tenant : null
+                };
+            var result = from processRow in tenancyProcessesWithTenants
+                            join tenancyPremisesRow in tenancyPremises
+                            on processRow.id_process equals tenancyPremisesRow.Field<int>("id_process")
+                            select new
+                            {
+                                id_premises = tenancyPremisesRow.Field<int>("id_premises"),
+                                processRow.registration_num,
+                                processRow.registration_date,
+                                processRow.residence_warrant_num,
+                                processRow.tenant
+                            };
             // Заполняем таблицу изменений
             var table = InitializeTable();
             table.BeginLoadData();
             result.ToList().ForEach(x =>
             {
-                table.Rows.Add(x.id_premises, x.tenancy_info);
+                table.Rows.Add(x.id_premises, x.registration_num, x.registration_date, x.residence_warrant_num, x.tenant);
             });
             table.EndLoadData();
             // Возвращаем результат
