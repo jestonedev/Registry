@@ -620,17 +620,15 @@ namespace Registry
 
         private void ribbonOrbMenuItemPremises_Click(object sender, EventArgs e)
         {
-            string filter = "";
-            IEnumerable<int> municipal_ids = DataModelHelper.ObjectIdsByStates(Entities.EntityType.Premise, new int[] { 4, 5 });
-            string ids = "";
-            foreach (int id in municipal_ids)
-                ids += id.ToString(CultureInfo.InvariantCulture) + ",";
-            ids = ids.TrimEnd(new char[] { ',' });
-            filter += "(id_state IN (4, 5) OR (id_state = 1 AND id_premises IN (0" + ids + ")))";
-            Viewport.Viewport viewport = ViewportFactory.CreateViewport(this, ViewportType.PremisesListViewport);
+            var filter = "";
+            var municipal_ids = DataModelHelper.ObjectIdsByStates(Entities.EntityType.Premise, new[] { 4, 5, 9 });
+            var ids = municipal_ids.Aggregate("", (current, id) => current + (id.ToString(CultureInfo.InvariantCulture) + ","));
+            ids = ids.TrimEnd(',');
+            filter += "(id_state IN (4, 5, 9) OR (id_state = 1 AND id_premises IN (0" + ids + ")))";
+            var viewport = ViewportFactory.CreateViewport(this, ViewportType.PremisesListViewport);
             viewport.DynamicFilter = filter;
-            if ((viewport as IMenuController).CanLoadData())
-                (viewport as IMenuController).LoadData();
+            if (((IMenuController) viewport).CanLoadData())
+                ((IMenuController) viewport).LoadData();
             AddViewport(viewport);
             ChangeMainMenuState();
             StatusBarStateUpdate();

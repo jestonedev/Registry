@@ -26,6 +26,7 @@ namespace Registry.Entities
         public int? StartupYear {get;set;}
         public bool? Improvement {get;set;}
         public bool? Elevator { get; set; }
+        public bool? RubbishChute { get; set; }
         public double? Wear { get; set; }
         public DateTime? StateDate { get; set; }
 
@@ -65,6 +66,7 @@ namespace Registry.Entities
                 first.StartupYear == second.StartupYear &&
                 first.Improvement == second.Improvement &&
                 first.Elevator == second.Elevator &&
+                first.RubbishChute == second.RubbishChute &&
                 first.IdState == second.IdState &&
                 first.Wear == second.Wear &&
                 first.StateDate == second.StateDate;

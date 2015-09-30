@@ -1,11 +1,15 @@
-﻿namespace Registry.SearchForms
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+using VIBlend.WinForms.Controls;
+
+namespace Registry.SearchForms
 {
     partial class SimpleSearchBuildingForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -28,7 +32,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SimpleSearchBuildingForm));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(SimpleSearchBuildingForm));
             this.textBoxCriteria = new System.Windows.Forms.TextBox();
             this.comboBoxCriteriaType = new System.Windows.Forms.ComboBox();
             this.vButtonCancel = new VIBlend.WinForms.Controls.vButton();
@@ -125,10 +129,10 @@
 
         #endregion
 
-        private VIBlend.WinForms.Controls.vButton vButtonCancel;
-        private VIBlend.WinForms.Controls.vButton vButtonSearch;
-        private System.Windows.Forms.TextBox textBoxCriteria;
-        private System.Windows.Forms.ComboBox comboBoxCriteriaType;
-        private System.Windows.Forms.CheckBox checkBoxMunicipalOnly;
+        private vButton vButtonCancel;
+        private vButton vButtonSearch;
+        private TextBox textBoxCriteria;
+        private ComboBox comboBoxCriteriaType;
+        private CheckBox checkBoxMunicipalOnly;
     }
 }

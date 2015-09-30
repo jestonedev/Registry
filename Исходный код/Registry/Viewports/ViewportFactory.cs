@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Globalization;
 
 namespace Registry.Viewport
@@ -74,7 +71,7 @@ namespace Registry.Viewport
                     return new ResettlePremisesViewport(menuCallback);
             }
             throw new ViewportException(
-                String.Format(CultureInfo.InvariantCulture, "В фабрику ViewportFactory передан неизвестный тип {0}", viewportType.ToString()));
+                string.Format(CultureInfo.InvariantCulture, "В фабрику ViewportFactory передан неизвестный тип {0}", viewportType));
         }
     }
 }

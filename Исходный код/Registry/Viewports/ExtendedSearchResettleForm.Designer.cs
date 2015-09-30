@@ -1,11 +1,15 @@
-﻿namespace Registry.SearchForms
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+using VIBlend.WinForms.Controls;
+
+namespace Registry.SearchForms
 {
     partial class ExtendedSearchResettleForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -28,7 +32,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExtendedSearchResettleForm));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(ExtendedSearchResettleForm));
             this.vButtonCancel = new VIBlend.WinForms.Controls.vButton();
             this.vButtonSearch = new VIBlend.WinForms.Controls.vButton();
             this.textBoxPersonSNP = new System.Windows.Forms.TextBox();
@@ -492,41 +496,41 @@
 
         #endregion
 
-        private VIBlend.WinForms.Controls.vButton vButtonCancel;
-        private VIBlend.WinForms.Controls.vButton vButtonSearch;
-        private System.Windows.Forms.TextBox textBoxPersonSNP;
-        private System.Windows.Forms.CheckBox checkBoxPersonSNPEnable;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.NumericUpDown numericUpDownIDResettle;
-        private System.Windows.Forms.CheckBox checkBoxIDResettleEnable;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.CheckBox checkBoxResettleDateEnable;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.DateTimePicker dateTimePickerResettleDate;
-        private System.Windows.Forms.ComboBox comboBoxResettleDateExpr;
-        private System.Windows.Forms.ComboBox comboBoxRegionTo;
-        private System.Windows.Forms.CheckBox checkBoxRegionToEnable;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBoxHouseTo;
-        private System.Windows.Forms.CheckBox checkBoxPremisesNumToEnable;
-        private System.Windows.Forms.TextBox textBoxPremisesNumTo;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.CheckBox checkBoxHouseToEnable;
-        private System.Windows.Forms.CheckBox checkBoxStreetToEnable;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox comboBoxStreetTo;
-        private System.Windows.Forms.ComboBox comboBoxStreetFrom;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.CheckBox checkBoxStreetFromEnable;
-        private System.Windows.Forms.CheckBox checkBoxHouseFromEnable;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.TextBox textBoxPremisesNumFrom;
-        private System.Windows.Forms.CheckBox checkBoxPremisesNumFromEnable;
-        private System.Windows.Forms.TextBox textBoxHouseFrom;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.CheckBox checkBoxRegionFromEnable;
-        private System.Windows.Forms.ComboBox comboBoxRegionFrom;
+        private vButton vButtonCancel;
+        private vButton vButtonSearch;
+        private TextBox textBoxPersonSNP;
+        private CheckBox checkBoxPersonSNPEnable;
+        private Label label5;
+        private NumericUpDown numericUpDownIDResettle;
+        private CheckBox checkBoxIDResettleEnable;
+        private Label label9;
+        private CheckBox checkBoxResettleDateEnable;
+        private Label label12;
+        private DateTimePicker dateTimePickerResettleDate;
+        private ComboBox comboBoxResettleDateExpr;
+        private ComboBox comboBoxRegionTo;
+        private CheckBox checkBoxRegionToEnable;
+        private Label label1;
+        private TextBox textBoxHouseTo;
+        private CheckBox checkBoxPremisesNumToEnable;
+        private TextBox textBoxPremisesNumTo;
+        private Label label2;
+        private CheckBox checkBoxHouseToEnable;
+        private CheckBox checkBoxStreetToEnable;
+        private Label label3;
+        private Label label4;
+        private ComboBox comboBoxStreetTo;
+        private ComboBox comboBoxStreetFrom;
+        private Label label11;
+        private Label label10;
+        private CheckBox checkBoxStreetFromEnable;
+        private CheckBox checkBoxHouseFromEnable;
+        private Label label7;
+        private TextBox textBoxPremisesNumFrom;
+        private CheckBox checkBoxPremisesNumFromEnable;
+        private TextBox textBoxHouseFrom;
+        private Label label8;
+        private CheckBox checkBoxRegionFromEnable;
+        private ComboBox comboBoxRegionFrom;
     }
 }

@@ -250,6 +250,8 @@ namespace Registry.DataModels
                 case "tenancy_sub_premises_assoc":
                     if (CalcDataModelTenancyAggregated.HasInstance())
                         CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate = true;
+                    if (CalcDataModelPremisesTenanciesInfo.HasInstance())
+                        CalcDataModelPremisesTenanciesInfo.GetInstance().DefferedUpdate = true;
                     break;
                 case "tenancy_persons":
                     if (CalcDataModelTenancyAggregated.HasInstance())
@@ -264,6 +266,11 @@ namespace Registry.DataModels
                 case "resettle_persons":
                     if (CalcDataModelResettleAggregated.HasInstance())
                         CalcDataModelResettleAggregated.GetInstance().DefferedUpdate = true;
+                    break;
+                case "tenancy_processes":
+                case "tenancy_reasons":
+                    if (CalcDataModelPremisesTenanciesInfo.HasInstance())
+                        CalcDataModelPremisesTenanciesInfo.GetInstance().DefferedUpdate = true;
                     break;
             }
         }

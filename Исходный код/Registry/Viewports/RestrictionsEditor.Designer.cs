@@ -1,11 +1,15 @@
-﻿namespace Registry.Viewport
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+using VIBlend.WinForms.Controls;
+
+namespace Registry.Viewport
 {
     partial class RestrictionsEditor
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -28,7 +32,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RestrictionsEditor));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(RestrictionsEditor));
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxRestrictionNumber = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -168,15 +172,15 @@
 
         #endregion
 
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBoxRestrictionNumber;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.DateTimePicker dateTimePickerRestrictionDate;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.TextBox textBoxRestrictionDescription;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.ComboBox comboBoxIdRestrictionType;
-        private VIBlend.WinForms.Controls.vButton vButtonCancel;
-        private VIBlend.WinForms.Controls.vButton vButtonSave;
+        private Label label1;
+        private TextBox textBoxRestrictionNumber;
+        private Label label2;
+        private DateTimePicker dateTimePickerRestrictionDate;
+        private Label label3;
+        private TextBox textBoxRestrictionDescription;
+        private Label label4;
+        private ComboBox comboBoxIdRestrictionType;
+        private vButton vButtonCancel;
+        private vButton vButtonSave;
     }
 }

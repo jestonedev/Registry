@@ -1,11 +1,15 @@
-﻿namespace Registry.SearchForms
+﻿using System.ComponentModel;
+using System.Windows.Forms;
+using VIBlend.WinForms.Controls;
+
+namespace Registry.SearchForms
 {
     partial class ExtendedSearchBuildingForm
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -28,7 +32,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExtendedSearchBuildingForm));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(ExtendedSearchBuildingForm));
             this.numericUpDownIDBuilding = new System.Windows.Forms.NumericUpDown();
             this.checkBoxIDBuildingEnable = new System.Windows.Forms.CheckBox();
             this.label9 = new System.Windows.Forms.Label();
@@ -585,48 +589,48 @@
 
         #endregion
 
-        private VIBlend.WinForms.Controls.vButton vButtonSearch;
-        private VIBlend.WinForms.Controls.vButton vButtonCancel;
-        private System.Windows.Forms.ComboBox comboBoxStreet;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBoxHouse;
-        private System.Windows.Forms.NumericUpDown numericUpDownFloors;
-        private System.Windows.Forms.CheckBox checkBoxStreetEnable;
-        private System.Windows.Forms.CheckBox checkBoxHouseEnable;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.CheckBox checkBoxFloorsEnable;
-        private System.Windows.Forms.CheckBox checkBoxCadastralNumEnable;
-        private System.Windows.Forms.TextBox textBoxCadastralNum;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.CheckBox checkBoxStartupYearEnable;
-        private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.NumericUpDown numericUpDownStartupYear;
-        private System.Windows.Forms.CheckBox checkBoxFundTypeEnable;
-        private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.ComboBox comboBoxFundType;
-        private System.Windows.Forms.CheckBox checkBoxElevator;
-        private System.Windows.Forms.CheckBox checkBoxElevatorEnable;
-        private System.Windows.Forms.CheckBox checkBoxImprovementEnable;
-        private System.Windows.Forms.CheckBox checkBoxImprovement;
-        private System.Windows.Forms.ComboBox comboBoxState;
-        private System.Windows.Forms.CheckBox checkBoxStateEnable;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.ComboBox comboBoxRegion;
-        private System.Windows.Forms.CheckBox checkBoxRegionEnable;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.CheckBox checkBoxIDBuildingEnable;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.NumericUpDown numericUpDownIDBuilding;
-        private System.Windows.Forms.CheckBox checkBoxContractNumberEnable;
-        private System.Windows.Forms.TextBox textBoxContractNumber;
-        private System.Windows.Forms.Label label10;
-        private System.Windows.Forms.CheckBox checkBoxTenantSNPEnable;
-        private System.Windows.Forms.TextBox textBoxTenantSNP;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.ComboBox comboBoxOwnershipType;
-        private System.Windows.Forms.CheckBox checkBoxOwnershipTypeEnable;
-        private System.Windows.Forms.Label label12;
+        private vButton vButtonSearch;
+        private vButton vButtonCancel;
+        private ComboBox comboBoxStreet;
+        private Label label1;
+        private Label label2;
+        private TextBox textBoxHouse;
+        private NumericUpDown numericUpDownFloors;
+        private CheckBox checkBoxStreetEnable;
+        private CheckBox checkBoxHouseEnable;
+        private Label label3;
+        private CheckBox checkBoxFloorsEnable;
+        private CheckBox checkBoxCadastralNumEnable;
+        private TextBox textBoxCadastralNum;
+        private Label label4;
+        private CheckBox checkBoxStartupYearEnable;
+        private Label label5;
+        private NumericUpDown numericUpDownStartupYear;
+        private CheckBox checkBoxFundTypeEnable;
+        private Label label6;
+        private ComboBox comboBoxFundType;
+        private CheckBox checkBoxElevator;
+        private CheckBox checkBoxElevatorEnable;
+        private CheckBox checkBoxImprovementEnable;
+        private CheckBox checkBoxImprovement;
+        private ComboBox comboBoxState;
+        private CheckBox checkBoxStateEnable;
+        private Label label7;
+        private ComboBox comboBoxRegion;
+        private CheckBox checkBoxRegionEnable;
+        private Label label8;
+        private CheckBox checkBoxIDBuildingEnable;
+        private Label label9;
+        private NumericUpDown numericUpDownIDBuilding;
+        private CheckBox checkBoxContractNumberEnable;
+        private TextBox textBoxContractNumber;
+        private Label label10;
+        private CheckBox checkBoxTenantSNPEnable;
+        private TextBox textBoxTenantSNP;
+        private Label label11;
+        private ComboBox comboBoxOwnershipType;
+        private CheckBox checkBoxOwnershipTypeEnable;
+        private Label label12;
 
     }
 }

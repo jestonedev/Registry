@@ -31,11 +31,6 @@ namespace Registry.Reporting
             get { return checkBoxHasLighting.Checked; }
         }
 
-        public bool HasChute
-        {
-            get { return checkBoxHasChute.Checked; }
-        }
-
         public bool HasRadio
         {
             get { return checkBoxHasRadio.Checked; }

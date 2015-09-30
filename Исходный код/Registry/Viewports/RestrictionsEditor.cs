@@ -1,16 +1,11 @@
-﻿using Registry.CalcDataModels;
+﻿using System;
+using System.Data;
+using System.Globalization;
+using System.Windows.Forms;
+using Registry.CalcDataModels;
 using Registry.DataModels;
 using Registry.Entities;
 using Security;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
 
 namespace Registry.Viewport
 {
@@ -20,9 +15,9 @@ namespace Registry.Viewport
         private Restriction restriction;
         private ParentTypeEnum parentType;
         private RestrictionsDataModel restrictions = RestrictionsDataModel.GetInstance();
-        private DataModel restriction_assoc = null;
-        private RestrictionTypesDataModel restriction_types = null;
-        private BindingSource v_restriction_types = null;
+        private DataModel restriction_assoc;
+        private RestrictionTypesDataModel restriction_types;
+        private BindingSource v_restriction_types;
 
         public ParentTypeEnum ParentType
         {
@@ -75,7 +70,7 @@ namespace Registry.Viewport
         {
             get
             {
-                Restriction restrictionValue = new Restriction();
+                var restrictionValue = new Restriction();
                 restrictionValue.Date = ViewportHelper.ValueOrNull(dateTimePickerRestrictionDate);
                 restrictionValue.Description = ViewportHelper.ValueOrNull(textBoxRestrictionDescription);
                 restrictionValue.Number = ViewportHelper.ValueOrNull(textBoxRestrictionNumber);
@@ -109,7 +104,7 @@ namespace Registry.Viewport
 
         private bool ValidatePermissions()
         {
-            EntityType entity = EntityType.Unknown;
+            var entity = EntityType.Unknown;
             string fieldName = null;
             if (ParentType == ParentTypeEnum.Building)
             {
@@ -154,10 +149,10 @@ namespace Registry.Viewport
 
         private void vButtonSave_Click(object sender, EventArgs e)
         {
-            Restriction restriction = RestrictionValue;
+            var restriction = RestrictionValue;
             if (!ValidateData(restriction))
                 return;
-            int id_parent = ((ParentType == ParentTypeEnum.Premises) && ParentRow != null) ? (int)ParentRow["id_premises"] :
+            var id_parent = ((ParentType == ParentTypeEnum.Premises) && ParentRow != null) ? (int)ParentRow["id_premises"] :
                         ((ParentType == ParentTypeEnum.Building) && ParentRow != null) ? (int)ParentRow["id_building"] : -1;
             if (state == ViewportState.NewRowState)
             {
@@ -167,34 +162,26 @@ namespace Registry.Viewport
                         "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
-                int id_restriction = RestrictionsDataModel.Insert(restriction, ParentType, id_parent);
+                var id_restriction = RestrictionsDataModel.Insert(restriction, ParentType, id_parent);
                 if (id_restriction == -1)
                     return;
                 restrictions.EditingNewRecord = true;
-                restrictions.Select().Rows.Add(
-                    new object[] { 
-                        id_restriction, 
-                        restriction.IdRestrictionType, 
-                        restriction.Number, 
-                        restriction.Date, 
-                        restriction.Description
-                    }
-                );
-                restriction_assoc.Select().Rows.Add(new object[] { id_parent, id_restriction });
+                restrictions.Select().Rows.Add(id_restriction, restriction.IdRestrictionType, restriction.Number, restriction.Date, restriction.Description);
+                restriction_assoc.Select().Rows.Add(id_parent, id_restriction);
                 restrictions.EditingNewRecord = false;
             } else
             {
                 if (RestrictionsDataModel.Update(restriction) == -1)
                     return;
-                DataRow row = restrictions.Select().Rows.Find(restriction.IdRestriction);
+                var row = restrictions.Select().Rows.Find(restriction.IdRestriction);
                 row["id_restriction_type"] = restriction.IdRestrictionType == null ? DBNull.Value : (object)restriction.IdRestrictionType;
                 row["number"] = restriction.Number == null ? DBNull.Value : (object)restriction.Number;
                 row["date"] = restriction.Date == null ? DBNull.Value : (object)restriction.Date;
                 row["description"] = restriction.Description == null ? DBNull.Value : (object)restriction.Description;
             }
             CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building,
-                    Int32.Parse(ParentRow["id_building"].ToString(), CultureInfo.InvariantCulture), true);
-            DialogResult = System.Windows.Forms.DialogResult.OK;
+                    int.Parse(ParentRow["id_building"].ToString(), CultureInfo.InvariantCulture), true);
+            DialogResult = DialogResult.OK;
         }
 
         private void selectAll_Enter(object sender, EventArgs e)

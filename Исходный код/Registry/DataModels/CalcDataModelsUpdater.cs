@@ -65,6 +65,11 @@ namespace Registry.DataModels
                             CalcDataModelTenancyNotifiesMaxDate.GetInstance().Refresh(EntityType.Unknown, null, true);
                             CalcDataModelTenancyNotifiesMaxDate.GetInstance().DefferedUpdate = false;
                         }
+                        if (CalcDataModelPremisesTenanciesInfo.HasInstance() && CalcDataModelPremisesTenanciesInfo.GetInstance().DefferedUpdate)
+                        {
+                            CalcDataModelPremisesTenanciesInfo.GetInstance().Refresh(EntityType.Unknown, null, true);
+                            CalcDataModelPremisesTenanciesInfo.GetInstance().DefferedUpdate = false;
+                        }
                     }, null);
                     //Обновление делаем примерно каждые CalcDataModelsUpdateTimeout милисекунд
                     Thread.Sleep(RegistrySettings.CalcDataModelsUpdateTimeout);
