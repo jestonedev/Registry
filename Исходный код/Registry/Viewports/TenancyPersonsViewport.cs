@@ -648,6 +648,7 @@ namespace Registry.Viewport
             v_document_issued_by = new BindingSource();
             v_document_issued_by.DataMember = "documents_issued_by";
             v_document_issued_by.DataSource = ds;
+            v_document_issued_by.Sort = "document_issued_by";
 
             v_tenancy_persons = new BindingSource();
             v_tenancy_persons.CurrentItemChanged += v_tenancy_persons_CurrentItemChanged;
