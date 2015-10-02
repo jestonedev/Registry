@@ -487,6 +487,28 @@ namespace Registry.Viewport
             ShowAssocViewport(ViewportType.TenancyListViewport);
         }
 
+        public override bool HasExportToOds()
+        {
+            return true;
+        }
+
+        public override void ExportToOds()
+        {
+            var reporter = ReporterFactory.CreateReporter(ReporterType.ExportReporter);
+            var columnHeaders = dataGridView.Columns.Cast<DataGridViewColumn>().
+                Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnHeader\":\"" + column.HeaderText + "\"}");
+            var columnPatterns = dataGridView.Columns.Cast<DataGridViewColumn>().
+                Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnPattern\":\"$column" + column.DisplayIndex + "$\"}");
+            var arguments = new Dictionary<string, string>
+            {
+                {"type", "2"},
+                {"filter", v_premises.Filter.Trim() == "" ? "(1=1)" : v_premises.Filter},
+                {"columnHeaders", "["+columnHeaders+"]"},
+                {"columnPatterns", "["+columnPatterns+"]"}
+            };
+            reporter.Run(arguments);
+        }
+
         private void ShowAssocViewport(ViewportType viewportType)
         {
             if (v_premises.Position == -1)

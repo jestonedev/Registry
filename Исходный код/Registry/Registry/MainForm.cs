@@ -379,30 +379,25 @@ namespace Registry
         public void DocumentsStateUpdate()
         {
             ribbon1.OrbDropDown.RecentItems.Clear();
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasTenancyContract17xReport())
+            if (dockPanel.ActiveDocument is IMenuController && (dockPanel.ActiveDocument as IMenuController).HasTenancyContract17xReport())
             {
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyContract1711);
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyContract1712);
             }
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasTenancyContractReport())
+            if (dockPanel.ActiveDocument is IMenuController && (dockPanel.ActiveDocument as IMenuController).HasTenancyContractReport())
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyContract);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasTenancyActReport())
+            if (dockPanel.ActiveDocument is IMenuController && (dockPanel.ActiveDocument as IMenuController).HasTenancyActReport())
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyAct);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasTenancyAgreementReport())
+            if (dockPanel.ActiveDocument is IMenuController && (dockPanel.ActiveDocument as IMenuController).HasTenancyAgreementReport())
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyAgreement);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasRegistryExcerptPremiseReport())
+            if (dockPanel.ActiveDocument is IMenuController && (dockPanel.ActiveDocument as IMenuController).HasRegistryExcerptPremiseReport())
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptPremise);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasRegistryExcerptSubPremiseReport())
+            if (dockPanel.ActiveDocument is IMenuController && (dockPanel.ActiveDocument as IMenuController).HasRegistryExcerptSubPremiseReport())
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptSubPremise);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasRegistryExcerptSubPremisesReport())
+            if (dockPanel.ActiveDocument is IMenuController && (dockPanel.ActiveDocument as IMenuController).HasRegistryExcerptSubPremisesReport())
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptSubPremises);
+            if (dockPanel.ActiveDocument is IMenuController && (dockPanel.ActiveDocument as IMenuController).HasExportToOds())
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonExportOds);
         }
 
         private void RibbonTabsStateUpdate()
@@ -921,7 +916,7 @@ namespace Registry
 
         private void ribbonButtonOrbRegistryExcerptPremise_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+            if (!(dockPanel.ActiveDocument is IMenuController))
                 return;
             (dockPanel.ActiveDocument as IMenuController).RegistryExcerptPremiseReportGenerate();
         }
@@ -1020,6 +1015,13 @@ namespace Registry
                 return true;
             }
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void ribbonButtonExportOds_Click(object sender, EventArgs e)
+        {
+            if (!(dockPanel.ActiveDocument is IMenuController))
+                return;
+            (dockPanel.ActiveDocument as IMenuController).ExportToOds();
         }
     }
 }

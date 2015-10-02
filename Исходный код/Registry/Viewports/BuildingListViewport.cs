@@ -10,6 +10,9 @@ using Registry.Entities;
 using Registry.SearchForms;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
+using Registry.Reporting;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Registry.Viewport
 {
@@ -371,6 +374,28 @@ namespace Registry.Viewport
         public override void ShowTenancies()
         {
             ShowAssocViewport(ViewportType.TenancyListViewport);
+        }
+
+        public override bool HasExportToOds()
+        {
+            return true;
+        }
+
+        public override void ExportToOds()
+        {
+            var reporter = ReporterFactory.CreateReporter(ReporterType.ExportReporter);
+            var columnHeaders = dataGridView.Columns.Cast<DataGridViewColumn>().
+                Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnHeader\":\"" + column.HeaderText + "\"}");
+            var columnPatterns = dataGridView.Columns.Cast<DataGridViewColumn>().
+                Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnPattern\":\"$column" + column.DisplayIndex + "$\"}");
+            var arguments = new Dictionary<string, string>
+            {
+                {"type", "1"},
+                {"filter", v_buildings.Filter.Trim() == "" ? "(1=1)" : v_buildings.Filter},
+                {"columnHeaders", "["+columnHeaders+"]"},
+                {"columnPatterns", "["+columnPatterns+"]"}
+            };
+            reporter.Run(arguments);
         }
 
         private void ShowAssocViewport(ViewportType viewportType)

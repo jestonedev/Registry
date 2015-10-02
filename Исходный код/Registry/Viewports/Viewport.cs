@@ -521,5 +521,15 @@ namespace Registry.Viewport
         {
             throw new ViewportException("Не реализовано");
         }
+
+        public virtual bool HasExportToOds()
+        {
+            return false;
+        }
+
+        public virtual void ExportToOds()
+        {
+            throw new ViewportException("Не реализовано");
+        }
     }
 }

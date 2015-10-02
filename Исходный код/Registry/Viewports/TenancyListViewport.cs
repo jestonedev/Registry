@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 using Registry.CalcDataModels;
 using Registry.DataModels;
@@ -440,6 +441,28 @@ namespace Registry.Viewport
         public override void ShowClaims()
         {
             ShowAssocViewport(ViewportType.ClaimListViewport);
+        }
+
+        public override bool HasExportToOds()
+        {
+            return true;
+        }
+
+        public override void ExportToOds()
+        {
+            var reporter = ReporterFactory.CreateReporter(ReporterType.ExportReporter);
+            var columnHeaders = dataGridView.Columns.Cast<DataGridViewColumn>().
+                Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnHeader\":\"" + column.HeaderText + "\"}");
+            var columnPatterns = dataGridView.Columns.Cast<DataGridViewColumn>().
+                Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnPattern\":\"$column" + column.DisplayIndex + "$\"}");
+            var arguments = new Dictionary<string, string>
+            {
+                {"type", "3"},
+                {"filter", v_tenancies.Filter.Trim() == "" ? "(1=1)" : v_tenancies.Filter},
+                {"columnHeaders", "["+columnHeaders+"]"},
+                {"columnPatterns", "["+columnPatterns+"]"}
+            };
+            reporter.Run(arguments);
         }
 
         private void ShowAssocViewport(ViewportType viewportType)
