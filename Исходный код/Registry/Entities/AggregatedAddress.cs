@@ -12,8 +12,8 @@ namespace Registry.Entities
 
         public AggregatedAddress(int idProcess, string address)
         {
-            this.IdProcess = idProcess;
-            this.Address = address;
+            IdProcess = idProcess;
+            Address = address;
         }
     }
 }

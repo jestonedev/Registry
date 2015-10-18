@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Registry.Entities
 {
-    public sealed class ClaimState
+    public sealed class ClaimState : Entity
     {
         public int? IdState { get; set; }
         public int? IdClaim { get; set; }
@@ -23,25 +23,23 @@ namespace Registry.Entities
 
         public bool Equals(ClaimState other)
         {
-            return this.Equals((object)other);
+            return Equals((object)other);
         }
 
         public static bool operator ==(ClaimState first, ClaimState second)
         {
             if ((object)first == null && (object)second == null)
                 return true;
-            else
-                if ((object)first == null || (object)second == null)
-                    return false;
-                else
+            if ((object)first == null || (object)second == null)
+                return false;
             return first.IdState == second.IdState &&
-                first.IdClaim == second.IdClaim &&
-                first.IdStateType == second.IdStateType &&
-                first.DateStartState == second.DateStartState &&
-                first.DateEndState == second.DateEndState &&
-                first.DocumentNum == second.DocumentNum &&
-                first.DocumentDate == second.DocumentDate &&
-                first.Description == second.Description;
+                   first.IdClaim == second.IdClaim &&
+                   first.IdStateType == second.IdStateType &&
+                   first.DateStartState == second.DateStartState &&
+                   first.DateEndState == second.DateEndState &&
+                   first.DocumentNum == second.DocumentNum &&
+                   first.DocumentDate == second.DocumentDate &&
+                   first.Description == second.Description;
         }
 
         public static bool operator !=(ClaimState first, ClaimState second)

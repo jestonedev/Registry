@@ -8,6 +8,7 @@ using Registry.Entities;
 using System.Data.Odbc;
 using System.Windows.Forms;
 using System.Globalization;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {
@@ -60,10 +61,10 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_restriction_type", restriction.IdRestrictionType));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("number", restriction.Number));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date", restriction.Date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", restriction.Description));
+                command.Parameters.Add(DBConnection.CreateParameter("id_restriction_type", restriction.IdRestrictionType));
+                command.Parameters.Add(DBConnection.CreateParameter("number", restriction.Number));
+                command.Parameters.Add(DBConnection.CreateParameter("date", restriction.Date));
+                command.Parameters.Add(DBConnection.CreateParameter("description", restriction.Description));
                 if (parentType == ParentTypeEnum.Building)
                     command_assoc.CommandText = "INSERT INTO restrictions_buildings_assoc (id_building, id_restriction) VALUES (?, ?)";
                 else
@@ -117,11 +118,11 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_restriction_type", restriction.IdRestrictionType));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("number", restriction.Number));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date", restriction.Date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", restriction.Description));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_restriction", restriction.IdRestriction));
+                command.Parameters.Add(DBConnection.CreateParameter("id_restriction_type", restriction.IdRestrictionType));
+                command.Parameters.Add(DBConnection.CreateParameter("number", restriction.Number));
+                command.Parameters.Add(DBConnection.CreateParameter("date", restriction.Date));
+                command.Parameters.Add(DBConnection.CreateParameter("description", restriction.Description));
+                command.Parameters.Add(DBConnection.CreateParameter("id_restriction", restriction.IdRestriction));
                 try
                 {
                     return connection.SqlModifyQuery(command);

@@ -8,6 +8,7 @@ using System.Data.Common;
 using System.Data.Odbc;
 using Registry.Entities;
 using System.Globalization;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {
@@ -60,11 +61,11 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyReason.IdProcess));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_reason_type", tenancyReason.IdReasonType));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_number", tenancyReason.ReasonNumber));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("reason_date", tenancyReason.ReasonDate));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_prepared", tenancyReason.ReasonPrepared));
+                command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancyReason.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter("id_reason_type", tenancyReason.IdReasonType));
+                command.Parameters.Add(DBConnection.CreateParameter("reason_number", tenancyReason.ReasonNumber));
+                command.Parameters.Add(DBConnection.CreateParameter("reason_date", tenancyReason.ReasonDate));
+                command.Parameters.Add(DBConnection.CreateParameter("reason_prepared", tenancyReason.ReasonPrepared));
                 try
                 {
                     connection.SqlBeginTransaction();
@@ -102,12 +103,12 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyReason.IdProcess));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_reason_type", tenancyReason.IdReasonType));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_number", tenancyReason.ReasonNumber));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("reason_date", tenancyReason.ReasonDate));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_prepared", tenancyReason.ReasonPrepared));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_reason", tenancyReason.IdReason));
+                command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancyReason.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter("id_reason_type", tenancyReason.IdReasonType));
+                command.Parameters.Add(DBConnection.CreateParameter("reason_number", tenancyReason.ReasonNumber));
+                command.Parameters.Add(DBConnection.CreateParameter("reason_date", tenancyReason.ReasonDate));
+                command.Parameters.Add(DBConnection.CreateParameter("reason_prepared", tenancyReason.ReasonPrepared));
+                command.Parameters.Add(DBConnection.CreateParameter("id_reason", tenancyReason.IdReason));
 
                 try
                 {

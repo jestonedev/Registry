@@ -8,6 +8,7 @@ using Registry.Entities;
 using System.Data.Common;
 using System.Data.Odbc;
 using System.Globalization;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {
@@ -90,28 +91,28 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyPerson.IdProcess));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_kinship", tenancyPerson.IdKinship));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("surname", tenancyPerson.Surname));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("name", tenancyPerson.Name));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("patronymic", tenancyPerson.Patronymic));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_of_birth", tenancyPerson.DateOfBirth));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_document_type", tenancyPerson.IdDocumentType));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_of_document_issue", tenancyPerson.DateOfDocumentIssue));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("document_num", tenancyPerson.DocumentNum));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("document_seria", tenancyPerson.DocumentSeria));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_document_issued_by", tenancyPerson.IdDocumentIssuedBy));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_id_street", tenancyPerson.RegistrationIdStreet));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_house", tenancyPerson.RegistrationHouse));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_flat", tenancyPerson.RegistrationFlat));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_room", tenancyPerson.RegistrationRoom));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_id_street", tenancyPerson.ResidenceIdStreet));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_house", tenancyPerson.ResidenceHouse));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_flat", tenancyPerson.ResidenceFlat));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_room", tenancyPerson.ResidenceRoom));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("personal_account", tenancyPerson.PersonalAccount));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("include_date", tenancyPerson.IncludeDate));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("exclude_date", tenancyPerson.ExcludeDate));
+                command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancyPerson.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter("id_kinship", tenancyPerson.IdKinship));
+                command.Parameters.Add(DBConnection.CreateParameter("surname", tenancyPerson.Surname));
+                command.Parameters.Add(DBConnection.CreateParameter("name", tenancyPerson.Name));
+                command.Parameters.Add(DBConnection.CreateParameter("patronymic", tenancyPerson.Patronymic));
+                command.Parameters.Add(DBConnection.CreateParameter("date_of_birth", tenancyPerson.DateOfBirth));
+                command.Parameters.Add(DBConnection.CreateParameter("id_document_type", tenancyPerson.IdDocumentType));
+                command.Parameters.Add(DBConnection.CreateParameter("date_of_document_issue", tenancyPerson.DateOfDocumentIssue));
+                command.Parameters.Add(DBConnection.CreateParameter("document_num", tenancyPerson.DocumentNum));
+                command.Parameters.Add(DBConnection.CreateParameter("document_seria", tenancyPerson.DocumentSeria));
+                command.Parameters.Add(DBConnection.CreateParameter("id_document_issued_by", tenancyPerson.IdDocumentIssuedBy));
+                command.Parameters.Add(DBConnection.CreateParameter("registration_id_street", tenancyPerson.RegistrationIdStreet));
+                command.Parameters.Add(DBConnection.CreateParameter("registration_house", tenancyPerson.RegistrationHouse));
+                command.Parameters.Add(DBConnection.CreateParameter("registration_flat", tenancyPerson.RegistrationFlat));
+                command.Parameters.Add(DBConnection.CreateParameter("registration_room", tenancyPerson.RegistrationRoom));
+                command.Parameters.Add(DBConnection.CreateParameter("residence_id_street", tenancyPerson.ResidenceIdStreet));
+                command.Parameters.Add(DBConnection.CreateParameter("residence_house", tenancyPerson.ResidenceHouse));
+                command.Parameters.Add(DBConnection.CreateParameter("residence_flat", tenancyPerson.ResidenceFlat));
+                command.Parameters.Add(DBConnection.CreateParameter("residence_room", tenancyPerson.ResidenceRoom));
+                command.Parameters.Add(DBConnection.CreateParameter("personal_account", tenancyPerson.PersonalAccount));
+                command.Parameters.Add(DBConnection.CreateParameter("include_date", tenancyPerson.IncludeDate));
+                command.Parameters.Add(DBConnection.CreateParameter("exclude_date", tenancyPerson.ExcludeDate));
 
                 try
                 {
@@ -150,29 +151,29 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyPerson.IdProcess));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_kinship", tenancyPerson.IdKinship));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("surname", tenancyPerson.Surname));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("name", tenancyPerson.Name));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("patronymic", tenancyPerson.Patronymic));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_of_birth", tenancyPerson.DateOfBirth));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_document_type", tenancyPerson.IdDocumentType));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date_of_document_issue", tenancyPerson.DateOfDocumentIssue));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("document_num", tenancyPerson.DocumentNum));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("document_seria", tenancyPerson.DocumentSeria));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_document_issued_by", tenancyPerson.IdDocumentIssuedBy));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_id_street", tenancyPerson.RegistrationIdStreet));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_house", tenancyPerson.RegistrationHouse));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_flat", tenancyPerson.RegistrationFlat));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_room", tenancyPerson.RegistrationRoom));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_id_street", tenancyPerson.ResidenceIdStreet));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_house", tenancyPerson.ResidenceHouse));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_flat", tenancyPerson.ResidenceFlat));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_room", tenancyPerson.ResidenceRoom));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("personal_account", tenancyPerson.PersonalAccount));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("include_date", tenancyPerson.IncludeDate));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("exclude_date", tenancyPerson.ExcludeDate));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_person", tenancyPerson.IdPerson));
+                command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancyPerson.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter("id_kinship", tenancyPerson.IdKinship));
+                command.Parameters.Add(DBConnection.CreateParameter("surname", tenancyPerson.Surname));
+                command.Parameters.Add(DBConnection.CreateParameter("name", tenancyPerson.Name));
+                command.Parameters.Add(DBConnection.CreateParameter("patronymic", tenancyPerson.Patronymic));
+                command.Parameters.Add(DBConnection.CreateParameter("date_of_birth", tenancyPerson.DateOfBirth));
+                command.Parameters.Add(DBConnection.CreateParameter("id_document_type", tenancyPerson.IdDocumentType));
+                command.Parameters.Add(DBConnection.CreateParameter("date_of_document_issue", tenancyPerson.DateOfDocumentIssue));
+                command.Parameters.Add(DBConnection.CreateParameter("document_num", tenancyPerson.DocumentNum));
+                command.Parameters.Add(DBConnection.CreateParameter("document_seria", tenancyPerson.DocumentSeria));
+                command.Parameters.Add(DBConnection.CreateParameter("id_document_issued_by", tenancyPerson.IdDocumentIssuedBy));
+                command.Parameters.Add(DBConnection.CreateParameter("registration_id_street", tenancyPerson.RegistrationIdStreet));
+                command.Parameters.Add(DBConnection.CreateParameter("registration_house", tenancyPerson.RegistrationHouse));
+                command.Parameters.Add(DBConnection.CreateParameter("registration_flat", tenancyPerson.RegistrationFlat));
+                command.Parameters.Add(DBConnection.CreateParameter("registration_room", tenancyPerson.RegistrationRoom));
+                command.Parameters.Add(DBConnection.CreateParameter("residence_id_street", tenancyPerson.ResidenceIdStreet));
+                command.Parameters.Add(DBConnection.CreateParameter("residence_house", tenancyPerson.ResidenceHouse));
+                command.Parameters.Add(DBConnection.CreateParameter("residence_flat", tenancyPerson.ResidenceFlat));
+                command.Parameters.Add(DBConnection.CreateParameter("residence_room", tenancyPerson.ResidenceRoom));
+                command.Parameters.Add(DBConnection.CreateParameter("personal_account", tenancyPerson.PersonalAccount));
+                command.Parameters.Add(DBConnection.CreateParameter("include_date", tenancyPerson.IncludeDate));
+                command.Parameters.Add(DBConnection.CreateParameter("exclude_date", tenancyPerson.ExcludeDate));
+                command.Parameters.Add(DBConnection.CreateParameter("id_person", tenancyPerson.IdPerson));
 
                 try
                 {

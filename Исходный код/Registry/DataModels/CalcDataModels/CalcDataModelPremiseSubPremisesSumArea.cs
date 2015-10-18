@@ -5,6 +5,7 @@ using System.Text;
 using Registry.DataModels;
 using System.Data;
 using System.Globalization;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 
 namespace Registry.CalcDataModels
@@ -35,7 +36,7 @@ namespace Registry.CalcDataModels
 
         protected override void Calculate(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            DMLoadState = DataModelLoadState.Loading;
+            DmLoadState = DataModelLoadState.Loading;
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelPremiseSubPremisesSumArea");
             CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;

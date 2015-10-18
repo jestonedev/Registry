@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {
@@ -93,8 +94,8 @@ namespace Registry.DataModels
                     using (DbCommand command = DBConnection.CreateCommand())
                     {
                         command.CommandText = query;
-                        command.Parameters.Add(DBConnection.CreateParameter<int>("id_record", id_record));
-                        command.Parameters.Add(DBConnection.CreateParameter<string>("user_name", user_name));
+                        command.Parameters.Add(DBConnection.CreateParameter("id_record", id_record));
+                        command.Parameters.Add(DBConnection.CreateParameter("user_name", user_name));
                         try
                         {
                             DataTable tableDB = connection.SqlSelectTable("tableDB", command);

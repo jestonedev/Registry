@@ -1,19 +1,15 @@
-﻿using Registry.CalcDataModels;
+﻿using System.Threading;
+using Registry.CalcDataModels;
 using Registry.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
 
 namespace Registry.DataModels
 {      
     internal sealed class CalcDataModelsUpdater
     {
-        private static CalcDataModelsUpdater instance;
+        private static CalcDataModelsUpdater _instance;
         public void Run()
         {
-            SynchronizationContext context = SynchronizationContext.Current;
+            var context = SynchronizationContext.Current;
             ThreadPool.QueueUserWorkItem(_ =>
             {
                 while (true)
@@ -79,9 +75,7 @@ namespace Registry.DataModels
 
         public static CalcDataModelsUpdater GetInstance()
         {
-            if (instance == null)
-                instance = new CalcDataModelsUpdater();
-            return instance;
+            return _instance ?? (_instance = new CalcDataModelsUpdater());
         }
     }
 }

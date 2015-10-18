@@ -1,39 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Windows.Forms;
-using System.Data;
+using Registry.Entities;
 
-namespace Registry.DataModels
+namespace Registry.DataModels.DataModels
 {
     public sealed class FundsBuildingsAssocDataModel : DataModel
     {
-        private static FundsBuildingsAssocDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM funds_buildings_assoc WHERE deleted = 0";
-        private static string tableName = "funds_buildings_assoc";
+        private const string SelectQuery = "SELECT * FROM funds_buildings_assoc WHERE deleted = 0";
+        private const string TableName = "funds_buildings_assoc";
 
         private FundsBuildingsAssocDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, selectQuery, tableName)
+            : base(progressBar, incrementor, SelectQuery, TableName)
         {
         }
 
         protected override void ConfigureTable()
         {
-            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_fund"] };
+            Table.PrimaryKey = new [] { Table.Columns["id_fund"] };
         }
 
-        public static FundsBuildingsAssocDataModel GetInstance()
+        protected override void ConfigureInsertCommand(DbCommand command, Entity entity)
         {
-            return GetInstance(null, 0);
-        }
-
-        public static FundsBuildingsAssocDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
-        {
-            if (dataModel == null)
-                dataModel = new FundsBuildingsAssocDataModel(progressBar, incrementor);
-            return dataModel;
+            command.CommandText = "INSERT INTO funds_buildings_assoc (id_building, id_fund) VALUES (?, ?)";
+            var fundObjectAssoc = (FundObjectAssoc) entity;          
+            command.Parameters.Add(DBConnection.CreateParameter("id_building", fundObjectAssoc.IdObject));
+            command.Parameters.Add(DBConnection.CreateParameter("id_fund", fundObjectAssoc.IdFund));
         }
     }
 }

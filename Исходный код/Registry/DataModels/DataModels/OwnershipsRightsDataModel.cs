@@ -8,6 +8,7 @@ using Registry.Entities;
 using System.Data.Odbc;
 using System.Windows.Forms;
 using System.Globalization;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {
@@ -60,10 +61,10 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right_type", ownershipRight.IdOwnershipRightType));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("number", ownershipRight.Number));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date", ownershipRight.Date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", ownershipRight.Description));
+                command.Parameters.Add(DBConnection.CreateParameter("id_ownership_right_type", ownershipRight.IdOwnershipRightType));
+                command.Parameters.Add(DBConnection.CreateParameter("number", ownershipRight.Number));
+                command.Parameters.Add(DBConnection.CreateParameter("date", ownershipRight.Date));
+                command.Parameters.Add(DBConnection.CreateParameter("description", ownershipRight.Description));
 
                 if (parentType == ParentTypeEnum.Building)
                     command_assoc.CommandText = "INSERT INTO ownership_buildings_assoc (id_building, id_ownership_right) VALUES (?, ?)";
@@ -118,11 +119,11 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right_type", ownershipRight.IdOwnershipRightType));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("number", ownershipRight.Number));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date", ownershipRight.Date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", ownershipRight.Description));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right", ownershipRight.IdOwnershipRight));
+                command.Parameters.Add(DBConnection.CreateParameter("id_ownership_right_type", ownershipRight.IdOwnershipRightType));
+                command.Parameters.Add(DBConnection.CreateParameter("number", ownershipRight.Number));
+                command.Parameters.Add(DBConnection.CreateParameter("date", ownershipRight.Date));
+                command.Parameters.Add(DBConnection.CreateParameter("description", ownershipRight.Description));
+                command.Parameters.Add(DBConnection.CreateParameter("id_ownership_right", ownershipRight.IdOwnershipRight));
 
                 try
                 {

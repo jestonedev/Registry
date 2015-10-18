@@ -8,6 +8,7 @@ using Registry.Entities;
 using System.Data.Odbc;
 using System.Data.Common;
 using System.Globalization;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {
@@ -56,9 +57,9 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_sub_premises", tenancyObject.IdObject));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyObject.IdProcess));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("rent_total_area", tenancyObject.RentTotalArea));
+                command.Parameters.Add(DBConnection.CreateParameter("id_sub_premises", tenancyObject.IdObject));
+                command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancyObject.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter("rent_total_area", tenancyObject.RentTotalArea));
                 try
                 {
                     connection.SqlBeginTransaction();
@@ -96,10 +97,10 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_sub_premises", tenancyObject.IdObject));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyObject.IdProcess));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("rent_total_area", tenancyObject.RentTotalArea));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_assoc", tenancyObject.IdAssoc));
+                command.Parameters.Add(DBConnection.CreateParameter("id_sub_premises", tenancyObject.IdObject));
+                command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancyObject.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter("rent_total_area", tenancyObject.RentTotalArea));
+                command.Parameters.Add(DBConnection.CreateParameter("id_assoc", tenancyObject.IdAssoc));
                 try
                 {
                     return connection.SqlModifyQuery(command);

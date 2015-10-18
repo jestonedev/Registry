@@ -8,6 +8,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Registry.CalcDataModels;
 using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Reporting;
 using Registry.SearchForms;

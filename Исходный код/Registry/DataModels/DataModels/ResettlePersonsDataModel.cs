@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {
@@ -82,10 +83,10 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", resettlePerson.IdProcess));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("surname", resettlePerson.Surname));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("name", resettlePerson.Name));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("patronymic", resettlePerson.Patronymic));
+                command.Parameters.Add(DBConnection.CreateParameter("id_process", resettlePerson.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter("surname", resettlePerson.Surname));
+                command.Parameters.Add(DBConnection.CreateParameter("name", resettlePerson.Name));
+                command.Parameters.Add(DBConnection.CreateParameter("patronymic", resettlePerson.Patronymic));
 
                 try
                 {
@@ -124,11 +125,11 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", resettlePerson.IdProcess));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("surname", resettlePerson.Surname));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("name", resettlePerson.Name));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("patronymic", resettlePerson.Patronymic));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_person", resettlePerson.IdPerson));
+                command.Parameters.Add(DBConnection.CreateParameter("id_process", resettlePerson.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter("surname", resettlePerson.Surname));
+                command.Parameters.Add(DBConnection.CreateParameter("name", resettlePerson.Name));
+                command.Parameters.Add(DBConnection.CreateParameter("patronymic", resettlePerson.Patronymic));
+                command.Parameters.Add(DBConnection.CreateParameter("id_person", resettlePerson.IdPerson));
 
                 try
                 {

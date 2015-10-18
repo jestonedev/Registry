@@ -8,6 +8,7 @@ using System.Data.Odbc;
 using Registry.Entities;
 using System.Data;
 using System.Globalization;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {
@@ -55,9 +56,9 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_name", reasonType.ReasonName));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_template", reasonType.ReasonTemplate));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_reason_type", reasonType.IdReasonType));
+                command.Parameters.Add(DBConnection.CreateParameter("reason_name", reasonType.ReasonName));
+                command.Parameters.Add(DBConnection.CreateParameter("reason_template", reasonType.ReasonTemplate));
+                command.Parameters.Add(DBConnection.CreateParameter("id_reason_type", reasonType.IdReasonType));
                 try
                 {
                     return connection.SqlModifyQuery(command);
@@ -87,8 +88,8 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_name", reasonType.ReasonName));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("reason_template", reasonType.ReasonTemplate));
+                command.Parameters.Add(DBConnection.CreateParameter("reason_name", reasonType.ReasonName));
+                command.Parameters.Add(DBConnection.CreateParameter("reason_template", reasonType.ReasonTemplate));
 
                 try
                 {

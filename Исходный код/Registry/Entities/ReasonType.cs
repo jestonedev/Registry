@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Registry.Entities
 {
-    public sealed class ReasonType
+    public sealed class ReasonType : Entity
     {
         public int? IdReasonType { get; set; }
         public string ReasonName { get; set; }
@@ -18,20 +18,18 @@ namespace Registry.Entities
 
         public bool Equals(ReasonType other)
         {
-            return this.Equals((object)other);
+            return Equals((object)other);
         }
 
         public static bool operator ==(ReasonType first, ReasonType second)
         {
             if ((object)first == null && (object)second == null)
                 return true;
-            else
-                if ((object)first == null || (object)second == null)
-                    return false;
-                else
+            if ((object)first == null || (object)second == null)
+                return false;
             return first.IdReasonType == second.IdReasonType &&
-                first.ReasonName == second.ReasonName &&
-                first.ReasonTemplate == second.ReasonTemplate;
+                   first.ReasonName == second.ReasonName &&
+                   first.ReasonTemplate == second.ReasonTemplate;
         }
 
         public static bool operator !=(ReasonType first, ReasonType second)

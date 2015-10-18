@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {

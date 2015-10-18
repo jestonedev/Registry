@@ -8,6 +8,7 @@ using System.Data.Common;
 using System.Data.Odbc;
 using Registry.Entities;
 using System.Globalization;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {
@@ -80,12 +81,12 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyAgreement.IdProcess));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("agreement_date", tenancyAgreement.AgreementDate));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("agreement_content", tenancyAgreement.AgreementContent));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancyAgreement.IdExecutor));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", tenancyAgreement.IdWarrant));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_agreement", tenancyAgreement.IdAgreement));
+                command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancyAgreement.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter("agreement_date", tenancyAgreement.AgreementDate));
+                command.Parameters.Add(DBConnection.CreateParameter("agreement_content", tenancyAgreement.AgreementContent));
+                command.Parameters.Add(DBConnection.CreateParameter("id_executor", tenancyAgreement.IdExecutor));
+                command.Parameters.Add(DBConnection.CreateParameter("id_warrant", tenancyAgreement.IdWarrant));
+                command.Parameters.Add(DBConnection.CreateParameter("id_agreement", tenancyAgreement.IdAgreement));
                 try
                 {
                     return connection.SqlModifyQuery(command);
@@ -115,11 +116,11 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyAgreement.IdProcess));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("agreement_date", tenancyAgreement.AgreementDate));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("agreement_content", tenancyAgreement.AgreementContent));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancyAgreement.IdExecutor));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", tenancyAgreement.IdWarrant));
+                command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancyAgreement.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter("agreement_date", tenancyAgreement.AgreementDate));
+                command.Parameters.Add(DBConnection.CreateParameter("agreement_content", tenancyAgreement.AgreementContent));
+                command.Parameters.Add(DBConnection.CreateParameter("id_executor", tenancyAgreement.IdExecutor));
+                command.Parameters.Add(DBConnection.CreateParameter("id_warrant", tenancyAgreement.IdWarrant));
                 try
                 {
                     connection.SqlBeginTransaction();

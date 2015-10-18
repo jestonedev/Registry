@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Registry.Entities
 {
-    public sealed class ResettlePerson
+    public sealed class ResettlePerson : Entity
     {
         public int? IdPerson { get; set; }
         public int? IdProcess { get; set; }
@@ -20,22 +20,20 @@ namespace Registry.Entities
 
         public bool Equals(ResettlePerson other)
         {
-            return this.Equals((object)other);
+            return Equals((object)other);
         }
 
         public static bool operator ==(ResettlePerson first, ResettlePerson second)
         {
             if ((object)first == null && (object)second == null)
                 return true;
-            else
-                if ((object)first == null || (object)second == null)
-                    return false;
-                else
-                    return first.IdPerson == second.IdPerson &&
-                        first.IdProcess == second.IdProcess &&
-                        first.Surname == second.Surname &&
-                        first.Name == second.Name &&
-                        first.Patronymic == second.Patronymic;
+            if ((object)first == null || (object)second == null)
+                return false;
+            return first.IdPerson == second.IdPerson &&
+                   first.IdProcess == second.IdProcess &&
+                   first.Surname == second.Surname &&
+                   first.Name == second.Name &&
+                   first.Patronymic == second.Patronymic;
         }
 
         public static bool operator !=(ResettlePerson first, ResettlePerson second)

@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Registry.Entities;
 using System.Data.Odbc;
 using System.Globalization;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {
@@ -79,7 +80,7 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<string>("structure_type", structureType.StructureTypeName));
+                command.Parameters.Add(DBConnection.CreateParameter("structure_type", structureType.StructureTypeName));
                 try
                 {
                     connection.SqlBeginTransaction();
@@ -117,8 +118,8 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<string>("structure_type", structureType.StructureTypeName));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_structure_type", structureType.IdStructureType));
+                command.Parameters.Add(DBConnection.CreateParameter("structure_type", structureType.StructureTypeName));
+                command.Parameters.Add(DBConnection.CreateParameter("id_structure_type", structureType.IdStructureType));
                 try
                 {
                     return connection.SqlModifyQuery(command);

@@ -8,6 +8,7 @@ using System.Data.Common;
 using System.Data.Odbc;
 using System.Data;
 using System.Globalization;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {
@@ -82,13 +83,13 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant_doc_type", warrant.IdWarrantDocType));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_num", warrant.RegistrationNum));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", warrant.RegistrationDate));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("on_behalf_of", warrant.OnBehalfOf));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("notary", warrant.Notary));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("notary_district", warrant.NotaryDistrict));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", warrant.Description));
+                command.Parameters.Add(DBConnection.CreateParameter("id_warrant_doc_type", warrant.IdWarrantDocType));
+                command.Parameters.Add(DBConnection.CreateParameter("registration_num", warrant.RegistrationNum));
+                command.Parameters.Add(DBConnection.CreateParameter("registration_date", warrant.RegistrationDate));
+                command.Parameters.Add(DBConnection.CreateParameter("on_behalf_of", warrant.OnBehalfOf));
+                command.Parameters.Add(DBConnection.CreateParameter("notary", warrant.Notary));
+                command.Parameters.Add(DBConnection.CreateParameter("notary_district", warrant.NotaryDistrict));
+                command.Parameters.Add(DBConnection.CreateParameter("description", warrant.Description));
                 try
                 {
                     connection.SqlBeginTransaction();
@@ -128,14 +129,14 @@ namespace Registry.DataModels
                     return -1;
                 }
                 command.CommandText = updateQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant_doc_type", warrant.IdWarrantDocType));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_num", warrant.RegistrationNum));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", warrant.RegistrationDate));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("on_behalf_of", warrant.OnBehalfOf));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("notary", warrant.Notary));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("notary_district", warrant.NotaryDistrict));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", warrant.Description));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", warrant.IdWarrant));
+                command.Parameters.Add(DBConnection.CreateParameter("id_warrant_doc_type", warrant.IdWarrantDocType));
+                command.Parameters.Add(DBConnection.CreateParameter("registration_num", warrant.RegistrationNum));
+                command.Parameters.Add(DBConnection.CreateParameter("registration_date", warrant.RegistrationDate));
+                command.Parameters.Add(DBConnection.CreateParameter("on_behalf_of", warrant.OnBehalfOf));
+                command.Parameters.Add(DBConnection.CreateParameter("notary", warrant.Notary));
+                command.Parameters.Add(DBConnection.CreateParameter("notary_district", warrant.NotaryDistrict));
+                command.Parameters.Add(DBConnection.CreateParameter("description", warrant.Description));
+                command.Parameters.Add(DBConnection.CreateParameter("id_warrant", warrant.IdWarrant));
 
                 try
                 {

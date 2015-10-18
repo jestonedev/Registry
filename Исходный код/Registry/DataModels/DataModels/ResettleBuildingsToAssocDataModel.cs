@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {
@@ -55,8 +56,8 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_building", resettleObject.IdObject));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", resettleObject.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter("id_building", resettleObject.IdObject));
+                command.Parameters.Add(DBConnection.CreateParameter("id_process", resettleObject.IdProcess));
                 try
                 {
                     connection.SqlBeginTransaction();

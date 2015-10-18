@@ -5,6 +5,7 @@ using System.Text;
 using System.Data;
 using Registry.CalcDataModels;
 using System.Globalization;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 
 namespace Registry.DataModels

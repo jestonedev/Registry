@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Registry.Entities
 {
-    public sealed class Claim
+    public sealed class Claim : Entity
     {
         public int? IdClaim { get; set; }
         public int? IdProcess { get; set; }
@@ -28,30 +28,28 @@ namespace Registry.Entities
 
         public bool Equals(Claim other)
         {
-            return this.Equals((object)other);
+            return Equals((object)other);
         }
 
         public static bool operator ==(Claim first, Claim second)
         {
             if ((object)first == null && (object)second == null)
                 return true;
-            else
-                if ((object)first == null || (object)second == null)
-                    return false;
-                else
+            if ((object)first == null || (object)second == null)
+                return false;
             return first.IdClaim == second.IdClaim &&
-                first.IdProcess == second.IdProcess &&
-                first.DateOfTransfer == second.DateOfTransfer &&
-                first.AmountOfDebtRent == second.AmountOfDebtRent &&
-                first.AmountOfDebtFine == second.AmountOfDebtFine &&
-                first.AtDate == second.AtDate &&
-                first.AmountOfFine == second.AmountOfFine &&
-                first.AmountOfRent == second.AmountOfRent &&
-                first.AmountOfFineRecover == second.AmountOfFineRecover &&
-                first.AmountOfRentRecover == second.AmountOfRentRecover &&
-                first.Description == second.Description &&
-                first.StartDeptPeriod == second.StartDeptPeriod &&
-                first.EndDeptPeriod == second.EndDeptPeriod;
+                   first.IdProcess == second.IdProcess &&
+                   first.DateOfTransfer == second.DateOfTransfer &&
+                   first.AmountOfDebtRent == second.AmountOfDebtRent &&
+                   first.AmountOfDebtFine == second.AmountOfDebtFine &&
+                   first.AtDate == second.AtDate &&
+                   first.AmountOfFine == second.AmountOfFine &&
+                   first.AmountOfRent == second.AmountOfRent &&
+                   first.AmountOfFineRecover == second.AmountOfFineRecover &&
+                   first.AmountOfRentRecover == second.AmountOfRentRecover &&
+                   first.Description == second.Description &&
+                   first.StartDeptPeriod == second.StartDeptPeriod &&
+                   first.EndDeptPeriod == second.EndDeptPeriod;
         }
 
         public static bool operator !=(Claim first, Claim second)

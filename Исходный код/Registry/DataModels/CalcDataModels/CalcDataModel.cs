@@ -6,6 +6,7 @@ using Registry.DataModels;
 using System.Data;
 using System.ComponentModel;
 using System.Windows.Forms;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 
 namespace Registry.CalcDataModels
@@ -20,7 +21,7 @@ namespace Registry.CalcDataModels
 
         protected CalcDataModel()
         {
-            DMLoadType = DataModelLoadSyncType.Asyncronize;
+            DmLoadType = DataModelLoadSyncType.Asyncronize;
             worker.DoWork += new DoWorkEventHandler(Calculate);
             worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(CalculationComplete);
         }
@@ -62,12 +63,12 @@ namespace Registry.CalcDataModels
                 throw new DataModelException("Не передана ссылка на объект RunWorkerCompletedEventArgs в классе CalcDataModel");
             if (e.Error != null)
             {
-                DMLoadState = DataModelLoadState.ErrorLoad;
+                DmLoadState = DataModelLoadState.ErrorLoad;
                 return;
             }
             if (e.Result is DataTable)
                 Table.Merge((DataTable)e.Result);
-            DMLoadState = DataModelLoadState.SuccessLoad;
+            DmLoadState = DataModelLoadState.SuccessLoad;
             if (RefreshEvent != null)
                 RefreshEvent(this, new EventArgs());
         }

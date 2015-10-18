@@ -5,6 +5,7 @@ using System.Text;
 using System.Data.Common;
 using System.Windows.Forms;
 using System.Data;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {

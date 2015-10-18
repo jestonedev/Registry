@@ -8,6 +8,7 @@ using System.Data.Odbc;
 using System.Windows.Forms;
 using Registry.Entities;
 using System.Globalization;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {
@@ -79,7 +80,7 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<string>("restriction_type", restrictionType.RestrictionTypeName));
+                command.Parameters.Add(DBConnection.CreateParameter("restriction_type", restrictionType.RestrictionTypeName));
                 try
                 {
                     connection.SqlBeginTransaction();
@@ -117,8 +118,8 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<string>("restriction_type", restrictionType.RestrictionTypeName));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_restriction_type", restrictionType.IdRestrictionType));
+                command.Parameters.Add(DBConnection.CreateParameter("restriction_type", restrictionType.RestrictionTypeName));
+                command.Parameters.Add(DBConnection.CreateParameter("id_restriction_type", restrictionType.IdRestrictionType));
                 try
                 {
                     return connection.SqlModifyQuery(command);

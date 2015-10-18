@@ -8,6 +8,7 @@ using System.Data;
 using Registry.Entities;
 using System.Data.Odbc;
 using System.Globalization;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {
@@ -98,26 +99,26 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_building", premise.IdBuilding));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", premise.IdState));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_kind", premise.IdPremisesKind));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_type", premise.IdPremisesType));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("premises_num", premise.PremisesNum));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("floor", premise.Floor));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_rooms", premise.NumRooms));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_beds", premise.NumBeds));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", premise.TotalArea));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("living_area", premise.LivingArea));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("height", premise.Height));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("cadastral_num", premise.CadastralNum));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("cadastral_cost", premise.CadastralCost));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("balance_cost", premise.BalanceCost));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", premise.Description));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("reg_date", premise.RegDate));
-                command.Parameters.Add(DBConnection.CreateParameter<bool?>("is_memorial", premise.IsMemorial));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("account", premise.Account));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("state_date", premise.StateDate));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", premise.IdPremises));
+                command.Parameters.Add(DBConnection.CreateParameter("id_building", premise.IdBuilding));
+                command.Parameters.Add(DBConnection.CreateParameter("id_state", premise.IdState));
+                command.Parameters.Add(DBConnection.CreateParameter("id_premises_kind", premise.IdPremisesKind));
+                command.Parameters.Add(DBConnection.CreateParameter("id_premises_type", premise.IdPremisesType));
+                command.Parameters.Add(DBConnection.CreateParameter("premises_num", premise.PremisesNum));
+                command.Parameters.Add(DBConnection.CreateParameter("floor", premise.Floor));
+                command.Parameters.Add(DBConnection.CreateParameter("num_rooms", premise.NumRooms));
+                command.Parameters.Add(DBConnection.CreateParameter("num_beds", premise.NumBeds));
+                command.Parameters.Add(DBConnection.CreateParameter("total_area", premise.TotalArea));
+                command.Parameters.Add(DBConnection.CreateParameter("living_area", premise.LivingArea));
+                command.Parameters.Add(DBConnection.CreateParameter("height", premise.Height));
+                command.Parameters.Add(DBConnection.CreateParameter("cadastral_num", premise.CadastralNum));
+                command.Parameters.Add(DBConnection.CreateParameter("cadastral_cost", premise.CadastralCost));
+                command.Parameters.Add(DBConnection.CreateParameter("balance_cost", premise.BalanceCost));
+                command.Parameters.Add(DBConnection.CreateParameter("description", premise.Description));
+                command.Parameters.Add(DBConnection.CreateParameter("reg_date", premise.RegDate));
+                command.Parameters.Add(DBConnection.CreateParameter("is_memorial", premise.IsMemorial));
+                command.Parameters.Add(DBConnection.CreateParameter("account", premise.Account));
+                command.Parameters.Add(DBConnection.CreateParameter("state_date", premise.StateDate));
+                command.Parameters.Add(DBConnection.CreateParameter("id_premises", premise.IdPremises));
                 try
                 {
                     return connection.SqlModifyQuery(command);
@@ -138,8 +139,8 @@ namespace Registry.DataModels
             using (DbCommand command = DBConnection.CreateCommand())
             {
                 command.CommandText = updateState;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", idState));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("state_date", stateDate));
+                command.Parameters.Add(DBConnection.CreateParameter("id_state", idState));
+                command.Parameters.Add(DBConnection.CreateParameter("state_date", stateDate));
                 command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", idPremise));
                 try
                 {
@@ -169,25 +170,25 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_building", premise.IdBuilding));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", premise.IdState));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_kind", premise.IdPremisesKind));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_type", premise.IdPremisesType));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("premises_num", premise.PremisesNum));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("floor", premise.Floor));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_rooms", premise.NumRooms));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_beds", premise.NumBeds));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", premise.TotalArea));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("living_area", premise.LivingArea));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("height", premise.Height));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("cadastral_num", premise.CadastralNum));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("cadastral_cost", premise.CadastralCost));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("balance_cost", premise.BalanceCost));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", premise.Description));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("reg_date", premise.RegDate));
-                command.Parameters.Add(DBConnection.CreateParameter<bool?>("is_memorial", premise.IsMemorial));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("account", premise.Account));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("state_date", premise.StateDate));
+                command.Parameters.Add(DBConnection.CreateParameter("id_building", premise.IdBuilding));
+                command.Parameters.Add(DBConnection.CreateParameter("id_state", premise.IdState));
+                command.Parameters.Add(DBConnection.CreateParameter("id_premises_kind", premise.IdPremisesKind));
+                command.Parameters.Add(DBConnection.CreateParameter("id_premises_type", premise.IdPremisesType));
+                command.Parameters.Add(DBConnection.CreateParameter("premises_num", premise.PremisesNum));
+                command.Parameters.Add(DBConnection.CreateParameter("floor", premise.Floor));
+                command.Parameters.Add(DBConnection.CreateParameter("num_rooms", premise.NumRooms));
+                command.Parameters.Add(DBConnection.CreateParameter("num_beds", premise.NumBeds));
+                command.Parameters.Add(DBConnection.CreateParameter("total_area", premise.TotalArea));
+                command.Parameters.Add(DBConnection.CreateParameter("living_area", premise.LivingArea));
+                command.Parameters.Add(DBConnection.CreateParameter("height", premise.Height));
+                command.Parameters.Add(DBConnection.CreateParameter("cadastral_num", premise.CadastralNum));
+                command.Parameters.Add(DBConnection.CreateParameter("cadastral_cost", premise.CadastralCost));
+                command.Parameters.Add(DBConnection.CreateParameter("balance_cost", premise.BalanceCost));
+                command.Parameters.Add(DBConnection.CreateParameter("description", premise.Description));
+                command.Parameters.Add(DBConnection.CreateParameter("reg_date", premise.RegDate));
+                command.Parameters.Add(DBConnection.CreateParameter("is_memorial", premise.IsMemorial));
+                command.Parameters.Add(DBConnection.CreateParameter("account", premise.Account));
+                command.Parameters.Add(DBConnection.CreateParameter("state_date", premise.StateDate));
                 try
                 {
                     connection.SqlBeginTransaction();

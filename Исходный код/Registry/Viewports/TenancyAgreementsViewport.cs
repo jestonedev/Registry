@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using CustomControls;
 using Declensions.Unicode;
 using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Reporting;
 using Security;

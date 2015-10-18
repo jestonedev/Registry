@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Registry.Entities
 {
-    public sealed class Warrant
+    public sealed class Warrant : Entity
     {
         public int? IdWarrant { get; set; }
         public int? IdWarrantDocType { get; set; }
@@ -23,25 +23,23 @@ namespace Registry.Entities
 
         public bool Equals(Warrant other)
         {
-            return this.Equals((object)other);
+            return Equals((object)other);
         }
 
         public static bool operator ==(Warrant first, Warrant second)
         {
             if ((object)first == null && (object)second == null)
                 return true;
-            else
-                if ((object)first == null || (object)second == null)
-                    return false;
-                else
+            if ((object)first == null || (object)second == null)
+                return false;
             return first.IdWarrant == second.IdWarrant &&
-                first.IdWarrantDocType == second.IdWarrantDocType &&
-                first.Notary == second.Notary &&
-                first.NotaryDistrict == second.NotaryDistrict &&
-                first.OnBehalfOf == second.OnBehalfOf &&
-                first.RegistrationDate == second.RegistrationDate &&
-                first.RegistrationNum == second.RegistrationNum &&
-                first.Description == second.Description;
+                   first.IdWarrantDocType == second.IdWarrantDocType &&
+                   first.Notary == second.Notary &&
+                   first.NotaryDistrict == second.NotaryDistrict &&
+                   first.OnBehalfOf == second.OnBehalfOf &&
+                   first.RegistrationDate == second.RegistrationDate &&
+                   first.RegistrationNum == second.RegistrationNum &&
+                   first.Description == second.Description;
         }
 
         public static bool operator !=(Warrant first, Warrant second)

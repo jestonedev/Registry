@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 
 namespace Registry.CalcDataModels
@@ -35,7 +36,7 @@ namespace Registry.CalcDataModels
 
         protected override void Calculate(object sender, DoWorkEventArgs e)
         {
-            DMLoadState = DataModelLoadState.Loading;
+            DmLoadState = DataModelLoadState.Loading;
             if (e == null)
                 throw new DataModelException(
                     "Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelPremisesTenanciesRegNumbers");

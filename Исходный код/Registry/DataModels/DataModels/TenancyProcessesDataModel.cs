@@ -8,6 +8,7 @@ using System.Data.Common;
 using System.Data.Odbc;
 using Registry.Entities;
 using System.Globalization;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {
@@ -84,20 +85,20 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_rent_type", tenancy.IdRentType));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", tenancy.IdWarrant));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_num", tenancy.RegistrationNum));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", tenancy.RegistrationDate));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("issue_date", tenancy.IssueDate));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("begin_date", tenancy.BeginDate));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("end_date", tenancy.EndDate));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_warrant_num", tenancy.ResidenceWarrantNum));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("residence_warrant_date", tenancy.ResidenceWarrantDate));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("protocol_num", tenancy.ProtocolNum));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("protocol_date", tenancy.ProtocolDate));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancy.IdExecutor));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", tenancy.Description));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancy.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter("id_rent_type", tenancy.IdRentType));
+                command.Parameters.Add(DBConnection.CreateParameter("id_warrant", tenancy.IdWarrant));
+                command.Parameters.Add(DBConnection.CreateParameter("registration_num", tenancy.RegistrationNum));
+                command.Parameters.Add(DBConnection.CreateParameter("registration_date", tenancy.RegistrationDate));
+                command.Parameters.Add(DBConnection.CreateParameter("issue_date", tenancy.IssueDate));
+                command.Parameters.Add(DBConnection.CreateParameter("begin_date", tenancy.BeginDate));
+                command.Parameters.Add(DBConnection.CreateParameter("end_date", tenancy.EndDate));
+                command.Parameters.Add(DBConnection.CreateParameter("residence_warrant_num", tenancy.ResidenceWarrantNum));
+                command.Parameters.Add(DBConnection.CreateParameter("residence_warrant_date", tenancy.ResidenceWarrantDate));
+                command.Parameters.Add(DBConnection.CreateParameter("protocol_num", tenancy.ProtocolNum));
+                command.Parameters.Add(DBConnection.CreateParameter("protocol_date", tenancy.ProtocolDate));
+                command.Parameters.Add(DBConnection.CreateParameter("id_executor", tenancy.IdExecutor));
+                command.Parameters.Add(DBConnection.CreateParameter("description", tenancy.Description));
+                command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancy.IdProcess));
                 try
                 {
                     return connection.SqlModifyQuery(command);
@@ -126,19 +127,19 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_rent_type", tenancy.IdRentType));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", tenancy.IdWarrant));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_num", tenancy.RegistrationNum));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", tenancy.RegistrationDate));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("issue_date", tenancy.IssueDate));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("begin_date", tenancy.BeginDate));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("end_date", tenancy.EndDate));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_warrant_num", tenancy.ResidenceWarrantNum));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("residence_warrant_date", tenancy.ResidenceWarrantDate));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("protocol_num", tenancy.ProtocolNum));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("protocol_date", tenancy.ProtocolDate));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancy.IdExecutor));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", tenancy.Description));
+                command.Parameters.Add(DBConnection.CreateParameter("id_rent_type", tenancy.IdRentType));
+                command.Parameters.Add(DBConnection.CreateParameter("id_warrant", tenancy.IdWarrant));
+                command.Parameters.Add(DBConnection.CreateParameter("registration_num", tenancy.RegistrationNum));
+                command.Parameters.Add(DBConnection.CreateParameter("registration_date", tenancy.RegistrationDate));
+                command.Parameters.Add(DBConnection.CreateParameter("issue_date", tenancy.IssueDate));
+                command.Parameters.Add(DBConnection.CreateParameter("begin_date", tenancy.BeginDate));
+                command.Parameters.Add(DBConnection.CreateParameter("end_date", tenancy.EndDate));
+                command.Parameters.Add(DBConnection.CreateParameter("residence_warrant_num", tenancy.ResidenceWarrantNum));
+                command.Parameters.Add(DBConnection.CreateParameter("residence_warrant_date", tenancy.ResidenceWarrantDate));
+                command.Parameters.Add(DBConnection.CreateParameter("protocol_num", tenancy.ProtocolNum));
+                command.Parameters.Add(DBConnection.CreateParameter("protocol_date", tenancy.ProtocolDate));
+                command.Parameters.Add(DBConnection.CreateParameter("id_executor", tenancy.IdExecutor));
+                command.Parameters.Add(DBConnection.CreateParameter("description", tenancy.Description));
                 try
                 {
                     connection.SqlBeginTransaction();

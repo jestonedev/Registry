@@ -1,39 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data.Common;
-using System.Windows.Forms;
-using System.Data;
+﻿using System.Windows.Forms;
 
-namespace Registry.DataModels
+namespace Registry.DataModels.DataModels
 {
     public class ObjectStatesDataModel: DataModel
     {
-        private static ObjectStatesDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM object_states";
-        private static string tableName = "object_states";
+        private const string SelectQuery = "SELECT * FROM object_states";
+        private const string TableName = "object_states";
 
         private ObjectStatesDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, selectQuery, tableName)
+            : base(progressBar, incrementor, SelectQuery, TableName)
         {
         }
 
         protected override void ConfigureTable()
         {
-            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_state"] };
-        }
-
-        public static ObjectStatesDataModel GetInstance()
-        {
-            return GetInstance(null, 0);
-        }
-
-        public static ObjectStatesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
-        {
-            if (dataModel == null)
-                dataModel = new ObjectStatesDataModel(progressBar, incrementor);
-            return dataModel;
+            Table.PrimaryKey = new [] { Table.Columns["id_state"] };
         }
     }
 }

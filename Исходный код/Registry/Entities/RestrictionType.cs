@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Registry.Entities
 {
-    public sealed class RestrictionType
+    public sealed class RestrictionType : Entity
     {
         public int? IdRestrictionType { get; set; }
         public string RestrictionTypeName { get; set; }
@@ -17,19 +17,17 @@ namespace Registry.Entities
 
         public bool Equals(RestrictionType other)
         {
-            return this.Equals((object)other);
+            return Equals((object)other);
         }
 
         public static bool operator ==(RestrictionType first, RestrictionType second)
         {
             if ((object)first == null && (object)second == null)
                 return true;
-            else
-                if ((object)first == null || (object)second == null)
-                    return false;
-                else
+            if ((object)first == null || (object)second == null)
+                return false;
             return first.IdRestrictionType == second.IdRestrictionType &&
-                first.RestrictionTypeName == second.RestrictionTypeName;
+                   first.RestrictionTypeName == second.RestrictionTypeName;
         }
 
         public static bool operator !=(RestrictionType first, RestrictionType second)

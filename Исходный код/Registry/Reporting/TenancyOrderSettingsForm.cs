@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Registry.DataModels;
 using System.Globalization;
+using Registry.DataModels.DataModels;
 
 namespace Registry.Reporting
 {

@@ -8,6 +8,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {
@@ -79,11 +80,11 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("resettle_date", resettle.ResettleDate));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_document_residence", resettle.IdDocumentResidence));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("debts", resettle.Debts));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", resettle.Description));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", resettle.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter("resettle_date", resettle.ResettleDate));
+                command.Parameters.Add(DBConnection.CreateParameter("id_document_residence", resettle.IdDocumentResidence));
+                command.Parameters.Add(DBConnection.CreateParameter("debts", resettle.Debts));
+                command.Parameters.Add(DBConnection.CreateParameter("description", resettle.Description));
+                command.Parameters.Add(DBConnection.CreateParameter("id_process", resettle.IdProcess));
                 try
                 {
                     return connection.SqlModifyQuery(command);
@@ -112,10 +113,10 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("resettle_date", resettle.ResettleDate));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_document_residence", resettle.IdDocumentResidence));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("debts", resettle.Debts));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", resettle.Description));
+                command.Parameters.Add(DBConnection.CreateParameter("resettle_date", resettle.ResettleDate));
+                command.Parameters.Add(DBConnection.CreateParameter("id_document_residence", resettle.IdDocumentResidence));
+                command.Parameters.Add(DBConnection.CreateParameter("debts", resettle.Debts));
+                command.Parameters.Add(DBConnection.CreateParameter("description", resettle.Description));
                 try
                 {
                     connection.SqlBeginTransaction();

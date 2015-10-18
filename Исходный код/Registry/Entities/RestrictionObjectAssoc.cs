@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Registry.Entities
 {
-    public sealed class RestrictionObjectAssoc
+    public sealed class RestrictionObjectAssoc : Entity
     {
         public int? IdObject { get; set; }
         public int? IdRestriction { get; set; }
@@ -13,9 +13,9 @@ namespace Registry.Entities
 
         public RestrictionObjectAssoc(int? idObject, int? idRestriction, DateTime? date)
         {
-            this.IdObject = idObject;
-            this.IdRestriction = idRestriction;
-            this.Date = date;
+            IdObject = idObject;
+            IdRestriction = idRestriction;
+            Date = date;
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Data;
 using System.Data.Common;
 using System.Data.Odbc;
 using System.Globalization;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {
@@ -56,10 +57,10 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_building", tenancyObject.IdObject));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyObject.IdProcess));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("rent_total_area", tenancyObject.RentTotalArea));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("rent_living_area", tenancyObject.RentLivingArea));
+                command.Parameters.Add(DBConnection.CreateParameter("id_building", tenancyObject.IdObject));
+                command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancyObject.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter("rent_total_area", tenancyObject.RentTotalArea));
+                command.Parameters.Add(DBConnection.CreateParameter("rent_living_area", tenancyObject.RentLivingArea));
                 try
                 {
                     connection.SqlBeginTransaction();
@@ -97,11 +98,11 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_building", tenancyObject.IdObject));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancyObject.IdProcess));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("rent_total_area", tenancyObject.RentTotalArea));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("rent_living_area", tenancyObject.RentLivingArea));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_assoc", tenancyObject.IdAssoc));
+                command.Parameters.Add(DBConnection.CreateParameter("id_building", tenancyObject.IdObject));
+                command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancyObject.IdProcess));
+                command.Parameters.Add(DBConnection.CreateParameter("rent_total_area", tenancyObject.RentTotalArea));
+                command.Parameters.Add(DBConnection.CreateParameter("rent_living_area", tenancyObject.RentLivingArea));
+                command.Parameters.Add(DBConnection.CreateParameter("id_assoc", tenancyObject.IdAssoc));
                 try
                 {
                     return connection.SqlModifyQuery(command);

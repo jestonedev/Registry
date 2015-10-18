@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Registry.Entities
 {
-    public sealed class DocumentResidence
+    public sealed class DocumentResidence : Entity
     {
         public int? IdDocumentResidence { get; set; }
         public string DocumentResidenceName { get; set; }
@@ -17,19 +17,17 @@ namespace Registry.Entities
 
         public bool Equals(DocumentResidence other)
         {
-            return this.Equals((object)other);
+            return Equals((object)other);
         }
 
         public static bool operator ==(DocumentResidence first, DocumentResidence second)
         {
             if ((object)first == null && (object)second == null)
                 return true;
-            else
-                if ((object)first == null || (object)second == null)
-                    return false;
-                else
-                    return first.IdDocumentResidence == second.IdDocumentResidence &&
-                        first.DocumentResidenceName == second.DocumentResidenceName;
+            if ((object)first == null || (object)second == null)
+                return false;
+            return first.IdDocumentResidence == second.IdDocumentResidence &&
+                   first.DocumentResidenceName == second.DocumentResidenceName;
         }
 
         public static bool operator !=(DocumentResidence first, DocumentResidence second)

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Registry.Entities
 {
-    public sealed class TenancyObject
+    public sealed class TenancyObject : Entity
     {
         public int? IdAssoc { get; set; }
         public int? IdObject { get; set; }
@@ -20,21 +20,19 @@ namespace Registry.Entities
 
         public bool Equals(TenancyObject other)
         {
-            return this.Equals((object)other);
+            return Equals((object)other);
         }
 
         public static bool operator ==(TenancyObject first, TenancyObject second)
         {
             if ((object)first == null && (object)second == null)
                 return true;
-            else
-                if ((object)first == null || (object)second == null)
-                    return false;
-                else
+            if ((object)first == null || (object)second == null)
+                return false;
             return first.IdObject == second.IdObject &&
-                first.IdProcess == second.IdProcess &&
-                first.RentTotalArea == second.RentTotalArea &&
-                first.RentLivingArea == second.RentLivingArea;
+                   first.IdProcess == second.IdProcess &&
+                   first.RentTotalArea == second.RentTotalArea &&
+                   first.RentLivingArea == second.RentLivingArea;
         }
 
         public static bool operator !=(TenancyObject first, TenancyObject second)

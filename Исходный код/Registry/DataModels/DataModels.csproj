@@ -60,6 +60,7 @@
     <Compile Include="CalcDataModels\CalcDataModelTenancyNotifiesMaxDate.cs" />
     <Compile Include="DataModelsCallbackUpdater.cs" />
     <Compile Include="DataModelHelper.cs" />
+    <Compile Include="DataModels\DataModelType.cs" />
     <Compile Include="DataModels\DocumentsResidenceDataModel.cs" />
     <Compile Include="DataModels\ResettleBuildingsFromAssocDataModel.cs" />
     <Compile Include="DataModels\ResettleBuildingsToAssocDataModel.cs" />

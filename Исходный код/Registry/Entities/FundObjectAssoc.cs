@@ -5,15 +5,15 @@ using System.Text;
 
 namespace Registry.Entities
 {
-    public sealed class FundObjectAssoc
+    public sealed class FundObjectAssoc : Entity
     {
         public int? IdObject { get; set; }
         public int? IdFund { get; set; }
 
         public FundObjectAssoc(int? idObject, int? idFund)
         {
-            this.IdFund = idFund;
-            this.IdObject = idObject;
+            IdFund = idFund;
+            IdObject = idObject;
         }
     }
 }

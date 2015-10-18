@@ -8,6 +8,7 @@ using Registry.Entities;
 using System.Windows.Forms;
 using System.Data.Odbc;
 using System.Globalization;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {
@@ -85,13 +86,13 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", subPremise.IdPremises));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", subPremise.IdState));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("sub_premises_num", subPremise.SubPremisesNum));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", subPremise.TotalArea));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("living_area", subPremise.LivingArea));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", subPremise.Description));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("state_date", subPremise.StateDate));
+                command.Parameters.Add(DBConnection.CreateParameter("id_premises", subPremise.IdPremises));
+                command.Parameters.Add(DBConnection.CreateParameter("id_state", subPremise.IdState));
+                command.Parameters.Add(DBConnection.CreateParameter("sub_premises_num", subPremise.SubPremisesNum));
+                command.Parameters.Add(DBConnection.CreateParameter("total_area", subPremise.TotalArea));
+                command.Parameters.Add(DBConnection.CreateParameter("living_area", subPremise.LivingArea));
+                command.Parameters.Add(DBConnection.CreateParameter("description", subPremise.Description));
+                command.Parameters.Add(DBConnection.CreateParameter("state_date", subPremise.StateDate));
                 try
                 {
                     connection.SqlBeginTransaction();
@@ -129,14 +130,14 @@ namespace Registry.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
                 }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", subPremise.IdPremises));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", subPremise.IdState));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("sub_premises_num", subPremise.SubPremisesNum));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", subPremise.TotalArea));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("living_area", subPremise.LivingArea));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", subPremise.Description));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("state_date", subPremise.StateDate));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_sub_premises", subPremise.IdSubPremises));
+                command.Parameters.Add(DBConnection.CreateParameter("id_premises", subPremise.IdPremises));
+                command.Parameters.Add(DBConnection.CreateParameter("id_state", subPremise.IdState));
+                command.Parameters.Add(DBConnection.CreateParameter("sub_premises_num", subPremise.SubPremisesNum));
+                command.Parameters.Add(DBConnection.CreateParameter("total_area", subPremise.TotalArea));
+                command.Parameters.Add(DBConnection.CreateParameter("living_area", subPremise.LivingArea));
+                command.Parameters.Add(DBConnection.CreateParameter("description", subPremise.Description));
+                command.Parameters.Add(DBConnection.CreateParameter("state_date", subPremise.StateDate));
+                command.Parameters.Add(DBConnection.CreateParameter("id_sub_premises", subPremise.IdSubPremises));
                 try
                 {
                     return connection.SqlModifyQuery(command);
