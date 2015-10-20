@@ -2,15 +2,17 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Viewport;
 
 namespace Registry.SearchForms
 {
     internal partial class ExtendedSearchTenancyForm : SearchForm
     {
-        KladrRegionsDataModel regions;
+        DataModel regions;
 
         BindingSource v_kladr;
         BindingSource v_regions;
@@ -19,11 +21,11 @@ namespace Registry.SearchForms
         public ExtendedSearchTenancyForm()
         {
             InitializeComponent();
-            KladrStreetsDataModel.GetInstance().Select();
-            RentTypesDataModel.GetInstance().Select();
-            regions = KladrRegionsDataModel.GetInstance();
+            DataModel.GetInstance(DataModelType.KladrStreetsDataModel).Select();
+            DataModel.GetInstance(DataModelType.RentTypesDataModel).Select();
+            regions = DataModel.GetInstance(DataModelType.KladrRegionsDataModel);
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             v_kladr = new BindingSource();
             v_kladr.DataSource = ds;
@@ -155,13 +157,13 @@ namespace Registry.SearchForms
             if (checkBoxTenantSNPEnable.Checked)
             {
                 var snp = textBoxTenantSNP.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var processesIds = DataModelHelper.TenancyProcessIDsBySNP(snp, row => row.Field<int?>("id_kinship") == 1);
+                var processesIds = DataModelHelper.TenancyProcessIdsBySnp(snp, row => row.Field<int?>("id_kinship") == 1);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (checkBoxPersonSNPEnable.Checked)
             {
                 var snp = textBoxPersonSNP.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var processesIds = DataModelHelper.TenancyProcessIDsBySNP(snp, row => true);
+                var processesIds = DataModelHelper.TenancyProcessIdsBySnp(snp, row => true);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (checkBoxRegionEnable.Checked && (comboBoxRegion.SelectedValue != null))
@@ -196,10 +198,44 @@ namespace Registry.SearchForms
             if (includedProcesses == null) return filter;
             if (!string.IsNullOrEmpty(filter.Trim()))
                 filter += " AND ";
-            filter += "id_process IN (0";
-            foreach (var id in includedProcesses)
-                filter += id.ToString(CultureInfo.InvariantCulture) + ",";
-            filter = filter.TrimEnd(',') + ")";
+            filter += "(" + BuildFilter(includedProcesses, "id_process") + ")";
+            return filter;
+        }
+
+        private static string BuildFilter(IEnumerable<int> ids, string fieldName)
+        {
+            var startId = -1;
+            var count = 0;
+            var filter = "";
+            var entropicPremisesIds = new List<int>();
+            foreach (var id in ids.Union(new List<int> { -1 }))
+            {
+                if (id != startId + count)
+                {
+                    if (count < 5)
+                    {
+                        if (startId != -1)
+                            for (var i = 0; i < count; i++)
+                                entropicPremisesIds.Add(startId + i);
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(filter))
+                            filter += " OR ";
+                        filter += string.Format("({1} <= {0} AND {0} <= {2})", fieldName, startId, startId + count - 1);
+                    }
+                    startId = id;
+                    count = 1;
+                }
+                else
+                    count++;
+            }
+            var entropicPIdsStr = entropicPremisesIds.Aggregate("", (current, premisesId) => current + (premisesId + ","));
+            entropicPIdsStr = entropicPIdsStr.Trim(',');
+            if (string.IsNullOrEmpty(entropicPIdsStr)) return filter;
+            if (!string.IsNullOrEmpty(filter))
+                filter += " OR ";
+            filter += string.Format("{0} IN ({1})", fieldName, entropicPIdsStr);
             return filter;
         }
 

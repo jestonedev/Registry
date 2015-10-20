@@ -34,6 +34,7 @@ namespace Registry.Reporting
         ResettleEmergencyBuildingsReporter,
         ResettleShortProcessingReporter,
         ResettleFullProcessingReporter,
-        RegistryAllPremisesReporter
+        RegistryAllPremisesReporter,
+        ExportReporter
     }
 }

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -21,7 +22,7 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        RestrictionTypesDataModel restriction_types;
+        DataModel restriction_types;
         DataTable snapshot_restriction_types = new DataTable("snapshot_restriction_types");
         #endregion Models
 
@@ -150,12 +151,12 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            restriction_types = RestrictionTypesDataModel.GetInstance();
+            restriction_types = DataModel.GetInstance(DataModelType.RestrictionTypesDataModel);
             restriction_types.Select();
 
             v_restriction_types = new BindingSource();
             v_restriction_types.DataMember = "restriction_types";
-            v_restriction_types.DataSource = DataSetManager.DataSet;
+            v_restriction_types.DataSource = DataModel.DataSet;
 
             //Инициируем колонки snapshot-модели
             for (var i = 0; i < restriction_types.Select().Columns.Count; i++)
@@ -276,7 +277,7 @@ namespace Registry.Viewport
                 var row = restriction_types.Select().Rows.Find(list[i].IdRestrictionType);
                 if (row == null)
                 {
-                    var id_restriction_type = RestrictionTypesDataModel.Insert(list[i]);
+                    var id_restriction_type = restriction_types.Insert(list[i]);
                     if (id_restriction_type == -1)
                     {
                         sync_views = true;
@@ -290,7 +291,7 @@ namespace Registry.Viewport
                 {
                     if (RowToRestrictionType(row) == list[i])
                         continue;
-                    if (RestrictionTypesDataModel.Update(list[i]) == -1)
+                    if (restriction_types.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         restriction_types.EditingNewRecord = false;
@@ -310,7 +311,7 @@ namespace Registry.Viewport
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (RestrictionTypesDataModel.Delete(list[i].IdRestrictionType.Value) == -1)
+                    if (restriction_types.Delete(list[i].IdRestrictionType.Value) == -1)
                     {
                         sync_views = true;
                         restriction_types.EditingNewRecord = false;

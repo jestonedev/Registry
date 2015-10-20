@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Registry.Entities
+﻿namespace Registry.Entities
 {
-    public sealed class Region
+    public sealed class Region : Entity
     {
         public string IdRegion { get; set; }
         public string RegionName { get; set; }
         public Region(string idRegion, string region)
         {
-            this.IdRegion = idRegion;
-            this.RegionName = region;
+            IdRegion = idRegion;
+            RegionName = region;
         }
 
         public override string ToString()

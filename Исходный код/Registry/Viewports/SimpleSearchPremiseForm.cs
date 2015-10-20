@@ -61,14 +61,14 @@ namespace Registry.SearchForms
             {
                 //по ФИО нанимателя
                 var snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var premisesIds = DataModelHelper.PremisesIDsBySNP(snp, (row) => { return row.Field<int?>("id_kinship") == 1; });
+                var premisesIds = DataModelHelper.PremisesIdsBySnp(snp, (row) => { return row.Field<int?>("id_kinship") == 1; });
                 includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);
             }
             if (comboBoxCriteriaType.SelectedIndex == 2)
             {
                 // по ФИО участника
                 var snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var premisesIds = DataModelHelper.PremisesIDsBySNP(snp, row => true);
+                var premisesIds = DataModelHelper.PremisesIdsBySnp(snp, row => true);
                 includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);
             }
             if (comboBoxCriteriaType.SelectedIndex == 3)

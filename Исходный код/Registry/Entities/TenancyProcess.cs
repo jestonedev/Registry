@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Registry.Entities
 {
-    public sealed class TenancyProcess
+    public sealed class TenancyProcess : Entity
     {
         public int? IdProcess { get; set; }
         public int? IdRentType { get; set; }
@@ -29,31 +29,29 @@ namespace Registry.Entities
 
         public bool Equals(TenancyProcess other)
         {
-            return this.Equals((object)other);
+            return Equals((object)other);
         }
 
         public static bool operator ==(TenancyProcess first, TenancyProcess second)
         {
             if ((object)first == null && (object)second == null)
                 return true;
-            else
-                if ((object)first == null || (object)second == null)
-                    return false;
-                else
+            if ((object)first == null || (object)second == null)
+                return false;
             return first.IdProcess == second.IdProcess &&
-                first.IdRentType == second.IdRentType &&
-                first.IdWarrant == second.IdWarrant &&
-                first.IdExecutor == second.IdExecutor &&
-                first.RegistrationNum == second.RegistrationNum &&
-                first.RegistrationDate == second.RegistrationDate &&
-                first.IssueDate == second.IssueDate &&
-                first.BeginDate == second.BeginDate &&
-                first.EndDate == second.EndDate &&
-                first.ResidenceWarrantNum == second.ResidenceWarrantNum &&
-                first.ResidenceWarrantDate == second.ResidenceWarrantDate &&
-                first.ProtocolNum == second.ProtocolNum &&
-                first.ProtocolDate == second.ProtocolDate &&
-                first.Description == second.Description;
+                   first.IdRentType == second.IdRentType &&
+                   first.IdWarrant == second.IdWarrant &&
+                   first.IdExecutor == second.IdExecutor &&
+                   first.RegistrationNum == second.RegistrationNum &&
+                   first.RegistrationDate == second.RegistrationDate &&
+                   first.IssueDate == second.IssueDate &&
+                   first.BeginDate == second.BeginDate &&
+                   first.EndDate == second.EndDate &&
+                   first.ResidenceWarrantNum == second.ResidenceWarrantNum &&
+                   first.ResidenceWarrantDate == second.ResidenceWarrantDate &&
+                   first.ProtocolNum == second.ProtocolNum &&
+                   first.ProtocolDate == second.ProtocolDate &&
+                   first.Description == second.Description;
         }
 
         public static bool operator !=(TenancyProcess first, TenancyProcess second)

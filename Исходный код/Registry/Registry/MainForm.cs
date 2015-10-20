@@ -1,36 +1,35 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Drawing.Drawing2D;
-using System.IO;
-using Registry.Viewport;
-using Registry.DataModels;
-using WeifenLuo.WinFormsUI.Docking;
-using Registry.Reporting;
-using Security;
-using System.Text.RegularExpressions;
-using Registry.SearchForms;
 using System.Globalization;
+using System.Linq;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
+using Registry.DataModels;
+using Registry.DataModels.DataModels;
+using Registry.Entities;
+using Registry.Reporting;
+using Registry.SearchForms;
+using Registry.Viewport;
+using Security;
+using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry
 {
     public partial class MainForm : Form, IMenuCallback
     {
-        private ReportLogForm reportLogForm = new ReportLogForm();
-        private int reportCounter = 0;
+        private readonly ReportLogForm _reportLogForm = new ReportLogForm();
+        private int _reportCounter;
 
         private void ChangeViewportsSelectProprty()
         {
-            for (int i = dockPanel.Documents.Count() - 1; i >= 0; i--)
-                (dockPanel.Documents.ElementAt(i) as IMenuController).Selected = false;
-            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+            for (var i = dockPanel.Documents.Count() - 1; i >= 0; i--)
+            {
+                var document = dockPanel.Documents.ElementAt(i) as IMenuController;
+                if (document != null)
+                    document.Selected = false;
+            }
+            if (!(dockPanel.ActiveDocument is IMenuController))
                 return;
-            (dockPanel.ActiveDocument as IMenuController).Selected = true;
+            ((IMenuController) dockPanel.ActiveDocument).Selected = true;
         }
 
         private void ChangeMainMenuState()
@@ -44,8 +43,9 @@ namespace Registry
 
         public void StatusBarStateUpdate()
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                toolStripLabelRecordCount.Text = "Всего записей: " + (dockPanel.ActiveDocument as IMenuController).GetRecordCount();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                toolStripLabelRecordCount.Text = @"Всего записей: " + document.GetRecordCount();
             else
                 toolStripLabelRecordCount.Text = "";
         }
@@ -77,97 +77,102 @@ namespace Registry
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead) || AccessControl.HasPrivelege(Priveleges.TenancyRead)
                 || AccessControl.HasPrivelege(Priveleges.ResettleRead))
             {
-                BuildingsDataModel.GetInstance(toolStripProgressBar, 1);
-                PremisesDataModel.GetInstance(toolStripProgressBar, 1);
-                SubPremisesDataModel.GetInstance(toolStripProgressBar, 1);
-                KladrStreetsDataModel.GetInstance(toolStripProgressBar, 1);
-                KladrRegionsDataModel.GetInstance(toolStripProgressBar, 1);
-                PremisesTypesDataModel.GetInstance(toolStripProgressBar, 1);
-                FundTypesDataModel.GetInstance(toolStripProgressBar, 1);
-                ObjectStatesDataModel.GetInstance(toolStripProgressBar, 1);
-                OwnershipRightTypesDataModel.GetInstance(toolStripProgressBar, 1);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.BuildingsDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.PremisesDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.SubPremisesDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.KladrStreetsDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.KladrRegionsDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.PremisesTypesDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.FundTypesDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ObjectStatesDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.OwnershipRightTypesDataModel);
             }
             // Реестр жилого фонда
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
             {
-                StructureTypesDataModel.GetInstance(toolStripProgressBar, 1);
-                PremisesKindsDataModel.GetInstance(toolStripProgressBar, 1);
-                FundsBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 1);
-                FundsPremisesAssocDataModel.GetInstance(toolStripProgressBar, 1);
-                FundsSubPremisesAssocDataModel.GetInstance(toolStripProgressBar, 1);
-                FundsHistoryDataModel.GetInstance(toolStripProgressBar, 1);
-                OwnershipBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 1);
-                OwnershipPremisesAssocDataModel.GetInstance(toolStripProgressBar, 1);
-                OwnershipsRightsDataModel.GetInstance(toolStripProgressBar, 1);
-                RestrictionsBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 1);
-                RestrictionsPremisesAssocDataModel.GetInstance(toolStripProgressBar, 1);
-                RestrictionsDataModel.GetInstance(toolStripProgressBar, 1);
-                RestrictionTypesDataModel.GetInstance(toolStripProgressBar, 1);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.StructureTypesDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.PremisesKindsDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.FundsBuildingsAssocDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.FundsPremisesAssocDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.FundsSubPremisesAssocDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.FundsHistoryDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.OwnershipBuildingsAssocDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.OwnershipPremisesAssocDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.OwnershipsRightsDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.RestrictionsBuildingsAssocDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.RestrictionsPremisesAssocDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.RestrictionsDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.RestrictionTypesDataModel);
             }
             //Общие таблицы для претензионно-исковой работы и процессов найма
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead) || AccessControl.HasPrivelege(Priveleges.ClaimsRead))
-                TenancyProcessesDataModel.GetInstance(toolStripProgressBar, 1);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancyProcessesDataModel);
             // Процессы найма
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
             {
                 // При поиске здания или помещения по нанимателю предварительная подгрузка не производится 
                 // Данные подгружаются по необходимости
-                TenancyPersonsDataModel.GetInstance(toolStripProgressBar, 1);
-                KinshipsDataModel.GetInstance(toolStripProgressBar, 1);
-                TenancyBuildingsAssocDataModel.GetInstance(toolStripProgressBar, 1);
-                TenancyPremisesAssocDataModel.GetInstance(toolStripProgressBar, 1);
-                TenancySubPremisesAssocDataModel.GetInstance(toolStripProgressBar, 1);
-                TenancyReasonsDataModel.GetInstance(toolStripProgressBar, 1);
-                TenancyReasonTypesDataModel.GetInstance(toolStripProgressBar, 1);
-                RentTypesDataModel.GetInstance(toolStripProgressBar, 1);
-                DocumentTypesDataModel.GetInstance(toolStripProgressBar, 1);
-                ExecutorsDataModel.GetInstance(toolStripProgressBar, 1);
-                TenancyAgreementsDataModel.GetInstance(toolStripProgressBar, 1);
-                WarrantsDataModel.GetInstance(toolStripProgressBar, 1);
-                WarrantDocTypesDataModel.GetInstance(toolStripProgressBar, 1);
-                DocumentsIssuedByDataModel.GetInstance(toolStripProgressBar, 1);
-                TenancyNotifiesDataModel.GetInstance(toolStripProgressBar, 1);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancyPersonsDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.KinshipsDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancyBuildingsAssocDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancyPremisesAssocDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancySubPremisesAssocDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancyReasonsDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancyReasonTypesDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.RentTypesDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.DocumentTypesDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ExecutorsDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancyAgreementsDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.WarrantsDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.WarrantDocTypesDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.DocumentsIssuedByDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancyNotifiesDataModel);
             }
             // Претензионно-исковая работа
             if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
             {
-                ClaimsDataModel.GetInstance(toolStripProgressBar, 1);
-                ClaimStatesDataModel.GetInstance(toolStripProgressBar, 1);
-                ClaimStateTypesDataModel.GetInstance(toolStripProgressBar, 1);
-                ClaimStateTypesRelationsDataModel.GetInstance(toolStripProgressBar, 1);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ClaimsDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ClaimStatesDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ClaimStateTypesDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ClaimStateTypesRelationsDataModel);
             }
             // Процессы переселения
             if (AccessControl.HasPrivelege(Priveleges.ResettleRead))
             {
-                ResettleProcessesDataModel.GetInstance(toolStripProgressBar, 1);
-                ResettlePersonsDataModel.GetInstance(toolStripProgressBar, 1);
-                ResettleBuildingsFromAssocDataModel.GetInstance(toolStripProgressBar, 1);
-                ResettleBuildingsToAssocDataModel.GetInstance(toolStripProgressBar, 1);
-                ResettlePremisesFromAssocDataModel.GetInstance(toolStripProgressBar, 1);
-                ResettlePremisesToAssocDataModel.GetInstance(toolStripProgressBar, 1);
-                ResettleSubPremisesFromAssocDataModel.GetInstance(toolStripProgressBar, 1);
-                ResettleSubPremisesToAssocDataModel.GetInstance(toolStripProgressBar, 1);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ResettleProcessesDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ResettlePersonsDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ResettleBuildingsFromAssocDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ResettleBuildingsToAssocDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ResettlePremisesFromAssocDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ResettlePremisesToAssocDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ResettleSubPremisesFromAssocDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ResettleSubPremisesToAssocDataModel);
             }
         }
 
         private void ribbonButtonTabClose_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).Close();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.Close();
         }
 
         private void ribbonButtonTabsClose_Click(object sender, EventArgs e)
         {
-            for (int i = dockPanel.Documents.Count() - 1; i >= 0; i--)
-                if (dockPanel.Documents.ElementAt(i) as IMenuController != null)
-                    (dockPanel.Documents.ElementAt(i) as IMenuController).Close();
+            for (var i = dockPanel.Documents.Count() - 1; i >= 0; i--)
+                if (dockPanel.Documents.ElementAt(i) is IMenuController)
+                {
+                    var document = dockPanel.Documents.ElementAt(i) as IMenuController;
+                    if (document != null)
+                        document.Close();
+                }
         }
 
         private void ribbonButtonTabCopy_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+            if (!(dockPanel.ActiveDocument is IMenuController))
                 return;
-            Viewport.Viewport viewport = (dockPanel.ActiveDocument as IMenuController).Duplicate();
+            var viewport = ((IMenuController) dockPanel.ActiveDocument).Duplicate();
             viewport.Show(dockPanel, DockState.Document);
         }
 
@@ -180,44 +185,44 @@ namespace Registry
 
         private void ribbonButtonFirst_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+            if (!(dockPanel.ActiveDocument is IMenuController))
                 return;
-            (dockPanel.ActiveDocument as IMenuController).MoveFirst();
+            ((IMenuController) dockPanel.ActiveDocument).MoveFirst();
             NavigationStateUpdate();
         }
 
         private void ribbonButtonLast_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+            if (!(dockPanel.ActiveDocument is IMenuController))
                 return;
-            (dockPanel.ActiveDocument as IMenuController).MoveLast();
+            ((IMenuController) dockPanel.ActiveDocument).MoveLast();
             NavigationStateUpdate();
         }
 
         private void ribbonButtonPrev_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+            if (!(dockPanel.ActiveDocument is IMenuController))
                 return;
-            (dockPanel.ActiveDocument as IMenuController).MovePrev();
+            ((IMenuController) dockPanel.ActiveDocument).MovePrev();
             NavigationStateUpdate();
         }
 
         private void ribbonButtonNext_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+            if (!(dockPanel.ActiveDocument is IMenuController))
                 return;
-            (dockPanel.ActiveDocument as IMenuController).MoveNext();
+            ((IMenuController) dockPanel.ActiveDocument).MoveNext();
             NavigationStateUpdate();
         }
 
         private void ribbonButtonSearch_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+            if (!(dockPanel.ActiveDocument is IMenuController))
                 return;
             if (ribbonButtonSearch.Checked)
-                (dockPanel.ActiveDocument as IMenuController).ClearSearch();
+                ((IMenuController) dockPanel.ActiveDocument).ClearSearch();
             else
-                (dockPanel.ActiveDocument as IMenuController).SearchRecord(SearchFormType.SimpleSearchForm);
+                ((IMenuController) dockPanel.ActiveDocument).SearchRecord(SearchFormType.SimpleSearchForm);
             NavigationStateUpdate();
             EditingStateUpdate();
             RelationsStateUpdate();
@@ -227,9 +232,9 @@ namespace Registry
 
         private void ribbonButtonExtendedSearch_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+            if (!(dockPanel.ActiveDocument is IMenuController))
                 return;
-            (dockPanel.ActiveDocument as IMenuController).SearchRecord(SearchFormType.ExtendedSearchForm);
+            ((IMenuController) dockPanel.ActiveDocument).SearchRecord(SearchFormType.ExtendedSearchForm);
             NavigationStateUpdate();
             EditingStateUpdate();
             RelationsStateUpdate();
@@ -239,9 +244,9 @@ namespace Registry
 
         private void ribbonButtonSimpleSearch_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+            if (!(dockPanel.ActiveDocument is IMenuController))
                 return;
-            (dockPanel.ActiveDocument as IMenuController).SearchRecord(SearchFormType.SimpleSearchForm);
+            ((IMenuController) dockPanel.ActiveDocument).SearchRecord(SearchFormType.SimpleSearchForm);
             NavigationStateUpdate();
             EditingStateUpdate();
             RelationsStateUpdate();
@@ -262,52 +267,49 @@ namespace Registry
 
         private void ribbonButtonOpen_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).OpenDetails();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.OpenDetails();
         }
 
         public void TabsStateUpdate()
         {
-            ribbonButtonTabCopy.Enabled = (dockPanel.ActiveDocument != null) && 
-                (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanDuplicate();
-            ribbonButtonTabClose.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null);
-            ribbonButtonTabsClose.Enabled = (dockPanel.Documents.Count() > 0);  
+            var document = dockPanel.ActiveDocument as IMenuController;
+            ribbonButtonTabCopy.Enabled = document != null && document.CanDuplicate();
+            ribbonButtonTabClose.Enabled = document != null;
+            ribbonButtonTabsClose.Enabled = dockPanel.Documents.Any();  
         }
 
         public void NavigationStateUpdate()
         {
-            ribbonButtonFirst.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanMoveFirst();
-            ribbonButtonPrev.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanMovePrev();
-            ribbonButtonNext.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanMoveNext();
-            ribbonButtonLast.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanMoveLast();
-            ribbonButtonSearch.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanSearchRecord();
-            ribbonButtonSearch.Checked = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).SearchedRecords();
-            ribbonButtonOpen.Enabled = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanOpenDetails();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            ribbonButtonFirst.Enabled = document != null && document.CanMoveFirst();
+            ribbonButtonPrev.Enabled = document != null && document.CanMovePrev();
+            ribbonButtonNext.Enabled = document != null && document.CanMoveNext();
+            ribbonButtonLast.Enabled = document != null && document.CanMoveLast();
+            ribbonButtonSearch.Enabled = document != null && document.CanSearchRecord();
+            ribbonButtonSearch.Checked = document != null && document.SearchedRecords();
+            ribbonButtonOpen.Enabled = document != null && document.CanOpenDetails();
         }
 
         public void EditingStateUpdate()
         {
-            ribbonButtonDeleteRecord.Enabled = (dockPanel.ActiveDocument != null) && 
-                (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanDeleteRecord();
-            ribbonButtonInsertRecord.Enabled = (dockPanel.ActiveDocument != null) && 
-                (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanInsertRecord();
-            ribbonButtonCopyRecord.Enabled = (dockPanel.ActiveDocument != null) && 
-                (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanCopyRecord();
-            ribbonButtonCancel.Enabled = (dockPanel.ActiveDocument != null) && 
-                (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanCancelRecord();
-            ribbonButtonSave.Enabled = (dockPanel.ActiveDocument != null) && 
-                (dockPanel.ActiveDocument as IMenuController != null) && (dockPanel.ActiveDocument as IMenuController).CanSaveRecord();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            ribbonButtonDeleteRecord.Enabled = document != null && document.CanDeleteRecord();
+            ribbonButtonInsertRecord.Enabled = document != null && document.CanInsertRecord();
+            ribbonButtonCopyRecord.Enabled = document != null && document.CanCopyRecord();
+            ribbonButtonCancel.Enabled = document != null && document.CanCancelRecord();
+            ribbonButtonSave.Enabled = document != null && document.CanSaveRecord();
         }
 
         public void RelationsStateUpdate()
         {
             ribbonPanelRelations.Items.Clear();
-            bool hasActiveDocument = (dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null);
             ribbon1.SuspendUpdating();
-            RegistryRelationsStateUpdate(hasActiveDocument);
-            TenancyRelationsStateUpdate(hasActiveDocument);
-            ClaimRelationsStateUpdate(hasActiveDocument);
-            ResettleRelationsStateUpdate(hasActiveDocument);
+            RegistryRelationsStateUpdate();
+            TenancyRelationsStateUpdate();
+            ClaimRelationsStateUpdate();
+            ResettleRelationsStateUpdate();
             if (ribbonPanelRelations.Items.Count == 0)
                 ribbonTabGeneral.Panels.Remove(ribbonPanelRelations);
             else
@@ -316,93 +318,91 @@ namespace Registry
             ribbon1.ResumeUpdating(true);
         }
 
-        private void ResettleRelationsStateUpdate(bool hasActiveDocument)
+        private void ResettleRelationsStateUpdate()
         {
-            if (AccessControl.HasPrivelege(Priveleges.ResettleRead))
-            {
-                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocResettlePersons())
-                    ribbonPanelRelations.Items.Add(ribbonButtonResettlePersons);
-                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocResettleFromObjects())
-                    ribbonPanelRelations.Items.Add(ribbonButtonResettleFromObjects);
-                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocResettleToObjects())
-                    ribbonPanelRelations.Items.Add(ribbonButtonResettleToObjects);
-            }
+            if (!AccessControl.HasPrivelege(Priveleges.ResettleRead)) return;
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document == null) return;
+            if (document.HasAssocResettlePersons())
+                ribbonPanelRelations.Items.Add(ribbonButtonResettlePersons);
+            if (document.HasAssocResettleFromObjects())
+                ribbonPanelRelations.Items.Add(ribbonButtonResettleFromObjects);
+            if (document.HasAssocResettleToObjects())
+                ribbonPanelRelations.Items.Add(ribbonButtonResettleToObjects);
         }
 
-        private void ClaimRelationsStateUpdate(bool hasActiveDocument)
+        private void ClaimRelationsStateUpdate()
         {
-            if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
-            {
-                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocClaims())
-                    ribbonPanelRelations.Items.Add(ribbonButtonClaims);
-                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocClaimStates())
-                    ribbonPanelRelations.Items.Add(ribbonButtonClaimStates);
-            }
+            if (!AccessControl.HasPrivelege(Priveleges.ClaimsRead)) return;
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document == null) return;
+            if (document.HasAssocClaims())
+                ribbonPanelRelations.Items.Add(ribbonButtonClaims);
+            if (document.HasAssocClaimStates())
+                ribbonPanelRelations.Items.Add(ribbonButtonClaimStates);
         }
 
-        private void TenancyRelationsStateUpdate(bool hasActiveDocument)
+        private void TenancyRelationsStateUpdate()
         {
-            if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
-            {
-                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocTenancyObjects())
-                    ribbonPanelRelations.Items.Add(ribbonButtonTenancyObjects);
-                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocTenancyPersons())
-                    ribbonPanelRelations.Items.Add(ribbonButtonTenancyPersons);
-                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocTenancyReasons())
-                    ribbonPanelRelations.Items.Add(ribbonButtonTenancyReasons);
-                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocTenancyAgreements())
-                    ribbonPanelRelations.Items.Add(ribbonButtonTenancyAgreements);
-                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocTenancies())
-                    ribbonPanelRelations.Items.Add(ribbonButtonAssocTenancies);
-            }
+            if (!AccessControl.HasPrivelege(Priveleges.TenancyRead)) return;
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document == null) return;
+            if (document.HasAssocTenancyObjects())
+                ribbonPanelRelations.Items.Add(ribbonButtonTenancyObjects);
+            if (document.HasAssocTenancyPersons())
+                ribbonPanelRelations.Items.Add(ribbonButtonTenancyPersons);
+            if (document.HasAssocTenancyReasons())
+                ribbonPanelRelations.Items.Add(ribbonButtonTenancyReasons);
+            if (document.HasAssocTenancyAgreements())
+                ribbonPanelRelations.Items.Add(ribbonButtonTenancyAgreements);
+            if (document.HasAssocTenancies())
+                ribbonPanelRelations.Items.Add(ribbonButtonAssocTenancies);
         }
 
-        private void RegistryRelationsStateUpdate(bool hasActiveDocument)
+        private void RegistryRelationsStateUpdate()
         {
-            if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
-            {
-                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocBuildings())
-                    ribbonPanelRelations.Items.Add(ribbonButtonBuildings);
-                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocSubPremises())
-                    ribbonPanelRelations.Items.Add(ribbonButtonSubPremises);
-                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocPremises())
-                    ribbonPanelRelations.Items.Add(ribbonButtonPremises);
-                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocOwnerships())
-                    ribbonPanelRelations.Items.Add(ribbonButtonOwnerships);
-                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocRestrictions())
-                    ribbonPanelRelations.Items.Add(ribbonButtonRestrictions);
-                if (hasActiveDocument && (dockPanel.ActiveDocument as IMenuController).HasAssocFundHistory())
-                    ribbonPanelRelations.Items.Add(ribbonButtonFundsHistory);
-            }
+            if (!AccessControl.HasPrivelege(Priveleges.RegistryRead)) return;
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document == null) return;
+            if (document.HasAssocBuildings())
+                ribbonPanelRelations.Items.Add(ribbonButtonBuildings);
+            if (document.HasAssocSubPremises())
+                ribbonPanelRelations.Items.Add(ribbonButtonSubPremises);
+            if (document.HasAssocPremises())
+                ribbonPanelRelations.Items.Add(ribbonButtonPremises);
+            if (document.HasAssocOwnerships())
+                ribbonPanelRelations.Items.Add(ribbonButtonOwnerships);
+            if (document.HasAssocRestrictions())
+                ribbonPanelRelations.Items.Add(ribbonButtonRestrictions);
+            if (document.HasAssocFundHistory())
+                ribbonPanelRelations.Items.Add(ribbonButtonFundsHistory);
         }
 
         public void DocumentsStateUpdate()
         {
             ribbon1.OrbDropDown.RecentItems.Clear();
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasTenancyContract17xReport())
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document == null)
+                return;
+            if (document.HasTenancyContract17xReport())
             {
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyContract1711);
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyContract1712);
             }
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasTenancyContractReport())
+            if (document.HasTenancyContractReport())
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyContract);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasTenancyActReport())
+            if (document.HasTenancyActReport())
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyAct);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasTenancyAgreementReport())
+            if (document.HasTenancyAgreementReport())
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyAgreement);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasRegistryExcerptPremiseReport())
+            if (document.HasRegistryExcerptPremiseReport())
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptPremise);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasRegistryExcerptSubPremiseReport())
+            if (document.HasRegistryExcerptSubPremiseReport())
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptSubPremise);
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null) &&
-                (dockPanel.ActiveDocument as IMenuController).HasRegistryExcerptSubPremisesReport())
+            if (document.HasRegistryExcerptSubPremisesReport())
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptSubPremises);
+            if (document.HasExportToOds())
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonExportOds);
         }
 
         private void RibbonTabsStateUpdate()
@@ -428,8 +428,9 @@ namespace Registry
 
         private void ribbonButtonSave_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).SaveRecord();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.SaveRecord();
             NavigationStateUpdate();
             RelationsStateUpdate();
             DocumentsStateUpdate();
@@ -437,8 +438,9 @@ namespace Registry
 
         private void ribbonButtonDeleteRecord_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).DeleteRecord();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.DeleteRecord();
             NavigationStateUpdate();
             EditingStateUpdate();
             RelationsStateUpdate();
@@ -448,8 +450,9 @@ namespace Registry
 
         private void ribbonButtonInsertRecord_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).InsertRecord();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.InsertRecord();
             EditingStateUpdate();
             NavigationStateUpdate();
             RelationsStateUpdate();
@@ -459,8 +462,9 @@ namespace Registry
 
         private void ribbonButtonCancel_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).CancelRecord();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.CancelRecord();
             NavigationStateUpdate();
             RelationsStateUpdate();
             DocumentsStateUpdate();
@@ -469,8 +473,9 @@ namespace Registry
 
         private void ribbonButtonCopyRecord_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).CopyRecord();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.CopyRecord();
             EditingStateUpdate();
             NavigationStateUpdate();
             RelationsStateUpdate();
@@ -485,132 +490,158 @@ namespace Registry
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            for (int i = dockPanel.Documents.Count() - 1; i >= 0; i--)
-                if (dockPanel.Documents.ElementAt(i) as IMenuController != null)
-                    (dockPanel.Documents.ElementAt(i) as IMenuController).Close();
+            for (var i = dockPanel.Documents.Count() - 1; i >= 0; i--)
+                if (dockPanel.Documents.ElementAt(i) is IMenuController)
+                {
+                    var document = dockPanel.Documents.ElementAt(i) as IMenuController;
+                    if (document != null)
+                        document.Close();
+                }
             if (dockPanel.Documents.Count() != 0)
                 e.Cancel = true;
         }
 
         public void ForceCloseDetachedViewports()
         {
-            for (int i = dockPanel.Documents.Count() - 1; i >= 0; i--)
-                if ((dockPanel.Documents.ElementAt(i) as IMenuController != null) && (dockPanel.Documents.ElementAt(i) as IMenuController).ViewportDetached())
-                    (dockPanel.Documents.ElementAt(i) as IMenuController).ForceClose();
+            for (var i = dockPanel.Documents.Count() - 1; i >= 0; i--)
+            {
+                var document = dockPanel.Documents.ElementAt(i) as IMenuController;
+                if (document != null && document.ViewportDetached())
+                    document.ForceClose();
+            }
         }
 
         private void ribbonButtonBuildings_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).ShowBuildings();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowBuildings();
         }
 
         private void ribbonButtonPremises_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).ShowPremises();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowPremises();
         }
 
         private void ribbonButtonSubPremises_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).ShowSubPremises();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowSubPremises();
         }
 
         private void ribbonButtonRestrictions_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).ShowRestrictions();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowRestrictions();
         }
 
         private void ribbonButtonOwnership_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).ShowOwnerships();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowOwnerships();
         }
 
         private void ribbonButtonFundsHistory_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).ShowFundHistory();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowFundHistory();
         }
 
         private void ribbonButtonPersons_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).ShowTenancyPersons();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowTenancyPersons();
         }
 
         private void ribbonButtonTenancyReasons_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).ShowTenancyReasons();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowTenancyReasons();
         }
 
         private void ribbonButtonAgreements_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).ShowTenancyAgreements();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowTenancyAgreements();
         }
 
         private void ribbonButtonTenancyPremises_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).ShowTenancyPremises();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowTenancyPremises();
         }
 
         private void ribbonButtonTenancyBuildings_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).ShowTenancyBuildings();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowTenancyBuildings();
         }
 
         private void ribbonButtonClaims_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).ShowClaims();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowClaims();
         }
 
         private void ribbonButtonClaimStates_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).ShowClaimStates();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowClaimStates();
         }
 
         private void ribbonButtonAssocTenancies_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).ShowTenancies();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowTenancies();
         }
 
         private void ribbonButtonResettlePersons_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).ShowResettlePersons();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowResettlePersons();
         }
 
         private void ribbonButtonResettleFromPremises_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).ShowResettleFromPremises();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowResettleFromPremises();
         }
 
         private void ribbonButtonResettleFromBuildings_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).ShowResettleFromBuildings();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowResettleFromBuildings();
         }
 
         private void ribbonButtonResettleToPremises_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).ShowResettleToPremises();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowResettleToPremises();
         }
 
         private void ribbonButtonResettleToBuildings_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument != null) && (dockPanel.ActiveDocument as IMenuController != null))
-                (dockPanel.ActiveDocument as IMenuController).ShowResettleToBuildings();
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowResettleToBuildings();
         }
 
         private void ribbonOrbMenuItemBuildings_Click(object sender, EventArgs e)
@@ -621,8 +652,8 @@ namespace Registry
         private void ribbonOrbMenuItemPremises_Click(object sender, EventArgs e)
         {
             var filter = "";
-            var municipal_ids = DataModelHelper.ObjectIdsByStates(Entities.EntityType.Premise, new[] { 4, 5, 9 });
-            var ids = municipal_ids.Aggregate("", (current, id) => current + (id.ToString(CultureInfo.InvariantCulture) + ","));
+            var municipalIds = DataModelHelper.ObjectIdsByStates(EntityType.Premise, new[] { 4, 5, 9 });
+            var ids = municipalIds.Aggregate("", (current, id) => current + (id.ToString(CultureInfo.InvariantCulture) + ","));
             ids = ids.TrimEnd(',');
             filter += "(id_state IN (4, 5, 9) OR (id_state = 1 AND id_premises IN (0" + ids + ")))";
             var viewport = ViewportFactory.CreateViewport(this, ViewportType.PremisesListViewport);
@@ -697,9 +728,9 @@ namespace Registry
 
         private void CreateViewport(ViewportType viewportType)
         {
-            Viewport.Viewport viewport = ViewportFactory.CreateViewport(this, viewportType);
-            if ((viewport as IMenuController).CanLoadData())
-                (viewport as IMenuController).LoadData();
+            var viewport = ViewportFactory.CreateViewport(this, viewportType);
+            if (((IMenuController) viewport).CanLoadData())
+                ((IMenuController) viewport).LoadData();
             AddViewport(viewport);
             ChangeMainMenuState();
             StatusBarStateUpdate();
@@ -720,12 +751,12 @@ namespace Registry
             if (user == null)
                 toolStripLabelHelloUser.Text = "";
             else
-                toolStripLabelHelloUser.Text = "Здравствуйте, " + user.DisplayName;
+                toolStripLabelHelloUser.Text = @"Здравствуйте, " + user.DisplayName;
             //Загружаем права пользователя
             AccessControl.LoadPriveleges();
             if (AccessControl.HasNoPriveleges())
             {
-                MessageBox.Show("У вас нет прав на использование данного приложения", "Ошибка",
+                MessageBox.Show(@"У вас нет прав на использование данного приложения", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 Application.Exit();
                 return;
@@ -742,34 +773,34 @@ namespace Registry
         private void RunReport(ReporterType reporterType)
         {
             Reporter reporter = ReporterFactory.CreateReporter(reporterType);
-            reporter.ReportOutputStreamResponse += new EventHandler<ReportOutputStreamEventArgs>(reporter_ReportOutputStreamResponse);
-            reporter.ReportComplete += new EventHandler<EventArgs>(reporter_ReportComplete);
-            reporter.ReportCanceled += new EventHandler<EventArgs>(reporter_ReportCanceled);
-            reportCounter++;
+            reporter.ReportOutputStreamResponse += reporter_ReportOutputStreamResponse;
+            reporter.ReportComplete += reporter_ReportComplete;
+            reporter.ReportCanceled += reporter_ReportCanceled;
+            _reportCounter++;
             reporter.Run();
         }
 
         void reporter_ReportCanceled(object sender, EventArgs e)
         {
-            reportCounter--;
-            if (reportCounter == 0)
-                reportLogForm.Hide();
+            _reportCounter--;
+            if (_reportCounter == 0)
+                _reportLogForm.Hide();
         }
 
         void reporter_ReportComplete(object sender, EventArgs e)
         {
-            reportLogForm.Log("[" + ((Reporter)sender).ReportTitle + "]: Формирвоание отчета закончено");
-            reportCounter--;
-            if (reportCounter == 0)
-                reportLogForm.Hide();
+            _reportLogForm.Log("[" + ((Reporter)sender).ReportTitle + "]: Формирвоание отчета закончено");
+            _reportCounter--;
+            if (_reportCounter == 0)
+                _reportLogForm.Hide();
         }
 
         void reporter_ReportOutputStreamResponse(object sender, ReportOutputStreamEventArgs e)
         {
-            if (reportLogForm.Visible == false)
-                reportLogForm.Show(dockPanel, DockState.DockBottomAutoHide);
+            if (_reportLogForm.Visible == false)
+                _reportLogForm.Show(dockPanel, DockState.DockBottomAutoHide);
             if (!String.IsNullOrEmpty(e.Text.Trim()) && (!Regex.IsMatch(e.Text.Trim(), "styles.xml")))
-                reportLogForm.Log("["+((Reporter)sender).ReportTitle+"]: "+e.Text.Trim());
+                _reportLogForm.Log("["+((Reporter)sender).ReportTitle+"]: "+e.Text.Trim());
         }
 
         private void ribbonButtonRegistryShortStatistic_Click(object sender, EventArgs e)
@@ -879,65 +910,65 @@ namespace Registry
 
         private void ribbonButton1711_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+            if (!(dockPanel.ActiveDocument is IMenuController))
                 return;
-            (dockPanel.ActiveDocument as IMenuController).TenancyContract17xReportGenerate(TenancyContractTypes.SpecialContract1711Form);
+            ((IMenuController) dockPanel.ActiveDocument).TenancyContract17xReportGenerate(TenancyContractTypes.SpecialContract1711Form);
         }
 
         private void ribbonButton1712_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+            if (!(dockPanel.ActiveDocument is IMenuController))
                 return;
-            (dockPanel.ActiveDocument as IMenuController).TenancyContract17xReportGenerate(TenancyContractTypes.SpecialContract1712Form);
+            ((IMenuController)dockPanel.ActiveDocument).TenancyContract17xReportGenerate(TenancyContractTypes.SpecialContract1712Form);
         }
 
         private void ribbonButtonTenancyAct_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+            if (!(dockPanel.ActiveDocument is IMenuController))
                 return;
-            (dockPanel.ActiveDocument as IMenuController).TenancyActReportGenerate();
+            ((IMenuController)dockPanel.ActiveDocument).TenancyActReportGenerate();
         }
 
         private void ribbonButtonTenancyContract_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+            if (!(dockPanel.ActiveDocument is IMenuController))
                 return;
-            (dockPanel.ActiveDocument as IMenuController).TenancyContractReportGenerate();
+            ((IMenuController)dockPanel.ActiveDocument).TenancyContractReportGenerate();
         }
 
         private void ribbonButtonTenancyAgreement_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+            if (!(dockPanel.ActiveDocument is IMenuController))
                 return;
-            (dockPanel.ActiveDocument as IMenuController).TenancyAgreementReportGenerate();
+            ((IMenuController)dockPanel.ActiveDocument).TenancyAgreementReportGenerate();
         }
 
         private void ribbonButtonOrderByCurrentTenancy_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+            if (!(dockPanel.ActiveDocument is IMenuController))
                 return;
-            (dockPanel.ActiveDocument as IMenuController).TenancyOrderReportGenerate();
+            ((IMenuController)dockPanel.ActiveDocument).TenancyOrderReportGenerate();
         }
 
         private void ribbonButtonOrbRegistryExcerptPremise_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+            if (!(dockPanel.ActiveDocument is IMenuController))
                 return;
-            (dockPanel.ActiveDocument as IMenuController).RegistryExcerptPremiseReportGenerate();
+            ((IMenuController)dockPanel.ActiveDocument).RegistryExcerptPremiseReportGenerate();
         }
 
         private void ribbonButtonOrbRegistryExcerptSubPremise_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+            if (!(dockPanel.ActiveDocument is IMenuController))
                 return;
-            (dockPanel.ActiveDocument as IMenuController).RegistryExcerptSubPremiseReportGenerate();
+            ((IMenuController)dockPanel.ActiveDocument).RegistryExcerptSubPremiseReportGenerate();
         }
 
         private void ribbonButtonOrbRegistryExcerptSubPremises_Click(object sender, EventArgs e)
         {
-            if ((dockPanel.ActiveDocument == null) || (dockPanel.ActiveDocument as IMenuController == null))
+            if (!(dockPanel.ActiveDocument is IMenuController))
                 return;
-            (dockPanel.ActiveDocument as IMenuController).RegistryExcerptSubPremisesReportGenerate();
+            ((IMenuController)dockPanel.ActiveDocument).RegistryExcerptSubPremisesReportGenerate();
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -1020,6 +1051,13 @@ namespace Registry
                 return true;
             }
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        private void ribbonButtonExportOds_Click(object sender, EventArgs e)
+        {
+            if (!(dockPanel.ActiveDocument is IMenuController))
+                return;
+            ((IMenuController) dockPanel.ActiveDocument).ExportToOds();
         }
     }
 }

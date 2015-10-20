@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 
 namespace Registry.Viewport
@@ -67,12 +68,12 @@ namespace Registry.Viewport
             snapshot_resettle_sub_premises.Columns.Add("is_checked").DataType = typeof(bool);
 
             if (way == ResettleEstateObjectWay.From)
-                resettle_sub_premises = ResettleSubPremisesFromAssocDataModel.GetInstance();
+                resettle_sub_premises = DataModel.GetInstance(DataModelType.ResettleSubPremisesFromAssocDataModel);
             else
-                resettle_sub_premises = ResettleSubPremisesToAssocDataModel.GetInstance();
+                resettle_sub_premises = DataModel.GetInstance(DataModelType.ResettleSubPremisesToAssocDataModel);
             resettle_sub_premises.Select();
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             v_resettle_sub_premises = new BindingSource();
             if (way == ResettleEstateObjectWay.From)
@@ -197,8 +198,10 @@ namespace Registry.Viewport
         public void SaveRecord()
         {
             sync_views = false;
-            ResettleSubPremisesFromAssocDataModel.GetInstance().EditingNewRecord = true;
-            ResettleSubPremisesToAssocDataModel.GetInstance().EditingNewRecord = true;
+            var resettleSubPremisesFromAssoc = DataModel.GetInstance(DataModelType.ResettleSubPremisesFromAssocDataModel);
+            var resettleSubPremisesToAssoc = DataModel.GetInstance(DataModelType.ResettleSubPremisesToAssocDataModel);
+            resettleSubPremisesFromAssoc.EditingNewRecord = true;
+            resettleSubPremisesToAssoc.EditingNewRecord = true;
             var list = ResettleSubPremisesFromViewport();
             for (var i = 0; i < list.Count; i++)
             {
@@ -209,14 +212,14 @@ namespace Registry.Viewport
                 {
                     var id_assoc = -1;
                     if (way == ResettleEstateObjectWay.From)
-                        id_assoc = ResettleSubPremisesFromAssocDataModel.Insert(list[i]);
+                        id_assoc = resettleSubPremisesFromAssoc.Insert(list[i]);
                     else
-                        id_assoc = ResettleSubPremisesToAssocDataModel.Insert(list[i]);
+                        id_assoc = resettleSubPremisesToAssoc.Insert(list[i]);
                     if (id_assoc == -1)
                     {
                         sync_views = true;
-                        ResettleSubPremisesFromAssocDataModel.GetInstance().EditingNewRecord = false;
-                        ResettleSubPremisesToAssocDataModel.GetInstance().EditingNewRecord = false;
+                        resettleSubPremisesFromAssoc.EditingNewRecord = false;
+                        resettleSubPremisesToAssoc.EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)v_snapshot_resettle_sub_premises[
@@ -241,15 +244,15 @@ namespace Registry.Viewport
                 {
                     var affected = -1;
                     if (way == ResettleEstateObjectWay.From)
-                        affected = ResettleSubPremisesFromAssocDataModel.Delete(list[i].IdAssoc.Value);
+                        affected = resettleSubPremisesFromAssoc.Delete(list[i].IdAssoc.Value);
                     else
-                        affected = ResettleSubPremisesToAssocDataModel.Delete(list[i].IdAssoc.Value);
+                        affected = resettleSubPremisesToAssoc.Delete(list[i].IdAssoc.Value);
 
                     if (affected == -1)
                     {
                         sync_views = true;
-                        ResettleSubPremisesFromAssocDataModel.GetInstance().EditingNewRecord = false;
-                        ResettleSubPremisesToAssocDataModel.GetInstance().EditingNewRecord = false;
+                        resettleSubPremisesFromAssoc.EditingNewRecord = false;
+                        resettleSubPremisesToAssoc.EditingNewRecord = false;
                         return;
                     }
                     var snapshot_row_index = -1;
@@ -268,8 +271,8 @@ namespace Registry.Viewport
                 }
             }
             sync_views = true;
-            ResettleSubPremisesFromAssocDataModel.GetInstance().EditingNewRecord = false;
-            ResettleSubPremisesToAssocDataModel.GetInstance().EditingNewRecord = false;
+            resettleSubPremisesFromAssoc.EditingNewRecord = false;
+            resettleSubPremisesToAssoc.EditingNewRecord = false;
         }
 
         protected override void OnVisibleChanged(EventArgs e)

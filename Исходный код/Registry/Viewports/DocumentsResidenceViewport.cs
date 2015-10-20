@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -21,7 +22,7 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        DocumentsResidenceDataModel documents_residence;
+        DataModel documents_residence;
         DataTable snapshot_documents_residence = new DataTable("snapshot_documents_residence");
         #endregion Models
 
@@ -156,7 +157,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            documents_residence = DocumentsResidenceDataModel.GetInstance();
+            documents_residence = DataModel.GetInstance(DataModelType.DocumentsResidenceDataModel);
 
             //Ожидаем дозагрузки данных, если это необходимо
             documents_residence.Select();
@@ -164,7 +165,7 @@ namespace Registry.Viewport
             v_documents_residence = new BindingSource
             {
                 DataMember = "documents_residence",
-                DataSource = DataSetManager.DataSet
+                DataSource = DataModel.DataSet
             };
 
             //Инициируем колонки snapshot-модели
@@ -312,7 +313,7 @@ namespace Registry.Viewport
                 var row = documents_residence.Select().Rows.Find(list[i].IdDocumentResidence);
                 if (row == null)
                 {
-                    var idDocumentResidence = DocumentsResidenceDataModel.Insert(list[i]);
+                    var idDocumentResidence = documents_residence.Insert(list[i]);
                     if (idDocumentResidence == -1)
                     {
                         sync_views = true;
@@ -327,7 +328,7 @@ namespace Registry.Viewport
 
                     if (RowToDocumentResidence(row) == list[i])
                         continue;
-                    if (DocumentsResidenceDataModel.Update(list[i]) == -1)
+                    if (documents_residence.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         documents_residence.EditingNewRecord = false;
@@ -347,7 +348,7 @@ namespace Registry.Viewport
                         rowIndex = j;
                 if (rowIndex == -1)
                 {
-                    if (document.IdDocumentResidence != null && DocumentsResidenceDataModel.Delete(document.IdDocumentResidence.Value) == -1)
+                    if (document.IdDocumentResidence != null && documents_residence.Delete(document.IdDocumentResidence.Value) == -1)
                     {
                         sync_views = true;
                         documents_residence.EditingNewRecord = false;

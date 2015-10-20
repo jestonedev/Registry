@@ -1,0 +1,382 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Registry.DataModels.BuildingsDataModel" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\BuildingsDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.ClaimsDataModel" Collapsed="true">
+    <Position X="16.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\ClaimsDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.ClaimStatesDataModel" Collapsed="true">
+    <Position X="32" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\ClaimStatesDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.ClaimStateTypesDataModel" Collapsed="true">
+    <Position X="47.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\ClaimStateTypesDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.ClaimStateTypesRelationsDataModel" Collapsed="true">
+    <Position X="63.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAIAEEAAAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\ClaimStateTypesRelationsDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.DataModel" Collapsed="true">
+    <Position X="56.75" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAACgAAAAAAAAAJAAABAQAAAAAAgFAAAAAAAQAAAAAA=</HashCode>
+      <FileName>DataModels\DataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.DocumentsIssuedByDataModel" Collapsed="true">
+    <Position X="2.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\DocumentsIssuedByDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.DocumentsResidenceDataModel" Collapsed="true">
+    <Position X="18.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\DocumentsResidenceDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.DocumentTypesDataModel" Collapsed="true">
+    <Position X="34.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAABAAgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\DocumentTypesDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.ExecutorsDataModel" Collapsed="true">
+    <Position X="50" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\ExecutorsDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.FundsBuildingsAssocDataModel" Collapsed="true">
+    <Position X="65.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAABAAgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\FundsBuildingsAssocDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.FundsHistoryDataModel" Collapsed="true">
+    <Position X="79.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\FundsHistoryDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.FundsPremisesAssocDataModel" Collapsed="true">
+    <Position X="92.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAABAAgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\FundsPremisesAssocDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.FundsSubPremisesAssocDataModel" Collapsed="true">
+    <Position X="104" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAABAAgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\FundsSubPremisesAssocDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.FundTypesDataModel" Collapsed="true">
+    <Position X="5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAABAAgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\FundTypesDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.KinshipsDataModel" Collapsed="true">
+    <Position X="20.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAABAAgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\KinshipsDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.KladrRegionsDataModel" Collapsed="true">
+    <Position X="36.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAABAAgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\KladrRegionsDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.KladrStreetsDataModel" Collapsed="true">
+    <Position X="52.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAABAAgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\KladrStreetsDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.ObjectStatesDataModel" Collapsed="true">
+    <Position X="68" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAABAAgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\ObjectStatesDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.OwnershipBuildingsAssocDataModel" Collapsed="true">
+    <Position X="81.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAABAAgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\OwnershipBuildingsAssocDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.OwnershipPremisesAssocDataModel" Collapsed="true">
+    <Position X="95" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAABAAgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\OwnershipPremisesAssocDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.OwnershipRightTypesDataModel" Collapsed="true">
+    <Position X="106.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\OwnershipRightTypesDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.OwnershipsRightsDataModel" Collapsed="true">
+    <Position X="7.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\OwnershipsRightsDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.PremisesDataModel" Collapsed="true">
+    <Position X="23" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAABAAABAEgBAABAAAABAAAAAA=</HashCode>
+      <FileName>DataModels\PremisesDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.PremisesKindsDataModel" Collapsed="true">
+    <Position X="38.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAABAAgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\PremisesKindsDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.PremisesTypesDataModel" Collapsed="true">
+    <Position X="54.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAABAAgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\PremisesTypesDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.RentTypesDataModel" Collapsed="true">
+    <Position X="70.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAABAAgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\RentTypesDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.ResettleBuildingsFromAssocDataModel" Collapsed="true">
+    <Position X="83.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAIAEEAAAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\ResettleBuildingsFromAssocDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.ResettleBuildingsToAssocDataModel" Collapsed="true">
+    <Position X="97.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAIAEEAAAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\ResettleBuildingsToAssocDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.ResettlePersonsDataModel" Collapsed="true">
+    <Position X="108.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAABAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\ResettlePersonsDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.ResettlePremisesFromAssocDataModel" Collapsed="true">
+    <Position X="9.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAIAEEAAAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\ResettlePremisesFromAssocDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.ResettlePremisesToAssocDataModel" Collapsed="true">
+    <Position X="25.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAIAEEAAAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\ResettlePremisesToAssocDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.ResettleProcessesDataModel" Collapsed="true">
+    <Position X="41" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\ResettleProcessesDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.ResettleSubPremisesFromAssocDataModel" Collapsed="true">
+    <Position X="56.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAIAEEAAAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\ResettleSubPremisesFromAssocDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.ResettleSubPremisesToAssocDataModel" Collapsed="true">
+    <Position X="72.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAIAEEAAAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\ResettleSubPremisesToAssocDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.RestrictionsBuildingsAssocDataModel" Collapsed="true">
+    <Position X="86" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAABAAgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\RestrictionsBuildingsAssocDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.RestrictionsDataModel" Collapsed="true">
+    <Position X="99.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\RestrictionsDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.RestrictionsPremisesAssocDataModel" Collapsed="true">
+    <Position X="110.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAABAAgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\RestrictionsPremisesAssocDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.RestrictionTypesDataModel" Collapsed="true">
+    <Position X="11.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\RestrictionTypesDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.StructureTypesDataModel" Collapsed="true">
+    <Position X="27.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\StructureTypesDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.SubPremisesDataModel" Collapsed="true">
+    <Position X="43.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\SubPremisesDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.TenancyAgreementsDataModel" Collapsed="true">
+    <Position X="59" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAABAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\TenancyAgreementsDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.TenancyBuildingsAssocDataModel" Collapsed="true">
+    <Position X="74.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\TenancyBuildingsAssocDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.TenancyNotifiesDataModel" Collapsed="true">
+    <Position X="88.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAABAAgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\TenancyNotifiesDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.TenancyPersonsDataModel" Collapsed="true">
+    <Position X="101.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAABAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\TenancyPersonsDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.TenancyPremisesAssocDataModel" Collapsed="true">
+    <Position X="113" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\TenancyPremisesAssocDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.TenancyProcessesDataModel" Collapsed="true">
+    <Position X="14" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\TenancyProcessesDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.TenancyReasonsDataModel" Collapsed="true">
+    <Position X="29.75" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\TenancyReasonsDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.TenancyReasonTypesDataModel" Collapsed="true">
+    <Position X="45.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\TenancyReasonTypesDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.TenancySubPremisesAssocDataModel" Collapsed="true">
+    <Position X="61.25" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\TenancySubPremisesAssocDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.WarrantDocTypesDataModel" Collapsed="true">
+    <Position X="77" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAAAAAAAAAAAAABAAgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\WarrantDocTypesDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Registry.DataModels.WarrantsDataModel" Collapsed="true">
+    <Position X="90.5" Y="1.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgQIAEEACAAAAAAAAAAAAAAABAEgBAABAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\WarrantsDataModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="Registry.DataModels.DataModelLoadState" Collapsed="true">
+    <Position X="115.5" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAAAAABAAAIAAAAAAAQAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\DataModelLoadState.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Enum Name="Registry.DataModels.DataModelLoadSyncType" Collapsed="true">
+    <Position X="117.25" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAIAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>DataModels\DataModelLoadSyncType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

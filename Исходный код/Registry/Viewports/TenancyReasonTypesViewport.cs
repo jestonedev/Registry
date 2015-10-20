@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -23,7 +24,7 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        TenancyReasonTypesDataModel tenancy_reason_types;
+        DataModel tenancy_reason_types;
         DataTable snapshot_reason_types = new DataTable("snapshot_reason_types");
         #endregion Models
 
@@ -217,14 +218,14 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            tenancy_reason_types = TenancyReasonTypesDataModel.GetInstance();
+            tenancy_reason_types = DataModel.GetInstance(DataModelType.TenancyReasonTypesDataModel);
 
             //Ожидаем дозагрузки данных, если это необходимо
             tenancy_reason_types.Select();
 
             v_tenancy_reason_types = new BindingSource();
             v_tenancy_reason_types.DataMember = "tenancy_reason_types";
-            v_tenancy_reason_types.DataSource = DataSetManager.DataSet;
+            v_tenancy_reason_types.DataSource = DataModel.DataSet;
 
             //Инициируем колонки snapshot-модели
             snapshot_reason_types.Locale = CultureInfo.InvariantCulture;
@@ -309,7 +310,7 @@ namespace Registry.Viewport
                 var row = tenancy_reason_types.Select().Rows.Find(list[i].IdReasonType);
                 if (row == null)
                 {
-                    var id_reason_type = TenancyReasonTypesDataModel.Insert(list[i]);
+                    var id_reason_type = tenancy_reason_types.Insert(list[i]);
                     if (id_reason_type == -1)
                     {
                         sync_views = true;
@@ -324,7 +325,7 @@ namespace Registry.Viewport
 
                     if (RowToReasonType(row) == list[i])
                         continue;
-                    if (TenancyReasonTypesDataModel.Update(list[i]) == -1)
+                    if (tenancy_reason_types.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         tenancy_reason_types.EditingNewRecord = false;
@@ -345,7 +346,7 @@ namespace Registry.Viewport
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (TenancyReasonTypesDataModel.Delete(list[i].IdReasonType.Value) == -1)
+                    if (tenancy_reason_types.Delete(list[i].IdReasonType.Value) == -1)
                     {
                         sync_views = true;
                         tenancy_reason_types.EditingNewRecord = false;

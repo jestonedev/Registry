@@ -1,38 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Data;
+﻿using System.Windows.Forms;
 
-namespace Registry.DataModels
+namespace Registry.DataModels.DataModels
 {
-    public sealed class RentTypesDataModel: DataModel
+    internal sealed class RentTypesDataModel : DataModel
     {
-        private static RentTypesDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM rent_types rt ORDER BY rt.rent_type DESC";
-        private static string tableName = "rent_types";
+        private static RentTypesDataModel _dataModel;
+        private const string SelectQuery = "SELECT * FROM rent_types rt ORDER BY rt.rent_type DESC";
+        private const string TableName = "rent_types";
 
         private RentTypesDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, selectQuery, tableName)
+            : base(progressBar, incrementor, SelectQuery, TableName)
         {
-        }
-
-        protected override void ConfigureTable()
-        {
-            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_rent_type"] };
-        }
-
-        public static RentTypesDataModel GetInstance()
-        {
-            return GetInstance(null, 0);
         }
 
         public static RentTypesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
         {
-            if (dataModel == null)
-                dataModel = new RentTypesDataModel(progressBar, incrementor);
-            return dataModel;
+            return _dataModel ?? (_dataModel = new RentTypesDataModel(progressBar, incrementor));
+        }
+
+        protected override void ConfigureTable()
+        {
+            Table.PrimaryKey = new [] { Table.Columns["id_rent_type"] };
+        }
+
+        protected override void ConfigureRelations()
+        {
+            AddRelation(TableName, "id_rent_type", "tenancy_processes", "id_rent_type");
         }
     }
 }

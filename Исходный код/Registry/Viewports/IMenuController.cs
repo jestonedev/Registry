@@ -110,5 +110,9 @@ namespace Registry.Viewport
         bool HasRegistryExcerptSubPremiseReport();
 
         bool HasRegistryExcerptPremiseReport();
+
+        bool HasExportToOds();
+
+        void ExportToOds();
     }
 }

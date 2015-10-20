@@ -2,19 +2,21 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Viewport;
 
 namespace Registry.SearchForms
 {
     internal partial class ExtendedSearchBuildingForm : SearchForm
     {
-        KladrStreetsDataModel kladr;
-        KladrRegionsDataModel regions;
-        FundTypesDataModel fundTypes;
-        ObjectStatesDataModel object_states;
-        OwnershipRightTypesDataModel ownership_right_types;
+        DataModel kladr;
+        DataModel regions;
+        DataModel fundTypes;
+        DataModel object_states;
+        DataModel ownership_right_types;
 
         BindingSource v_kladr;
         BindingSource v_regions;
@@ -99,7 +101,7 @@ namespace Registry.SearchForms
             if (checkBoxTenantSNPEnable.Checked)
             {
                 var snp = textBoxTenantSNP.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var buildingsIds = DataModelHelper.BuildingIDsBySNP(snp, row => row.Field<int?>("id_kinship") == 1);
+                var buildingsIds = DataModelHelper.BuildingIdsBySnp(snp, row => row.Field<int?>("id_kinship") == 1);
                 includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingsIds);
             }
             if ((checkBoxOwnershipTypeEnable.Checked) && (comboBoxOwnershipType.SelectedValue != null))
@@ -112,22 +114,56 @@ namespace Registry.SearchForms
             {
                 if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += "id_building IN (0";
-                foreach (var id in includedBuildings)
-                    filter += id.ToString(CultureInfo.InvariantCulture) + ",";
-                filter = filter.TrimEnd(',') + ")";
+                filter += "(" + BuildFilter(includedBuildings, "id_building") + ")";
             }
+            return filter;
+        }
+
+        private static string BuildFilter(IEnumerable<int> ids, string fieldName)
+        {
+            var startId = -1;
+            var count = 0;
+            var filter = "";
+            var entropicPremisesIds = new List<int>();
+            foreach (var id in ids.Union(new List<int> { -1 }))
+            {
+                if (id != startId + count)
+                {
+                    if (count < 5)
+                    {
+                        if (startId != -1)
+                            for (var i = 0; i < count; i++)
+                                entropicPremisesIds.Add(startId + i);
+                    }
+                    else
+                    {
+                        if (!string.IsNullOrEmpty(filter))
+                            filter += " OR ";
+                        filter += string.Format("({1} <= {0} AND {0} <= {2})", fieldName, startId, startId + count - 1);
+                    }
+                    startId = id;
+                    count = 1;
+                }
+                else
+                    count++;
+            }
+            var entropicPIdsStr = entropicPremisesIds.Aggregate("", (current, premisesId) => current + (premisesId + ","));
+            entropicPIdsStr = entropicPIdsStr.Trim(',');
+            if (string.IsNullOrEmpty(entropicPIdsStr)) return filter;
+            if (!string.IsNullOrEmpty(filter))
+                filter += " OR ";
+            filter += string.Format("{0} IN ({1})", fieldName, entropicPIdsStr);
             return filter;
         }
 
         public ExtendedSearchBuildingForm()
         {
             InitializeComponent();
-            kladr = KladrStreetsDataModel.GetInstance();
-            fundTypes = FundTypesDataModel.GetInstance();
-            object_states = ObjectStatesDataModel.GetInstance();
-            regions = KladrRegionsDataModel.GetInstance();
-            ownership_right_types = OwnershipRightTypesDataModel.GetInstance();
+            kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
+            fundTypes = DataModel.GetInstance(DataModelType.FundTypesDataModel);
+            object_states = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
+            regions = DataModel.GetInstance(DataModelType.KladrRegionsDataModel);
+            ownership_right_types = DataModel.GetInstance(DataModelType.OwnershipRightTypesDataModel);
 
             v_kladr = new BindingSource {DataSource = kladr.Select()};
 

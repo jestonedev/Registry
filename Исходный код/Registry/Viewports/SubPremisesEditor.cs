@@ -4,8 +4,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Registry.CalcDataModels;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
 
@@ -16,8 +17,8 @@ namespace Registry.Viewport
         private ViewportState state = ViewportState.NewRowState;
         private SubPremise subPremise;
         private ParentTypeEnum parentType;
-        private SubPremisesDataModel sub_premises = SubPremisesDataModel.GetInstance();
-        private ObjectStatesDataModel object_states;
+        private DataModel sub_premises = DataModel.GetInstance(DataModelType.SubPremisesDataModel);
+        private DataModel object_states;
         private BindingSource v_object_states;
 
         public ParentTypeEnum ParentType
@@ -106,7 +107,7 @@ namespace Registry.Viewport
         public SubPremisesEditor()
         {
             InitializeComponent();
-            object_states = ObjectStatesDataModel.GetInstance();
+            object_states = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
             v_object_states = new BindingSource();
             v_object_states.DataSource = object_states.Select();
             comboBoxIdState.DataSource = v_object_states;
@@ -165,14 +166,14 @@ namespace Registry.Viewport
                     return;
                 }
                 sub_premises.EditingNewRecord = true;
-                var id_sub_premise = SubPremisesDataModel.Insert(subPremise);
+                var id_sub_premise = sub_premises.Insert(subPremise);
                 if (id_sub_premise == -1)
                     return;
                 sub_premises.Select().Rows.Add(id_sub_premise, subPremise.IdPremises, subPremise.IdState, subPremise.SubPremisesNum, subPremise.TotalArea, subPremise.LivingArea, subPremise.Description, subPremise.StateDate);
                 sub_premises.EditingNewRecord = false;
             } else
             {
-                if (SubPremisesDataModel.Update(subPremise) == -1)
+                if (sub_premises.Update(subPremise) == -1)
                     return;
                 var row = sub_premises.Select().Rows.Find(subPremise.IdSubPremises);
                 row["id_state"] = subPremise.IdState == null ? DBNull.Value : (object)subPremise.IdState;
@@ -182,12 +183,6 @@ namespace Registry.Viewport
                 row["description"] = subPremise.Description == null ? DBNull.Value : (object)subPremise.Description;
                 row["state_date"] = subPremise.StateDate == null ? DBNull.Value : (object)subPremise.StateDate;
             }
-            CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
-            CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
-            CalcDataModelPremiseSubPremisesSumArea.GetInstance().Refresh(EntityType.Premise,
-                int.Parse(ParentRow["id_premises"].ToString(), CultureInfo.InvariantCulture), true);
-            CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building,
-                int.Parse(ParentRow["id_building"].ToString(), CultureInfo.InvariantCulture), true);
             DialogResult = DialogResult.OK;
         }
 

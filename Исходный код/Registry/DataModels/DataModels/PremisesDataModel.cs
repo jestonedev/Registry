@@ -1,44 +1,32 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Data.Common;
-using System.Windows.Forms;
-using System.Data;
-using Registry.Entities;
 using System.Data.Odbc;
 using System.Globalization;
+using System.Windows.Forms;
+using Registry.Entities;
 
-namespace Registry.DataModels
+namespace Registry.DataModels.DataModels
 {
-    public sealed class PremisesDataModel : DataModel
+    internal sealed class PremisesDataModel : DataModel
     {
-        private static PremisesDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM premises WHERE deleted = 0";
-        private static string deleteQuery = "UPDATE premises SET deleted = 1 WHERE id_premises = ?";
-        private static string insertQuery = @"INSERT INTO premises
-                            (id_building, id_state, id_premises_kind, id_premises_type, premises_num, floor
-                             , num_rooms, num_beds, total_area, living_area, height
-                             , cadastral_num, cadastral_cost
-                             , balance_cost, description, reg_date, is_memorial, account, state_date)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        private static string updateQuery = @"UPDATE premises SET id_building = ?, id_state = ?, id_premises_kind = ?, 
-                            id_premises_type = ?,premises_num = ?, floor = ?, num_rooms = ?, num_beds = ?, 
-                            total_area = ?, living_area = ?, height = ?, 
-                            cadastral_num = ?, cadastral_cost = ?, 
-                            balance_cost = ?, description = ?, reg_date = ?, is_memorial = ?, account = ?, state_date = ? WHERE id_premises = ?";
-        private static string updateState = @"UPDATE premises SET id_state = ?,  state_date = ? WHERE id_premises = ?";
-        private static string tableName = "premises";
+        private static PremisesDataModel _dataModel;
+        private const string SelectQuery = "SELECT * FROM premises WHERE deleted = 0";
+        private const string TableName = "premises";
 
         private PremisesDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, selectQuery, tableName)
+            : base(progressBar, incrementor, SelectQuery, TableName)
         {
             EditingNewRecord = false;            
         }
 
+        public static PremisesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
+            return _dataModel ?? (_dataModel = new PremisesDataModel(progressBar, incrementor));
+        }
+
         protected override void ConfigureTable()
         {
-            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_premises"] };
+            Table.PrimaryKey = new [] { Table.Columns["id_premises"] };
             Table.Columns["id_state"].DefaultValue = 1;
             Table.Columns["living_area"].DefaultValue = 0;
             Table.Columns["total_area"].DefaultValue = 0;
@@ -53,164 +41,85 @@ namespace Registry.DataModels
             Table.Columns["is_memorial"].DefaultValue = false;
         }
 
-        public static PremisesDataModel GetInstance()
+        protected override void ConfigureRelations()
         {
-            return GetInstance(null, 0);
+            AddRelation("buildings", "id_building", TableName, "id_building");
+            AddRelation("premises_types", "id_premises_type", TableName, "id_premises_type");
+            AddRelation("premises_kinds", "id_premises_kind", TableName, "id_premises_kind");
+            AddRelation("object_states", "id_state", TableName, "id_state");
+            AddRelation(TableName, "id_premises", "sub_premises", "id_premises");
+            AddRelation(TableName, "id_premises", "restrictions_premises_assoc", "id_premises");
+            AddRelation(TableName, "id_premises", "ownership_premises_assoc", "id_premises");
+            AddRelation(TableName, "id_premises", "funds_premises_assoc", "id_premises");
+            AddRelation(TableName, "id_premises", "tenancy_premises_assoc", "id_premises");
+            AddRelation(TableName, "id_premises", "resettle_premises_from_assoc", "id_premises");
+            AddRelation(TableName, "id_premises", "resettle_premises_to_assoc", "id_premises");
         }
 
-        public static PremisesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        protected override void ConfigureDeleteCommand(DbCommand command, int id)
         {
-            if (dataModel == null)
-                dataModel = new PremisesDataModel(progressBar, incrementor);
-            return dataModel;
+            command.CommandText = "UPDATE premises SET deleted = 1 WHERE id_premises = ?";
+            command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", id));
         }
 
-        public static int Delete(int id)
+        protected override void ConfigureInsertCommand(DbCommand command, Entity entity)
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                command.CommandText = deleteQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", id));
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось удалить помещение из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            command.CommandText = @"INSERT INTO premises
+                            (id_building, id_state, id_premises_kind, id_premises_type, premises_num, floor
+                             , num_rooms, num_beds, total_area, living_area, height
+                             , cadastral_num, cadastral_cost
+                             , balance_cost, description, reg_date, is_memorial, account, state_date)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            var premise = (Premise)entity;
+            command.Parameters.Add(DBConnection.CreateParameter("id_building", premise.IdBuilding));
+            command.Parameters.Add(DBConnection.CreateParameter("id_state", premise.IdState));
+            command.Parameters.Add(DBConnection.CreateParameter("id_premises_kind", premise.IdPremisesKind));
+            command.Parameters.Add(DBConnection.CreateParameter("id_premises_type", premise.IdPremisesType));
+            command.Parameters.Add(DBConnection.CreateParameter("premises_num", premise.PremisesNum));
+            command.Parameters.Add(DBConnection.CreateParameter("floor", premise.Floor));
+            command.Parameters.Add(DBConnection.CreateParameter("num_rooms", premise.NumRooms));
+            command.Parameters.Add(DBConnection.CreateParameter("num_beds", premise.NumBeds));
+            command.Parameters.Add(DBConnection.CreateParameter("total_area", premise.TotalArea));
+            command.Parameters.Add(DBConnection.CreateParameter("living_area", premise.LivingArea));
+            command.Parameters.Add(DBConnection.CreateParameter("height", premise.Height));
+            command.Parameters.Add(DBConnection.CreateParameter("cadastral_num", premise.CadastralNum));
+            command.Parameters.Add(DBConnection.CreateParameter("cadastral_cost", premise.CadastralCost));
+            command.Parameters.Add(DBConnection.CreateParameter("balance_cost", premise.BalanceCost));
+            command.Parameters.Add(DBConnection.CreateParameter("description", premise.Description));
+            command.Parameters.Add(DBConnection.CreateParameter("reg_date", premise.RegDate));
+            command.Parameters.Add(DBConnection.CreateParameter("is_memorial", premise.IsMemorial));
+            command.Parameters.Add(DBConnection.CreateParameter("account", premise.Account));
+            command.Parameters.Add(DBConnection.CreateParameter("state_date", premise.StateDate));
         }
 
-        public static int Update(Premise premise)
+        protected override void ConfigureUpdateCommand(DbCommand command, Entity entity)
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                command.CommandText = updateQuery;
-                if (premise == null)
-                {
-                    MessageBox.Show("В метод Update не передана ссылка на объект помещения", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_building", premise.IdBuilding));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", premise.IdState));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_kind", premise.IdPremisesKind));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_type", premise.IdPremisesType));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("premises_num", premise.PremisesNum));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("floor", premise.Floor));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_rooms", premise.NumRooms));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_beds", premise.NumBeds));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", premise.TotalArea));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("living_area", premise.LivingArea));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("height", premise.Height));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("cadastral_num", premise.CadastralNum));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("cadastral_cost", premise.CadastralCost));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("balance_cost", premise.BalanceCost));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", premise.Description));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("reg_date", premise.RegDate));
-                command.Parameters.Add(DBConnection.CreateParameter<bool?>("is_memorial", premise.IsMemorial));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("account", premise.Account));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("state_date", premise.StateDate));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", premise.IdPremises));
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось изменить данные о помещении. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
-        }
-
-        public static int UpdateState(int idPremise, int? idState, DateTime? stateDate)
-        {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                command.CommandText = updateState;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", idState));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("state_date", stateDate));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises", idPremise));
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture,
-                        "Не удалось изменить данные о помещении. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
-        }
-
-        public static int Insert(Premise premise)
-        {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            using (DbCommand last_id_command = DBConnection.CreateCommand())
-            {
-                last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
-                command.CommandText = insertQuery;
-                if (premise == null)
-                {
-                    MessageBox.Show("В метод Insert не передана ссылка на объект помещения", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_building", premise.IdBuilding));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state", premise.IdState));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_kind", premise.IdPremisesKind));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_premises_type", premise.IdPremisesType));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("premises_num", premise.PremisesNum));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("floor", premise.Floor));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_rooms", premise.NumRooms));
-                command.Parameters.Add(DBConnection.CreateParameter<short?>("num_beds", premise.NumBeds));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("total_area", premise.TotalArea));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("living_area", premise.LivingArea));
-                command.Parameters.Add(DBConnection.CreateParameter<double?>("height", premise.Height));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("cadastral_num", premise.CadastralNum));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("cadastral_cost", premise.CadastralCost));
-                command.Parameters.Add(DBConnection.CreateParameter<decimal?>("balance_cost", premise.BalanceCost));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", premise.Description));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("reg_date", premise.RegDate));
-                command.Parameters.Add(DBConnection.CreateParameter<bool?>("is_memorial", premise.IsMemorial));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("account", premise.Account));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("state_date", premise.StateDate));
-                try
-                {
-                    connection.SqlBeginTransaction();
-                    connection.SqlModifyQuery(command);
-                    DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
-                    connection.SqlCommitTransaction();
-                    if (last_id.Rows.Count == 0)
-                    {
-                        MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", 
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        return -1;
-                    }
-                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.InvariantCulture);
-                }
-                catch (OdbcException e)
-                {
-                    connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось добавить помещение в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            command.CommandText = @"UPDATE premises SET id_building = ?, id_state = ?, id_premises_kind = ?, 
+                            id_premises_type = ?,premises_num = ?, floor = ?, num_rooms = ?, num_beds = ?, 
+                            total_area = ?, living_area = ?, height = ?, 
+                            cadastral_num = ?, cadastral_cost = ?, 
+                            balance_cost = ?, description = ?, reg_date = ?, is_memorial = ?, account = ?, state_date = ? WHERE id_premises = ?";
+            var premise = (Premise) entity;
+            command.Parameters.Add(DBConnection.CreateParameter("id_building", premise.IdBuilding));
+            command.Parameters.Add(DBConnection.CreateParameter("id_state", premise.IdState));
+            command.Parameters.Add(DBConnection.CreateParameter("id_premises_kind", premise.IdPremisesKind));
+            command.Parameters.Add(DBConnection.CreateParameter("id_premises_type", premise.IdPremisesType));
+            command.Parameters.Add(DBConnection.CreateParameter("premises_num", premise.PremisesNum));
+            command.Parameters.Add(DBConnection.CreateParameter("floor", premise.Floor));
+            command.Parameters.Add(DBConnection.CreateParameter("num_rooms", premise.NumRooms));
+            command.Parameters.Add(DBConnection.CreateParameter("num_beds", premise.NumBeds));
+            command.Parameters.Add(DBConnection.CreateParameter("total_area", premise.TotalArea));
+            command.Parameters.Add(DBConnection.CreateParameter("living_area", premise.LivingArea));
+            command.Parameters.Add(DBConnection.CreateParameter("height", premise.Height));
+            command.Parameters.Add(DBConnection.CreateParameter("cadastral_num", premise.CadastralNum));
+            command.Parameters.Add(DBConnection.CreateParameter("cadastral_cost", premise.CadastralCost));
+            command.Parameters.Add(DBConnection.CreateParameter("balance_cost", premise.BalanceCost));
+            command.Parameters.Add(DBConnection.CreateParameter("description", premise.Description));
+            command.Parameters.Add(DBConnection.CreateParameter("reg_date", premise.RegDate));
+            command.Parameters.Add(DBConnection.CreateParameter("is_memorial", premise.IsMemorial));
+            command.Parameters.Add(DBConnection.CreateParameter("account", premise.Account));
+            command.Parameters.Add(DBConnection.CreateParameter("state_date", premise.StateDate));
+            command.Parameters.Add(DBConnection.CreateParameter("id_premises", premise.IdPremises));
         }
     }
 }

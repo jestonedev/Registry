@@ -29,6 +29,7 @@ namespace Registry
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             WeifenLuo.WinFormsUI.Docking.DockPanelSkin dockPanelSkin2 = new WeifenLuo.WinFormsUI.Docking.DockPanelSkin();
             WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin autoHideStripSkin2 = new WeifenLuo.WinFormsUI.Docking.AutoHideStripSkin();
             WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient4 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
@@ -44,7 +45,6 @@ namespace Registry
             WeifenLuo.WinFormsUI.Docking.DockPanelGradient dockPanelGradient6 = new WeifenLuo.WinFormsUI.Docking.DockPanelGradient();
             WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient13 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
             WeifenLuo.WinFormsUI.Docking.TabGradient tabGradient14 = new WeifenLuo.WinFormsUI.Docking.TabGradient();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.ribbon1 = new System.Windows.Forms.Ribbon();
             this.ribbonOrbMenuItemBuildings = new System.Windows.Forms.RibbonOrbMenuItem();
             this.ribbonOrbMenuItemPremises = new System.Windows.Forms.RibbonOrbMenuItem();
@@ -121,6 +121,7 @@ namespace Registry
             this.ribbonButtonPremisesByExchangeReport = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonPremisesByDonationReport = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonMunicipalPremises = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonAllPremises = new System.Windows.Forms.RibbonButton();
             this.ribbonPanel7 = new System.Windows.Forms.RibbonPanel();
             this.ribbonButtonStructureTypes = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonRestrictionTypes = new System.Windows.Forms.RibbonButton();
@@ -161,7 +162,8 @@ namespace Registry
             this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripLabelRecordCount = new System.Windows.Forms.ToolStripLabel();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
-            this.ribbonButtonAllPremises = new System.Windows.Forms.RibbonButton();
+            this.ribbonSeparator3 = new System.Windows.Forms.RibbonSeparator();
+            this.ribbonButtonExportOds = new System.Windows.Forms.RibbonButton();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -193,6 +195,8 @@ namespace Registry
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptPremise);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptSubPremise);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptSubPremises);
+            this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonSeparator3);
+            this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonExportOds);
             this.ribbon1.OrbDropDown.RecentItemsCaption = "Печать";
             this.ribbon1.OrbDropDown.Size = new System.Drawing.Size(527, 339);
             this.ribbon1.OrbDropDown.TabIndex = 0;
@@ -200,7 +204,7 @@ namespace Registry
             this.ribbon1.OrbStyle = System.Windows.Forms.RibbonOrbStyle.Office_2010;
             this.ribbon1.OrbText = "Меню";
             this.ribbon1.RibbonTabFont = new System.Drawing.Font("Trebuchet MS", 9F);
-            this.ribbon1.Size = new System.Drawing.Size(1016, 124);
+            this.ribbon1.Size = new System.Drawing.Size(1008, 124);
             this.ribbon1.TabIndex = 0;
             this.ribbon1.Tabs.Add(this.ribbonTabGeneral);
             this.ribbon1.Tabs.Add(this.ribbonTabHousing);
@@ -1049,6 +1053,18 @@ namespace Registry
             this.ribbonButtonMunicipalPremises.ToolTipTitle = "Муниципальные жилые помещения";
             this.ribbonButtonMunicipalPremises.Click += new System.EventHandler(this.ribbonButtonMunicipalPremises_Click);
             // 
+            // ribbonButtonAllPremises
+            // 
+            this.ribbonButtonAllPremises.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAllPremises.Image")));
+            this.ribbonButtonAllPremises.MaxSizeMode = System.Windows.Forms.RibbonElementSizeMode.Medium;
+            this.ribbonButtonAllPremises.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAllPremises.SmallImage")));
+            this.ribbonButtonAllPremises.Text = "Все ЖП";
+            this.ribbonButtonAllPremises.ToolTip = "При нажатии на данную кнопку будет сформирован отчет в OpenOffice Calc по всем жи" +
+    "лым помещениям";
+            this.ribbonButtonAllPremises.ToolTipImage = global::Registry.Properties.Resources.ooo_calc__max_;
+            this.ribbonButtonAllPremises.ToolTipTitle = "Все жилые помещения";
+            this.ribbonButtonAllPremises.Click += new System.EventHandler(this.ribbonButtonAllPremises_Click);
+            // 
             // ribbonPanel7
             // 
             this.ribbonPanel7.ButtonMoreEnabled = false;
@@ -1388,7 +1404,7 @@ namespace Registry
             this.toolStripLabelRecordCount});
             this.mbStatusStrip1.Location = new System.Drawing.Point(0, 716);
             this.mbStatusStrip1.Name = "mbStatusStrip1";
-            this.mbStatusStrip1.Size = new System.Drawing.Size(1016, 25);
+            this.mbStatusStrip1.Size = new System.Drawing.Size(1008, 25);
             this.mbStatusStrip1.TabIndex = 4;
             this.mbStatusStrip1.Text = "mbStatusStrip1";
             // 
@@ -1427,7 +1443,7 @@ namespace Registry
             this.dockPanel.Location = new System.Drawing.Point(0, 124);
             this.dockPanel.Name = "dockPanel";
             this.dockPanel.ShowDocumentIcon = true;
-            this.dockPanel.Size = new System.Drawing.Size(1016, 592);
+            this.dockPanel.Size = new System.Drawing.Size(1008, 592);
             dockPanelGradient4.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
             dockPanelGradient4.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
             autoHideStripSkin2.DockStripGradient = dockPanelGradient4;
@@ -1476,24 +1492,21 @@ namespace Registry
             this.dockPanel.TabIndex = 5;
             this.dockPanel.ActiveDocumentChanged += new System.EventHandler(this.dockPanel_ActiveDocumentChanged);
             // 
-            // ribbonButtonAllPremises
+            // ribbonButtonExportOds
             // 
-            this.ribbonButtonAllPremises.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAllPremises.Image")));
-            this.ribbonButtonAllPremises.MaxSizeMode = System.Windows.Forms.RibbonElementSizeMode.Medium;
-            this.ribbonButtonAllPremises.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAllPremises.SmallImage")));
-            this.ribbonButtonAllPremises.Text = "Все ЖП";
-            this.ribbonButtonAllPremises.ToolTip = "При нажатии на данную кнопку будет сформирован отчет в OpenOffice Calc по всем жи" +
-    "лым помещениям";
-            this.ribbonButtonAllPremises.ToolTipImage = global::Registry.Properties.Resources.ooo_calc__max_;
-            this.ribbonButtonAllPremises.ToolTipTitle = "Все жилые помещения";
-            this.ribbonButtonAllPremises.Click += new System.EventHandler(this.ribbonButtonAllPremises_Click);
+            this.ribbonButtonExportOds.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonExportOds.Image")));
+            this.ribbonButtonExportOds.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonExportOds.SmallImage")));
+            this.ribbonButtonExportOds.Text = "Экспорт";
+            this.ribbonButtonExportOds.ToolTip = "Экспортирует отфильтрованные данные в табличный процессор";
+            this.ribbonButtonExportOds.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonExportOds.ToolTipImage")));
+            this.ribbonButtonExportOds.Click += new System.EventHandler(this.ribbonButtonExportOds_Click);
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(1016, 741);
+            this.ClientSize = new System.Drawing.Size(1008, 741);
             this.Controls.Add(this.dockPanel);
             this.Controls.Add(this.mbStatusStrip1);
             this.Controls.Add(this.ribbon1);
@@ -1630,6 +1643,8 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButtonOrbRegistryExcerptSubPremise;
         private System.Windows.Forms.RibbonButton ribbonButtonOrbRegistryExcerptSubPremises;
         private System.Windows.Forms.RibbonButton ribbonButtonAllPremises;
+        private System.Windows.Forms.RibbonSeparator ribbonSeparator3;
+        private System.Windows.Forms.RibbonButton ribbonButtonExportOds;
     }
 }
 

@@ -5,7 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -24,7 +24,7 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        ExecutorsDataModel executors;
+        DataModel executors;
         DataTable snapshot_executors = new DataTable("snapshot_executors");
         #endregion Models
 
@@ -213,7 +213,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            executors = ExecutorsDataModel.GetInstance();
+            executors = DataModel.GetInstance(DataModelType.ExecutorsDataModel);
 
             //Ожидаем дозагрузки данных, если это необходимо
             executors.Select();
@@ -221,7 +221,7 @@ namespace Registry.Viewport
             v_executors = new BindingSource
             {
                 DataMember = "executors",
-                DataSource = DataSetManager.DataSet
+                DataSource = DataModel.DataSet
             };
 
             //Инициируем колонки snapshot-модели
@@ -307,7 +307,7 @@ namespace Registry.Viewport
                 var row = executors.Select().Rows.Find(list[i].IdExecutor);
                 if (row == null)
                 {
-                    var idExecutor = ExecutorsDataModel.Insert(list[i]);
+                    var idExecutor = executors.Insert(list[i]);
                     if (idExecutor == -1)
                     {
                         sync_views = true;
@@ -322,7 +322,7 @@ namespace Registry.Viewport
 
                     if (RowToExecutor(row) == list[i])
                         continue;
-                    if (ExecutorsDataModel.Update(list[i]) == -1)
+                    if (executors.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         executors.EditingNewRecord = false;
@@ -345,7 +345,7 @@ namespace Registry.Viewport
                         rowIndex = j;
                 if (rowIndex == -1)
                 {
-                    if (executor.IdExecutor != null && ExecutorsDataModel.Delete(executor.IdExecutor.Value) == -1)
+                    if (executor.IdExecutor != null && executors.Delete(executor.IdExecutor.Value) == -1)
                     {
                         sync_views = true;
                         executors.EditingNewRecord = false;

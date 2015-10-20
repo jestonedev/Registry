@@ -1,38 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Data;
+﻿using System.Windows.Forms;
 
-namespace Registry.DataModels
+namespace Registry.DataModels.DataModels
 {
-    public sealed class KinshipsDataModel: DataModel
+    internal sealed class KinshipsDataModel : DataModel
     {
-        private static KinshipsDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM kinships";
-        private static string tableName = "kinships";
+        private static KinshipsDataModel _dataModel;
+        private const string SelectQuery = "SELECT * FROM kinships";
+        private const string TableName = "kinships";
 
         private KinshipsDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, selectQuery, tableName)
+            : base(progressBar, incrementor, SelectQuery, TableName)
         {
-        }
-
-        protected override void ConfigureTable()
-        {
-            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_kinship"] };
-        }
-
-        public static KinshipsDataModel GetInstance()
-        {
-            return GetInstance(null, 0);
         }
 
         public static KinshipsDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
         {
-            if (dataModel == null)
-                dataModel = new KinshipsDataModel(progressBar, incrementor);
-            return dataModel;
+            return _dataModel ?? (_dataModel = new KinshipsDataModel(progressBar, incrementor));
+        }
+
+        protected override void ConfigureTable()
+        {
+            Table.PrimaryKey = new [] { Table.Columns["id_kinship"] };
+        }
+
+        protected override void ConfigureRelations()
+        {
+            AddRelation(TableName, "id_kinship", "tenancy_persons", "id_kinship");
         }
     }
 }

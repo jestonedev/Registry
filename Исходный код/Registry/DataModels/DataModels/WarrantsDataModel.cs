@@ -1,155 +1,73 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Data.Common;
 using System.Windows.Forms;
 using Registry.Entities;
-using System.Data.Common;
-using System.Data.Odbc;
-using System.Data;
-using System.Globalization;
 
-namespace Registry.DataModels
+namespace Registry.DataModels.DataModels
 {
-    public sealed class WarrantsDataModel: DataModel
+    internal sealed class WarrantsDataModel : DataModel
     {
-        private static WarrantsDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM warrants WHERE deleted <> 1";
-        private static string deleteQuery = "UPDATE warrants SET deleted = 1 WHERE id_warrant = ?";
-        private static string insertQuery = @"INSERT INTO warrants
-                            (id_warrant_doc_type, registration_num, 
-                            registration_date, on_behalf_of, notary,
-                            notary_district, description) VALUES (?, ?, ?, ?, ?, ?, ?)";
-        private static string updateQuery = @"UPDATE warrants SET id_warrant_doc_type = ?,
-                            registration_num = ?, registration_date = ?, on_behalf_of = ?, notary = ?,
-                            notary_district = ?, description = ? WHERE id_warrant = ?";
-        private static string tableName = "warrants";
+        private static WarrantsDataModel _dataModel;
+        private const string SelectQuery = "SELECT * FROM warrants WHERE deleted <> 1";
+        private const string TableName = "warrants";
 
         private WarrantsDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, selectQuery, tableName)
+            : base(progressBar, incrementor, SelectQuery, TableName)
         {
-        }
-
-        protected override void ConfigureTable()
-        {
-            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_warrant"] };
-        }
-
-
-        public static WarrantsDataModel GetInstance()
-        {
-            return GetInstance(null, 0);
         }
 
         public static WarrantsDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
         {
-            if (dataModel == null)
-                dataModel = new WarrantsDataModel(progressBar, incrementor);
-            return dataModel;
+            return _dataModel ?? (_dataModel = new WarrantsDataModel(progressBar, incrementor));
         }
 
-        public static int Delete(int id)
+        protected override void ConfigureTable()
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                command.CommandText = deleteQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", id));
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, "Не удалось удалить доверенность из базы данных. Подробная ошибка: {0}", 
-                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            Table.PrimaryKey = new [] { Table.Columns["id_warrant"] };
         }
 
-        public static int Insert(Warrant warrant)
+        protected override void ConfigureRelations()
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            using (DbCommand last_id_command = DBConnection.CreateCommand())
-            {   
-                last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
-                command.CommandText = insertQuery;
-                if (warrant == null)
-                {
-                    MessageBox.Show("В метод Insert не передана ссылка на сущность доверенности", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant_doc_type", warrant.IdWarrantDocType));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_num", warrant.RegistrationNum));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", warrant.RegistrationDate));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("on_behalf_of", warrant.OnBehalfOf));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("notary", warrant.Notary));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("notary_district", warrant.NotaryDistrict));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", warrant.Description));
-                try
-                {
-                    connection.SqlBeginTransaction();
-                    connection.SqlModifyQuery(command);
-                    DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
-
-                    if (last_id.Rows.Count == 0)
-                    {
-                        MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, 
-                            MessageBoxDefaultButton.Button1);
-                        connection.SqlRollbackTransaction();
-                        return -1;
-                    }
-                    connection.SqlCommitTransaction();
-
-                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.InvariantCulture);
-                }
-                catch (OdbcException e)
-                {
-                    connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, "Не удалось добавить запись о доверенности в базу данных. Подробная ошибка: {0}", 
-                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            AddRelation(TableName, "id_warrant", "tenancy_agreements", "id_warrant");
+            AddRelation(TableName, "id_warrant", "tenancy_processes", "id_warrant");
+            AddRelation("warrant_doc_types", "id_warrant_doc_type", TableName, "id_warrant_doc_type");
         }
 
-        public static int Update(Warrant warrant)
+        protected override void ConfigureDeleteCommand(DbCommand command, int id)
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                if (warrant == null)
-                {
-                    MessageBox.Show("В метод Update не передана ссылка на сущность доверенности", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-                command.CommandText = updateQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant_doc_type", warrant.IdWarrantDocType));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_num", warrant.RegistrationNum));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", warrant.RegistrationDate));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("on_behalf_of", warrant.OnBehalfOf));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("notary", warrant.Notary));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("notary_district", warrant.NotaryDistrict));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", warrant.Description));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", warrant.IdWarrant));
+            command.CommandText = "UPDATE warrants SET deleted = 1 WHERE id_warrant = ?";
+            command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", id));
+        }
 
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось изменить запись о доверенности в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }               
-            }
+        protected override void ConfigureUpdateCommand(DbCommand command, Entity entity)
+        {
+            command.CommandText = @"UPDATE warrants SET id_warrant_doc_type = ?,
+                            registration_num = ?, registration_date = ?, on_behalf_of = ?, notary = ?,
+                            notary_district = ?, description = ? WHERE id_warrant = ?";
+            var warrant = (Warrant) entity;
+            command.Parameters.Add(DBConnection.CreateParameter("id_warrant_doc_type", warrant.IdWarrantDocType));
+            command.Parameters.Add(DBConnection.CreateParameter("registration_num", warrant.RegistrationNum));
+            command.Parameters.Add(DBConnection.CreateParameter("registration_date", warrant.RegistrationDate));
+            command.Parameters.Add(DBConnection.CreateParameter("on_behalf_of", warrant.OnBehalfOf));
+            command.Parameters.Add(DBConnection.CreateParameter("notary", warrant.Notary));
+            command.Parameters.Add(DBConnection.CreateParameter("notary_district", warrant.NotaryDistrict));
+            command.Parameters.Add(DBConnection.CreateParameter("description", warrant.Description));
+            command.Parameters.Add(DBConnection.CreateParameter("id_warrant", warrant.IdWarrant));
+        }
+
+        protected override void ConfigureInsertCommand(DbCommand command, Entity entity)
+        {
+            command.CommandText = @"INSERT INTO warrants
+                            (id_warrant_doc_type, registration_num, 
+                            registration_date, on_behalf_of, notary,
+                            notary_district, description) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            var warrant = (Warrant)entity;
+            command.Parameters.Add(DBConnection.CreateParameter("id_warrant_doc_type", warrant.IdWarrantDocType));
+            command.Parameters.Add(DBConnection.CreateParameter("registration_num", warrant.RegistrationNum));
+            command.Parameters.Add(DBConnection.CreateParameter("registration_date", warrant.RegistrationDate));
+            command.Parameters.Add(DBConnection.CreateParameter("on_behalf_of", warrant.OnBehalfOf));
+            command.Parameters.Add(DBConnection.CreateParameter("notary", warrant.Notary));
+            command.Parameters.Add(DBConnection.CreateParameter("notary_district", warrant.NotaryDistrict));
+            command.Parameters.Add(DBConnection.CreateParameter("description", warrant.Description));
         }
     }
 }

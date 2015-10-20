@@ -1,5 +1,4 @@
-﻿using Registry.CalcDataModels;
-using Registry.DataModels;
+﻿using Registry.DataModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,17 +10,19 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Windows.Forms;
+using Registry.DataModels.CalcDataModels;
+using Registry.DataModels.DataModels;
 
 namespace Registry.Reporting
 {
     public partial class TenancyNotifiesSettingsForm : Form
     {
         #region Models
-        private TenancyProcessesDataModel tenancies = null;
-        private CalcDataModelTenancyAggregated tenancies_aggregate = null;
-        private RentTypesDataModel rent_types = null;
-        private ExecutorsDataModel executors = null;
-        private CalcDataModelTenancyNotifiesMaxDate tenancy_notifies_max_date = null;
+        private DataModel tenancies = null;
+        private CalcDataModel tenancies_aggregate = null;
+        private DataModel rent_types = null;
+        private DataModel executors = null;
+        private CalcDataModel tenancy_notifies_max_date = null;
         private Collection<int> checked_tenancies = new Collection<int>();
         #endregion Models
 
@@ -60,18 +61,18 @@ namespace Registry.Reporting
             InitializeComponent();
 
             dataGridView.AutoGenerateColumns = false;
-            tenancies = TenancyProcessesDataModel.GetInstance();
-            rent_types = RentTypesDataModel.GetInstance();
-            executors = ExecutorsDataModel.GetInstance();
-            tenancies_aggregate = CalcDataModelTenancyAggregated.GetInstance();
-            tenancy_notifies_max_date = CalcDataModelTenancyNotifiesMaxDate.GetInstance();
+            tenancies = DataModel.GetInstance(DataModelType.TenancyProcessesDataModel);
+            rent_types = DataModel.GetInstance(DataModelType.RentTypesDataModel);
+            executors = DataModel.GetInstance(DataModelType.ExecutorsDataModel);
+            tenancies_aggregate = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelTenancyAggregated);
+            tenancy_notifies_max_date = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelTenancyNotifiesMaxDate);
 
             //Ожидаем загрузки данных, если это необходимо
             tenancies.Select();
             rent_types.Select();
             executors.Select();
 
-            DataSet ds = DataSetManager.DataSet;
+            DataSet ds = DataModel.DataSet;
 
             v_tenancies = new BindingSource();
             v_tenancies.DataMember = "tenancy_processes";

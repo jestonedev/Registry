@@ -1,163 +1,63 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data.Common;
-using System.Data;
-using Registry.Entities;
-using System.Data.Odbc;
+﻿using System.Data.Common;
 using System.Windows.Forms;
-using System.Globalization;
+using Registry.Entities;
 
-namespace Registry.DataModels
+namespace Registry.DataModels.DataModels
 {
-    public sealed class OwnershipsRightsDataModel : DataModel
+    internal sealed class OwnershipsRightsDataModel : DataModel
     {
-        private static OwnershipsRightsDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM ownership_rights";
-        private static string deleteQuery = "UPDATE ownership_rights SET deleted = 1 WHERE id_ownership_right = ?";
-        private static string insertQuery = @"INSERT INTO ownership_rights
-                            (id_ownership_right_type, number, `date`, description)
-                            VALUES (?, ?, ?, ?)";
-        private static string updateQuery = @"UPDATE ownership_rights SET id_ownership_right_type = ?,
-                            number= ?, `date` = ?, description = ? WHERE id_ownership_right = ?";
-        private static string tableName = "ownership_rights";
+        private static OwnershipsRightsDataModel _dataModel;
+        private const string SelectQuery = "SELECT * FROM ownership_rights";
+        private const string TableName = "ownership_rights";
 
         private OwnershipsRightsDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, selectQuery, tableName)
+            : base(progressBar, incrementor, SelectQuery, TableName)
         {
-        }
-
-        protected override void ConfigureTable()
-        {
-            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_ownership_right"] };
-        }
-
-        public static OwnershipsRightsDataModel GetInstance()
-        {
-            return GetInstance(null, 0);
         }
 
         public static OwnershipsRightsDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
         {
-            if (dataModel == null)
-                dataModel = new OwnershipsRightsDataModel(progressBar, incrementor);
-            return dataModel;
+            return _dataModel ?? (_dataModel = new OwnershipsRightsDataModel(progressBar, incrementor));
         }
 
-        public static int Insert(OwnershipRight ownershipRight, ParentTypeEnum parentType, int idParent)
+        protected override void ConfigureTable()
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            using (DbCommand command_assoc = DBConnection.CreateCommand())
-            using (DbCommand last_id_command = DBConnection.CreateCommand())
-            {
-                last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
-                command.CommandText = insertQuery;
-                if (ownershipRight == null)
-                {
-                    MessageBox.Show("В метод Insert не передана ссылка на объект ограничения права", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right_type", ownershipRight.IdOwnershipRightType));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("number", ownershipRight.Number));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date", ownershipRight.Date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", ownershipRight.Description));
-
-                if (parentType == ParentTypeEnum.Building)
-                    command_assoc.CommandText = "INSERT INTO ownership_buildings_assoc (id_building, id_ownership_right) VALUES (?, ?)";
-                else
-                    if (parentType == ParentTypeEnum.Premises)
-                        command_assoc.CommandText = "INSERT INTO ownership_premises_assoc (id_premises, id_ownership_right) VALUES (?, ?)";
-                    else
-                    {
-                        MessageBox.Show("Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
-                                "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        return -1;
-                    }
-                try
-                {
-                    connection.SqlBeginTransaction();
-                    connection.SqlModifyQuery(command);
-                    DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
-                    if (last_id.Rows.Count == 0)
-                    {
-                        MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        connection.SqlRollbackTransaction();
-                        return -1;
-                    }
-                    command_assoc.Parameters.Add(DBConnection.CreateParameter<int?>("id_object", idParent));
-                    command_assoc.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right", 
-                        Convert.ToInt32(last_id.Rows[0][0], CultureInfo.InvariantCulture)));
-                    connection.SqlModifyQuery(command_assoc);
-                    connection.SqlCommitTransaction();
-                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.InvariantCulture);
-                }
-                catch (OdbcException e)
-                {
-                    connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture,
-                        "Не удалось добавить наименование ограничения в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            Table.PrimaryKey = new [] { Table.Columns["id_ownership_right"] };
         }
 
-        public static int Update(OwnershipRight ownershipRight)
+        protected override void ConfigureRelations()
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                command.CommandText = updateQuery;
-                if (ownershipRight == null)
-                {
-                    MessageBox.Show("В метод Update не передана ссылка на объект ограничения права", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right_type", ownershipRight.IdOwnershipRightType));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("number", ownershipRight.Number));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("date", ownershipRight.Date));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", ownershipRight.Description));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right", ownershipRight.IdOwnershipRight));
-
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось изменить наименование ограничения в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            AddRelation("ownership_right_types", "id_ownership_right_type", TableName, "id_ownership_right_type");
+            AddRelation(TableName, "id_ownership_right", "ownership_premises_assoc", "id_ownership_right");
+            AddRelation(TableName, "id_ownership_right", "ownership_buildings_assoc", "id_ownership_right");
         }
 
-        public static int Delete(int id)
+        protected override void ConfigureDeleteCommand(DbCommand command, int id)
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                command.CommandText = deleteQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right", id));
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось удалить ограничение из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            command.CommandText = "UPDATE ownership_rights SET deleted = 1 WHERE id_ownership_right = ?";
+            command.Parameters.Add(DBConnection.CreateParameter<int?>("id_ownership_right", id));
+        }
+
+        protected override void ConfigureUpdateCommand(DbCommand command, Entity entity)
+        {
+            command.CommandText = @"UPDATE ownership_rights SET id_ownership_right_type = ?,
+                            number= ?, `date` = ?, description = ? WHERE id_ownership_right = ?";
+            var ownershipRight = (OwnershipRight) entity;
+            command.Parameters.Add(DBConnection.CreateParameter("id_ownership_right_type", ownershipRight.IdOwnershipRightType));
+            command.Parameters.Add(DBConnection.CreateParameter("number", ownershipRight.Number));
+            command.Parameters.Add(DBConnection.CreateParameter("date", ownershipRight.Date));
+            command.Parameters.Add(DBConnection.CreateParameter("description", ownershipRight.Description));
+            command.Parameters.Add(DBConnection.CreateParameter("id_ownership_right", ownershipRight.IdOwnershipRight));
+        }
+
+        protected override void ConfigureInsertCommand(DbCommand command, Entity entity)
+        {
+            command.CommandText = @"INSERT INTO ownership_rights (id_ownership_right_type, number, `date`, description) VALUES (?, ?, ?, ?)";
+            var ownershipRight = (OwnershipRight)entity;
+            command.Parameters.Add(DBConnection.CreateParameter("id_ownership_right_type", ownershipRight.IdOwnershipRightType));
+            command.Parameters.Add(DBConnection.CreateParameter("number", ownershipRight.Number));
+            command.Parameters.Add(DBConnection.CreateParameter("date", ownershipRight.Date));
+            command.Parameters.Add(DBConnection.CreateParameter("description", ownershipRight.Description));
         }
     }
 }

@@ -115,6 +115,7 @@
     <Compile Include="RegistryExcerptSettingsForm.Designer.cs">
       <DependentUpon>RegistryExcerptSettingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExportReporter.cs" />
     <Compile Include="TenancyNotifiesSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>

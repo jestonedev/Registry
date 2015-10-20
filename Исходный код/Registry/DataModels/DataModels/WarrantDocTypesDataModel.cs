@@ -1,39 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Data;
+﻿using System.Windows.Forms;
 
-namespace Registry.DataModels
+namespace Registry.DataModels.DataModels
 {
-    public sealed class WarrantDocTypesDataModel: DataModel
+    internal sealed class WarrantDocTypesDataModel : DataModel
     {
-        private static WarrantDocTypesDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM warrant_doc_types";
-        private static string tableName = "warrant_doc_types";
+        private static WarrantDocTypesDataModel _dataModel;
+        private const string SelectQuery = "SELECT * FROM warrant_doc_types";
+        private const string TableName = "warrant_doc_types";
 
         private WarrantDocTypesDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, selectQuery, tableName)
+            : base(progressBar, incrementor, SelectQuery, TableName)
         {
-        }
-
-        protected override void ConfigureTable()
-        {
-            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_warrant_doc_type"] };
-        }
-
-
-        public static WarrantDocTypesDataModel GetInstance()
-        {
-            return GetInstance(null, 0);
         }
 
         public static WarrantDocTypesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
         {
-            if (dataModel == null)
-                dataModel = new WarrantDocTypesDataModel(progressBar, incrementor);
-            return dataModel;
+            return _dataModel ?? (_dataModel = new WarrantDocTypesDataModel(progressBar, incrementor));
+        }
+
+        protected override void ConfigureTable()
+        {
+            Table.PrimaryKey = new [] { Table.Columns["id_warrant_doc_type"] };
+        }
+
+        protected override void ConfigureRelations()
+        {
+            AddRelation(TableName, "id_warrant_doc_type", "warrants", "id_warrant_doc_type");
         }
     }
 }

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Registry.Entities
+﻿namespace Registry.Entities
 {
-    public sealed class DocumentIssuedBy
+    public sealed class DocumentIssuedBy : Entity
     {
         public int? IdDocumentIssuedBy { get; set; }
         public string DocumentIssuedByName { get; set; }
@@ -17,19 +12,17 @@ namespace Registry.Entities
 
         public bool Equals(DocumentIssuedBy other)
         {
-            return this.Equals((object)other);
+            return Equals((object)other);
         }
 
         public static bool operator ==(DocumentIssuedBy first, DocumentIssuedBy second)
         {
             if ((object)first == null && (object)second == null)
                 return true;
-            else
-                if ((object)first == null || (object)second == null)
-                    return false;
-                else
+            if ((object)first == null || (object)second == null)
+                return false;
             return first.IdDocumentIssuedBy == second.IdDocumentIssuedBy &&
-                first.DocumentIssuedByName == second.DocumentIssuedByName;
+                   first.DocumentIssuedByName == second.DocumentIssuedByName;
         }
 
         public static bool operator !=(DocumentIssuedBy first, DocumentIssuedBy second)

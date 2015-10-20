@@ -6,8 +6,9 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using CustomControls;
-using Registry.CalcDataModels;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -26,8 +27,8 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        OwnershipsRightsDataModel ownership_rights;
-        OwnershipRightTypesDataModel ownerships_rights_types;
+        DataModel ownership_rights;
+        DataModel ownerships_rights_types;
         DataModel ownership_assoc;
         DataTable snapshot_ownerships_rights = new DataTable("snapshot_ownerships_rights");
         #endregion Models
@@ -230,18 +231,22 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            ownership_rights = OwnershipsRightsDataModel.GetInstance();
-            ownerships_rights_types = OwnershipRightTypesDataModel.GetInstance();
+            ownership_rights = DataModel.GetInstance(DataModelType.OwnershipsRightsDataModel);
+            ownerships_rights_types = DataModel.GetInstance(DataModelType.OwnershipRightTypesDataModel);
             // Дожидаемся дозагрузки данных, если это необходимо
             ownership_rights.Select();
             ownerships_rights_types.Select();
-            if (ParentType == ParentTypeEnum.Premises)
-                ownership_assoc = OwnershipPremisesAssocDataModel.GetInstance();
-            else
-                if (ParentType == ParentTypeEnum.Building)
-                    ownership_assoc = OwnershipBuildingsAssocDataModel.GetInstance();
-                else
+            switch (ParentType)
+            {
+                case ParentTypeEnum.Premises:
+                    ownership_assoc = DataModel.GetInstance(DataModelType.OwnershipPremisesAssocDataModel);
+                    break;
+                case ParentTypeEnum.Building:
+                    ownership_assoc = DataModel.GetInstance(DataModelType.OwnershipBuildingsAssocDataModel);
+                    break;
+                default:
                     throw new ViewportException("Неизвестный тип родительского объекта");
+            }
             ownership_assoc.Select();
 
             v_ownership_assoc = new BindingSource();
@@ -260,17 +265,17 @@ namespace Registry.Viewport
                 }
                 else
                     throw new ViewportException("Неизвестный тип родительского объекта");
-            v_ownership_assoc.DataSource = DataSetManager.DataSet;
+            v_ownership_assoc.DataSource = DataModel.DataSet;
 
             v_ownership_rights = new BindingSource();
             v_ownership_rights.DataMember = "ownership_rights";
-            v_ownership_rights.DataSource = DataSetManager.DataSet;
+            v_ownership_rights.DataSource = DataModel.DataSet;
             //Перестраиваем фильтр v_ownerships_rights.Filter
             RebuildFilter();
 
             v_ownership_right_types = new BindingSource();
             v_ownership_right_types.DataMember = "ownership_right_types";
-            v_ownership_right_types.DataSource = DataSetManager.DataSet;
+            v_ownership_right_types.DataSource = DataModel.DataSet;
 
             //Инициируем колонки snapshot-модели
             for (var i = 0; i < ownership_rights.Select().Columns.Count; i++)
@@ -417,13 +422,23 @@ namespace Registry.Viewport
                         RebuildFilter();
                         return;
                     }
-                    var id_ownership_right = OwnershipsRightsDataModel.Insert(list[i], ParentType, id_parent);
+                    var id_ownership_right = ownership_rights.Insert(list[i]);
                     if (id_ownership_right == -1)
                     {
                         sync_views = true;
                         ownership_rights.EditingNewRecord = false;
                         RebuildFilter();
                         return;
+                    }
+                    var assoc = new OwnershipRightObjectAssoc(id_parent, id_ownership_right);
+                    switch (ParentType)
+                    {
+                        case ParentTypeEnum.Building:
+                            DataModel.GetInstance(DataModelType.OwnershipBuildingsAssocDataModel).Insert(assoc);
+                            break;
+                        case ParentTypeEnum.Premises:
+                            DataModel.GetInstance(DataModelType.OwnershipPremisesAssocDataModel).Insert(assoc);
+                            break;
                     }
                     ((DataRowView)v_snapshot_ownerships_rights[i])["id_ownership_right"] = id_ownership_right;
                     ownership_rights.Select().Rows.Add(DataRowViewToArray((DataRowView)v_snapshot_ownerships_rights[i]));
@@ -433,7 +448,7 @@ namespace Registry.Viewport
                 {
                     if (RowToOwnershipRight(row) == list[i])
                         continue;
-                    if (OwnershipsRightsDataModel.Update(list[i]) == -1)
+                    if (ownership_rights.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         ownership_rights.EditingNewRecord = false;
@@ -457,7 +472,7 @@ namespace Registry.Viewport
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (OwnershipsRightsDataModel.Delete(list[i].IdOwnershipRight.Value) == -1)
+                    if (ownership_rights.Delete(list[i].IdOwnershipRight.Value) == -1)
                     {
                         sync_views = true;
                         ownership_rights.EditingNewRecord = false;
@@ -472,9 +487,6 @@ namespace Registry.Viewport
             sync_views = true;
             ownership_rights.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
-            if (ParentType == ParentTypeEnum.Premises || ParentType == ParentTypeEnum.Building)
-                CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building,
-                    int.Parse(ParentRow["id_building"].ToString(), CultureInfo.InvariantCulture), true);
         }
 
         public override bool CanDuplicate()

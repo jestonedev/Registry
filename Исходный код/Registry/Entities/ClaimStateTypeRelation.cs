@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Registry.Entities
+﻿namespace Registry.Entities
 {
-    public sealed class ClaimStateTypeRelation
+    public sealed class ClaimStateTypeRelation : Entity
     {
         public int? IdRelation { get; set; }
         public int? IdStateFrom { get; set; }
@@ -18,20 +13,18 @@ namespace Registry.Entities
 
         public bool Equals(ClaimStateTypeRelation other)
         {
-            return this.Equals((object)other);
+            return Equals((object)other);
         }
 
         public static bool operator ==(ClaimStateTypeRelation first, ClaimStateTypeRelation second)
         {
             if ((object)first == null && (object)second == null)
                 return true;
-            else
-                if ((object)first == null || (object)second == null)
-                    return false;
-                else
+            if ((object)first == null || (object)second == null)
+                return false;
             return first.IdRelation == second.IdRelation &&
-                first.IdStateFrom == second.IdStateFrom &&
-                first.IdStateTo == second.IdStateTo;
+                   first.IdStateFrom == second.IdStateFrom &&
+                   first.IdStateTo == second.IdStateTo;
         }
 
         public static bool operator !=(ClaimStateTypeRelation first, ClaimStateTypeRelation second)

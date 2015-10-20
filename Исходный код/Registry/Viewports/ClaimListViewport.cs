@@ -5,7 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -55,7 +55,7 @@ namespace Registry.Viewport
         #endregion Components
 
         //Modeles
-        ClaimsDataModel claims;
+        DataModel claims;
 
         //Views
         BindingSource v_claims;
@@ -299,7 +299,7 @@ namespace Registry.Viewport
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            var tenancyRows = from tenancyRow in DataModelHelper.FilterRows(TenancyProcessesDataModel.GetInstance().Select())
+            var tenancyRows = from tenancyRow in DataModel.GetInstance(DataModelType.TenancyProcessesDataModel).FilterDeletedRows()
                                where tenancyRow.Field<int>("id_process") == claim.IdProcess
                                select tenancyRow;
             if (tenancyRows.Any()) return true;
@@ -456,12 +456,12 @@ namespace Registry.Viewport
         {
             DockAreas = DockAreas.Document;
             dataGridViewClaims.AutoGenerateColumns = false;
-            claims = ClaimsDataModel.GetInstance();
+            claims = DataModel.GetInstance(DataModelType.ClaimsDataModel);
 
             // Ожидаем дозагрузки, если это необходимо
             claims.Select();
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             v_claims = new BindingSource();
             v_claims.CurrentItemChanged += v_claims_CurrentItemChanged;
@@ -542,7 +542,7 @@ namespace Registry.Viewport
             if (MessageBox.Show(@"Вы действительно хотите удалить эту запись?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                 return;
-            if (ClaimsDataModel.Delete((int)((DataRowView)v_claims.Current)["id_claim"]) == -1)
+            if (claims.Delete((int)((DataRowView)v_claims.Current)["id_claim"]) == -1)
                 return;
             is_editable = false;
             ((DataRowView)v_claims[v_claims.Position]).Delete();
@@ -570,7 +570,7 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
-                    var idClaim = ClaimsDataModel.Insert(claim);
+                    var idClaim = claims.Insert(claim);
                     if (idClaim == -1)
                     {
                         claims.EditingNewRecord = false;
@@ -594,7 +594,7 @@ namespace Registry.Viewport
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
-                    if (ClaimsDataModel.Update(claim) == -1)
+                    if (claims.Update(claim) == -1)
                         return;
                     var row = ((DataRowView)v_claims[v_claims.Position]);
                     is_editable = false;

@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Registry.Entities
+﻿namespace Registry.Entities
 {
-    public sealed class Executor
+    public sealed class Executor : Entity
     {
         public int? IdExecutor { get; set; }
         public string ExecutorName { get; set; }
@@ -20,22 +15,20 @@ namespace Registry.Entities
 
         public bool Equals(Executor other)
         {
-            return this.Equals((object)other);
+            return Equals((object)other);
         }
 
         public static bool operator ==(Executor first, Executor second)
         {
             if ((object)first == null && (object)second == null)
                 return true;
-            else
-                if ((object)first == null || (object)second == null)
-                    return false;
-                else
+            if ((object)first == null || (object)second == null)
+                return false;
             return first.IdExecutor == second.IdExecutor &&
-                first.ExecutorName == second.ExecutorName &&
-                first.ExecutorLogin == second.ExecutorLogin &&
-                first.Phone == second.Phone &&
-                first.IsInactive == second.IsInactive;
+                   first.ExecutorName == second.ExecutorName &&
+                   first.ExecutorLogin == second.ExecutorLogin &&
+                   first.Phone == second.Phone &&
+                   first.IsInactive == second.IsInactive;
         }
 
         public static bool operator !=(Executor first, Executor second)

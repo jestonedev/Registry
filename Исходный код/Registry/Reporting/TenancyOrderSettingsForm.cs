@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Registry.DataModels;
 using System.Globalization;
+using Registry.DataModels.DataModels;
 
 namespace Registry.Reporting
 {
@@ -82,10 +83,10 @@ namespace Registry.Reporting
         public TenancyOrderSettingsForm()
         {
             InitializeComponent();
-            RentTypesDataModel.GetInstance().Select();
-            ExecutorsDataModel.GetInstance().Select();
+            DataModel.GetInstance(DataModelType.RentTypesDataModel).Select();
+            DataModel.GetInstance(DataModelType.ExecutorsDataModel).Select();
 
-            DataSet ds = DataSetManager.DataSet;
+            DataSet ds = DataModel.DataSet;
 
             v_rent_types = new BindingSource();
             v_rent_types.DataSource = ds;

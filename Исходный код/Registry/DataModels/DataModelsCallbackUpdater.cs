@@ -1,26 +1,24 @@
-﻿using Registry.CalcDataModels;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Data;
 using System.Data.Common;
 using System.Data.Odbc;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Windows.Forms;
+using Registry.DataModels.CalcDataModels;
+using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
 {
     public sealed class DataModelsCallbackUpdater
     {
-        private static DataModelsCallbackUpdater instance;
-        private static string query = @"SELECT id_record, `table`, id_key, field_name, field_new_value, operation_type 
+        private static DataModelsCallbackUpdater _instance;
+        private const string Query = @"SELECT id_record, `table`, id_key, field_name, field_new_value, operation_type 
                                         FROM `log` WHERE id_record > ? AND (operation_type = 'UPDATE' OR (operation_type IN ('DELETE','INSERT') AND (user_name <> ? OR `table` = 'tenancy_notifies')))";
-        private static string initQuery = @"SELECT IFNULL(MAX(id_record), 0) AS id_record, USER() AS user_name FROM log";
-        private int id_record = -1;
-        private string user_name = "";
-        private DataRow updRow = null;
+        private const string InitQuery = @"SELECT IFNULL(MAX(id_record), 0) AS id_record, USER() AS user_name FROM log";
+        private int _idRecord = -1;
+        private string _userName = "";
+        private DataRow _updRow;
 
         private DataModelsCallbackUpdater()
         {
@@ -28,21 +26,21 @@ namespace Registry.DataModels
 
         public void Initialize()
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
+            using (var connection = new DBConnection())
+            using (var command = DBConnection.CreateCommand())
             {
-                command.CommandText = initQuery;
+                command.CommandText = InitQuery;
                 try
                 {
-                    DataTable table = connection.SqlSelectTable("table", command);
+                    var table = connection.SqlSelectTable("table", command);
                     if (table.Rows.Count == 0)
                     {
                         MessageBox.Show("Не удалось инициализировать DataModelCallbackUpdater", "Неизвестная ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error,
                             MessageBoxDefaultButton.Button1);
                         Application.Exit();
                     }
-                    id_record = Convert.ToInt32(table.Rows[0]["id_record"].ToString(), CultureInfo.InvariantCulture);
-                    user_name = table.Rows[0]["user_name"].ToString();
+                    _idRecord = Convert.ToInt32(table.Rows[0]["id_record"].ToString(), CultureInfo.InvariantCulture);
+                    _userName = table.Rows[0]["user_name"].ToString();
                 }
                 catch (OdbcException e)
                 {
@@ -56,11 +54,11 @@ namespace Registry.DataModels
 
         public void Run()
         {
-            SynchronizationContext context = SynchronizationContext.Current;
+            var context = SynchronizationContext.Current;
             ThreadPool.QueueUserWorkItem(_ =>
             {
-                DataTable tableCacheLvl1 = new DataTable("tableCacheLvl1");
-                DataTable tableCacheLvl2 = new DataTable("tableCacheLvl2");
+                var tableCacheLvl1 = new DataTable("tableCacheLvl1");
+                var tableCacheLvl2 = new DataTable("tableCacheLvl2");
                 tableCacheLvl1.Locale = CultureInfo.InvariantCulture;
                 tableCacheLvl2.Locale = CultureInfo.InvariantCulture;
                 InitializeColumns(tableCacheLvl1);
@@ -72,14 +70,12 @@ namespace Registry.DataModels
                     tableCacheLvl2.Clear();
                     context.Send(__ =>
                     {
-                        DataTable workTable = tableCacheLvl1;
+                        var workTable = tableCacheLvl1;
                         foreach (DataRow row in workTable.Rows)
                         {
-                            if (error || !UpdateModelFromRow(row))
-                            {
-                                tableCacheLvl2.Rows.Add(RowToCacheObject(row));
-                                error = true;
-                            }
+                            if (!error && UpdateModelFromRow(row)) continue;
+                            tableCacheLvl2.Rows.Add(RowToCacheObject(row));
+                            error = true;
                         }
                     }, null);
                     //Переносим данные из кэша 2-го уровня в первый
@@ -89,30 +85,28 @@ namespace Registry.DataModels
                     if (error)
                         continue;
                     //Обновляем модель из базы
-                    using (DBConnection connection = new DBConnection())
-                    using (DbCommand command = DBConnection.CreateCommand())
+                    using (var connection = new DBConnection())
+                    using (var command = DBConnection.CreateCommand())
                     {
-                        command.CommandText = query;
-                        command.Parameters.Add(DBConnection.CreateParameter<int>("id_record", id_record));
-                        command.Parameters.Add(DBConnection.CreateParameter<string>("user_name", user_name));
+                        command.CommandText = Query;
+                        command.Parameters.Add(DBConnection.CreateParameter("id_record", _idRecord));
+                        command.Parameters.Add(DBConnection.CreateParameter("user_name", _userName));
                         try
                         {
-                            DataTable tableDB = connection.SqlSelectTable("tableDB", command);
-                            tableDB.Locale = CultureInfo.InvariantCulture;
+                            var tableDb = connection.SqlSelectTable("tableDB", command);
+                            tableDb.Locale = CultureInfo.InvariantCulture;
                             context.Send(__ =>
                             {
-                                DataTable workTable = tableDB;
+                                var workTable = tableDb;
                                 foreach (DataRow row in workTable.Rows)
                                 {
-                                    if (error || !UpdateModelFromRow(row))
-                                    {
-                                        tableCacheLvl1.Rows.Add(RowToCacheObject(row));
-                                        error = true;
-                                    }
+                                    if (!error && UpdateModelFromRow(row)) continue;
+                                    tableCacheLvl1.Rows.Add(RowToCacheObject(row));
+                                    error = true;
                                 }
                             }, null);
-                            if (tableDB.Rows.Count > 0)
-                                id_record = Convert.ToInt32(tableDB.Rows[tableDB.Rows.Count - 1]["id_record"].ToString(), CultureInfo.InvariantCulture);
+                            if (tableDb.Rows.Count > 0)
+                                _idRecord = Convert.ToInt32(tableDb.Rows[tableDb.Rows.Count - 1]["id_record"].ToString(), CultureInfo.InvariantCulture);
                         }
                         catch (OdbcException)
                         {
@@ -127,255 +121,79 @@ namespace Registry.DataModels
 
         private bool UpdateModelFromRow(DataRow row)
         {
-            string table = row["table"].ToString();
-            int id_key = Convert.ToInt32(row["id_key"].ToString(), CultureInfo.InvariantCulture);
-            string field_name = row["field_name"].ToString();
-            string field_value = row["field_new_value"].ToString();
-            string operation_type = row["operation_type"].ToString();
+            var table = row["table"].ToString();
+            var idKey = Convert.ToInt32(row["id_key"].ToString(), CultureInfo.InvariantCulture);
+            var fieldName = row["field_name"].ToString();
+            var fieldValue = row["field_new_value"].ToString();
+            var operationType = row["operation_type"].ToString();
             //Если таблица не загружена, то у пользователя просто нет необходимых прав. Игнорируем ее и возвращаем true
-            if (!DataSetManager.DataSet.Tables.Contains(table))
+            if (DataModel.GetLoadedInstance(table) == null)
                 return true;
-            DataTable updTable = DataSetManager.DataSet.Tables[table];
+            var updTable = DataModel.GetLoadedInstance(table).Select();
             //Ищем строку для обновления
-            if (!((updRow != null)
-                && (updRow.RowState != DataRowState.Deleted)
-                && (updRow.RowState != DataRowState.Detached)
-                && (updRow.Table.TableName == table) 
-                && (updRow.Table.PrimaryKey.Length > 0)
-                && (Convert.ToInt32(updRow[updRow.Table.PrimaryKey[0].ColumnName], CultureInfo.InvariantCulture) == id_key)))
+            if (!((_updRow != null)
+                && (_updRow.RowState != DataRowState.Deleted)
+                && (_updRow.RowState != DataRowState.Detached)
+                && (_updRow.Table.TableName == table) 
+                && (_updRow.Table.PrimaryKey.Length > 0)
+                && (Convert.ToInt32(_updRow[_updRow.Table.PrimaryKey[0].ColumnName], CultureInfo.InvariantCulture) == idKey)))
             {
                 //Если строка не закэширована, или закэширована не та строка, то надо найти и закэшировать строку по имени таблицы и id_key
-                updRow = updTable.Rows.Find(id_key);
+                _updRow = updTable.Rows.Find(idKey);
             }
             //Если строка в представлении пользователя существует, но помечена как удаленная, то игнорировать ее
-            if (updRow != null && (updRow.RowState == DataRowState.Deleted || updRow.RowState == DataRowState.Detached))
+            if (_updRow != null && (_updRow.RowState == DataRowState.Deleted || _updRow.RowState == DataRowState.Detached))
                 return true;
-            switch (operation_type)
+            switch (operationType)
             {
                 case "INSERT":
                     //Если модель находится в режиме IsNewRecord, то вернуть false
-                    if (EditingNewRecordModel(table))
+                    if (DataModel.GetLoadedInstance(table).EditingNewRecord)
                         return false;
                     //Если строки нет, то создаем новую
-                    if (updRow == null)
+                    if (_updRow == null)
                     {
-                        updRow = updTable.NewRow();
-                        updRow[updRow.Table.PrimaryKey[0].ColumnName] = id_key;
-                        updRow.EndEdit();
-                        updTable.Rows.Add(updRow);
+                        _updRow = updTable.NewRow();
+                        _updRow[_updRow.Table.PrimaryKey[0].ColumnName] = idKey;
+                        _updRow.EndEdit();
+                        updTable.Rows.Add(_updRow);
                     }
-                    SetValue(updRow, field_name, field_value, operation_type);
+                    SetValue(_updRow, fieldName, fieldValue);
                     return true;
                 case "UPDATE":
                     //Если строки нет, то игнорируем и возвращаем false, чтобы сохранить в кэш строку
-                    if (updRow == null)
+                    if (_updRow == null)
                         return false;
-                    SetValue(updRow, field_name, field_value, operation_type);
+                    SetValue(_updRow, fieldName, fieldValue);
                     return true;
                 case "DELETE":
                     //Если строка не найдена, значит она уже удалена, возвращаем true
-                    if (updRow == null)
+                    if (_updRow == null)
                         return true;
-                    updTable.Rows.Remove(updRow);
-                    CalcDataModelsUpdate(table, field_name, operation_type);
+                    updTable.Rows.Remove(_updRow);
                     return true;
                 default:
                     return true;
             }
         }
 
-        private static void CalcDataModelsUpdate(string table, string field_name, string operation_type)
-        {
-            switch (table)
-            {
-                case "ownership_rights":
-                case "restrictions":
-                    if (CalcDataModelBuildingsPremisesSumArea.HasInstance())
-                        CalcDataModelBuildingsPremisesSumArea.GetInstance().DefferedUpdate = true;
-                    break;
-                case "funds_history":
-                    if (CalcDataModelBuildingsCurrentFunds.HasInstance())
-                        CalcDataModelBuildingsCurrentFunds.GetInstance().DefferedUpdate = true;
-                    if (CalcDataModelPremisesCurrentFunds.HasInstance())
-                        CalcDataModelPremisesCurrentFunds.GetInstance().DefferedUpdate = true;
-                    if (CalcDataModelSubPremisesCurrentFunds.HasInstance())
-                        CalcDataModelSubPremisesCurrentFunds.GetInstance().DefferedUpdate = true;
-                    if (CalcDataModelBuildingsPremisesFunds.HasInstance())
-                        CalcDataModelBuildingsPremisesFunds.GetInstance().DefferedUpdate = true;
-                    break;
-                case "sub_premises":
-                    if (CalcDataModelPremiseSubPremisesSumArea.HasInstance())
-                        CalcDataModelPremiseSubPremisesSumArea.GetInstance().DefferedUpdate = true;
-                    if (CalcDataModelBuildingsPremisesSumArea.HasInstance())
-                        CalcDataModelBuildingsPremisesSumArea.GetInstance().DefferedUpdate = true;
-                    if (operation_type == "DELETE" || (operation_type == "UPDATE" && (field_name == "id_premises" || field_name == "sub_premises_num")))
-                    {
-                        if (CalcDataModelTenancyAggregated.HasInstance())
-                            CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate = true;
-                        if (CalcDataModelResettleAggregated.HasInstance())
-                            CalcDataModelResettleAggregated.GetInstance().DefferedUpdate = true;
-                    }
-                    break;
-                case "premises":
-                    if (CalcDataModelBuildingsPremisesSumArea.HasInstance())
-                        CalcDataModelBuildingsPremisesSumArea.GetInstance().DefferedUpdate = true;
-                    if (operation_type == "DELETE")
-                    {
-                        if (CalcDataModelBuildingsPremisesFunds.HasInstance())
-                            CalcDataModelBuildingsPremisesFunds.GetInstance().DefferedUpdate = true;
-                    }
-                    if (operation_type == "DELETE" || (operation_type == "UPDATE" && (field_name == "id_buildings" || field_name == "premises_num" || field_name == "id_premises_type")))
-                    {
-                        if (CalcDataModelTenancyAggregated.HasInstance())
-                            CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate = true;
-                        if (CalcDataModelResettleAggregated.HasInstance())
-                            CalcDataModelResettleAggregated.GetInstance().DefferedUpdate = true;
-                    }
-                    break;
-                case "buildings":
-                    if (operation_type == "DELETE" || (operation_type == "UPDATE" && (field_name == "id_street" || field_name == "house")))
-                    {
-                        if (CalcDataModelTenancyAggregated.HasInstance())
-                            CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate = true;
-                        if (CalcDataModelResettleAggregated.HasInstance())
-                            CalcDataModelResettleAggregated.GetInstance().DefferedUpdate = true;
-                    }
-                    break;
-                case "tenancy_notifies":
-                    if ((operation_type == "DELETE" || operation_type == "INSERT") && CalcDataModelTenancyNotifiesMaxDate.HasInstance())
-                        CalcDataModelTenancyNotifiesMaxDate.GetInstance().DefferedUpdate = true;
-                    break;
-                case "tenancy_buildings_assoc":
-                case "tenancy_premises_assoc":
-                case "tenancy_sub_premises_assoc":
-                    if (CalcDataModelTenancyAggregated.HasInstance())
-                        CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate = true;
-                    if (CalcDataModelPremisesTenanciesInfo.HasInstance())
-                        CalcDataModelPremisesTenanciesInfo.GetInstance().DefferedUpdate = true;
-                    break;
-                case "tenancy_persons":
-                    if (CalcDataModelTenancyAggregated.HasInstance())
-                        CalcDataModelTenancyAggregated.GetInstance().DefferedUpdate = true;
-                    if (CalcDataModelPremisesTenanciesInfo.HasInstance())
-                        CalcDataModelPremisesTenanciesInfo.GetInstance().DefferedUpdate = true;
-                    break;
-                case "resettle_buildings_from_assoc":
-                case "resettle_buildings_to_assoc":
-                case "resettle_premises_from_assoc":
-                case "resettle_premises_to_assoc":
-                case "resettle_sub_premises_from_assoc":
-                case "resettle_sub_premises_to_assoc":
-                case "resettle_persons":
-                    if (CalcDataModelResettleAggregated.HasInstance())
-                        CalcDataModelResettleAggregated.GetInstance().DefferedUpdate = true;
-                    break;
-                case "tenancy_processes":
-                case "tenancy_reasons":
-                    if (CalcDataModelPremisesTenanciesInfo.HasInstance())
-                        CalcDataModelPremisesTenanciesInfo.GetInstance().DefferedUpdate = true;
-                    break;
-            }
-        }
-
-        private static void SetValue(DataRow row, string field_name, string field_value, string operation_type)
+        private static void SetValue(DataRow row, string fieldName, string fieldValue)
         {
             // Если поле не найдено, то возможно оно новое в базе и надо его проигнорировать
-            if (!row.Table.Columns.Contains(field_name))
+            if (!row.Table.Columns.Contains(fieldName))
                 return;
-            if (String.IsNullOrEmpty(field_value))
+            if (string.IsNullOrEmpty(fieldValue))
             {
-                if (!row[field_name].Equals(DBNull.Value))
-                {
-                    row[field_name] = DBNull.Value;
-                    row.EndEdit();
-                    CalcDataModelsUpdate(row.Table.TableName, field_name, operation_type);
-                }
+                if (row[fieldName].Equals(DBNull.Value)) return;
+                row[fieldName] = DBNull.Value;
+                row.EndEdit();
             }
             else
             {
-                object value = Convert.ChangeType(field_value, row.Table.Columns[field_name].DataType, CultureInfo.InvariantCulture);
-                if (!row[field_name].Equals(value))
-                {
-                    row[field_name] = value;
-                    row.EndEdit();
-                    CalcDataModelsUpdate(row.Table.TableName, field_name, operation_type);
-                }
-            }
-        }
-
-        private static bool EditingNewRecordModel(string table)
-        {
-            switch (table)
-            {
-                case "buildings":
-                    return BuildingsDataModel.GetInstance().EditingNewRecord;
-                case "premises":
-                    return PremisesDataModel.GetInstance().EditingNewRecord;
-                case "sub_premises":
-                    return SubPremisesDataModel.GetInstance().EditingNewRecord;
-                case "claim_states":
-                    return ClaimStatesDataModel.GetInstance().EditingNewRecord;
-                case "claims":
-                    return ClaimsDataModel.GetInstance().EditingNewRecord;
-                case "claim_state_types":
-                    return ClaimStateTypesDataModel.GetInstance().EditingNewRecord;
-                case "claim_state_types_relations":
-                    return ClaimStateTypesDataModel.GetInstance().EditingNewRecord;
-                case "documents_issued_by":
-                    return DocumentsIssuedByDataModel.GetInstance().EditingNewRecord;
-                case "documents_residence":
-                    return DocumentsResidenceDataModel.GetInstance().EditingNewRecord;
-                case "executors":
-                    return ExecutorsDataModel.GetInstance().EditingNewRecord;
-                case "funds_buildings_assoc":
-                case "funds_premises_assoc":
-                case "funds_sub_premises_assoc":
-                case "funds_history":
-                    return FundsHistoryDataModel.GetInstance().EditingNewRecord;
-                case "ownership_buildings_assoc":
-                case "ownership_premises_assoc":
-                case "ownership_rights":
-                    return OwnershipsRightsDataModel.GetInstance().EditingNewRecord;
-                case "restrictions_premises_assoc":
-                case "restrictions_buildings_assoc":
-                case "restrictions":
-                    return RestrictionsDataModel.GetInstance().EditingNewRecord;
-                case "tenancy_agreements":
-                    return TenancyAgreementsDataModel.GetInstance().EditingNewRecord;
-                case "tenancy_persons":
-                    return TenancyPersonsDataModel.GetInstance().EditingNewRecord;
-                case "tenancy_processes":
-                    return TenancyProcessesDataModel.GetInstance().EditingNewRecord;
-                case "tenancy_reasons":
-                    return TenancyReasonsDataModel.GetInstance().EditingNewRecord;
-                case "tenancy_reason_types":
-                    return TenancyReasonTypesDataModel.GetInstance().EditingNewRecord;
-                case "tenancy_sub_premises_assoc":
-                    return TenancySubPremisesAssocDataModel.GetInstance().EditingNewRecord;
-                case "tenancy_premises_assoc":
-                    return TenancyPremisesAssocDataModel.GetInstance().EditingNewRecord;
-                case "tenancy_buildings_assoc":
-                    return TenancyBuildingsAssocDataModel.GetInstance().EditingNewRecord;
-                case "warrants":
-                    return WarrantsDataModel.GetInstance().EditingNewRecord;
-                case "resettle_processes":
-                    return ResettleProcessesDataModel.GetInstance().EditingNewRecord;
-                case "resettle_persons":
-                    return ResettlePersonsDataModel.GetInstance().EditingNewRecord;
-                case "resettle_sub_premises_from_assoc":
-                    return ResettleSubPremisesFromAssocDataModel.GetInstance().EditingNewRecord;
-                case "resettle_premises_from_assoc":
-                    return ResettlePremisesFromAssocDataModel.GetInstance().EditingNewRecord;
-                case "resettle_buildings_from_assoc":
-                    return ResettleBuildingsFromAssocDataModel.GetInstance().EditingNewRecord;
-                case "resettle_sub_premises_to_assoc":
-                    return ResettleSubPremisesToAssocDataModel.GetInstance().EditingNewRecord;
-                case "resettle_premises_to_assoc":
-                    return ResettlePremisesToAssocDataModel.GetInstance().EditingNewRecord;
-                case "resettle_buildings_to_assoc":
-                    return ResettleBuildingsToAssocDataModel.GetInstance().EditingNewRecord;
-                default:
-                    return false;
+                var value = Convert.ChangeType(fieldValue, row.Table.Columns[fieldName].DataType, CultureInfo.InvariantCulture);
+                if (row[fieldName].Equals(value)) return;
+                row[fieldName] = value;
+                row.EndEdit();
             }
         }
 
@@ -390,7 +208,7 @@ namespace Registry.DataModels
 
         private static object[] RowToCacheObject(DataRow row)
         {
-            return new object[] {
+            return new[] {
                 row["table"],
                 row["id_key"],
                 row["field_name"],
@@ -401,9 +219,7 @@ namespace Registry.DataModels
 
         public static DataModelsCallbackUpdater GetInstance()
         {
-            if (instance == null)
-                instance = new DataModelsCallbackUpdater();
-            return instance;
+            return _instance ?? (_instance = new DataModelsCallbackUpdater());
         }
     }
 }

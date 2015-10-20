@@ -1,39 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Windows.Forms;
-using System.Data;
+using Registry.Entities;
 
-namespace Registry.DataModels
+namespace Registry.DataModels.DataModels
 {
-    public sealed class FundsPremisesAssocDataModel : DataModel
+    internal sealed class FundsPremisesAssocDataModel : DataModel
     {
-        private static FundsPremisesAssocDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM funds_premises_assoc WHERE deleted = 0";
-        private static string tableName = "funds_premises_assoc";
+        private static FundsPremisesAssocDataModel _dataModel;
+        private const string SelectQuery = "SELECT * FROM funds_premises_assoc WHERE deleted = 0";
+        private const string TableName = "funds_premises_assoc";
 
         private FundsPremisesAssocDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, selectQuery, tableName)
+            : base(progressBar, incrementor, SelectQuery, TableName)
         {
-        }
-
-        protected override void ConfigureTable()
-        {
-            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_fund"] };
-        }
-
-        public static FundsPremisesAssocDataModel GetInstance()
-        {
-            return GetInstance(null, 0);
         }
 
         public static FundsPremisesAssocDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
         {
-            if (dataModel == null)
-                dataModel = new FundsPremisesAssocDataModel(progressBar, incrementor);
-            return dataModel;
+            return _dataModel ?? (_dataModel = new FundsPremisesAssocDataModel(progressBar, incrementor));
+        }
+
+        protected override void ConfigureTable()
+        {
+            Table.PrimaryKey = new [] { Table.Columns["id_fund"] };
+        }
+
+        protected override void ConfigureRelations()
+        {
+            AddRelation("funds_history", "id_fund", TableName, "id_fund");
+            AddRelation("premises", "id_premises", TableName, "id_premises");
+        }
+
+        protected override void ConfigureInsertCommand(DbCommand command, Entity entity)
+        {
+            command.CommandText = "INSERT INTO funds_premises_assoc (id_premises, id_fund) VALUES (?, ?)";
+            var fundObjectAssoc = (FundObjectAssoc) entity;          
+            command.Parameters.Add(DBConnection.CreateParameter("id_premises", fundObjectAssoc.IdObject));
+            command.Parameters.Add(DBConnection.CreateParameter("id_fund", fundObjectAssoc.IdFund));
         }
     }
 }

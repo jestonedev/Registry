@@ -40,7 +40,7 @@ namespace Registry.SearchForms
             {
                 //по ФИО участника переселения
                 var snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var processes_ids = DataModelHelper.ResettleProcessIDsBySNP(snp);
+                var processes_ids = DataModelHelper.ResettleProcessIdsBySnp(snp);
                 included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
             }
             if (comboBoxCriteriaType.SelectedIndex == 1)

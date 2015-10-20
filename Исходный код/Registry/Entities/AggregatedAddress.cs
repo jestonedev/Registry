@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Registry.Entities
+﻿namespace Registry.Entities
 {
     public sealed class AggregatedAddress
     {
@@ -12,8 +7,8 @@ namespace Registry.Entities
 
         public AggregatedAddress(int idProcess, string address)
         {
-            this.IdProcess = idProcess;
-            this.Address = address;
+            IdProcess = idProcess;
+            Address = address;
         }
     }
 }

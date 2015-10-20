@@ -5,8 +5,8 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using CustomControls;
-using Registry.CalcDataModels;
 using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -52,8 +52,8 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        FundsHistoryDataModel funds_history;
-        FundTypesDataModel fund_types;
+        DataModel funds_history;
+        DataModel fund_types;
         DataModel fund_assoc;
         #endregion Models
 
@@ -514,25 +514,25 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            funds_history = FundsHistoryDataModel.GetInstance();
-            fund_types = FundTypesDataModel.GetInstance();
+            funds_history = DataModel.GetInstance(DataModelType.FundsHistoryDataModel);
+            fund_types = DataModel.GetInstance(DataModelType.FundTypesDataModel);
 
             // Ожидаем дозагрузки, если это необходимо
             funds_history.Select();
             fund_types.Select();
 
             if (ParentType == ParentTypeEnum.SubPremises)
-                fund_assoc = FundsSubPremisesAssocDataModel.GetInstance();
+                fund_assoc = DataModel.GetInstance(DataModelType.FundsSubPremisesAssocDataModel);
             else
                 if (ParentType == ParentTypeEnum.Premises)
-                    fund_assoc = FundsPremisesAssocDataModel.GetInstance();
+                    fund_assoc = DataModel.GetInstance(DataModelType.FundsPremisesAssocDataModel);
                 else
                     if (ParentType == ParentTypeEnum.Building)
-                        fund_assoc = FundsBuildingsAssocDataModel.GetInstance();
+                        fund_assoc = DataModel.GetInstance(DataModelType.FundsBuildingsAssocDataModel);
                     else
                         throw new ViewportException("Неизвестный тип родительского объекта");
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             v_fund_assoc = new BindingSource();
             if ((ParentType == ParentTypeEnum.SubPremises) && (ParentRow != null))
@@ -614,11 +614,24 @@ namespace Registry.Viewport
                             "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
-                    var idFund = FundsHistoryDataModel.Insert(fundHistory, ParentType, idParent);
+                    var idFund = funds_history.Insert(fundHistory);
                     if (idFund == -1)
                     {
                         funds_history.EditingNewRecord = false;
                         return;
+                    }
+                    var assoc = new FundObjectAssoc(idParent, idFund);
+                    switch (ParentType)
+                    {
+                        case ParentTypeEnum.Building:
+                            DataModel.GetInstance(DataModelType.FundsBuildingsAssocDataModel).Insert(assoc);
+                            break;
+                        case ParentTypeEnum.Premises:
+                            DataModel.GetInstance(DataModelType.FundsPremisesAssocDataModel).Insert(assoc);
+                            break;
+                        case ParentTypeEnum.SubPremises:
+                            DataModel.GetInstance(DataModelType.FundsSubPremisesAssocDataModel).Insert(assoc);
+                            break;
                     }
                     DataRowView newRow;
                     fundHistory.IdFund = idFund;
@@ -636,11 +649,11 @@ namespace Registry.Viewport
                 case ViewportState.ModifyRowState:
                     if (fundHistory.IdFund == null)
                     {
-                        MessageBox.Show("Вы пытаетесь изменить запись о принадлежности фонду без внутренного номера. " +
-                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        MessageBox.Show(@"Вы пытаетесь изменить запись о принадлежности фонду без внутренного номера. " +
+                            @"Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
-                    if (FundsHistoryDataModel.Update(fundHistory) == -1)
+                    if (funds_history.Update(fundHistory) == -1)
                         return;
                     is_editable = false;
                     var row = ((DataRowView)v_funds_history[v_funds_history.Position]);
@@ -652,20 +665,6 @@ namespace Registry.Viewport
             dataGridView.Enabled = true;
             is_editable = true;
             viewportState = ViewportState.ReadState;
-            if (ParentType == ParentTypeEnum.Building || ParentType == ParentTypeEnum.Premises)
-                CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(EntityType.Building, (int)ParentRow["id_building"], true);
-            switch (ParentType)
-            {
-                case ParentTypeEnum.Building:
-                    CalcDataModelBuildingsCurrentFunds.GetInstance().Refresh(EntityType.Building, (int)ParentRow["id_building"], true);
-                    break;
-                case ParentTypeEnum.Premises:
-                    CalcDataModelPremisesCurrentFunds.GetInstance().Refresh(EntityType.Premise, (int)ParentRow["id_premises"], true);
-                    break;
-                case ParentTypeEnum.SubPremises:
-                    CalcDataModelSubPremisesCurrentFunds.GetInstance().Refresh(EntityType.SubPremise, (int)ParentRow["id_sub_premises"], true);
-                    break;
-            }
             MenuCallback.EditingStateUpdate();
         }
 
@@ -719,12 +718,12 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание",
+            if (MessageBox.Show(@"Вы действительно хотите удалить эту запись?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 if (ValidatePermissions() == false)
                     return;
-                if (FundsHistoryDataModel.Delete((int)((DataRowView)v_funds_history.Current)["id_fund"]) == -1)
+                if (funds_history.Delete((int)((DataRowView)v_funds_history.Current)["id_fund"]) == -1)
                     return;
                 is_editable = false;
                 ((DataRowView)v_funds_history[v_funds_history.Position]).Delete();
@@ -733,16 +732,6 @@ namespace Registry.Viewport
                 viewportState = ViewportState.ReadState;
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.ForceCloseDetachedViewports();
-                if (ParentType == ParentTypeEnum.Building || ParentType == ParentTypeEnum.Premises)
-                    CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(EntityType.Building, (int)ParentRow["id_building"], true);
-                if (ParentType == ParentTypeEnum.Building)
-                    CalcDataModelBuildingsCurrentFunds.GetInstance().Refresh(EntityType.Building, (int)ParentRow["id_building"], true);
-                else
-                    if (ParentType == ParentTypeEnum.Premises)
-                        CalcDataModelPremisesCurrentFunds.GetInstance().Refresh(EntityType.Premise, (int)ParentRow["id_premises"], true);
-                    else
-                        if (ParentType == ParentTypeEnum.SubPremises)
-                            CalcDataModelSubPremisesCurrentFunds.GetInstance().Refresh(EntityType.SubPremise, (int)ParentRow["id_sub_premises"], true);
             }
         }
 
@@ -798,8 +787,6 @@ namespace Registry.Viewport
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (e == null)
-                return;
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
             else

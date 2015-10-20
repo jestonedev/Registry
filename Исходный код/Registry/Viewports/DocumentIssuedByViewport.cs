@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -21,7 +22,7 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        DocumentsIssuedByDataModel documents_issued_by;
+        DataModel documents_issued_by;
         DataTable snapshot_documents_issued_by = new DataTable("snapshot_documents_issued_by");
         #endregion Models
 
@@ -153,7 +154,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            documents_issued_by = DocumentsIssuedByDataModel.GetInstance();
+            documents_issued_by = DataModel.GetInstance(DataModelType.DocumentsIssuedByDataModel);
 
             //Ожидаем дозагрузки данных, если это необходимо
             documents_issued_by.Select();
@@ -161,7 +162,7 @@ namespace Registry.Viewport
             v_documents_issued_by = new BindingSource
             {
                 DataMember = "documents_issued_by",
-                DataSource = DataSetManager.DataSet
+                DataSource = DataModel.DataSet
             };
 
             //Инициируем колонки snapshot-модели
@@ -309,7 +310,7 @@ namespace Registry.Viewport
                 var row = documents_issued_by.Select().Rows.Find(list[i].IdDocumentIssuedBy);
                 if (row == null)
                 {
-                    var idDocumentIssuedBy = DocumentsIssuedByDataModel.Insert(list[i]);
+                    var idDocumentIssuedBy = documents_issued_by.Insert(list[i]);
                     if (idDocumentIssuedBy == -1)
                     {
                         sync_views = true;
@@ -324,7 +325,7 @@ namespace Registry.Viewport
 
                     if (RowToDocumentIssuedBy(row) == list[i])
                         continue;
-                    if (DocumentsIssuedByDataModel.Update(list[i]) == -1)
+                    if (documents_issued_by.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         documents_issued_by.EditingNewRecord = false;
@@ -344,7 +345,7 @@ namespace Registry.Viewport
                         rowIndex = j;
                 if (rowIndex == -1)
                 {
-                    if (document.IdDocumentIssuedBy != null && DocumentsIssuedByDataModel.Delete(document.IdDocumentIssuedBy.Value) == -1)
+                    if (document.IdDocumentIssuedBy != null && documents_issued_by.Delete(document.IdDocumentIssuedBy.Value) == -1)
                     {
                         sync_views = true;
                         documents_issued_by.EditingNewRecord = false;

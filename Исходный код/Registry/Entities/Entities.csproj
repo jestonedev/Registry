@@ -51,7 +51,10 @@
   <ItemGroup>
     <Compile Include="AggregatedAddress.cs" />
     <Compile Include="DocumentResidence.cs" />
+    <Compile Include="Entity.cs" />
     <Compile Include="EntityType.cs" />
+    <Compile Include="RestrictionRightObjectAssoc.cs" />
+    <Compile Include="OwnershipRightObjectAssoc.cs" />
     <Compile Include="FundObjectAssoc.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ResettleEstateObjectWay.cs" />

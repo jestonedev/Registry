@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -41,9 +42,9 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        ClaimStatesDataModel claim_states;
-        ClaimStateTypesDataModel claim_state_types;
-        ClaimStateTypesRelationsDataModel claim_state_types_relations;
+        DataModel claim_states;
+        DataModel claim_state_types;
+        DataModel claim_state_types_relations;
         #endregion Models
 
         #region Views
@@ -462,16 +463,16 @@ namespace Registry.Viewport
         {
             DockAreas = DockAreas.Document;
             dataGridView.AutoGenerateColumns = false;
-            claim_states = ClaimStatesDataModel.GetInstance();
-            claim_state_types = ClaimStateTypesDataModel.GetInstance();
-            claim_state_types_relations = ClaimStateTypesRelationsDataModel.GetInstance();
+            claim_states = DataModel.GetInstance(DataModelType.ClaimStatesDataModel);
+            claim_state_types = DataModel.GetInstance(DataModelType.ClaimStateTypesDataModel);
+            claim_state_types_relations = DataModel.GetInstance(DataModelType.ClaimStateTypesRelationsDataModel);
 
             //Ожидаем дозагрузки, если это необходимо
             claim_states.Select();
             claim_state_types.Select();
             claim_state_types_relations.Select();
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             if (ParentType == ParentTypeEnum.Claim && ParentRow != null)
                 Text = string.Format(CultureInfo.InvariantCulture, "Состояния иск. работы №{0}", ParentRow["id_claim"]);
@@ -531,7 +532,7 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
-                    var idState = ClaimStatesDataModel.Insert(claimState);
+                    var idState = claim_states.Insert(claimState);
                     if (idState == -1)
                     {
                         claim_states.EditingNewRecord = false;
@@ -555,7 +556,7 @@ namespace Registry.Viewport
                             @"Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
-                    if (ClaimStatesDataModel.Update(claimState) == -1)
+                    if (claim_states.Update(claimState) == -1)
                         return;
                     var row = ((DataRowView)v_claim_states[v_claim_states.Position]);
                     is_editable = false;
@@ -625,7 +626,7 @@ namespace Registry.Viewport
             {
                 var nextClaimStateType = 
                     Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.InvariantCulture);
-                stateCount = (from claimStateTypesRow in DataModelHelper.FilterRows(claim_state_types.Select())
+                stateCount = (from claimStateTypesRow in claim_state_types.FilterDeletedRows()
                     where Convert.ToBoolean(claimStateTypesRow.Field<object>("is_start_state_type"), CultureInfo.InvariantCulture) &&
                           (claimStateTypesRow.Field<int>("id_state_type") == nextClaimStateType)
                     select claimStateTypesRow.Field<int>("id_state_type")).Count();
@@ -638,7 +639,7 @@ namespace Registry.Viewport
                         Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position - 1])["id_state_type"], CultureInfo.InvariantCulture);
                     var nextClaimStateType = 
                         Convert.ToInt32(((DataRowView)v_claim_states[v_claim_states.Position + 1])["id_state_type"], CultureInfo.InvariantCulture);
-                    stateCount = (from claimStateTypesRelRow in DataModelHelper.FilterRows(claim_state_types_relations.Select())
+                    stateCount = (from claimStateTypesRelRow in claim_state_types_relations.FilterDeletedRows()
                         where claimStateTypesRelRow.Field<int>("id_state_from") == previosClaimStateType &&
                               claimStateTypesRelRow.Field<int>("id_state_to") == nextClaimStateType
                         select claimStateTypesRelRow.Field<int>("id_state_to")).Count();
@@ -650,7 +651,7 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if (ClaimStatesDataModel.Delete((int)((DataRowView)v_claim_states.Current)["id_state"]) == -1)
+            if (claim_states.Delete((int)((DataRowView)v_claim_states.Current)["id_state"]) == -1)
                 return;
             is_editable = false;
             ((DataRowView)v_claim_states[v_claim_states.Position]).Delete();

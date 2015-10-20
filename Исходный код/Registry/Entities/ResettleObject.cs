@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Registry.Entities
+﻿namespace Registry.Entities
 {
-    public sealed class ResettleObject
+    public sealed class ResettleObject : Entity
     {
         public int? IdAssoc { get; set; }
         public int? IdObject { get; set; }
@@ -18,19 +13,17 @@ namespace Registry.Entities
 
         public bool Equals(ResettleObject other)
         {
-            return this.Equals((object)other);
+            return Equals((object)other);
         }
 
         public static bool operator ==(ResettleObject first, ResettleObject second)
         {
             if ((object)first == null && (object)second == null)
                 return true;
-            else
-                if ((object)first == null || (object)second == null)
-                    return false;
-                else
+            if ((object)first == null || (object)second == null)
+                return false;
             return first.IdObject == second.IdObject &&
-                first.IdProcess == second.IdProcess;
+                   first.IdProcess == second.IdProcess;
         }
 
         public static bool operator !=(ResettleObject first, ResettleObject second)

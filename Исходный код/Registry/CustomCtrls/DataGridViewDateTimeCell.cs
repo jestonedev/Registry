@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace CustomControls
@@ -10,10 +7,9 @@ namespace CustomControls
     {
 
         public DataGridViewDateTimeCell()
-            : base()
         {
             // Use the short date format. 
-            this.Style.Format = "d";
+            Style.Format = "d";
         }
 
         public override void InitializeEditingControl(int rowIndex, object
@@ -22,17 +18,18 @@ namespace CustomControls
             // Set the value of the editing control to the current cell value. 
             base.InitializeEditingControl(rowIndex, initialFormattedValue,
                 dataGridViewCellStyle);
-            DateTimeEditingControl ctl =
+            var ctl =
                 DataGridView.EditingControl as DateTimeEditingControl;
             // Use the default row value when Value property is null. 
             DateTime stub;
-            if ((this.Value == null) || (!DateTime.TryParse(this.Value.ToString(), out stub)))
+            if ((Value == null) || (!DateTime.TryParse(Value.ToString(), out stub)))
             {
-                ctl.Value = (DateTime)this.DefaultNewRowValue;
+                if (DefaultNewRowValue == null) return;
+                if (ctl != null) ctl.Value = (DateTime)DefaultNewRowValue;
             }
             else
             {
-                ctl.Value = (DateTime)this.Value;
+                if (ctl != null) ctl.Value = (DateTime)Value;
             }
         }
 

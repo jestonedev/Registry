@@ -7,18 +7,19 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 
 namespace Registry.Reporting
 {
     internal partial class SelectRegionsForm : Form
     {
-        private KladrRegionsDataModel regions = null;
+        private DataModel regions = null;
         private BindingSource v_regions = null;
         public SelectRegionsForm()
         {
             InitializeComponent();
-            regions = KladrRegionsDataModel.GetInstance();
+            regions = DataModel.GetInstance(DataModelType.KladrRegionsDataModel);
             v_regions = new BindingSource();
             v_regions.DataSource = regions.Select();
             v_regions.Sort = "region ASC";

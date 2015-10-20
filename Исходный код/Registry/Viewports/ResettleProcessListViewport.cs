@@ -4,8 +4,9 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using Registry.CalcDataModels;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.SearchForms;
 using Security;
@@ -35,9 +36,9 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        ResettleProcessesDataModel resettle_processes;
-        DocumentsResidenceDataModel documents_residence;
-        CalcDataModelResettleAggregated resettle_aggregate;
+        DataModel resettle_processes;
+        DataModel documents_residence;
+        CalcDataModel resettle_aggregate;
         #endregion Models
 
         #region Views
@@ -355,15 +356,15 @@ namespace Registry.Viewport
         {
             DockAreas = DockAreas.Document;
             dataGridView.AutoGenerateColumns = false;
-            resettle_processes = ResettleProcessesDataModel.GetInstance();
-            documents_residence = DocumentsResidenceDataModel.GetInstance();
-            resettle_aggregate = CalcDataModelResettleAggregated.GetInstance();
+            resettle_processes = DataModel.GetInstance(DataModelType.ResettleProcessesDataModel);
+            documents_residence = DataModel.GetInstance(DataModelType.DocumentsResidenceDataModel);
+            resettle_aggregate = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelResettleAggregated);
 
             // Ожидаем дозагрузки, если это необходимо
             resettle_processes.Select();
             documents_residence.Select();
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             v_documents_residence = new BindingSource();
             v_documents_residence.DataMember = "documents_residence";
@@ -442,7 +443,7 @@ namespace Registry.Viewport
             if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                if (ResettleProcessesDataModel.Delete((int)((DataRowView)v_resettle_processes.Current)["id_process"]) == -1)
+                if (resettle_processes.Delete((int)((DataRowView)v_resettle_processes.Current)["id_process"]) == -1)
                     return;
                 is_editable = false;
                 ((DataRowView)v_resettle_processes[v_resettle_processes.Position]).Delete();
@@ -524,7 +525,7 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
-                    var id_process = ResettleProcessesDataModel.Insert(resettleProcess);
+                    var id_process = resettle_processes.Insert(resettleProcess);
                     if (id_process == -1)
                     {
                         resettle_processes.EditingNewRecord = false;
@@ -550,7 +551,7 @@ namespace Registry.Viewport
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
-                    if (ResettleProcessesDataModel.Update(resettleProcess) == -1)
+                    if (resettle_processes.Update(resettleProcess) == -1)
                         return;
                     var row = ((DataRowView)v_resettle_processes[v_resettle_processes.Position]);
                     is_editable = false;

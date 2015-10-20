@@ -7,8 +7,9 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Microsoft.TeamFoundation.Client;
-using Registry.CalcDataModels;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.SearchForms;
 using Registry.Viewport.Properties;
@@ -24,16 +25,16 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        private PremisesDataModel premises;
-        private BuildingsDataModel buildings;
-        private KladrStreetsDataModel kladr;
-        private PremisesTypesDataModel premises_types;
-        private SubPremisesDataModel sub_premises;
-        private TenancyPremisesAssocDataModel tenancy_premises;
+        private DataModel premises;
+        private DataModel buildings;
+        private DataModel kladr;
+        private DataModel premises_types;
+        private DataModel sub_premises;
+        private DataModel tenancy_premises;
         private DataTable snapshot_tenancy_premises;
-        private ObjectStatesDataModel object_states;
-        private CalcDataModelPremisesCurrentFunds premises_funds;
-        private FundTypesDataModel fund_types;
+        private DataModel object_states;
+        private CalcDataModel premises_funds;
+        private DataModel fund_types;
         #endregion Models
 
         #region Views
@@ -190,17 +191,15 @@ namespace Registry.Viewport
         {
             foreach (var premises in tenancyPremises)
             {
-                if (!ViewportHelper.PremiseFundAndRentMatch(premises.IdObject.Value, (int)ParentRow["id_rent_type"]))
-                {
-                    var idBuilding = (int)PremisesDataModel.GetInstance().Select().Rows.Find(premises.IdObject.Value)["id_building"];
-                    if (!ViewportHelper.BuildingFundAndRentMatch(idBuilding, (int)ParentRow["id_rent_type"]) &&
-                                MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемого помещения. Все равно продолжить сохранение?",
-                                "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != 
-                                DialogResult.Yes)
-                        return false;
-                    else
-                        return true;
-                }
+                if (ViewportHelper.PremiseFundAndRentMatch(premises.IdObject.Value, (int) ParentRow["id_rent_type"]))
+                    continue;
+                var idBuilding = (int)DataModel.GetInstance(DataModelType.PremisesDataModel).Select().Rows.Find(premises.IdObject.Value)["id_building"];
+                if (!ViewportHelper.BuildingFundAndRentMatch(idBuilding, (int)ParentRow["id_rent_type"]) &&
+                    MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемого помещения. Все равно продолжить сохранение?",
+                        "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != 
+                    DialogResult.Yes)
+                    return false;
+                return true;
             }
             return true;
         }
@@ -259,15 +258,15 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            premises = PremisesDataModel.GetInstance();
-            kladr = KladrStreetsDataModel.GetInstance();
-            buildings = BuildingsDataModel.GetInstance();
-            premises_types = PremisesTypesDataModel.GetInstance();
-            sub_premises = SubPremisesDataModel.GetInstance();
-            tenancy_premises = TenancyPremisesAssocDataModel.GetInstance();
-            object_states = ObjectStatesDataModel.GetInstance();
-            premises_funds = CalcDataModelPremisesCurrentFunds.GetInstance();
-            fund_types = FundTypesDataModel.GetInstance();
+            premises = DataModel.GetInstance(DataModelType.PremisesDataModel);
+            kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
+            buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel);
+            premises_types = DataModel.GetInstance(DataModelType.PremisesTypesDataModel);
+            sub_premises = DataModel.GetInstance(DataModelType.SubPremisesDataModel);
+            tenancy_premises = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel);
+            object_states = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
+            premises_funds = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelPremisesCurrentFunds);
+            fund_types = DataModel.GetInstance(DataModelType.FundTypesDataModel);
             object_states.Select();
             premises_funds.Select();
             fund_types.Select();
@@ -289,7 +288,7 @@ namespace Registry.Viewport
             snapshot_tenancy_premises.Columns.Add("rent_total_area").DataType = typeof(double);
             snapshot_tenancy_premises.Columns.Add("rent_living_area").DataType = typeof(double);
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             v_premises = new BindingSource();
             v_premises.CurrentItemChanged += v_premises_CurrentItemChanged;
@@ -402,17 +401,10 @@ namespace Registry.Viewport
                     return;
                 }
                 var id_building = (int)((DataRowView)v_premises[v_premises.Position])["id_building"];
-                if (PremisesDataModel.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
+                if (premises.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
                     return;
                 ((DataRowView)v_premises[v_premises.Position]).Delete();
                 MenuCallback.ForceCloseDetachedViewports();
-                if (ParentType == ParentTypeEnum.Tenancy)
-                {
-                    CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(EntityType.Building, id_building, true);
-                    CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building, id_building, true);
-                    CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
-                    CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
-                }
             }
         }
 
@@ -528,7 +520,7 @@ namespace Registry.Viewport
                     row = tenancy_premises.Select().Rows.Find(list[i].IdAssoc);
                 if (row == null)
                 {
-                    var id_assoc = TenancyPremisesAssocDataModel.Insert(list[i]);
+                    var id_assoc = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).Insert(list[i]);
                     if (id_assoc == -1)
                     {
                         sync_views = true;
@@ -543,7 +535,7 @@ namespace Registry.Viewport
                 {
                     if (RowToTenancyPremises(row) == list[i])
                         continue;
-                    if (TenancyPremisesAssocDataModel.Update(list[i]) == -1)
+                    if (DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).Update(list[i]) == -1)
                     {
                         sync_views = true;
                         tenancy_premises.EditingNewRecord = false;
@@ -568,7 +560,7 @@ namespace Registry.Viewport
                 }
                 if (row_index == -1)
                 {
-                    if (TenancyPremisesAssocDataModel.Delete(list[i].IdAssoc.Value) == -1)
+                    if (DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).Delete(list[i].IdAssoc.Value) == -1)
                     {
                         sync_views = true;
                         tenancy_premises.EditingNewRecord = false;
@@ -594,11 +586,6 @@ namespace Registry.Viewport
             // Сохраняем комнаты в базу данных
             ((TenancySubPremisesDetails)dataGridView.DetailsControl).SaveRecord();
             MenuCallback.EditingStateUpdate();
-            // Обновляем зависимую агрегационную модель
-            if (ParentType == ParentTypeEnum.Tenancy)
-                CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.TenancyProcess, (int)ParentRow["id_process"], true);
-            if (CalcDataModelPremisesTenanciesInfo.HasInstance())
-                CalcDataModelPremisesTenanciesInfo.GetInstance().Refresh(EntityType.Unknown, null, true);
         }
 
         public override bool CanInsertRecord()

@@ -53,14 +53,14 @@ namespace Registry.SearchForms
             {
                 //по ФИО нанимателя
                 var snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var processes_ids = DataModelHelper.TenancyProcessIDsBySNP(snp, (row) => { return row.Field<int?>("id_kinship") == 1; });
+                var processes_ids = DataModelHelper.TenancyProcessIdsBySnp(snp, (row) => { return row.Field<int?>("id_kinship") == 1; });
                 included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
             }
             if (comboBoxCriteriaType.SelectedIndex == 2)
             {
                 //по ФИО участника
                 var snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var processes_ids = DataModelHelper.TenancyProcessIDsBySNP(snp, (row) => { return true; });
+                var processes_ids = DataModelHelper.TenancyProcessIdsBySnp(snp, (row) => { return true; });
                 included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
             }
             if (comboBoxCriteriaType.SelectedIndex == 3)

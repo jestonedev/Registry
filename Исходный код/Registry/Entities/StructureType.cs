@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Registry.Entities
+﻿namespace Registry.Entities
 {
-    public sealed class StructureType
+    public sealed class StructureType : Entity
     {
         public int? IdStructureType { get; set; }
         public string StructureTypeName { get; set; }
@@ -17,19 +12,17 @@ namespace Registry.Entities
 
         public bool Equals(StructureType other)
         {
-            return this.Equals((object)other);
+            return Equals((object)other);
         }
 
         public static bool operator ==(StructureType first, StructureType second)
         {
             if ((object)first == null && (object)second == null)
                 return true;
-            else
-                if ((object)first == null || (object)second == null)
-                    return false;
-                else
+            if ((object)first == null || (object)second == null)
+                return false;
             return first.IdStructureType == second.IdStructureType &&
-                first.StructureTypeName == second.StructureTypeName;
+                   first.StructureTypeName == second.StructureTypeName;
         }
 
         public static bool operator !=(StructureType first, StructureType second)

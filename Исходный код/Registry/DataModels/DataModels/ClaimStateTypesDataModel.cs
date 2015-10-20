@@ -1,143 +1,60 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Data.Common;
 using System.Windows.Forms;
-using System.Data;
 using Registry.Entities;
-using System.Data.Common;
-using System.Data.Odbc;
-using System.Globalization;
 
-namespace Registry.DataModels
+namespace Registry.DataModels.DataModels
 {
-    public sealed class ClaimStateTypesDataModel: DataModel
+    internal sealed class ClaimStateTypesDataModel : DataModel
     {
-        private static ClaimStateTypesDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM claim_state_types WHERE deleted <> 1";
-        private static string deleteQuery = "UPDATE claim_state_types SET deleted = 1 WHERE id_state_type = ?";
-        private static string insertQuery = @"INSERT INTO claim_state_types
-                            (state_type, is_start_state_type)
-                            VALUES (?, ?)";
-        private static string updateQuery = @"UPDATE claim_state_types SET state_type = ?, is_start_state_type = ? WHERE id_state_type = ?";
-
-        private static string tableName = "claim_state_types";
+        private static ClaimStateTypesDataModel _dataModel;
+        private const string SelectQuery = "SELECT * FROM claim_state_types WHERE deleted <> 1";
+        private const string TableName = "claim_state_types";
 
         private ClaimStateTypesDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, selectQuery, tableName)
+            : base(progressBar, incrementor, SelectQuery, TableName)
         {
-        }
-
-        protected override void ConfigureTable()
-        {
-            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_state_type"] };
-        }
-
-        public static ClaimStateTypesDataModel GetInstance()
-        {
-            return GetInstance(null, 0);
         }
 
         public static ClaimStateTypesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
         {
-            if (dataModel == null)
-                dataModel = new ClaimStateTypesDataModel(progressBar, incrementor);
-            return dataModel;
+            return _dataModel ?? (_dataModel = new ClaimStateTypesDataModel(progressBar, incrementor));
         }
 
-        public static int Delete(int id)
+        protected override void ConfigureTable()
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                command.CommandText = deleteQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state_type", id));
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось удалить наименование вида состояния претензионно-исковой рабоыт. Подробная ошибка: {0}",
-                        e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            Table.PrimaryKey = new [] { Table.Columns["id_state_type"] };
         }
 
-        public static int Update(ClaimStateType claimStateType)
+        protected override void ConfigureRelations()
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                command.CommandText = updateQuery;
-                if (claimStateType == null)
-                {
-                    MessageBox.Show("В метод Update не передана ссылка на объект типа состояния претензионно-исковой работы", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-                command.Parameters.Add(DBConnection.CreateParameter<string>("state_type", claimStateType.StateType));
-                command.Parameters.Add(DBConnection.CreateParameter<bool?>("is_start_state_type", claimStateType.IsStartStateType));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state_type", claimStateType.IdStateType));
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось изменить наименование вида состояния претензионно-исковой работы в базе данных. " +
-                        "Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            AddRelation(TableName, "id_state_type", "claim_states", "id_state_type");
+            AddRelation(TableName, "id_state_type", "claim_state_types_relations", "id_state_from");
+            AddRelation(TableName, "id_state_type", "claim_state_types_relations", "id_state_to");
         }
 
-        public static int Insert(ClaimStateType claimStateType)
+        protected override void ConfigureDeleteCommand(DbCommand command, int id)
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            using (DbCommand last_id_command = DBConnection.CreateCommand())
-            {
-                last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
-                command.CommandText = insertQuery;
-                if (claimStateType == null)
-                {
-                    MessageBox.Show("В метод Insert не передана ссылка на объект типа состояния претензионно-исковой работы", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-                command.Parameters.Add(DBConnection.CreateParameter<string>("state_type", claimStateType.StateType));
-                command.Parameters.Add(DBConnection.CreateParameter<bool?>("is_start_state_type", claimStateType.IsStartStateType));
-                try
-                {
-                    connection.SqlBeginTransaction();
-                    connection.SqlModifyQuery(command);
-                    DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
-                    connection.SqlCommitTransaction();
-                    if (last_id.Rows.Count == 0)
-                    {
-                        MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        return -1;
-                    }
-                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.InvariantCulture);
-                }
-                catch (OdbcException e)
-                {
-                    connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось добавить наименование вида состояния претензионно-исковой работы в базу данных. " +
-                        "Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            command.CommandText = "UPDATE claim_state_types SET deleted = 1 WHERE id_state_type = ?";
+            command.Parameters.Add(DBConnection.CreateParameter<int?>("id_state_type", id));
+        }
+
+        protected override void ConfigureUpdateCommand(DbCommand command, Entity entity)
+        {
+            command.CommandText = @"UPDATE claim_state_types SET state_type = ?, is_start_state_type = ? WHERE id_state_type = ?";
+            var claimStateType = (ClaimStateType) entity;
+            command.Parameters.Add(DBConnection.CreateParameter("state_type", claimStateType.StateType));
+            command.Parameters.Add(DBConnection.CreateParameter("is_start_state_type", claimStateType.IsStartStateType));
+            command.Parameters.Add(DBConnection.CreateParameter("id_state_type", claimStateType.IdStateType));
+        }
+
+        protected override void ConfigureInsertCommand(DbCommand command, Entity entity)
+        {
+            command.CommandText = @"INSERT INTO claim_state_types
+                            (state_type, is_start_state_type)
+                            VALUES (?, ?)";
+            var claimStateType = (ClaimStateType)entity;
+            command.Parameters.Add(DBConnection.CreateParameter("state_type", claimStateType.StateType));
+            command.Parameters.Add(DBConnection.CreateParameter("is_start_state_type", claimStateType.IsStartStateType));
         }
     }
 }

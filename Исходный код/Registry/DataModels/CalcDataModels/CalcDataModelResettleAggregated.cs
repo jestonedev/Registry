@@ -1,93 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data;
-using Registry.DataModels;
+﻿using System.Data;
 using System.Globalization;
-using Registry.Entities;
+using System.Linq;
+using Registry.DataModels.DataModels;
 
-namespace Registry.CalcDataModels
+namespace Registry.DataModels.CalcDataModels
 {
-    public sealed class CalcDataModelResettleAggregated : CalcDataModel
+    internal sealed class CalcDataModelResettleAggregated : CalcDataModel
     {
-        private static CalcDataModelResettleAggregated dataModel = null;
+        private static CalcDataModelResettleAggregated _dataModel;
 
-        private static string tableName = "resettle_aggregated";
+        private const string TableName = "resettle_aggregated";
 
         private CalcDataModelResettleAggregated()
         {
             Table = InitializeTable();
-            Refresh(EntityType.Unknown, null, false);            
+            Refresh();
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.ResettleProcessesDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.ResettlePersonsDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.ResettleBuildingsFromAssocDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.ResettlePremisesFromAssocDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.ResettleSubPremisesFromAssocDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.ResettleBuildingsToAssocDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.ResettlePremisesToAssocDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.ResettleSubPremisesToAssocDataModel).Select());
         }
 
         private static DataTable InitializeTable()
         {
-            DataTable table = new DataTable(tableName);
-            table.Locale = CultureInfo.InvariantCulture;
+            var table = new DataTable(TableName) {Locale = CultureInfo.InvariantCulture};
             table.Columns.Add("id_process").DataType = typeof(int);
             table.Columns.Add("resettlers").DataType = typeof(string);
             table.Columns.Add("address_from").DataType = typeof(string);
             table.Columns.Add("address_to").DataType = typeof(string);
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_process"] };
+            table.PrimaryKey = new [] { table.Columns["id_process"] };
             return table;
         }
 
         protected override void Calculate(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            DMLoadState = DataModelLoadState.Loading;
+            DmLoadState = DataModelLoadState.Loading;
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModeTenancyAggregated");
-            CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;
             // Фильтруем удаленные строки
-            var resettles = DataModelHelper.FilterRows(ResettleProcessesDataModel.GetInstance().Select(), config.Entity, config.IdObject);
-            var resettle_persons = DataModelHelper.FilterRows(ResettlePersonsDataModel.GetInstance().Select(), config.Entity, config.IdObject);
+            var resettles = DataModel.GetInstance(DataModelType.ResettleProcessesDataModel).FilterDeletedRows();
+            var resettlePersons = DataModel.GetInstance(DataModelType.ResettlePersonsDataModel).FilterDeletedRows();
+
             // Вычисляем агрегационную информацию
-            var resettlers = from resettle_persons_row in resettle_persons
-                             group (resettle_persons_row.Field<string>("surname") + " " + 
-                                    resettle_persons_row.Field<string>("name") + " " +
-                                    resettle_persons_row.Field<string>("patronymic")).Trim() by resettle_persons_row.Field<int>("id_process") into gs
+            var resettlers = from resettlePersonsRow in resettlePersons
+                             group (resettlePersonsRow.Field<string>("surname") + " " + 
+                                    resettlePersonsRow.Field<string>("name") + " " +
+                                    resettlePersonsRow.Field<string>("patronymic")).Trim() by resettlePersonsRow.Field<int>("id_process") into gs
                              select new
                              {
                                  id_process = gs.Key,
-                                 resettlers = gs.Aggregate((a, b) => { 
-                                     return a + ", " + b; 
-                                 })
+                                 resettlers = gs.Aggregate((a, b) => a + ", " + b)
                              };
-            var addresses_from = DataModelHelper.AggregateAddressByIdProcess(ResettleBuildingsFromAssocDataModel.GetInstance(),
-                ResettlePremisesFromAssocDataModel.GetInstance(),
-                ResettleSubPremisesFromAssocDataModel.GetInstance(), config.Entity == EntityType.ResettleProcess ? config.IdObject : null);
-            var addresses_to = DataModelHelper.AggregateAddressByIdProcess(ResettleBuildingsToAssocDataModel.GetInstance(),
-                ResettlePremisesToAssocDataModel.GetInstance(),
-                ResettleSubPremisesToAssocDataModel.GetInstance(), config.Entity == EntityType.ResettleProcess ? config.IdObject : null);
-            var result = from resettles_row in resettles
-                         join resettlers_row in resettlers
-                         on resettles_row.Field<int>("id_process") equals resettlers_row.id_process into a
-                         from a_row in a.DefaultIfEmpty()
-                         join addresses_from_row in addresses_from
-                         on resettles_row.Field<int>("id_process") equals addresses_from_row.IdProcess into b
-                         from b_row in b.DefaultIfEmpty()
-                         join addresses_to_row in addresses_to
-                         on resettles_row.Field<int>("id_process") equals addresses_to_row.IdProcess into c
-                         from c_row in c.DefaultIfEmpty()
+            var addressesFrom = DataModelHelper.AggregateAddressByIdProcess(
+                DataModel.GetInstance(DataModelType.ResettleBuildingsFromAssocDataModel).FilterDeletedRows(),
+                DataModel.GetInstance(DataModelType.ResettlePremisesFromAssocDataModel).FilterDeletedRows(),
+                DataModel.GetInstance(DataModelType.ResettleSubPremisesFromAssocDataModel).FilterDeletedRows());
+            var addressesTo = DataModelHelper.AggregateAddressByIdProcess(
+                DataModel.GetInstance(DataModelType.ResettleBuildingsToAssocDataModel).FilterDeletedRows(),
+                DataModel.GetInstance(DataModelType.ResettlePremisesToAssocDataModel).FilterDeletedRows(),
+                DataModel.GetInstance(DataModelType.ResettleSubPremisesToAssocDataModel).FilterDeletedRows());
+            var result = from resettlesRow in resettles
+                         join resettlersRow in resettlers
+                         on resettlesRow.Field<int>("id_process") equals resettlersRow.id_process into a
+                         from aRow in a.DefaultIfEmpty()
+                         join addressesFromRow in addressesFrom
+                         on resettlesRow.Field<int>("id_process") equals addressesFromRow.IdProcess into b
+                         from bRow in b.DefaultIfEmpty()
+                         join addressesToRow in addressesTo
+                         on resettlesRow.Field<int>("id_process") equals addressesToRow.IdProcess into c
+                         from cRow in c.DefaultIfEmpty()
                          select new
                          {
-                             id_process = resettles_row.Field<int>("id_process"),
-                             address_to = (c_row == null) ? "" : c_row.Address,
-                             address_from = (b_row == null) ? "" : b_row.Address,
-                             resettlers = (a_row == null) ? "" : a_row.resettlers
+                             id_process = resettlesRow.Field<int>("id_process"),
+                             address_to = (cRow == null) ? "" : cRow.Address,
+                             address_from = (bRow == null) ? "" : bRow.Address,
+                             resettlers = (aRow == null) ? "" : aRow.resettlers
                          };
             // Заполняем таблицу изменений
-            DataTable table = InitializeTable();
+            var table = InitializeTable();
             table.BeginLoadData();
-            result.ToList().ForEach((x) =>
+            result.ToList().ForEach(x =>
             {
-                table.Rows.Add(new object[] { 
-                    x.id_process, 
-                    x.resettlers,
-                    x.address_from, 
-                    x.address_to
-                });
+                table.Rows.Add(x.id_process, x.resettlers, x.address_from, x.address_to);
             });
             table.EndLoadData();
             // Возвращаем результат
@@ -96,14 +94,7 @@ namespace Registry.CalcDataModels
 
         public static CalcDataModelResettleAggregated GetInstance()
         {
-            if (dataModel == null)
-                dataModel = new CalcDataModelResettleAggregated();
-            return dataModel;
-        }
-
-        public static bool HasInstance()
-        {
-            return dataModel != null;
+            return _dataModel ?? (_dataModel = new CalcDataModelResettleAggregated());
         }
     }
 }

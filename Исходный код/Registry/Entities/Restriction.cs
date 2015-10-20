@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Registry.Entities
 {
-    public class Restriction
+    public class Restriction : Entity
     {
         public int? IdRestriction { get; set; }
         public int? IdRestrictionType { get; set; }
@@ -20,22 +17,20 @@ namespace Registry.Entities
 
         public bool Equals(Restriction other)
         {
-            return this.Equals((object)other);
+            return Equals((object)other);
         }
 
         public static bool operator ==(Restriction first, Restriction second)
         {
             if ((object)first == null && (object)second == null)
                 return true;
-            else
-                if ((object)first == null || (object)second == null)
-                    return false;
-                else
+            if ((object)first == null || (object)second == null)
+                return false;
             return first.IdRestriction == second.IdRestriction &&
-                first.IdRestrictionType == second.IdRestrictionType &&
-                first.Number == second.Number &&
-                first.Date == second.Date &&
-                first.Description == second.Description;
+                   first.IdRestrictionType == second.IdRestrictionType &&
+                   first.Number == second.Number &&
+                   first.Date == second.Date &&
+                   first.Description == second.Description;
         }
 
         public static bool operator !=(Restriction first, Restriction second)

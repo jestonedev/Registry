@@ -1,167 +1,98 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Data;
 using System.Data.Common;
-using System.Data.Odbc;
+using System.Windows.Forms;
 using Registry.Entities;
-using System.Globalization;
 
-namespace Registry.DataModels
+namespace Registry.DataModels.DataModels
 {
-    public sealed class TenancyProcessesDataModel: DataModel
+    internal sealed class TenancyProcessesDataModel : DataModel
     {
-        private static TenancyProcessesDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM tenancy_processes WHERE deleted = 0";
-        private static string deleteQuery = "UPDATE tenancy_processes SET deleted = 1 WHERE id_process = ?";
-        private static string insertQuery = @"INSERT INTO tenancy_processes
+        private static TenancyProcessesDataModel _dataModel;
+        private const string SelectQuery = "SELECT * FROM tenancy_processes WHERE deleted = 0";
+        private const string TableName = "tenancy_processes";
+
+        private TenancyProcessesDataModel(ToolStripProgressBar progressBar, int incrementor)
+            : base(progressBar, incrementor, SelectQuery, TableName)
+        {
+        }
+
+        public static TenancyProcessesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
+            return _dataModel ?? (_dataModel = new TenancyProcessesDataModel(progressBar, incrementor));
+        }
+
+        protected override void ConfigureTable()
+        {
+            Table.PrimaryKey = new [] { Table.Columns["id_process"] };
+            Table.Columns["registration_date"].DefaultValue = DateTime.Now.Date;
+        }
+
+        protected override void ConfigureRelations()
+        {
+            AddRelation(TableName, "id_process", "tenancy_buildings_assoc", "id_process");
+            AddRelation(TableName, "id_process", "tenancy_premises_assoc", "id_process");
+            AddRelation(TableName, "id_process", "tenancy_sub_premises_assoc", "id_process");
+            AddRelation(TableName, "id_process", "tenancy_reasons", "id_process");
+            AddRelation(TableName, "id_process", "tenancy_notifies", "id_process");
+            AddRelation(TableName, "id_process", "tenancy_agreements", "id_process");
+            AddRelation(TableName, "id_process", "tenancy_persons", "id_process");
+            AddRelation(TableName, "id_process", "claims", "id_process");
+            AddRelation("rent_types", "id_rent_type", TableName, "id_rent_type");
+            AddRelation("executors", "id_executor", TableName, "id_executor");
+            AddRelation("warrants", "id_warrant", TableName, "id_warrant");
+        }
+
+        protected override void ConfigureDeleteCommand(DbCommand command, int id)
+        {
+            command.CommandText = "UPDATE tenancy_processes SET deleted = 1 WHERE id_process = ?";
+            command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", id));
+        }
+
+        protected override void ConfigureInsertCommand(DbCommand command, Entity entity)
+        {
+            command.CommandText = @"INSERT INTO tenancy_processes
                             (id_rent_type, id_warrant, registration_num
                              , registration_date, issue_date, begin_date, end_date
                              , residence_warrant_num, residence_warrant_date
                              , protocol_num, protocol_date, id_executor, description)
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        private static string updateQuery = @"UPDATE tenancy_processes SET id_rent_type = ?, id_warrant = ?, registration_num = ?, 
+            var tenancy = (TenancyProcess) entity;
+            command.Parameters.Add(DBConnection.CreateParameter("id_rent_type", tenancy.IdRentType));
+            command.Parameters.Add(DBConnection.CreateParameter("id_warrant", tenancy.IdWarrant));
+            command.Parameters.Add(DBConnection.CreateParameter("registration_num", tenancy.RegistrationNum));
+            command.Parameters.Add(DBConnection.CreateParameter("registration_date", tenancy.RegistrationDate));
+            command.Parameters.Add(DBConnection.CreateParameter("issue_date", tenancy.IssueDate));
+            command.Parameters.Add(DBConnection.CreateParameter("begin_date", tenancy.BeginDate));
+            command.Parameters.Add(DBConnection.CreateParameter("end_date", tenancy.EndDate));
+            command.Parameters.Add(DBConnection.CreateParameter("residence_warrant_num", tenancy.ResidenceWarrantNum));
+            command.Parameters.Add(DBConnection.CreateParameter("residence_warrant_date", tenancy.ResidenceWarrantDate));
+            command.Parameters.Add(DBConnection.CreateParameter("protocol_num", tenancy.ProtocolNum));
+            command.Parameters.Add(DBConnection.CreateParameter("protocol_date", tenancy.ProtocolDate));
+            command.Parameters.Add(DBConnection.CreateParameter("id_executor", tenancy.IdExecutor));
+            command.Parameters.Add(DBConnection.CreateParameter("description", tenancy.Description));
+        }
+
+        protected override void ConfigureUpdateCommand(DbCommand command, Entity entity)
+        {
+            command.CommandText = @"UPDATE tenancy_processes SET id_rent_type = ?, id_warrant = ?, registration_num = ?, 
                             registration_date = ?, issue_date = ?, begin_date = ?, end_date = ?,
                             residence_warrant_num = ?, residence_warrant_date = ?, protocol_num = ?, 
                             protocol_date = ?, id_executor = ?, description = ? WHERE id_process = ?";
-        private static string tableName = "tenancy_processes";
-
-        private TenancyProcessesDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, selectQuery, tableName)
-        {
-        }
-
-        protected override void ConfigureTable()
-        {
-            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_process"] };
-            Table.Columns["registration_date"].DefaultValue = DateTime.Now.Date;
-        }
-
-        public static TenancyProcessesDataModel GetInstance()
-        {
-            return GetInstance(null, 0);
-        }
-
-        public static TenancyProcessesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
-        {
-            if (dataModel == null)
-                dataModel = new TenancyProcessesDataModel(progressBar, incrementor);
-            return dataModel;
-        }
-
-        public static int Delete(int id)
-        {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                command.CommandText = deleteQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", id));
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось удалить процесс найма из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
-        }
-
-        public static int Update(TenancyProcess tenancy)
-        {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                command.CommandText = updateQuery;
-                if (tenancy == null)
-                {
-                    MessageBox.Show("В метод Update не передана ссылка на сущность процесса найма", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_rent_type", tenancy.IdRentType));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", tenancy.IdWarrant));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_num", tenancy.RegistrationNum));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", tenancy.RegistrationDate));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("issue_date", tenancy.IssueDate));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("begin_date", tenancy.BeginDate));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("end_date", tenancy.EndDate));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_warrant_num", tenancy.ResidenceWarrantNum));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("residence_warrant_date", tenancy.ResidenceWarrantDate));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("protocol_num", tenancy.ProtocolNum));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("protocol_date", tenancy.ProtocolDate));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancy.IdExecutor));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", tenancy.Description));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_process", tenancy.IdProcess));
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось изменить данные о процессе найма. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
-        }
-
-        public static int Insert(TenancyProcess tenancy)
-        {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            using (DbCommand last_id_command = DBConnection.CreateCommand())
-            {
-                last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
-                command.CommandText = insertQuery;
-                if (tenancy == null)
-                {
-                    MessageBox.Show("В метод Insert не передана ссылка на сущность процесса найма", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_rent_type", tenancy.IdRentType));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_warrant", tenancy.IdWarrant));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("registration_num", tenancy.RegistrationNum));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("registration_date", tenancy.RegistrationDate));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("issue_date", tenancy.IssueDate));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("begin_date", tenancy.BeginDate));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("end_date", tenancy.EndDate));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("residence_warrant_num", tenancy.ResidenceWarrantNum));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("residence_warrant_date", tenancy.ResidenceWarrantDate));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("protocol_num", tenancy.ProtocolNum));
-                command.Parameters.Add(DBConnection.CreateParameter<DateTime?>("protocol_date", tenancy.ProtocolDate));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_executor", tenancy.IdExecutor));
-                command.Parameters.Add(DBConnection.CreateParameter<string>("description", tenancy.Description));
-                try
-                {
-                    connection.SqlBeginTransaction();
-                    connection.SqlModifyQuery(command);
-                    DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
-                    connection.SqlCommitTransaction();
-                    if (last_id.Rows.Count == 0)
-                    {
-                        MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        return -1;
-                    }
-                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.InvariantCulture);
-                }
-                catch (OdbcException e)
-                {
-                    connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось добавить информацию о процессе найма в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            var tenancy = (TenancyProcess)entity;
+            command.Parameters.Add(DBConnection.CreateParameter("id_rent_type", tenancy.IdRentType));
+            command.Parameters.Add(DBConnection.CreateParameter("id_warrant", tenancy.IdWarrant));
+            command.Parameters.Add(DBConnection.CreateParameter("registration_num", tenancy.RegistrationNum));
+            command.Parameters.Add(DBConnection.CreateParameter("registration_date", tenancy.RegistrationDate));
+            command.Parameters.Add(DBConnection.CreateParameter("issue_date", tenancy.IssueDate));
+            command.Parameters.Add(DBConnection.CreateParameter("begin_date", tenancy.BeginDate));
+            command.Parameters.Add(DBConnection.CreateParameter("end_date", tenancy.EndDate));
+            command.Parameters.Add(DBConnection.CreateParameter("residence_warrant_num", tenancy.ResidenceWarrantNum));
+            command.Parameters.Add(DBConnection.CreateParameter("residence_warrant_date", tenancy.ResidenceWarrantDate));
+            command.Parameters.Add(DBConnection.CreateParameter("protocol_num", tenancy.ProtocolNum));
+            command.Parameters.Add(DBConnection.CreateParameter("protocol_date", tenancy.ProtocolDate));
+            command.Parameters.Add(DBConnection.CreateParameter("id_executor", tenancy.IdExecutor));
+            command.Parameters.Add(DBConnection.CreateParameter("description", tenancy.Description));
+            command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancy.IdProcess));
         }
     }
 }

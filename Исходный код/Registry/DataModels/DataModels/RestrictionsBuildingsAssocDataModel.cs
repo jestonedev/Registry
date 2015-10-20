@@ -1,39 +1,42 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data.Common;
+﻿using System.Data.Common;
 using System.Windows.Forms;
-using System.Data;
+using Registry.Entities;
 
-namespace Registry.DataModels
+namespace Registry.DataModels.DataModels
 {
-    public sealed class RestrictionsBuildingsAssocDataModel : DataModel
-    {        
-        private static RestrictionsBuildingsAssocDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM restrictions_buildings_assoc WHERE deleted = 0";
-        private static string tableName = "restrictions_buildings_assoc";
+    internal sealed class RestrictionsBuildingsAssocDataModel : DataModel
+    {
+        private static RestrictionsBuildingsAssocDataModel _dataModel;
+        private const string SelectQuery = "SELECT * FROM restrictions_buildings_assoc WHERE deleted = 0";
+        private const string TableName = "restrictions_buildings_assoc";
 
         private RestrictionsBuildingsAssocDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, selectQuery, tableName)
+            : base(progressBar, incrementor, SelectQuery, TableName)
         {
-        }
-
-        protected override void ConfigureTable()
-        {
-            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_restriction"] };
-        }
-
-        public static RestrictionsBuildingsAssocDataModel GetInstance()
-        {
-            return GetInstance(null, 0);
         }
 
         public static RestrictionsBuildingsAssocDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
         {
-            if (dataModel == null)
-                dataModel = new RestrictionsBuildingsAssocDataModel(progressBar, incrementor);
-            return dataModel;
+            return _dataModel ?? (_dataModel = new RestrictionsBuildingsAssocDataModel(progressBar, incrementor));
+        }
+
+        protected override void ConfigureTable()
+        {
+            Table.PrimaryKey = new [] { Table.Columns["id_restriction"] };
+        }
+
+        protected override void ConfigureRelations()
+        {
+            AddRelation("restrictions", "id_restriction", TableName, "id_restriction");
+            AddRelation("buildings", "id_building", TableName, "id_building");
+        }
+
+        protected override void ConfigureInsertCommand(DbCommand command, Entity entity)
+        {
+            command.CommandText = "INSERT INTO restrictions_buildings_assoc (id_building, id_restriction) VALUES (?, ?)";
+            var restrictionObject = (RestrictionObjectAssoc)entity;
+            command.Parameters.Add(DBConnection.CreateParameter("id_building", restrictionObject.IdObject));
+            command.Parameters.Add(DBConnection.CreateParameter("id_restriction", restrictionObject.IdRestriction));
         }
     }
 }

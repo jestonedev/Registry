@@ -1,38 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Data;
+﻿using System.Windows.Forms;
 
-namespace Registry.DataModels
+namespace Registry.DataModels.DataModels
 {
-    public sealed class DocumentTypesDataModel: DataModel
+    internal sealed class DocumentTypesDataModel : DataModel
     {
-        private static DocumentTypesDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM document_types";
-        private static string tableName = "document_types";
+        private static DocumentTypesDataModel _dataModel;
+        private const string SelectQuery = "SELECT * FROM document_types";
+        private const string TableName = "document_types";
 
         private DocumentTypesDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, selectQuery, tableName)
+            : base(progressBar, incrementor, SelectQuery, TableName)
         {
-        }
-
-        protected override void ConfigureTable()
-        {
-            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_document_type"] };
-        }
-
-        public static DocumentTypesDataModel GetInstance()
-        {
-            return GetInstance(null, 0);
         }
 
         public static DocumentTypesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
         {
-            if (dataModel == null)
-                dataModel = new DocumentTypesDataModel(progressBar, incrementor);
-            return dataModel;
+            return _dataModel ?? (_dataModel = new DocumentTypesDataModel(progressBar, incrementor));
+        }
+
+        protected override void ConfigureTable()
+        {
+            Table.PrimaryKey = new [] { Table.Columns["id_document_type"] };
+        }
+
+        protected override void ConfigureRelations()
+        {
+            AddRelation(TableName, "id_document_type", "tenancy_persons", "id_document_type");
         }
     }
 }

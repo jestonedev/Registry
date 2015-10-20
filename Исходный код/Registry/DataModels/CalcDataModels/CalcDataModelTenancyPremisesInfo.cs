@@ -1,29 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data;
-using Registry.DataModels;
+﻿using System.Data;
 using System.Globalization;
-using Registry.Entities;
+using System.Linq;
+using Registry.DataModels.DataModels;
 
-namespace Registry.CalcDataModels
+namespace Registry.DataModels.CalcDataModels
 {
-    public sealed class CalcDataModelTenancyPremisesInfo : CalcDataModel
+    internal sealed class CalcDataModelTenancyPremisesInfo : CalcDataModel
     {
-
-        private static string tableName = "tenancy_premises_info";
+        private const string TableName = "tenancy_premises_info";
 
         private CalcDataModelTenancyPremisesInfo()
         {
             Table = InitializeTable();
-            Refresh(EntityType.Unknown, null, false);            
+            Refresh();
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.TenancySubPremisesAssocDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.KladrStreetsDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.BuildingsDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.PremisesDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.SubPremisesDataModel).Select());
         }
 
         private static DataTable InitializeTable()
         {
-            DataTable table = new DataTable(tableName);
-            table.Locale = CultureInfo.InvariantCulture;
+            var table = new DataTable(TableName) {Locale = CultureInfo.InvariantCulture};
             table.Columns.Add("id_process").DataType = typeof(int);
             table.Columns.Add("address").DataType = typeof(string);
             table.Columns.Add("total_area").DataType = typeof(double);
@@ -34,83 +35,76 @@ namespace Registry.CalcDataModels
 
         protected override void Calculate(object sender, System.ComponentModel.DoWorkEventArgs e)
         {
-            DMLoadState = DataModelLoadState.Loading;
+            DmLoadState = DataModelLoadState.Loading;
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelTenancyPremisesInfo");
-            CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;
             // Вычисляем агрегационную информацию
-            var assoc_sub_premises = DataModelHelper.FilterRows(TenancySubPremisesAssocDataModel.GetInstance().Select(), config.Entity, config.IdObject);
-            var assoc_premises = DataModelHelper.FilterRows(TenancyPremisesAssocDataModel.GetInstance().Select(), config.Entity, config.IdObject);
-            var assoc_buildings = DataModelHelper.FilterRows(TenancyBuildingsAssocDataModel.GetInstance().Select(), config.Entity, config.IdObject);
-            var kladr_street = DataModelHelper.FilterRows(KladrStreetsDataModel.GetInstance().Select());
-            var buildings = DataModelHelper.FilterRows(BuildingsDataModel.GetInstance().Select());
-            var premises = DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select());
-            var sub_premises = DataModelHelper.FilterRows(SubPremisesDataModel.GetInstance().Select());
+            var assocSubPremises = DataModel.GetInstance(DataModelType.TenancySubPremisesAssocDataModel).FilterDeletedRows();
+            var assocPremises = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).FilterDeletedRows();
+            var assocBuildings = DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel).FilterDeletedRows();
+            var kladrStreet = DataModel.GetInstance(DataModelType.KladrStreetsDataModel).FilterDeletedRows();
+            var buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel).FilterDeletedRows();
+            var premises = DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows();
+            var subPremises = DataModel.GetInstance(DataModelType.SubPremisesDataModel).FilterDeletedRows();
 
-            var a_sub_premises = from assoc_sub_premises_row in assoc_sub_premises
-                                    join sub_premises_row in sub_premises
-                                    on assoc_sub_premises_row.Field<int>("id_sub_premises") equals sub_premises_row.Field<int>("id_sub_premises")
-                                    join premises_row in premises
-                                    on sub_premises_row.Field<int>("id_premises") equals premises_row.Field<int>("id_premises")
-                                    join buildings_row in buildings
-                                    on premises_row.Field<int>("id_building") equals buildings_row.Field<int>("id_building")
-                                    join kladr_street_row in kladr_street
-                                    on buildings_row.Field<string>("id_street") equals kladr_street_row.Field<string>("id_street")
+            var aSubPremises = from assocSubPremisesRow in assocSubPremises
+                                    join subPremisesRow in subPremises
+                                    on assocSubPremisesRow.Field<int>("id_sub_premises") equals subPremisesRow.Field<int>("id_sub_premises")
+                                    join premisesRow in premises
+                                    on subPremisesRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")
+                                    join buildingsRow in buildings
+                                    on premisesRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
+                                    join kladrStreetRow in kladrStreet
+                                    on buildingsRow.Field<string>("id_street") equals kladrStreetRow.Field<string>("id_street")
                                     select new
                                     {
-                                        id_process = assoc_sub_premises_row.Field<int>("id_process"),
-                                        address = kladr_street_row.Field<string>("street_name") + ", дом " + buildings_row.Field<string>("house") +
-                                            (premises_row.Field<int>("id_premises_type") == 2 ? " ком. " : 
-                                            (premises_row.Field<int>("id_premises_type") == 4 ? " пом. " : " кв. ")) + premises_row.Field<string>("premises_num") +
-                                            " ком. " + sub_premises_row.Field<string>("sub_premises_num"),
-                                        total_area = sub_premises_row.Field<double>("total_area"),
-                                        living_area = sub_premises_row.Field<double>("living_area"),
-                                        rent_area = assoc_sub_premises_row.Field<double?>("rent_total_area")
+                                        id_process = assocSubPremisesRow.Field<int>("id_process"),
+                                        address = kladrStreetRow.Field<string>("street_name") + ", дом " + buildingsRow.Field<string>("house") +
+                                            (premisesRow.Field<int>("id_premises_type") == 2 ? " ком. " : 
+                                            (premisesRow.Field<int>("id_premises_type") == 4 ? " пом. " : " кв. ")) + premisesRow.Field<string>("premises_num") +
+                                            " ком. " + subPremisesRow.Field<string>("sub_premises_num"),
+                                        total_area = subPremisesRow.Field<double>("total_area"),
+                                        living_area = subPremisesRow.Field<double>("living_area"),
+                                        rent_area = assocSubPremisesRow.Field<double?>("rent_total_area")
                                     };
-            var a_premises = from assoc_premises_row in assoc_premises
-                                    join premises_row in premises
-                                    on assoc_premises_row.Field<int>("id_premises") equals premises_row.Field<int>("id_premises")
-                                    join buildings_row in buildings
-                                    on premises_row.Field<int>("id_building") equals buildings_row.Field<int>("id_building")
-                                    join kladr_street_row in kladr_street
-                                    on buildings_row.Field<string>("id_street") equals kladr_street_row.Field<string>("id_street")
+            var aPremises = from assocPremisesRow in assocPremises
+                                    join premisesRow in premises
+                                    on assocPremisesRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")
+                                    join buildingsRow in buildings
+                                    on premisesRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
+                                    join kladrStreetRow in kladrStreet
+                                    on buildingsRow.Field<string>("id_street") equals kladrStreetRow.Field<string>("id_street")
                                     select new
                                     {
-                                        id_process = assoc_premises_row.Field<int>("id_process"),
-                                        address = kladr_street_row.Field<string>("street_name") + ", дом " + buildings_row.Field<string>("house") +
-                                            (premises_row.Field<int>("id_premises_type") == 2 ? " ком. " :
-                                            (premises_row.Field<int>("id_premises_type") == 4 ? " пом. " : " кв. ")) + premises_row.Field<string>("premises_num"),
-                                        total_area = premises_row.Field<double>("total_area"),
-                                        living_area = premises_row.Field<double>("living_area"),
-                                        rent_area = assoc_premises_row.Field<double?>("rent_total_area")
+                                        id_process = assocPremisesRow.Field<int>("id_process"),
+                                        address = kladrStreetRow.Field<string>("street_name") + ", дом " + buildingsRow.Field<string>("house") +
+                                            (premisesRow.Field<int>("id_premises_type") == 2 ? " ком. " :
+                                            (premisesRow.Field<int>("id_premises_type") == 4 ? " пом. " : " кв. ")) + premisesRow.Field<string>("premises_num"),
+                                        total_area = premisesRow.Field<double>("total_area"),
+                                        living_area = premisesRow.Field<double>("living_area"),
+                                        rent_area = assocPremisesRow.Field<double?>("rent_total_area")
                                     };
-            var a_buildings = from assoc_buildings_row in assoc_buildings
-                             join buildings_row in buildings
-                             on assoc_buildings_row.Field<int>("id_building") equals buildings_row.Field<int>("id_building")
-                             join kladr_street_row in kladr_street
-                             on buildings_row.Field<string>("id_street") equals kladr_street_row.Field<string>("id_street")
+            var aBuildings = from assocBuildingsRow in assocBuildings
+                             join buildingsRow in buildings
+                             on assocBuildingsRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
+                             join kladrStreetRow in kladrStreet
+                             on buildingsRow.Field<string>("id_street") equals kladrStreetRow.Field<string>("id_street")
                              select new
                              {
-                                 id_process = assoc_buildings_row.Field<int>("id_process"),
-                                 address = kladr_street_row.Field<string>("street_name") + ", дом " + buildings_row.Field<string>("house"),
-                                 total_area = buildings_row.Field<double>("total_area"),
-                                 living_area = buildings_row.Field<double>("living_area"),
-                                 rent_area = assoc_buildings_row.Field<double?>("rent_total_area")
+                                 id_process = assocBuildingsRow.Field<int>("id_process"),
+                                 address = kladrStreetRow.Field<string>("street_name") + ", дом " + buildingsRow.Field<string>("house"),
+                                 total_area = buildingsRow.Field<double>("total_area"),
+                                 living_area = buildingsRow.Field<double>("living_area"),
+                                 rent_area = assocBuildingsRow.Field<double?>("rent_total_area")
                              };
-            var result = a_buildings.Union(a_premises).Union(a_sub_premises);
+            var result = aBuildings.Union(aPremises).Union(aSubPremises);
 
             // Заполняем таблицу изменений
-            DataTable table = InitializeTable();
+            var table = InitializeTable();
             table.BeginLoadData();
-            result.ToList().ForEach((x) =>
+            result.ToList().ForEach(x =>
             {
-                table.Rows.Add(new object[] { 
-                    x.id_process, 
-                    x.address, 
-                    x.total_area,
-                    x.living_area,
-                    x.rent_area
-                });
+                table.Rows.Add(x.id_process, x.address, x.total_area, x.living_area, x.rent_area);
             });
             table.EndLoadData();
             // Возвращаем результат
@@ -120,11 +114,6 @@ namespace Registry.CalcDataModels
         public static CalcDataModelTenancyPremisesInfo GetInstance()
         {
             return new CalcDataModelTenancyPremisesInfo();
-        }
-
-        public static bool HasInstance()
-        {
-            return false;
         }
     }
 }

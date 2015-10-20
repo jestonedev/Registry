@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Registry.Entities
 {
-    public sealed class TenancyPerson
+    public sealed class TenancyPerson : Entity
     {
         public int? IdPerson { get; set; }
         public int? IdProcess { get; set; }
@@ -38,40 +35,38 @@ namespace Registry.Entities
 
         public bool Equals(TenancyPerson other)
         {
-            return this.Equals((object)other);
+            return Equals((object)other);
         }
 
         public static bool operator ==(TenancyPerson first, TenancyPerson second)
         {
             if ((object)first == null && (object)second == null)
                 return true;
-            else
-                if ((object)first == null || (object)second == null)
-                    return false;
-                else
-                    return first.IdPerson == second.IdPerson &&
-                        first.IdProcess == second.IdProcess &&
-                        first.IdKinship == second.IdKinship &&
-                        first.Surname == second.Surname &&
-                        first.Name == second.Name &&
-                        first.Patronymic == second.Patronymic &&
-                        first.DateOfBirth == second.DateOfBirth &&
-                        first.IdDocumentType == second.IdDocumentType &&
-                        first.DateOfDocumentIssue == second.DateOfDocumentIssue &&
-                        first.DocumentNum == second.DocumentNum &&
-                        first.DocumentSeria == second.DocumentSeria &&
-                        first.IdDocumentIssuedBy == second.IdDocumentIssuedBy &&
-                        first.RegistrationIdStreet == second.RegistrationIdStreet &&
-                        first.RegistrationHouse == second.RegistrationHouse &&
-                        first.RegistrationFlat == second.RegistrationFlat &&
-                        first.RegistrationRoom == second.RegistrationRoom &&
-                        first.ResidenceIdStreet == second.ResidenceIdStreet &&
-                        first.ResidenceHouse == second.ResidenceHouse &&
-                        first.ResidenceFlat == second.ResidenceFlat &&
-                        first.ResidenceRoom == second.ResidenceRoom &&
-                        first.PersonalAccount == second.PersonalAccount &&
-                        first.IncludeDate == second.IncludeDate &&
-                        first.ExcludeDate == second.ExcludeDate;
+            if ((object)first == null || (object)second == null)
+                return false;
+            return first.IdPerson == second.IdPerson &&
+                   first.IdProcess == second.IdProcess &&
+                   first.IdKinship == second.IdKinship &&
+                   first.Surname == second.Surname &&
+                   first.Name == second.Name &&
+                   first.Patronymic == second.Patronymic &&
+                   first.DateOfBirth == second.DateOfBirth &&
+                   first.IdDocumentType == second.IdDocumentType &&
+                   first.DateOfDocumentIssue == second.DateOfDocumentIssue &&
+                   first.DocumentNum == second.DocumentNum &&
+                   first.DocumentSeria == second.DocumentSeria &&
+                   first.IdDocumentIssuedBy == second.IdDocumentIssuedBy &&
+                   first.RegistrationIdStreet == second.RegistrationIdStreet &&
+                   first.RegistrationHouse == second.RegistrationHouse &&
+                   first.RegistrationFlat == second.RegistrationFlat &&
+                   first.RegistrationRoom == second.RegistrationRoom &&
+                   first.ResidenceIdStreet == second.ResidenceIdStreet &&
+                   first.ResidenceHouse == second.ResidenceHouse &&
+                   first.ResidenceFlat == second.ResidenceFlat &&
+                   first.ResidenceRoom == second.ResidenceRoom &&
+                   first.PersonalAccount == second.PersonalAccount &&
+                   first.IncludeDate == second.IncludeDate &&
+                   first.ExcludeDate == second.ExcludeDate;
         }
 
         public static bool operator !=(TenancyPerson first, TenancyPerson second)

@@ -8,12 +8,13 @@ using System.Text;
 using System.Windows.Forms;
 using Registry.DataModels;
 using System.Globalization;
+using Registry.DataModels.DataModels;
 
 namespace Registry.Reporting
 {
     public partial class TenancyStatisticFilterForm : Form
     {
-        KladrRegionsDataModel regions = null;
+        DataModel regions = null;
 
         BindingSource v_kladr = null;
         BindingSource v_regions = null;
@@ -23,12 +24,12 @@ namespace Registry.Reporting
         public TenancyStatisticFilterForm()
         {
             InitializeComponent();
-            KladrStreetsDataModel.GetInstance().Select();
-            regions = KladrRegionsDataModel.GetInstance();
-            RentTypesDataModel.GetInstance().Select();
-            TenancyReasonTypesDataModel.GetInstance().Select();
+            DataModel.GetInstance(DataModelType.KladrStreetsDataModel).Select();
+            regions = DataModel.GetInstance(DataModelType.KladrRegionsDataModel);
+            DataModel.GetInstance(DataModelType.RentTypesDataModel).Select();
+            DataModel.GetInstance(DataModelType.TenancyReasonTypesDataModel).Select();
 
-            DataSet ds = DataSetManager.DataSet;
+            DataSet ds = DataModel.DataSet;
 
             v_kladr = new BindingSource();
             v_kladr.DataSource = ds;

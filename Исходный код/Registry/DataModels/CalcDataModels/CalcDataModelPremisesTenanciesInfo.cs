@@ -2,47 +2,49 @@
 using System.ComponentModel;
 using System.Data;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using Registry.DataModels;
-using Registry.Entities;
+using Registry.DataModels.DataModels;
 
-namespace Registry.CalcDataModels
+namespace Registry.DataModels.CalcDataModels
 {
-    public sealed class CalcDataModelPremisesTenanciesInfo : CalcDataModel
+    internal sealed class CalcDataModelPremisesTenanciesInfo : CalcDataModel
     {
-        private static CalcDataModelPremisesTenanciesInfo dataModel = null;
+        private static CalcDataModelPremisesTenanciesInfo _dataModel;
 
-        private static string tableName = "premises_tenancies_reg_number";
+        private const string TableName = "premises_tenancies_reg_number";
 
         private CalcDataModelPremisesTenanciesInfo()
         {
             Table = InitializeTable();
-            Refresh(EntityType.Unknown, null, false);
+            Refresh();
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.TenancyProcessesDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.TenancyPersonsDataModel).Select());
         }
 
         private static DataTable InitializeTable()
         {
-            var table = new DataTable(tableName) {Locale = CultureInfo.InvariantCulture};
+            var table = new DataTable(TableName) {Locale = CultureInfo.InvariantCulture};
             table.Columns.Add("id_premises").DataType = typeof(int);
             table.Columns.Add("registration_num").DataType = typeof(string);
             table.Columns.Add("registration_date").DataType = typeof(DateTime);
+            table.Columns.Add("end_date").DataType = typeof(DateTime);
             table.Columns.Add("residence_warrant_num").DataType = typeof(string);
+            table.Columns.Add("residence_warrant_date").DataType = typeof(DateTime);
             table.Columns.Add("tenant").DataType = typeof(string);
             return table;
         }
 
         protected override void Calculate(object sender, DoWorkEventArgs e)
         {
-            DMLoadState = DataModelLoadState.Loading;
+            DmLoadState = DataModelLoadState.Loading;
             if (e == null)
                 throw new DataModelException(
                     "Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelPremisesTenanciesRegNumbers");
-            var config = (CalcAsyncConfig) e.Argument;
             // Фильтруем удаленные строки
-            var tenancyPremises = DataModelHelper.FilterRows(TenancyPremisesAssocDataModel.GetInstance().Select());
-            var tenancyProcesses = DataModelHelper.FilterRows(TenancyProcessesDataModel.GetInstance().Select());
-            var tenancyPersons = DataModelHelper.FilterRows(TenancyPersonsDataModel.GetInstance().Select());
+            var tenancyPremises = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).FilterDeletedRows();
+            var tenancyProcesses = DataModel.GetInstance(DataModelType.TenancyProcessesDataModel).FilterDeletedRows();
+            var tenancyPersons = DataModel.GetInstance(DataModelType.TenancyPersonsDataModel).FilterDeletedRows();
             // Вычисляем агрегационную информацию
             var tenants = from row in tenancyPersons
                 where row.Field<int?>("id_kinship") == 1
@@ -63,7 +65,9 @@ namespace Registry.CalcDataModels
                     id_process = processRow.Field<int>("id_process"),
                     registration_num = processRow.Field<string>("registration_num"),
                     registration_date = processRow.Field<DateTime?>("registration_date"),
+                    end_date = processRow.Field<DateTime?>("end_date"),
                     residence_warrant_num = processRow.Field<string>("residence_warrant_num"),
+                    residence_warrant_date = processRow.Field<DateTime?>("residence_warrant_date"),
                     tenant = pTenantsRow != null ? pTenantsRow.tenant : null
                 };
             var result = from processRow in tenancyProcessesWithTenants
@@ -74,7 +78,9 @@ namespace Registry.CalcDataModels
                                 id_premises = tenancyPremisesRow.Field<int>("id_premises"),
                                 processRow.registration_num,
                                 processRow.registration_date,
+                                processRow.end_date,
                                 processRow.residence_warrant_num,
+                                processRow.residence_warrant_date,
                                 processRow.tenant
                             };
             // Заполняем таблицу изменений
@@ -82,7 +88,7 @@ namespace Registry.CalcDataModels
             table.BeginLoadData();
             result.ToList().ForEach(x =>
             {
-                table.Rows.Add(x.id_premises, x.registration_num, x.registration_date, x.residence_warrant_num, x.tenant);
+                table.Rows.Add(x.id_premises, x.registration_num, x.registration_date, x.end_date, x.residence_warrant_num, x.residence_warrant_date, x.tenant);
             });
             table.EndLoadData();
             // Возвращаем результат
@@ -91,12 +97,7 @@ namespace Registry.CalcDataModels
 
         public static CalcDataModelPremisesTenanciesInfo GetInstance()
         {
-            return dataModel ?? (dataModel = new CalcDataModelPremisesTenanciesInfo());
-        }
-
-        public static bool HasInstance()
-        {
-            return dataModel != null;
+            return _dataModel ?? (_dataModel = new CalcDataModelPremisesTenanciesInfo());
         }
     }
 }

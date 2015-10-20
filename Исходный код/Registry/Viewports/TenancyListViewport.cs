@@ -4,9 +4,11 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
-using Registry.CalcDataModels;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Reporting;
 using Registry.SearchForms;
@@ -22,12 +24,12 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        private TenancyProcessesDataModel tenancies;
-        private TenancyBuildingsAssocDataModel tenancy_building_assoc;
-        private TenancyPremisesAssocDataModel tenancy_premises_assoc;
-        private TenancySubPremisesAssocDataModel tenancy_sub_premises_assoc;
-        private CalcDataModelTenancyAggregated tenancies_aggregate;
-        private RentTypesDataModel rent_types;
+        private DataModel tenancies;
+        private DataModel tenancy_building_assoc;
+        private DataModel tenancy_premises_assoc;
+        private DataModel tenancy_sub_premises_assoc;
+        private CalcDataModel tenancies_aggregate;
+        private DataModel rent_types;
         #endregion Models
 
         #region Views
@@ -74,13 +76,13 @@ namespace Registry.Viewport
             switch (ParentType)
             {
                 case ParentTypeEnum.Building:
-                    ids = DataModelHelper.TenancyProcessIDsByBuildingID(Convert.ToInt32(ParentRow["id_building"], CultureInfo.InvariantCulture));
+                    ids = DataModelHelper.TenancyProcessIDsByBuildingId(Convert.ToInt32(ParentRow["id_building"], CultureInfo.InvariantCulture));
                     break;
                 case ParentTypeEnum.Premises:
-                    ids = DataModelHelper.TenancyProcessIDsByPremisesID(Convert.ToInt32(ParentRow["id_premises"], CultureInfo.InvariantCulture));
+                    ids = DataModelHelper.TenancyProcessIDsByPremisesId(Convert.ToInt32(ParentRow["id_premises"], CultureInfo.InvariantCulture));
                     break;
                 case ParentTypeEnum.SubPremises:
-                    ids = DataModelHelper.TenancyProcessIDsBySubPremisesID(Convert.ToInt32(ParentRow["id_sub_premises"], CultureInfo.InvariantCulture));
+                    ids = DataModelHelper.TenancyProcessIDsBySubPremisesId(Convert.ToInt32(ParentRow["id_sub_premises"], CultureInfo.InvariantCulture));
                     break;
                 default: 
                     throw new ViewportException("Неизвестный тип родительского объекта");
@@ -182,9 +184,9 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            tenancies = TenancyProcessesDataModel.GetInstance();
-            rent_types = RentTypesDataModel.GetInstance();
-            tenancies_aggregate = CalcDataModelTenancyAggregated.GetInstance();
+            tenancies = DataModel.GetInstance(DataModelType.TenancyProcessesDataModel);
+            rent_types = DataModel.GetInstance(DataModelType.RentTypesDataModel);
+            tenancies_aggregate = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelTenancyAggregated);
 
             //Ожидаем загрузки данных, если это необходимо
             tenancies.Select();
@@ -192,7 +194,7 @@ namespace Registry.Viewport
 
             SetViewportCaption();
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             v_tenancies = new BindingSource();
             v_tenancies.DataMember = "tenancy_processes";
@@ -217,17 +219,17 @@ namespace Registry.Viewport
                 switch (ParentType)
                 {
                     case ParentTypeEnum.Building:
-                        tenancy_building_assoc = TenancyBuildingsAssocDataModel.GetInstance();
+                        tenancy_building_assoc = DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel);
                         tenancy_building_assoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
                         tenancy_building_assoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
                         break;
                     case ParentTypeEnum.Premises:
-                        tenancy_premises_assoc = TenancyPremisesAssocDataModel.GetInstance();
+                        tenancy_premises_assoc = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel);
                         tenancy_premises_assoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
                         tenancy_premises_assoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
                         break;
                     case ParentTypeEnum.SubPremises:
-                        tenancy_sub_premises_assoc = TenancySubPremisesAssocDataModel.GetInstance();
+                        tenancy_sub_premises_assoc = DataModel.GetInstance(DataModelType.TenancySubPremisesAssocDataModel);
                         tenancy_sub_premises_assoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
                         tenancy_sub_premises_assoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
                         break;
@@ -249,12 +251,10 @@ namespace Registry.Viewport
             if (MessageBox.Show("Вы действительно хотите удалить этот процесс найма жилья?", "Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                if (TenancyProcessesDataModel.Delete((int)((DataRowView)v_tenancies.Current)["id_process"]) == -1)
+                if (tenancies.Delete((int)((DataRowView)v_tenancies.Current)["id_process"]) == -1)
                     return;
                 ((DataRowView)v_tenancies[v_tenancies.Position]).Delete();
                 MenuCallback.ForceCloseDetachedViewports();
-                if (CalcDataModelPremisesTenanciesInfo.HasInstance())
-                    CalcDataModelPremisesTenanciesInfo.GetInstance().Refresh(EntityType.Unknown, null, true);
             }
         }
 
@@ -440,6 +440,28 @@ namespace Registry.Viewport
         public override void ShowClaims()
         {
             ShowAssocViewport(ViewportType.ClaimListViewport);
+        }
+
+        public override bool HasExportToOds()
+        {
+            return true;
+        }
+
+        public override void ExportToOds()
+        {
+            var reporter = ReporterFactory.CreateReporter(ReporterType.ExportReporter);
+            var columnHeaders = dataGridView.Columns.Cast<DataGridViewColumn>().
+                Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnHeader\":\"" + column.HeaderText + "\"}");
+            var columnPatterns = dataGridView.Columns.Cast<DataGridViewColumn>().
+                Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnPattern\":\"$column" + column.DisplayIndex + "$\"}");
+            var arguments = new Dictionary<string, string>
+            {
+                {"type", "3"},
+                {"filter", v_tenancies.Filter.Trim() == "" ? "(1=1)" : v_tenancies.Filter},
+                {"columnHeaders", "["+columnHeaders+"]"},
+                {"columnPatterns", "["+columnPatterns+"]"}
+            };
+            reporter.Run(arguments);
         }
 
         private void ShowAssocViewport(ViewportType viewportType)

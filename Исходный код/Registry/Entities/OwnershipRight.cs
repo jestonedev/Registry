@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Registry.Entities
 {
-    public class OwnershipRight
+    public class OwnershipRight : Entity
     {
         public int? IdOwnershipRight { get; set; }
         public int? IdOwnershipRightType { get; set; }
@@ -20,22 +17,20 @@ namespace Registry.Entities
 
         public bool Equals(OwnershipRight other)
         {
-            return this.Equals((object)other);
+            return Equals((object)other);
         }
 
         public static bool operator ==(OwnershipRight first, OwnershipRight second)
         {
             if ((object)first == null && (object)second == null)
                 return true;
-            else
-                if ((object)first == null || (object)second == null)
-                    return false;
-                else
+            if ((object)first == null || (object)second == null)
+                return false;
             return first.IdOwnershipRight == second.IdOwnershipRight &&
-                first.IdOwnershipRightType == second.IdOwnershipRightType &&
-                first.Number == second.Number &&
-                first.Date == second.Date &&
-                first.Description == second.Description;
+                   first.IdOwnershipRightType == second.IdOwnershipRightType &&
+                   first.Number == second.Number &&
+                   first.Date == second.Date &&
+                   first.Description == second.Description;
         }
 
         public static bool operator !=(OwnershipRight first, OwnershipRight second)

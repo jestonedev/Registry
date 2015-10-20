@@ -57,14 +57,14 @@ namespace Registry.SearchForms
             {
                 //по ФИО нанимателя
                 var snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var buildingIds = DataModelHelper.BuildingIDsBySNP(snp, row => row.Field<int?>("id_kinship") == 1);
+                var buildingIds = DataModelHelper.BuildingIdsBySnp(snp, row => row.Field<int?>("id_kinship") == 1);
                 includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingIds);
             }
             if (comboBoxCriteriaType.SelectedIndex == 2)
             {
                 // по ФИО участника
                 var snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var buildingIds = DataModelHelper.BuildingIDsBySNP(snp, row => true);
+                var buildingIds = DataModelHelper.BuildingIdsBySnp(snp, row => true);
                 includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingIds);
             }
             if (comboBoxCriteriaType.SelectedIndex == 3)

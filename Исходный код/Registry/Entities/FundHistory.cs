@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Registry.Entities
 {
-    public sealed class FundHistory
+    public sealed class FundHistory : Entity
     {
         public int? IdFund { get; set; }
         public int? IdFundType { get; set; }
@@ -26,28 +23,26 @@ namespace Registry.Entities
 
         public bool Equals(FundHistory other)
         {
-            return this.Equals((object)other);
+            return Equals((object)other);
         }
 
         public static bool operator ==(FundHistory first, FundHistory second)
         {
             if ((object)first == null && (object)second == null)
                 return true;
-            else
-                if ((object)first == null || (object)second == null)
-                    return false;
-                else
+            if ((object)first == null || (object)second == null)
+                return false;
             return first.IdFund == second.IdFund &&
-                first.IdFundType == second.IdFundType &&
-                first.ProtocolNumber == second.ProtocolNumber &&
-                first.ProtocolDate == second.ProtocolDate &&
-                first.IncludeRestrictionNumber == second.IncludeRestrictionNumber &&
-                first.IncludeRestrictionDate == second.IncludeRestrictionDate &&
-                first.IncludeRestrictionDescription == second.IncludeRestrictionDescription &&
-                first.ExcludeRestrictionNumber == second.ExcludeRestrictionNumber &&
-                first.ExcludeRestrictionDate == second.ExcludeRestrictionDate &&
-                first.ExcludeRestrictionDescription == second.ExcludeRestrictionDescription &&
-                first.Description == second.Description;
+                   first.IdFundType == second.IdFundType &&
+                   first.ProtocolNumber == second.ProtocolNumber &&
+                   first.ProtocolDate == second.ProtocolDate &&
+                   first.IncludeRestrictionNumber == second.IncludeRestrictionNumber &&
+                   first.IncludeRestrictionDate == second.IncludeRestrictionDate &&
+                   first.IncludeRestrictionDescription == second.IncludeRestrictionDescription &&
+                   first.ExcludeRestrictionNumber == second.ExcludeRestrictionNumber &&
+                   first.ExcludeRestrictionDate == second.ExcludeRestrictionDate &&
+                   first.ExcludeRestrictionDescription == second.ExcludeRestrictionDescription &&
+                   first.Description == second.Description;
         }
 
         public static bool operator !=(FundHistory first, FundHistory second)

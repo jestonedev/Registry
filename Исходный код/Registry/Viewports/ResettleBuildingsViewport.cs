@@ -5,8 +5,9 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using Registry.CalcDataModels;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.SearchForms;
 using Security;
@@ -30,8 +31,8 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        private BuildingsDataModel buildings;
-        private KladrStreetsDataModel kladr;
+        private DataModel buildings;
+        private DataModel kladr;
         private DataModel resettle_buildings;
         private DataTable snapshot_resettle_buildings;
         #endregion Models
@@ -206,12 +207,12 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            buildings = BuildingsDataModel.GetInstance();
-            kladr = KladrStreetsDataModel.GetInstance();
+            buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel);
+            kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
             if (way == ResettleEstateObjectWay.From)
-                resettle_buildings = ResettleBuildingsFromAssocDataModel.GetInstance();
+                resettle_buildings = DataModel.GetInstance(DataModelType.ResettleBuildingsFromAssocDataModel);
             else
-                resettle_buildings = ResettleBuildingsToAssocDataModel.GetInstance();
+                resettle_buildings = DataModel.GetInstance(DataModelType.ResettleBuildingsToAssocDataModel);
             // Ожидаем дозагрузки данных, если это необходимо
             buildings.Select();
             kladr.Select();
@@ -224,7 +225,7 @@ namespace Registry.Viewport
             snapshot_resettle_buildings.Columns.Add("id_building").DataType = typeof(int);
             snapshot_resettle_buildings.Columns.Add("is_checked").DataType = typeof(bool);
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             v_buildings = new BindingSource();
             v_buildings.DataMember = "buildings";
@@ -297,12 +298,10 @@ namespace Registry.Viewport
                         "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
-                if (BuildingsDataModel.Delete((int)((DataRowView)v_buildings.Current)["id_building"]) == -1)
+                if (buildings.Delete((int)((DataRowView)v_buildings.Current)["id_building"]) == -1)
                     return;
                 ((DataRowView)v_buildings[v_buildings.Position]).Delete();
                 MenuCallback.ForceCloseDetachedViewports();
-                CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
-                CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
             }
         }
 
@@ -436,14 +435,16 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
-            ResettleBuildingsFromAssocDataModel.GetInstance().EditingNewRecord = true;
-            ResettleBuildingsToAssocDataModel.GetInstance().EditingNewRecord = true;
+            var resettleBuildingsFromAssoc = DataModel.GetInstance(DataModelType.ResettleBuildingsFromAssocDataModel);
+            var resettleBuildingsToAssoc = DataModel.GetInstance(DataModelType.ResettleBuildingsToAssocDataModel);
+            resettleBuildingsFromAssoc.EditingNewRecord = true;
+            resettleBuildingsToAssoc.EditingNewRecord = true;
             var list = ResettleBuildingsFromViewport();
             if (!ValidateResettleBuildings(list))
             {
                 sync_views = true;
-                ResettleBuildingsFromAssocDataModel.GetInstance().EditingNewRecord = false;
-                ResettleBuildingsToAssocDataModel.GetInstance().EditingNewRecord = false;
+                resettleBuildingsFromAssoc.EditingNewRecord = false;
+                resettleBuildingsToAssoc.EditingNewRecord = false;
                 return;
             }
             for (var i = 0; i < list.Count; i++)
@@ -455,14 +456,14 @@ namespace Registry.Viewport
                 {
                     var id_assoc = -1;
                     if (way == ResettleEstateObjectWay.From)
-                        id_assoc = ResettleBuildingsFromAssocDataModel.Insert(list[i]);
+                        id_assoc = resettleBuildingsFromAssoc.Insert(list[i]);
                     else
-                        id_assoc = ResettleBuildingsToAssocDataModel.Insert(list[i]);
+                        id_assoc = resettleBuildingsToAssoc.Insert(list[i]);
                     if (id_assoc == -1)
                     {
-                        sync_views = true; 
-                        ResettleBuildingsFromAssocDataModel.GetInstance().EditingNewRecord = false;
-                        ResettleBuildingsToAssocDataModel.GetInstance().EditingNewRecord = false;
+                        sync_views = true;
+                        resettleBuildingsFromAssoc.EditingNewRecord = false;
+                        resettleBuildingsToAssoc.EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)v_snapshot_resettle_buildings[
@@ -487,14 +488,14 @@ namespace Registry.Viewport
                 {
                     var affected = -1;
                     if (way == ResettleEstateObjectWay.From)
-                        affected = ResettleBuildingsFromAssocDataModel.Delete(list[i].IdAssoc.Value);
+                        affected = resettleBuildingsFromAssoc.Delete(list[i].IdAssoc.Value);
                     else
-                        affected = ResettleBuildingsToAssocDataModel.Delete(list[i].IdAssoc.Value);
+                        affected = resettleBuildingsToAssoc.Delete(list[i].IdAssoc.Value);
                     if (affected == -1)
                     {
                         sync_views = true;
-                        ResettleBuildingsFromAssocDataModel.GetInstance().EditingNewRecord = false;
-                        ResettleBuildingsToAssocDataModel.GetInstance().EditingNewRecord = false;
+                        resettleBuildingsFromAssoc.EditingNewRecord = false;
+                        resettleBuildingsToAssoc.EditingNewRecord = false;
                         return;
                     }
                     var snapshot_row_index = -1;
@@ -513,11 +514,9 @@ namespace Registry.Viewport
                 }
             }
             sync_views = true;
-            ResettleBuildingsFromAssocDataModel.GetInstance().EditingNewRecord = false;
-            ResettleBuildingsToAssocDataModel.GetInstance().EditingNewRecord = false;
+            resettleBuildingsFromAssoc.EditingNewRecord = false;
+            resettleBuildingsToAssoc.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
-            if (ParentType == ParentTypeEnum.ResettleProcess)
-                CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.ResettleProcess, (int)ParentRow["id_process"], true);
         }
 
         public override bool CanDuplicate()
@@ -590,8 +589,6 @@ namespace Registry.Viewport
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (e == null)
-                return;
             if (SnapshotHasChanges())
             {
                 var result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",

@@ -1,39 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data.Common;
-using System.Data;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
-namespace Registry.DataModels
+namespace Registry.DataModels.DataModels
 {
-    public sealed class FundTypesDataModel : DataModel
+    internal sealed class FundTypesDataModel : DataModel
     {
-        private static FundTypesDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM fund_types ft ORDER BY CASE ft.id_fund_type WHEN 4 THEN 0 ELSE ft.fund_type END DESC";
-        private static string tableName = "fund_types";
+        private static FundTypesDataModel _dataModel;
+        private const string SelectQuery = "SELECT * FROM fund_types ft ORDER BY CASE ft.id_fund_type WHEN 4 THEN 0 ELSE ft.fund_type END DESC";
+        private const string TableName = "fund_types";
 
         private FundTypesDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, selectQuery, tableName)
+            : base(progressBar, incrementor, SelectQuery, TableName)
         {
-        }
-
-        protected override void ConfigureTable()
-        {
-            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_fund_type"] };
-        }
-
-        public static FundTypesDataModel GetInstance()
-        {
-            return GetInstance(null, 0);
         }
 
         public static FundTypesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
         {
-            if (dataModel == null)
-                dataModel = new FundTypesDataModel(progressBar, incrementor);
-            return dataModel;
+            return _dataModel ?? (_dataModel = new FundTypesDataModel(progressBar, incrementor));
+        }
+
+        protected override void ConfigureTable()
+        {
+            Table.PrimaryKey = new [] { Table.Columns["id_fund_type"] };
+        }
+
+        protected override void ConfigureRelations()
+        {
+            AddRelation(TableName, "id_fund_type", "funds_history", "id_fund_type");
         }
     }
 }

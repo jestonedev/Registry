@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Configuration;
 using System.Diagnostics;
 
@@ -12,10 +9,10 @@ namespace Launcher
         [STAThread]
         static void Main()
         {
-            string exeApp = ConfigurationManager.AppSettings["exeApp"];
-            using (Process process = new Process())
+            var exeApp = ConfigurationManager.AppSettings["exeApp"];
+            using (var process = new Process())
             {
-                ProcessStartInfo psi = new ProcessStartInfo(exeApp);
+                var psi = new ProcessStartInfo(exeApp);
                 process.StartInfo = psi;
                 process.Start();
             }

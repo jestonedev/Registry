@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Registry.Entities
 {
-    public sealed class Premise
+    public sealed class Premise : Entity
     {
         public int? IdPremises { get; set; }
         public int? IdBuilding { get; set; }
@@ -35,37 +32,35 @@ namespace Registry.Entities
 
         public bool Equals(Premise other)
         {
-            return this.Equals((object)other);
+            return Equals((object)other);
         }
 
         public static bool operator ==(Premise first, Premise second)
         {
             if ((object)first == null && (object)second == null)
                 return true;
-            else
-                if ((object)first == null || (object)second == null)
-                    return false;
-                else
+            if ((object)first == null || (object)second == null)
+                return false;
             return first.IdPremises == second.IdPremises &&
-                first.IdBuilding == second.IdBuilding &&
-                first.PremisesNum == second.PremisesNum &&
-                first.TotalArea == second.TotalArea &&
-                first.LivingArea == second.LivingArea &&
-                first.Height == second.Height &&
-                first.NumRooms == second.NumRooms &&
-                first.NumBeds == second.NumBeds &&
-                first.IdPremisesType == second.IdPremisesType &&
-                first.IdPremisesKind == second.IdPremisesKind &&
-                first.Floor == second.Floor &&
-                first.Description == second.Description &&
-                first.CadastralNum == second.CadastralNum &&
-                first.CadastralCost == second.CadastralCost &&
-                first.BalanceCost == second.BalanceCost &&
-                first.IdState == second.IdState &&
-                first.RegDate == second.RegDate &&
-                first.IsMemorial == second.IsMemorial &&
-                first.Account == second.Account &&
-                first.StateDate == second.StateDate;
+                   first.IdBuilding == second.IdBuilding &&
+                   first.PremisesNum == second.PremisesNum &&
+                   first.TotalArea == second.TotalArea &&
+                   first.LivingArea == second.LivingArea &&
+                   first.Height == second.Height &&
+                   first.NumRooms == second.NumRooms &&
+                   first.NumBeds == second.NumBeds &&
+                   first.IdPremisesType == second.IdPremisesType &&
+                   first.IdPremisesKind == second.IdPremisesKind &&
+                   first.Floor == second.Floor &&
+                   first.Description == second.Description &&
+                   first.CadastralNum == second.CadastralNum &&
+                   first.CadastralCost == second.CadastralCost &&
+                   first.BalanceCost == second.BalanceCost &&
+                   first.IdState == second.IdState &&
+                   first.RegDate == second.RegDate &&
+                   first.IsMemorial == second.IsMemorial &&
+                   first.Account == second.Account &&
+                   first.StateDate == second.StateDate;
         }
 
         public static bool operator !=(Premise first, Premise second)

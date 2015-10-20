@@ -6,8 +6,9 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using Registry.CalcDataModels;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Reporting;
 using Registry.SearchForms;
@@ -31,14 +32,14 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        private PremisesDataModel premises;
-        private BuildingsDataModel buildings;
-        private KladrStreetsDataModel kladr;
-        private PremisesTypesDataModel premises_types;
-        private ObjectStatesDataModel object_states;
-        private CalcDataModelPremisesCurrentFunds premises_funds;
-        private CalcDataModelPremisesTenanciesInfo _premisesTenanciesInfo;
-        private FundTypesDataModel fund_types;
+        private DataModel premises;
+        private DataModel buildings;
+        private DataModel kladr;
+        private DataModel premises_types;
+        private DataModel object_states;
+        private CalcDataModel premises_funds;
+        private CalcDataModel _premisesTenanciesInfo;
+        private DataModel fund_types;
         #endregion Models
 
         #region Views
@@ -131,13 +132,13 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            premises = PremisesDataModel.GetInstance();
-            kladr = KladrStreetsDataModel.GetInstance();
-            buildings = BuildingsDataModel.GetInstance();
-            premises_types = PremisesTypesDataModel.GetInstance();
-            object_states = ObjectStatesDataModel.GetInstance();
-            premises_funds = CalcDataModelPremisesCurrentFunds.GetInstance();
-            fund_types = FundTypesDataModel.GetInstance();
+            premises = DataModel.GetInstance(DataModelType.PremisesDataModel);
+            kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
+            buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel);
+            premises_types = DataModel.GetInstance(DataModelType.PremisesTypesDataModel);
+            object_states = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
+            fund_types = DataModel.GetInstance(DataModelType.FundTypesDataModel);
+            premises_funds = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelPremisesCurrentFunds);
 
             // Ожидаем дозагрузки данных, если это необходимо
             kladr.Select();
@@ -149,20 +150,41 @@ namespace Registry.Viewport
 
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
             {
-                _premisesTenanciesInfo = CalcDataModelPremisesTenanciesInfo.GetInstance();
+                _premisesTenanciesInfo = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelPremisesTenanciesInfo);
                 _premisesTenanciesInfo.Select();
                 var registrationNumColumn = new DataGridViewTextBoxColumn
                 {
                     Name = "registration_num",
                     HeaderText = @"№ договора найма",
-                    Width = 130,
+                    Width = 150,
+                    SortMode = DataGridViewColumnSortMode.NotSortable
+                };
+                var registrationDateColumn = new DataGridViewTextBoxColumn
+                {
+                    Name = "registration_date",
+                    HeaderText = @"Дата договора найма",
+                    Width = 150,
+                    SortMode = DataGridViewColumnSortMode.NotSortable
+                };
+                var endDateColumn = new DataGridViewTextBoxColumn
+                {
+                    Name = "end_date",
+                    HeaderText = @"Дата окончания договора",
+                    Width = 170,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
                 var residenceWarrantNumColumn = new DataGridViewTextBoxColumn
                 {
                     Name = "residence_warrant_num",
                     HeaderText = @"№ ордера найма",
-                    Width = 130,
+                    Width = 150,
+                    SortMode = DataGridViewColumnSortMode.NotSortable
+                };
+                var residenceWarrantDateColumn = new DataGridViewTextBoxColumn
+                {
+                    Name = "residence_warrant_date",
+                    HeaderText = @"Дата ордера найма",
+                    Width = 150,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
                 var tenantColumn = new DataGridViewTextBoxColumn
@@ -173,12 +195,15 @@ namespace Registry.Viewport
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
                 dataGridView.Columns.Add(registrationNumColumn);
+                dataGridView.Columns.Add(registrationDateColumn);
+                dataGridView.Columns.Add(endDateColumn);
                 dataGridView.Columns.Add(residenceWarrantNumColumn);
+                dataGridView.Columns.Add(residenceWarrantDateColumn);
                 dataGridView.Columns.Add(tenantColumn);
                 _premisesTenanciesInfo.RefreshEvent += _premisesTenanciesInfo_RefreshEvent;
             }
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             v_premises = new BindingSource();
             v_premises.CurrentItemChanged += v_premises_CurrentItemChanged;
@@ -237,14 +262,10 @@ namespace Registry.Viewport
                     return;
                 }
                 var id_building = (int)((DataRowView)v_premises[v_premises.Position])["id_building"];
-                if (PremisesDataModel.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
+                if (premises.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
                     return;
                 ((DataRowView)v_premises[v_premises.Position]).Delete();
                 MenuCallback.ForceCloseDetachedViewports();
-                CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(EntityType.Building, id_building, true);
-                CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building, id_building, true);
-                CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, true);
-                CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, true);
             }
         }
 
@@ -471,6 +492,28 @@ namespace Registry.Viewport
             ShowAssocViewport(ViewportType.TenancyListViewport);
         }
 
+        public override bool HasExportToOds()
+        {
+            return true;
+        }
+
+        public override void ExportToOds()
+        {
+            var reporter = ReporterFactory.CreateReporter(ReporterType.ExportReporter);
+            var columnHeaders = dataGridView.Columns.Cast<DataGridViewColumn>().
+                Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnHeader\":\"" + column.HeaderText + "\"}");
+            var columnPatterns = dataGridView.Columns.Cast<DataGridViewColumn>().
+                Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnPattern\":\"$column" + column.DisplayIndex + "$\"}");
+            var arguments = new Dictionary<string, string>
+            {
+                {"type", "2"},
+                {"filter", v_premises.Filter.Trim() == "" ? "(1=1)" : v_premises.Filter},
+                {"columnHeaders", "["+columnHeaders+"]"},
+                {"columnPatterns", "["+columnPatterns+"]"}
+            };
+            reporter.Run(arguments);
+        }
+
         private void ShowAssocViewport(ViewportType viewportType)
         {
             if (v_premises.Position == -1)
@@ -586,15 +629,32 @@ namespace Registry.Viewport
                     }
                     break;
                 case "registration_num":
+                case "registration_date":
                 case "residence_warrant_num":
+                case "residence_warrant_date":
                 case "tenant":
+                case "end_date":
                     var tenancyInfoRows =
-                        from tenancyInfoRow in DataModelHelper.FilterRows(_premisesTenanciesInfo.Select())
+                        from tenancyInfoRow in _premisesTenanciesInfo.FilterDeletedRows()
                         where tenancyInfoRow.Field<int>("id_premises") == (int?) row["id_premises"]
                         orderby tenancyInfoRow.Field<DateTime?>("registration_date") descending 
                         select tenancyInfoRow;
-                    if (tenancyInfoRows.Any())
-                        e.Value = tenancyInfoRows.First().Field<object>(dataGridView.Columns[e.ColumnIndex].Name);
+                    if (!tenancyInfoRows.Any())
+                        return;
+                    switch (dataGridView.Columns[e.ColumnIndex].Name)
+                    {
+                        case "registration_date":
+                        case "residence_warrant_date":
+                        case "end_date":
+                            var date = tenancyInfoRows.First().Field<DateTime?>(dataGridView.Columns[e.ColumnIndex].Name);
+                            e.Value =date != null ? date.Value.ToString("dd.MM.yyyy") : null;
+                            break;
+                        case "registration_num":
+                        case "residence_warrant_num":
+                        case "tenant":
+                                e.Value = tenancyInfoRows.First().Field<string>(dataGridView.Columns[e.ColumnIndex].Name);
+                            break;
+                    }
                     break;
             }
         }

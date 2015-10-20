@@ -1,137 +1,54 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Data.Common;
-using System.Text;
-using System.Data;
+﻿using System.Data.Common;
 using System.Windows.Forms;
 using Registry.Entities;
-using System.Data.Odbc;
-using System.Globalization;
 
-namespace Registry.DataModels
+namespace Registry.DataModels.DataModels
 {
-    public sealed class StructureTypesDataModel : DataModel
+    internal sealed class StructureTypesDataModel : DataModel
     {
-        private static StructureTypesDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM structure_types WHERE deleted <> 1";
-        private static string deleteQuery = "UPDATE structure_types SET deleted = 1 WHERE id_structure_type = ?";
-        private static string insertQuery = @"INSERT INTO structure_types
-                            (structure_type)
-                            VALUES (?)";
-        private static string updateQuery = @"UPDATE structure_types SET structure_type = ? WHERE id_structure_type = ?";
-        private static string tableName = "structure_types";
+        private static StructureTypesDataModel _dataModel;
+        private const string SelectQuery = "SELECT * FROM structure_types WHERE deleted <> 1";
+        private const string TableName = "structure_types";
 
         private StructureTypesDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, selectQuery, tableName)
+            : base(progressBar, incrementor, SelectQuery, TableName)
         {
-        }
-
-        protected override void ConfigureTable()
-        {
-            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_structure_type"] };
-        }
-
-        public static StructureTypesDataModel GetInstance()
-        {
-            return GetInstance(null, 0);
         }
 
         public static StructureTypesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
         {
-            if (dataModel == null)
-                dataModel = new StructureTypesDataModel(progressBar, incrementor);
-            return dataModel;
+            return _dataModel ?? (_dataModel = new StructureTypesDataModel(progressBar, incrementor));
         }
 
-        public static int Delete(int id)
+        protected override void ConfigureTable()
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                command.CommandText = deleteQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_structure_type", id));
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось удалить наименование структуры из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            Table.PrimaryKey = new [] { Table.Columns["id_structure_type"] };
         }
 
-        public static int Insert(StructureType structureType)
+        protected override void ConfigureRelations()
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            using (DbCommand last_id_command = DBConnection.CreateCommand())
-            {
-                last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
-                command.CommandText = insertQuery;
-                if (structureType == null)
-                {
-                    MessageBox.Show("В метод Insert не передана ссылка на объект вида материала здания", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-                command.Parameters.Add(DBConnection.CreateParameter<string>("structure_type", structureType.StructureTypeName));
-                try
-                {
-                    connection.SqlBeginTransaction();
-                    connection.SqlModifyQuery(command);
-                    DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
-                    connection.SqlCommitTransaction();
-                    if (last_id.Rows.Count == 0)
-                    {
-                        MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        return -1;
-                    }
-                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.InvariantCulture);
-                }
-                catch (OdbcException e)
-                {
-                    connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось добавить наименование структуры в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            AddRelation(TableName, "id_structure_type", "buildings", "id_structure_type");
         }
 
-        public static int Update(StructureType structureType)
+        protected override void ConfigureDeleteCommand(DbCommand command, int id)
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                command.CommandText = updateQuery;
-                if (structureType == null)
-                {
-                    MessageBox.Show("В метод Update не передана ссылка на объект вида материала здания", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-                command.Parameters.Add(DBConnection.CreateParameter<string>("structure_type", structureType.StructureTypeName));
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_structure_type", structureType.IdStructureType));
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось изменить наименование структуры в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            command.CommandText = "UPDATE structure_types SET deleted = 1 WHERE id_structure_type = ?";
+            command.Parameters.Add(DBConnection.CreateParameter<int?>("id_structure_type", id));
+        }
+
+        protected override void ConfigureInsertCommand(DbCommand command, Entity entity)
+        {
+            command.CommandText = @"INSERT INTO structure_types (structure_type) VALUES (?)";
+            var structureType = (StructureType) entity;
+            command.Parameters.Add(DBConnection.CreateParameter("structure_type", structureType.StructureTypeName));
+        }
+
+        protected override void ConfigureUpdateCommand(DbCommand command, Entity entity)
+        {
+            command.CommandText = @"UPDATE structure_types SET structure_type = ? WHERE id_structure_type = ?";
+            var structureType = (StructureType)entity;
+            command.Parameters.Add(DBConnection.CreateParameter("structure_type", structureType.StructureTypeName));
+            command.Parameters.Add(DBConnection.CreateParameter("id_structure_type", structureType.IdStructureType));
         }
     }
 }

@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using CustomControls;
 using Declensions.Unicode;
 using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Reporting;
 using Security;
@@ -73,11 +74,11 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Modeles
-        TenancyPersonsDataModel tenancy_persons;
-        TenancyAgreementsDataModel tenancy_agreements;
-        ExecutorsDataModel executors;
-        WarrantsDataModel warrants;
-        KinshipsDataModel kinships;
+        DataModel tenancy_persons;
+        DataModel tenancy_agreements;
+        DataModel executors;
+        DataModel warrants;
+        DataModel kinships;
         #endregion Modeles
 
         #region Views
@@ -461,11 +462,11 @@ namespace Registry.Viewport
             dataGridView.AutoGenerateColumns = false;
             dataGridViewTenancyPersons.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            tenancy_agreements = TenancyAgreementsDataModel.GetInstance();
-            tenancy_persons = TenancyPersonsDataModel.GetInstance();
-            executors = ExecutorsDataModel.GetInstance();
-            warrants = WarrantsDataModel.GetInstance();
-            kinships = KinshipsDataModel.GetInstance();
+            tenancy_agreements = DataModel.GetInstance(DataModelType.TenancyAgreementsDataModel);
+            tenancy_persons = DataModel.GetInstance(DataModelType.TenancyPersonsDataModel);
+            executors = DataModel.GetInstance(DataModelType.ExecutorsDataModel);
+            warrants = DataModel.GetInstance(DataModelType.WarrantsDataModel);
+            kinships = DataModel.GetInstance(DataModelType.KinshipsDataModel);
 
             // Ожидаем дозагрузки, если это необходимо
             tenancy_agreements.Select();
@@ -474,7 +475,7 @@ namespace Registry.Viewport
             warrants.Select();
             kinships.Select();
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             if ((ParentType == ParentTypeEnum.Tenancy) && (ParentRow != null))
                 Text = string.Format(CultureInfo.InvariantCulture, "Соглашения найма №{0}", ParentRow["id_process"]);
@@ -528,7 +529,7 @@ namespace Registry.Viewport
             if (MessageBox.Show("Вы действительно хотите это соглашение?", "Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                if (TenancyAgreementsDataModel.Delete((int)((DataRowView)v_tenancy_agreements.Current)["id_agreement"]) == -1)
+                if (tenancy_agreements.Delete((int)((DataRowView)v_tenancy_agreements.Current)["id_agreement"]) == -1)
                     return;
                 is_editable = false;
                 ((DataRowView)v_tenancy_agreements[v_tenancy_agreements.Position]).Delete();
@@ -593,7 +594,7 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 case ViewportState.NewRowState:
-                    var id_agreement = TenancyAgreementsDataModel.Insert(tenancyAgreement);
+                    var id_agreement = tenancy_agreements.Insert(tenancyAgreement);
                     if (id_agreement == -1)
                     {
                         tenancy_agreements.EditingNewRecord = false;
@@ -616,7 +617,7 @@ namespace Registry.Viewport
                             "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
-                    if (TenancyAgreementsDataModel.Update(tenancyAgreement) == -1)
+                    if (tenancy_agreements.Update(tenancyAgreement) == -1)
                         return;
                     var row = ((DataRowView)v_tenancy_agreements[v_tenancy_agreements.Position]);
                     is_editable = false;
@@ -861,7 +862,7 @@ namespace Registry.Viewport
                         Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "",
                         textBoxTerminateAgreement.Text.StartsWith("по ") ? textBoxTerminateAgreement.Text.Substring(3).Trim() : textBoxTerminateAgreement.Text.Trim(),
                     dateTimePickerTerminateDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture),
-                    RentTypesDataModel.GetInstance().Select().Rows.Find(ParentRow["id_rent_type"])["rent_type_genetive"]);
+                    DataModel.GetInstance(DataModelType.RentTypesDataModel).Select().Rows.Find(ParentRow["id_rent_type"])["rent_type_genetive"]);
         }
 
         void vButtonExplainPaste_Click(object sender, EventArgs e)
