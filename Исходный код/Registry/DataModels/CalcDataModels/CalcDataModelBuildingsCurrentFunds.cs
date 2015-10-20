@@ -1,34 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data;
-using Registry.DataModels;
+﻿using System.Data;
 using System.Globalization;
+using System.Linq;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 
-namespace Registry.CalcDataModels
+namespace Registry.DataModels.CalcDataModels
 {
-    public sealed class CalcDataModelBuildingsCurrentFunds : CalcDataModel
+    internal sealed class CalcDataModelBuildingsCurrentFunds : CalcDataModel
     {
-        private static CalcDataModelBuildingsCurrentFunds dataModel = null;
+        private static CalcDataModelBuildingsCurrentFunds _dataModel;
+        private const string TableName = "buildings_current_funds";
 
-        private static string tableName = "buildings_current_funds";
-
-        private CalcDataModelBuildingsCurrentFunds(): base()
+        private CalcDataModelBuildingsCurrentFunds()
         {
             Table = InitializeTable();
-            Refresh(EntityType.Unknown, null, false);
+            Refresh();
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.FundsHistoryDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.FundsBuildingsAssocDataModel).Select());
         }
 
         private static DataTable InitializeTable()
         {
-            DataTable table = new DataTable(tableName);
-            table.Locale = CultureInfo.InvariantCulture;
+            var table = new DataTable(TableName) {Locale = CultureInfo.InvariantCulture};
             table.Columns.Add("id_building").DataType = typeof(int);
             table.Columns.Add("id_fund_type").DataType = typeof(int);
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_building"] };
+            table.PrimaryKey = new [] { table.Columns["id_building"] };
             return table;
         }
 
@@ -37,29 +33,26 @@ namespace Registry.CalcDataModels
             DmLoadState = DataModelLoadState.Loading;
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelBuildingsCurrentFunds");
-            CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;
             // Фильтруем удаленные строки
-            var funds_history = DataModelHelper.FilterRows(FundsHistoryDataModel.GetInstance().Select());
-            var funds_buildings_assoc = DataModelHelper.FilterRows(FundsBuildingsAssocDataModel.GetInstance().Select(), config.Entity, config.IdObject);
+            var fundsHistory = DataModel.GetInstance(DataModelType.FundsHistoryDataModel).FilterDeletedRows();
+            var fundsBuildingsAssoc = DataModel.GetInstance(DataModelType.FundsBuildingsAssocDataModel).FilterDeletedRows();
             // Вычисляем агрегационную информацию
-            var max_id_by_buldings = DataModelHelper.MaxFundIDsByObject(funds_buildings_assoc, EntityType.Building);          
-            var result = from fund_history_row in funds_history
-                         join max_id_by_building_row in max_id_by_buldings
-                                       on fund_history_row.Field<int>("id_fund") equals max_id_by_building_row.IdFund
+            var maxIdByBuldings = DataModelHelper.MaxFundIDsByObject(fundsBuildingsAssoc, EntityType.Building);          
+            var result = from fundHistoryRow in fundsHistory
+                         join maxIdByBuildingRow in maxIdByBuldings
+                                       on fundHistoryRow.Field<int>("id_fund") equals maxIdByBuildingRow.IdFund
                          select new
                          {
-                             id_building = max_id_by_building_row.IdObject,
-                             id_fund = max_id_by_building_row.IdFund,
-                             id_fund_type = fund_history_row.Field<int>("id_fund_type")
+                             id_building = maxIdByBuildingRow.IdObject,
+                             id_fund = maxIdByBuildingRow.IdFund,
+                             id_fund_type = fundHistoryRow.Field<int>("id_fund_type")
                          };
             // Заполняем таблицу изменений
-            DataTable table = InitializeTable();
+            var table = InitializeTable();
             table.BeginLoadData();
-            result.ToList().ForEach((x) =>
+            result.ToList().ForEach(x =>
             {
-                table.Rows.Add(new object[] { 
-                    x.id_building, 
-                    x.id_fund_type });
+                table.Rows.Add(x.id_building, x.id_fund_type);
             });
             table.EndLoadData();
             // Возвращаем результат
@@ -68,14 +61,7 @@ namespace Registry.CalcDataModels
 
         public static CalcDataModelBuildingsCurrentFunds GetInstance()
         {
-            if (dataModel == null)
-                dataModel = new CalcDataModelBuildingsCurrentFunds();
-            return dataModel;
-        }
-
-        public static bool HasInstance()
-        {
-            return dataModel != null;
+            return _dataModel ?? (_dataModel = new CalcDataModelBuildingsCurrentFunds());
         }
     }
 }

@@ -6,8 +6,8 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using CustomControls;
-using Registry.CalcDataModels;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
@@ -27,8 +27,8 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        RestrictionsDataModel restrictions;
-        RestrictionTypesDataModel restriction_types;
+        DataModel restrictions;
+        DataModel restriction_types;
         DataModel restriction_assoc;
         DataTable snapshot_restrictions = new DataTable("snapshot_restrictions");
         #endregion Models
@@ -272,17 +272,17 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            restrictions = RestrictionsDataModel.GetInstance();
-            restriction_types = RestrictionTypesDataModel.GetInstance();
+            restrictions = DataModel.GetInstance(DataModelType.RestrictionsDataModel);
+            restriction_types = DataModel.GetInstance(DataModelType.RestrictionTypesDataModel);
             // Дожидаемся дозагрузки данных, если это необходимо
             restrictions.Select();
             restriction_types.Select();
 
             if (ParentType == ParentTypeEnum.Premises)
-                restriction_assoc = RestrictionsPremisesAssocDataModel.GetInstance();
+                restriction_assoc =  DataModel.GetInstance(DataModelType.RestrictionsPremisesAssocDataModel);
             else
                 if (ParentType == ParentTypeEnum.Building)
-                    restriction_assoc = RestrictionsBuildingsAssocDataModel.GetInstance();
+                    restriction_assoc = DataModel.GetInstance(DataModelType.RestrictionsBuildingsAssocDataModel);
                 else
                     throw new ViewportException("Неизвестный тип родительского объекта");
             restriction_assoc.Select();
@@ -303,17 +303,17 @@ namespace Registry.Viewport
                 }
                 else
                     throw new ViewportException("Неизвестный тип родительского объекта");
-            v_restriction_assoc.DataSource = DataSetManager.DataSet;
+            v_restriction_assoc.DataSource = DataModel.DataSet;
 
             v_restrictions = new BindingSource();
             v_restrictions.DataMember = "restrictions";
-            v_restrictions.DataSource = DataSetManager.DataSet;
+            v_restrictions.DataSource = DataModel.DataSet;
             //Перестраиваем фильтр v_ownerships_rights.Filter
             RebuildFilter();
 
             v_restriction_types = new BindingSource();
             v_restriction_types.DataMember = "restriction_types";
-            v_restriction_types.DataSource = DataSetManager.DataSet;
+            v_restriction_types.DataSource = DataModel.DataSet;
 
             //Инициируем колонки snapshot-модели
             for (var i = 0; i < restrictions.Select().Columns.Count; i++)
@@ -419,13 +419,23 @@ namespace Registry.Viewport
                         RebuildFilter();
                         return;
                     }
-                    var id_restriction = RestrictionsDataModel.Insert(list[i], ParentType, id_parent);
+                    var id_restriction = restrictions.Insert(list[i]);
                     if (id_restriction == -1)
                     {
                         sync_views = true;
                         restrictions.EditingNewRecord = false;
                         RebuildFilter();
                         return;
+                    }
+                    var assoc = new RestrictionObjectAssoc(id_parent, id_restriction, null);
+                    switch (ParentType)
+                    {
+                        case ParentTypeEnum.Building:
+                            DataModel.GetInstance(DataModelType.RestrictionsBuildingsAssocDataModel).Insert(assoc);
+                            break;
+                        case ParentTypeEnum.Premises:
+                            DataModel.GetInstance(DataModelType.RestrictionsPremisesAssocDataModel).Insert(assoc);
+                            break;
                     }
                     ((DataRowView)v_snapshot_restrictions[i])["id_restriction"] = id_restriction;
                     restrictions.Select().Rows.Add(DataRowViewToArray((DataRowView)v_snapshot_restrictions[i]));
@@ -435,7 +445,7 @@ namespace Registry.Viewport
                 {
                     if (RowToRestriction(row) == list[i])
                         continue;
-                    if (RestrictionsDataModel.Update(list[i]) == -1)
+                    if (restrictions.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         restrictions.EditingNewRecord = false;
@@ -459,7 +469,7 @@ namespace Registry.Viewport
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (RestrictionsDataModel.Delete(list[i].IdRestriction.Value) == -1)
+                    if (restrictions.Delete(list[i].IdRestriction.Value) == -1)
                     {
                         sync_views = true;
                         restrictions.EditingNewRecord = false;
@@ -473,9 +483,6 @@ namespace Registry.Viewport
             sync_views = true;
             restrictions.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
-            if (ParentType == ParentTypeEnum.Premises || ParentType == ParentTypeEnum.Building)
-                CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building,
-                    int.Parse(ParentRow["id_building"].ToString(), CultureInfo.InvariantCulture), true);
         }
 
         public override bool CanDuplicate()

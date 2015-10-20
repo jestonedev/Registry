@@ -10,7 +10,8 @@ using Registry.DataModels;
 using Registry.Entities;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
-using Registry.CalcDataModels;
+using Registry.DataModels.CalcDataModels;
+using Registry.DataModels.DataModels;
 
 namespace Registry.Viewport
 {
@@ -27,8 +28,8 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        TenancyReasonsDataModel tenancy_reasons;
-        TenancyReasonTypesDataModel tenancy_reason_types;
+        DataModel tenancy_reasons;
+        DataModel tenancy_reason_types;
         DataTable snapshot_tenancy_reasons = new DataTable("snapshot_tenancy_reasons");
         #endregion Models
 
@@ -224,8 +225,8 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            tenancy_reasons = TenancyReasonsDataModel.GetInstance();
-            tenancy_reason_types = TenancyReasonTypesDataModel.GetInstance();
+            tenancy_reasons = DataModel.GetInstance(DataModelType.TenancyReasonsDataModel);
+            tenancy_reason_types = DataModel.GetInstance(DataModelType.TenancyReasonTypesDataModel);
             // Дожидаемся дозагрузки данных, если это необходимо
             tenancy_reasons.Select();
             tenancy_reason_types.Select();
@@ -236,11 +237,11 @@ namespace Registry.Viewport
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 v_tenancy_reasons.Filter += " AND ";
             v_tenancy_reasons.Filter += DynamicFilter;
-            v_tenancy_reasons.DataSource = DataSetManager.DataSet;
+            v_tenancy_reasons.DataSource = DataModel.DataSet;
 
             v_tenancy_reason_types = new BindingSource();
             v_tenancy_reason_types.DataMember = "tenancy_reason_types";
-            v_tenancy_reason_types.DataSource = DataSetManager.DataSet;
+            v_tenancy_reason_types.DataSource = DataModel.DataSet;
 
             if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
                 Text = string.Format(CultureInfo.InvariantCulture, "Основания найма №{0}", ParentRow["id_process"]);
@@ -336,7 +337,7 @@ namespace Registry.Viewport
                 var row = tenancy_reasons.Select().Rows.Find(list[i].IdReason);
                 if (row == null)
                 {
-                    var id_reason = TenancyReasonsDataModel.Insert(list[i]);
+                    var id_reason = tenancy_reasons.Insert(list[i]);
                     if (id_reason == -1)
                     {
                         sync_views = true; 
@@ -350,7 +351,7 @@ namespace Registry.Viewport
                 {
                     if (RowToTenancyReason(row) == list[i])
                         continue;
-                    if (TenancyReasonsDataModel.Update(list[i]) == -1)
+                    if (tenancy_reasons.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         tenancy_reasons.EditingNewRecord = false;
@@ -373,7 +374,7 @@ namespace Registry.Viewport
                         ((int)dataGridView.Rows[j].Cells["id_reason"].Value == list[i].IdReason))
                         rowIndex = j;
                 if (rowIndex != -1) continue;
-                if (TenancyReasonsDataModel.Delete(list[i].IdReason.Value) == -1)
+                if (tenancy_reasons.Delete(list[i].IdReason.Value) == -1)
                 {
                     sync_views = true;
                     tenancy_reasons.EditingNewRecord = false;
@@ -384,8 +385,6 @@ namespace Registry.Viewport
             sync_views = true;
             tenancy_reasons.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
-            if (CalcDataModelPremisesTenanciesInfo.HasInstance())
-                CalcDataModelPremisesTenanciesInfo.GetInstance().Refresh(EntityType.Unknown, null, true);
         }
 
         public override bool CanDuplicate()

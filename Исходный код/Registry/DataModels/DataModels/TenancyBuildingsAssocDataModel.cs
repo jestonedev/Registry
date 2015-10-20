@@ -1,142 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Data.Common;
 using System.Windows.Forms;
 using Registry.Entities;
-using System.Data;
-using System.Data.Common;
-using System.Data.Odbc;
-using System.Globalization;
-using Registry.DataModels.DataModels;
 
-namespace Registry.DataModels
+namespace Registry.DataModels.DataModels
 {
-    public sealed class TenancyBuildingsAssocDataModel: DataModel
+    internal sealed class TenancyBuildingsAssocDataModel : DataModel
     {
-        private static TenancyBuildingsAssocDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM tenancy_buildings_assoc WHERE deleted = 0";
-        private static string deleteQuery = "UPDATE tenancy_buildings_assoc SET deleted = 1 WHERE id_assoc = ?";
-        private static string insertQuery = @"INSERT INTO tenancy_buildings_assoc (id_building, id_process, rent_total_area, rent_living_area) VALUES (?,?,?,?)";
-        private static string updateQuery = @"UPDATE tenancy_buildings_assoc SET id_building = ?, id_process = ?, rent_total_area = ?, rent_living_area = ? WHERE id_assoc = ?";
-        private static string tableName = "tenancy_buildings_assoc";
+        private static TenancyBuildingsAssocDataModel _dataModel;
+        private const string SelectQuery = "SELECT * FROM tenancy_buildings_assoc WHERE deleted = 0";
+        private const string TableName = "tenancy_buildings_assoc";
 
         private TenancyBuildingsAssocDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, selectQuery, tableName)
+            : base(progressBar, incrementor, SelectQuery, TableName)
         {
-        }
-
-        protected override void ConfigureTable()
-        {
-            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_assoc"] };
-        }
-
-        public static TenancyBuildingsAssocDataModel GetInstance()
-        {
-            return GetInstance(null, 0);
         }
 
         public static TenancyBuildingsAssocDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
         {
-            if (dataModel == null)
-                dataModel = new TenancyBuildingsAssocDataModel(progressBar, incrementor);
-            return dataModel;
+            return _dataModel ?? (_dataModel = new TenancyBuildingsAssocDataModel(progressBar, incrementor));
         }
 
-        public static int Insert(TenancyObject tenancyObject)
+        protected override void ConfigureTable()
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            using (DbCommand last_id_command = DBConnection.CreateCommand())
-            {
-                last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
-                command.CommandText = insertQuery;
-                if (tenancyObject == null)
-                {
-                    MessageBox.Show("В метод Insert не передана ссылка на ассоциативный объект процесса найма", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-                command.Parameters.Add(DBConnection.CreateParameter("id_building", tenancyObject.IdObject));
-                command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancyObject.IdProcess));
-                command.Parameters.Add(DBConnection.CreateParameter("rent_total_area", tenancyObject.RentTotalArea));
-                command.Parameters.Add(DBConnection.CreateParameter("rent_living_area", tenancyObject.RentLivingArea));
-                try
-                {
-                    connection.SqlBeginTransaction();
-                    connection.SqlModifyQuery(command);
-                    DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
-                    connection.SqlCommitTransaction();
-                    if (last_id.Rows.Count == 0)
-                    {
-                        MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        return -1;
-                    }
-                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.InvariantCulture);
-                }
-                catch (OdbcException e)
-                {
-                    connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось добавить связь здания с процессом найма в базу данных. Подробная ошибка: {0}",
-                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            Table.PrimaryKey = new [] { Table.Columns["id_assoc"] };
         }
 
-        public static int Update(TenancyObject tenancyObject)
+        protected override void ConfigureRelations()
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                command.CommandText = updateQuery;
-                if (tenancyObject == null)
-                {
-                    MessageBox.Show("В метод Update не передана ссылка на ассоциативный объект процесса найма", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-                command.Parameters.Add(DBConnection.CreateParameter("id_building", tenancyObject.IdObject));
-                command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancyObject.IdProcess));
-                command.Parameters.Add(DBConnection.CreateParameter("rent_total_area", tenancyObject.RentTotalArea));
-                command.Parameters.Add(DBConnection.CreateParameter("rent_living_area", tenancyObject.RentLivingArea));
-                command.Parameters.Add(DBConnection.CreateParameter("id_assoc", tenancyObject.IdAssoc));
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось изменить связь здания с процессом найма в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            AddRelation("building", "id_building", TableName, "id_building");
+            AddRelation("tenancy_processes", "id_process", TableName, "id_process");
         }
 
-        public static int Delete(int id)
+        protected override void ConfigureDeleteCommand(DbCommand command, int id)
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                command.CommandText = deleteQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_assoc", id));
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось удалить связь здания с процесссом найма из базы данных. Подробная ошибка: {0}",
-                        e.Message), "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            command.CommandText = "UPDATE tenancy_buildings_assoc SET deleted = 1 WHERE id_assoc = ?";
+            command.Parameters.Add(DBConnection.CreateParameter<int?>("id_assoc", id));
+        }
+
+        protected override void ConfigureUpdateCommand(DbCommand command, Entity entity)
+        {
+            command.CommandText = @"UPDATE tenancy_buildings_assoc SET id_building = ?, id_process = ?, rent_total_area = ?, rent_living_area = ? 
+                                    WHERE id_assoc = ?";
+            var tenancyObject = (TenancyObject) entity;
+            command.Parameters.Add(DBConnection.CreateParameter("id_building", tenancyObject.IdObject));
+            command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancyObject.IdProcess));
+            command.Parameters.Add(DBConnection.CreateParameter("rent_total_area", tenancyObject.RentTotalArea));
+            command.Parameters.Add(DBConnection.CreateParameter("rent_living_area", tenancyObject.RentLivingArea));
+            command.Parameters.Add(DBConnection.CreateParameter("id_assoc", tenancyObject.IdAssoc));
+        }
+
+        protected override void ConfigureInsertCommand(DbCommand command, Entity entity)
+        {
+            command.CommandText = @"INSERT INTO tenancy_buildings_assoc (id_building, id_process, rent_total_area, rent_living_area) VALUES (?,?,?,?)";
+            var tenancyObject = (TenancyObject)entity;
+            command.Parameters.Add(DBConnection.CreateParameter("id_building", tenancyObject.IdObject));
+            command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancyObject.IdProcess));
+            command.Parameters.Add(DBConnection.CreateParameter("rent_total_area", tenancyObject.RentTotalArea));
+            command.Parameters.Add(DBConnection.CreateParameter("rent_living_area", tenancyObject.RentLivingArea));
         }
     }
 }

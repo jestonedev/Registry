@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 
 namespace Registry.Viewport
@@ -18,7 +19,7 @@ namespace Registry.Viewport
 
         #region Models
         public DataTable sub_premises { get; set; }
-        private TenancySubPremisesAssocDataModel tenancy_sub_premises;
+        private DataModel tenancy_sub_premises;
         #endregion Models
         private DataGridViewCheckBoxColumn is_checked;
         private DataGridViewTextBoxColumn rent_total_area;
@@ -64,10 +65,10 @@ namespace Registry.Viewport
             snapshot_tenancy_sub_premises.Columns.Add("is_checked").DataType = typeof(bool);
             snapshot_tenancy_sub_premises.Columns.Add("rent_total_area").DataType = typeof(double);
 
-            tenancy_sub_premises = TenancySubPremisesAssocDataModel.GetInstance();
+            tenancy_sub_premises = DataModel.GetInstance(DataModelType.TenancySubPremisesAssocDataModel);
             tenancy_sub_premises.Select();
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             v_tenancy_sub_premises = new BindingSource();
             v_tenancy_sub_premises.DataMember = "tenancy_sub_premises_assoc";
@@ -157,17 +158,16 @@ namespace Registry.Viewport
             {
                 if (!ViewportHelper.SubPremiseFundAndRentMatch(subPremises.IdObject.Value, (int)ParentRow["id_rent_type"]))
                 {
-                    var idPremises = (int)SubPremisesDataModel.GetInstance().Select().Rows.Find(subPremises.IdObject.Value)["id_premises"];
+                    var idPremises = (int)DataModel.GetInstance(DataModelType.SubPremisesDataModel).Select().Rows.Find(subPremises.IdObject.Value)["id_premises"];
                     if (!ViewportHelper.PremiseFundAndRentMatch(idPremises, (int)ParentRow["id_rent_type"]))
                     {
-                        var idBuilding = (int)PremisesDataModel.GetInstance().Select().Rows.Find(idPremises)["id_building"];
+                        var idBuilding = (int)DataModel.GetInstance(DataModelType.PremisesDataModel).Select().Rows.Find(idPremises)["id_building"];
                         if (!ViewportHelper.BuildingFundAndRentMatch(idBuilding, (int)ParentRow["id_rent_type"]) &&
                                     MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемой комнаты. Все равно продолжить сохранение?",
                                     "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) !=
                                     DialogResult.Yes)
                             return false;
-                        else
-                            return true;
+                        return true;
                     }
                 }
             }
@@ -220,7 +220,7 @@ namespace Registry.Viewport
                     row = tenancy_sub_premises.Select().Rows.Find(list[i].IdAssoc);
                 if (row == null)
                 {
-                    var id_assoc = TenancySubPremisesAssocDataModel.Insert(list[i]);
+                    var id_assoc = tenancy_sub_premises.Insert(list[i]);
                     if (id_assoc == -1)
                     {
                         sync_views = true;
@@ -235,7 +235,7 @@ namespace Registry.Viewport
                 {
                     if (RowToTenancySubPremises(row) == list[i])
                         continue;
-                    if (TenancySubPremisesAssocDataModel.Update(list[i]) == -1)
+                    if (tenancy_sub_premises.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         tenancy_sub_premises.EditingNewRecord = false;
@@ -259,7 +259,7 @@ namespace Registry.Viewport
                 }
                 if (row_index == -1)
                 {
-                    if (TenancySubPremisesAssocDataModel.Delete(list[i].IdAssoc.Value) == -1)
+                    if (tenancy_sub_premises.Delete(list[i].IdAssoc.Value) == -1)
                     {
                         sync_views = true;
                         tenancy_sub_premises.EditingNewRecord = false;

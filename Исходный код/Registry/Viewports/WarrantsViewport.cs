@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using CustomControls;
 using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -40,8 +41,8 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        WarrantsDataModel warrants;
-        WarrantDocTypesDataModel warrant_doc_types;
+        DataModel warrants;
+        DataModel warrant_doc_types;
         #endregion Models
 
         #region Views
@@ -371,14 +372,14 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            warrants = WarrantsDataModel.GetInstance();
-            warrant_doc_types = WarrantDocTypesDataModel.GetInstance();
+            warrants = DataModel.GetInstance(DataModelType.WarrantsDataModel);
+            warrant_doc_types = DataModel.GetInstance(DataModelType.WarrantDocTypesDataModel);
 
             // Ожидаем дозагрузки, если это необходимо
             warrants.Select();
             warrant_doc_types.Select();
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             v_warrant_doc_types = new BindingSource();
             v_warrant_doc_types.DataMember = "warrant_doc_types";
@@ -436,7 +437,7 @@ namespace Registry.Viewport
             if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание", 
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                if (WarrantsDataModel.Delete((int)((DataRowView)v_warrants.Current)["id_warrant"]) == -1)
+                if (warrants.Delete((int)((DataRowView)v_warrants.Current)["id_warrant"]) == -1)
                     return;
                 is_editable = false;
                 ((DataRowView)v_warrants[v_warrants.Position]).Delete();
@@ -492,7 +493,7 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
-                    var id_warrant = WarrantsDataModel.Insert(warrant);
+                    var id_warrant = warrants.Insert(warrant);
                     if (id_warrant == -1)
                     {
                         warrants.EditingNewRecord = false;
@@ -517,7 +518,7 @@ namespace Registry.Viewport
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
-                    if (WarrantsDataModel.Update(warrant) == -1)
+                    if (warrants.Update(warrant) == -1)
                         return;
                     var row = ((DataRowView)v_warrants[v_warrants.Position]);
                     is_editable = false;

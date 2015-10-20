@@ -4,8 +4,9 @@ using Registry.Entities;
 
 namespace Registry.DataModels.DataModels
 {
-    public sealed class ExecutorsDataModel: DataModel
+    internal sealed class ExecutorsDataModel : DataModel
     {
+        private static ExecutorsDataModel _dataModel;
         private const string SelectQuery = "SELECT * FROM executors WHERE deleted <> 1";
         private const string TableName = "executors";
 
@@ -14,10 +15,21 @@ namespace Registry.DataModels.DataModels
         {
         }
 
+        public static ExecutorsDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
+            return _dataModel ?? (_dataModel = new ExecutorsDataModel(progressBar, incrementor));
+        }
+
         protected override void ConfigureTable()
         {
             Table.PrimaryKey = new [] { Table.Columns["id_executor"] };
             Table.Columns["is_inactive"].DefaultValue = false;
+        }
+
+        protected override void ConfigureRelations()
+        {
+            AddRelation(TableName, "id_executor", "tenancy_processes", "id_executor");
+            AddRelation(TableName, "id_executor", "tenancy_agreements", "id_executor");
         }
 
         protected override void ConfigureDeleteCommand(DbCommand command, int id)

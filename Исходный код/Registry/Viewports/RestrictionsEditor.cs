@@ -2,8 +2,8 @@
 using System.Data;
 using System.Globalization;
 using System.Windows.Forms;
-using Registry.CalcDataModels;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
@@ -15,9 +15,9 @@ namespace Registry.Viewport
         private ViewportState state = ViewportState.NewRowState;
         private Restriction restriction;
         private ParentTypeEnum parentType;
-        private RestrictionsDataModel restrictions = RestrictionsDataModel.GetInstance();
+        private DataModel restrictions = DataModel.GetInstance(DataModelType.RestrictionsDataModel);
         private DataModel restriction_assoc;
-        private RestrictionTypesDataModel restriction_types;
+        private DataModel restriction_types;
         private BindingSource v_restriction_types;
 
         public ParentTypeEnum ParentType
@@ -29,10 +29,10 @@ namespace Registry.Viewport
             set
             {
                 if (value == ParentTypeEnum.Premises)
-                    restriction_assoc = RestrictionsPremisesAssocDataModel.GetInstance();
+                    restriction_assoc = DataModel.GetInstance(DataModelType.RestrictionsPremisesAssocDataModel);
                 else
                     if (value == ParentTypeEnum.Building)
-                        restriction_assoc = RestrictionsBuildingsAssocDataModel.GetInstance();
+                        restriction_assoc = DataModel.GetInstance(DataModelType.RestrictionsBuildingsAssocDataModel);
                     else
                         throw new ViewportException("Неизвестный тип родительского объекта");
                 parentType = value;
@@ -95,7 +95,7 @@ namespace Registry.Viewport
         public RestrictionsEditor()
         {
             InitializeComponent();
-            restriction_types = RestrictionTypesDataModel.GetInstance();
+            restriction_types = DataModel.GetInstance(DataModelType.RestrictionTypesDataModel);
             v_restriction_types = new BindingSource();
             v_restriction_types.DataSource = restriction_types.Select();
             comboBoxIdRestrictionType.DataSource = v_restriction_types;
@@ -163,16 +163,26 @@ namespace Registry.Viewport
                         "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
-                var id_restriction = RestrictionsDataModel.Insert(restriction, ParentType, id_parent);
+                var id_restriction = restrictions.Insert(restriction);
                 if (id_restriction == -1)
                     return;
+                var assoc = new RestrictionObjectAssoc(id_parent, id_restriction, null);
+                switch (ParentType)
+                {
+                    case ParentTypeEnum.Building:
+                        DataModel.GetInstance(DataModelType.RestrictionsBuildingsAssocDataModel).Insert(assoc);
+                        break;
+                    case ParentTypeEnum.Premises:
+                        DataModel.GetInstance(DataModelType.RestrictionsPremisesAssocDataModel).Insert(assoc);
+                        break;
+                }
                 restrictions.EditingNewRecord = true;
                 restrictions.Select().Rows.Add(id_restriction, restriction.IdRestrictionType, restriction.Number, restriction.Date, restriction.Description);
                 restriction_assoc.Select().Rows.Add(id_parent, id_restriction);
                 restrictions.EditingNewRecord = false;
             } else
             {
-                if (RestrictionsDataModel.Update(restriction) == -1)
+                if (restrictions.Update(restriction) == -1)
                     return;
                 var row = restrictions.Select().Rows.Find(restriction.IdRestriction);
                 row["id_restriction_type"] = restriction.IdRestrictionType == null ? DBNull.Value : (object)restriction.IdRestrictionType;
@@ -180,8 +190,6 @@ namespace Registry.Viewport
                 row["date"] = restriction.Date == null ? DBNull.Value : (object)restriction.Date;
                 row["description"] = restriction.Description == null ? DBNull.Value : (object)restriction.Description;
             }
-            CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building,
-                    int.Parse(ParentRow["id_building"].ToString(), CultureInfo.InvariantCulture), true);
             DialogResult = DialogResult.OK;
         }
 

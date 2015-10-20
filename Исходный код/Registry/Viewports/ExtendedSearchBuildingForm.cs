@@ -12,11 +12,11 @@ namespace Registry.SearchForms
 {
     internal partial class ExtendedSearchBuildingForm : SearchForm
     {
-        KladrStreetsDataModel kladr;
-        KladrRegionsDataModel regions;
-        FundTypesDataModel fundTypes;
-        ObjectStatesDataModel object_states;
-        OwnershipRightTypesDataModel ownership_right_types;
+        DataModel kladr;
+        DataModel regions;
+        DataModel fundTypes;
+        DataModel object_states;
+        DataModel ownership_right_types;
 
         BindingSource v_kladr;
         BindingSource v_regions;
@@ -101,7 +101,7 @@ namespace Registry.SearchForms
             if (checkBoxTenantSNPEnable.Checked)
             {
                 var snp = textBoxTenantSNP.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var buildingsIds = DataModelHelper.BuildingIDsBySNP(snp, row => row.Field<int?>("id_kinship") == 1);
+                var buildingsIds = DataModelHelper.BuildingIdsBySnp(snp, row => row.Field<int?>("id_kinship") == 1);
                 includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingsIds);
             }
             if ((checkBoxOwnershipTypeEnable.Checked) && (comboBoxOwnershipType.SelectedValue != null))
@@ -159,11 +159,11 @@ namespace Registry.SearchForms
         public ExtendedSearchBuildingForm()
         {
             InitializeComponent();
-            kladr = KladrStreetsDataModel.GetInstance();
-            fundTypes = FundTypesDataModel.GetInstance();
-            object_states = ObjectStatesDataModel.GetInstance();
-            regions = KladrRegionsDataModel.GetInstance();
-            ownership_right_types = OwnershipRightTypesDataModel.GetInstance();
+            kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
+            fundTypes = DataModel.GetInstance(DataModelType.FundTypesDataModel);
+            object_states = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
+            regions = DataModel.GetInstance(DataModelType.KladrRegionsDataModel);
+            ownership_right_types = DataModel.GetInstance(DataModelType.OwnershipRightTypesDataModel);
 
             v_kladr = new BindingSource {DataSource = kladr.Select()};
 

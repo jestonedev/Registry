@@ -4,8 +4,9 @@ using Registry.Entities;
 
 namespace Registry.DataModels.DataModels
 {
-    public sealed class DocumentsIssuedByDataModel: DataModel
+    internal sealed class DocumentsIssuedByDataModel : DataModel
     {
+        private static DocumentsIssuedByDataModel _dataModel;
         private const string SelectQuery = "SELECT * FROM documents_issued_by WHERE deleted <> 1";
         private const string TableName = "documents_issued_by";
 
@@ -14,9 +15,19 @@ namespace Registry.DataModels.DataModels
         {
         }
 
+        public static DocumentsIssuedByDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
+            return _dataModel ?? (_dataModel = new DocumentsIssuedByDataModel(progressBar, incrementor));
+        }
+
         protected override void ConfigureTable()
         {
             Table.PrimaryKey = new [] { Table.Columns["id_document_issued_by"] };
+        }
+
+        protected override void ConfigureRelations()
+        {
+            AddRelation(TableName, "id_document_issued_by", "tenancy_persons", "id_document_issued_by");  
         }
 
         protected override void ConfigureDeleteCommand(DbCommand command, int id)

@@ -22,7 +22,7 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        OwnershipRightTypesDataModel ownership_right_types;
+        DataModel ownership_right_types;
         DataTable snapshot_ownership_right_types = new DataTable("snapshot_ownership_right_types");
         #endregion Models
 
@@ -190,12 +190,12 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            ownership_right_types = OwnershipRightTypesDataModel.GetInstance();
+            ownership_right_types = DataModel.GetInstance(DataModelType.OwnershipRightTypesDataModel);
             ownership_right_types.Select();
 
             v_ownership_right_types = new BindingSource();
             v_ownership_right_types.DataMember = "ownership_right_types";
-            v_ownership_right_types.DataSource = DataSetManager.DataSet;
+            v_ownership_right_types.DataSource = DataModel.DataSet;
 
             //Инициируем колонки snapshot-модели
             for (var i = 0; i < ownership_right_types.Select().Columns.Count; i++)
@@ -276,7 +276,7 @@ namespace Registry.Viewport
                 var row = ownership_right_types.Select().Rows.Find(list[i].IdOwnershipRightType);
                 if (row == null)
                 {
-                    var id_ownership_right_type = OwnershipRightTypesDataModel.Insert(list[i]);
+                    var id_ownership_right_type = ownership_right_types.Insert(list[i]);
                     if (id_ownership_right_type == -1)
                     {
                         sync_views = true;
@@ -290,7 +290,7 @@ namespace Registry.Viewport
                 {
                     if (RowToOwnershipRightType(row) == list[i])
                         continue;
-                    if (OwnershipRightTypesDataModel.Update(list[i]) == -1)
+                    if (ownership_right_types.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         ownership_right_types.EditingNewRecord = false;
@@ -310,7 +310,7 @@ namespace Registry.Viewport
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (OwnershipRightTypesDataModel.Delete(list[i].IdOwnershipRightType.Value) == -1)
+                    if (ownership_right_types.Delete(list[i].IdOwnershipRightType.Value) == -1)
                     {
                         sync_views = true;
                         ownership_right_types.EditingNewRecord = false;

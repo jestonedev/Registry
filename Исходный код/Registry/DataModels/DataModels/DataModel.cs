@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.Odbc;
@@ -6,12 +7,14 @@ using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
 using Registry.Entities;
+using Registry.DataModels.CalcDataModels;
 
 namespace Registry.DataModels.DataModels
 {
     public class DataModel
     {
-        private static DataModel _dataModel;
+        private static readonly DataSet dataSet = new DataSet();
+        public static DataSet DataSet { get { return dataSet; } }
 
         private DataTable _table;
         private DataModelLoadState _dmLoadState = DataModelLoadState.BeforeLoad;
@@ -50,7 +53,12 @@ namespace Registry.DataModels.DataModels
                     ConfigureTable();
                     lock (LockObj)
                     {
-                        DataSetManager.AddTable(Table);
+                        if (!dataSet.Tables.Contains(Table.TableName))
+                        {
+                            Table.ExtendedProperties.Add("model", this);
+                            dataSet.Tables.Add(Table);
+                            ConfigureRelations();
+                        }
                     }
                     DmLoadState = DataModelLoadState.SuccessLoad;
                     if (progress != null)
@@ -61,7 +69,7 @@ namespace Registry.DataModels.DataModels
                             progressBar.Visible = false;
                             //Если мы загрузили все данные, то запускаем CallbackUpdater
                             DataModelsCallbackUpdater.GetInstance().Run();
-                            CalcDataModelsUpdater.GetInstance().Run();
+                            CalcDataModel.RunRefreshWalker();
                         }, null);
                     }
                 }
@@ -85,30 +93,148 @@ namespace Registry.DataModels.DataModels
             }, progressBar); 
         }
 
-        public DataModel GetInstance(DataModelType dataModeltype)
+        public static DataModel GetInstance(DataModelType dataModelType)
         {
-            return GetInstance(null, 0, dataModeltype);
+            return GetInstance(null, 0, dataModelType);
         }
 
-        public DataModel GetInstance(ToolStripProgressBar progressBar, int incrementor, DataModelType dataModelType)
+        public static DataModel GetInstance(ToolStripProgressBar progressBar, int incrementor, DataModelType dataModelType)
         {
-            if (_dataModel != null)
-                return _dataModel;
             switch (dataModelType)
             {
                 case DataModelType.BuildingsDataModel:
-                    _dataModel = new BuildingsDataModel(progressBar, incrementor);
-                    break;
+                    return BuildingsDataModel.GetInstance(progressBar, incrementor);
                 case DataModelType.ClaimsDataModel:
-                    _dataModel = new ClaimsDataModel(progressBar, incrementor);
-                    break;
+                    return ClaimsDataModel.GetInstance(progressBar, incrementor);
                 case DataModelType.ClaimStatesDataModel:
-                    _dataModel = new ClaimStatesDataModel(progressBar, incrementor);
-                    break;
+                    return ClaimStatesDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.ClaimStateTypesDataModel:
+                    return ClaimStateTypesDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.ClaimStateTypesRelationsDataModel:
+                    return ClaimStateTypesRelationsDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.DocumentsIssuedByDataModel:
+                    return DocumentsIssuedByDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.DocumentsResidenceDataModel:
+                    return DocumentsResidenceDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.DocumentTypesDataModel:
+                    return DocumentTypesDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.ExecutorsDataModel:
+                    return ExecutorsDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.FundsBuildingsAssocDataModel:
+                    return FundsBuildingsAssocDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.FundsHistoryDataModel:
+                    return FundsHistoryDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.FundsPremisesAssocDataModel:
+                    return FundsPremisesAssocDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.FundsSubPremisesAssocDataModel:
+                    return FundsSubPremisesAssocDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.FundTypesDataModel:
+                    return FundTypesDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.KinshipsDataModel:
+                    return KinshipsDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.KladrRegionsDataModel:
+                    return KladrRegionsDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.KladrStreetsDataModel:
+                    return KladrStreetsDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.ObjectStatesDataModel:
+                    return ObjectStatesDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.OwnershipBuildingsAssocDataModel:
+                    return OwnershipBuildingsAssocDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.OwnershipPremisesAssocDataModel:
+                    return OwnershipPremisesAssocDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.OwnershipRightTypesDataModel:
+                    return OwnershipRightTypesDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.OwnershipsRightsDataModel:
+                    return OwnershipsRightsDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.PremisesDataModel:
+                    return PremisesDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.PremisesKindsDataModel:
+                    return PremisesKindsDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.PremisesTypesDataModel:
+                    return PremisesTypesDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.RentTypesDataModel:
+                    return RentTypesDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.ResettleBuildingsFromAssocDataModel:
+                    return ResettleBuildingsFromAssocDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.ResettleBuildingsToAssocDataModel:
+                    return ResettleBuildingsToAssocDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.ResettlePersonsDataModel:
+                    return ResettlePersonsDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.ResettlePremisesFromAssocDataModel:
+                    return ResettlePremisesFromAssocDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.ResettlePremisesToAssocDataModel:
+                    return ResettlePremisesToAssocDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.ResettleProcessesDataModel:
+                    return ResettleProcessesDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.ResettleSubPremisesFromAssocDataModel:
+                    return ResettleSubPremisesFromAssocDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.ResettleSubPremisesToAssocDataModel:
+                    return ResettleSubPremisesToAssocDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.RestrictionsBuildingsAssocDataModel:
+                    return RestrictionsBuildingsAssocDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.RestrictionsDataModel:
+                    return RestrictionsDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.RestrictionsPremisesAssocDataModel:
+                    return RestrictionsPremisesAssocDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.RestrictionTypesDataModel:
+                    return RestrictionTypesDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.StructureTypesDataModel:
+                    return StructureTypesDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.SubPremisesDataModel:
+                    return SubPremisesDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.TenancyAgreementsDataModel:
+                    return TenancyAgreementsDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.TenancyBuildingsAssocDataModel:
+                    return TenancyBuildingsAssocDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.TenancyNotifiesDataModel:
+                    return TenancyNotifiesDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.TenancyPersonsDataModel:
+                    return TenancyPersonsDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.TenancyPremisesAssocDataModel:
+                    return TenancyPremisesAssocDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.TenancyProcessesDataModel:
+                    return TenancyProcessesDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.TenancyReasonsDataModel:
+                    return TenancyReasonsDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.TenancyReasonTypesDataModel:
+                    return TenancyReasonTypesDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.TenancySubPremisesAssocDataModel:
+                    return TenancySubPremisesAssocDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.WarrantDocTypesDataModel:
+                    return WarrantDocTypesDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.WarrantsDataModel:
+                    return WarrantsDataModel.GetInstance(progressBar, incrementor);
                 default:
                     throw new DataModelException("Неизвестный тип модели");
             }
-            return _dataModel;
+        }
+
+        public static DataModel GetLoadedInstance(string tableName)
+        {
+            DataModel dm = null;
+            lock (LockObj)
+            {
+                if (dataSet.Tables.Contains(tableName))
+                    dm = (DataModel)dataSet.Tables[tableName].ExtendedProperties["model"];
+            }
+            return dm;
+        }
+
+        protected static void AddRelation(string masterTableName, string masterColumnName, string slaveTableName,
+            string slaveColumnName)
+        {
+            if (!dataSet.Tables.Contains(masterTableName)) return;
+            if (!dataSet.Tables.Contains(slaveTableName)) return;
+            if (dataSet.Relations.Contains(masterTableName + "_" + slaveTableName)) return;
+            var relation = new DataRelation(masterTableName + "_" + slaveTableName,
+                dataSet.Tables[masterTableName].Columns[masterColumnName],
+                dataSet.Tables[slaveTableName].Columns[slaveColumnName], true);
+            dataSet.Relations.Add(relation);
+        }
+
+        protected virtual void ConfigureRelations()
+        {
+            
         }
 
         protected virtual void ConfigureTable()
@@ -136,7 +262,7 @@ namespace Registry.DataModels.DataModels
             return Table;
         }
 
-        public int Delete(int id)
+        public virtual int Delete(int id)
         {
             using (var connection = new DBConnection())
             using (var command = DBConnection.CreateCommand())
@@ -160,7 +286,7 @@ namespace Registry.DataModels.DataModels
         {
         }
 
-        public int Update(Entity entity)
+        public virtual int Update(Entity entity)
         {
             using (var connection = new DBConnection())
             using (var command = DBConnection.CreateCommand())
@@ -190,7 +316,7 @@ namespace Registry.DataModels.DataModels
         {
         }
 
-        public int Insert(Entity entity)
+        public virtual int Insert(Entity entity)
         {
             using (var connection = new DBConnection())
             using (var command = DBConnection.CreateCommand())
@@ -211,7 +337,8 @@ namespace Registry.DataModels.DataModels
                     connection.SqlModifyQuery(command);
                     var lastId = connection.SqlSelectTable("last_id", lastIdCommand);
                     connection.SqlCommitTransaction();
-                    if (lastId.Rows.Count != 0) return Convert.ToInt32(lastId.Rows[0][0], CultureInfo.InvariantCulture);
+                    if (lastId.Rows.Count != 0) 
+                        return Convert.ToInt32(lastId.Rows[0][0], CultureInfo.InvariantCulture);
                     MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
@@ -230,5 +357,15 @@ namespace Registry.DataModels.DataModels
         protected virtual void ConfigureInsertCommand(DbCommand command, Entity entity)
         {
         }
+
+        public IEnumerable<DataRow> FilterDeletedRows()
+        {
+            if (_table == null)
+                throw new DataModelException("Таблица еще не загружена");
+            return from tableRow in _table.AsEnumerable()
+                   where (tableRow.RowState != DataRowState.Deleted) &&
+                         (tableRow.RowState != DataRowState.Detached)
+                   select tableRow;
+        }    
     }
 }

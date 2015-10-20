@@ -12,7 +12,7 @@ namespace Registry.SearchForms
 {
     internal partial class ExtendedSearchTenancyForm : SearchForm
     {
-        KladrRegionsDataModel regions;
+        DataModel regions;
 
         BindingSource v_kladr;
         BindingSource v_regions;
@@ -21,11 +21,11 @@ namespace Registry.SearchForms
         public ExtendedSearchTenancyForm()
         {
             InitializeComponent();
-            KladrStreetsDataModel.GetInstance().Select();
-            RentTypesDataModel.GetInstance().Select();
-            regions = KladrRegionsDataModel.GetInstance();
+            DataModel.GetInstance(DataModelType.KladrStreetsDataModel).Select();
+            DataModel.GetInstance(DataModelType.RentTypesDataModel).Select();
+            regions = DataModel.GetInstance(DataModelType.KladrRegionsDataModel);
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             v_kladr = new BindingSource();
             v_kladr.DataSource = ds;
@@ -157,13 +157,13 @@ namespace Registry.SearchForms
             if (checkBoxTenantSNPEnable.Checked)
             {
                 var snp = textBoxTenantSNP.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var processesIds = DataModelHelper.TenancyProcessIDsBySNP(snp, row => row.Field<int?>("id_kinship") == 1);
+                var processesIds = DataModelHelper.TenancyProcessIdsBySnp(snp, row => row.Field<int?>("id_kinship") == 1);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (checkBoxPersonSNPEnable.Checked)
             {
                 var snp = textBoxPersonSNP.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var processesIds = DataModelHelper.TenancyProcessIDsBySNP(snp, row => true);
+                var processesIds = DataModelHelper.TenancyProcessIdsBySnp(snp, row => true);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (checkBoxRegionEnable.Checked && (comboBoxRegion.SelectedValue != null))

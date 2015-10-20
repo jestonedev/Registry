@@ -6,18 +6,30 @@ namespace Registry.DataModels.DataModels
 {
     internal sealed class ClaimStatesDataModel: DataModel
     {
+        private static ClaimStatesDataModel _dataModel;
         private const string SelectQuery = "SELECT * FROM claim_states c WHERE deleted = 0";
         private const string TableName = "claim_states";
 
-        public ClaimStatesDataModel(ToolStripProgressBar progressBar, int incrementor)
+        private ClaimStatesDataModel(ToolStripProgressBar progressBar, int incrementor)
             : base(progressBar, incrementor, SelectQuery, TableName)
         {
             EditingNewRecord = false;      
         }
 
+        public static ClaimStatesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
+            return _dataModel ?? (_dataModel = new ClaimStatesDataModel(progressBar, incrementor));
+        }
+
         protected override void ConfigureTable()
         {
             Table.PrimaryKey = new[] { Table.Columns["id_state"] };
+        }
+
+        protected override void ConfigureRelations()
+        {
+            AddRelation("claims", "id_claim", TableName, "id_claim");
+            AddRelation("claim_state_types", "id_state_type", TableName, "id_state_type");      
         }
 
         protected override void ConfigureDeleteCommand(DbCommand command, int id)

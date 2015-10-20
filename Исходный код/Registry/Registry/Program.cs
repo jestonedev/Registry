@@ -11,7 +11,7 @@ namespace Registry
 {
     static class Program
     {
-        private const string m_appName = "Registry";  
+        private const string MAppName = "Registry";  
         /// <summary>
         /// Главная точка входа для приложения.
         /// </summary>
@@ -19,7 +19,7 @@ namespace Registry
         static void Main(string[] args)
         {
             bool canCreateNewApp;
-            using (Mutex mutex = new Mutex(true, m_appName, out canCreateNewApp))
+            using (new Mutex(true, MAppName, out canCreateNewApp))
             {
                 if (canCreateNewApp)
                 {
@@ -27,7 +27,7 @@ namespace Registry
                     Application.SetCompatibleTextRenderingDefault(false);
                     if (args.Length > 0 && args.Contains("--config"))
                     {
-                        using (SettingsForm sf = new SettingsForm())
+                        using (var sf = new SettingsForm())
                         {
                             sf.ShowDialog();
                         }
@@ -42,10 +42,8 @@ namespace Registry
                     }
                 }
                 else
-                {
-                    MessageBox.Show("Приложение уже запущено", "Ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
-                }
+                    MessageBox.Show(@"Приложение уже запущено", @"Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
             }
         }
     }

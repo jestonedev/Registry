@@ -14,12 +14,12 @@ namespace Registry.Reporting
 {
     internal partial class SelectRegionsForm : Form
     {
-        private KladrRegionsDataModel regions = null;
+        private DataModel regions = null;
         private BindingSource v_regions = null;
         public SelectRegionsForm()
         {
             InitializeComponent();
-            regions = KladrRegionsDataModel.GetInstance();
+            regions = DataModel.GetInstance(DataModelType.KladrRegionsDataModel);
             v_regions = new BindingSource();
             v_regions.DataSource = regions.Select();
             v_regions.Sort = "region ASC";

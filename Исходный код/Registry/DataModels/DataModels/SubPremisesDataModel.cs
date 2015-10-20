@@ -1,156 +1,78 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Data.Common;
-using System.Data;
-using Registry.Entities;
+﻿using System.Data.Common;
 using System.Windows.Forms;
-using System.Data.Odbc;
-using System.Globalization;
-using Registry.DataModels.DataModels;
+using Registry.Entities;
 
-namespace Registry.DataModels
+namespace Registry.DataModels.DataModels
 {
-    public sealed class SubPremisesDataModel : DataModel
+    internal sealed class SubPremisesDataModel : DataModel
     {
-        private static SubPremisesDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM sub_premises WHERE deleted = 0";
-        private static string deleteQuery = "UPDATE sub_premises SET deleted = 1 WHERE id_sub_premises = ?";
-        private static string insertQuery = @"INSERT INTO sub_premises
-                            (id_premises, id_state, sub_premises_num, total_area, living_area, description, state_date)
-                            VALUES (?, ?, ?, ?, ?, ?, ?)";
-        private static string updateQuery = @"UPDATE sub_premises SET id_premises = ?, id_state = ?, sub_premises_num = ?, 
-                            total_area = ?, living_area = ?, description = ?, state_date = ? WHERE id_sub_premises = ?";
-
-        private static string tableName = "sub_premises";
+        private static SubPremisesDataModel _dataModel;
+        private const string SelectQuery = "SELECT * FROM sub_premises WHERE deleted = 0";
+        private const string TableName = "sub_premises";
 
         private SubPremisesDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, selectQuery, tableName)
+            : base(progressBar, incrementor, SelectQuery, TableName)
         {
+        }
+
+        public static SubPremisesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
+            return _dataModel ?? (_dataModel = new SubPremisesDataModel(progressBar, incrementor));
         }
 
         protected override void ConfigureTable()
         {
-            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_sub_premises"] };
+            Table.PrimaryKey = new [] { Table.Columns["id_sub_premises"] };
             Table.Columns["total_area"].DefaultValue = 0;
             Table.Columns["living_area"].DefaultValue = 0;
             Table.Columns["deleted"].DefaultValue = 0;
             Table.Columns["id_state"].DefaultValue = 1;
         }
 
-        public static SubPremisesDataModel GetInstance()
+        protected override void ConfigureRelations()
         {
-            return GetInstance(null, 0);
+            AddRelation("premises", "id_premises", TableName, "id_premises");
+            AddRelation("object_states", "id_state", TableName, "id_state");
+            AddRelation(TableName, "id_sub_premises", "funds_sub_premises_assoc", "id_sub_premises");
+            AddRelation(TableName, "id_sub_premises", "tenancy_sub_premises_assoc", "id_sub_premises");
+            AddRelation(TableName, "id_sub_premises", "resettle_sub_premises_from_assoc", "id_sub_premises");
+            AddRelation(TableName, "id_sub_premises", "resettle_sub_premises_to_assoc", "id_sub_premises");
         }
 
-        public static SubPremisesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        protected override void ConfigureDeleteCommand(DbCommand command, int id)
         {
-            if (dataModel == null)
-                dataModel = new SubPremisesDataModel(progressBar, incrementor);
-            return dataModel;
+            command.CommandText = "UPDATE sub_premises SET deleted = 1 WHERE id_sub_premises = ?";
+            command.Parameters.Add(DBConnection.CreateParameter<int?>("id_sub_premises", id));
         }
 
-        public static int Delete(int id)
+        protected override void ConfigureUpdateCommand(DbCommand command, Entity entity)
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                command.CommandText = deleteQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_sub_premises", id));
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось удалить комнату из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            command.CommandText = @"UPDATE sub_premises SET id_premises = ?, id_state = ?, sub_premises_num = ?, 
+                            total_area = ?, living_area = ?, description = ?, state_date = ? WHERE id_sub_premises = ?";
+            var subPremise = (SubPremise) entity;
+            command.Parameters.Add(DBConnection.CreateParameter("id_premises", subPremise.IdPremises));
+            command.Parameters.Add(DBConnection.CreateParameter("id_state", subPremise.IdState));
+            command.Parameters.Add(DBConnection.CreateParameter("sub_premises_num", subPremise.SubPremisesNum));
+            command.Parameters.Add(DBConnection.CreateParameter("total_area", subPremise.TotalArea));
+            command.Parameters.Add(DBConnection.CreateParameter("living_area", subPremise.LivingArea));
+            command.Parameters.Add(DBConnection.CreateParameter("description", subPremise.Description));
+            command.Parameters.Add(DBConnection.CreateParameter("state_date", subPremise.StateDate));
+            command.Parameters.Add(DBConnection.CreateParameter("id_sub_premises", subPremise.IdSubPremises));
         }
 
-        public static int Insert(SubPremise subPremise)
+        protected override void ConfigureInsertCommand(DbCommand command, Entity entity)
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            using (DbCommand last_id_command = DBConnection.CreateCommand())
-            {
-                last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
-                command.CommandText = insertQuery;
-                if (subPremise == null)
-                {
-                    MessageBox.Show("В метод Insert не передана ссылка на объект комнаты", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-                command.Parameters.Add(DBConnection.CreateParameter("id_premises", subPremise.IdPremises));
-                command.Parameters.Add(DBConnection.CreateParameter("id_state", subPremise.IdState));
-                command.Parameters.Add(DBConnection.CreateParameter("sub_premises_num", subPremise.SubPremisesNum));
-                command.Parameters.Add(DBConnection.CreateParameter("total_area", subPremise.TotalArea));
-                command.Parameters.Add(DBConnection.CreateParameter("living_area", subPremise.LivingArea));
-                command.Parameters.Add(DBConnection.CreateParameter("description", subPremise.Description));
-                command.Parameters.Add(DBConnection.CreateParameter("state_date", subPremise.StateDate));
-                try
-                {
-                    connection.SqlBeginTransaction();
-                    connection.SqlModifyQuery(command);
-                    DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
-                    connection.SqlCommitTransaction();
-                    if (last_id.Rows.Count == 0)
-                    {
-                        MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        return -1;
-                    }
-                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.InvariantCulture);
-                }
-                catch (OdbcException e)
-                {
-                    connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось добавить комнату в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
-        }
-
-        public static int Update(SubPremise subPremise)
-        {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                command.CommandText = updateQuery;
-                if (subPremise == null)
-                {
-                    MessageBox.Show("В метод Update не передана ссылка на объект комнаты", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-                command.Parameters.Add(DBConnection.CreateParameter("id_premises", subPremise.IdPremises));
-                command.Parameters.Add(DBConnection.CreateParameter("id_state", subPremise.IdState));
-                command.Parameters.Add(DBConnection.CreateParameter("sub_premises_num", subPremise.SubPremisesNum));
-                command.Parameters.Add(DBConnection.CreateParameter("total_area", subPremise.TotalArea));
-                command.Parameters.Add(DBConnection.CreateParameter("living_area", subPremise.LivingArea));
-                command.Parameters.Add(DBConnection.CreateParameter("description", subPremise.Description));
-                command.Parameters.Add(DBConnection.CreateParameter("state_date", subPremise.StateDate));
-                command.Parameters.Add(DBConnection.CreateParameter("id_sub_premises", subPremise.IdSubPremises));
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось изменить комнату в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            command.CommandText = @"INSERT INTO sub_premises 
+                            (id_premises, id_state, sub_premises_num, total_area, living_area, description, state_date)
+                            VALUES (?, ?, ?, ?, ?, ?, ?)";
+            var subPremise = (SubPremise)entity;
+            command.Parameters.Add(DBConnection.CreateParameter("id_premises", subPremise.IdPremises));
+            command.Parameters.Add(DBConnection.CreateParameter("id_state", subPremise.IdState));
+            command.Parameters.Add(DBConnection.CreateParameter("sub_premises_num", subPremise.SubPremisesNum));
+            command.Parameters.Add(DBConnection.CreateParameter("total_area", subPremise.TotalArea));
+            command.Parameters.Add(DBConnection.CreateParameter("living_area", subPremise.LivingArea));
+            command.Parameters.Add(DBConnection.CreateParameter("description", subPremise.Description));
+            command.Parameters.Add(DBConnection.CreateParameter("state_date", subPremise.StateDate));
         }
     }
 }

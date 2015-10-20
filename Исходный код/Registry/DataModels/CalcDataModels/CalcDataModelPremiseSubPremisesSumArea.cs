@@ -1,36 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Registry.DataModels;
-using System.Data;
+﻿using System.Data;
 using System.Globalization;
+using System.Linq;
 using Registry.DataModels.DataModels;
-using Registry.Entities;
 
-namespace Registry.CalcDataModels
+namespace Registry.DataModels.CalcDataModels
 {
 
-    public sealed class CalcDataModelPremiseSubPremisesSumArea : CalcDataModel
+    internal sealed class CalcDataModelPremiseSubPremisesSumArea : CalcDataModel
     {
-        private static CalcDataModelPremiseSubPremisesSumArea dataModel = null;
+        private static CalcDataModelPremiseSubPremisesSumArea _dataModel;
 
-        private static string tableName = "premise_sub_premises_sum_area";
+        private const string TableName = "premise_sub_premises_sum_area";
 
         private CalcDataModelPremiseSubPremisesSumArea()
-            : base()
         {
             Table = InitializeTable();
-            Refresh(EntityType.Unknown, null, false);
+            Refresh();
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.PremisesDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.SubPremisesDataModel).Select());
         }
 
         private static DataTable InitializeTable()
         {
-            DataTable table = new DataTable(tableName);
-            table.Locale = CultureInfo.InvariantCulture;
+            var table = new DataTable(TableName) {Locale = CultureInfo.InvariantCulture};
             table.Columns.Add("id_premises").DataType = typeof(int);
             table.Columns.Add("sum_area").DataType = typeof(double);
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_premises"] };
+            table.PrimaryKey = new [] { table.Columns["id_premises"] };
             return table;
         }
 
@@ -39,29 +34,26 @@ namespace Registry.CalcDataModels
             DmLoadState = DataModelLoadState.Loading;
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelPremiseSubPremisesSumArea");
-            CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;
             // Фильтруем удаленные строки
-            var premises = DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select(), config.Entity, config.IdObject);
-            var sub_premises = DataModelHelper.FilterRows(SubPremisesDataModel.GetInstance().Select());
+            var premises = DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows();
+            var subPremises = DataModel.GetInstance(DataModelType.SubPremisesDataModel).FilterDeletedRows();
             // Вычисляем агрегационную информацию
-            var result = from premises_row in premises
-                         join sub_premises_row in sub_premises
-                         on premises_row.Field<int>("id_premises") equals sub_premises_row.Field<int>("id_premises")
-                         where new int[] {4, 5, 9}.Contains(sub_premises_row.Field<int>("id_state"))
-                         group sub_premises_row.Field<double>("total_area") by premises_row.Field<int>("id_premises") into gs
+            var result = from premisesRow in premises
+                         join subPremisesRow in subPremises
+                         on premisesRow.Field<int>("id_premises") equals subPremisesRow.Field<int>("id_premises")
+                         where new [] {4, 5, 9}.Contains(subPremisesRow.Field<int>("id_state"))
+                         group subPremisesRow.Field<double>("total_area") by premisesRow.Field<int>("id_premises") into gs
                          select new
                          {
                              id_premises = gs.Key,
                              sum_area = gs.Sum()
                          };
             // Заполняем таблицу изменений
-            DataTable table = InitializeTable();
+            var table = InitializeTable();
             table.BeginLoadData();
-            result.ToList().ForEach((x) =>
+            result.ToList().ForEach(x =>
             {
-                table.Rows.Add(new object[] { 
-                    x.id_premises, 
-                    x.sum_area });
+                table.Rows.Add(x.id_premises, x.sum_area);
             });
             table.EndLoadData();
             // Возвращаем результат
@@ -70,14 +62,7 @@ namespace Registry.CalcDataModels
 
         public static CalcDataModelPremiseSubPremisesSumArea GetInstance()
         {
-            if (dataModel == null)
-                dataModel = new CalcDataModelPremiseSubPremisesSumArea();
-            return dataModel;
-        }
-
-        public static bool HasInstance()
-        {
-            return dataModel != null;
+            return _dataModel ?? (_dataModel = new CalcDataModelPremiseSubPremisesSumArea());
         }
     }
 }

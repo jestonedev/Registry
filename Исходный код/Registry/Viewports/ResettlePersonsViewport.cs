@@ -5,8 +5,9 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using Registry.CalcDataModels;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -25,7 +26,7 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        ResettlePersonsDataModel resettle_persons;
+        DataModel resettle_persons;
         DataTable snapshot_resettle_persons = new DataTable("snapshot_resettle_persons");
         #endregion Models
 
@@ -229,7 +230,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            resettle_persons = ResettlePersonsDataModel.GetInstance();
+            resettle_persons = DataModel.GetInstance(DataModelType.ResettlePersonsDataModel);
             // Дожидаемся дозагрузки данных, если это необходимо
             resettle_persons.Select();
 
@@ -239,7 +240,7 @@ namespace Registry.Viewport
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 v_resettle_persons.Filter += " AND ";
             v_resettle_persons.Filter += DynamicFilter;
-            v_resettle_persons.DataSource = DataSetManager.DataSet;
+            v_resettle_persons.DataSource = DataModel.DataSet;
 
             if (ParentRow != null && ParentType == ParentTypeEnum.ResettleProcess)
                 Text = string.Format(CultureInfo.InvariantCulture, "Участники переселения №{0}", ParentRow["id_process"]);
@@ -330,7 +331,7 @@ namespace Registry.Viewport
                 var row = resettle_persons.Select().Rows.Find(list[i].IdPerson);
                 if (row == null)
                 {
-                    var id_person = ResettlePersonsDataModel.Insert(list[i]);
+                    var id_person = resettle_persons.Insert(list[i]);
                     if (id_person == -1)
                     {
                         sync_views = true; 
@@ -344,7 +345,7 @@ namespace Registry.Viewport
                 {
                     if (RowToResettlePerson(row) == list[i])
                         continue;
-                    if (ResettlePersonsDataModel.Update(list[i]) == -1)
+                    if (resettle_persons.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         resettle_persons.EditingNewRecord = false;
@@ -367,7 +368,7 @@ namespace Registry.Viewport
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (ResettlePersonsDataModel.Delete(list[i].IdPerson.Value) == -1)
+                    if (resettle_persons.Delete(list[i].IdPerson.Value) == -1)
                     {
                         sync_views = true;
                         resettle_persons.EditingNewRecord = false;
@@ -379,8 +380,6 @@ namespace Registry.Viewport
             sync_views = true;
             resettle_persons.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
-            if (ParentType == ParentTypeEnum.ResettleProcess)
-                CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.ResettleProcess, (int)ParentRow["id_process"], true);
         }
 
         public override bool CanDuplicate()

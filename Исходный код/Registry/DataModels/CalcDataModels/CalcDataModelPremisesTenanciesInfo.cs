@@ -2,29 +2,29 @@
 using System.ComponentModel;
 using System.Data;
 using System.Globalization;
-using System.IO;
 using System.Linq;
-using Registry.DataModels;
 using Registry.DataModels.DataModels;
-using Registry.Entities;
 
-namespace Registry.CalcDataModels
+namespace Registry.DataModels.CalcDataModels
 {
-    public sealed class CalcDataModelPremisesTenanciesInfo : CalcDataModel
+    internal sealed class CalcDataModelPremisesTenanciesInfo : CalcDataModel
     {
-        private static CalcDataModelPremisesTenanciesInfo dataModel = null;
+        private static CalcDataModelPremisesTenanciesInfo _dataModel;
 
-        private static string tableName = "premises_tenancies_reg_number";
+        private const string TableName = "premises_tenancies_reg_number";
 
         private CalcDataModelPremisesTenanciesInfo()
         {
             Table = InitializeTable();
-            Refresh(EntityType.Unknown, null, false);
+            Refresh();
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.TenancyProcessesDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.TenancyPersonsDataModel).Select());
         }
 
         private static DataTable InitializeTable()
         {
-            var table = new DataTable(tableName) {Locale = CultureInfo.InvariantCulture};
+            var table = new DataTable(TableName) {Locale = CultureInfo.InvariantCulture};
             table.Columns.Add("id_premises").DataType = typeof(int);
             table.Columns.Add("registration_num").DataType = typeof(string);
             table.Columns.Add("registration_date").DataType = typeof(DateTime);
@@ -40,11 +40,10 @@ namespace Registry.CalcDataModels
             if (e == null)
                 throw new DataModelException(
                     "Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelPremisesTenanciesRegNumbers");
-            var config = (CalcAsyncConfig) e.Argument;
             // Фильтруем удаленные строки
-            var tenancyPremises = DataModelHelper.FilterRows(TenancyPremisesAssocDataModel.GetInstance().Select());
-            var tenancyProcesses = DataModelHelper.FilterRows(TenancyProcessesDataModel.GetInstance().Select());
-            var tenancyPersons = DataModelHelper.FilterRows(TenancyPersonsDataModel.GetInstance().Select());
+            var tenancyPremises = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).FilterDeletedRows();
+            var tenancyProcesses = DataModel.GetInstance(DataModelType.TenancyProcessesDataModel).FilterDeletedRows();
+            var tenancyPersons = DataModel.GetInstance(DataModelType.TenancyPersonsDataModel).FilterDeletedRows();
             // Вычисляем агрегационную информацию
             var tenants = from row in tenancyPersons
                 where row.Field<int?>("id_kinship") == 1
@@ -95,12 +94,7 @@ namespace Registry.CalcDataModels
 
         public static CalcDataModelPremisesTenanciesInfo GetInstance()
         {
-            return dataModel ?? (dataModel = new CalcDataModelPremisesTenanciesInfo());
-        }
-
-        public static bool HasInstance()
-        {
-            return dataModel != null;
+            return _dataModel ?? (_dataModel = new CalcDataModelPremisesTenanciesInfo());
         }
     }
 }

@@ -3,7 +3,7 @@ using System.Data;
 using System.Globalization;
 using System.Reflection;
 using System.Windows.Forms;
-using Registry.CalcDataModels;
+using Registry.DataModels.CalcDataModels;
 
 namespace Registry.Viewport
 {
@@ -160,37 +160,31 @@ namespace Registry.Viewport
 
         internal static bool BuildingFundAndRentMatch(int idBuilding, int idRentType)
         {
-            var bRow = CalcDataModelBuildingsCurrentFunds.GetInstance().Select().Rows.Find(idBuilding);
-            if (bRow != null)
-            {
-                var idFundType = (int)bRow["id_fund_type"];
-                if (idRentType == TranslateFundIdToRentId(idFundType))
-                    return true;
-            }
+            var bRow = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelBuildingsCurrentFunds).Select().Rows.Find(idBuilding);
+            if (bRow == null) return false;
+            var idFundType = (int)bRow["id_fund_type"];
+            if (idRentType == TranslateFundIdToRentId(idFundType))
+                return true;
             return false;
         }
 
         internal static bool PremiseFundAndRentMatch(int idPremise, int idRentType)
         {
-            var bRow = CalcDataModelPremisesCurrentFunds.GetInstance().Select().Rows.Find(idPremise);
-            if (bRow != null)
-            {
-                var idFundType = (int)bRow["id_fund_type"];
-                if (idRentType == TranslateFundIdToRentId(idFundType))
-                    return true;
-            }
+            var bRow = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelPremisesCurrentFunds).Select().Rows.Find(idPremise);
+            if (bRow == null) return false;
+            var idFundType = (int)bRow["id_fund_type"];
+            if (idRentType == TranslateFundIdToRentId(idFundType))
+                return true;
             return false;
         }
 
         internal static bool SubPremiseFundAndRentMatch(int idSubPremise, int idRentType)
         {
-            var bRow = CalcDataModelSubPremisesCurrentFunds.GetInstance().Select().Rows.Find(idSubPremise);
-            if (bRow != null)
-            {
-                var idFundType = (int)bRow["id_fund_type"];
-                if (idRentType == TranslateFundIdToRentId(idFundType))
-                    return true;
-            }
+            var bRow = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelSubPremisesCurrentFunds).Select().Rows.Find(idSubPremise);
+            if (bRow == null) return false;
+            var idFundType = (int)bRow["id_fund_type"];
+            if (idRentType == TranslateFundIdToRentId(idFundType))
+                return true;
             return false;
         }
 

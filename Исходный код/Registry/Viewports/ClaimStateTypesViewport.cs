@@ -32,8 +32,8 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        ClaimStateTypesDataModel claim_state_types;
-        ClaimStateTypesRelationsDataModel claim_state_types_relations;
+        DataModel claim_state_types;
+        DataModel claim_state_types_relations;
         DataTable snapshot_claim_state_types = new DataTable("snapshot_claim_state_types");
         DataTable snapshot_claim_state_types_relations = new DataTable("snapshot_claim_state_types_relations");
         #endregion Models
@@ -272,8 +272,8 @@ namespace Registry.Viewport
         {
             dataGridViewClaimStateTypes.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            claim_state_types = ClaimStateTypesDataModel.GetInstance();
-            claim_state_types_relations = ClaimStateTypesRelationsDataModel.GetInstance();
+            claim_state_types = DataModel.GetInstance(DataModelType.ClaimStateTypesDataModel);
+            claim_state_types_relations = DataModel.GetInstance(DataModelType.ClaimStateTypesRelationsDataModel);
             //Ожиданем дозагрузки данных, если это необходимо
             claim_state_types.Select();
             claim_state_types_relations.Select();
@@ -291,20 +291,20 @@ namespace Registry.Viewport
             v_claim_state_types = new BindingSource
             {
                 DataMember = "claim_state_types",
-                DataSource = DataSetManager.DataSet
+                DataSource = DataModel.DataSet
             };
 
             v_claim_state_types_from = new BindingSource
             {
                 DataMember = "claim_state_types",
-                DataSource = DataSetManager.DataSet
+                DataSource = DataModel.DataSet
             };
             v_claim_state_types_from.CurrentItemChanged += v_claim_state_types_from_CurrentItemChanged;
 
             v_claim_state_types_relations = new BindingSource
             {
                 DataMember = "claim_state_types_relations",
-                DataSource = DataSetManager.DataSet
+                DataSource = DataModel.DataSet
             };
 
             //Инициируем колонки snapshot-модели
@@ -405,7 +405,7 @@ namespace Registry.Viewport
                 var row = claim_state_types.Select().Rows.Find(list[i].IdStateType);
                 if (row == null)
                 {
-                    var idStateType = ClaimStateTypesDataModel.Insert(list[i]);
+                    var idStateType = claim_state_types.Insert(list[i]);
                     if (idStateType == -1)
                     {
                         sync_views = true;
@@ -422,7 +422,7 @@ namespace Registry.Viewport
                 {
                     if (RowToClaimStateType(row) == list[i])
                         continue;
-                    if (ClaimStateTypesDataModel.Update(list[i]) == -1)
+                    if (claim_state_types.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         claim_state_types.EditingNewRecord = false;
@@ -443,7 +443,7 @@ namespace Registry.Viewport
                         ((int)dataGridViewClaimStateTypes.Rows[j].Cells["id_state_type"].Value == claimStateType.IdStateType))
                         rowIndex = j;
                 if (rowIndex != -1) continue;
-                if (claimStateType.IdStateType != null && ClaimStateTypesDataModel.Delete(claimStateType.IdStateType.Value) == -1)
+                if (claimStateType.IdStateType != null && claim_state_types.Delete(claimStateType.IdStateType.Value) == -1)
                 {
                     sync_views = true;
                     claim_state_types.EditingNewRecord = false;
@@ -464,15 +464,17 @@ namespace Registry.Viewport
             {
                 var row = claim_state_types_relations.Select().Rows.Find(claimStateRel.IdRelation);
                 if (row != null) continue;
-                var idRelation = ClaimStateTypesRelationsDataModel.Insert(claimStateRel);
+                var idRelation = claim_state_types_relations.Insert(claimStateRel);
                 if (idRelation == -1)
                 {
                     sync_views = true;
                     claim_state_types.EditingNewRecord = false;
                     return;
                 }
-                var relRow = (from snapshotRow in DataModelHelper.FilterRows(snapshot_claim_state_types_relations)
-                    where snapshotRow.Field<int>("id_state_from") == claimStateRel.IdStateFrom &&
+                var relRow = (from snapshotRow in snapshot_claim_state_types_relations.AsEnumerable()
+                    where (snapshotRow.RowState != DataRowState.Deleted) &&
+                          (snapshotRow.RowState != DataRowState.Detached) &&
+                          snapshotRow.Field<int>("id_state_from") == claimStateRel.IdStateFrom &&
                           snapshotRow.Field<int>("id_state_to") == claimStateRel.IdStateTo
                     select snapshotRow).First();
                 relRow["id_relation"] = idRelation;
@@ -496,7 +498,7 @@ namespace Registry.Viewport
                 }
                 if (rowIndex == -1)
                 {
-                    if (claimStateRel.IdRelation != null && ClaimStateTypesRelationsDataModel.Delete(claimStateRel.IdRelation.Value) == -1)
+                    if (claimStateRel.IdRelation != null && claim_state_types_relations.Delete(claimStateRel.IdRelation.Value) == -1)
                     {
                         sync_views = true;
                         claim_state_types.EditingNewRecord = false;

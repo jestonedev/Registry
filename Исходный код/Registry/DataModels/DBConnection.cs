@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Registry.DataModels
 {
-    internal sealed class DBConnection: IDisposable
+    public sealed class DBConnection: IDisposable
     {
         private const string ProviderName = "ODBC";
         private static readonly DbProviderFactory Factory = DbProviderFactories.GetFactory(ParseProviderName(ProviderName));

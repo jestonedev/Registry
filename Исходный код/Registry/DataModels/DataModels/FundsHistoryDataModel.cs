@@ -4,8 +4,9 @@ using Registry.Entities;
 
 namespace Registry.DataModels.DataModels
 {
-    public sealed class FundsHistoryDataModel : DataModel
+    internal sealed class FundsHistoryDataModel : DataModel
     {
+        private static FundsHistoryDataModel _dataModel;
         private const string SelectQuery = "SELECT * FROM funds_history WHERE deleted = 0";
         private const string TableName = "funds_history";
 
@@ -14,9 +15,22 @@ namespace Registry.DataModels.DataModels
         {
         }
 
+        public static FundsHistoryDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
+            return _dataModel ?? (_dataModel = new FundsHistoryDataModel(progressBar, incrementor));
+        }
+
         protected override void ConfigureTable()
         {
             Table.PrimaryKey = new [] { Table.Columns["id_fund"] };
+        }
+
+        protected override void ConfigureRelations()
+        {
+            AddRelation("fund_types", "id_fund_type", TableName, "id_fund_type");
+            AddRelation(TableName, "id_fund", "funds_buildings_assoc", "id_fund");
+            AddRelation(TableName, "id_fund", "funds_premises_assoc", "id_fund");
+            AddRelation(TableName, "id_fund", "funds_sub_premises_assoc", "id_fund");
         }
 
         protected override void ConfigureDeleteCommand(DbCommand command, int id)

@@ -8,8 +8,8 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using CustomControls;
-using Registry.CalcDataModels;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Reporting;
@@ -25,8 +25,8 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        SubPremisesDataModel sub_premises;
-        ObjectStatesDataModel object_states;
+        DataModel sub_premises;
+        DataModel object_states;
         DataTable snapshot_sub_premises = new DataTable("snapshot_sub_premises");
         #endregion Models
 
@@ -244,15 +244,15 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            sub_premises = SubPremisesDataModel.GetInstance();
-            object_states = ObjectStatesDataModel.GetInstance();
+            sub_premises = DataModel.GetInstance(DataModelType.SubPremisesDataModel);
+            object_states = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
             // Дожидаемся дозагрузки данных, если это необходимо
             sub_premises.Select();
             object_states.Select();
 
             v_object_states = new BindingSource();
             v_object_states.DataMember = "object_states";
-            v_object_states.DataSource = DataSetManager.DataSet;
+            v_object_states.DataSource = DataModel.DataSet;
 
             v_sub_premises = new BindingSource();
             v_sub_premises.DataMember = "sub_premises";
@@ -260,7 +260,7 @@ namespace Registry.Viewport
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 v_sub_premises.Filter += " AND ";
             v_sub_premises.Filter += DynamicFilter;
-            v_sub_premises.DataSource = DataSetManager.DataSet;
+            v_sub_premises.DataSource = DataModel.DataSet;
 
             if (ParentRow != null && ParentType == ParentTypeEnum.Premises)
                 Text = string.Format(CultureInfo.InvariantCulture, "Комнаты помещения №{0}", ParentRow["id_premises"]);
@@ -380,7 +380,7 @@ namespace Registry.Viewport
                         sub_premises.EditingNewRecord = false;
                         return;
                     }
-                    var id_sub_premises = SubPremisesDataModel.Insert(list[i]);
+                    var id_sub_premises = sub_premises.Insert(list[i]);
                     if (id_sub_premises == -1)
                     {
                         sync_views = true;
@@ -413,7 +413,7 @@ namespace Registry.Viewport
                         sub_premises.EditingNewRecord = false;
                         return;
                     }
-                    if (SubPremisesDataModel.Update(list[i]) == -1)
+                    if (sub_premises.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         sub_premises.EditingNewRecord = false;
@@ -457,7 +457,7 @@ namespace Registry.Viewport
                         sub_premises.EditingNewRecord = false;
                         return;
                     }
-                    if (SubPremisesDataModel.Delete(list[i].IdSubPremises.Value) == -1)
+                    if (sub_premises.Delete(list[i].IdSubPremises.Value) == -1)
                     {
                         sync_views = true;
                         sub_premises.EditingNewRecord = false;
@@ -469,12 +469,6 @@ namespace Registry.Viewport
             sync_views = true;
             sub_premises.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
-            CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
-            CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
-            CalcDataModelPremiseSubPremisesSumArea.GetInstance().Refresh(EntityType.Premise,
-                int.Parse(ParentRow["id_premises"].ToString(), CultureInfo.InvariantCulture), true);
-            CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building,
-                int.Parse(ParentRow["id_building"].ToString(), CultureInfo.InvariantCulture), true);
         }
 
         public override bool CanDuplicate()

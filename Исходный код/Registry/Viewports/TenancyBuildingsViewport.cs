@@ -5,8 +5,8 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using Registry.CalcDataModels;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.SearchForms;
@@ -22,9 +22,9 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        private BuildingsDataModel buildings;
-        private KladrStreetsDataModel kladr;
-        private TenancyBuildingsAssocDataModel tenancy_buildings;
+        private DataModel buildings;
+        private DataModel kladr;
+        private DataModel tenancy_buildings;
         private DataTable snapshot_tenancy_buildings;
         #endregion Models
 
@@ -221,9 +221,9 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            buildings = BuildingsDataModel.GetInstance();
-            kladr = KladrStreetsDataModel.GetInstance();
-            tenancy_buildings = TenancyBuildingsAssocDataModel.GetInstance();
+            buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel);
+            kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
+            tenancy_buildings = DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel);
             // Ожидаем дозагрузки данных, если это необходимо
             buildings.Select();
             kladr.Select();
@@ -238,7 +238,7 @@ namespace Registry.Viewport
             snapshot_tenancy_buildings.Columns.Add("rent_total_area").DataType = typeof(double);
             snapshot_tenancy_buildings.Columns.Add("rent_living_area").DataType = typeof(double);
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             v_buildings = new BindingSource();
             v_buildings.DataMember = "buildings";
@@ -315,12 +315,10 @@ namespace Registry.Viewport
                         "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
-                if (BuildingsDataModel.Delete((int)((DataRowView)v_buildings.Current)["id_building"]) == -1)
+                if (buildings.Delete((int)((DataRowView)v_buildings.Current)["id_building"]) == -1)
                     return;
                 ((DataRowView)v_buildings[v_buildings.Position]).Delete();
                 MenuCallback.ForceCloseDetachedViewports();
-                CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
-                CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
             }
         }
 
@@ -469,7 +467,7 @@ namespace Registry.Viewport
                     row = tenancy_buildings.Select().Rows.Find(list[i].IdAssoc);
                 if (row == null)
                 {
-                    var id_assoc = TenancyBuildingsAssocDataModel.Insert(list[i]);
+                    var id_assoc = buildings.Insert(list[i]);
                     if (id_assoc == -1)
                     {
                         sync_views = true;
@@ -484,7 +482,7 @@ namespace Registry.Viewport
                 {
                     if (RowToTenancyBuilding(row) == list[i])
                         continue;
-                    if (TenancyBuildingsAssocDataModel.Update(list[i]) == -1)
+                    if (buildings.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         tenancy_buildings.EditingNewRecord = false;
@@ -509,7 +507,7 @@ namespace Registry.Viewport
                 }
                 if (row_index == -1)
                 {
-                    if (TenancyBuildingsAssocDataModel.Delete(list[i].IdAssoc.Value) == -1)
+                    if (buildings.Delete(list[i].IdAssoc.Value) == -1)
                     {
                         sync_views = true;
                         tenancy_buildings.EditingNewRecord = false;
@@ -533,8 +531,6 @@ namespace Registry.Viewport
             sync_views = true;
             tenancy_buildings.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
-            if (ParentType == ParentTypeEnum.Tenancy)
-                CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.TenancyProcess, (int)ParentRow["id_process"], true);
         }
 
         public override bool CanDuplicate()

@@ -6,8 +6,8 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using Registry.CalcDataModels;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Reporting;
@@ -32,14 +32,14 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        private PremisesDataModel premises;
-        private BuildingsDataModel buildings;
-        private KladrStreetsDataModel kladr;
-        private PremisesTypesDataModel premises_types;
-        private ObjectStatesDataModel object_states;
-        private CalcDataModelPremisesCurrentFunds premises_funds;
-        private CalcDataModelPremisesTenanciesInfo _premisesTenanciesInfo;
-        private FundTypesDataModel fund_types;
+        private DataModel premises;
+        private DataModel buildings;
+        private DataModel kladr;
+        private DataModel premises_types;
+        private DataModel object_states;
+        private CalcDataModel premises_funds;
+        private CalcDataModel _premisesTenanciesInfo;
+        private DataModel fund_types;
         #endregion Models
 
         #region Views
@@ -132,13 +132,13 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            premises = PremisesDataModel.GetInstance();
-            kladr = KladrStreetsDataModel.GetInstance();
-            buildings = BuildingsDataModel.GetInstance();
-            premises_types = PremisesTypesDataModel.GetInstance();
-            object_states = ObjectStatesDataModel.GetInstance();
-            premises_funds = CalcDataModelPremisesCurrentFunds.GetInstance();
-            fund_types = FundTypesDataModel.GetInstance();
+            premises = DataModel.GetInstance(DataModelType.PremisesDataModel);
+            kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
+            buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel);
+            premises_types = DataModel.GetInstance(DataModelType.PremisesTypesDataModel);
+            object_states = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
+            fund_types = DataModel.GetInstance(DataModelType.FundTypesDataModel);
+            premises_funds = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelPremisesCurrentFunds);
 
             // Ожидаем дозагрузки данных, если это необходимо
             kladr.Select();
@@ -150,7 +150,7 @@ namespace Registry.Viewport
 
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
             {
-                _premisesTenanciesInfo = CalcDataModelPremisesTenanciesInfo.GetInstance();
+                _premisesTenanciesInfo = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelPremisesTenanciesInfo);
                 _premisesTenanciesInfo.Select();
                 var registrationNumColumn = new DataGridViewTextBoxColumn
                 {
@@ -195,7 +195,7 @@ namespace Registry.Viewport
                 _premisesTenanciesInfo.RefreshEvent += _premisesTenanciesInfo_RefreshEvent;
             }
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             v_premises = new BindingSource();
             v_premises.CurrentItemChanged += v_premises_CurrentItemChanged;
@@ -254,14 +254,10 @@ namespace Registry.Viewport
                     return;
                 }
                 var id_building = (int)((DataRowView)v_premises[v_premises.Position])["id_building"];
-                if (PremisesDataModel.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
+                if (premises.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
                     return;
                 ((DataRowView)v_premises[v_premises.Position]).Delete();
                 MenuCallback.ForceCloseDetachedViewports();
-                CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(EntityType.Building, id_building, true);
-                CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building, id_building, true);
-                CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, true);
-                CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, true);
             }
         }
 
@@ -630,7 +626,7 @@ namespace Registry.Viewport
                 case "residence_warrant_date":
                 case "tenant":
                     var tenancyInfoRows =
-                        from tenancyInfoRow in DataModelHelper.FilterRows(_premisesTenanciesInfo.Select())
+                        from tenancyInfoRow in _premisesTenanciesInfo.FilterDeletedRows()
                         where tenancyInfoRow.Field<int>("id_premises") == (int?) row["id_premises"]
                         orderby tenancyInfoRow.Field<DateTime?>("registration_date") descending 
                         select tenancyInfoRow;

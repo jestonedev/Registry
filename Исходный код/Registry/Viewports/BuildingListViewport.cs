@@ -4,7 +4,6 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using Registry.CalcDataModels;
 using Registry.DataModels;
 using Registry.Entities;
 using Registry.SearchForms;
@@ -13,6 +12,7 @@ using WeifenLuo.WinFormsUI.Docking;
 using Registry.Reporting;
 using System.Collections.Generic;
 using System.Linq;
+using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 
 namespace Registry.Viewport
@@ -24,9 +24,9 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        private BuildingsDataModel buildings;
-        private KladrStreetsDataModel kladr;
-        private ObjectStatesDataModel object_states;
+        private DataModel buildings;
+        private DataModel kladr;
+        private DataModel object_states;
         #endregion
 
         #region Views
@@ -125,15 +125,15 @@ namespace Registry.Viewport
         public override void LoadData()
         {
             DockAreas = DockAreas.Document;
-            buildings = BuildingsDataModel.GetInstance();
-            kladr = KladrStreetsDataModel.GetInstance();
-            object_states = ObjectStatesDataModel.GetInstance();
+            buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel);
+            kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
+            object_states = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
             // Ожидаем дозагрузки данных, если это необходимо
             buildings.Select();
             kladr.Select();
             object_states.Select();
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             v_buildings = new BindingSource {DataMember = "buildings"};
             v_buildings.CurrentItemChanged += v_buildings_CurrentItemChanged;
@@ -255,12 +255,10 @@ namespace Registry.Viewport
                         @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
-                if (BuildingsDataModel.Delete((int)((DataRowView)v_buildings.Current)["id_building"]) == -1)
+                if (buildings.Delete((int)((DataRowView)v_buildings.Current)["id_building"]) == -1)
                     return;
                 ((DataRowView)v_buildings[v_buildings.Position]).Delete();
                 MenuCallback.ForceCloseDetachedViewports();
-                CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, true);
-                CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, true);
             }
         }
 

@@ -12,8 +12,8 @@ namespace Registry.SearchForms
 {
     internal partial class ExtendedSearchPremisesForm : SearchForm
     {
-        KladrRegionsDataModel regions;
-        OwnershipRightTypesDataModel ownership_right_types;
+        DataModel regions;
+        DataModel ownership_right_types;
 
         BindingSource v_kladr;
         BindingSource v_regions;
@@ -84,7 +84,7 @@ namespace Registry.SearchForms
             if (checkBoxTenantSNPEnable.Checked)
             {
                 var snp = textBoxTenantSNP.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var premisesIds = DataModelHelper.PremisesIDsBySNP(snp, row => row.Field<int?>("id_kinship") == 1);
+                var premisesIds = DataModelHelper.PremisesIdsBySnp(snp, row => row.Field<int?>("id_kinship") == 1);
                 includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);    
             }
             if ((checkBoxOwnershipTypeEnable.Checked) && (comboBoxOwnershipType.SelectedValue != null))
@@ -148,13 +148,13 @@ namespace Registry.SearchForms
         public ExtendedSearchPremisesForm()
         {
             InitializeComponent();
-            KladrStreetsDataModel.GetInstance().Select();
-            FundTypesDataModel.GetInstance().Select();
-            ObjectStatesDataModel.GetInstance().Select();
-            regions = KladrRegionsDataModel.GetInstance();
-            ownership_right_types = OwnershipRightTypesDataModel.GetInstance();
+            DataModel.GetInstance(DataModelType.KladrStreetsDataModel).Select();
+            DataModel.GetInstance(DataModelType.FundTypesDataModel).Select();
+            DataModel.GetInstance(DataModelType.ObjectStatesDataModel).Select();
+            regions = DataModel.GetInstance(DataModelType.KladrRegionsDataModel);
+            ownership_right_types = DataModel.GetInstance(DataModelType.OwnershipRightTypesDataModel);
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             v_kladr = new BindingSource
             {

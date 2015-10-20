@@ -1,149 +1,68 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-using System.Data;
 using System.Data.Common;
-using System.Data.Odbc;
+using System.Windows.Forms;
 using Registry.Entities;
-using System.Globalization;
-using Registry.DataModels.DataModels;
 
-namespace Registry.DataModels
+namespace Registry.DataModels.DataModels
 {
-    public sealed class TenancyReasonsDataModel: DataModel
+    internal sealed class TenancyReasonsDataModel : DataModel
     {
-        private static TenancyReasonsDataModel dataModel = null;
-        private static string selectQuery = "SELECT * FROM tenancy_reasons WHERE deleted = 0";
-        private static string deleteQuery = "UPDATE tenancy_reasons SET deleted = 1 WHERE id_reason = ?";
-        private static string insertQuery = @"INSERT INTO tenancy_reasons
-                            (id_process, id_reason_type, reason_number, reason_date, reason_prepared)
-                            VALUES (?, ?, ?, ?, ?)";
-        private static string updateQuery = @"UPDATE tenancy_reasons SET id_process = ?, id_reason_type = ?, reason_number = ?, 
-                            reason_date = ?, reason_prepared = ? WHERE id_reason = ?";
-        private static string tableName = "tenancy_reasons";
+        private static TenancyReasonsDataModel _dataModel;
+        private const string SelectQuery = "SELECT * FROM tenancy_reasons WHERE deleted = 0";
+        private const string TableName = "tenancy_reasons";
 
         private TenancyReasonsDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, selectQuery, tableName)
+            : base(progressBar, incrementor, SelectQuery, TableName)
         {
-        }
-
-        protected override void ConfigureTable()
-        {
-            Table.PrimaryKey = new DataColumn[] { Table.Columns["id_reason"] };
-            Table.Columns["reason_date"].DefaultValue = DateTime.Now.Date;
-        }
-
-        public static TenancyReasonsDataModel GetInstance()
-        {
-            return GetInstance(null, 0);
         }
 
         public static TenancyReasonsDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
         {
-            if (dataModel == null)
-                dataModel = new TenancyReasonsDataModel(progressBar, incrementor);
-            return dataModel;
+            return _dataModel ?? (_dataModel = new TenancyReasonsDataModel(progressBar, incrementor));
         }
 
-        public static int Insert(TenancyReason tenancyReason)
+        protected override void ConfigureTable()
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            using (DbCommand last_id_command = DBConnection.CreateCommand())
-            {
-                last_id_command.CommandText = "SELECT LAST_INSERT_ID()";
-                command.CommandText = insertQuery;
-                if (tenancyReason == null)
-                {
-                    MessageBox.Show("В метод Insert не передана ссылка на сущность основания найма", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-                command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancyReason.IdProcess));
-                command.Parameters.Add(DBConnection.CreateParameter("id_reason_type", tenancyReason.IdReasonType));
-                command.Parameters.Add(DBConnection.CreateParameter("reason_number", tenancyReason.ReasonNumber));
-                command.Parameters.Add(DBConnection.CreateParameter("reason_date", tenancyReason.ReasonDate));
-                command.Parameters.Add(DBConnection.CreateParameter("reason_prepared", tenancyReason.ReasonPrepared));
-                try
-                {
-                    connection.SqlBeginTransaction();
-                    connection.SqlModifyQuery(command);
-                    DataTable last_id = connection.SqlSelectTable("last_id", last_id_command);
-                    connection.SqlCommitTransaction();
-                    if (last_id.Rows.Count == 0)
-                    {
-                        MessageBox.Show("Запрос не вернул идентификатор ключа", "Неизвестная ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        return -1;
-                    }
-                    return Convert.ToInt32(last_id.Rows[0][0], CultureInfo.InvariantCulture);
-                }
-                catch (OdbcException e)
-                {
-                    connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось добавить основание найма в базу данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            Table.PrimaryKey = new [] { Table.Columns["id_reason"] };
+            Table.Columns["reason_date"].DefaultValue = DateTime.Now.Date;
         }
 
-        public static int Update(TenancyReason tenancyReason)
+        protected override void ConfigureRelations()
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                command.CommandText = updateQuery;
-                if (tenancyReason == null)
-                {
-                    MessageBox.Show("В метод Update не передана ссылка на сущность основания найма", "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-                command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancyReason.IdProcess));
-                command.Parameters.Add(DBConnection.CreateParameter("id_reason_type", tenancyReason.IdReasonType));
-                command.Parameters.Add(DBConnection.CreateParameter("reason_number", tenancyReason.ReasonNumber));
-                command.Parameters.Add(DBConnection.CreateParameter("reason_date", tenancyReason.ReasonDate));
-                command.Parameters.Add(DBConnection.CreateParameter("reason_prepared", tenancyReason.ReasonPrepared));
-                command.Parameters.Add(DBConnection.CreateParameter("id_reason", tenancyReason.IdReason));
-
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    connection.SqlRollbackTransaction();
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось изменить основание найма в базе данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            AddRelation("tenancy_processes", "id_process", TableName, "id_process");
+            AddRelation("tenancy_reason_types", "id_reason_type", TableName, "id_reason_type");
         }
 
-        public static int Delete(int id)
+        protected override void ConfigureDeleteCommand(DbCommand command, int id)
         {
-            using (DBConnection connection = new DBConnection())
-            using (DbCommand command = DBConnection.CreateCommand())
-            {
-                command.CommandText = deleteQuery;
-                command.Parameters.Add(DBConnection.CreateParameter<int?>("id_reason", id));
-                try
-                {
-                    return connection.SqlModifyQuery(command);
-                }
-                catch (OdbcException e)
-                {
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture, 
-                        "Не удалось удалить основание найма из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return -1;
-                }
-            }
+            command.CommandText = "UPDATE tenancy_reasons SET deleted = 1 WHERE id_reason = ?";
+            command.Parameters.Add(DBConnection.CreateParameter<int?>("id_reason", id));
+        }
+
+        protected override void ConfigureUpdateCommand(DbCommand command, Entity entity)
+        {
+            command.CommandText = @"UPDATE tenancy_reasons SET id_process = ?, id_reason_type = ?, reason_number = ?, 
+                            reason_date = ?, reason_prepared = ? WHERE id_reason = ?";
+            var tenancyReason = (TenancyReason) entity;
+            command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancyReason.IdProcess));
+            command.Parameters.Add(DBConnection.CreateParameter("id_reason_type", tenancyReason.IdReasonType));
+            command.Parameters.Add(DBConnection.CreateParameter("reason_number", tenancyReason.ReasonNumber));
+            command.Parameters.Add(DBConnection.CreateParameter("reason_date", tenancyReason.ReasonDate));
+            command.Parameters.Add(DBConnection.CreateParameter("reason_prepared", tenancyReason.ReasonPrepared));
+            command.Parameters.Add(DBConnection.CreateParameter("id_reason", tenancyReason.IdReason));
+        }
+
+        protected override void ConfigureInsertCommand(DbCommand command, Entity entity)
+        {
+            command.CommandText = @"INSERT INTO tenancy_reasons
+                            (id_process, id_reason_type, reason_number, reason_date, reason_prepared)
+                            VALUES (?, ?, ?, ?, ?)";
+            var tenancyReason = (TenancyReason)entity;
+            command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancyReason.IdProcess));
+            command.Parameters.Add(DBConnection.CreateParameter("id_reason_type", tenancyReason.IdReasonType));
+            command.Parameters.Add(DBConnection.CreateParameter("reason_number", tenancyReason.ReasonNumber));
+            command.Parameters.Add(DBConnection.CreateParameter("reason_date", tenancyReason.ReasonDate));
+            command.Parameters.Add(DBConnection.CreateParameter("reason_prepared", tenancyReason.ReasonPrepared));
         }
     }
 }

@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -21,7 +22,7 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        StructureTypesDataModel structure_types;
+        DataModel structure_types;
         DataTable snapshot_structure_types = new DataTable("snapshot_structure_types");
         #endregion Models
 
@@ -188,13 +189,13 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            structure_types = StructureTypesDataModel.GetInstance();
+            structure_types = DataModel.GetInstance(DataModelType.StructureTypesDataModel);
             //Ожиданем дозагрузки данных, если это необходимо
             structure_types.Select();
 
             v_structure_types = new BindingSource();
             v_structure_types.DataMember = "structure_types";
-            v_structure_types.DataSource = DataSetManager.DataSet;
+            v_structure_types.DataSource = DataModel.DataSet;
 
             //Инициируем колонки snapshot-модели
             for (var i = 0; i < structure_types.Select().Columns.Count; i++)
@@ -275,7 +276,7 @@ namespace Registry.Viewport
                 var row = structure_types.Select().Rows.Find(list[i].IdStructureType);
                 if (row == null)
                 {
-                    var id_structure_type = StructureTypesDataModel.Insert(list[i]);
+                    var id_structure_type = structure_types.Insert(list[i]);
                     if (id_structure_type == -1)
                     {
                         sync_views = true;
@@ -289,7 +290,7 @@ namespace Registry.Viewport
                 {
                     if (RowToStructureType(row) == list[i])
                         continue;
-                    if (StructureTypesDataModel.Update(list[i]) == -1)
+                    if (structure_types.Update(list[i]) == -1)
                     {
                         sync_views = true;
                         structure_types.EditingNewRecord = false;
@@ -309,7 +310,7 @@ namespace Registry.Viewport
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (StructureTypesDataModel.Delete(list[i].IdStructureType.Value) == -1)
+                    if (structure_types.Delete(list[i].IdStructureType.Value) == -1)
                     {
                         sync_views = true;
                         structure_types.EditingNewRecord = false;

@@ -2,8 +2,9 @@
 
 namespace Registry.DataModels.DataModels
 {
-    public sealed class KinshipsDataModel: DataModel
+    internal sealed class KinshipsDataModel : DataModel
     {
+        private static KinshipsDataModel _dataModel;
         private const string SelectQuery = "SELECT * FROM kinships";
         private const string TableName = "kinships";
 
@@ -12,9 +13,19 @@ namespace Registry.DataModels.DataModels
         {
         }
 
+        public static KinshipsDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
+            return _dataModel ?? (_dataModel = new KinshipsDataModel(progressBar, incrementor));
+        }
+
         protected override void ConfigureTable()
         {
             Table.PrimaryKey = new [] { Table.Columns["id_kinship"] };
+        }
+
+        protected override void ConfigureRelations()
+        {
+            AddRelation(TableName, "id_kinship", "tenancy_persons", "id_kinship");
         }
     }
 }

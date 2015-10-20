@@ -7,8 +7,8 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Windows.Forms;
-using Registry.CalcDataModels;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Reporting;
@@ -68,17 +68,17 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        private TenancyProcessesDataModel tenancies;
-        private TenancyBuildingsAssocDataModel tenancy_building_assoc;
-        private TenancyPremisesAssocDataModel tenancy_premises_assoc;
-        private TenancySubPremisesAssocDataModel tenancy_sub_premises_assoc;
-        private ExecutorsDataModel executors;
-        private RentTypesDataModel rent_types;
-        private TenancyAgreementsDataModel tenancy_agreements;
-        private WarrantsDataModel warrants;
-        private TenancyPersonsDataModel tenancy_persons;
-        private TenancyReasonsDataModel tenancy_reasons;
-        private KinshipsDataModel kinships;
+        private DataModel tenancies;
+        private DataModel tenancy_building_assoc;
+        private DataModel tenancy_premises_assoc;
+        private DataModel tenancy_sub_premises_assoc;
+        private DataModel executors;
+        private DataModel rent_types;
+        private DataModel tenancy_agreements;
+        private DataModel warrants;
+        private DataModel tenancy_persons;
+        private DataModel tenancy_reasons;
+        private DataModel kinships;
         #endregion Models
 
         #region Views
@@ -153,13 +153,13 @@ namespace Registry.Viewport
             switch (ParentType)
             {
                 case ParentTypeEnum.Building:
-                    ids = DataModelHelper.TenancyProcessIDsByBuildingID(Convert.ToInt32(ParentRow["id_building"], CultureInfo.InvariantCulture));
+                    ids = DataModelHelper.TenancyProcessIDsByBuildingId(Convert.ToInt32(ParentRow["id_building"], CultureInfo.InvariantCulture));
                     break;
                 case ParentTypeEnum.Premises:
-                    ids = DataModelHelper.TenancyProcessIDsByPremisesID(Convert.ToInt32(ParentRow["id_premises"], CultureInfo.InvariantCulture));
+                    ids = DataModelHelper.TenancyProcessIDsByPremisesId(Convert.ToInt32(ParentRow["id_premises"], CultureInfo.InvariantCulture));
                     break;
                 case ParentTypeEnum.SubPremises:
-                    ids = DataModelHelper.TenancyProcessIDsBySubPremisesID(Convert.ToInt32(ParentRow["id_sub_premises"], CultureInfo.InvariantCulture));
+                    ids = DataModelHelper.TenancyProcessIDsBySubPremisesId(Convert.ToInt32(ParentRow["id_sub_premises"], CultureInfo.InvariantCulture));
                     break;
                 default:
                     throw new ViewportException("Неизвестный тип родительского объекта");
@@ -541,7 +541,7 @@ namespace Registry.Viewport
                         {
                             if (!ViewportHelper.PremiseFundAndRentMatch((int)ParentRow["id_premises"], tenancy.IdRentType.Value))
                             {
-                                var idBuilding = (int)PremisesDataModel.GetInstance().Select().Rows.Find((int)ParentRow["id_premises"])["id_building"];
+                                var idBuilding = (int)DataModel.GetInstance(DataModelType.PremisesDataModel).Select().Rows.Find((int)ParentRow["id_premises"])["id_building"];
                                 if (!ViewportHelper.BuildingFundAndRentMatch(idBuilding, tenancy.IdRentType.Value) &&
                                     MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемой комнаты. Все равно продолжить сохранение?",
                                     "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
@@ -608,7 +608,7 @@ namespace Registry.Viewport
             if (viewportState != ViewportState.NewRowState)
             {
                 var reasons =
-                    (from reason_row in DataModelHelper.FilterRows(TenancyReasonsDataModel.GetInstance().Select())
+                    (from reason_row in DataModel.GetInstance(DataModelType.TenancyReasonsDataModel).FilterDeletedRows() 
                         where reason_row.Field<int>("id_process") == (int) row["id_process"] &&
                               reason_row.Field<string>("reason_prepared").ToUpper().Contains("ОРДЕР")
                         select new
@@ -758,14 +758,14 @@ namespace Registry.Viewport
             dataGridViewTenancyPersons.AutoGenerateColumns = false;
             dataGridViewTenancyReasons.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            tenancies = TenancyProcessesDataModel.GetInstance();
-            executors = ExecutorsDataModel.GetInstance();
-            rent_types = RentTypesDataModel.GetInstance();
-            tenancy_agreements = TenancyAgreementsDataModel.GetInstance();
-            warrants = WarrantsDataModel.GetInstance();
-            tenancy_persons = TenancyPersonsDataModel.GetInstance();
-            tenancy_reasons = TenancyReasonsDataModel.GetInstance();
-            kinships = KinshipsDataModel.GetInstance();
+            tenancies = DataModel.GetInstance(DataModelType.TenancyProcessesDataModel);
+            executors = DataModel.GetInstance(DataModelType.ExecutorsDataModel);
+            rent_types = DataModel.GetInstance(DataModelType.RentTypesDataModel);
+            tenancy_agreements = DataModel.GetInstance(DataModelType.TenancyAgreementsDataModel);
+            warrants = DataModel.GetInstance(DataModelType.WarrantsDataModel);
+            tenancy_persons = DataModel.GetInstance(DataModelType.TenancyPersonsDataModel);
+            tenancy_reasons = DataModel.GetInstance(DataModelType.TenancyReasonsDataModel);
+            kinships = DataModel.GetInstance(DataModelType.KinshipsDataModel);
 
             //Ожидаем дозагрузки данных, если это необходимо
             tenancies.Select();
@@ -777,7 +777,7 @@ namespace Registry.Viewport
             tenancy_reasons.Select();
             kinships.Select();
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             v_executors = new BindingSource();
             v_executors.DataMember = "executors";
@@ -818,7 +818,7 @@ namespace Registry.Viewport
             v_tenancy_reasons.DataSource = v_tenancies;
 
             v_tenancy_addresses = new BindingSource();
-            v_tenancy_addresses.DataSource = CalcDataModelTenancyPremisesInfo.GetInstance().Select();
+            v_tenancy_addresses.DataSource = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelTenancyPremisesInfo);
 
             DataBind();
 
@@ -831,17 +831,17 @@ namespace Registry.Viewport
                 switch (ParentType)
                 {
                     case ParentTypeEnum.Building:
-                        tenancy_building_assoc = TenancyBuildingsAssocDataModel.GetInstance();
+                        tenancy_building_assoc = DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel);
                         tenancy_building_assoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
                         tenancy_building_assoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
                         break;
                     case ParentTypeEnum.Premises:
-                        tenancy_premises_assoc = TenancyPremisesAssocDataModel.GetInstance();
+                        tenancy_premises_assoc = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel);
                         tenancy_premises_assoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
                         tenancy_premises_assoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
                         break;
                     case ParentTypeEnum.SubPremises:
-                        tenancy_sub_premises_assoc = TenancySubPremisesAssocDataModel.GetInstance();
+                        tenancy_sub_premises_assoc = DataModel.GetInstance(DataModelType.TenancySubPremisesAssocDataModel);
                         tenancy_sub_premises_assoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
                         tenancy_sub_premises_assoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
                         break;
@@ -967,7 +967,7 @@ namespace Registry.Viewport
             if (MessageBox.Show("Вы действительно хотите удалить этот процесс найма?", "Внимание", 
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                if (TenancyProcessesDataModel.Delete((int)((DataRowView)v_tenancies.Current)["id_process"]) == -1)
+                if (tenancies.Delete((int)((DataRowView)v_tenancies.Current)["id_process"]) == -1)
                     return;
                 is_editable = false;
                 ((DataRowView)v_tenancies[v_tenancies.Position]).Delete();
@@ -975,8 +975,6 @@ namespace Registry.Viewport
                 viewportState = ViewportState.ReadState;
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.ForceCloseDetachedViewports();
-                if (CalcDataModelPremisesTenanciesInfo.HasInstance())
-                    CalcDataModelPremisesTenanciesInfo.GetInstance().Refresh(EntityType.Unknown, null, true);
             }
         }
 
@@ -1039,7 +1037,7 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
-                    var id_process = TenancyProcessesDataModel.Insert(tenancy);
+                    var id_process = tenancies.Insert(tenancy);
                     if (id_process == -1)
                     {
                         tenancies.EditingNewRecord = false;
@@ -1061,7 +1059,6 @@ namespace Registry.Viewport
                         if (!CopyTenancyProcessRelData(id_process, id_copy_process.Value))
                             MessageBox.Show("Произошла ошибка во время копирования данных", "Ошибка",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.TenancyProcess, id_process, false);
                     }
                     else
                         if (ParentRow != null)
@@ -1074,10 +1071,10 @@ namespace Registry.Viewport
                             switch (ParentType)
                             {
                                 case ParentTypeEnum.Building:
-                                    var tenancy_buildings = TenancyBuildingsAssocDataModel.GetInstance();
+                                    var tenancy_buildings = DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel);
                                     to.IdObject = Convert.ToInt32(ParentRow["id_building"], CultureInfo.InvariantCulture);
                                     tenancy_buildings.EditingNewRecord = true;
-                                    id_assoc = TenancyBuildingsAssocDataModel.Insert(to);
+                                    id_assoc = tenancy_buildings.Insert(to);
                                     if (id_assoc == -1)
                                         return;
                                     to.IdAssoc = id_assoc;
@@ -1085,10 +1082,10 @@ namespace Registry.Viewport
                                     tenancy_buildings.EditingNewRecord = false;
                                     break;
                                 case ParentTypeEnum.Premises:
-                                    var tenancy_premises = TenancyPremisesAssocDataModel.GetInstance();
+                                    var tenancy_premises = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel);
                                     to.IdObject = Convert.ToInt32(ParentRow["id_premises"], CultureInfo.InvariantCulture);
                                     tenancy_premises.EditingNewRecord = true;
-                                    id_assoc = TenancyPremisesAssocDataModel.Insert(to);
+                                    id_assoc = tenancy_premises.Insert(to);
                                     if (id_assoc == -1)
                                         return;
                                     to.IdAssoc = id_assoc;
@@ -1096,10 +1093,10 @@ namespace Registry.Viewport
                                     tenancy_premises.EditingNewRecord = false;
                                     break;
                                 case ParentTypeEnum.SubPremises:
-                                    var tenancy_sub_premises = TenancySubPremisesAssocDataModel.GetInstance();
+                                    var tenancy_sub_premises = DataModel.GetInstance(DataModelType.TenancySubPremisesAssocDataModel);
                                     to.IdObject = Convert.ToInt32(ParentRow["id_sub_premises"], CultureInfo.InvariantCulture);
                                     tenancy_sub_premises.EditingNewRecord = true;
-                                    id_assoc = TenancySubPremisesAssocDataModel.Insert(to);
+                                    id_assoc = tenancy_sub_premises.Insert(to);
                                     if (id_assoc == -1)
                                         return;
                                     to.IdAssoc = id_assoc;
@@ -1108,12 +1105,11 @@ namespace Registry.Viewport
                                     break;
                                 default: throw new ViewportException("Неизвестный тип родительского объекта");
                             }
-                            CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.TenancyProcess, id_process, true);
                         }
                     // Обновляем информацию по помещениям (живое обновление не реализуемо)
                     if (v_tenancy_addresses != null)
                     {
-                        v_tenancy_addresses.DataSource = CalcDataModelTenancyPremisesInfo.GetInstance().Select();
+                        v_tenancy_addresses.DataSource = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelTenancyPremisesInfo);
                         FiltersRebuild();
                     }
                     tenancies.EditingNewRecord = false;
@@ -1128,7 +1124,7 @@ namespace Registry.Viewport
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
-                    if (TenancyProcessesDataModel.Update(tenancy) == -1)
+                    if (tenancies.Update(tenancy) == -1)
                         return;
                     var row = ((DataRowView)v_tenancies[v_tenancies.Position]);
                     is_editable = false;
@@ -1142,35 +1138,34 @@ namespace Registry.Viewport
             viewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
-            if (CalcDataModelPremisesTenanciesInfo.HasInstance())
-                CalcDataModelPremisesTenanciesInfo.GetInstance().Refresh(EntityType.Unknown, null, true);
         }
 
         // Метод копирует зависимые данные по процессу найма
         private bool CopyTenancyProcessRelData(int id_new_process, int id_copy_process)
         {
-            var persons = from persons_row in DataModelHelper.FilterRows(TenancyPersonsDataModel.GetInstance().Select())
+            var persons = from persons_row in tenancy_persons.FilterDeletedRows()
                           where persons_row.Field<int>("id_process") == id_copy_process
                           select persons_row;
-            TenancyPersonsDataModel.GetInstance().EditingNewRecord = true;
+            tenancy_persons.EditingNewRecord = true;
             foreach (var person_row in persons.ToList())
             {
                 var person = DataRowToPerson(person_row);
                 person.IdProcess = id_new_process;
-                var id_person = TenancyPersonsDataModel.Insert(person);
+                var id_person = tenancy_persons.Insert(person);
                 if (id_person == -1)
                 {
-                    TenancyPersonsDataModel.GetInstance().EditingNewRecord = false;
+                    tenancy_persons.EditingNewRecord = false;
                     return false;
                 }
                 person.IdPerson = id_person;
-                TenancyPersonsDataModel.GetInstance().Select().Rows.Add(PersonToObjectArray(person));
+                tenancy_persons.Select().Rows.Add(PersonToObjectArray(person));
             }
-            TenancyPersonsDataModel.GetInstance().EditingNewRecord = false;
-            var buildings = from row in DataModelHelper.FilterRows(TenancyBuildingsAssocDataModel.GetInstance().Select())
+            tenancy_persons.EditingNewRecord = false;
+            var tenancyBuildingsAssoc = DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel);
+            var buildings = from row in tenancyBuildingsAssoc.FilterDeletedRows()
                             where row.Field<int>("id_process") == id_copy_process
                             select row;
-            TenancyBuildingsAssocDataModel.GetInstance().EditingNewRecord = true;
+            tenancyBuildingsAssoc.EditingNewRecord = true;
             foreach (var row in buildings.ToList())
             {
                 var obj = new TenancyObject();
@@ -1178,21 +1173,22 @@ namespace Registry.Viewport
                 obj.IdProcess = id_new_process;
                 obj.RentLivingArea = row.Field<double?>("rent_living_area");
                 obj.RentTotalArea = row.Field<double?>("rent_total_area");
-                var id_assoc = TenancyBuildingsAssocDataModel.Insert(obj);
+                var id_assoc = tenancyBuildingsAssoc.Insert(obj);
                 if (id_assoc == -1)
                 {
-                    TenancyBuildingsAssocDataModel.GetInstance().EditingNewRecord = false;
+                    tenancyBuildingsAssoc.EditingNewRecord = false;
                     return false;
                 }
                 obj.IdAssoc = id_assoc;
-                TenancyBuildingsAssocDataModel.GetInstance().Select().Rows.Add(obj.IdAssoc, obj.IdObject, obj.IdProcess,
+                tenancyBuildingsAssoc.Select().Rows.Add(obj.IdAssoc, obj.IdObject, obj.IdProcess,
                     obj.RentTotalArea, obj.RentLivingArea);
             }
-            TenancyBuildingsAssocDataModel.GetInstance().EditingNewRecord = false;
-            var premises = from row in DataModelHelper.FilterRows(TenancyPremisesAssocDataModel.GetInstance().Select())
+            tenancyBuildingsAssoc.EditingNewRecord = false;
+            var tenancyPremisesAssoc = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel);
+            var premises = from row in tenancyPremisesAssoc.FilterDeletedRows()
                             where row.Field<int>("id_process") == id_copy_process
                            select row;
-            TenancyPremisesAssocDataModel.GetInstance().EditingNewRecord = true;
+            tenancyPremisesAssoc.EditingNewRecord = true;
             foreach (var row in premises.ToList())
             {
                 var obj = new TenancyObject();
@@ -1200,38 +1196,39 @@ namespace Registry.Viewport
                 obj.IdProcess = id_new_process;
                 obj.RentLivingArea = row.Field<double?>("rent_living_area");
                 obj.RentTotalArea = row.Field<double?>("rent_total_area");
-                var id_assoc = TenancyPremisesAssocDataModel.Insert(obj);
+                var id_assoc = tenancyPremisesAssoc.Insert(obj);
                 if (id_assoc == -1)
                 {
-                    TenancyPremisesAssocDataModel.GetInstance().EditingNewRecord = false;
+                    tenancyPremisesAssoc.EditingNewRecord = false;
                     return false;
                 }
                 obj.IdAssoc = id_assoc;
-                TenancyPremisesAssocDataModel.GetInstance().Select().Rows.Add(obj.IdAssoc, obj.IdObject, obj.IdProcess,
+                tenancyPremisesAssoc.Select().Rows.Add(obj.IdAssoc, obj.IdObject, obj.IdProcess,
                     obj.RentTotalArea, obj.RentLivingArea);
             }
-            TenancyPremisesAssocDataModel.GetInstance().EditingNewRecord = false;
-            var sub_premises = from row in DataModelHelper.FilterRows(TenancySubPremisesAssocDataModel.GetInstance().Select())
+            tenancyPremisesAssoc.EditingNewRecord = false;
+            var tenancySubPremisesAssoc = DataModel.GetInstance(DataModelType.TenancySubPremisesAssocDataModel);
+            var sub_premises = from row in tenancySubPremisesAssoc.FilterDeletedRows()
                            where row.Field<int>("id_process") == id_copy_process
                                select row;
-            TenancySubPremisesAssocDataModel.GetInstance().EditingNewRecord = true;
+            tenancySubPremisesAssoc.EditingNewRecord = true;
             foreach (var row in sub_premises.ToList())
             {
                 var obj = new TenancyObject();
                 obj.IdObject = row.Field<int?>("id_sub_premises");
                 obj.IdProcess = id_new_process;
                 obj.RentTotalArea = row.Field<double?>("rent_total_area");
-                var id_assoc = TenancySubPremisesAssocDataModel.Insert(obj);
+                var id_assoc = tenancySubPremisesAssoc.Insert(obj);
                 if (id_assoc == -1)
                 {
-                    TenancySubPremisesAssocDataModel.GetInstance().EditingNewRecord = false;
+                    tenancySubPremisesAssoc.EditingNewRecord = false;
                     return false;
                 }
                 obj.IdAssoc = id_assoc;
-                TenancySubPremisesAssocDataModel.GetInstance().Select().Rows.Add(obj.IdAssoc, obj.IdObject, obj.IdProcess,
+                tenancySubPremisesAssoc.Select().Rows.Add(obj.IdAssoc, obj.IdObject, obj.IdProcess,
                     obj.RentTotalArea);
             }
-            TenancySubPremisesAssocDataModel.GetInstance().EditingNewRecord = false;
+            tenancySubPremisesAssoc.EditingNewRecord = false;
             return true;
         }
 
@@ -1523,7 +1520,8 @@ namespace Registry.Viewport
             // Обновляем информацию по помещениям (живое обновление не реализуемо)
             if (v_tenancy_addresses != null)
             {
-                v_tenancy_addresses.DataSource = CalcDataModelTenancyPremisesInfo.GetInstance().Select();
+                v_tenancy_addresses.DataSource =
+                    CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelTenancyPremisesInfo).Select();
                 FiltersRebuild();
             }
             checkBoxProtocolEnable.Focus();

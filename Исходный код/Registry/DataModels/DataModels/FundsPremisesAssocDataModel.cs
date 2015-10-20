@@ -4,8 +4,9 @@ using Registry.Entities;
 
 namespace Registry.DataModels.DataModels
 {
-    public sealed class FundsPremisesAssocDataModel : DataModel
+    internal sealed class FundsPremisesAssocDataModel : DataModel
     {
+        private static FundsPremisesAssocDataModel _dataModel;
         private const string SelectQuery = "SELECT * FROM funds_premises_assoc WHERE deleted = 0";
         private const string TableName = "funds_premises_assoc";
 
@@ -14,9 +15,20 @@ namespace Registry.DataModels.DataModels
         {
         }
 
+        public static FundsPremisesAssocDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
+            return _dataModel ?? (_dataModel = new FundsPremisesAssocDataModel(progressBar, incrementor));
+        }
+
         protected override void ConfigureTable()
         {
             Table.PrimaryKey = new [] { Table.Columns["id_fund"] };
+        }
+
+        protected override void ConfigureRelations()
+        {
+            AddRelation("funds_history", "id_fund", TableName, "id_fund");
+            AddRelation("premises", "id_premises", TableName, "id_premises");
         }
 
         protected override void ConfigureInsertCommand(DbCommand command, Entity entity)

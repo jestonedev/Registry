@@ -1,36 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Registry.DataModels;
-using System.Data;
+﻿using System.Data;
 using System.Globalization;
+using System.Linq;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 
-namespace Registry.CalcDataModels
+namespace Registry.DataModels.CalcDataModels
 {
 
-    public sealed class CalcDataModelBuildingsPremisesSumArea : CalcDataModel
+    internal sealed class CalcDataModelBuildingsPremisesSumArea : CalcDataModel
     {
-        private static CalcDataModelBuildingsPremisesSumArea dataModel = null;
+        private static CalcDataModelBuildingsPremisesSumArea _dataModel;
 
-        private static string tableName = "buildings_premises_sum_area";
+        private const string TableName = "buildings_premises_sum_area";
 
         private CalcDataModelBuildingsPremisesSumArea()
-            : base()
         {
             Table = InitializeTable();
-            Refresh(EntityType.Unknown, null, false);
+            Refresh();
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.PremisesDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.SubPremisesDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.RestrictionsBuildingsAssocDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.RestrictionsPremisesAssocDataModel).Select());
         }
 
         private static DataTable InitializeTable()
         {
-            DataTable table = new DataTable(tableName);
-            table.Locale = CultureInfo.InvariantCulture;
+            var table = new DataTable(TableName) {Locale = CultureInfo.InvariantCulture};
             table.Columns.Add("id_building").DataType = typeof(int);
             table.Columns.Add("sum_area").DataType = typeof(double);
-            table.PrimaryKey = new DataColumn[] { table.Columns["id_building"] };
+            table.PrimaryKey = new [] { table.Columns["id_building"] };
             return table;
         }
 
@@ -39,75 +37,73 @@ namespace Registry.CalcDataModels
             DmLoadState = DataModelLoadState.Loading;
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelBuildingsPremisesSumArea");
-            CalcAsyncConfig config = (CalcAsyncConfig)e.Argument;
             // Фильтруем удаленные строки
-            var premises = DataModelHelper.FilterRows(PremisesDataModel.GetInstance().Select(), config.Entity, config.IdObject);
-            var sub_premises = DataModelHelper.FilterRows(SubPremisesDataModel.GetInstance().Select());
-            var restrictions_buildigns_assoc = DataModelHelper.FilterRows(RestrictionsBuildingsAssocDataModel.GetInstance().Select(), config.Entity, config.IdObject);
-            var restrictions_premises_assoc = DataModelHelper.FilterRows(RestrictionsPremisesAssocDataModel.GetInstance().Select());
+            var premises = DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows();
+            var subPremises = DataModel.GetInstance(DataModelType.SubPremisesDataModel).FilterDeletedRows();
+            var restrictionsBuildignsAssoc = DataModel.GetInstance(DataModelType.RestrictionsBuildingsAssocDataModel).FilterDeletedRows();
+            var restrictionsPremisesAssoc = DataModel.GetInstance(DataModelType.RestrictionsPremisesAssocDataModel).FilterDeletedRows(); 
+            
             // Вычисляем агрегационную информацию
-            var sub_premises_sum_area = from premises_row in premises
-                                        join sub_premises_row in sub_premises
-                                        on premises_row.Field<int>("id_premises") equals sub_premises_row.Field<int>("id_premises")
-                                        where new int[] { 4, 5, 9 }.Contains(sub_premises_row.Field<int>("id_state"))
-                                        group sub_premises_row.Field<double>("total_area") by premises_row.Field<int>("id_premises") into gs
+            var subPremisesSumArea = from premisesRow in premises
+                                        join subPremisesRow in subPremises
+                                        on premisesRow.Field<int>("id_premises") equals subPremisesRow.Field<int>("id_premises")
+                                        where new[] { 4, 5, 9 }.Contains(subPremisesRow.Field<int>("id_state"))
+                                        group subPremisesRow.Field<double>("total_area") by premisesRow.Field<int>("id_premises") into gs
                                         select new
                                         {
                                             id_premises = gs.Key,
                                             sum_area = gs.Sum()
                                         };
             // Определяем снесеные здания и снесеные (на всякий случай) квартиры
-            var demolished_buildings = DataModelHelper.DemolishedBuildingIDs();
-            var demolished_premises = DataModelHelper.DemolishedPremisesIDs();
+            var demolishedBuildings = DataModelHelper.DemolishedBuildingIDs();
+            var demolishedPremises = DataModelHelper.DemolishedPremisesIDs();
             // Определяем исключенные здания и квартиры из муниципальной собственности
-            var buildings_exclude_from_municipal = DataModelHelper.ObjectIDsExcludedFromMunicipal(restrictions_buildigns_assoc, EntityType.Building);
-            var buildings_included_into_municipal = DataModelHelper.ObjectIDsIncludedIntoMunicipal(restrictions_buildigns_assoc, EntityType.Building);
-            var premises_exclude_from_municipal = DataModelHelper.ObjectIDsExcludedFromMunicipal(restrictions_premises_assoc, EntityType.Premise);
-            var premises_included_into_municipal = DataModelHelper.ObjectIDsIncludedIntoMunicipal(restrictions_premises_assoc, EntityType.Premise);
+            var buildingsExcludeFromMunicipal = DataModelHelper.ObjectIDsExcludedFromMunicipal(restrictionsBuildignsAssoc, EntityType.Building);
+            var buildingsIncludedIntoMunicipal = DataModelHelper.ObjectIDsIncludedIntoMunicipal(restrictionsBuildignsAssoc, EntityType.Building);
+            var premisesExcludeFromMunicipal = DataModelHelper.ObjectIDsExcludedFromMunicipal(restrictionsPremisesAssoc, EntityType.Premise);
+            var premisesIncludedIntoMunicipal = DataModelHelper.ObjectIDsIncludedIntoMunicipal(restrictionsPremisesAssoc, EntityType.Premise);
             // Возвращаем сумму площадей только муниципальных помещений
-            var result = from premises_row in premises
-                         join sub_premises_sum_area_row in sub_premises_sum_area
-                         on premises_row.Field<int>("id_premises") equals sub_premises_sum_area_row.id_premises into spsar
-                         from spsar_row in spsar.DefaultIfEmpty()
-                         join demolished_buildings_id in demolished_buildings
-                         on premises_row.Field<int>("id_building") equals demolished_buildings_id into dbr
-                         from dbr_row in dbr.DefaultIfEmpty()
-                         join demolished_premises_id in demolished_premises
-                         on premises_row.Field<int>("id_premises") equals demolished_premises_id into dpr
-                         from dpr_row in dpr.DefaultIfEmpty()
-                         join buildings_exclude_from_municipal_row in buildings_exclude_from_municipal
-                         on premises_row.Field<int>("id_building") equals buildings_exclude_from_municipal_row.IdObject into befmr
-                         from befmr_row in befmr.DefaultIfEmpty()
-                         join premises_exclude_from_municipal_row in premises_exclude_from_municipal
-                         on premises_row.Field<int>("id_premises") equals premises_exclude_from_municipal_row.IdObject into pefmr
-                         from pefmr_row in pefmr.DefaultIfEmpty()
-                         join buildings_included_into_municipal_row in buildings_included_into_municipal
-                         on premises_row.Field<int>("id_building") equals buildings_included_into_municipal_row.IdObject into biimr
-                         from biimr_row in biimr.DefaultIfEmpty()
-                         join premises_included_into_municipal_row in premises_included_into_municipal
-                         on premises_row.Field<int>("id_premises") equals premises_included_into_municipal_row.IdObject into piimr
-                         from piimr_row in piimr.DefaultIfEmpty()
-                         where dbr_row == 0 && dpr_row == 0 &&
-                               (befmr_row == null || (piimr_row != null && befmr_row.Date <= piimr_row.Date)) && 
-                               (pefmr_row == null || (biimr_row != null && pefmr_row.Date <= biimr_row.Date))
-                         group new int[] { 4, 5, 9 }.Contains(premises_row.Field<int>("id_state")) ? 
-                                premises_row.Field<double>("total_area") :
-                                premises_row.Field<int>("id_state") == 1 ?
-                                (spsar_row == null ? 0 : spsar_row.sum_area) : 0 
-                                by premises_row.Field<int>("id_building") into gs
+            var result = from premisesRow in premises
+                         join subPremisesSumAreaRow in subPremisesSumArea
+                         on premisesRow.Field<int>("id_premises") equals subPremisesSumAreaRow.id_premises into spsar
+                         from spsarRow in spsar.DefaultIfEmpty()
+                         join demolishedBuildingsId in demolishedBuildings
+                         on premisesRow.Field<int>("id_building") equals demolishedBuildingsId into dbr
+                         from dbrRow in dbr.DefaultIfEmpty()
+                         join demolishedPremisesId in demolishedPremises
+                         on premisesRow.Field<int>("id_premises") equals demolishedPremisesId into dpr
+                         from dprRow in dpr.DefaultIfEmpty()
+                         join buildingsExcludeFromMunicipalRow in buildingsExcludeFromMunicipal
+                         on premisesRow.Field<int>("id_building") equals buildingsExcludeFromMunicipalRow.IdObject into befmr
+                         from befmrRow in befmr.DefaultIfEmpty()
+                         join premisesExcludeFromMunicipalRow in premisesExcludeFromMunicipal
+                         on premisesRow.Field<int>("id_premises") equals premisesExcludeFromMunicipalRow.IdObject into pefmr
+                         from pefmrRow in pefmr.DefaultIfEmpty()
+                         join buildingsIncludedIntoMunicipalRow in buildingsIncludedIntoMunicipal
+                         on premisesRow.Field<int>("id_building") equals buildingsIncludedIntoMunicipalRow.IdObject into biimr
+                         from biimrRow in biimr.DefaultIfEmpty()
+                         join premisesIncludedIntoMunicipalRow in premisesIncludedIntoMunicipal
+                         on premisesRow.Field<int>("id_premises") equals premisesIncludedIntoMunicipalRow.IdObject into piimr
+                         from piimrRow in piimr.DefaultIfEmpty()
+                         where dbrRow == 0 && dprRow == 0 &&
+                               (befmrRow == null || (piimrRow != null && befmrRow.Date <= piimrRow.Date)) && 
+                               (pefmrRow == null || (biimrRow != null && pefmrRow.Date <= biimrRow.Date))
+                         group new[] { 4, 5, 9 }.Contains(premisesRow.Field<int>("id_state")) ? 
+                                premisesRow.Field<double>("total_area") :
+                                premisesRow.Field<int>("id_state") == 1 ?
+                                (spsarRow == null ? 0 : spsarRow.sum_area) : 0 
+                                by premisesRow.Field<int>("id_building") into gs
                          select new
                          {
                              id_building = gs.Key,
                              sum_area = gs.Sum()
                          };
             // Заполняем таблицу изменений
-            DataTable table = InitializeTable();
+            var table = InitializeTable();
             table.BeginLoadData();
-            result.ToList().ForEach((x) =>
+            result.ToList().ForEach(x =>
             {
-                table.Rows.Add(new object[] { 
-                    x.id_building, 
-                    x.sum_area });
+                table.Rows.Add(x.id_building, x.sum_area);
             });
             table.EndLoadData();
             // Возвращаем результат
@@ -116,14 +112,7 @@ namespace Registry.CalcDataModels
 
         public static CalcDataModelBuildingsPremisesSumArea GetInstance()
         {
-            if (dataModel == null)
-                dataModel = new CalcDataModelBuildingsPremisesSumArea();
-            return dataModel;
-        }
-
-        public static bool HasInstance()
-        {
-            return dataModel != null;
+            return _dataModel ?? (_dataModel = new CalcDataModelBuildingsPremisesSumArea());
         }
     }
 }

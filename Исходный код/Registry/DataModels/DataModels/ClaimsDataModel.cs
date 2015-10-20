@@ -6,13 +6,19 @@ namespace Registry.DataModels.DataModels
 {
     internal sealed class ClaimsDataModel: DataModel
     {
+        private static ClaimsDataModel _dataModel;
         private const string SelectQuery = "SELECT * FROM claims c WHERE deleted = 0";
         private const string TableName = "claims";
 
-        public ClaimsDataModel(ToolStripProgressBar progressBar, int incrementor)
+        private ClaimsDataModel(ToolStripProgressBar progressBar, int incrementor)
             : base(progressBar, incrementor, SelectQuery, TableName)
         {
             EditingNewRecord = false;      
+        }
+
+        public static ClaimsDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
+            return _dataModel ?? (_dataModel = new ClaimsDataModel(progressBar, incrementor));
         }
 
         protected override void ConfigureTable()
@@ -26,6 +32,11 @@ namespace Registry.DataModels.DataModels
             Table.Columns["amount_of_fine_recover"].DefaultValue = 0;
         }
 
+        protected override void ConfigureRelations()
+        {
+            AddRelation("claims", "id_claim", "claim_states", "id_claim");
+            AddRelation("tenancy_processes", "id_process", "claims", "id_process"); 
+        }
 
         protected override void ConfigureDeleteCommand(DbCommand command, int id)
         {

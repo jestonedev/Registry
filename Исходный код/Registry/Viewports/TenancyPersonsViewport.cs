@@ -4,8 +4,8 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using Registry.CalcDataModels;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
@@ -72,11 +72,11 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        TenancyPersonsDataModel tenancy_persons;
-        KinshipsDataModel kinships;
-        DocumentTypesDataModel document_types;
-        DocumentsIssuedByDataModel document_issued_by;
-        KladrStreetsDataModel kladr;
+        DataModel tenancy_persons;
+        DataModel kinships;
+        DataModel document_types;
+        DataModel document_issued_by;
+        DataModel kladr;
         #endregion Models
 
         #region Views
@@ -610,11 +610,11 @@ namespace Registry.Viewport
         {
             dataGridViewTenancyPersons.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            tenancy_persons = TenancyPersonsDataModel.GetInstance();
-            kinships = KinshipsDataModel.GetInstance();
-            document_types = DocumentTypesDataModel.GetInstance();
-            document_issued_by = DocumentsIssuedByDataModel.GetInstance();
-            kladr = KladrStreetsDataModel.GetInstance();
+            tenancy_persons = DataModel.GetInstance(DataModelType.TenancyPersonsDataModel);
+            kinships = DataModel.GetInstance(DataModelType.KinshipsDataModel);
+            document_types = DataModel.GetInstance(DataModelType.DocumentTypesDataModel);
+            document_issued_by = DataModel.GetInstance(DataModelType.DocumentsIssuedByDataModel);
+            kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel); 
 
             // Ожидаем дозагрузки, если это необходимо
             tenancy_persons.Select();
@@ -623,7 +623,7 @@ namespace Registry.Viewport
             document_issued_by.Select();
             kladr.Select();
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             if ((ParentType == ParentTypeEnum.Tenancy) && (ParentRow != null))
                 Text = string.Format(CultureInfo.InvariantCulture, "Участники найма №{0}", ParentRow["id_process"]);
@@ -720,7 +720,7 @@ namespace Registry.Viewport
             if (MessageBox.Show("Вы действительно хотите этого участника договора?", "Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                if (TenancyPersonsDataModel.Delete((int)((DataRowView)v_tenancy_persons.Current)["id_person"]) == -1)
+                if (tenancy_persons.Delete((int)((DataRowView)v_tenancy_persons.Current)["id_person"]) == -1)
                     return;
                 is_editable = false;
                 ((DataRowView)v_tenancy_persons[v_tenancy_persons.Position]).Delete();
@@ -729,11 +729,6 @@ namespace Registry.Viewport
                 viewportState = ViewportState.ReadState;
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.ForceCloseDetachedViewports(); 
-                if (ParentType == ParentTypeEnum.Tenancy)
-                    CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.TenancyProcess,
-                        (int)ParentRow["id_process"], true);
-                if (CalcDataModelPremisesTenanciesInfo.HasInstance())
-                    CalcDataModelPremisesTenanciesInfo.GetInstance().Refresh(EntityType.Unknown, null, true);
             }
         }
 
@@ -801,10 +796,10 @@ namespace Registry.Viewport
             if (comboBoxIssuedBy.SelectedValue == null && !string.IsNullOrEmpty(comboBoxIssuedBy.Text))
             {
                 var document = new DocumentIssuedBy {DocumentIssuedByName = comboBoxIssuedBy.Text};
-                var idDocument = DocumentsIssuedByDataModel.Insert(document);
+                var idDocument = DataModel.GetInstance(DataModelType.DocumentsIssuedByDataModel).Insert(document);
                 if (idDocument == -1) return;
                 document.IdDocumentIssuedBy = idDocument;
-                DocumentsIssuedByDataModel.GetInstance().Select().Rows.
+                DataModel.GetInstance(DataModelType.DocumentsIssuedByDataModel).Select().Rows.
                     Add(document.IdDocumentIssuedBy, document.DocumentIssuedByName);
                 comboBoxIssuedBy.SelectedValue = document.IdDocumentIssuedBy;
             }
@@ -818,7 +813,7 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 case ViewportState.NewRowState:
-                    var id_person = TenancyPersonsDataModel.Insert(tenancyPerson);
+                    var id_person = tenancy_persons.Insert(tenancyPerson);
                     if (id_person == -1)
                     {
                         tenancy_persons.EditingNewRecord = false;
@@ -842,7 +837,7 @@ namespace Registry.Viewport
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
-                    if (TenancyPersonsDataModel.Update(tenancyPerson) == -1)
+                    if (tenancy_persons.Update(tenancyPerson) == -1)
                         return;
                     var row = ((DataRowView)v_tenancy_persons[v_tenancy_persons.Position]);
                     is_editable = false;
@@ -855,16 +850,10 @@ namespace Registry.Viewport
             dataGridViewTenancyPersons.Enabled = true;
             is_editable = true;
             MenuCallback.EditingStateUpdate();
-            if (ParentType == ParentTypeEnum.Tenancy)
-                CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.TenancyProcess, (int)ParentRow["id_process"], false);
-            if (CalcDataModelPremisesTenanciesInfo.HasInstance())
-                CalcDataModelPremisesTenanciesInfo.GetInstance().Refresh(EntityType.Unknown, null, true);
         }
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (e == null)
-                return;
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
             else

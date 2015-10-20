@@ -12,7 +12,7 @@ namespace Registry.SearchForms
 {
     internal partial class ExtendedSearchResettleForm : SearchForm
     {
-        KladrRegionsDataModel regions;
+        DataModel regions;
         BindingSource v_kladr_from;
         BindingSource v_regions_from;
         BindingSource v_kladr_to;
@@ -21,10 +21,10 @@ namespace Registry.SearchForms
         public ExtendedSearchResettleForm()
         {
             InitializeComponent();
-            KladrStreetsDataModel.GetInstance().Select();
-            regions = KladrRegionsDataModel.GetInstance();
+            DataModel.GetInstance(DataModelType.KladrStreetsDataModel).Select();
+            regions = DataModel.GetInstance(DataModelType.KladrRegionsDataModel);
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             v_kladr_from = new BindingSource
             {
@@ -91,7 +91,7 @@ namespace Registry.SearchForms
             if (checkBoxPersonSNPEnable.Checked)
             {
                 var snp = textBoxPersonSNP.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var processesIds = DataModelHelper.ResettleProcessIDsBySNP(snp);
+                var processesIds = DataModelHelper.ResettleProcessIdsBySnp(snp);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (checkBoxRegionFromEnable.Checked && (comboBoxRegionFrom.SelectedValue != null))

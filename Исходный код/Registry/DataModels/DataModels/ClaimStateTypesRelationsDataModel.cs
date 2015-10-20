@@ -4,8 +4,9 @@ using Registry.Entities;
 
 namespace Registry.DataModels.DataModels
 {
-    public sealed class ClaimStateTypesRelationsDataModel: DataModel
+    internal sealed class ClaimStateTypesRelationsDataModel : DataModel
     {
+        private static ClaimStateTypesRelationsDataModel _dataModel;
         private const string SelectQuery = "SELECT * FROM claim_state_types_relations WHERE deleted <> 1";
         private const string TableName = "claim_state_types_relations";
 
@@ -14,9 +15,20 @@ namespace Registry.DataModels.DataModels
         {  
         }
 
+        public static ClaimStateTypesRelationsDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
+            return _dataModel ?? (_dataModel = new ClaimStateTypesRelationsDataModel(progressBar, incrementor));
+        }
+
         protected override void ConfigureTable()
         {
             Table.PrimaryKey = new[] { Table.Columns["id_relation"] };
+        }
+
+        protected override void ConfigureRelations()
+        {
+            AddRelation("claim_state_types", "id_state_type", TableName, "id_state_from");
+            AddRelation("claim_state_types", "id_state_type", TableName, "id_state_to");
         }
 
         protected override void ConfigureDeleteCommand(DbCommand command, int id)

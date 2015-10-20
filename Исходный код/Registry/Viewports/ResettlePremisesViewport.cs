@@ -6,8 +6,8 @@ using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
 using Microsoft.TeamFoundation.Client;
-using Registry.CalcDataModels;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.SearchForms;
@@ -34,11 +34,11 @@ namespace Registry.Viewport
         #endregion Components
 
         #region Models
-        private PremisesDataModel premises;
-        private BuildingsDataModel buildings;
-        private KladrStreetsDataModel kladr;
-        private PremisesTypesDataModel premises_types;
-        private SubPremisesDataModel sub_premises;
+        private DataModel premises;
+        private DataModel buildings;
+        private DataModel kladr;
+        private DataModel premises_types;
+        private DataModel sub_premises;
         private DataModel resettle_premises;
         private DataTable snapshot_resettle_premises;
         #endregion Models
@@ -236,16 +236,16 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            premises = PremisesDataModel.GetInstance();
-            kladr = KladrStreetsDataModel.GetInstance();
-            buildings = BuildingsDataModel.GetInstance();
-            premises_types = PremisesTypesDataModel.GetInstance();
-            sub_premises = SubPremisesDataModel.GetInstance();
+            premises = DataModel.GetInstance(DataModelType.PremisesDataModel);
+            kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
+            buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel);
+            premises_types = DataModel.GetInstance(DataModelType.PremisesTypesDataModel);
+            sub_premises = DataModel.GetInstance(DataModelType.SubPremisesDataModel);
 
             if (way == ResettleEstateObjectWay.From)
-                resettle_premises = ResettlePremisesFromAssocDataModel.GetInstance();
+                resettle_premises = DataModel.GetInstance(DataModelType.ResettlePremisesFromAssocDataModel);
             else
-                resettle_premises = ResettlePremisesToAssocDataModel.GetInstance();
+                resettle_premises = DataModel.GetInstance(DataModelType.ResettlePremisesToAssocDataModel);
 
             // Ожидаем дозагрузки данных, если это необходимо
             premises.Select();
@@ -262,7 +262,7 @@ namespace Registry.Viewport
             snapshot_resettle_premises.Columns.Add("id_premises").DataType = typeof(int);
             snapshot_resettle_premises.Columns.Add("is_checked").DataType = typeof(bool);
 
-            var ds = DataSetManager.DataSet;
+            var ds = DataModel.DataSet;
 
             v_premises = new BindingSource();
             v_premises.CurrentItemChanged += v_premises_CurrentItemChanged;
@@ -273,9 +273,9 @@ namespace Registry.Viewport
             if ((ParentRow != null) && (ParentType == ParentTypeEnum.ResettleProcess))
             {
                 if (way == ResettleEstateObjectWay.From)
-                    Text = "Помещения (из) переселения №" + ParentRow["id_process"];
+                    Text = @"Помещения (из) переселения №" + ParentRow["id_process"];
                 else
-                    Text = "Помещения (в) переселения №" + ParentRow["id_process"];
+                    Text = @"Помещения (в) переселения №" + ParentRow["id_process"];
             }
             else
                 throw new ViewportException("Неизвестный тип родительского объекта");
@@ -338,35 +338,28 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите удалить это помещение?", "Внимание", 
+            if (MessageBox.Show(@"Вы действительно хотите удалить это помещение?", @"Внимание", 
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 if (DataModelHelper.HasMunicipal((int)((DataRowView)v_premises.Current)["id_premises"], EntityType.Premise)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                 {
-                    MessageBox.Show("У вас нет прав на удаление муниципальных жилых помещений и помещений, в которых присутствуют муниципальные комнаты",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(@"У вас нет прав на удаление муниципальных жилых помещений и помещений, в которых присутствуют муниципальные комнаты",
+                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
                 if (DataModelHelper.HasNotMunicipal((int)((DataRowView)v_premises.Current)["id_premises"], EntityType.Premise)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                 {
-                    MessageBox.Show("У вас нет прав на удаление немуниципальных жилых помещений и помещений, в которых присутствуют немуниципальные комнаты",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(@"У вас нет прав на удаление немуниципальных жилых помещений и помещений, в которых присутствуют немуниципальные комнаты",
+                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
                 var id_building = (int)((DataRowView)v_premises[v_premises.Position])["id_building"];
-                if (PremisesDataModel.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
+                if (premises.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
                     return;
                 ((DataRowView)v_premises[v_premises.Position]).Delete();
                 MenuCallback.ForceCloseDetachedViewports();
-                if (ParentType == ParentTypeEnum.ResettleProcess)
-                {
-                    CalcDataModelBuildingsPremisesFunds.GetInstance().Refresh(EntityType.Building, id_building, true);
-                    CalcDataModelBuildingsPremisesSumArea.GetInstance().Refresh(EntityType.Building, id_building, true);
-                    CalcDataModelTenancyAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
-                    CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.Unknown, null, false);
-                }
             }
         }
 
@@ -457,24 +450,26 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
-            ResettlePremisesFromAssocDataModel.GetInstance().EditingNewRecord = true;
-            ResettlePremisesToAssocDataModel.GetInstance().EditingNewRecord = true;
+            var resettlePremisesFromAssoc = DataModel.GetInstance(DataModelType.ResettlePremisesFromAssocDataModel);
+            var resettlePremisesToAssoc = DataModel.GetInstance(DataModelType.ResettlePremisesToAssocDataModel);
+            resettlePremisesFromAssoc.EditingNewRecord = true;
+            resettlePremisesToAssoc.EditingNewRecord = true;
             var list = ResettlePremisesFromViewport();
             // Проверяем данные о помещениях
             if (!ValidateResettlePremises(list))
             {
                 sync_views = true;
-                ResettlePremisesFromAssocDataModel.GetInstance().EditingNewRecord = false;
-                ResettlePremisesToAssocDataModel.GetInstance().EditingNewRecord = false;
+                resettlePremisesFromAssoc.EditingNewRecord = false;
+                resettlePremisesToAssoc.EditingNewRecord = false;
                 return;
             }
             // Проверяем данные о комнатах
             if (!ResettleSubPremisesDetails.ValidateResettleSubPremises(
                 ((ResettleSubPremisesDetails)dataGridView.DetailsControl).ResettleSubPremisesFromViewport()))
             {
-                sync_views = true;
-                ResettlePremisesFromAssocDataModel.GetInstance().EditingNewRecord = false;
-                ResettlePremisesToAssocDataModel.GetInstance().EditingNewRecord = false;
+                sync_views = true; 
+                resettlePremisesFromAssoc.EditingNewRecord = false;
+                resettlePremisesToAssoc.EditingNewRecord = false;
                 return;
             }
             // Сохраняем помещения в базу данных
@@ -487,15 +482,15 @@ namespace Registry.Viewport
                 {
 
                     var id_assoc = -1;
-                    if (way == ResettleEstateObjectWay.From) 
-                        id_assoc = ResettlePremisesFromAssocDataModel.Insert(list[i]);
+                    if (way == ResettleEstateObjectWay.From)
+                        id_assoc = resettlePremisesFromAssoc.Insert(list[i]);
                     else
-                        id_assoc = ResettlePremisesToAssocDataModel.Insert(list[i]);
+                        id_assoc = resettlePremisesToAssoc.Insert(list[i]);
                     if (id_assoc == -1)
                     {
                         sync_views = true;
-                        ResettlePremisesFromAssocDataModel.GetInstance().EditingNewRecord = false;
-                        ResettlePremisesToAssocDataModel.GetInstance().EditingNewRecord = false;
+                        resettlePremisesFromAssoc.EditingNewRecord = false;
+                        resettlePremisesToAssoc.EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)v_snapshot_resettle_premises[
@@ -520,14 +515,14 @@ namespace Registry.Viewport
                 {
                     var affected = -1;
                     if (way == ResettleEstateObjectWay.From)
-                        affected = ResettlePremisesFromAssocDataModel.Delete(list[i].IdAssoc.Value);
+                        affected = resettlePremisesFromAssoc.Delete(list[i].IdAssoc.Value);
                     else
-                        affected = ResettlePremisesToAssocDataModel.Delete(list[i].IdAssoc.Value);
+                        affected = resettlePremisesToAssoc.Delete(list[i].IdAssoc.Value);
                     if (affected == -1)
                     {
                         sync_views = true;
-                        ResettlePremisesFromAssocDataModel.GetInstance().EditingNewRecord = false;
-                        ResettlePremisesToAssocDataModel.GetInstance().EditingNewRecord = false;
+                        resettlePremisesFromAssoc.EditingNewRecord = false;
+                        resettlePremisesToAssoc.EditingNewRecord = false;
                         return;
                     }
                     var snapshot_row_index = -1;
@@ -546,14 +541,11 @@ namespace Registry.Viewport
                 }
             }
             sync_views = true;
-            ResettlePremisesFromAssocDataModel.GetInstance().EditingNewRecord = false;
-            ResettlePremisesToAssocDataModel.GetInstance().EditingNewRecord = false;
+            resettlePremisesFromAssoc.EditingNewRecord = false;
+            resettlePremisesToAssoc.EditingNewRecord = false;
             // Сохраняем комнаты в базу данных
             ((ResettleSubPremisesDetails)dataGridView.DetailsControl).SaveRecord();
             MenuCallback.EditingStateUpdate();
-            // Обновляем зависимую агрегационную модель
-            if (ParentType == ParentTypeEnum.ResettleProcess)
-                CalcDataModelResettleAggregated.GetInstance().Refresh(EntityType.ResettleProcess, (int)ParentRow["id_process"], true);
         }
 
         public override bool CanInsertRecord()

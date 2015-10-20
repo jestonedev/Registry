@@ -3,12 +3,13 @@ using System.Data;
 using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.DataModels;
 
 namespace Registry.Viewport
 {
     public partial class SelectWarrantForm : Form
     {
-        private WarrantsDataModel warrants;
+        private DataModel warrants;
 
         private BindingSource v_warrants;
 
@@ -35,7 +36,7 @@ namespace Registry.Viewport
 
         private void SelectWarrantForm_Load(object sender, EventArgs e)
         {
-            warrants = WarrantsDataModel.GetInstance();
+            warrants = DataModel.GetInstance(DataModelType.WarrantsDataModel);
 
             v_warrants = new BindingSource();
             v_warrants.DataSource = warrants.Select();

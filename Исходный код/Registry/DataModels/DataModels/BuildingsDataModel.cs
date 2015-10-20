@@ -7,12 +7,18 @@ namespace Registry.DataModels.DataModels
 {
     internal sealed class BuildingsDataModel : DataModel
     {
+        private static BuildingsDataModel _dataModel;
         private const string SelectQuery = "SELECT * FROM buildings b WHERE deleted = 0";
         private const string TableName = "buildings";
 
-        public BuildingsDataModel(ToolStripProgressBar progressBar, int incrementor): base(progressBar, incrementor, SelectQuery, TableName)
+        private BuildingsDataModel(ToolStripProgressBar progressBar, int incrementor): base(progressBar, incrementor, SelectQuery, TableName)
         {
             EditingNewRecord = false;      
+        }
+
+        public static BuildingsDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        {
+            return _dataModel ?? (_dataModel = new BuildingsDataModel(progressBar, incrementor));
         }
 
         protected override void ConfigureTable()
@@ -33,6 +39,20 @@ namespace Registry.DataModels.DataModels
             Table.Columns["cadastral_cost"].DefaultValue = 0;
             Table.Columns["balance_cost"].DefaultValue = 0;
             Table.Columns["wear"].DefaultValue = 0;
+        }
+
+        protected override void ConfigureRelations()
+        {
+            AddRelation("kladr", "id_street", TableName, "id_street");
+            AddRelation("object_states", "id_state", TableName, "id_state");
+            AddRelation("structure_types", "id_structure_type", TableName, "id_structure_type");
+            AddRelation(TableName, "id_building", "premises", "id_building");
+            AddRelation(TableName, "id_building", "restrictions_buildings_assoc", "id_building");
+            AddRelation(TableName, "id_building", "ownership_buildings_assoc", "id_building");
+            AddRelation(TableName, "id_building", "funds_buildings_assoc", "id_building");
+            AddRelation(TableName, "id_building", "tenancy_buildings_assoc", "id_building");
+            AddRelation(TableName, "id_building", "resettle_buildings_from_assoc", "id_building");
+            AddRelation(TableName, "id_building", "resettle_buildings_to_assoc", "id_building");
         }
 
         protected override void ConfigureDeleteCommand(DbCommand command, int id)
