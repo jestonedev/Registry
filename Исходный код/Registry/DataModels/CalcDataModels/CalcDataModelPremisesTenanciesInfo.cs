@@ -28,6 +28,7 @@ namespace Registry.DataModels.CalcDataModels
             table.Columns.Add("id_premises").DataType = typeof(int);
             table.Columns.Add("registration_num").DataType = typeof(string);
             table.Columns.Add("registration_date").DataType = typeof(DateTime);
+            table.Columns.Add("end_date").DataType = typeof(DateTime);
             table.Columns.Add("residence_warrant_num").DataType = typeof(string);
             table.Columns.Add("residence_warrant_date").DataType = typeof(DateTime);
             table.Columns.Add("tenant").DataType = typeof(string);
@@ -64,6 +65,7 @@ namespace Registry.DataModels.CalcDataModels
                     id_process = processRow.Field<int>("id_process"),
                     registration_num = processRow.Field<string>("registration_num"),
                     registration_date = processRow.Field<DateTime?>("registration_date"),
+                    end_date = processRow.Field<DateTime?>("end_date"),
                     residence_warrant_num = processRow.Field<string>("residence_warrant_num"),
                     residence_warrant_date = processRow.Field<DateTime?>("residence_warrant_date"),
                     tenant = pTenantsRow != null ? pTenantsRow.tenant : null
@@ -76,6 +78,7 @@ namespace Registry.DataModels.CalcDataModels
                                 id_premises = tenancyPremisesRow.Field<int>("id_premises"),
                                 processRow.registration_num,
                                 processRow.registration_date,
+                                processRow.end_date,
                                 processRow.residence_warrant_num,
                                 processRow.residence_warrant_date,
                                 processRow.tenant
@@ -85,7 +88,7 @@ namespace Registry.DataModels.CalcDataModels
             table.BeginLoadData();
             result.ToList().ForEach(x =>
             {
-                table.Rows.Add(x.id_premises, x.registration_num, x.registration_date, x.residence_warrant_num, x.residence_warrant_date, x.tenant);
+                table.Rows.Add(x.id_premises, x.registration_num, x.registration_date, x.end_date, x.residence_warrant_num, x.residence_warrant_date, x.tenant);
             });
             table.EndLoadData();
             // Возвращаем результат

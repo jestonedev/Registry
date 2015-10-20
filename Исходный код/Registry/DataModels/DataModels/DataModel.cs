@@ -360,9 +360,7 @@ namespace Registry.DataModels.DataModels
 
         public IEnumerable<DataRow> FilterDeletedRows()
         {
-            if (_table == null)
-                throw new DataModelException("Таблица еще не загружена");
-            return from tableRow in _table.AsEnumerable()
+            return from tableRow in Select().AsEnumerable()
                    where (tableRow.RowState != DataRowState.Deleted) &&
                          (tableRow.RowState != DataRowState.Detached)
                    select tableRow;

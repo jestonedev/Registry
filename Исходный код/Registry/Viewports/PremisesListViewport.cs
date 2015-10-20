@@ -166,6 +166,13 @@ namespace Registry.Viewport
                     Width = 150,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
+                var endDateColumn = new DataGridViewTextBoxColumn
+                {
+                    Name = "end_date",
+                    HeaderText = @"Дата окончания договора",
+                    Width = 170,
+                    SortMode = DataGridViewColumnSortMode.NotSortable
+                };
                 var residenceWarrantNumColumn = new DataGridViewTextBoxColumn
                 {
                     Name = "residence_warrant_num",
@@ -189,6 +196,7 @@ namespace Registry.Viewport
                 };
                 dataGridView.Columns.Add(registrationNumColumn);
                 dataGridView.Columns.Add(registrationDateColumn);
+                dataGridView.Columns.Add(endDateColumn);
                 dataGridView.Columns.Add(residenceWarrantNumColumn);
                 dataGridView.Columns.Add(residenceWarrantDateColumn);
                 dataGridView.Columns.Add(tenantColumn);
@@ -625,6 +633,7 @@ namespace Registry.Viewport
                 case "residence_warrant_num":
                 case "residence_warrant_date":
                 case "tenant":
+                case "end_date":
                     var tenancyInfoRows =
                         from tenancyInfoRow in _premisesTenanciesInfo.FilterDeletedRows()
                         where tenancyInfoRow.Field<int>("id_premises") == (int?) row["id_premises"]
@@ -636,6 +645,7 @@ namespace Registry.Viewport
                     {
                         case "registration_date":
                         case "residence_warrant_date":
+                        case "end_date":
                             var date = tenancyInfoRows.First().Field<DateTime?>(dataGridView.Columns[e.ColumnIndex].Name);
                             e.Value =date != null ? date.Value.ToString("dd.MM.yyyy") : null;
                             break;
