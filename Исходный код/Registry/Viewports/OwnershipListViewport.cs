@@ -15,33 +15,17 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
-    internal sealed class OwnershipListViewport : Viewport
+    internal sealed partial class OwnershipListViewport : EditableDataGridViewport
     {
-        #region Components
-        private DataGridView dataGridView;
-        private DataGridViewTextBoxColumn id_ownership_right;
-        private DataGridViewTextBoxColumn number;
-        private DataGridViewDateTimeColumn date;
-        private DataGridViewTextBoxColumn description;
-        private DataGridViewComboBoxColumn id_ownership_right_type;
-        #endregion Components
-
         #region Models
-        DataModel ownership_rights;
         DataModel ownerships_rights_types;
         DataModel ownership_assoc;
-        DataTable snapshot_ownerships_rights = new DataTable("snapshot_ownerships_rights");
         #endregion Models
 
         #region Views
-        BindingSource v_ownership_rights;
         BindingSource v_ownership_right_types;
         BindingSource v_ownership_assoc;
-        BindingSource v_snapshot_ownerships_rights;
         #endregion Views
-
-        //Флаг разрешения синхронизации snapshot и original моделей
-        bool sync_views = true;
 
         private OwnershipListViewport()
             : this(null)
@@ -51,7 +35,10 @@ namespace Registry.Viewport
         public OwnershipListViewport(IMenuCallback menuCallback): base(menuCallback)
         {
             InitializeComponent();
-            snapshot_ownerships_rights.Locale = CultureInfo.InvariantCulture;
+            GeneralSnapshot = new DataTable("snapshot_ownerships_rights")
+            {
+                Locale = CultureInfo.InvariantCulture
+            };
         }
 
         public OwnershipListViewport(OwnershipListViewport ownershipListViewport, IMenuCallback menuCallback)
@@ -70,7 +57,7 @@ namespace Registry.Viewport
                 ownershipFilter += ((DataRowView)v_ownership_assoc[i])["id_ownership_right"] + ",";
             ownershipFilter = ownershipFilter.TrimEnd(',');
             ownershipFilter += ")";
-            v_ownership_rights.Filter = ownershipFilter;
+            GeneralBindingSource.Filter = ownershipFilter;
         }
 
         private bool SnapshotHasChanges()
@@ -203,10 +190,10 @@ namespace Registry.Viewport
         private List<OwnershipRight> OwnershipRightsFromView()
         {
             var list = new List<OwnershipRight>();
-            for (var i = 0; i < v_ownership_rights.Count; i++)
+            for (var i = 0; i < GeneralBindingSource.Count; i++)
             {
                 var or = new OwnershipRight();
-                var row = ((DataRowView)v_ownership_rights[i]);
+                var row = ((DataRowView)GeneralBindingSource[i]);
                 or.IdOwnershipRight = ViewportHelper.ValueOrNull<int>(row, "id_ownership_right");
                 or.IdOwnershipRightType = ViewportHelper.ValueOrNull<int>(row, "id_ownership_right_type");
                 or.Number = ViewportHelper.ValueOrNull(row, "number");
@@ -215,11 +202,6 @@ namespace Registry.Viewport
                 list.Add(or);
             }
             return list;
-        }
-
-        public override int GetRecordCount()
-        {
-            return v_snapshot_ownerships_rights.Count;
         }
 
         public override bool CanLoadData()
@@ -231,10 +213,10 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            ownership_rights = DataModel.GetInstance(DataModelType.OwnershipsRightsDataModel);
+            GeneralDataModel = DataModel.GetInstance(DataModelType.OwnershipsRightsDataModel);
             ownerships_rights_types = DataModel.GetInstance(DataModelType.OwnershipRightTypesDataModel);
             // Дожидаемся дозагрузки данных, если это необходимо
-            ownership_rights.Select();
+            GeneralDataModel.Select();
             ownerships_rights_types.Select();
             switch (ParentType)
             {
@@ -267,9 +249,9 @@ namespace Registry.Viewport
                     throw new ViewportException("Неизвестный тип родительского объекта");
             v_ownership_assoc.DataSource = DataModel.DataSet;
 
-            v_ownership_rights = new BindingSource();
-            v_ownership_rights.DataMember = "ownership_rights";
-            v_ownership_rights.DataSource = DataModel.DataSet;
+            GeneralBindingSource = new BindingSource();
+            GeneralBindingSource.DataMember = "ownership_rights";
+            GeneralBindingSource.DataSource = DataModel.DataSet;
             //Перестраиваем фильтр v_ownerships_rights.Filter
             RebuildFilter();
 
@@ -278,19 +260,19 @@ namespace Registry.Viewport
             v_ownership_right_types.DataSource = DataModel.DataSet;
 
             //Инициируем колонки snapshot-модели
-            for (var i = 0; i < ownership_rights.Select().Columns.Count; i++)
-                snapshot_ownerships_rights.Columns.Add(new DataColumn(ownership_rights.Select().Columns[i].ColumnName, 
-                    ownership_rights.Select().Columns[i].DataType));
+            for (var i = 0; i < GeneralDataModel.Select().Columns.Count; i++)
+                GeneralSnapshot.Columns.Add(new DataColumn(GeneralDataModel.Select().Columns[i].ColumnName,
+                    GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
-            for (var i = 0; i < v_ownership_rights.Count; i++)
-                snapshot_ownerships_rights.Rows.Add(DataRowViewToArray(((DataRowView)v_ownership_rights[i])));
-            v_snapshot_ownerships_rights = new BindingSource();
-            v_snapshot_ownerships_rights.DataSource = snapshot_ownerships_rights;
-            v_snapshot_ownerships_rights.CurrentItemChanged += v_snapshot_ownerships_rights_CurrentItemChanged;
-            snapshot_ownerships_rights.RowChanged += snapshot_ownerships_rights_RowChanged;
-            snapshot_ownerships_rights.RowDeleted += snapshot_ownerships_rights_RowDeleted;
+            for (var i = 0; i < GeneralBindingSource.Count; i++)
+                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
+            GeneralSnapshotBindingSource = new BindingSource();
+            GeneralSnapshotBindingSource.DataSource = GeneralSnapshot;
+            GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_ownerships_rights_CurrentItemChanged;
+            GeneralSnapshot.RowChanged += snapshot_ownerships_rights_RowChanged;
+            GeneralSnapshot.RowDeleted += snapshot_ownerships_rights_RowDeleted;
 
-            dataGridView.DataSource = v_snapshot_ownerships_rights;
+            dataGridView.DataSource = GeneralSnapshotBindingSource;
 
             id_ownership_right.DataPropertyName = "id_ownership_right";
             id_ownership_right_type.DataSource = v_ownership_right_types;
@@ -307,50 +289,10 @@ namespace Registry.Viewport
             //События изменения данных для проверки соответствия реальным данным в модели
             dataGridView.CellValueChanged += dataGridView_CellValueChanged;
             //Синхронизация данных исходные->текущие
-            ownership_rights.Select().RowChanged += OwnershipListViewport_RowChanged;
-            ownership_rights.Select().RowDeleting += OwnershipListViewport_RowDeleting;
+            GeneralDataModel.Select().RowChanged += OwnershipListViewport_RowChanged;
+            GeneralDataModel.Select().RowDeleting += OwnershipListViewport_RowDeleting;
             ownership_assoc.Select().RowChanged += OwnershipAssoc_RowChanged;
             ownership_assoc.Select().RowDeleted += OwnershipAssoc_RowDeleted;
-        }
-        
-        public override void MoveFirst()
-        {
-            v_snapshot_ownerships_rights.MoveFirst();
-        }
-
-        public override void MoveLast()
-        {
-            v_snapshot_ownerships_rights.MoveLast();
-        }
-
-        public override void MoveNext()
-        {
-            v_snapshot_ownerships_rights.MoveNext();
-        }
-
-        public override void MovePrev()
-        {
-            v_snapshot_ownerships_rights.MovePrevious();
-        }
-
-        public override bool CanMoveFirst()
-        {
-            return v_snapshot_ownerships_rights.Position > 0;
-        }
-
-        public override bool CanMovePrev()
-        {
-            return v_snapshot_ownerships_rights.Position > 0;
-        }
-
-        public override bool CanMoveNext()
-        {
-            return (v_snapshot_ownerships_rights.Position > -1) && (v_snapshot_ownerships_rights.Position < (v_snapshot_ownerships_rights.Count - 1));
-        }
-
-        public override bool CanMoveLast()
-        {
-            return (v_snapshot_ownerships_rights.Position > -1) && (v_snapshot_ownerships_rights.Position < (v_snapshot_ownerships_rights.Count - 1));
         }
 
         public override bool CanInsertRecord()
@@ -360,19 +302,19 @@ namespace Registry.Viewport
 
         public override void InsertRecord()
         {
-            var row = (DataRowView)v_snapshot_ownerships_rights.AddNew();
+            var row = (DataRowView)GeneralSnapshotBindingSource.AddNew();
             row.EndEdit();
         }
 
         public override bool CanDeleteRecord()
         {
-            return (v_snapshot_ownerships_rights.Position != -1) && 
+            return (GeneralSnapshotBindingSource.Position != -1) && 
                 (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
         public override void DeleteRecord()
         {
-            ((DataRowView)v_snapshot_ownerships_rights[v_snapshot_ownerships_rights.Position]).Row.Delete();
+            ((DataRowView)GeneralSnapshotBindingSource[GeneralSnapshotBindingSource.Position]).Row.Delete();
         }
 
         public override bool CanCancelRecord()
@@ -382,9 +324,9 @@ namespace Registry.Viewport
 
         public override void CancelRecord()
         {
-            snapshot_ownerships_rights.Clear();
-            for (var i = 0; i < v_ownership_rights.Count; i++)
-                snapshot_ownerships_rights.Rows.Add(DataRowViewToArray(((DataRowView)v_ownership_rights[i])));
+            GeneralSnapshot.Clear();
+            for (var i = 0; i < GeneralBindingSource.Count; i++)
+                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -397,17 +339,17 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
-            ownership_rights.EditingNewRecord = true;
+            GeneralDataModel.EditingNewRecord = true;
             var list = OwnershipRightsFromViewport();
             if (!ValidateViewportData(list))
             {
                 sync_views = true;
-                ownership_rights.EditingNewRecord = false;
+                GeneralDataModel.EditingNewRecord = false;
                 return;
             }
             for (var i = 0; i < list.Count; i++)
             {
-                var row = ownership_rights.Select().Rows.Find(list[i].IdOwnershipRight);
+                var row = GeneralDataModel.Select().Rows.Find(list[i].IdOwnershipRight);
                 if (row == null)
                 {
                     var id_parent = ((ParentType == ParentTypeEnum.Premises) && ParentRow != null) ? (int)ParentRow["id_premises"] :
@@ -418,15 +360,15 @@ namespace Registry.Viewport
                         MessageBox.Show("Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору", 
                             "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         sync_views = true;
-                        ownership_rights.EditingNewRecord = false;
+                        GeneralDataModel.EditingNewRecord = false;
                         RebuildFilter();
                         return;
                     }
-                    var id_ownership_right = ownership_rights.Insert(list[i]);
+                    var id_ownership_right = GeneralDataModel.Insert(list[i]);
                     if (id_ownership_right == -1)
                     {
                         sync_views = true;
-                        ownership_rights.EditingNewRecord = false;
+                        GeneralDataModel.EditingNewRecord = false;
                         RebuildFilter();
                         return;
                     }
@@ -440,18 +382,18 @@ namespace Registry.Viewport
                             DataModel.GetInstance(DataModelType.OwnershipPremisesAssocDataModel).Insert(assoc);
                             break;
                     }
-                    ((DataRowView)v_snapshot_ownerships_rights[i])["id_ownership_right"] = id_ownership_right;
-                    ownership_rights.Select().Rows.Add(DataRowViewToArray((DataRowView)v_snapshot_ownerships_rights[i]));
+                    ((DataRowView)GeneralSnapshotBindingSource[i])["id_ownership_right"] = id_ownership_right;
+                    GeneralDataModel.Select().Rows.Add(DataRowViewToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                     ownership_assoc.Select().Rows.Add(id_parent, id_ownership_right);
                 }
                 else
                 {
                     if (RowToOwnershipRight(row) == list[i])
                         continue;
-                    if (ownership_rights.Update(list[i]) == -1)
+                    if (GeneralDataModel.Update(list[i]) == -1)
                     {
                         sync_views = true;
-                        ownership_rights.EditingNewRecord = false;
+                        GeneralDataModel.EditingNewRecord = false;
                         RebuildFilter();
                         return;
                     }
@@ -472,20 +414,20 @@ namespace Registry.Viewport
                         row_index = j;
                 if (row_index == -1)
                 {
-                    if (ownership_rights.Delete(list[i].IdOwnershipRight.Value) == -1)
+                    if (GeneralDataModel.Delete(list[i].IdOwnershipRight.Value) == -1)
                     {
                         sync_views = true;
-                        ownership_rights.EditingNewRecord = false;
+                        GeneralDataModel.EditingNewRecord = false;
                         RebuildFilter();
                         return;
                     }
-                    ownership_rights.Select().Rows.Find(list[i].IdOwnershipRight).Delete();
+                    GeneralDataModel.Select().Rows.Find(list[i].IdOwnershipRight).Delete();
                     RebuildFilter();
                 }
             }
             RebuildFilter();
             sync_views = true;
-            ownership_rights.EditingNewRecord = false;
+            GeneralDataModel.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
         }
 
@@ -504,8 +446,6 @@ namespace Registry.Viewport
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (e == null)
-                return;
             if (SnapshotHasChanges())
             {
                 var result = MessageBox.Show("Сохранить изменения об ограничениях в базу данных?", "Внимание",
@@ -521,8 +461,8 @@ namespace Registry.Viewport
                         return;
                     }
             }
-            ownership_rights.Select().RowChanged -= OwnershipListViewport_RowChanged;
-            ownership_rights.Select().RowDeleting -= OwnershipListViewport_RowDeleting;
+            GeneralDataModel.Select().RowChanged -= OwnershipListViewport_RowChanged;
+            GeneralDataModel.Select().RowDeleting -= OwnershipListViewport_RowDeleting;
             ownership_assoc.Select().RowChanged -= OwnershipAssoc_RowChanged;
             ownership_assoc.Select().RowDeleted -= OwnershipAssoc_RowDeleted;
             base.OnClosing(e);
@@ -530,8 +470,8 @@ namespace Registry.Viewport
 
         public override void ForceClose()
         {
-            ownership_rights.Select().RowChanged -= OwnershipListViewport_RowChanged;
-            ownership_rights.Select().RowDeleting -= OwnershipListViewport_RowDeleting;
+            GeneralDataModel.Select().RowChanged -= OwnershipListViewport_RowChanged;
+            GeneralDataModel.Select().RowDeleting -= OwnershipListViewport_RowDeleting;
             ownership_assoc.Select().RowChanged -= OwnershipAssoc_RowChanged;
             ownership_assoc.Select().RowDeleted -= OwnershipAssoc_RowDeleted;
             Close();
@@ -597,13 +537,13 @@ namespace Registry.Viewport
             //Если в модели есть запись, а в снапшоте нет, то добавляем в снапшот
             if (e.Row["id_ownership_right"] == DBNull.Value)
                 return;
-            var row_index = v_ownership_rights.Find("id_ownership_right", e.Row["id_ownership_right"]);
+            var row_index = GeneralBindingSource.Find("id_ownership_right", e.Row["id_ownership_right"]);
             if (row_index == -1)
                 return;
-            var row = (DataRowView)v_ownership_rights[row_index];
-            if ((v_snapshot_ownerships_rights.Find("id_ownership_right", e.Row["id_ownership_right"]) == -1) && (row_index != -1))
+            var row = (DataRowView)GeneralBindingSource[row_index];
+            if ((GeneralSnapshotBindingSource.Find("id_ownership_right", e.Row["id_ownership_right"]) == -1) && (row_index != -1))
             {
-                snapshot_ownerships_rights.Rows.Add(row["id_ownership_right"], row["id_ownership_right_type"], row["number"], row["date"], row["description"]);
+                GeneralSnapshot.Rows.Add(row["id_ownership_right"], row["id_ownership_right_type"], row["number"], row["date"], row["description"]);
             }
         }
 
@@ -622,9 +562,9 @@ namespace Registry.Viewport
                 return;
             if (e.Action == DataRowAction.Delete)
             {
-                var row_index = v_snapshot_ownerships_rights.Find("id_ownership_right", e.Row["id_ownership_right"]);
+                var row_index = GeneralSnapshotBindingSource.Find("id_ownership_right", e.Row["id_ownership_right"]);
                 if (row_index != -1)
-                    ((DataRowView)v_snapshot_ownerships_rights[row_index]).Delete();
+                    ((DataRowView)GeneralSnapshotBindingSource[row_index]).Delete();
             }
         }
 
@@ -634,10 +574,10 @@ namespace Registry.Viewport
                 return;
             if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
             {
-                var row_index = v_snapshot_ownerships_rights.Find("id_ownership_right", e.Row["id_ownership_right"]);
+                var row_index = GeneralSnapshotBindingSource.Find("id_ownership_right", e.Row["id_ownership_right"]);
                 if (row_index != -1)
                 {
-                    var row = ((DataRowView)v_snapshot_ownerships_rights[row_index]);
+                    var row = ((DataRowView)GeneralSnapshotBindingSource[row_index]);
                     row["id_ownership_right_type"] = e.Row["id_ownership_right_type"];
                     row["number"] = e.Row["number"];
                     row["date"] = e.Row["date"];
@@ -649,9 +589,9 @@ namespace Registry.Viewport
                 {
                     //Если строка имеется в текущем контексте оригинального представления, то добавить его и в snapshot, 
                     //иначе - объект не принадлежит текущему родителю
-                    var row_index = v_ownership_rights.Find("id_ownership_right", e.Row["id_ownership_right"]);
+                    var row_index = GeneralBindingSource.Find("id_ownership_right", e.Row["id_ownership_right"]);
                     if (row_index != -1)
-                        snapshot_ownerships_rights.Rows.Add(e.Row["id_ownership_right"], e.Row["id_ownership_right_type"], e.Row["number"], e.Row["date"], e.Row["description"]);
+                        GeneralSnapshot.Rows.Add(e.Row["id_ownership_right"], e.Row["id_ownership_right_type"], e.Row["number"], e.Row["date"], e.Row["description"]);
                 }
         }
 
@@ -679,100 +619,6 @@ namespace Registry.Viewport
             var editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
             dataGridView.CurrentCell.Value = editingControl.SelectedValue;
             dataGridView.EndEdit();
-        }
-
-        private void InitializeComponent()
-        {
-            var dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            var resources = new ComponentResourceManager(typeof(OwnershipListViewport));
-            dataGridView = new DataGridView();
-            id_ownership_right = new DataGridViewTextBoxColumn();
-            number = new DataGridViewTextBoxColumn();
-            date = new DataGridViewDateTimeColumn();
-            description = new DataGridViewTextBoxColumn();
-            id_ownership_right_type = new DataGridViewComboBoxColumn();
-            ((ISupportInitialize)(dataGridView)).BeginInit();
-            SuspendLayout();
-            // 
-            // dataGridView
-            // 
-            dataGridView.AllowUserToAddRows = false;
-            dataGridView.AllowUserToDeleteRows = false;
-            dataGridView.AllowUserToResizeRows = false;
-            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView.BackgroundColor = Color.White;
-            dataGridView.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Control;
-            dataGridViewCellStyle1.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle1.Padding = new Padding(0, 2, 0, 2);
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Columns.AddRange(id_ownership_right, number, date, description, id_ownership_right_type);
-            dataGridView.Dock = DockStyle.Fill;
-            dataGridView.Location = new Point(3, 3);
-            dataGridView.MultiSelect = false;
-            dataGridView.Name = "dataGridView";
-            dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridView.ShowCellToolTips = false;
-            dataGridView.Size = new Size(819, 328);
-            dataGridView.TabIndex = 2;
-            dataGridView.EditingControlShowing += dataGridView_EditingControlShowing;
-            // 
-            // id_ownership_right
-            // 
-            id_ownership_right.HeaderText = "Идентификатор основания";
-            id_ownership_right.Name = "id_ownership_right";
-            id_ownership_right.Visible = false;
-            // 
-            // number
-            // 
-            number.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            number.HeaderText = "Номер";
-            number.MinimumWidth = 150;
-            number.Name = "number";
-            number.Width = 150;
-            // 
-            // date
-            // 
-            date.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            date.HeaderText = "Дата";
-            date.MinimumWidth = 150;
-            date.Name = "date";
-            date.Width = 150;
-            // 
-            // description
-            // 
-            description.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            description.HeaderText = "Наименование";
-            description.MinimumWidth = 300;
-            description.Name = "description";
-            // 
-            // id_ownership_right_type
-            // 
-            id_ownership_right_type.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            id_ownership_right_type.HeaderText = "Тип ограничения";
-            id_ownership_right_type.MinimumWidth = 150;
-            id_ownership_right_type.Name = "id_ownership_right_type";
-            id_ownership_right_type.Width = 150;
-            // 
-            // OwnershipListViewport
-            // 
-            BackColor = Color.White;
-            ClientSize = new Size(825, 334);
-            Controls.Add(dataGridView);
-            Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            Icon = ((Icon)(resources.GetObject("$this.Icon")));
-            Name = "OwnershipListViewport";
-            Padding = new Padding(3);
-            Text = "Ограничения";
-            ((ISupportInitialize)(dataGridView)).EndInit();
-            ResumeLayout(false);
-
         }
     }
 }

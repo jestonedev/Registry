@@ -17,22 +17,10 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
-    internal sealed class PremisesListViewport : Viewport
+    internal sealed partial class PremisesListViewport : DataGridViewport
     {
-        #region Components
-        private DataGridView dataGridView;
-        private DataGridViewTextBoxColumn id_premises;
-        private DataGridViewTextBoxColumn id_street;
-        private DataGridViewTextBoxColumn house;
-        private DataGridViewTextBoxColumn premises_num;
-        private DataGridViewComboBoxColumn id_premises_type;
-        private DataGridViewTextBoxColumn total_area;
-        private DataGridViewTextBoxColumn id_state;
-        private DataGridViewTextBoxColumn current_fund;
-        #endregion Components
 
         #region Models
-        private DataModel premises;
         private DataModel buildings;
         private DataModel kladr;
         private DataModel premises_types;
@@ -43,7 +31,6 @@ namespace Registry.Viewport
         #endregion Models
 
         #region Views
-        private BindingSource v_premises;
         private BindingSource v_buildings;
         private BindingSource v_premises_types;
         #endregion Views
@@ -73,54 +60,9 @@ namespace Registry.Viewport
 
         public void LocatePremisesBy(int id)
         {
-            var Position = v_premises.Find("id_premises", id);
+            var Position = GeneralBindingSource.Find("id_premises", id);
             if (Position > 0)
-                v_premises.Position = Position;
-        }
-
-        public override int GetRecordCount()
-        {
-            return v_premises.Count;
-        }
-
-        public override bool CanMoveFirst()
-        {
-            return v_premises.Position > 0;
-        }
-
-        public override bool CanMovePrev()
-        {
-            return v_premises.Position > 0;
-        }
-
-        public override bool CanMoveNext()
-        {
-            return (v_premises.Position > -1) && (v_premises.Position < (v_premises.Count - 1));
-        }
-
-        public override bool CanMoveLast()
-        {
-            return (v_premises.Position > -1) && (v_premises.Position < (v_premises.Count - 1));
-        }
-
-        public override void MoveFirst()
-        {
-            v_premises.MoveFirst();
-        }
-
-        public override void MovePrev()
-        {
-            v_premises.MovePrevious();
-        }
-
-        public override void MoveNext()
-        {
-            v_premises.MoveNext();
-        }
-
-        public override void MoveLast()
-        {
-            v_premises.MoveLast();
+                GeneralBindingSource.Position = Position;
         }
 
         public override bool CanLoadData()
@@ -132,7 +74,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            premises = DataModel.GetInstance(DataModelType.PremisesDataModel);
+            GeneralDataModel = DataModel.GetInstance(DataModelType.PremisesDataModel);
             kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
             buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel);
             premises_types = DataModel.GetInstance(DataModelType.PremisesTypesDataModel);
@@ -205,14 +147,14 @@ namespace Registry.Viewport
 
             var ds = DataModel.DataSet;
 
-            v_premises = new BindingSource();
-            v_premises.CurrentItemChanged += v_premises_CurrentItemChanged;
-            v_premises.DataMember = "premises";
-            v_premises.DataSource = ds;
-            v_premises.Filter = StaticFilter;
+            GeneralBindingSource = new BindingSource();
+            GeneralBindingSource.CurrentItemChanged += v_premises_CurrentItemChanged;
+            GeneralBindingSource.DataMember = "premises";
+            GeneralBindingSource.DataSource = ds;
+            GeneralBindingSource.Filter = StaticFilter;
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
-                v_premises.Filter += " AND ";
-            v_premises.Filter += DynamicFilter;
+                GeneralBindingSource.Filter += " AND ";
+            GeneralBindingSource.Filter += DynamicFilter;
             if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
                 Text = "Помещения здания №" + ParentRow["id_building"];
 
@@ -228,17 +170,17 @@ namespace Registry.Viewport
             id_premises_type.ValueMember = "id_premises_type";
             id_premises_type.DisplayMember = "premises_type";
 
-            premises.Select().RowChanged += PremisesListViewport_RowChanged;
-            premises.Select().RowDeleted += PremisesListViewport_RowDeleted;
+            GeneralDataModel.Select().RowChanged += PremisesListViewport_RowChanged;
+            GeneralDataModel.Select().RowDeleted += PremisesListViewport_RowDeleted;
             premises_funds.RefreshEvent += premises_funds_RefreshEvent;
-            dataGridView.RowCount = v_premises.Count;
+            dataGridView.RowCount = GeneralBindingSource.Count;
 
             ViewportHelper.SetDoubleBuffered(dataGridView);
         }
         
         public override bool CanDeleteRecord()
         {
-            return (v_premises.Position > -1) &&
+            return (GeneralBindingSource.Position > -1) &&
                 (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
@@ -247,24 +189,23 @@ namespace Registry.Viewport
             if (MessageBox.Show("Вы действительно хотите удалить это помещение?", "Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                if (DataModelHelper.HasMunicipal((int)((DataRowView)v_premises.Current)["id_premises"], EntityType.Premise)
+                if (DataModelHelper.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                 {
                     MessageBox.Show("У вас нет прав на удаление муниципальных жилых помещений и помещений, в которых присутствуют муниципальные комнаты",
                         "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
-                if (DataModelHelper.HasNotMunicipal((int)((DataRowView)v_premises.Current)["id_premises"], EntityType.Premise)
+                if (DataModelHelper.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                 {
                     MessageBox.Show("У вас нет прав на удаление немуниципальных жилых помещений и помещений, в которых присутствуют немуниципальные комнаты",
                         "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
-                var id_building = (int)((DataRowView)v_premises[v_premises.Position])["id_building"];
-                if (premises.Delete((int)((DataRowView)v_premises.Current)["id_premises"]) == -1)
+                if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_premises"]) == -1)
                     return;
-                ((DataRowView)v_premises[v_premises.Position]).Delete();
+                ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
                 MenuCallback.ForceCloseDetachedViewports();
             }
         }
@@ -320,20 +261,20 @@ namespace Registry.Viewport
                 Filter += " AND ";
             Filter += DynamicFilter;
             dataGridView.RowCount = 0;
-            v_premises.Filter = Filter;
-            dataGridView.RowCount = v_premises.Count;
+            GeneralBindingSource.Filter = Filter;
+            dataGridView.RowCount = GeneralBindingSource.Count;
         }
 
         public override void ClearSearch()
         {
-            v_premises.Filter = StaticFilter;
-            dataGridView.RowCount = v_premises.Count;
+            GeneralBindingSource.Filter = StaticFilter;
+            dataGridView.RowCount = GeneralBindingSource.Count;
             DynamicFilter = "";
         }
 
         public override bool CanOpenDetails()
         {
-            if (v_premises.Position == -1)
+            if (GeneralBindingSource.Position == -1)
                 return false;
             else
                 return true;
@@ -350,14 +291,14 @@ namespace Registry.Viewport
                 viewport.LoadData();
             else
                 return;
-            if (v_premises.Count > 0)
-                viewport.LocatePremisesBy((((DataRowView)v_premises[v_premises.Position])["id_premises"] as int?) ?? -1);
+            if (GeneralBindingSource.Count > 0)
+                viewport.LocatePremisesBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"] as int?) ?? -1);
             MenuCallback.AddViewport(viewport);
         }
 
         public override bool CanInsertRecord()
         {
-            return (!premises.EditingNewRecord) &&
+            return (!GeneralDataModel.EditingNewRecord) &&
                 (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
@@ -378,7 +319,7 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            return (v_premises.Position != -1) &&
+            return (GeneralBindingSource.Position != -1) &&
                 (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
@@ -393,8 +334,8 @@ namespace Registry.Viewport
                 viewport.LoadData();
             else
                 return;
-            if (v_premises.Count > 0)
-                viewport.LocatePremisesBy((((DataRowView)v_premises[v_premises.Position])["id_premises"] as int?) ?? -1);
+            if (GeneralBindingSource.Count > 0)
+                viewport.LocatePremisesBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"] as int?) ?? -1);
             MenuCallback.AddViewport(viewport);
             viewport.CopyRecord();
         }
@@ -404,8 +345,8 @@ namespace Registry.Viewport
             var viewport = new PremisesListViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
-            if (v_premises.Count > 0)
-                viewport.LocatePremisesBy((((DataRowView)v_premises[v_premises.Position])["id_premises"] as int?) ?? -1);
+            if (GeneralBindingSource.Count > 0)
+                viewport.LocatePremisesBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"] as int?) ?? -1);
             return viewport;
         }
 
@@ -416,44 +357,44 @@ namespace Registry.Viewport
 
         public override bool HasAssocOwnerships()
         {
-            return (v_premises.Position > -1);
+            return (GeneralBindingSource.Position > -1);
         }
 
         public override bool HasAssocRestrictions()
         {
-            return (v_premises.Position > -1);
+            return (GeneralBindingSource.Position > -1);
         }
 
         public override bool HasAssocSubPremises()
         {
-            return (v_premises.Position > -1);
+            return (GeneralBindingSource.Position > -1);
         }
 
         public override bool HasAssocFundHistory()
         {
-            return (v_premises.Position > -1);
+            return (GeneralBindingSource.Position > -1);
         }
 
         public override bool HasAssocTenancies()
         {
-            return (v_premises.Position > -1);
+            return (GeneralBindingSource.Position > -1);
         }
 
         public override bool HasRegistryExcerptPremiseReport()
         {
-            return (v_premises.Position > -1);
+            return (GeneralBindingSource.Position > -1);
         }
 
         public override bool HasRegistryExcerptSubPremisesReport()
         {
-            return (v_premises.Position > -1);
+            return (GeneralBindingSource.Position > -1);
         }
 
         public override void RegistryExcerptPremiseReportGenerate()
         {
             var reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
             var arguments = new Dictionary<string, string>();
-            arguments.Add("ids", ((DataRowView)v_premises[v_premises.Position])["id_premises"].ToString());
+            arguments.Add("ids", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"].ToString());
             arguments.Add("excerpt_type", "1");
             reporter.Run(arguments);
         }
@@ -462,7 +403,7 @@ namespace Registry.Viewport
         {
             var reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
             var arguments = new Dictionary<string, string>();
-            arguments.Add("ids", ((DataRowView)v_premises[v_premises.Position])["id_premises"].ToString());
+            arguments.Add("ids", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"].ToString());
             arguments.Add("excerpt_type", "3");
             reporter.Run(arguments);
         }
@@ -507,7 +448,7 @@ namespace Registry.Viewport
             var arguments = new Dictionary<string, string>
             {
                 {"type", "2"},
-                {"filter", v_premises.Filter.Trim() == "" ? "(1=1)" : v_premises.Filter},
+                {"filter", GeneralBindingSource.Filter.Trim() == "" ? "(1=1)" : GeneralBindingSource.Filter},
                 {"columnHeaders", "["+columnHeaders+"]"},
                 {"columnPatterns", "["+columnPatterns+"]"}
             };
@@ -516,14 +457,14 @@ namespace Registry.Viewport
 
         private void ShowAssocViewport(ViewportType viewportType)
         {
-            if (v_premises.Position == -1)
+            if (GeneralBindingSource.Position == -1)
             {
                 MessageBox.Show("Не выбрано помещение", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             ShowAssocViewport(MenuCallback, viewportType,
-                "id_premises = " + Convert.ToInt32(((DataRowView)v_premises[v_premises.Position])["id_premises"], CultureInfo.InvariantCulture),
-                ((DataRowView)v_premises[v_premises.Position]).Row,
+                "id_premises = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"], CultureInfo.InvariantCulture),
+                ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
                 ParentTypeEnum.Premises);
         }
 
@@ -541,7 +482,7 @@ namespace Registry.Viewport
 
         void PremisesListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
-            dataGridView.RowCount = v_premises.Count;
+            dataGridView.RowCount = GeneralBindingSource.Count;
             dataGridView.Refresh();
             MenuCallback.ForceCloseDetachedViewports();
             if (Selected)
@@ -552,7 +493,7 @@ namespace Registry.Viewport
         {
             if (e.Action == DataRowAction.Change || e.Action == DataRowAction.ChangeCurrentAndOriginal || e.Action == DataRowAction.ChangeOriginal)
                 dataGridView.Refresh();
-            dataGridView.RowCount = v_premises.Count;
+            dataGridView.RowCount = GeneralBindingSource.Count;
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
         }
@@ -565,7 +506,7 @@ namespace Registry.Viewport
             {
                 foreach (DataGridViewColumn column in dataGridView.Columns)
                     column.HeaderCell.SortGlyphDirection = SortOrder.None;
-                v_premises.Sort = dataGridView.Columns[e.ColumnIndex].Name + " " + ((way == SortOrder.Ascending) ? "ASC" : "DESC");
+                GeneralBindingSource.Sort = dataGridView.Columns[e.ColumnIndex].Name + " " + ((way == SortOrder.Ascending) ? "ASC" : "DESC");
                 dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = way;
                 return true;
             };
@@ -579,15 +520,15 @@ namespace Registry.Viewport
         void dataGridView_SelectionChanged(object sender, EventArgs e)
         {
             if (dataGridView.SelectedRows.Count > 0)
-                v_premises.Position = dataGridView.SelectedRows[0].Index;
+                GeneralBindingSource.Position = dataGridView.SelectedRows[0].Index;
             else
-                v_premises.Position = -1;
+                GeneralBindingSource.Position = -1;
         }
 
         void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
-            if (v_premises.Count <= e.RowIndex) return;
-            var row = ((DataRowView)v_premises[e.RowIndex]);
+            if (GeneralBindingSource.Count <= e.RowIndex) return;
+            var row = ((DataRowView)GeneralBindingSource[e.RowIndex]);
             var buildingRow = buildings.Select().Rows.Find(row["id_building"]);
             if (buildingRow == null)
                 return;
@@ -661,12 +602,12 @@ namespace Registry.Viewport
 
         void v_premises_CurrentItemChanged(object sender, EventArgs e)
         {
-            if (v_premises.Position == -1 || dataGridView.RowCount == 0)
+            if (GeneralBindingSource.Position == -1 || dataGridView.RowCount == 0)
             {
                 dataGridView.ClearSelection();
                 return;
             }
-            if (v_premises.Position >= dataGridView.RowCount)
+            if (GeneralBindingSource.Position >= dataGridView.RowCount)
             {
                 dataGridView.Rows[dataGridView.RowCount - 1].Selected = true;
                 if (dataGridView.CurrentCell != null)
@@ -676,11 +617,11 @@ namespace Registry.Viewport
             }
             else
             {
-                dataGridView.Rows[v_premises.Position].Selected = true;
+                dataGridView.Rows[GeneralBindingSource.Position].Selected = true;
                 if (dataGridView.CurrentCell != null)
-                    dataGridView.CurrentCell = dataGridView.Rows[v_premises.Position].Cells[dataGridView.CurrentCell.ColumnIndex];
+                    dataGridView.CurrentCell = dataGridView.Rows[GeneralBindingSource.Position].Cells[dataGridView.CurrentCell.ColumnIndex];
                 else
-                    dataGridView.CurrentCell = dataGridView.Rows[v_premises.Position].Cells[0];
+                    dataGridView.CurrentCell = dataGridView.Rows[GeneralBindingSource.Position].Cells[0];
             }
             if (!Selected) return;
             MenuCallback.NavigationStateUpdate();
@@ -706,143 +647,6 @@ namespace Registry.Viewport
         void _premisesTenanciesInfo_RefreshEvent(object sender, EventArgs e)
         {
             dataGridView.Refresh();
-        }
-
-        private void InitializeComponent()
-        {
-            var dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            var dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            var resources = new ComponentResourceManager(typeof(PremisesListViewport));
-            dataGridView = new DataGridView();
-            id_premises = new DataGridViewTextBoxColumn();
-            id_street = new DataGridViewTextBoxColumn();
-            house = new DataGridViewTextBoxColumn();
-            premises_num = new DataGridViewTextBoxColumn();
-            id_premises_type = new DataGridViewComboBoxColumn();
-            total_area = new DataGridViewTextBoxColumn();
-            id_state = new DataGridViewTextBoxColumn();
-            current_fund = new DataGridViewTextBoxColumn();
-            ((ISupportInitialize)(dataGridView)).BeginInit();
-            SuspendLayout();
-            // 
-            // dataGridView
-            // 
-            dataGridView.AllowUserToAddRows = false;
-            dataGridView.AllowUserToDeleteRows = false;
-            dataGridView.AllowUserToResizeRows = false;
-            dataGridView.BackgroundColor = Color.White;
-            dataGridView.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Control;
-            dataGridViewCellStyle1.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle1.Padding = new Padding(0, 2, 0, 2);
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Columns.AddRange(id_premises, id_street, house, premises_num, id_premises_type, total_area, id_state, current_fund);
-            dataGridView.Dock = DockStyle.Fill;
-            dataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
-            dataGridView.Location = new Point(3, 3);
-            dataGridView.MultiSelect = false;
-            dataGridView.Name = "dataGridView";
-            dataGridView.ReadOnly = true;
-            dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView.ShowCellToolTips = false;
-            dataGridView.Size = new Size(1125, 704);
-            dataGridView.TabIndex = 0;
-            dataGridView.VirtualMode = true;
-            dataGridView.CellDoubleClick += dataGridView_CellDoubleClick;
-            dataGridView.CellValueNeeded += dataGridView_CellValueNeeded;
-            dataGridView.ColumnHeaderMouseClick += dataGridView_ColumnHeaderMouseClick;
-            dataGridView.SelectionChanged += dataGridView_SelectionChanged;
-            dataGridView.Resize += dataGridView_Resize;
-            // 
-            // id_premises
-            // 
-            id_premises.HeaderText = "№";
-            id_premises.MinimumWidth = 100;
-            id_premises.Name = "id_premises";
-            id_premises.ReadOnly = true;
-            // 
-            // id_street
-            // 
-            id_street.HeaderText = "Адрес";
-            id_street.MinimumWidth = 250;
-            id_street.Name = "id_street";
-            id_street.ReadOnly = true;
-            id_street.SortMode = DataGridViewColumnSortMode.NotSortable;
-            id_street.Width = 250;
-            // 
-            // house
-            // 
-            house.HeaderText = "Дом";
-            house.MinimumWidth = 100;
-            house.Name = "house";
-            house.ReadOnly = true;
-            house.SortMode = DataGridViewColumnSortMode.NotSortable;
-            // 
-            // premises_num
-            // 
-            premises_num.HeaderText = "Помещение";
-            premises_num.MinimumWidth = 100;
-            premises_num.Name = "premises_num";
-            premises_num.ReadOnly = true;
-            // 
-            // id_premises_type
-            // 
-            id_premises_type.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
-            id_premises_type.HeaderText = "Тип помещения";
-            id_premises_type.MinimumWidth = 150;
-            id_premises_type.Name = "id_premises_type";
-            id_premises_type.ReadOnly = true;
-            id_premises_type.SortMode = DataGridViewColumnSortMode.Automatic;
-            id_premises_type.Width = 150;
-            // 
-            // total_area
-            // 
-            dataGridViewCellStyle2.Format = "#0.0## м²";
-            total_area.DefaultCellStyle = dataGridViewCellStyle2;
-            total_area.HeaderText = "Общая площадь";
-            total_area.MinimumWidth = 140;
-            total_area.Name = "total_area";
-            total_area.ReadOnly = true;
-            total_area.Width = 140;
-            // 
-            // id_state
-            // 
-            id_state.HeaderText = "Текущее состояние";
-            id_state.MinimumWidth = 170;
-            id_state.Name = "id_state";
-            id_state.ReadOnly = true;
-            id_state.Width = 170;
-            // 
-            // current_fund
-            // 
-            current_fund.HeaderText = "Текущий фонд";
-            current_fund.MinimumWidth = 170;
-            current_fund.Name = "current_fund";
-            current_fund.ReadOnly = true;
-            current_fund.SortMode = DataGridViewColumnSortMode.NotSortable;
-            current_fund.Width = 170;
-            // 
-            // PremisesListViewport
-            // 
-            BackColor = Color.White;
-            ClientSize = new Size(1131, 710);
-            Controls.Add(dataGridView);
-            DoubleBuffered = true;
-            Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            Icon = ((Icon)(resources.GetObject("$this.Icon")));
-            Name = "PremisesListViewport";
-            Padding = new Padding(3);
-            Text = "Перечень помещений";
-            ((ISupportInitialize)(dataGridView)).EndInit();
-            ResumeLayout(false);
-
         }
     }
 }

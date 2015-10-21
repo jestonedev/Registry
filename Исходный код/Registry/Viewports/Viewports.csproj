@@ -84,8 +84,38 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BuildingListViewport.Designer.cs">
+      <DependentUpon>BuildingListViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BuildingViewport.Designer.cs">
+      <DependentUpon>BuildingViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ClaimListViewport.Designer.cs">
+      <DependentUpon>ClaimListViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ClaimStatesViewport.Designer.cs">
+      <DependentUpon>ClaimStatesViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ClaimStateTypesViewport.Designer.cs">
+      <DependentUpon>ClaimStateTypesViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataGridViewport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DocumentIssuedByViewport.Designer.cs">
+      <DependentUpon>DocumentIssuedByViewport.cs</DependentUpon>
+    </Compile>
     <Compile Include="DocumentsResidenceViewport.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DocumentsResidenceViewport.Designer.cs">
+      <DependentUpon>DocumentsResidenceViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="EditableDataGridViewport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExecutorsViewport.Designer.cs">
+      <DependentUpon>ExecutorsViewport.cs</DependentUpon>
     </Compile>
     <Compile Include="ExtendedSearchResettleForm.cs">
       <SubType>Form</SubType>
@@ -93,7 +123,25 @@
     <Compile Include="ExtendedSearchResettleForm.Designer.cs">
       <DependentUpon>ExtendedSearchResettleForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="FormViewport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FundsHistoryViewport.Designer.cs">
+      <DependentUpon>FundsHistoryViewport.cs</DependentUpon>
+    </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="OwnershipListViewport.Designer.cs">
+      <DependentUpon>OwnershipListViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="OwnershipTypeListViewport.Designer.cs">
+      <DependentUpon>OwnershipTypeListViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PremisesListViewport.Designer.cs">
+      <DependentUpon>PremisesListViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PremisesViewport.Designer.cs">
+      <DependentUpon>PremisesViewport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -102,8 +150,17 @@
     <Compile Include="ResettleBuildingsViewport.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ResettleBuildingsViewport.Designer.cs">
+      <DependentUpon>ResettleBuildingsViewport.cs</DependentUpon>
+    </Compile>
     <Compile Include="ResettlePersonsViewport.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ResettlePersonsViewport.Designer.cs">
+      <DependentUpon>ResettlePersonsViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ResettlePremisesViewport.Designer.cs">
+      <DependentUpon>ResettlePremisesViewport.cs</DependentUpon>
     </Compile>
     <Compile Include="ResettleProcessListViewport.cs">
       <SubType>Form</SubType>
@@ -113,6 +170,18 @@
     </Compile>
     <Compile Include="OwnershipsEditor.Designer.cs">
       <DependentUpon>OwnershipsEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ResettleProcessListViewport.Designer.cs">
+      <DependentUpon>ResettleProcessListViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RestrictionListViewport.Designer.cs">
+      <DependentUpon>RestrictionListViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="RestrictionTypeListViewport.Designer.cs">
+      <DependentUpon>RestrictionTypeListViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="StructureTypeListViewport.Designer.cs">
+      <DependentUpon>StructureTypeListViewport.cs</DependentUpon>
     </Compile>
     <Compile Include="SubPremisesEditor.cs">
       <SubType>Form</SubType>
@@ -131,6 +200,9 @@
     </Compile>
     <Compile Include="SimpleSearchResettleForm.Designer.cs">
       <DependentUpon>SimpleSearchResettleForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SubPremisesViewport.Designer.cs">
+      <DependentUpon>SubPremisesViewport.cs</DependentUpon>
     </Compile>
     <Compile Include="TenancyAgreementsViewport.cs">
       <SubType>Form</SubType>
@@ -152,6 +224,21 @@
     </Compile>
     <Compile Include="ResettlePremisesViewport.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TenancyAgreementsViewport.Designer.cs">
+      <DependentUpon>TenancyAgreementsViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TenancyBuildingsViewport.Designer.cs">
+      <DependentUpon>TenancyBuildingsViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TenancyListViewport.Designer.cs">
+      <DependentUpon>TenancyListViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TenancyPersonsViewport.Designer.cs">
+      <DependentUpon>TenancyPersonsViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="TenancyPremisesViewport.Designer.cs">
+      <DependentUpon>TenancyPremisesViewport.cs</DependentUpon>
     </Compile>
     <Compile Include="TenancyReasonsViewport.cs">
       <SubType>Form</SubType>
@@ -183,6 +270,9 @@
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TenancyReasonsViewport.Designer.cs">
+      <DependentUpon>TenancyReasonsViewport.cs</DependentUpon>
+    </Compile>
     <Compile Include="TenancyReasonTypesViewport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -249,6 +339,9 @@
     <Compile Include="ResettleSubPremisesDetails.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="TenancyReasonTypesViewport.Designer.cs">
+      <DependentUpon>TenancyReasonTypesViewport.cs</DependentUpon>
+    </Compile>
     <Compile Include="TenancySubPremisesDetails.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -267,6 +360,9 @@
     <Compile Include="TenancyViewport.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="TenancyViewport.Designer.cs">
+      <DependentUpon>TenancyViewport.cs</DependentUpon>
+    </Compile>
     <Compile Include="Viewport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -277,6 +373,9 @@
     <Compile Include="ViewportFactory.cs" />
     <Compile Include="WarrantsViewport.cs">
       <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WarrantsViewport.Designer.cs">
+      <DependentUpon>WarrantsViewport.cs</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>

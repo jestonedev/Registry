@@ -1,5 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Data;
+using System.Windows.Forms;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Reporting;
 using Registry.SearchForms;
@@ -9,16 +11,14 @@ namespace Registry.Viewport
 {
     public class Viewport: DockContent, IMenuController
     {
-        private IMenuCallback menuCallback;
-
-        protected IMenuCallback MenuCallback { get { return menuCallback; } set { menuCallback = value; } }
-        private bool selected_;
-
-        
+        protected IMenuCallback MenuCallback { get; set; }
+        public bool Selected { get; set; }
         public string StaticFilter { get; set; }
         public string DynamicFilter { get; set; }
         public DataRow ParentRow { get; set; }
         public ParentTypeEnum ParentType { get; set; }
+        protected BindingSource GeneralBindingSource;
+        protected DataModel GeneralDataModel;
 
         protected Viewport(): this(null)
         {
@@ -47,7 +47,7 @@ namespace Registry.Viewport
 
         public virtual int GetRecordCount()
         {
-            return 0;
+            return GeneralBindingSource.Count;
         }
 
         public virtual Viewport Duplicate()
@@ -254,8 +254,8 @@ namespace Registry.Viewport
             viewport.StaticFilter = staticFilter;
             viewport.ParentRow = parentRow;
             viewport.ParentType = parentType;
-            if ((viewport as IMenuController).CanLoadData())
-                (viewport as IMenuController).LoadData();
+            if (((IMenuController) viewport).CanLoadData())
+                ((IMenuController) viewport).LoadData();
             menuCallback.AddViewport(viewport);
             return viewport;
         }
@@ -428,18 +428,6 @@ namespace Registry.Viewport
         public virtual bool ViewportDetached()
         {
             return ((ParentRow != null) && ((ParentRow.RowState == DataRowState.Detached) || (ParentRow.RowState == DataRowState.Deleted)));
-        }
-
-        public bool Selected
-        {
-            get
-            {
-                return selected_;
-            }
-            set
-            {
-                selected_ = value;
-            }
         }
 
         public virtual bool HasTenancyContract17xReport()
