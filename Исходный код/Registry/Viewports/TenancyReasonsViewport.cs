@@ -17,6 +17,9 @@ namespace Registry.Viewport
 {
     internal sealed partial class TenancyReasonsViewport: EditableDataGridViewport
     {
+        private DataModel tenancyReasonTypesDataModel;
+
+        private BindingSource v_tenancyReasonTypesDataModel;
 
         private TenancyReasonsViewport()
             : this(null)
@@ -158,10 +161,10 @@ namespace Registry.Viewport
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
             GeneralDataModel = DataModel.GetInstance(DataModelType.TenancyReasonsDataModel);
-            GeneralDataModel = DataModel.GetInstance(DataModelType.TenancyReasonTypesDataModel);
+            tenancyReasonTypesDataModel = DataModel.GetInstance(DataModelType.TenancyReasonTypesDataModel);
             // Дожидаемся дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
-            GeneralDataModel.Select();
+            tenancyReasonTypesDataModel.Select();
 
             GeneralBindingSource = new BindingSource();
             GeneralBindingSource.DataMember = "tenancy_reasons";
@@ -171,9 +174,9 @@ namespace Registry.Viewport
             GeneralBindingSource.Filter += DynamicFilter;
             GeneralBindingSource.DataSource = DataModel.DataSet;
 
-            GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.DataMember = "tenancy_reason_types";
-            GeneralBindingSource.DataSource = DataModel.DataSet;
+            v_tenancyReasonTypesDataModel = new BindingSource();
+            v_tenancyReasonTypesDataModel.DataMember = "tenancy_reason_types";
+            v_tenancyReasonTypesDataModel.DataSource = DataModel.DataSet;
 
             if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
                 Text = string.Format(CultureInfo.InvariantCulture, "Основания найма №{0}", ParentRow["id_process"]);
@@ -193,7 +196,7 @@ namespace Registry.Viewport
 
             id_process.DataPropertyName = "id_process";
             id_reason.DataPropertyName = "id_reason";
-            id_reason_type.DataSource = GeneralBindingSource;
+            id_reason_type.DataSource = v_tenancyReasonTypesDataModel;
             id_reason_type.ValueMember = "id_reason_type";
             id_reason_type.DisplayMember = "reason_name";
             id_reason_type.DataPropertyName = "id_reason_type";
@@ -367,10 +370,10 @@ namespace Registry.Viewport
 
         void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            var reason_type_index = GeneralBindingSource.Find("id_reason_type", dataGridView.Rows[e.RowIndex].Cells["id_reason_type"].Value);
+            var reason_type_index = v_tenancyReasonTypesDataModel.Find("id_reason_type", dataGridView.Rows[e.RowIndex].Cells["id_reason_type"].Value);
             var reason_template = "";
             if (reason_type_index != -1)
-                reason_template = ((DataRowView)GeneralBindingSource[reason_type_index])["reason_template"].ToString();
+                reason_template = ((DataRowView)v_tenancyReasonTypesDataModel[reason_type_index])["reason_template"].ToString();
             var reason_number = dataGridView.Rows[e.RowIndex].Cells["reason_number"].Value.ToString();
             DateTime? reason_date = null;
             if (dataGridView.Rows[e.RowIndex].Cells["reason_date"].Value != DBNull.Value)

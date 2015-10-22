@@ -453,147 +453,134 @@ namespace Registry.Viewport
             Close();
         }
 
-        public override bool HasAssocFundHistory()
+        public override bool HasAssocViewport(ViewportType viewportType)
         {
-            return (GeneralSnapshotBindingSource.Count > 0);
+            var reports = new List<ViewportType>
+            {
+                ViewportType.FundsHistoryViewport,
+                ViewportType.TenancyListViewport
+            };
+            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
         }
 
-        public override bool HasAssocTenancies()
-        {
-            return (GeneralSnapshotBindingSource.Count > 0);
-        }
-
-        public override bool HasRegistryExcerptPremiseReport()
-        {
-            return true;
-        }
-
-        public override bool HasRegistryExcerptSubPremiseReport()
-        {
-            return (GeneralSnapshotBindingSource.Count > 0);
-        }
-
-        public override bool HasRegistryExcerptSubPremisesReport()
-        {
-            return true;
-        }
-
-        public override void RegistryExcerptPremiseReportGenerate()
-        {
-            var reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
-            var arguments = new Dictionary<string, string>();
-            arguments.Add("ids", ParentRow["id_premises"].ToString());
-            arguments.Add("excerpt_type", "1");
-            reporter.Run(arguments);
-        }
-
-        public override void RegistryExcerptSubPremiseReportGenerate()
+        public override void ShowAssocViewport(ViewportType viewportType)
         {
             if (SnapshotHasChanges())
             {
-                var result = MessageBox.Show("Перед формированием выписки по комнате необходимо сохранить изменения в базу данных. " +
-                    "Вы хотите это сделать?", "Внимание",
+                var result = MessageBox.Show(@"Перед открытием связных объектов необходимо сохранить изменения в базу данных. " +
+                    @"Вы хотите это сделать?", @"Внимание",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                if (result == DialogResult.Yes)
-                    SaveRecord();
-                else
-                    if (result == DialogResult.No)
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        SaveRecord();
+                        break;
+                    case DialogResult.No:
                         CancelRecord();
-                    else
+                        break;
+                    default:
                         return;
+                }
             }
-            if (SnapshotHasChanges())
-                return;
             if (GeneralSnapshotBindingSource.Position == -1)
             {
-                MessageBox.Show("Не выбрана комната для формирования выписки", "Ошибка",
+                MessageBox.Show(@"Не выбрана комната для отображения истории принадлежности к фондам", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            var reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
-            var arguments = new Dictionary<string, string>();
-            arguments.Add("ids", ((DataRowView)GeneralSnapshotBindingSource[GeneralSnapshotBindingSource.Position])["id_sub_premises"].ToString());
-            arguments.Add("excerpt_type", "2");
-            reporter.Run(arguments);
-        }
-
-        public override void RegistryExcerptSubPremisesReportGenerate()
-        {
-            if (SnapshotHasChanges())
-            {
-                var result = MessageBox.Show("Перед формированием выписки по муниципальным комнатам необходимо сохранить изменения в базу данных. " +
-                    "Вы хотите это сделать?", "Внимание",
-                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                if (result == DialogResult.Yes)
-                    SaveRecord();
-                else
-                    if (result == DialogResult.No)
-                        CancelRecord();
-                    else
-                        return;
-            }
-            if (SnapshotHasChanges())
-                return;
-            var reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
-            var arguments = new Dictionary<string, string>();
-            arguments.Add("ids", ParentRow["id_premises"].ToString());
-            arguments.Add("excerpt_type", "3");
-            reporter.Run(arguments);
-        }
-
-        public override void ShowFundHistory()
-        {
-            if (SnapshotHasChanges())
-            {
-                var result = MessageBox.Show("Перед открытием истории принадлежности фондам необходимо сохранить изменения в базу данных. "+
-                    "Вы хотите это сделать?", "Внимание", 
-                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                if (result == DialogResult.Yes)
-                    SaveRecord();
-                else
-                    if (result == DialogResult.No)
-                        CancelRecord();
-                    else
-                        return;
-            }
-            if (SnapshotHasChanges())
-                return;
-            if (GeneralSnapshotBindingSource.Position == -1)
-            {
-                MessageBox.Show("Не выбрана комната для отображения истории принадлежности к фондам", "Ошибка", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                return;
-            }
-            ShowAssocViewport(MenuCallback, ViewportType.FundsHistoryViewport, "id_sub_premises = " +
+            ShowAssocViewport(MenuCallback, viewportType, "id_sub_premises = " +
                 Convert.ToInt32(((DataRowView)GeneralSnapshotBindingSource[GeneralSnapshotBindingSource.Position])["id_sub_premises"], CultureInfo.InvariantCulture),
                 ((DataRowView)GeneralSnapshotBindingSource[GeneralSnapshotBindingSource.Position]).Row, ParentTypeEnum.SubPremises);
         }
 
-        public override void ShowTenancies()
+        public override bool HasReport(ReporterType reporterType)
+        {
+            switch (reporterType)
+            {
+                case  ReporterType.RegistryExcerptReporterSubPremise:
+                    return (GeneralSnapshotBindingSource.Count > 0);
+                case  ReporterType.RegistryExcerptReporterPremise:
+                case ReporterType.RegistryExcerptReporterAllMunSubPremises:
+                    return true;
+            }
+            return false;
+        }
+
+        public override void GenerateReport(ReporterType reporterType)
         {
             if (SnapshotHasChanges())
             {
-                var result = MessageBox.Show("Перед открытием истории найма необходимо сохранить изменения в базу данных. Вы хотите это сделать?",
-                    "Внимание", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                if (result == DialogResult.Yes)
-                    SaveRecord();
-                else
-                    if (result == DialogResult.No)
+                var result = MessageBox.Show(@"Перед открытием истории принадлежности фондам необходимо сохранить изменения в базу данных. " +
+                    @"Вы хотите это сделать?", @"Внимание",
+                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        SaveRecord();
+                        break;
+                    case DialogResult.No:
                         CancelRecord();
-                    else
+                        break;
+                    default:
                         return;
+                }
             }
-            if (SnapshotHasChanges())
-                return;
             if (GeneralSnapshotBindingSource.Position == -1)
             {
-                MessageBox.Show("Не выбрана комната для отображения истории найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Не выбрана комната для отображения истории принадлежности к фондам", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport(MenuCallback, ViewportType.TenancyListViewport, "id_sub_premises = " +
-                Convert.ToInt32(((DataRowView)GeneralSnapshotBindingSource[GeneralSnapshotBindingSource.Position])["id_sub_premises"], CultureInfo.InvariantCulture),
-                ((DataRowView)GeneralSnapshotBindingSource[GeneralSnapshotBindingSource.Position]).Row, ParentTypeEnum.SubPremises);
+            var reporter = ReporterFactory.CreateReporter(reporterType);
+            var arguments = new Dictionary<string, string>();
+            switch (reporterType)
+            {
+                case ReporterType.RegistryExcerptReporterSubPremise:
+                    arguments = RegistryExcerptReporterSubPremiseArguments();
+                    break;
+                case ReporterType.RegistryExcerptReporterPremise:
+                    arguments = RegistryExcerptPremiseReportArguments();
+                    break;
+                case ReporterType.RegistryExcerptReporterAllMunSubPremises:
+                    arguments = RegistryExcerptReporterAllMunSubPremisesArguments();
+                    break;
+            }
+            reporter.Run(arguments);
         }
+
+        private Dictionary<string, string> RegistryExcerptPremiseReportArguments()
+        {
+            var arguments = new Dictionary<string, string>
+            {
+                {"ids", ParentRow["id_premises"].ToString()},
+                {"excerpt_type", "1"}
+            };
+            return arguments;
+        }
+
+        private Dictionary<string, string> RegistryExcerptReporterSubPremiseArguments()
+        {
+            var arguments = new Dictionary<string, string>
+            {
+                {
+                    "ids",
+                    ((DataRowView) GeneralSnapshotBindingSource[GeneralSnapshotBindingSource.Position])[
+                        "id_sub_premises"].ToString()
+                },
+                {"excerpt_type", "2"}
+            };
+            return arguments;
+        }
+
+        private Dictionary<string, string> RegistryExcerptReporterAllMunSubPremisesArguments()
+        {
+            var arguments = new Dictionary<string, string>
+            {
+                {"ids", ParentRow["id_premises"].ToString()},
+                {"excerpt_type", "3"}
+            };
+            return arguments;
+        } 
 
         void v_snapshot_sub_premises_CurrentItemChanged(object sender, EventArgs e)
         {

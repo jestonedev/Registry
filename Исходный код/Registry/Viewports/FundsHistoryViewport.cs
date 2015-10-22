@@ -13,7 +13,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
-    internal sealed partial class FundsHistoryViewport : FormViewport
+    internal sealed partial class FundsHistoryViewport : FormWithGridViewport
     {
         #region Models
         DataModel fund_types;
@@ -34,6 +34,7 @@ namespace Registry.Viewport
             : base(menuCallback)
         {
             InitializeComponent();
+            DataGridView = dataGridView;
         }
 
         public FundsHistoryViewport(FundsHistoryViewport fundsHistoryViewport, IMenuCallback menuCallback)

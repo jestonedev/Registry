@@ -17,7 +17,6 @@ namespace Registry.Reporting
         RegistryPremisesByDonationReporter,
         RegistryMunicipalPremisesReporter,
         RegistryFullStatisticReporter,
-        RegistryExcerptReporter,
         ClaimsStatisticReporter,
         TenancyContractCommercialReporter,
         TenancyContractSocialReporter,
@@ -35,6 +34,9 @@ namespace Registry.Reporting
         ResettleShortProcessingReporter,
         ResettleFullProcessingReporter,
         RegistryAllPremisesReporter,
-        ExportReporter
+        ExportReporter,
+        RegistryExcerptReporterPremise,
+        RegistryExcerptReporterSubPremise,
+        RegistryExcerptReporterAllMunSubPremises
     }
 }

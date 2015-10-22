@@ -18,7 +18,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
-    internal sealed partial class TenancyAgreementsViewport: FormViewport
+    internal sealed partial class TenancyAgreementsViewport : FormWithGridViewport
     {
         #region Modeles
         DataModel tenancy_persons;
@@ -49,6 +49,7 @@ namespace Registry.Viewport
             : base(menuCallback)
         {
             InitializeComponent();
+            DataGridView = dataGridView;
         }
 
         public TenancyAgreementsViewport(TenancyAgreementsViewport tenancyAgreementsViewport, IMenuCallback menuCallback)
@@ -540,12 +541,13 @@ namespace Registry.Viewport
             return viewport;
         }
 
-        public override bool HasTenancyAgreementReport()
+        public override bool HasReport(ReporterType reporterType)
         {
-            return (GeneralBindingSource.Position > -1);
+            return reporterType == ReporterType.TenancyAgreementReporter && 
+                (GeneralBindingSource.Position > -1);
         }
 
-        public override void TenancyAgreementReportGenerate()
+        public override void GenerateReport(ReporterType reporterType)
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
@@ -553,13 +555,13 @@ namespace Registry.Viewport
                 return;
             if (GeneralBindingSource.Position == -1)
             {
-                MessageBox.Show("Не выбрано соглашение для печати",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Не выбрано соглашение для печати",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
             ReporterFactory.CreateReporter(ReporterType.TenancyAgreementReporter).Run(
-                new Dictionary<string, string>() { { "id_agreement", row["id_agreement"].ToString() } });
+                new Dictionary<string, string> { { "id_agreement", row["id_agreement"].ToString() } });
         }
 
         private bool TenancyValidForReportGenerate()

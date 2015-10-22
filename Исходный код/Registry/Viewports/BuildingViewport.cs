@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -783,11 +784,11 @@ namespace Registry.Viewport
             var buildingFromView = (Building) EntityFromView();
             if (!ValidateBuilding(building))
                 return;
-            string Filter = "";
-            if (!String.IsNullOrEmpty(GeneralBindingSource.Filter))
-                Filter += " OR ";
+            var filter = "";
+            if (!string.IsNullOrEmpty(GeneralBindingSource.Filter))
+                filter += " OR ";
             else
-                Filter += "(1 = 1) OR ";
+                filter += "(1 = 1) OR ";
             switch (viewportState)
             {
                 case ViewportState.ReadState:
@@ -795,23 +796,23 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
-                    int id_building = GeneralDataModel.Insert(building);
-                    if (id_building == -1)
+                    var idBuilding = GeneralDataModel.Insert(building);
+                    if (idBuilding == -1)
                     {
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
                     DataRowView newRow;
-                    building.IdBuilding = id_building;
+                    building.IdBuilding = idBuilding;
                     is_editable = false;
                     if (GeneralBindingSource.Position == -1)
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    Filter += String.Format(CultureInfo.CurrentCulture, "(id_building = {0})", building.IdBuilding);
-                    GeneralBindingSource.Filter += Filter;
+                    filter += string.Format(CultureInfo.CurrentCulture, "(id_building = {0})", building.IdBuilding);
+                    GeneralBindingSource.Filter += filter;
                     FillRowFromBuilding(building, newRow);
-                    Text = @"Здание №" + id_building.ToString(CultureInfo.InvariantCulture);
+                    Text = @"Здание №" + idBuilding.ToString(CultureInfo.InvariantCulture);
                     viewportState = ViewportState.ReadState;
                     GeneralDataModel.EditingNewRecord = false;
                     break;
@@ -834,8 +835,8 @@ namespace Registry.Viewport
                         return;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     is_editable = false;
-                    Filter += string.Format(CultureInfo.CurrentCulture, "(id_building = {0})", building.IdBuilding);
-                    GeneralBindingSource.Filter += Filter;
+                    filter += string.Format(CultureInfo.CurrentCulture, "(id_building = {0})", building.IdBuilding);
+                    GeneralBindingSource.Filter += filter;
                     FillRowFromBuilding(building, row);
                     if (dialogResult == DialogResult.No)
                     {
@@ -1010,64 +1011,26 @@ namespace Registry.Viewport
             return viewport;
         }
 
-        public override bool HasAssocPremises()
+        public override bool HasAssocViewport(ViewportType viewportType)
         {
-            return (GeneralBindingSource.Position > -1);
+            var reports = new List<ViewportType>
+            {
+                ViewportType.PremisesListViewport,
+                ViewportType.OwnershipListViewport,
+                ViewportType.RestrictionListViewport,
+                ViewportType.FundsHistoryViewport,
+                ViewportType.TenancyListViewport
+            };
+            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
         }
 
-        public override bool HasAssocOwnerships()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override bool HasAssocRestrictions()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override bool HasAssocFundHistory()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-        
-        public override bool HasAssocTenancies()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override void ShowPremises()
-        {
-            ShowAssocViewport(ViewportType.PremisesListViewport);
-        }
-
-        public override void ShowOwnerships()
-        {
-            ShowAssocViewport(ViewportType.OwnershipListViewport);
-        }
-
-        public override void ShowRestrictions()
-        {
-            ShowAssocViewport(ViewportType.RestrictionListViewport);
-        }
-
-        public override void ShowFundHistory()
-        {         
-            ShowAssocViewport(ViewportType.FundsHistoryViewport);
-        }
-
-        public override void ShowTenancies()
-        {
-            ShowAssocViewport(ViewportType.TenancyListViewport);
-        }
-
-        private void ShowAssocViewport(ViewportType viewportType)
+        public override void ShowAssocViewport(ViewportType viewportType)
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
             if (GeneralBindingSource.Position == -1)
             {
-                MessageBox.Show("Не выбрано здание", "Ошибка", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Не выбрано здание для отображения истории найма", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             ShowAssocViewport(MenuCallback, viewportType,
@@ -1252,16 +1215,16 @@ namespace Registry.Viewport
         {
             if (e.RowIndex == -1)
                 return;
-            if (HasAssocRestrictions())
-                ShowRestrictions();
+            if (HasAssocViewport(ViewportType.RestrictionListViewport))
+                ShowAssocViewport(ViewportType.RestrictionListViewport);
         }
 
         private void dataGridViewOwnerships_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1)
                 return;
-            if (HasAssocOwnerships())
-                ShowOwnerships();
+            if (HasAssocViewport(ViewportType.OwnershipListViewport))
+                ShowAssocViewport(ViewportType.OwnershipListViewport);
         }
 
         private void textBoxHouse_KeyPress(object sender, KeyPressEventArgs e)

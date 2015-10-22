@@ -44,6 +44,7 @@ namespace Registry.Viewport
         public TenancyBuildingsViewport(IMenuCallback menuCallback): base(menuCallback)
         {
             InitializeComponent();
+            DataGridView = dataGridView;
         }
 
         public TenancyBuildingsViewport(TenancyBuildingsViewport tenancyBuildingsViewport, IMenuCallback menuCallback)
@@ -487,51 +488,24 @@ namespace Registry.Viewport
             return viewport;
         }
 
-        public override bool HasAssocPremises()
+        public override bool HasAssocViewport(ViewportType viewportType)
         {
-            return (GeneralBindingSource.Position > -1);
+            var reports = new List<ViewportType>
+            {
+                ViewportType.PremisesListViewport,
+                ViewportType.OwnershipListViewport,
+                ViewportType.RestrictionListViewport,
+                ViewportType.FundsHistoryViewport,
+                ViewportType.TenancyListViewport
+            };
+            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
         }
 
-        public override bool HasAssocOwnerships()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override bool HasAssocRestrictions()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override bool HasAssocFundHistory()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override void ShowPremises()
-        {
-            ShowAssocViewport(ViewportType.PremisesListViewport);
-        }
-
-        public override void ShowOwnerships()
-        {
-            ShowAssocViewport(ViewportType.OwnershipListViewport);
-        }
-
-        public override void ShowRestrictions()
-        {
-            ShowAssocViewport(ViewportType.RestrictionListViewport);
-        }
-
-        public override void ShowFundHistory()
-        {
-            ShowAssocViewport(ViewportType.FundsHistoryViewport);
-        }
-
-        private void ShowAssocViewport(ViewportType viewportType)
+        public override void ShowAssocViewport(ViewportType viewportType)
         {
             if (GeneralBindingSource.Position == -1)
             {
-                MessageBox.Show("Не выбрано здание для отображения истории найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Не выбрано здание для отображения связных объектов", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             ShowAssocViewport(MenuCallback, viewportType,
@@ -610,31 +584,6 @@ namespace Registry.Viewport
                 row["rent_living_area"] = e.Row["rent_living_area"];
             }
             dataGridView.Invalidate();
-        }
-
-        void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
-        {
-            if (GeneralBindingSource.Position == -1 || dataGridView.RowCount == 0)
-            {
-                dataGridView.ClearSelection();
-                return;
-            }
-            if (GeneralBindingSource.Position >= dataGridView.RowCount)
-            {
-                dataGridView.Rows[dataGridView.RowCount - 1].Selected = true;
-                dataGridView.CurrentCell = dataGridView.Rows[dataGridView.RowCount - 1].Cells[0];
-            }
-            else
-            {
-                dataGridView.Rows[GeneralBindingSource.Position].Selected = true;
-                dataGridView.CurrentCell = dataGridView.Rows[GeneralBindingSource.Position].Cells[0];
-            }
-            if (Selected)
-            {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
-            }
         }
 
         void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)

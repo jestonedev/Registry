@@ -11,7 +11,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
-    internal sealed partial class TenancyPersonsViewport: FormViewport
+    internal sealed partial class TenancyPersonsViewport : FormWithGridViewport
     {
         #region Models
         DataModel kinships;
@@ -37,6 +37,7 @@ namespace Registry.Viewport
             : base(menuCallback)
         {
             InitializeComponent();
+            DataGridView = dataGridViewTenancyPersons;
         }
 
         public TenancyPersonsViewport(TenancyPersonsViewport tenancyPersonsViewport, IMenuCallback menuCallback)

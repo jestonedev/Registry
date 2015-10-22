@@ -337,6 +337,11 @@ namespace Registry.Viewport
             this.numericUpDownProcessID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownProcessID.Location = new System.Drawing.Point(172, 4);
+            this.numericUpDownProcessID.Maximum = new decimal(new int[] {
+            100000000,
+            0,
+            0,
+            0});
             this.numericUpDownProcessID.Name = "numericUpDownProcessID";
             this.numericUpDownProcessID.Size = new System.Drawing.Size(202, 21);
             this.numericUpDownProcessID.TabIndex = 0;

@@ -38,7 +38,9 @@ namespace Registry.Reporting
                     return new MunicipalPremisesReporter();
                 case ReporterType.RegistryAllPremisesReporter:
                     return new AllPremisesReporter();
-                case ReporterType.RegistryExcerptReporter:
+                case ReporterType.RegistryExcerptReporterPremise:
+                case ReporterType.RegistryExcerptReporterSubPremise:
+                case ReporterType.RegistryExcerptReporterAllMunSubPremises:
                     return new ExcerptReporter();
                 case ReporterType.ClaimsStatisticReporter:
                     return new ClaimsStatisticReporter();

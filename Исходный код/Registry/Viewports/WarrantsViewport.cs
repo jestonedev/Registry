@@ -12,7 +12,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
-    internal sealed partial class WarrantsViewport: FormViewport
+    internal sealed partial class WarrantsViewport : FormWithGridViewport
     {
 
         #region Models
@@ -32,6 +32,7 @@ namespace Registry.Viewport
             : base(menuCallback)
         {
             InitializeComponent();
+            DataGridView = dataGridView;
         }
 
         public WarrantsViewport(WarrantsViewport warrantsViewport, IMenuCallback menuCallback)

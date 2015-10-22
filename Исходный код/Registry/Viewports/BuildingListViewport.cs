@@ -41,6 +41,7 @@ namespace Registry.Viewport
         public BuildingListViewport(IMenuCallback menuCallback): base(menuCallback)
         {
             InitializeComponent();
+            DataGridView = dataGridView;
         }
 
         public BuildingListViewport(Viewport buildingListViewport, IMenuCallback menuCallback)
@@ -70,6 +71,7 @@ namespace Registry.Viewport
             GeneralDataModel = DataModel.GetInstance(DataModelType.BuildingsDataModel);
             kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
             object_states = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
+            
             // Ожидаем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
             kladr.Select();
@@ -108,10 +110,7 @@ namespace Registry.Viewport
 
         public override bool SearchedRecords()
         {
-            if (!string.IsNullOrEmpty(DynamicFilter))
-                return true;
-            else
-                return false;
+            return !string.IsNullOrEmpty(DynamicFilter);
         }
 
         public override void SearchRecord(SearchFormType searchFormType)
@@ -267,64 +266,56 @@ namespace Registry.Viewport
             return viewport;
         }
 
-        public override bool HasAssocPremises()
+        public override bool HasAssocViewport(ViewportType viewportType)
         {
-            return (GeneralBindingSource.Position > -1);
+            var reports = new List<ViewportType>
+            {
+                ViewportType.PremisesListViewport,
+                ViewportType.OwnershipListViewport,
+                ViewportType.RestrictionListViewport,
+                ViewportType.FundsHistoryViewport,
+                ViewportType.TenancyListViewport
+            };
+            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
+        }
+        
+        public override void ShowAssocViewport(ViewportType viewportType)
+        {
+            if (GeneralBindingSource.Position == -1)
+            {
+                MessageBox.Show(@"Не выбрано здание для отображения истории найма", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            ShowAssocViewport(MenuCallback, viewportType,
+                "id_building = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"], CultureInfo.InvariantCulture),
+                ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
+                ParentTypeEnum.Building);
         }
 
-        public override bool HasAssocOwnerships()
+        public override bool HasReport(ReporterType reporterType)
         {
-            return (GeneralBindingSource.Position > -1);
+            var reports = new List<ReporterType>
+            {
+                ReporterType.ExportReporter
+            };
+            return reports.Contains(reporterType);
         }
 
-        public override bool HasAssocRestrictions()
+        public override void GenerateReport(ReporterType reporterType)
         {
-            return (GeneralBindingSource.Position > -1);
+            var reporter = ReporterFactory.CreateReporter(reporterType);
+            var arguments = new Dictionary<string, string>();
+            switch (reporterType)
+            {
+                case ReporterType.ExportReporter:
+                    arguments = ExportReportArguments();
+                    break;
+            }
+            reporter.Run(arguments);
         }
 
-        public override bool HasAssocFundHistory()
+        private Dictionary<string,string> ExportReportArguments()
         {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override bool HasAssocTenancies()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override void ShowPremises()
-        {
-            ShowAssocViewport(ViewportType.PremisesListViewport);
-        }
-
-        public override void ShowOwnerships()
-        {
-            ShowAssocViewport(ViewportType.OwnershipListViewport);
-        }
-
-        public override void ShowRestrictions()
-        {
-            ShowAssocViewport(ViewportType.RestrictionListViewport);
-        }
-
-        public override void ShowFundHistory()
-        {
-            ShowAssocViewport(ViewportType.FundsHistoryViewport);
-        }
-
-        public override void ShowTenancies()
-        {
-            ShowAssocViewport(ViewportType.TenancyListViewport);
-        }
-
-        public override bool HasExportToOds()
-        {
-            return true;
-        }
-
-        public override void ExportToOds()
-        {
-            var reporter = ReporterFactory.CreateReporter(ReporterType.ExportReporter);
             var columnHeaders = dataGridView.Columns.Cast<DataGridViewColumn>().
                 Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnHeader\":\"" + column.HeaderText + "\"}");
             var columnPatterns = dataGridView.Columns.Cast<DataGridViewColumn>().
@@ -336,20 +327,7 @@ namespace Registry.Viewport
                 {"columnHeaders", "["+columnHeaders+"]"},
                 {"columnPatterns", "["+columnPatterns+"]"}
             };
-            reporter.Run(arguments);
-        }
-
-        private void ShowAssocViewport(ViewportType viewportType)
-        {
-            if (GeneralBindingSource.Position == -1)
-            {
-                MessageBox.Show(@"Не выбрано здание для отображения истории найма", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                return;
-            }
-            ShowAssocViewport(MenuCallback, viewportType,
-                "id_building = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"], CultureInfo.InvariantCulture),
-                ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
-                ParentTypeEnum.Building);
+            return arguments;
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -417,25 +395,13 @@ namespace Registry.Viewport
             switch (dataGridView.Columns[e.ColumnIndex].Name)
             {
                 case "id_building":
-                    e.Value = row["id_building"];
-                    break;
                 case "id_street":
-                    e.Value = row["id_street"];
-                    break;
                 case "house":
-                    e.Value = row["house"];
-                    break;
                 case "floors":
-                    e.Value = row["floors"];
-                    break;
                 case "living_area":
-                    e.Value = row["living_area"];
-                    break;
                 case "cadastral_num":
-                    e.Value = row["cadastral_num"];
-                    break;
                 case "startup_year":
-                    e.Value = row["startup_year"];
+                    e.Value = row[dataGridView.Columns[e.ColumnIndex].Name];
                     break;
                 case "id_state":
                     var stateRow = object_states.Select().Rows.Find(row["id_state"]);
@@ -443,45 +409,23 @@ namespace Registry.Viewport
                         e.Value = stateRow["state_female"];
                     break;
             }
-        }
-
-        void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
-        {
-            if (GeneralBindingSource.Position == -1 || dataGridView.RowCount == 0)
-            {
-                dataGridView.ClearSelection();
-                return;
-            }
-            if (GeneralBindingSource.Position >= dataGridView.RowCount)
-            {
-                dataGridView.Rows[dataGridView.RowCount - 1].Selected = true;
-                dataGridView.CurrentCell = dataGridView.Rows[dataGridView.RowCount - 1].Cells[0];
-            }
-            else
-            {
-                dataGridView.Rows[GeneralBindingSource.Position].Selected = true;
-                dataGridView.CurrentCell = dataGridView.Rows[GeneralBindingSource.Position].Cells[0];
-            }
-            if (Selected)
-            {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
-            }
-        }
+        } 
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
+            var idStreetColumn = dataGridView.Columns["id_street"];
+            if (idStreetColumn == null) return;
             if (dataGridView.Size.Width > 1100)
             {
-                if (dataGridView.Columns["id_street"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
-                    dataGridView.Columns["id_street"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                if (idStreetColumn.AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
+                    idStreetColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             }
             else
             {
-                if (dataGridView.Columns["id_street"].AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
-                    dataGridView.Columns["id_street"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                if (idStreetColumn.AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
+                    idStreetColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
         }
+    
     }
 }

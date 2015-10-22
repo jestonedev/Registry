@@ -1140,111 +1140,26 @@ namespace Registry.Viewport
             base.Close();
         }
 
-        public override bool HasAssocOwnerships()
+        public override bool HasAssocViewport(ViewportType viewportType)
         {
-            return (GeneralBindingSource.Position != -1);
+            var reports = new List<ViewportType>
+            {
+                ViewportType.SubPremisesViewport,
+                ViewportType.OwnershipListViewport,
+                ViewportType.RestrictionListViewport,
+                ViewportType.FundsHistoryViewport,
+                ViewportType.TenancyListViewport
+            };
+            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
         }
 
-        public override bool HasAssocRestrictions()
-        {
-            return (GeneralBindingSource.Position != -1);
-        }
-
-        public override bool HasAssocSubPremises()
-        {
-            return (GeneralBindingSource.Position != -1);
-        }
-
-        public override bool HasAssocFundHistory()
-        {
-            return (GeneralBindingSource.Position != -1);
-        }
-
-        public override bool HasAssocTenancies()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override bool HasRegistryExcerptPremiseReport()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override bool HasRegistryExcerptSubPremiseReport()
-        {
-            return (v_sub_premises.Position > -1);
-        }
-
-        public override bool HasRegistryExcerptSubPremisesReport()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override void RegistryExcerptPremiseReportGenerate()
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            Reporter reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
-            Dictionary<string, string> arguments = new Dictionary<string, string>();
-            arguments.Add("ids", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"].ToString());
-            arguments.Add("excerpt_type", "1");
-            reporter.Run(arguments);
-        }
-
-        public override void RegistryExcerptSubPremiseReportGenerate()
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            Reporter reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
-            Dictionary<string, string> arguments = new Dictionary<string, string>();
-            arguments.Add("ids", ((DataRowView)v_sub_premises[v_sub_premises.Position])["id_sub_premises"].ToString());
-            arguments.Add("excerpt_type", "2");
-            reporter.Run(arguments);
-        }
-
-        public override void RegistryExcerptSubPremisesReportGenerate()
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            Reporter reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
-            Dictionary<string, string> arguments = new Dictionary<string, string>();
-            arguments.Add("ids", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"].ToString());
-            arguments.Add("excerpt_type", "3");
-            reporter.Run(arguments);
-        }
-
-        public override void ShowOwnerships()
-        {
-            ShowAssocViewport(ViewportType.OwnershipListViewport);
-        }
-
-        public override void ShowRestrictions()
-        {
-            ShowAssocViewport(ViewportType.RestrictionListViewport);
-        }
-
-        public override void ShowSubPremises()
-        {
-            ShowAssocViewport(ViewportType.SubPremisesViewport);
-        }
-
-        public override void ShowFundHistory()
-        {
-            ShowAssocViewport(ViewportType.FundsHistoryViewport);
-        }
-
-        public override void ShowTenancies()
-        {
-            ShowAssocViewport(ViewportType.TenancyListViewport);
-        }
-
-        private void ShowAssocViewport(ViewportType viewportType)
+        public override void ShowAssocViewport(ViewportType viewportType)
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
             if (GeneralBindingSource.Position == -1)
             {
-                MessageBox.Show("Не выбрано помещение", "Ошибка",
+                MessageBox.Show(@"Не выбрано помещение", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
@@ -1252,6 +1167,70 @@ namespace Registry.Viewport
                 "id_premises = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"], CultureInfo.InvariantCulture),
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
                 ParentTypeEnum.Premises);
+        }
+
+        public override bool HasReport(ReporterType reporterType)
+        {
+            switch (reporterType)
+            {
+                case ReporterType.RegistryExcerptReporterPremise:
+                case ReporterType.RegistryExcerptReporterAllMunSubPremises:
+                    return (GeneralBindingSource.Position > -1);
+                case ReporterType.RegistryExcerptReporterSubPremise:
+                    return (v_sub_premises.Position > -1);
+            }
+            return false;
+        }
+
+        public override void GenerateReport(ReporterType reporterType)
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            var reporter = ReporterFactory.CreateReporter(reporterType);
+            var arguments = new Dictionary<string, string>();
+            switch (reporterType)
+            {
+                case ReporterType.RegistryExcerptReporterPremise:
+                    arguments = RegistryExcerptPremiseReportArguments();
+                    break;
+                case ReporterType.RegistryExcerptReporterAllMunSubPremises:
+                    arguments = RegistryExcerptReporterAllMunSubPremisesArguments();
+                    break;
+                case ReporterType.RegistryExcerptReporterSubPremise:
+                    arguments = RegistryExcerptReporterSubPremiseArguments();
+                    break;
+            }
+            reporter.Run(arguments);
+        }
+
+        private Dictionary<string, string> RegistryExcerptPremiseReportArguments()
+        {
+            var arguments = new Dictionary<string, string>
+            {
+                {"ids", ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_premises"].ToString()},
+                {"excerpt_type", "1"}
+            };
+            return arguments;
+        }
+
+        private Dictionary<string, string> RegistryExcerptReporterSubPremiseArguments()
+        {
+            var arguments = new Dictionary<string, string>
+            {
+                {"ids", ((DataRowView) v_sub_premises[v_sub_premises.Position])["id_sub_premises"].ToString()},
+                {"excerpt_type", "2"}
+            };
+            return arguments;
+        }
+
+        private Dictionary<string, string> RegistryExcerptReporterAllMunSubPremisesArguments()
+        {
+            var arguments = new Dictionary<string, string>
+            {
+                {"ids", ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_premises"].ToString()},
+                {"excerpt_type", "3"}
+            };
+            return arguments;
         }
 
         protected override void OnVisibleChanged(EventArgs e)
@@ -1487,24 +1466,24 @@ namespace Registry.Viewport
         {
             if (e.RowIndex == -1)
                 return;
-            if (HasAssocRestrictions())
-                ShowRestrictions();
+            if (HasAssocViewport(ViewportType.RestrictionListViewport))
+                ShowAssocViewport(ViewportType.RestrictionListViewport);
         }
 
         private void dataGridViewOwnerships_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1)
                 return;
-            if (HasAssocOwnerships())
-                ShowOwnerships();
+            if (HasAssocViewport(ViewportType.OwnershipListViewport))
+                ShowAssocViewport(ViewportType.OwnershipListViewport);
         }
 
         private void dataGridViewRooms_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1)
                 return;
-            if (HasAssocSubPremises())
-                ShowSubPremises();
+            if (HasAssocViewport(ViewportType.SubPremisesViewport))
+                ShowAssocViewport(ViewportType.SubPremisesViewport);
         }
 
         private void textBoxPremisesNumber_KeyPress(object sender, KeyPressEventArgs e)

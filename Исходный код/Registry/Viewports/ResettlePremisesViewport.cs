@@ -58,6 +58,7 @@ namespace Registry.Viewport
         public ResettlePremisesViewport(IMenuCallback menuCallback): base(menuCallback)
         {
             InitializeComponent();
+            DataGridView = dataGridView;
         }
 
         public ResettlePremisesViewport(ResettlePremisesViewport resettlePremisesViewport, IMenuCallback menuCallback)
@@ -118,15 +119,6 @@ namespace Registry.Viewport
             var Position = GeneralBindingSource.Find("id_premises", id);
             if (Position > 0)
                 GeneralBindingSource.Position = Position;
-        }
-
-        private static ResettleObject RowToResettlePremises(DataRow row)
-        {
-            var to = new ResettleObject();
-            to.IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
-            to.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
-            to.IdObject = ViewportHelper.ValueOrNull<int>(row, "id_premises");
-            return to;
         }
 
         private List<ResettleObject> ResettlePremisesFromViewport()
@@ -204,7 +196,7 @@ namespace Registry.Viewport
             var ds = DataModel.DataSet;
 
             GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.CurrentItemChanged += v_premises_CurrentItemChanged;
+            GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
             GeneralBindingSource.DataMember = "premises";
             GeneralBindingSource.DataSource = ds;
             GeneralBindingSource.Filter += DynamicFilter;
@@ -579,83 +571,30 @@ namespace Registry.Viewport
             base.ForceClose();
         }
 
-        public override bool HasAssocOwnerships()
+        public override bool HasAssocViewport(ViewportType viewportType)
         {
-            return (GeneralBindingSource.Position > -1);
+            var reports = new List<ViewportType>
+            {
+                ViewportType.SubPremisesViewport,
+                ViewportType.OwnershipListViewport,
+                ViewportType.RestrictionListViewport,
+                ViewportType.FundsHistoryViewport,
+                ViewportType.TenancyListViewport
+            };
+            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
         }
 
-        public override bool HasAssocRestrictions()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override bool HasAssocSubPremises()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override bool HasAssocFundHistory()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override void ShowOwnerships()
-        {
-            ShowAssocViewport(ViewportType.OwnershipListViewport);
-        }
-
-        public override void ShowRestrictions()
-        {
-            ShowAssocViewport(ViewportType.RestrictionListViewport);
-        }
-
-        public override void ShowSubPremises()
-        {
-            ShowAssocViewport(ViewportType.SubPremisesViewport);
-        }
-
-        public override void ShowFundHistory()
-        {
-            ShowAssocViewport(ViewportType.FundsHistoryViewport);
-        }
-
-        private void ShowAssocViewport(ViewportType viewportType)
+        public override void ShowAssocViewport(ViewportType viewportType)
         {
             if (GeneralBindingSource.Position == -1)
             {
-                MessageBox.Show("Не выбрано помещение", "Ошибка", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Не выбрано помещение", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             ShowAssocViewport(MenuCallback, viewportType,
                 "id_premises = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"], CultureInfo.InvariantCulture),
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
                 ParentTypeEnum.Premises);
-        }
-
-        void v_premises_CurrentItemChanged(object sender, EventArgs e)
-        {
-            if (GeneralBindingSource.Position == -1 || dataGridView.RowCount == 0)
-            {
-                dataGridView.ClearSelection();
-                return;
-            }
-            if (GeneralBindingSource.Position >= dataGridView.RowCount)
-            {
-                dataGridView.Rows[dataGridView.RowCount - 1].Selected = true;
-                dataGridView.CurrentCell = dataGridView.Rows[dataGridView.RowCount - 1].Cells[0];
-            }
-            else
-            {
-                dataGridView.Rows[GeneralBindingSource.Position].Selected = true;
-                dataGridView.CurrentCell = dataGridView.Rows[GeneralBindingSource.Position].Cells[0];
-            }
-            if (Selected)
-            {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
-            }
         }
 
         void ResettlePremisesViewport_RowDeleting(object sender, DataRowChangeEventArgs e)

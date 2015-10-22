@@ -33,6 +33,7 @@ namespace Registry.Viewport
         private DataModel tenancy_persons;
         private DataModel tenancy_reasons;
         private DataModel kinships;
+        private CalcDataModel tenancy_premises_info;
         #endregion Models
 
         #region Views
@@ -622,6 +623,7 @@ namespace Registry.Viewport
             tenancy_persons = DataModel.GetInstance(DataModelType.TenancyPersonsDataModel);
             tenancy_reasons = DataModel.GetInstance(DataModelType.TenancyReasonsDataModel);
             kinships = DataModel.GetInstance(DataModelType.KinshipsDataModel);
+            tenancy_premises_info = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelTenancyPremisesInfo);
 
             //Ожидаем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
@@ -674,7 +676,7 @@ namespace Registry.Viewport
             v_tenancy_reasons.DataSource = GeneralBindingSource;
 
             v_tenancy_addresses = new BindingSource();
-            v_tenancy_addresses.DataSource = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelTenancyPremisesInfo);
+            v_tenancy_addresses.DataSource = tenancy_premises_info.Select();
 
             DataBind();
 
@@ -704,9 +706,21 @@ namespace Registry.Viewport
                     default: throw new ViewportException("Неизвестный тип родительского объекта");
                 }
             }
-            v_tenancy_persons.ListChanged += v_persons_ListChanged;           
+            v_tenancy_persons.ListChanged += v_persons_ListChanged;   
+            tenancy_premises_info.RefreshEvent +=tenancy_premises_info_RefreshEvent;
             FiltersRebuild();
             DataChangeHandlersInit();
+        }
+
+        private void tenancy_premises_info_RefreshEvent(object sender, EventArgs e)
+        {
+            // Обновляем информацию по помещениям (живое обновление не реализуемо)
+            if (v_tenancy_addresses != null)
+            {
+                v_tenancy_addresses.DataSource =
+                    tenancy_premises_info.Select();
+                FiltersRebuild();
+            }
         }
 
         public override bool CanSearchRecord()
@@ -1188,164 +1202,110 @@ namespace Registry.Viewport
             Close();
         }
 
-        public override bool HasAssocTenancyPersons()
+        public override bool HasAssocViewport(ViewportType viewportType)
         {
-            return (GeneralBindingSource.Position > -1);
+            var reports = new List<ViewportType>
+            {
+                ViewportType.TenancyPersonsViewport,
+                ViewportType.TenancyReasonsViewport,
+                ViewportType.TenancyBuildingsViewport,
+                ViewportType.TenancyPremisesViewport,
+                ViewportType.TenancyAgreementsViewport,
+                ViewportType.ClaimListViewport
+            };
+            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
         }
 
-        public override bool HasAssocTenancyReasons()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override bool HasAssocTenancyObjects()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override bool HasAssocTenancyAgreements()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override void ShowTenancyPersons()
-        {
-            ShowAssocViewport(ViewportType.TenancyPersonsViewport);
-        }
-
-        public override void ShowTenancyReasons()
-        {
-            ShowAssocViewport(ViewportType.TenancyReasonsViewport);
-        }
-
-        public override void ShowTenancyAgreements()
-        {
-            ShowAssocViewport(ViewportType.TenancyAgreementsViewport);
-        }
-
-        public override void ShowTenancyBuildings()
-        {
-            ShowAssocViewport(ViewportType.TenancyBuildingsViewport);
-        }
-
-        public override void ShowTenancyPremises()
-        {
-            ShowAssocViewport(ViewportType.TenancyPremisesViewport);
-        }
-
-        public override void ShowClaims()
-        {
-            ShowAssocViewport(ViewportType.ClaimListViewport);
-        }
-
-        private Viewport ShowAssocViewport(ViewportType viewportType)
+        public override void ShowAssocViewport(ViewportType viewportType)
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return null;
+                return;
             if (GeneralBindingSource.Position == -1)
             {
-                MessageBox.Show("Не выбран процесс найма", "Ошибка", 
+                MessageBox.Show(@"Не выбран процесс найма", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                return null;
+                return;
             }
-            return ShowAssocViewport(MenuCallback, viewportType,
+            ShowAssocViewport(MenuCallback, viewportType,
                 "id_process = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"], CultureInfo.InvariantCulture),
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
                 ParentTypeEnum.Tenancy);
         }
 
-        public override bool HasTenancyContract17xReport()
+        public override bool HasReport(ReporterType reporterType)
         {
-            return (GeneralBindingSource.Position > -1) && (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_rent_type"] != DBNull.Value) &&
-                Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_rent_type"], CultureInfo.InvariantCulture) == 2;
-        }
-
-        public override bool HasTenancyContractReport()
-        {
-            return (GeneralBindingSource.Position > -1) && (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_rent_type"] != DBNull.Value) && 
-                Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_rent_type"], CultureInfo.InvariantCulture) != 2;
-        }
-
-        public override bool HasTenancyActReport()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override bool HasTenancyAgreementReport()
-        {
-            return (GeneralBindingSource.Position > -1) && (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"] != DBNull.Value) &&
-                (DataModelHelper.TenancyAgreementsForProcess(
-                    Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"], CultureInfo.InvariantCulture)) > 0);
-        }
-
-        public override void TenancyContract17xReportGenerate(TenancyContractTypes tenancyContractType)
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            if (!TenancyValidForReportGenerate())
-                return;
-            var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            if (ViewportHelper.ValueOrNull<int>(row, "id_rent_type") != 2)
+            if (GeneralBindingSource.Position == -1)
+                return false;
+            var idProcess = ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_process"] != DBNull.Value
+                ? (int?)Convert.ToInt32(((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_process"],
+                    CultureInfo.InvariantCulture) : null;
+            var idRentType = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_rent_type"] != DBNull.Value
+                ? (int?)Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_rent_type"],
+                    CultureInfo.InvariantCulture) : null;
+            switch (reporterType)
             {
-                MessageBox.Show("Для формирования договора по формам 1711 и 1712 необходимо, чтобы тип найма был - специализированный", 
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                return;
+                case ReporterType.TenancyContractCommercialReporter:
+                    return idProcess != null && idRentType == 1;
+                case ReporterType.TenancyContractSocialReporter:
+                    return idProcess != null && idRentType == 3;
+                case ReporterType.TenancyContractSpecial1711Reporter:
+                case ReporterType.TenancyContractSpecial1712Reporter:
+                    return idProcess != null && idRentType == 2;
+                case ReporterType.TenancyActReporter:
+                    return true;
+                case ReporterType.TenancyAgreementReporter:
+                    return idProcess != null && (DataModelHelper.TenancyAgreementsForProcess(idProcess.Value) > 0);
             }
-            if (tenancyContractType == TenancyContractTypes.SpecialContract1711Form)
-                ReporterFactory.CreateReporter(ReporterType.TenancyContractSpecial1711Reporter).
-                    Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
-            else
-                if (tenancyContractType == TenancyContractTypes.SpecialContract1712Form)
-                    ReporterFactory.CreateReporter(ReporterType.TenancyContractSpecial1712Reporter).
-                        Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
+            return false;
         }
 
-        public override void TenancyContractReportGenerate()
+        public override void GenerateReport(ReporterType reporterType)
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
             if (!TenancyValidForReportGenerate())
                 return;
-            var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            if (ViewportHelper.ValueOrNull<int>(row, "id_rent_type") == 2)
-                MessageBox.Show("Для формирования договора специализированного найма необходимо выбрать форму договора: 1711 или 1712", 
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-            else
-                if (ViewportHelper.ValueOrNull<int>(row, "id_rent_type") == 1)
-                    ReporterFactory.CreateReporter(ReporterType.TenancyContractCommercialReporter).
-                        Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
-                else
-                    if (ViewportHelper.ValueOrNull<int>(row, "id_rent_type") == 3)
-                        ReporterFactory.CreateReporter(ReporterType.TenancyContractSocialReporter).
-                            Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
-        }
-
-        public override void TenancyActReportGenerate()
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            if (!TenancyValidForReportGenerate())
-                return;
-            var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            ReporterFactory.CreateReporter(ReporterType.TenancyActReporter).
-                Run(new Dictionary<string, string>() { { "id_process", row["id_process"].ToString() } });
-        }
-
-        public override void TenancyAgreementReportGenerate()
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            if (!TenancyValidForReportGenerate())
-                return;
-            if (v_tenancy_agreements.Position == -1)
+            var reporter = ReporterFactory.CreateReporter(reporterType);
+            var arguments = new Dictionary<string, string>();
+            switch (reporterType)
             {
-                MessageBox.Show("Не выбрано соглашение для печати",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                return;
+                case ReporterType.TenancyContractCommercialReporter:
+                case ReporterType.TenancyContractSocialReporter:
+                case ReporterType.TenancyContractSpecial1711Reporter:
+                case ReporterType.TenancyContractSpecial1712Reporter:
+                    arguments = TenancyContractReporterArguments();
+                    break;
+                case ReporterType.TenancyActReporter:
+                    arguments = TenancyActReporterArguments();
+                    break;
+                case ReporterType.TenancyAgreementReporter:
+                    if (v_tenancy_agreements.Position == -1)
+                    {
+                        MessageBox.Show(@"Не выбрано соглашение для печати",
+                            @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        return;
+                    }
+                    arguments = TenancyAgreementReporterArguments();
+                    break;
             }
+            reporter.Run(arguments);
+        }
+        private Dictionary<string, string> TenancyContractReporterArguments()
+        {
+            var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
+            return new Dictionary<string, string> { { "id_process", row["id_process"].ToString() } };
+        }
+
+        private Dictionary<string, string> TenancyActReporterArguments()
+        {
+            var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
+            return new Dictionary<string, string> {{"id_process", row["id_process"].ToString()}};
+        }
+
+        private Dictionary<string, string> TenancyAgreementReporterArguments()
+        {
             var row = (DataRowView)v_tenancy_agreements[v_tenancy_agreements.Position];
-            ReporterFactory.CreateReporter(ReporterType.TenancyAgreementReporter).Run(
-                new Dictionary<string, string>() { { "id_agreement", row["id_agreement"].ToString() } });
+            return new Dictionary<string, string> {{"id_agreement", row["id_agreement"].ToString()}};
         }
 
         private bool TenancyValidForReportGenerate()
@@ -1373,13 +1333,6 @@ namespace Registry.Viewport
         {
             RedrawDataGridRows();
             UnbindedCheckBoxesUpdate();
-            // Обновляем информацию по помещениям (живое обновление не реализуемо)
-            if (v_tenancy_addresses != null)
-            {
-                v_tenancy_addresses.DataSource =
-                    CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelTenancyPremisesInfo).Select();
-                FiltersRebuild();
-            }
             checkBoxProtocolEnable.Focus();
             base.OnVisibleChanged(e);
         }
@@ -1489,33 +1442,27 @@ namespace Registry.Viewport
 
         private void dataGridViewTenancyAgreements_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (!HasAssocTenancyReasons())
+            if (!HasAssocViewport(ViewportType.TenancyAgreementsViewport))
                 return;
             if (e.RowIndex == -1)
                 return;
-            var viewport = ShowAssocViewport(ViewportType.TenancyAgreementsViewport);
-            if (viewport != null)
-                ((TenancyAgreementsViewport)viewport).LocateAgreementBy(
-                    Convert.ToInt32(((DataRowView)v_tenancy_agreements[v_tenancy_agreements.Position])["id_agreement"], CultureInfo.InvariantCulture));    
+            ShowAssocViewport(ViewportType.TenancyAgreementsViewport);
         }
 
         private void dataGridViewTenancyPersons_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (!HasAssocTenancyReasons())
+            if (!HasAssocViewport(ViewportType.TenancyPersonsViewport))
                 return;
             if (e.RowIndex == -1)
                 return;
-            var viewport = ShowAssocViewport(ViewportType.TenancyPersonsViewport);
-            if (viewport != null)
-                ((TenancyPersonsViewport)viewport).LocatePersonBy(
-                    Convert.ToInt32(((DataRowView)v_tenancy_persons[v_tenancy_persons.Position])["id_person"], CultureInfo.InvariantCulture)); 
+            ShowAssocViewport(ViewportType.TenancyPersonsViewport);
         }
 
         private void dataGridViewTenancyAddress_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1)
                 return;
-            if (HasAssocTenancyObjects())
+            if (HasAssocViewport(ViewportType.TenancyPremisesViewport))
                 ShowAssocViewport(ViewportType.TenancyPremisesViewport);
         }
 
@@ -1523,7 +1470,7 @@ namespace Registry.Viewport
         {
             if (e.RowIndex == -1)
                 return;
-            if (HasAssocTenancyReasons())
+            if (HasAssocViewport(ViewportType.TenancyReasonsViewport))
                 ShowAssocViewport(ViewportType.TenancyReasonsViewport);
         }
 

@@ -14,7 +14,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
-    internal sealed partial class ClaimStatesViewport: FormViewport
+    internal sealed partial class ClaimStatesViewport : FormWithGridViewport
     {
         #region Models
         DataModel claim_state_types;
@@ -36,6 +36,7 @@ namespace Registry.Viewport
             : base(menuCallback)
         {
             InitializeComponent();
+            DataGridView = dataGridView;
         }
 
         public ClaimStatesViewport(Viewport claimStatesViewport, IMenuCallback menuCallback)

@@ -1,5 +1,8 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Data;
+using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
@@ -48,11 +51,6 @@ namespace Registry.Viewport
         public virtual int GetRecordCount()
         {
             return GeneralBindingSource.Count;
-        }
-
-        public virtual Viewport Duplicate()
-        { 
-            return this;
         }
 
         public virtual bool CanDuplicate()
@@ -150,101 +148,6 @@ namespace Registry.Viewport
             throw new ViewportException("Не реализовано");
         }
 
-        public virtual void ShowBuildings()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void ShowPremises()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void ShowRestrictions()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void ShowOwnerships()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void ShowFundHistory()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void ShowSubPremises()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void ShowTenancyPersons()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void ShowTenancyReasons()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void ShowTenancyAgreements()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void ShowTenancyBuildings()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void ShowTenancyPremises()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void ShowClaims()
-        {
-           throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void ShowClaimStates()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void ShowTenancies()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void ShowResettlePersons()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void ShowResettleFromBuildings()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void ShowResettleFromPremises()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void ShowResettleToBuildings()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void ShowResettleToPremises()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
         protected virtual Viewport ShowAssocViewport(IMenuCallback menuCallback, ViewportType viewportType, 
             string staticFilter, DataRow parentRow, ParentTypeEnum parentType)
         {
@@ -320,86 +223,6 @@ namespace Registry.Viewport
             return false;
         }
 
-        public virtual bool HasAssocSubPremises()
-        {
-            return false;
-        }
-
-        public virtual bool HasAssocBuildings()
-        {
-            return false;
-        }
-
-        public virtual bool HasAssocPremises()
-        {
-            return false;
-        }
-
-        public virtual bool HasAssocOwnerships()
-        {
-            return false;
-        }
-
-        public virtual bool HasAssocRestrictions()
-        {
-            return false;
-        }
-
-        public virtual bool HasAssocFundHistory()
-        {
-            return false;
-        }
-
-        public virtual bool HasAssocTenancyPersons()
-        {
-            return false;
-        }
-
-        public virtual bool HasAssocTenancyReasons()
-        {
-            return false;
-        }
-
-        public virtual bool HasAssocTenancyAgreements()
-        {
-            return false;
-        }
-
-        public virtual bool HasAssocTenancyObjects()
-        {
-            return false;
-        }
-
-        public virtual bool HasAssocClaims()
-        {
-            return false;
-        }
-
-        public virtual bool HasAssocClaimStates()
-        {
-            return false;
-        }
-
-        public virtual bool HasAssocResettlePersons()
-        {
-            return false;
-        }
-
-        public virtual bool HasAssocResettleFromObjects()
-        {
-            return false;
-        }
-
-        public virtual bool HasAssocResettleToObjects()
-        {
-            return false;
-        }
-
-        public virtual bool HasAssocTenancies()
-        {
-            return false;
-        }
-
         public virtual bool CanFilterSocialFund()
         {
             return false;
@@ -430,94 +253,28 @@ namespace Registry.Viewport
             return ((ParentRow != null) && ((ParentRow.RowState == DataRowState.Detached) || (ParentRow.RowState == DataRowState.Deleted)));
         }
 
-        public virtual bool HasTenancyContract17xReport()
-        {
-            return false;
-        }
-
-        public virtual bool HasTenancyContractReport()
-        {
-            return false;
-        }
-
-        public virtual bool HasTenancyActReport()
-        {
-            return false;
-        }
-
-        public virtual bool HasTenancyAgreementReport()
-        {
-            return false;
-        }
-
-        public virtual bool HasTenancyOrderReport()
-        {
-            return false;
-        }
-
-        public virtual bool HasRegistryExcerptSubPremisesReport()
-        {
-            return false;
-        }
-
-        public virtual bool HasRegistryExcerptSubPremiseReport()
-        {
-            return false;
-        }
-
-        public virtual bool HasRegistryExcerptPremiseReport()
-        {
-            return false;
-        }
-
-        public virtual void TenancyContract17xReportGenerate(TenancyContractTypes tenancyContractType)
+        public virtual void ShowAssocViewport(ViewportType viewportType)
         {
             throw new ViewportException("Не реализовано");
         }
 
-        public virtual void TenancyContractReportGenerate()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void TenancyActReportGenerate()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void TenancyAgreementReportGenerate()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void TenancyOrderReportGenerate()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void RegistryExcerptPremiseReportGenerate()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void RegistryExcerptSubPremiseReportGenerate()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual void RegistryExcerptSubPremisesReportGenerate()
-        {
-            throw new ViewportException("Не реализовано");
-        }
-
-        public virtual bool HasExportToOds()
+        public virtual bool HasAssocViewport(ViewportType viewportType)
         {
             return false;
         }
 
-        public virtual void ExportToOds()
+        public virtual void GenerateReport(ReporterType reporterType)
         {
             throw new ViewportException("Не реализовано");
+        }
+
+        public virtual bool HasReport(ReporterType reporterType)
+        {
+            return false;
+        }
+        public virtual Viewport Duplicate()
+        {
+            return this;
         }
     }
 }

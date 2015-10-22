@@ -27,7 +27,7 @@
       <Value Profile="(Default)">5000</Value>
     </Setting>
     <Setting Name="CalcDataModelsUpdateTimeout" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">10000</Value>
+      <Value Profile="(Default)">5000</Value>
     </Setting>
     <Setting Name="UseLDAP" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

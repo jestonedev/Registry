@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -12,7 +13,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
-    internal sealed partial class ClaimListViewport : FormViewport
+    internal sealed partial class ClaimListViewport : FormWithGridViewport
     {
         private ClaimListViewport()
             : this(null)
@@ -23,6 +24,7 @@ namespace Registry.Viewport
             : base(menuCallback)
         {
             InitializeComponent();
+            DataGridView = dataGridViewClaims;
         }
 
         public ClaimListViewport(ClaimListViewport claimListViewport, IMenuCallback menuCallback)
@@ -548,22 +550,26 @@ namespace Registry.Viewport
             Close();
         }
 
-        public override bool HasAssocClaimStates()
+        public override bool HasAssocViewport(ViewportType viewportType)
         {
-            return (GeneralBindingSource.Position > -1);
+            var reports = new List<ViewportType>
+            {
+                ViewportType.ClaimStatesViewport
+            };
+            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
         }
 
-        public override void ShowClaimStates()
+        public override void ShowAssocViewport(ViewportType viewportType)
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
             if (GeneralBindingSource.Position == -1)
             {
-                MessageBox.Show(@"Не выбрана протензионно-исковая работа для отображения ее состояний", @"Ошибка", 
+                MessageBox.Show(@"Не выбрана протензионно-исковая работа для отображения ее состояний", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport(MenuCallback, ViewportType.ClaimStatesViewport,
+            ShowAssocViewport(MenuCallback, viewportType,
                 "id_claim = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"], CultureInfo.InvariantCulture),
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row, ParentTypeEnum.Claim);
         }

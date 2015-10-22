@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
@@ -532,71 +533,58 @@ namespace Registry.Viewport
             Close();
         }
 
-        public override bool HasAssocResettlePersons()
+        public override bool HasAssocViewport(ViewportType viewportType)
         {
-            return (GeneralBindingSource.Position > -1);
+            var reports = new List<ViewportType>
+            {
+                ViewportType.ResettlePersonsViewport,
+                ViewportType.ResettleFromBuildingsViewport,
+                ViewportType.ResettleFromPremisesViewport,
+                ViewportType.ResettleToBuildingsViewport,
+                ViewportType.ResettleToPremisesViewport
+            };
+            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
         }
 
-        public override bool HasAssocResettleFromObjects()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override bool HasAssocResettleToObjects()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override void ShowResettlePersons()
-        {
-            ShowAssocViewport(ViewportType.ResettlePersonsViewport);
-        }
-
-        public override void ShowResettleFromBuildings()
-        {
-            ShowAssocViewport(ViewportType.ResettleFromBuildingsViewport, ResettleEstateObjectWay.From);
-        }
-
-        public override void ShowResettleToBuildings()
-        {
-            ShowAssocViewport(ViewportType.ResettleToBuildingsViewport, ResettleEstateObjectWay.To);
-        }
-
-        public override void ShowResettleFromPremises()
-        {
-            ShowAssocViewport(ViewportType.ResettleFromPremisesViewport, ResettleEstateObjectWay.From);
-        }
-
-        public override void ShowResettleToPremises()
-        {
-            ShowAssocViewport(ViewportType.ResettleToPremisesViewport, ResettleEstateObjectWay.To);
-        }
-
-        private void ShowAssocViewport(ViewportType viewportType)
+        public override void ShowAssocViewport(ViewportType viewportType)
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
             if (GeneralBindingSource.Position == -1)
             {
-                MessageBox.Show("Не выбран процесс переселения", "Ошибка",
+                MessageBox.Show(@"Не выбран процесс переселения", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport(MenuCallback, viewportType,
-                "id_process = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"], CultureInfo.InvariantCulture),
-                ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
-                ParentTypeEnum.ResettleProcess);
+
+            switch (viewportType)
+            {               
+                case ViewportType.ResettlePersonsViewport:                   
+                    ShowAssocViewport(MenuCallback, viewportType,
+                        "id_process = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"], CultureInfo.InvariantCulture),
+                        ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
+                        ParentTypeEnum.ResettleProcess);
+                    break;
+                case ViewportType.ResettleFromBuildingsViewport:
+                case ViewportType.ResettleFromPremisesViewport:                 
+                    ShowAssocViewport(ViewportType.ResettleFromBuildingsViewport, ResettleEstateObjectWay.From);
+                    break;
+                case ViewportType.ResettleToBuildingsViewport:
+                case ViewportType.ResettleToPremisesViewport:
+                    ShowAssocViewport(ViewportType.ResettleToBuildingsViewport, ResettleEstateObjectWay.To);
+                    break;
+            }
         }
 
-        private Viewport ShowAssocViewport(ViewportType viewportType, ResettleEstateObjectWay way)
+        private void ShowAssocViewport(ViewportType viewportType, ResettleEstateObjectWay way)
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return null;
+                return;
             if (GeneralBindingSource.Position == -1)
             {
-                MessageBox.Show("Не выбран процесс переселения", "Ошибка",
+                MessageBox.Show(@"Не выбран процесс переселения", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                return null;
+                return;
             }
             if (MenuCallback == null)
                 throw new ViewportException("Не заданна ссылка на интерфейс menuCallback");
@@ -605,17 +593,22 @@ namespace Registry.Viewport
                 CultureInfo.InvariantCulture);
             viewport.ParentRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row;
             viewport.ParentType = ParentTypeEnum.ResettleProcess;
-            if (viewportType == ViewportType.ResettleFromBuildingsViewport || viewportType == ViewportType.ResettleToBuildingsViewport)
-                ((ResettleBuildingsViewport)viewport).Way = way;
-            else
-            if (viewportType == ViewportType.ResettleFromPremisesViewport || viewportType == ViewportType.ResettleToPremisesViewport)
-                ((ResettlePremisesViewport)viewport).Way = way;
-            else
-                throw new ViewportException("Неподдерживаемый тип viewport");
-            if ((viewport as IMenuController).CanLoadData())
-                (viewport as IMenuController).LoadData();
+            switch (viewportType)
+            {
+                case ViewportType.ResettleFromBuildingsViewport:
+                case ViewportType.ResettleToBuildingsViewport:
+                    ((ResettleBuildingsViewport)viewport).Way = way;
+                    break;
+                case ViewportType.ResettleFromPremisesViewport:
+                case ViewportType.ResettleToPremisesViewport:
+                    ((ResettlePremisesViewport)viewport).Way = way;
+                    break;
+                default:
+                    throw new ViewportException("Неподдерживаемый тип viewport");
+            }
+            if (((IMenuController) viewport).CanLoadData())
+                ((IMenuController) viewport).LoadData();
             MenuCallback.AddViewport(viewport);
-            return viewport;
         }
 
         void resettles_aggregate_RefreshEvent(object sender, EventArgs e)

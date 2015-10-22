@@ -47,9 +47,10 @@ namespace Registry.Viewport
         public PremisesListViewport(IMenuCallback menuCallback): base(menuCallback)
         {
             InitializeComponent();
+            DataGridView = dataGridView;
         }
 
-        public PremisesListViewport(PremisesListViewport premisesListViewport, IMenuCallback menuCallback)
+        public PremisesListViewport(Viewport premisesListViewport, IMenuCallback menuCallback)
             : this(menuCallback)
         {
             DynamicFilter = premisesListViewport.DynamicFilter;
@@ -148,7 +149,7 @@ namespace Registry.Viewport
             var ds = DataModel.DataSet;
 
             GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.CurrentItemChanged += v_premises_CurrentItemChanged;
+            GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
             GeneralBindingSource.DataMember = "premises";
             GeneralBindingSource.DataSource = ds;
             GeneralBindingSource.Filter = StaticFilter;
@@ -156,7 +157,7 @@ namespace Registry.Viewport
                 GeneralBindingSource.Filter += " AND ";
             GeneralBindingSource.Filter += DynamicFilter;
             if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                Text = "Помещения здания №" + ParentRow["id_building"];
+                Text = @"Помещения здания №" + ParentRow["id_building"];
 
             v_buildings = new BindingSource();
             v_buildings.DataMember = "buildings";
@@ -231,10 +232,7 @@ namespace Registry.Viewport
 
         public override bool SearchedRecords()
         {
-            if (!string.IsNullOrEmpty(DynamicFilter))
-                return true;
-            else
-                return false;
+            return !string.IsNullOrEmpty(DynamicFilter);
         }
 
         public override void SearchRecord(SearchFormType searchFormType)
@@ -256,12 +254,12 @@ namespace Registry.Viewport
                     DynamicFilter = spExtendedSearchForm.GetFilter();
                     break;
             }
-            var Filter = StaticFilter;
+            var filter = StaticFilter;
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
-                Filter += " AND ";
-            Filter += DynamicFilter;
+                filter += " AND ";
+            filter += DynamicFilter;
             dataGridView.RowCount = 0;
-            GeneralBindingSource.Filter = Filter;
+            GeneralBindingSource.Filter = filter;
             dataGridView.RowCount = GeneralBindingSource.Count;
         }
 
@@ -355,92 +353,84 @@ namespace Registry.Viewport
             return true;
         }
 
-        public override bool HasAssocOwnerships()
+        public override bool HasAssocViewport(ViewportType viewportType)
         {
-            return (GeneralBindingSource.Position > -1);
+            var reports = new List<ViewportType>
+            {
+                ViewportType.SubPremisesViewport,
+                ViewportType.OwnershipListViewport,
+                ViewportType.RestrictionListViewport,
+                ViewportType.FundsHistoryViewport,
+                ViewportType.TenancyListViewport
+            };
+            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
         }
 
-        public override bool HasAssocRestrictions()
+        public override void ShowAssocViewport(ViewportType viewportType)
         {
-            return (GeneralBindingSource.Position > -1);
+            if (GeneralBindingSource.Position == -1)
+            {
+                MessageBox.Show(@"Не выбрано помещение", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            ShowAssocViewport(MenuCallback, viewportType,
+                "id_premises = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"], CultureInfo.InvariantCulture),
+                ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
+                ParentTypeEnum.Premises);
         }
 
-        public override bool HasAssocSubPremises()
+        public override bool HasReport(ReporterType reporterType)
         {
-            return (GeneralBindingSource.Position > -1);
+            var reports = new List<ReporterType>
+            {
+                ReporterType.ExportReporter,
+                ReporterType.RegistryExcerptReporterPremise,
+                ReporterType.RegistryExcerptReporterAllMunSubPremises
+            };
+            return reports.Contains(reporterType);
         }
 
-        public override bool HasAssocFundHistory()
+        public override void GenerateReport(ReporterType reporterType)
         {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override bool HasAssocTenancies()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override bool HasRegistryExcerptPremiseReport()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override bool HasRegistryExcerptSubPremisesReport()
-        {
-            return (GeneralBindingSource.Position > -1);
-        }
-
-        public override void RegistryExcerptPremiseReportGenerate()
-        {
-            var reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
+            var reporter = ReporterFactory.CreateReporter(reporterType);
             var arguments = new Dictionary<string, string>();
-            arguments.Add("ids", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"].ToString());
-            arguments.Add("excerpt_type", "1");
+            switch (reporterType)
+            {
+                case ReporterType.ExportReporter:
+                    arguments = ExportReportArguments();
+                    break;
+                case ReporterType.RegistryExcerptReporterPremise:
+                    arguments = RegistryExcerptPremiseReportArguments();
+                    break;
+                case ReporterType.RegistryExcerptReporterAllMunSubPremises:
+                    arguments = RegistryExcerptReporterAllMunSubPremisesArguments();
+                    break;
+            }
             reporter.Run(arguments);
         }
 
-        public override void RegistryExcerptSubPremisesReportGenerate()
+        private Dictionary<string, string> RegistryExcerptPremiseReportArguments()
         {
-            var reporter = ReporterFactory.CreateReporter(ReporterType.RegistryExcerptReporter);
-            var arguments = new Dictionary<string, string>();
-            arguments.Add("ids", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"].ToString());
-            arguments.Add("excerpt_type", "3");
-            reporter.Run(arguments);
+            var arguments = new Dictionary<string, string>
+            {
+                {"ids", ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_premises"].ToString()},
+                {"excerpt_type", "1"}
+            };
+            return arguments;
         }
 
-        public override void ShowOwnerships()
+        private Dictionary<string, string> RegistryExcerptReporterAllMunSubPremisesArguments()
         {
-            ShowAssocViewport(ViewportType.OwnershipListViewport);
+            var arguments = new Dictionary<string, string>
+            {
+                {"ids", ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_premises"].ToString()},
+                {"excerpt_type", "3"}
+            };
+            return arguments;
         }
 
-        public override void ShowRestrictions()
+        private Dictionary<string, string> ExportReportArguments()
         {
-            ShowAssocViewport(ViewportType.RestrictionListViewport);
-        }
-
-        public override void ShowSubPremises()
-        {
-            ShowAssocViewport(ViewportType.SubPremisesViewport);
-        }
-
-        public override void ShowFundHistory()
-        {
-            ShowAssocViewport(ViewportType.FundsHistoryViewport);
-        }
-
-        public override void ShowTenancies()
-        {
-            ShowAssocViewport(ViewportType.TenancyListViewport);
-        }
-
-        public override bool HasExportToOds()
-        {
-            return true;
-        }
-
-        public override void ExportToOds()
-        {
-            var reporter = ReporterFactory.CreateReporter(ReporterType.ExportReporter);
             var columnHeaders = dataGridView.Columns.Cast<DataGridViewColumn>().
                 Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnHeader\":\"" + column.HeaderText + "\"}");
             var columnPatterns = dataGridView.Columns.Cast<DataGridViewColumn>().
@@ -452,20 +442,7 @@ namespace Registry.Viewport
                 {"columnHeaders", "["+columnHeaders+"]"},
                 {"columnPatterns", "["+columnPatterns+"]"}
             };
-            reporter.Run(arguments);
-        }
-
-        private void ShowAssocViewport(ViewportType viewportType)
-        {
-            if (GeneralBindingSource.Position == -1)
-            {
-                MessageBox.Show("Не выбрано помещение", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                return;
-            }
-            ShowAssocViewport(MenuCallback, viewportType,
-                "id_premises = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"], CultureInfo.InvariantCulture),
-                ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
-                ParentTypeEnum.Premises);
+            return arguments;
         }
 
         void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
@@ -598,36 +575,6 @@ namespace Registry.Viewport
                     }
                     break;
             }
-        }
-
-        void v_premises_CurrentItemChanged(object sender, EventArgs e)
-        {
-            if (GeneralBindingSource.Position == -1 || dataGridView.RowCount == 0)
-            {
-                dataGridView.ClearSelection();
-                return;
-            }
-            if (GeneralBindingSource.Position >= dataGridView.RowCount)
-            {
-                dataGridView.Rows[dataGridView.RowCount - 1].Selected = true;
-                if (dataGridView.CurrentCell != null)
-                    dataGridView.CurrentCell = dataGridView.Rows[dataGridView.RowCount - 1].Cells[dataGridView.CurrentCell.ColumnIndex];
-                else
-                    dataGridView.CurrentCell = dataGridView.Rows[dataGridView.RowCount - 1].Cells[0];
-            }
-            else
-            {
-                dataGridView.Rows[GeneralBindingSource.Position].Selected = true;
-                if (dataGridView.CurrentCell != null)
-                    dataGridView.CurrentCell = dataGridView.Rows[GeneralBindingSource.Position].Cells[dataGridView.CurrentCell.ColumnIndex];
-                else
-                    dataGridView.CurrentCell = dataGridView.Rows[GeneralBindingSource.Position].Cells[0];
-            }
-            if (!Selected) return;
-            MenuCallback.NavigationStateUpdate();
-            MenuCallback.EditingStateUpdate();
-            MenuCallback.RelationsStateUpdate();
-            MenuCallback.DocumentsStateUpdate();
         }
 
         private void dataGridView_Resize(object sender, EventArgs e)
