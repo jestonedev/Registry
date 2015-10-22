@@ -566,12 +566,12 @@ namespace Registry.Viewport
                         ParentTypeEnum.ResettleProcess);
                     break;
                 case ViewportType.ResettleFromBuildingsViewport:
-                case ViewportType.ResettleFromPremisesViewport:                 
-                    ShowAssocViewport(ViewportType.ResettleFromBuildingsViewport, ResettleEstateObjectWay.From);
+                case ViewportType.ResettleFromPremisesViewport:
+                    ShowAssocViewport(viewportType, ResettleEstateObjectWay.From);
                     break;
                 case ViewportType.ResettleToBuildingsViewport:
                 case ViewportType.ResettleToPremisesViewport:
-                    ShowAssocViewport(ViewportType.ResettleToBuildingsViewport, ResettleEstateObjectWay.To);
+                    ShowAssocViewport(viewportType, ResettleEstateObjectWay.To);
                     break;
             }
         }

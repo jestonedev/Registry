@@ -19,11 +19,13 @@ namespace Registry.Viewport
     {
         #region Models
         private DataModel kladr;
+        private DataModel resettle_buildings;
         private DataTable snapshot_resettle_buildings;
         #endregion Models
 
         #region Views
         private BindingSource v_kladr;
+        private BindingSource v_resettle_buildings;
         private BindingSource v_snapshot_resettle_buildings;
         #endregion Views
 
@@ -46,7 +48,7 @@ namespace Registry.Viewport
         public ResettleBuildingsViewport(IMenuCallback menuCallback): base(menuCallback)
         {
             InitializeComponent();
-            dataGridView = DataGridView;
+            DataGridView = dataGridView;
         }
 
         public ResettleBuildingsViewport(ResettleBuildingsViewport resettleBuildingsViewport, IMenuCallback menuCallback)
@@ -111,10 +113,10 @@ namespace Registry.Viewport
         private List<ResettleObject> ResettleBuildingsFromView()
         {
             var list = new List<ResettleObject>();
-            for (var i = 0; i < GeneralBindingSource.Count; i++)
+            for (var i = 0; i < v_resettle_buildings.Count; i++)
             {
                 var ro = new ResettleObject();
-                var row = ((DataRowView)GeneralBindingSource[i]);
+                var row = ((DataRowView)v_resettle_buildings[i]);
                 ro.IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
                 ro.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
                 ro.IdObject = ViewportHelper.ValueOrNull<int>(row, "id_building");
@@ -140,13 +142,13 @@ namespace Registry.Viewport
             GeneralDataModel = DataModel.GetInstance(DataModelType.BuildingsDataModel);
             kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
             if (way == ResettleEstateObjectWay.From)
-                GeneralDataModel = DataModel.GetInstance(DataModelType.ResettleBuildingsFromAssocDataModel);
+                resettle_buildings = DataModel.GetInstance(DataModelType.ResettleBuildingsFromAssocDataModel);
             else
-                GeneralDataModel = DataModel.GetInstance(DataModelType.ResettleBuildingsToAssocDataModel);
+                resettle_buildings = DataModel.GetInstance(DataModelType.ResettleBuildingsToAssocDataModel);
             // Ожидаем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
             kladr.Select();
-            GeneralDataModel.Select();
+            resettle_buildings.Select();
 
             // Инициализируем snapshot-модель
             snapshot_resettle_buildings = new DataTable("selected_buildings");
@@ -177,17 +179,17 @@ namespace Registry.Viewport
             v_kladr.DataMember = "kladr";
             v_kladr.DataSource = ds;
 
-            GeneralBindingSource = new BindingSource();
+            v_resettle_buildings = new BindingSource();
             if (way == ResettleEstateObjectWay.From)
-                GeneralBindingSource.DataMember = "resettle_buildings_from_assoc";
+                v_resettle_buildings.DataMember = "resettle_buildings_from_assoc";
             else
-                GeneralBindingSource.DataMember = "resettle_buildings_to_assoc";
-            GeneralBindingSource.Filter = StaticFilter;
-            GeneralBindingSource.DataSource = ds;
+                v_resettle_buildings.DataMember = "resettle_buildings_to_assoc";
+            v_resettle_buildings.Filter = StaticFilter;
+            v_resettle_buildings.DataSource = ds;
 
             //Загружаем данные snapshot-модели из original-view
-            for (var i = 0; i < GeneralBindingSource.Count; i++)
-                snapshot_resettle_buildings.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
+            for (var i = 0; i < v_resettle_buildings.Count; i++)
+                snapshot_resettle_buildings.Rows.Add(DataRowViewToArray(((DataRowView)v_resettle_buildings[i])));
             v_snapshot_resettle_buildings = new BindingSource();
             v_snapshot_resettle_buildings.DataSource = snapshot_resettle_buildings;
 
@@ -197,8 +199,8 @@ namespace Registry.Viewport
 
             GeneralDataModel.Select().RowChanged += BuildingsViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted += BuildingsViewport_RowDeleted;
-            GeneralDataModel.Select().RowChanged += ResettleBuildingsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting += ResettleBuildingsViewport_RowDeleting;
+            resettle_buildings.Select().RowChanged += ResettleBuildingsViewport_RowChanged;
+            resettle_buildings.Select().RowDeleting += ResettleBuildingsViewport_RowDeleting;
             dataGridView.RowCount = GeneralBindingSource.Count;
             ViewportHelper.SetDoubleBuffered(dataGridView);
         }
@@ -351,8 +353,8 @@ namespace Registry.Viewport
         public override void CancelRecord()
         {
             snapshot_resettle_buildings.Clear();
-            for (var i = 0; i < GeneralBindingSource.Count; i++)
-                snapshot_resettle_buildings.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
+            for (var i = 0; i < v_resettle_buildings.Count; i++)
+                snapshot_resettle_buildings.Rows.Add(DataRowViewToArray(((DataRowView)v_resettle_buildings[i])));
             dataGridView.Refresh();
             MenuCallback.EditingStateUpdate();
         }
@@ -381,7 +383,7 @@ namespace Registry.Viewport
             {
                 DataRow row = null;
                 if (list[i].IdAssoc != null)
-                    row = GeneralDataModel.Select().Rows.Find(list[i].IdAssoc);
+                    row = resettle_buildings.Select().Rows.Find(list[i].IdAssoc);
                 if (row == null)
                 {
                     var id_assoc = -1;
@@ -398,7 +400,7 @@ namespace Registry.Viewport
                     }
                     ((DataRowView)v_snapshot_resettle_buildings[
                         v_snapshot_resettle_buildings.Find("id_building", list[i].IdObject)])["id_assoc"] = id_assoc;
-                    GeneralDataModel.Select().Rows.Add(id_assoc, list[i].IdObject, list[i].IdProcess, 0);
+                    resettle_buildings.Select().Rows.Add(id_assoc, list[i].IdObject, list[i].IdProcess, 0);
                 }
             }
             list = ResettleBuildingsFromView();
@@ -440,7 +442,7 @@ namespace Registry.Viewport
                         if (building_row_index != -1)
                             dataGridView.InvalidateRow(building_row_index);
                     }
-                    GeneralDataModel.Select().Rows.Find(list[i].IdAssoc).Delete();
+                    resettle_buildings.Select().Rows.Find(list[i].IdAssoc).Delete();
                 }
             }
             sync_views = true;
@@ -509,8 +511,8 @@ namespace Registry.Viewport
             }
             GeneralDataModel.Select().RowChanged -= BuildingsViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted -= BuildingsViewport_RowDeleted;
-            GeneralDataModel.Select().RowChanged -= ResettleBuildingsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting -= ResettleBuildingsViewport_RowDeleting;
+            resettle_buildings.Select().RowChanged -= ResettleBuildingsViewport_RowChanged;
+            resettle_buildings.Select().RowDeleting -= ResettleBuildingsViewport_RowDeleting;
             base.OnClosing(e);
         }
 
@@ -518,8 +520,8 @@ namespace Registry.Viewport
         {
             GeneralDataModel.Select().RowChanged -= BuildingsViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted -= BuildingsViewport_RowDeleted;
-            GeneralDataModel.Select().RowChanged -= ResettleBuildingsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting -= ResettleBuildingsViewport_RowDeleting;
+            resettle_buildings.Select().RowChanged -= ResettleBuildingsViewport_RowChanged;
+            resettle_buildings.Select().RowDeleting -= ResettleBuildingsViewport_RowDeleting;
             base.ForceClose();
         }
 
