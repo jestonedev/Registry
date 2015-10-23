@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Registry.Entities;
 
 namespace Registry.Viewport
 {
@@ -66,6 +67,34 @@ namespace Registry.Viewport
         public sealed override int GetRecordCount()
         {
             return GeneralSnapshotBindingSource.Count;
+        }
+
+        protected virtual bool SnapshotHasChanges()
+        {
+            var listFromView = EntitiesListFromView();
+            var listFromViewport = EntitiesListFromViewport();
+            if (listFromView.Count != listFromViewport.Count)
+                return true;
+            foreach (var documentFromView in listFromView)
+            {
+                var founded = false;
+                foreach (var documentFromViewport in listFromViewport)
+                    if (documentFromView.Equals(documentFromViewport))
+                        founded = true;
+                if (!founded)
+                    return true;
+            }
+            return false;
+        }
+
+        protected virtual List<Entity> EntitiesListFromView()
+        {
+            return new List<Entity>();
+        }
+
+        protected virtual List<Entity> EntitiesListFromViewport()
+        {
+            return new List<Entity>();
         }
     }
 }

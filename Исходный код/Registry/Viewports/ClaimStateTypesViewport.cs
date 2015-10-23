@@ -48,7 +48,7 @@ namespace Registry.Viewport
         {
         }
 
-        private bool SnapshotHasChanges()
+        protected override bool SnapshotHasChanges()
         {
             var listFromView = ClaimStateTypesFromView();
             var listFromViewport = ClaimStateTypesFromViewport();

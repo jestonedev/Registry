@@ -2,11 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
@@ -40,25 +38,6 @@ namespace Registry.Viewport
             ParentType = reasonTypesViewport.ParentType;
         }
 
-        private bool SnapshotHasChanges()
-        {
-            var list_from_view = ReasonTypesFromView();
-            var list_from_viewport = ReasonTypesFromViewport();
-            if (list_from_view.Count != list_from_viewport.Count)
-                return true;
-            var founded = false;
-            for (var i = 0; i < list_from_view.Count; i++)
-            {
-                founded = false;
-                for (var j = 0; j < list_from_viewport.Count; j++)
-                    if (list_from_view[i] == list_from_viewport[j])
-                        founded = true;
-                if (!founded)
-                    return true;
-            }
-            return false;
-        }
-
         private static object[] DataRowViewToArray(DataRowView dataRowView)
         {
             return new[] { 
@@ -68,73 +47,73 @@ namespace Registry.Viewport
             };
         }
 
-        private static bool ValidateViewportData(List<ReasonType> list)
+        private static bool ValidateViewportData(IEnumerable<Entity> list)
         {
-            foreach (var reasonType in list)
+            foreach (var entity in list)
             {
+                var reasonType = (ReasonType) entity;
                 if (reasonType.ReasonName == null)
                 {
-                    MessageBox.Show("Имя вида основания не может быть пустым", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(@"Имя вида основания не может быть пустым", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
                 if (reasonType.ReasonName != null && reasonType.ReasonName.Length > 150)
                 {
-                    MessageBox.Show("Длина имени типа основания не может превышать 150 символов",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(@"Длина имени типа основания не может превышать 150 символов",
+                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
                 if (reasonType.ReasonTemplate == null)
                 {
-                    MessageBox.Show("Шаблон основания не может быть пустым", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(@"Шаблон основания не может быть пустым", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
                 if (reasonType.ReasonTemplate != null && reasonType.ReasonTemplate.Length > 4000)
                 {
-                    MessageBox.Show("Длина шаблона вида основания не может превышать 4000 символов",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(@"Длина шаблона вида основания не может превышать 4000 символов",
+                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
-                if (!(Regex.IsMatch(reasonType.ReasonTemplate, "@reason_number@") &&
-                     (Regex.IsMatch(reasonType.ReasonTemplate, "@reason_date@"))))
-                {
-                    MessageBox.Show("Шаблон основания имеет неверный формат. В шаблоне должны быть указаны номер (в виде шаблона @reason_number@) и" +
-                        " дата (в виде шаблона @reason_date@) основания", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return false;
-                }
+                if (Regex.IsMatch(reasonType.ReasonTemplate, "@reason_number@") &&
+                    (Regex.IsMatch(reasonType.ReasonTemplate, "@reason_date@"))) continue;
+                MessageBox.Show(@"Шаблон основания имеет неверный формат. В шаблоне должны быть указаны номер (в виде шаблона @reason_number@) и" +
+                                @" дата (в виде шаблона @reason_date@) основания", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return false;
             }
             return true;
         }
 
         private static ReasonType RowToReasonType(DataRow row)
         {
-            var reasonType = new ReasonType();
-            reasonType.IdReasonType = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
-            reasonType.ReasonName = ViewportHelper.ValueOrNull(row, "reason_name");
-            reasonType.ReasonTemplate = ViewportHelper.ValueOrNull(row, "reason_template"); 
+            var reasonType = new ReasonType
+            {
+                IdReasonType = ViewportHelper.ValueOrNull<int>(row, "id_reason_type"),
+                ReasonName = ViewportHelper.ValueOrNull(row, "reason_name"),
+                ReasonTemplate = ViewportHelper.ValueOrNull(row, "reason_template")
+            };
+
             return reasonType;
         }
 
-        private List<ReasonType> ReasonTypesFromViewport()
+        protected override List<Entity> EntitiesListFromViewport()
         {
-            var list = new List<ReasonType>();
+            var list = new List<Entity>();
             for (var i = 0; i < dataGridView.Rows.Count; i++)
             {
-                if (!dataGridView.Rows[i].IsNewRow)
-                {
-                    var rt = new ReasonType();
-                    var row = dataGridView.Rows[i];
-                    rt.IdReasonType = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
-                    rt.ReasonName = ViewportHelper.ValueOrNull(row, "reason_name");
-                    rt.ReasonTemplate = ViewportHelper.ValueOrNull(row, "reason_template"); 
-                    list.Add(rt);
-                }
+                if (dataGridView.Rows[i].IsNewRow) continue;
+                var rt = new ReasonType();
+                var row = dataGridView.Rows[i];
+                rt.IdReasonType = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
+                rt.ReasonName = ViewportHelper.ValueOrNull(row, "reason_name");
+                rt.ReasonTemplate = ViewportHelper.ValueOrNull(row, "reason_template"); 
+                list.Add(rt);
             }
             return list;
         }
 
-        private List<ReasonType> ReasonTypesFromView()
+        protected override List<Entity> EntitiesListFromView()
         {
-            var list = new List<ReasonType>();
+            var list = new List<Entity>();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
             {
                 var rt = new ReasonType();
@@ -201,7 +180,7 @@ namespace Registry.Viewport
         public override void InsertRecord()
         {
             var row = (DataRowView)GeneralSnapshotBindingSource.AddNew();
-            row.EndEdit();
+            if (row != null) row.EndEdit();
         }
 
         public override bool CanDeleteRecord()
@@ -236,7 +215,7 @@ namespace Registry.Viewport
         {
             sync_views = false;
             GeneralDataModel.EditingNewRecord = true;
-            var list = ReasonTypesFromViewport();
+            var list = EntitiesListFromViewport();
             if (!ValidateViewportData(list))
             {
                 sync_views = true;
@@ -245,52 +224,55 @@ namespace Registry.Viewport
             }
             for (var i = 0; i < list.Count; i++)
             {
-                var row = GeneralDataModel.Select().Rows.Find(list[i].IdReasonType);
+                var reasonType = (ReasonType) list[i];
+                var row = GeneralDataModel.Select().Rows.Find(reasonType.IdReasonType);
                 if (row == null)
                 {
-                    var id_reason_type = GeneralDataModel.Insert(list[i]);
-                    if (id_reason_type == -1)
+                    var idReasonType = GeneralDataModel.Insert(reasonType);
+                    if (idReasonType == -1)
                     {
                         sync_views = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    ((DataRowView)GeneralSnapshotBindingSource[i])["id_reason_type"] = id_reason_type;
+                    ((DataRowView)GeneralSnapshotBindingSource[i])["id_reason_type"] = idReasonType;
                     GeneralDataModel.Select().Rows.Add(DataRowViewToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
 
-                    if (RowToReasonType(row) == list[i])
+                    if (RowToReasonType(row) == reasonType)
                         continue;
-                    if (GeneralDataModel.Update(list[i]) == -1)
+                    if (GeneralDataModel.Update(reasonType) == -1)
                     {
                         sync_views = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    row["reason_name"] = list[i].ReasonName == null ? DBNull.Value : (object)list[i].ReasonName;
-                    row["reason_template"] = list[i].ReasonTemplate == null ? DBNull.Value : (object)list[i].ReasonTemplate;
+                    row["reason_name"] = reasonType.ReasonName == null ? DBNull.Value : (object)reasonType.ReasonName;
+                    row["reason_template"] = reasonType.ReasonTemplate == null ? DBNull.Value : (object)reasonType.ReasonTemplate;
                 }
             }
-            list = ReasonTypesFromView();
-            for (var i = 0; i < list.Count; i++)
+            list = EntitiesListFromView();
+            foreach (var entity in list)
             {
-                var row_index = -1;
+                var reasonType = (ReasonType) entity;
+                var rowIndex = -1;
                 for (var j = 0; j < dataGridView.Rows.Count; j++)
                     if ((dataGridView.Rows[j].Cells["id_reason_type"].Value != null) &&
                         !string.IsNullOrEmpty(dataGridView.Rows[j].Cells["id_reason_type"].Value.ToString()) &&
-                        ((int)dataGridView.Rows[j].Cells["id_reason_type"].Value == list[i].IdReasonType))
-                        row_index = j;
-                if (row_index == -1)
+                        ((int)dataGridView.Rows[j].Cells["id_reason_type"].Value == reasonType.IdReasonType))
+                        rowIndex = j;
+                if (rowIndex == -1)
                 {
-                    if (GeneralDataModel.Delete(list[i].IdReasonType.Value) == -1)
+                    if (reasonType.IdReasonType != null && 
+                        GeneralDataModel.Delete(reasonType.IdReasonType.Value) == -1)
                     {
                         sync_views = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    GeneralDataModel.Select().Rows.Find(list[i].IdReasonType).Delete();
+                    GeneralDataModel.Select().Rows.Find(reasonType.IdReasonType).Delete();
                 }
             }
             sync_views = true;
@@ -313,11 +295,9 @@ namespace Registry.Viewport
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (e == null)
-                return;
             if (SnapshotHasChanges())
             {
-                var result = MessageBox.Show("Сохранить изменения о виде основания в базу данных?", "Внимание",
+                var result = MessageBox.Show(@"Сохранить изменения о виде основания в базу данных?", @"Внимание",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                 if (result == DialogResult.Yes)
                     SaveRecord();
@@ -385,9 +365,9 @@ namespace Registry.Viewport
                 return;
             if (e.Action == DataRowAction.Delete)
             {
-                var row_index = GeneralSnapshotBindingSource.Find("id_reason_type", e.Row["id_reason_type"]);
-                if (row_index != -1)
-                    ((DataRowView)GeneralSnapshotBindingSource[row_index]).Delete();
+                var rowIndex = GeneralSnapshotBindingSource.Find("id_reason_type", e.Row["id_reason_type"]);
+                if (rowIndex != -1)
+                    ((DataRowView)GeneralSnapshotBindingSource[rowIndex]).Delete();
             }
         }
 
@@ -395,15 +375,15 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            var row_index = GeneralSnapshotBindingSource.Find("id_reason_type", e.Row["id_reason_type"]);
-            if (row_index == -1 && GeneralBindingSource.Find("id_reason_type", e.Row["id_reason_type"]) != -1)
+            var rowIndex = GeneralSnapshotBindingSource.Find("id_reason_type", e.Row["id_reason_type"]);
+            if (rowIndex == -1 && GeneralBindingSource.Find("id_reason_type", e.Row["id_reason_type"]) != -1)
             {
                 GeneralSnapshot.Rows.Add(e.Row["id_reason_type"], e.Row["reason_name"], e.Row["reason_template"]);
             }
             else
-                if (row_index != -1)
+                if (rowIndex != -1)
                 {
-                    var row = ((DataRowView)GeneralSnapshotBindingSource[row_index]);
+                    var row = ((DataRowView)GeneralSnapshotBindingSource[rowIndex]);
                     row["reason_name"] = e.Row["reason_name"];
                     row["reason_template"] = e.Row["reason_template"];
                 }

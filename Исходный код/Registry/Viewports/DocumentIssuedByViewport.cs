@@ -37,24 +37,6 @@ namespace Registry.Viewport
             ParentType = documentIssuedByViewport.ParentType;
         }
 
-        private bool SnapshotHasChanges()
-        {
-            var listFromView = DocumentsIssuedByFromView();
-            var listFromViewport = DocumentsIssuedByFromViewport();
-            if (listFromView.Count != listFromViewport.Count)
-                return true;
-            foreach (var documentFromView in listFromView)
-            {
-                var founded = false;
-                foreach (var documentFromViewport in listFromViewport)
-                    if (documentFromView == documentFromViewport)
-                        founded = true;
-                if (!founded)
-                    return true;
-            }
-            return false;
-        }
-
         private static object[] DataRowViewToArray(DataRowView dataRowView)
         {
             return new[] { 
@@ -63,10 +45,11 @@ namespace Registry.Viewport
             };
         }
 
-        private static bool ValidateViewportData(List<DocumentIssuedBy> list)
+        private static bool ValidateViewportData(IEnumerable<Entity> list)
         {
-            foreach (var documentIssuedBy in list)
+            foreach (var entity in list)
             {
+                var documentIssuedBy = (DocumentIssuedBy) entity;
                 if (documentIssuedBy.DocumentIssuedByName == null)
                 {
                     MessageBox.Show(@"Наименование органа, выдающего документы, удостоверяющие личность, не может быть пустым",
@@ -93,9 +76,9 @@ namespace Registry.Viewport
             return documentIssuedBy;
         }
 
-        private List<DocumentIssuedBy> DocumentsIssuedByFromViewport()
+        protected override List<Entity> EntitiesListFromViewport()
         {
-            var list = new List<DocumentIssuedBy>();
+            var list = new List<Entity>();
             for (var i = 0; i < dataGridView.Rows.Count; i++)
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
@@ -108,9 +91,9 @@ namespace Registry.Viewport
             return list;
         }
 
-        private List<DocumentIssuedBy> DocumentsIssuedByFromView()
+        protected override List<Entity> EntitiesListFromView()
         {
-            var list = new List<DocumentIssuedBy>();
+            var list = new List<Entity>();
             foreach (var document in GeneralBindingSource)
             {
                 var dib = new DocumentIssuedBy();
@@ -235,7 +218,7 @@ namespace Registry.Viewport
         {
             sync_views = false;
             GeneralDataModel.EditingNewRecord = true;
-            var list = DocumentsIssuedByFromViewport();
+            var list = EntitiesListFromViewport();
             if (!ValidateViewportData(list))
             {
                 sync_views = true;
@@ -244,7 +227,8 @@ namespace Registry.Viewport
             }
             for (var i = 0; i < list.Count; i++)
             {
-                var row = GeneralDataModel.Select().Rows.Find(list[i].IdDocumentIssuedBy);
+                var document = (DocumentIssuedBy)list[i];
+                var row = GeneralDataModel.Select().Rows.Find(document.IdDocumentIssuedBy);
                 if (row == null)
                 {
                     var idDocumentIssuedBy = GeneralDataModel.Insert(list[i]);
@@ -260,7 +244,7 @@ namespace Registry.Viewport
                 else
                 {
 
-                    if (RowToDocumentIssuedBy(row) == list[i])
+                    if (RowToDocumentIssuedBy(row) == document)
                         continue;
                     if (GeneralDataModel.Update(list[i]) == -1)
                     {
@@ -268,28 +252,27 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    row["document_issued_by"] = list[i].DocumentIssuedByName == null ? DBNull.Value : (object)list[i].DocumentIssuedByName;
+                    row["document_issued_by"] = document.DocumentIssuedByName == null ? DBNull.Value : (object)document.DocumentIssuedByName;
                 }
             }
-            list = DocumentsIssuedByFromView();
-            foreach (DocumentIssuedBy document in list)
+            list = EntitiesListFromView();
+            foreach (var entity in list)
             {
+                var document = (DocumentIssuedBy)entity;
                 var rowIndex = -1;
                 for (var j = 0; j < dataGridView.Rows.Count; j++)
                     if ((dataGridView.Rows[j].Cells["id_document_issued_by"].Value != null) &&
                         !string.IsNullOrEmpty(dataGridView.Rows[j].Cells["id_document_issued_by"].Value.ToString()) &&
                         ((int)dataGridView.Rows[j].Cells["id_document_issued_by"].Value == document.IdDocumentIssuedBy))
                         rowIndex = j;
-                if (rowIndex == -1)
+                if (rowIndex != -1) continue;
+                if (document.IdDocumentIssuedBy != null && GeneralDataModel.Delete(document.IdDocumentIssuedBy.Value) == -1)
                 {
-                    if (document.IdDocumentIssuedBy != null && GeneralDataModel.Delete(document.IdDocumentIssuedBy.Value) == -1)
-                    {
-                        sync_views = true;
-                        GeneralDataModel.EditingNewRecord = false;
-                        return;
-                    }
-                    GeneralDataModel.Select().Rows.Find(document.IdDocumentIssuedBy).Delete();
+                    sync_views = true;
+                    GeneralDataModel.EditingNewRecord = false;
+                    return;
                 }
+                GeneralDataModel.Select().Rows.Find(document.IdDocumentIssuedBy).Delete();
             }
             sync_views = true;
             GeneralDataModel.EditingNewRecord = false;

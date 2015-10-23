@@ -2,24 +2,20 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using CustomControls;
-using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
-using Registry.DataModels.CalcDataModels;
-using Registry.DataModels.DataModels;
 
 namespace Registry.Viewport
 {
     internal sealed partial class TenancyReasonsViewport: EditableDataGridViewport
     {
-        private DataModel tenancyReasonTypesDataModel;
+        private DataModel _tenancyReasonTypesDataModel;
 
-        private BindingSource v_tenancyReasonTypesDataModel;
+        private BindingSource _vTenancyReasonTypesDataModel;
 
         private TenancyReasonsViewport()
             : this(null)
@@ -30,8 +26,7 @@ namespace Registry.Viewport
             : base(menuCallback)
         {
             InitializeComponent();
-            GeneralSnapshot = new DataTable("snapshot_tenancy_reasons");
-            GeneralSnapshot.Locale = CultureInfo.InvariantCulture;
+            GeneralSnapshot = new DataTable("snapshot_tenancy_reasons") {Locale = CultureInfo.InvariantCulture};
         }
 
         public TenancyReasonsViewport(TenancyReasonsViewport tenancyReasonsViewport, IMenuCallback menuCallback)
@@ -41,25 +36,6 @@ namespace Registry.Viewport
             StaticFilter = tenancyReasonsViewport.StaticFilter;
             ParentRow = tenancyReasonsViewport.ParentRow;
             ParentType = tenancyReasonsViewport.ParentType;
-        }
-
-        private bool SnapshotHasChanges()
-        {
-            var list_from_view = TenancyReasonsFromView();
-            var list_from_viewport = TenancyReasonsFromViewport();
-            if (list_from_view.Count != list_from_viewport.Count)
-                return true;
-            var founded = false;
-            for (var i = 0; i < list_from_view.Count; i++)
-            {
-                founded = false;
-                for (var j = 0; j < list_from_viewport.Count; j++)
-                    if (list_from_view[i] == list_from_viewport[j])
-                        founded = true;
-                if (!founded)
-                    return true;
-            }
-            return false;
         }
 
         private static object[] DataRowViewToArray(DataRowView dataRowView)
@@ -74,25 +50,26 @@ namespace Registry.Viewport
             };
         }
 
-        private static bool ValidateViewportData(List<TenancyReason> list)
+        private static bool ValidateViewportData(IEnumerable<Entity> list)
         {
-            foreach (var tenancyReason in list)
+            foreach (var entity in list)
             {
+                var tenancyReason = (TenancyReason) entity;
                 if (tenancyReason.IdReasonType == null)
                 {
-                    MessageBox.Show("Не выбран вид основания", "Ошибка", 
+                    MessageBox.Show(@"Не выбран вид основания", @"Ошибка", 
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
                 if (tenancyReason.ReasonNumber != null && tenancyReason.ReasonNumber.Length > 50)
                 {
-                    MessageBox.Show("Длина номера основания не может превышать 50 символов", "Ошибка", 
+                    MessageBox.Show(@"Длина номера основания не может превышать 50 символов", @"Ошибка", 
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
                 if (tenancyReason.ReasonDate == null)
                 {
-                    MessageBox.Show("Не заполнена дата основания", "Ошибка", 
+                    MessageBox.Show(@"Не заполнена дата основания", @"Ошибка", 
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
@@ -102,19 +79,21 @@ namespace Registry.Viewport
 
         private static TenancyReason RowToTenancyReason(DataRow row)
         {
-            var tenancyReason = new TenancyReason();
-            tenancyReason.IdReason = ViewportHelper.ValueOrNull<int>(row, "id_reason");
-            tenancyReason.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
-            tenancyReason.IdReasonType = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
-            tenancyReason.ReasonNumber = ViewportHelper.ValueOrNull(row, "reason_number");
-            tenancyReason.ReasonDate = ViewportHelper.ValueOrNull<DateTime>(row, "reason_date");
-            tenancyReason.ReasonPrepared = ViewportHelper.ValueOrNull(row, "reason_prepared");
+            var tenancyReason = new TenancyReason
+            {
+                IdReason = ViewportHelper.ValueOrNull<int>(row, "id_reason"),
+                IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process"),
+                IdReasonType = ViewportHelper.ValueOrNull<int>(row, "id_reason_type"),
+                ReasonNumber = ViewportHelper.ValueOrNull(row, "reason_number"),
+                ReasonDate = ViewportHelper.ValueOrNull<DateTime>(row, "reason_date"),
+                ReasonPrepared = ViewportHelper.ValueOrNull(row, "reason_prepared")
+            };
             return tenancyReason;
         }
 
-        private List<TenancyReason> TenancyReasonsFromViewport()
+        protected override List<Entity> EntitiesListFromViewport()
         {
-            var list = new List<TenancyReason>();
+            var list = new List<Entity>();
             for (var i = 0; i < dataGridView.Rows.Count; i++)
             {
                 if (!dataGridView.Rows[i].IsNewRow)
@@ -133,9 +112,9 @@ namespace Registry.Viewport
             return list;
         }
 
-        private List<TenancyReason> TenancyReasonsFromView()
+        protected override List<Entity> EntitiesListFromView()
         {
-            var list = new List<TenancyReason>();
+            var list = new List<Entity>();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
             {
                 var cr = new TenancyReason();
@@ -161,22 +140,26 @@ namespace Registry.Viewport
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
             GeneralDataModel = DataModel.GetInstance(DataModelType.TenancyReasonsDataModel);
-            tenancyReasonTypesDataModel = DataModel.GetInstance(DataModelType.TenancyReasonTypesDataModel);
+            _tenancyReasonTypesDataModel = DataModel.GetInstance(DataModelType.TenancyReasonTypesDataModel);
             // Дожидаемся дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
-            tenancyReasonTypesDataModel.Select();
+            _tenancyReasonTypesDataModel.Select();
 
-            GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.DataMember = "tenancy_reasons";
-            GeneralBindingSource.Filter = StaticFilter;
+            GeneralBindingSource = new BindingSource
+            {
+                DataMember = "tenancy_reasons",
+                Filter = StaticFilter
+            };
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 GeneralBindingSource.Filter += " AND ";
             GeneralBindingSource.Filter += DynamicFilter;
             GeneralBindingSource.DataSource = DataModel.DataSet;
 
-            v_tenancyReasonTypesDataModel = new BindingSource();
-            v_tenancyReasonTypesDataModel.DataMember = "tenancy_reason_types";
-            v_tenancyReasonTypesDataModel.DataSource = DataModel.DataSet;
+            _vTenancyReasonTypesDataModel = new BindingSource
+            {
+                DataMember = "tenancy_reason_types",
+                DataSource = DataModel.DataSet
+            };
 
             if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
                 Text = string.Format(CultureInfo.InvariantCulture, "Основания найма №{0}", ParentRow["id_process"]);
@@ -188,15 +171,14 @@ namespace Registry.Viewport
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
                 GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
-            GeneralSnapshotBindingSource = new BindingSource();
-            GeneralSnapshotBindingSource.DataSource = GeneralSnapshot;
+            GeneralSnapshotBindingSource = new BindingSource {DataSource = GeneralSnapshot};
             GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_tenancy_reasons_CurrentItemChanged;
 
             dataGridView.DataSource = GeneralSnapshotBindingSource;
 
             id_process.DataPropertyName = "id_process";
             id_reason.DataPropertyName = "id_reason";
-            id_reason_type.DataSource = v_tenancyReasonTypesDataModel;
+            id_reason_type.DataSource = _vTenancyReasonTypesDataModel;
             id_reason_type.ValueMember = "id_reason_type";
             id_reason_type.DisplayMember = "reason_name";
             id_reason_type.DataPropertyName = "id_reason_type";
@@ -223,6 +205,7 @@ namespace Registry.Viewport
         public override void InsertRecord()
         {
             var row = (DataRowView)GeneralSnapshotBindingSource.AddNew();
+            if (row == null) return;
             row["id_process"] = ParentRow["id_process"];
             row["reason_date"] = DateTime.Now.Date;
             row.EndEdit();
@@ -260,7 +243,7 @@ namespace Registry.Viewport
         {
             sync_views = false;
             GeneralDataModel.EditingNewRecord = true;
-            var list = TenancyReasonsFromViewport();
+            var list = EntitiesListFromViewport();
             if (!ValidateViewportData(list))
             {
                 sync_views = true; 
@@ -269,53 +252,56 @@ namespace Registry.Viewport
             }
             for (var i = 0; i < list.Count; i++)
             {
-                var row = GeneralDataModel.Select().Rows.Find(list[i].IdReason);
+                var tenancyReason = (TenancyReason) list[i];
+                var row = GeneralDataModel.Select().Rows.Find(tenancyReason.IdReason);
                 if (row == null)
                 {
-                    var id_reason = GeneralDataModel.Insert(list[i]);
-                    if (id_reason == -1)
+                    var idReason = GeneralDataModel.Insert(tenancyReason);
+                    if (idReason == -1)
                     {
                         sync_views = true; 
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    ((DataRowView)GeneralSnapshotBindingSource[i])["id_reason"] = id_reason;
+                    ((DataRowView)GeneralSnapshotBindingSource[i])["id_reason"] = idReason;
                     GeneralDataModel.Select().Rows.Add(DataRowViewToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
-                    if (RowToTenancyReason(row) == list[i])
+                    if (RowToTenancyReason(row) == tenancyReason)
                         continue;
-                    if (GeneralDataModel.Update(list[i]) == -1)
+                    if (GeneralDataModel.Update(tenancyReason) == -1)
                     {
                         sync_views = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    row["id_process"] = list[i].IdProcess == null ? DBNull.Value : (object)list[i].IdProcess;
-                    row["id_reason_type"] = list[i].IdReasonType == null ? DBNull.Value : (object)list[i].IdReasonType;
-                    row["reason_number"] = list[i].ReasonNumber == null ? DBNull.Value : (object)list[i].ReasonNumber;
-                    row["reason_date"] = list[i].ReasonDate == null ? DBNull.Value : (object)list[i].ReasonDate;
-                    row["reason_prepared"] = list[i].ReasonPrepared == null ? DBNull.Value : (object)list[i].ReasonPrepared;
+                    row["id_process"] = tenancyReason.IdProcess == null ? DBNull.Value : (object)tenancyReason.IdProcess;
+                    row["id_reason_type"] = tenancyReason.IdReasonType == null ? DBNull.Value : (object)tenancyReason.IdReasonType;
+                    row["reason_number"] = tenancyReason.ReasonNumber == null ? DBNull.Value : (object)tenancyReason.ReasonNumber;
+                    row["reason_date"] = tenancyReason.ReasonDate == null ? DBNull.Value : (object)tenancyReason.ReasonDate;
+                    row["reason_prepared"] = tenancyReason.ReasonPrepared == null ? DBNull.Value : (object)tenancyReason.ReasonPrepared;
                 }
             }
-            list = TenancyReasonsFromView();
-            for (var i = 0; i < list.Count; i++)
+            list = EntitiesListFromView();
+            foreach (var entity in list)
             {
+                var tenancyReason = (TenancyReason)entity;
                 var rowIndex = -1;
                 for (var j = 0; j < dataGridView.Rows.Count; j++)
                     if ((dataGridView.Rows[j].Cells["id_reason"].Value != null) &&
                         !string.IsNullOrEmpty(dataGridView.Rows[j].Cells["id_reason"].Value.ToString()) &&
-                        ((int)dataGridView.Rows[j].Cells["id_reason"].Value == list[i].IdReason))
+                        ((int)dataGridView.Rows[j].Cells["id_reason"].Value == tenancyReason.IdReason))
                         rowIndex = j;
                 if (rowIndex != -1) continue;
-                if (GeneralDataModel.Delete(list[i].IdReason.Value) == -1)
+                if (tenancyReason.IdReason != null && 
+                    GeneralDataModel.Delete(tenancyReason.IdReason.Value) == -1)
                 {
                     sync_views = true;
                     GeneralDataModel.EditingNewRecord = false;
                     return;
                 }
-                GeneralDataModel.Select().Rows.Find(list[i].IdReason).Delete();
+                GeneralDataModel.Select().Rows.Find(tenancyReason.IdReason).Delete();
             }
             sync_views = true;
             GeneralDataModel.EditingNewRecord = false;
@@ -337,22 +323,22 @@ namespace Registry.Viewport
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (e == null)
-                return;
             if (SnapshotHasChanges())
             {
-                var result = MessageBox.Show("Сохранить изменения об основаниях на найм жилья в базу данных?", "Внимание",
-                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                if (result == DialogResult.Yes)
-                    SaveRecord();
-                else
-                    if (result == DialogResult.No)
+                var result = MessageBox.Show(@"Сохранить изменения об основаниях на найм жилья в базу данных?", 
+                    @"Внимание", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        SaveRecord();
+                        break;
+                    case DialogResult.No:
                         CancelRecord();
-                    else
-                    {
+                        break;
+                    default:
                         e.Cancel = true;
                         return;
-                    }
+                }
             }
             GeneralDataModel.Select().RowChanged -= TenancyReasonsViewport_RowChanged;
             GeneralDataModel.Select().RowDeleting -= TenancyReasonsViewport_RowDeleting;
@@ -370,21 +356,20 @@ namespace Registry.Viewport
 
         void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            var reason_type_index = v_tenancyReasonTypesDataModel.Find("id_reason_type", dataGridView.Rows[e.RowIndex].Cells["id_reason_type"].Value);
-            var reason_template = "";
-            if (reason_type_index != -1)
-                reason_template = ((DataRowView)v_tenancyReasonTypesDataModel[reason_type_index])["reason_template"].ToString();
-            var reason_number = dataGridView.Rows[e.RowIndex].Cells["reason_number"].Value.ToString();
-            DateTime? reason_date = null;
+            var reasonTypeIndex = _vTenancyReasonTypesDataModel.Find("id_reason_type", dataGridView.Rows[e.RowIndex].Cells["id_reason_type"].Value);
+            var reasonTemplate = "";
+            if (reasonTypeIndex != -1)
+                reasonTemplate = ((DataRowView)_vTenancyReasonTypesDataModel[reasonTypeIndex])["reason_template"].ToString();
+            var reasonNumber = dataGridView.Rows[e.RowIndex].Cells["reason_number"].Value.ToString();
+            DateTime? reasonDate = null;
             if (dataGridView.Rows[e.RowIndex].Cells["reason_date"].Value != DBNull.Value)
-                reason_date = Convert.ToDateTime(dataGridView.Rows[e.RowIndex].Cells["reason_date"].Value, CultureInfo.InvariantCulture);
-            reason_template = reason_template.Replace("@reason_date@", reason_date == null ? "" :
-                    reason_date.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
-            if (string.IsNullOrEmpty(reason_number))
-                reason_template = reason_template.Replace("№@reason_number@", reason_number).Replace("№ @reason_number@", reason_number);
-            else
-                reason_template = reason_template.Replace("@reason_number@", reason_number);
-            dataGridView.Rows[e.RowIndex].Cells["reason_prepared"].Value = reason_template;
+                reasonDate = Convert.ToDateTime(dataGridView.Rows[e.RowIndex].Cells["reason_date"].Value, CultureInfo.InvariantCulture);
+            reasonTemplate = reasonTemplate.Replace("@reason_date@", reasonDate == null ? "" :
+                    reasonDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
+            reasonTemplate = string.IsNullOrEmpty(reasonNumber) ? 
+                reasonTemplate.Replace("№@reason_number@", reasonNumber).Replace("№ @reason_number@", reasonNumber) : 
+                reasonTemplate.Replace("@reason_number@", reasonNumber);
+            dataGridView.Rows[e.RowIndex].Cells["reason_prepared"].Value = reasonTemplate;
             MenuCallback.EditingStateUpdate();
         }
 
@@ -394,16 +379,12 @@ namespace Registry.Viewport
             switch (cell.OwningColumn.Name)
             {
                 case "reason_number":
-                    if (cell.Value.ToString().Trim().Length > 50)
-                        cell.ErrorText = "Длина номера основания не может превышать 50 символов";
-                    else
-                        cell.ErrorText = "";
+                    cell.ErrorText = cell.Value.ToString().Trim().Length > 50 ? 
+                        "Длина номера основания не может превышать 50 символов" : "";
                     break;
                 case "reason_date":
-                    if (string.IsNullOrEmpty(cell.Value.ToString().Trim()))
-                        cell.ErrorText = "Не заполнена дата основания";
-                    else
-                        cell.ErrorText = "";
+                    cell.ErrorText = string.IsNullOrEmpty(cell.Value.ToString().Trim()) ? 
+                        "Не заполнена дата основания" : "";
                     break;
             }
         }
@@ -431,27 +412,25 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            if (e.Action == DataRowAction.Delete)
-            {
-                var row_index = GeneralSnapshotBindingSource.Find("id_reason", e.Row["id_reason"]);
-                if (row_index != -1)
-                    ((DataRowView)GeneralSnapshotBindingSource[row_index]).Delete();
-            }
+            if (e.Action != DataRowAction.Delete) return;
+            var rowIndex = GeneralSnapshotBindingSource.Find("id_reason", e.Row["id_reason"]);
+            if (rowIndex != -1)
+                ((DataRowView)GeneralSnapshotBindingSource[rowIndex]).Delete();
         }
 
         void TenancyReasonsViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (!sync_views)
                 return;
-            var row_index = GeneralSnapshotBindingSource.Find("id_reason", e.Row["id_reason"]);
-            if (row_index == -1 && GeneralBindingSource.Find("id_reason", e.Row["id_reason"]) != -1)
+            var rowIndex = GeneralSnapshotBindingSource.Find("id_reason", e.Row["id_reason"]);
+            if (rowIndex == -1 && GeneralBindingSource.Find("id_reason", e.Row["id_reason"]) != -1)
             {
                 GeneralSnapshot.Rows.Add(e.Row["id_reason"], e.Row["id_process"], e.Row["id_reason_type"], e.Row["reason_number"], e.Row["reason_date"], e.Row["reason_prepared"]);
             }
             else
-                if (row_index != -1)
+                if (rowIndex != -1)
                 {
-                    var row = ((DataRowView)GeneralSnapshotBindingSource[row_index]);
+                    var row = ((DataRowView)GeneralSnapshotBindingSource[rowIndex]);
                     row["id_process"] = e.Row["id_process"];
                     row["id_reason_type"] = e.Row["id_reason_type"];
                     row["reason_number"] = e.Row["reason_number"];
@@ -468,18 +447,17 @@ namespace Registry.Viewport
 
         void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            if (dataGridView.CurrentCell.OwningColumn.Name == "id_reason_type")
-            {
-                var editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
-                editingControl.DropDownClosed -= editingControl_DropDownClosed;
-                editingControl.DropDownClosed += editingControl_DropDownClosed;
-            }
+            if (dataGridView.CurrentCell.OwningColumn.Name != "id_reason_type") return;
+            var editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
+            if (editingControl == null) return;
+            editingControl.DropDownClosed -= editingControl_DropDownClosed;
+            editingControl.DropDownClosed += editingControl_DropDownClosed;
         }
 
         void editingControl_DropDownClosed(object sender, EventArgs e)
         {
             var editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
-            dataGridView.CurrentCell.Value = editingControl.SelectedValue;
+            if (editingControl != null) dataGridView.CurrentCell.Value = editingControl.SelectedValue;
             dataGridView.EndEdit();
         }
     }

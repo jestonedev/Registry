@@ -37,24 +37,6 @@ namespace Registry.Viewport
             ParentType = documentResidenceViewport.ParentType;
         }
 
-        private bool SnapshotHasChanges()
-        {
-            var listFromView = DocumentsIssuedByFromView();
-            var listFromViewport = DocumentsIssuedByFromViewport();
-            if (listFromView.Count != listFromViewport.Count)
-                return true;
-            foreach (var documentView in listFromView)
-            {
-                var founded = false;
-                foreach (var documentViewport in listFromViewport)
-                    if (documentView == documentViewport)
-                        founded = true;
-                if (!founded)
-                    return true;
-            }
-            return false;
-        }
-
         private static object[] DataRowViewToArray(DataRowView dataRowView)
         {
             return new[] { 
@@ -63,10 +45,11 @@ namespace Registry.Viewport
             };
         }
 
-        private static bool ValidateViewportData(List<DocumentResidence> list)
+        private static bool ValidateViewportData(IEnumerable<Entity> list)
         {
-            foreach (var documentResidence in list)
+            foreach (var entity in list)
             {
+                var documentResidence = (DocumentResidence) entity;
                 if (documentResidence.DocumentResidenceName == null)
                 {
                     MessageBox.Show(@"Наименование документа-основания на проживание не может быть пустым",
@@ -92,9 +75,9 @@ namespace Registry.Viewport
             return documentResidence;
         }
 
-        private List<DocumentResidence> DocumentsIssuedByFromViewport()
+        protected override List<Entity> EntitiesListFromViewport()
         {
-            var list = new List<DocumentResidence>();
+            var list = new List<Entity>();
             for (var i = 0; i < dataGridView.Rows.Count; i++)
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
@@ -109,9 +92,9 @@ namespace Registry.Viewport
             return list;
         }
 
-        private List<DocumentResidence> DocumentsIssuedByFromView()
+        protected override List<Entity> EntitiesListFromView()
         {
-            var list = new List<DocumentResidence>();
+            var list = new List<Entity>();
             foreach (var document in GeneralBindingSource)
             {
                 var row = ((DataRowView)document);
@@ -238,7 +221,7 @@ namespace Registry.Viewport
         {
             sync_views = false;
             GeneralDataModel.EditingNewRecord = true;
-            var list = DocumentsIssuedByFromViewport();
+            var list = EntitiesListFromViewport();
             if (!ValidateViewportData(list))
             {
                 sync_views = true;
@@ -247,7 +230,8 @@ namespace Registry.Viewport
             }
             for (var i = 0; i < list.Count; i++)
             {
-                var row = GeneralDataModel.Select().Rows.Find(list[i].IdDocumentResidence);
+                var document = (DocumentResidence)list[i];
+                var row = GeneralDataModel.Select().Rows.Find(document.IdDocumentResidence);
                 if (row == null)
                 {
                     var idDocumentResidence = GeneralDataModel.Insert(list[i]);
@@ -263,7 +247,7 @@ namespace Registry.Viewport
                 else
                 {
 
-                    if (RowToDocumentResidence(row) == list[i])
+                    if (RowToDocumentResidence(row) == document)
                         continue;
                     if (GeneralDataModel.Update(list[i]) == -1)
                     {
@@ -271,12 +255,13 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    row["document_residence"] = list[i].DocumentResidenceName == null ? DBNull.Value : (object)list[i].DocumentResidenceName;
+                    row["document_residence"] = document.DocumentResidenceName == null ? DBNull.Value : (object)document.DocumentResidenceName;
                 }
             }
-            list = DocumentsIssuedByFromView();
-            foreach (var document in list)
+            list = EntitiesListFromView();
+            foreach (var entity in list)
             {
+                var document = (DocumentResidence)entity;
                 var rowIndex = -1;
                 for (var j = 0; j < dataGridView.Rows.Count; j++)
                     if ((dataGridView.Rows[j].Cells["id_document_residence"].Value != null) &&

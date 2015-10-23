@@ -2,12 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using CustomControls;
 using Registry.DataModels;
-using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
@@ -18,13 +15,13 @@ namespace Registry.Viewport
     internal sealed partial class RestrictionListViewport : EditableDataGridViewport
     {
         #region Models
-        DataModel restriction_types;
-        DataModel restriction_assoc;
+        DataModel _restrictionTypes;
+        DataModel _restrictionAssoc;
         #endregion Models
 
         #region Views
-        BindingSource v_restriction_types;
-        BindingSource v_restriction_assoc;
+        BindingSource _vRestrictionTypes;
+        BindingSource _vRestrictionAssoc;
         #endregion Views
 
         private RestrictionListViewport()
@@ -53,30 +50,11 @@ namespace Registry.Viewport
         private void RebuildFilter()
         {
             var restrictionFilter = "id_restriction IN (0";
-            for (var i = 0; i < v_restriction_assoc.Count; i++)
-                restrictionFilter += ((DataRowView)v_restriction_assoc[i])["id_restriction"] + ",";
+            for (var i = 0; i < _vRestrictionAssoc.Count; i++)
+                restrictionFilter += ((DataRowView)_vRestrictionAssoc[i])["id_restriction"] + ",";
             restrictionFilter = restrictionFilter.TrimEnd(',');
             restrictionFilter += ")";
             GeneralBindingSource.Filter = restrictionFilter;
-        }
-
-        private bool SnapshotHasChanges()
-        {
-            var list_from_view = RestrictionsFromView();
-            var list_from_viewport = RestrictionsFromViewport();
-            if (list_from_view.Count != list_from_viewport.Count)
-                return true;
-            var founded = false;
-            for (var i = 0; i < list_from_view.Count; i++)
-            {
-                founded = false;
-                for (var j = 0; j < list_from_viewport.Count; j++)
-                    if (list_from_view[i] == list_from_viewport[j])
-                        founded = true;
-                if (!founded)
-                    return true;
-            }
-            return false;
         }
 
         private static object[] DataRowViewToArray(DataRowView dataRowView)
@@ -94,61 +72,64 @@ namespace Registry.Viewport
         {
             var entity = EntityType.Unknown;
             string fieldName = null;
-            if (ParentType == ParentTypeEnum.Building)
+            switch (ParentType)
             {
-                entity = EntityType.Building;
-                fieldName = "id_building";
-            }
-            else
-                if (ParentType == ParentTypeEnum.Premises)
-                {
+                case ParentTypeEnum.Building:
+                    entity = EntityType.Building;
+                    fieldName = "id_building";
+                    break;
+                case ParentTypeEnum.Premises:
                     entity = EntityType.Premise;
                     fieldName = "id_premises";
-                }
+                    break;
+            }
+            if (fieldName == null)
+                return false;
             if (DataModelHelper.HasMunicipal((int)ParentRow[fieldName], entity)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
-                MessageBox.Show("У вас нет прав на изменение информации о реквизитах НПА муниципальных объектов",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"У вас нет прав на изменение информации о реквизитах НПА муниципальных объектов",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             if (DataModelHelper.HasNotMunicipal((int)ParentRow[fieldName], entity)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
-                MessageBox.Show("У вас нет прав на изменение информации о реквизитах НПА немуниципальных объектов",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"У вас нет прав на изменение информации о реквизитах НПА немуниципальных объектов",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             return true;
         }
 
-        private bool ValidateViewportData(List<Restriction> list)
+        private bool ValidateViewportData(IEnumerable<Entity> list)
         {
             if (ValidatePermissions() == false)
                 return false;
-            foreach (var restriction in list)
+            foreach (var entity in list)
             {
+                var restriction = (Restriction) entity;
                 if (restriction.Number != null && restriction.Number.Length > 10)
                 {
-                    MessageBox.Show("Номер реквизита не может привышать 10 символов", "Ошибка", 
+                    MessageBox.Show(@"Номер реквизита не может привышать 10 символов", @"Ошибка", 
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
                 if (restriction.Date == null)
                 {
-                    MessageBox.Show("Не заполнена дата", "Ошибка", 
+                    MessageBox.Show(@"Не заполнена дата", @"Ошибка", 
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
                 if (restriction.Description != null && restriction.Description.Length > 255)
                 {
-                    MessageBox.Show("Длина наименования реквизита не может превышать 255 символов", "Ошибка", 
+                    MessageBox.Show(@"Длина наименования реквизита не может превышать 255 символов", @"Ошибка", 
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
                 if (restriction.IdRestrictionType == null)
                 {
-                    MessageBox.Show("Не выбран тип реквизита", "Ошибка", 
+                    MessageBox.Show(@"Не выбран тип реквизита", @"Ошибка", 
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
@@ -158,38 +139,38 @@ namespace Registry.Viewport
 
         private static Restriction RowToRestriction(DataRow row)
         {
-            var restriction = new Restriction();
-            restriction.IdRestriction = ViewportHelper.ValueOrNull<int>(row, "id_restriction");
-            restriction.IdRestrictionType = ViewportHelper.ValueOrNull<int>(row, "id_restriction_type");
-            restriction.Number = ViewportHelper.ValueOrNull(row, "number");
-            restriction.Date = ViewportHelper.ValueOrNull<DateTime>(row, "date");
-            restriction.Description = ViewportHelper.ValueOrNull(row, "description");
+            var restriction = new Restriction
+            {
+                IdRestriction = ViewportHelper.ValueOrNull<int>(row, "id_restriction"),
+                IdRestrictionType = ViewportHelper.ValueOrNull<int>(row, "id_restriction_type"),
+                Number = ViewportHelper.ValueOrNull(row, "number"),
+                Date = ViewportHelper.ValueOrNull<DateTime>(row, "date"),
+                Description = ViewportHelper.ValueOrNull(row, "description")
+            };
             return restriction;
         }
 
-        private List<Restriction> RestrictionsFromViewport()
+        protected override List<Entity> EntitiesListFromViewport()
         {
-            var list = new List<Restriction>();
+            var list = new List<Entity>();
             for (var i = 0; i < dataGridView.Rows.Count; i++)
             {
-                if (!dataGridView.Rows[i].IsNewRow)
-                {
-                    var r = new Restriction();
-                    var row = dataGridView.Rows[i];
-                    r.IdRestriction = ViewportHelper.ValueOrNull<int>(row, "id_restriction");
-                    r.IdRestrictionType = ViewportHelper.ValueOrNull<int>(row, "id_restriction_type");
-                    r.Number = ViewportHelper.ValueOrNull(row, "number");
-                    r.Date = ViewportHelper.ValueOrNull<DateTime>(row, "date");
-                    r.Description = ViewportHelper.ValueOrNull(row, "description");
-                    list.Add(r);
-                }
+                if (dataGridView.Rows[i].IsNewRow) continue;
+                var r = new Restriction();
+                var row = dataGridView.Rows[i];
+                r.IdRestriction = ViewportHelper.ValueOrNull<int>(row, "id_restriction");
+                r.IdRestrictionType = ViewportHelper.ValueOrNull<int>(row, "id_restriction_type");
+                r.Number = ViewportHelper.ValueOrNull(row, "number");
+                r.Date = ViewportHelper.ValueOrNull<DateTime>(row, "date");
+                r.Description = ViewportHelper.ValueOrNull(row, "description");
+                list.Add(r);
             }
             return list;
         }
 
-        private List<Restriction> RestrictionsFromView()
+        protected override List<Entity> EntitiesListFromView()
         {
-            var list = new List<Restriction>();
+            var list = new List<Entity>();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
             {
                 var r = new Restriction();
@@ -214,47 +195,51 @@ namespace Registry.Viewport
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
             GeneralDataModel = DataModel.GetInstance(DataModelType.RestrictionsDataModel);
-            restriction_types = DataModel.GetInstance(DataModelType.RestrictionTypesDataModel);
+            _restrictionTypes = DataModel.GetInstance(DataModelType.RestrictionTypesDataModel);
             // Дожидаемся дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
-            restriction_types.Select();
+            _restrictionTypes.Select();
 
             if (ParentType == ParentTypeEnum.Premises)
-                restriction_assoc =  DataModel.GetInstance(DataModelType.RestrictionsPremisesAssocDataModel);
+                _restrictionAssoc =  DataModel.GetInstance(DataModelType.RestrictionsPremisesAssocDataModel);
             else
                 if (ParentType == ParentTypeEnum.Building)
-                    restriction_assoc = DataModel.GetInstance(DataModelType.RestrictionsBuildingsAssocDataModel);
+                    _restrictionAssoc = DataModel.GetInstance(DataModelType.RestrictionsBuildingsAssocDataModel);
                 else
                     throw new ViewportException("Неизвестный тип родительского объекта");
-            restriction_assoc.Select();
+            _restrictionAssoc.Select();
 
-            v_restriction_assoc = new BindingSource();
+            _vRestrictionAssoc = new BindingSource();
             if ((ParentType == ParentTypeEnum.Premises) && (ParentRow != null))
             {
-                v_restriction_assoc.DataMember = "restrictions_premises_assoc";
-                v_restriction_assoc.Filter = "id_premises = " + ParentRow["id_premises"];
+                _vRestrictionAssoc.DataMember = "restrictions_premises_assoc";
+                _vRestrictionAssoc.Filter = "id_premises = " + ParentRow["id_premises"];
                 Text = string.Format(CultureInfo.InvariantCulture, "Реквизиты помещения №{0}", ParentRow["id_premises"]);
             }
             else
                 if ((ParentType == ParentTypeEnum.Building) && (ParentRow != null))
                 {
-                    v_restriction_assoc.DataMember = "restrictions_buildings_assoc";
-                    v_restriction_assoc.Filter = "id_building = " + ParentRow["id_building"];
+                    _vRestrictionAssoc.DataMember = "restrictions_buildings_assoc";
+                    _vRestrictionAssoc.Filter = "id_building = " + ParentRow["id_building"];
                     Text = string.Format(CultureInfo.InvariantCulture, "Реквизиты здания №{0}", ParentRow["id_building"]);
                 }
                 else
                     throw new ViewportException("Неизвестный тип родительского объекта");
-            v_restriction_assoc.DataSource = DataModel.DataSet;
+            _vRestrictionAssoc.DataSource = DataModel.DataSet;
 
-            GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.DataMember = "restrictions";
-            GeneralBindingSource.DataSource = DataModel.DataSet;
+            GeneralBindingSource = new BindingSource
+            {
+                DataMember = "restrictions",
+                DataSource = DataModel.DataSet
+            };
             //Перестраиваем фильтр v_ownerships_rights.Filter
             RebuildFilter();
 
-            v_restriction_types = new BindingSource();
-            v_restriction_types.DataMember = "restriction_types";
-            v_restriction_types.DataSource = DataModel.DataSet;
+            _vRestrictionTypes = new BindingSource
+            {
+                DataMember = "restriction_types",
+                DataSource = DataModel.DataSet
+            };
 
             //Инициируем колонки snapshot-модели
             for (var i = 0; i < GeneralDataModel.Select().Columns.Count; i++)
@@ -263,8 +248,7 @@ namespace Registry.Viewport
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
                 GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
-            GeneralSnapshotBindingSource = new BindingSource();
-            GeneralSnapshotBindingSource.DataSource = GeneralSnapshot;
+            GeneralSnapshotBindingSource = new BindingSource {DataSource = GeneralSnapshot};
             GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_restrictions_CurrentItemChanged;
             GeneralSnapshot.RowChanged += snapshot_restrictions_RowChanged;
             GeneralSnapshot.RowDeleted += snapshot_restrictions_RowDeleted;
@@ -272,7 +256,7 @@ namespace Registry.Viewport
             dataGridView.DataSource = GeneralSnapshotBindingSource;
 
             id_restriction.DataPropertyName = "id_restriction";
-            id_restriction_type.DataSource = v_restriction_types;
+            id_restriction_type.DataSource = _vRestrictionTypes;
             id_restriction_type.ValueMember = "id_restriction_type";
             id_restriction_type.DisplayMember = "restriction_type";
             id_restriction_type.DataPropertyName = "id_restriction_type";
@@ -288,8 +272,8 @@ namespace Registry.Viewport
             //Синхронизация данных исходные->текущие
             GeneralDataModel.Select().RowChanged += RestrictionListViewport_RowChanged;
             GeneralDataModel.Select().RowDeleting += RestrictionListViewport_RowDeleting;
-            restriction_assoc.Select().RowChanged += RestrictionAssoc_RowChanged;
-            restriction_assoc.Select().RowDeleted += RestrictionAssoc_RowDeleted;
+            _restrictionAssoc.Select().RowChanged += RestrictionAssoc_RowChanged;
+            _restrictionAssoc.Select().RowDeleted += RestrictionAssoc_RowDeleted;
         }
         
         public override bool CanInsertRecord()
@@ -300,7 +284,7 @@ namespace Registry.Viewport
         public override void InsertRecord()
         {
             var row = (DataRowView)GeneralSnapshotBindingSource.AddNew();
-            row.EndEdit();
+            if (row != null) row.EndEdit();
         }
 
         public override bool CanDeleteRecord()
@@ -337,7 +321,7 @@ namespace Registry.Viewport
         {
             sync_views = false;
             GeneralDataModel.EditingNewRecord = true;
-            var list = RestrictionsFromViewport();
+            var list = EntitiesListFromViewport();
             if (!ValidateViewportData(list))
             {
                 sync_views = true;
@@ -345,30 +329,31 @@ namespace Registry.Viewport
             }
             for (var i = 0; i < list.Count; i++)
             {
-                var row = GeneralDataModel.Select().Rows.Find(list[i].IdRestriction);
+                var restriction = (Restriction) list[i];
+                var row = GeneralDataModel.Select().Rows.Find(restriction.IdRestriction);
                 if (row == null)
                 {
-                    var id_parent = ((ParentType == ParentTypeEnum.Premises) && ParentRow != null) ? (int)ParentRow["id_premises"] :
+                    var idParent = ((ParentType == ParentTypeEnum.Premises) && ParentRow != null) ? (int)ParentRow["id_premises"] :
                         ((ParentType == ParentTypeEnum.Building) && ParentRow != null) ? (int)ParentRow["id_building"] :
                         -1;
-                    if (id_parent == -1)
+                    if (idParent == -1)
                     {
-                        MessageBox.Show("Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
-                            "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        MessageBox.Show(@"Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
+                            @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         sync_views = true;
                         GeneralDataModel.EditingNewRecord = false;
                         RebuildFilter();
                         return;
                     }
-                    var id_restriction = GeneralDataModel.Insert(list[i]);
-                    if (id_restriction == -1)
+                    var idRestriction = GeneralDataModel.Insert(restriction);
+                    if (idRestriction == -1)
                     {
                         sync_views = true;
                         GeneralDataModel.EditingNewRecord = false;
                         RebuildFilter();
                         return;
                     }
-                    var assoc = new RestrictionObjectAssoc(id_parent, id_restriction, null);
+                    var assoc = new RestrictionObjectAssoc(idParent, idRestriction, null);
                     switch (ParentType)
                     {
                         case ParentTypeEnum.Building:
@@ -378,47 +363,47 @@ namespace Registry.Viewport
                             DataModel.GetInstance(DataModelType.RestrictionsPremisesAssocDataModel).Insert(assoc);
                             break;
                     }
-                    ((DataRowView)GeneralSnapshotBindingSource[i])["id_restriction"] = id_restriction;
+                    ((DataRowView)GeneralSnapshotBindingSource[i])["id_restriction"] = idRestriction;
                     GeneralDataModel.Select().Rows.Add(DataRowViewToArray((DataRowView)GeneralSnapshotBindingSource[i]));
-                    restriction_assoc.Select().Rows.Add(id_parent, id_restriction);
+                    _restrictionAssoc.Select().Rows.Add(idParent, idRestriction);
                 }
                 else
                 {
-                    if (RowToRestriction(row) == list[i])
+                    if (RowToRestriction(row) == restriction)
                         continue;
-                    if (GeneralDataModel.Update(list[i]) == -1)
+                    if (GeneralDataModel.Update(restriction) == -1)
                     {
                         sync_views = true;
                         GeneralDataModel.EditingNewRecord = false;
                         RebuildFilter();
                         return;
                     }
-                    row["id_restriction_type"] = list[i].IdRestrictionType == null ? DBNull.Value : (object)list[i].IdRestrictionType;
-                    row["number"] = list[i].Number == null ? DBNull.Value : (object)list[i].Number;
-                    row["date"] = list[i].Date == null ? DBNull.Value : (object)list[i].Date;
-                    row["description"] = list[i].Description == null ? DBNull.Value : (object)list[i].Description;
+                    row["id_restriction_type"] = restriction.IdRestrictionType == null ? DBNull.Value : (object)restriction.IdRestrictionType;
+                    row["number"] = restriction.Number == null ? DBNull.Value : (object)restriction.Number;
+                    row["date"] = restriction.Date == null ? DBNull.Value : (object)restriction.Date;
+                    row["description"] = restriction.Description == null ? DBNull.Value : (object)restriction.Description;
                 }
             }
-            list = RestrictionsFromView();
-            for (var i = 0; i < list.Count; i++)
+            list = EntitiesListFromView();
+            foreach (var entity in list)
             {
-                var row_index = -1;
+                var restriction = (Restriction) entity;
+                var rowIndex = -1;
                 for (var j = 0; j < dataGridView.Rows.Count; j++)
                     if ((dataGridView.Rows[j].Cells["id_restriction"].Value != null) &&
                         !string.IsNullOrEmpty(dataGridView.Rows[j].Cells["id_restriction"].Value.ToString()) &&
-                        ((int)dataGridView.Rows[j].Cells["id_restriction"].Value == list[i].IdRestriction))
-                        row_index = j;
-                if (row_index == -1)
+                        ((int)dataGridView.Rows[j].Cells["id_restriction"].Value == restriction.IdRestriction))
+                        rowIndex = j;
+                if (rowIndex != -1) continue;
+                if (restriction.IdRestriction != null && 
+                    GeneralDataModel.Delete(restriction.IdRestriction.Value) == -1)
                 {
-                    if (GeneralDataModel.Delete(list[i].IdRestriction.Value) == -1)
-                    {
-                        sync_views = true;
-                        GeneralDataModel.EditingNewRecord = false;
-                        RebuildFilter();
-                        return;
-                    }
-                    GeneralDataModel.Select().Rows.Find(list[i].IdRestriction).Delete();
+                    sync_views = true;
+                    GeneralDataModel.EditingNewRecord = false;
+                    RebuildFilter();
+                    return;
                 }
+                GeneralDataModel.Select().Rows.Find(restriction.IdRestriction).Delete();
             }
             RebuildFilter();
             sync_views = true;
@@ -441,11 +426,9 @@ namespace Registry.Viewport
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (e == null)
-                return;
             if (SnapshotHasChanges())
             {
-                var result = MessageBox.Show("Сохранить изменения о реквизитах в базу данных?", "Внимание",
+                var result = MessageBox.Show(@"Сохранить изменения о реквизитах в базу данных?", @"Внимание",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
                 if (result == DialogResult.Yes)
                     SaveRecord();
@@ -460,8 +443,8 @@ namespace Registry.Viewport
             }
             GeneralDataModel.Select().RowChanged -= RestrictionListViewport_RowChanged;
             GeneralDataModel.Select().RowDeleting -= RestrictionListViewport_RowDeleting;
-            restriction_assoc.Select().RowChanged -= RestrictionAssoc_RowChanged;
-            restriction_assoc.Select().RowDeleted -= RestrictionAssoc_RowDeleted;
+            _restrictionAssoc.Select().RowChanged -= RestrictionAssoc_RowChanged;
+            _restrictionAssoc.Select().RowDeleted -= RestrictionAssoc_RowDeleted;
             base.OnClosing(e);
         }
 
@@ -469,8 +452,8 @@ namespace Registry.Viewport
         {
             GeneralDataModel.Select().RowChanged -= RestrictionListViewport_RowChanged;
             GeneralDataModel.Select().RowDeleting -= RestrictionListViewport_RowDeleting;
-            restriction_assoc.Select().RowChanged -= RestrictionAssoc_RowChanged;
-            restriction_assoc.Select().RowDeleted -= RestrictionAssoc_RowDeleted;
+            _restrictionAssoc.Select().RowChanged -= RestrictionAssoc_RowChanged;
+            _restrictionAssoc.Select().RowDeleted -= RestrictionAssoc_RowDeleted;
             Close();
         }
 
@@ -512,11 +495,11 @@ namespace Registry.Viewport
             //Если в модели есть запись, а в снапшоте нет, то добавляем в снапшот
             if (e.Row["id_restriction"] == DBNull.Value)
                 return;
-            var row_index = GeneralBindingSource.Find("id_restriction", e.Row["id_restriction"]);
-            if (row_index == -1)
+            var rowIndex = GeneralBindingSource.Find("id_restriction", e.Row["id_restriction"]);
+            if (rowIndex == -1)
                 return;
-            var row = (DataRowView)GeneralBindingSource[row_index];
-            if ((GeneralSnapshotBindingSource.Find("id_restriction", e.Row["id_restriction"]) == -1) && (row_index != -1))
+            var row = (DataRowView)GeneralBindingSource[rowIndex];
+            if ((GeneralSnapshotBindingSource.Find("id_restriction", e.Row["id_restriction"]) == -1) && (rowIndex != -1))
             {
                 GeneralSnapshot.Rows.Add(row["id_restriction"], row["id_restriction_type"], row["number"], row["date"], row["description"]);
             }
@@ -528,9 +511,9 @@ namespace Registry.Viewport
                 return;
             if (e.Action == DataRowAction.Delete)
             {
-                var row_index = GeneralSnapshotBindingSource.Find("id_restriction", e.Row["id_restriction"]);
-                if (row_index != -1)
-                    ((DataRowView)GeneralSnapshotBindingSource[row_index]).Delete();
+                var rowIndex = GeneralSnapshotBindingSource.Find("id_restriction", e.Row["id_restriction"]);
+                if (rowIndex != -1)
+                    ((DataRowView)GeneralSnapshotBindingSource[rowIndex]).Delete();
             }
         }
 
@@ -538,29 +521,29 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            if ((e.Action == DataRowAction.Change) || (e.Action == DataRowAction.ChangeCurrentAndOriginal) || e.Action == DataRowAction.ChangeOriginal)
+            switch (e.Action)
             {
-                var row_index = GeneralSnapshotBindingSource.Find("id_restriction", e.Row["id_restriction"]);
-                if (row_index != -1)
-                {
-                    var row = ((DataRowView)GeneralSnapshotBindingSource[row_index]);
+                case DataRowAction.Change:
+                case DataRowAction.ChangeCurrentAndOriginal:
+                case DataRowAction.ChangeOriginal:
+                    var rowIndex = GeneralSnapshotBindingSource.Find("id_restriction", e.Row["id_restriction"]);
+                    if (rowIndex == -1) return;
+                    var row = ((DataRowView)GeneralSnapshotBindingSource[rowIndex]);
                     row["id_restriction_type"] = e.Row["id_restriction_type"];
                     row["number"] = e.Row["number"];
                     row["date"] = e.Row["date"];
                     row["description"] = e.Row["description"];
-                }
-            }
-            else
-                if (e.Action == DataRowAction.Add)
-                {
+                    break;
+                case DataRowAction.Add:
                     //Если строка имеется в текущем контексте оригинального представления, то добавить его и в snapshot, 
                     //иначе - объект не принадлежит текущему родителю
-                    var row_index = GeneralBindingSource.Find("id_restriction", e.Row["id_restriction"]);
-                    if (row_index != -1)
+                    rowIndex = GeneralBindingSource.Find("id_restriction", e.Row["id_restriction"]);
+                    if (rowIndex != -1)
                         GeneralSnapshot.Rows.Add(e.Row["id_restriction"], e.Row["id_restriction_type"], e.Row["number"], e.Row["date"], e.Row["description"]);
-                }
+                    break;
+            }
         }
-        
+
         void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             MenuCallback.EditingStateUpdate();
@@ -572,22 +555,16 @@ namespace Registry.Viewport
             switch (cell.OwningColumn.Name)
             {
                 case "number":
-                    if (cell.Value.ToString().Trim().Length > 10)
-                        cell.ErrorText = "Длина номера реквизита не может превышать 10 символов";
-                    else
-                        cell.ErrorText = "";
+                    cell.ErrorText = cell.Value.ToString().Trim().Length > 10 ? 
+                        "Длина номера реквизита не может превышать 10 символов" : "";
                     break;
                 case "date":
-                    if (string.IsNullOrEmpty(cell.Value.ToString().Trim()))
-                        cell.ErrorText = "Не заполнена дата";
-                    else
-                        cell.ErrorText = "";
+                    cell.ErrorText = string.IsNullOrEmpty(cell.Value.ToString().Trim()) ? 
+                        "Не заполнена дата" : "";
                     break;
                 case "description":
-                    if (cell.Value.ToString().Trim().Length > 255)
-                        cell.ErrorText = "Длина наименования реквизита не может превышать 255 символов";
-                    else
-                        cell.ErrorText = "";
+                    cell.ErrorText = cell.Value.ToString().Trim().Length > 255 ? 
+                        "Длина наименования реквизита не может превышать 255 символов" : "";
                     break;
             }
         }
@@ -603,17 +580,16 @@ namespace Registry.Viewport
 
         void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            if (dataGridView.CurrentCell.OwningColumn.Name == "id_restriction_type")
-            {
-                var editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
-                editingControl.DropDownClosed -= editingControl_DropDownClosed;
-                editingControl.DropDownClosed += editingControl_DropDownClosed;
-            }
+            if (dataGridView.CurrentCell.OwningColumn.Name != "id_restriction_type") return;
+            var editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
+            if (editingControl == null) return;
+            editingControl.DropDownClosed -= editingControl_DropDownClosed;
+            editingControl.DropDownClosed += editingControl_DropDownClosed;
         }
         void editingControl_DropDownClosed(object sender, EventArgs e)
         {
             var editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
-            dataGridView.CurrentCell.Value = editingControl.SelectedValue;
+            if (editingControl != null) dataGridView.CurrentCell.Value = editingControl.SelectedValue;
             dataGridView.EndEdit();
         }
     }

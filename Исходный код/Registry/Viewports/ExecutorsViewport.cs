@@ -37,24 +37,6 @@ namespace Registry.Viewport
             ParentType = executorsViewport.ParentType;
         }
 
-        private bool SnapshotHasChanges()
-        {
-            var listFromView = ExecutorsFromView();
-            var listFromViewport = ExecutorsFromViewport();
-            if (listFromView.Count != listFromViewport.Count)
-                return true;
-            foreach (var executorView in listFromView)
-            {
-                var founded = false;
-                foreach (var executorViewport in listFromViewport)
-                    if (executorView == executorViewport)
-                        founded = true;
-                if (!founded)
-                    return true;
-            }
-            return false;
-        }
-
         private static object[] DataRowViewToArray(DataRowView dataRowView)
         {
             return new[] { 
@@ -66,10 +48,11 @@ namespace Registry.Viewport
             };
         }
 
-        private static bool ValidateViewportData(List<Executor> list)
+        private static bool ValidateViewportData(IEnumerable<Entity> list)
         {
-            foreach (var executor in list)
+            foreach (var entity in list)
             {
+                var executor = (Executor) entity;
                 if (executor.ExecutorName == null)
                 {
                     MessageBox.Show(@"ФИО исполнителя не может быть пустым", @"Ошибка", 
@@ -100,9 +83,9 @@ namespace Registry.Viewport
             return executor;
         }
 
-        private List<Executor> ExecutorsFromViewport()
+        protected override List<Entity> EntitiesListFromViewport()
         {
-            var list = new List<Executor>();
+            var list = new List<Entity>();
             for (var i = 0; i < dataGridView.Rows.Count; i++)
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
@@ -120,9 +103,9 @@ namespace Registry.Viewport
             return list;
         }
 
-        private List<Executor> ExecutorsFromView()
+        protected override List<Entity> EntitiesListFromView()
         {
-            var list = new List<Executor>();
+            var list = new List<Entity>();
             foreach (var executor in GeneralBindingSource)
             {
                 var row = ((DataRowView)executor);
@@ -230,7 +213,7 @@ namespace Registry.Viewport
         {
             sync_views = false;
             GeneralDataModel.EditingNewRecord = true;
-            var list = ExecutorsFromViewport();
+            var list = EntitiesListFromViewport();
             if (!ValidateViewportData(list))
             {
                 sync_views = true;
@@ -239,7 +222,8 @@ namespace Registry.Viewport
             }
             for (var i = 0; i < list.Count; i++)
             {
-                var row = GeneralDataModel.Select().Rows.Find(list[i].IdExecutor);
+                var executor = (Executor)list[i];
+                var row = GeneralDataModel.Select().Rows.Find(executor.IdExecutor);
                 if (row == null)
                 {
                     var idExecutor = GeneralDataModel.Insert(list[i]);
@@ -255,7 +239,7 @@ namespace Registry.Viewport
                 else
                 {
 
-                    if (RowToExecutor(row) == list[i])
+                    if (RowToExecutor(row) == executor)
                         continue;
                     if (GeneralDataModel.Update(list[i]) == -1)
                     {
@@ -263,15 +247,16 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    row["executor_name"] = list[i].ExecutorName == null ? DBNull.Value : (object)list[i].ExecutorName;
-                    row["executor_login"] = list[i].ExecutorLogin == null ? DBNull.Value : (object)list[i].ExecutorLogin;
-                    row["phone"] = list[i].Phone == null ? DBNull.Value : (object)list[i].Phone;
-                    row["is_inactive"] = list[i].IsInactive == null ? DBNull.Value : (object)list[i].IsInactive;
+                    row["executor_name"] = executor.ExecutorName == null ? DBNull.Value : (object)executor.ExecutorName;
+                    row["executor_login"] = executor.ExecutorLogin == null ? DBNull.Value : (object)executor.ExecutorLogin;
+                    row["phone"] = executor.Phone == null ? DBNull.Value : (object)executor.Phone;
+                    row["is_inactive"] = executor.IsInactive == null ? DBNull.Value : (object)executor.IsInactive;
                 }
             }
-            list = ExecutorsFromView();
-            foreach (var executor in list)
+            list = EntitiesListFromView();
+            foreach (var entity in list)
             {
+                var executor = (Executor) entity;
                 var rowIndex = -1;
                 for (var j = 0; j < dataGridView.Rows.Count; j++)
                     if ((dataGridView.Rows[j].Cells["id_executor"].Value != null) &&
