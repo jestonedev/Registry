@@ -15,30 +15,15 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
-    internal sealed class ResettleBuildingsViewport: Viewport
+    internal sealed partial class ResettleBuildingsViewport : DataGridViewport
     {
-
-        #region Components
-        private DataGridViewCheckBoxColumn is_checked;
-        private DataGridViewTextBoxColumn id_building;
-        private DataGridViewComboBoxColumn id_street;
-        private DataGridViewTextBoxColumn house;
-        private DataGridViewTextBoxColumn floors;
-        private DataGridViewTextBoxColumn living_area;
-        private DataGridViewTextBoxColumn cadastral_num;
-        private DataGridViewTextBoxColumn startup_year;
-        private DataGridView dataGridView;
-        #endregion Components
-
         #region Models
-        private DataModel buildings;
         private DataModel kladr;
         private DataModel resettle_buildings;
         private DataTable snapshot_resettle_buildings;
         #endregion Models
 
         #region Views
-        private BindingSource v_buildings;
         private BindingSource v_kladr;
         private BindingSource v_resettle_buildings;
         private BindingSource v_snapshot_resettle_buildings;
@@ -63,6 +48,7 @@ namespace Registry.Viewport
         public ResettleBuildingsViewport(IMenuCallback menuCallback): base(menuCallback)
         {
             InitializeComponent();
+            DataGridView = dataGridView;
         }
 
         public ResettleBuildingsViewport(ResettleBuildingsViewport resettleBuildingsViewport, IMenuCallback menuCallback)
@@ -104,16 +90,7 @@ namespace Registry.Viewport
 
         public void LocateBuildingBy(int id)
         {
-            v_buildings.Position = v_buildings.Find("id_building", id);
-        }
-
-        private static ResettleObject RowToResettleBuilding(DataRow row)
-        {
-            var ro = new ResettleObject();
-            ro.IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
-            ro.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
-            ro.IdObject = ViewportHelper.ValueOrNull<int>(row, "id_building");
-            return ro;
+            GeneralBindingSource.Position = GeneralBindingSource.Find("id_building", id);
         }
 
         private List<ResettleObject> ResettleBuildingsFromViewport()
@@ -153,51 +130,6 @@ namespace Registry.Viewport
             return true;
         }
 
-        public override int GetRecordCount()
-        {
-            return v_buildings.Count;
-        }
-
-        public override bool CanMoveFirst()
-        {
-            return v_buildings.Position > 0;
-        }
-
-        public override bool CanMovePrev()
-        {
-            return v_buildings.Position > 0;
-        }
-
-        public override bool CanMoveNext()
-        {
-            return (v_buildings.Position > -1) && (v_buildings.Position < (v_buildings.Count - 1));
-        }
-
-        public override bool CanMoveLast()
-        {
-            return (v_buildings.Position > -1) && (v_buildings.Position < (v_buildings.Count - 1));
-        }
-
-        public override void MoveFirst()
-        {
-            v_buildings.MoveFirst();
-        }
-
-        public override void MovePrev()
-        {
-            v_buildings.MovePrevious();
-        }
-
-        public override void MoveNext()
-        {
-            v_buildings.MoveNext();
-        }
-
-        public override void MoveLast()
-        {
-            v_buildings.MoveLast();
-        }
-
         public override bool CanLoadData()
         {
             return true;
@@ -207,14 +139,14 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel);
+            GeneralDataModel = DataModel.GetInstance(DataModelType.BuildingsDataModel);
             kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
             if (way == ResettleEstateObjectWay.From)
                 resettle_buildings = DataModel.GetInstance(DataModelType.ResettleBuildingsFromAssocDataModel);
             else
                 resettle_buildings = DataModel.GetInstance(DataModelType.ResettleBuildingsToAssocDataModel);
             // Ожидаем дозагрузки данных, если это необходимо
-            buildings.Select();
+            GeneralDataModel.Select();
             kladr.Select();
             resettle_buildings.Select();
 
@@ -227,11 +159,11 @@ namespace Registry.Viewport
 
             var ds = DataModel.DataSet;
 
-            v_buildings = new BindingSource();
-            v_buildings.DataMember = "buildings";
-            v_buildings.CurrentItemChanged += v_buildings_CurrentItemChanged;
-            v_buildings.DataSource = ds;
-            v_buildings.Filter = DynamicFilter;
+            GeneralBindingSource = new BindingSource();
+            GeneralBindingSource.DataMember = "buildings";
+            GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
+            GeneralBindingSource.DataSource = ds;
+            GeneralBindingSource.Filter = DynamicFilter;
 
             if ((ParentRow != null) && (ParentType == ParentTypeEnum.ResettleProcess))
             {
@@ -265,17 +197,17 @@ namespace Registry.Viewport
             id_street.ValueMember = "id_street";
             id_street.DisplayMember = "street_name";
 
-            buildings.Select().RowChanged += BuildingsViewport_RowChanged;
-            buildings.Select().RowDeleted += BuildingsViewport_RowDeleted;
+            GeneralDataModel.Select().RowChanged += BuildingsViewport_RowChanged;
+            GeneralDataModel.Select().RowDeleted += BuildingsViewport_RowDeleted;
             resettle_buildings.Select().RowChanged += ResettleBuildingsViewport_RowChanged;
             resettle_buildings.Select().RowDeleting += ResettleBuildingsViewport_RowDeleting;
-            dataGridView.RowCount = v_buildings.Count;
+            dataGridView.RowCount = GeneralBindingSource.Count;
             ViewportHelper.SetDoubleBuffered(dataGridView);
         }
 
         public override bool CanDeleteRecord()
         {
-            return (v_buildings.Position > -1) &&
+            return (GeneralBindingSource.Position > -1) &&
                 (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
@@ -284,23 +216,23 @@ namespace Registry.Viewport
             if (MessageBox.Show("Вы действительно хотите удалить это здание?", "Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                if (DataModelHelper.HasMunicipal((int)((DataRowView)v_buildings.Current)["id_building"], EntityType.Building)
+                if (DataModelHelper.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                 {
                     MessageBox.Show("У вас нет прав на удаление муниципальных жилых зданий и зданий, в которых присутствуют муниципальные помещения",
                         "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
-                if (DataModelHelper.HasNotMunicipal((int)((DataRowView)v_buildings.Current)["id_building"], EntityType.Building)
+                if (DataModelHelper.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                 {
                     MessageBox.Show("У вас нет прав на удаление немуниципальных жилых зданий и зданий, в которых присутствуют немуниципальные помещения",
                         "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
-                if (buildings.Delete((int)((DataRowView)v_buildings.Current)["id_building"]) == -1)
+                if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_building"]) == -1)
                     return;
-                ((DataRowView)v_buildings[v_buildings.Position]).Delete();
+                ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
                 MenuCallback.ForceCloseDetachedViewports();
             }
         }
@@ -338,21 +270,21 @@ namespace Registry.Viewport
                     break;
             }
             dataGridView.RowCount = 0;
-            v_buildings.Filter = DynamicFilter;
-            dataGridView.RowCount = v_buildings.Count;
+            GeneralBindingSource.Filter = DynamicFilter;
+            dataGridView.RowCount = GeneralBindingSource.Count;
 
         }
 
         public override void ClearSearch()
         {
-            v_buildings.Filter = "";
-            dataGridView.RowCount = v_buildings.Count;
+            GeneralBindingSource.Filter = "";
+            dataGridView.RowCount = GeneralBindingSource.Count;
             DynamicFilter = "";
         }
 
         public override bool CanOpenDetails()
         {
-            return (v_buildings.Position != -1) && AccessControl.HasPrivelege(Priveleges.RegistryRead);
+            return (GeneralBindingSource.Position != -1) && AccessControl.HasPrivelege(Priveleges.RegistryRead);
         }
 
         public override void OpenDetails()
@@ -366,14 +298,14 @@ namespace Registry.Viewport
                 viewport.LoadData();
             else
                 return;
-            if (v_buildings.Count > 0)
-                viewport.LocateBuildingBy((((DataRowView)v_buildings[v_buildings.Position])["id_building"] as int?) ?? -1);
+            if (GeneralBindingSource.Count > 0)
+                viewport.LocateBuildingBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] as int?) ?? -1);
             MenuCallback.AddViewport(viewport);
         }
 
         public override bool CanInsertRecord()
         {
-            return (!buildings.EditingNewRecord) &&
+            return (!GeneralDataModel.EditingNewRecord) &&
                 (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
@@ -393,7 +325,7 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            return (v_buildings.Position != -1) && (!buildings.EditingNewRecord) &&
+            return (GeneralBindingSource.Position != -1) && (!GeneralDataModel.EditingNewRecord) &&
                 (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
@@ -407,8 +339,8 @@ namespace Registry.Viewport
                 viewport.LoadData();
             else
                 return;
-            if (v_buildings.Count > 0)
-                viewport.LocateBuildingBy((((DataRowView)v_buildings[v_buildings.Position])["id_building"] as int?) ?? -1);
+            if (GeneralBindingSource.Count > 0)
+                viewport.LocateBuildingBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] as int?) ?? -1);
             MenuCallback.AddViewport(viewport);
             viewport.CopyRecord();
         }
@@ -505,7 +437,7 @@ namespace Registry.Viewport
                             snapshot_row_index = j;
                     if (snapshot_row_index != -1)
                     {
-                        var building_row_index = v_buildings.Find("id_building", list[i].IdObject);
+                        var building_row_index = GeneralBindingSource.Find("id_building", list[i].IdObject);
                         ((DataRowView)v_snapshot_resettle_buildings[snapshot_row_index]).Delete();
                         if (building_row_index != -1)
                             dataGridView.InvalidateRow(building_row_index);
@@ -529,61 +461,34 @@ namespace Registry.Viewport
             var viewport = new ResettleBuildingsViewport(this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
-            if (v_buildings.Count > 0)
-                viewport.LocateBuildingBy((((DataRowView)v_buildings[v_buildings.Position])["id_building"] as int?) ?? -1);
+            if (GeneralBindingSource.Count > 0)
+                viewport.LocateBuildingBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] as int?) ?? -1);
             return viewport;
         }
 
-        public override bool HasAssocPremises()
+        public override bool HasAssocViewport(ViewportType viewportType)
         {
-            return (v_buildings.Position > -1);
-        }
-
-        public override bool HasAssocOwnerships()
-        {
-            return (v_buildings.Position > -1);
-        }
-
-        public override bool HasAssocRestrictions()
-        {
-            return (v_buildings.Position > -1);
-        }
-
-        public override bool HasAssocFundHistory()
-        {
-            return (v_buildings.Position > -1);
-        }
-
-        public override void ShowPremises()
-        {
-            ShowAssocViewport(ViewportType.PremisesListViewport);
-        }
-
-        public override void ShowOwnerships()
-        {
-            ShowAssocViewport(ViewportType.OwnershipListViewport);
-        }
-
-        public override void ShowRestrictions()
-        {
-            ShowAssocViewport(ViewportType.RestrictionListViewport);
-        }
-
-        public override void ShowFundHistory()
-        {
-            ShowAssocViewport(ViewportType.FundsHistoryViewport);
-        }
-
-        private void ShowAssocViewport(ViewportType viewportType)
-        {
-            if (v_buildings.Position == -1)
+            var reports = new List<ViewportType>
             {
-                MessageBox.Show("Не выбрано здание для отображения истории найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                ViewportType.PremisesListViewport,
+                ViewportType.OwnershipListViewport,
+                ViewportType.RestrictionListViewport,
+                ViewportType.FundsHistoryViewport,
+                ViewportType.TenancyListViewport
+            };
+            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
+        }
+
+        public override void ShowAssocViewport(ViewportType viewportType)
+        {
+            if (GeneralBindingSource.Position == -1)
+            {
+                MessageBox.Show(@"Не выбрано здание для отображения связных объектов", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             ShowAssocViewport(MenuCallback, viewportType,
-                "id_building = " + Convert.ToInt32(((DataRowView)v_buildings[v_buildings.Position])["id_building"], CultureInfo.InvariantCulture),
-                ((DataRowView)v_buildings[v_buildings.Position]).Row,
+                "id_building = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"], CultureInfo.InvariantCulture),
+                ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
                 ParentTypeEnum.Building);
         }
 
@@ -604,8 +509,8 @@ namespace Registry.Viewport
                         return;
                     }
             }
-            buildings.Select().RowChanged -= BuildingsViewport_RowChanged;
-            buildings.Select().RowDeleted -= BuildingsViewport_RowDeleted;
+            GeneralDataModel.Select().RowChanged -= BuildingsViewport_RowChanged;
+            GeneralDataModel.Select().RowDeleted -= BuildingsViewport_RowDeleted;
             resettle_buildings.Select().RowChanged -= ResettleBuildingsViewport_RowChanged;
             resettle_buildings.Select().RowDeleting -= ResettleBuildingsViewport_RowDeleting;
             base.OnClosing(e);
@@ -613,8 +518,8 @@ namespace Registry.Viewport
 
         public override void ForceClose()
         {
-            buildings.Select().RowChanged -= BuildingsViewport_RowChanged;
-            buildings.Select().RowDeleted -= BuildingsViewport_RowDeleted;
+            GeneralDataModel.Select().RowChanged -= BuildingsViewport_RowChanged;
+            GeneralDataModel.Select().RowDeleted -= BuildingsViewport_RowDeleted;
             resettle_buildings.Select().RowChanged -= ResettleBuildingsViewport_RowChanged;
             resettle_buildings.Select().RowDeleting -= ResettleBuildingsViewport_RowDeleting;
             base.ForceClose();
@@ -643,35 +548,10 @@ namespace Registry.Viewport
                 Convert.ToInt32(e.Row["id_process"], CultureInfo.InvariantCulture) != Convert.ToInt32(ParentRow["id_process"], CultureInfo.InvariantCulture))
                 return;
             var row_index = v_snapshot_resettle_buildings.Find("id_building", e.Row["id_building"]);
-            if (row_index == -1 && v_resettle_buildings.Find("id_assoc", e.Row["id_assoc"]) != -1)
+            if (row_index == -1 && GeneralBindingSource.Find("id_assoc", e.Row["id_assoc"]) != -1)
             {
                 snapshot_resettle_buildings.Rows.Add(e.Row["id_assoc"], e.Row["id_building"], true);
                 dataGridView.Invalidate();
-            }
-        }
-
-        void v_buildings_CurrentItemChanged(object sender, EventArgs e)
-        {
-            if (v_buildings.Position == -1 || dataGridView.RowCount == 0)
-            {
-                dataGridView.ClearSelection();
-                return;
-            }
-            if (v_buildings.Position >= dataGridView.RowCount)
-            {
-                dataGridView.Rows[dataGridView.RowCount - 1].Selected = true;
-                dataGridView.CurrentCell = dataGridView.Rows[dataGridView.RowCount - 1].Cells[0];
-            }
-            else
-            {
-                dataGridView.Rows[v_buildings.Position].Selected = true;
-                dataGridView.CurrentCell = dataGridView.Rows[v_buildings.Position].Cells[0];
-            }
-            if (Selected)
-            {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
             }
         }
 
@@ -683,7 +563,7 @@ namespace Registry.Viewport
             {
                 foreach (DataGridViewColumn column in dataGridView.Columns)
                     column.HeaderCell.SortGlyphDirection = SortOrder.None;
-                v_buildings.Sort = dataGridView.Columns[e.ColumnIndex].Name + " " + ((way == SortOrder.Ascending) ? "ASC" : "DESC");
+                GeneralBindingSource.Sort = dataGridView.Columns[e.ColumnIndex].Name + " " + ((way == SortOrder.Ascending) ? "ASC" : "DESC");
                 dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = way;
                 return true;
             };
@@ -698,7 +578,7 @@ namespace Registry.Viewport
         {
             if (!sync_views)
                 return;
-            dataGridView.RowCount = v_buildings.Count;
+            dataGridView.RowCount = GeneralBindingSource.Count;
             dataGridView.Refresh();
             MenuCallback.ForceCloseDetachedViewports();
             if (Selected)
@@ -711,7 +591,7 @@ namespace Registry.Viewport
                 return;
             if (e.Action == DataRowAction.Change || e.Action == DataRowAction.ChangeCurrentAndOriginal || e.Action == DataRowAction.ChangeOriginal)
                 dataGridView.Refresh();
-            dataGridView.RowCount = v_buildings.Count;
+            dataGridView.RowCount = GeneralBindingSource.Count;
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
         }
@@ -719,15 +599,15 @@ namespace Registry.Viewport
         void dataGridView_SelectionChanged(object sender, EventArgs e)
         {
             if (dataGridView.SelectedRows.Count > 0)
-                v_buildings.Position = dataGridView.SelectedRows[0].Index;
+                GeneralBindingSource.Position = dataGridView.SelectedRows[0].Index;
             else
-                v_buildings.Position = -1;
+                GeneralBindingSource.Position = -1;
             dataGridView.Refresh();
         }
 
         void dataGridView_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)
         {
-            var id_building = Convert.ToInt32(((DataRowView)v_buildings[e.RowIndex])["id_building"], CultureInfo.InvariantCulture);
+            var id_building = Convert.ToInt32(((DataRowView)GeneralBindingSource[e.RowIndex])["id_building"], CultureInfo.InvariantCulture);
             var row_index = v_snapshot_resettle_buildings.Find("id_building", id_building);
             sync_views = false;
             switch (dataGridView.Columns[e.ColumnIndex].Name)
@@ -745,8 +625,8 @@ namespace Registry.Viewport
 
         void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
-            if (v_buildings.Count <= e.RowIndex || v_buildings.Count == 0) return;
-            var id_building = Convert.ToInt32(((DataRowView)v_buildings[e.RowIndex])["id_building"], CultureInfo.InvariantCulture);
+            if (GeneralBindingSource.Count <= e.RowIndex || GeneralBindingSource.Count == 0) return;
+            var id_building = Convert.ToInt32(((DataRowView)GeneralBindingSource[e.RowIndex])["id_building"], CultureInfo.InvariantCulture);
             var row_index = v_snapshot_resettle_buildings.Find("id_building", id_building);
             switch (dataGridView.Columns[e.ColumnIndex].Name)
             {
@@ -755,25 +635,25 @@ namespace Registry.Viewport
                         e.Value = ((DataRowView)v_snapshot_resettle_buildings[row_index])["is_checked"];
                     break;
                 case "id_building":
-                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["id_building"];
+                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["id_building"];
                     break;
                 case "id_street":
-                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["id_street"];
+                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["id_street"];
                     break;
                 case "house":
-                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["house"];
+                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["house"];
                     break;
                 case "floors":
-                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["floors"];
+                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["floors"];
                     break;
                 case "living_area":
-                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["living_area"];
+                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["living_area"];
                     break;
                 case "cadastral_num":
-                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["cadastral_num"];
+                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["cadastral_num"];
                     break;
                 case "startup_year":
-                    e.Value = ((DataRowView)v_buildings[e.RowIndex])["cadastral_num"];
+                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["cadastral_num"];
                     break;
             }
         }
@@ -796,157 +676,6 @@ namespace Registry.Viewport
         {
             if (dataGridView.CurrentCell is DataGridViewCheckBoxCell)
                 dataGridView.EndEdit();
-        }
-
-        private void InitializeComponent()
-        {
-            var dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            var dataGridViewCellStyle4 = new DataGridViewCellStyle();
-            var dataGridViewCellStyle2 = new DataGridViewCellStyle();
-            var dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            var resources = new ComponentResourceManager(typeof(ResettleBuildingsViewport));
-            dataGridView = new DataGridView();
-            is_checked = new DataGridViewCheckBoxColumn();
-            id_building = new DataGridViewTextBoxColumn();
-            id_street = new DataGridViewComboBoxColumn();
-            house = new DataGridViewTextBoxColumn();
-            floors = new DataGridViewTextBoxColumn();
-            living_area = new DataGridViewTextBoxColumn();
-            cadastral_num = new DataGridViewTextBoxColumn();
-            startup_year = new DataGridViewTextBoxColumn();
-            ((ISupportInitialize)(dataGridView)).BeginInit();
-            SuspendLayout();
-            // 
-            // dataGridView
-            // 
-            dataGridView.AllowUserToAddRows = false;
-            dataGridView.AllowUserToDeleteRows = false;
-            dataGridView.AllowUserToResizeRows = false;
-            dataGridView.BackgroundColor = Color.White;
-            dataGridView.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Control;
-            dataGridViewCellStyle1.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle1.Padding = new Padding(0, 2, 0, 2);
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Columns.AddRange(is_checked, id_building, id_street, house, floors, living_area, cadastral_num, startup_year);
-            dataGridViewCellStyle4.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = Color.FromArgb(224, 224, 224);
-            dataGridViewCellStyle4.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            dataGridViewCellStyle4.ForeColor = SystemColors.ControlText;
-            dataGridViewCellStyle4.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle4.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle4.WrapMode = DataGridViewTriState.False;
-            dataGridView.DefaultCellStyle = dataGridViewCellStyle4;
-            dataGridView.Dock = DockStyle.Fill;
-            dataGridView.Location = new Point(0, 0);
-            dataGridView.MultiSelect = false;
-            dataGridView.Name = "dataGridView";
-            dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView.ShowCellToolTips = false;
-            dataGridView.Size = new Size(1131, 551);
-            dataGridView.TabIndex = 1;
-            dataGridView.VirtualMode = true;
-            dataGridView.CellValueNeeded += dataGridView_CellValueNeeded;
-            dataGridView.CellValuePushed += dataGridView_CellValuePushed;
-            dataGridView.ColumnHeaderMouseClick += dataGridView_ColumnHeaderMouseClick;
-            dataGridView.CurrentCellDirtyStateChanged += dataGridView_CurrentCellDirtyStateChanged;
-            dataGridView.SelectionChanged += dataGridView_SelectionChanged;
-            dataGridView.Resize += dataGridView_Resize;
-            // 
-            // is_checked
-            // 
-            dataGridViewCellStyle2.Alignment = DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = Color.White;
-            dataGridViewCellStyle2.NullValue = false;
-            is_checked.DefaultCellStyle = dataGridViewCellStyle2;
-            is_checked.HeaderText = "";
-            is_checked.MinimumWidth = 30;
-            is_checked.Name = "is_checked";
-            is_checked.Resizable = DataGridViewTriState.False;
-            is_checked.Width = 30;
-            // 
-            // id_building
-            // 
-            id_building.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            id_building.HeaderText = "№";
-            id_building.MinimumWidth = 100;
-            id_building.Name = "id_building";
-            id_building.ReadOnly = true;
-            // 
-            // id_street
-            // 
-            id_street.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            id_street.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
-            id_street.HeaderText = "Адрес";
-            id_street.MinimumWidth = 250;
-            id_street.Name = "id_street";
-            id_street.ReadOnly = true;
-            id_street.SortMode = DataGridViewColumnSortMode.Automatic;
-            id_street.Width = 250;
-            // 
-            // house
-            // 
-            house.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            house.HeaderText = "Дом";
-            house.MinimumWidth = 100;
-            house.Name = "house";
-            house.ReadOnly = true;
-            // 
-            // floors
-            // 
-            floors.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            floors.HeaderText = "Этажность";
-            floors.MinimumWidth = 100;
-            floors.Name = "floors";
-            floors.ReadOnly = true;
-            // 
-            // living_area
-            // 
-            living_area.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            dataGridViewCellStyle3.Format = "#0.0## м²";
-            living_area.DefaultCellStyle = dataGridViewCellStyle3;
-            living_area.HeaderText = "Жилая площадь";
-            living_area.MinimumWidth = 150;
-            living_area.Name = "living_area";
-            living_area.ReadOnly = true;
-            living_area.Width = 150;
-            // 
-            // cadastral_num
-            // 
-            cadastral_num.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            cadastral_num.HeaderText = "Кадастровый номер";
-            cadastral_num.MinimumWidth = 170;
-            cadastral_num.Name = "cadastral_num";
-            cadastral_num.ReadOnly = true;
-            cadastral_num.Width = 170;
-            // 
-            // startup_year
-            // 
-            startup_year.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            startup_year.HeaderText = "Год ввода в эксплуатацию";
-            startup_year.MinimumWidth = 190;
-            startup_year.Name = "startup_year";
-            startup_year.ReadOnly = true;
-            startup_year.Width = 190;
-            // 
-            // ResettleBuildingsViewport
-            // 
-            ClientSize = new Size(1131, 551);
-            Controls.Add(dataGridView);
-            Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            Icon = ((Icon)(resources.GetObject("$this.Icon")));
-            Name = "ResettleBuildingsViewport";
-            Text = "Здания по процессу переселения №{0}";
-            ((ISupportInitialize)(dataGridView)).EndInit();
-            ResumeLayout(false);
-
         }
     }
 }

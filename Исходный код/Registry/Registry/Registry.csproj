@@ -108,6 +108,9 @@
     <Compile Include="ReportLogForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ReportLogForm.Designer.cs">
+      <DependentUpon>ReportLogForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
