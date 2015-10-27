@@ -690,7 +690,6 @@ namespace Registry.Viewport
             dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dataGridView.Size = new Size(882, 223);
             dataGridView.TabIndex = 2;
-            dataGridView.DataError += dataGridView_DataError;
             // 
             // id_agreement
             // 

@@ -32,5 +32,8 @@
     <Setting Name="UseLDAP" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
+    <Setting Name="MSPConnectionString" Type="System.String" Scope="User">
+      <Value Profile="(Default)">IMLU/p0C/8AiREcT98nwUYGpZNwyeb2JPC0kuE4+luCowC9PgFaXVvhiAb1Hau031f4f9crgY5xgMDKDWoXN8A==</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

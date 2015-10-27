@@ -725,11 +725,6 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
-        void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            e.ThrowException = false;
-        }
-
         protected override void OnVisibleChanged(EventArgs e)
         {
             RedrawDataGridRows();

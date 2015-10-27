@@ -1,8 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Data;
+using System.Data.Odbc;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
@@ -882,17 +885,151 @@ namespace Registry.Viewport
                 comboBoxRegistrationStreet.Text = "";
         }
 
-        void dataGridViewTenancyPersons_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            e.ThrowException = false;
-        }
-
         private void textBoxSNP_Leave(object sender, EventArgs e)
         {
             var textBox = (TextBox)sender;
             var text = textBox.Text;
             if (!string.IsNullOrEmpty(text))
                 textBox.Text = text[0].ToString().ToUpper(CultureInfo.CurrentCulture) + text.Substring(1);
+        }
+
+        private void buttonImportFromMSP_Click(object sender, EventArgs e)
+        {
+            if ((GeneralBindingSource.Count == 0 || (GeneralBindingSource.Count == 1 && viewportState == ViewportState.NewRowState))
+                && ParentType == ParentTypeEnum.Tenancy)
+            {
+                var premisesAssoc = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel);
+                var premises = DataModel.GetInstance(DataModelType.PremisesDataModel);
+                var buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel);
+                var streets = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
+                var currentPremise = (from premisesAssocRow in premisesAssoc.FilterDeletedRows()
+                    join premisesRow in premises.FilterDeletedRows()
+                        on premisesAssocRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")
+                    join buildingsRow in buildings.FilterDeletedRows()
+                        on premisesRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
+                    join streetsRow in streets.FilterDeletedRows()
+                        on buildingsRow.Field<string>("id_street") equals streetsRow.Field<string>("id_street")
+                    where premisesAssocRow.Field<int>("id_process") == (int)ParentRow["id_process"]
+                    select new
+                    {
+                        premises_num = premisesRow.Field<string>("premises_num"),
+                        house = buildingsRow.Field<string>("house"),
+                        street_name = streetsRow.Field<string>("street_name")
+                    }).ToList();
+                if (currentPremise.Count == 0)
+                {
+                    MessageBox.Show(@"Нельзя импортировать данные из МСП, т.к. на процесс найма не завязано ни одного помещения", 
+                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1); 
+                    return;
+                }
+                CancelRecord();
+                using (var connection = new SqlConnection(Settings.RegistrySettings.MspConnectionString))
+                {
+                    var command = new SqlCommand
+                    {
+                        Connection = connection,
+                        CommandText = @"
+                        SELECT v.family, name, father, v.birth
+                        FROM (
+                        SELECT 
+                          CASE SUBSTRING(ts.base_month,1,3) 
+                          WHEN 'Jan' THEN SUBSTRING(ts.base_month,4,4)+'01'
+                          WHEN 'Feb' THEN SUBSTRING(ts.base_month,4,4)+'02'
+                          WHEN 'Mar' THEN SUBSTRING(ts.base_month,4,4)+'03'
+                          WHEN 'Apr' THEN SUBSTRING(ts.base_month,4,4)+'04'
+                          WHEN 'May' THEN SUBSTRING(ts.base_month,4,4)+'05'
+                          WHEN 'Jun' THEN SUBSTRING(ts.base_month,4,4)+'06'
+                          WHEN 'Jul' THEN SUBSTRING(ts.base_month,4,4)+'07'
+                          WHEN 'Aug' THEN SUBSTRING(ts.base_month,4,4)+'08'
+                          WHEN 'Sep' THEN SUBSTRING(ts.base_month,4,4)+'09'
+                          WHEN 'Oct' THEN SUBSTRING(ts.base_month,4,4)+'10'
+                          WHEN 'Nov' THEN SUBSTRING(ts.base_month,4,4)+'11'
+                          WHEN 'Dec' THEN SUBSTRING(ts.base_month,4,4)+'12'
+                          ELSE ts.base_month
+                          END AS mon, family, name, father, birth
+                        FROM dbo.t_bks ts
+                        WHERE ts.street = @street AND house = @house AND flat = @flat) v
+                        WHERE mon = (
+                          SELECT 
+                          MAX(CASE SUBSTRING(ts.base_month,1,3) 
+                          WHEN 'Jan' THEN SUBSTRING(ts.base_month,4,4)+'01'
+                          WHEN 'Feb' THEN SUBSTRING(ts.base_month,4,4)+'02'
+                          WHEN 'Mar' THEN SUBSTRING(ts.base_month,4,4)+'03'
+                          WHEN 'Apr' THEN SUBSTRING(ts.base_month,4,4)+'04'
+                          WHEN 'May' THEN SUBSTRING(ts.base_month,4,4)+'05'
+                          WHEN 'Jun' THEN SUBSTRING(ts.base_month,4,4)+'06'
+                          WHEN 'Jul' THEN SUBSTRING(ts.base_month,4,4)+'07'
+                          WHEN 'Aug' THEN SUBSTRING(ts.base_month,4,4)+'08'
+                          WHEN 'Sep' THEN SUBSTRING(ts.base_month,4,4)+'09'
+                          WHEN 'Oct' THEN SUBSTRING(ts.base_month,4,4)+'10'
+                          WHEN 'Nov' THEN SUBSTRING(ts.base_month,4,4)+'11'
+                          WHEN 'Dec' THEN SUBSTRING(ts.base_month,4,4)+'12'
+                          ELSE ts.base_month
+                          END) AS mon
+                          FROM dbo.t_bks ts
+                          WHERE ts.street = @street AND house = @house AND flat = @flat
+                          )
+                        ORDER BY mon;"
+                    };
+                    var streetName = currentPremise.First().street_name;
+                    var prefixes = new []
+                    {
+                        "пер. ", "ул. ", "пр-кт. ", "б-р. ",
+                        "гск. ", "проезд. ", "пл-ка. ","туп. "
+                    };
+                    var streetParts = streetName.Split(prefixes, StringSplitOptions.RemoveEmptyEntries);
+                    streetName = streetParts[streetParts.Length - 1];
+                    var street = new SqlParameter("street", SqlDbType.NVarChar) { Value = streetName };
+                    command.Parameters.Add(street);
+
+                    var house = new SqlParameter("house", SqlDbType.NVarChar) { Value = currentPremise.First().house };
+                    command.Parameters.Add(house);
+
+                    var flat = new SqlParameter("flat", SqlDbType.NVarChar) { Value = currentPremise.First().premises_num };
+                    command.Parameters.Add(flat);
+
+                    try
+                    {
+                        connection.Open();
+                        var reader = command.ExecuteReader();
+                        is_editable = false;
+                        while (reader.Read())
+                        {
+                            var surnameValue = reader.GetString(0);
+                            var nameValue = reader.GetString(1);
+                            var patronymicValue = reader.GetString(2);
+                            var birthValue = reader.GetDateTime(3);
+                            var person = new TenancyPerson
+                            {
+                                Surname = surnameValue,
+                                Name = nameValue,
+                                Patronymic = patronymicValue,
+                                DateOfBirth = birthValue,
+                                IdProcess = (int)ParentRow["id_process"],
+                                IdKinship = 64,
+                                IdDocumentType = 255
+                            };
+                            var idPerson = GeneralDataModel.Insert(person);
+                            if (idPerson == -1)
+                                return;
+                            person.IdPerson = idPerson;
+                            var row = (DataRowView)GeneralBindingSource.AddNew();
+                            if (row == null) continue;
+                            FillRowFromTenancyPerson(person, row);
+                        }
+                        is_editable = true;
+                    }
+                    catch (SqlException err)
+                    {
+                        MessageBox.Show(string.Format("Ошибка подключения к базе данных. Подробнее: {0}", err.Message), @"Ошибка",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        is_editable = true;
+                    }
+                }
+                return;
+            }
+            MessageBox.Show(@"Нельзя импортировать участников найма, т.к. в списке уже присутствуют участники", @"Ошибка",
+                MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
         }
     }
 }

@@ -8,6 +8,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Registry.Entities;
 using Registry.DataModels.CalcDataModels;
+using Settings;
 
 namespace Registry.DataModels.DataModels
 {
@@ -26,7 +27,7 @@ namespace Registry.DataModels.DataModels
 
         private static readonly object LockObj = new object();
         // Не больше MaxDBConnectionCount потоков одновременно делают запросы к БД
-        private static readonly Semaphore DbAccessSemaphore = new Semaphore(RegistrySettings.MaxDBConnectionCount, RegistrySettings.MaxDBConnectionCount);
+        private static readonly Semaphore DbAccessSemaphore = new Semaphore(RegistrySettings.MaxDbConnectionCount, RegistrySettings.MaxDbConnectionCount);
         public bool EditingNewRecord { get; set; }
 
         protected DataModel()
