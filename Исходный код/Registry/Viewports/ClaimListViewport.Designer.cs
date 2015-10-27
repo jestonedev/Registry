@@ -500,7 +500,6 @@ namespace Registry.Viewport
             this.dataGridViewClaims.VirtualMode = true;
             this.dataGridViewClaims.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridViewClaims_CellValueNeeded);
             this.dataGridViewClaims.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridViewClaims_ColumnHeaderMouseClick);
-            this.dataGridViewClaims.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridViewClaims_DataError);
             this.dataGridViewClaims.SelectionChanged += new System.EventHandler(this.dataGridViewClaims_SelectionChanged);
             // 
             // id_claim

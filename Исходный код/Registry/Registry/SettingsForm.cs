@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows.Forms;
+using Settings;
 
 namespace Registry
 {
@@ -16,12 +17,12 @@ namespace Registry
             textBoxActivityManagerOutputCodepage.Text = RegistrySettings.ActivityManagerOutputCodePage;
             textBoxActivityManagerPath.Text = RegistrySettings.ActivityManagerPath;
             textBoxConnectionString.Text = RegistrySettings.ConnectionString;
-            textBoxLDAPPassword.Text = RegistrySettings.LDAPPassword;
-            textBoxLDAPUserName.Text = RegistrySettings.LDAPUserName;
-            numericUpDownMaxDBConnectionCount.Value = RegistrySettings.MaxDBConnectionCount;
+            textBoxLDAPPassword.Text = RegistrySettings.LdapPassword;
+            textBoxLDAPUserName.Text = RegistrySettings.LdapUserName;
+            numericUpDownMaxDBConnectionCount.Value = RegistrySettings.MaxDbConnectionCount;
             numericUpDownDataModelsCallbackUpdateTimeout.Value = RegistrySettings.DataModelsCallbackUpdateTimeout;
             numericUpDownCalcDataModelsUpdateTimeout.Value = RegistrySettings.CalcDataModelsUpdateTimeout;
-            checkBoxUseLDAP.Checked = RegistrySettings.UseLDAP;
+            checkBoxUseLDAP.Checked = RegistrySettings.UseLdap;
         }
 
         private void vButton2_Click(object sender, EventArgs e)
@@ -30,12 +31,12 @@ namespace Registry
             RegistrySettings.ActivityManagerOutputCodePage = textBoxActivityManagerOutputCodepage.Text;
             RegistrySettings.ActivityManagerPath = textBoxActivityManagerPath.Text;
             RegistrySettings.ConnectionString = textBoxConnectionString.Text;
-            RegistrySettings.LDAPPassword = textBoxLDAPPassword.Text;
-            RegistrySettings.LDAPUserName = textBoxLDAPUserName.Text;
-            RegistrySettings.MaxDBConnectionCount = Convert.ToInt32(numericUpDownMaxDBConnectionCount.Value);
+            RegistrySettings.LdapPassword = textBoxLDAPPassword.Text;
+            RegistrySettings.LdapUserName = textBoxLDAPUserName.Text;
+            RegistrySettings.MaxDbConnectionCount = Convert.ToInt32(numericUpDownMaxDBConnectionCount.Value);
             RegistrySettings.DataModelsCallbackUpdateTimeout = Convert.ToInt32(numericUpDownDataModelsCallbackUpdateTimeout.Value);
             RegistrySettings.CalcDataModelsUpdateTimeout = Convert.ToInt32(numericUpDownCalcDataModelsUpdateTimeout.Value);
-            RegistrySettings.UseLDAP = checkBoxUseLDAP.Checked;
+            RegistrySettings.UseLdap = checkBoxUseLDAP.Checked;
             RegistrySettings.Save();
             Close();
         }

@@ -27,18 +27,13 @@ namespace Registry.DataModels
             (from tenancyBuildingsAssocRow in tenancyBuildingsAssoc
              join tenancyPersonsRow in tenancyPersons
              on tenancyBuildingsAssocRow.Field<int>("id_process") equals tenancyPersonsRow.Field<int>("id_process")
-             where ((snp.Count() == 1) ? tenancyPersonsRow.Field<string>("surname") != null &&
-                                         string.Equals(tenancyPersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase) :
-                    (snp.Count() == 2) ? tenancyPersonsRow.Field<string>("surname") != null &&
-                                         string.Equals(tenancyPersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase) &&
-                                         tenancyPersonsRow.Field<string>("name") != null &&
-                                         string.Equals(tenancyPersonsRow.Field<string>("name"), snp[1], StringComparison.InvariantCultureIgnoreCase) :
-                    (snp.Count() == 3) && (tenancyPersonsRow.Field<string>("surname") != null &&
-                                           string.Equals(tenancyPersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase) &&
-                                           tenancyPersonsRow.Field<string>("name") != null &&
-                                           string.Equals(tenancyPersonsRow.Field<string>("name"), snp[1], StringComparison.InvariantCultureIgnoreCase) &&
-                                           tenancyPersonsRow.Field<string>("patronymic") != null &&
-                                           string.Equals(tenancyPersonsRow.Field<string>("patronymic"), snp[2], StringComparison.InvariantCultureIgnoreCase))) && condition(tenancyPersonsRow)
+             where ((snp.Any()) && (tenancyPersonsRow.Field<string>("surname") != null &&
+                     string.Equals(tenancyPersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase))) &&
+                    ((snp.Count() < 2) || tenancyPersonsRow.Field<string>("name") != null &&
+                     string.Equals(tenancyPersonsRow.Field<string>("name"), snp[1], StringComparison.InvariantCultureIgnoreCase) ) &&
+                    ((snp.Count() < 3) || tenancyPersonsRow.Field<string>("patronymic") != null &&
+                     string.Equals(tenancyPersonsRow.Field<string>("patronymic"), snp[2], StringComparison.InvariantCultureIgnoreCase)) &&
+                    condition(tenancyPersonsRow)
              select tenancyBuildingsAssocRow.Field<int>("id_building")).Distinct();
         }
 
@@ -50,38 +45,29 @@ namespace Registry.DataModels
             (from tenancyPremisesAssocRow in tenancyPremisesAssoc
              join tenancyPersonsRow in tenancyPersons
              on tenancyPremisesAssocRow.Field<int>("id_process") equals tenancyPersonsRow.Field<int>("id_process")
-             where ((snp.Count() == 1) ? tenancyPersonsRow.Field<string>("surname") != null &&
-                                         string.Equals(tenancyPersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase) :
-                    (snp.Count() == 2) ? tenancyPersonsRow.Field<string>("surname") != null && 
-                                         string.Equals(tenancyPersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase) &&
-                                         tenancyPersonsRow.Field<string>("name") != null &&
-                                         string.Equals(tenancyPersonsRow.Field<string>("name"), snp[1], StringComparison.InvariantCultureIgnoreCase) :
-                    (snp.Count() == 3) && (tenancyPersonsRow.Field<string>("surname") != null && 
-                                           string.Equals(tenancyPersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase) &&
-                                           tenancyPersonsRow.Field<string>("name") != null &&
-                                           string.Equals(tenancyPersonsRow.Field<string>("name"), snp[1], StringComparison.InvariantCultureIgnoreCase) &&
-                                           tenancyPersonsRow.Field<string>("patronymic") != null &&
-                                           string.Equals(tenancyPersonsRow.Field<string>("patronymic"), snp[2], StringComparison.InvariantCultureIgnoreCase))) && condition(tenancyPersonsRow)
+             where ((snp.Any()) && (tenancyPersonsRow.Field<string>("surname") != null &&
+                     string.Equals(tenancyPersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase))) &&
+                    ((snp.Count() < 2) || tenancyPersonsRow.Field<string>("name") != null &&
+                     string.Equals(tenancyPersonsRow.Field<string>("name"), snp[1], StringComparison.InvariantCultureIgnoreCase)) &&
+                    ((snp.Count() < 3) || tenancyPersonsRow.Field<string>("patronymic") != null &&
+                     string.Equals(tenancyPersonsRow.Field<string>("patronymic"), snp[2], StringComparison.InvariantCultureIgnoreCase)) &&
+                    condition(tenancyPersonsRow)
              select tenancyPremisesAssocRow.Field<int>("id_premises")).Distinct();
         }
 
         public static IEnumerable<int> TenancyProcessIdsBySnp(string[] snp, Func<DataRow, bool> condition)
         {
             var tenancyPersons = DataModel.GetInstance(DataModelType.TenancyPersonsDataModel).FilterDeletedRows();
+
             return
             (from tenancyPersonsRow in tenancyPersons
-             where ((snp.Count() == 1) ? tenancyPersonsRow.Field<string>("surname") != null &&
-                                         string.Equals(tenancyPersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase) :
-                    (snp.Count() == 2) ? tenancyPersonsRow.Field<string>("surname") != null && 
-                                         string.Equals(tenancyPersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase) &&
-                                         tenancyPersonsRow.Field<string>("name") != null &&
-                                         string.Equals(tenancyPersonsRow.Field<string>("name"), snp[1], StringComparison.InvariantCultureIgnoreCase) :
-                    (snp.Count() == 3) && (tenancyPersonsRow.Field<string>("surname") != null &&
-                                           string.Equals(tenancyPersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase) &&
-                                           tenancyPersonsRow.Field<string>("name") != null &&
-                                           string.Equals(tenancyPersonsRow.Field<string>("name"), snp[1], StringComparison.InvariantCultureIgnoreCase) &&
-                                           tenancyPersonsRow.Field<string>("patronymic") != null &&
-                                           string.Equals(tenancyPersonsRow.Field<string>("patronymic"), snp[2], StringComparison.InvariantCultureIgnoreCase))) && condition(tenancyPersonsRow)
+             where ((snp.Any()) && (tenancyPersonsRow.Field<string>("surname") != null &&
+                    string.Equals(tenancyPersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase))) &&
+                ((snp.Count() < 2) || tenancyPersonsRow.Field<string>("name") != null &&
+                    string.Equals(tenancyPersonsRow.Field<string>("name"), snp[1], StringComparison.InvariantCultureIgnoreCase)) &&
+                ((snp.Count() < 3) || tenancyPersonsRow.Field<string>("patronymic") != null &&
+                    string.Equals(tenancyPersonsRow.Field<string>("patronymic"), snp[2], StringComparison.InvariantCultureIgnoreCase)) &&
+                condition(tenancyPersonsRow)
              select tenancyPersonsRow.Field<int>("id_process")).Distinct();
         }
 
@@ -90,18 +76,12 @@ namespace Registry.DataModels
             var resettlePersons = DataModel.GetInstance(DataModelType.ResettlePersonsDataModel).FilterDeletedRows();
             return
             (from resettlePersonsRow in resettlePersons
-             where ((snp.Count() == 1) ? resettlePersonsRow.Field<string>("surname") != null && 
-                                         string.Equals(resettlePersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase) :
-                    (snp.Count() == 2) ? resettlePersonsRow.Field<string>("surname") != null && 
-                                         string.Equals(resettlePersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase) &&
-                                         resettlePersonsRow.Field<string>("name") != null && 
-                                         string.Equals(resettlePersonsRow.Field<string>("name"), snp[1], StringComparison.InvariantCultureIgnoreCase) :
-                    (snp.Count() == 3) && (resettlePersonsRow.Field<string>("surname") != null && 
-                                           string.Equals(resettlePersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase) &&
-                                           resettlePersonsRow.Field<string>("name") != null && 
-                                           string.Equals(resettlePersonsRow.Field<string>("name"), snp[1], StringComparison.InvariantCultureIgnoreCase) &&
-                                           resettlePersonsRow.Field<string>("patronymic") != null && 
-                                           string.Equals(resettlePersonsRow.Field<string>("patronymic"), snp[2], StringComparison.InvariantCultureIgnoreCase)))
+             where ((snp.Any()) && (resettlePersonsRow.Field<string>("surname") != null &&
+                    string.Equals(resettlePersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase))) &&
+                ((snp.Count() < 2) || resettlePersonsRow.Field<string>("name") != null &&
+                    string.Equals(resettlePersonsRow.Field<string>("name"), snp[1], StringComparison.InvariantCultureIgnoreCase)) &&
+                ((snp.Count() < 3) || resettlePersonsRow.Field<string>("patronymic") != null &&
+                    string.Equals(resettlePersonsRow.Field<string>("patronymic"), snp[2], StringComparison.InvariantCultureIgnoreCase))
              select resettlePersonsRow.Field<int>("id_process")).Distinct();
         }
 

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
+using Settings;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
@@ -59,7 +60,7 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
-                if ((executor.ExecutorLogin != null) && (RegistrySettings.UseLDAP) &&
+                if ((executor.ExecutorLogin != null) && (RegistrySettings.UseLdap) &&
                     (UserDomain.GetUserDomain(executor.ExecutorLogin) == null))
                 {
                     MessageBox.Show(@"Пользователя с указанным логином не существует", @"Ошибка", 

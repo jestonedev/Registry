@@ -8,7 +8,16 @@ namespace Registry.Viewport
 {
     internal class FormWithGridViewport: FormViewport
     {
-        protected DataGridView DataGridView;
+        private DataGridView _dataGridView;
+        protected DataGridView DataGridView
+        {
+            get { return _dataGridView; }
+            set
+            {
+                _dataGridView = value;
+                _dataGridView.DataError += DataGridView_DataError;
+            }
+        }
 
         protected FormWithGridViewport(): this(null)
         {
@@ -17,6 +26,11 @@ namespace Registry.Viewport
         protected FormWithGridViewport(IMenuCallback menuCallback)
             : base(menuCallback)
         {
+        }
+
+        void DataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            e.ThrowException = false;
         }
 
         protected override void CheckViewportModifications()

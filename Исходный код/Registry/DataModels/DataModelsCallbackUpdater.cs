@@ -7,6 +7,7 @@ using System.Threading;
 using System.Windows.Forms;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
+using Settings;
 
 namespace Registry.DataModels
 {

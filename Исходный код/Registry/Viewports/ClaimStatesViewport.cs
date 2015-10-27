@@ -692,10 +692,5 @@ namespace Registry.Viewport
             dateTimePickerStartState.Focus();
             base.OnVisibleChanged(e);
         }
-
-        void dataGridViewClaimStates_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            e.ThrowException = false;
-        }
     }
 }

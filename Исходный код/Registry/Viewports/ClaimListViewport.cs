@@ -664,11 +664,6 @@ namespace Registry.Viewport
             }
         }
 
-        void dataGridViewClaims_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            e.ThrowException = false;
-        }
-
         void ClaimListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)

@@ -10,6 +10,7 @@ using Registry.Reporting;
 using Registry.SearchForms;
 using Registry.Viewport;
 using Security;
+using Settings;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry
@@ -749,7 +750,7 @@ namespace Registry
         private void MainForm_Load(object sender, EventArgs e)
         {
             UserDomain user = null;
-            if (RegistrySettings.UseLDAP)
+            if (RegistrySettings.UseLdap)
                 user = UserDomain.Current;
             if (user == null)
                 toolStripLabelHelloUser.Text = "";

@@ -628,11 +628,6 @@ namespace Registry.Viewport
             base.OnVisibleChanged(e);
         }
 
-        void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            e.ThrowException = false;
-        }
-
         void vButtonSelectWarrant_Click(object sender, EventArgs e)
         {
             if (id_warrant != null)

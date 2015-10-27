@@ -142,5 +142,18 @@ namespace Settings.Properties {
                 this["UseLDAP"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("IMLU/p0C/8AiREcT98nwUYGpZNwyeb2JPC0kuE4+luCowC9PgFaXVvhiAb1Hau031f4f9crgY5xgMDKDW" +
+            "oXN8A==")]
+        public string MSPConnectionString {
+            get {
+                return ((string)(this["MSPConnectionString"]));
+            }
+            set {
+                this["MSPConnectionString"] = value;
+            }
+        }
     }
 }

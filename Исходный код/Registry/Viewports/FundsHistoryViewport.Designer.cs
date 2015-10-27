@@ -448,7 +448,6 @@ namespace Registry.Viewport
             dataGridView.ShowCellToolTips = false;
             dataGridView.Size = new Size(702, 100);
             dataGridView.TabIndex = 0;
-            dataGridView.DataError += dataGridView_DataError;
             // 
             // id_fund
             // 

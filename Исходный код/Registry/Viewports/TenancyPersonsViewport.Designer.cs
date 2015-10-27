@@ -68,671 +68,694 @@ namespace Registry.Viewport
 
         private void InitializeComponent()
         {
-            var dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            var resources = new ComponentResourceManager(typeof(TenancyPersonsViewport));
-            tableLayoutPanel11 = new TableLayoutPanel();
-            groupBox23 = new GroupBox();
-            textBoxPersonalAccount = new TextBox();
-            label81 = new Label();
-            dateTimePickerDateOfBirth = new DateTimePicker();
-            comboBoxKinship = new ComboBox();
-            label57 = new Label();
-            label56 = new Label();
-            textBoxPatronymic = new TextBox();
-            label55 = new Label();
-            textBoxName = new TextBox();
-            label54 = new Label();
-            textBoxSurname = new TextBox();
-            label53 = new Label();
-            groupBox27 = new GroupBox();
-            label66 = new Label();
-            textBoxRegistrationRoom = new TextBox();
-            label65 = new Label();
-            textBoxRegistrationFlat = new TextBox();
-            label63 = new Label();
-            label64 = new Label();
-            comboBoxRegistrationStreet = new ComboBox();
-            textBoxRegistrationHouse = new TextBox();
-            groupBox26 = new GroupBox();
-            dateTimePickerExcludeDate = new DateTimePicker();
-            label2 = new Label();
-            dateTimePickerIncludeDate = new DateTimePicker();
-            label1 = new Label();
-            comboBoxIssuedBy = new ComboBox();
-            label62 = new Label();
-            dateTimePickerDateOfDocumentIssue = new DateTimePicker();
-            label61 = new Label();
-            textBoxDocumentNumber = new TextBox();
-            label60 = new Label();
-            textBoxDocumentSeria = new TextBox();
-            label59 = new Label();
-            comboBoxDocumentType = new ComboBox();
-            label58 = new Label();
-            groupBox28 = new GroupBox();
-            label67 = new Label();
-            textBoxResidenceRoom = new TextBox();
-            label68 = new Label();
-            textBoxResidenceFlat = new TextBox();
-            label69 = new Label();
-            label70 = new Label();
-            comboBoxResidenceStreet = new ComboBox();
-            textBoxResidenceHouse = new TextBox();
-            dataGridViewTenancyPersons = new DataGridView();
-            surname = new DataGridViewTextBoxColumn();
-            name = new DataGridViewTextBoxColumn();
-            patronymic = new DataGridViewTextBoxColumn();
-            date_of_birth = new DataGridViewTextBoxColumn();
-            id_kinship = new DataGridViewComboBoxColumn();
-            tableLayoutPanel11.SuspendLayout();
-            groupBox23.SuspendLayout();
-            groupBox27.SuspendLayout();
-            groupBox26.SuspendLayout();
-            groupBox28.SuspendLayout();
-            ((ISupportInitialize)(dataGridViewTenancyPersons)).BeginInit();
-            SuspendLayout();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyPersonsViewport));
+            this.tableLayoutPanel11 = new System.Windows.Forms.TableLayoutPanel();
+            this.groupBox23 = new System.Windows.Forms.GroupBox();
+            this.buttonImportFromMSP = new System.Windows.Forms.Button();
+            this.textBoxPersonalAccount = new System.Windows.Forms.TextBox();
+            this.label81 = new System.Windows.Forms.Label();
+            this.dateTimePickerDateOfBirth = new System.Windows.Forms.DateTimePicker();
+            this.comboBoxKinship = new System.Windows.Forms.ComboBox();
+            this.label57 = new System.Windows.Forms.Label();
+            this.label56 = new System.Windows.Forms.Label();
+            this.textBoxPatronymic = new System.Windows.Forms.TextBox();
+            this.label55 = new System.Windows.Forms.Label();
+            this.textBoxName = new System.Windows.Forms.TextBox();
+            this.label54 = new System.Windows.Forms.Label();
+            this.textBoxSurname = new System.Windows.Forms.TextBox();
+            this.label53 = new System.Windows.Forms.Label();
+            this.groupBox27 = new System.Windows.Forms.GroupBox();
+            this.label66 = new System.Windows.Forms.Label();
+            this.textBoxRegistrationRoom = new System.Windows.Forms.TextBox();
+            this.label65 = new System.Windows.Forms.Label();
+            this.textBoxRegistrationFlat = new System.Windows.Forms.TextBox();
+            this.label63 = new System.Windows.Forms.Label();
+            this.label64 = new System.Windows.Forms.Label();
+            this.comboBoxRegistrationStreet = new System.Windows.Forms.ComboBox();
+            this.textBoxRegistrationHouse = new System.Windows.Forms.TextBox();
+            this.groupBox26 = new System.Windows.Forms.GroupBox();
+            this.dateTimePickerExcludeDate = new System.Windows.Forms.DateTimePicker();
+            this.label2 = new System.Windows.Forms.Label();
+            this.dateTimePickerIncludeDate = new System.Windows.Forms.DateTimePicker();
+            this.label1 = new System.Windows.Forms.Label();
+            this.comboBoxIssuedBy = new System.Windows.Forms.ComboBox();
+            this.label62 = new System.Windows.Forms.Label();
+            this.dateTimePickerDateOfDocumentIssue = new System.Windows.Forms.DateTimePicker();
+            this.label61 = new System.Windows.Forms.Label();
+            this.textBoxDocumentNumber = new System.Windows.Forms.TextBox();
+            this.label60 = new System.Windows.Forms.Label();
+            this.textBoxDocumentSeria = new System.Windows.Forms.TextBox();
+            this.label59 = new System.Windows.Forms.Label();
+            this.comboBoxDocumentType = new System.Windows.Forms.ComboBox();
+            this.label58 = new System.Windows.Forms.Label();
+            this.groupBox28 = new System.Windows.Forms.GroupBox();
+            this.label67 = new System.Windows.Forms.Label();
+            this.textBoxResidenceRoom = new System.Windows.Forms.TextBox();
+            this.label68 = new System.Windows.Forms.Label();
+            this.textBoxResidenceFlat = new System.Windows.Forms.TextBox();
+            this.label69 = new System.Windows.Forms.Label();
+            this.label70 = new System.Windows.Forms.Label();
+            this.comboBoxResidenceStreet = new System.Windows.Forms.ComboBox();
+            this.textBoxResidenceHouse = new System.Windows.Forms.TextBox();
+            this.dataGridViewTenancyPersons = new System.Windows.Forms.DataGridView();
+            this.surname = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.patronymic = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.date_of_birth = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_kinship = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.tableLayoutPanel11.SuspendLayout();
+            this.groupBox23.SuspendLayout();
+            this.groupBox27.SuspendLayout();
+            this.groupBox26.SuspendLayout();
+            this.groupBox28.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyPersons)).BeginInit();
+            this.SuspendLayout();
             // 
             // tableLayoutPanel11
             // 
-            tableLayoutPanel11.ColumnCount = 2;
-            tableLayoutPanel11.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel11.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel11.Controls.Add(groupBox23, 0, 0);
-            tableLayoutPanel11.Controls.Add(groupBox27, 0, 1);
-            tableLayoutPanel11.Controls.Add(groupBox26, 1, 0);
-            tableLayoutPanel11.Controls.Add(groupBox28, 1, 1);
-            tableLayoutPanel11.Controls.Add(dataGridViewTenancyPersons, 0, 2);
-            tableLayoutPanel11.Dock = DockStyle.Fill;
-            tableLayoutPanel11.Location = new Point(3, 3);
-            tableLayoutPanel11.Name = "tableLayoutPanel11";
-            tableLayoutPanel11.RowCount = 3;
-            tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Absolute, 220F));
-            tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Absolute, 140F));
-            tableLayoutPanel11.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanel11.Size = new Size(813, 564);
-            tableLayoutPanel11.TabIndex = 0;
+            this.tableLayoutPanel11.ColumnCount = 2;
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel11.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel11.Controls.Add(this.groupBox23, 0, 0);
+            this.tableLayoutPanel11.Controls.Add(this.groupBox27, 0, 1);
+            this.tableLayoutPanel11.Controls.Add(this.groupBox26, 1, 0);
+            this.tableLayoutPanel11.Controls.Add(this.groupBox28, 1, 1);
+            this.tableLayoutPanel11.Controls.Add(this.dataGridViewTenancyPersons, 0, 2);
+            this.tableLayoutPanel11.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel11.Location = new System.Drawing.Point(3, 3);
+            this.tableLayoutPanel11.Name = "tableLayoutPanel11";
+            this.tableLayoutPanel11.RowCount = 3;
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 220F));
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
+            this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel11.Size = new System.Drawing.Size(813, 564);
+            this.tableLayoutPanel11.TabIndex = 0;
             // 
             // groupBox23
             // 
-            groupBox23.Controls.Add(textBoxPersonalAccount);
-            groupBox23.Controls.Add(label81);
-            groupBox23.Controls.Add(dateTimePickerDateOfBirth);
-            groupBox23.Controls.Add(comboBoxKinship);
-            groupBox23.Controls.Add(label57);
-            groupBox23.Controls.Add(label56);
-            groupBox23.Controls.Add(textBoxPatronymic);
-            groupBox23.Controls.Add(label55);
-            groupBox23.Controls.Add(textBoxName);
-            groupBox23.Controls.Add(label54);
-            groupBox23.Controls.Add(textBoxSurname);
-            groupBox23.Controls.Add(label53);
-            groupBox23.Dock = DockStyle.Fill;
-            groupBox23.Location = new Point(3, 3);
-            groupBox23.Name = "groupBox23";
-            groupBox23.Size = new Size(400, 214);
-            groupBox23.TabIndex = 1;
-            groupBox23.TabStop = false;
-            groupBox23.Text = "Личные данные";
+            this.groupBox23.Controls.Add(this.buttonImportFromMSP);
+            this.groupBox23.Controls.Add(this.textBoxPersonalAccount);
+            this.groupBox23.Controls.Add(this.label81);
+            this.groupBox23.Controls.Add(this.dateTimePickerDateOfBirth);
+            this.groupBox23.Controls.Add(this.comboBoxKinship);
+            this.groupBox23.Controls.Add(this.label57);
+            this.groupBox23.Controls.Add(this.label56);
+            this.groupBox23.Controls.Add(this.textBoxPatronymic);
+            this.groupBox23.Controls.Add(this.label55);
+            this.groupBox23.Controls.Add(this.textBoxName);
+            this.groupBox23.Controls.Add(this.label54);
+            this.groupBox23.Controls.Add(this.textBoxSurname);
+            this.groupBox23.Controls.Add(this.label53);
+            this.groupBox23.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox23.Location = new System.Drawing.Point(3, 3);
+            this.groupBox23.Name = "groupBox23";
+            this.groupBox23.Size = new System.Drawing.Size(400, 214);
+            this.groupBox23.TabIndex = 1;
+            this.groupBox23.TabStop = false;
+            this.groupBox23.Text = "Личные данные";
+            // 
+            // buttonImportFromMSP
+            // 
+            this.buttonImportFromMSP.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonImportFromMSP.Location = new System.Drawing.Point(164, 183);
+            this.buttonImportFromMSP.Name = "buttonImportFromMSP";
+            this.buttonImportFromMSP.Size = new System.Drawing.Size(230, 24);
+            this.buttonImportFromMSP.TabIndex = 6;
+            this.buttonImportFromMSP.Text = "Импортировать из МСП";
+            this.buttonImportFromMSP.UseVisualStyleBackColor = true;
+            this.buttonImportFromMSP.Click += new System.EventHandler(this.buttonImportFromMSP_Click);
             // 
             // textBoxPersonalAccount
             // 
-            textBoxPersonalAccount.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                            | AnchorStyles.Right;
-            textBoxPersonalAccount.Location = new Point(164, 157);
-            textBoxPersonalAccount.MaxLength = 255;
-            textBoxPersonalAccount.Name = "textBoxPersonalAccount";
-            textBoxPersonalAccount.Size = new Size(230, 21);
-            textBoxPersonalAccount.TabIndex = 29;
+            this.textBoxPersonalAccount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxPersonalAccount.Location = new System.Drawing.Point(164, 157);
+            this.textBoxPersonalAccount.MaxLength = 255;
+            this.textBoxPersonalAccount.Name = "textBoxPersonalAccount";
+            this.textBoxPersonalAccount.Size = new System.Drawing.Size(230, 21);
+            this.textBoxPersonalAccount.TabIndex = 5;
             // 
             // label81
             // 
-            label81.AutoSize = true;
-            label81.Location = new Point(17, 160);
-            label81.Name = "label81";
-            label81.Size = new Size(86, 15);
-            label81.TabIndex = 30;
-            label81.Text = "Лицевой счет";
+            this.label81.AutoSize = true;
+            this.label81.Location = new System.Drawing.Point(17, 160);
+            this.label81.Name = "label81";
+            this.label81.Size = new System.Drawing.Size(86, 15);
+            this.label81.TabIndex = 30;
+            this.label81.Text = "Лицевой счет";
             // 
             // dateTimePickerDateOfBirth
             // 
-            dateTimePickerDateOfBirth.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                               | AnchorStyles.Right;
-            dateTimePickerDateOfBirth.Location = new Point(164, 100);
-            dateTimePickerDateOfBirth.Name = "dateTimePickerDateOfBirth";
-            dateTimePickerDateOfBirth.ShowCheckBox = true;
-            dateTimePickerDateOfBirth.Size = new Size(230, 21);
-            dateTimePickerDateOfBirth.TabIndex = 3;
+            this.dateTimePickerDateOfBirth.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerDateOfBirth.Location = new System.Drawing.Point(164, 100);
+            this.dateTimePickerDateOfBirth.Name = "dateTimePickerDateOfBirth";
+            this.dateTimePickerDateOfBirth.ShowCheckBox = true;
+            this.dateTimePickerDateOfBirth.Size = new System.Drawing.Size(230, 21);
+            this.dateTimePickerDateOfBirth.TabIndex = 3;
             // 
             // comboBoxKinship
             // 
-            comboBoxKinship.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                     | AnchorStyles.Right;
-            comboBoxKinship.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBoxKinship.FormattingEnabled = true;
-            comboBoxKinship.Location = new Point(164, 127);
-            comboBoxKinship.Name = "comboBoxKinship";
-            comboBoxKinship.Size = new Size(230, 23);
-            comboBoxKinship.TabIndex = 4;
+            this.comboBoxKinship.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxKinship.DropDownHeight = 405;
+            this.comboBoxKinship.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxKinship.FormattingEnabled = true;
+            this.comboBoxKinship.IntegralHeight = false;
+            this.comboBoxKinship.Location = new System.Drawing.Point(164, 127);
+            this.comboBoxKinship.Name = "comboBoxKinship";
+            this.comboBoxKinship.Size = new System.Drawing.Size(230, 23);
+            this.comboBoxKinship.TabIndex = 4;
             // 
             // label57
             // 
-            label57.AutoSize = true;
-            label57.Location = new Point(17, 131);
-            label57.Name = "label57";
-            label57.Size = new Size(110, 15);
-            label57.TabIndex = 28;
-            label57.Text = "Отношение/связь";
+            this.label57.AutoSize = true;
+            this.label57.Location = new System.Drawing.Point(17, 131);
+            this.label57.Name = "label57";
+            this.label57.Size = new System.Drawing.Size(110, 15);
+            this.label57.TabIndex = 28;
+            this.label57.Text = "Отношение/связь";
             // 
             // label56
             // 
-            label56.AutoSize = true;
-            label56.Location = new Point(17, 103);
-            label56.Name = "label56";
-            label56.Size = new Size(98, 15);
-            label56.TabIndex = 26;
-            label56.Text = "Дата рождения";
+            this.label56.AutoSize = true;
+            this.label56.Location = new System.Drawing.Point(17, 103);
+            this.label56.Name = "label56";
+            this.label56.Size = new System.Drawing.Size(98, 15);
+            this.label56.TabIndex = 26;
+            this.label56.Text = "Дата рождения";
             // 
             // textBoxPatronymic
             // 
-            textBoxPatronymic.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                       | AnchorStyles.Right;
-            textBoxPatronymic.Location = new Point(164, 73);
-            textBoxPatronymic.MaxLength = 255;
-            textBoxPatronymic.Name = "textBoxPatronymic";
-            textBoxPatronymic.Size = new Size(230, 21);
-            textBoxPatronymic.TabIndex = 2;
-            textBoxPatronymic.Leave += textBoxSNP_Leave;
+            this.textBoxPatronymic.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxPatronymic.Location = new System.Drawing.Point(164, 73);
+            this.textBoxPatronymic.MaxLength = 255;
+            this.textBoxPatronymic.Name = "textBoxPatronymic";
+            this.textBoxPatronymic.Size = new System.Drawing.Size(230, 21);
+            this.textBoxPatronymic.TabIndex = 2;
+            this.textBoxPatronymic.Leave += new System.EventHandler(this.textBoxSNP_Leave);
             // 
             // label55
             // 
-            label55.AutoSize = true;
-            label55.Location = new Point(17, 76);
-            label55.Name = "label55";
-            label55.Size = new Size(63, 15);
-            label55.TabIndex = 24;
-            label55.Text = "Отчество";
+            this.label55.AutoSize = true;
+            this.label55.Location = new System.Drawing.Point(17, 76);
+            this.label55.Name = "label55";
+            this.label55.Size = new System.Drawing.Size(63, 15);
+            this.label55.TabIndex = 24;
+            this.label55.Text = "Отчество";
             // 
             // textBoxName
             // 
-            textBoxName.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                 | AnchorStyles.Right;
-            textBoxName.Location = new Point(164, 46);
-            textBoxName.MaxLength = 50;
-            textBoxName.Name = "textBoxName";
-            textBoxName.Size = new Size(230, 21);
-            textBoxName.TabIndex = 1;
-            textBoxName.Leave += textBoxSNP_Leave;
+            this.textBoxName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxName.Location = new System.Drawing.Point(164, 46);
+            this.textBoxName.MaxLength = 50;
+            this.textBoxName.Name = "textBoxName";
+            this.textBoxName.Size = new System.Drawing.Size(230, 21);
+            this.textBoxName.TabIndex = 1;
+            this.textBoxName.Leave += new System.EventHandler(this.textBoxSNP_Leave);
             // 
             // label54
             // 
-            label54.AutoSize = true;
-            label54.Location = new Point(17, 49);
-            label54.Name = "label54";
-            label54.Size = new Size(32, 15);
-            label54.TabIndex = 22;
-            label54.Text = "Имя";
+            this.label54.AutoSize = true;
+            this.label54.Location = new System.Drawing.Point(17, 49);
+            this.label54.Name = "label54";
+            this.label54.Size = new System.Drawing.Size(32, 15);
+            this.label54.TabIndex = 22;
+            this.label54.Text = "Имя";
             // 
             // textBoxSurname
             // 
-            textBoxSurname.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                    | AnchorStyles.Right;
-            textBoxSurname.Location = new Point(164, 19);
-            textBoxSurname.MaxLength = 50;
-            textBoxSurname.Name = "textBoxSurname";
-            textBoxSurname.Size = new Size(230, 21);
-            textBoxSurname.TabIndex = 0;
-            textBoxSurname.Leave += textBoxSNP_Leave;
+            this.textBoxSurname.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSurname.Location = new System.Drawing.Point(164, 19);
+            this.textBoxSurname.MaxLength = 50;
+            this.textBoxSurname.Name = "textBoxSurname";
+            this.textBoxSurname.Size = new System.Drawing.Size(230, 21);
+            this.textBoxSurname.TabIndex = 0;
+            this.textBoxSurname.Leave += new System.EventHandler(this.textBoxSNP_Leave);
             // 
             // label53
             // 
-            label53.AutoSize = true;
-            label53.Location = new Point(17, 22);
-            label53.Name = "label53";
-            label53.Size = new Size(62, 15);
-            label53.TabIndex = 20;
-            label53.Text = "Фамилия";
+            this.label53.AutoSize = true;
+            this.label53.Location = new System.Drawing.Point(17, 22);
+            this.label53.Name = "label53";
+            this.label53.Size = new System.Drawing.Size(62, 15);
+            this.label53.TabIndex = 20;
+            this.label53.Text = "Фамилия";
             // 
             // groupBox27
             // 
-            groupBox27.Controls.Add(label66);
-            groupBox27.Controls.Add(textBoxRegistrationRoom);
-            groupBox27.Controls.Add(label65);
-            groupBox27.Controls.Add(textBoxRegistrationFlat);
-            groupBox27.Controls.Add(label63);
-            groupBox27.Controls.Add(label64);
-            groupBox27.Controls.Add(comboBoxRegistrationStreet);
-            groupBox27.Controls.Add(textBoxRegistrationHouse);
-            groupBox27.Dock = DockStyle.Fill;
-            groupBox27.Location = new Point(3, 223);
-            groupBox27.Name = "groupBox27";
-            groupBox27.Size = new Size(400, 134);
-            groupBox27.TabIndex = 3;
-            groupBox27.TabStop = false;
-            groupBox27.Text = "Адрес регистрации";
+            this.groupBox27.Controls.Add(this.label66);
+            this.groupBox27.Controls.Add(this.textBoxRegistrationRoom);
+            this.groupBox27.Controls.Add(this.label65);
+            this.groupBox27.Controls.Add(this.textBoxRegistrationFlat);
+            this.groupBox27.Controls.Add(this.label63);
+            this.groupBox27.Controls.Add(this.label64);
+            this.groupBox27.Controls.Add(this.comboBoxRegistrationStreet);
+            this.groupBox27.Controls.Add(this.textBoxRegistrationHouse);
+            this.groupBox27.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox27.Location = new System.Drawing.Point(3, 223);
+            this.groupBox27.Name = "groupBox27";
+            this.groupBox27.Size = new System.Drawing.Size(400, 134);
+            this.groupBox27.TabIndex = 3;
+            this.groupBox27.TabStop = false;
+            this.groupBox27.Text = "Адрес регистрации";
             // 
             // label66
             // 
-            label66.AutoSize = true;
-            label66.Location = new Point(17, 109);
-            label66.Name = "label66";
-            label66.Size = new Size(101, 15);
-            label66.TabIndex = 18;
-            label66.Text = "Номер комнаты";
+            this.label66.AutoSize = true;
+            this.label66.Location = new System.Drawing.Point(17, 109);
+            this.label66.Name = "label66";
+            this.label66.Size = new System.Drawing.Size(101, 15);
+            this.label66.TabIndex = 18;
+            this.label66.Text = "Номер комнаты";
             // 
             // textBoxRegistrationRoom
             // 
-            textBoxRegistrationRoom.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                             | AnchorStyles.Right;
-            textBoxRegistrationRoom.Location = new Point(164, 106);
-            textBoxRegistrationRoom.MaxLength = 15;
-            textBoxRegistrationRoom.Name = "textBoxRegistrationRoom";
-            textBoxRegistrationRoom.Size = new Size(230, 21);
-            textBoxRegistrationRoom.TabIndex = 3;
+            this.textBoxRegistrationRoom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxRegistrationRoom.Location = new System.Drawing.Point(164, 106);
+            this.textBoxRegistrationRoom.MaxLength = 15;
+            this.textBoxRegistrationRoom.Name = "textBoxRegistrationRoom";
+            this.textBoxRegistrationRoom.Size = new System.Drawing.Size(230, 21);
+            this.textBoxRegistrationRoom.TabIndex = 3;
             // 
             // label65
             // 
-            label65.AutoSize = true;
-            label65.Location = new Point(17, 81);
-            label65.Name = "label65";
-            label65.Size = new Size(106, 15);
-            label65.TabIndex = 16;
-            label65.Text = "Номер квартиры";
+            this.label65.AutoSize = true;
+            this.label65.Location = new System.Drawing.Point(17, 81);
+            this.label65.Name = "label65";
+            this.label65.Size = new System.Drawing.Size(106, 15);
+            this.label65.TabIndex = 16;
+            this.label65.Text = "Номер квартиры";
             // 
             // textBoxRegistrationFlat
             // 
-            textBoxRegistrationFlat.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                             | AnchorStyles.Right;
-            textBoxRegistrationFlat.Location = new Point(164, 78);
-            textBoxRegistrationFlat.MaxLength = 15;
-            textBoxRegistrationFlat.Name = "textBoxRegistrationFlat";
-            textBoxRegistrationFlat.Size = new Size(230, 21);
-            textBoxRegistrationFlat.TabIndex = 2;
+            this.textBoxRegistrationFlat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxRegistrationFlat.Location = new System.Drawing.Point(164, 78);
+            this.textBoxRegistrationFlat.MaxLength = 15;
+            this.textBoxRegistrationFlat.Name = "textBoxRegistrationFlat";
+            this.textBoxRegistrationFlat.Size = new System.Drawing.Size(230, 21);
+            this.textBoxRegistrationFlat.TabIndex = 2;
             // 
             // label63
             // 
-            label63.AutoSize = true;
-            label63.Location = new Point(17, 24);
-            label63.Name = "label63";
-            label63.Size = new Size(43, 15);
-            label63.TabIndex = 12;
-            label63.Text = "Улица";
+            this.label63.AutoSize = true;
+            this.label63.Location = new System.Drawing.Point(17, 24);
+            this.label63.Name = "label63";
+            this.label63.Size = new System.Drawing.Size(43, 15);
+            this.label63.TabIndex = 12;
+            this.label63.Text = "Улица";
             // 
             // label64
             // 
-            label64.AutoSize = true;
-            label64.Location = new Point(17, 53);
-            label64.Name = "label64";
-            label64.Size = new Size(79, 15);
-            label64.TabIndex = 13;
-            label64.Text = "Номер дома";
+            this.label64.AutoSize = true;
+            this.label64.Location = new System.Drawing.Point(17, 53);
+            this.label64.Name = "label64";
+            this.label64.Size = new System.Drawing.Size(79, 15);
+            this.label64.TabIndex = 13;
+            this.label64.Text = "Номер дома";
             // 
             // comboBoxRegistrationStreet
             // 
-            comboBoxRegistrationStreet.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                                | AnchorStyles.Right;
-            comboBoxRegistrationStreet.FormattingEnabled = true;
-            comboBoxRegistrationStreet.Location = new Point(164, 20);
-            comboBoxRegistrationStreet.Name = "comboBoxRegistrationStreet";
-            comboBoxRegistrationStreet.Size = new Size(230, 23);
-            comboBoxRegistrationStreet.TabIndex = 0;
-            comboBoxRegistrationStreet.DropDownClosed += comboBoxRegistrationStreet_DropDownClosed;
-            comboBoxRegistrationStreet.KeyUp += comboBoxRegistrationStreet_KeyUp;
-            comboBoxRegistrationStreet.Leave += comboBoxRegistrationStreet_Leave;
+            this.comboBoxRegistrationStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxRegistrationStreet.FormattingEnabled = true;
+            this.comboBoxRegistrationStreet.Location = new System.Drawing.Point(164, 20);
+            this.comboBoxRegistrationStreet.Name = "comboBoxRegistrationStreet";
+            this.comboBoxRegistrationStreet.Size = new System.Drawing.Size(230, 23);
+            this.comboBoxRegistrationStreet.TabIndex = 0;
+            this.comboBoxRegistrationStreet.DropDownClosed += new System.EventHandler(this.comboBoxRegistrationStreet_DropDownClosed);
+            this.comboBoxRegistrationStreet.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxRegistrationStreet_KeyUp);
+            this.comboBoxRegistrationStreet.Leave += new System.EventHandler(this.comboBoxRegistrationStreet_Leave);
             // 
             // textBoxRegistrationHouse
             // 
-            textBoxRegistrationHouse.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                              | AnchorStyles.Right;
-            textBoxRegistrationHouse.Location = new Point(164, 50);
-            textBoxRegistrationHouse.MaxLength = 10;
-            textBoxRegistrationHouse.Name = "textBoxRegistrationHouse";
-            textBoxRegistrationHouse.Size = new Size(230, 21);
-            textBoxRegistrationHouse.TabIndex = 1;
+            this.textBoxRegistrationHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxRegistrationHouse.Location = new System.Drawing.Point(164, 50);
+            this.textBoxRegistrationHouse.MaxLength = 10;
+            this.textBoxRegistrationHouse.Name = "textBoxRegistrationHouse";
+            this.textBoxRegistrationHouse.Size = new System.Drawing.Size(230, 21);
+            this.textBoxRegistrationHouse.TabIndex = 1;
             // 
             // groupBox26
             // 
-            groupBox26.Controls.Add(dateTimePickerExcludeDate);
-            groupBox26.Controls.Add(label2);
-            groupBox26.Controls.Add(dateTimePickerIncludeDate);
-            groupBox26.Controls.Add(label1);
-            groupBox26.Controls.Add(comboBoxIssuedBy);
-            groupBox26.Controls.Add(label62);
-            groupBox26.Controls.Add(dateTimePickerDateOfDocumentIssue);
-            groupBox26.Controls.Add(label61);
-            groupBox26.Controls.Add(textBoxDocumentNumber);
-            groupBox26.Controls.Add(label60);
-            groupBox26.Controls.Add(textBoxDocumentSeria);
-            groupBox26.Controls.Add(label59);
-            groupBox26.Controls.Add(comboBoxDocumentType);
-            groupBox26.Controls.Add(label58);
-            groupBox26.Dock = DockStyle.Fill;
-            groupBox26.Location = new Point(409, 3);
-            groupBox26.Name = "groupBox26";
-            groupBox26.Size = new Size(401, 214);
-            groupBox26.TabIndex = 2;
-            groupBox26.TabStop = false;
-            groupBox26.Text = "Документ, удостоверяющий личность";
+            this.groupBox26.Controls.Add(this.dateTimePickerExcludeDate);
+            this.groupBox26.Controls.Add(this.label2);
+            this.groupBox26.Controls.Add(this.dateTimePickerIncludeDate);
+            this.groupBox26.Controls.Add(this.label1);
+            this.groupBox26.Controls.Add(this.comboBoxIssuedBy);
+            this.groupBox26.Controls.Add(this.label62);
+            this.groupBox26.Controls.Add(this.dateTimePickerDateOfDocumentIssue);
+            this.groupBox26.Controls.Add(this.label61);
+            this.groupBox26.Controls.Add(this.textBoxDocumentNumber);
+            this.groupBox26.Controls.Add(this.label60);
+            this.groupBox26.Controls.Add(this.textBoxDocumentSeria);
+            this.groupBox26.Controls.Add(this.label59);
+            this.groupBox26.Controls.Add(this.comboBoxDocumentType);
+            this.groupBox26.Controls.Add(this.label58);
+            this.groupBox26.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox26.Location = new System.Drawing.Point(409, 3);
+            this.groupBox26.Name = "groupBox26";
+            this.groupBox26.Size = new System.Drawing.Size(401, 214);
+            this.groupBox26.TabIndex = 2;
+            this.groupBox26.TabStop = false;
+            this.groupBox26.Text = "Документ, удостоверяющий личность";
             // 
             // dateTimePickerExcludeDate
             // 
-            dateTimePickerExcludeDate.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                               | AnchorStyles.Right;
-            dateTimePickerExcludeDate.Location = new Point(164, 184);
-            dateTimePickerExcludeDate.Name = "dateTimePickerExcludeDate";
-            dateTimePickerExcludeDate.ShowCheckBox = true;
-            dateTimePickerExcludeDate.Size = new Size(231, 21);
-            dateTimePickerExcludeDate.TabIndex = 41;
+            this.dateTimePickerExcludeDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerExcludeDate.Location = new System.Drawing.Point(164, 184);
+            this.dateTimePickerExcludeDate.Name = "dateTimePickerExcludeDate";
+            this.dateTimePickerExcludeDate.ShowCheckBox = true;
+            this.dateTimePickerExcludeDate.Size = new System.Drawing.Size(231, 21);
+            this.dateTimePickerExcludeDate.TabIndex = 41;
             // 
             // label2
             // 
-            label2.AutoSize = true;
-            label2.Location = new Point(17, 187);
-            label2.Name = "label2";
-            label2.Size = new Size(109, 15);
-            label2.TabIndex = 42;
-            label2.Text = "Дата исключения";
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(17, 187);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(109, 15);
+            this.label2.TabIndex = 42;
+            this.label2.Text = "Дата исключения";
             // 
             // dateTimePickerIncludeDate
             // 
-            dateTimePickerIncludeDate.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                               | AnchorStyles.Right;
-            dateTimePickerIncludeDate.Location = new Point(164, 157);
-            dateTimePickerIncludeDate.Name = "dateTimePickerIncludeDate";
-            dateTimePickerIncludeDate.ShowCheckBox = true;
-            dateTimePickerIncludeDate.Size = new Size(231, 21);
-            dateTimePickerIncludeDate.TabIndex = 39;
+            this.dateTimePickerIncludeDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerIncludeDate.Location = new System.Drawing.Point(164, 157);
+            this.dateTimePickerIncludeDate.Name = "dateTimePickerIncludeDate";
+            this.dateTimePickerIncludeDate.ShowCheckBox = true;
+            this.dateTimePickerIncludeDate.Size = new System.Drawing.Size(231, 21);
+            this.dateTimePickerIncludeDate.TabIndex = 39;
             // 
             // label1
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(17, 160);
-            label1.Name = "label1";
-            label1.Size = new Size(103, 15);
-            label1.TabIndex = 40;
-            label1.Text = "Дата включения";
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(17, 160);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(103, 15);
+            this.label1.TabIndex = 40;
+            this.label1.Text = "Дата включения";
             // 
             // comboBoxIssuedBy
             // 
-            comboBoxIssuedBy.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                      | AnchorStyles.Right;
-            comboBoxIssuedBy.FormattingEnabled = true;
-            comboBoxIssuedBy.Location = new Point(164, 128);
-            comboBoxIssuedBy.Name = "comboBoxIssuedBy";
-            comboBoxIssuedBy.Size = new Size(231, 23);
-            comboBoxIssuedBy.TabIndex = 4;
-            comboBoxIssuedBy.DropDownClosed += comboBoxIssuedBy_DropDownClosed;
-            comboBoxIssuedBy.KeyUp += comboBoxIssuedBy_KeyUp;
-            comboBoxIssuedBy.Leave += comboBoxIssuedBy_Leave;
+            this.comboBoxIssuedBy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxIssuedBy.FormattingEnabled = true;
+            this.comboBoxIssuedBy.Location = new System.Drawing.Point(164, 128);
+            this.comboBoxIssuedBy.Name = "comboBoxIssuedBy";
+            this.comboBoxIssuedBy.Size = new System.Drawing.Size(231, 23);
+            this.comboBoxIssuedBy.TabIndex = 4;
+            this.comboBoxIssuedBy.DropDownClosed += new System.EventHandler(this.comboBoxIssuedBy_DropDownClosed);
+            this.comboBoxIssuedBy.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxIssuedBy_KeyUp);
+            this.comboBoxIssuedBy.Leave += new System.EventHandler(this.comboBoxIssuedBy_Leave);
             // 
             // label62
             // 
-            label62.AutoSize = true;
-            label62.Location = new Point(17, 132);
-            label62.Name = "label62";
-            label62.Size = new Size(71, 15);
-            label62.TabIndex = 38;
-            label62.Text = "Кем выдан";
+            this.label62.AutoSize = true;
+            this.label62.Location = new System.Drawing.Point(17, 132);
+            this.label62.Name = "label62";
+            this.label62.Size = new System.Drawing.Size(71, 15);
+            this.label62.TabIndex = 38;
+            this.label62.Text = "Кем выдан";
             // 
             // dateTimePickerDateOfDocumentIssue
             // 
-            dateTimePickerDateOfDocumentIssue.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                                       | AnchorStyles.Right;
-            dateTimePickerDateOfDocumentIssue.Location = new Point(164, 101);
-            dateTimePickerDateOfDocumentIssue.Name = "dateTimePickerDateOfDocumentIssue";
-            dateTimePickerDateOfDocumentIssue.ShowCheckBox = true;
-            dateTimePickerDateOfDocumentIssue.Size = new Size(231, 21);
-            dateTimePickerDateOfDocumentIssue.TabIndex = 3;
+            this.dateTimePickerDateOfDocumentIssue.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerDateOfDocumentIssue.Location = new System.Drawing.Point(164, 101);
+            this.dateTimePickerDateOfDocumentIssue.Name = "dateTimePickerDateOfDocumentIssue";
+            this.dateTimePickerDateOfDocumentIssue.ShowCheckBox = true;
+            this.dateTimePickerDateOfDocumentIssue.Size = new System.Drawing.Size(231, 21);
+            this.dateTimePickerDateOfDocumentIssue.TabIndex = 3;
             // 
             // label61
             // 
-            label61.AutoSize = true;
-            label61.Location = new Point(17, 104);
-            label61.Name = "label61";
-            label61.Size = new Size(83, 15);
-            label61.TabIndex = 36;
-            label61.Text = "Дата выдачи";
+            this.label61.AutoSize = true;
+            this.label61.Location = new System.Drawing.Point(17, 104);
+            this.label61.Name = "label61";
+            this.label61.Size = new System.Drawing.Size(83, 15);
+            this.label61.TabIndex = 36;
+            this.label61.Text = "Дата выдачи";
             // 
             // textBoxDocumentNumber
             // 
-            textBoxDocumentNumber.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                           | AnchorStyles.Right;
-            textBoxDocumentNumber.Location = new Point(164, 74);
-            textBoxDocumentNumber.MaxLength = 8;
-            textBoxDocumentNumber.Name = "textBoxDocumentNumber";
-            textBoxDocumentNumber.Size = new Size(231, 21);
-            textBoxDocumentNumber.TabIndex = 2;
+            this.textBoxDocumentNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxDocumentNumber.Location = new System.Drawing.Point(164, 74);
+            this.textBoxDocumentNumber.MaxLength = 8;
+            this.textBoxDocumentNumber.Name = "textBoxDocumentNumber";
+            this.textBoxDocumentNumber.Size = new System.Drawing.Size(231, 21);
+            this.textBoxDocumentNumber.TabIndex = 2;
             // 
             // label60
             // 
-            label60.AutoSize = true;
-            label60.Location = new Point(17, 77);
-            label60.Name = "label60";
-            label60.Size = new Size(46, 15);
-            label60.TabIndex = 34;
-            label60.Text = "Номер";
+            this.label60.AutoSize = true;
+            this.label60.Location = new System.Drawing.Point(17, 77);
+            this.label60.Name = "label60";
+            this.label60.Size = new System.Drawing.Size(46, 15);
+            this.label60.TabIndex = 34;
+            this.label60.Text = "Номер";
             // 
             // textBoxDocumentSeria
             // 
-            textBoxDocumentSeria.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                          | AnchorStyles.Right;
-            textBoxDocumentSeria.Location = new Point(164, 47);
-            textBoxDocumentSeria.MaxLength = 8;
-            textBoxDocumentSeria.Name = "textBoxDocumentSeria";
-            textBoxDocumentSeria.Size = new Size(231, 21);
-            textBoxDocumentSeria.TabIndex = 1;
+            this.textBoxDocumentSeria.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxDocumentSeria.Location = new System.Drawing.Point(164, 47);
+            this.textBoxDocumentSeria.MaxLength = 8;
+            this.textBoxDocumentSeria.Name = "textBoxDocumentSeria";
+            this.textBoxDocumentSeria.Size = new System.Drawing.Size(231, 21);
+            this.textBoxDocumentSeria.TabIndex = 1;
             // 
             // label59
             // 
-            label59.AutoSize = true;
-            label59.Location = new Point(17, 50);
-            label59.Name = "label59";
-            label59.Size = new Size(43, 15);
-            label59.TabIndex = 32;
-            label59.Text = "Серия";
+            this.label59.AutoSize = true;
+            this.label59.Location = new System.Drawing.Point(17, 50);
+            this.label59.Name = "label59";
+            this.label59.Size = new System.Drawing.Size(43, 15);
+            this.label59.TabIndex = 32;
+            this.label59.Text = "Серия";
             // 
             // comboBoxDocumentType
             // 
-            comboBoxDocumentType.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                          | AnchorStyles.Right;
-            comboBoxDocumentType.DropDownStyle = ComboBoxStyle.DropDownList;
-            comboBoxDocumentType.FormattingEnabled = true;
-            comboBoxDocumentType.Location = new Point(164, 18);
-            comboBoxDocumentType.Name = "comboBoxDocumentType";
-            comboBoxDocumentType.Size = new Size(231, 23);
-            comboBoxDocumentType.TabIndex = 0;
+            this.comboBoxDocumentType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxDocumentType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDocumentType.FormattingEnabled = true;
+            this.comboBoxDocumentType.Location = new System.Drawing.Point(164, 18);
+            this.comboBoxDocumentType.Name = "comboBoxDocumentType";
+            this.comboBoxDocumentType.Size = new System.Drawing.Size(231, 23);
+            this.comboBoxDocumentType.TabIndex = 0;
             // 
             // label58
             // 
-            label58.AutoSize = true;
-            label58.Location = new Point(17, 22);
-            label58.Name = "label58";
-            label58.Size = new Size(94, 15);
-            label58.TabIndex = 30;
-            label58.Text = "Вид документа";
+            this.label58.AutoSize = true;
+            this.label58.Location = new System.Drawing.Point(17, 22);
+            this.label58.Name = "label58";
+            this.label58.Size = new System.Drawing.Size(94, 15);
+            this.label58.TabIndex = 30;
+            this.label58.Text = "Вид документа";
             // 
             // groupBox28
             // 
-            groupBox28.Controls.Add(label67);
-            groupBox28.Controls.Add(textBoxResidenceRoom);
-            groupBox28.Controls.Add(label68);
-            groupBox28.Controls.Add(textBoxResidenceFlat);
-            groupBox28.Controls.Add(label69);
-            groupBox28.Controls.Add(label70);
-            groupBox28.Controls.Add(comboBoxResidenceStreet);
-            groupBox28.Controls.Add(textBoxResidenceHouse);
-            groupBox28.Dock = DockStyle.Fill;
-            groupBox28.Location = new Point(409, 223);
-            groupBox28.Name = "groupBox28";
-            groupBox28.Size = new Size(401, 134);
-            groupBox28.TabIndex = 4;
-            groupBox28.TabStop = false;
-            groupBox28.Text = "Адрес проживания";
+            this.groupBox28.Controls.Add(this.label67);
+            this.groupBox28.Controls.Add(this.textBoxResidenceRoom);
+            this.groupBox28.Controls.Add(this.label68);
+            this.groupBox28.Controls.Add(this.textBoxResidenceFlat);
+            this.groupBox28.Controls.Add(this.label69);
+            this.groupBox28.Controls.Add(this.label70);
+            this.groupBox28.Controls.Add(this.comboBoxResidenceStreet);
+            this.groupBox28.Controls.Add(this.textBoxResidenceHouse);
+            this.groupBox28.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox28.Location = new System.Drawing.Point(409, 223);
+            this.groupBox28.Name = "groupBox28";
+            this.groupBox28.Size = new System.Drawing.Size(401, 134);
+            this.groupBox28.TabIndex = 4;
+            this.groupBox28.TabStop = false;
+            this.groupBox28.Text = "Адрес проживания";
             // 
             // label67
             // 
-            label67.AutoSize = true;
-            label67.Location = new Point(17, 110);
-            label67.Name = "label67";
-            label67.Size = new Size(101, 15);
-            label67.TabIndex = 26;
-            label67.Text = "Номер комнаты";
+            this.label67.AutoSize = true;
+            this.label67.Location = new System.Drawing.Point(17, 110);
+            this.label67.Name = "label67";
+            this.label67.Size = new System.Drawing.Size(101, 15);
+            this.label67.TabIndex = 26;
+            this.label67.Text = "Номер комнаты";
             // 
             // textBoxResidenceRoom
             // 
-            textBoxResidenceRoom.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                          | AnchorStyles.Right;
-            textBoxResidenceRoom.Location = new Point(164, 106);
-            textBoxResidenceRoom.MaxLength = 15;
-            textBoxResidenceRoom.Name = "textBoxResidenceRoom";
-            textBoxResidenceRoom.Size = new Size(231, 21);
-            textBoxResidenceRoom.TabIndex = 3;
+            this.textBoxResidenceRoom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxResidenceRoom.Location = new System.Drawing.Point(164, 106);
+            this.textBoxResidenceRoom.MaxLength = 15;
+            this.textBoxResidenceRoom.Name = "textBoxResidenceRoom";
+            this.textBoxResidenceRoom.Size = new System.Drawing.Size(231, 21);
+            this.textBoxResidenceRoom.TabIndex = 3;
             // 
             // label68
             // 
-            label68.AutoSize = true;
-            label68.Location = new Point(17, 81);
-            label68.Name = "label68";
-            label68.Size = new Size(106, 15);
-            label68.TabIndex = 24;
-            label68.Text = "Номер квартиры";
+            this.label68.AutoSize = true;
+            this.label68.Location = new System.Drawing.Point(17, 81);
+            this.label68.Name = "label68";
+            this.label68.Size = new System.Drawing.Size(106, 15);
+            this.label68.TabIndex = 24;
+            this.label68.Text = "Номер квартиры";
             // 
             // textBoxResidenceFlat
             // 
-            textBoxResidenceFlat.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                          | AnchorStyles.Right;
-            textBoxResidenceFlat.Location = new Point(164, 78);
-            textBoxResidenceFlat.MaxLength = 15;
-            textBoxResidenceFlat.Name = "textBoxResidenceFlat";
-            textBoxResidenceFlat.Size = new Size(231, 21);
-            textBoxResidenceFlat.TabIndex = 2;
+            this.textBoxResidenceFlat.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxResidenceFlat.Location = new System.Drawing.Point(164, 78);
+            this.textBoxResidenceFlat.MaxLength = 15;
+            this.textBoxResidenceFlat.Name = "textBoxResidenceFlat";
+            this.textBoxResidenceFlat.Size = new System.Drawing.Size(231, 21);
+            this.textBoxResidenceFlat.TabIndex = 2;
             // 
             // label69
             // 
-            label69.AutoSize = true;
-            label69.Location = new Point(17, 24);
-            label69.Name = "label69";
-            label69.Size = new Size(43, 15);
-            label69.TabIndex = 20;
-            label69.Text = "Улица";
+            this.label69.AutoSize = true;
+            this.label69.Location = new System.Drawing.Point(17, 24);
+            this.label69.Name = "label69";
+            this.label69.Size = new System.Drawing.Size(43, 15);
+            this.label69.TabIndex = 20;
+            this.label69.Text = "Улица";
             // 
             // label70
             // 
-            label70.AutoSize = true;
-            label70.Location = new Point(17, 53);
-            label70.Name = "label70";
-            label70.Size = new Size(79, 15);
-            label70.TabIndex = 21;
-            label70.Text = "Номер дома";
+            this.label70.AutoSize = true;
+            this.label70.Location = new System.Drawing.Point(17, 53);
+            this.label70.Name = "label70";
+            this.label70.Size = new System.Drawing.Size(79, 15);
+            this.label70.TabIndex = 21;
+            this.label70.Text = "Номер дома";
             // 
             // comboBoxResidenceStreet
             // 
-            comboBoxResidenceStreet.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                             | AnchorStyles.Right;
-            comboBoxResidenceStreet.FormattingEnabled = true;
-            comboBoxResidenceStreet.Location = new Point(164, 20);
-            comboBoxResidenceStreet.Name = "comboBoxResidenceStreet";
-            comboBoxResidenceStreet.Size = new Size(231, 23);
-            comboBoxResidenceStreet.TabIndex = 0;
-            comboBoxResidenceStreet.DropDownClosed += comboBoxResidenceStreet_DropDownClosed;
-            comboBoxResidenceStreet.KeyUp += comboBoxResidenceStreet_KeyUp;
-            comboBoxResidenceStreet.Leave += comboBoxResidenceStreet_Leave;
+            this.comboBoxResidenceStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxResidenceStreet.FormattingEnabled = true;
+            this.comboBoxResidenceStreet.Location = new System.Drawing.Point(164, 20);
+            this.comboBoxResidenceStreet.Name = "comboBoxResidenceStreet";
+            this.comboBoxResidenceStreet.Size = new System.Drawing.Size(231, 23);
+            this.comboBoxResidenceStreet.TabIndex = 0;
+            this.comboBoxResidenceStreet.DropDownClosed += new System.EventHandler(this.comboBoxResidenceStreet_DropDownClosed);
+            this.comboBoxResidenceStreet.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxResidenceStreet_KeyUp);
+            this.comboBoxResidenceStreet.Leave += new System.EventHandler(this.comboBoxResidenceStreet_Leave);
             // 
             // textBoxResidenceHouse
             // 
-            textBoxResidenceHouse.Anchor = (AnchorStyles.Top | AnchorStyles.Left)
-                                           | AnchorStyles.Right;
-            textBoxResidenceHouse.Location = new Point(164, 50);
-            textBoxResidenceHouse.MaxLength = 10;
-            textBoxResidenceHouse.Name = "textBoxResidenceHouse";
-            textBoxResidenceHouse.Size = new Size(231, 21);
-            textBoxResidenceHouse.TabIndex = 1;
+            this.textBoxResidenceHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxResidenceHouse.Location = new System.Drawing.Point(164, 50);
+            this.textBoxResidenceHouse.MaxLength = 10;
+            this.textBoxResidenceHouse.Name = "textBoxResidenceHouse";
+            this.textBoxResidenceHouse.Size = new System.Drawing.Size(231, 21);
+            this.textBoxResidenceHouse.TabIndex = 1;
             // 
             // dataGridViewTenancyPersons
             // 
-            dataGridViewTenancyPersons.AllowUserToAddRows = false;
-            dataGridViewTenancyPersons.AllowUserToDeleteRows = false;
-            dataGridViewTenancyPersons.AllowUserToResizeRows = false;
-            dataGridViewTenancyPersons.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridViewTenancyPersons.BackgroundColor = Color.White;
-            dataGridViewTenancyPersons.BorderStyle = BorderStyle.Fixed3D;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Control;
-            dataGridViewCellStyle1.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle1.Padding = new Padding(0, 2, 0, 2);
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dataGridViewTenancyPersons.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            dataGridViewTenancyPersons.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridViewTenancyPersons.Columns.AddRange(surname, name, patronymic, date_of_birth, id_kinship);
-            tableLayoutPanel11.SetColumnSpan(dataGridViewTenancyPersons, 2);
-            dataGridViewTenancyPersons.Dock = DockStyle.Fill;
-            dataGridViewTenancyPersons.Location = new Point(3, 363);
-            dataGridViewTenancyPersons.MultiSelect = false;
-            dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
-            dataGridViewTenancyPersons.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridViewTenancyPersons.Size = new Size(807, 198);
-            dataGridViewTenancyPersons.TabIndex = 0;
-            dataGridViewTenancyPersons.DataError += dataGridViewTenancyPersons_DataError;
+            this.dataGridViewTenancyPersons.AllowUserToAddRows = false;
+            this.dataGridViewTenancyPersons.AllowUserToDeleteRows = false;
+            this.dataGridViewTenancyPersons.AllowUserToResizeRows = false;
+            this.dataGridViewTenancyPersons.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridViewTenancyPersons.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridViewTenancyPersons.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridViewTenancyPersons.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.dataGridViewTenancyPersons.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewTenancyPersons.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.surname,
+            this.name,
+            this.patronymic,
+            this.date_of_birth,
+            this.id_kinship});
+            this.tableLayoutPanel11.SetColumnSpan(this.dataGridViewTenancyPersons, 2);
+            this.dataGridViewTenancyPersons.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewTenancyPersons.Location = new System.Drawing.Point(3, 363);
+            this.dataGridViewTenancyPersons.MultiSelect = false;
+            this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
+            this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(807, 198);
+            this.dataGridViewTenancyPersons.TabIndex = 0;
             // 
             // surname
             // 
-            surname.HeaderText = "Фамилия";
-            surname.MinimumWidth = 100;
-            surname.Name = "surname";
-            surname.ReadOnly = true;
+            this.surname.HeaderText = "Фамилия";
+            this.surname.MinimumWidth = 100;
+            this.surname.Name = "surname";
+            this.surname.ReadOnly = true;
             // 
             // name
             // 
-            name.HeaderText = "Имя";
-            name.MinimumWidth = 100;
-            name.Name = "name";
-            name.ReadOnly = true;
+            this.name.HeaderText = "Имя";
+            this.name.MinimumWidth = 100;
+            this.name.Name = "name";
+            this.name.ReadOnly = true;
             // 
             // patronymic
             // 
-            patronymic.HeaderText = "Отчество";
-            patronymic.MinimumWidth = 100;
-            patronymic.Name = "patronymic";
-            patronymic.ReadOnly = true;
+            this.patronymic.HeaderText = "Отчество";
+            this.patronymic.MinimumWidth = 100;
+            this.patronymic.Name = "patronymic";
+            this.patronymic.ReadOnly = true;
             // 
             // date_of_birth
             // 
-            date_of_birth.HeaderText = "Дата рождения";
-            date_of_birth.MinimumWidth = 130;
-            date_of_birth.Name = "date_of_birth";
-            date_of_birth.ReadOnly = true;
+            this.date_of_birth.HeaderText = "Дата рождения";
+            this.date_of_birth.MinimumWidth = 130;
+            this.date_of_birth.Name = "date_of_birth";
+            this.date_of_birth.ReadOnly = true;
             // 
             // id_kinship
             // 
-            id_kinship.DisplayStyle = DataGridViewComboBoxDisplayStyle.Nothing;
-            id_kinship.HeaderText = "Отношение/связь";
-            id_kinship.MinimumWidth = 100;
-            id_kinship.Name = "id_kinship";
+            this.id_kinship.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
+            this.id_kinship.HeaderText = "Отношение/связь";
+            this.id_kinship.MinimumWidth = 100;
+            this.id_kinship.Name = "id_kinship";
             // 
             // TenancyPersonsViewport
             // 
-            AutoScroll = true;
-            AutoScrollMinSize = new Size(660, 420);
-            BackColor = Color.White;
-            ClientSize = new Size(819, 570);
-            Controls.Add(tableLayoutPanel11);
-            Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            Icon = ((Icon)(resources.GetObject("$this.Icon")));
-            Name = "TenancyPersonsViewport";
-            Padding = new Padding(3);
-            Text = "Участники найма №{0}";
-            tableLayoutPanel11.ResumeLayout(false);
-            groupBox23.ResumeLayout(false);
-            groupBox23.PerformLayout();
-            groupBox27.ResumeLayout(false);
-            groupBox27.PerformLayout();
-            groupBox26.ResumeLayout(false);
-            groupBox26.PerformLayout();
-            groupBox28.ResumeLayout(false);
-            groupBox28.PerformLayout();
-            ((ISupportInitialize)(dataGridViewTenancyPersons)).EndInit();
-            ResumeLayout(false);
+            this.AutoScroll = true;
+            this.AutoScrollMinSize = new System.Drawing.Size(660, 420);
+            this.BackColor = System.Drawing.Color.White;
+            this.ClientSize = new System.Drawing.Size(819, 570);
+            this.Controls.Add(this.tableLayoutPanel11);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "TenancyPersonsViewport";
+            this.Padding = new System.Windows.Forms.Padding(3);
+            this.Text = "Участники найма №{0}";
+            this.tableLayoutPanel11.ResumeLayout(false);
+            this.groupBox23.ResumeLayout(false);
+            this.groupBox23.PerformLayout();
+            this.groupBox27.ResumeLayout(false);
+            this.groupBox27.PerformLayout();
+            this.groupBox26.ResumeLayout(false);
+            this.groupBox26.PerformLayout();
+            this.groupBox28.ResumeLayout(false);
+            this.groupBox28.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyPersons)).EndInit();
+            this.ResumeLayout(false);
+
         }
+
+        private Button buttonImportFromMSP;
     }
 }

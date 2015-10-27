@@ -5,6 +5,7 @@ using System.Text;
 using System.DirectoryServices.ActiveDirectory;
 using System.DirectoryServices;
 using System.Globalization;
+using Settings;
 
 namespace Registry
 {
@@ -51,7 +52,7 @@ namespace Registry
             foreach (string domainName in GetDomains())
             {
                 DirectoryContext context = new DirectoryContext(DirectoryContextType.Domain, domainName,
-                RegistrySettings.LDAPUserName, RegistrySettings.LDAPPassword);
+                RegistrySettings.LdapUserName, RegistrySettings.LdapPassword);
                 Domain domain = Domain.GetDomain(context);
                 using (DirectoryEntry domainEntry = domain.GetDirectoryEntry())
                 {

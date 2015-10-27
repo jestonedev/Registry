@@ -505,11 +505,6 @@ namespace Registry.Viewport
             is_editable = true;
         }
 
-        void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            e.ThrowException = false;
-        }
-
         private void selectAll_Enter(object sender, EventArgs e)
         {
             ViewportHelper.SelectAllText(sender);

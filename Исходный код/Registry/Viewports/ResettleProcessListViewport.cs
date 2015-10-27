@@ -15,7 +15,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
-    internal sealed partial class ResettleProcessListViewport: FormViewport
+    internal sealed partial class ResettleProcessListViewport: FormWithGridViewport
     {
         #region Models
         DataModel documents_residence;
@@ -39,6 +39,7 @@ namespace Registry.Viewport
             : base(menuCallback)
         {
             InitializeComponent();
+            DataGridView = dataGridView;
         }
 
         public ResettleProcessListViewport(ResettleProcessListViewport resettleProcessListViewport, IMenuCallback menuCallback)
@@ -705,11 +706,6 @@ namespace Registry.Viewport
                         e.Value = ((DataRowView)v_resettle_aggregate[row_index])["address_to"];
                     break;   
             }
-        }
-
-        void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
-        {
-            e.ThrowException = false;
         }
 
         void ResettleProcessListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
