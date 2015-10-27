@@ -212,25 +212,28 @@ namespace Registry.Viewport
                 parent = this;
             foreach (Control control in parent.Controls)
             {
-                if (control is TextBox)
-                {
-                    (control as TextBox).TextChanged += (sender, args) => CheckViewportModifications();
-                    (control as TextBox).Enter += (sender, args) => ViewportHelper.SelectAllText(sender);
-                }
-                if (control is DateTimePicker)
-                    (control as DateTimePicker).ValueChanged += (sender, args) => CheckViewportModifications();
                 if (control is NumericUpDown)
                 {
                     (control as NumericUpDown).ValueChanged += (sender, args) => CheckViewportModifications();
                     (control as NumericUpDown).Enter += (sender, args) => ViewportHelper.SelectAllText(sender);
-                }
+                } else
+                if (control is DateTimePicker)
+                    (control as DateTimePicker).ValueChanged += (sender, args) => CheckViewportModifications();
+                else
                 if (control is ComboBox)
                 {
                     (control as ComboBox).SelectedValueChanged += (sender, args) => CheckViewportModifications();
                     (control as ComboBox).Enter += (sender, args) => ViewportHelper.SelectAllText(sender);
                 }
+                else
                 if (control is CheckBox)
                     (control as CheckBox).CheckedChanged += (sender, args) => CheckViewportModifications();
+                else
+                if (control is TextBox && !string.IsNullOrEmpty(control.Name))
+                {
+                    (control as TextBox).TextChanged += (sender, args) => CheckViewportModifications();
+                    (control as TextBox).Enter += (sender, args) => ViewportHelper.SelectAllText(sender);
+                }
                 if (control.Controls.Count > 0)
                     DataChangeHandlersInit(control);
             }
