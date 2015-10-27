@@ -691,6 +691,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Location = new System.Drawing.Point(3, 363);
             this.dataGridViewTenancyPersons.MultiSelect = false;
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
+            this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(807, 198);
             this.dataGridViewTenancyPersons.TabIndex = 0;
@@ -729,6 +730,7 @@ namespace Registry.Viewport
             this.id_kinship.HeaderText = "Отношение/связь";
             this.id_kinship.MinimumWidth = 100;
             this.id_kinship.Name = "id_kinship";
+            this.id_kinship.ReadOnly = true;
             // 
             // TenancyPersonsViewport
             // 
