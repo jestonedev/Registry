@@ -25,26 +25,18 @@ namespace Registry.Viewport
         #endregion Views
 
         private OwnershipListViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public OwnershipListViewport(IMenuCallback menuCallback): base(menuCallback)
+        public OwnershipListViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
             InitializeComponent();
             GeneralSnapshot = new DataTable("snapshot_ownerships_rights")
             {
                 Locale = CultureInfo.InvariantCulture
             };
-        }
-
-        public OwnershipListViewport(OwnershipListViewport ownershipListViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = ownershipListViewport.DynamicFilter;
-            StaticFilter = ownershipListViewport.StaticFilter;
-            ParentRow = ownershipListViewport.ParentRow;
-            ParentType = ownershipListViewport.ParentType;
         }
 
         private void RebuildFilter()

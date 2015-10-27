@@ -57,23 +57,14 @@ namespace Registry.Viewport
         private int? id_copy_process;
 
         private TenancyViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public TenancyViewport(IMenuCallback menuCallback)
-            : base(menuCallback)
+        public TenancyViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
             InitializeComponent();
-        }
-
-        public TenancyViewport(TenancyViewport tenancyViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = tenancyViewport.DynamicFilter;
-            StaticFilter = tenancyViewport.StaticFilter;
-            ParentRow = tenancyViewport.ParentRow;
-            ParentType = tenancyViewport.ParentType;
         }
 
         private void FiltersRebuild()
@@ -308,98 +299,10 @@ namespace Registry.Viewport
 
         protected override bool ChangeViewportStateTo(ViewportState state)
         {
-            if (!AccessControl.HasPrivelege(Priveleges.TenancyWrite))
-            {
-                viewportState = ViewportState.ReadState;
-                return true;
-            }
-            switch (state)
-            {
-                case ViewportState.ReadState:
-                    switch (viewportState)
-                    {
-                        case ViewportState.ReadState:
-                            return true;
-                        case ViewportState.NewRowState:
-                        case ViewportState.ModifyRowState:
-                            var result = MessageBox.Show("Сохранить изменения о процессе найма в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                            if (result == DialogResult.Yes)
-                                SaveRecord();
-                            else
-                                if (result == DialogResult.No)
-                                    CancelRecord();
-                                else return false;
-                            if (viewportState == ViewportState.ReadState)
-                                return true;
-                            else
-                                return false;
-                    }
-                    break;
-                case ViewportState.NewRowState:
-                    switch (viewportState)
-                    {
-                        case ViewportState.ReadState:
-                            if (GeneralDataModel.EditingNewRecord)
-                                return false;
-                            else
-                            {
-                                viewportState = ViewportState.NewRowState;
-                                return true;
-                            }
-                        case ViewportState.NewRowState:
-                            return true;
-                        case ViewportState.ModifyRowState:
-                            var result = MessageBox.Show("Сохранить изменения о процессе найма в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                            if (result == DialogResult.Yes)
-                                SaveRecord();
-                            else
-                                if (result == DialogResult.No)
-                                    CancelRecord();
-                                else
-                                    return false;
-                            if (viewportState == ViewportState.ReadState)
-                                return ChangeViewportStateTo(ViewportState.NewRowState);
-                            else
-                                return false;
-                    }
-                    break;
-                case ViewportState.ModifyRowState: ;
-                    switch (viewportState)
-                    {
-                        case ViewportState.ReadState:
-                            viewportState = ViewportState.ModifyRowState;
-                            return true;
-                        case ViewportState.ModifyRowState:
-                            return true;
-                        case ViewportState.NewRowState:
-                            var result = MessageBox.Show("Сохранить изменения о помещениях в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                            if (result == DialogResult.Yes)
-                                SaveRecord();
-                            else
-                                if (result == DialogResult.No)
-                                    CancelRecord();
-                                else
-                                    return false;
-                            if (viewportState == ViewportState.ReadState)
-                                return ChangeViewportStateTo(ViewportState.ModifyRowState);
-                            else
-                                return false;
-                    }
-                    break;
-            }
-            return false;
-        }
-
-        internal void LocateTenancyBy(int id)
-        {
-            var Position = GeneralBindingSource.Find("id_process", id);
-            is_editable = false;
-            if (Position > 0)
-                GeneralBindingSource.Position = Position;
-            is_editable = true;
+            if (AccessControl.HasPrivelege(Priveleges.TenancyWrite)) 
+                return base.ChangeViewportStateTo(state);
+            viewportState = ViewportState.ReadState;
+            return true;
         }
 
         private bool ValidateTenancy(TenancyProcess tenancy)
@@ -1158,21 +1061,6 @@ namespace Registry.Viewport
                 person.IncludeDate,
                 person.ExcludeDate
             };
-        }
-
-        public override bool CanDuplicate()
-        {
-            return true;
-        }
-
-        public override Viewport Duplicate()
-        {
-            var viewport = new TenancyViewport(this, MenuCallback);
-            if (viewport.CanLoadData())
-                viewport.LoadData();
-            if (GeneralBindingSource.Count > 0)
-                viewport.LocateTenancyBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"] as int?) ?? -1);
-            return viewport;
         }
 
         protected override void OnClosing(CancelEventArgs e)

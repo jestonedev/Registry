@@ -24,24 +24,15 @@ namespace Registry.Viewport
         #endregion Views
 
         private WarrantsViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public WarrantsViewport(IMenuCallback menuCallback)
-            : base(menuCallback)
+        public WarrantsViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
             InitializeComponent();
             DataGridView = dataGridView;
-        }
-
-        public WarrantsViewport(WarrantsViewport warrantsViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = warrantsViewport.DynamicFilter;
-            StaticFilter = warrantsViewport.StaticFilter;
-            ParentRow = warrantsViewport.ParentRow;
-            ParentType = warrantsViewport.ParentType;
         }
 
         private void DataBind()
@@ -76,98 +67,10 @@ namespace Registry.Viewport
 
         protected override bool ChangeViewportStateTo(ViewportState state)
         {
-            if (!AccessControl.HasPrivelege(Priveleges.TenancyDirectoriesReadWrite))
-            {
-                viewportState = ViewportState.ReadState;
-                return true;
-            }
-            switch (state)
-            {
-                case ViewportState.ReadState:
-                    switch (viewportState)
-                    {
-                        case ViewportState.ReadState:
-                            return true;
-                        case ViewportState.NewRowState:
-                        case ViewportState.ModifyRowState:
-                            var result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                            if (result == DialogResult.Yes)
-                                SaveRecord();
-                            else
-                                if (result == DialogResult.No)
-                                    CancelRecord();
-                                else return false;
-                            if (viewportState == ViewportState.ReadState)
-                                return true;
-                            else
-                                return false;
-                    }
-                    break;
-                case ViewportState.NewRowState:
-                    switch (viewportState)
-                    {
-                        case ViewportState.ReadState:
-                            if (GeneralDataModel.EditingNewRecord)
-                                return false;
-                            else
-                            {
-                                viewportState = ViewportState.NewRowState;
-                                return true;
-                            }
-                        case ViewportState.NewRowState:
-                            return true;
-                        case ViewportState.ModifyRowState:
-                            var result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                            if (result == DialogResult.Yes)
-                                SaveRecord();
-                            else
-                                if (result == DialogResult.No)
-                                    CancelRecord();
-                                else
-                                    return false;
-                            if (viewportState == ViewportState.ReadState)
-                                return ChangeViewportStateTo(ViewportState.NewRowState);
-                            else
-                                return false;
-                    }
-                    break;
-                case ViewportState.ModifyRowState: ;
-                    switch (viewportState)
-                    {
-                        case ViewportState.ReadState:
-                            viewportState = ViewportState.ModifyRowState;
-                            return true;
-                        case ViewportState.ModifyRowState:
-                            return true;
-                        case ViewportState.NewRowState:
-                            var result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                            if (result == DialogResult.Yes)
-                                SaveRecord();
-                            else
-                                if (result == DialogResult.No)
-                                    CancelRecord();
-                                else
-                                    return false;
-                            if (viewportState == ViewportState.ReadState)
-                                return ChangeViewportStateTo(ViewportState.ModifyRowState);
-                            else
-                                return false;
-                    }
-                    break;
-            }
-            return false;
-        }
-
-        private void LocateWarrantBy(int id)
-        {
-            var Position = GeneralBindingSource.Find("id_warrant", id);
-            is_editable = false;
-            if (Position > 0)
-                GeneralBindingSource.Position = Position;
-            is_editable = true;
+            if (AccessControl.HasPrivelege(Priveleges.TenancyDirectoriesReadWrite))
+                return base.ChangeViewportStateTo(state);
+            viewportState = ViewportState.ReadState;
+            return true;
         }
 
         private void ViewportFromWarrant(Warrant warrant)
@@ -338,21 +241,6 @@ namespace Registry.Viewport
             return (GeneralBindingSource.Position > -1)
                 && (viewportState != ViewportState.NewRowState)
                 && AccessControl.HasPrivelege(Priveleges.TenancyDirectoriesReadWrite);
-        }
-
-        public override bool CanDuplicate()
-        {
-            return true;
-        }
-
-        public override Viewport Duplicate()
-        {
-            var viewport = new WarrantsViewport(this, MenuCallback);
-            if (viewport.CanLoadData())
-                viewport.LoadData();
-            if (GeneralBindingSource.Count > 0)
-                viewport.LocateWarrantBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_warrant"] as int?) ?? -1);
-            return viewport;
         }
 
         public override bool CanCancelRecord()

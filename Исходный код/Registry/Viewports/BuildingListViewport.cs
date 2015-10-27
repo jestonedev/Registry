@@ -1,19 +1,17 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Reporting;
 using Registry.SearchForms;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
-using Registry.Reporting;
-using System.Collections.Generic;
-using System.Linq;
-using Registry.DataModels.CalcDataModels;
-using Registry.DataModels.DataModels;
 
 namespace Registry.Viewport
 {
@@ -21,43 +19,28 @@ namespace Registry.Viewport
     {
 
         #region Models
-        private DataModel kladr;
-        private DataModel object_states;
+        private DataModel _kladr;
+        private DataModel _objectStates;
         #endregion
 
         #region Views
-        private BindingSource v_kladr;
+        private BindingSource _vKladr;
         #endregion
 
         //Forms
-        private SearchForm sbSimpleSearchForm;
-        private SearchForm sbExtendedSearchForm;
+        private SearchForm _sbSimpleSearchForm;
+        private SearchForm _sbExtendedSearchForm;
 
         private BuildingListViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public BuildingListViewport(IMenuCallback menuCallback): base(menuCallback)
+        public BuildingListViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
             InitializeComponent();
             DataGridView = dataGridView;
-        }
-
-        public BuildingListViewport(Viewport buildingListViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = buildingListViewport.DynamicFilter;
-            StaticFilter = buildingListViewport.StaticFilter;
-            ParentRow = buildingListViewport.ParentRow;
-            ParentType = buildingListViewport.ParentType;
-        }
-
-        public void LocateBuildingBy(int id)
-        {
-            var position = GeneralBindingSource.Find("id_building", id);
-            if (position > 0)
-                GeneralBindingSource.Position = position;
         }
 
         public override bool CanLoadData()
@@ -69,13 +52,13 @@ namespace Registry.Viewport
         {
             DockAreas = DockAreas.Document;
             GeneralDataModel = DataModel.GetInstance(DataModelType.BuildingsDataModel);
-            kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
-            object_states = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
+            _kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
+            _objectStates = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
             
             // Ожидаем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
-            kladr.Select();
-            object_states.Select();
+            _kladr.Select();
+            _objectStates.Select();
 
             var ds = DataModel.DataSet;
 
@@ -87,13 +70,13 @@ namespace Registry.Viewport
                 GeneralBindingSource.Filter += " AND ";
             GeneralBindingSource.Filter += DynamicFilter;
 
-            v_kladr = new BindingSource
+            _vKladr = new BindingSource
             {
                 DataMember = "kladr",
                 DataSource = ds
             };
 
-            id_street.DataSource = v_kladr;
+            id_street.DataSource = _vKladr;
             id_street.ValueMember = "id_street";
             id_street.DisplayMember = "street_name";
 
@@ -118,18 +101,18 @@ namespace Registry.Viewport
             switch (searchFormType)
             {
                 case SearchFormType.SimpleSearchForm:
-                    if (sbSimpleSearchForm == null)
-                        sbSimpleSearchForm = new SimpleSearchBuildingForm();
-                    if (sbSimpleSearchForm.ShowDialog() != DialogResult.OK)
+                    if (_sbSimpleSearchForm == null)
+                        _sbSimpleSearchForm = new SimpleSearchBuildingForm();
+                    if (_sbSimpleSearchForm.ShowDialog() != DialogResult.OK)
                         return;
-                    DynamicFilter = sbSimpleSearchForm.GetFilter();
+                    DynamicFilter = _sbSimpleSearchForm.GetFilter();
                     break;
                 case SearchFormType.ExtendedSearchForm:
-                    if (sbExtendedSearchForm == null)
-                        sbExtendedSearchForm = new ExtendedSearchBuildingForm();
-                    if (sbExtendedSearchForm.ShowDialog() != DialogResult.OK)
+                    if (_sbExtendedSearchForm == null)
+                        _sbExtendedSearchForm = new ExtendedSearchBuildingForm();
+                    if (_sbExtendedSearchForm.ShowDialog() != DialogResult.OK)
                         return;
-                    DynamicFilter = sbExtendedSearchForm.GetFilter();
+                    DynamicFilter = _sbExtendedSearchForm.GetFilter();
                     break;
             }
             var filter = StaticFilter;
@@ -155,7 +138,7 @@ namespace Registry.Viewport
 
         public override void OpenDetails()
         {
-            var viewport = new BuildingViewport(MenuCallback)
+            var viewport = new BuildingViewport(null, MenuCallback)
             {
                 StaticFilter = StaticFilter,
                 DynamicFilter = DynamicFilter,
@@ -167,7 +150,7 @@ namespace Registry.Viewport
             else
                 return;
             if (GeneralBindingSource.Count > 0)
-                viewport.LocateBuildingBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] as int?) ?? -1);
+                viewport.LocateEntityBy("id_building", (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] as int?) ?? -1);
             MenuCallback.AddViewport(viewport);
         }
 
@@ -211,7 +194,7 @@ namespace Registry.Viewport
 
         public override void InsertRecord()
         {
-            var viewport = new BuildingViewport(MenuCallback)
+            var viewport = new BuildingViewport(null, MenuCallback)
             {
                 StaticFilter = StaticFilter,
                 DynamicFilter = DynamicFilter,
@@ -234,7 +217,7 @@ namespace Registry.Viewport
 
         public override void CopyRecord()
         {
-            var viewport = new BuildingViewport(MenuCallback)
+            var viewport = new BuildingViewport(null, MenuCallback)
             {
                 StaticFilter = StaticFilter,
                 DynamicFilter = DynamicFilter,
@@ -246,24 +229,9 @@ namespace Registry.Viewport
             else
                 return;
             if (GeneralBindingSource.Count > 0)
-                viewport.LocateBuildingBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] as int?) ?? -1);
+                viewport.LocateEntityBy("id_building", (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] as int?) ?? -1);
             MenuCallback.AddViewport(viewport);
             viewport.CopyRecord();
-        }
-
-        public override bool CanDuplicate()
-        {
-            return true;
-        }
-
-        public override Viewport Duplicate()
-        {
-            var viewport = new BuildingListViewport(this, MenuCallback);
-            if (viewport.CanLoadData())
-                viewport.LoadData();
-            if (GeneralBindingSource.Count > 0)
-                viewport.LocateBuildingBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] as int?) ?? -1);
-            return viewport;
         }
 
         public override bool HasAssocViewport(ViewportType viewportType)
@@ -404,7 +372,7 @@ namespace Registry.Viewport
                     e.Value = row[dataGridView.Columns[e.ColumnIndex].Name];
                     break;
                 case "id_state":
-                    var stateRow = object_states.Select().Rows.Find(row["id_state"]);
+                    var stateRow = _objectStates.Select().Rows.Find(row["id_state"]);
                     if (stateRow != null)
                         e.Value = stateRow["state_female"];
                     break;

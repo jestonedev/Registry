@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -10,11 +11,11 @@ namespace Registry.Viewport
     {
         protected DataGridView DataGridView;
 
-        protected DataGridViewport(): this(null)
+        protected DataGridViewport(): this(null, null)
         {
         }
 
-        protected DataGridViewport(IMenuCallback menuCallback): base(menuCallback)
+        protected DataGridViewport(Viewport viewport, IMenuCallback menuCallback): base(viewport, menuCallback)
         {
         }
 
@@ -84,6 +85,30 @@ namespace Registry.Viewport
             MenuCallback.EditingStateUpdate();
             MenuCallback.RelationsStateUpdate();
             MenuCallback.DocumentsStateUpdate();
+        }
+
+        public override void LocateEntityBy(string fieldName, object value)
+        {
+            var position = GeneralBindingSource.Find(fieldName, value);
+            if (position > 0)
+                GeneralBindingSource.Position = position;
+        }
+
+        public override Viewport Duplicate()
+        {
+            var viewport = (Viewport)Activator.CreateInstance(GetType(), this, MenuCallback);
+            if (viewport.CanLoadData())
+                viewport.LoadData();
+            if (GeneralBindingSource.Count <= 0 || !GeneralDataModel.Select().PrimaryKey.Any()) return viewport;
+            var fileName = GeneralDataModel.Select().PrimaryKey[0].ColumnName;
+            viewport.LocateEntityBy(fileName,
+                (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])[fileName] as int?) ?? -1);
+            return viewport;
+        }
+
+        public override bool CanDuplicate()
+        {
+            return true;
         }
     }
 }

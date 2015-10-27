@@ -19,12 +19,12 @@ namespace Registry.Viewport
             }
         }
 
-        protected FormWithGridViewport(): this(null)
+        protected FormWithGridViewport(): this(null, null)
         {
         }
 
-        protected FormWithGridViewport(IMenuCallback menuCallback)
-            : base(menuCallback)
+        protected FormWithGridViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
         }
 

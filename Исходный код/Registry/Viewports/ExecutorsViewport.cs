@@ -15,27 +15,18 @@ namespace Registry.Viewport
     internal sealed partial class ExecutorsViewport : EditableDataGridViewport
     {
         private ExecutorsViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public ExecutorsViewport(IMenuCallback menuCallback)
-            : base(menuCallback)
+        public ExecutorsViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
             InitializeComponent();
             GeneralSnapshot = new DataTable("snapshot_executors")
             {
                 Locale = CultureInfo.InvariantCulture
             };
-        }
-
-        public ExecutorsViewport(Viewport executorsViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = executorsViewport.DynamicFilter;
-            StaticFilter = executorsViewport.StaticFilter;
-            ParentRow = executorsViewport.ParentRow;
-            ParentType = executorsViewport.ParentType;
         }
 
         private static object[] DataRowViewToArray(DataRowView dataRowView)

@@ -16,11 +16,12 @@ namespace Registry.Viewport
         //Флаг разрешения синхронизации snapshot и original моделей
         protected bool sync_views = true;
 
-        protected EditableDataGridViewport(): this(null)
+        protected EditableDataGridViewport(): this(null, null)
         {
         }
 
-        protected EditableDataGridViewport(IMenuCallback menuCallback): base(menuCallback)
+        protected EditableDataGridViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
         }
 

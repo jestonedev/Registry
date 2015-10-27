@@ -13,29 +13,19 @@ namespace Registry.Viewport
 {
     internal sealed partial class ResettlePersonsViewport: EditableDataGridViewport
     {
-
         private ResettlePersonsViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public ResettlePersonsViewport(IMenuCallback menuCallback)
-            : base(menuCallback)
+        public ResettlePersonsViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
             InitializeComponent();
             GeneralSnapshot = new DataTable("snapshot_resettle_persons")
             {
                 Locale = CultureInfo.InvariantCulture
             };
-        }
-
-        public ResettlePersonsViewport(ResettlePersonsViewport resettlePersonsViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = resettlePersonsViewport.DynamicFilter;
-            StaticFilter = resettlePersonsViewport.StaticFilter;
-            ParentRow = resettlePersonsViewport.ParentRow;
-            ParentType = resettlePersonsViewport.ParentType;
         }
 
         private static object[] DataRowViewToArray(DataRowView dataRowView)

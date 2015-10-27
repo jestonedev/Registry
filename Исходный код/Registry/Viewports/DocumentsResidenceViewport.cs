@@ -12,29 +12,20 @@ using WeifenLuo.WinFormsUI.Docking;
 namespace Registry.Viewport
 {
     internal sealed partial class DocumentsResidenceViewport: EditableDataGridViewport
-    {  
+    {
         private DocumentsResidenceViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public DocumentsResidenceViewport(IMenuCallback menuCallback)
-            : base(menuCallback)
+        public DocumentsResidenceViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
             InitializeComponent();
             GeneralSnapshot = new DataTable("snapshot_documents_residence")
             {
                 Locale = CultureInfo.InvariantCulture
             };
-        }
-
-        public DocumentsResidenceViewport(DocumentsResidenceViewport documentResidenceViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = documentResidenceViewport.DynamicFilter;
-            StaticFilter = documentResidenceViewport.StaticFilter;
-            ParentRow = documentResidenceViewport.ParentRow;
-            ParentType = documentResidenceViewport.ParentType;
         }
 
         private static object[] DataRowViewToArray(DataRowView dataRowView)

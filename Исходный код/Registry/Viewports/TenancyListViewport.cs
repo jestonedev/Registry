@@ -38,24 +38,15 @@ namespace Registry.Viewport
         private SearchForm stSimpleSearchForm;
 
         private TenancyListViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public TenancyListViewport(IMenuCallback menuCallback)
-            : base(menuCallback)
+        public TenancyListViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
             InitializeComponent();
             DataGridView = dataGridView;
-        }
-        
-        public TenancyListViewport(TenancyListViewport tenancyListViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = tenancyListViewport.DynamicFilter;
-            StaticFilter = tenancyListViewport.StaticFilter;
-            ParentRow = tenancyListViewport.ParentRow;
-            ParentType = tenancyListViewport.ParentType;
         }
 
         private void RebuildStaticFilter()
@@ -111,13 +102,6 @@ namespace Registry.Viewport
                     default: throw new ViewportException("Неизвестный тип родительского объекта");
                 }
             }
-        }
-
-        public void LocateTenancyBy(int id)
-        {
-            var Position = GeneralBindingSource.Find("id_process", id);
-            if (Position > 0)
-                GeneralBindingSource.Position = Position;
         }
 
         public override bool CanLoadData()
@@ -261,17 +245,19 @@ namespace Registry.Viewport
 
         public override void OpenDetails()
         {
-            var viewport = new TenancyViewport(MenuCallback);
-            viewport.StaticFilter = StaticFilter;
-            viewport.DynamicFilter = DynamicFilter;
-            viewport.ParentRow = ParentRow;
-            viewport.ParentType = ParentType;
+            var viewport = new TenancyViewport(null, MenuCallback)
+            {
+                StaticFilter = StaticFilter,
+                DynamicFilter = DynamicFilter,
+                ParentRow = ParentRow,
+                ParentType = ParentType
+            };
             if (viewport.CanLoadData())
                 viewport.LoadData();
             else
                 return;
             if (GeneralBindingSource.Count > 0)
-                viewport.LocateTenancyBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"] as int?) ?? -1);
+                viewport.LocateEntityBy("id_process", (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"] as int?) ?? -1);
             MenuCallback.AddViewport(viewport);
         }
 
@@ -282,11 +268,13 @@ namespace Registry.Viewport
 
         public override void InsertRecord()
         {
-            var viewport = new TenancyViewport(MenuCallback);
-            viewport.StaticFilter = StaticFilter;
-            viewport.DynamicFilter = DynamicFilter;
-            viewport.ParentRow = ParentRow;
-            viewport.ParentType = ParentType;
+            var viewport = new TenancyViewport(null, MenuCallback)
+            {
+                StaticFilter = StaticFilter,
+                DynamicFilter = DynamicFilter,
+                ParentRow = ParentRow,
+                ParentType = ParentType
+            };
             if (viewport.CanLoadData())
                 viewport.LoadData();
             else
@@ -302,34 +290,21 @@ namespace Registry.Viewport
 
         public override void CopyRecord()
         {
-            var viewport = new TenancyViewport(MenuCallback);
-            viewport.StaticFilter = StaticFilter;
-            viewport.DynamicFilter = DynamicFilter;
-            viewport.ParentRow = ParentRow;
-            viewport.ParentType = ParentType;
+            var viewport = new TenancyViewport(null, MenuCallback)
+            {
+                StaticFilter = StaticFilter,
+                DynamicFilter = DynamicFilter,
+                ParentRow = ParentRow,
+                ParentType = ParentType
+            };
             if (viewport.CanLoadData())
                 viewport.LoadData();
             else
                 return;
             if (GeneralBindingSource.Count > 0)
-                viewport.LocateTenancyBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"] as int?) ?? -1);
+                viewport.LocateEntityBy("id_process", (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"] as int?) ?? -1);
             MenuCallback.AddViewport(viewport);
             viewport.CopyRecord();
-        }
-
-        public override bool CanDuplicate()
-        {
-            return true;
-        }
-
-        public override Viewport Duplicate()
-        {
-            var viewport = new TenancyListViewport(this, MenuCallback);
-            if (viewport.CanLoadData())
-                viewport.LoadData();
-            if (GeneralBindingSource.Count > 0)
-                viewport.LocateTenancyBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"] as int?) ?? -1);
-            return viewport;
         }
 
         public override bool HasAssocViewport(ViewportType viewportType)
@@ -577,32 +552,6 @@ namespace Registry.Viewport
         {
             RebuildStaticFilter();
             dataGridView.RowCount = GeneralBindingSource.Count;
-        }
-
-        void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
-        {
-            if (GeneralBindingSource.Position == -1 || dataGridView.RowCount == 0)
-            {
-                dataGridView.ClearSelection();
-                return;
-            }
-            if (GeneralBindingSource.Position >= dataGridView.RowCount)
-            {
-                dataGridView.Rows[dataGridView.RowCount - 1].Selected = true;
-                dataGridView.CurrentCell = dataGridView.Rows[dataGridView.RowCount - 1].Cells[0];
-            }
-            else
-            {
-                dataGridView.Rows[GeneralBindingSource.Position].Selected = true;
-                dataGridView.CurrentCell = dataGridView.Rows[GeneralBindingSource.Position].Cells[0];
-            }
-            if (Selected)
-            {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
-                MenuCallback.DocumentsStateUpdate();
-            }
         }
 
         private void dataGridView_Resize(object sender, EventArgs e)

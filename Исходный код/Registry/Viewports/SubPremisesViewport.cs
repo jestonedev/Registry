@@ -27,24 +27,18 @@ namespace Registry.Viewport
         #endregion Views
 
         private SubPremisesViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public SubPremisesViewport(IMenuCallback menuCallback)
-            : base(menuCallback)
+        public SubPremisesViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
             InitializeComponent();
-            GeneralSnapshot = new DataTable("snapshot_sub_premises") {Locale = CultureInfo.InvariantCulture};
-        }
-
-        public SubPremisesViewport(Viewport subPremisesViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = subPremisesViewport.DynamicFilter;
-            StaticFilter = subPremisesViewport.StaticFilter;
-            ParentRow = subPremisesViewport.ParentRow;
-            ParentType = subPremisesViewport.ParentType;
+            GeneralSnapshot = new DataTable("snapshot_sub_premises")
+            {
+                Locale = CultureInfo.InvariantCulture
+            };
         }
 
         private static object[] DataRowViewToArray(DataRowView dataRowView)

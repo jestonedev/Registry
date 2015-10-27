@@ -51,23 +51,15 @@ namespace Registry.Viewport
         public ResettleEstateObjectWay Way { get { return way; } set { way = value; } }
 
         private ResettlePremisesViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public ResettlePremisesViewport(IMenuCallback menuCallback): base(menuCallback)
+        public ResettlePremisesViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
             InitializeComponent();
             DataGridView = dataGridView;
-        }
-
-        public ResettlePremisesViewport(ResettlePremisesViewport resettlePremisesViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = resettlePremisesViewport.DynamicFilter;
-            StaticFilter = resettlePremisesViewport.StaticFilter;
-            ParentRow = resettlePremisesViewport.ParentRow;
-            ParentType = resettlePremisesViewport.ParentType;
         }
 
         private bool SnapshotHasChanges()
@@ -345,7 +337,7 @@ namespace Registry.Viewport
 
         public override void OpenDetails()
         {
-            var viewport = new PremisesViewport(MenuCallback);
+            var viewport = new PremisesViewport(null, MenuCallback);
             viewport.DynamicFilter = DynamicFilter;
             viewport.ParentRow = ParentRow;
             viewport.ParentType = ParentType;
@@ -354,7 +346,7 @@ namespace Registry.Viewport
             else
                 return;
             if (GeneralBindingSource.Count > 0)
-                viewport.LocatePremisesBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"] as int?) ?? -1);
+                viewport.LocateEntityBy("id_premises", (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"] as int?) ?? -1);
             MenuCallback.AddViewport(viewport);
         }
 
@@ -487,10 +479,12 @@ namespace Registry.Viewport
 
         public override void InsertRecord()
         {
-            var viewport = new PremisesViewport(MenuCallback);
-            viewport.DynamicFilter = DynamicFilter;
-            viewport.ParentRow = ParentRow;
-            viewport.ParentType = ParentType;
+            var viewport = new PremisesViewport(null, MenuCallback)
+            {
+                DynamicFilter = DynamicFilter,
+                ParentRow = ParentRow,
+                ParentType = ParentType
+            };
             if (viewport.CanLoadData())
                 viewport.LoadData();
             else
@@ -507,16 +501,18 @@ namespace Registry.Viewport
 
         public override void CopyRecord()
         {
-            var viewport = new PremisesViewport(MenuCallback);
-            viewport.DynamicFilter = DynamicFilter;
-            viewport.ParentRow = ParentRow;
-            viewport.ParentType = ParentType;
+            var viewport = new PremisesViewport(null, MenuCallback)
+            {
+                DynamicFilter = DynamicFilter,
+                ParentRow = ParentRow,
+                ParentType = ParentType
+            };
             if (viewport.CanLoadData())
                 viewport.LoadData();
             else
                 return;
             if (GeneralBindingSource.Count > 0)
-                viewport.LocatePremisesBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"] as int?) ?? -1);
+                viewport.LocateEntityBy("id_premises", (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"] as int?) ?? -1);
             MenuCallback.AddViewport(viewport);
             viewport.CopyRecord();
         }

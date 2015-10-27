@@ -37,23 +37,15 @@ namespace Registry.Viewport
         bool sync_views = true;
 
         private TenancyBuildingsViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public TenancyBuildingsViewport(IMenuCallback menuCallback): base(menuCallback)
+        public TenancyBuildingsViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
             InitializeComponent();
             DataGridView = dataGridView;
-        }
-
-        public TenancyBuildingsViewport(TenancyBuildingsViewport tenancyBuildingsViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = tenancyBuildingsViewport.DynamicFilter;
-            StaticFilter = tenancyBuildingsViewport.StaticFilter;
-            ParentRow = tenancyBuildingsViewport.ParentRow;
-            ParentType = tenancyBuildingsViewport.ParentType;
         }
 
         private bool SnapshotHasChanges()
@@ -84,11 +76,6 @@ namespace Registry.Viewport
                 dataRowView["rent_total_area"],
                 dataRowView["rent_living_area"]
             };
-        }
-
-        public void LocateBuildingBy(int id)
-        {
-            GeneralBindingSource.Position = GeneralBindingSource.Find("id_building", id);
         }
 
         private static TenancyObject RowToTenancyBuilding(DataRow row)
@@ -314,17 +301,19 @@ namespace Registry.Viewport
 
         public override void OpenDetails()
         {
-            var viewport = new BuildingViewport(MenuCallback);
-            viewport.StaticFilter = "";
-            viewport.DynamicFilter = DynamicFilter;
-            viewport.ParentRow = ParentRow;
-            viewport.ParentType = ParentType;
+            var viewport = new BuildingViewport(null, MenuCallback)
+            {
+                StaticFilter = "",
+                DynamicFilter = DynamicFilter,
+                ParentRow = ParentRow,
+                ParentType = ParentType
+            };
             if (viewport.CanLoadData())
                 viewport.LoadData();
             else
                 return;
             if (GeneralBindingSource.Count > 0)
-                viewport.LocateBuildingBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] as int?) ?? -1);
+                viewport.LocateEntityBy("id_building", (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] as int?) ?? -1);
             MenuCallback.AddViewport(viewport);
         }
 
@@ -336,7 +325,7 @@ namespace Registry.Viewport
 
         public override void InsertRecord()
         {
-            var viewport = new BuildingViewport(MenuCallback);
+            var viewport = new BuildingViewport(null, MenuCallback);
             viewport.DynamicFilter = DynamicFilter;
             viewport.ParentRow = ParentRow;
             viewport.ParentType = ParentType;
@@ -356,16 +345,18 @@ namespace Registry.Viewport
 
         public override void CopyRecord()
         {
-            var viewport = new BuildingViewport(MenuCallback);
-            viewport.DynamicFilter = DynamicFilter;
-            viewport.ParentRow = ParentRow;
-            viewport.ParentType = ParentType;
+            var viewport = new BuildingViewport(null, MenuCallback)
+            {
+                DynamicFilter = DynamicFilter,
+                ParentRow = ParentRow,
+                ParentType = ParentType
+            };
             if (viewport.CanLoadData())
                 viewport.LoadData();
             else
                 return;
             if (GeneralBindingSource.Count > 0)
-                viewport.LocateBuildingBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] as int?) ?? -1);
+                viewport.LocateEntityBy("id_building", (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] as int?) ?? -1);
             MenuCallback.AddViewport(viewport);
             viewport.CopyRecord();
         }
@@ -471,21 +462,6 @@ namespace Registry.Viewport
             sync_views = true;
             tenancy_buildings.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
-        }
-
-        public override bool CanDuplicate()
-        {
-            return true;
-        }
-
-        public override Viewport Duplicate()
-        {
-            var viewport = new TenancyBuildingsViewport(this, MenuCallback);
-            if (viewport.CanLoadData())
-                viewport.LoadData();
-            if (GeneralBindingSource.Count > 0)
-                viewport.LocateBuildingBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] as int?) ?? -1);
-            return viewport;
         }
 
         public override bool HasAssocViewport(ViewportType viewportType)

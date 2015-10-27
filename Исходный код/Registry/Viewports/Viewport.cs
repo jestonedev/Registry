@@ -23,16 +23,19 @@ namespace Registry.Viewport
         protected BindingSource GeneralBindingSource;
         protected DataModel GeneralDataModel;
 
-        protected Viewport(): this(null)
+        protected Viewport(): this(null, null)
         {
         }
 
-        protected Viewport(IMenuCallback menuCallback)
+        protected Viewport(Viewport viewport, IMenuCallback menuCallback)
         {
-            StaticFilter = "";
-            DynamicFilter = "";
-            ParentRow = null;
-            ParentType = ParentTypeEnum.None;
+            if (viewport != null)
+            {
+                StaticFilter = viewport.StaticFilter;
+                DynamicFilter = viewport.DynamicFilter;
+                ParentRow = viewport.ParentRow;
+                ParentType = viewport.ParentType;
+            }
             MenuCallback = menuCallback;
         }
 
@@ -272,9 +275,14 @@ namespace Registry.Viewport
         {
             return false;
         }
+       
         public virtual Viewport Duplicate()
         {
             return this;
+        }
+
+        public virtual void LocateEntityBy(string fieldName, object value)
+        {
         }
     }
 }

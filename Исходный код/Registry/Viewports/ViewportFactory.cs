@@ -10,65 +10,65 @@ namespace Registry.Viewport
             switch (viewportType)
             {
                 case ViewportType.BuildingListViewport:
-                    return new BuildingListViewport(menuCallback);
+                    return new BuildingListViewport(null, menuCallback);
                 case ViewportType.BuildingViewport:
-                    return new BuildingViewport(menuCallback);
-                case ViewportType.OwnershipListViewport: 
-                    return new OwnershipListViewport(menuCallback);
-                case ViewportType.OwnershipTypeListViewport: 
-                    return new OwnershipTypeListViewport(menuCallback);
+                    return new BuildingViewport(null, menuCallback);
+                case ViewportType.OwnershipListViewport:
+                    return new OwnershipListViewport(null, menuCallback);
+                case ViewportType.OwnershipTypeListViewport:
+                    return new OwnershipTypeListViewport(null, menuCallback);
                 case ViewportType.PremisesListViewport: 
-                    return new PremisesListViewport(menuCallback);
+                    return new PremisesListViewport(null, menuCallback);
                 case ViewportType.PremisesViewport:
-                    return new PremisesViewport(menuCallback);
-                case ViewportType.RestrictionListViewport: 
-                    return new RestrictionListViewport(menuCallback);
+                    return new PremisesViewport(null, menuCallback);
+                case ViewportType.RestrictionListViewport:
+                    return new RestrictionListViewport(null, menuCallback);
                 case ViewportType.SubPremisesViewport:
-                    return new SubPremisesViewport(menuCallback);
-                case ViewportType.RestrictionTypeListViewport: 
-                    return new RestrictionTypeListViewport(menuCallback);
-                case ViewportType.StructureTypeListViewport: 
-                    return new StructureTypeListViewport(menuCallback);
+                    return new SubPremisesViewport(null, menuCallback);
+                case ViewportType.RestrictionTypeListViewport:
+                    return new RestrictionTypeListViewport(null, menuCallback);
+                case ViewportType.StructureTypeListViewport:
+                    return new StructureTypeListViewport(null, menuCallback);
                 case ViewportType.TenancyListViewport:
-                    return new TenancyListViewport(menuCallback);
+                    return new TenancyListViewport(null, menuCallback);
                 case ViewportType.TenancyPersonsViewport:
-                    return new TenancyPersonsViewport(menuCallback);
+                    return new TenancyPersonsViewport(null, menuCallback);
                 case ViewportType.TenancyBuildingsViewport:
-                    return new TenancyBuildingsViewport(menuCallback);
+                    return new TenancyBuildingsViewport(null, menuCallback);
                 case ViewportType.TenancyPremisesViewport:
-                    return new TenancyPremisesViewport(menuCallback);
+                    return new TenancyPremisesViewport(null, menuCallback);
                 case ViewportType.TenancyReasonsViewport:
-                    return new TenancyReasonsViewport(menuCallback);
+                    return new TenancyReasonsViewport(null, menuCallback);
                 case ViewportType.TenancyAgreementsViewport:
-                    return new TenancyAgreementsViewport(menuCallback);
+                    return new TenancyAgreementsViewport(null, menuCallback);
                 case ViewportType.WarrantsViewport:
-                    return new WarrantsViewport(menuCallback);
+                    return new WarrantsViewport(null, menuCallback);
                 case ViewportType.TenancyReasonTypesViewport:
-                    return new TenancyReasonTypesViewport(menuCallback);
+                    return new TenancyReasonTypesViewport(null, menuCallback);
                 case ViewportType.ExecutorsViewport:
-                    return new ExecutorsViewport(menuCallback);
+                    return new ExecutorsViewport(null, menuCallback);
                 case ViewportType.DocumentIssuedByViewport:
-                    return new DocumentIssuedByViewport(menuCallback);
+                    return new DocumentIssuedByViewport(null, menuCallback);
                 case ViewportType.ClaimListViewport:
-                    return new ClaimListViewport(menuCallback);
+                    return new ClaimListViewport(null, menuCallback);
                 case ViewportType.ClaimStatesViewport:
-                    return new ClaimStatesViewport(menuCallback);
+                    return new ClaimStatesViewport(null, menuCallback);
                 case ViewportType.ClaimStateTypesViewport:
-                    return new ClaimStateTypesViewport(menuCallback);
+                    return new ClaimStateTypesViewport(null, menuCallback);
                 case ViewportType.FundsHistoryViewport:
-                    return new FundsHistoryViewport(menuCallback);
+                    return new FundsHistoryViewport(null, menuCallback);
                 case ViewportType.DocumentsResidenceViewport:
-                    return new DocumentsResidenceViewport(menuCallback);
+                    return new DocumentsResidenceViewport(null, menuCallback);
                 case ViewportType.ResettleProcessListViewport:
-                    return new ResettleProcessListViewport(menuCallback);
+                    return new ResettleProcessListViewport(null, menuCallback);
                 case ViewportType.ResettlePersonsViewport:
-                    return new ResettlePersonsViewport(menuCallback);
+                    return new ResettlePersonsViewport(null, menuCallback);
                 case ViewportType.ResettleFromBuildingsViewport:
                 case ViewportType.ResettleToBuildingsViewport:
-                    return new ResettleBuildingsViewport(menuCallback);
+                    return new ResettleBuildingsViewport(null, menuCallback);
                 case ViewportType.ResettleFromPremisesViewport:
                 case ViewportType.ResettleToPremisesViewport:
-                    return new ResettlePremisesViewport(menuCallback);
+                    return new ResettlePremisesViewport(null, menuCallback);
             }
             throw new ViewportException(
                 string.Format(CultureInfo.InvariantCulture, "В фабрику ViewportFactory передан неизвестный тип {0}", viewportType));
