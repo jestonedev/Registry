@@ -243,7 +243,6 @@ namespace Registry.Viewport
             this.vButtonSelectWarrant.Text = "...";
             this.vButtonSelectWarrant.UseVisualStyleBackColor = false;
             this.vButtonSelectWarrant.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
-            this.vButtonSelectWarrant.Click += new System.EventHandler(this.vButtonSelectWarrant_Click);
             // 
             // textBoxAgreementWarrant
             // 
@@ -383,7 +382,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(433, 75);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(433, 77);
             this.dataGridViewTenancyPersons.TabIndex = 3;
             // 
             // surname
@@ -582,9 +581,9 @@ namespace Registry.Viewport
             this.tabPageExplain.Controls.Add(this.textBoxExplainPoint);
             this.tabPageExplain.Controls.Add(this.vButtonExplainPaste);
             this.tabPageExplain.Controls.Add(this.label79);
-            this.tabPageExplain.Location = new System.Drawing.Point(4, 25);
+            this.tabPageExplain.Location = new System.Drawing.Point(4, 27);
             this.tabPageExplain.Name = "tabPageExplain";
-            this.tabPageExplain.Size = new System.Drawing.Size(436, 150);
+            this.tabPageExplain.Size = new System.Drawing.Size(436, 148);
             this.tabPageExplain.TabIndex = 2;
             this.tabPageExplain.Text = "Изложить";
             // 
@@ -640,9 +639,9 @@ namespace Registry.Viewport
             this.tabPageTerminate.Controls.Add(this.vButtonTerminatePaste);
             this.tabPageTerminate.Controls.Add(this.textBoxTerminateAgreement);
             this.tabPageTerminate.Controls.Add(this.label80);
-            this.tabPageTerminate.Location = new System.Drawing.Point(4, 25);
+            this.tabPageTerminate.Location = new System.Drawing.Point(4, 27);
             this.tabPageTerminate.Name = "tabPageTerminate";
-            this.tabPageTerminate.Size = new System.Drawing.Size(436, 150);
+            this.tabPageTerminate.Size = new System.Drawing.Size(436, 148);
             this.tabPageTerminate.TabIndex = 3;
             this.tabPageTerminate.Text = "Расторгнуть";
             // 
