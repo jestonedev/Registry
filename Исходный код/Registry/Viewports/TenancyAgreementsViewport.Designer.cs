@@ -243,6 +243,7 @@ namespace Registry.Viewport
             this.vButtonSelectWarrant.Text = "...";
             this.vButtonSelectWarrant.UseVisualStyleBackColor = false;
             this.vButtonSelectWarrant.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonSelectWarrant.Click += new System.EventHandler(this.vButtonSelectWarrant_Click);
             // 
             // textBoxAgreementWarrant
             // 
@@ -382,7 +383,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(433, 79);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(433, 75);
             this.dataGridViewTenancyPersons.TabIndex = 3;
             // 
             // surname
@@ -426,6 +427,7 @@ namespace Registry.Viewport
             this.vButtonExcludePaste.Text = "→";
             this.vButtonExcludePaste.UseVisualStyleBackColor = false;
             this.vButtonExcludePaste.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonExcludePaste.Click += new System.EventHandler(this.vButtonExcludePaste_Click);
             // 
             // textBoxExcludePoint
             // 
@@ -459,10 +461,10 @@ namespace Registry.Viewport
             this.tabPageInclude.Controls.Add(this.label78);
             this.tabPageInclude.Controls.Add(this.vButtonIncludePaste);
             this.tabPageInclude.Controls.Add(this.label75);
-            this.tabPageInclude.Location = new System.Drawing.Point(4, 25);
+            this.tabPageInclude.Location = new System.Drawing.Point(4, 27);
             this.tabPageInclude.Name = "tabPageInclude";
             this.tabPageInclude.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInclude.Size = new System.Drawing.Size(436, 150);
+            this.tabPageInclude.Size = new System.Drawing.Size(436, 148);
             this.tabPageInclude.TabIndex = 1;
             this.tabPageInclude.Text = "Включить";
             // 
@@ -562,6 +564,7 @@ namespace Registry.Viewport
             this.vButtonIncludePaste.Text = "→";
             this.vButtonIncludePaste.UseVisualStyleBackColor = false;
             this.vButtonIncludePaste.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonIncludePaste.Click += new System.EventHandler(this.vButtonIncludePaste_Click);
             // 
             // label75
             // 
@@ -593,7 +596,7 @@ namespace Registry.Viewport
             this.textBoxExplainContent.Location = new System.Drawing.Point(7, 32);
             this.textBoxExplainContent.Multiline = true;
             this.textBoxExplainContent.Name = "textBoxExplainContent";
-            this.textBoxExplainContent.Size = new System.Drawing.Size(424, 103);
+            this.textBoxExplainContent.Size = new System.Drawing.Size(424, 101);
             this.textBoxExplainContent.TabIndex = 1;
             // 
             // textBoxExplainPoint
@@ -618,6 +621,7 @@ namespace Registry.Viewport
             this.vButtonExplainPaste.Text = "→";
             this.vButtonExplainPaste.UseVisualStyleBackColor = false;
             this.vButtonExplainPaste.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonExplainPaste.Click += new System.EventHandler(this.vButtonExplainPaste_Click);
             // 
             // label79
             // 
@@ -671,6 +675,7 @@ namespace Registry.Viewport
             this.vButtonTerminatePaste.Text = "→";
             this.vButtonTerminatePaste.UseVisualStyleBackColor = false;
             this.vButtonTerminatePaste.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonTerminatePaste.Click += new System.EventHandler(this.vButtonTerminatePaste_Click);
             // 
             // textBoxTerminateAgreement
             // 
