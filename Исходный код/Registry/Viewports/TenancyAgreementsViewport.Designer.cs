@@ -382,7 +382,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(433, 79);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(433, 77);
             this.dataGridViewTenancyPersons.TabIndex = 3;
             // 
             // surname
@@ -426,6 +426,7 @@ namespace Registry.Viewport
             this.vButtonExcludePaste.Text = "→";
             this.vButtonExcludePaste.UseVisualStyleBackColor = false;
             this.vButtonExcludePaste.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonExcludePaste.Click += new System.EventHandler(this.vButtonExcludePaste_Click);
             // 
             // textBoxExcludePoint
             // 
@@ -459,10 +460,10 @@ namespace Registry.Viewport
             this.tabPageInclude.Controls.Add(this.label78);
             this.tabPageInclude.Controls.Add(this.vButtonIncludePaste);
             this.tabPageInclude.Controls.Add(this.label75);
-            this.tabPageInclude.Location = new System.Drawing.Point(4, 25);
+            this.tabPageInclude.Location = new System.Drawing.Point(4, 27);
             this.tabPageInclude.Name = "tabPageInclude";
             this.tabPageInclude.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInclude.Size = new System.Drawing.Size(436, 150);
+            this.tabPageInclude.Size = new System.Drawing.Size(436, 148);
             this.tabPageInclude.TabIndex = 1;
             this.tabPageInclude.Text = "Включить";
             // 
@@ -562,6 +563,7 @@ namespace Registry.Viewport
             this.vButtonIncludePaste.Text = "→";
             this.vButtonIncludePaste.UseVisualStyleBackColor = false;
             this.vButtonIncludePaste.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonIncludePaste.Click += new System.EventHandler(this.vButtonIncludePaste_Click);
             // 
             // label75
             // 
@@ -579,9 +581,9 @@ namespace Registry.Viewport
             this.tabPageExplain.Controls.Add(this.textBoxExplainPoint);
             this.tabPageExplain.Controls.Add(this.vButtonExplainPaste);
             this.tabPageExplain.Controls.Add(this.label79);
-            this.tabPageExplain.Location = new System.Drawing.Point(4, 25);
+            this.tabPageExplain.Location = new System.Drawing.Point(4, 27);
             this.tabPageExplain.Name = "tabPageExplain";
-            this.tabPageExplain.Size = new System.Drawing.Size(436, 150);
+            this.tabPageExplain.Size = new System.Drawing.Size(436, 148);
             this.tabPageExplain.TabIndex = 2;
             this.tabPageExplain.Text = "Изложить";
             // 
@@ -593,7 +595,7 @@ namespace Registry.Viewport
             this.textBoxExplainContent.Location = new System.Drawing.Point(7, 32);
             this.textBoxExplainContent.Multiline = true;
             this.textBoxExplainContent.Name = "textBoxExplainContent";
-            this.textBoxExplainContent.Size = new System.Drawing.Size(424, 103);
+            this.textBoxExplainContent.Size = new System.Drawing.Size(424, 101);
             this.textBoxExplainContent.TabIndex = 1;
             // 
             // textBoxExplainPoint
@@ -618,6 +620,7 @@ namespace Registry.Viewport
             this.vButtonExplainPaste.Text = "→";
             this.vButtonExplainPaste.UseVisualStyleBackColor = false;
             this.vButtonExplainPaste.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonExplainPaste.Click += new System.EventHandler(this.vButtonExplainPaste_Click);
             // 
             // label79
             // 
@@ -636,9 +639,9 @@ namespace Registry.Viewport
             this.tabPageTerminate.Controls.Add(this.vButtonTerminatePaste);
             this.tabPageTerminate.Controls.Add(this.textBoxTerminateAgreement);
             this.tabPageTerminate.Controls.Add(this.label80);
-            this.tabPageTerminate.Location = new System.Drawing.Point(4, 25);
+            this.tabPageTerminate.Location = new System.Drawing.Point(4, 27);
             this.tabPageTerminate.Name = "tabPageTerminate";
-            this.tabPageTerminate.Size = new System.Drawing.Size(436, 150);
+            this.tabPageTerminate.Size = new System.Drawing.Size(436, 148);
             this.tabPageTerminate.TabIndex = 3;
             this.tabPageTerminate.Text = "Расторгнуть";
             // 
@@ -671,6 +674,7 @@ namespace Registry.Viewport
             this.vButtonTerminatePaste.Text = "→";
             this.vButtonTerminatePaste.UseVisualStyleBackColor = false;
             this.vButtonTerminatePaste.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonTerminatePaste.Click += new System.EventHandler(this.vButtonTerminatePaste_Click);
             // 
             // textBoxTerminateAgreement
             // 
