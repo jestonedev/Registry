@@ -30,22 +30,18 @@ namespace Registry.Viewport
         int temp_id_state_type = int.MaxValue;
 
         private ClaimStateTypesViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public ClaimStateTypesViewport(IMenuCallback menuCallback)
-            : base(menuCallback)
+        public ClaimStateTypesViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
             InitializeComponent();
-            GeneralSnapshot = new DataTable("snapshot_claim_state_types");
-            GeneralSnapshot.Locale = CultureInfo.InvariantCulture;
-            snapshot_claim_state_types_relations.Locale = CultureInfo.InvariantCulture;
-        }
-
-        public ClaimStateTypesViewport(ClaimStateTypesViewport claimStateTypesViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
+            GeneralSnapshot = new DataTable("snapshot_claim_state_types")
+            {
+                Locale = CultureInfo.InvariantCulture
+            };
         }
 
         protected override bool SnapshotHasChanges()

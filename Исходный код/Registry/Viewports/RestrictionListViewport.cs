@@ -25,26 +25,18 @@ namespace Registry.Viewport
         #endregion Views
 
         private RestrictionListViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public RestrictionListViewport(IMenuCallback menuCallback): base(menuCallback)
+        public RestrictionListViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
             InitializeComponent();
             GeneralSnapshot = new DataTable("snapshot_restrictions")
             {
                 Locale = CultureInfo.InvariantCulture
             };
-        }
-
-        public RestrictionListViewport(RestrictionListViewport restrictionListViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = restrictionListViewport.DynamicFilter;
-            StaticFilter = restrictionListViewport.StaticFilter;
-            ParentRow = restrictionListViewport.ParentRow;
-            ParentType = restrictionListViewport.ParentType;
         }
 
         private void RebuildFilter()

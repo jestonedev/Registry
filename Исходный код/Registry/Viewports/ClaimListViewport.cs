@@ -16,33 +16,15 @@ namespace Registry.Viewport
     internal sealed partial class ClaimListViewport : FormWithGridViewport
     {
         private ClaimListViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public ClaimListViewport(IMenuCallback menuCallback)
-            : base(menuCallback)
+        public ClaimListViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
             InitializeComponent();
             DataGridView = dataGridViewClaims;
-        }
-
-        public ClaimListViewport(ClaimListViewport claimListViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = claimListViewport.DynamicFilter;
-            StaticFilter = claimListViewport.StaticFilter;
-            ParentRow = claimListViewport.ParentRow;
-            ParentType = claimListViewport.ParentType;
-        }
-
-        private void LocateClaimBy(int id)
-        {
-            var position = GeneralBindingSource.Find("id_claim", id);
-            is_editable = false;
-            if (position > 0)
-                GeneralBindingSource.Position = position;
-            is_editable = true;
         }
 
         private void SetViewportCaption()
@@ -137,85 +119,10 @@ namespace Registry.Viewport
 
         protected override bool ChangeViewportStateTo(ViewportState state)
         {
-            switch (state)
-            {
-                case ViewportState.ReadState:
-                    switch (viewportState)
-                    {
-                        case ViewportState.ReadState:
-                            return true;
-                        case ViewportState.NewRowState:
-                        case ViewportState.ModifyRowState:
-                            var result = MessageBox.Show(@"Сохранить изменения в базу данных?", @"Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                            switch (result)
-                            {
-                                case DialogResult.Yes:
-                                    SaveRecord();
-                                    break;
-                                case DialogResult.No:
-                                    CancelRecord();
-                                    break;
-                                default:
-                                    return false;
-                            }
-                            return viewportState == ViewportState.ReadState;
-                    }
-                    break;
-                case ViewportState.NewRowState:
-                    switch (viewportState)
-                    {
-                        case ViewportState.ReadState:
-                            if (GeneralDataModel.EditingNewRecord)
-                                return false;
-                            viewportState = ViewportState.NewRowState;
-                            return true;
-                        case ViewportState.NewRowState:
-                            return true;
-                        case ViewportState.ModifyRowState:
-                            var result = MessageBox.Show(@"Сохранить изменения в базу данных?", @"Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                            switch (result)
-                            {
-                                case DialogResult.Yes:
-                                    SaveRecord();
-                                    break;
-                                case DialogResult.No:
-                                    CancelRecord();
-                                    break;
-                                default:
-                                    return false;
-                            }
-                            return viewportState == ViewportState.ReadState && ChangeViewportStateTo(ViewportState.NewRowState);
-                    }
-                    break;
-                case ViewportState.ModifyRowState:
-                    switch (viewportState)
-                    {
-                        case ViewportState.ReadState:
-                            viewportState = ViewportState.ModifyRowState;
-                            return true;
-                        case ViewportState.ModifyRowState:
-                            return true;
-                        case ViewportState.NewRowState:
-                            var result = MessageBox.Show(@"Сохранить изменения в базу данных?", @"Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                            switch (result)
-                            {
-                                case DialogResult.Yes:
-                                    SaveRecord();
-                                    break;
-                                case DialogResult.No:
-                                    CancelRecord();
-                                    break;
-                                default:
-                                    return false;
-                            }
-                            return viewportState == ViewportState.ReadState && ChangeViewportStateTo(ViewportState.ModifyRowState);
-                    }
-                    break;
-            }
-            return false;
+            if (AccessControl.HasPrivelege(Priveleges.ClaimsWrite))
+                return base.ChangeViewportStateTo(state);
+            viewportState = ViewportState.ReadState;
+            return true;
         }
 
         private bool ValidateClaim(Claim claim)
@@ -512,21 +419,6 @@ namespace Registry.Viewport
             viewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
-        }
-
-        public override bool CanDuplicate()
-        {
-            return true;
-        }
-
-        public override Viewport Duplicate()
-        {
-            var viewport = new ClaimListViewport(this, MenuCallback);
-            if (viewport.CanLoadData())
-                viewport.LoadData();
-            if (GeneralBindingSource.Count > 0)
-                viewport.LocateClaimBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"] as int?) ?? -1);
-            return viewport;
         }
 
         protected override void OnClosing(CancelEventArgs e)

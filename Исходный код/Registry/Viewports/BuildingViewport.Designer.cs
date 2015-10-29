@@ -91,6 +91,7 @@ namespace Registry.Viewport
         private VIBlend.WinForms.Controls.vButton vButtonOwnershipAdd;
         private DateTimePicker dateTimePickerStateDate;
         private Label label22;
+        private CheckBox checkBoxRubbishChute;
         #endregion Components
 
 

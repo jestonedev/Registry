@@ -15,27 +15,18 @@ namespace Registry.Viewport
     internal sealed partial class TenancyReasonTypesViewport: EditableDataGridViewport
     {
         private TenancyReasonTypesViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public TenancyReasonTypesViewport(IMenuCallback menuCallback)
-            : base(menuCallback)
+        public TenancyReasonTypesViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
             InitializeComponent();
             GeneralSnapshot = new DataTable("snapshot_reason_types")
             {
                 Locale = CultureInfo.InvariantCulture
             };
-        }
-
-        public TenancyReasonTypesViewport(TenancyReasonTypesViewport reasonTypesViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = reasonTypesViewport.DynamicFilter;
-            StaticFilter = reasonTypesViewport.StaticFilter;
-            ParentRow = reasonTypesViewport.ParentRow;
-            ParentType = reasonTypesViewport.ParentType;
         }
 
         private static object[] DataRowViewToArray(DataRowView dataRowView)

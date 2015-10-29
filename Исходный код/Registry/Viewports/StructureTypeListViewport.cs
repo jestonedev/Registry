@@ -13,24 +13,15 @@ namespace Registry.Viewport
 {
     internal sealed partial class StructureTypeListViewport : EditableDataGridViewport
     {
-        private StructureTypeListViewport()
-            : this(null)
+        private StructureTypeListViewport() : this(null, null)
         {
         }
 
-        public StructureTypeListViewport(IMenuCallback menuCallback): base(menuCallback)
+        public StructureTypeListViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
-            InitializeComponent();
-            GeneralSnapshot = new DataTable("snapshot_structure_types") {Locale = CultureInfo.InvariantCulture};
-        }
-
-        public StructureTypeListViewport(Viewport structureTypeListViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = structureTypeListViewport.DynamicFilter;
-            StaticFilter = structureTypeListViewport.StaticFilter;
-            ParentRow = structureTypeListViewport.ParentRow;
-            ParentType = structureTypeListViewport.ParentType;
+            InitializeComponent(); 
+            GeneralSnapshot = new DataTable("snapshot_structure_types") { Locale = CultureInfo.InvariantCulture };
         }
 
         private static object[] DataRowViewToArray(DataRowView dataRowView)

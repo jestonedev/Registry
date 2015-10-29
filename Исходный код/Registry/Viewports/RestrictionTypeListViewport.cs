@@ -13,29 +13,19 @@ namespace Registry.Viewport
 {
     internal sealed partial class RestrictionTypeListViewport : EditableDataGridViewport
     {
-        #region Models
-
-        readonly DataTable _snapshotRestrictionTypes = new DataTable("snapshot_restriction_types");
-        #endregion Models
-
         private RestrictionTypeListViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public RestrictionTypeListViewport(IMenuCallback menuCallback): base(menuCallback)
+        public RestrictionTypeListViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
             InitializeComponent();
-            _snapshotRestrictionTypes.Locale = CultureInfo.InvariantCulture;
-        }
-
-        public RestrictionTypeListViewport(RestrictionTypeListViewport restrictionTypeListViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = restrictionTypeListViewport.DynamicFilter;
-            StaticFilter = restrictionTypeListViewport.StaticFilter;
-            ParentRow = restrictionTypeListViewport.ParentRow;
-            ParentType = restrictionTypeListViewport.ParentType;
+            GeneralSnapshot = new DataTable("snapshot_restriction_types")
+            {
+                Locale = CultureInfo.InvariantCulture
+            };
         }
 
         private static object[] DataRowViewToArray(DataRowView dataRowView)
@@ -125,12 +115,12 @@ namespace Registry.Viewport
 
             //Инициируем колонки snapshot-модели
             for (var i = 0; i < GeneralDataModel.Select().Columns.Count; i++)
-                _snapshotRestrictionTypes.Columns.Add(new DataColumn(GeneralDataModel.Select().Columns[i].ColumnName, 
+                GeneralSnapshot.Columns.Add(new DataColumn(GeneralDataModel.Select().Columns[i].ColumnName, 
                     GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                _snapshotRestrictionTypes.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
-            GeneralSnapshotBindingSource = new BindingSource {DataSource = _snapshotRestrictionTypes};
+                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
+            GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
             GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_restriction_types_CurrentItemChanged;
 
             dataGridView.DataSource = GeneralSnapshotBindingSource;
@@ -174,9 +164,9 @@ namespace Registry.Viewport
 
         public override void CancelRecord()
         {
-            _snapshotRestrictionTypes.Clear();
+            GeneralSnapshot.Clear();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                _snapshotRestrictionTypes.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
+                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -316,7 +306,7 @@ namespace Registry.Viewport
             var rowIndex = GeneralSnapshotBindingSource.Find("id_restriction_type", e.Row["id_restriction_type"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_restriction_type", e.Row["id_restriction_type"]) != -1)
             {
-                _snapshotRestrictionTypes.Rows.Add(e.Row["id_restriction_type"], e.Row["restriction_type"]);
+                GeneralSnapshot.Rows.Add(e.Row["id_restriction_type"], e.Row["restriction_type"]);
             }
             else
                 if (rowIndex != -1)

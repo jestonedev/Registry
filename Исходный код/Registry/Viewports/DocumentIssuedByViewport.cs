@@ -14,27 +14,18 @@ namespace Registry.Viewport
     internal sealed partial class DocumentIssuedByViewport: EditableDataGridViewport
     {
         private DocumentIssuedByViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public DocumentIssuedByViewport(IMenuCallback menuCallback)
-            : base(menuCallback)
+        public DocumentIssuedByViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
             InitializeComponent();
             GeneralSnapshot = new DataTable("snapshot_documents_issued_by")
             {
                 Locale = CultureInfo.InvariantCulture
             };
-        }
-
-        public DocumentIssuedByViewport(DocumentIssuedByViewport documentIssuedByViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = documentIssuedByViewport.DynamicFilter;
-            StaticFilter = documentIssuedByViewport.StaticFilter;
-            ParentRow = documentIssuedByViewport.ParentRow;
-            ParentType = documentIssuedByViewport.ParentType;
         }
 
         private static object[] DataRowViewToArray(DataRowView dataRowView)

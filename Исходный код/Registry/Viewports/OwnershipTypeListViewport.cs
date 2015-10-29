@@ -14,26 +14,15 @@ namespace Registry.Viewport
     internal sealed partial class OwnershipTypeListViewport : EditableDataGridViewport
     {
         private OwnershipTypeListViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public OwnershipTypeListViewport(IMenuCallback menuCallback): base(menuCallback)
+        public OwnershipTypeListViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
-            InitializeComponent();
-            GeneralSnapshot = new DataTable("snapshot_ownership_right_types")
-            {
-                Locale = CultureInfo.InvariantCulture
-            };
-        }
-
-        public OwnershipTypeListViewport(OwnershipTypeListViewport ownershipTypeListViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = ownershipTypeListViewport.DynamicFilter;
-            StaticFilter = ownershipTypeListViewport.StaticFilter;
-            ParentRow = ownershipTypeListViewport.ParentRow;
-            ParentType = ownershipTypeListViewport.ParentType;
+            InitializeComponent(); 
+            GeneralSnapshot = new DataTable("snapshot_ownership_right_types") { Locale = CultureInfo.InvariantCulture };
         }
 
         private static object[] DataRowViewToArray(DataRowView dataRowView)

@@ -18,24 +18,18 @@ namespace Registry.Viewport
         private BindingSource _vTenancyReasonTypesDataModel;
 
         private TenancyReasonsViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public TenancyReasonsViewport(IMenuCallback menuCallback)
-            : base(menuCallback)
+        public TenancyReasonsViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
             InitializeComponent();
-            GeneralSnapshot = new DataTable("snapshot_tenancy_reasons") {Locale = CultureInfo.InvariantCulture};
-        }
-
-        public TenancyReasonsViewport(TenancyReasonsViewport tenancyReasonsViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = tenancyReasonsViewport.DynamicFilter;
-            StaticFilter = tenancyReasonsViewport.StaticFilter;
-            ParentRow = tenancyReasonsViewport.ParentRow;
-            ParentType = tenancyReasonsViewport.ParentType;
+            GeneralSnapshot = new DataTable("snapshot_tenancy_reasons")
+            {
+                Locale = CultureInfo.InvariantCulture
+            };
         }
 
         private static object[] DataRowViewToArray(DataRowView dataRowView)

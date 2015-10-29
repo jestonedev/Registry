@@ -41,24 +41,15 @@ namespace Registry.Viewport
         private bool is_first_visible = true;   // первое отображение формы
 
         private TenancyAgreementsViewport()
-            : this(null)
+            : this(null, null)
         {
         }
 
-        public TenancyAgreementsViewport(IMenuCallback menuCallback)
-            : base(menuCallback)
+        public TenancyAgreementsViewport(Viewport viewport, IMenuCallback menuCallback)
+            : base(viewport, menuCallback)
         {
             InitializeComponent();
             DataGridView = dataGridView;
-        }
-
-        public TenancyAgreementsViewport(TenancyAgreementsViewport tenancyAgreementsViewport, IMenuCallback menuCallback)
-            : this(menuCallback)
-        {
-            DynamicFilter = tenancyAgreementsViewport.DynamicFilter;
-            StaticFilter = tenancyAgreementsViewport.StaticFilter;
-            ParentRow = tenancyAgreementsViewport.ParentRow;
-            ParentType = tenancyAgreementsViewport.ParentType;
         }
 
         private void RedrawDataGridTenancyPersonsRows()
@@ -105,107 +96,18 @@ namespace Registry.Viewport
 
         protected override bool ChangeViewportStateTo(ViewportState state)
         {
-            if (!AccessControl.HasPrivelege(Priveleges.TenancyWrite))
-            {
-                viewportState = ViewportState.ReadState;
-                return true;
-            }
-            switch (state)
-            {
-                case ViewportState.ReadState:
-                    switch (viewportState)
-                    {
-                        case ViewportState.ReadState:
-                            return true;
-                        case ViewportState.NewRowState:
-                        case ViewportState.ModifyRowState:
-                            var result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                            if (result == DialogResult.Yes)
-                                SaveRecord();
-                            else
-                                if (result == DialogResult.No)
-                                    CancelRecord();
-                                else return false;
-                            if (viewportState == ViewportState.ReadState)
-                                return true;
-                            else
-                                return false;
-                    }
-                    break;
-                case ViewportState.NewRowState:
-                    switch (viewportState)
-                    {
-                        case ViewportState.ReadState:
-                            if (GeneralDataModel.EditingNewRecord)
-                                return false;
-                            else
-                            {
-                                viewportState = ViewportState.NewRowState;
-                                return true;
-                            }
-                        case ViewportState.NewRowState:
-                            return true;
-                        case ViewportState.ModifyRowState:
-                            var result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                            if (result == DialogResult.Yes)
-                                SaveRecord();
-                            else
-                                if (result == DialogResult.No)
-                                    CancelRecord();
-                                else
-                                    return false;
-                            if (viewportState == ViewportState.ReadState)
-                                return ChangeViewportStateTo(ViewportState.NewRowState);
-                            else
-                                return false;
-                    }
-                    break;
-                case ViewportState.ModifyRowState: ;
-                    switch (viewportState)
-                    {
-                        case ViewportState.ReadState:
-                            viewportState = ViewportState.ModifyRowState;
-                            return true;
-                        case ViewportState.ModifyRowState:
-                            return true;
-                        case ViewportState.NewRowState:
-                            var result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
-                                MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                            if (result == DialogResult.Yes)
-                                SaveRecord();
-                            else
-                                if (result == DialogResult.No)
-                                    CancelRecord();
-                                else
-                                    return false;
-                            if (viewportState == ViewportState.ReadState)
-                                return ChangeViewportStateTo(ViewportState.ModifyRowState);
-                            else
-                                return false;
-                    }
-                    break;
-            }
-            return false;
+            if (AccessControl.HasPrivelege(Priveleges.TenancyWrite)) return base.ChangeViewportStateTo(state);
+            viewportState = ViewportState.ReadState;
+            return true;
         }
 
-        public void LocateAgreementBy(int id)
-        {
-            var Position = GeneralBindingSource.Find("id_agreement", id);
-            is_editable = false;
-            if (Position > 0)
-                GeneralBindingSource.Position = Position;
-            is_editable = true;
-        }
-
-        private string WarrantStringByID(int id_warrant)
+        private string WarrantStringById(int idWarrant)
         {
             if (v_warrants.Position == -1)
                 return null;
             else
             {
-                var row_index = v_warrants.Find("id_warrant", id_warrant);
+                var row_index = v_warrants.Find("id_warrant", idWarrant);
                 if (row_index == -1)
                     return null;
                 var registration_date = Convert.ToDateTime(((DataRowView)v_warrants[row_index])["registration_date"], CultureInfo.InvariantCulture);
@@ -215,13 +117,13 @@ namespace Registry.Viewport
             }
         }
 
-        private void BindWarrantID()
+        private void BindWarrantId()
         {
             if ((GeneralBindingSource.Position > -1) && ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_warrant"] != DBNull.Value)
             {
                 id_warrant = Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_warrant"], CultureInfo.InvariantCulture);
                 textBoxAgreementWarrant.Text =
-                    WarrantStringByID(id_warrant.Value);
+                    WarrantStringById(id_warrant.Value);
                 vButtonSelectWarrant.Text = "x";
             }
             else
@@ -239,7 +141,7 @@ namespace Registry.Viewport
             textBoxAgreementContent.Text = tenancyAgreement.AgreementContent;
             if (tenancyAgreement.IdWarrant != null)
             {
-                textBoxAgreementWarrant.Text = WarrantStringByID(tenancyAgreement.IdWarrant.Value);
+                textBoxAgreementWarrant.Text = WarrantStringById(tenancyAgreement.IdWarrant.Value);
                 id_warrant = tenancyAgreement.IdWarrant;
             }
             else
@@ -421,7 +323,7 @@ namespace Registry.Viewport
                     dataGridView.Enabled = true;
                     is_editable = false;
                     DataBind();
-                    BindWarrantID();
+                    BindWarrantId();
                     viewportState = ViewportState.ReadState;
                     break;
             }
@@ -524,21 +426,6 @@ namespace Registry.Viewport
             GeneralDataModel.EditingNewRecord = true;
             ViewportFromTenancyAgreement(tenancyAgreement);
             is_editable = true;
-        }
-
-        public override bool CanDuplicate()
-        {
-            return true;
-        }
-
-        public override Viewport Duplicate()
-        {
-            var viewport = new TenancyAgreementsViewport(this, MenuCallback);
-            if (viewport.CanLoadData())
-                viewport.LoadData();
-            if (GeneralBindingSource.Count > 0)
-                viewport.LocateAgreementBy((((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_agreement"] as int?) ?? -1);
-            return viewport;
         }
 
         public override bool HasReport(ReporterType reporterType)
@@ -644,7 +531,7 @@ namespace Registry.Viewport
                 if (swForm.WarrantId != null)
                 {
                     id_warrant = swForm.WarrantId.Value;
-                    textBoxAgreementWarrant.Text = WarrantStringByID(swForm.WarrantId.Value);
+                    textBoxAgreementWarrant.Text = WarrantStringById(swForm.WarrantId.Value);
                     vButtonSelectWarrant.Text = "x";
                 }
             }
@@ -893,7 +780,7 @@ namespace Registry.Viewport
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.RelationsStateUpdate();
             }
-            BindWarrantID();
+            BindWarrantId();
             if (GeneralBindingSource.Position == -1)
                 return;
             if (viewportState == ViewportState.NewRowState)
