@@ -32,7 +32,7 @@ namespace Registry.SearchForms
         /// </summary>
         private void InitializeComponent()
         {
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(ExtendedSearchPremisesForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExtendedSearchPremisesForm));
             this.vButtonCancel = new VIBlend.WinForms.Controls.vButton();
             this.vButtonSearch = new VIBlend.WinForms.Controls.vButton();
             this.checkBoxHouseEnable = new System.Windows.Forms.CheckBox();
@@ -53,7 +53,6 @@ namespace Registry.SearchForms
             this.checkBoxFundTypeEnable = new System.Windows.Forms.CheckBox();
             this.label6 = new System.Windows.Forms.Label();
             this.textBoxHouse = new System.Windows.Forms.TextBox();
-            this.comboBoxState = new System.Windows.Forms.ComboBox();
             this.checkBoxStateEnable = new System.Windows.Forms.CheckBox();
             this.label7 = new System.Windows.Forms.Label();
             this.numericUpDownIDPremises = new System.Windows.Forms.NumericUpDown();
@@ -71,6 +70,7 @@ namespace Registry.SearchForms
             this.comboBoxOwnershipType = new System.Windows.Forms.ComboBox();
             this.checkBoxOwnershipTypeEnable = new System.Windows.Forms.CheckBox();
             this.label12 = new System.Windows.Forms.Label();
+            this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloor)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownIDPremises)).BeginInit();
             this.SuspendLayout();
@@ -80,7 +80,7 @@ namespace Registry.SearchForms
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(257, 518);
+            this.vButtonCancel.Location = new System.Drawing.Point(641, 433);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
@@ -93,7 +93,7 @@ namespace Registry.SearchForms
             // 
             this.vButtonSearch.AllowAnimations = true;
             this.vButtonSearch.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSearch.Location = new System.Drawing.Point(119, 518);
+            this.vButtonSearch.Location = new System.Drawing.Point(518, 433);
             this.vButtonSearch.Name = "vButtonSearch";
             this.vButtonSearch.RoundedCornersMask = ((byte)(15));
             this.vButtonSearch.Size = new System.Drawing.Size(117, 35);
@@ -108,7 +108,7 @@ namespace Registry.SearchForms
             this.checkBoxHouseEnable.AutoSize = true;
             this.checkBoxHouseEnable.Location = new System.Drawing.Point(17, 155);
             this.checkBoxHouseEnable.Name = "checkBoxHouseEnable";
-            this.checkBoxHouseEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxHouseEnable.Size = new System.Drawing.Size(18, 17);
             this.checkBoxHouseEnable.TabIndex = 6;
             this.checkBoxHouseEnable.UseVisualStyleBackColor = true;
             this.checkBoxHouseEnable.CheckedChanged += new System.EventHandler(this.checkBoxHouseEnable_CheckedChanged);
@@ -118,7 +118,7 @@ namespace Registry.SearchForms
             this.checkBoxStreetEnable.AutoSize = true;
             this.checkBoxStreetEnable.Location = new System.Drawing.Point(17, 113);
             this.checkBoxStreetEnable.Name = "checkBoxStreetEnable";
-            this.checkBoxStreetEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxStreetEnable.Size = new System.Drawing.Size(18, 17);
             this.checkBoxStreetEnable.TabIndex = 4;
             this.checkBoxStreetEnable.UseVisualStyleBackColor = true;
             this.checkBoxStreetEnable.CheckedChanged += new System.EventHandler(this.checkBoxStreetEnable_CheckedChanged);
@@ -128,7 +128,7 @@ namespace Registry.SearchForms
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(10, 135);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(79, 15);
+            this.label2.Size = new System.Drawing.Size(96, 18);
             this.label2.TabIndex = 25;
             this.label2.Text = "Номер дома";
             // 
@@ -137,7 +137,7 @@ namespace Registry.SearchForms
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(10, 92);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(43, 15);
+            this.label1.Size = new System.Drawing.Size(51, 18);
             this.label1.TabIndex = 24;
             this.label1.Text = "Улица";
             // 
@@ -147,7 +147,7 @@ namespace Registry.SearchForms
             this.comboBoxStreet.FormattingEnabled = true;
             this.comboBoxStreet.Location = new System.Drawing.Point(42, 109);
             this.comboBoxStreet.Name = "comboBoxStreet";
-            this.comboBoxStreet.Size = new System.Drawing.Size(437, 23);
+            this.comboBoxStreet.Size = new System.Drawing.Size(437, 26);
             this.comboBoxStreet.TabIndex = 5;
             this.comboBoxStreet.DropDownClosed += new System.EventHandler(this.comboBoxStreet_DropDownClosed);
             this.comboBoxStreet.Enter += new System.EventHandler(this.selectAll_Enter);
@@ -159,7 +159,7 @@ namespace Registry.SearchForms
             this.checkBoxPremisesNumEnable.AutoSize = true;
             this.checkBoxPremisesNumEnable.Location = new System.Drawing.Point(17, 196);
             this.checkBoxPremisesNumEnable.Name = "checkBoxPremisesNumEnable";
-            this.checkBoxPremisesNumEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxPremisesNumEnable.Size = new System.Drawing.Size(18, 17);
             this.checkBoxPremisesNumEnable.TabIndex = 8;
             this.checkBoxPremisesNumEnable.UseVisualStyleBackColor = true;
             this.checkBoxPremisesNumEnable.CheckedChanged += new System.EventHandler(this.checkBoxPremisesNumEnable_CheckedChanged);
@@ -170,7 +170,7 @@ namespace Registry.SearchForms
             this.textBoxPremisesNum.Location = new System.Drawing.Point(42, 193);
             this.textBoxPremisesNum.MaxLength = 4;
             this.textBoxPremisesNum.Name = "textBoxPremisesNum";
-            this.textBoxPremisesNum.Size = new System.Drawing.Size(437, 21);
+            this.textBoxPremisesNum.Size = new System.Drawing.Size(437, 24);
             this.textBoxPremisesNum.TabIndex = 9;
             this.textBoxPremisesNum.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -179,7 +179,7 @@ namespace Registry.SearchForms
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(10, 176);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(116, 15);
+            this.label3.Size = new System.Drawing.Size(138, 18);
             this.label3.TabIndex = 28;
             this.label3.Text = "Номер помещения";
             // 
@@ -188,7 +188,7 @@ namespace Registry.SearchForms
             this.checkBoxFloorEnable.AutoSize = true;
             this.checkBoxFloorEnable.Location = new System.Drawing.Point(17, 237);
             this.checkBoxFloorEnable.Name = "checkBoxFloorEnable";
-            this.checkBoxFloorEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxFloorEnable.Size = new System.Drawing.Size(18, 17);
             this.checkBoxFloorEnable.TabIndex = 10;
             this.checkBoxFloorEnable.UseVisualStyleBackColor = true;
             this.checkBoxFloorEnable.CheckedChanged += new System.EventHandler(this.checkBoxFloorEnable_CheckedChanged);
@@ -198,7 +198,7 @@ namespace Registry.SearchForms
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(10, 217);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(38, 15);
+            this.label4.Size = new System.Drawing.Size(45, 18);
             this.label4.TabIndex = 31;
             this.label4.Text = "Этаж";
             // 
@@ -212,7 +212,7 @@ namespace Registry.SearchForms
             0,
             0});
             this.numericUpDownFloor.Name = "numericUpDownFloor";
-            this.numericUpDownFloor.Size = new System.Drawing.Size(437, 21);
+            this.numericUpDownFloor.Size = new System.Drawing.Size(437, 24);
             this.numericUpDownFloor.TabIndex = 11;
             this.numericUpDownFloor.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -221,7 +221,7 @@ namespace Registry.SearchForms
             this.checkBoxCadastralNumEnable.AutoSize = true;
             this.checkBoxCadastralNumEnable.Location = new System.Drawing.Point(17, 278);
             this.checkBoxCadastralNumEnable.Name = "checkBoxCadastralNumEnable";
-            this.checkBoxCadastralNumEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxCadastralNumEnable.Size = new System.Drawing.Size(18, 17);
             this.checkBoxCadastralNumEnable.TabIndex = 12;
             this.checkBoxCadastralNumEnable.UseVisualStyleBackColor = true;
             this.checkBoxCadastralNumEnable.CheckedChanged += new System.EventHandler(this.checkBoxCadastralNumEnable_CheckedChanged);
@@ -232,7 +232,7 @@ namespace Registry.SearchForms
             this.textBoxCadastralNum.Location = new System.Drawing.Point(42, 275);
             this.textBoxCadastralNum.MaxLength = 15;
             this.textBoxCadastralNum.Name = "textBoxCadastralNum";
-            this.textBoxCadastralNum.Size = new System.Drawing.Size(437, 21);
+            this.textBoxCadastralNum.Size = new System.Drawing.Size(437, 24);
             this.textBoxCadastralNum.TabIndex = 13;
             this.textBoxCadastralNum.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -241,7 +241,7 @@ namespace Registry.SearchForms
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(10, 258);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(126, 15);
+            this.label5.Size = new System.Drawing.Size(150, 18);
             this.label5.TabIndex = 34;
             this.label5.Text = "Кадастровый номер";
             // 
@@ -252,7 +252,7 @@ namespace Registry.SearchForms
             this.comboBoxFundType.FormattingEnabled = true;
             this.comboBoxFundType.Location = new System.Drawing.Point(42, 398);
             this.comboBoxFundType.Name = "comboBoxFundType";
-            this.comboBoxFundType.Size = new System.Drawing.Size(437, 23);
+            this.comboBoxFundType.Size = new System.Drawing.Size(437, 26);
             this.comboBoxFundType.TabIndex = 19;
             // 
             // checkBoxFundTypeEnable
@@ -260,7 +260,7 @@ namespace Registry.SearchForms
             this.checkBoxFundTypeEnable.AutoSize = true;
             this.checkBoxFundTypeEnable.Location = new System.Drawing.Point(17, 402);
             this.checkBoxFundTypeEnable.Name = "checkBoxFundTypeEnable";
-            this.checkBoxFundTypeEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxFundTypeEnable.Size = new System.Drawing.Size(18, 17);
             this.checkBoxFundTypeEnable.TabIndex = 18;
             this.checkBoxFundTypeEnable.UseVisualStyleBackColor = true;
             this.checkBoxFundTypeEnable.CheckedChanged += new System.EventHandler(this.checkBoxFundTypeEnable_CheckedChanged);
@@ -270,7 +270,7 @@ namespace Registry.SearchForms
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(10, 381);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(115, 15);
+            this.label6.Size = new System.Drawing.Size(140, 18);
             this.label6.TabIndex = 37;
             this.label6.Text = "Тип жилого фонда";
             // 
@@ -279,36 +279,26 @@ namespace Registry.SearchForms
             this.textBoxHouse.Enabled = false;
             this.textBoxHouse.Location = new System.Drawing.Point(42, 152);
             this.textBoxHouse.Name = "textBoxHouse";
-            this.textBoxHouse.Size = new System.Drawing.Size(437, 21);
+            this.textBoxHouse.Size = new System.Drawing.Size(437, 24);
             this.textBoxHouse.TabIndex = 7;
             this.textBoxHouse.Enter += new System.EventHandler(this.selectAll_Enter);
-            // 
-            // comboBoxState
-            // 
-            this.comboBoxState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxState.Enabled = false;
-            this.comboBoxState.FormattingEnabled = true;
-            this.comboBoxState.Location = new System.Drawing.Point(42, 441);
-            this.comboBoxState.Name = "comboBoxState";
-            this.comboBoxState.Size = new System.Drawing.Size(437, 23);
-            this.comboBoxState.TabIndex = 21;
             // 
             // checkBoxStateEnable
             // 
             this.checkBoxStateEnable.AutoSize = true;
-            this.checkBoxStateEnable.Location = new System.Drawing.Point(17, 445);
+            this.checkBoxStateEnable.Location = new System.Drawing.Point(494, 29);
             this.checkBoxStateEnable.Name = "checkBoxStateEnable";
-            this.checkBoxStateEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxStateEnable.TabIndex = 20;
+            this.checkBoxStateEnable.Size = new System.Drawing.Size(18, 17);
+            this.checkBoxStateEnable.TabIndex = 22;
             this.checkBoxStateEnable.UseVisualStyleBackColor = true;
             this.checkBoxStateEnable.CheckedChanged += new System.EventHandler(this.checkBoxStateEnable_CheckedChanged);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(10, 424);
+            this.label7.Location = new System.Drawing.Point(491, 8);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(140, 15);
+            this.label7.Size = new System.Drawing.Size(167, 18);
             this.label7.TabIndex = 41;
             this.label7.Text = "Состояние помещения";
             // 
@@ -322,16 +312,16 @@ namespace Registry.SearchForms
             0,
             0});
             this.numericUpDownIDPremises.Name = "numericUpDownIDPremises";
-            this.numericUpDownIDPremises.Size = new System.Drawing.Size(437, 21);
+            this.numericUpDownIDPremises.Size = new System.Drawing.Size(437, 24);
             this.numericUpDownIDPremises.TabIndex = 1;
             this.numericUpDownIDPremises.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxIDPremisesEnable
             // 
             this.checkBoxIDPremisesEnable.AutoSize = true;
-            this.checkBoxIDPremisesEnable.Location = new System.Drawing.Point(17, 28);
+            this.checkBoxIDPremisesEnable.Location = new System.Drawing.Point(17, 29);
             this.checkBoxIDPremisesEnable.Name = "checkBoxIDPremisesEnable";
-            this.checkBoxIDPremisesEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxIDPremisesEnable.Size = new System.Drawing.Size(18, 17);
             this.checkBoxIDPremisesEnable.TabIndex = 0;
             this.checkBoxIDPremisesEnable.UseVisualStyleBackColor = true;
             this.checkBoxIDPremisesEnable.CheckedChanged += new System.EventHandler(this.checkBoxIDBuildingEnable_CheckedChanged);
@@ -341,7 +331,7 @@ namespace Registry.SearchForms
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(10, 8);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(186, 15);
+            this.label9.Size = new System.Drawing.Size(219, 18);
             this.label9.TabIndex = 47;
             this.label9.Text = "Внутренний номер помещения";
             // 
@@ -352,7 +342,7 @@ namespace Registry.SearchForms
             this.comboBoxRegion.FormattingEnabled = true;
             this.comboBoxRegion.Location = new System.Drawing.Point(42, 66);
             this.comboBoxRegion.Name = "comboBoxRegion";
-            this.comboBoxRegion.Size = new System.Drawing.Size(437, 23);
+            this.comboBoxRegion.Size = new System.Drawing.Size(437, 26);
             this.comboBoxRegion.TabIndex = 3;
             // 
             // checkBoxRegionEnable
@@ -360,7 +350,7 @@ namespace Registry.SearchForms
             this.checkBoxRegionEnable.AutoSize = true;
             this.checkBoxRegionEnable.Location = new System.Drawing.Point(17, 70);
             this.checkBoxRegionEnable.Name = "checkBoxRegionEnable";
-            this.checkBoxRegionEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxRegionEnable.Size = new System.Drawing.Size(18, 17);
             this.checkBoxRegionEnable.TabIndex = 2;
             this.checkBoxRegionEnable.UseVisualStyleBackColor = true;
             this.checkBoxRegionEnable.CheckedChanged += new System.EventHandler(this.checkBoxRegionEnable_CheckedChanged);
@@ -370,7 +360,7 @@ namespace Registry.SearchForms
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(10, 49);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(84, 15);
+            this.label8.Size = new System.Drawing.Size(101, 18);
             this.label8.TabIndex = 46;
             this.label8.Text = "Жилой район";
             // 
@@ -379,7 +369,7 @@ namespace Registry.SearchForms
             this.checkBoxTenantSNPEnable.AutoSize = true;
             this.checkBoxTenantSNPEnable.Location = new System.Drawing.Point(17, 360);
             this.checkBoxTenantSNPEnable.Name = "checkBoxTenantSNPEnable";
-            this.checkBoxTenantSNPEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxTenantSNPEnable.Size = new System.Drawing.Size(18, 17);
             this.checkBoxTenantSNPEnable.TabIndex = 16;
             this.checkBoxTenantSNPEnable.UseVisualStyleBackColor = true;
             this.checkBoxTenantSNPEnable.CheckedChanged += new System.EventHandler(this.checkBoxTenantSNPEnable_CheckedChanged);
@@ -390,7 +380,7 @@ namespace Registry.SearchForms
             this.textBoxTenantSNP.Location = new System.Drawing.Point(42, 357);
             this.textBoxTenantSNP.MaxLength = 255;
             this.textBoxTenantSNP.Name = "textBoxTenantSNP";
-            this.textBoxTenantSNP.Size = new System.Drawing.Size(437, 21);
+            this.textBoxTenantSNP.Size = new System.Drawing.Size(437, 24);
             this.textBoxTenantSNP.TabIndex = 17;
             this.textBoxTenantSNP.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -399,7 +389,7 @@ namespace Registry.SearchForms
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(10, 340);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(111, 15);
+            this.label11.Size = new System.Drawing.Size(131, 18);
             this.label11.TabIndex = 52;
             this.label11.Text = "ФИО нанимателя";
             // 
@@ -408,7 +398,7 @@ namespace Registry.SearchForms
             this.checkBoxContractNumberEnable.AutoSize = true;
             this.checkBoxContractNumberEnable.Location = new System.Drawing.Point(17, 319);
             this.checkBoxContractNumberEnable.Name = "checkBoxContractNumberEnable";
-            this.checkBoxContractNumberEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxContractNumberEnable.Size = new System.Drawing.Size(18, 17);
             this.checkBoxContractNumberEnable.TabIndex = 14;
             this.checkBoxContractNumberEnable.UseVisualStyleBackColor = true;
             this.checkBoxContractNumberEnable.CheckedChanged += new System.EventHandler(this.checkBoxContractNumberEnable_CheckedChanged);
@@ -419,7 +409,7 @@ namespace Registry.SearchForms
             this.textBoxContractNumber.Location = new System.Drawing.Point(42, 316);
             this.textBoxContractNumber.MaxLength = 16;
             this.textBoxContractNumber.Name = "textBoxContractNumber";
-            this.textBoxContractNumber.Size = new System.Drawing.Size(437, 21);
+            this.textBoxContractNumber.Size = new System.Drawing.Size(437, 24);
             this.textBoxContractNumber.TabIndex = 15;
             this.textBoxContractNumber.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -428,7 +418,7 @@ namespace Registry.SearchForms
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(10, 299);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(143, 15);
+            this.label10.Size = new System.Drawing.Size(172, 18);
             this.label10.TabIndex = 49;
             this.label10.Text = "Номер договора найма";
             // 
@@ -437,36 +427,47 @@ namespace Registry.SearchForms
             this.comboBoxOwnershipType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxOwnershipType.Enabled = false;
             this.comboBoxOwnershipType.FormattingEnabled = true;
-            this.comboBoxOwnershipType.Location = new System.Drawing.Point(42, 484);
+            this.comboBoxOwnershipType.Location = new System.Drawing.Point(42, 442);
             this.comboBoxOwnershipType.Name = "comboBoxOwnershipType";
-            this.comboBoxOwnershipType.Size = new System.Drawing.Size(437, 23);
-            this.comboBoxOwnershipType.TabIndex = 23;
+            this.comboBoxOwnershipType.Size = new System.Drawing.Size(437, 26);
+            this.comboBoxOwnershipType.TabIndex = 21;
             // 
             // checkBoxOwnershipTypeEnable
             // 
             this.checkBoxOwnershipTypeEnable.AutoSize = true;
-            this.checkBoxOwnershipTypeEnable.Location = new System.Drawing.Point(17, 488);
+            this.checkBoxOwnershipTypeEnable.Location = new System.Drawing.Point(17, 445);
             this.checkBoxOwnershipTypeEnable.Name = "checkBoxOwnershipTypeEnable";
-            this.checkBoxOwnershipTypeEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxOwnershipTypeEnable.TabIndex = 22;
+            this.checkBoxOwnershipTypeEnable.Size = new System.Drawing.Size(18, 17);
+            this.checkBoxOwnershipTypeEnable.TabIndex = 20;
             this.checkBoxOwnershipTypeEnable.UseVisualStyleBackColor = true;
             this.checkBoxOwnershipTypeEnable.CheckedChanged += new System.EventHandler(this.checkBoxOwnershipTypeEnable_CheckedChanged);
             // 
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(12, 467);
+            this.label12.Location = new System.Drawing.Point(10, 424);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(105, 15);
+            this.label12.Size = new System.Drawing.Size(124, 18);
             this.label12.TabIndex = 56;
             this.label12.Text = "Тип ограничения";
             // 
+            // checkedListBox1
+            // 
+            this.checkedListBox1.CheckOnClick = true;
+            this.checkedListBox1.Enabled = false;
+            this.checkedListBox1.FormattingEnabled = true;
+            this.checkedListBox1.Location = new System.Drawing.Point(518, 28);
+            this.checkedListBox1.Name = "checkedListBox1";
+            this.checkedListBox1.Size = new System.Drawing.Size(240, 232);
+            this.checkedListBox1.TabIndex = 23;
+            // 
             // ExtendedSearchPremisesForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 18F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(493, 563);
+            this.ClientSize = new System.Drawing.Size(764, 472);
+            this.Controls.Add(this.checkedListBox1);
             this.Controls.Add(this.comboBoxOwnershipType);
             this.Controls.Add(this.checkBoxOwnershipTypeEnable);
             this.Controls.Add(this.label12);
@@ -482,7 +483,6 @@ namespace Registry.SearchForms
             this.Controls.Add(this.comboBoxRegion);
             this.Controls.Add(this.checkBoxRegionEnable);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this.comboBoxState);
             this.Controls.Add(this.checkBoxStateEnable);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.textBoxHouse);
@@ -542,7 +542,6 @@ namespace Registry.SearchForms
         private CheckBox checkBoxFundTypeEnable;
         private Label label6;
         private TextBox textBoxHouse;
-        private ComboBox comboBoxState;
         private CheckBox checkBoxStateEnable;
         private Label label7;
         private NumericUpDown numericUpDownIDPremises;
@@ -560,5 +559,6 @@ namespace Registry.SearchForms
         private ComboBox comboBoxOwnershipType;
         private CheckBox checkBoxOwnershipTypeEnable;
         private Label label12;
+        private CheckedListBox checkedListBox1;
     }
 }
