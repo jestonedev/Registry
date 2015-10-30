@@ -47,12 +47,20 @@ namespace Registry.SearchForms
                 else
                     filter += "cadastral_num is null";
             }
-            if ((checkBoxStateEnable.Checked) && (comboBoxState.SelectedValue != null))
+            if ((checkBoxStateEnable.Checked) && ((checkedListBox1.CheckedItems.Count > 0)))
             {
                 if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += "id_state = " + comboBoxState.SelectedValue;
-            }
+                string array = string.Empty;
+                for(int i = 0; i < checkedListBox1.CheckedItems.Count; i++)
+                {
+                    var row =(DataRowView) checkedListBox1.CheckedItems[i];
+                    array += checkedListBox1.CheckedItems.IndexOf(row) == checkedListBox1.CheckedItems.Count - 1 ?
+                        row["id_state"] : row["id_state"] + ", ";
+                }
+                filter += "id_state IN (" + array + ")";
+            }         
+
             if (checkBoxIDPremisesEnable.Checked)
                 includedPremises = DataModelHelper.Intersect(null, new List<int>() { Convert.ToInt32(numericUpDownIDPremises.Value) });
             if ((checkBoxRegionEnable.Checked) && (comboBoxRegion.SelectedValue != null))
@@ -184,11 +192,11 @@ namespace Registry.SearchForms
 
             comboBoxFundType.DataSource = v_fundTypes;
             comboBoxFundType.ValueMember = "id_fund_type";
-            comboBoxFundType.DisplayMember = "fund_type";
+            comboBoxFundType.DisplayMember = "fund_type";            
 
-            comboBoxState.DataSource = v_object_states;
-            comboBoxState.ValueMember = "id_state";
-            comboBoxState.DisplayMember = "state_neutral";
+            checkedListBox1.DataSource = v_object_states;
+            checkedListBox1.ValueMember = "id_state";
+            checkedListBox1.DisplayMember = "state_neutral";
 
             comboBoxRegion.DataSource = v_regions;
             comboBoxRegion.ValueMember = "id_region";
@@ -328,7 +336,7 @@ namespace Registry.SearchForms
 
         private void checkBoxStateEnable_CheckedChanged(object sender, EventArgs e)
         {
-            comboBoxState.Enabled = checkBoxStateEnable.Checked;
+           checkedListBox1.Enabled = checkBoxStateEnable.Checked;
         }
 
         private void checkBoxIDBuildingEnable_CheckedChanged(object sender, EventArgs e)
