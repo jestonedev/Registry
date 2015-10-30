@@ -76,7 +76,7 @@ namespace Registry.Viewport
             this.panel7 = new System.Windows.Forms.Panel();
             this.groupBox29 = new System.Windows.Forms.GroupBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.vButton2 = new VIBlend.WinForms.Controls.vButton();
+            this.vButtonPaymentInsert = new VIBlend.WinForms.Controls.vButton();
             this.comboBoxExecutor = new System.Windows.Forms.ComboBox();
             this.label73 = new System.Windows.Forms.Label();
             this.vButtonSelectWarrant = new VIBlend.WinForms.Controls.vButton();
@@ -169,7 +169,7 @@ namespace Registry.Viewport
             // groupBox29
             // 
             this.groupBox29.Controls.Add(this.label4);
-            this.groupBox29.Controls.Add(this.vButton2);
+            this.groupBox29.Controls.Add(this.vButtonPaymentInsert);
             this.groupBox29.Controls.Add(this.comboBoxExecutor);
             this.groupBox29.Controls.Add(this.label73);
             this.groupBox29.Controls.Add(this.vButtonSelectWarrant);
@@ -189,26 +189,26 @@ namespace Registry.Viewport
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(258, 109);
+            this.label4.Location = new System.Drawing.Point(279, 109);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(142, 18);
+            this.label4.Size = new System.Drawing.Size(120, 15);
             this.label4.TabIndex = 40;
             this.label4.Text = "Изменение оплаты";
             // 
-            // vButton2
+            // vButtonPaymentInsert
             // 
-            this.vButton2.AllowAnimations = true;
-            this.vButton2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.vButton2.BackColor = System.Drawing.Color.Transparent;
-            this.vButton2.Location = new System.Drawing.Point(405, 109);
-            this.vButton2.Name = "vButton2";
-            this.vButton2.RoundedCornersMask = ((byte)(15));
-            this.vButton2.Size = new System.Drawing.Size(27, 20);
-            this.vButton2.TabIndex = 39;
-            this.vButton2.Text = "→";
-            this.vButton2.UseVisualStyleBackColor = false;
-            this.vButton2.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
-            this.vButton2.Click += new System.EventHandler(this.vButton2_Click);
+            this.vButtonPaymentInsert.AllowAnimations = true;
+            this.vButtonPaymentInsert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.vButtonPaymentInsert.BackColor = System.Drawing.Color.Transparent;
+            this.vButtonPaymentInsert.Location = new System.Drawing.Point(405, 108);
+            this.vButtonPaymentInsert.Name = "vButtonPaymentInsert";
+            this.vButtonPaymentInsert.RoundedCornersMask = ((byte)(15));
+            this.vButtonPaymentInsert.Size = new System.Drawing.Size(27, 20);
+            this.vButtonPaymentInsert.TabIndex = 39;
+            this.vButtonPaymentInsert.Text = "→";
+            this.vButtonPaymentInsert.UseVisualStyleBackColor = false;
+            this.vButtonPaymentInsert.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonPaymentInsert.Click += new System.EventHandler(this.vButtonPaymentInsert_Click);
             // 
             // comboBoxExecutor
             // 
@@ -218,7 +218,7 @@ namespace Registry.Viewport
             this.comboBoxExecutor.FormattingEnabled = true;
             this.comboBoxExecutor.Location = new System.Drawing.Point(164, 77);
             this.comboBoxExecutor.Name = "comboBoxExecutor";
-            this.comboBoxExecutor.Size = new System.Drawing.Size(268, 26);
+            this.comboBoxExecutor.Size = new System.Drawing.Size(268, 23);
             this.comboBoxExecutor.TabIndex = 3;
             // 
             // label73
@@ -226,7 +226,7 @@ namespace Registry.Viewport
             this.label73.AutoSize = true;
             this.label73.Location = new System.Drawing.Point(17, 80);
             this.label73.Name = "label73";
-            this.label73.Size = new System.Drawing.Size(101, 18);
+            this.label73.Size = new System.Drawing.Size(85, 15);
             this.label73.TabIndex = 38;
             this.label73.Text = "Исполнитель";
             // 
@@ -243,6 +243,7 @@ namespace Registry.Viewport
             this.vButtonSelectWarrant.Text = "...";
             this.vButtonSelectWarrant.UseVisualStyleBackColor = false;
             this.vButtonSelectWarrant.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonSelectWarrant.Click += new System.EventHandler(this.vButtonSelectWarrant_Click);
             // 
             // textBoxAgreementWarrant
             // 
@@ -251,7 +252,7 @@ namespace Registry.Viewport
             this.textBoxAgreementWarrant.Location = new System.Drawing.Point(164, 48);
             this.textBoxAgreementWarrant.Name = "textBoxAgreementWarrant";
             this.textBoxAgreementWarrant.ReadOnly = true;
-            this.textBoxAgreementWarrant.Size = new System.Drawing.Size(235, 24);
+            this.textBoxAgreementWarrant.Size = new System.Drawing.Size(235, 21);
             this.textBoxAgreementWarrant.TabIndex = 1;
             // 
             // label72
@@ -259,7 +260,7 @@ namespace Registry.Viewport
             this.label72.AutoSize = true;
             this.label72.Location = new System.Drawing.Point(17, 51);
             this.label72.Name = "label72";
-            this.label72.Size = new System.Drawing.Size(130, 18);
+            this.label72.Size = new System.Drawing.Size(109, 15);
             this.label72.TabIndex = 35;
             this.label72.Text = "По доверенности";
             // 
@@ -269,7 +270,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerAgreementDate.Location = new System.Drawing.Point(164, 19);
             this.dateTimePickerAgreementDate.Name = "dateTimePickerAgreementDate";
-            this.dateTimePickerAgreementDate.Size = new System.Drawing.Size(268, 24);
+            this.dateTimePickerAgreementDate.Size = new System.Drawing.Size(268, 21);
             this.dateTimePickerAgreementDate.TabIndex = 0;
             // 
             // label71
@@ -277,7 +278,7 @@ namespace Registry.Viewport
             this.label71.AutoSize = true;
             this.label71.Location = new System.Drawing.Point(17, 23);
             this.label71.Name = "label71";
-            this.label71.Size = new System.Drawing.Size(130, 18);
+            this.label71.Size = new System.Drawing.Size(109, 15);
             this.label71.TabIndex = 33;
             this.label71.Text = "Дата соглашения";
             // 
@@ -296,12 +297,12 @@ namespace Registry.Viewport
             // textBoxAgreementContent
             // 
             this.textBoxAgreementContent.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxAgreementContent.Location = new System.Drawing.Point(3, 20);
+            this.textBoxAgreementContent.Location = new System.Drawing.Point(3, 17);
             this.textBoxAgreementContent.MaxLength = 4000;
             this.textBoxAgreementContent.Multiline = true;
             this.textBoxAgreementContent.Name = "textBoxAgreementContent";
             this.textBoxAgreementContent.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxAgreementContent.Size = new System.Drawing.Size(432, 290);
+            this.textBoxAgreementContent.Size = new System.Drawing.Size(432, 293);
             this.textBoxAgreementContent.TabIndex = 1;
             // 
             // tabControl1
@@ -328,10 +329,10 @@ namespace Registry.Viewport
             this.tabPageExclude.Controls.Add(this.vButtonExcludePaste);
             this.tabPageExclude.Controls.Add(this.textBoxExcludePoint);
             this.tabPageExclude.Controls.Add(this.label74);
-            this.tabPageExclude.Location = new System.Drawing.Point(4, 27);
+            this.tabPageExclude.Location = new System.Drawing.Point(4, 24);
             this.tabPageExclude.Name = "tabPageExclude";
             this.tabPageExclude.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageExclude.Size = new System.Drawing.Size(436, 148);
+            this.tabPageExclude.Size = new System.Drawing.Size(436, 151);
             this.tabPageExclude.TabIndex = 0;
             this.tabPageExclude.Text = "Исключить";
             // 
@@ -341,7 +342,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxGeneralExcludePoint.Location = new System.Drawing.Point(164, 6);
             this.textBoxGeneralExcludePoint.Name = "textBoxGeneralExcludePoint";
-            this.textBoxGeneralExcludePoint.Size = new System.Drawing.Size(234, 24);
+            this.textBoxGeneralExcludePoint.Size = new System.Drawing.Size(234, 21);
             this.textBoxGeneralExcludePoint.TabIndex = 0;
             // 
             // label3
@@ -349,7 +350,7 @@ namespace Registry.Viewport
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(13, 9);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(49, 18);
+            this.label3.Size = new System.Drawing.Size(41, 15);
             this.label3.TabIndex = 50;
             this.label3.Text = "Пункт";
             // 
@@ -382,7 +383,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(433, 77);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(430, 88);
             this.dataGridViewTenancyPersons.TabIndex = 3;
             // 
             // surname
@@ -434,7 +435,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxExcludePoint.Location = new System.Drawing.Point(164, 34);
             this.textBoxExcludePoint.Name = "textBoxExcludePoint";
-            this.textBoxExcludePoint.Size = new System.Drawing.Size(235, 24);
+            this.textBoxExcludePoint.Size = new System.Drawing.Size(235, 21);
             this.textBoxExcludePoint.TabIndex = 1;
             // 
             // label74
@@ -442,7 +443,7 @@ namespace Registry.Viewport
             this.label74.AutoSize = true;
             this.label74.Location = new System.Drawing.Point(13, 37);
             this.label74.Name = "label74";
-            this.label74.Size = new System.Drawing.Size(75, 18);
+            this.label74.Size = new System.Drawing.Size(62, 15);
             this.label74.TabIndex = 37;
             this.label74.Text = "Подпункт";
             // 
@@ -460,10 +461,10 @@ namespace Registry.Viewport
             this.tabPageInclude.Controls.Add(this.label78);
             this.tabPageInclude.Controls.Add(this.vButtonIncludePaste);
             this.tabPageInclude.Controls.Add(this.label75);
-            this.tabPageInclude.Location = new System.Drawing.Point(4, 27);
+            this.tabPageInclude.Location = new System.Drawing.Point(4, 22);
             this.tabPageInclude.Name = "tabPageInclude";
             this.tabPageInclude.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInclude.Size = new System.Drawing.Size(436, 148);
+            this.tabPageInclude.Size = new System.Drawing.Size(436, 153);
             this.tabPageInclude.TabIndex = 1;
             this.tabPageInclude.Text = "Включить";
             // 
@@ -473,7 +474,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxGeneralIncludePoint.Location = new System.Drawing.Point(164, 6);
             this.textBoxGeneralIncludePoint.Name = "textBoxGeneralIncludePoint";
-            this.textBoxGeneralIncludePoint.Size = new System.Drawing.Size(234, 24);
+            this.textBoxGeneralIncludePoint.Size = new System.Drawing.Size(234, 21);
             this.textBoxGeneralIncludePoint.TabIndex = 0;
             // 
             // label2
@@ -481,7 +482,7 @@ namespace Registry.Viewport
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(13, 9);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(49, 18);
+            this.label2.Size = new System.Drawing.Size(41, 15);
             this.label2.TabIndex = 48;
             this.label2.Text = "Пункт";
             // 
@@ -491,7 +492,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerIncludeDateOfBirth.Location = new System.Drawing.Point(164, 90);
             this.dateTimePickerIncludeDateOfBirth.Name = "dateTimePickerIncludeDateOfBirth";
-            this.dateTimePickerIncludeDateOfBirth.Size = new System.Drawing.Size(234, 24);
+            this.dateTimePickerIncludeDateOfBirth.Size = new System.Drawing.Size(234, 21);
             this.dateTimePickerIncludeDateOfBirth.TabIndex = 3;
             // 
             // comboBoxIncludeKinship
@@ -502,7 +503,7 @@ namespace Registry.Viewport
             this.comboBoxIncludeKinship.FormattingEnabled = true;
             this.comboBoxIncludeKinship.Location = new System.Drawing.Point(164, 118);
             this.comboBoxIncludeKinship.Name = "comboBoxIncludeKinship";
-            this.comboBoxIncludeKinship.Size = new System.Drawing.Size(234, 26);
+            this.comboBoxIncludeKinship.Size = new System.Drawing.Size(234, 23);
             this.comboBoxIncludeKinship.TabIndex = 4;
             // 
             // label76
@@ -510,7 +511,7 @@ namespace Registry.Viewport
             this.label76.AutoSize = true;
             this.label76.Location = new System.Drawing.Point(13, 122);
             this.label76.Name = "label76";
-            this.label76.Size = new System.Drawing.Size(131, 18);
+            this.label76.Size = new System.Drawing.Size(110, 15);
             this.label76.TabIndex = 46;
             this.label76.Text = "Отношение/связь";
             // 
@@ -519,7 +520,7 @@ namespace Registry.Viewport
             this.label77.AutoSize = true;
             this.label77.Location = new System.Drawing.Point(13, 93);
             this.label77.Name = "label77";
-            this.label77.Size = new System.Drawing.Size(116, 18);
+            this.label77.Size = new System.Drawing.Size(98, 15);
             this.label77.TabIndex = 45;
             this.label77.Text = "Дата рождения";
             // 
@@ -529,7 +530,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxIncludeSNP.Location = new System.Drawing.Point(164, 62);
             this.textBoxIncludeSNP.Name = "textBoxIncludeSNP";
-            this.textBoxIncludeSNP.Size = new System.Drawing.Size(234, 24);
+            this.textBoxIncludeSNP.Size = new System.Drawing.Size(234, 21);
             this.textBoxIncludeSNP.TabIndex = 2;
             // 
             // textBoxIncludePoint
@@ -538,7 +539,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxIncludePoint.Location = new System.Drawing.Point(164, 34);
             this.textBoxIncludePoint.Name = "textBoxIncludePoint";
-            this.textBoxIncludePoint.Size = new System.Drawing.Size(234, 24);
+            this.textBoxIncludePoint.Size = new System.Drawing.Size(234, 21);
             this.textBoxIncludePoint.TabIndex = 1;
             // 
             // label78
@@ -546,7 +547,7 @@ namespace Registry.Viewport
             this.label78.AutoSize = true;
             this.label78.Location = new System.Drawing.Point(13, 65);
             this.label78.Name = "label78";
-            this.label78.Size = new System.Drawing.Size(44, 18);
+            this.label78.Size = new System.Drawing.Size(36, 15);
             this.label78.TabIndex = 43;
             this.label78.Text = "ФИО";
             // 
@@ -570,7 +571,7 @@ namespace Registry.Viewport
             this.label75.AutoSize = true;
             this.label75.Location = new System.Drawing.Point(13, 37);
             this.label75.Name = "label75";
-            this.label75.Size = new System.Drawing.Size(75, 18);
+            this.label75.Size = new System.Drawing.Size(62, 15);
             this.label75.TabIndex = 40;
             this.label75.Text = "Подпункт";
             // 
@@ -581,9 +582,9 @@ namespace Registry.Viewport
             this.tabPageExplain.Controls.Add(this.textBoxExplainPoint);
             this.tabPageExplain.Controls.Add(this.vButtonExplainPaste);
             this.tabPageExplain.Controls.Add(this.label79);
-            this.tabPageExplain.Location = new System.Drawing.Point(4, 27);
+            this.tabPageExplain.Location = new System.Drawing.Point(4, 22);
             this.tabPageExplain.Name = "tabPageExplain";
-            this.tabPageExplain.Size = new System.Drawing.Size(436, 148);
+            this.tabPageExplain.Size = new System.Drawing.Size(436, 153);
             this.tabPageExplain.TabIndex = 2;
             this.tabPageExplain.Text = "Изложить";
             // 
@@ -604,7 +605,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxExplainPoint.Location = new System.Drawing.Point(163, 6);
             this.textBoxExplainPoint.Name = "textBoxExplainPoint";
-            this.textBoxExplainPoint.Size = new System.Drawing.Size(234, 24);
+            this.textBoxExplainPoint.Size = new System.Drawing.Size(234, 21);
             this.textBoxExplainPoint.TabIndex = 0;
             // 
             // vButtonExplainPaste
@@ -627,7 +628,7 @@ namespace Registry.Viewport
             this.label79.AutoSize = true;
             this.label79.Location = new System.Drawing.Point(12, 9);
             this.label79.Name = "label79";
-            this.label79.Size = new System.Drawing.Size(75, 18);
+            this.label79.Size = new System.Drawing.Size(62, 15);
             this.label79.TabIndex = 40;
             this.label79.Text = "Подпункт";
             // 
@@ -639,9 +640,9 @@ namespace Registry.Viewport
             this.tabPageTerminate.Controls.Add(this.vButtonTerminatePaste);
             this.tabPageTerminate.Controls.Add(this.textBoxTerminateAgreement);
             this.tabPageTerminate.Controls.Add(this.label80);
-            this.tabPageTerminate.Location = new System.Drawing.Point(4, 27);
+            this.tabPageTerminate.Location = new System.Drawing.Point(4, 22);
             this.tabPageTerminate.Name = "tabPageTerminate";
-            this.tabPageTerminate.Size = new System.Drawing.Size(436, 148);
+            this.tabPageTerminate.Size = new System.Drawing.Size(436, 153);
             this.tabPageTerminate.TabIndex = 3;
             this.tabPageTerminate.Text = "Расторгнуть";
             // 
@@ -649,7 +650,7 @@ namespace Registry.Viewport
             // 
             this.dateTimePickerTerminateDate.Location = new System.Drawing.Point(163, 34);
             this.dateTimePickerTerminateDate.Name = "dateTimePickerTerminateDate";
-            this.dateTimePickerTerminateDate.Size = new System.Drawing.Size(234, 24);
+            this.dateTimePickerTerminateDate.Size = new System.Drawing.Size(234, 21);
             this.dateTimePickerTerminateDate.TabIndex = 45;
             // 
             // label1
@@ -657,7 +658,7 @@ namespace Registry.Viewport
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(12, 38);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(138, 18);
+            this.label1.Size = new System.Drawing.Size(118, 15);
             this.label1.TabIndex = 44;
             this.label1.Text = "Дата расторжения";
             // 
@@ -682,7 +683,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxTerminateAgreement.Location = new System.Drawing.Point(163, 6);
             this.textBoxTerminateAgreement.Name = "textBoxTerminateAgreement";
-            this.textBoxTerminateAgreement.Size = new System.Drawing.Size(234, 24);
+            this.textBoxTerminateAgreement.Size = new System.Drawing.Size(234, 21);
             this.textBoxTerminateAgreement.TabIndex = 0;
             // 
             // label80
@@ -690,7 +691,7 @@ namespace Registry.Viewport
             this.label80.AutoSize = true;
             this.label80.Location = new System.Drawing.Point(12, 10);
             this.label80.Name = "label80";
-            this.label80.Size = new System.Drawing.Size(133, 18);
+            this.label80.Size = new System.Drawing.Size(110, 15);
             this.label80.TabIndex = 43;
             this.label80.Text = "По какой причине";
             // 
@@ -779,7 +780,7 @@ namespace Registry.Viewport
 
         }
 
-        private vButton vButton2;
+        private vButton vButtonPaymentInsert;
         private IContainer components;
         private Label label4;
     }
