@@ -383,7 +383,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(433, 73);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(430, 88);
             this.dataGridViewTenancyPersons.TabIndex = 3;
             // 
             // surname
