@@ -128,6 +128,7 @@ namespace Registry.Viewport
             var idPremises = (int)((DataRowView) _premises[_premises.Position])["id_premises"];
             _premises.Filter = string.Format("({0}) AND (id_premises <> {1})", _premises.Filter, idPremises);
             dataGridView.RowCount = _premises.Count;
+            dataGridView.Refresh();
         }
 
         private void toolStripButtonPremisesCurrent_Click(object sender, EventArgs e)

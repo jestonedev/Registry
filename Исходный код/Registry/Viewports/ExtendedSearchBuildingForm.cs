@@ -121,9 +121,11 @@ namespace Registry.SearchForms
             {
                 if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += "(" + BuildFilter(includedBuildings, "id_building") + ")";
+                var buildingsFilter = BuildFilter(includedBuildings, "id_building");
+                if (!string.IsNullOrEmpty(buildingsFilter))
+                    filter += "(" + buildingsFilter + ")";
             }
-            return filter;
+            return filter == "" ? "0 = 1" : filter;
         }
 
         private static string BuildFilter(IEnumerable<int> ids, string fieldName)

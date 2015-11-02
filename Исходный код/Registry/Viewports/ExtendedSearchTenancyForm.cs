@@ -198,8 +198,10 @@ namespace Registry.SearchForms
             if (includedProcesses == null) return filter;
             if (!string.IsNullOrEmpty(filter.Trim()))
                 filter += " AND ";
-            filter += "(" + BuildFilter(includedProcesses, "id_process") + ")";
-            return filter;
+            var processesFilter = BuildFilter(includedProcesses, "id_process");
+            if (!string.IsNullOrEmpty(processesFilter))
+                filter += "(" + processesFilter + ")";
+            return filter == "" ? "0 = 1" : filter;
         }
 
         private static string BuildFilter(IEnumerable<int> ids, string fieldName)
