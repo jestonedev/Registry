@@ -37,6 +37,7 @@ namespace Registry.Reporting
         ExportReporter,
         RegistryExcerptReporterPremise,
         RegistryExcerptReporterSubPremise,
-        RegistryExcerptReporterAllMunSubPremises
+        RegistryExcerptReporterAllMunSubPremises,
+        MultiExcerptReporter
     }
 }

@@ -394,6 +394,14 @@ namespace Registry.Viewport
                     idStreetColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
         }
-    
+
+
+        internal int GetCurrentId()
+        {
+            if (GeneralBindingSource.Position < 0) return -1;
+            if (((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_building"] != DBNull.Value)
+                return (int) ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_building"];
+            return -1;
+        }
     }
 }

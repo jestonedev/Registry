@@ -1633,5 +1633,18 @@ namespace Registry.Viewport
                 editor.ShowDialog();
             }
         }
+
+        internal int GetCurrentId()
+        {
+            if (GeneralBindingSource.Position < 0) return -1;
+            if (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"] != DBNull.Value)
+                return (int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"];
+            return -1;
+        }
+
+        internal string GetFilter()
+        {
+            return GeneralBindingSource.Filter;
+        }
     }
 }

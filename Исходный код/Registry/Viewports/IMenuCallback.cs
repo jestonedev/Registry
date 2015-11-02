@@ -11,5 +11,6 @@
         void ForceCloseDetachedViewports();
         void AddViewport(Viewport viewport);
         void SwitchToPreviousViewport();
+        Viewport GetCurrentViewport();
     }
 }

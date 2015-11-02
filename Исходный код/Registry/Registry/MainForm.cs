@@ -18,6 +18,7 @@ namespace Registry
     public partial class MainForm : Form, IMenuCallback
     {
         private readonly ReportLogForm _reportLogForm = new ReportLogForm();
+        private MultiExcerptsMaster _multiExcerptsMasterForm;
         private int _reportCounter;
 
         private void ChangeViewportsSelectProprty()
@@ -182,6 +183,8 @@ namespace Registry
             ChangeMainMenuState();
             StatusBarStateUpdate();
             ChangeViewportsSelectProprty();
+            if (_multiExcerptsMasterForm != null)
+                _multiExcerptsMasterForm.UpdateToolbar();
         }
 
         private void ribbonButtonFirst_Click(object sender, EventArgs e)
@@ -387,7 +390,10 @@ namespace Registry
             ribbon1.OrbDropDown.RecentItems.Clear();
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document == null)
+            {
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryMultiExcerpt);
                 return;
+            }
             if (document.HasReport(ReporterType.TenancyContractSpecial1711Reporter))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyContract1711);
             if (document.HasReport(ReporterType.TenancyContractSpecial1712Reporter))
@@ -405,6 +411,7 @@ namespace Registry
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptSubPremise);
             if (document.HasReport(ReporterType.RegistryExcerptReporterAllMunSubPremises))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptSubPremises);
+            ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryMultiExcerpt);
             if (document.HasReport(ReporterType.ExportReporter))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonExportOds);
         }
@@ -986,6 +993,14 @@ namespace Registry
                 document.GenerateReport(ReporterType.ExportReporter); 
         }
 
+
+        private void ribbonButtonOrbRegistryMultiExcerpt_Click(object sender, EventArgs e)
+        {
+            _multiExcerptsMasterForm = new MultiExcerptsMaster(this);
+            _multiExcerptsMasterForm.Show(dockPanel, DockState.DockBottom);
+            _multiExcerptsMasterForm.UpdateToolbar();
+        }
+
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             switch (keyData)
@@ -1043,6 +1058,12 @@ namespace Registry
                     return true;
             }
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+
+        public Viewport.Viewport GetCurrentViewport()
+        {
+            return dockPanel.ActiveDocument as Viewport.Viewport;
         }
     }
 }

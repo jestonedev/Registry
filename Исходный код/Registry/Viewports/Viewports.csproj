@@ -133,6 +133,12 @@
       <DependentUpon>FundsHistoryViewport.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="MultiExcerptsMaster.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MultiExcerptsMaster.Designer.cs">
+      <DependentUpon>MultiExcerptsMaster.cs</DependentUpon>
+    </Compile>
     <Compile Include="OwnershipListViewport.Designer.cs">
       <DependentUpon>OwnershipListViewport.cs</DependentUpon>
     </Compile>
@@ -446,6 +452,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FundsHistoryViewport.resx">
       <DependentUpon>FundsHistoryViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MultiExcerptsMaster.resx">
+      <DependentUpon>MultiExcerptsMaster.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OwnershipListViewport.resx">
       <DependentUpon>OwnershipListViewport.cs</DependentUpon>

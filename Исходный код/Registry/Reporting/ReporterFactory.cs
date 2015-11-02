@@ -42,6 +42,8 @@ namespace Registry.Reporting
                 case ReporterType.RegistryExcerptReporterSubPremise:
                 case ReporterType.RegistryExcerptReporterAllMunSubPremises:
                     return new ExcerptReporter();
+                case ReporterType.MultiExcerptReporter:
+                    return new MultiExcerptReporter();
                 case ReporterType.ClaimsStatisticReporter:
                     return new ClaimsStatisticReporter();
                 case ReporterType.TenancyContractCommercialReporter:
