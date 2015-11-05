@@ -24,7 +24,7 @@
       <Value Profile="(Default)">\\nas\media$\ActivityManager\templates\registry</Value>
     </Setting>
     <Setting Name="DataModelsCallbackUpdateTimeout" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">60000</Value>
+      <Value Profile="(Default)">120000</Value>
     </Setting>
     <Setting Name="CalcDataModelsUpdateTimeout" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">5000</Value>
