@@ -96,7 +96,7 @@ namespace Registry.DataModels
                                 Contains(addressParts[0].ToUpperInvariant()) :
                             (addressParts.Count() >= 2) && (kladrRow.Field<string>("street_name").ToUpperInvariant().
                                 Contains(addressParts[0].ToUpperInvariant()) &&
-                            string.Equals(buildingRow.Field<string>("house"), addressParts[1], StringComparison.InvariantCultureIgnoreCase))
+                            buildingRow.Field<string>("house").ToUpper().Contains(addressParts[1].ToUpper()))
                     select buildingRow.Field<int>("id_building"));
         }
 
@@ -114,10 +114,10 @@ namespace Registry.DataModels
                                 Contains(addressParts[0].ToUpperInvariant()) :
                             (addressParts.Count() == 2) ? kladrRow.Field<string>("street_name").ToUpperInvariant().
                                 Contains(addressParts[0].ToUpperInvariant()) &&
-                            string.Equals(buildingRow.Field<string>("house"), addressParts[1], StringComparison.InvariantCultureIgnoreCase) :
+                            buildingRow.Field<string>("house").ToUpper().Contains(addressParts[1].ToUpper()) :
                             (addressParts.Count() == 3) && (kladrRow.Field<string>("street_name").ToUpperInvariant().
                                 Contains(addressParts[0].ToUpperInvariant()) &&
-                            string.Equals(buildingRow.Field<string>("house"), addressParts[1], StringComparison.InvariantCultureIgnoreCase) &&
+                            buildingRow.Field<string>("house").ToUpper().Contains(addressParts[1].ToUpper()) &&
                             premisesRow.Field<string>("premises_num").ToUpperInvariant().Contains(
                                 addressParts[2].ToUpperInvariant()))
                     select premisesRow.Field<int>("id_premises"));
@@ -141,8 +141,7 @@ namespace Registry.DataModels
                                                 Contains(addressParts[0].ToUpperInvariant()) :
                                           (addressParts.Count() >= 2) && ((kladrRow.Field<string>("street_name").ToUpperInvariant().
                                               Contains(addressParts[0].ToUpperInvariant())) &&
-                                        (buildingsRow.Field<string>("house").ToUpperInvariant() == 
-                                        addressParts[1].ToUpperInvariant()))
+                                        buildingsRow.Field<string>("house").ToUpper().Contains(addressParts[1].ToUpper()))
                                     select tenancyBuildingsRow.Field<int>("id_process");
             var tenancyPremises = from tenancyPremisesRow in tenancyPremisesAssoc
                                    join premisesRow in premises
@@ -155,10 +154,10 @@ namespace Registry.DataModels
                                                 Contains(addressParts[0].ToUpperInvariant())) :
                                          (addressParts.Count() == 2) ? (kladrRow.Field<string>("street_name").ToUpperInvariant().
                                                 Contains(addressParts[0].ToUpperInvariant())) &&
-                                         (string.Equals(buildingsRow.Field<string>("house"), addressParts[1], StringComparison.InvariantCultureIgnoreCase)) :
+                                         buildingsRow.Field<string>("house").ToUpper().Contains(addressParts[1].ToUpper()) :
                                          (addressParts.Count() == 3) && ((kladrRow.Field<string>("street_name").ToUpperInvariant().
                                              Contains(addressParts[0].ToUpperInvariant())) &&
-                                        (string.Equals(buildingsRow.Field<string>("house"), addressParts[1], StringComparison.InvariantCultureIgnoreCase)) &&
+                                        buildingsRow.Field<string>("house").ToUpper().Contains(addressParts[1].ToUpper()) &&
                                         (premisesRow.Field<string>("premises_num").ToUpperInvariant().Contains(
                                             addressParts[2].ToUpperInvariant())))
                                    select tenancyPremisesRow.Field<int>("id_process");
@@ -175,11 +174,11 @@ namespace Registry.DataModels
                                                 Contains(addressParts[0].ToUpperInvariant())) :
                                          (addressParts.Count() == 2) ? (kladrRow.Field<string>("street_name").ToUpperInvariant().
                                                 Contains(addressParts[0].ToUpperInvariant())) &&
-                                         (string.Equals(buildingsRow.Field<string>("house"), addressParts[1], StringComparison.InvariantCultureIgnoreCase)) :
+                                         buildingsRow.Field<string>("house").ToUpper().Contains(addressParts[1].ToUpper()) :
                                          (addressParts.Count() == 3) && ((kladrRow.Field<string>("street_name").ToUpperInvariant().
                                              Contains(addressParts[0].ToUpperInvariant())) &&
-                                        (string.Equals(buildingsRow.Field<string>("house"), addressParts[1], StringComparison.InvariantCultureIgnoreCase)) &&
-                                        (string.Equals(premisesRow.Field<string>("premises_num"), addressParts[2], StringComparison.InvariantCultureIgnoreCase)))
+                                        buildingsRow.Field<string>("house").ToUpper().Contains(addressParts[1].ToUpper()) &&
+                                        premisesRow.Field<string>("premises_num").ToUpper().Contains(addressParts[2].ToUpper()))
                                        select tenancySubPremisesRow.Field<int>("id_process");
             return tenancyBuildings.Union(tenancyPremises).Union(tenancySubPremises);
         }
@@ -440,7 +439,7 @@ namespace Registry.DataModels
         {
             var buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel).FilterDeletedRows();
             return (from buildingRow in buildings
-                    where (buildingRow.Field<string>("house") == house)
+                    where (buildingRow.Field<string>("house").ToUpper().Contains(house.ToUpper()))
                     select buildingRow.Field<int>("id_building"));
         }
 
