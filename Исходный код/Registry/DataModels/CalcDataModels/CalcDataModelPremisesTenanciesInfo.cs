@@ -18,6 +18,7 @@ namespace Registry.DataModels.CalcDataModels
             Table = InitializeTable();
             Refresh();
             RefreshOnTableModify(DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance(DataModelType.TenancySubPremisesAssocDataModel).Select());
             RefreshOnTableModify(DataModel.GetInstance(DataModelType.TenancyProcessesDataModel).Select());
             RefreshOnTableModify(DataModel.GetInstance(DataModelType.TenancyPersonsDataModel).Select());
         }
@@ -32,6 +33,7 @@ namespace Registry.DataModels.CalcDataModels
             table.Columns.Add("residence_warrant_num").DataType = typeof(string);
             table.Columns.Add("residence_warrant_date").DataType = typeof(DateTime);
             table.Columns.Add("tenant").DataType = typeof(string);
+            table.Columns.Add("object_type").DataType = typeof(int);
             return table;
         }
 
@@ -43,9 +45,28 @@ namespace Registry.DataModels.CalcDataModels
                     "Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelPremisesTenanciesRegNumbers");
             // Фильтруем удаленные строки
             var tenancyPremises = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).FilterDeletedRows();
+            var tenancySubPremises = DataModel.GetInstance(DataModelType.TenancySubPremisesAssocDataModel).FilterDeletedRows();
+            var subPremises = DataModel.GetInstance(DataModelType.SubPremisesDataModel).FilterDeletedRows();
             var tenancyProcesses = DataModel.GetInstance(DataModelType.TenancyProcessesDataModel).FilterDeletedRows();
             var tenancyPersons = DataModel.GetInstance(DataModelType.TenancyPersonsDataModel).FilterDeletedRows();
             // Вычисляем агрегационную информацию
+            var tenancyAssoc = (from tenancySubPremisesRow in tenancySubPremises
+                join subPremisesRow in subPremises
+                    on tenancySubPremisesRow.Field<int>("id_sub_premises") equals
+                    subPremisesRow.Field<int>("id_sub_premises")
+                select new
+                {
+                    idPremises = subPremisesRow.Field<int>("id_premises"),
+                    idProcess = tenancySubPremisesRow.Field<int>("id_process"),
+                    idObjectType = 2
+                })
+                .Union(from premisesRow in tenancyPremises 
+                select new
+                {
+                    idPremises = premisesRow.Field<int>("id_premises"),
+                    idProcess = premisesRow.Field<int>("id_process"),
+                    idObjectType = 1
+                });
             var tenants = from row in tenancyPersons
                 where row.Field<int?>("id_kinship") == 1
                 select new
@@ -71,24 +92,25 @@ namespace Registry.DataModels.CalcDataModels
                     tenant = pTenantsRow != null ? pTenantsRow.tenant : null
                 };
             var result = from processRow in tenancyProcessesWithTenants
-                            join tenancyPremisesRow in tenancyPremises
-                            on processRow.id_process equals tenancyPremisesRow.Field<int>("id_process")
+                         join tenancyAssocRow in tenancyAssoc
+                            on processRow.id_process equals tenancyAssocRow.idProcess
                             select new
                             {
-                                id_premises = tenancyPremisesRow.Field<int>("id_premises"),
+                                tenancyAssocRow.idPremises,
                                 processRow.registration_num,
                                 processRow.registration_date,
                                 processRow.end_date,
                                 processRow.residence_warrant_num,
                                 processRow.residence_warrant_date,
-                                processRow.tenant
+                                processRow.tenant,
+                                tenancyAssocRow.idObjectType,
                             };
             // Заполняем таблицу изменений
             var table = InitializeTable();
             table.BeginLoadData();
             result.ToList().ForEach(x =>
             {
-                table.Rows.Add(x.id_premises, x.registration_num, x.registration_date, x.end_date, x.residence_warrant_num, x.residence_warrant_date, x.tenant);
+                table.Rows.Add(x.idPremises, x.registration_num, x.registration_date, x.end_date, x.residence_warrant_num, x.residence_warrant_date, x.tenant, x.idObjectType);
             });
             table.EndLoadData();
             // Возвращаем результат

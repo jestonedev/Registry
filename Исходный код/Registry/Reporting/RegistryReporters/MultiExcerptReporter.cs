@@ -12,7 +12,7 @@ namespace Registry.Reporting.RegistryReporters
         {
             if (arguments == null)
                 arguments = new Dictionary<string, string>();
-            arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "registry\\multi_excerpt.xml"));
+            arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "registry\\premises_mx.xml"));
             arguments.Add("connectionString", RegistrySettings.ConnectionString);
             var filter = arguments["filter"];
             var fileName = Path.GetTempFileName();

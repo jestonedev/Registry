@@ -531,23 +531,35 @@ namespace Registry.Viewport
                     var tenancyInfoRows =
                         from tenancyInfoRow in _premisesTenanciesInfo.FilterDeletedRows()
                         where tenancyInfoRow.Field<int>("id_premises") == (int?) row["id_premises"]
-                        orderby tenancyInfoRow.Field<DateTime?>("registration_date") descending 
+                        orderby tenancyInfoRow.Field<DateTime?>("registration_date") ?? 
+                            DateTime.Now descending 
                         select tenancyInfoRow;
                     if (!tenancyInfoRows.Any())
                         return;
+                    var tenancyRow = tenancyInfoRows.First();
                     switch (dataGridView.Columns[e.ColumnIndex].Name)
                     {
                         case "registration_date":
                         case "residence_warrant_date":
                         case "end_date":
-                            var date = tenancyInfoRows.First().Field<DateTime?>(dataGridView.Columns[e.ColumnIndex].Name);
+                            var date = tenancyRow.Field<DateTime?>(dataGridView.Columns[e.ColumnIndex].Name);
                             e.Value =date != null ? date.Value.ToString("dd.MM.yyyy") : null;
                             break;
                         case "registration_num":
                         case "residence_warrant_num":
                         case "tenant":
-                                e.Value = tenancyInfoRows.First().Field<string>(dataGridView.Columns[e.ColumnIndex].Name);
+                                e.Value = tenancyRow.Field<string>(dataGridView.Columns[e.ColumnIndex].Name);
                             break;
+                    }
+                    if (tenancyRow.Field<int?>("object_type") == 2)
+                    {
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.LightGreen;
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.Green;
+                    }
+                    else
+                    {
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.White;
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = SystemColors.Highlight;
                     }
                     break;
             }
