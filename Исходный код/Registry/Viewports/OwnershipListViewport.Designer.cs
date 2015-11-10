@@ -22,95 +22,102 @@ namespace Registry.Viewport
 
         private void InitializeComponent()
         {
-            var dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            var resources = new ComponentResourceManager(typeof(OwnershipListViewport));
-            dataGridView = new DataGridView();
-            id_ownership_right = new DataGridViewTextBoxColumn();
-            number = new DataGridViewTextBoxColumn();
-            date = new DataGridViewDateTimeColumn();
-            description = new DataGridViewTextBoxColumn();
-            id_ownership_right_type = new DataGridViewComboBoxColumn();
-            ((ISupportInitialize)(dataGridView)).BeginInit();
-            SuspendLayout();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OwnershipListViewport));
+            this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.id_ownership_right = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.date = new CustomControls.DataGridViewDateTimeColumn();
+            this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_ownership_right_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.SuspendLayout();
             // 
             // dataGridView
             // 
-            dataGridView.AllowUserToAddRows = false;
-            dataGridView.AllowUserToDeleteRows = false;
-            dataGridView.AllowUserToResizeRows = false;
-            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView.BackgroundColor = Color.White;
-            dataGridView.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Control;
-            dataGridViewCellStyle1.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle1.Padding = new Padding(0, 2, 0, 2);
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Columns.AddRange(id_ownership_right, number, date, description, id_ownership_right_type);
-            dataGridView.Dock = DockStyle.Fill;
-            dataGridView.Location = new Point(3, 3);
-            dataGridView.MultiSelect = false;
-            dataGridView.Name = "dataGridView";
-            dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridView.ShowCellToolTips = false;
-            dataGridView.Size = new Size(819, 328);
-            dataGridView.TabIndex = 2;
-            dataGridView.EditingControlShowing += dataGridView_EditingControlShowing;
+            this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
+            this.dataGridView.AllowUserToResizeRows = false;
+            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.id_ownership_right,
+            this.number,
+            this.date,
+            this.description,
+            this.id_ownership_right_type});
+            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.dataGridView.Location = new System.Drawing.Point(3, 3);
+            this.dataGridView.MultiSelect = false;
+            this.dataGridView.Name = "dataGridView";
+            this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridView.ShowCellToolTips = false;
+            this.dataGridView.Size = new System.Drawing.Size(819, 328);
+            this.dataGridView.TabIndex = 2;
+            this.dataGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridView_EditingControlShowing);
             // 
             // id_ownership_right
             // 
-            id_ownership_right.HeaderText = "Идентификатор основания";
-            id_ownership_right.Name = "id_ownership_right";
-            id_ownership_right.Visible = false;
+            this.id_ownership_right.HeaderText = "Идентификатор основания";
+            this.id_ownership_right.Name = "id_ownership_right";
+            this.id_ownership_right.Visible = false;
             // 
             // number
             // 
-            number.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            number.HeaderText = "Номер";
-            number.MinimumWidth = 150;
-            number.Name = "number";
-            number.Width = 150;
+            this.number.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.number.HeaderText = "Номер";
+            this.number.MinimumWidth = 150;
+            this.number.Name = "number";
+            this.number.Width = 150;
             // 
             // date
             // 
-            date.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            date.HeaderText = "Дата";
-            date.MinimumWidth = 150;
-            date.Name = "date";
-            date.Width = 150;
+            this.date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.date.HeaderText = "Дата";
+            this.date.MinimumWidth = 150;
+            this.date.Name = "date";
+            this.date.Width = 150;
             // 
             // description
             // 
-            description.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            description.HeaderText = "Наименование";
-            description.MinimumWidth = 300;
-            description.Name = "description";
+            this.description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.description.HeaderText = "Наименование";
+            this.description.MinimumWidth = 300;
+            this.description.Name = "description";
             // 
             // id_ownership_right_type
             // 
-            id_ownership_right_type.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            id_ownership_right_type.HeaderText = "Тип ограничения";
-            id_ownership_right_type.MinimumWidth = 150;
-            id_ownership_right_type.Name = "id_ownership_right_type";
-            id_ownership_right_type.Width = 150;
+            this.id_ownership_right_type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.id_ownership_right_type.HeaderText = "Тип ограничения";
+            this.id_ownership_right_type.MinimumWidth = 150;
+            this.id_ownership_right_type.Name = "id_ownership_right_type";
+            this.id_ownership_right_type.Width = 150;
             // 
             // OwnershipListViewport
             // 
-            BackColor = Color.White;
-            ClientSize = new Size(825, 334);
-            Controls.Add(dataGridView);
-            Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            Icon = ((Icon)(resources.GetObject("$this.Icon")));
-            Name = "OwnershipListViewport";
-            Padding = new Padding(3);
-            Text = "Ограничения";
-            ((ISupportInitialize)(dataGridView)).EndInit();
-            ResumeLayout(false);
+            this.BackColor = System.Drawing.Color.White;
+            this.ClientSize = new System.Drawing.Size(825, 334);
+            this.Controls.Add(this.dataGridView);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "OwnershipListViewport";
+            this.Padding = new System.Windows.Forms.Padding(3);
+            this.Text = "Ограничения";
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.ResumeLayout(false);
+
         }
     }
 }

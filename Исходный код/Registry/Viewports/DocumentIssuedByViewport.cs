@@ -339,19 +339,7 @@ namespace Registry.Viewport
 
         void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
         {
-            var cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
-            switch (cell.OwningColumn.Name)
-            {
-                case "document_issued_by":
-                    if (cell.Value.ToString().Trim().Length > 255)
-                        cell.ErrorText = "Длина наименования органа, выдающего документы, удостоверяющие личность, не может превышать 255 символов";
-                    else
-                        if (string.IsNullOrEmpty(cell.Value.ToString().Trim()))
-                            cell.ErrorText = "Наименование органа, выдающего документы, удостоверяющие личность, не может быть пустым";
-                        else
-                            cell.ErrorText = "";
-                    break;
-            }
+
         }
 
         void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)

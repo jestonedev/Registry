@@ -578,6 +578,7 @@ namespace Registry.Viewport
             editingControl.DropDownClosed -= editingControl_DropDownClosed;
             editingControl.DropDownClosed += editingControl_DropDownClosed;
         }
+
         void editingControl_DropDownClosed(object sender, EventArgs e)
         {
             var editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;

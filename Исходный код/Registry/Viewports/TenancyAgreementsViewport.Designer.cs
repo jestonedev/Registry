@@ -344,6 +344,7 @@ namespace Registry.Viewport
             this.textBoxGeneralExcludePoint.Name = "textBoxGeneralExcludePoint";
             this.textBoxGeneralExcludePoint.Size = new System.Drawing.Size(234, 21);
             this.textBoxGeneralExcludePoint.TabIndex = 0;
+            this.textBoxGeneralExcludePoint.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label3
             // 
@@ -383,7 +384,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(430, 88);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(430, 86);
             this.dataGridViewTenancyPersons.TabIndex = 3;
             // 
             // surname
@@ -437,6 +438,7 @@ namespace Registry.Viewport
             this.textBoxExcludePoint.Name = "textBoxExcludePoint";
             this.textBoxExcludePoint.Size = new System.Drawing.Size(235, 21);
             this.textBoxExcludePoint.TabIndex = 1;
+            this.textBoxExcludePoint.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label74
             // 
@@ -461,10 +463,10 @@ namespace Registry.Viewport
             this.tabPageInclude.Controls.Add(this.label78);
             this.tabPageInclude.Controls.Add(this.vButtonIncludePaste);
             this.tabPageInclude.Controls.Add(this.label75);
-            this.tabPageInclude.Location = new System.Drawing.Point(4, 22);
+            this.tabPageInclude.Location = new System.Drawing.Point(4, 24);
             this.tabPageInclude.Name = "tabPageInclude";
             this.tabPageInclude.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInclude.Size = new System.Drawing.Size(436, 153);
+            this.tabPageInclude.Size = new System.Drawing.Size(436, 151);
             this.tabPageInclude.TabIndex = 1;
             this.tabPageInclude.Text = "Включить";
             // 
@@ -476,6 +478,7 @@ namespace Registry.Viewport
             this.textBoxGeneralIncludePoint.Name = "textBoxGeneralIncludePoint";
             this.textBoxGeneralIncludePoint.Size = new System.Drawing.Size(234, 21);
             this.textBoxGeneralIncludePoint.TabIndex = 0;
+            this.textBoxGeneralIncludePoint.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label2
             // 
@@ -532,6 +535,7 @@ namespace Registry.Viewport
             this.textBoxIncludeSNP.Name = "textBoxIncludeSNP";
             this.textBoxIncludeSNP.Size = new System.Drawing.Size(234, 21);
             this.textBoxIncludeSNP.TabIndex = 2;
+            this.textBoxIncludeSNP.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // textBoxIncludePoint
             // 
@@ -541,6 +545,7 @@ namespace Registry.Viewport
             this.textBoxIncludePoint.Name = "textBoxIncludePoint";
             this.textBoxIncludePoint.Size = new System.Drawing.Size(234, 21);
             this.textBoxIncludePoint.TabIndex = 1;
+            this.textBoxIncludePoint.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label78
             // 
@@ -582,9 +587,9 @@ namespace Registry.Viewport
             this.tabPageExplain.Controls.Add(this.textBoxExplainPoint);
             this.tabPageExplain.Controls.Add(this.vButtonExplainPaste);
             this.tabPageExplain.Controls.Add(this.label79);
-            this.tabPageExplain.Location = new System.Drawing.Point(4, 22);
+            this.tabPageExplain.Location = new System.Drawing.Point(4, 24);
             this.tabPageExplain.Name = "tabPageExplain";
-            this.tabPageExplain.Size = new System.Drawing.Size(436, 153);
+            this.tabPageExplain.Size = new System.Drawing.Size(436, 151);
             this.tabPageExplain.TabIndex = 2;
             this.tabPageExplain.Text = "Изложить";
             // 
@@ -596,8 +601,9 @@ namespace Registry.Viewport
             this.textBoxExplainContent.Location = new System.Drawing.Point(7, 32);
             this.textBoxExplainContent.Multiline = true;
             this.textBoxExplainContent.Name = "textBoxExplainContent";
-            this.textBoxExplainContent.Size = new System.Drawing.Size(424, 101);
+            this.textBoxExplainContent.Size = new System.Drawing.Size(424, 99);
             this.textBoxExplainContent.TabIndex = 1;
+            this.textBoxExplainContent.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // textBoxExplainPoint
             // 
@@ -607,6 +613,7 @@ namespace Registry.Viewport
             this.textBoxExplainPoint.Name = "textBoxExplainPoint";
             this.textBoxExplainPoint.Size = new System.Drawing.Size(234, 21);
             this.textBoxExplainPoint.TabIndex = 0;
+            this.textBoxExplainPoint.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // vButtonExplainPaste
             // 
@@ -640,9 +647,9 @@ namespace Registry.Viewport
             this.tabPageTerminate.Controls.Add(this.vButtonTerminatePaste);
             this.tabPageTerminate.Controls.Add(this.textBoxTerminateAgreement);
             this.tabPageTerminate.Controls.Add(this.label80);
-            this.tabPageTerminate.Location = new System.Drawing.Point(4, 22);
+            this.tabPageTerminate.Location = new System.Drawing.Point(4, 24);
             this.tabPageTerminate.Name = "tabPageTerminate";
-            this.tabPageTerminate.Size = new System.Drawing.Size(436, 153);
+            this.tabPageTerminate.Size = new System.Drawing.Size(436, 151);
             this.tabPageTerminate.TabIndex = 3;
             this.tabPageTerminate.Text = "Расторгнуть";
             // 
@@ -685,6 +692,7 @@ namespace Registry.Viewport
             this.textBoxTerminateAgreement.Name = "textBoxTerminateAgreement";
             this.textBoxTerminateAgreement.Size = new System.Drawing.Size(234, 21);
             this.textBoxTerminateAgreement.TabIndex = 0;
+            this.textBoxTerminateAgreement.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label80
             // 

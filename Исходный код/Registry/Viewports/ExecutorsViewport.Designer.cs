@@ -21,94 +21,101 @@ namespace Registry.Viewport
 
         private void InitializeComponent()
         {
-            var dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            var resources = new ComponentResourceManager(typeof(ExecutorsViewport));
-            dataGridView = new DataGridView();
-            id_executor = new DataGridViewTextBoxColumn();
-            executor_name = new DataGridViewTextBoxColumn();
-            executor_login = new DataGridViewTextBoxColumn();
-            phone = new DataGridViewTextBoxColumn();
-            is_inactive = new DataGridViewCheckBoxColumn();
-            ((ISupportInitialize)(dataGridView)).BeginInit();
-            SuspendLayout();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExecutorsViewport));
+            this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.id_executor = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.executor_name = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.executor_login = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.phone = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.is_inactive = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.SuspendLayout();
             // 
             // dataGridView
             // 
-            dataGridView.AllowUserToAddRows = false;
-            dataGridView.AllowUserToDeleteRows = false;
-            dataGridView.AllowUserToResizeRows = false;
-            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView.BackgroundColor = Color.White;
-            dataGridView.BorderStyle = BorderStyle.Fixed3D;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Control;
-            dataGridViewCellStyle1.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle1.Padding = new Padding(0, 2, 0, 2);
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Columns.AddRange(id_executor, executor_name, executor_login, phone, is_inactive);
-            dataGridView.Dock = DockStyle.Fill;
-            dataGridView.Location = new Point(3, 3);
-            dataGridView.MultiSelect = false;
-            dataGridView.Name = "dataGridView";
-            dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView.Size = new Size(648, 281);
-            dataGridView.TabIndex = 8;
-            dataGridView.CurrentCellDirtyStateChanged += dataGridView_CurrentCellDirtyStateChanged;
+            this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
+            this.dataGridView.AllowUserToResizeRows = false;
+            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.id_executor,
+            this.executor_name,
+            this.executor_login,
+            this.phone,
+            this.is_inactive});
+            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.dataGridView.Location = new System.Drawing.Point(3, 3);
+            this.dataGridView.MultiSelect = false;
+            this.dataGridView.Name = "dataGridView";
+            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView.Size = new System.Drawing.Size(648, 281);
+            this.dataGridView.TabIndex = 8;
+            this.dataGridView.CurrentCellDirtyStateChanged += new System.EventHandler(this.dataGridView_CurrentCellDirtyStateChanged);
             // 
             // id_executor
             // 
-            id_executor.Frozen = true;
-            id_executor.HeaderText = @"Идентификатор исполнителя";
-            id_executor.Name = "id_executor";
-            id_executor.ReadOnly = true;
-            id_executor.Visible = false;
+            this.id_executor.Frozen = true;
+            this.id_executor.HeaderText = "Идентификатор исполнителя";
+            this.id_executor.Name = "id_executor";
+            this.id_executor.ReadOnly = true;
+            this.id_executor.Visible = false;
             // 
             // executor_name
             // 
-            executor_name.HeaderText = @"ФИО исполнителя";
-            executor_name.MaxInputLength = 255;
-            executor_name.MinimumWidth = 150;
-            executor_name.Name = "executor_name";
+            this.executor_name.HeaderText = "ФИО исполнителя";
+            this.executor_name.MaxInputLength = 255;
+            this.executor_name.MinimumWidth = 150;
+            this.executor_name.Name = "executor_name";
             // 
             // executor_login
             // 
-            executor_login.HeaderText = @"Логин исполнителя";
-            executor_login.MaxInputLength = 255;
-            executor_login.MinimumWidth = 150;
-            executor_login.Name = "executor_login";
+            this.executor_login.HeaderText = "Логин исполнителя";
+            this.executor_login.MaxInputLength = 255;
+            this.executor_login.MinimumWidth = 150;
+            this.executor_login.Name = "executor_login";
             // 
             // phone
             // 
-            phone.HeaderText = @"Телефон";
-            phone.MaxInputLength = 255;
-            phone.MinimumWidth = 150;
-            phone.Name = "phone";
+            this.phone.HeaderText = "Телефон";
+            this.phone.MaxInputLength = 255;
+            this.phone.MinimumWidth = 150;
+            this.phone.Name = "phone";
             // 
             // is_inactive
             // 
-            is_inactive.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            is_inactive.HeaderText = @"Неактивный";
-            is_inactive.Name = "is_inactive";
-            is_inactive.Resizable = DataGridViewTriState.True;
-            is_inactive.SortMode = DataGridViewColumnSortMode.Automatic;
+            this.is_inactive.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.is_inactive.HeaderText = "Неактивный";
+            this.is_inactive.Name = "is_inactive";
+            this.is_inactive.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.is_inactive.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             // 
             // ExecutorsViewport
             // 
-            BackColor = Color.White;
-            ClientSize = new Size(654, 287);
-            Controls.Add(dataGridView);
-            Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            Icon = ((Icon)(resources.GetObject("$this.Icon")));
-            Name = "ExecutorsViewport";
-            Padding = new Padding(3);
-            Text = @"Исполнители";
-            ((ISupportInitialize)(dataGridView)).EndInit();
-            ResumeLayout(false);
+            this.BackColor = System.Drawing.Color.White;
+            this.ClientSize = new System.Drawing.Size(654, 287);
+            this.Controls.Add(this.dataGridView);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "ExecutorsViewport";
+            this.Padding = new System.Windows.Forms.Padding(3);
+            this.Text = "Исполнители";
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.ResumeLayout(false);
+
         }
     }
 }

@@ -19,65 +19,68 @@ namespace Registry.Viewport
 
         private void InitializeComponent()
         {
-            var dataGridViewCellStyle3 = new DataGridViewCellStyle();
-            var resources = new ComponentResourceManager(typeof(DocumentsResidenceViewport));
-            dataGridView = new DataGridView();
-            id_document_residence = new DataGridViewTextBoxColumn();
-            document_residence = new DataGridViewTextBoxColumn();
-            ((ISupportInitialize)(dataGridView)).BeginInit();
-            SuspendLayout();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(DocumentsResidenceViewport));
+            this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.id_document_residence = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.document_residence = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.SuspendLayout();
             // 
             // dataGridView
             // 
-            dataGridView.AllowUserToAddRows = false;
-            dataGridView.AllowUserToDeleteRows = false;
-            dataGridView.AllowUserToResizeRows = false;
-            dataGridView.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            dataGridView.BackgroundColor = Color.White;
-            dataGridView.BorderStyle = BorderStyle.Fixed3D;
-            dataGridViewCellStyle3.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle3.BackColor = SystemColors.Control;
-            dataGridViewCellStyle3.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            dataGridViewCellStyle3.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle3.Padding = new Padding(0, 2, 0, 2);
-            dataGridViewCellStyle3.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle3.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle3.WrapMode = DataGridViewTriState.True;
-            dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Columns.AddRange(id_document_residence, document_residence);
-            dataGridView.Dock = DockStyle.Fill;
-            dataGridView.Location = new Point(0, 0);
-            dataGridView.MultiSelect = false;
-            dataGridView.Name = "dataGridView";
-            dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView.Size = new Size(671, 463);
-            dataGridView.TabIndex = 9;
+            this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
+            this.dataGridView.AllowUserToResizeRows = false;
+            this.dataGridView.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
+            this.dataGridView.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.id_document_residence,
+            this.document_residence});
+            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
+            this.dataGridView.Location = new System.Drawing.Point(0, 0);
+            this.dataGridView.MultiSelect = false;
+            this.dataGridView.Name = "dataGridView";
+            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView.Size = new System.Drawing.Size(671, 463);
+            this.dataGridView.TabIndex = 9;
             // 
             // id_document_residence
             // 
-            id_document_residence.Frozen = true;
-            id_document_residence.HeaderText = @"Идентификатор органа";
-            id_document_residence.Name = "id_document_residence";
-            id_document_residence.ReadOnly = true;
-            id_document_residence.Visible = false;
+            this.id_document_residence.Frozen = true;
+            this.id_document_residence.HeaderText = "Идентификатор органа";
+            this.id_document_residence.Name = "id_document_residence";
+            this.id_document_residence.ReadOnly = true;
+            this.id_document_residence.Visible = false;
             // 
             // document_residence
             // 
-            document_residence.HeaderText = @"Наименование";
-            document_residence.MinimumWidth = 100;
-            document_residence.Name = "document_residence";
+            this.document_residence.HeaderText = "Наименование";
+            this.document_residence.MinimumWidth = 100;
+            this.document_residence.Name = "document_residence";
             // 
             // DocumentsResidenceViewport
             // 
-            ClientSize = new Size(671, 463);
-            Controls.Add(dataGridView);
-            Font = new Font("Microsoft Sans Serif", 8.25F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            Icon = ((Icon)(resources.GetObject("$this.Icon")));
-            Name = "DocumentsResidenceViewport";
-            Text = @"Виды документов на проживание";
-            ((ISupportInitialize)(dataGridView)).EndInit();
-            ResumeLayout(false);
+            this.ClientSize = new System.Drawing.Size(671, 463);
+            this.Controls.Add(this.dataGridView);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "DocumentsResidenceViewport";
+            this.Text = "Виды документов на проживание";
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.ResumeLayout(false);
 
         }
     }
