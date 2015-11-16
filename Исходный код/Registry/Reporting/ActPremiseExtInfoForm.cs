@@ -43,19 +43,19 @@ namespace Registry.Reporting
 
         public int HeatingType
         {
-            get {
+            get
+            {
                 if (radioButtonStoveHeating.Checked)
                     return 1;
-                else
-                    if (radioButtonLocalHeating.Checked)
-                        return 2;
-                    else
-                        if (radioButtonCentralHeating.Checked)
-                            return 3;
-                        else 
-                            return 0;
-
+                if (radioButtonLocalHeating.Checked)
+                    return 2;
+                return radioButtonCentralHeating.Checked ? 3 : 0;
             }
+        }
+
+        public bool OpenedDate
+        {
+            get { return checkBoxOpenDate.Checked; }
         }
 
         public ActPremiseExtInfoForm()

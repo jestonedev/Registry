@@ -41,6 +41,7 @@
             this.radioButtonStoveHeating = new System.Windows.Forms.RadioButton();
             this.vButton2 = new VIBlend.WinForms.Controls.vButton();
             this.vButton1 = new VIBlend.WinForms.Controls.vButton();
+            this.checkBoxOpenDate = new System.Windows.Forms.CheckBox();
             this.groupBoxHeating.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -100,9 +101,9 @@
             this.groupBoxHeating.Controls.Add(this.radioButtonLocalHeating);
             this.groupBoxHeating.Controls.Add(this.radioButtonCentralHeating);
             this.groupBoxHeating.Controls.Add(this.radioButtonStoveHeating);
-            this.groupBoxHeating.Location = new System.Drawing.Point(208, 28);
+            this.groupBoxHeating.Location = new System.Drawing.Point(208, 12);
             this.groupBoxHeating.Name = "groupBoxHeating";
-            this.groupBoxHeating.Size = new System.Drawing.Size(180, 93);
+            this.groupBoxHeating.Size = new System.Drawing.Size(180, 86);
             this.groupBoxHeating.TabIndex = 6;
             this.groupBoxHeating.TabStop = false;
             this.groupBoxHeating.Text = "      Отопление";
@@ -121,7 +122,7 @@
             // 
             this.radioButtonLocalHeating.AutoSize = true;
             this.radioButtonLocalHeating.Enabled = false;
-            this.radioButtonLocalHeating.Location = new System.Drawing.Point(10, 46);
+            this.radioButtonLocalHeating.Location = new System.Drawing.Point(10, 51);
             this.radioButtonLocalHeating.Name = "radioButtonLocalHeating";
             this.radioButtonLocalHeating.Size = new System.Drawing.Size(69, 17);
             this.radioButtonLocalHeating.TabIndex = 2;
@@ -132,7 +133,7 @@
             // 
             this.radioButtonCentralHeating.AutoSize = true;
             this.radioButtonCentralHeating.Enabled = false;
-            this.radioButtonCentralHeating.Location = new System.Drawing.Point(10, 68);
+            this.radioButtonCentralHeating.Location = new System.Drawing.Point(82, 27);
             this.radioButtonCentralHeating.Name = "radioButtonCentralHeating";
             this.radioButtonCentralHeating.Size = new System.Drawing.Size(92, 17);
             this.radioButtonCentralHeating.TabIndex = 1;
@@ -143,7 +144,7 @@
             // 
             this.radioButtonStoveHeating.AutoSize = true;
             this.radioButtonStoveHeating.Enabled = false;
-            this.radioButtonStoveHeating.Location = new System.Drawing.Point(10, 23);
+            this.radioButtonStoveHeating.Location = new System.Drawing.Point(10, 28);
             this.radioButtonStoveHeating.Name = "radioButtonStoveHeating";
             this.radioButtonStoveHeating.Size = new System.Drawing.Size(62, 17);
             this.radioButtonStoveHeating.TabIndex = 0;
@@ -178,12 +179,23 @@
             this.vButton1.UseVisualStyleBackColor = false;
             this.vButton1.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
             // 
+            // checkBoxOpenDate
+            // 
+            this.checkBoxOpenDate.AutoSize = true;
+            this.checkBoxOpenDate.Location = new System.Drawing.Point(208, 104);
+            this.checkBoxOpenDate.Name = "checkBoxOpenDate";
+            this.checkBoxOpenDate.Size = new System.Drawing.Size(165, 17);
+            this.checkBoxOpenDate.TabIndex = 20;
+            this.checkBoxOpenDate.Text = "Печатать с открытой датой";
+            this.checkBoxOpenDate.UseVisualStyleBackColor = true;
+            // 
             // ActPremiseExtInfoForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
             this.ClientSize = new System.Drawing.Size(395, 167);
+            this.Controls.Add(this.checkBoxOpenDate);
             this.Controls.Add(this.vButton2);
             this.Controls.Add(this.vButton1);
             this.Controls.Add(this.groupBoxHeating);
@@ -220,5 +232,6 @@
         private VIBlend.WinForms.Controls.vButton vButton2;
         private VIBlend.WinForms.Controls.vButton vButton1;
         private System.Windows.Forms.CheckBox checkBoxHasHeating;
+        private System.Windows.Forms.CheckBox checkBoxOpenDate;
     }
 }

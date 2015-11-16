@@ -13,7 +13,7 @@ namespace Registry.Reporting.TenancyReporters
         {
             if (arguments == null)
                 arguments = new Dictionary<string, string>();
-            using (ActPremiseExtInfoForm form = new ActPremiseExtInfoForm())
+            using (var form = new ActPremiseExtInfoForm())
             {
                 if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
                 {
@@ -28,10 +28,11 @@ namespace Registry.Reporting.TenancyReporters
                     arguments.Add("stove_heating", form.HeatingType == 1 ? "$u$печным$/u$" : "печным");
                     arguments.Add("local_heating", form.HeatingType == 2 ? "$u$местным$/u$" : "местным");
                     arguments.Add("central_heating", form.HeatingType == 3 ? "$u$центральным$/u$" : "центральным");
+                    arguments.Add("opened_date", form.OpenedDate ? "1" : "0");
                     base.Run(arguments);
                 }
                 else
-                    base.Cancel();
+                    Cancel();
             }
         }
     }

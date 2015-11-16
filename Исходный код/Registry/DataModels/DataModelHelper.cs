@@ -96,7 +96,7 @@ namespace Registry.DataModels
                                 Contains(addressParts[0].ToUpperInvariant()) :
                             (addressParts.Count() >= 2) && (kladrRow.Field<string>("street_name").ToUpperInvariant().
                                 Contains(addressParts[0].ToUpperInvariant()) &&
-                            buildingRow.Field<string>("house").ToUpper().Contains(addressParts[1].ToUpper()))
+                            buildingRow.Field<string>("house").ToUpper().Equals(addressParts[1].ToUpper()))
                     select buildingRow.Field<int>("id_building"));
         }
 
@@ -114,11 +114,11 @@ namespace Registry.DataModels
                                 Contains(addressParts[0].ToUpperInvariant()) :
                             (addressParts.Count() == 2) ? kladrRow.Field<string>("street_name").ToUpperInvariant().
                                 Contains(addressParts[0].ToUpperInvariant()) &&
-                            buildingRow.Field<string>("house").ToUpper().Contains(addressParts[1].ToUpper()) :
+                            buildingRow.Field<string>("house").ToUpper().Equals(addressParts[1].ToUpper()) :
                             (addressParts.Count() == 3) && (kladrRow.Field<string>("street_name").ToUpperInvariant().
                                 Contains(addressParts[0].ToUpperInvariant()) &&
-                            buildingRow.Field<string>("house").ToUpper().Contains(addressParts[1].ToUpper()) &&
-                            premisesRow.Field<string>("premises_num").ToUpperInvariant().Contains(
+                            buildingRow.Field<string>("house").ToUpper().Equals(addressParts[1].ToUpper()) &&
+                            premisesRow.Field<string>("premises_num").ToUpperInvariant().Equals(
                                 addressParts[2].ToUpperInvariant()))
                     select premisesRow.Field<int>("id_premises"));
         }
@@ -141,7 +141,7 @@ namespace Registry.DataModels
                                                 Contains(addressParts[0].ToUpperInvariant()) :
                                           (addressParts.Count() >= 2) && ((kladrRow.Field<string>("street_name").ToUpperInvariant().
                                               Contains(addressParts[0].ToUpperInvariant())) &&
-                                        buildingsRow.Field<string>("house").ToUpper().Contains(addressParts[1].ToUpper()))
+                                        buildingsRow.Field<string>("house").ToUpper().Equals(addressParts[1].ToUpper()))
                                     select tenancyBuildingsRow.Field<int>("id_process");
             var tenancyPremises = from tenancyPremisesRow in tenancyPremisesAssoc
                                    join premisesRow in premises
@@ -154,11 +154,11 @@ namespace Registry.DataModels
                                                 Contains(addressParts[0].ToUpperInvariant())) :
                                          (addressParts.Count() == 2) ? (kladrRow.Field<string>("street_name").ToUpperInvariant().
                                                 Contains(addressParts[0].ToUpperInvariant())) &&
-                                         buildingsRow.Field<string>("house").ToUpper().Contains(addressParts[1].ToUpper()) :
+                                         buildingsRow.Field<string>("house").ToUpper().Equals(addressParts[1].ToUpper()) :
                                          (addressParts.Count() == 3) && ((kladrRow.Field<string>("street_name").ToUpperInvariant().
                                              Contains(addressParts[0].ToUpperInvariant())) &&
-                                        buildingsRow.Field<string>("house").ToUpper().Contains(addressParts[1].ToUpper()) &&
-                                        (premisesRow.Field<string>("premises_num").ToUpperInvariant().Contains(
+                                        buildingsRow.Field<string>("house").ToUpper().Equals(addressParts[1].ToUpper()) &&
+                                        (premisesRow.Field<string>("premises_num").ToUpperInvariant().Equals(
                                             addressParts[2].ToUpperInvariant())))
                                    select tenancyPremisesRow.Field<int>("id_process");
             var tenancySubPremises = from tenancySubPremisesRow in tenancySubPremisesAssoc
@@ -174,11 +174,11 @@ namespace Registry.DataModels
                                                 Contains(addressParts[0].ToUpperInvariant())) :
                                          (addressParts.Count() == 2) ? (kladrRow.Field<string>("street_name").ToUpperInvariant().
                                                 Contains(addressParts[0].ToUpperInvariant())) &&
-                                         buildingsRow.Field<string>("house").ToUpper().Contains(addressParts[1].ToUpper()) :
+                                         buildingsRow.Field<string>("house").ToUpper().Equals(addressParts[1].ToUpper()) :
                                          (addressParts.Count() == 3) && ((kladrRow.Field<string>("street_name").ToUpperInvariant().
                                              Contains(addressParts[0].ToUpperInvariant())) &&
-                                        buildingsRow.Field<string>("house").ToUpper().Contains(addressParts[1].ToUpper()) &&
-                                        premisesRow.Field<string>("premises_num").ToUpper().Contains(addressParts[2].ToUpper()))
+                                        buildingsRow.Field<string>("house").ToUpper().Equals(addressParts[1].ToUpper()) &&
+                                        premisesRow.Field<string>("premises_num").ToUpper().Equals(addressParts[2].ToUpper()))
                                        select tenancySubPremisesRow.Field<int>("id_process");
             return tenancyBuildings.Union(tenancyPremises).Union(tenancySubPremises);
         }
