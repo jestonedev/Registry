@@ -202,6 +202,8 @@ namespace Registry.Viewport
             if (row == null) return;
             row["id_process"] = ParentRow["id_process"];
             row["reason_date"] = DateTime.Now.Date;
+            dataGridView.Rows[dataGridView.Rows.Count - 1].Cells["id_reason_type"].Value = 1;
+            dataGridView.Rows[dataGridView.Rows.Count - 1].Cells["reason_number"].Selected = true;
             row.EndEdit();
         }
 

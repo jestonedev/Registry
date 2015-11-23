@@ -279,7 +279,8 @@ namespace Registry.Viewport
         public override void InsertRecord()
         {
             var row = (DataRowView)GeneralSnapshotBindingSource.AddNew();
-            if (row != null) row.EndEdit();
+            if (row != null) 
+                row.EndEdit();
         }
 
         public override bool CanDeleteRecord()
