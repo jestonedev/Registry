@@ -149,16 +149,45 @@ namespace Registry.Viewport
                     position = _vBuildingPremisesSumArea.Find("id_building", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"]);
                 if (position != -1)
                 {
-                    var value = Convert.ToDecimal((double)((DataRowView)_vBuildingPremisesSumArea[position])["sum_area"], CultureInfo.InvariantCulture);
-                    numericUpDownMunicipalArea.Minimum = value;
-                    numericUpDownMunicipalArea.Maximum = value;
-                    numericUpDownMunicipalArea.Value = value;
+                    var row = ((DataRowView) _vBuildingPremisesSumArea[position]);
+                    var sumArea = Convert.ToDecimal((double)row["sum_area"], CultureInfo.InvariantCulture);
+                    var totalMunCount = Convert.ToDecimal((int)row["mun_premises_count"], CultureInfo.InvariantCulture);
+                    var totalPremisesCount = 
+                        (from premisesRow in DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows()
+                        where premisesRow.Field<int>("id_building") == (int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"]
+                        group premisesRow by premisesRow.Field<int>("id_building") into gs
+                        select gs.Count()).First();
+                    if (totalPremisesCount > 0)
+                    {
+                        var percentage = (totalMunCount/totalPremisesCount)*100;
+                        numericUpDownMunPremisesPercentage.Maximum = percentage;
+                        numericUpDownMunPremisesPercentage.Minimum = percentage;
+                        numericUpDownMunPremisesPercentage.Value = percentage;
+                    }
+                    else
+                    {
+                        numericUpDownMunPremisesPercentage.Maximum = 0;
+                        numericUpDownMunPremisesPercentage.Minimum = 0;
+                        numericUpDownMunPremisesPercentage.Value = 0;
+                    }
+                    numericUpDownMunicipalArea.Minimum = sumArea;
+                    numericUpDownMunicipalArea.Maximum = sumArea;
+                    numericUpDownMunicipalArea.Value = sumArea;
+                    numericUpDownMunPremisesCount.Minimum = totalMunCount;
+                    numericUpDownMunPremisesCount.Maximum = totalMunCount;
+                    numericUpDownMunPremisesCount.Value = totalMunCount;
                 }
                 else
                 {
                     numericUpDownMunicipalArea.Maximum = 0;
                     numericUpDownMunicipalArea.Minimum = 0;
                     numericUpDownMunicipalArea.Value = 0;
+                    numericUpDownMunPremisesCount.Maximum = 0;
+                    numericUpDownMunPremisesCount.Minimum = 0;
+                    numericUpDownMunPremisesCount.Value = 0;
+                    numericUpDownMunPremisesPercentage.Maximum = 0;
+                    numericUpDownMunPremisesPercentage.Minimum = 0;
+                    numericUpDownMunPremisesPercentage.Value = 0;
                 }
             }
         }

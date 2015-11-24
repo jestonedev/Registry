@@ -28,6 +28,7 @@ namespace Registry.DataModels.CalcDataModels
             var table = new DataTable(TableName) {Locale = CultureInfo.InvariantCulture};
             table.Columns.Add("id_building").DataType = typeof(int);
             table.Columns.Add("sum_area").DataType = typeof(double);
+            table.Columns.Add("mun_premises_count").DataType = typeof(int);
             table.PrimaryKey = new [] { table.Columns["id_building"] };
             return table;
         }
@@ -96,14 +97,15 @@ namespace Registry.DataModels.CalcDataModels
                          select new
                          {
                              id_building = gs.Key,
-                             sum_area = gs.Sum()
+                             sum_area = gs.Sum(),
+                             mun_premises_count = gs.Count()
                          };
             // Заполняем таблицу изменений
             var table = InitializeTable();
             table.BeginLoadData();
             result.ToList().ForEach(x =>
             {
-                table.Rows.Add(x.id_building, x.sum_area);
+                table.Rows.Add(x.id_building, x.sum_area, x.mun_premises_count);
             });
             table.EndLoadData();
             // Возвращаем результат
