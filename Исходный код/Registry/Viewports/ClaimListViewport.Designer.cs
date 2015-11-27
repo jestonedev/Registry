@@ -22,7 +22,6 @@ namespace Registry.Viewport
         NumericUpDown numericUpDownAmountOfRent;
         NumericUpDown numericUpDownAmountOfFineRecover;
         NumericUpDown numericUpDownAmountOfRentRecover;
-        NumericUpDown numericUpDownProcessID;
         Label label89;
         Label label90;
         Label label91;
@@ -42,12 +41,6 @@ namespace Registry.Viewport
         DateTimePicker dateTimePickerAtDate;
         DateTimePicker dateTimePickerDateOfTransfer;
         DataGridView dataGridViewClaims;
-        private DataGridViewTextBoxColumn id_claim;
-        private DataGridViewTextBoxColumn date_of_transfer;
-        private DataGridViewTextBoxColumn amount_of_debt_rent;
-        private DataGridViewTextBoxColumn amount_of_debt_fine;
-        private DataGridViewTextBoxColumn at_date;
-        private DataGridViewTextBoxColumn description;
         #endregion Components
 
 
@@ -73,7 +66,6 @@ namespace Registry.Viewport
             this.numericUpDownAmountOfDebtFine = new System.Windows.Forms.NumericUpDown();
             this.label89 = new System.Windows.Forms.Label();
             this.panel9 = new System.Windows.Forms.Panel();
-            this.numericUpDownProcessID = new System.Windows.Forms.NumericUpDown();
             this.label103 = new System.Windows.Forms.Label();
             this.numericUpDownAmountOfFineRecover = new System.Windows.Forms.NumericUpDown();
             this.label95 = new System.Windows.Forms.Label();
@@ -88,11 +80,13 @@ namespace Registry.Viewport
             this.label96 = new System.Windows.Forms.Label();
             this.dataGridViewClaims = new System.Windows.Forms.DataGridView();
             this.id_claim = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.date_of_transfer = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_of_debt_rent = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_of_debt_fine = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.at_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.comboBoxAccount = new System.Windows.Forms.ComboBox();
             this.tableLayoutPanel15.SuspendLayout();
             this.groupBox34.SuspendLayout();
             this.tableLayoutPanel16.SuspendLayout();
@@ -102,7 +96,6 @@ namespace Registry.Viewport
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountOfRent)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountOfDebtFine)).BeginInit();
             this.panel9.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownProcessID)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountOfFineRecover)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountOfRentRecover)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewClaims)).BeginInit();
@@ -312,7 +305,7 @@ namespace Registry.Viewport
             // 
             // panel9
             // 
-            this.panel9.Controls.Add(this.numericUpDownProcessID);
+            this.panel9.Controls.Add(this.comboBoxAccount);
             this.panel9.Controls.Add(this.label103);
             this.panel9.Controls.Add(this.numericUpDownAmountOfFineRecover);
             this.panel9.Controls.Add(this.label95);
@@ -332,28 +325,14 @@ namespace Registry.Viewport
             this.panel9.Size = new System.Drawing.Size(384, 176);
             this.panel9.TabIndex = 1;
             // 
-            // numericUpDownProcessID
-            // 
-            this.numericUpDownProcessID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownProcessID.Location = new System.Drawing.Point(172, 4);
-            this.numericUpDownProcessID.Maximum = new decimal(new int[] {
-            100000000,
-            0,
-            0,
-            0});
-            this.numericUpDownProcessID.Name = "numericUpDownProcessID";
-            this.numericUpDownProcessID.Size = new System.Drawing.Size(202, 21);
-            this.numericUpDownProcessID.TabIndex = 0;
-            // 
             // label103
             // 
             this.label103.AutoSize = true;
             this.label103.Location = new System.Drawing.Point(14, 6);
             this.label103.Name = "label103";
-            this.label103.Size = new System.Drawing.Size(96, 15);
+            this.label103.Size = new System.Drawing.Size(139, 15);
             this.label103.TabIndex = 51;
-            this.label103.Text = "Процесс найма";
+            this.label103.Text = "Номер лицевого счета";
             // 
             // numericUpDownAmountOfFineRecover
             // 
@@ -481,6 +460,7 @@ namespace Registry.Viewport
             this.dataGridViewClaims.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewClaims.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id_claim,
+            this.account,
             this.date_of_transfer,
             this.amount_of_debt_rent,
             this.amount_of_debt_fine,
@@ -509,6 +489,14 @@ namespace Registry.Viewport
             this.id_claim.Name = "id_claim";
             this.id_claim.ReadOnly = true;
             this.id_claim.Width = 50;
+            // 
+            // account
+            // 
+            this.account.HeaderText = "Лицевой счет";
+            this.account.MinimumWidth = 150;
+            this.account.Name = "account";
+            this.account.ReadOnly = true;
+            this.account.Width = 150;
             // 
             // date_of_transfer
             // 
@@ -554,6 +542,18 @@ namespace Registry.Viewport
             this.description.Name = "description";
             this.description.ReadOnly = true;
             // 
+            // comboBoxAccount
+            // 
+            this.comboBoxAccount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxAccount.Location = new System.Drawing.Point(172, 4);
+            this.comboBoxAccount.Name = "comboBoxAccount";
+            this.comboBoxAccount.Size = new System.Drawing.Size(202, 23);
+            this.comboBoxAccount.TabIndex = 52;
+            this.comboBoxAccount.DropDownClosed += new System.EventHandler(this.comboBoxAccount_DropDownClosed);
+            this.comboBoxAccount.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxAccount_KeyUp);
+            this.comboBoxAccount.Leave += new System.EventHandler(this.comboBoxAccount_Leave);
+            // 
             // ClaimListViewport
             // 
             this.AutoScroll = true;
@@ -577,12 +577,20 @@ namespace Registry.Viewport
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountOfDebtFine)).EndInit();
             this.panel9.ResumeLayout(false);
             this.panel9.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownProcessID)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountOfFineRecover)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountOfRentRecover)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewClaims)).EndInit();
             this.ResumeLayout(false);
 
         }
+
+        private DataGridViewTextBoxColumn id_claim;
+        private DataGridViewTextBoxColumn account;
+        private DataGridViewTextBoxColumn date_of_transfer;
+        private DataGridViewTextBoxColumn amount_of_debt_rent;
+        private DataGridViewTextBoxColumn amount_of_debt_fine;
+        private DataGridViewTextBoxColumn at_date;
+        private DataGridViewTextBoxColumn description;
+        private ComboBox comboBoxAccount;
     }
 }

@@ -5,7 +5,7 @@ namespace Registry.Entities
     public sealed class Claim : Entity
     {
         public int? IdClaim { get; set; }
-        public int? IdProcess { get; set; }
+        public int? IdAccount { get; set; }
         public DateTime? DateOfTransfer { get; set; }
         public decimal? AmountOfDebtRent { get; set; }
         public decimal? AmountOfDebtFine { get; set; }
@@ -35,7 +35,7 @@ namespace Registry.Entities
             if ((object)first == null || (object)second == null)
                 return false;
             return first.IdClaim == second.IdClaim &&
-                   first.IdProcess == second.IdProcess &&
+                   first.IdAccount == second.IdAccount &&
                    first.DateOfTransfer == second.DateOfTransfer &&
                    first.AmountOfDebtRent == second.AmountOfDebtRent &&
                    first.AmountOfDebtFine == second.AmountOfDebtFine &&

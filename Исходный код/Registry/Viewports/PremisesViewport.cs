@@ -600,7 +600,7 @@ namespace Registry.Viewport
             dataGridViewOwnerships.AutoGenerateColumns = false;
             dataGridViewRestrictions.AutoGenerateColumns = false;
             dataGridViewRooms.AutoGenerateColumns = false;
-            this.DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
+            DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
 
             GeneralDataModel = DataModel.GetInstance(DataModelType.PremisesDataModel);
             kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
@@ -617,7 +617,7 @@ namespace Registry.Viewport
             ownershipPremisesAssoc = DataModel.GetInstance(DataModelType.OwnershipPremisesAssocDataModel);
             ownershipBuildingsAssoc = DataModel.GetInstance(DataModelType.OwnershipBuildingsAssocDataModel);
             fundTypes = DataModel.GetInstance(DataModelType.FundTypesDataModel);
-            object_states = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
+            object_states = DataModel.GetInstance(DataModelType.ObjectStatesDataModel); 
 
             // Вычисляемые модели
             premisesCurrentFund = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelPremisesCurrentFunds);
@@ -642,35 +642,49 @@ namespace Registry.Viewport
             fundTypes.Select();
             object_states.Select();
 
-            DataSet ds = DataModel.DataSet;
+            var ds = DataModel.DataSet;
 
-            v_kladr = new BindingSource();
-            v_kladr.DataMember = "kladr";
-            v_kladr.DataSource = ds;
+            v_kladr = new BindingSource
+            {
+                DataMember = "kladr",
+                DataSource = ds
+            };
 
-            v_buildings = new BindingSource();
-            v_buildings.DataMember = "kladr_buildings";
-            v_buildings.DataSource = v_kladr;
+            v_buildings = new BindingSource
+            {
+                DataMember = "kladr_buildings",
+                DataSource = v_kladr
+            };
 
-            v_premisesCurrentFund = new BindingSource();
-            v_premisesCurrentFund.DataMember = "premises_current_funds";
-            v_premisesCurrentFund.DataSource = premisesCurrentFund.Select();
+            v_premisesCurrentFund = new BindingSource
+            {
+                DataMember = "premises_current_funds",
+                DataSource = premisesCurrentFund.Select()
+            };
 
-            v_premisesSubPremisesSumArea = new BindingSource();
-            v_premisesSubPremisesSumArea.DataMember = "premise_sub_premises_sum_area";
-            v_premisesSubPremisesSumArea.DataSource = premiseSubPremisesSumArea.Select();
+            v_premisesSubPremisesSumArea = new BindingSource
+            {
+                DataMember = "premise_sub_premises_sum_area",
+                DataSource = premiseSubPremisesSumArea.Select()
+            };
 
-            v_subPremisesCurrentFund = new BindingSource();
-            v_subPremisesCurrentFund.DataMember = "sub_premises_current_funds";
-            v_subPremisesCurrentFund.DataSource = subPremisesCurrentFund.Select();
+            v_subPremisesCurrentFund = new BindingSource
+            {
+                DataMember = "sub_premises_current_funds",
+                DataSource = subPremisesCurrentFund.Select()
+            };
 
-            v_fundType = new BindingSource();
-            v_fundType.DataMember = "fund_types";
-            v_fundType.DataSource = ds;
+            v_fundType = new BindingSource
+            {
+                DataMember = "fund_types",
+                DataSource = ds
+            };
 
-            v_object_states = new BindingSource();
-            v_object_states.DataMember = "object_states";
-            v_object_states.DataSource = ds;
+            v_object_states = new BindingSource
+            {
+                DataMember = "object_states",
+                DataSource = ds
+            };
 
             v_sub_premises_object_states = new BindingSource();
             v_sub_premises_object_states.DataMember = "object_states";
@@ -989,8 +1003,6 @@ namespace Registry.Viewport
 
         protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
         {
-            if (e == null)
-                return;
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
             else
@@ -1007,6 +1019,14 @@ namespace Registry.Viewport
                 premisesCurrentFund.RefreshEvent -= premisesCurrentFund_RefreshEvent;
                 premiseSubPremisesSumArea.RefreshEvent -= premiseSubPremisesSumArea_RefreshEvent;
                 subPremisesCurrentFund.RefreshEvent -= subPremisesCurrentFund_RefreshEvent;
+                v_sub_premises.CurrentItemChanged -= v_sub_premises_CurrentItemChanged;
+                v_restrictionPremisesAssoc.CurrentItemChanged -= v_restrictionPremisesAssoc_CurrentItemChanged;
+                v_restrictionBuildingsAssoc.CurrentItemChanged -= v_restrictionBuildingsAssoc_CurrentItemChanged;
+                v_ownershipPremisesAssoc.CurrentItemChanged -= v_ownershipPremisesAssoc_CurrentItemChanged;
+                v_ownershipBuildingsAssoc.CurrentItemChanged -= v_ownershipBuildingsAssoc_CurrentItemChanged;
+                GeneralDataModel.Select().RowChanged -= PremisesViewport_RowChanged;
+                GeneralDataModel.Select().RowDeleted -= PremisesViewport_RowDeleted;
+                GeneralBindingSource.CurrentItemChanged -= v_premises_CurrentItemChanged;
             }
             base.OnClosing(e);
         }
@@ -1015,19 +1035,7 @@ namespace Registry.Viewport
         {
             if (viewportState == ViewportState.NewRowState)
                 GeneralDataModel.EditingNewRecord = false;
-            ownershipPremisesAssoc.Select().RowChanged -= OwnershipsAssoc_RowChanged;
-            ownershipPremisesAssoc.Select().RowDeleted -= OwnershipsAssoc_RowDeleted;
-            ownershipBuildingsAssoc.Select().RowChanged -= ownershipBuildingsAssoc_RowChanged;
-            ownershipBuildingsAssoc.Select().RowDeleted -= ownershipBuildingsAssoc_RowDeleted;
-            restrictionPremisesAssoc.Select().RowChanged -= RestrictionsAssoc_RowChanged;
-            restrictionPremisesAssoc.Select().RowDeleted -= RestrictionsAssoc_RowDeleted;
-            restrictionBuildingsAssoc.Select().RowChanged -= restrictionBuildingsAssoc_RowChanged;
-            restrictionBuildingsAssoc.Select().RowDeleted -= restrictionBuildingsAssoc_RowDeleted;
-            sub_premises.Select().RowChanged -= SubPremises_RowChanged;
-            premisesCurrentFund.RefreshEvent -= premisesCurrentFund_RefreshEvent;
-            premiseSubPremisesSumArea.RefreshEvent -= premiseSubPremisesSumArea_RefreshEvent;
-            subPremisesCurrentFund.RefreshEvent -= subPremisesCurrentFund_RefreshEvent;
-            base.Close();
+            Close();
         }
 
         public override bool HasAssocViewport(ViewportType viewportType)
@@ -1038,7 +1046,8 @@ namespace Registry.Viewport
                 ViewportType.OwnershipListViewport,
                 ViewportType.RestrictionListViewport,
                 ViewportType.FundsHistoryViewport,
-                ViewportType.TenancyListViewport
+                ViewportType.TenancyListViewport,
+                ViewportType.PaymentsAccountsViewport
             };
             return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
         }

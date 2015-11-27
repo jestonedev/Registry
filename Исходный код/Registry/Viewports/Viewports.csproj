@@ -123,6 +123,12 @@
     <Compile Include="ExtendedSearchResettleForm.Designer.cs">
       <DependentUpon>ExtendedSearchResettleForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ExtendedSearchPaymentAccounts.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExtendedSearchPaymentAccounts.Designer.cs">
+      <DependentUpon>ExtendedSearchPaymentAccounts.cs</DependentUpon>
+    </Compile>
     <Compile Include="FormWithGridViewport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -144,6 +150,18 @@
     </Compile>
     <Compile Include="OwnershipTypeListViewport.Designer.cs">
       <DependentUpon>OwnershipTypeListViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PaymentsViewport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PaymentsViewport.Designer.cs">
+      <DependentUpon>PaymentsViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="PaymentsAccountsViewport.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PaymentsAccountsViewport.Designer.cs">
+      <DependentUpon>PaymentsAccountsViewport.cs</DependentUpon>
     </Compile>
     <Compile Include="PremisesListViewport.Designer.cs">
       <DependentUpon>PremisesListViewport.cs</DependentUpon>
@@ -447,6 +465,9 @@
     <EmbeddedResource Include="ExtendedSearchResettleForm.resx">
       <DependentUpon>ExtendedSearchResettleForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ExtendedSearchPaymentAccounts.resx">
+      <DependentUpon>ExtendedSearchPaymentAccounts.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ExtendedSearchTenancyForm.resx">
       <DependentUpon>ExtendedSearchTenancyForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -461,6 +482,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="OwnershipTypeListViewport.resx">
       <DependentUpon>OwnershipTypeListViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PaymentsViewport.resx">
+      <DependentUpon>PaymentsViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PaymentsAccountsViewport.resx">
+      <DependentUpon>PaymentsAccountsViewport.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="PremisesListViewport.resx">
       <DependentUpon>PremisesListViewport.cs</DependentUpon>

@@ -492,8 +492,6 @@ namespace Registry.Viewport
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (e == null)
-                return;
             if (SnapshotHasChanges())
             {
                 var result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
@@ -509,20 +507,12 @@ namespace Registry.Viewport
                         return;
                     }
             }
+            GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
             GeneralDataModel.Select().RowChanged -= BuildingsViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted -= BuildingsViewport_RowDeleted;
             tenancy_buildings.Select().RowChanged -= TenancyBuildingsViewport_RowChanged;
             tenancy_buildings.Select().RowDeleting -= TenancyBuildingsViewport_RowDeleting;
             base.OnClosing(e);
-        }
-
-        public override void ForceClose()
-        {
-            GeneralDataModel.Select().RowChanged -= BuildingsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted -= BuildingsViewport_RowDeleted;
-            tenancy_buildings.Select().RowChanged -= TenancyBuildingsViewport_RowChanged;
-            tenancy_buildings.Select().RowDeleting -= TenancyBuildingsViewport_RowDeleting;
-            base.ForceClose();
         }
 
         void TenancyBuildingsViewport_RowDeleting(object sender, DataRowChangeEventArgs e)

@@ -300,7 +300,10 @@ namespace Registry.Viewport
                         e.Cancel = true;
                         return;
                     }
-            }
+            } 
+            GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_reason_types_CurrentItemChanged;
+            dataGridView.CellValidated -= dataGridView_CellValidated;
+            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
             GeneralDataModel.Select().RowChanged -= ReasonTypesViewport_RowChanged;
             GeneralDataModel.Select().RowDeleting -= ReasonTypesViewport_RowDeleting;
             GeneralDataModel.Select().RowDeleted -= ReasonTypesViewport_RowDeleted;

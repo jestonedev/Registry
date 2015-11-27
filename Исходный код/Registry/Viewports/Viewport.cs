@@ -53,7 +53,7 @@ namespace Registry.Viewport
 
         public virtual int GetRecordCount()
         {
-            return GeneralBindingSource.Count;
+            return GeneralBindingSource == null ? 0 : GeneralBindingSource.Count;
         }
 
         public virtual bool CanDuplicate()
@@ -283,6 +283,13 @@ namespace Registry.Viewport
 
         public virtual void LocateEntityBy(string fieldName, object value)
         {
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (GeneralBindingSource != null) 
+                GeneralBindingSource.Dispose();
+            base.Dispose(disposing);
         }
     }
 }

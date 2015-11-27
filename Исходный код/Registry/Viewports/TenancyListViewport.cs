@@ -315,8 +315,7 @@ namespace Registry.Viewport
                 ViewportType.TenancyReasonsViewport,
                 ViewportType.TenancyBuildingsViewport,
                 ViewportType.TenancyPremisesViewport,
-                ViewportType.TenancyAgreementsViewport,
-                ViewportType.ClaimListViewport
+                ViewportType.TenancyAgreementsViewport
             };
             return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
         }
@@ -442,15 +441,23 @@ namespace Registry.Viewport
             GeneralDataModel.Select().RowChanged -= TenancyListViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted -= TenancyListViewport_RowDeleted;
             tenancies_aggregate.RefreshEvent -= tenancies_aggregate_RefreshEvent;
+            GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
+            if (tenancy_building_assoc != null)
+            {
+                tenancy_building_assoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
+                tenancy_building_assoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
+            }
+            if (tenancy_premises_assoc != null)
+            {
+                tenancy_premises_assoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
+                tenancy_premises_assoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
+            }
+            if (tenancy_sub_premises_assoc != null)
+            {
+                tenancy_sub_premises_assoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
+                tenancy_sub_premises_assoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
+            }
             base.OnClosing(e);
-        }
-
-        public override void ForceClose()
-        {
-            GeneralDataModel.Select().RowChanged -= TenancyListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted -= TenancyListViewport_RowDeleted;
-            tenancies_aggregate.RefreshEvent -= tenancies_aggregate_RefreshEvent;
-            base.ForceClose();
         }
 
         void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)

@@ -604,6 +604,7 @@ namespace Registry.Viewport
                 e.Cancel = true;
             else
             {
+                GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
                 GeneralDataModel.Select().RowDeleted -= TenancyPersonsViewport_RowDeleted;
                 GeneralDataModel.Select().RowChanged -= TenancyPersonsViewport_RowChanged;
             }
@@ -614,8 +615,6 @@ namespace Registry.Viewport
         {
             if (viewportState == ViewportState.NewRowState)
                 GeneralDataModel.EditingNewRecord = false;
-            GeneralDataModel.Select().RowDeleted -= TenancyPersonsViewport_RowDeleted;
-            GeneralDataModel.Select().RowChanged -= TenancyPersonsViewport_RowChanged;
             Close();
         }
 

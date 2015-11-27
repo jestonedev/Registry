@@ -538,48 +538,46 @@ namespace Registry.Viewport
             tenancy_reasons.Select();
             kinships.Select();
 
-            var ds = DataModel.DataSet;
+            v_executors = new BindingSource
+            {
+                DataSource = executors.Select(),
+                Filter = "is_inactive = 0"
+            };
 
-            v_executors = new BindingSource();
-            v_executors.DataMember = "executors";
-            v_executors.DataSource = ds;
-            v_executors.Filter = "is_inactive = 0";
+            v_rent_types = new BindingSource {DataSource = rent_types.Select()};
 
-            v_rent_types = new BindingSource();
-            v_rent_types.DataMember = "rent_types";
-            v_rent_types.DataSource = ds;
+            v_kinships = new BindingSource {DataSource = kinships.Select()};
 
-            v_kinships = new BindingSource();
-            v_kinships.DataMember = "kinships";
-            v_kinships.DataSource = ds;
-
-            v_warrants = new BindingSource();
-            v_warrants.DataMember = "warrants";
-            v_warrants.DataSource = ds;
+            v_warrants = new BindingSource {DataSource = warrants.Select()};
 
             GeneralBindingSource = new BindingSource();
             GeneralBindingSource.CurrentItemChanged += v_tenancies_CurrentItemChanged;
             GeneralBindingSource.DataMember = "tenancy_processes";
-            GeneralBindingSource.DataSource = ds;
+            GeneralBindingSource.DataSource = GeneralDataModel.Select();
             RebuildStaticFilter();
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 GeneralBindingSource.Filter += " AND ";
             GeneralBindingSource.Filter += DynamicFilter;
 
-            v_tenancy_persons = new BindingSource();
-            v_tenancy_persons.DataMember = "tenancy_processes_tenancy_persons";
-            v_tenancy_persons.DataSource = GeneralBindingSource;
+            v_tenancy_persons = new BindingSource
+            {
+                DataMember = "tenancy_processes_tenancy_persons",
+                DataSource = GeneralBindingSource
+            };
 
-            v_tenancy_agreements = new BindingSource();
-            v_tenancy_agreements.DataMember = "tenancy_processes_tenancy_agreements";
-            v_tenancy_agreements.DataSource = GeneralBindingSource;
+            v_tenancy_agreements = new BindingSource
+            {
+                DataMember = "tenancy_processes_tenancy_agreements",
+                DataSource = GeneralBindingSource
+            };
 
-            v_tenancy_reasons = new BindingSource();
-            v_tenancy_reasons.DataMember = "tenancy_processes_tenancy_reasons";
-            v_tenancy_reasons.DataSource = GeneralBindingSource;
+            v_tenancy_reasons = new BindingSource
+            {
+                DataMember = "tenancy_processes_tenancy_reasons",
+                DataSource = GeneralBindingSource
+            };
 
-            v_tenancy_addresses = new BindingSource();
-            v_tenancy_addresses.DataSource = tenancy_premises_info.Select();
+            v_tenancy_addresses = new BindingSource {DataSource = tenancy_premises_info.Select()};
 
             DataBind();
 
@@ -1065,16 +1063,33 @@ namespace Registry.Viewport
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (e == null)
-                return;
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
             else
             {
+                GeneralBindingSource.CurrentItemChanged -= v_tenancies_CurrentItemChanged;
+                v_tenancy_persons.ListChanged -= v_persons_ListChanged;
+                tenancy_premises_info.RefreshEvent -= tenancy_premises_info_RefreshEvent;
                 tenancy_persons.Select().RowChanged -= TenancyPersons_RowChanged;
                 tenancy_persons.Select().RowDeleted -= TenancyPersons_RowDeleted;
                 GeneralDataModel.Select().RowChanged -= TenancyViewport_RowChanged;
                 GeneralDataModel.Select().RowDeleted -= TenancyViewport_RowDeleted;
+
+                if (tenancy_building_assoc != null)
+                {
+                        tenancy_building_assoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
+                        tenancy_building_assoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
+                }
+                if (tenancy_premises_assoc != null)
+                {
+                        tenancy_premises_assoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
+                        tenancy_premises_assoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
+                }
+                if (tenancy_sub_premises_assoc != null)
+                {
+                        tenancy_sub_premises_assoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
+                        tenancy_sub_premises_assoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
+                }
             }
             base.OnClosing(e);
         }
@@ -1083,11 +1098,7 @@ namespace Registry.Viewport
         {
             if (viewportState == ViewportState.NewRowState)
                 GeneralDataModel.EditingNewRecord = false;
-            tenancy_persons.Select().RowChanged -= TenancyPersons_RowChanged;
-            tenancy_persons.Select().RowDeleted -= TenancyPersons_RowDeleted;
-            GeneralDataModel.Select().RowChanged -= TenancyViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted -= TenancyViewport_RowDeleted;
-            Close();
+            base.ForceClose();
         }
 
         public override bool HasAssocViewport(ViewportType viewportType)
@@ -1098,8 +1109,7 @@ namespace Registry.Viewport
                 ViewportType.TenancyReasonsViewport,
                 ViewportType.TenancyBuildingsViewport,
                 ViewportType.TenancyPremisesViewport,
-                ViewportType.TenancyAgreementsViewport,
-                ViewportType.ClaimListViewport
+                ViewportType.TenancyAgreementsViewport
             };
             return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
         }

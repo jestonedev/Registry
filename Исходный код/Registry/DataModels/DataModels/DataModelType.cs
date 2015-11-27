@@ -53,6 +53,8 @@
         DocumentsIssuedByDataModel,
         ClaimStateTypesRelationsDataModel,
         ClaimStateTypesDataModel,
-        ObjectStatesDataModel
+        ObjectStatesDataModel,
+        PaymentsAccountsDataModel,
+        PaymentsDataModel
     }
 }

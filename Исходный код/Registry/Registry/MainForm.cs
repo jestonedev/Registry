@@ -67,14 +67,8 @@ namespace Registry
                 toolStripProgressBar.Maximum += 9;   
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
                 toolStripProgressBar.Maximum += 13;
-            if (AccessControl.HasPrivelege(Priveleges.TenancyRead) || AccessControl.HasPrivelege(Priveleges.ClaimsRead))
-                toolStripProgressBar.Maximum += 1;
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
-                toolStripProgressBar.Maximum += 15;
-            if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
-                toolStripProgressBar.Maximum += 4;
-            if (AccessControl.HasPrivelege(Priveleges.ResettleRead))
-                toolStripProgressBar.Maximum += 8;
+                toolStripProgressBar.Maximum += 16;
             //Общие таблицы для реестра жилого фонда, процессов найма и процессов переселения
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead) || AccessControl.HasPrivelege(Priveleges.TenancyRead)
                 || AccessControl.HasPrivelege(Priveleges.ResettleRead))
@@ -106,9 +100,6 @@ namespace Registry
                 DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.RestrictionsDataModel);
                 DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.RestrictionTypesDataModel);
             }
-            //Общие таблицы для претензионно-исковой работы и процессов найма
-            if (AccessControl.HasPrivelege(Priveleges.TenancyRead) || AccessControl.HasPrivelege(Priveleges.ClaimsRead))
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancyProcessesDataModel);
             // Процессы найма
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
             {
@@ -129,34 +120,19 @@ namespace Registry
                 DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.WarrantDocTypesDataModel);
                 DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.DocumentsIssuedByDataModel);
                 DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancyNotifiesDataModel);
+                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancyProcessesDataModel);
             }
-            // Претензионно-исковая работа
-            if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
-            {
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ClaimsDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ClaimStatesDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ClaimStateTypesDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ClaimStateTypesRelationsDataModel);
-            }
-            // Процессы переселения
-            if (AccessControl.HasPrivelege(Priveleges.ResettleRead))
-            {
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ResettleProcessesDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ResettlePersonsDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ResettleBuildingsFromAssocDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ResettleBuildingsToAssocDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ResettlePremisesFromAssocDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ResettlePremisesToAssocDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ResettleSubPremisesFromAssocDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ResettleSubPremisesToAssocDataModel);
-            }
+            if (toolStripProgressBar.Maximum == 0)
+                toolStripProgressBar.Visible = false;
         }
 
         private void ribbonButtonTabClose_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
+            {
                 document.Close();
+            }
         }
 
         private void ribbonButtonTabsClose_Click(object sender, EventArgs e)
@@ -166,7 +142,9 @@ namespace Registry
                 {
                     var document = dockPanel.Documents.ElementAt(i) as IMenuController;
                     if (document != null)
+                    {
                         document.Close();
+                    }
                 }
         }
 
@@ -266,7 +244,9 @@ namespace Registry
         public void AddViewport(Viewport.Viewport viewport)
         {
             if (viewport != null)
+            {
                 viewport.Show(dockPanel, DockState.Document);
+            }
         }
 
         private void ribbonButtonOpen_Click(object sender, EventArgs e)
@@ -346,6 +326,10 @@ namespace Registry
                 ribbonPanelRelations.Items.Add(ribbonButtonClaims);
             if (document.HasAssocViewport(ViewportType.ClaimStatesViewport))
                 ribbonPanelRelations.Items.Add(ribbonButtonClaimStates);
+            if (document.HasAssocViewport(ViewportType.PaymentsAccountsViewport))
+                ribbonPanelRelations.Items.Add(ribbonButtonAccounts);
+            if (document.HasAssocViewport(ViewportType.PaymentsViewport))
+                ribbonPanelRelations.Items.Add(ribbonButtonAccountHistory);
         }
 
         private void TenancyRelationsStateUpdate()
@@ -434,6 +418,7 @@ namespace Registry
             ribbonOrbMenuItemPremises.Enabled = AccessControl.HasPrivelege(Priveleges.RegistryRead);
             ribbonOrbMenuItemTenancy.Enabled = AccessControl.HasPrivelege(Priveleges.TenancyRead);
             ribbonOrbMenuItemClaims.Enabled = AccessControl.HasPrivelege(Priveleges.ClaimsRead);
+            ribbonOrbMenuItemPayments.Enabled = AccessControl.HasPrivelege(Priveleges.ClaimsRead);
             ribbonOrbMenuItemResettles.Enabled = AccessControl.HasPrivelege(Priveleges.ResettleRead);
         }
 
@@ -613,6 +598,21 @@ namespace Registry
                 document.ShowAssocViewport(ViewportType.ClaimStatesViewport);
         }
 
+        private void ribbonButtonAccounts_Click(object sender, EventArgs e)
+        {
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowAssocViewport(ViewportType.PaymentsAccountsViewport);
+        }
+
+        private void ribbonButtonAccountHistory_Click(object sender, EventArgs e)
+        {
+
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.ShowAssocViewport(ViewportType.PaymentsViewport);
+        }
+
         private void ribbonButtonAssocTenancies_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
@@ -730,6 +730,11 @@ namespace Registry
         private void ribbonButtonClaimStateTypes_Click(object sender, EventArgs e)
         {
             CreateViewport(ViewportType.ClaimStateTypesViewport);
+        }
+
+        private void ribbonOrbMenuItemPayments_Click(object sender, EventArgs e)
+        {
+            CreateViewport(ViewportType.PaymentsAccountsViewport);
         }
 
         private void ribbonButtonDocumentResidence_Click(object sender, EventArgs e)

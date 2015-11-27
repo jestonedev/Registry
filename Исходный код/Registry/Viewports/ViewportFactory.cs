@@ -69,6 +69,10 @@ namespace Registry.Viewport
                 case ViewportType.ResettleFromPremisesViewport:
                 case ViewportType.ResettleToPremisesViewport:
                     return new ResettlePremisesViewport(null, menuCallback);
+                case ViewportType.PaymentsAccountsViewport:
+                    return new PaymentsAccountsViewport(null, menuCallback);
+                case ViewportType.PaymentsViewport:
+                    return new PaymentsViewport(null, menuCallback);
             }
             throw new ViewportException(
                 string.Format(CultureInfo.InvariantCulture, "В фабрику ViewportFactory передан неизвестный тип {0}", viewportType));

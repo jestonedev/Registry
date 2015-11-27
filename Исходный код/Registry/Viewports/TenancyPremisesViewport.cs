@@ -561,8 +561,6 @@ namespace Registry.Viewport
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (e == null)
-                return;
             if (SnapshotHasChanges())
             {
                 var result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
@@ -582,16 +580,8 @@ namespace Registry.Viewport
             GeneralDataModel.Select().RowDeleted -= PremisesListViewport_RowDeleted;
             tenancy_premises.Select().RowChanged -= TenancyPremisesViewport_RowChanged;
             tenancy_premises.Select().RowDeleting -= TenancyPremisesViewport_RowDeleting;
+            premises_funds.RefreshEvent -= premises_funds_RefreshEvent;
             base.OnClosing(e);
-        }
-
-        public override void ForceClose()
-        {
-            GeneralDataModel.Select().RowChanged -= PremisesListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted -= PremisesListViewport_RowDeleted;
-            tenancy_premises.Select().RowChanged -= TenancyPremisesViewport_RowChanged;
-            tenancy_premises.Select().RowDeleting -= TenancyPremisesViewport_RowDeleting;
-            base.ForceClose();
         }
 
         public override bool HasAssocViewport(ViewportType viewportType)

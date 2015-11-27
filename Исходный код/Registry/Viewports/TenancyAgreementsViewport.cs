@@ -477,12 +477,11 @@ namespace Registry.Viewport
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (e == null)
-                return;
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
             else
             {
+                GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
                 tenancy_persons.Select().RowDeleted -= TenancyPersonsViewport_RowDeleted;
                 tenancy_persons.Select().RowChanged -= TenancyPersonsViewport_RowChanged;
                 GeneralDataModel.Select().RowDeleted -= TenancyAgreementsViewport_RowDeleted;
@@ -495,10 +494,6 @@ namespace Registry.Viewport
         {
             if (viewportState == ViewportState.NewRowState)
                 GeneralDataModel.EditingNewRecord = false;
-            tenancy_persons.Select().RowDeleted -= TenancyPersonsViewport_RowDeleted;
-            tenancy_persons.Select().RowChanged -= TenancyPersonsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted -= TenancyAgreementsViewport_RowDeleted;
-            GeneralDataModel.Select().RowChanged -= TenancyAgreementsViewport_RowChanged;
             Close();
         }
 

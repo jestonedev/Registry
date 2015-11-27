@@ -205,6 +205,10 @@ namespace Registry.DataModels.DataModels
                     return WarrantDocTypesDataModel.GetInstance(progressBar, incrementor);
                 case DataModelType.WarrantsDataModel:
                     return WarrantsDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.PaymentsAccountsDataModel:
+                    return PaymentsAccountsDataModel.GetInstance(progressBar, incrementor);
+                case DataModelType.PaymentsDataModel:
+                    return PaymentsDataModel.GetInstance();
                 default:
                     throw new DataModelException("Неизвестный тип модели");
             }

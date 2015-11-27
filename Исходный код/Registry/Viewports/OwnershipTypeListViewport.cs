@@ -102,7 +102,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.OwnershipRightTypesDataModel);
+            GeneralDataModel = DataModel.GetInstance(DataModelType.OwnershipRightTypesDataModel); 
             GeneralDataModel.Select();
 
             GeneralBindingSource = new BindingSource
@@ -271,7 +271,10 @@ namespace Registry.Viewport
                         e.Cancel = true;
                         return;
                 }
-            }
+            } 
+            GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_ownership_right_types_CurrentItemChanged;
+            dataGridView.CellValidated -= dataGridView_CellValidated;
+            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
             GeneralDataModel.Select().RowChanged -= OwnershipTypeListViewport_RowChanged;
             GeneralDataModel.Select().RowDeleting -= OwnershipTypeListViewport_RowDeleting;
             GeneralDataModel.Select().RowDeleted -= OwnershipTypeListViewport_RowDeleted;

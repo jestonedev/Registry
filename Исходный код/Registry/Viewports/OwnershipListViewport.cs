@@ -438,7 +438,11 @@ namespace Registry.Viewport
                         e.Cancel = true;
                         return;
                     }
-            }
+            } GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_ownerships_rights_CurrentItemChanged;
+            GeneralSnapshot.RowChanged -= snapshot_ownerships_rights_RowChanged;
+            GeneralSnapshot.RowDeleted -= snapshot_ownerships_rights_RowDeleted;
+            dataGridView.CellValidated -= dataGridView_CellValidated;
+            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
             GeneralDataModel.Select().RowChanged -= OwnershipListViewport_RowChanged;
             GeneralDataModel.Select().RowDeleting -= OwnershipListViewport_RowDeleting;
             _ownershipAssoc.Select().RowChanged -= OwnershipAssoc_RowChanged;
@@ -448,10 +452,6 @@ namespace Registry.Viewport
 
         public override void ForceClose()
         {
-            GeneralDataModel.Select().RowChanged -= OwnershipListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting -= OwnershipListViewport_RowDeleting;
-            _ownershipAssoc.Select().RowChanged -= OwnershipAssoc_RowChanged;
-            _ownershipAssoc.Select().RowDeleted -= OwnershipAssoc_RowDeleted;
             Close();
         }
 

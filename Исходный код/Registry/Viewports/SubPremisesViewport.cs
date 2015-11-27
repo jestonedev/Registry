@@ -427,6 +427,11 @@ namespace Registry.Viewport
                         return;
                 }
             }
+            GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_sub_premises_CurrentItemChanged;
+            dataGridView.EditingControlShowing -= dataGridView_EditingControlShowing;
+            dataGridView.CellValidated -= dataGridView_CellValidated;
+            dataGridView.DataError -= dataGridView_DataError;
+            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
             GeneralDataModel.Select().RowChanged -= SubPremisesViewport_RowChanged;
             GeneralDataModel.Select().RowDeleting -= SubPremisesViewport_RowDeleting;
             GeneralDataModel.Select().RowDeleted -= SubPremisesViewport_RowDeleted;
@@ -446,7 +451,8 @@ namespace Registry.Viewport
             var reports = new List<ViewportType>
             {
                 ViewportType.FundsHistoryViewport,
-                ViewportType.TenancyListViewport
+                ViewportType.TenancyListViewport,
+                ViewportType.PaymentsAccountsViewport
             };
             return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
         }

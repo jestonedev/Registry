@@ -336,18 +336,13 @@ namespace Registry.Viewport
                         return;
                 }
             }
+            GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_tenancy_reasons_CurrentItemChanged;
+            dataGridView.CellValidated -= dataGridView_CellValidated;
+            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
             GeneralDataModel.Select().RowChanged -= TenancyReasonsViewport_RowChanged;
             GeneralDataModel.Select().RowDeleting -= TenancyReasonsViewport_RowDeleting;
             GeneralDataModel.Select().RowDeleted -= TenancyReasonsViewport_RowDeleted;
             base.OnClosing(e);
-        }
-
-        public override void ForceClose()
-        {
-            GeneralDataModel.Select().RowChanged -= TenancyReasonsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting -= TenancyReasonsViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted -= TenancyReasonsViewport_RowDeleted;
-            Close();
         }
 
         void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)

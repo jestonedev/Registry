@@ -557,10 +557,12 @@ namespace Registry.Viewport
                 e.Cancel = true;
             else
             {
-                fund_assoc.Select().RowChanged -= FundAssoc_RowChanged;
-                fund_assoc.Select().RowDeleted -= FundAssoc_RowDeleted;
+                GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
                 GeneralDataModel.Select().RowChanged -= FundsHistoryViewport_RowChanged;
                 GeneralDataModel.Select().RowDeleted -= FundsHistoryViewport_RowDeleted;
+                fund_assoc.Select().RowChanged -= FundAssoc_RowChanged;
+                fund_assoc.Select().RowDeleted -= FundAssoc_RowDeleted;
+                comboBoxFundType.SelectedIndexChanged -= comboBoxFundType_SelectedIndexChanged;
             }
             base.OnClosing(e);
         }
@@ -569,10 +571,6 @@ namespace Registry.Viewport
         {
             if (viewportState == ViewportState.NewRowState)
                 GeneralDataModel.EditingNewRecord = false;
-            fund_assoc.Select().RowChanged -= FundAssoc_RowChanged;
-            fund_assoc.Select().RowDeleted -= FundAssoc_RowDeleted;
-            GeneralDataModel.Select().RowChanged -= FundsHistoryViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted -= FundsHistoryViewport_RowDeleted;
             Close();
         }
 

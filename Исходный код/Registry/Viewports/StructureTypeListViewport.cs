@@ -269,7 +269,9 @@ namespace Registry.Viewport
                         e.Cancel = true;
                         return;
                 }
-            }
+            } GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_structure_types_CurrentItemChanged;
+            dataGridView.CellValidated -= dataGridView_CellValidated;
+            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
             GeneralDataModel.Select().RowChanged -= StructureTypeListViewport_RowChanged;
             GeneralDataModel.Select().RowDeleting -= StructureTypeListViewport_RowDeleting;
             GeneralDataModel.Select().RowDeleted -= StructureTypeListViewport_RowDeleted;

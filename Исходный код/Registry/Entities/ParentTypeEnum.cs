@@ -8,6 +8,7 @@
         SubPremises,
         Tenancy,
         Claim,
-        ResettleProcess
+        ResettleProcess,
+        PaymentAccount
     }
 }

@@ -503,6 +503,7 @@ namespace Registry.Viewport
                         return;
                     }
             }
+            GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
             GeneralDataModel.Select().RowChanged -= BuildingsViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted -= BuildingsViewport_RowDeleted;
             resettle_buildings.Select().RowChanged -= ResettleBuildingsViewport_RowChanged;
@@ -512,10 +513,6 @@ namespace Registry.Viewport
 
         public override void ForceClose()
         {
-            GeneralDataModel.Select().RowChanged -= BuildingsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted -= BuildingsViewport_RowDeleted;
-            resettle_buildings.Select().RowChanged -= ResettleBuildingsViewport_RowChanged;
-            resettle_buildings.Select().RowDeleting -= ResettleBuildingsViewport_RowDeleting;
             base.ForceClose();
         }
 

@@ -534,8 +534,6 @@ namespace Registry.Viewport
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (e == null)
-                return;
             if (SnapshotHasChanges())
             {
                 var result = MessageBox.Show("Сохранить изменения в базу данных?", "Внимание",
@@ -551,6 +549,7 @@ namespace Registry.Viewport
                         return;
                     }
             }
+            GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
             GeneralDataModel.Select().RowChanged -= PremisesListViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted -= PremisesListViewport_RowDeleted;
             resettle_premises.Select().RowChanged -= ResettlePremisesViewport_RowChanged;

@@ -15,6 +15,8 @@ namespace Registry.Viewport
 {
     internal sealed partial class ClaimListViewport : FormWithGridViewport
     {
+        private BindingSource v_accounts;
+
         private ClaimListViewport()
             : this(null, null)
         {
@@ -31,9 +33,9 @@ namespace Registry.Viewport
         {
             if (viewportState == ViewportState.NewRowState)
             {
-                if ((ParentRow != null) && (ParentType == ParentTypeEnum.Tenancy))
+                if ((ParentRow != null) && (ParentType == ParentTypeEnum.PaymentAccount))
                 {
-                    Text = string.Format(CultureInfo.InvariantCulture, "Новая исковая работа найма №{0}", ParentRow["id_process"]);
+                    Text = string.Format(CultureInfo.InvariantCulture, "Новая исковая работа по ЛС №{0}", ParentRow["account"]);
                 }
                 else
                     Text = @"Новая исковая работа";
@@ -41,16 +43,16 @@ namespace Registry.Viewport
             else
                 if (GeneralBindingSource.Position != -1)
                 {
-                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.Tenancy))
-                        Text = string.Format(CultureInfo.InvariantCulture, "Исковая работа №{0} найма №{1}",
-                            ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"], ParentRow["id_process"]);
+                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.PaymentAccount))
+                        Text = string.Format(CultureInfo.InvariantCulture, "Исковая работа №{0} по ЛС №{1}",
+                            ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"], ParentRow["account"]);
                     else
                         Text = string.Format(CultureInfo.InvariantCulture, "Исковая работа №{0}", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"]);
                 }
                 else
                 {
-                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.Tenancy))
-                        Text = string.Format(CultureInfo.InvariantCulture, "Исковые работы в найме №{0} отсутствуют", ParentRow["id_process"]);
+                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.PaymentAccount))
+                        Text = string.Format(CultureInfo.InvariantCulture, "Исковые работы по ЛС №{0} отсутствуют", ParentRow["account"]);
                     else
                         Text = @"Исковые работы отсутствуют";
                 }
@@ -58,6 +60,12 @@ namespace Registry.Viewport
 
         private void DataBind()
         {
+            comboBoxAccount.DataSource = v_accounts;
+            comboBoxAccount.ValueMember = "id_account";
+            comboBoxAccount.DisplayMember = "account";
+            comboBoxAccount.DataBindings.Clear();
+            comboBoxAccount.DataBindings.Add("SelectedValue", GeneralBindingSource, "id_account", true, DataSourceUpdateMode.Never, DBNull.Value);
+
             textBoxDescription.DataBindings.Clear();
             textBoxDescription.DataBindings.Add("Text", GeneralBindingSource, "description", true, DataSourceUpdateMode.Never, "");
             dateTimePickerDateOfTransfer.DataBindings.Clear();
@@ -68,8 +76,6 @@ namespace Registry.Viewport
             dateTimePickerStartDeptPeriod.DataBindings.Add("Value", GeneralBindingSource, "start_dept_period", true, DataSourceUpdateMode.Never, null);
             dateTimePickerEndDeptPeriod.DataBindings.Clear();
             dateTimePickerEndDeptPeriod.DataBindings.Add("Value", GeneralBindingSource, "end_dept_period", true, DataSourceUpdateMode.Never, null);
-            numericUpDownProcessID.DataBindings.Clear();
-            numericUpDownProcessID.DataBindings.Add("Value", GeneralBindingSource, "id_process", true, DataSourceUpdateMode.Never, 0);
             numericUpDownAmountOfDebtFine.DataBindings.Clear();
             numericUpDownAmountOfDebtFine.DataBindings.Add("Value", GeneralBindingSource, "amount_of_debt_fine", true, DataSourceUpdateMode.Never, 0);
             numericUpDownAmountOfDebtRent.DataBindings.Clear();
@@ -86,7 +92,7 @@ namespace Registry.Viewport
 
         private void UnbindedCheckBoxesUpdate()
         {
-            var row = (GeneralBindingSource.Position >= 0) ? (DataRowView)GeneralBindingSource[GeneralBindingSource.Position] : null;
+            var row = (GeneralBindingSource.Count > 0 && GeneralBindingSource.Position >= 0) ? (DataRowView)GeneralBindingSource[GeneralBindingSource.Position] : null;
             if (row != null && ((GeneralBindingSource.Position >= 0) && (row["date_of_transfer"] != DBNull.Value)))
                 dateTimePickerDateOfTransfer.Checked = true;
             else
@@ -127,29 +133,26 @@ namespace Registry.Viewport
 
         private bool ValidateClaim(Claim claim)
         {
-            if (claim.IdProcess == null)
+
+            if (claim.IdAccount == null)
             {
-                MessageBox.Show(@"Необходимо задать внутренний номер процесса найм. Если вы видите это сообщение, обратитесь к системному администратору",
+                MessageBox.Show(@"Лицевого счета с указанным номером не существует",
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                comboBoxAccount.Focus();
                 return false;
             }
-            var tenancyRows = from tenancyRow in DataModel.GetInstance(DataModelType.TenancyProcessesDataModel).FilterDeletedRows()
-                               where tenancyRow.Field<int>("id_process") == claim.IdProcess
-                               select tenancyRow;
-            if (tenancyRows.Any()) return true;
-            MessageBox.Show(@"Процесса найма с указаннным внутренним номером не существует",
-                @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-            numericUpDownProcessID.Focus();
-            return false;
+            return true;
         }
 
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
+
+
             var claim = new Claim
             {
                 IdClaim = ViewportHelper.ValueOrNull<int>(row, "id_claim"),
-                IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process"),
+                IdAccount = ViewportHelper.ValueOrNull<int>(row, "id_account"),
                 AmountOfDebtRent = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_debt_rent"),
                 AmountOfDebtFine = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_debt_fine"),
                 AmountOfRent = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_rent"),
@@ -172,7 +175,7 @@ namespace Registry.Viewport
                 claim.IdClaim = null;
             else
                 claim.IdClaim = Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"], CultureInfo.InvariantCulture);
-            claim.IdProcess = Convert.ToInt32(numericUpDownProcessID.Value);
+            claim.IdAccount = ViewportHelper.ValueOrNull<int>(comboBoxAccount);         
             claim.AmountOfDebtRent = numericUpDownAmountOfDebtRent.Value;
             claim.AmountOfDebtFine = numericUpDownAmountOfDebtFine.Value;
             claim.AmountOfRent = numericUpDownAmountOfRent.Value;
@@ -189,7 +192,7 @@ namespace Registry.Viewport
 
         private void ViewportFromClaim(Claim claim)
         {
-            numericUpDownProcessID.Value = ViewportHelper.ValueOrDefault(claim.IdProcess);
+            comboBoxAccount.SelectedValue = ViewportHelper.ValueOrDBNull(claim.IdAccount);
             numericUpDownAmountOfDebtFine.Value = ViewportHelper.ValueOrDefault(claim.AmountOfDebtFine);
             numericUpDownAmountOfDebtRent.Value = ViewportHelper.ValueOrDefault(claim.AmountOfDebtRent);
             numericUpDownAmountOfFine.Value = ViewportHelper.ValueOrDefault(claim.AmountOfFine);
@@ -207,7 +210,7 @@ namespace Registry.Viewport
         {
             row.BeginEdit();
             row["id_claim"] = ViewportHelper.ValueOrDBNull(claim.IdClaim);
-            row["id_process"] = ViewportHelper.ValueOrDBNull(claim.IdProcess);
+            row["id_account"] = ViewportHelper.ValueOrDBNull(claim.IdAccount);
             row["date_of_transfer"] = ViewportHelper.ValueOrDBNull(claim.DateOfTransfer);
             row["at_date"] = ViewportHelper.ValueOrDBNull(claim.AtDate);
             row["start_dept_period"] = ViewportHelper.ValueOrDBNull(claim.StartDeptPeriod);
@@ -235,20 +238,22 @@ namespace Registry.Viewport
 
             // Ожидаем дозагрузки, если это необходимо
             GeneralDataModel.Select();
-
-            var ds = DataModel.DataSet;
+            DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).Select();
 
             GeneralBindingSource = new BindingSource();
             GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
             GeneralBindingSource.DataMember = "claims";
-            GeneralBindingSource.DataSource = ds;
+            GeneralBindingSource.DataSource = DataModel.DataSet;
             GeneralBindingSource.Filter = StaticFilter;
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 GeneralBindingSource.Filter += " AND ";
             GeneralBindingSource.Filter += DynamicFilter;
 
-            if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
-                numericUpDownProcessID.Enabled = false;
+            v_accounts = new BindingSource
+            {
+                DataSource = DataModel.DataSet,
+                DataMember = "payments_accounts"
+            };
 
             DataBind();
 
@@ -275,7 +280,7 @@ namespace Registry.Viewport
             dataGridViewClaims.RowCount = dataGridViewClaims.RowCount + 1;
             GeneralBindingSource.AddNew();
             if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
-                numericUpDownProcessID.Value = (int)ParentRow["id_process"];
+                comboBoxAccount.SelectedValue = ParentRow["id_account"].ToString();
             is_editable = true;
             dataGridViewClaims.Enabled = false;
             GeneralDataModel.EditingNewRecord = true;
@@ -303,7 +308,7 @@ namespace Registry.Viewport
             dateTimePickerStartDeptPeriod.Checked = (claim.StartDeptPeriod != null);
             dateTimePickerEndDeptPeriod.Checked = (claim.EndDeptPeriod != null);
             if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
-                numericUpDownProcessID.Value = (int)ParentRow["id_process"];
+                comboBoxAccount.SelectedValue = ParentRow["id_account"].ToString();
             is_editable = true;
         }
 
@@ -427,6 +432,7 @@ namespace Registry.Viewport
                 e.Cancel = true;
             else
             {
+                GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
                 GeneralDataModel.Select().RowChanged -= ClaimListViewport_RowChanged;
                 GeneralDataModel.Select().RowDeleted -= ClaimListViewport_RowDeleted;
             }
@@ -437,8 +443,6 @@ namespace Registry.Viewport
         {
             if (viewportState == ViewportState.NewRowState)
                 GeneralDataModel.EditingNewRecord = false;
-            GeneralDataModel.Select().RowChanged -= ClaimListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted -= ClaimListViewport_RowDeleted;
             Close();
         }
 
@@ -536,6 +540,13 @@ namespace Registry.Viewport
                 case "id_claim":
                     e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["id_claim"];
                     break;
+                case "id_account":
+                    var accountList = (from row in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
+                                  where row.Field<int>("id_account") == (int)((DataRowView)GeneralBindingSource[e.RowIndex])["id_account"]
+                        select row).ToList();
+                    if (accountList.Any())
+                        e.Value = accountList.First().Field<string>("account");
+                    break;
                 case "date_of_transfer":
                     e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["date_of_transfer"] == DBNull.Value ? "" :
                         ((DateTime)((DataRowView)GeneralBindingSource[e.RowIndex])["date_of_transfer"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
@@ -584,6 +595,39 @@ namespace Registry.Viewport
         {
             UnbindedCheckBoxesUpdate();
             base.OnVisibleChanged(e);
+        }
+
+        void comboBoxAccount_DropDownClosed(object sender, EventArgs e)
+        {
+            if (comboBoxAccount.Items.Count == 0)
+                comboBoxAccount.SelectedIndex = -1;
+        }
+
+        void comboBoxAccount_KeyUp(object sender, KeyEventArgs e)
+        {
+            if ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode == Keys.Back) || (e.KeyCode == Keys.Delete) ||
+                (e.KeyCode >= Keys.D0 && e.KeyCode <= Keys.D9) || (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9))
+            {
+                string text = comboBoxAccount.Text;
+                int selectionStart = comboBoxAccount.SelectionStart;
+                int selectionLength = comboBoxAccount.SelectionLength;
+                v_accounts.Filter = "account like '%" + comboBoxAccount.Text + "%'";
+                comboBoxAccount.Text = text;
+                comboBoxAccount.SelectionStart = selectionStart;
+                comboBoxAccount.SelectionLength = selectionLength;
+            }
+        }
+
+        void comboBoxAccount_Leave(object sender, EventArgs e)
+        {
+            if (comboBoxAccount.Items.Count > 0)
+            {
+                if (comboBoxAccount.SelectedValue == null)
+                    comboBoxAccount.SelectedValue = v_accounts[v_accounts.Position];
+                comboBoxAccount.Text = ((DataRowView)v_accounts[v_accounts.Position])["account"].ToString();
+            }
+            if (comboBoxAccount.SelectedValue == null)
+                comboBoxAccount.Text = "";
         }
     }
 }

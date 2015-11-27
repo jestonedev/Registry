@@ -484,6 +484,7 @@ namespace Registry.Viewport
                 e.Cancel = true;
             else
             {
+                GeneralBindingSource.CurrentItemChanged -= v_claim_states_CurrentItemChanged;
                 GeneralDataModel.Select().RowChanged -= ClaimStatesViewport_RowChanged;
                 GeneralDataModel.Select().RowDeleted -= ClaimStatesViewport_RowDeleted;
                 claim_state_types.Select().RowChanged -= ClaimStateTypesViewport_RowChanged;
@@ -498,12 +499,6 @@ namespace Registry.Viewport
         {
             if (viewportState == ViewportState.NewRowState)
                 GeneralDataModel.EditingNewRecord = false;
-            GeneralDataModel.Select().RowChanged -= ClaimStatesViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted -= ClaimStatesViewport_RowDeleted;
-            claim_state_types.Select().RowChanged -= ClaimStateTypesViewport_RowChanged;
-            claim_state_types.Select().RowDeleted -= ClaimStateTypesViewport_RowDeleted;
-            claim_state_types_relations.Select().RowChanged -= ClaimStateTypesRelationsViewport_RowChanged;
-            claim_state_types_relations.Select().RowDeleted -= ClaimStateTypesRelationsViewport_RowDeleted;
             Close();
         }
 

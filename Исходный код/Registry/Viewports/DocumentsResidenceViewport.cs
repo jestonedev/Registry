@@ -110,9 +110,6 @@ namespace Registry.Viewport
             DockAreas = DockAreas.Document;
             GeneralDataModel = DataModel.GetInstance(DataModelType.DocumentsResidenceDataModel);
 
-            //Ожидаем дозагрузки данных, если это необходимо
-            GeneralDataModel.Select();
-
             GeneralBindingSource = new BindingSource
             {
                 DataMember = "documents_residence",
@@ -174,6 +171,10 @@ namespace Registry.Viewport
                         return;
                 }
             }
+
+            GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_documents_issued_by_CurrentItemChanged;
+            dataGridView.CellValidated -= dataGridView_CellValidated;
+            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
             GeneralDataModel.Select().RowChanged -= DocumentResidenceViewport_RowChanged;
             GeneralDataModel.Select().RowDeleting -= DocumentResidenceViewport_RowDeleting;
             GeneralDataModel.Select().RowDeleted -= DocumentResidenceViewport_RowDeleted;

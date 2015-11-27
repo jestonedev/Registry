@@ -117,14 +117,12 @@ namespace Registry.SearchForms
                     int.Parse(comboBoxOwnershipType.SelectedValue.ToString(), CultureInfo.InvariantCulture));
                 includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingsIds);
             }
-            if (includedBuildings != null)
-            {
-                if (!string.IsNullOrEmpty(filter.Trim()))
-                    filter += " AND ";
-                var buildingsFilter = BuildFilter(includedBuildings, "id_building");
-                if (!string.IsNullOrEmpty(buildingsFilter))
-                    filter += "(" + buildingsFilter + ")";
-            }
+            if (includedBuildings == null) return filter == "" ? "0 = 1" : filter;
+            if (!string.IsNullOrEmpty(filter.Trim()))
+                filter += " AND ";
+            var buildingsFilter = BuildFilter(includedBuildings, "id_building");
+            if (!string.IsNullOrEmpty(buildingsFilter))
+                filter += "(" + buildingsFilter + ")";
             return filter == "" ? "0 = 1" : filter;
         }
 

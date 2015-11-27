@@ -109,14 +109,12 @@ namespace Registry.SearchForms
                 if (!string.IsNullOrEmpty(premisesFilter))
                     filter += "(" + premisesFilter + ")";
             }
-            if (includedBuildings != null)
-            {
-                if (!string.IsNullOrEmpty(filter.Trim()))
-                    filter += " AND ";
-                var buildingsFilter = BuildFilter(includedBuildings, "id_building");
-                if (!string.IsNullOrEmpty(buildingsFilter))
-                    filter += "(" + buildingsFilter + ")";
-            }
+            if (includedBuildings == null) return filter == "" ? "0 = 1" : filter;
+            if (!string.IsNullOrEmpty(filter.Trim()))
+                filter += " AND ";
+            var buildingsFilter = BuildFilter(includedBuildings, "id_building");
+            if (!string.IsNullOrEmpty(buildingsFilter))
+                filter += "(" + buildingsFilter + ")";
             return filter == "" ? "0 = 1" : filter;
         }
 
@@ -160,6 +158,7 @@ namespace Registry.SearchForms
         public ExtendedSearchPremisesForm()
         {
             InitializeComponent();
+
             DataModel.GetInstance(DataModelType.KladrStreetsDataModel).Select();
             DataModel.GetInstance(DataModelType.FundTypesDataModel).Select();
             DataModel.GetInstance(DataModelType.ObjectStatesDataModel).Select();
@@ -174,7 +173,7 @@ namespace Registry.SearchForms
                 DataMember = "kladr"
             };
 
-            v_regions = new BindingSource {DataSource = regions.Select()};
+            v_regions = new BindingSource { DataSource = regions.Select() };
 
             v_fundTypes = new BindingSource
             {
@@ -188,7 +187,7 @@ namespace Registry.SearchForms
                 DataMember = "object_states"
             };
 
-            v_ownership_right_types = new BindingSource {DataSource = ownership_right_types.Select()};
+            v_ownership_right_types = new BindingSource { DataSource = ownership_right_types.Select() };
 
             comboBoxStreet.DataSource = v_kladr;
             comboBoxStreet.ValueMember = "id_street";

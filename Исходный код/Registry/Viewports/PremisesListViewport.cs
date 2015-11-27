@@ -144,13 +144,17 @@ namespace Registry.Viewport
             if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
                 Text = @"Помещения здания №" + ParentRow["id_building"];
 
-            v_buildings = new BindingSource();
-            v_buildings.DataMember = "buildings";
-            v_buildings.DataSource = ds;
+            v_buildings = new BindingSource
+            {
+                DataMember = "buildings",
+                DataSource = ds
+            };
 
-            v_premises_types = new BindingSource();
-            v_premises_types.DataMember = "premises_types";
-            v_premises_types.DataSource = ds;
+            v_premises_types = new BindingSource
+            {
+                DataMember = "premises_types",
+                DataSource = ds
+            };
 
             id_premises_type.DataSource = v_premises_types;
             id_premises_type.ValueMember = "id_premises_type";
@@ -196,18 +200,20 @@ namespace Registry.Viewport
             }
         }
 
-        public override void Close()
+        protected override void OnClosing(CancelEventArgs e)
         {
             if (_premisesTenanciesInfo != null)
                 _premisesTenanciesInfo.RefreshEvent -= _premisesTenanciesInfo_RefreshEvent;
-            base.Close();
-        }
-
-        public override void ForceClose()
-        {
-            if (_premisesTenanciesInfo != null)
-                _premisesTenanciesInfo.RefreshEvent -= _premisesTenanciesInfo_RefreshEvent;
-            base.ForceClose();
+            if (GeneralBindingSource != null)
+                GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
+            if (GeneralDataModel != null)
+            {
+                GeneralDataModel.Select().RowChanged -= PremisesListViewport_RowChanged;
+                GeneralDataModel.Select().RowDeleted -= PremisesListViewport_RowDeleted;
+            }
+            if (premises_funds != null)
+                premises_funds.RefreshEvent -= premises_funds_RefreshEvent;
+            base.OnClosing(e);
         }
 
         public override bool CanSearchRecord()
@@ -337,7 +343,8 @@ namespace Registry.Viewport
                 ViewportType.OwnershipListViewport,
                 ViewportType.RestrictionListViewport,
                 ViewportType.FundsHistoryViewport,
-                ViewportType.TenancyListViewport
+                ViewportType.TenancyListViewport,
+                ViewportType.PaymentsAccountsViewport
             };
             return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
         }

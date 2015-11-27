@@ -21,6 +21,7 @@ namespace Registry.SearchForms
         public ExtendedSearchTenancyForm()
         {
             InitializeComponent();
+
             DataModel.GetInstance(DataModelType.KladrStreetsDataModel).Select();
             DataModel.GetInstance(DataModelType.RentTypesDataModel).Select();
             regions = DataModel.GetInstance(DataModelType.KladrRegionsDataModel);
@@ -195,7 +196,7 @@ namespace Registry.SearchForms
                     DataModelHelper.ConditionType.PremisesCondition);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
-            if (includedProcesses == null) return filter;
+            if (includedProcesses == null) return filter == "" ? "0 = 1" : filter;
             if (!string.IsNullOrEmpty(filter.Trim()))
                 filter += " AND ";
             var processesFilter = BuildFilter(includedProcesses, "id_process");

@@ -125,8 +125,6 @@ namespace Registry.Viewport
             DockAreas = DockAreas.Document;
             GeneralDataModel = DataModel.GetInstance(DataModelType.ExecutorsDataModel);
 
-            //Ожидаем дозагрузки данных, если это необходимо
-            GeneralDataModel.Select();
 
             GeneralBindingSource = new BindingSource
             {
@@ -303,6 +301,9 @@ namespace Registry.Viewport
                         return;
                 }
             }
+            GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_executors_CurrentItemChanged;
+            dataGridView.CellValidated -= dataGridView_CellValidated;
+            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
             GeneralDataModel.Select().RowChanged -= ExecutorsViewport_RowChanged;
             GeneralDataModel.Select().RowDeleting -= ExecutorsViewport_RowDeleting;
             GeneralDataModel.Select().RowDeleted -= ExecutorsViewport_RowDeleted;

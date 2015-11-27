@@ -21,6 +21,7 @@ namespace Registry.SearchForms
         public ExtendedSearchResettleForm()
         {
             InitializeComponent();
+
             DataModel.GetInstance(DataModelType.KladrStreetsDataModel).Select();
             regions = DataModel.GetInstance(DataModelType.KladrRegionsDataModel);
 
@@ -38,9 +39,9 @@ namespace Registry.SearchForms
                 DataMember = "kladr"
             };
 
-            v_regions_from = new BindingSource {DataSource = regions.Select()};
+            v_regions_from = new BindingSource { DataSource = regions.Select() };
 
-            v_regions_to = new BindingSource {DataSource = regions.Select()};
+            v_regions_to = new BindingSource { DataSource = regions.Select() };
 
             comboBoxStreetFrom.DataSource = v_kladr_from;
             comboBoxStreetFrom.ValueMember = "id_street";
@@ -151,16 +152,14 @@ namespace Registry.SearchForms
                     DataModelHelper.ConditionType.PremisesCondition, ResettleEstateObjectWay.To);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
-            if (includedProcesses != null)
-            {
-                if (!string.IsNullOrEmpty(filter.Trim()))
-                    filter += " AND ";
-                filter += "id_process IN (0";
-                foreach (var id in includedProcesses)
-                    filter += id.ToString(CultureInfo.InvariantCulture) + ",";
-                filter = filter.TrimEnd(',') + ")";
-            }
-            return filter;
+            if (includedProcesses == null) return filter == "" ? "0 = 1" : filter;
+            if (!string.IsNullOrEmpty(filter.Trim()))
+                filter += " AND ";
+            filter += "id_process IN (0";
+            foreach (var id in includedProcesses)
+                filter += id.ToString(CultureInfo.InvariantCulture) + ",";
+            filter = filter.TrimEnd(',') + ")";
+            return filter == "" ? "0 = 1" : filter;
         }
 
         private static string ConvertDisplayEqExprToSql(string expr)

@@ -475,6 +475,10 @@ namespace Registry.Viewport
                         return;
                     }
             }
+            v_claim_state_types_from.CurrentItemChanged -= v_claim_state_types_from_CurrentItemChanged;
+            GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_claim_state_types_CurrentItemChanged;
+            dataGridViewClaimStateTypes.CellValueChanged -= dataGridViewClaimStateTypes_CellValueChanged;
+            dataGridViewClaimStateTypesFrom.CellValueChanged -= dataGridViewClaimStateTypesFrom_CellValueChanged;
             GeneralDataModel.Select().RowChanged -= ClaimStateTypesViewport_RowChanged;
             GeneralDataModel.Select().RowDeleting -= ClaimStateTypesViewport_RowDeleting;
             GeneralDataModel.Select().RowDeleted -= ClaimStateTypesViewport_RowDeleted;

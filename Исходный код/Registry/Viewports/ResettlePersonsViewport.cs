@@ -320,7 +320,10 @@ namespace Registry.Viewport
                         e.Cancel = true;
                         return;
                 }
-            }
+            } 
+            GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_resettle_persons_CurrentItemChanged;
+            dataGridView.CellValidated -= dataGridView_CellValidated;
+            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
             GeneralDataModel.Select().RowChanged -= ResettlePersonsViewport_RowChanged;
             GeneralDataModel.Select().RowDeleting -= ResettlePersonsViewport_RowDeleting;
             GeneralDataModel.Select().RowDeleted -= ResettlePersonsViewport_RowDeleted;

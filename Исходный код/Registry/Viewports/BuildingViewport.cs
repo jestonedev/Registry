@@ -984,10 +984,15 @@ namespace Registry.Viewport
             else
             {
                 _buildingsCurrentFund.RefreshEvent -= buildingsCurrentFund_RefreshEvent;
+                _buildingsPremisesFunds.RefreshEvent -= buildingsPremisesFunds_RefreshEvent;
+                _buildingsPremisesSumArea.RefreshEvent -= buildingsPremisesSumArea_RefreshEvent; 
                 _restrictionBuildingsAssoc.Select().RowChanged -= RestrictionsAssoc_RowChanged;
                 _restrictionBuildingsAssoc.Select().RowDeleted -= RestrictionsAssoc_RowDeleted;
                 _ownershipBuildingsAssoc.Select().RowChanged -= OwnershipsAssoc_RowChanged;
                 _ownershipBuildingsAssoc.Select().RowDeleted -= OwnershipsAssoc_RowDeleted;
+                _vRestrictionBuildingsAssoc.CurrentItemChanged -= v_restrictionBuildingsAssoc_CurrentItemChanged;
+                _vOwnershipBuildingsAssoc.CurrentItemChanged -= v_ownershipBuildingsAssoc_CurrentItemChanged;
+                GeneralBindingSource.CurrentItemChanged -= v_building_CurrentItemChanged;
                 GeneralDataModel.Select().RowDeleted -= BuildingViewport_RowDeleted;
                 GeneralDataModel.Select().RowChanged -= BuildingViewport_RowChanged;
             }

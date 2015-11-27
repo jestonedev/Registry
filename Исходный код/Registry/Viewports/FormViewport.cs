@@ -60,22 +60,22 @@ namespace Registry.Viewport
 
         public sealed override bool CanMoveFirst()
         {
-            return GeneralBindingSource.Position > 0;
+            return GeneralBindingSource != null && GeneralBindingSource.Position > 0;
         }
 
         public sealed override bool CanMovePrev()
         {
-            return GeneralBindingSource.Position > 0;
+            return GeneralBindingSource != null && GeneralBindingSource.Position > 0;
         }
 
         public sealed override bool CanMoveNext()
         {
-            return (GeneralBindingSource.Position > -1) && (GeneralBindingSource.Position < (GeneralBindingSource.Count - 1));
+            return GeneralBindingSource != null && (GeneralBindingSource.Position > -1) && (GeneralBindingSource.Position < (GeneralBindingSource.Count - 1));
         }
 
         public sealed override bool CanMoveLast()
         {
-            return (GeneralBindingSource.Position > -1) && (GeneralBindingSource.Position < (GeneralBindingSource.Count - 1));
+            return GeneralBindingSource != null && (GeneralBindingSource.Position > -1) && (GeneralBindingSource.Position < (GeneralBindingSource.Count - 1));
         }
 
         protected virtual bool ChangeViewportStateTo(ViewportState state)
@@ -253,7 +253,8 @@ namespace Registry.Viewport
             var viewport = (Viewport)Activator.CreateInstance(GetType(), this, MenuCallback);
             if (viewport.CanLoadData())
                 viewport.LoadData();
-            if (GeneralBindingSource.Count <= 0 || !GeneralDataModel.Select().PrimaryKey.Any()) return viewport;
+            if (GeneralBindingSource == null || GeneralDataModel == null || GeneralBindingSource.Count <= 0 || 
+                GeneralDataModel.Select() == null || !GeneralDataModel.Select().PrimaryKey.Any()) return viewport;
             var fileName = GeneralDataModel.Select().PrimaryKey[0].ColumnName;
             viewport.LocateEntityBy(fileName,
                 (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])[fileName] as int?) ?? -1);

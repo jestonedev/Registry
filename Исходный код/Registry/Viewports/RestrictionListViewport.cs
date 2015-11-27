@@ -433,6 +433,11 @@ namespace Registry.Viewport
                         return;
                     }
             }
+            GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_restrictions_CurrentItemChanged;
+            GeneralSnapshot.RowChanged -= snapshot_restrictions_RowChanged;
+            GeneralSnapshot.RowDeleted -= snapshot_restrictions_RowDeleted;
+            dataGridView.CellValidated -= dataGridView_CellValidated;
+            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
             GeneralDataModel.Select().RowChanged -= RestrictionListViewport_RowChanged;
             GeneralDataModel.Select().RowDeleting -= RestrictionListViewport_RowDeleting;
             _restrictionAssoc.Select().RowChanged -= RestrictionAssoc_RowChanged;

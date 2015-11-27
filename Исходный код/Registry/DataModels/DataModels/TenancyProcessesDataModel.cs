@@ -36,7 +36,6 @@ namespace Registry.DataModels.DataModels
             AddRelation(TableName, "id_process", "tenancy_notifies", "id_process");
             AddRelation(TableName, "id_process", "tenancy_agreements", "id_process");
             AddRelation(TableName, "id_process", "tenancy_persons", "id_process");
-            AddRelation(TableName, "id_process", "claims", "id_process");
             AddRelation("rent_types", "id_rent_type", TableName, "id_rent_type");
             AddRelation("executors", "id_executor", TableName, "id_executor");
             AddRelation("warrants", "id_warrant", TableName, "id_warrant");

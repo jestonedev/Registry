@@ -300,8 +300,13 @@ namespace Registry.Viewport
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            GeneralDataModel.Select().RowChanged -= BuildingListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted -= BuildingListViewport_RowDeleted;
+            if (GeneralBindingSource != null)
+                GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
+            if (GeneralDataModel != null)
+            {
+                GeneralDataModel.Select().RowChanged -= BuildingListViewport_RowChanged;
+                GeneralDataModel.Select().RowDeleted -= BuildingListViewport_RowDeleted;
+            }
             base.OnClosing(e);
         }
 

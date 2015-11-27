@@ -406,12 +406,12 @@ namespace Registry.Viewport
 
         protected override void OnClosing(CancelEventArgs e)
         {
-            if (e == null)
-                return;
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
             else
             {
+                GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
+                resettle_aggregate.RefreshEvent -= resettles_aggregate_RefreshEvent;
                 GeneralDataModel.Select().RowChanged -= ResettleProcessListViewport_RowChanged;
                 GeneralDataModel.Select().RowDeleted -= ResettleProcessListViewport_RowDeleted;
             }

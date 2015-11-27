@@ -62,6 +62,8 @@
     <Compile Include="DataModelHelper.cs" />
     <Compile Include="DataModels\DataModelType.cs" />
     <Compile Include="DataModels\DocumentsResidenceDataModel.cs" />
+    <Compile Include="DataModels\PaymentsAccountsDataModel.cs" />
+    <Compile Include="DataModels\PaymentsDataModel.cs" />
     <Compile Include="DataModels\ResettleBuildingsFromAssocDataModel.cs" />
     <Compile Include="DataModels\ResettleBuildingsToAssocDataModel.cs" />
     <Compile Include="DataModels\ResettlePersonsDataModel.cs" />
