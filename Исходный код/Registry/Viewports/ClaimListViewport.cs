@@ -279,7 +279,7 @@ namespace Registry.Viewport
             is_editable = false;
             dataGridViewClaims.RowCount = dataGridViewClaims.RowCount + 1;
             GeneralBindingSource.AddNew();
-            if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
+            if (ParentRow != null && ParentType == ParentTypeEnum.PaymentAccount)
                 comboBoxAccount.SelectedValue = ParentRow["id_account"].ToString();
             is_editable = true;
             dataGridViewClaims.Enabled = false;
@@ -623,11 +623,15 @@ namespace Registry.Viewport
             if (comboBoxAccount.Items.Count > 0)
             {
                 if (comboBoxAccount.SelectedValue == null)
-                    comboBoxAccount.SelectedValue = v_accounts[v_accounts.Position];
+                    comboBoxAccount.SelectedValue = ((DataRowView)v_accounts[v_accounts.Position])["id_account"];
                 comboBoxAccount.Text = ((DataRowView)v_accounts[v_accounts.Position])["account"].ToString();
             }
             if (comboBoxAccount.SelectedValue == null)
+            {
+                v_accounts.Filter = "";
                 comboBoxAccount.Text = "";
+                comboBoxAccount.SelectedValue = DBNull.Value;
+            }
         }
     }
 }

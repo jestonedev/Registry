@@ -51,7 +51,8 @@ namespace Registry.DataModels.DataModels
                                               INNER JOIN v_kladr_streets vks ON b.id_street = vks.id_street
                                               RIGHT JOIN payments_accounts pa ON v.id_account = pa.id_account
                                           INNER JOIN payments pm ON pa.id_account = pm.id_account
-                                          WHERE pa.id_account = {0}";
+                                          WHERE pa.id_account = {0}
+                                          ORDER BY pm.date";
         private const string TableName = "payments";
 
         public override DataTable Select()
