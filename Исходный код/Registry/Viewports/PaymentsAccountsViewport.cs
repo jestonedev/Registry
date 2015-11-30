@@ -180,6 +180,10 @@ namespace Registry.Viewport
             numericUpDownBalanceDGIOutput.DataBindings.Add("Value", GeneralBindingSource, "balance_output_dgi", true, DataSourceUpdateMode.Never, 0);
             numericUpDownBalanceDGIOutput.DataBindings.Add("Minimum", GeneralBindingSource, "balance_output_dgi", true, DataSourceUpdateMode.Never, 0);
             numericUpDownBalanceDGIOutput.DataBindings.Add("Maximum", GeneralBindingSource, "balance_output_dgi", true, DataSourceUpdateMode.Never, 0);
+
+            dateTimePickerAtDate.DataBindings.Clear();
+            dateTimePickerAtDate.DataBindings.Add("Value", GeneralBindingSource, "date", true, DataSourceUpdateMode.Never, 0);
+
         }
 
         public override bool CanSearchRecord()

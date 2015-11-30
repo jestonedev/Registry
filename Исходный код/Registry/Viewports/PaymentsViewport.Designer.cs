@@ -69,25 +69,6 @@
             this.label8 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.groupBoxGeneralInfo = new System.Windows.Forms.GroupBox();
-            this.textBoxTenant = new System.Windows.Forms.TextBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.numericUpDownPrescribed = new System.Windows.Forms.NumericUpDown();
-            this.label5 = new System.Windows.Forms.Label();
-            this.numericUpDownLivingArea = new System.Windows.Forms.NumericUpDown();
-            this.label4 = new System.Windows.Forms.Label();
-            this.numericUpDownTotalArea = new System.Windows.Forms.NumericUpDown();
-            this.label92 = new System.Windows.Forms.Label();
-            this.dateTimePickerAtDate = new System.Windows.Forms.DateTimePicker();
-            this.label91 = new System.Windows.Forms.Label();
-            this.textBoxAccount = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBoxAddress = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBoxRawAddress = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBoxCRN = new System.Windows.Forms.TextBox();
-            this.label99 = new System.Windows.Forms.Label();
             this.date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.crn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -112,6 +93,25 @@
             this.balance_output_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_output_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_output_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.groupBoxGeneralInfo = new System.Windows.Forms.GroupBox();
+            this.textBoxTenant = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.numericUpDownPrescribed = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.numericUpDownLivingArea = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.numericUpDownTotalArea = new System.Windows.Forms.NumericUpDown();
+            this.label92 = new System.Windows.Forms.Label();
+            this.dateTimePickerAtDate = new System.Windows.Forms.DateTimePicker();
+            this.label91 = new System.Windows.Forms.Label();
+            this.textBoxAccount = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBoxAddress = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.textBoxRawAddress = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBoxCRN = new System.Windows.Forms.TextBox();
+            this.label99 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.tableLayoutPanel5.SuspendLayout();
@@ -722,222 +722,6 @@
             this.dataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_ColumnHeaderMouseClick);
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             // 
-            // groupBoxGeneralInfo
-            // 
-            this.groupBoxGeneralInfo.Controls.Add(this.textBoxTenant);
-            this.groupBoxGeneralInfo.Controls.Add(this.label18);
-            this.groupBoxGeneralInfo.Controls.Add(this.numericUpDownPrescribed);
-            this.groupBoxGeneralInfo.Controls.Add(this.label5);
-            this.groupBoxGeneralInfo.Controls.Add(this.numericUpDownLivingArea);
-            this.groupBoxGeneralInfo.Controls.Add(this.label4);
-            this.groupBoxGeneralInfo.Controls.Add(this.numericUpDownTotalArea);
-            this.groupBoxGeneralInfo.Controls.Add(this.label92);
-            this.groupBoxGeneralInfo.Controls.Add(this.dateTimePickerAtDate);
-            this.groupBoxGeneralInfo.Controls.Add(this.label91);
-            this.groupBoxGeneralInfo.Controls.Add(this.textBoxAccount);
-            this.groupBoxGeneralInfo.Controls.Add(this.label3);
-            this.groupBoxGeneralInfo.Controls.Add(this.textBoxAddress);
-            this.groupBoxGeneralInfo.Controls.Add(this.label2);
-            this.groupBoxGeneralInfo.Controls.Add(this.textBoxRawAddress);
-            this.groupBoxGeneralInfo.Controls.Add(this.label1);
-            this.groupBoxGeneralInfo.Controls.Add(this.textBoxCRN);
-            this.groupBoxGeneralInfo.Controls.Add(this.label99);
-            this.groupBoxGeneralInfo.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxGeneralInfo.Location = new System.Drawing.Point(3, 3);
-            this.groupBoxGeneralInfo.Name = "groupBoxGeneralInfo";
-            this.tableLayoutPanel1.SetRowSpan(this.groupBoxGeneralInfo, 5);
-            this.groupBoxGeneralInfo.Size = new System.Drawing.Size(498, 364);
-            this.groupBoxGeneralInfo.TabIndex = 0;
-            this.groupBoxGeneralInfo.TabStop = false;
-            this.groupBoxGeneralInfo.Text = "Основная информация";
-            // 
-            // textBoxTenant
-            // 
-            this.textBoxTenant.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxTenant.Location = new System.Drawing.Point(167, 123);
-            this.textBoxTenant.MaxLength = 4000;
-            this.textBoxTenant.Name = "textBoxTenant";
-            this.textBoxTenant.Size = new System.Drawing.Size(323, 20);
-            this.textBoxTenant.TabIndex = 4;
-            // 
-            // label18
-            // 
-            this.label18.AutoSize = true;
-            this.label18.Location = new System.Drawing.Point(9, 127);
-            this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(70, 13);
-            this.label18.TabIndex = 67;
-            this.label18.Text = "Наниматель";
-            // 
-            // numericUpDownPrescribed
-            // 
-            this.numericUpDownPrescribed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownPrescribed.Location = new System.Drawing.Point(167, 205);
-            this.numericUpDownPrescribed.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownPrescribed.Name = "numericUpDownPrescribed";
-            this.numericUpDownPrescribed.Size = new System.Drawing.Size(323, 20);
-            this.numericUpDownPrescribed.TabIndex = 7;
-            this.numericUpDownPrescribed.ThousandsSeparator = true;
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(9, 207);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(63, 13);
-            this.label5.TabIndex = 65;
-            this.label5.Text = "Прописано";
-            // 
-            // numericUpDownLivingArea
-            // 
-            this.numericUpDownLivingArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownLivingArea.DecimalPlaces = 3;
-            this.numericUpDownLivingArea.Location = new System.Drawing.Point(167, 177);
-            this.numericUpDownLivingArea.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownLivingArea.Name = "numericUpDownLivingArea";
-            this.numericUpDownLivingArea.Size = new System.Drawing.Size(323, 20);
-            this.numericUpDownLivingArea.TabIndex = 6;
-            this.numericUpDownLivingArea.ThousandsSeparator = true;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 179);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(90, 13);
-            this.label4.TabIndex = 63;
-            this.label4.Text = "Жилая площадь";
-            // 
-            // numericUpDownTotalArea
-            // 
-            this.numericUpDownTotalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownTotalArea.DecimalPlaces = 3;
-            this.numericUpDownTotalArea.Location = new System.Drawing.Point(167, 149);
-            this.numericUpDownTotalArea.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownTotalArea.Name = "numericUpDownTotalArea";
-            this.numericUpDownTotalArea.Size = new System.Drawing.Size(323, 20);
-            this.numericUpDownTotalArea.TabIndex = 5;
-            this.numericUpDownTotalArea.ThousandsSeparator = true;
-            // 
-            // label92
-            // 
-            this.label92.AutoSize = true;
-            this.label92.Location = new System.Drawing.Point(9, 151);
-            this.label92.Name = "label92";
-            this.label92.Size = new System.Drawing.Size(90, 13);
-            this.label92.TabIndex = 61;
-            this.label92.Text = "Общая площадь";
-            // 
-            // dateTimePickerAtDate
-            // 
-            this.dateTimePickerAtDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerAtDate.Location = new System.Drawing.Point(167, 232);
-            this.dateTimePickerAtDate.Name = "dateTimePickerAtDate";
-            this.dateTimePickerAtDate.Size = new System.Drawing.Size(323, 20);
-            this.dateTimePickerAtDate.TabIndex = 8;
-            // 
-            // label91
-            // 
-            this.label91.AutoSize = true;
-            this.label91.Location = new System.Drawing.Point(9, 235);
-            this.label91.Name = "label91";
-            this.label91.Size = new System.Drawing.Size(132, 13);
-            this.label91.TabIndex = 60;
-            this.label91.Text = "Состояние счета на дату";
-            // 
-            // textBoxAccount
-            // 
-            this.textBoxAccount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxAccount.Location = new System.Drawing.Point(167, 98);
-            this.textBoxAccount.MaxLength = 4000;
-            this.textBoxAccount.Name = "textBoxAccount";
-            this.textBoxAccount.Size = new System.Drawing.Size(323, 20);
-            this.textBoxAccount.TabIndex = 3;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 102);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(76, 13);
-            this.label3.TabIndex = 57;
-            this.label3.Text = "Лицевой счет";
-            // 
-            // textBoxAddress
-            // 
-            this.textBoxAddress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxAddress.Location = new System.Drawing.Point(167, 71);
-            this.textBoxAddress.MaxLength = 4000;
-            this.textBoxAddress.Name = "textBoxAddress";
-            this.textBoxAddress.Size = new System.Drawing.Size(323, 20);
-            this.textBoxAddress.TabIndex = 2;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 75);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(110, 13);
-            this.label2.TabIndex = 55;
-            this.label2.Text = "Адрес в реестр ЖФ";
-            // 
-            // textBoxRawAddress
-            // 
-            this.textBoxRawAddress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxRawAddress.Location = new System.Drawing.Point(167, 45);
-            this.textBoxRawAddress.MaxLength = 4000;
-            this.textBoxRawAddress.Name = "textBoxRawAddress";
-            this.textBoxRawAddress.Size = new System.Drawing.Size(323, 20);
-            this.textBoxRawAddress.TabIndex = 1;
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 49);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 13);
-            this.label1.TabIndex = 53;
-            this.label1.Text = "Адрес по БКС";
-            // 
-            // textBoxCRN
-            // 
-            this.textBoxCRN.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxCRN.Location = new System.Drawing.Point(167, 19);
-            this.textBoxCRN.MaxLength = 4000;
-            this.textBoxCRN.Name = "textBoxCRN";
-            this.textBoxCRN.Size = new System.Drawing.Size(323, 20);
-            this.textBoxCRN.TabIndex = 0;
-            // 
-            // label99
-            // 
-            this.label99.AutoSize = true;
-            this.label99.Location = new System.Drawing.Point(9, 22);
-            this.label99.Name = "label99";
-            this.label99.Size = new System.Drawing.Size(29, 13);
-            this.label99.TabIndex = 51;
-            this.label99.Text = "СРН";
-            // 
             // date
             // 
             this.date.HeaderText = "Состояние на дату";
@@ -1095,6 +879,223 @@
             this.balance_output_dgi.HeaderText = "Сальдо исх. ДГИ";
             this.balance_output_dgi.Name = "balance_output_dgi";
             this.balance_output_dgi.ReadOnly = true;
+            // 
+            // groupBoxGeneralInfo
+            // 
+            this.groupBoxGeneralInfo.Controls.Add(this.textBoxTenant);
+            this.groupBoxGeneralInfo.Controls.Add(this.label18);
+            this.groupBoxGeneralInfo.Controls.Add(this.numericUpDownPrescribed);
+            this.groupBoxGeneralInfo.Controls.Add(this.label5);
+            this.groupBoxGeneralInfo.Controls.Add(this.numericUpDownLivingArea);
+            this.groupBoxGeneralInfo.Controls.Add(this.label4);
+            this.groupBoxGeneralInfo.Controls.Add(this.numericUpDownTotalArea);
+            this.groupBoxGeneralInfo.Controls.Add(this.label92);
+            this.groupBoxGeneralInfo.Controls.Add(this.dateTimePickerAtDate);
+            this.groupBoxGeneralInfo.Controls.Add(this.label91);
+            this.groupBoxGeneralInfo.Controls.Add(this.textBoxAccount);
+            this.groupBoxGeneralInfo.Controls.Add(this.label3);
+            this.groupBoxGeneralInfo.Controls.Add(this.textBoxAddress);
+            this.groupBoxGeneralInfo.Controls.Add(this.label2);
+            this.groupBoxGeneralInfo.Controls.Add(this.textBoxRawAddress);
+            this.groupBoxGeneralInfo.Controls.Add(this.label1);
+            this.groupBoxGeneralInfo.Controls.Add(this.textBoxCRN);
+            this.groupBoxGeneralInfo.Controls.Add(this.label99);
+            this.groupBoxGeneralInfo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxGeneralInfo.Location = new System.Drawing.Point(3, 3);
+            this.groupBoxGeneralInfo.Name = "groupBoxGeneralInfo";
+            this.tableLayoutPanel1.SetRowSpan(this.groupBoxGeneralInfo, 5);
+            this.groupBoxGeneralInfo.Size = new System.Drawing.Size(498, 364);
+            this.groupBoxGeneralInfo.TabIndex = 0;
+            this.groupBoxGeneralInfo.TabStop = false;
+            this.groupBoxGeneralInfo.Text = "Основная информация";
+            // 
+            // textBoxTenant
+            // 
+            this.textBoxTenant.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxTenant.Location = new System.Drawing.Point(167, 123);
+            this.textBoxTenant.MaxLength = 4000;
+            this.textBoxTenant.Name = "textBoxTenant";
+            this.textBoxTenant.Size = new System.Drawing.Size(323, 20);
+            this.textBoxTenant.TabIndex = 4;
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(9, 127);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(70, 13);
+            this.label18.TabIndex = 67;
+            this.label18.Text = "Наниматель";
+            // 
+            // numericUpDownPrescribed
+            // 
+            this.numericUpDownPrescribed.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownPrescribed.Location = new System.Drawing.Point(167, 205);
+            this.numericUpDownPrescribed.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownPrescribed.Name = "numericUpDownPrescribed";
+            this.numericUpDownPrescribed.Size = new System.Drawing.Size(323, 20);
+            this.numericUpDownPrescribed.TabIndex = 7;
+            this.numericUpDownPrescribed.ThousandsSeparator = true;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(9, 207);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(63, 13);
+            this.label5.TabIndex = 65;
+            this.label5.Text = "Прописано";
+            // 
+            // numericUpDownLivingArea
+            // 
+            this.numericUpDownLivingArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownLivingArea.DecimalPlaces = 3;
+            this.numericUpDownLivingArea.Location = new System.Drawing.Point(167, 177);
+            this.numericUpDownLivingArea.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownLivingArea.Name = "numericUpDownLivingArea";
+            this.numericUpDownLivingArea.Size = new System.Drawing.Size(323, 20);
+            this.numericUpDownLivingArea.TabIndex = 6;
+            this.numericUpDownLivingArea.ThousandsSeparator = true;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(9, 179);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(90, 13);
+            this.label4.TabIndex = 63;
+            this.label4.Text = "Жилая площадь";
+            // 
+            // numericUpDownTotalArea
+            // 
+            this.numericUpDownTotalArea.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownTotalArea.DecimalPlaces = 3;
+            this.numericUpDownTotalArea.Location = new System.Drawing.Point(167, 149);
+            this.numericUpDownTotalArea.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownTotalArea.Name = "numericUpDownTotalArea";
+            this.numericUpDownTotalArea.Size = new System.Drawing.Size(323, 20);
+            this.numericUpDownTotalArea.TabIndex = 5;
+            this.numericUpDownTotalArea.ThousandsSeparator = true;
+            // 
+            // label92
+            // 
+            this.label92.AutoSize = true;
+            this.label92.Location = new System.Drawing.Point(9, 151);
+            this.label92.Name = "label92";
+            this.label92.Size = new System.Drawing.Size(90, 13);
+            this.label92.TabIndex = 61;
+            this.label92.Text = "Общая площадь";
+            // 
+            // dateTimePickerAtDate
+            // 
+            this.dateTimePickerAtDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerAtDate.Enabled = false;
+            this.dateTimePickerAtDate.Location = new System.Drawing.Point(167, 232);
+            this.dateTimePickerAtDate.Name = "dateTimePickerAtDate";
+            this.dateTimePickerAtDate.Size = new System.Drawing.Size(323, 20);
+            this.dateTimePickerAtDate.TabIndex = 8;
+            // 
+            // label91
+            // 
+            this.label91.AutoSize = true;
+            this.label91.Location = new System.Drawing.Point(9, 235);
+            this.label91.Name = "label91";
+            this.label91.Size = new System.Drawing.Size(132, 13);
+            this.label91.TabIndex = 60;
+            this.label91.Text = "Состояние счета на дату";
+            // 
+            // textBoxAccount
+            // 
+            this.textBoxAccount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxAccount.Location = new System.Drawing.Point(167, 98);
+            this.textBoxAccount.MaxLength = 4000;
+            this.textBoxAccount.Name = "textBoxAccount";
+            this.textBoxAccount.Size = new System.Drawing.Size(323, 20);
+            this.textBoxAccount.TabIndex = 3;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(9, 102);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(76, 13);
+            this.label3.TabIndex = 57;
+            this.label3.Text = "Лицевой счет";
+            // 
+            // textBoxAddress
+            // 
+            this.textBoxAddress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxAddress.Location = new System.Drawing.Point(167, 71);
+            this.textBoxAddress.MaxLength = 4000;
+            this.textBoxAddress.Name = "textBoxAddress";
+            this.textBoxAddress.Size = new System.Drawing.Size(323, 20);
+            this.textBoxAddress.TabIndex = 2;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(9, 75);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(110, 13);
+            this.label2.TabIndex = 55;
+            this.label2.Text = "Адрес в реестр ЖФ";
+            // 
+            // textBoxRawAddress
+            // 
+            this.textBoxRawAddress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxRawAddress.Location = new System.Drawing.Point(167, 45);
+            this.textBoxRawAddress.MaxLength = 4000;
+            this.textBoxRawAddress.Name = "textBoxRawAddress";
+            this.textBoxRawAddress.Size = new System.Drawing.Size(323, 20);
+            this.textBoxRawAddress.TabIndex = 1;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(9, 49);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(77, 13);
+            this.label1.TabIndex = 53;
+            this.label1.Text = "Адрес по БКС";
+            // 
+            // textBoxCRN
+            // 
+            this.textBoxCRN.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxCRN.Location = new System.Drawing.Point(167, 19);
+            this.textBoxCRN.MaxLength = 4000;
+            this.textBoxCRN.Name = "textBoxCRN";
+            this.textBoxCRN.Size = new System.Drawing.Size(323, 20);
+            this.textBoxCRN.TabIndex = 0;
+            // 
+            // label99
+            // 
+            this.label99.AutoSize = true;
+            this.label99.Location = new System.Drawing.Point(9, 22);
+            this.label99.Name = "label99";
+            this.label99.Size = new System.Drawing.Size(29, 13);
+            this.label99.TabIndex = 51;
+            this.label99.Text = "СРН";
             // 
             // PaymentsViewport
             // 

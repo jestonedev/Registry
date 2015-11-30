@@ -1003,6 +1003,7 @@
             // 
             this.dateTimePickerAtDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerAtDate.Enabled = false;
             this.dateTimePickerAtDate.Location = new System.Drawing.Point(167, 232);
             this.dateTimePickerAtDate.Name = "dateTimePickerAtDate";
             this.dateTimePickerAtDate.Size = new System.Drawing.Size(323, 20);
