@@ -187,7 +187,8 @@ namespace Registry.SearchForms
             }
             var entropicPIdsStr = entropicPremisesIds.Aggregate("", (current, premisesId) => current + (premisesId + ","));
             entropicPIdsStr = entropicPIdsStr.Trim(',');
-            if (string.IsNullOrEmpty(entropicPIdsStr)) return string.Format("{0} IN (0)", fieldName);
+            if (string.IsNullOrEmpty(entropicPIdsStr))
+                return string.IsNullOrEmpty(filter) ? string.Format("{0} IN (0)", fieldName) : filter;
             if (!string.IsNullOrEmpty(filter))
                 filter += " OR ";
             filter += string.Format("{0} IN ({1})", fieldName, entropicPIdsStr);
