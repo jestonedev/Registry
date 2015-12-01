@@ -386,6 +386,8 @@ namespace Registry.Viewport
                 return;
             is_editable = false;
             GeneralBindingSource.AddNew();
+            if (v_claim_state_types.Count > 0)
+                comboBoxClaimStateType.SelectedValue = ((DataRowView)v_claim_state_types[0])["id_state_type"];
             is_editable = true;
             dataGridView.Enabled = false;
             GeneralDataModel.EditingNewRecord = true; 

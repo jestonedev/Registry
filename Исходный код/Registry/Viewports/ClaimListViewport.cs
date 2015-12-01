@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
@@ -365,6 +366,37 @@ namespace Registry.Viewport
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     FillRowFromClaim(claim, newRow);
+                    // Add first state automaticaly
+                    var firstStateTypes = DataModelHelper.ClaimStartStateTypeIds().ToList();
+                    if (firstStateTypes.Any())
+                    {
+                        var firstStateType = firstStateTypes.First();
+                        var claimStatesDataModel = DataModel.GetInstance(DataModelType.ClaimStatesDataModel);
+                        var claimStatesBindingSource = new BindingSource
+                        {
+                            DataSource = claimStatesDataModel.Select()
+                        };
+                        var claimState = new ClaimState
+                        {
+                            IdClaim = claim.IdClaim,
+                            IdStateType = firstStateType
+                        };
+                        var idState = claimStatesDataModel.Insert(claimState);
+                        if (idState != -1)
+                        {
+                            claimState.IdState = idState;
+                        }
+
+                        var claimsStateRow = (DataRowView)claimStatesBindingSource.AddNew();
+                        if (claimsStateRow != null)
+                        {
+                            claimsStateRow.BeginEdit();
+                            claimsStateRow["id_state"] = ViewportHelper.ValueOrDBNull(claimState.IdState);
+                            claimsStateRow["id_claim"] = ViewportHelper.ValueOrDBNull(claimState.IdClaim);
+                            claimsStateRow["id_state_type"] = ViewportHelper.ValueOrDBNull(claimState.IdStateType);
+                            claimsStateRow.EndEdit();
+                        }
+                    }
                     GeneralDataModel.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
