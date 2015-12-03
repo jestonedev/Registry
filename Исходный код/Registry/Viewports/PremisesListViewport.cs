@@ -550,7 +550,9 @@ namespace Registry.Viewport
                         case "residence_warrant_date":
                         case "end_date":
                             var date = tenancyRow.Field<DateTime?>(dataGridView.Columns[e.ColumnIndex].Name);
-                            e.Value =date != null ? date.Value.ToString("dd.MM.yyyy") : null;
+                            e.Value = date != null ? date.Value.ToString("dd.MM.yyyy") : null;
+                            if (dataGridView.Columns[e.ColumnIndex].Name == "end_date" && tenancyRow.Field<bool?>("until_dismissal") == true)
+                                e.Value = "на период ТО";
                             break;
                         case "registration_num":
                         case "residence_warrant_num":

@@ -83,7 +83,7 @@ namespace Registry.Reporting
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += String.Format(CultureInfo.InvariantCulture, "SUBSTRING(v.id_street, 1, 13) = '{0}'", comboBoxRegion.SelectedValue.ToString());
+                filter += String.Format(CultureInfo.InvariantCulture, "SUBSTRING(v.id_street, 1, 12) = '{0}'", comboBoxRegion.SelectedValue.ToString());
             }
             if (checkBoxStreetEnable.Checked && (comboBoxStreet.SelectedValue != null))
             {
@@ -142,9 +142,9 @@ namespace Registry.Reporting
         {
             if (dateFrom.Checked && dateTo.Checked)
             {
-                return String.Format(CultureInfo.InvariantCulture, "tp.{0} BETWEEN STR_TO_DATE('{1}','%d.%m.%Y') AND STR_TO_DATE('{2}','%d.%m.%Y')",
+                return String.Format(CultureInfo.InvariantCulture, "tp.{0} BETWEEN STR_TO_DATE('{1}','%d.%m.%Y') AND STR_TO_DATE('{2}','%d.%m.%Y %H:%i:%S')",
                     name, dateFrom.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture), 
-                    dateTo.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
+                    dateTo.Value.AddHours(23).AddMinutes(59).AddSeconds(59).ToString("dd.MM.yyyy hh:mm:ss", CultureInfo.InvariantCulture));
             }
             else
                 if (dateFrom.Checked)
@@ -155,8 +155,8 @@ namespace Registry.Reporting
                 else
                     if (dateTo.Checked)
                     {
-                        return String.Format(CultureInfo.InvariantCulture, "tp.{0} <= STR_TO_DATE('{1}','%d.%m.%Y')",
-                        name, dateTo.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
+                        return String.Format(CultureInfo.InvariantCulture, "tp.{0} <= STR_TO_DATE('{1}','%d.%m.%Y %H:%i:%S')",
+                        name, dateTo.Value.AddHours(23).AddMinutes(59).AddSeconds(59).ToString("dd.MM.yyyy hh:mm:ss", CultureInfo.InvariantCulture));
                     }
             throw new ReporterException("Невозможно построить фильтр для формирования статистики найма");
         }

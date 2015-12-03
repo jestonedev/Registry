@@ -25,6 +25,7 @@ namespace Registry.DataModels.DataModels
         {
             Table.PrimaryKey = new [] { Table.Columns["id_process"] };
             Table.Columns["registration_date"].DefaultValue = DateTime.Now.Date;
+            Table.Columns["until_dismissal"].DefaultValue = false;
         }
 
         protected override void ConfigureRelations()
@@ -51,10 +52,10 @@ namespace Registry.DataModels.DataModels
         {
             command.CommandText = @"INSERT INTO tenancy_processes
                             (id_rent_type, id_warrant, registration_num
-                             , registration_date, issue_date, begin_date, end_date
+                             , registration_date, issue_date, begin_date, end_date, until_dismissal
                              , residence_warrant_num, residence_warrant_date
                              , protocol_num, protocol_date, id_executor, description)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             var tenancy = (TenancyProcess) entity;
             command.Parameters.Add(DBConnection.CreateParameter("id_rent_type", tenancy.IdRentType));
             command.Parameters.Add(DBConnection.CreateParameter("id_warrant", tenancy.IdWarrant));
@@ -63,6 +64,7 @@ namespace Registry.DataModels.DataModels
             command.Parameters.Add(DBConnection.CreateParameter("issue_date", tenancy.IssueDate));
             command.Parameters.Add(DBConnection.CreateParameter("begin_date", tenancy.BeginDate));
             command.Parameters.Add(DBConnection.CreateParameter("end_date", tenancy.EndDate));
+            command.Parameters.Add(DBConnection.CreateParameter("until_dismissal", tenancy.UntilDismissal));
             command.Parameters.Add(DBConnection.CreateParameter("residence_warrant_num", tenancy.ResidenceWarrantNum));
             command.Parameters.Add(DBConnection.CreateParameter("residence_warrant_date", tenancy.ResidenceWarrantDate));
             command.Parameters.Add(DBConnection.CreateParameter("protocol_num", tenancy.ProtocolNum));
@@ -74,7 +76,7 @@ namespace Registry.DataModels.DataModels
         protected override void ConfigureUpdateCommand(DbCommand command, Entity entity)
         {
             command.CommandText = @"UPDATE tenancy_processes SET id_rent_type = ?, id_warrant = ?, registration_num = ?, 
-                            registration_date = ?, issue_date = ?, begin_date = ?, end_date = ?,
+                            registration_date = ?, issue_date = ?, begin_date = ?, end_date = ?, until_dismissal = ?,
                             residence_warrant_num = ?, residence_warrant_date = ?, protocol_num = ?, 
                             protocol_date = ?, id_executor = ?, description = ? WHERE id_process = ?";
             var tenancy = (TenancyProcess)entity;
@@ -85,6 +87,7 @@ namespace Registry.DataModels.DataModels
             command.Parameters.Add(DBConnection.CreateParameter("issue_date", tenancy.IssueDate));
             command.Parameters.Add(DBConnection.CreateParameter("begin_date", tenancy.BeginDate));
             command.Parameters.Add(DBConnection.CreateParameter("end_date", tenancy.EndDate));
+            command.Parameters.Add(DBConnection.CreateParameter("until_dismissal", tenancy.UntilDismissal));
             command.Parameters.Add(DBConnection.CreateParameter("residence_warrant_num", tenancy.ResidenceWarrantNum));
             command.Parameters.Add(DBConnection.CreateParameter("residence_warrant_date", tenancy.ResidenceWarrantDate));
             command.Parameters.Add(DBConnection.CreateParameter("protocol_num", tenancy.ProtocolNum));

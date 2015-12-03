@@ -136,29 +136,30 @@ namespace Registry.Viewport
 
         private void UnbindedCheckBoxesUpdate()
         {
-            var row = (GeneralBindingSource.Position >= 0) ? (DataRowView)GeneralBindingSource[GeneralBindingSource.Position] : null;
-            if ((GeneralBindingSource.Position >= 0) && (row["date_of_birth"] != DBNull.Value))
+            if (GeneralBindingSource.Count == 0) return;
+            var row = GeneralBindingSource.Position >= 0 ? (DataRowView)GeneralBindingSource[GeneralBindingSource.Position] : null;
+            if ((GeneralBindingSource.Position >= 0) && (row != null) && (row["date_of_birth"] != DBNull.Value))
                 dateTimePickerDateOfBirth.Checked = true;
             else
             {
                 dateTimePickerDateOfBirth.Value = DateTime.Now.Date;
                 dateTimePickerDateOfBirth.Checked = false;
             }
-            if ((GeneralBindingSource.Position >= 0) && (row["date_of_document_issue"] != DBNull.Value))
+            if ((GeneralBindingSource.Position >= 0) && (row != null) && (row["date_of_document_issue"] != DBNull.Value))
                 dateTimePickerDateOfDocumentIssue.Checked = true;
             else
             {
                 dateTimePickerDateOfDocumentIssue.Value = DateTime.Now.Date;
                 dateTimePickerDateOfDocumentIssue.Checked = false;
             }
-            if ((GeneralBindingSource.Position >= 0) && (row["include_date"] != DBNull.Value))
+            if ((GeneralBindingSource.Position >= 0) && (row != null) && (row["include_date"] != DBNull.Value))
                 dateTimePickerIncludeDate.Checked = true;
             else
             {
                 dateTimePickerIncludeDate.Value = DateTime.Now.Date;
                 dateTimePickerIncludeDate.Checked = false;
             }
-            if ((GeneralBindingSource.Position >= 0) && (row["exclude_date"] != DBNull.Value))
+            if ((GeneralBindingSource.Position >= 0) && (row != null) && (row["exclude_date"] != DBNull.Value))
                 dateTimePickerExcludeDate.Checked = true;
             else
             {

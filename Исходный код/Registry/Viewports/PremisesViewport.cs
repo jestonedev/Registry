@@ -295,8 +295,9 @@ namespace Registry.Viewport
 
         private void UnbindedCheckBoxesUpdate()
         {
-            DataRowView row = (GeneralBindingSource.Position >= 0) ? (DataRowView)GeneralBindingSource[GeneralBindingSource.Position] : null;
-            if ((GeneralBindingSource.Position >= 0) && (row["state_date"] != DBNull.Value))
+            if (GeneralBindingSource.Count == 0) return;
+            var row = GeneralBindingSource.Position >= 0 ? (DataRowView)GeneralBindingSource[GeneralBindingSource.Position] : null;
+            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["state_date"] != DBNull.Value)))
                 dateTimePickerStateDate.Checked = true;
             else
             {

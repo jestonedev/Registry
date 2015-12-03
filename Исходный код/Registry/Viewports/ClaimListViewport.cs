@@ -93,7 +93,8 @@ namespace Registry.Viewport
 
         private void UnbindedCheckBoxesUpdate()
         {
-            var row = (GeneralBindingSource.Count > 0 && GeneralBindingSource.Position >= 0) ? (DataRowView)GeneralBindingSource[GeneralBindingSource.Position] : null;
+            if (GeneralBindingSource.Count == 0) return;
+            var row = GeneralBindingSource.Position >= 0 ? (DataRowView)GeneralBindingSource[GeneralBindingSource.Position] : null;
             if (row != null && ((GeneralBindingSource.Position >= 0) && (row["date_of_transfer"] != DBNull.Value)))
                 dateTimePickerDateOfTransfer.Checked = true;
             else

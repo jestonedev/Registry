@@ -233,7 +233,7 @@ namespace Registry.Reporting
                     break;
                 case "end_date":
                     DateTime end_date;
-                    if (DateTime.TryParse(((DataRowView)v_tenancies[e.RowIndex])["end_date"].ToString(), out end_date))
+                    if (DateTime.TryParse(((DataRowView) v_tenancies[e.RowIndex])["end_date"].ToString(), out end_date))
                         e.Value = end_date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                     else
                         e.Value = "";

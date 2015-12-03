@@ -133,7 +133,8 @@ namespace Registry.Viewport
 
         private void UnbindedCheckBoxesUpdate()
         {
-            var row = (GeneralBindingSource.Position >= 0) ? (DataRowView)GeneralBindingSource[GeneralBindingSource.Position] : null;
+            if (GeneralBindingSource.Count == 0) return;
+            var row = GeneralBindingSource.Position >= 0 ? (DataRowView)GeneralBindingSource[GeneralBindingSource.Position] : null;
             if (row != null && ((GeneralBindingSource.Position >= 0) && (row["document_date"] != DBNull.Value)))
                 dateTimePickerDocDate.Checked = true;
             else

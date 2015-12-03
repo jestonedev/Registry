@@ -14,8 +14,6 @@ using Registry.Entities;
 using Registry.Reporting;
 using Registry.SearchForms;
 using Security;
-using VIBlend.Utilities;
-using VIBlend.WinForms.Controls;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
@@ -205,25 +203,26 @@ namespace Registry.Viewport
 
         private void UnbindedCheckBoxesUpdate()
         {
+            if (GeneralBindingSource.Count == 0) return;
             var row = (GeneralBindingSource.Position >= 0) ? (DataRowView)GeneralBindingSource[GeneralBindingSource.Position] : null;
-            checkBoxContractEnable.Checked = (GeneralBindingSource.Position >= 0) &&
+            checkBoxContractEnable.Checked = (GeneralBindingSource.Position >= 0) && (row != null) &&
                 (row["registration_date"] != DBNull.Value) && (row["registration_num"] != DBNull.Value);
-            checkBoxProtocolEnable.Checked = (GeneralBindingSource.Position >= 0) && (row["protocol_date"] != DBNull.Value) && (row["protocol_num"] != DBNull.Value);
-            if ((GeneralBindingSource.Position >= 0) && (row["issue_date"] != DBNull.Value))
+            checkBoxProtocolEnable.Checked = (GeneralBindingSource.Position >= 0) && (row != null) && (row["protocol_date"] != DBNull.Value) && (row["protocol_num"] != DBNull.Value);
+            if ((GeneralBindingSource.Position >= 0) && (row != null) && (row["issue_date"] != DBNull.Value))
                 dateTimePickerIssueDate.Checked = true;
             else
             {
                 dateTimePickerIssueDate.Value = DateTime.Now.Date;
                 dateTimePickerIssueDate.Checked = false;
             }
-            if ((GeneralBindingSource.Position >= 0) && (row["begin_date"] != DBNull.Value))
+            if ((GeneralBindingSource.Position >= 0) && (row != null) && (row["begin_date"] != DBNull.Value))
                 dateTimePickerBeginDate.Checked = true;
             else
             {
                 dateTimePickerBeginDate.Value = DateTime.Now.Date;
                 dateTimePickerBeginDate.Checked = false;
             }
-            if ((GeneralBindingSource.Position >= 0) && (row["end_date"] != DBNull.Value))
+            if ((GeneralBindingSource.Position >= 0) && (row != null) && (row["end_date"] != DBNull.Value))
                 dateTimePickerEndDate.Checked = true;
             else
             {
@@ -295,6 +294,10 @@ namespace Registry.Viewport
             comboBoxExecutor.DisplayMember = "executor_name";
             comboBoxExecutor.DataBindings.Clear();
             comboBoxExecutor.DataBindings.Add("SelectedValue", GeneralBindingSource, "id_executor", true, DataSourceUpdateMode.Never, DBNull.Value);
+
+            checkBoxUntilDismissal.DataBindings.Clear();
+            checkBoxUntilDismissal.DataBindings.Add("Checked", GeneralBindingSource, "until_dismissal", true,
+                DataSourceUpdateMode.Never, DBNull.Value);
         }
 
         protected override bool ChangeViewportStateTo(ViewportState state)
@@ -388,6 +391,7 @@ namespace Registry.Viewport
             tenancy.IssueDate = ViewportHelper.ValueOrNull<DateTime>(row, "issue_date");
             tenancy.BeginDate = ViewportHelper.ValueOrNull<DateTime>(row, "begin_date");
             tenancy.EndDate = ViewportHelper.ValueOrNull<DateTime>(row, "end_date");
+            tenancy.UntilDismissal = ViewportHelper.ValueOrNull<bool>(row, "until_dismissal");     
             tenancy.ResidenceWarrantNum = ViewportHelper.ValueOrNull(row, "residence_warrant_num");
             tenancy.ResidenceWarrantDate = ViewportHelper.ValueOrNull<DateTime>(row, "residence_warrant_date");
             tenancy.ProtocolNum = ViewportHelper.ValueOrNull(row, "protocol_num");
@@ -413,7 +417,16 @@ namespace Registry.Viewport
                 tenancy.RegistrationDate = dateTimePickerRegistrationDate.Value.Date;
                 tenancy.IssueDate = ViewportHelper.ValueOrNull(dateTimePickerIssueDate);
                 tenancy.BeginDate = ViewportHelper.ValueOrNull(dateTimePickerBeginDate);
-                tenancy.EndDate = ViewportHelper.ValueOrNull(dateTimePickerEndDate);
+                if (checkBoxUntilDismissal.Checked)
+                {
+                    tenancy.EndDate = null;
+                    tenancy.UntilDismissal = true;
+                }
+                else
+                {
+                    tenancy.EndDate = ViewportHelper.ValueOrNull(dateTimePickerEndDate);
+                    tenancy.UntilDismissal = false;
+                }
             }
             else
             {
@@ -423,6 +436,7 @@ namespace Registry.Viewport
                 tenancy.IssueDate = null;
                 tenancy.BeginDate = null;
                 tenancy.EndDate = null;
+                tenancy.UntilDismissal = false;
             }
             // Отклики из прошлого, раньше была возможность менять ордер на вкладке процесса найма, убрано из-за плохой согласованности с основаниями найма
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
@@ -470,7 +484,8 @@ namespace Registry.Viewport
             dateTimePickerBeginDate.Value = ViewportHelper.ValueOrDefault(tenancy.BeginDate);
             dateTimePickerBeginDate.Checked = (tenancy.BeginDate != null);
             dateTimePickerEndDate.Value = ViewportHelper.ValueOrDefault(tenancy.EndDate);
-            dateTimePickerEndDate.Checked = (tenancy.EndDate != null);
+            dateTimePickerEndDate.Checked = (tenancy.EndDate != null) && (tenancy.UntilDismissal != true);
+            checkBoxUntilDismissal.Checked = tenancy.UntilDismissal != null && tenancy.UntilDismissal.Value;
             textBoxProtocolNumber.Text = tenancy.ProtocolNum;
             dateTimePickerProtocolDate.Value = ViewportHelper.ValueOrDefault(tenancy.ProtocolDate);
             textBoxDescription.Text = tenancy.Description;
@@ -497,6 +512,7 @@ namespace Registry.Viewport
             row["issue_date"] = ViewportHelper.ValueOrDBNull(tenancy.IssueDate);
             row["begin_date"] = ViewportHelper.ValueOrDBNull(tenancy.BeginDate);
             row["end_date"] = ViewportHelper.ValueOrDBNull(tenancy.EndDate);
+            row["until_dismissal"] = ViewportHelper.ValueOrDBNull(tenancy.UntilDismissal);
             row["residence_warrant_num"] = ViewportHelper.ValueOrDBNull(tenancy.ResidenceWarrantNum);
             row["residence_warrant_date"] = ViewportHelper.ValueOrDBNull(tenancy.ResidenceWarrantDate);
             row["protocol_num"] = ViewportHelper.ValueOrDBNull(tenancy.ProtocolNum);
@@ -540,20 +556,33 @@ namespace Registry.Viewport
 
             v_executors = new BindingSource
             {
-                DataSource = executors.Select(),
+                DataSource = DataModel.DataSet,
+                DataMember = "executors",
                 Filter = "is_inactive = 0"
             };
 
-            v_rent_types = new BindingSource {DataSource = rent_types.Select()};
+            v_rent_types = new BindingSource
+            {
+                DataSource = DataModel.DataSet,
+                DataMember = "rent_types"
+            };
 
-            v_kinships = new BindingSource {DataSource = kinships.Select()};
+            v_kinships = new BindingSource
+            {
+                DataSource = DataModel.DataSet,
+                DataMember = "kinships"
+            };
 
-            v_warrants = new BindingSource {DataSource = warrants.Select()};
+            v_warrants = new BindingSource
+            {
+                DataSource = DataModel.DataSet,
+                DataMember = "warrants"
+            };
 
             GeneralBindingSource = new BindingSource();
             GeneralBindingSource.CurrentItemChanged += v_tenancies_CurrentItemChanged;
             GeneralBindingSource.DataMember = "tenancy_processes";
-            GeneralBindingSource.DataSource = GeneralDataModel.Select();
+            GeneralBindingSource.DataSource = DataModel.DataSet;
             RebuildStaticFilter();
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 GeneralBindingSource.Filter += " AND ";
@@ -1375,6 +1404,11 @@ namespace Registry.Viewport
         private void selectAll_Enter(object sender, EventArgs e)
         {
             ViewportHelper.SelectAllText(sender);
+        }
+
+        private void checkBoxUntilDismissal_CheckedChanged(object sender, EventArgs e)
+        {
+            dateTimePickerEndDate.Enabled = !checkBoxUntilDismissal.Checked;
         }
     }
 }
