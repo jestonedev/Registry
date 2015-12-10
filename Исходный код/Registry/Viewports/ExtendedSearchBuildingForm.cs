@@ -154,7 +154,15 @@ namespace Registry.SearchForms
                 else
                     count++;
             }
-            var entropicPIdsStr = entropicPremisesIds.Aggregate("", (current, premisesId) => current + (premisesId + ","));
+            string entropicPIdsStr;
+            if (entropicPremisesIds.Count > 1000)
+            {
+                entropicPIdsStr = ids.Aggregate("", (current, premisesId) => current + (premisesId + ","));
+                filter = "";
+            }
+            else
+                entropicPIdsStr = entropicPremisesIds.Aggregate("",
+                    (current, premisesId) => current + (premisesId + ","));
             entropicPIdsStr = entropicPIdsStr.Trim(',');
             if (string.IsNullOrEmpty(entropicPIdsStr))
                 return string.IsNullOrEmpty(filter) ? string.Format("{0} IN (0)", fieldName) : filter;
