@@ -69,39 +69,22 @@ namespace Registry.Viewport
 
             textBoxDescription.DataBindings.Clear();
             textBoxDescription.DataBindings.Add("Text", GeneralBindingSource, "description", true, DataSourceUpdateMode.Never, "");
-            dateTimePickerDateOfTransfer.DataBindings.Clear();
-            dateTimePickerDateOfTransfer.DataBindings.Add("Value", GeneralBindingSource, "date_of_transfer", true, DataSourceUpdateMode.Never, null);
             dateTimePickerAtDate.DataBindings.Clear();
             dateTimePickerAtDate.DataBindings.Add("Value", GeneralBindingSource, "at_date", true, DataSourceUpdateMode.Never, null);
             dateTimePickerStartDeptPeriod.DataBindings.Clear();
             dateTimePickerStartDeptPeriod.DataBindings.Add("Value", GeneralBindingSource, "start_dept_period", true, DataSourceUpdateMode.Never, null);
             dateTimePickerEndDeptPeriod.DataBindings.Clear();
             dateTimePickerEndDeptPeriod.DataBindings.Add("Value", GeneralBindingSource, "end_dept_period", true, DataSourceUpdateMode.Never, null);
-            numericUpDownAmountOfDebtFine.DataBindings.Clear();
-            numericUpDownAmountOfDebtFine.DataBindings.Add("Value", GeneralBindingSource, "amount_of_debt_fine", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownAmountOfDebtRent.DataBindings.Clear();
-            numericUpDownAmountOfDebtRent.DataBindings.Add("Value", GeneralBindingSource, "amount_of_debt_rent", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownAmountOfFine.DataBindings.Clear();
-            numericUpDownAmountOfFine.DataBindings.Add("Value", GeneralBindingSource, "amount_of_fine", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownAmountOfRent.DataBindings.Clear();
-            numericUpDownAmountOfRent.DataBindings.Add("Value", GeneralBindingSource, "amount_of_rent", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownAmountOfFineRecover.DataBindings.Clear();
-            numericUpDownAmountOfFineRecover.DataBindings.Add("Value", GeneralBindingSource, "amount_of_fine_recover", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownAmountOfRentRecover.DataBindings.Clear();
-            numericUpDownAmountOfRentRecover.DataBindings.Add("Value", GeneralBindingSource, "amount_of_rent_recover", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownAmountDGI.DataBindings.Clear();
+            numericUpDownAmountDGI.DataBindings.Add("Value", GeneralBindingSource, "amount_dgi", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownAmountTenancy.DataBindings.Clear();
+            numericUpDownAmountTenancy.DataBindings.Add("Value", GeneralBindingSource, "amount_tenancy", true, DataSourceUpdateMode.Never, 0);
         }
 
         private void UnbindedCheckBoxesUpdate()
         {
             if (GeneralBindingSource.Count == 0) return;
             var row = GeneralBindingSource.Position >= 0 ? (DataRowView)GeneralBindingSource[GeneralBindingSource.Position] : null;
-            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["date_of_transfer"] != DBNull.Value)))
-                dateTimePickerDateOfTransfer.Checked = true;
-            else
-            {
-                dateTimePickerDateOfTransfer.Value = DateTime.Now.Date;
-                dateTimePickerDateOfTransfer.Checked = false;
-            }
             if (row != null && ((GeneralBindingSource.Position >= 0) && (row["at_date"] != DBNull.Value)))
                 dateTimePickerAtDate.Checked = true;
             else
@@ -155,13 +138,8 @@ namespace Registry.Viewport
             {
                 IdClaim = ViewportHelper.ValueOrNull<int>(row, "id_claim"),
                 IdAccount = ViewportHelper.ValueOrNull<int>(row, "id_account"),
-                AmountOfDebtRent = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_debt_rent"),
-                AmountOfDebtFine = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_debt_fine"),
-                AmountOfRent = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_rent"),
-                AmountOfFine = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_fine"),
-                AmountOfRentRecover = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_rent_recover"),
-                AmountOfFineRecover = ViewportHelper.ValueOrNull<decimal>(row, "amount_of_fine_recover"),
-                DateOfTransfer = ViewportHelper.ValueOrNull<DateTime>(row, "date_of_transfer"),
+                AmountTenancy = ViewportHelper.ValueOrNull<decimal>(row, "amount_tenancy"),
+                AmountDgi = ViewportHelper.ValueOrNull<decimal>(row, "amount_dgi"),
                 AtDate = ViewportHelper.ValueOrNull<DateTime>(row, "at_date"),
                 StartDeptPeriod = ViewportHelper.ValueOrNull<DateTime>(row, "start_dept_period"),
                 EndDeptPeriod = ViewportHelper.ValueOrNull<DateTime>(row, "end_dept_period"),
@@ -178,13 +156,8 @@ namespace Registry.Viewport
             else
                 claim.IdClaim = Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"], CultureInfo.InvariantCulture);
             claim.IdAccount = ViewportHelper.ValueOrNull<int>(comboBoxAccount);         
-            claim.AmountOfDebtRent = numericUpDownAmountOfDebtRent.Value;
-            claim.AmountOfDebtFine = numericUpDownAmountOfDebtFine.Value;
-            claim.AmountOfRent = numericUpDownAmountOfRent.Value;
-            claim.AmountOfFine = numericUpDownAmountOfFine.Value;
-            claim.AmountOfRentRecover = numericUpDownAmountOfRentRecover.Value;
-            claim.AmountOfFineRecover = numericUpDownAmountOfFineRecover.Value;
-            claim.DateOfTransfer = ViewportHelper.ValueOrNull(dateTimePickerDateOfTransfer);
+            claim.AmountTenancy = numericUpDownAmountTenancy.Value;
+            claim.AmountDgi = numericUpDownAmountDGI.Value;
             claim.AtDate = ViewportHelper.ValueOrNull(dateTimePickerAtDate);
             claim.StartDeptPeriod = ViewportHelper.ValueOrNull(dateTimePickerStartDeptPeriod);
             claim.EndDeptPeriod = ViewportHelper.ValueOrNull(dateTimePickerEndDeptPeriod);
@@ -195,13 +168,8 @@ namespace Registry.Viewport
         private void ViewportFromClaim(Claim claim)
         {
             comboBoxAccount.SelectedValue = ViewportHelper.ValueOrDBNull(claim.IdAccount);
-            numericUpDownAmountOfDebtFine.Value = ViewportHelper.ValueOrDefault(claim.AmountOfDebtFine);
-            numericUpDownAmountOfDebtRent.Value = ViewportHelper.ValueOrDefault(claim.AmountOfDebtRent);
-            numericUpDownAmountOfFine.Value = ViewportHelper.ValueOrDefault(claim.AmountOfFine);
-            numericUpDownAmountOfRent.Value = ViewportHelper.ValueOrDefault(claim.AmountOfRent);
-            numericUpDownAmountOfFineRecover.Value = ViewportHelper.ValueOrDefault(claim.AmountOfFineRecover);
-            numericUpDownAmountOfRentRecover.Value = ViewportHelper.ValueOrDefault(claim.AmountOfRentRecover);
-            dateTimePickerDateOfTransfer.Value = ViewportHelper.ValueOrDefault(claim.DateOfTransfer);
+            numericUpDownAmountDGI.Value = ViewportHelper.ValueOrDefault(claim.AmountDgi);
+            numericUpDownAmountTenancy.Value = ViewportHelper.ValueOrDefault(claim.AmountTenancy);
             dateTimePickerAtDate.Value = ViewportHelper.ValueOrDefault(claim.AtDate);
             dateTimePickerStartDeptPeriod.Value = ViewportHelper.ValueOrDefault(claim.StartDeptPeriod);
             dateTimePickerEndDeptPeriod.Value = ViewportHelper.ValueOrDefault(claim.EndDeptPeriod);
@@ -213,16 +181,11 @@ namespace Registry.Viewport
             row.BeginEdit();
             row["id_claim"] = ViewportHelper.ValueOrDBNull(claim.IdClaim);
             row["id_account"] = ViewportHelper.ValueOrDBNull(claim.IdAccount);
-            row["date_of_transfer"] = ViewportHelper.ValueOrDBNull(claim.DateOfTransfer);
             row["at_date"] = ViewportHelper.ValueOrDBNull(claim.AtDate);
             row["start_dept_period"] = ViewportHelper.ValueOrDBNull(claim.StartDeptPeriod);
             row["end_dept_period"] = ViewportHelper.ValueOrDBNull(claim.EndDeptPeriod);
-            row["amount_of_debt_rent"] = ViewportHelper.ValueOrDBNull(claim.AmountOfDebtRent);
-            row["amount_of_debt_fine"] = ViewportHelper.ValueOrDBNull(claim.AmountOfDebtFine);
-            row["amount_of_rent"] = ViewportHelper.ValueOrDBNull(claim.AmountOfRent);
-            row["amount_of_fine"] = ViewportHelper.ValueOrDBNull(claim.AmountOfFine);
-            row["amount_of_rent_recover"] = ViewportHelper.ValueOrDBNull(claim.AmountOfRentRecover);
-            row["amount_of_fine_recover"] = ViewportHelper.ValueOrDBNull(claim.AmountOfFineRecover);
+            row["amount_tenancy"] = ViewportHelper.ValueOrDBNull(claim.AmountTenancy);
+            row["amount_dgi"] = ViewportHelper.ValueOrDBNull(claim.AmountDgi);
             row["description"] = ViewportHelper.ValueOrDBNull(claim.Description);
             row.EndEdit();
         }
@@ -267,6 +230,9 @@ namespace Registry.Viewport
             ViewportHelper.SetDoubleBuffered(dataGridViewClaims);
             is_editable = true;
             DataChangeHandlersInit();
+
+            if (ParentRow != null)
+                comboBoxAccount.Enabled = false;
         }
 
         public override bool CanInsertRecord()
@@ -305,7 +271,6 @@ namespace Registry.Viewport
             dataGridViewClaims.Enabled = false;
             GeneralDataModel.EditingNewRecord = true;
             ViewportFromClaim(claim);
-            dateTimePickerDateOfTransfer.Checked = (claim.DateOfTransfer != null);
             dateTimePickerAtDate.Checked = (claim.AtDate != null);
             dateTimePickerStartDeptPeriod.Checked = (claim.StartDeptPeriod != null);
             dateTimePickerEndDeptPeriod.Checked = (claim.EndDeptPeriod != null);
@@ -575,20 +540,24 @@ namespace Registry.Viewport
                     break;
                 case "id_account":
                     var accountList = (from row in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
-                                  where row.Field<int>("id_account") == (int)((DataRowView)GeneralBindingSource[e.RowIndex])["id_account"]
+                                  where row.Field<int?>("id_account") == (int?)((DataRowView)GeneralBindingSource[e.RowIndex])["id_account"]
                         select row).ToList();
                     if (accountList.Any())
                         e.Value = accountList.First().Field<string>("account");
                     break;
-                case "date_of_transfer":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["date_of_transfer"] == DBNull.Value ? "" :
-                        ((DateTime)((DataRowView)GeneralBindingSource[e.RowIndex])["date_of_transfer"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+                case "start_dept_period":
+                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["start_dept_period"] == DBNull.Value ? "" :
+                        ((DateTime)((DataRowView)GeneralBindingSource[e.RowIndex])["start_dept_period"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                     break;
-                case "amount_of_debt_rent":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["amount_of_debt_rent"];
+                case "end_dept_period":
+                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["end_dept_period"] == DBNull.Value ? "" :
+                        ((DateTime)((DataRowView)GeneralBindingSource[e.RowIndex])["end_dept_period"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                     break;
-                case "amount_of_debt_fine":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["amount_of_debt_fine"];
+                case "amount_tenancy":
+                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["amount_tenancy"];
+                    break;
+                case "amount_dgi":
+                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["amount_dgi"];
                     break;
                 case "at_date":
                     e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["at_date"] == DBNull.Value ? "" :
@@ -665,6 +634,13 @@ namespace Registry.Viewport
                 comboBoxAccount.Text = "";
                 comboBoxAccount.SelectedValue = DBNull.Value;
             }
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (keyData == Keys.Enter)
+                return false;
+            return base.ProcessCmdKey(ref msg, keyData);
         }
     }
 }

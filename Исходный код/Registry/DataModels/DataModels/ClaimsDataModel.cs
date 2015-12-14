@@ -24,12 +24,9 @@ namespace Registry.DataModels.DataModels
         protected override void ConfigureTable()
         {
             Table.PrimaryKey = new[] { Table.Columns["id_claim"] };
-            Table.Columns["amount_of_debt_rent"].DefaultValue = 0;
-            Table.Columns["amount_of_debt_fine"].DefaultValue = 0;
-            Table.Columns["amount_of_rent"].DefaultValue = 0;
-            Table.Columns["amount_of_fine"].DefaultValue = 0;
-            Table.Columns["amount_of_rent_recover"].DefaultValue = 0;
-            Table.Columns["amount_of_fine_recover"].DefaultValue = 0;
+            Table.Columns["amount_tenancy"].DefaultValue = 0;
+            Table.Columns["amount_dgi"].DefaultValue = 0;
+            Table.Columns["id_account"].DefaultValue = 0;
         }
 
         protected override void ConfigureRelations()
@@ -47,21 +44,15 @@ namespace Registry.DataModels.DataModels
         protected override void ConfigureUpdateCommand(DbCommand command, Entity entity)
         {
             command.CommandText = @"UPDATE claims SET id_account = ?,
-                            date_of_transfer = ?, amount_of_debt_rent = ?, amount_of_debt_fine = ?, at_date = ?,
-                            amount_of_rent = ?, amount_of_fine = ?, amount_of_rent_recover = ?, 
-                            amount_of_fine_recover = ?, start_dept_period = ?, end_dept_period = ?, description = ? WHERE id_claim = ?";
+                            at_date = ?, start_dept_period = ?, end_dept_period = ?, 
+                            amount_tenancy = ?, amount_dgi = ?, description = ? WHERE id_claim = ?";
             var claim = (Claim)entity;
             command.Parameters.Add(DBConnection.CreateParameter("id_account", claim.IdAccount));
-            command.Parameters.Add(DBConnection.CreateParameter("date_of_transfer", claim.DateOfTransfer));
-            command.Parameters.Add(DBConnection.CreateParameter("amount_of_debt_rent", claim.AmountOfDebtRent));
-            command.Parameters.Add(DBConnection.CreateParameter("amount_of_debt_fine", claim.AmountOfDebtFine));
             command.Parameters.Add(DBConnection.CreateParameter("at_date", claim.AtDate));
-            command.Parameters.Add(DBConnection.CreateParameter("amount_of_rent", claim.AmountOfRent));
-            command.Parameters.Add(DBConnection.CreateParameter("amount_of_fine", claim.AmountOfFine));
-            command.Parameters.Add(DBConnection.CreateParameter("amount_of_rent_recover", claim.AmountOfRentRecover));
-            command.Parameters.Add(DBConnection.CreateParameter("amount_of_fine_recover", claim.AmountOfFineRecover));
             command.Parameters.Add(DBConnection.CreateParameter("start_dept_period", claim.StartDeptPeriod));
             command.Parameters.Add(DBConnection.CreateParameter("end_dept_period", claim.EndDeptPeriod));
+            command.Parameters.Add(DBConnection.CreateParameter("amount_tenancy", claim.AmountTenancy));
+            command.Parameters.Add(DBConnection.CreateParameter("amount_dgi", claim.AmountDgi));
             command.Parameters.Add(DBConnection.CreateParameter("description", claim.Description));
             command.Parameters.Add(DBConnection.CreateParameter("id_claim", claim.IdClaim));
         }
@@ -69,22 +60,16 @@ namespace Registry.DataModels.DataModels
         protected override void ConfigureInsertCommand(DbCommand command, Entity entity)
         {
             command.CommandText = @"INSERT INTO claims
-                            (id_account, date_of_transfer, amount_of_debt_rent, 
-                            amount_of_debt_fine, at_date, amount_of_rent,
-                            amount_of_fine, amount_of_rent_recover, amount_of_fine_recover, start_dept_period, end_dept_period, description)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            var claim = (Claim) entity;
+                            (id_account, at_date, start_dept_period, end_dept_period, amount_tenancy, 
+                            amount_dgi,  description)
+                            VALUES (?, ?, ?, ?, ?, ?, ?)";
+            var claim = (Claim)entity;
             command.Parameters.Add(DBConnection.CreateParameter("id_account", claim.IdAccount));
-            command.Parameters.Add(DBConnection.CreateParameter("date_of_transfer", claim.DateOfTransfer));
-            command.Parameters.Add(DBConnection.CreateParameter("amount_of_debt_rent", claim.AmountOfDebtRent));
-            command.Parameters.Add(DBConnection.CreateParameter("amount_of_debt_fine", claim.AmountOfDebtFine));
             command.Parameters.Add(DBConnection.CreateParameter("at_date", claim.AtDate));
-            command.Parameters.Add(DBConnection.CreateParameter("amount_of_rent", claim.AmountOfRent));
-            command.Parameters.Add(DBConnection.CreateParameter("amount_of_fine", claim.AmountOfFine));
-            command.Parameters.Add(DBConnection.CreateParameter("amount_of_rent_recover", claim.AmountOfRentRecover));
-            command.Parameters.Add(DBConnection.CreateParameter("amount_of_fine_recover", claim.AmountOfFineRecover));
             command.Parameters.Add(DBConnection.CreateParameter("start_dept_period", claim.StartDeptPeriod));
             command.Parameters.Add(DBConnection.CreateParameter("end_dept_period", claim.EndDeptPeriod));
+            command.Parameters.Add(DBConnection.CreateParameter("amount_tenancy", claim.AmountTenancy));
+            command.Parameters.Add(DBConnection.CreateParameter("amount_dgi", claim.AmountDgi));
             command.Parameters.Add(DBConnection.CreateParameter("description", claim.Description));
         }
     }

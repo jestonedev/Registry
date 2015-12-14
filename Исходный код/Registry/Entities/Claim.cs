@@ -6,17 +6,12 @@ namespace Registry.Entities
     {
         public int? IdClaim { get; set; }
         public int? IdAccount { get; set; }
-        public DateTime? DateOfTransfer { get; set; }
-        public decimal? AmountOfDebtRent { get; set; }
-        public decimal? AmountOfDebtFine { get; set; }
         public DateTime? AtDate { get; set; }
-        public decimal? AmountOfRent { get; set; }
-        public decimal? AmountOfFine { get; set; }
-        public decimal? AmountOfRentRecover { get; set; }
-        public decimal? AmountOfFineRecover { get; set; }
         public DateTime? StartDeptPeriod { get; set; }
         public DateTime? EndDeptPeriod { get; set; }
         public string Description { get; set; }
+        public decimal? AmountTenancy { get; set; }
+        public decimal? AmountDgi { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -36,17 +31,12 @@ namespace Registry.Entities
                 return false;
             return first.IdClaim == second.IdClaim &&
                    first.IdAccount == second.IdAccount &&
-                   first.DateOfTransfer == second.DateOfTransfer &&
-                   first.AmountOfDebtRent == second.AmountOfDebtRent &&
-                   first.AmountOfDebtFine == second.AmountOfDebtFine &&
                    first.AtDate == second.AtDate &&
-                   first.AmountOfFine == second.AmountOfFine &&
-                   first.AmountOfRent == second.AmountOfRent &&
-                   first.AmountOfFineRecover == second.AmountOfFineRecover &&
-                   first.AmountOfRentRecover == second.AmountOfRentRecover &&
                    first.Description == second.Description &&
                    first.StartDeptPeriod == second.StartDeptPeriod &&
-                   first.EndDeptPeriod == second.EndDeptPeriod;
+                   first.EndDeptPeriod == second.EndDeptPeriod &&
+                   first.AmountTenancy == second.AmountTenancy &&
+                   first.AmountDgi == second.AmountDgi;
         }
 
         public static bool operator !=(Claim first, Claim second)
