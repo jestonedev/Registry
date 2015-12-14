@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Registry.DataModels.DataModels;
 
 namespace Registry.Reporting
 {
@@ -27,21 +28,46 @@ namespace Registry.Reporting
             }
         }
 
+        public int SignerId
+        {
+            get { return (int)comboBoxSigner.SelectedValue; }
+        }
+
         public RegistryExcerptSettingsForm()
         {
             InitializeComponent();
-            foreach (Control control in this.Controls)
+            var signers = DataModel.GetInstance(DataModelType.SelectableHeadHousingDepDataModel).Select();
+            comboBoxSigner.DataSource = signers;
+            comboBoxSigner.ValueMember = "id_record";
+            comboBoxSigner.DisplayMember = "snp";
+
+            foreach (Control control in Controls)
                 control.KeyDown += (sender, e) =>
                 {
-                    ComboBox comboBox = sender as ComboBox;
+                    var comboBox = sender as ComboBox;
                     if (comboBox != null && comboBox.DroppedDown)
                         return;
-                    if (e.KeyCode == Keys.Enter)
-                        this.DialogResult = System.Windows.Forms.DialogResult.OK;
-                    else
-                        if (e.KeyCode == Keys.Escape)
-                            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+                    switch (e.KeyCode)
+                    {
+                        case Keys.Enter:
+                            DialogResult = DialogResult.OK;
+                            break;
+                        case Keys.Escape:
+                            DialogResult = DialogResult.Cancel;
+                            break;
+                    }
                 };
+        }
+
+        private void vButtonOk_Click(object sender, EventArgs e)
+        {
+            if (comboBoxSigner.SelectedValue == DBNull.Value)
+            {
+                MessageBox.Show("Ошибка", "Необходимо выбрать подписывающего", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                comboBoxSigner.Focus();
+                return;
+            }
+            DialogResult = DialogResult.OK;
         }
     }
 }

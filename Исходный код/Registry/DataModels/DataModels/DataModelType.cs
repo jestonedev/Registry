@@ -55,6 +55,7 @@
         ClaimStateTypesDataModel,
         ObjectStatesDataModel,
         PaymentsAccountsDataModel,
-        PaymentsDataModel
+        PaymentsDataModel,
+        SelectableHeadHousingDepDataModel
     }
 }

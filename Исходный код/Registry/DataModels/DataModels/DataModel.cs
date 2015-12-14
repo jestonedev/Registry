@@ -209,6 +209,8 @@ namespace Registry.DataModels.DataModels
                     return PaymentsAccountsDataModel.GetInstance(progressBar, incrementor);
                 case DataModelType.PaymentsDataModel:
                     return PaymentsDataModel.GetInstance();
+                case DataModelType.SelectableHeadHousingDepDataModel:
+                    return SelectableHeadHousingDepDataModel.GetInstance();
                 default:
                     throw new DataModelException("Неизвестный тип модели");
             }

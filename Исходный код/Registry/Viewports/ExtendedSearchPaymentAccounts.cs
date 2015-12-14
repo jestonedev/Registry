@@ -131,7 +131,6 @@ namespace Registry.SearchForms
             if (checkBoxBalanceOutputDGIEnable.Checked)
                 includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_output_dgi",
                     comboBoxBalanceOutputDGIExpr.Text, numericUpDownBalanceOutputDGIFrom.Value, numericUpDownBalanceOutputDGITo.Value);
-
             if (includedAccounts == null) return filter == "" ? "0 = 1" : filter;
             if (!string.IsNullOrEmpty(filter.Trim()))
                 filter += " AND ";
@@ -150,7 +149,7 @@ namespace Registry.SearchForms
                 format = "{0} {1} {2} AND {3}";
             }
             if (checkBoxDateEnable.Checked)
-                format += string.Format(" AND date {0} STR_TO_DATE('{1}','%d.%m.%Y')", comboBoxDateExpr.Text, dateTimePickerDate.Value.ToString("dd.MM.yyyy"));
+                format += string.Format(" AND date {0} STR_TO_DATE('{1}','%d.%m.%Y')", ConvertDisplayEqExprToSql(comboBoxDateExpr.Text), dateTimePickerDate.Value.ToString("dd.MM.yyyy"));
             includedAccounts = DataModelHelper.Intersect(includedAccounts,
                 PaymentsAccountsDataModel.GetAccountIdsByPaymentFilter(
                     string.Format(format, field, op, from.ToString(CultureInfo.InvariantCulture), to.ToString(CultureInfo.InvariantCulture))));
