@@ -345,7 +345,8 @@ namespace Registry.Viewport
                         var claimState = new ClaimState
                         {
                             IdClaim = claim.IdClaim,
-                            IdStateType = firstStateType
+                            IdStateType = firstStateType,
+                            TransferToLegalDepartmentWho = UserDomain.Current.DisplayName
                         };
                         var idState = claimStatesDataModel.Insert(claimState);
                         if (idState != -1)
