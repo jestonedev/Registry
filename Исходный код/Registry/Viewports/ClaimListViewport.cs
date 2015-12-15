@@ -361,6 +361,7 @@ namespace Registry.Viewport
                             claimsStateRow["id_state"] = ViewportHelper.ValueOrDBNull(claimState.IdState);
                             claimsStateRow["id_claim"] = ViewportHelper.ValueOrDBNull(claimState.IdClaim);
                             claimsStateRow["id_state_type"] = ViewportHelper.ValueOrDBNull(claimState.IdStateType);
+                            claimsStateRow["transfer_to_legal_department_who"] = ViewportHelper.ValueOrDBNull(claimState.TransferToLegalDepartmentWho);
                             claimsStateRow.EndEdit();
                         }
                     }
@@ -540,6 +541,7 @@ namespace Registry.Viewport
                     e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["id_claim"];
                     break;
                 case "id_account":
+                    if (((DataRowView) GeneralBindingSource[e.RowIndex])["id_account"] == DBNull.Value) return;
                     var accountList = (from row in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
                                   where row.Field<int?>("id_account") == (int?)((DataRowView)GeneralBindingSource[e.RowIndex])["id_account"]
                         select row).ToList();

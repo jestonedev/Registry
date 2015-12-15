@@ -26,7 +26,6 @@ namespace Registry.DataModels.DataModels
             Table.PrimaryKey = new[] { Table.Columns["id_claim"] };
             Table.Columns["amount_tenancy"].DefaultValue = 0;
             Table.Columns["amount_dgi"].DefaultValue = 0;
-            Table.Columns["id_account"].DefaultValue = 0;
         }
 
         protected override void ConfigureRelations()
