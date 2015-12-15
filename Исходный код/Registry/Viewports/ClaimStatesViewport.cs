@@ -26,7 +26,7 @@ namespace Registry.Viewport
         BindingSource v_claim_state_types_for_grid;
         #endregion Views
 
-        private bool noUpdateFieldList = false;
+        private bool _noUpdateFieldList;
 
         private ClaimStatesViewport()
             : this(null, null)
@@ -191,13 +191,6 @@ namespace Registry.Viewport
         {
             if (GeneralBindingSource.Count == 0) return;
             var row = GeneralBindingSource.Position >= 0 ? (DataRowView)GeneralBindingSource[GeneralBindingSource.Position] : null;
-            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["date_start_state"] != DBNull.Value)))
-                dateTimePickerStartState.Checked = true;
-            else
-            {
-                dateTimePickerStartState.Value = DateTime.Now.Date;
-                dateTimePickerStartState.Checked = false;
-            }
             if (row != null && ((GeneralBindingSource.Position >= 0) && (row["transfert_to_legal_department_date"] != DBNull.Value)))
                 dateTimePickerTransfertToLegalDepartmentDate.Checked = true;
             else
@@ -626,7 +619,6 @@ namespace Registry.Viewport
             dataGridView.Enabled = false;
             GeneralDataModel.EditingNewRecord = true;
             ViewportFromClaimState(claimState);
-            dateTimePickerStartState.Checked = (claimState.DateStartState != null);
 
             dateTimePickerTransfertToLegalDepartmentDate.Checked = claimState.TransfertToLegalDepartmentDate != null;
             dateTimePickerAcceptedByLegalDepartmentDate.Checked = claimState.AcceptedByLegalDepartmentDate != null;
@@ -659,6 +651,7 @@ namespace Registry.Viewport
             GeneralBindingSource.AddNew();
             if (v_claim_state_types.Count > 0)
                 comboBoxClaimStateType.SelectedValue = ((DataRowView)v_claim_state_types[0])["id_state_type"];
+            textBoxTransferToLegalDepartmentWho.Text = UserDomain.Current.DisplayName;
             is_editable = true;
             dataGridView.Enabled = false;
             GeneralDataModel.EditingNewRecord = true; 
@@ -777,7 +770,7 @@ namespace Registry.Viewport
 
         void v_claim_states_CurrentItemChanged(object sender, EventArgs e)
         {
-            noUpdateFieldList = true;
+            _noUpdateFieldList = true;
             if (GeneralBindingSource.Position == -1 || dataGridView.RowCount == 0)
                 dataGridView.ClearSelection();
             else
@@ -794,7 +787,7 @@ namespace Registry.Viewport
             }
             UnbindedCheckBoxesUpdate();
             RebuildFilter();
-            noUpdateFieldList = false;
+            _noUpdateFieldList = false;
             comboBoxClaimStateType_SelectedValueChanged(this, new EventArgs());
             if (GeneralBindingSource.Position == -1)
                 return;
@@ -852,7 +845,7 @@ namespace Registry.Viewport
 
         private void comboBoxClaimStateType_SelectedValueChanged(object sender, EventArgs e)
         {
-            if (comboBoxClaimStateType.SelectedValue == DBNull.Value || comboBoxClaimStateType.SelectedValue == null || noUpdateFieldList)
+            if (comboBoxClaimStateType.SelectedValue == DBNull.Value || comboBoxClaimStateType.SelectedValue == null || _noUpdateFieldList)
             {  
                 tableLayoutPanelAll.RowStyles[0].Height = 90F;
                 tabControlWithoutTabs1.Visible = false;
