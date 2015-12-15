@@ -26,6 +26,8 @@ namespace Registry.Viewport
         BindingSource v_claim_state_types_for_grid;
         #endregion Views
 
+        private bool noUpdateFieldList = false;
+
         private ClaimStatesViewport()
             : this(null, null)
         {
@@ -104,22 +106,16 @@ namespace Registry.Viewport
 
         private void DataBind()
         {
-            comboBoxClaimStateType.DataSource = v_claim_state_types;
             comboBoxClaimStateType.ValueMember = "id_state_type";
             comboBoxClaimStateType.DisplayMember = "state_type";
+            comboBoxClaimStateType.DataSource = v_claim_state_types;
             comboBoxClaimStateType.DataBindings.Clear();
             comboBoxClaimStateType.DataBindings.Add("SelectedValue", GeneralBindingSource, "id_state_type", true, DataSourceUpdateMode.Never, DBNull.Value);
 
-            textBoxDocumentNumber.DataBindings.Clear();
-            textBoxDocumentNumber.DataBindings.Add("Text", GeneralBindingSource, "document_num", true, DataSourceUpdateMode.Never, "");
             textBoxDescription.DataBindings.Clear();
             textBoxDescription.DataBindings.Add("Text", GeneralBindingSource, "description", true, DataSourceUpdateMode.Never, "");
-            dateTimePickerDocDate.DataBindings.Clear();
-            dateTimePickerDocDate.DataBindings.Add("Value", GeneralBindingSource, "document_date", true, DataSourceUpdateMode.Never, null);
             dateTimePickerStartState.DataBindings.Clear();
             dateTimePickerStartState.DataBindings.Add("Value", GeneralBindingSource, "date_start_state", true, DataSourceUpdateMode.Never, null);
-            dateTimePickerEndState.DataBindings.Clear();
-            dateTimePickerEndState.DataBindings.Add("Value", GeneralBindingSource, "date_end_state", true, DataSourceUpdateMode.Never, null);
 
             dataGridView.DataSource = GeneralBindingSource;
             id_state_type.DataSource = v_claim_state_types_for_grid;
@@ -127,21 +123,74 @@ namespace Registry.Viewport
             id_state_type.ValueMember = "id_state_type";
             id_state_type.DataPropertyName = "id_state_type";
             date_start_state.DataPropertyName = "date_start_state";
-            date_end_state.DataPropertyName = "date_end_state";
             description.DataPropertyName = "description";
+
+            dateTimePickerTransfertToLegalDepartmentDate.DataBindings.Clear();
+            dateTimePickerTransfertToLegalDepartmentDate.DataBindings.Add("Value", GeneralBindingSource, "transfert_to_legal_department_date",true, DataSourceUpdateMode.Never, null);
+            textBoxTransferToLegalDepartmentWho.DataBindings.Clear();
+            textBoxTransferToLegalDepartmentWho.DataBindings.Add("Text", GeneralBindingSource, "transfer_to_legal_department_who",true, DataSourceUpdateMode.Never, "");
+            dateTimePickerAcceptedByLegalDepartmentDate.DataBindings.Clear();
+            dateTimePickerAcceptedByLegalDepartmentDate.DataBindings.Add("Value", GeneralBindingSource, "accepted_by_legal_department_date",true, DataSourceUpdateMode.Never, null);
+            textBoxAcceptedByLegalDepartmentWho.DataBindings.Clear();
+            textBoxAcceptedByLegalDepartmentWho.DataBindings.Add("Text", GeneralBindingSource, "accepted_by_legal_department_who", true, DataSourceUpdateMode.Never, "");
+            dateTimePickerClaimDirectionDate.DataBindings.Clear();
+            dateTimePickerClaimDirectionDate.DataBindings.Add("Value", GeneralBindingSource, "claim_direction_date",true, DataSourceUpdateMode.Never, null);
+            textBoxClaimDirectionDescription.DataBindings.Clear();
+            textBoxClaimDirectionDescription.DataBindings.Add("Text", GeneralBindingSource, "claim_direction_description", true, DataSourceUpdateMode.Never, "");
+            dateTimePickerCourtOrderDate.DataBindings.Clear();
+            dateTimePickerCourtOrderDate.DataBindings.Add("Value", GeneralBindingSource, "court_order_date",true, DataSourceUpdateMode.Never, null);
+            textBoxCourtOrderNum.DataBindings.Clear();
+            textBoxCourtOrderNum.DataBindings.Add("Text", GeneralBindingSource, "court_order_num", true, DataSourceUpdateMode.Never, "");
+            dateTimePickerObtainingCourtOrderDate.DataBindings.Clear();
+            dateTimePickerObtainingCourtOrderDate.DataBindings.Add("Value", GeneralBindingSource, "obtaining_court_order_date",true, DataSourceUpdateMode.Never, null);
+            textBoxObtainingCourtOrderDescription.DataBindings.Clear();
+            textBoxObtainingCourtOrderDescription.DataBindings.Add("Text", GeneralBindingSource, "obtaining_court_order_description", true, DataSourceUpdateMode.Never, "");
+
+            dateTimePickerDirectionCourtOrderBailiffsDate.DataBindings.Clear();
+            dateTimePickerDirectionCourtOrderBailiffsDate.DataBindings.Add("Value", GeneralBindingSource, "direction_court_order_bailiffs_date",true, DataSourceUpdateMode.Never, null);
+            textBoxDirectionCourtOrderBailiffsDescription.DataBindings.Clear();
+            textBoxDirectionCourtOrderBailiffsDescription.DataBindings.Add("Text", GeneralBindingSource, "direction_court_order_bailiffs_description", true, DataSourceUpdateMode.Never, "");
+            dateTimePickerEnforcementProceedingStartDate.DataBindings.Clear();
+            dateTimePickerEnforcementProceedingStartDate.DataBindings.Add("Value", GeneralBindingSource, "enforcement_proceeding_start_date",true, DataSourceUpdateMode.Never, null);
+            textBoxEnforcementProceedingStartDescription.DataBindings.Clear();
+            textBoxEnforcementProceedingStartDescription.DataBindings.Add("Text", GeneralBindingSource, "enforcement_proceeding_start_description", true, DataSourceUpdateMode.Never, "");
+            dateTimePickerEnforcementProceedingEndDate.DataBindings.Clear();
+            dateTimePickerEnforcementProceedingEndDate.DataBindings.Add("Value", GeneralBindingSource, "enforcement_proceeding_end_date",true, DataSourceUpdateMode.Never, null);
+            textBoxEnforcementProceedingEndDescription.DataBindings.Clear();
+            textBoxEnforcementProceedingEndDescription.DataBindings.Add("Text", GeneralBindingSource, "enforcement_proceeding_end_description", true, DataSourceUpdateMode.Never, "");
+            dateTimePickerEnforcementProceedingTerminateDate.DataBindings.Clear();
+            dateTimePickerEnforcementProceedingTerminateDate.DataBindings.Add("Value", GeneralBindingSource, "enforcement_proceeding_terminate_date",true, DataSourceUpdateMode.Never, null);
+            textBoxEnforcementProceedingTerminateDescription.DataBindings.Clear();
+            textBoxEnforcementProceedingTerminateDescription.DataBindings.Add("Text", GeneralBindingSource, "enforcement_proceeding_terminate_description", true, DataSourceUpdateMode.Never, "");
+            dateTimePickerRepeatedDirectionCourtOrderBailiffsDate.DataBindings.Clear();
+            dateTimePickerRepeatedDirectionCourtOrderBailiffsDate.DataBindings.Add("Value", GeneralBindingSource, "repeated_direction_court_order_bailiffs_date",true, DataSourceUpdateMode.Never, null);
+            textBoxRepeatedDirectionCourtOrderBailiffsDescription.DataBindings.Clear();
+            textBoxRepeatedDirectionCourtOrderBailiffsDescription.DataBindings.Add("Text", GeneralBindingSource, "repeated_direction_court_order_bailiffs_description", true, DataSourceUpdateMode.Never, "");
+            dateTimePickerRepeatedEnforcementProceedingStartDate.DataBindings.Clear();
+            dateTimePickerRepeatedEnforcementProceedingStartDate.DataBindings.Add("Value", GeneralBindingSource, "repeated_enforcement_proceeding_start_date",true, DataSourceUpdateMode.Never, null);
+            textBoxRepeatedEnforcementProceedingStartDescription.DataBindings.Clear();
+            textBoxRepeatedEnforcementProceedingStartDescription.DataBindings.Add("Text", GeneralBindingSource, "repeated_enforcement_proceeding_start_description", true, DataSourceUpdateMode.Never, "");
+            dateTimePickerRepeatedEnforcementProceedingEndDate.DataBindings.Clear();
+            dateTimePickerRepeatedEnforcementProceedingEndDate.DataBindings.Add("Value", GeneralBindingSource, "repeated_enforcement_proceeding_end_date",true, DataSourceUpdateMode.Never, null);
+            textBoxRepeatedEnforcementProceedingEndDescription.DataBindings.Clear();
+            textBoxRepeatedEnforcementProceedingEndDescription.DataBindings.Add("Text", GeneralBindingSource, "repeated_enforcement_proceeding_end_description", true, DataSourceUpdateMode.Never, "");
+
+            dateTimePickerCourtOrderCancelDate.DataBindings.Clear();
+            dateTimePickerCourtOrderCancelDate.DataBindings.Add("Value", GeneralBindingSource, "court_order_cancel_date",true, DataSourceUpdateMode.Never, null);
+            textBoxCourtOrderCancelDescription.DataBindings.Clear();
+            textBoxCourtOrderCancelDescription.DataBindings.Add("Text", GeneralBindingSource, "court_order_cancel_description", true, DataSourceUpdateMode.Never, "");
+            dateTimePickerClaimCompleteDate.DataBindings.Clear();
+            dateTimePickerClaimCompleteDate.DataBindings.Add("Value", GeneralBindingSource, "claim_complete_date",true, DataSourceUpdateMode.Never, null);
+            textBoxClaimCompleteDescription.DataBindings.Clear();
+            textBoxClaimCompleteDescription.DataBindings.Add("Text", GeneralBindingSource, "claim_complete_description", true, DataSourceUpdateMode.Never, "");
+            textBoxClaimCompleteReason.DataBindings.Clear();
+            textBoxClaimCompleteReason.DataBindings.Add("Text", GeneralBindingSource, "claim_complete_reason", true, DataSourceUpdateMode.Never, "");
         }
 
         private void UnbindedCheckBoxesUpdate()
         {
             if (GeneralBindingSource.Count == 0) return;
             var row = GeneralBindingSource.Position >= 0 ? (DataRowView)GeneralBindingSource[GeneralBindingSource.Position] : null;
-            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["document_date"] != DBNull.Value)))
-                dateTimePickerDocDate.Checked = true;
-            else
-            {
-                dateTimePickerDocDate.Value = DateTime.Now.Date;
-                dateTimePickerDocDate.Checked = false;
-            }
             if (row != null && ((GeneralBindingSource.Position >= 0) && (row["date_start_state"] != DBNull.Value)))
                 dateTimePickerStartState.Checked = true;
             else
@@ -149,13 +198,103 @@ namespace Registry.Viewport
                 dateTimePickerStartState.Value = DateTime.Now.Date;
                 dateTimePickerStartState.Checked = false;
             }
-
-            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["date_end_state"] != DBNull.Value)))
-                dateTimePickerEndState.Checked = true;
+            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["transfert_to_legal_department_date"] != DBNull.Value)))
+                dateTimePickerTransfertToLegalDepartmentDate.Checked = true;
             else
             {
-                dateTimePickerEndState.Value = DateTime.Now.Date;
-                dateTimePickerEndState.Checked = false;
+                dateTimePickerTransfertToLegalDepartmentDate.Value = DateTime.Now.Date;
+                dateTimePickerTransfertToLegalDepartmentDate.Checked = false;
+            }
+            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["accepted_by_legal_department_date"] != DBNull.Value)))
+                dateTimePickerAcceptedByLegalDepartmentDate.Checked = true;
+            else
+            {
+                dateTimePickerAcceptedByLegalDepartmentDate.Value = DateTime.Now.Date;
+                dateTimePickerAcceptedByLegalDepartmentDate.Checked = false;
+            }
+            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["claim_direction_date"] != DBNull.Value)))
+                dateTimePickerClaimDirectionDate.Checked = true;
+            else
+            {
+                dateTimePickerClaimDirectionDate.Value = DateTime.Now.Date;
+                dateTimePickerClaimDirectionDate.Checked = false;
+            }
+            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["court_order_date"] != DBNull.Value)))
+                dateTimePickerCourtOrderDate.Checked = true;
+            else
+            {
+                dateTimePickerCourtOrderDate.Value = DateTime.Now.Date;
+                dateTimePickerCourtOrderDate.Checked = false;
+            }
+            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["obtaining_court_order_date"] != DBNull.Value)))
+                dateTimePickerObtainingCourtOrderDate.Checked = true;
+            else
+            {
+                dateTimePickerObtainingCourtOrderDate.Value = DateTime.Now.Date;
+                dateTimePickerObtainingCourtOrderDate.Checked = false;
+            }
+            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["direction_court_order_bailiffs_date"] != DBNull.Value)))
+                dateTimePickerDirectionCourtOrderBailiffsDate.Checked = true;
+            else
+            {
+                dateTimePickerDirectionCourtOrderBailiffsDate.Value = DateTime.Now.Date;
+                dateTimePickerDirectionCourtOrderBailiffsDate.Checked = false;
+            }
+            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["enforcement_proceeding_start_date"] != DBNull.Value)))
+                dateTimePickerEnforcementProceedingStartDate.Checked = true;
+            else
+            {
+                dateTimePickerEnforcementProceedingStartDate.Value = DateTime.Now.Date;
+                dateTimePickerEnforcementProceedingStartDate.Checked = false;
+            }
+            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["enforcement_proceeding_end_date"] != DBNull.Value)))
+                dateTimePickerEnforcementProceedingEndDate.Checked = true;
+            else
+            {
+                dateTimePickerEnforcementProceedingEndDate.Value = DateTime.Now.Date;
+                dateTimePickerEnforcementProceedingEndDate.Checked = false;
+            }
+            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["enforcement_proceeding_terminate_date"] != DBNull.Value)))
+                dateTimePickerEnforcementProceedingTerminateDate.Checked = true;
+            else
+            {
+                dateTimePickerEnforcementProceedingTerminateDate.Value = DateTime.Now.Date;
+                dateTimePickerEnforcementProceedingTerminateDate.Checked = false;
+            }
+            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["repeated_direction_court_order_bailiffs_date"] != DBNull.Value)))
+                dateTimePickerRepeatedDirectionCourtOrderBailiffsDate.Checked = true;
+            else
+            {
+                dateTimePickerRepeatedDirectionCourtOrderBailiffsDate.Value = DateTime.Now.Date;
+                dateTimePickerRepeatedDirectionCourtOrderBailiffsDate.Checked = false;
+            }
+            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["repeated_enforcement_proceeding_start_date"] != DBNull.Value)))
+                dateTimePickerRepeatedEnforcementProceedingStartDate.Checked = true;
+            else
+            {
+                dateTimePickerRepeatedEnforcementProceedingStartDate.Value = DateTime.Now.Date;
+                dateTimePickerRepeatedEnforcementProceedingStartDate.Checked = false;
+            }
+            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["repeated_enforcement_proceeding_end_date"] != DBNull.Value)))
+                dateTimePickerRepeatedEnforcementProceedingEndDate.Checked = true;
+            else
+            {
+                dateTimePickerRepeatedEnforcementProceedingEndDate.Value = DateTime.Now.Date;
+                dateTimePickerRepeatedEnforcementProceedingEndDate.Checked = false;
+            }
+            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["court_order_cancel_date"] != DBNull.Value)))
+                dateTimePickerCourtOrderCancelDate.Checked = true;
+            else
+            {
+                dateTimePickerCourtOrderCancelDate.Value = DateTime.Now.Date;
+                dateTimePickerCourtOrderCancelDate.Checked = false;
+            }
+            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["claim_complete_date"] != DBNull.Value)))
+                dateTimePickerClaimCompleteDate.Checked = true;
+            else
+            {
+                dateTimePickerClaimCompleteDate.Value = DateTime.Now.Date;
+                dateTimePickerClaimCompleteDate.Checked = false;
             }
         }
 
@@ -185,21 +324,81 @@ namespace Registry.Viewport
             row["id_claim"] = ViewportHelper.ValueOrDBNull(claimState.IdClaim);
             row["id_state_type"] = ViewportHelper.ValueOrDBNull(claimState.IdStateType);
             row["date_start_state"] = ViewportHelper.ValueOrDBNull(claimState.DateStartState);
-            row["date_end_state"] = ViewportHelper.ValueOrDBNull(claimState.DateEndState);
-            row["document_num"] = ViewportHelper.ValueOrDBNull(claimState.DocumentNum);
-            row["document_date"] = ViewportHelper.ValueOrDBNull(claimState.DocumentDate);
             row["description"] = ViewportHelper.ValueOrDBNull(claimState.Description);
+
+            row["transfert_to_legal_department_date"] = ViewportHelper.ValueOrDBNull(claimState.TransfertToLegalDepartmentDate);
+            row["transfer_to_legal_department_who"] = ViewportHelper.ValueOrDBNull(claimState.TransferToLegalDepartmentWho);
+            row["accepted_by_legal_department_date"] = ViewportHelper.ValueOrDBNull(claimState.AcceptedByLegalDepartmentDate);
+            row["accepted_by_legal_department_who"] = ViewportHelper.ValueOrDBNull(claimState.AcceptedByLegalDepartmentWho);
+
+            row["claim_direction_date"] = ViewportHelper.ValueOrDBNull(claimState.ClaimDirectionDate);
+            row["claim_direction_description"] = ViewportHelper.ValueOrDBNull(claimState.ClaimDirectionDescription);
+            row["court_order_date"] = ViewportHelper.ValueOrDBNull(claimState.CourtOrderDate);
+            row["court_order_num"] = ViewportHelper.ValueOrDBNull(claimState.CourtOrderNum);
+            row["obtaining_court_order_date"] = ViewportHelper.ValueOrDBNull(claimState.ObtainingCourtOrderDate);
+            row["obtaining_court_order_description"] = ViewportHelper.ValueOrDBNull(claimState.ObtainingCourtOrderDescription);
+
+            row["direction_court_order_bailiffs_date"] = ViewportHelper.ValueOrDBNull(claimState.DirectionCourtOrderBailiffsDate);
+            row["direction_court_order_bailiffs_description"] = ViewportHelper.ValueOrDBNull(claimState.DirectionCourtOrderBailiffsDescription);
+            row["enforcement_proceeding_start_date"] = ViewportHelper.ValueOrDBNull(claimState.EnforcementProceedingStartDate);
+            row["enforcement_proceeding_start_description"] = ViewportHelper.ValueOrDBNull(claimState.EnforcementProceedingStartDescription);
+            row["enforcement_proceeding_end_date"] = ViewportHelper.ValueOrDBNull(claimState.EnforcementProceedingEndDate);
+            row["enforcement_proceeding_end_description"] = ViewportHelper.ValueOrDBNull(claimState.EnforcementProceedingEndDescription);
+            row["enforcement_proceeding_terminate_date"] = ViewportHelper.ValueOrDBNull(claimState.EnforcementProceedingTerminateDate);
+            row["enforcement_proceeding_terminate_description"] = ViewportHelper.ValueOrDBNull(claimState.EnforcementProceedingTerminateDescription);
+            row["repeated_direction_court_order_bailiffs_date"] = ViewportHelper.ValueOrDBNull(claimState.RepeatedDirectionCourtOrderBailiffsDate);
+            row["repeated_direction_court_order_bailiffs_description"] = ViewportHelper.ValueOrDBNull(claimState.RepeatedDirectionCourtOrderBailiffsDescription);
+            row["repeated_enforcement_proceeding_start_date"] = ViewportHelper.ValueOrDBNull(claimState.RepeatedEnforcementProceedingStartDate);
+            row["repeated_enforcement_proceeding_start_description"] = ViewportHelper.ValueOrDBNull(claimState.RepeatedEnforcementProceedingStartDescription);
+            row["repeated_enforcement_proceeding_end_date"] = ViewportHelper.ValueOrDBNull(claimState.RepeatedEnforcementProceedingEndDate);
+            row["repeated_enforcement_proceeding_end_description"] = ViewportHelper.ValueOrDBNull(claimState.RepeatedEnforcementProceedingEndDescription);
+
+            row["court_order_cancel_date"] = ViewportHelper.ValueOrDBNull(claimState.CourtOrderCancelDate);
+            row["court_order_cancel_description"] = ViewportHelper.ValueOrDBNull(claimState.CourtOrderCancelDescription);
+            row["claim_complete_date"] = ViewportHelper.ValueOrDBNull(claimState.ClaimCompleteDate);
+            row["claim_complete_description"] = ViewportHelper.ValueOrDBNull(claimState.ClaimCompleteDescription);
+            row["claim_complete_reason"] = ViewportHelper.ValueOrDBNull(claimState.ClaimCompleteReason);
             row.EndEdit();
         }
 
         private void ViewportFromClaimState(ClaimState claimState)
         {
             comboBoxClaimStateType.SelectedValue = ViewportHelper.ValueOrDBNull(claimState.IdStateType);
-            textBoxDocumentNumber.Text = claimState.DocumentNum;
             textBoxDescription.Text = claimState.Description;
-            dateTimePickerDocDate.Value = ViewportHelper.ValueOrDefault(claimState.DocumentDate);
             dateTimePickerStartState.Value = ViewportHelper.ValueOrDefault(claimState.DateStartState);
-            dateTimePickerEndState.Value = ViewportHelper.ValueOrDefault(claimState.DateEndState);
+
+            dateTimePickerTransfertToLegalDepartmentDate.Value = ViewportHelper.ValueOrDefault(claimState.TransfertToLegalDepartmentDate);
+            textBoxTransferToLegalDepartmentWho.Text = claimState.TransferToLegalDepartmentWho;
+            dateTimePickerAcceptedByLegalDepartmentDate.Value = ViewportHelper.ValueOrDefault(claimState.AcceptedByLegalDepartmentDate);
+            textBoxAcceptedByLegalDepartmentWho.Text = claimState.AcceptedByLegalDepartmentWho;
+
+            dateTimePickerClaimDirectionDate.Value = ViewportHelper.ValueOrDefault(claimState.ClaimDirectionDate);
+            textBoxClaimDirectionDescription.Text = claimState.ClaimDirectionDescription;
+            dateTimePickerClaimDirectionDate.Value = ViewportHelper.ValueOrDefault(claimState.CourtOrderDate);
+            textBoxCourtOrderNum.Text = claimState.CourtOrderNum;
+            dateTimePickerObtainingCourtOrderDate.Value = ViewportHelper.ValueOrDefault(claimState.ObtainingCourtOrderDate);
+            textBoxObtainingCourtOrderDescription.Text = claimState.ObtainingCourtOrderDescription;
+
+            dateTimePickerDirectionCourtOrderBailiffsDate.Value = ViewportHelper.ValueOrDefault(claimState.DirectionCourtOrderBailiffsDate);
+            textBoxDirectionCourtOrderBailiffsDescription.Text = claimState.DirectionCourtOrderBailiffsDescription;
+            dateTimePickerEnforcementProceedingStartDate.Value = ViewportHelper.ValueOrDefault(claimState.EnforcementProceedingStartDate);
+            textBoxEnforcementProceedingStartDescription.Text = claimState.EnforcementProceedingStartDescription;
+            dateTimePickerEnforcementProceedingEndDate.Value = ViewportHelper.ValueOrDefault(claimState.EnforcementProceedingEndDate);
+            textBoxEnforcementProceedingEndDescription.Text = claimState.EnforcementProceedingEndDescription;
+            dateTimePickerEnforcementProceedingTerminateDate.Value = ViewportHelper.ValueOrDefault(claimState.EnforcementProceedingTerminateDate);
+            textBoxEnforcementProceedingTerminateDescription.Text = claimState.EnforcementProceedingTerminateDescription;
+            dateTimePickerRepeatedDirectionCourtOrderBailiffsDate.Value = ViewportHelper.ValueOrDefault(claimState.RepeatedDirectionCourtOrderBailiffsDate);
+            textBoxRepeatedDirectionCourtOrderBailiffsDescription.Text = claimState.RepeatedDirectionCourtOrderBailiffsDescription;
+            dateTimePickerRepeatedEnforcementProceedingStartDate.Value = ViewportHelper.ValueOrDefault(claimState.RepeatedEnforcementProceedingStartDate);
+            textBoxRepeatedEnforcementProceedingStartDescription.Text = claimState.RepeatedEnforcementProceedingStartDescription;
+            dateTimePickerRepeatedEnforcementProceedingEndDate.Value = ViewportHelper.ValueOrDefault(claimState.RepeatedEnforcementProceedingEndDate);
+            textBoxRepeatedEnforcementProceedingEndDescription.Text = claimState.RepeatedEnforcementProceedingEndDescription;
+
+            dateTimePickerCourtOrderCancelDate.Value = ViewportHelper.ValueOrDefault(claimState.CourtOrderCancelDate);
+            textBoxObtainingCourtOrderDescription.Text = claimState.CourtOrderCancelDescription;
+            dateTimePickerClaimCompleteDate.Value = ViewportHelper.ValueOrDefault(claimState.ClaimCompleteDate);
+            textBoxClaimCompleteDescription.Text = claimState.ClaimCompleteDescription;
+            textBoxClaimCompleteReason.Text = claimState.ClaimCompleteReason;
         }
 
         protected override Entity EntityFromViewport()
@@ -211,11 +410,38 @@ namespace Registry.Viewport
                     (DataRowView) GeneralBindingSource[GeneralBindingSource.Position], "id_state"),
                 IdStateType = ViewportHelper.ValueOrNull<int>(comboBoxClaimStateType),
                 IdClaim = ViewportHelper.ValueOrNull<int>(ParentRow, "id_claim"),
-                DocumentNum = ViewportHelper.ValueOrNull(textBoxDocumentNumber),
                 Description = ViewportHelper.ValueOrNull(textBoxDescription),
                 DateStartState = ViewportHelper.ValueOrNull(dateTimePickerStartState),
-                DateEndState = ViewportHelper.ValueOrNull(dateTimePickerEndState),
-                DocumentDate = ViewportHelper.ValueOrNull(dateTimePickerDocDate)
+
+                TransfertToLegalDepartmentDate = ViewportHelper.ValueOrNull(dateTimePickerTransfertToLegalDepartmentDate),
+                TransferToLegalDepartmentWho = ViewportHelper.ValueOrNull(textBoxTransferToLegalDepartmentWho),
+                AcceptedByLegalDepartmentDate = ViewportHelper.ValueOrNull(dateTimePickerAcceptedByLegalDepartmentDate),
+                AcceptedByLegalDepartmentWho = ViewportHelper.ValueOrNull(textBoxAcceptedByLegalDepartmentWho),
+                ClaimDirectionDate = ViewportHelper.ValueOrNull(dateTimePickerClaimDirectionDate),
+                ClaimDirectionDescription = ViewportHelper.ValueOrNull(textBoxClaimDirectionDescription),
+                CourtOrderDate = ViewportHelper.ValueOrNull(dateTimePickerCourtOrderDate),
+                CourtOrderNum = ViewportHelper.ValueOrNull(textBoxCourtOrderNum),
+                ObtainingCourtOrderDate = ViewportHelper.ValueOrNull(dateTimePickerObtainingCourtOrderDate),
+                ObtainingCourtOrderDescription = ViewportHelper.ValueOrNull(textBoxObtainingCourtOrderDescription),
+                DirectionCourtOrderBailiffsDate = ViewportHelper.ValueOrNull(dateTimePickerDirectionCourtOrderBailiffsDate),
+                DirectionCourtOrderBailiffsDescription = ViewportHelper.ValueOrNull(textBoxDirectionCourtOrderBailiffsDescription),
+                EnforcementProceedingStartDate = ViewportHelper.ValueOrNull(dateTimePickerEnforcementProceedingStartDate),
+                EnforcementProceedingStartDescription = ViewportHelper.ValueOrNull(textBoxEnforcementProceedingStartDescription),
+                EnforcementProceedingEndDate = ViewportHelper.ValueOrNull(dateTimePickerEnforcementProceedingEndDate),
+                EnforcementProceedingEndDescription = ViewportHelper.ValueOrNull(textBoxEnforcementProceedingEndDescription),
+                EnforcementProceedingTerminateDate = ViewportHelper.ValueOrNull(dateTimePickerEnforcementProceedingTerminateDate),
+                EnforcementProceedingTerminateDescription = ViewportHelper.ValueOrNull(textBoxEnforcementProceedingTerminateDescription),
+                RepeatedDirectionCourtOrderBailiffsDate = ViewportHelper.ValueOrNull(dateTimePickerRepeatedDirectionCourtOrderBailiffsDate),
+                RepeatedDirectionCourtOrderBailiffsDescription = ViewportHelper.ValueOrNull(textBoxRepeatedDirectionCourtOrderBailiffsDescription),
+                RepeatedEnforcementProceedingStartDate = ViewportHelper.ValueOrNull(dateTimePickerRepeatedEnforcementProceedingStartDate),
+                RepeatedEnforcementProceedingStartDescription = ViewportHelper.ValueOrNull(textBoxRepeatedEnforcementProceedingStartDescription),
+                RepeatedEnforcementProceedingEndDate = ViewportHelper.ValueOrNull(dateTimePickerRepeatedEnforcementProceedingEndDate),
+                RepeatedEnforcementProceedingEndDescription = ViewportHelper.ValueOrNull(textBoxRepeatedEnforcementProceedingEndDescription),
+                CourtOrderCancelDate = ViewportHelper.ValueOrNull(dateTimePickerCourtOrderCancelDate),
+                CourtOrderCancelDescription = ViewportHelper.ValueOrNull(textBoxCourtOrderCancelDescription),
+                ClaimCompleteDate = ViewportHelper.ValueOrNull(dateTimePickerClaimCompleteDate),
+                ClaimCompleteDescription = ViewportHelper.ValueOrNull(textBoxClaimCompleteDescription),
+                ClaimCompleteReason = ViewportHelper.ValueOrNull(textBoxClaimCompleteReason)
             };
             return claimState;
         }
@@ -228,11 +454,41 @@ namespace Registry.Viewport
                 IdState = ViewportHelper.ValueOrNull<int>(row, "id_state"),
                 IdStateType = ViewportHelper.ValueOrNull<int>(row, "id_state_type"),
                 IdClaim = ViewportHelper.ValueOrNull<int>(row, "id_claim"),
-                DocumentNum = ViewportHelper.ValueOrNull(row, "document_num"),
                 Description = ViewportHelper.ValueOrNull(row, "description"),
                 DateStartState = ViewportHelper.ValueOrNull<DateTime>(row, "date_start_state"),
-                DateEndState = ViewportHelper.ValueOrNull<DateTime>(row, "date_end_state"),
-                DocumentDate = ViewportHelper.ValueOrNull<DateTime>(row, "document_date")
+
+                TransfertToLegalDepartmentDate = ViewportHelper.ValueOrNull<DateTime>(row, "transfert_to_legal_department_date"),
+                TransferToLegalDepartmentWho = ViewportHelper.ValueOrNull(row, "transfer_to_legal_department_who"),
+                AcceptedByLegalDepartmentDate = ViewportHelper.ValueOrNull<DateTime>(row, "accepted_by_legal_department_date"),
+                AcceptedByLegalDepartmentWho = ViewportHelper.ValueOrNull(row, "accepted_by_legal_department_who"),
+
+                ClaimDirectionDate = ViewportHelper.ValueOrNull<DateTime>(row, "claim_direction_date"),
+                ClaimDirectionDescription = ViewportHelper.ValueOrNull(row, "claim_direction_description"),
+                CourtOrderDate = ViewportHelper.ValueOrNull<DateTime>(row, "court_order_date"),
+                CourtOrderNum = ViewportHelper.ValueOrNull(row, "court_order_num"),
+                ObtainingCourtOrderDate = ViewportHelper.ValueOrNull<DateTime>(row, "obtaining_court_order_date"),
+                ObtainingCourtOrderDescription = ViewportHelper.ValueOrNull(row, "obtaining_court_order_description"),
+
+                DirectionCourtOrderBailiffsDate = ViewportHelper.ValueOrNull<DateTime>(row, "direction_court_order_bailiffs_date"),
+                DirectionCourtOrderBailiffsDescription = ViewportHelper.ValueOrNull(row, "direction_court_order_bailiffs_description"),
+                EnforcementProceedingStartDate = ViewportHelper.ValueOrNull<DateTime>(row, "enforcement_proceeding_start_date"),
+                EnforcementProceedingStartDescription = ViewportHelper.ValueOrNull(row, "enforcement_proceeding_start_description"),
+                EnforcementProceedingEndDate = ViewportHelper.ValueOrNull<DateTime>(row, "enforcement_proceeding_end_date"),
+                EnforcementProceedingEndDescription = ViewportHelper.ValueOrNull(row, "enforcement_proceeding_end_description"),
+                EnforcementProceedingTerminateDate = ViewportHelper.ValueOrNull<DateTime>(row, "enforcement_proceeding_terminate_date"),
+                EnforcementProceedingTerminateDescription = ViewportHelper.ValueOrNull(row, "enforcement_proceeding_terminate_description"),
+                RepeatedDirectionCourtOrderBailiffsDate = ViewportHelper.ValueOrNull<DateTime>(row, "repeated_direction_court_order_bailiffs_date"),
+                RepeatedDirectionCourtOrderBailiffsDescription = ViewportHelper.ValueOrNull(row, "repeated_direction_court_order_bailiffs_description"),
+                RepeatedEnforcementProceedingStartDate = ViewportHelper.ValueOrNull<DateTime>(row, "repeated_enforcement_proceeding_start_date"),
+                RepeatedEnforcementProceedingStartDescription = ViewportHelper.ValueOrNull(row, "repeated_enforcement_proceeding_start_description"),
+                RepeatedEnforcementProceedingEndDate = ViewportHelper.ValueOrNull<DateTime>(row, "repeated_enforcement_proceeding_end_date"),
+                RepeatedEnforcementProceedingEndDescription = ViewportHelper.ValueOrNull(row, "repeated_enforcement_proceeding_end_description"),
+
+                CourtOrderCancelDate = ViewportHelper.ValueOrNull<DateTime>(row, "court_order_cancel_date"),
+                CourtOrderCancelDescription = ViewportHelper.ValueOrNull(row, "court_order_cancel_description"),
+                ClaimCompleteDate = ViewportHelper.ValueOrNull<DateTime>(row, "claim_complete_date"),
+                ClaimCompleteDescription = ViewportHelper.ValueOrNull(row, "claim_complete_description"),
+                ClaimCompleteReason = ViewportHelper.ValueOrNull(row, "claim_complete_reason"),
             };
             return claimState;
         }
@@ -370,9 +626,23 @@ namespace Registry.Viewport
             dataGridView.Enabled = false;
             GeneralDataModel.EditingNewRecord = true;
             ViewportFromClaimState(claimState);
-            dateTimePickerDocDate.Checked = (claimState.DocumentDate != null);
             dateTimePickerStartState.Checked = (claimState.DateStartState != null);
-            dateTimePickerEndState.Checked = (claimState.DateEndState != null);
+
+            dateTimePickerTransfertToLegalDepartmentDate.Checked = claimState.TransfertToLegalDepartmentDate != null;
+            dateTimePickerAcceptedByLegalDepartmentDate.Checked = claimState.AcceptedByLegalDepartmentDate != null;
+            dateTimePickerClaimDirectionDate.Checked = claimState.ClaimDirectionDate != null;
+            dateTimePickerCourtOrderDate.Checked = claimState.CourtOrderDate != null;
+            dateTimePickerObtainingCourtOrderDate.Checked = claimState.ObtainingCourtOrderDate != null;
+            dateTimePickerDirectionCourtOrderBailiffsDate.Checked = claimState.DirectionCourtOrderBailiffsDate != null;
+            dateTimePickerEnforcementProceedingStartDate.Checked = claimState.EnforcementProceedingStartDate != null;
+            dateTimePickerEnforcementProceedingEndDate.Checked = claimState.EnforcementProceedingEndDate != null;
+            dateTimePickerEnforcementProceedingTerminateDate.Checked = claimState.EnforcementProceedingTerminateDate != null;
+            dateTimePickerRepeatedDirectionCourtOrderBailiffsDate.Checked = claimState.RepeatedDirectionCourtOrderBailiffsDate != null;
+            dateTimePickerRepeatedEnforcementProceedingStartDate.Checked = claimState.RepeatedEnforcementProceedingStartDate != null;
+            dateTimePickerRepeatedEnforcementProceedingEndDate.Checked = claimState.RepeatedEnforcementProceedingEndDate != null;
+            dateTimePickerCourtOrderCancelDate.Checked = claimState.CourtOrderCancelDate != null;
+            dateTimePickerClaimCompleteDate.Checked = claimState.ClaimCompleteDate != null;
+
             is_editable = true;
         }
 
@@ -507,6 +777,7 @@ namespace Registry.Viewport
 
         void v_claim_states_CurrentItemChanged(object sender, EventArgs e)
         {
+            noUpdateFieldList = true;
             if (GeneralBindingSource.Position == -1 || dataGridView.RowCount == 0)
                 dataGridView.ClearSelection();
             else
@@ -523,6 +794,8 @@ namespace Registry.Viewport
             }
             UnbindedCheckBoxesUpdate();
             RebuildFilter();
+            noUpdateFieldList = false;
+            comboBoxClaimStateType_SelectedValueChanged(this, new EventArgs());
             if (GeneralBindingSource.Position == -1)
                 return;
             if (viewportState == ViewportState.NewRowState)
@@ -575,6 +848,47 @@ namespace Registry.Viewport
             UnbindedCheckBoxesUpdate();
             dateTimePickerStartState.Focus();
             base.OnVisibleChanged(e);
+        }
+
+        private void comboBoxClaimStateType_SelectedValueChanged(object sender, EventArgs e)
+        {
+            if (comboBoxClaimStateType.SelectedValue == DBNull.Value || comboBoxClaimStateType.SelectedValue == null || noUpdateFieldList)
+            {  
+                tableLayoutPanelAll.RowStyles[0].Height = 90F;
+                tabControlWithoutTabs1.Visible = false;
+                return;
+            }
+            tabControlWithoutTabs1.Visible = true;
+            switch ((int)comboBoxClaimStateType.SelectedValue)
+            {
+                case 1:
+                    tableLayoutPanelAll.RowStyles[0].Height = groupBoxTransfertToLegalDepartment.Height +
+                                                              groupBoxAcceptedByLegalDepartment.Height + 90;
+                    tabControlWithoutTabs1.SelectTab(tabPageToLegalDepartment);
+                    break;
+                case 2:
+                    tableLayoutPanelAll.RowStyles[0].Height = groupBoxClaimDirectedToCourt.Height +
+                                                              groupBoxCourtOrder.Height + groupBoxObtainingCourtOrder.Height + 90;
+                    tabControlWithoutTabs1.SelectTab(tabPagePreparingOrder);
+                    break;
+                case 3:
+                    tableLayoutPanelAll.RowStyles[0].Height =
+                        groupBoxDirectionCourtOrderBailiffs.Height + groupBoxEnforcementProceedingStart.Height +
+                        groupBoxEnforcementProceedingEnd.Height + groupBoxEnforcementProceedingTerminate.Height +
+                        groupBoxRepeatedEnforcementProceedingStart.Height +
+                        groupBoxRepeatedEnforcementProceedingEnd.Height +
+                        groupBoxRepeatedDirectionCourtOrderBailiffs.Height + 90;
+                    tabControlWithoutTabs1.SelectTab(tabPageExecutoryProcess);
+                    break;
+                case 4:
+                    tableLayoutPanelAll.RowStyles[0].Height = groupBoxCourtOrderCancel.Height + groupBoxClaimComplete.Height + 90;
+                    tabControlWithoutTabs1.SelectTab(tabPageCompletionClaims);
+                    break;
+                default:
+                    tableLayoutPanelAll.RowStyles[0].Height = 90F;
+                    tabControlWithoutTabs1.Visible = false;
+                    break;
+            }
         }
     }
 }
