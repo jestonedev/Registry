@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
@@ -843,12 +844,27 @@ namespace Registry.Viewport
             base.OnVisibleChanged(e);
         }
 
+        // Метод прячет поля с задержкой в 200 мс
+        private void LagHideExtendedFields()
+        {
+            if (comboBoxClaimStateType.SelectedValue == DBNull.Value || comboBoxClaimStateType.SelectedValue == null ||
+                _noUpdateFieldList)
+            {
+                tableLayoutPanelAll.RowStyles[0].Height = 90F;
+                tabControlWithoutTabs1.Visible = false;
+            }
+        }
+
         private void comboBoxClaimStateType_SelectedValueChanged(object sender, EventArgs e)
         {
             if (comboBoxClaimStateType.SelectedValue == DBNull.Value || comboBoxClaimStateType.SelectedValue == null || _noUpdateFieldList)
-            {  
-                tableLayoutPanelAll.RowStyles[0].Height = 90F;
-                tabControlWithoutTabs1.Visible = false;
+            {
+                var context = SynchronizationContext.Current;
+                ThreadPool.UnsafeQueueUserWorkItem(n =>
+                {
+                    Thread.Sleep(200);
+                    context.Post(x => LagHideExtendedFields(), null);
+                }, null);
                 return;
             }
             tabControlWithoutTabs1.Visible = true;
