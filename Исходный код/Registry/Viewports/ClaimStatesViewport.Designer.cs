@@ -31,14 +31,6 @@ namespace Registry.Viewport
             this.tableLayoutPanelDetails = new System.Windows.Forms.TableLayoutPanel();
             this.tabControlWithoutTabs1 = new CustomControls.TabControlWithoutTabs();
             this.tabPageToLegalDepartment = new System.Windows.Forms.TabPage();
-            this.groupBoxAcceptedByLegalDepartment = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBoxAcceptedByLegalDepartmentWho = new System.Windows.Forms.TextBox();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.dateTimePickerAcceptedByLegalDepartmentDate = new System.Windows.Forms.DateTimePicker();
-            this.label4 = new System.Windows.Forms.Label();
             this.groupBoxTransfertToLegalDepartment = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
             this.panel2 = new System.Windows.Forms.Panel();
@@ -148,6 +140,7 @@ namespace Registry.Viewport
             this.panel28 = new System.Windows.Forms.Panel();
             this.dateTimePickerCourtOrderCancelDate = new System.Windows.Forms.DateTimePicker();
             this.label26 = new System.Windows.Forms.Label();
+            this.tabPageAcceptedByLegalDepartment = new System.Windows.Forms.TabPage();
             this.panel10 = new System.Windows.Forms.Panel();
             this.dateTimePickerStartState = new System.Windows.Forms.DateTimePicker();
             this.label108 = new System.Windows.Forms.Label();
@@ -160,15 +153,19 @@ namespace Registry.Viewport
             this.id_state_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.date_start_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.groupBoxAcceptedByLegalDepartment = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBoxAcceptedByLegalDepartmentWho = new System.Windows.Forms.TextBox();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.dateTimePickerAcceptedByLegalDepartmentDate = new System.Windows.Forms.DateTimePicker();
+            this.label4 = new System.Windows.Forms.Label();
             this.tableLayoutPanelAll.SuspendLayout();
             this.groupBox35.SuspendLayout();
             this.tableLayoutPanelDetails.SuspendLayout();
             this.tabControlWithoutTabs1.SuspendLayout();
             this.tabPageToLegalDepartment.SuspendLayout();
-            this.groupBoxAcceptedByLegalDepartment.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            this.panel3.SuspendLayout();
-            this.panel4.SuspendLayout();
             this.groupBoxTransfertToLegalDepartment.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -224,34 +221,39 @@ namespace Registry.Viewport
             this.tableLayoutPanel13.SuspendLayout();
             this.panel27.SuspendLayout();
             this.panel28.SuspendLayout();
+            this.tabPageAcceptedByLegalDepartment.SuspendLayout();
             this.panel10.SuspendLayout();
             this.panel11.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.groupBoxAcceptedByLegalDepartment.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
+            this.panel3.SuspendLayout();
+            this.panel4.SuspendLayout();
             this.SuspendLayout();
             // 
             // tableLayoutPanelAll
             // 
             this.tableLayoutPanelAll.ColumnCount = 1;
             this.tableLayoutPanelAll.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelAll.Controls.Add(this.groupBox35, 0, 0);
-            this.tableLayoutPanelAll.Controls.Add(this.dataGridView, 0, 1);
+            this.tableLayoutPanelAll.Controls.Add(this.groupBox35, 0, 1);
+            this.tableLayoutPanelAll.Controls.Add(this.dataGridView, 0, 0);
             this.tableLayoutPanelAll.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanelAll.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanelAll.Name = "tableLayoutPanelAll";
             this.tableLayoutPanelAll.RowCount = 2;
-            this.tableLayoutPanelAll.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 435F));
             this.tableLayoutPanelAll.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanelAll.Size = new System.Drawing.Size(1002, 724);
+            this.tableLayoutPanelAll.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 412F));
+            this.tableLayoutPanelAll.Size = new System.Drawing.Size(1002, 565);
             this.tableLayoutPanelAll.TabIndex = 1;
             // 
             // groupBox35
             // 
             this.groupBox35.Controls.Add(this.tableLayoutPanelDetails);
             this.groupBox35.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox35.Location = new System.Drawing.Point(0, 0);
+            this.groupBox35.Location = new System.Drawing.Point(0, 153);
             this.groupBox35.Margin = new System.Windows.Forms.Padding(0);
             this.groupBox35.Name = "groupBox35";
-            this.groupBox35.Size = new System.Drawing.Size(1002, 435);
+            this.groupBox35.Size = new System.Drawing.Size(1002, 412);
             this.groupBox35.TabIndex = 0;
             this.groupBox35.TabStop = false;
             this.groupBox35.Text = "Общие сведения";
@@ -270,13 +272,14 @@ namespace Registry.Viewport
             this.tableLayoutPanelDetails.RowCount = 2;
             this.tableLayoutPanelDetails.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 60F));
             this.tableLayoutPanelDetails.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanelDetails.Size = new System.Drawing.Size(996, 415);
+            this.tableLayoutPanelDetails.Size = new System.Drawing.Size(996, 392);
             this.tableLayoutPanelDetails.TabIndex = 0;
             // 
             // tabControlWithoutTabs1
             // 
             this.tableLayoutPanelDetails.SetColumnSpan(this.tabControlWithoutTabs1, 2);
             this.tabControlWithoutTabs1.Controls.Add(this.tabPageToLegalDepartment);
+            this.tabControlWithoutTabs1.Controls.Add(this.tabPageAcceptedByLegalDepartment);
             this.tabControlWithoutTabs1.Controls.Add(this.tabPagePreparingOrder);
             this.tabControlWithoutTabs1.Controls.Add(this.tabPageExecutoryProcess);
             this.tabControlWithoutTabs1.Controls.Add(this.tabPageCompletionClaims);
@@ -290,7 +293,6 @@ namespace Registry.Viewport
             // 
             // tabPageToLegalDepartment
             // 
-            this.tabPageToLegalDepartment.Controls.Add(this.groupBoxAcceptedByLegalDepartment);
             this.tabPageToLegalDepartment.Controls.Add(this.groupBoxTransfertToLegalDepartment);
             this.tabPageToLegalDepartment.Location = new System.Drawing.Point(4, 24);
             this.tabPageToLegalDepartment.Margin = new System.Windows.Forms.Padding(0);
@@ -299,94 +301,6 @@ namespace Registry.Viewport
             this.tabPageToLegalDepartment.TabIndex = 0;
             this.tabPageToLegalDepartment.Text = "Передача дела в юр. отдел";
             this.tabPageToLegalDepartment.UseVisualStyleBackColor = true;
-            // 
-            // groupBoxAcceptedByLegalDepartment
-            // 
-            this.groupBoxAcceptedByLegalDepartment.Controls.Add(this.tableLayoutPanel2);
-            this.groupBoxAcceptedByLegalDepartment.Dock = System.Windows.Forms.DockStyle.Top;
-            this.groupBoxAcceptedByLegalDepartment.Location = new System.Drawing.Point(0, 47);
-            this.groupBoxAcceptedByLegalDepartment.Margin = new System.Windows.Forms.Padding(0);
-            this.groupBoxAcceptedByLegalDepartment.Name = "groupBoxAcceptedByLegalDepartment";
-            this.groupBoxAcceptedByLegalDepartment.Padding = new System.Windows.Forms.Padding(0);
-            this.groupBoxAcceptedByLegalDepartment.Size = new System.Drawing.Size(988, 47);
-            this.groupBoxAcceptedByLegalDepartment.TabIndex = 1;
-            this.groupBoxAcceptedByLegalDepartment.TabStop = false;
-            this.groupBoxAcceptedByLegalDepartment.Text = "Принято в юр. отдел";
-            // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.ColumnCount = 2;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel2.Controls.Add(this.panel3, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.panel4, 0, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 14);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.RowCount = 1;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(988, 33);
-            this.tableLayoutPanel2.TabIndex = 0;
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.label3);
-            this.panel3.Controls.Add(this.textBoxAcceptedByLegalDepartmentWho);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(494, 0);
-            this.panel3.Margin = new System.Windows.Forms.Padding(0);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(494, 33);
-            this.panel3.TabIndex = 1;
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(14, 9);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(74, 15);
-            this.label3.TabIndex = 32;
-            this.label3.Text = "Кто принял";
-            // 
-            // textBoxAcceptedByLegalDepartmentWho
-            // 
-            this.textBoxAcceptedByLegalDepartmentWho.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxAcceptedByLegalDepartmentWho.Location = new System.Drawing.Point(161, 6);
-            this.textBoxAcceptedByLegalDepartmentWho.Name = "textBoxAcceptedByLegalDepartmentWho";
-            this.textBoxAcceptedByLegalDepartmentWho.Size = new System.Drawing.Size(327, 21);
-            this.textBoxAcceptedByLegalDepartmentWho.TabIndex = 0;
-            // 
-            // panel4
-            // 
-            this.panel4.Controls.Add(this.dateTimePickerAcceptedByLegalDepartmentDate);
-            this.panel4.Controls.Add(this.label4);
-            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel4.Location = new System.Drawing.Point(0, 0);
-            this.panel4.Margin = new System.Windows.Forms.Padding(0);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(494, 33);
-            this.panel4.TabIndex = 0;
-            // 
-            // dateTimePickerAcceptedByLegalDepartmentDate
-            // 
-            this.dateTimePickerAcceptedByLegalDepartmentDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerAcceptedByLegalDepartmentDate.Location = new System.Drawing.Point(157, 6);
-            this.dateTimePickerAcceptedByLegalDepartmentDate.Name = "dateTimePickerAcceptedByLegalDepartmentDate";
-            this.dateTimePickerAcceptedByLegalDepartmentDate.ShowCheckBox = true;
-            this.dateTimePickerAcceptedByLegalDepartmentDate.Size = new System.Drawing.Size(328, 21);
-            this.dateTimePickerAcceptedByLegalDepartmentDate.TabIndex = 0;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(10, 9);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(96, 15);
-            this.label4.TabIndex = 33;
-            this.label4.Text = "Дата принятия";
             // 
             // groupBoxTransfertToLegalDepartment
             // 
@@ -481,10 +395,10 @@ namespace Registry.Viewport
             this.tabPagePreparingOrder.Controls.Add(this.groupBoxObtainingCourtOrder);
             this.tabPagePreparingOrder.Controls.Add(this.groupBoxCourtOrder);
             this.tabPagePreparingOrder.Controls.Add(this.groupBoxClaimDirectedToCourt);
-            this.tabPagePreparingOrder.Location = new System.Drawing.Point(4, 22);
+            this.tabPagePreparingOrder.Location = new System.Drawing.Point(4, 24);
             this.tabPagePreparingOrder.Margin = new System.Windows.Forms.Padding(0);
             this.tabPagePreparingOrder.Name = "tabPagePreparingOrder";
-            this.tabPagePreparingOrder.Size = new System.Drawing.Size(988, 330);
+            this.tabPagePreparingOrder.Size = new System.Drawing.Size(988, 328);
             this.tabPagePreparingOrder.TabIndex = 1;
             this.tabPagePreparingOrder.Text = "Подготовка и получение судебного приказа";
             this.tabPagePreparingOrder.UseVisualStyleBackColor = true;
@@ -762,10 +676,10 @@ namespace Registry.Viewport
             this.tabPageExecutoryProcess.Controls.Add(this.groupBoxEnforcementProceedingEnd);
             this.tabPageExecutoryProcess.Controls.Add(this.groupBoxEnforcementProceedingStart);
             this.tabPageExecutoryProcess.Controls.Add(this.groupBoxDirectionCourtOrderBailiffs);
-            this.tabPageExecutoryProcess.Location = new System.Drawing.Point(4, 22);
+            this.tabPageExecutoryProcess.Location = new System.Drawing.Point(4, 24);
             this.tabPageExecutoryProcess.Margin = new System.Windows.Forms.Padding(0);
             this.tabPageExecutoryProcess.Name = "tabPageExecutoryProcess";
-            this.tabPageExecutoryProcess.Size = new System.Drawing.Size(988, 330);
+            this.tabPageExecutoryProcess.Size = new System.Drawing.Size(988, 328);
             this.tabPageExecutoryProcess.TabIndex = 2;
             this.tabPageExecutoryProcess.Text = "Исполнительное производство";
             this.tabPageExecutoryProcess.UseVisualStyleBackColor = true;
@@ -1390,10 +1304,10 @@ namespace Registry.Viewport
             // 
             this.tabPageCompletionClaims.Controls.Add(this.groupBoxClaimComplete);
             this.tabPageCompletionClaims.Controls.Add(this.groupBoxCourtOrderCancel);
-            this.tabPageCompletionClaims.Location = new System.Drawing.Point(4, 22);
+            this.tabPageCompletionClaims.Location = new System.Drawing.Point(4, 24);
             this.tabPageCompletionClaims.Margin = new System.Windows.Forms.Padding(0);
             this.tabPageCompletionClaims.Name = "tabPageCompletionClaims";
-            this.tabPageCompletionClaims.Size = new System.Drawing.Size(988, 330);
+            this.tabPageCompletionClaims.Size = new System.Drawing.Size(988, 328);
             this.tabPageCompletionClaims.TabIndex = 3;
             this.tabPageCompletionClaims.Text = "Завершение претензионной работы";
             this.tabPageCompletionClaims.UseVisualStyleBackColor = true;
@@ -1594,6 +1508,16 @@ namespace Registry.Viewport
             this.label26.TabIndex = 33;
             this.label26.Text = "Дата отмены";
             // 
+            // tabPageAcceptedByLegalDepartment
+            // 
+            this.tabPageAcceptedByLegalDepartment.Controls.Add(this.groupBoxAcceptedByLegalDepartment);
+            this.tabPageAcceptedByLegalDepartment.Location = new System.Drawing.Point(4, 24);
+            this.tabPageAcceptedByLegalDepartment.Name = "tabPageAcceptedByLegalDepartment";
+            this.tabPageAcceptedByLegalDepartment.Size = new System.Drawing.Size(988, 328);
+            this.tabPageAcceptedByLegalDepartment.TabIndex = 4;
+            this.tabPageAcceptedByLegalDepartment.Text = "Принято в юр. отдел";
+            this.tabPageAcceptedByLegalDepartment.UseVisualStyleBackColor = true;
+            // 
             // panel10
             // 
             this.panel10.Controls.Add(this.dateTimePickerStartState);
@@ -1687,12 +1611,12 @@ namespace Registry.Viewport
             this.date_start_state,
             this.description});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridView.Location = new System.Drawing.Point(3, 438);
+            this.dataGridView.Location = new System.Drawing.Point(3, 3);
             this.dataGridView.MultiSelect = false;
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.Size = new System.Drawing.Size(996, 283);
+            this.dataGridView.Size = new System.Drawing.Size(996, 147);
             this.dataGridView.TabIndex = 1;
             // 
             // id_state_type
@@ -1723,13 +1647,101 @@ namespace Registry.Viewport
             this.description.ReadOnly = true;
             this.description.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
+            // groupBoxAcceptedByLegalDepartment
+            // 
+            this.groupBoxAcceptedByLegalDepartment.Controls.Add(this.tableLayoutPanel2);
+            this.groupBoxAcceptedByLegalDepartment.Dock = System.Windows.Forms.DockStyle.Top;
+            this.groupBoxAcceptedByLegalDepartment.Location = new System.Drawing.Point(0, 0);
+            this.groupBoxAcceptedByLegalDepartment.Margin = new System.Windows.Forms.Padding(0);
+            this.groupBoxAcceptedByLegalDepartment.Name = "groupBoxAcceptedByLegalDepartment";
+            this.groupBoxAcceptedByLegalDepartment.Padding = new System.Windows.Forms.Padding(0);
+            this.groupBoxAcceptedByLegalDepartment.Size = new System.Drawing.Size(988, 47);
+            this.groupBoxAcceptedByLegalDepartment.TabIndex = 2;
+            this.groupBoxAcceptedByLegalDepartment.TabStop = false;
+            this.groupBoxAcceptedByLegalDepartment.Text = "Принято в юр. отдел";
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 2;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
+            this.tableLayoutPanel2.Controls.Add(this.panel3, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.panel4, 0, 0);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 14);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.RowCount = 1;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(988, 33);
+            this.tableLayoutPanel2.TabIndex = 0;
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.label3);
+            this.panel3.Controls.Add(this.textBoxAcceptedByLegalDepartmentWho);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(494, 0);
+            this.panel3.Margin = new System.Windows.Forms.Padding(0);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(494, 33);
+            this.panel3.TabIndex = 1;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(14, 9);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(74, 15);
+            this.label3.TabIndex = 32;
+            this.label3.Text = "Кто принял";
+            // 
+            // textBoxAcceptedByLegalDepartmentWho
+            // 
+            this.textBoxAcceptedByLegalDepartmentWho.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxAcceptedByLegalDepartmentWho.Location = new System.Drawing.Point(161, 6);
+            this.textBoxAcceptedByLegalDepartmentWho.Name = "textBoxAcceptedByLegalDepartmentWho";
+            this.textBoxAcceptedByLegalDepartmentWho.Size = new System.Drawing.Size(327, 21);
+            this.textBoxAcceptedByLegalDepartmentWho.TabIndex = 0;
+            // 
+            // panel4
+            // 
+            this.panel4.Controls.Add(this.dateTimePickerAcceptedByLegalDepartmentDate);
+            this.panel4.Controls.Add(this.label4);
+            this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel4.Location = new System.Drawing.Point(0, 0);
+            this.panel4.Margin = new System.Windows.Forms.Padding(0);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(494, 33);
+            this.panel4.TabIndex = 0;
+            // 
+            // dateTimePickerAcceptedByLegalDepartmentDate
+            // 
+            this.dateTimePickerAcceptedByLegalDepartmentDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerAcceptedByLegalDepartmentDate.Location = new System.Drawing.Point(157, 6);
+            this.dateTimePickerAcceptedByLegalDepartmentDate.Name = "dateTimePickerAcceptedByLegalDepartmentDate";
+            this.dateTimePickerAcceptedByLegalDepartmentDate.ShowCheckBox = true;
+            this.dateTimePickerAcceptedByLegalDepartmentDate.Size = new System.Drawing.Size(328, 21);
+            this.dateTimePickerAcceptedByLegalDepartmentDate.TabIndex = 0;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(10, 9);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(96, 15);
+            this.label4.TabIndex = 33;
+            this.label4.Text = "Дата принятия";
+            // 
             // ClaimStatesViewport
             // 
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(700, 190);
             this.AutoSize = true;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1008, 730);
+            this.ClientSize = new System.Drawing.Size(1008, 571);
             this.Controls.Add(this.tableLayoutPanelAll);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1741,12 +1753,6 @@ namespace Registry.Viewport
             this.tableLayoutPanelDetails.ResumeLayout(false);
             this.tabControlWithoutTabs1.ResumeLayout(false);
             this.tabPageToLegalDepartment.ResumeLayout(false);
-            this.groupBoxAcceptedByLegalDepartment.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.panel3.ResumeLayout(false);
-            this.panel3.PerformLayout();
-            this.panel4.ResumeLayout(false);
-            this.panel4.PerformLayout();
             this.groupBoxTransfertToLegalDepartment.ResumeLayout(false);
             this.tableLayoutPanel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
@@ -1828,11 +1834,18 @@ namespace Registry.Viewport
             this.panel27.PerformLayout();
             this.panel28.ResumeLayout(false);
             this.panel28.PerformLayout();
+            this.tabPageAcceptedByLegalDepartment.ResumeLayout(false);
             this.panel10.ResumeLayout(false);
             this.panel10.PerformLayout();
             this.panel11.ResumeLayout(false);
             this.panel11.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.groupBoxAcceptedByLegalDepartment.ResumeLayout(false);
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
+            this.panel4.ResumeLayout(false);
+            this.panel4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -1841,14 +1854,6 @@ namespace Registry.Viewport
         private TabPage tabPageToLegalDepartment;
         private GroupBox groupBoxTransfertToLegalDepartment;
         private TabPage tabPagePreparingOrder;
-        private GroupBox groupBoxAcceptedByLegalDepartment;
-        private TableLayoutPanel tableLayoutPanel2;
-        private Panel panel3;
-        private Label label3;
-        private TextBox textBoxAcceptedByLegalDepartmentWho;
-        private Panel panel4;
-        private DateTimePicker dateTimePickerAcceptedByLegalDepartmentDate;
-        private Label label4;
         private TableLayoutPanel tableLayoutPanel1;
         private Panel panel2;
         private Label label2;
@@ -1961,5 +1966,14 @@ namespace Registry.Viewport
         private DataGridViewComboBoxColumn id_state_type;
         private DataGridViewTextBoxColumn date_start_state;
         private DataGridViewTextBoxColumn description;
+        private TabPage tabPageAcceptedByLegalDepartment;
+        private GroupBox groupBoxAcceptedByLegalDepartment;
+        private TableLayoutPanel tableLayoutPanel2;
+        private Panel panel3;
+        private Label label3;
+        private TextBox textBoxAcceptedByLegalDepartmentWho;
+        private Panel panel4;
+        private DateTimePicker dateTimePickerAcceptedByLegalDepartmentDate;
+        private Label label4;
     }
 }

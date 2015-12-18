@@ -850,7 +850,6 @@ namespace Registry.Viewport
             if (comboBoxClaimStateType.SelectedValue == DBNull.Value || comboBoxClaimStateType.SelectedValue == null ||
                 _noUpdateFieldList)
             {
-                tableLayoutPanelAll.RowStyles[0].Height = 90F;
                 tabControlWithoutTabs1.Visible = false;
             }
         }
@@ -870,31 +869,22 @@ namespace Registry.Viewport
             tabControlWithoutTabs1.Visible = true;
             switch ((int)comboBoxClaimStateType.SelectedValue)
             {
-                case 1:
-                    tableLayoutPanelAll.RowStyles[0].Height = groupBoxTransfertToLegalDepartment.Height +
-                                                              groupBoxAcceptedByLegalDepartment.Height + 90;
+                case 2:
                     tabControlWithoutTabs1.SelectTab(tabPageToLegalDepartment);
                     break;
-                case 2:
-                    tableLayoutPanelAll.RowStyles[0].Height = groupBoxClaimDirectedToCourt.Height +
-                                                              groupBoxCourtOrder.Height + groupBoxObtainingCourtOrder.Height + 90;
-                    tabControlWithoutTabs1.SelectTab(tabPagePreparingOrder);
-                    break;
                 case 3:
-                    tableLayoutPanelAll.RowStyles[0].Height =
-                        groupBoxDirectionCourtOrderBailiffs.Height + groupBoxEnforcementProceedingStart.Height +
-                        groupBoxEnforcementProceedingEnd.Height + groupBoxEnforcementProceedingTerminate.Height +
-                        groupBoxRepeatedEnforcementProceedingStart.Height +
-                        groupBoxRepeatedEnforcementProceedingEnd.Height +
-                        groupBoxRepeatedDirectionCourtOrderBailiffs.Height + 90;
-                    tabControlWithoutTabs1.SelectTab(tabPageExecutoryProcess);
+                    tabControlWithoutTabs1.SelectTab(tabPageAcceptedByLegalDepartment);
                     break;
                 case 4:
-                    tableLayoutPanelAll.RowStyles[0].Height = groupBoxCourtOrderCancel.Height + groupBoxClaimComplete.Height + 90;
+                    tabControlWithoutTabs1.SelectTab(tabPagePreparingOrder);
+                    break;
+                case 5:
+                    tabControlWithoutTabs1.SelectTab(tabPageExecutoryProcess);
+                    break;
+                case 6:
                     tabControlWithoutTabs1.SelectTab(tabPageCompletionClaims);
                     break;
                 default:
-                    tableLayoutPanelAll.RowStyles[0].Height = 90F;
                     tabControlWithoutTabs1.Visible = false;
                     break;
             }

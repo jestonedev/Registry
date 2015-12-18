@@ -346,7 +346,8 @@ namespace Registry.Viewport
                         {
                             IdClaim = claim.IdClaim,
                             IdStateType = firstStateType,
-                            TransferToLegalDepartmentWho = UserDomain.Current.DisplayName
+                            TransferToLegalDepartmentWho = UserDomain.Current.DisplayName,
+                            DateStartState = DateTime.Now.Date
                         };
                         var idState = claimStatesDataModel.Insert(claimState);
                         if (idState != -1)
@@ -362,6 +363,7 @@ namespace Registry.Viewport
                             claimsStateRow["id_claim"] = ViewportHelper.ValueOrDBNull(claimState.IdClaim);
                             claimsStateRow["id_state_type"] = ViewportHelper.ValueOrDBNull(claimState.IdStateType);
                             claimsStateRow["transfer_to_legal_department_who"] = ViewportHelper.ValueOrDBNull(claimState.TransferToLegalDepartmentWho);
+                            claimsStateRow["date_start_state"] = ViewportHelper.ValueOrDBNull(claimState.DateStartState);
                             claimsStateRow.EndEdit();
                         }
                     }
