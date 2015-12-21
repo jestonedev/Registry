@@ -168,16 +168,16 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 75F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 70F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(800, 600);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(816, 613);
             this.tableLayoutPanel1.TabIndex = 0;
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.tableLayoutPanel5);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(403, 228);
+            this.groupBox1.Location = new System.Drawing.Point(411, 228);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(394, 69);
+            this.groupBox1.Size = new System.Drawing.Size(402, 69);
             this.groupBox1.TabIndex = 4;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Оплата (последний месяц)";
@@ -199,7 +199,7 @@
             this.tableLayoutPanel5.RowCount = 2;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(388, 50);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(396, 50);
             this.tableLayoutPanel5.TabIndex = 71;
             // 
             // numericUpDownPaymentDGI
@@ -207,14 +207,14 @@
             this.numericUpDownPaymentDGI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownPaymentDGI.DecimalPlaces = 2;
-            this.numericUpDownPaymentDGI.Location = new System.Drawing.Point(133, 22);
+            this.numericUpDownPaymentDGI.Location = new System.Drawing.Point(136, 22);
             this.numericUpDownPaymentDGI.Maximum = new decimal(new int[] {
             1000000000,
             0,
             0,
             0});
             this.numericUpDownPaymentDGI.Name = "numericUpDownPaymentDGI";
-            this.numericUpDownPaymentDGI.Size = new System.Drawing.Size(121, 20);
+            this.numericUpDownPaymentDGI.Size = new System.Drawing.Size(124, 20);
             this.numericUpDownPaymentDGI.TabIndex = 1;
             this.numericUpDownPaymentDGI.ThousandsSeparator = true;
             // 
@@ -230,7 +230,7 @@
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(133, 3);
+            this.label19.Location = new System.Drawing.Point(136, 3);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(70, 13);
             this.label19.TabIndex = 79;
@@ -248,7 +248,7 @@
             0,
             0});
             this.numericUpDownPaymentTenancy.Name = "numericUpDownPaymentTenancy";
-            this.numericUpDownPaymentTenancy.Size = new System.Drawing.Size(121, 20);
+            this.numericUpDownPaymentTenancy.Size = new System.Drawing.Size(124, 20);
             this.numericUpDownPaymentTenancy.TabIndex = 0;
             this.numericUpDownPaymentTenancy.ThousandsSeparator = true;
             // 
@@ -256,9 +256,9 @@
             // 
             this.groupBoxChargings.Controls.Add(this.tableLayoutPanel3);
             this.groupBoxChargings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxChargings.Location = new System.Drawing.Point(403, 78);
+            this.groupBoxChargings.Location = new System.Drawing.Point(411, 78);
             this.groupBoxChargings.Name = "groupBoxChargings";
-            this.groupBoxChargings.Size = new System.Drawing.Size(394, 69);
+            this.groupBoxChargings.Size = new System.Drawing.Size(402, 69);
             this.groupBoxChargings.TabIndex = 2;
             this.groupBoxChargings.TabStop = false;
             this.groupBoxChargings.Text = "Начисления (последний месяц)";
@@ -282,7 +282,7 @@
             this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(388, 50);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(396, 50);
             this.tableLayoutPanel3.TabIndex = 69;
             // 
             // numericUpDownChargingDGI
@@ -290,14 +290,14 @@
             this.numericUpDownChargingDGI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownChargingDGI.DecimalPlaces = 2;
-            this.numericUpDownChargingDGI.Location = new System.Drawing.Point(260, 22);
+            this.numericUpDownChargingDGI.Location = new System.Drawing.Point(266, 22);
             this.numericUpDownChargingDGI.Maximum = new decimal(new int[] {
             1000000000,
             0,
             0,
             0});
             this.numericUpDownChargingDGI.Name = "numericUpDownChargingDGI";
-            this.numericUpDownChargingDGI.Size = new System.Drawing.Size(122, 20);
+            this.numericUpDownChargingDGI.Size = new System.Drawing.Size(124, 20);
             this.numericUpDownChargingDGI.TabIndex = 2;
             this.numericUpDownChargingDGI.ThousandsSeparator = true;
             // 
@@ -313,7 +313,7 @@
             // label17
             // 
             this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(260, 3);
+            this.label17.Location = new System.Drawing.Point(266, 3);
             this.label17.Name = "label17";
             this.label17.Size = new System.Drawing.Size(94, 13);
             this.label17.TabIndex = 83;
@@ -331,7 +331,7 @@
             0,
             0});
             this.numericUpDownChargingTotal.Name = "numericUpDownChargingTotal";
-            this.numericUpDownChargingTotal.Size = new System.Drawing.Size(121, 20);
+            this.numericUpDownChargingTotal.Size = new System.Drawing.Size(124, 20);
             this.numericUpDownChargingTotal.TabIndex = 0;
             this.numericUpDownChargingTotal.ThousandsSeparator = true;
             // 
@@ -340,21 +340,21 @@
             this.numericUpDownChargingTenancy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownChargingTenancy.DecimalPlaces = 2;
-            this.numericUpDownChargingTenancy.Location = new System.Drawing.Point(133, 22);
+            this.numericUpDownChargingTenancy.Location = new System.Drawing.Point(136, 22);
             this.numericUpDownChargingTenancy.Maximum = new decimal(new int[] {
             1000000000,
             0,
             0,
             0});
             this.numericUpDownChargingTenancy.Name = "numericUpDownChargingTenancy";
-            this.numericUpDownChargingTenancy.Size = new System.Drawing.Size(121, 20);
+            this.numericUpDownChargingTenancy.Size = new System.Drawing.Size(124, 20);
             this.numericUpDownChargingTenancy.TabIndex = 1;
             this.numericUpDownChargingTenancy.ThousandsSeparator = true;
             // 
             // label15
             // 
             this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(133, 3);
+            this.label15.Location = new System.Drawing.Point(136, 3);
             this.label15.Name = "label15";
             this.label15.Size = new System.Drawing.Size(97, 13);
             this.label15.TabIndex = 81;
@@ -364,9 +364,9 @@
             // 
             this.groupBoxRecalcs.Controls.Add(this.tableLayoutPanel4);
             this.groupBoxRecalcs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxRecalcs.Location = new System.Drawing.Point(403, 153);
+            this.groupBoxRecalcs.Location = new System.Drawing.Point(411, 153);
             this.groupBoxRecalcs.Name = "groupBoxRecalcs";
-            this.groupBoxRecalcs.Size = new System.Drawing.Size(394, 69);
+            this.groupBoxRecalcs.Size = new System.Drawing.Size(402, 69);
             this.groupBoxRecalcs.TabIndex = 3;
             this.groupBoxRecalcs.TabStop = false;
             this.groupBoxRecalcs.Text = "Разовый перерасчет и перенос сальдо (последний месяц)";
@@ -390,7 +390,7 @@
             this.tableLayoutPanel4.RowCount = 2;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(388, 50);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(396, 50);
             this.tableLayoutPanel4.TabIndex = 70;
             // 
             // numericUpDownTransferBalance
@@ -398,14 +398,14 @@
             this.numericUpDownTransferBalance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownTransferBalance.DecimalPlaces = 2;
-            this.numericUpDownTransferBalance.Location = new System.Drawing.Point(260, 22);
+            this.numericUpDownTransferBalance.Location = new System.Drawing.Point(266, 22);
             this.numericUpDownTransferBalance.Maximum = new decimal(new int[] {
             1000000000,
             0,
             0,
             0});
             this.numericUpDownTransferBalance.Name = "numericUpDownTransferBalance";
-            this.numericUpDownTransferBalance.Size = new System.Drawing.Size(122, 20);
+            this.numericUpDownTransferBalance.Size = new System.Drawing.Size(124, 20);
             this.numericUpDownTransferBalance.TabIndex = 2;
             this.numericUpDownTransferBalance.ThousandsSeparator = true;
             // 
@@ -414,14 +414,14 @@
             this.numericUpDownRecalcDGI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownRecalcDGI.DecimalPlaces = 2;
-            this.numericUpDownRecalcDGI.Location = new System.Drawing.Point(133, 22);
+            this.numericUpDownRecalcDGI.Location = new System.Drawing.Point(136, 22);
             this.numericUpDownRecalcDGI.Maximum = new decimal(new int[] {
             1000000000,
             0,
             0,
             0});
             this.numericUpDownRecalcDGI.Name = "numericUpDownRecalcDGI";
-            this.numericUpDownRecalcDGI.Size = new System.Drawing.Size(121, 20);
+            this.numericUpDownRecalcDGI.Size = new System.Drawing.Size(124, 20);
             this.numericUpDownRecalcDGI.TabIndex = 1;
             this.numericUpDownRecalcDGI.ThousandsSeparator = true;
             // 
@@ -446,14 +446,14 @@
             0,
             0});
             this.numericUpDownRecalcTenancy.Name = "numericUpDownRecalcTenancy";
-            this.numericUpDownRecalcTenancy.Size = new System.Drawing.Size(121, 20);
+            this.numericUpDownRecalcTenancy.Size = new System.Drawing.Size(124, 20);
             this.numericUpDownRecalcTenancy.TabIndex = 0;
             this.numericUpDownRecalcTenancy.ThousandsSeparator = true;
             // 
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(133, 3);
+            this.label14.Location = new System.Drawing.Point(136, 3);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(93, 13);
             this.label14.TabIndex = 79;
@@ -462,7 +462,7 @@
             // label12
             // 
             this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(260, 3);
+            this.label12.Location = new System.Drawing.Point(266, 3);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(90, 13);
             this.label12.TabIndex = 75;
@@ -472,9 +472,9 @@
             // 
             this.groupBoxBalanceOutput.Controls.Add(this.tableLayoutPanel6);
             this.groupBoxBalanceOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxBalanceOutput.Location = new System.Drawing.Point(403, 303);
+            this.groupBoxBalanceOutput.Location = new System.Drawing.Point(411, 303);
             this.groupBoxBalanceOutput.Name = "groupBoxBalanceOutput";
-            this.groupBoxBalanceOutput.Size = new System.Drawing.Size(394, 64);
+            this.groupBoxBalanceOutput.Size = new System.Drawing.Size(402, 64);
             this.groupBoxBalanceOutput.TabIndex = 5;
             this.groupBoxBalanceOutput.TabStop = false;
             this.groupBoxBalanceOutput.Text = "Исходящее сальдо (последний месяц)";
@@ -498,7 +498,7 @@
             this.tableLayoutPanel6.RowCount = 2;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(388, 45);
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(396, 45);
             this.tableLayoutPanel6.TabIndex = 72;
             // 
             // numericUpDownBalanceDGIOutput
@@ -506,14 +506,14 @@
             this.numericUpDownBalanceDGIOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownBalanceDGIOutput.DecimalPlaces = 2;
-            this.numericUpDownBalanceDGIOutput.Location = new System.Drawing.Point(260, 22);
+            this.numericUpDownBalanceDGIOutput.Location = new System.Drawing.Point(266, 22);
             this.numericUpDownBalanceDGIOutput.Maximum = new decimal(new int[] {
             1000000000,
             0,
             0,
             0});
             this.numericUpDownBalanceDGIOutput.Name = "numericUpDownBalanceDGIOutput";
-            this.numericUpDownBalanceDGIOutput.Size = new System.Drawing.Size(122, 20);
+            this.numericUpDownBalanceDGIOutput.Size = new System.Drawing.Size(124, 20);
             this.numericUpDownBalanceDGIOutput.TabIndex = 2;
             this.numericUpDownBalanceDGIOutput.ThousandsSeparator = true;
             // 
@@ -529,7 +529,7 @@
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(260, 3);
+            this.label9.Location = new System.Drawing.Point(266, 3);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(70, 13);
             this.label9.TabIndex = 73;
@@ -547,7 +547,7 @@
             0,
             0});
             this.numericUpDownBalanceTotalOutput.Name = "numericUpDownBalanceTotalOutput";
-            this.numericUpDownBalanceTotalOutput.Size = new System.Drawing.Size(121, 20);
+            this.numericUpDownBalanceTotalOutput.Size = new System.Drawing.Size(124, 20);
             this.numericUpDownBalanceTotalOutput.TabIndex = 0;
             this.numericUpDownBalanceTotalOutput.ThousandsSeparator = true;
             // 
@@ -556,21 +556,21 @@
             this.numericUpDownBalanceTenancyOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownBalanceTenancyOutput.DecimalPlaces = 2;
-            this.numericUpDownBalanceTenancyOutput.Location = new System.Drawing.Point(133, 22);
+            this.numericUpDownBalanceTenancyOutput.Location = new System.Drawing.Point(136, 22);
             this.numericUpDownBalanceTenancyOutput.Maximum = new decimal(new int[] {
             1000000000,
             0,
             0,
             0});
             this.numericUpDownBalanceTenancyOutput.Name = "numericUpDownBalanceTenancyOutput";
-            this.numericUpDownBalanceTenancyOutput.Size = new System.Drawing.Size(121, 20);
+            this.numericUpDownBalanceTenancyOutput.Size = new System.Drawing.Size(124, 20);
             this.numericUpDownBalanceTenancyOutput.TabIndex = 1;
             this.numericUpDownBalanceTenancyOutput.ThousandsSeparator = true;
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(133, 3);
+            this.label10.Location = new System.Drawing.Point(136, 3);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(73, 13);
             this.label10.TabIndex = 71;
@@ -580,9 +580,9 @@
             // 
             this.groupBoxBalanceInput.Controls.Add(this.tableLayoutPanel2);
             this.groupBoxBalanceInput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxBalanceInput.Location = new System.Drawing.Point(403, 3);
+            this.groupBoxBalanceInput.Location = new System.Drawing.Point(411, 3);
             this.groupBoxBalanceInput.Name = "groupBoxBalanceInput";
-            this.groupBoxBalanceInput.Size = new System.Drawing.Size(394, 69);
+            this.groupBoxBalanceInput.Size = new System.Drawing.Size(402, 69);
             this.groupBoxBalanceInput.TabIndex = 1;
             this.groupBoxBalanceInput.TabStop = false;
             this.groupBoxBalanceInput.Text = "Входящее сальдо (последний месяц)";
@@ -606,21 +606,21 @@
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(388, 50);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(396, 50);
             this.tableLayoutPanel2.TabIndex = 68;
             // 
             // numericUpDownBalanceDGIInput
             // 
             this.numericUpDownBalanceDGIInput.DecimalPlaces = 2;
             this.numericUpDownBalanceDGIInput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numericUpDownBalanceDGIInput.Location = new System.Drawing.Point(260, 22);
+            this.numericUpDownBalanceDGIInput.Location = new System.Drawing.Point(266, 22);
             this.numericUpDownBalanceDGIInput.Maximum = new decimal(new int[] {
             1000000000,
             0,
             0,
             0});
             this.numericUpDownBalanceDGIInput.Name = "numericUpDownBalanceDGIInput";
-            this.numericUpDownBalanceDGIInput.Size = new System.Drawing.Size(122, 20);
+            this.numericUpDownBalanceDGIInput.Size = new System.Drawing.Size(124, 20);
             this.numericUpDownBalanceDGIInput.TabIndex = 2;
             this.numericUpDownBalanceDGIInput.ThousandsSeparator = true;
             // 
@@ -645,7 +645,7 @@
             0,
             0});
             this.numericUpDownBalanceTotalInput.Name = "numericUpDownBalanceTotalInput";
-            this.numericUpDownBalanceTotalInput.Size = new System.Drawing.Size(121, 20);
+            this.numericUpDownBalanceTotalInput.Size = new System.Drawing.Size(124, 20);
             this.numericUpDownBalanceTotalInput.TabIndex = 0;
             this.numericUpDownBalanceTotalInput.ThousandsSeparator = true;
             // 
@@ -653,21 +653,21 @@
             // 
             this.numericUpDownBalanceTenancyInput.DecimalPlaces = 2;
             this.numericUpDownBalanceTenancyInput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numericUpDownBalanceTenancyInput.Location = new System.Drawing.Point(133, 22);
+            this.numericUpDownBalanceTenancyInput.Location = new System.Drawing.Point(136, 22);
             this.numericUpDownBalanceTenancyInput.Maximum = new decimal(new int[] {
             1000000000,
             0,
             0,
             0});
             this.numericUpDownBalanceTenancyInput.Name = "numericUpDownBalanceTenancyInput";
-            this.numericUpDownBalanceTenancyInput.Size = new System.Drawing.Size(121, 20);
+            this.numericUpDownBalanceTenancyInput.Size = new System.Drawing.Size(124, 20);
             this.numericUpDownBalanceTenancyInput.TabIndex = 1;
             this.numericUpDownBalanceTenancyInput.ThousandsSeparator = true;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(260, 3);
+            this.label8.Location = new System.Drawing.Point(266, 3);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(70, 13);
             this.label8.TabIndex = 67;
@@ -676,7 +676,7 @@
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(133, 3);
+            this.label7.Location = new System.Drawing.Point(136, 3);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(73, 13);
             this.label7.TabIndex = 65;
@@ -720,7 +720,7 @@
             this.dataGridView.MultiSelect = false;
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.Size = new System.Drawing.Size(794, 224);
+            this.dataGridView.Size = new System.Drawing.Size(810, 237);
             this.dataGridView.TabIndex = 6;
             this.dataGridView.VirtualMode = true;
             this.dataGridView.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView_CellValueNeeded);
@@ -904,7 +904,7 @@
             this.groupBoxGeneralInfo.Location = new System.Drawing.Point(3, 3);
             this.groupBoxGeneralInfo.Name = "groupBoxGeneralInfo";
             this.tableLayoutPanel1.SetRowSpan(this.groupBoxGeneralInfo, 5);
-            this.groupBoxGeneralInfo.Size = new System.Drawing.Size(394, 364);
+            this.groupBoxGeneralInfo.Size = new System.Drawing.Size(402, 364);
             this.groupBoxGeneralInfo.TabIndex = 0;
             this.groupBoxGeneralInfo.TabStop = false;
             this.groupBoxGeneralInfo.Text = "Основная информация";
@@ -916,7 +916,7 @@
             this.textBoxTenant.Location = new System.Drawing.Point(167, 123);
             this.textBoxTenant.MaxLength = 4000;
             this.textBoxTenant.Name = "textBoxTenant";
-            this.textBoxTenant.Size = new System.Drawing.Size(219, 20);
+            this.textBoxTenant.Size = new System.Drawing.Size(227, 20);
             this.textBoxTenant.TabIndex = 4;
             // 
             // label18
@@ -939,7 +939,7 @@
             0,
             0});
             this.numericUpDownPrescribed.Name = "numericUpDownPrescribed";
-            this.numericUpDownPrescribed.Size = new System.Drawing.Size(219, 20);
+            this.numericUpDownPrescribed.Size = new System.Drawing.Size(227, 20);
             this.numericUpDownPrescribed.TabIndex = 7;
             this.numericUpDownPrescribed.ThousandsSeparator = true;
             // 
@@ -964,7 +964,7 @@
             0,
             0});
             this.numericUpDownLivingArea.Name = "numericUpDownLivingArea";
-            this.numericUpDownLivingArea.Size = new System.Drawing.Size(219, 20);
+            this.numericUpDownLivingArea.Size = new System.Drawing.Size(227, 20);
             this.numericUpDownLivingArea.TabIndex = 6;
             this.numericUpDownLivingArea.ThousandsSeparator = true;
             // 
@@ -989,7 +989,7 @@
             0,
             0});
             this.numericUpDownTotalArea.Name = "numericUpDownTotalArea";
-            this.numericUpDownTotalArea.Size = new System.Drawing.Size(219, 20);
+            this.numericUpDownTotalArea.Size = new System.Drawing.Size(227, 20);
             this.numericUpDownTotalArea.TabIndex = 5;
             this.numericUpDownTotalArea.ThousandsSeparator = true;
             // 
@@ -1009,7 +1009,7 @@
             this.dateTimePickerAtDate.Enabled = false;
             this.dateTimePickerAtDate.Location = new System.Drawing.Point(167, 232);
             this.dateTimePickerAtDate.Name = "dateTimePickerAtDate";
-            this.dateTimePickerAtDate.Size = new System.Drawing.Size(219, 20);
+            this.dateTimePickerAtDate.Size = new System.Drawing.Size(227, 20);
             this.dateTimePickerAtDate.TabIndex = 8;
             // 
             // label91
@@ -1028,7 +1028,7 @@
             this.textBoxAccount.Location = new System.Drawing.Point(167, 98);
             this.textBoxAccount.MaxLength = 4000;
             this.textBoxAccount.Name = "textBoxAccount";
-            this.textBoxAccount.Size = new System.Drawing.Size(219, 20);
+            this.textBoxAccount.Size = new System.Drawing.Size(227, 20);
             this.textBoxAccount.TabIndex = 3;
             // 
             // label3
@@ -1047,7 +1047,7 @@
             this.textBoxAddress.Location = new System.Drawing.Point(167, 71);
             this.textBoxAddress.MaxLength = 4000;
             this.textBoxAddress.Name = "textBoxAddress";
-            this.textBoxAddress.Size = new System.Drawing.Size(219, 20);
+            this.textBoxAddress.Size = new System.Drawing.Size(227, 20);
             this.textBoxAddress.TabIndex = 2;
             // 
             // label2
@@ -1066,7 +1066,7 @@
             this.textBoxRawAddress.Location = new System.Drawing.Point(167, 45);
             this.textBoxRawAddress.MaxLength = 4000;
             this.textBoxRawAddress.Name = "textBoxRawAddress";
-            this.textBoxRawAddress.Size = new System.Drawing.Size(219, 20);
+            this.textBoxRawAddress.Size = new System.Drawing.Size(227, 20);
             this.textBoxRawAddress.TabIndex = 1;
             // 
             // label1
@@ -1085,7 +1085,7 @@
             this.textBoxCRN.Location = new System.Drawing.Point(167, 19);
             this.textBoxCRN.MaxLength = 4000;
             this.textBoxCRN.Name = "textBoxCRN";
-            this.textBoxCRN.Size = new System.Drawing.Size(219, 20);
+            this.textBoxCRN.Size = new System.Drawing.Size(227, 20);
             this.textBoxCRN.TabIndex = 0;
             // 
             // label99
@@ -1104,7 +1104,7 @@
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(800, 600);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(805, 505);
+            this.ClientSize = new System.Drawing.Size(821, 613);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

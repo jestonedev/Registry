@@ -102,6 +102,12 @@
     <Compile Include="DataGridViewport.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="MultiPaymentAccountsAtDateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MultiPaymentAccountsAtDateForm.Designer.cs">
+      <DependentUpon>MultiPaymentAccountsAtDateForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="DocumentIssuedByViewport.Designer.cs">
       <DependentUpon>DocumentIssuedByViewport.cs</DependentUpon>
     </Compile>
@@ -453,6 +459,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ClaimStateTypesViewport.resx">
       <DependentUpon>ClaimStateTypesViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MultiPaymentAccountsAtDateForm.resx">
+      <DependentUpon>MultiPaymentAccountsAtDateForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DocumentIssuedByViewport.resx">
       <DependentUpon>DocumentIssuedByViewport.cs</DependentUpon>

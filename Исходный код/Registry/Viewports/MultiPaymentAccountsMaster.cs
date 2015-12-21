@@ -180,8 +180,8 @@ namespace Registry.Viewport
 
         private void toolStripButtonCreateClaims_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show(@"Вы точно хотите создать новые претензионно-исковые работы по данным лицевым счетам?",
-                @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.No) return;
+            if (_paymentAccount.Count == 0)
+                return;
             if (DataModel.GetInstance(DataModelType.ClaimsDataModel).EditingNewRecord)
             {
                 MessageBox.Show(@"Невозможно провести массовую операцию вставки претензионно-исковых работ пока форма исковых работ находится в состоянии добавления новой записи. Отмените добавление новой записи или сохраните ее.",
@@ -194,6 +194,43 @@ namespace Registry.Viewport
                     @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 return;
             }
+            var claimsDataModel = DataModel.GetInstance(DataModelType.ClaimsDataModel);
+            var claimStatesDataModel = DataModel.GetInstance(DataModelType.ClaimStatesDataModel);
+            var lastStates = from stateRow in claimStatesDataModel.FilterDeletedRows()
+                             group stateRow.Field<int?>("id_state") by stateRow.Field<int>("id_claim") into gs
+                select new 
+                {
+                    id_claim = gs.Key,
+                    id_state = gs.Max()
+                };
+            var lastStateTypes = from lastStateRow in lastStates
+                join stateRow in claimStatesDataModel.FilterDeletedRows()
+                    on lastStateRow.id_state equals stateRow.Field<int?>("id_state")
+                select new
+                {
+                    id_claim = stateRow.Field<int>("id_claim"),
+                    id_state_type = stateRow.Field<int>("id_state_type")
+                };
+            // Check duplicates
+            for (var i = 0; i < _paymentAccount.Count; i++)
+            {
+                var row = (DataRowView)_paymentAccount[i];
+                if (row["id_account"] == DBNull.Value) continue;
+                var isDuplicate = (from lastStateTypeRow in lastStateTypes
+                    join claimsRow in claimsDataModel.FilterDeletedRows()
+                        on lastStateTypeRow.id_claim equals claimsRow.Field<int>("id_claim")
+                    where claimsRow.Field<int?>("id_account") == (int?) row["id_account"] &&
+                        DataModelHelper.ClaimStateTypeIdsByPrevStateType(lastStateTypeRow.id_state_type).Any()
+                    select claimsRow).Any();
+                if (isDuplicate && MessageBox.Show(string.Format(
+                    @"По лицевому счету {0} уже заведена незавершенная претензионно-исковая работа. Все равно продолжить?",
+                    row["account"]), @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) !=
+                    DialogResult.Yes)
+                    return;
+            }
+            var atDateForm = new MultiPaymentAccountsAtDateForm();
+            if (atDateForm.ShowDialog() != DialogResult.OK)
+                return;
             toolStripProgressBarMultiOperations.Visible = true;
             toolStripProgressBarMultiOperations.Value = 0;
             toolStripProgressBarMultiOperations.Maximum = _paymentAccount.Count - 1;
@@ -206,9 +243,9 @@ namespace Registry.Viewport
                 {
                     IdAccount = (int) row["id_account"],
                     AmountTenancy = ViewportHelper.ValueOrNull<decimal>(row, "balance_output_tenancy"),
-                    AmountDgi = ViewportHelper.ValueOrNull<decimal>(row, "balance_output_dgi")
+                    AmountDgi = ViewportHelper.ValueOrNull<decimal>(row, "balance_output_dgi"),
+                    AtDate = atDateForm.DateAt
                 };
-                var claimsDataModel = DataModel.GetInstance(DataModelType.ClaimsDataModel);
                 var id = claimsDataModel.Insert(claim);
                 if (id == -1) break;
                 claim.IdClaim = id;
@@ -228,12 +265,12 @@ namespace Registry.Viewport
                 claimRow["id_account"] = ViewportHelper.ValueOrDBNull(claim.IdAccount);
                 claimRow["amount_tenancy"] = ViewportHelper.ValueOrDBNull(claim.AmountTenancy);
                 claimRow["amount_dgi"] = ViewportHelper.ValueOrDBNull(claim.AmountDgi);
+                claimRow["at_date"] = ViewportHelper.ValueOrDBNull(claim.AtDate);
                 claimRow.EndEdit();
                 // Add first state automaticaly
                 var firstStateTypes = DataModelHelper.ClaimStartStateTypeIds().ToList();
                 if (!firstStateTypes.Any()) continue;
                 var firstStateType = firstStateTypes.First();
-                var claimStatesDataModel = DataModel.GetInstance(DataModelType.ClaimStatesDataModel);
                 var claimStatesBindingSource = new BindingSource
                 {
                     DataSource = claimStatesDataModel.Select()
@@ -267,6 +304,8 @@ namespace Registry.Viewport
                 Application.DoEvents();
             }
             toolStripProgressBarMultiOperations.Visible = false;
+            MessageBox.Show(@"Претензионно-исковые работы успешно созданы", @"Сообщение", MessageBoxButtons.OK,
+                MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
         }
 
         public void UpdateToolbar()
