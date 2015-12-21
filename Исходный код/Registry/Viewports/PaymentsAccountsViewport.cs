@@ -384,5 +384,18 @@ namespace Registry.Viewport
                 GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
             base.OnClosing(e);
         }
+
+        internal int GetCurrentId()
+        {
+            if (GeneralBindingSource.Position < 0) return -1;
+            if (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_account"] != DBNull.Value)
+                return (int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_account"];
+            return -1;
+        }
+
+        internal string GetFilter()
+        {
+            return GeneralBindingSource.Filter;
+        }
     }
 }

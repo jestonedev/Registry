@@ -18,7 +18,6 @@ namespace Registry
     public partial class MainForm : Form, IMenuCallback
     {
         private readonly ReportLogForm _reportLogForm = new ReportLogForm();
-        private MultiExcerptsMaster _multiExcerptsMasterForm;
         private int _reportCounter;
 
         private void ChangeViewportsSelectProprty()
@@ -161,8 +160,11 @@ namespace Registry
             ChangeMainMenuState();
             StatusBarStateUpdate();
             ChangeViewportsSelectProprty();
-            if (_multiExcerptsMasterForm != null)
-                _multiExcerptsMasterForm.UpdateToolbar();
+            foreach (var doc in dockPanel.Contents)
+            {
+                if (doc is IMultiMaster)
+                    (doc as IMultiMaster).UpdateToolbar();
+            }
         }
 
         private void ribbonButtonFirst_Click(object sender, EventArgs e)
@@ -375,7 +377,10 @@ namespace Registry
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document == null)
             {
-                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryMultiExcerpt);
+                if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
+                    ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryMultiExcerpt);
+                if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
+                    ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbMultiPaymentAccount);
                 return;
             }
             if (document.HasReport(ReporterType.TenancyContractSpecial1711Reporter))
@@ -395,7 +400,10 @@ namespace Registry
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptSubPremise);
             if (document.HasReport(ReporterType.RegistryExcerptReporterAllMunSubPremises))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptSubPremises);
-            ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryMultiExcerpt);
+            if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryMultiExcerpt);
+            if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbMultiPaymentAccount);
             if (document.HasReport(ReporterType.ExportReporter))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonExportOds);
         }
@@ -1001,9 +1009,16 @@ namespace Registry
 
         private void ribbonButtonOrbRegistryMultiExcerpt_Click(object sender, EventArgs e)
         {
-            _multiExcerptsMasterForm = new MultiExcerptsMaster(this);
-            _multiExcerptsMasterForm.Show(dockPanel, DockState.DockBottom);
-            _multiExcerptsMasterForm.UpdateToolbar();
+            var multiExcerptsMasterForm = new MultiExcerptsMaster(this);
+            multiExcerptsMasterForm.Show(dockPanel, DockState.DockBottom);
+            multiExcerptsMasterForm.UpdateToolbar();
+        }
+
+        private void ribbonButtonOrbMultiPaymentAccount_Click(object sender, EventArgs e)
+        {
+            var multiPaymentAccountsMaster = new MultiPaymentAccountsMaster(this);
+            multiPaymentAccountsMaster.Show(dockPanel, DockState.DockBottom);
+            multiPaymentAccountsMaster.UpdateToolbar();
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)

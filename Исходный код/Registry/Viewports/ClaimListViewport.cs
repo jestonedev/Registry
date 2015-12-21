@@ -248,7 +248,11 @@ namespace Registry.Viewport
             dataGridViewClaims.RowCount = dataGridViewClaims.RowCount + 1;
             GeneralBindingSource.AddNew();
             if (ParentRow != null && ParentType == ParentTypeEnum.PaymentAccount)
+            {
                 comboBoxAccount.SelectedValue = ParentRow["id_account"].ToString();
+                numericUpDownAmountTenancy.Value = ViewportHelper.ValueOrDefault((decimal?)ParentRow["balance_output_tenancy"]);
+                numericUpDownAmountDGI.Value = ViewportHelper.ValueOrDefault((decimal?)ParentRow["balance_output_dgi"]);
+            }
             is_editable = true;
             dataGridViewClaims.Enabled = false;
             GeneralDataModel.EditingNewRecord = true;
@@ -333,6 +337,13 @@ namespace Registry.Viewport
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     FillRowFromClaim(claim, newRow);
                     // Add first state automaticaly
+                    if (DataModel.GetInstance(DataModelType.ClaimStatesDataModel).EditingNewRecord)
+                    {
+                        MessageBox.Show(@"Не удалось автоматически вставить первый этап претензионно-исковой работы, т.к. форма состояний исковых работ находится в состоянии добавления новой записи.",
+                            @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                        GeneralDataModel.EditingNewRecord = false;
+                        break;
+                    }
                     var firstStateTypes = DataModelHelper.ClaimStartStateTypeIds().ToList();
                     if (firstStateTypes.Any())
                     {
@@ -347,25 +358,26 @@ namespace Registry.Viewport
                             IdClaim = claim.IdClaim,
                             IdStateType = firstStateType,
                             TransferToLegalDepartmentWho = UserDomain.Current.DisplayName,
+                            AcceptedByLegalDepartmentWho = UserDomain.Current.DisplayName,
                             DateStartState = DateTime.Now.Date
                         };
                         var idState = claimStatesDataModel.Insert(claimState);
                         if (idState != -1)
                         {
                             claimState.IdState = idState;
-                        }
-
-                        var claimsStateRow = (DataRowView)claimStatesBindingSource.AddNew();
-                        if (claimsStateRow != null)
-                        {
-                            claimsStateRow.BeginEdit();
-                            claimsStateRow["id_state"] = ViewportHelper.ValueOrDBNull(claimState.IdState);
-                            claimsStateRow["id_claim"] = ViewportHelper.ValueOrDBNull(claimState.IdClaim);
-                            claimsStateRow["id_state_type"] = ViewportHelper.ValueOrDBNull(claimState.IdStateType);
-                            claimsStateRow["transfer_to_legal_department_who"] = ViewportHelper.ValueOrDBNull(claimState.TransferToLegalDepartmentWho);
-                            claimsStateRow["date_start_state"] = ViewportHelper.ValueOrDBNull(claimState.DateStartState);
-                            claimsStateRow.EndEdit();
-                        }
+                            var claimsStateRow = (DataRowView)claimStatesBindingSource.AddNew();
+                            if (claimsStateRow != null)
+                            {
+                                claimsStateRow.BeginEdit();
+                                claimsStateRow["id_state"] = ViewportHelper.ValueOrDBNull(claimState.IdState);
+                                claimsStateRow["id_claim"] = ViewportHelper.ValueOrDBNull(claimState.IdClaim);
+                                claimsStateRow["id_state_type"] = ViewportHelper.ValueOrDBNull(claimState.IdStateType);
+                                claimsStateRow["transfer_to_legal_department_who"] = ViewportHelper.ValueOrDBNull(claimState.TransferToLegalDepartmentWho);
+                                claimsStateRow["accepted_by_legal_department_who"] = ViewportHelper.ValueOrDBNull(claimState.AcceptedByLegalDepartmentWho);
+                                claimsStateRow["date_start_state"] = ViewportHelper.ValueOrDBNull(claimState.DateStartState);
+                                claimsStateRow.EndEdit();
+                            }
+                        }                     
                     }
                     GeneralDataModel.EditingNewRecord = false;
                     break;

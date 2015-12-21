@@ -90,7 +90,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel15.RowCount = 2;
             this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
             this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel15.Size = new System.Drawing.Size(773, 491);
+            this.tableLayoutPanel15.Size = new System.Drawing.Size(680, 491);
             this.tableLayoutPanel15.TabIndex = 0;
             // 
             // groupBox34
@@ -100,7 +100,7 @@ namespace Registry.Viewport
             this.groupBox34.Location = new System.Drawing.Point(0, 0);
             this.groupBox34.Margin = new System.Windows.Forms.Padding(0);
             this.groupBox34.Name = "groupBox34";
-            this.groupBox34.Size = new System.Drawing.Size(773, 140);
+            this.groupBox34.Size = new System.Drawing.Size(680, 140);
             this.groupBox34.TabIndex = 1;
             this.groupBox34.TabStop = false;
             this.groupBox34.Text = "Общие сведения";
@@ -118,7 +118,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel16.RowCount = 1;
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 155F));
-            this.tableLayoutPanel16.Size = new System.Drawing.Size(767, 120);
+            this.tableLayoutPanel16.Size = new System.Drawing.Size(674, 120);
             this.tableLayoutPanel16.TabIndex = 0;
             // 
             // panel8
@@ -136,7 +136,7 @@ namespace Registry.Viewport
             this.panel8.Location = new System.Drawing.Point(0, 0);
             this.panel8.Margin = new System.Windows.Forms.Padding(0);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(383, 120);
+            this.panel8.Size = new System.Drawing.Size(337, 120);
             this.panel8.TabIndex = 0;
             // 
             // comboBoxAccount
@@ -145,7 +145,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxAccount.Location = new System.Drawing.Point(170, 5);
             this.comboBoxAccount.Name = "comboBoxAccount";
-            this.comboBoxAccount.Size = new System.Drawing.Size(202, 23);
+            this.comboBoxAccount.Size = new System.Drawing.Size(156, 23);
             this.comboBoxAccount.TabIndex = 0;
             this.comboBoxAccount.DropDownClosed += new System.EventHandler(this.comboBoxAccount_DropDownClosed);
             this.comboBoxAccount.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxAccount_KeyUp);
@@ -167,7 +167,7 @@ namespace Registry.Viewport
             this.dateTimePickerAtDate.Location = new System.Drawing.Point(170, 35);
             this.dateTimePickerAtDate.Name = "dateTimePickerAtDate";
             this.dateTimePickerAtDate.ShowCheckBox = true;
-            this.dateTimePickerAtDate.Size = new System.Drawing.Size(202, 21);
+            this.dateTimePickerAtDate.Size = new System.Drawing.Size(156, 21);
             this.dateTimePickerAtDate.TabIndex = 1;
             // 
             // label91
@@ -186,7 +186,7 @@ namespace Registry.Viewport
             this.dateTimePickerEndDeptPeriod.Location = new System.Drawing.Point(170, 92);
             this.dateTimePickerEndDeptPeriod.Name = "dateTimePickerEndDeptPeriod";
             this.dateTimePickerEndDeptPeriod.ShowCheckBox = true;
-            this.dateTimePickerEndDeptPeriod.Size = new System.Drawing.Size(202, 21);
+            this.dateTimePickerEndDeptPeriod.Size = new System.Drawing.Size(156, 21);
             this.dateTimePickerEndDeptPeriod.TabIndex = 3;
             // 
             // label96
@@ -214,7 +214,7 @@ namespace Registry.Viewport
             this.dateTimePickerStartDeptPeriod.Location = new System.Drawing.Point(170, 63);
             this.dateTimePickerStartDeptPeriod.Name = "dateTimePickerStartDeptPeriod";
             this.dateTimePickerStartDeptPeriod.ShowCheckBox = true;
-            this.dateTimePickerStartDeptPeriod.Size = new System.Drawing.Size(202, 21);
+            this.dateTimePickerStartDeptPeriod.Size = new System.Drawing.Size(156, 21);
             this.dateTimePickerStartDeptPeriod.TabIndex = 2;
             // 
             // label97
@@ -235,10 +235,10 @@ namespace Registry.Viewport
             this.panel9.Controls.Add(this.label99);
             this.panel9.Controls.Add(this.label94);
             this.panel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel9.Location = new System.Drawing.Point(383, 0);
+            this.panel9.Location = new System.Drawing.Point(337, 0);
             this.panel9.Margin = new System.Windows.Forms.Padding(0);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(384, 120);
+            this.panel9.Size = new System.Drawing.Size(337, 120);
             this.panel9.TabIndex = 1;
             // 
             // numericUpDownAmountDGI
@@ -253,7 +253,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownAmountDGI.Name = "numericUpDownAmountDGI";
-            this.numericUpDownAmountDGI.Size = new System.Drawing.Size(202, 21);
+            this.numericUpDownAmountDGI.Size = new System.Drawing.Size(155, 21);
             this.numericUpDownAmountDGI.TabIndex = 1;
             this.numericUpDownAmountDGI.ThousandsSeparator = true;
             // 
@@ -274,7 +274,7 @@ namespace Registry.Viewport
             this.textBoxDescription.MaxLength = 4000;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
-            this.textBoxDescription.Size = new System.Drawing.Size(202, 50);
+            this.textBoxDescription.Size = new System.Drawing.Size(155, 50);
             this.textBoxDescription.TabIndex = 2;
             // 
             // numericUpDownAmountTenancy
@@ -289,7 +289,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownAmountTenancy.Name = "numericUpDownAmountTenancy";
-            this.numericUpDownAmountTenancy.Size = new System.Drawing.Size(202, 21);
+            this.numericUpDownAmountTenancy.Size = new System.Drawing.Size(155, 21);
             this.numericUpDownAmountTenancy.TabIndex = 0;
             this.numericUpDownAmountTenancy.ThousandsSeparator = true;
             // 
@@ -337,7 +337,7 @@ namespace Registry.Viewport
             this.dataGridViewClaims.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridViewClaims.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewClaims.ShowCellToolTips = false;
-            this.dataGridViewClaims.Size = new System.Drawing.Size(767, 345);
+            this.dataGridViewClaims.Size = new System.Drawing.Size(674, 345);
             this.dataGridViewClaims.TabIndex = 0;
             this.dataGridViewClaims.VirtualMode = true;
             this.dataGridViewClaims.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridViewClaims_CellValueNeeded);
@@ -417,7 +417,7 @@ namespace Registry.Viewport
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(680, 300);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(779, 497);
+            this.ClientSize = new System.Drawing.Size(681, 497);
             this.Controls.Add(this.tableLayoutPanel15);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));

@@ -8,7 +8,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
-    public sealed partial class MultiExcerptsMaster : DockContent
+    public sealed partial class MultiExcerptsMaster : DockContent, IMultiMaster
     {
         private readonly BindingSource _premises = new BindingSource();
         private readonly IMenuCallback _menuCallback;

@@ -139,6 +139,13 @@
       <DependentUpon>FundsHistoryViewport.cs</DependentUpon>
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
+    <Compile Include="IMultiMaster.cs" />
+    <Compile Include="MultiPaymentAccountsMaster.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MultiPaymentAccountsMaster.Designer.cs">
+      <DependentUpon>MultiPaymentAccountsMaster.cs</DependentUpon>
+    </Compile>
     <Compile Include="MultiExcerptsMaster.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -473,6 +480,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FundsHistoryViewport.resx">
       <DependentUpon>FundsHistoryViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MultiPaymentAccountsMaster.resx">
+      <DependentUpon>MultiPaymentAccountsMaster.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MultiExcerptsMaster.resx">
       <DependentUpon>MultiExcerptsMaster.cs</DependentUpon>

@@ -653,6 +653,7 @@ namespace Registry.Viewport
             if (v_claim_state_types.Count > 0)
                 comboBoxClaimStateType.SelectedValue = ((DataRowView)v_claim_state_types[0])["id_state_type"];
             textBoxTransferToLegalDepartmentWho.Text = UserDomain.Current.DisplayName;
+            textBoxAcceptedByLegalDepartmentWho.Text = UserDomain.Current.DisplayName;
             is_editable = true;
             dataGridView.Enabled = false;
             GeneralDataModel.EditingNewRecord = true; 
