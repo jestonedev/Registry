@@ -380,7 +380,10 @@ namespace Registry
                 if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
                     ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryMultiExcerpt);
                 if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
+                {
                     ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbMultiPaymentAccount);
+                    ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbMultiClaims);
+                }
                 return;
             }
             if (document.HasReport(ReporterType.TenancyContractSpecial1711Reporter))
@@ -403,7 +406,10 @@ namespace Registry
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryMultiExcerpt);
             if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
+            {
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbMultiPaymentAccount);
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbMultiClaims);
+            }
             if (document.HasReport(ReporterType.ExportReporter))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonExportOds);
         }
@@ -1019,6 +1025,13 @@ namespace Registry
             var multiPaymentAccountsMaster = new MultiPaymentAccountsMaster(this);
             multiPaymentAccountsMaster.Show(dockPanel, DockState.DockBottom);
             multiPaymentAccountsMaster.UpdateToolbar();
+        }
+
+        private void ribbonButtonOrbMultiClaims_Click(object sender, EventArgs e)
+        {
+            var multiClaimsMaster = new MultiClaimsMaster(this);
+            multiClaimsMaster.Show(dockPanel, DockState.DockBottom);
+            multiClaimsMaster.UpdateToolbar();
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)

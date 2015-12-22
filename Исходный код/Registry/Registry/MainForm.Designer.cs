@@ -63,6 +63,7 @@ namespace Registry
             this.ribbonButtonOrbRegistryExcerptSubPremise = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbRegistryExcerptSubPremises = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbRegistryMultiExcerpt = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonOrbMultiPaymentAccount = new System.Windows.Forms.RibbonButton();
             this.ribbonSeparator3 = new System.Windows.Forms.RibbonSeparator();
             this.ribbonButtonExportOds = new System.Windows.Forms.RibbonButton();
             this.ribbonTabGeneral = new System.Windows.Forms.RibbonTab();
@@ -169,7 +170,7 @@ namespace Registry
             this.toolStripLabelRecordCount = new System.Windows.Forms.ToolStripLabel();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.ribbonButton3 = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonOrbMultiPaymentAccount = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonOrbMultiClaims = new System.Windows.Forms.RibbonButton();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -204,6 +205,7 @@ namespace Registry
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptSubPremises);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryMultiExcerpt);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbMultiPaymentAccount);
+            this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbMultiClaims);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonSeparator3);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonExportOds);
             this.ribbon1.OrbDropDown.RecentItemsCaption = "Печать";
@@ -402,6 +404,18 @@ namespace Registry
             this.ribbonButtonOrbRegistryMultiExcerpt.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryMultiExcerpt.ToolTipImage")));
             this.ribbonButtonOrbRegistryMultiExcerpt.ToolTipTitle = "Массовая выписка";
             this.ribbonButtonOrbRegistryMultiExcerpt.Click += new System.EventHandler(this.ribbonButtonOrbRegistryMultiExcerpt_Click);
+            // 
+            // ribbonButtonOrbMultiPaymentAccount
+            // 
+            this.ribbonButtonOrbMultiPaymentAccount.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiPaymentAccount.Image")));
+            this.ribbonButtonOrbMultiPaymentAccount.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiPaymentAccount.SmallImage")));
+            this.ribbonButtonOrbMultiPaymentAccount.Text = "Массовые операции над лицевыми счетами";
+            this.ribbonButtonOrbMultiPaymentAccount.ToolTip = "При нажатии на данную кнопку откроется мастер массовых операций над лицевыми счет" +
+    "ами";
+            this.ribbonButtonOrbMultiPaymentAccount.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiPaymentAccount.ToolTipImage")));
+            this.ribbonButtonOrbMultiPaymentAccount.ToolTipTitle = "Массовые операции над лицевыми счетами";
+            this.ribbonButtonOrbMultiPaymentAccount.Value = "";
+            this.ribbonButtonOrbMultiPaymentAccount.Click += new System.EventHandler(this.ribbonButtonOrbMultiPaymentAccount_Click);
             // 
             // ribbonButtonExportOds
             // 
@@ -1561,17 +1575,16 @@ namespace Registry
             this.ribbonButton3.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButton3.SmallImage")));
             this.ribbonButton3.Text = "Лицевые счета";
             // 
-            // ribbonButtonOrbMultiPaymentAccount
+            // ribbonButtonOrbMultiClaims
             // 
-            this.ribbonButtonOrbMultiPaymentAccount.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiPaymentAccount.Image")));
-            this.ribbonButtonOrbMultiPaymentAccount.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiPaymentAccount.SmallImage")));
-            this.ribbonButtonOrbMultiPaymentAccount.Text = "Массовые операции над лицевыми счетами";
-            this.ribbonButtonOrbMultiPaymentAccount.ToolTip = "При нажатии на данную кнопку откроется мастер массовых операций над лицевыми счет" +
-    "ами";
-            this.ribbonButtonOrbMultiPaymentAccount.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiPaymentAccount.ToolTipImage")));
-            this.ribbonButtonOrbMultiPaymentAccount.ToolTipTitle = "Массовые операции над лицевыми счетами";
-            this.ribbonButtonOrbMultiPaymentAccount.Value = "";
-            this.ribbonButtonOrbMultiPaymentAccount.Click += new System.EventHandler(this.ribbonButtonOrbMultiPaymentAccount_Click);
+            this.ribbonButtonOrbMultiClaims.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiClaims.Image")));
+            this.ribbonButtonOrbMultiClaims.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiClaims.SmallImage")));
+            this.ribbonButtonOrbMultiClaims.Text = "Массовые операции над исковыми работами";
+            this.ribbonButtonOrbMultiClaims.ToolTip = "При нажатии на данную кнопку откроется мастер массовых операций над претензионно-" +
+    "исковыми работами";
+            this.ribbonButtonOrbMultiClaims.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbMultiClaims.ToolTipImage")));
+            this.ribbonButtonOrbMultiClaims.ToolTipTitle = "Массовые операции над исковыми работами";
+            this.ribbonButtonOrbMultiClaims.Click += new System.EventHandler(this.ribbonButtonOrbMultiClaims_Click);
             // 
             // MainForm
             // 
@@ -1723,6 +1736,7 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButtonAccountHistory;
         private System.Windows.Forms.RibbonButton ribbonButton3;
         private System.Windows.Forms.RibbonButton ribbonButtonOrbMultiPaymentAccount;
+        private System.Windows.Forms.RibbonButton ribbonButtonOrbMultiClaims;
     }
 }
 

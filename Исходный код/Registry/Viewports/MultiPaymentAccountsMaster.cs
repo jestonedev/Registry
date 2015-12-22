@@ -173,7 +173,7 @@ namespace Registry.Viewport
             var premisesAccountViewport = viewport as PaymentsAccountsViewport;
             if (premisesAccountViewport != null)
                 filter = premisesAccountViewport.GetFilter();
-            if (filter == "") return;
+            if (filter == "") filter = "1=1";
             _paymentAccount.Filter = string.Format("({0}) OR ({1})", _paymentAccount.Filter, filter);
             dataGridView.RowCount = _paymentAccount.Count;
         }
@@ -292,7 +292,7 @@ namespace Registry.Viewport
                 }
                 claimState.IdState = idState;
                 var claimsStateRow = (DataRowView)claimStatesBindingSource.AddNew();
-                if (claimsStateRow == null) continue;
+                if (claimsStateRow == null) break;
                 claimsStateRow.BeginEdit();
                 claimsStateRow["id_state"] = ViewportHelper.ValueOrDBNull(claimState.IdState);
                 claimsStateRow["id_claim"] = ViewportHelper.ValueOrDBNull(claimState.IdClaim);
@@ -304,8 +304,12 @@ namespace Registry.Viewport
                 Application.DoEvents();
             }
             toolStripProgressBarMultiOperations.Visible = false;
-            MessageBox.Show(@"Претензионно-исковые работы успешно созданы", @"Сообщение", MessageBoxButtons.OK,
-                MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+            if (toolStripProgressBarMultiOperations.Value == toolStripProgressBarMultiOperations.Maximum)
+                MessageBox.Show(@"Претензионно-исковые работы успешно созданы", @"Сообщение", MessageBoxButtons.OK,
+                    MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+            else
+                MessageBox.Show(@"Во время добавления претензионно-исковых работ возникли ошибки", @"Внимание", MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
         }
 
         public void UpdateToolbar()

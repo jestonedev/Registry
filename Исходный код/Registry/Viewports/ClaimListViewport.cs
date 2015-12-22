@@ -487,6 +487,7 @@ namespace Registry.Viewport
         void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
             SetViewportCaption();
+            if (v_accounts != null) v_accounts.Filter = "";
             if (GeneralBindingSource.Position == -1 || dataGridViewClaims.RowCount == 0)
                 dataGridViewClaims.ClearSelection();
             else
@@ -549,39 +550,65 @@ namespace Registry.Viewport
         void dataGridViewClaims_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (GeneralBindingSource.Count <= e.RowIndex) return;
+            var row = ((DataRowView)GeneralBindingSource[e.RowIndex]);
             switch (dataGridViewClaims.Columns[e.ColumnIndex].Name)
             {
                 case "id_claim":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["id_claim"];
+                    e.Value = row["id_claim"];
                     break;
                 case "id_account":
-                    if (((DataRowView) GeneralBindingSource[e.RowIndex])["id_account"] == DBNull.Value) return;
-                    var accountList = (from row in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
-                                  where row.Field<int?>("id_account") == (int?)((DataRowView)GeneralBindingSource[e.RowIndex])["id_account"]
-                        select row).ToList();
+                    if (row["id_account"] == DBNull.Value) return;
+                    var accountList = (from paymentAccountRow in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
+                                       where paymentAccountRow.Field<int?>("id_account") == (int?)row["id_account"]
+                                       select paymentAccountRow).ToList();
                     if (accountList.Any())
                         e.Value = accountList.First().Field<string>("account");
                     break;
                 case "start_dept_period":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["start_dept_period"] == DBNull.Value ? "" :
-                        ((DateTime)((DataRowView)GeneralBindingSource[e.RowIndex])["start_dept_period"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+                    e.Value = row["start_dept_period"] == DBNull.Value ? "" :
+                        ((DateTime)row["start_dept_period"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                     break;
                 case "end_dept_period":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["end_dept_period"] == DBNull.Value ? "" :
-                        ((DateTime)((DataRowView)GeneralBindingSource[e.RowIndex])["end_dept_period"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+                    e.Value = row["end_dept_period"] == DBNull.Value ? "" :
+                        ((DateTime)row["end_dept_period"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                     break;
                 case "amount_tenancy":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["amount_tenancy"];
+                    e.Value = row["amount_tenancy"];
                     break;
                 case "amount_dgi":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["amount_dgi"];
+                    e.Value = row["amount_dgi"];
                     break;
                 case "at_date":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["at_date"] == DBNull.Value ? "" :
-                        ((DateTime)((DataRowView)GeneralBindingSource[e.RowIndex])["at_date"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+                    e.Value = row["at_date"] == DBNull.Value ? "" :
+                        ((DateTime)row["at_date"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                     break;
                 case "description":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["description"];
+                    e.Value = row["description"];
+                    break;
+                case "current_state":
+                    if (row["id_claim"] == DBNull.Value || row["id_claim"] == null) return;
+                    var idClaim = (int?) row["id_claim"];
+                    var lastClaimStateMaxIds =
+                        from claimStateRow in DataModel.GetInstance(DataModelType.ClaimStatesDataModel).FilterDeletedRows()
+                        where claimStateRow.Field<int?>("id_claim") == idClaim
+                        group claimStateRow.Field<int?>("id_state") by claimStateRow.Field<int?>("id_claim") into gs
+                        select new
+                        {
+                            id_claim = gs.Key,
+                            id_state = gs.Max()
+                        };
+                    var lastClaimState =
+                        (from claimStateRow in
+                            DataModel.GetInstance(DataModelType.ClaimStatesDataModel).FilterDeletedRows()
+                        join lastClaimStateRow in lastClaimStateMaxIds
+                            on claimStateRow.Field<int?>("id_state") equals lastClaimStateRow.id_state
+                        join stateTypeRow in
+                            DataModel.GetInstance(DataModelType.ClaimStateTypesDataModel).FilterDeletedRows()
+                            on claimStateRow.Field<int?>("id_state_type") equals
+                            stateTypeRow.Field<int?>("id_state_type")
+                        select stateTypeRow.Field<string>("state_type")).ToList();
+                    if (lastClaimState.Any())
+                        e.Value = lastClaimState.First();
                     break;
             }
         }
@@ -658,6 +685,19 @@ namespace Registry.Viewport
             if (keyData == Keys.Enter)
                 return false;
             return base.ProcessCmdKey(ref msg, keyData);
+        }
+
+        internal int GetCurrentId()
+        {
+            if (GeneralBindingSource.Position < 0) return -1;
+            if (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"] != DBNull.Value)
+                return (int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"];
+            return -1;
+        }
+
+        internal string GetFilter()
+        {
+            return GeneralBindingSource.Filter;
         }
     }
 }

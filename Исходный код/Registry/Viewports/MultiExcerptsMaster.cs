@@ -160,7 +160,7 @@ namespace Registry.Viewport
             var premisesViewport = viewport as PremisesViewport;
             if (premisesViewport != null)
                 filter = premisesViewport.GetFilter();
-            if (filter == "") return;
+            if (filter == "") filter = "1=1";
             _premises.Filter = string.Format("({0}) OR ({1})", _premises.Filter, filter);
             dataGridView.RowCount = _premises.Count;
         }

@@ -102,6 +102,12 @@
     <Compile Include="DataGridViewport.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="MultiClaimsStateConfigForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MultiClaimsStateConfigForm.Designer.cs">
+      <DependentUpon>MultiClaimsStateConfigForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MultiPaymentAccountsAtDateForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -146,6 +152,12 @@
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IMultiMaster.cs" />
+    <Compile Include="MultiClaimsMaster.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MultiClaimsMaster.Designer.cs">
+      <DependentUpon>MultiClaimsMaster.cs</DependentUpon>
+    </Compile>
     <Compile Include="MultiPaymentAccountsMaster.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -460,6 +472,9 @@
     <EmbeddedResource Include="ClaimStateTypesViewport.resx">
       <DependentUpon>ClaimStateTypesViewport.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="MultiClaimsStateConfigForm.resx">
+      <DependentUpon>MultiClaimsStateConfigForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MultiPaymentAccountsAtDateForm.resx">
       <DependentUpon>MultiPaymentAccountsAtDateForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -489,6 +504,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FundsHistoryViewport.resx">
       <DependentUpon>FundsHistoryViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MultiClaimsMaster.resx">
+      <DependentUpon>MultiClaimsMaster.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MultiPaymentAccountsMaster.resx">
       <DependentUpon>MultiPaymentAccountsMaster.cs</DependentUpon>
