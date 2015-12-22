@@ -333,7 +333,6 @@ namespace Registry.Viewport
             this.dataGridViewClaims.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewClaims.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dataGridViewClaims.Location = new System.Drawing.Point(3, 143);
-            this.dataGridViewClaims.MultiSelect = false;
             this.dataGridViewClaims.Name = "dataGridViewClaims";
             this.dataGridViewClaims.ReadOnly = true;
             this.dataGridViewClaims.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;

@@ -385,12 +385,14 @@ namespace Registry.Viewport
             base.OnClosing(e);
         }
 
-        internal int GetCurrentId()
+        internal IEnumerable<int> GetCurrentIds()
         {
-            if (GeneralBindingSource.Position < 0) return -1;
-            if (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_account"] != DBNull.Value)
-                return (int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_account"];
-            return -1;
+            var ids = new List<int>();
+            if (GeneralBindingSource.Position < 0) return ids;
+            for (var i = 0; i < dataGridView.SelectedRows.Count; i++)
+                if (((DataRowView)GeneralBindingSource[dataGridView.SelectedRows[i].Index])["id_account"] != DBNull.Value)
+                ids.Add((int)((DataRowView)GeneralBindingSource[dataGridView.SelectedRows[i].Index])["id_account"]);
+            return ids;
         }
 
         internal string GetFilter()

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -155,12 +156,13 @@ namespace Registry.Viewport
             var viewport = _menuCallback.GetCurrentViewport();
             if (viewport == null)
                 return;
-            var idAccount = -1;
+            IEnumerable<int> idAccount = new List<int>();
             var paymentsAccountsViewport = viewport as PaymentsAccountsViewport;
             if (paymentsAccountsViewport != null)
-                idAccount = paymentsAccountsViewport.GetCurrentId();
-            if (idAccount == -1) return;
-            _paymentAccount.Filter = string.Format("({0}) OR (id_account = {1})", _paymentAccount.Filter, idAccount);
+                idAccount = paymentsAccountsViewport.GetCurrentIds();
+            if (!idAccount.Any()) return;
+            _paymentAccount.Filter = string.Format("({0}) OR (id_account IN ({1}))", _paymentAccount.Filter, 
+                idAccount.Select(x => x.ToString()).Aggregate((x,y) => x +","+ y));
             dataGridView.RowCount = _paymentAccount.Count;
         }
 

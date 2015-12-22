@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -118,12 +119,12 @@ namespace Registry.Viewport
             var viewport = _menuCallback.GetCurrentViewport();
             if (viewport == null)
                 return;
-            var idClaim = -1;
+            IEnumerable<int> idClaim = new List<int>();
             var claimsViewport = viewport as ClaimListViewport;
             if (claimsViewport != null)
-                idClaim = claimsViewport.GetCurrentId();
-            if (idClaim == -1) return;
-            _claims.Filter = string.Format("({0}) OR (id_claim = {1})", _claims.Filter, idClaim);
+                idClaim = claimsViewport.GetCurrentIds();
+            if (!idClaim.Any()) return;
+            _claims.Filter = string.Format("({0}) OR (id_claim IN ({1}))", _claims.Filter, idClaim.Select(x => x.ToString()).Aggregate((x, y) => x + "," + y));
             dataGridView.RowCount = _claims.Count;
         }
 

@@ -687,12 +687,14 @@ namespace Registry.Viewport
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        internal int GetCurrentId()
+        internal IEnumerable<int> GetCurrentIds()
         {
-            if (GeneralBindingSource.Position < 0) return -1;
-            if (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"] != DBNull.Value)
-                return (int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"];
-            return -1;
+            var ids = new List<int>();
+            if (GeneralBindingSource.Position < 0) return ids;
+            for (var i = 0; i < dataGridViewClaims.SelectedRows.Count; i++)
+                if (((DataRowView)GeneralBindingSource[dataGridViewClaims.SelectedRows[i].Index])["id_claim"] != DBNull.Value)
+                    ids.Add((int)((DataRowView)GeneralBindingSource[dataGridViewClaims.SelectedRows[i].Index])["id_claim"]);
+            return ids;
         }
 
         internal string GetFilter()
