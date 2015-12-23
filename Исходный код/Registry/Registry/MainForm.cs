@@ -9,6 +9,7 @@ using Registry.Entities;
 using Registry.Reporting;
 using Registry.SearchForms;
 using Registry.Viewport;
+using Registry.Viewport.SearchForms;
 using Security;
 using Settings;
 using WeifenLuo.WinFormsUI.Docking;

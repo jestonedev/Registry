@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Registry.Reporting;
 using Registry.SearchForms;
+using Registry.Viewport.SearchForms;
 
 namespace Registry.Viewport
 {

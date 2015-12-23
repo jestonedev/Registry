@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Viewport;
+using Registry.Viewport.SearchForms;
 
 namespace Registry.SearchForms
 {

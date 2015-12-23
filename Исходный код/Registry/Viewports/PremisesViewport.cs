@@ -14,6 +14,7 @@ using System.Text.RegularExpressions;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Reporting;
+using Registry.Viewport.SearchForms;
 
 namespace Registry.Viewport
 {

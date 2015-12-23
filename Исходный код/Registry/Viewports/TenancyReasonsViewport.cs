@@ -154,6 +154,7 @@ namespace Registry.Viewport
                 DataMember = "tenancy_reason_types",
                 DataSource = DataModel.DataSet
             };
+            _vTenancyReasonTypesDataModel.Sort = "reason_name";
 
             if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
                 Text = string.Format(CultureInfo.InvariantCulture, "Основания найма №{0}", ParentRow["id_process"]);

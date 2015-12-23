@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Viewport.SearchForms;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -17,6 +18,10 @@ namespace Registry.Viewport
     internal sealed partial class ClaimListViewport : FormWithGridViewport
     {
         private BindingSource v_accounts;
+
+
+        private SearchForm spExtendedSearchForm;
+        private SearchForm spSimpleSearchForm;
 
         private ClaimListViewport()
             : this(null, null)
@@ -438,6 +443,51 @@ namespace Registry.Viewport
             viewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
+        }
+
+        public override bool CanSearchRecord()
+        {
+            return true;
+        }
+
+        public override bool SearchedRecords()
+        {
+            return !string.IsNullOrEmpty(DynamicFilter);
+        }
+
+        public override void SearchRecord(SearchFormType searchFormType)
+        {
+            switch (searchFormType)
+            {
+                case SearchFormType.SimpleSearchForm:
+                    if (spSimpleSearchForm == null)
+                        spSimpleSearchForm = new SimpleSearchClaimsForm();
+                    if (spSimpleSearchForm.ShowDialog() != DialogResult.OK)
+                        return;
+                    DynamicFilter = spSimpleSearchForm.GetFilter();
+                    break;
+                case SearchFormType.ExtendedSearchForm:
+                    if (spExtendedSearchForm == null)
+                        spExtendedSearchForm = new ExtendedSearchClaimsForm();
+                    if (spExtendedSearchForm.ShowDialog() != DialogResult.OK)
+                        return;
+                    DynamicFilter = spExtendedSearchForm.GetFilter();
+                    break;
+            }
+            var filter = StaticFilter;
+            if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
+                filter += " AND ";
+            filter += DynamicFilter;
+            dataGridViewClaims.RowCount = 0;
+            GeneralBindingSource.Filter = filter;
+            dataGridViewClaims.RowCount = GeneralBindingSource.Count;
+        }
+
+        public override void ClearSearch()
+        {
+            GeneralBindingSource.Filter = StaticFilter;
+            dataGridViewClaims.RowCount = GeneralBindingSource.Count;
+            DynamicFilter = "";
         }
 
         protected override void OnClosing(CancelEventArgs e)

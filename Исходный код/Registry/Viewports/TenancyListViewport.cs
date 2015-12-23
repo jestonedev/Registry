@@ -12,6 +12,7 @@ using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Reporting;
 using Registry.SearchForms;
+using Registry.Viewport.SearchForms;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 

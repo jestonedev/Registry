@@ -129,16 +129,16 @@
     <Compile Include="ExecutorsViewport.Designer.cs">
       <DependentUpon>ExecutorsViewport.cs</DependentUpon>
     </Compile>
-    <Compile Include="ExtendedSearchResettleForm.cs">
+    <Compile Include="SearchForms\ExtendedSearchResettleForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ExtendedSearchResettleForm.Designer.cs">
+    <Compile Include="SearchForms\ExtendedSearchResettleForm.Designer.cs">
       <DependentUpon>ExtendedSearchResettleForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ExtendedSearchPaymentAccounts.cs">
+    <Compile Include="SearchForms\ExtendedSearchPaymentAccounts.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ExtendedSearchPaymentAccounts.Designer.cs">
+    <Compile Include="SearchForms\ExtendedSearchPaymentAccounts.Designer.cs">
       <DependentUpon>ExtendedSearchPaymentAccounts.cs</DependentUpon>
     </Compile>
     <Compile Include="FormWithGridViewport.cs">
@@ -232,6 +232,18 @@
     <Compile Include="RestrictionTypeListViewport.Designer.cs">
       <DependentUpon>RestrictionTypeListViewport.cs</DependentUpon>
     </Compile>
+    <Compile Include="SearchForms\ExtendedSearchClaimsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SearchForms\ExtendedSearchClaimsForm.Designer.cs">
+      <DependentUpon>ExtendedSearchClaimsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SearchForms\SimpleSearchClaimsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SearchForms\SimpleSearchClaimsForm.Designer.cs">
+      <DependentUpon>SimpleSearchClaimsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="StructureTypeListViewport.Designer.cs">
       <DependentUpon>StructureTypeListViewport.cs</DependentUpon>
     </Compile>
@@ -247,10 +259,10 @@
     <Compile Include="RestrictionsEditor.Designer.cs">
       <DependentUpon>RestrictionsEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="SimpleSearchResettleForm.cs">
+    <Compile Include="SearchForms\SimpleSearchResettleForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SimpleSearchResettleForm.Designer.cs">
+    <Compile Include="SearchForms\SimpleSearchResettleForm.Designer.cs">
       <DependentUpon>SimpleSearchResettleForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SubPremisesViewport.Designer.cs">
@@ -345,20 +357,20 @@
     <Compile Include="ExtendedSearchBuildingForm.Designer.cs">
       <DependentUpon>ExtendedSearchBuildingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SearchForm.cs">
+    <Compile Include="SearchForms\SearchForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SearchFormType.cs" />
-    <Compile Include="ExtendedSearchPremisesForm.cs">
+    <Compile Include="SearchForms\SearchFormType.cs" />
+    <Compile Include="SearchForms\ExtendedSearchPremisesForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ExtendedSearchPremisesForm.Designer.cs">
+    <Compile Include="SearchForms\ExtendedSearchPremisesForm.Designer.cs">
       <DependentUpon>ExtendedSearchPremisesForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="ExtendedSearchTenancyForm.cs">
+    <Compile Include="SearchForms\ExtendedSearchTenancyForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ExtendedSearchTenancyForm.Designer.cs">
+    <Compile Include="SearchForms\ExtendedSearchTenancyForm.Designer.cs">
       <DependentUpon>ExtendedSearchTenancyForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SelectWarrantForm.cs">
@@ -367,22 +379,22 @@
     <Compile Include="SelectWarrantForm.Designer.cs">
       <DependentUpon>SelectWarrantForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SimpleSearchBuildingForm.cs">
+    <Compile Include="SearchForms\SimpleSearchBuildingForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SimpleSearchBuildingForm.Designer.cs">
+    <Compile Include="SearchForms\SimpleSearchBuildingForm.Designer.cs">
       <DependentUpon>SimpleSearchBuildingForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SimpleSearchPremiseForm.cs">
+    <Compile Include="SearchForms\SimpleSearchPremiseForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SimpleSearchPremiseForm.Designer.cs">
+    <Compile Include="SearchForms\SimpleSearchPremiseForm.Designer.cs">
       <DependentUpon>SimpleSearchPremiseForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="SimpleSearchTenancyForm.cs">
+    <Compile Include="SearchForms\SimpleSearchTenancyForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SimpleSearchTenancyForm.Designer.cs">
+    <Compile Include="SearchForms\SimpleSearchTenancyForm.Designer.cs">
       <DependentUpon>SimpleSearchTenancyForm.cs</DependentUpon>
     </Compile>
     <Compile Include="StructureTypeListViewport.cs">
@@ -490,16 +502,16 @@
     <EmbeddedResource Include="ExtendedSearchBuildingForm.resx">
       <DependentUpon>ExtendedSearchBuildingForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ExtendedSearchPremisesForm.resx">
+    <EmbeddedResource Include="SearchForms\ExtendedSearchPremisesForm.resx">
       <DependentUpon>ExtendedSearchPremisesForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ExtendedSearchResettleForm.resx">
+    <EmbeddedResource Include="SearchForms\ExtendedSearchResettleForm.resx">
       <DependentUpon>ExtendedSearchResettleForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ExtendedSearchPaymentAccounts.resx">
+    <EmbeddedResource Include="SearchForms\ExtendedSearchPaymentAccounts.resx">
       <DependentUpon>ExtendedSearchPaymentAccounts.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ExtendedSearchTenancyForm.resx">
+    <EmbeddedResource Include="SearchForms\ExtendedSearchTenancyForm.resx">
       <DependentUpon>ExtendedSearchTenancyForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FundsHistoryViewport.resx">
@@ -555,6 +567,12 @@
     <EmbeddedResource Include="OwnershipsEditor.resx">
       <DependentUpon>OwnershipsEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="SearchForms\ExtendedSearchClaimsForm.resx">
+      <DependentUpon>ExtendedSearchClaimsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SearchForms\SimpleSearchClaimsForm.resx">
+      <DependentUpon>SimpleSearchClaimsForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SubPremisesEditor.resx">
       <DependentUpon>SubPremisesEditor.cs</DependentUpon>
     </EmbeddedResource>
@@ -567,16 +585,16 @@
     <EmbeddedResource Include="SelectWarrantForm.resx">
       <DependentUpon>SelectWarrantForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SimpleSearchBuildingForm.resx">
+    <EmbeddedResource Include="SearchForms\SimpleSearchBuildingForm.resx">
       <DependentUpon>SimpleSearchBuildingForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SimpleSearchPremiseForm.resx">
+    <EmbeddedResource Include="SearchForms\SimpleSearchPremiseForm.resx">
       <DependentUpon>SimpleSearchPremiseForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SimpleSearchResettleForm.resx">
+    <EmbeddedResource Include="SearchForms\SimpleSearchResettleForm.resx">
       <DependentUpon>SimpleSearchResettleForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SimpleSearchTenancyForm.resx">
+    <EmbeddedResource Include="SearchForms\SimpleSearchTenancyForm.resx">
       <DependentUpon>SimpleSearchTenancyForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="StructureTypeListViewport.resx">
