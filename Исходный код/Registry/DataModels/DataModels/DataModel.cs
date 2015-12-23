@@ -210,7 +210,7 @@ namespace Registry.DataModels.DataModels
                 case DataModelType.PaymentsDataModel:
                     return PaymentsDataModel.GetInstance();
                 case DataModelType.SelectableHeadHousingDepDataModel:
-                    return SelectableHeadHousingDepDataModel.GetInstance();
+                    return SelectableSigners.GetInstance();
                 default:
                     throw new DataModelException("Неизвестный тип модели");
             }

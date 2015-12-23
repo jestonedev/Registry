@@ -6,23 +6,23 @@ using System.Windows.Forms;
 
 namespace Registry.DataModels.DataModels
 {
-    internal class SelectableHeadHousingDepDataModel: DataModel
+    internal class SelectableSigners: DataModel
     {
-        private static SelectableHeadHousingDepDataModel _dataModel;
+        private static SelectableSigners _dataModel;
         private const string SelectQuery = @"SELECT s.id_record, CONCAT(s.surname, ' ', s.`name`, 
-                                              IF(s.patronymic IS NULL, '', CONCAT(' ', s.patronymic))) AS snp
-                                            FROM selectable_head_housing_dep s
+                                              IF(s.patronymic IS NULL, '', CONCAT(' ', s.patronymic))) AS snp, id_signer_group
+                                            FROM selectable_signers s
                                             WHERE s.deleted = 0";
         private const string TableName = "selectable_head_housing_dep";
 
-        private SelectableHeadHousingDepDataModel()
+        private SelectableSigners()
             : base(null, 1, SelectQuery, TableName)
         {
         }
 
-        public static SelectableHeadHousingDepDataModel GetInstance()
+        public static SelectableSigners GetInstance()
         {
-            return _dataModel ?? (_dataModel = new SelectableHeadHousingDepDataModel());
+            return _dataModel ?? (_dataModel = new SelectableSigners());
         }
 
         protected override void ConfigureTable()
