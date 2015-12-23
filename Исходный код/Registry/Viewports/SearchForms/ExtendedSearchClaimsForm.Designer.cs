@@ -81,7 +81,7 @@ namespace Registry.Viewport.SearchForms
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(214, 356);
+            this.vButtonCancel.Location = new System.Drawing.Point(214, 358);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
@@ -94,7 +94,7 @@ namespace Registry.Viewport.SearchForms
             // 
             this.vButtonSearch.AllowAnimations = true;
             this.vButtonSearch.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSearch.Location = new System.Drawing.Point(76, 356);
+            this.vButtonSearch.Location = new System.Drawing.Point(76, 358);
             this.vButtonSearch.Name = "vButtonSearch";
             this.vButtonSearch.RoundedCornersMask = ((byte)(15));
             this.vButtonSearch.Size = new System.Drawing.Size(117, 35);
@@ -109,7 +109,7 @@ namespace Registry.Viewport.SearchForms
             this.dateTimePickerAtDateFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerAtDateFrom.Enabled = false;
-            this.dateTimePickerAtDateFrom.Location = new System.Drawing.Point(94, 148);
+            this.dateTimePickerAtDateFrom.Location = new System.Drawing.Point(94, 150);
             this.dateTimePickerAtDateFrom.Name = "dateTimePickerAtDateFrom";
             this.dateTimePickerAtDateFrom.Size = new System.Drawing.Size(141, 21);
             this.dateTimePickerAtDateFrom.TabIndex = 8;
@@ -117,7 +117,7 @@ namespace Registry.Viewport.SearchForms
             // label103
             // 
             this.label103.AutoSize = true;
-            this.label103.Location = new System.Drawing.Point(9, 87);
+            this.label103.Location = new System.Drawing.Point(9, 89);
             this.label103.Name = "label103";
             this.label103.Size = new System.Drawing.Size(139, 15);
             this.label103.TabIndex = 53;
@@ -126,7 +126,7 @@ namespace Registry.Viewport.SearchForms
             // label91
             // 
             this.label91.AutoSize = true;
-            this.label91.Location = new System.Drawing.Point(9, 130);
+            this.label91.Location = new System.Drawing.Point(9, 132);
             this.label91.Name = "label91";
             this.label91.Size = new System.Drawing.Size(130, 15);
             this.label91.TabIndex = 52;
@@ -135,11 +135,11 @@ namespace Registry.Viewport.SearchForms
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(9, 43);
+            this.label1.Location = new System.Drawing.Point(9, 45);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(135, 15);
+            this.label1.Size = new System.Drawing.Size(119, 15);
             this.label1.TabIndex = 55;
-            this.label1.Text = "Последнее состояние";
+            this.label1.Text = "Текущее состояние";
             // 
             // comboBoxLastState
             // 
@@ -147,7 +147,7 @@ namespace Registry.Viewport.SearchForms
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxLastState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxLastState.Enabled = false;
-            this.comboBoxLastState.Location = new System.Drawing.Point(33, 61);
+            this.comboBoxLastState.Location = new System.Drawing.Point(33, 63);
             this.comboBoxLastState.Name = "comboBoxLastState";
             this.comboBoxLastState.Size = new System.Drawing.Size(360, 23);
             this.comboBoxLastState.TabIndex = 3;
@@ -155,7 +155,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxAtDateChecked
             // 
             this.checkBoxAtDateChecked.AutoSize = true;
-            this.checkBoxAtDateChecked.Location = new System.Drawing.Point(12, 152);
+            this.checkBoxAtDateChecked.Location = new System.Drawing.Point(12, 154);
             this.checkBoxAtDateChecked.Name = "checkBoxAtDateChecked";
             this.checkBoxAtDateChecked.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAtDateChecked.TabIndex = 6;
@@ -165,7 +165,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxLastStateChecked
             // 
             this.checkBoxLastStateChecked.AutoSize = true;
-            this.checkBoxLastStateChecked.Location = new System.Drawing.Point(12, 65);
+            this.checkBoxLastStateChecked.Location = new System.Drawing.Point(12, 67);
             this.checkBoxLastStateChecked.Name = "checkBoxLastStateChecked";
             this.checkBoxLastStateChecked.Size = new System.Drawing.Size(15, 14);
             this.checkBoxLastStateChecked.TabIndex = 2;
@@ -175,7 +175,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxAccountChecked
             // 
             this.checkBoxAccountChecked.AutoSize = true;
-            this.checkBoxAccountChecked.Location = new System.Drawing.Point(12, 109);
+            this.checkBoxAccountChecked.Location = new System.Drawing.Point(12, 111);
             this.checkBoxAccountChecked.Name = "checkBoxAccountChecked";
             this.checkBoxAccountChecked.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAccountChecked.TabIndex = 4;
@@ -185,7 +185,7 @@ namespace Registry.Viewport.SearchForms
             // textBoxAccount
             // 
             this.textBoxAccount.Enabled = false;
-            this.textBoxAccount.Location = new System.Drawing.Point(33, 105);
+            this.textBoxAccount.Location = new System.Drawing.Point(33, 107);
             this.textBoxAccount.Name = "textBoxAccount";
             this.textBoxAccount.Size = new System.Drawing.Size(360, 21);
             this.textBoxAccount.TabIndex = 5;
@@ -200,7 +200,7 @@ namespace Registry.Viewport.SearchForms
             "≤",
             "=",
             "между"});
-            this.comboBoxAtDateExpr.Location = new System.Drawing.Point(34, 147);
+            this.comboBoxAtDateExpr.Location = new System.Drawing.Point(34, 149);
             this.comboBoxAtDateExpr.Name = "comboBoxAtDateExpr";
             this.comboBoxAtDateExpr.Size = new System.Drawing.Size(48, 23);
             this.comboBoxAtDateExpr.TabIndex = 7;
@@ -209,7 +209,7 @@ namespace Registry.Viewport.SearchForms
             // 
             this.numericUpDownAmmountDGITo.DecimalPlaces = 2;
             this.numericUpDownAmmountDGITo.Enabled = false;
-            this.numericUpDownAmmountDGITo.Location = new System.Drawing.Point(245, 320);
+            this.numericUpDownAmmountDGITo.Location = new System.Drawing.Point(245, 322);
             this.numericUpDownAmmountDGITo.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -223,7 +223,7 @@ namespace Registry.Viewport.SearchForms
             // 
             this.numericUpDownAmmountDGIFrom.DecimalPlaces = 2;
             this.numericUpDownAmmountDGIFrom.Enabled = false;
-            this.numericUpDownAmmountDGIFrom.Location = new System.Drawing.Point(94, 320);
+            this.numericUpDownAmmountDGIFrom.Location = new System.Drawing.Point(94, 322);
             this.numericUpDownAmmountDGIFrom.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -243,7 +243,7 @@ namespace Registry.Viewport.SearchForms
             "≤",
             "=",
             "между"});
-            this.comboBoxAmmountDGIExpr.Location = new System.Drawing.Point(33, 319);
+            this.comboBoxAmmountDGIExpr.Location = new System.Drawing.Point(33, 321);
             this.comboBoxAmmountDGIExpr.Name = "comboBoxAmmountDGIExpr";
             this.comboBoxAmmountDGIExpr.Size = new System.Drawing.Size(49, 23);
             this.comboBoxAmmountDGIExpr.TabIndex = 23;
@@ -251,7 +251,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxAmmountDGIChecked
             // 
             this.checkBoxAmmountDGIChecked.AutoSize = true;
-            this.checkBoxAmmountDGIChecked.Location = new System.Drawing.Point(12, 324);
+            this.checkBoxAmmountDGIChecked.Location = new System.Drawing.Point(12, 326);
             this.checkBoxAmmountDGIChecked.Name = "checkBoxAmmountDGIChecked";
             this.checkBoxAmmountDGIChecked.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAmmountDGIChecked.TabIndex = 22;
@@ -261,7 +261,7 @@ namespace Registry.Viewport.SearchForms
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(9, 302);
+            this.label21.Location = new System.Drawing.Point(9, 304);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(149, 15);
             this.label21.TabIndex = 176;
@@ -271,7 +271,7 @@ namespace Registry.Viewport.SearchForms
             // 
             this.numericUpDownAmmountTenancyTo.DecimalPlaces = 2;
             this.numericUpDownAmmountTenancyTo.Enabled = false;
-            this.numericUpDownAmmountTenancyTo.Location = new System.Drawing.Point(245, 277);
+            this.numericUpDownAmmountTenancyTo.Location = new System.Drawing.Point(245, 279);
             this.numericUpDownAmmountTenancyTo.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -285,7 +285,7 @@ namespace Registry.Viewport.SearchForms
             // 
             this.numericUpDownAmmountTenancyFrom.DecimalPlaces = 2;
             this.numericUpDownAmmountTenancyFrom.Enabled = false;
-            this.numericUpDownAmmountTenancyFrom.Location = new System.Drawing.Point(94, 277);
+            this.numericUpDownAmmountTenancyFrom.Location = new System.Drawing.Point(94, 279);
             this.numericUpDownAmmountTenancyFrom.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -305,7 +305,7 @@ namespace Registry.Viewport.SearchForms
             "≤",
             "=",
             "между"});
-            this.comboBoxAmmountTenancyExpr.Location = new System.Drawing.Point(33, 276);
+            this.comboBoxAmmountTenancyExpr.Location = new System.Drawing.Point(33, 278);
             this.comboBoxAmmountTenancyExpr.Name = "comboBoxAmmountTenancyExpr";
             this.comboBoxAmmountTenancyExpr.Size = new System.Drawing.Size(49, 23);
             this.comboBoxAmmountTenancyExpr.TabIndex = 19;
@@ -313,7 +313,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxAmmountTenancyChecked
             // 
             this.checkBoxAmmountTenancyChecked.AutoSize = true;
-            this.checkBoxAmmountTenancyChecked.Location = new System.Drawing.Point(12, 281);
+            this.checkBoxAmmountTenancyChecked.Location = new System.Drawing.Point(12, 283);
             this.checkBoxAmmountTenancyChecked.Name = "checkBoxAmmountTenancyChecked";
             this.checkBoxAmmountTenancyChecked.Size = new System.Drawing.Size(15, 14);
             this.checkBoxAmmountTenancyChecked.TabIndex = 18;
@@ -323,7 +323,7 @@ namespace Registry.Viewport.SearchForms
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(9, 259);
+            this.label22.Location = new System.Drawing.Point(9, 261);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(154, 15);
             this.label22.TabIndex = 175;
@@ -334,7 +334,7 @@ namespace Registry.Viewport.SearchForms
             this.dateTimePickerAtDateTo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerAtDateTo.Enabled = false;
-            this.dateTimePickerAtDateTo.Location = new System.Drawing.Point(245, 148);
+            this.dateTimePickerAtDateTo.Location = new System.Drawing.Point(245, 150);
             this.dateTimePickerAtDateTo.Name = "dateTimePickerAtDateTo";
             this.dateTimePickerAtDateTo.Size = new System.Drawing.Size(148, 21);
             this.dateTimePickerAtDateTo.TabIndex = 9;
@@ -344,7 +344,7 @@ namespace Registry.Viewport.SearchForms
             this.dateTimePickerStartDeptPeriodTo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerStartDeptPeriodTo.Enabled = false;
-            this.dateTimePickerStartDeptPeriodTo.Location = new System.Drawing.Point(245, 191);
+            this.dateTimePickerStartDeptPeriodTo.Location = new System.Drawing.Point(245, 193);
             this.dateTimePickerStartDeptPeriodTo.Name = "dateTimePickerStartDeptPeriodTo";
             this.dateTimePickerStartDeptPeriodTo.Size = new System.Drawing.Size(148, 21);
             this.dateTimePickerStartDeptPeriodTo.TabIndex = 13;
@@ -359,7 +359,7 @@ namespace Registry.Viewport.SearchForms
             "≤",
             "=",
             "между"});
-            this.comboBoxStartDeptPeriodExpr.Location = new System.Drawing.Point(34, 190);
+            this.comboBoxStartDeptPeriodExpr.Location = new System.Drawing.Point(34, 192);
             this.comboBoxStartDeptPeriodExpr.Name = "comboBoxStartDeptPeriodExpr";
             this.comboBoxStartDeptPeriodExpr.Size = new System.Drawing.Size(48, 23);
             this.comboBoxStartDeptPeriodExpr.TabIndex = 11;
@@ -367,7 +367,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxStartDeptPeriodChecked
             // 
             this.checkBoxStartDeptPeriodChecked.AutoSize = true;
-            this.checkBoxStartDeptPeriodChecked.Location = new System.Drawing.Point(12, 195);
+            this.checkBoxStartDeptPeriodChecked.Location = new System.Drawing.Point(12, 197);
             this.checkBoxStartDeptPeriodChecked.Name = "checkBoxStartDeptPeriodChecked";
             this.checkBoxStartDeptPeriodChecked.Size = new System.Drawing.Size(15, 14);
             this.checkBoxStartDeptPeriodChecked.TabIndex = 10;
@@ -377,7 +377,7 @@ namespace Registry.Viewport.SearchForms
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 173);
+            this.label2.Location = new System.Drawing.Point(9, 175);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(275, 15);
             this.label2.TabIndex = 180;
@@ -388,7 +388,7 @@ namespace Registry.Viewport.SearchForms
             this.dateTimePickerStartDeptPeriodFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerStartDeptPeriodFrom.Enabled = false;
-            this.dateTimePickerStartDeptPeriodFrom.Location = new System.Drawing.Point(94, 191);
+            this.dateTimePickerStartDeptPeriodFrom.Location = new System.Drawing.Point(94, 193);
             this.dateTimePickerStartDeptPeriodFrom.Name = "dateTimePickerStartDeptPeriodFrom";
             this.dateTimePickerStartDeptPeriodFrom.Size = new System.Drawing.Size(141, 21);
             this.dateTimePickerStartDeptPeriodFrom.TabIndex = 12;
@@ -398,7 +398,7 @@ namespace Registry.Viewport.SearchForms
             this.dateTimePickerEndDeptPeriodTo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerEndDeptPeriodTo.Enabled = false;
-            this.dateTimePickerEndDeptPeriodTo.Location = new System.Drawing.Point(245, 234);
+            this.dateTimePickerEndDeptPeriodTo.Location = new System.Drawing.Point(245, 236);
             this.dateTimePickerEndDeptPeriodTo.Name = "dateTimePickerEndDeptPeriodTo";
             this.dateTimePickerEndDeptPeriodTo.Size = new System.Drawing.Size(148, 21);
             this.dateTimePickerEndDeptPeriodTo.TabIndex = 17;
@@ -413,7 +413,7 @@ namespace Registry.Viewport.SearchForms
             "≤",
             "=",
             "между"});
-            this.comboBoxEndDeptPeriodExpr.Location = new System.Drawing.Point(34, 233);
+            this.comboBoxEndDeptPeriodExpr.Location = new System.Drawing.Point(34, 235);
             this.comboBoxEndDeptPeriodExpr.Name = "comboBoxEndDeptPeriodExpr";
             this.comboBoxEndDeptPeriodExpr.Size = new System.Drawing.Size(48, 23);
             this.comboBoxEndDeptPeriodExpr.TabIndex = 15;
@@ -421,7 +421,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxEndDeptPeriodChecked
             // 
             this.checkBoxEndDeptPeriodChecked.AutoSize = true;
-            this.checkBoxEndDeptPeriodChecked.Location = new System.Drawing.Point(12, 238);
+            this.checkBoxEndDeptPeriodChecked.Location = new System.Drawing.Point(12, 240);
             this.checkBoxEndDeptPeriodChecked.Name = "checkBoxEndDeptPeriodChecked";
             this.checkBoxEndDeptPeriodChecked.Size = new System.Drawing.Size(15, 14);
             this.checkBoxEndDeptPeriodChecked.TabIndex = 14;
@@ -431,7 +431,7 @@ namespace Registry.Viewport.SearchForms
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 216);
+            this.label3.Location = new System.Drawing.Point(9, 218);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(295, 15);
             this.label3.TabIndex = 185;
@@ -442,7 +442,7 @@ namespace Registry.Viewport.SearchForms
             this.dateTimePickerEndDeptPeriodFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerEndDeptPeriodFrom.Enabled = false;
-            this.dateTimePickerEndDeptPeriodFrom.Location = new System.Drawing.Point(94, 234);
+            this.dateTimePickerEndDeptPeriodFrom.Location = new System.Drawing.Point(94, 236);
             this.dateTimePickerEndDeptPeriodFrom.Name = "dateTimePickerEndDeptPeriodFrom";
             this.dateTimePickerEndDeptPeriodFrom.Size = new System.Drawing.Size(141, 21);
             this.dateTimePickerEndDeptPeriodFrom.TabIndex = 16;
@@ -450,7 +450,7 @@ namespace Registry.Viewport.SearchForms
             // numericUpDownClaimId
             // 
             this.numericUpDownClaimId.Enabled = false;
-            this.numericUpDownClaimId.Location = new System.Drawing.Point(33, 19);
+            this.numericUpDownClaimId.Location = new System.Drawing.Point(33, 21);
             this.numericUpDownClaimId.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -463,7 +463,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxClaimIdChecked
             // 
             this.checkBoxClaimIdChecked.AutoSize = true;
-            this.checkBoxClaimIdChecked.Location = new System.Drawing.Point(12, 23);
+            this.checkBoxClaimIdChecked.Location = new System.Drawing.Point(12, 25);
             this.checkBoxClaimIdChecked.Name = "checkBoxClaimIdChecked";
             this.checkBoxClaimIdChecked.Size = new System.Drawing.Size(15, 14);
             this.checkBoxClaimIdChecked.TabIndex = 0;
@@ -473,7 +473,7 @@ namespace Registry.Viewport.SearchForms
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(9, 1);
+            this.label4.Location = new System.Drawing.Point(9, 3);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(116, 15);
             this.label4.TabIndex = 188;

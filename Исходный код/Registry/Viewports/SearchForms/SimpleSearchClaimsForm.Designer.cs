@@ -107,9 +107,9 @@ namespace Registry.Viewport.SearchForms
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(9, 4);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(135, 15);
+            this.label1.Size = new System.Drawing.Size(119, 15);
             this.label1.TabIndex = 55;
-            this.label1.Text = "Последнее состояние";
+            this.label1.Text = "Текущее состояние";
             // 
             // comboBoxLastState
             // 
