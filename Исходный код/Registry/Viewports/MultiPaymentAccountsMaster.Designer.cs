@@ -42,6 +42,7 @@ namespace Registry.Viewport
             this.toolStripButtonCreateClaims = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1 = new System.Windows.Forms.ToolStrip();
             this.toolStripProgressBarMultiOperations = new System.Windows.Forms.ToolStripProgressBar();
+            this.toolStripButtonRequestToBks = new System.Windows.Forms.ToolStripButton();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -314,6 +315,7 @@ namespace Registry.Viewport
             this.toolStripButtonAccountDeleteAll,
             this.toolStripSeparator2,
             this.toolStripButtonCreateClaims,
+            this.toolStripButtonRequestToBks,
             this.toolStripProgressBarMultiOperations});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -326,6 +328,16 @@ namespace Registry.Viewport
             this.toolStripProgressBarMultiOperations.Name = "toolStripProgressBarMultiOperations";
             this.toolStripProgressBarMultiOperations.Size = new System.Drawing.Size(100, 22);
             this.toolStripProgressBarMultiOperations.Visible = false;
+            // 
+            // toolStripButtonRequestToBks
+            // 
+            this.toolStripButtonRequestToBks.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonRequestToBks.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRequestToBks.Image")));
+            this.toolStripButtonRequestToBks.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRequestToBks.Name = "toolStripButtonRequestToBks";
+            this.toolStripButtonRequestToBks.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRequestToBks.Text = "Сформировать запрос в БКС";
+            this.toolStripButtonRequestToBks.Click += new System.EventHandler(this.toolStripButtonRequestToBks_Click);
             // 
             // MultiPaymentAccountsMaster
             // 
@@ -380,6 +392,7 @@ namespace Registry.Viewport
         private ToolStripButton toolStripButtonCreateClaims;
         private ToolStrip toolStrip1;
         private ToolStripProgressBar toolStripProgressBarMultiOperations;
+        private ToolStripButton toolStripButtonRequestToBks;
 
     }
 }

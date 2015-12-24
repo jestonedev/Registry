@@ -644,6 +644,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="Resources\insert-object %28min%29.png" />
     <None Include="Viewports.snk" />
   </ItemGroup>

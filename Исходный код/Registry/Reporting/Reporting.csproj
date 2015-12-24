@@ -66,6 +66,13 @@
     <Compile Include="ActPremiseExtInfoForm.Designer.cs">
       <DependentUpon>ActPremiseExtInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ClaimsReporters\RequestToBksReporter.cs" />
+    <Compile Include="RequestToBksSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="RequestToBksSettingsForm.Designer.cs">
+      <DependentUpon>RequestToBksSettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="RegistryReporters\AllPremisesReporter.cs" />
     <Compile Include="ClaimsFilterForm.cs">
       <SubType>Form</SubType>
@@ -170,6 +177,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DateRangeForm.resx">
       <DependentUpon>DateRangeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RequestToBksSettingsForm.resx">
+      <DependentUpon>RequestToBksSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SelectRegionsForm.resx">
       <DependentUpon>SelectRegionsForm.cs</DependentUpon>

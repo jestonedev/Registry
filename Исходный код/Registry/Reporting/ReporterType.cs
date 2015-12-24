@@ -38,6 +38,7 @@ namespace Registry.Reporting
         RegistryExcerptReporterPremise,
         RegistryExcerptReporterSubPremise,
         RegistryExcerptReporterAllMunSubPremises,
-        MultiExcerptReporter
+        MultiExcerptReporter,
+        RequestToBksReporter
     }
 }

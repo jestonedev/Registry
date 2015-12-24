@@ -43,7 +43,7 @@ namespace Registry.Viewport
             this.groupBox34 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
             this.panel8 = new System.Windows.Forms.Panel();
-            this.comboBoxAccount = new System.Windows.Forms.ComboBox();
+            this.textBoxAccount = new System.Windows.Forms.TextBox();
             this.label103 = new System.Windows.Forms.Label();
             this.dateTimePickerAtDate = new System.Windows.Forms.DateTimePicker();
             this.label91 = new System.Windows.Forms.Label();
@@ -124,7 +124,7 @@ namespace Registry.Viewport
             // 
             // panel8
             // 
-            this.panel8.Controls.Add(this.comboBoxAccount);
+            this.panel8.Controls.Add(this.textBoxAccount);
             this.panel8.Controls.Add(this.label103);
             this.panel8.Controls.Add(this.dateTimePickerAtDate);
             this.panel8.Controls.Add(this.label91);
@@ -140,17 +140,15 @@ namespace Registry.Viewport
             this.panel8.Size = new System.Drawing.Size(337, 120);
             this.panel8.TabIndex = 0;
             // 
-            // comboBoxAccount
+            // textBoxAccount
             // 
-            this.comboBoxAccount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.textBoxAccount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.comboBoxAccount.Location = new System.Drawing.Point(170, 5);
-            this.comboBoxAccount.Name = "comboBoxAccount";
-            this.comboBoxAccount.Size = new System.Drawing.Size(156, 23);
-            this.comboBoxAccount.TabIndex = 0;
-            this.comboBoxAccount.DropDownClosed += new System.EventHandler(this.comboBoxAccount_DropDownClosed);
-            this.comboBoxAccount.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxAccount_KeyUp);
-            this.comboBoxAccount.Leave += new System.EventHandler(this.comboBoxAccount_Leave);
+            this.textBoxAccount.Location = new System.Drawing.Point(170, 6);
+            this.textBoxAccount.Name = "textBoxAccount";
+            this.textBoxAccount.Size = new System.Drawing.Size(156, 21);
+            this.textBoxAccount.TabIndex = 52;
+            this.textBoxAccount.Leave += new System.EventHandler(this.textBoxAccount_Leave);
             // 
             // label103
             // 
@@ -446,7 +444,6 @@ namespace Registry.Viewport
             this.ResumeLayout(false);
 
         }
-        private ComboBox comboBoxAccount;
         private DataGridViewTextBoxColumn id_claim;
         private DataGridViewTextBoxColumn id_account;
         private DataGridViewTextBoxColumn at_date;
@@ -456,5 +453,6 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn amount_tenancy;
         private DataGridViewTextBoxColumn amount_dgi;
         private DataGridViewTextBoxColumn description;
+        private TextBox textBoxAccount;
     }
 }

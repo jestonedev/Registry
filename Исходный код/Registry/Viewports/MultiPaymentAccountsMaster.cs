@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Reporting;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -24,7 +25,7 @@ namespace Registry.Viewport
                         | DockAreas.DockTop
                         | DockAreas.DockBottom;
             _menuCallback = menuCallback;
-            DataModel.GetInstance(DataModelType.PremisesDataModel).Select();
+            DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).Select();
             _paymentAccount.DataSource = DataModel.DataSet;
             _paymentAccount.DataMember = "payments_accounts";
             _paymentAccount.Filter = "0 = 1";
@@ -172,9 +173,9 @@ namespace Registry.Viewport
             if (viewport == null)
                 return;
             var filter = "";
-            var premisesAccountViewport = viewport as PaymentsAccountsViewport;
-            if (premisesAccountViewport != null)
-                filter = premisesAccountViewport.GetFilter();
+            var paymentsAccountViewport = viewport as PaymentsAccountsViewport;
+            if (paymentsAccountViewport != null)
+                filter = paymentsAccountViewport.GetFilter();
             if (filter == "") filter = "1=1";
             _paymentAccount.Filter = string.Format("({0}) OR ({1})", _paymentAccount.Filter, filter);
             dataGridView.RowCount = _paymentAccount.Count;
@@ -323,6 +324,22 @@ namespace Registry.Viewport
             toolStripButtonAccountCurrent.Visible = true;
             toolStripButtonAccountsByFilter.Visible = true;
             toolStripButtonCreateClaims.Enabled = AccessControl.HasPrivelege(Priveleges.ClaimsWrite);
+        }
+
+        private void toolStripButtonRequestToBks_Click(object sender, EventArgs e)
+        {
+            var reporter = ReporterFactory.CreateReporter(ReporterType.RequestToBksReporter);
+            var arguments = new Dictionary<string, string>();
+            var filter = "";
+            for (var i = 0; i < _paymentAccount.Count; i++)
+            {
+                var row = ((DataRowView)_paymentAccount[i]);
+                if (row["id_account"] != DBNull.Value)
+                    filter += row["id_account"] + ",";
+            }
+            filter = filter.TrimEnd(',');
+            arguments.Add("filter", filter);
+            reporter.Run(arguments);
         }
     }
 }

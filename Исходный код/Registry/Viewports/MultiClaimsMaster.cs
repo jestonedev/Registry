@@ -24,7 +24,7 @@ namespace Registry.Viewport
                         | DockAreas.DockTop
                         | DockAreas.DockBottom;
             _menuCallback = menuCallback;
-            DataModel.GetInstance(DataModelType.PremisesDataModel).Select();
+            DataModel.GetInstance(DataModelType.ClaimsDataModel).Select();
             _claims.DataSource = DataModel.DataSet;
             _claims.DataMember = "claims";
             _claims.Filter = "0 = 1";

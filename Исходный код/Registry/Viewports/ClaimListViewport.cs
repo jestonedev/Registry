@@ -23,6 +23,8 @@ namespace Registry.Viewport
         private SearchForm spExtendedSearchForm;
         private SearchForm spSimpleSearchForm;
 
+        private int? _idAccount;
+
         private ClaimListViewport()
             : this(null, null)
         {
@@ -66,12 +68,6 @@ namespace Registry.Viewport
 
         private void DataBind()
         {
-            comboBoxAccount.DataSource = v_accounts;
-            comboBoxAccount.ValueMember = "id_account";
-            comboBoxAccount.DisplayMember = "account";
-            comboBoxAccount.DataBindings.Clear();
-            comboBoxAccount.DataBindings.Add("SelectedValue", GeneralBindingSource, "id_account", true, DataSourceUpdateMode.Never, DBNull.Value);
-
             textBoxDescription.DataBindings.Clear();
             textBoxDescription.DataBindings.Add("Text", GeneralBindingSource, "description", true, DataSourceUpdateMode.Never, "");
             dateTimePickerAtDate.DataBindings.Clear();
@@ -128,7 +124,7 @@ namespace Registry.Viewport
             {
                 MessageBox.Show(@"Лицевого счета с указанным номером не существует",
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                comboBoxAccount.Focus();
+                textBoxAccount.Focus();
                 return false;
             }
             return true;
@@ -160,7 +156,7 @@ namespace Registry.Viewport
                 claim.IdClaim = null;
             else
                 claim.IdClaim = Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"], CultureInfo.InvariantCulture);
-            claim.IdAccount = ViewportHelper.ValueOrNull<int>(comboBoxAccount);         
+            claim.IdAccount = _idAccount;
             claim.AmountTenancy = numericUpDownAmountTenancy.Value;
             claim.AmountDgi = numericUpDownAmountDGI.Value;
             claim.AtDate = ViewportHelper.ValueOrNull(dateTimePickerAtDate);
@@ -172,13 +168,14 @@ namespace Registry.Viewport
 
         private void ViewportFromClaim(Claim claim)
         {
-            comboBoxAccount.SelectedValue = ViewportHelper.ValueOrDBNull(claim.IdAccount);
             numericUpDownAmountDGI.Value = ViewportHelper.ValueOrDefault(claim.AmountDgi);
             numericUpDownAmountTenancy.Value = ViewportHelper.ValueOrDefault(claim.AmountTenancy);
             dateTimePickerAtDate.Value = ViewportHelper.ValueOrDefault(claim.AtDate);
             dateTimePickerStartDeptPeriod.Value = ViewportHelper.ValueOrDefault(claim.StartDeptPeriod);
             dateTimePickerEndDeptPeriod.Value = ViewportHelper.ValueOrDefault(claim.EndDeptPeriod);
             textBoxDescription.Text = claim.Description;
+            _idAccount = claim.IdAccount;
+            BindAccount(claim.IdAccount);
         }
 
         private static void FillRowFromClaim(Claim claim, DataRowView row)
@@ -219,6 +216,13 @@ namespace Registry.Viewport
                 GeneralBindingSource.Filter += " AND ";
             GeneralBindingSource.Filter += DynamicFilter;
 
+            if (ParentRow != null && ParentType == ParentTypeEnum.PaymentAccount)
+            {
+                _idAccount = (int?) ParentRow["id_account"];
+                textBoxAccount.Enabled = false;
+            }
+            BindAccount(_idAccount);
+
             v_accounts = new BindingSource
             {
                 DataSource = DataModel.DataSet,
@@ -235,9 +239,20 @@ namespace Registry.Viewport
             ViewportHelper.SetDoubleBuffered(dataGridViewClaims);
             is_editable = true;
             DataChangeHandlersInit();
+        }
 
-            if (ParentRow != null)
-                comboBoxAccount.Enabled = false;
+        private void BindAccount(int? idAccount)
+        {
+            if (ParentRow != null && ParentType == ParentTypeEnum.PaymentAccount)
+                textBoxAccount.Text = ParentRow["account"].ToString();
+            else
+            {
+                if (idAccount == null) return;
+                textBoxAccount.Text =
+                    (from row in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
+                        where row.Field<int>("id_account") == idAccount.Value
+                        select row.Field<string>("account")).FirstOrDefault();
+            }
         }
 
         public override bool CanInsertRecord()
@@ -254,7 +269,6 @@ namespace Registry.Viewport
             GeneralBindingSource.AddNew();
             if (ParentRow != null && ParentType == ParentTypeEnum.PaymentAccount)
             {
-                comboBoxAccount.SelectedValue = ParentRow["id_account"].ToString();
                 numericUpDownAmountTenancy.Value = ViewportHelper.ValueOrDefault((decimal?)ParentRow["balance_output_tenancy"]);
                 numericUpDownAmountDGI.Value = ViewportHelper.ValueOrDefault((decimal?)ParentRow["balance_output_dgi"]);
             }
@@ -281,10 +295,8 @@ namespace Registry.Viewport
             GeneralDataModel.EditingNewRecord = true;
             ViewportFromClaim(claim);
             dateTimePickerAtDate.Checked = (claim.AtDate != null);
-            dateTimePickerStartDeptPeriod.Checked = (claim.StartDeptPeriod != null);
-            dateTimePickerEndDeptPeriod.Checked = (claim.EndDeptPeriod != null);
-            if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
-                comboBoxAccount.SelectedValue = ParentRow["id_account"].ToString();
+            dateTimePickerStartDeptPeriod.Checked = claim.StartDeptPeriod != null;
+            dateTimePickerEndDeptPeriod.Checked = claim.EndDeptPeriod != null;
             is_editable = true;
         }
 
@@ -317,6 +329,10 @@ namespace Registry.Viewport
 
         public override void SaveRecord()
         {
+            _idAccount = (from row in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
+                          where row.Field<string>("account") == textBoxAccount.Text.Trim()
+                          select row.Field<int?>("id_account")).FirstOrDefault();
+
             var claim = (Claim) EntityFromViewport();
             if (!ValidateClaim(claim))
                 return;
@@ -439,6 +455,8 @@ namespace Registry.Viewport
                     break;
             }
             UnbindedCheckBoxesUpdate();
+            UpdateIdAccount();
+            BindAccount(_idAccount);
             is_editable = true;
             viewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
@@ -561,6 +579,8 @@ namespace Registry.Viewport
                 MenuCallback.RelationsStateUpdate();
             }
             UnbindedCheckBoxesUpdate();
+            UpdateIdAccount();
+            BindAccount(_idAccount);
             if (GeneralBindingSource.Position == -1)
                 return;
             if (viewportState == ViewportState.NewRowState)
@@ -568,6 +588,22 @@ namespace Registry.Viewport
             dataGridViewClaims.Enabled = true;
             viewportState = ViewportState.ReadState;
             is_editable = true;
+        }
+
+        private void UpdateIdAccount()
+        {
+            if (GeneralBindingSource.Position > -1 && ParentRow == null &&
+                ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_account"] != DBNull.Value)
+            {
+                _idAccount = (int?) ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_account"];
+            }
+            else
+            {
+                if (ParentRow != null && ParentType == ParentTypeEnum.PaymentAccount)
+                    _idAccount = (int?)ParentRow["id_account"];
+                else
+                    _idAccount = null;
+            }
         }
 
         void dataGridViewClaims_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
@@ -670,6 +706,8 @@ namespace Registry.Viewport
                 dataGridViewClaims.RowCount = GeneralBindingSource.Count;
                 dataGridViewClaims.Refresh();
                 UnbindedCheckBoxesUpdate();
+                UpdateIdAccount();
+                BindAccount(_idAccount);
                 MenuCallback.ForceCloseDetachedViewports();
                 if (Selected)
                     MenuCallback.StatusBarStateUpdate();
@@ -682,6 +720,8 @@ namespace Registry.Viewport
                 dataGridViewClaims.Refresh();
             dataGridViewClaims.RowCount = GeneralBindingSource.Count;
             UnbindedCheckBoxesUpdate();
+            UpdateIdAccount();
+            BindAccount(_idAccount);
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
             CheckViewportModifications();
@@ -691,43 +731,6 @@ namespace Registry.Viewport
         {
             UnbindedCheckBoxesUpdate();
             base.OnVisibleChanged(e);
-        }
-
-        void comboBoxAccount_DropDownClosed(object sender, EventArgs e)
-        {
-            if (comboBoxAccount.Items.Count == 0)
-                comboBoxAccount.SelectedIndex = -1;
-        }
-
-        void comboBoxAccount_KeyUp(object sender, KeyEventArgs e)
-        {
-            if ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode == Keys.Back) || (e.KeyCode == Keys.Delete) ||
-                (e.KeyCode >= Keys.D0 && e.KeyCode <= Keys.D9) || (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9))
-            {
-                string text = comboBoxAccount.Text;
-                int selectionStart = comboBoxAccount.SelectionStart;
-                int selectionLength = comboBoxAccount.SelectionLength;
-                v_accounts.Filter = "account like '%" + comboBoxAccount.Text + "%'";
-                comboBoxAccount.Text = text;
-                comboBoxAccount.SelectionStart = selectionStart;
-                comboBoxAccount.SelectionLength = selectionLength;
-            }
-        }
-
-        void comboBoxAccount_Leave(object sender, EventArgs e)
-        {
-            if (comboBoxAccount.Items.Count > 0)
-            {
-                if (comboBoxAccount.SelectedValue == null)
-                    comboBoxAccount.SelectedValue = ((DataRowView)v_accounts[v_accounts.Position])["id_account"];
-                comboBoxAccount.Text = ((DataRowView)v_accounts[v_accounts.Position])["account"].ToString();
-            }
-            if (comboBoxAccount.SelectedValue == null)
-            {
-                v_accounts.Filter = "";
-                comboBoxAccount.Text = "";
-                comboBoxAccount.SelectedValue = DBNull.Value;
-            }
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -750,6 +753,15 @@ namespace Registry.Viewport
         internal string GetFilter()
         {
             return GeneralBindingSource.Filter;
+        }
+
+        private void textBoxAccount_Leave(object sender, EventArgs e)
+        {
+            _idAccount = (from row in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
+                where row.Field<string>("account") == textBoxAccount.Text.Trim()
+                select row.Field<int?>("id_account")).FirstOrDefault();
+            BindAccount(_idAccount);
+            CheckViewportModifications();
         }
     }
 }

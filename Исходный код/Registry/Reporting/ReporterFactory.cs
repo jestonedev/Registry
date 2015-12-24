@@ -78,6 +78,8 @@ namespace Registry.Reporting
                     return new ResettleTotalStatisticReporter();
                 case ReporterType.ExportReporter:
                     return new ExportReporter();
+                case ReporterType.RequestToBksReporter:
+                    return new RequestToBksReporter();
             }
             throw new ReporterException(
                 String.Format(CultureInfo.InvariantCulture, "В фабрику ReporterFactory передан неизвестный тип {0}", reporterType.ToString()));
