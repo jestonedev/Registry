@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Reporting;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -255,6 +256,22 @@ namespace Registry.Viewport
             toolStripButtonClaimCurrent.Visible = true;
             toolStripButtonClaimsByFilter.Visible = true;
             toolStripButtonCreateClaims.Enabled = AccessControl.HasPrivelege(Priveleges.ClaimsWrite);
+        }
+
+        private void toolStripButtonJudicialOrder_Click(object sender, EventArgs e)
+        {
+            var reporter = ReporterFactory.CreateReporter(ReporterType.JudicialOrderReporter);
+            var arguments = new Dictionary<string, string>();
+            var filter = "";
+            for (var i = 0; i < _claims.Count; i++)
+            {
+                var row = ((DataRowView)_claims[i]);
+                if (row["id_claim"] != DBNull.Value)
+                    filter += row["id_claim"] + ",";
+            }
+            filter = filter.TrimEnd(',');
+            arguments.Add("filter", filter);
+            reporter.Run(arguments);
         }
     }
 }

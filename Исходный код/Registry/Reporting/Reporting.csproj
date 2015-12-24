@@ -66,7 +66,14 @@
     <Compile Include="ActPremiseExtInfoForm.Designer.cs">
       <DependentUpon>ActPremiseExtInfoForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ClaimsReporters\JudicialOrderReporter.cs" />
     <Compile Include="ClaimsReporters\RequestToBksReporter.cs" />
+    <Compile Include="JudicialOrderSettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="JudicialOrderSettingsForm.Designer.cs">
+      <DependentUpon>JudicialOrderSettingsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="RequestToBksSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -177,6 +184,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DateRangeForm.resx">
       <DependentUpon>DateRangeForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="JudicialOrderSettingsForm.resx">
+      <DependentUpon>JudicialOrderSettingsForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RequestToBksSettingsForm.resx">
       <DependentUpon>RequestToBksSettingsForm.cs</DependentUpon>

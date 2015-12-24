@@ -80,6 +80,8 @@ namespace Registry.Reporting
                     return new ExportReporter();
                 case ReporterType.RequestToBksReporter:
                     return new RequestToBksReporter();
+                case ReporterType.JudicialOrderReporter:
+                    return new JudicialOrderReporter();
             }
             throw new ReporterException(
                 String.Format(CultureInfo.InvariantCulture, "В фабрику ReporterFactory передан неизвестный тип {0}", reporterType.ToString()));
