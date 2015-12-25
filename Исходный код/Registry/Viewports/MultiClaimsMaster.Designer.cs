@@ -20,15 +20,16 @@ namespace Registry.Viewport
             this.toolStripButtonCreateClaims = new System.Windows.Forms.ToolStripButton();
             this.toolStripProgressBarMultiOperations = new System.Windows.Forms.ToolStripProgressBar();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.toolStripButtonJudicialOrder = new System.Windows.Forms.ToolStripButton();
             this.id_claim = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.at_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.current_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.start_dept_period = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.end_dept_period = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolStripButtonJudicialOrder = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -130,6 +131,7 @@ namespace Registry.Viewport
             this.id_claim,
             this.id_account,
             this.at_date,
+            this.current_state,
             this.start_dept_period,
             this.end_dept_period,
             this.amount_tenancy,
@@ -150,6 +152,16 @@ namespace Registry.Viewport
             this.dataGridView.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView_CellValueNeeded);
             this.dataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_ColumnHeaderMouseClick);
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
+            // 
+            // toolStripButtonJudicialOrder
+            // 
+            this.toolStripButtonJudicialOrder.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonJudicialOrder.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonJudicialOrder.Image")));
+            this.toolStripButtonJudicialOrder.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonJudicialOrder.Name = "toolStripButtonJudicialOrder";
+            this.toolStripButtonJudicialOrder.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonJudicialOrder.Text = "Сформировать заявление о выдаче судебного приказа";
+            this.toolStripButtonJudicialOrder.Click += new System.EventHandler(this.toolStripButtonJudicialOrder_Click);
             // 
             // id_claim
             // 
@@ -174,6 +186,14 @@ namespace Registry.Viewport
             this.at_date.Name = "at_date";
             this.at_date.ReadOnly = true;
             this.at_date.Width = 170;
+            // 
+            // current_state
+            // 
+            this.current_state.HeaderText = "Текущее состояние";
+            this.current_state.MinimumWidth = 150;
+            this.current_state.Name = "current_state";
+            this.current_state.ReadOnly = true;
+            this.current_state.Width = 150;
             // 
             // start_dept_period
             // 
@@ -219,16 +239,6 @@ namespace Registry.Viewport
             this.description.Name = "description";
             this.description.ReadOnly = true;
             // 
-            // toolStripButtonJudicialOrder
-            // 
-            this.toolStripButtonJudicialOrder.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonJudicialOrder.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonJudicialOrder.Image")));
-            this.toolStripButtonJudicialOrder.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonJudicialOrder.Name = "toolStripButtonJudicialOrder";
-            this.toolStripButtonJudicialOrder.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonJudicialOrder.Text = "Сформировать заявление о выдаче судебного приказа";
-            this.toolStripButtonJudicialOrder.Click += new System.EventHandler(this.toolStripButtonJudicialOrder_Click);
-            // 
             // MultiClaimsMaster
             // 
             this.ClientSize = new System.Drawing.Size(608, 157);
@@ -257,15 +267,16 @@ namespace Registry.Viewport
         private ToolStrip toolStrip1;
         private ToolStripProgressBar toolStripProgressBarMultiOperations;
         private DataGridView dataGridView;
+        private ToolStripButton toolStripButtonJudicialOrder;
         private DataGridViewTextBoxColumn id_claim;
         private DataGridViewTextBoxColumn id_account;
         private DataGridViewTextBoxColumn at_date;
+        private DataGridViewTextBoxColumn current_state;
         private DataGridViewTextBoxColumn start_dept_period;
         private DataGridViewTextBoxColumn end_dept_period;
         private DataGridViewTextBoxColumn amount_tenancy;
         private DataGridViewTextBoxColumn amount_dgi;
         private DataGridViewTextBoxColumn description;
-        private ToolStripButton toolStripButtonJudicialOrder;
 
     }
 }

@@ -96,6 +96,31 @@ namespace Registry.Viewport
                 case "description":
                     e.Value = row["description"];
                     break;
+                case "current_state":
+                    if (row["id_claim"] == DBNull.Value || row["id_claim"] == null) return;
+                    var idClaim = (int?)row["id_claim"];
+                    var lastClaimStateMaxIds =
+                        from claimStateRow in DataModel.GetInstance(DataModelType.ClaimStatesDataModel).FilterDeletedRows()
+                        where claimStateRow.Field<int?>("id_claim") == idClaim
+                        group claimStateRow.Field<int?>("id_state") by claimStateRow.Field<int?>("id_claim") into gs
+                        select new
+                        {
+                            id_claim = gs.Key,
+                            id_state = gs.Max()
+                        };
+                    var lastClaimState =
+                        (from claimStateRow in
+                             DataModel.GetInstance(DataModelType.ClaimStatesDataModel).FilterDeletedRows()
+                         join lastClaimStateRow in lastClaimStateMaxIds
+                             on claimStateRow.Field<int?>("id_state") equals lastClaimStateRow.id_state
+                         join stateTypeRow in
+                             DataModel.GetInstance(DataModelType.ClaimStateTypesDataModel).FilterDeletedRows()
+                             on claimStateRow.Field<int?>("id_state_type") equals
+                             stateTypeRow.Field<int?>("id_state_type")
+                         select stateTypeRow.Field<string>("state_type")).ToList();
+                    if (lastClaimState.Any())
+                        e.Value = lastClaimState.First();
+                    break;
             }
         }
 
@@ -260,6 +285,21 @@ namespace Registry.Viewport
 
         private void toolStripButtonJudicialOrder_Click(object sender, EventArgs e)
         {
+            for (var i = 0; i < _claims.Count; i++)
+            {
+                var row = ((DataRowView)_claims[i]);
+                var hasState =
+                    (from currentRow in DataModel.GetInstance(DataModelType.ClaimStatesDataModel).FilterDeletedRows()
+                        where
+                            currentRow.Field<int?>("id_claim") == (int)row["id_claim"] &&
+                            currentRow.Field<int?>("id_state_type") == 4
+                        select currentRow).Any();
+                if (hasState) continue;
+                MessageBox.Show(string.Format("В претензионно-исковой работе №{0} отсутствует стадия подготовки и направления судебного приказа. Для формирования заявлений необходимо проставить стадию или убрать претензионно-исковую работу из списка мастера массовых операций", 
+                    row["id_claim"]), @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                return;
+            }
+
             var reporter = ReporterFactory.CreateReporter(ReporterType.JudicialOrderReporter);
             var arguments = new Dictionary<string, string>();
             var filter = "";
