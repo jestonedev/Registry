@@ -532,7 +532,8 @@ namespace Registry.Viewport
         {
             var reports = new List<ViewportType>
             {
-                ViewportType.ClaimStatesViewport
+                ViewportType.ClaimStatesViewport,
+                ViewportType.PaymentsAccountsViewport
             };
             return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
         }

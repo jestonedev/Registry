@@ -62,6 +62,10 @@ namespace Registry.Viewport
                         ids = PaymentsAccountsDataModel.GetAccountIdsBySubPremiseFilter(StaticFilter);
                         title = string.Format("Лицевой счет комнаты {0} помещения №{1}", ParentRow["sub_premises_num"], ParentRow["id_premises"]);
                         break;
+                    case ParentTypeEnum.Claim:
+                        ids = new List<int>{(int)ParentRow["id_account"]};
+                        title = string.Format("Лицевой счет для исковой работы №{0}", ParentRow["id_claim"]);
+                        break;
                 }
                 if (ids.Any())
                     filter = "id_account IN (" + ids.Select(id => id.ToString()).Aggregate((acc, v) => acc + "," + v) +

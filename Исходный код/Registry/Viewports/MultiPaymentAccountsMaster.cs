@@ -328,6 +328,47 @@ namespace Registry.Viewport
 
         private void toolStripButtonRequestToBks_Click(object sender, EventArgs e)
         {
+            // select all claims with stage 1 and with existed next stage
+            var claimStatesDataModel = DataModel.GetInstance(DataModelType.ClaimStatesDataModel);
+            for (var i = 0; i < _paymentAccount.Count; i++)
+            {
+                var row = ((DataRowView)_paymentAccount[i]);
+
+                var lastStates = from stateRow in claimStatesDataModel.FilterDeletedRows()
+                                 group stateRow.Field<int?>("id_state") by stateRow.Field<int>("id_claim") into gs
+                                 select new
+                                 {
+                                     id_claim = gs.Key,
+                                     id_state = gs.Max()
+                                 };
+                var lastStateTypes = from lastStateRow in lastStates
+                                      join stateRow in claimStatesDataModel.FilterDeletedRows()
+                                          on lastStateRow.id_state equals stateRow.Field<int?>("id_state")
+                                      select new
+                                      {
+                                          id_claim = stateRow.Field<int>("id_claim"),
+                                          id_state_type = stateRow.Field<int>("id_state_type")
+                                      };
+                var notCompletedClaimWithFirstState =
+                    from claimRow in DataModel.GetInstance(DataModelType.ClaimsDataModel).FilterDeletedRows()
+                    join claimStateRow in claimStatesDataModel.FilterDeletedRows()
+                        on claimRow.Field<int?>("id_claim") equals claimStateRow.Field<int?>("id_claim")
+                    join lstRow in lastStateTypes.Where(x => DataModelHelper.ClaimStateTypeIdsByPrevStateType(x.id_state_type).Any())
+                        on claimRow.Field<int?>("id_claim") equals lstRow.id_claim into j
+                    from jRow in j.DefaultIfEmpty()
+                    where jRow != null &&
+                        claimStateRow.Field<int?>("id_state_type") == 1 &&
+                        claimRow.Field<int?>("id_account") == (int?) row["id_account"]
+                    select new {claimRow, jRow};
+                if (notCompletedClaimWithFirstState.Any()) continue;
+                MessageBox.Show(
+                    string.Format(
+                        "Не удалось найти подходящую исковую работу по лицевому счету №{0} для формирования запроса в БКС. Возможно по данному лицевому счету отсутствуют незавершенные исковые работы",
+                        row["id_account"]), @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button1);
+                return;
+            }
+
             var reporter = ReporterFactory.CreateReporter(ReporterType.RequestToBksReporter);
             var arguments = new Dictionary<string, string>();
             var filter = "";

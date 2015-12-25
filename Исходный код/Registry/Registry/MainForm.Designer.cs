@@ -824,8 +824,7 @@ namespace Registry
             this.ribbonButtonAccounts.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAccounts.Image")));
             this.ribbonButtonAccounts.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAccounts.SmallImage")));
             this.ribbonButtonAccounts.Text = "Лицевые счета";
-            this.ribbonButtonAccounts.ToolTip = "При нажатии на данную кнопку будет открыт перечень лицевых счетов выбранного объе" +
-    "кта недвижимости";
+            this.ribbonButtonAccounts.ToolTip = "При нажатии на данную кнопку будет открыт перечень лицевых счетов БКС";
             this.ribbonButtonAccounts.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonAccounts.ToolTipImage")));
             this.ribbonButtonAccounts.ToolTipTitle = "Лицевые счета";
             this.ribbonButtonAccounts.Click += new System.EventHandler(this.ribbonButtonAccounts_Click);
