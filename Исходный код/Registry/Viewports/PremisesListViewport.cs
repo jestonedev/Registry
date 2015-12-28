@@ -143,7 +143,14 @@ namespace Registry.Viewport
                 GeneralBindingSource.Filter += " AND ";
             GeneralBindingSource.Filter += DynamicFilter;
             if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
+            {
                 Text = @"Помещения здания №" + ParentRow["id_building"];
+            }
+            else
+            if ((ParentRow != null) && (ParentType == ParentTypeEnum.PaymentAccount))
+            {
+                Text = string.Format("Помещения по лицевому счету №{0}", ParentRow["account"]);
+            }
 
             v_buildings = new BindingSource
             {

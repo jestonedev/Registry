@@ -339,7 +339,8 @@ namespace Registry.Viewport
             var reports = new List<ViewportType>
             {
                 ViewportType.PaymentsViewport,
-                ViewportType.ClaimListViewport
+                ViewportType.ClaimListViewport,
+                ViewportType.PremisesListViewport
             };
             return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
         }
@@ -352,8 +353,27 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
+            var filter = "id_account = " +
+                         Convert.ToInt32(
+                             ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_account"],
+                             CultureInfo.InvariantCulture);
+            if (viewportType == ViewportType.PremisesListViewport)
+            {
+                var ids = PaymentsAccountsDataModel.GetPremisesIdsByAccountFilter(filter).ToList();
+                if (!ids.Any())
+                {
+                    MessageBox.Show(@"К данному лицевому счету не привязано ни одного объекта недвижимости", @"Внимание",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                    return;
+                }
+                if (ids.Count == 1)
+                {
+                    viewportType = ViewportType.PremisesViewport;
+                }
+                filter = string.Format("id_premises IN (0{0})", ids.Select(id => id.ToString()).Aggregate((x,y) => x + "," + y));
+            }
             ShowAssocViewport(MenuCallback, viewportType,
-                "id_account = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_account"], CultureInfo.InvariantCulture),
+                filter,
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
                 ParentTypeEnum.PaymentAccount);
         }

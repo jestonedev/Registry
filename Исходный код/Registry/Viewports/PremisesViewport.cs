@@ -221,26 +221,40 @@ namespace Registry.Viewport
             {
                 if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
                 {
-                    this.Text = String.Format(CultureInfo.InvariantCulture, "Новое помещение здания №{0}", ParentRow["id_building"]);
+                    Text = string.Format(CultureInfo.InvariantCulture, "Новое помещение здания №{0}", ParentRow["id_building"]);
                 }
                 else
-                    this.Text = "Новое помещение";
+                    Text = @"Новое помещение";
             }
             else
                 if (GeneralBindingSource.Position != -1)
                 {
                     if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                        this.Text = String.Format(CultureInfo.InvariantCulture, "Помещение №{0} здания №{1}",
-                            ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"], ParentRow["id_building"]);
+                    {
+                        Text = string.Format(CultureInfo.InvariantCulture, "Помещение №{0} здания №{1}",
+                            ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_premises"],
+                            ParentRow["id_building"]);
+                    } else
+                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.PaymentAccount))
+                    {
+                        Text = string.Format("Помещения по лицевому счету №{0}", ParentRow["account"]);
+                    }
                     else
-                        this.Text = String.Format(CultureInfo.InvariantCulture, "Помещение №{0}", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"]);
+                        Text = string.Format(CultureInfo.InvariantCulture, "Помещение №{0}", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"]);
                 }
                 else
                 {
                     if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                        this.Text = String.Format(CultureInfo.InvariantCulture, "Помещения в здании №{0} отсутствуют", ParentRow["id_building"]);
+                    {
+                        Text = string.Format(CultureInfo.InvariantCulture, "Помещения в здании №{0} отсутствуют",
+                            ParentRow["id_building"]);
+                    } else
+                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.PaymentAccount))
+                    {
+                        Text = string.Format("Помещения по лицевому счету №{0} отсутствуют", ParentRow["account"]);
+                    }
                     else
-                        this.Text = "Помещения отсутствуют";
+                        Text = @"Помещения отсутствуют";
                 }
         }
 
@@ -253,14 +267,14 @@ namespace Registry.Viewport
                 label38.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
                 checkBoxIsMemorial.Location = new Point(19, 209);
-                this.tableLayoutPanel3.RowStyles[0].Height = 269F;
+                tableLayoutPanel3.RowStyles[0].Height = 269F;
             }
             else
             {
                 label38.Visible = false;
                 comboBoxCurrentFundType.Visible = false;
                 checkBoxIsMemorial.Location = new Point(19, 183);
-                this.tableLayoutPanel3.RowStyles[0].Height = 240F;
+                tableLayoutPanel3.RowStyles[0].Height = 240F;
             }
         }
 
@@ -416,7 +430,7 @@ namespace Registry.Viewport
                 comboBoxHouse.Focus();
                 return false;
             }
-            if (premise.PremisesNum == null || String.IsNullOrEmpty(premise.PremisesNum.Trim()))
+            if (premise.PremisesNum == null || string.IsNullOrEmpty(premise.PremisesNum.Trim()))
             {
                 MessageBox.Show("Необходимо указать номер помещения", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxPremisesNumber.Focus();
@@ -467,7 +481,7 @@ namespace Registry.Viewport
             if ((premise.PremisesNum != premiseFromView.PremisesNum) || (premise.IdBuilding != premiseFromView.IdBuilding))
                 if (DataModelHelper.PremisesDuplicateCount(premise) != 0 &&
                     MessageBox.Show("В указанном доме уже есть квартира с таким номером. Все равно продолжить сохранение?", "Внимание", 
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != System.Windows.Forms.DialogResult.Yes)
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                     return false;
             return true;
         }
@@ -696,7 +710,7 @@ namespace Registry.Viewport
             GeneralBindingSource.CurrentItemChanged += v_premises_CurrentItemChanged;
             GeneralBindingSource.DataMember = "premises";
             GeneralBindingSource.Filter = StaticFilter;
-            if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
+            if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 GeneralBindingSource.Filter += " AND ";
             GeneralBindingSource.Filter += DynamicFilter;
             GeneralBindingSource.DataSource = ds;
@@ -848,7 +862,7 @@ namespace Registry.Viewport
                     break;
             }
             string Filter = StaticFilter;
-            if (!String.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
+            if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 Filter += " AND ";
             Filter += DynamicFilter;
             is_editable = false;
@@ -913,7 +927,7 @@ namespace Registry.Viewport
             if (!ValidatePremise(premise))
                 return;
             string Filter = "";
-            if (!String.IsNullOrEmpty(GeneralBindingSource.Filter))
+            if (!string.IsNullOrEmpty(GeneralBindingSource.Filter))
                 Filter += " OR ";
             else
                 Filter += "(1 = 1) OR ";
@@ -937,7 +951,7 @@ namespace Registry.Viewport
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    Filter += String.Format(CultureInfo.CurrentCulture, "(id_premises = {0})", premise.IdPremises);
+                    Filter += string.Format(CultureInfo.CurrentCulture, "(id_premises = {0})", premise.IdPremises);
                     GeneralBindingSource.Filter += Filter;
                     FillRowFromPremise(premise, newRow);
                     viewportState = ViewportState.ReadState;
@@ -956,7 +970,7 @@ namespace Registry.Viewport
                         return;
                     DataRowView row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     is_editable = false;
-                    Filter += String.Format(CultureInfo.CurrentCulture, "(id_premises = {0})", premise.IdPremises);
+                    Filter += string.Format(CultureInfo.CurrentCulture, "(id_premises = {0})", premise.IdPremises);
                     GeneralBindingSource.Filter += Filter;
                     FillRowFromPremise(premise, row);
                     viewportState = ViewportState.ReadState;
@@ -1472,7 +1486,7 @@ namespace Registry.Viewport
                 return;
             }
             if (MessageBox.Show(@"Вы уверены, что хотите удалить этот реквизит?", @"Внимание",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != System.Windows.Forms.DialogResult.Yes)
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                 return;
             int idRestriction = (int)((DataRowView)v_restrictions[v_restrictions.Position])["id_restriction"];
             if (restrictions.Delete(idRestriction) == -1)
@@ -1516,7 +1530,7 @@ namespace Registry.Viewport
                 return;
             }
             if (MessageBox.Show("Вы уверены, что хотите удалить это ограничение?", "Внимание",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != System.Windows.Forms.DialogResult.Yes)
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                 return;
             int idOwnershipRight = (int)((DataRowView)v_ownershipRights[v_ownershipRights.Position])["id_ownership_right"];
             if (ownershipRights.Delete(idOwnershipRight) == -1)
@@ -1601,7 +1615,7 @@ namespace Registry.Viewport
                 return;
             }
             if (MessageBox.Show("Вы уверены, что хотите удалить эту комнату?", "Внимание",
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != System.Windows.Forms.DialogResult.Yes)
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                 return;
             int idSubPremise = (int)((DataRowView)v_sub_premises[v_sub_premises.Position])["id_sub_premises"];
             if (sub_premises.Delete(idSubPremise) == -1)

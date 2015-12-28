@@ -180,5 +180,25 @@ namespace Registry.DataModels.DataModels
                 return connection.SqlSelectTable("ids", command).AsEnumerable().Select(row => row.Field<int>("id_account")).Distinct();
             }
         }
+
+        public static IEnumerable<int> GetPremisesIdsByAccountFilter(string whereStatement)
+        {
+            using (var connection = new DBConnection())
+            using (var command = DBConnection.CreateCommand())
+            {
+                command.CommandText = string.Format(@"SELECT v.id_premises, v.object_type
+                    FROM (
+                    SELECT papa.id_premises, 1 as object_type, pa.id_account
+                    FROM payments_accounts pa
+                        INNER JOIN payments_account_premises_assoc papa ON pa.id_account = papa.id_account
+                    UNION ALL
+                    SELECT sp.id_premises, 2, pa.id_account
+                    FROM payments_accounts pa
+                        INNER JOIN payments_account_sub_premises_assoc paspa ON pa.id_account = paspa.id_account
+                        INNER JOIN sub_premises sp ON paspa.id_sub_premises = sp.id_sub_premises) v
+                    WHERE {0}", whereStatement);
+                return connection.SqlSelectTable("ids", command).AsEnumerable().Select(row => row.Field<int>("id_premises"));
+            }
+        }
     }
 }
