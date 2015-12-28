@@ -351,10 +351,10 @@
     <Compile Include="RestrictionTypeListViewport.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ExtendedSearchBuildingForm.cs">
+    <Compile Include="SearchForms\ExtendedSearchBuildingForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ExtendedSearchBuildingForm.Designer.cs">
+    <Compile Include="SearchForms\ExtendedSearchBuildingForm.Designer.cs">
       <DependentUpon>ExtendedSearchBuildingForm.cs</DependentUpon>
     </Compile>
     <Compile Include="SearchForms\SearchForm.cs">
@@ -499,7 +499,7 @@
     <EmbeddedResource Include="ExecutorsViewport.resx">
       <DependentUpon>ExecutorsViewport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ExtendedSearchBuildingForm.resx">
+    <EmbeddedResource Include="SearchForms\ExtendedSearchBuildingForm.resx">
       <DependentUpon>ExtendedSearchBuildingForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SearchForms\ExtendedSearchPremisesForm.resx">

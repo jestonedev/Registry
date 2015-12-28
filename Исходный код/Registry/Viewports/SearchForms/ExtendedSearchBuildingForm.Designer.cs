@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using VIBlend.WinForms.Controls;
 
-namespace Registry.SearchForms
+namespace Registry.Viewport.SearchForms
 {
     partial class ExtendedSearchBuildingForm
     {

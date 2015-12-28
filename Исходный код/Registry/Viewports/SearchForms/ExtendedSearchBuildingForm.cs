@@ -6,10 +6,8 @@ using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
-using Registry.Viewport;
-using Registry.Viewport.SearchForms;
 
-namespace Registry.SearchForms
+namespace Registry.Viewport.SearchForms
 {
     internal partial class ExtendedSearchBuildingForm : SearchForm
     {

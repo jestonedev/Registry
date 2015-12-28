@@ -46,6 +46,14 @@
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.dateTimePickerOrderFrom = new System.Windows.Forms.DateTimePicker();
+            this.checkBoxResettle2013to2017 = new System.Windows.Forms.CheckBox();
+            this.textBoxHouse = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.comboBoxStreet = new System.Windows.Forms.ComboBox();
+            this.groupBoxAddress = new System.Windows.Forms.GroupBox();
+            this.checkBoxEnableAddress = new System.Windows.Forms.CheckBox();
+            this.groupBoxAddress.SuspendLayout();
             this.SuspendLayout();
             // 
             // vButtonOk
@@ -53,7 +61,7 @@
             this.vButtonOk.AllowAnimations = true;
             this.vButtonOk.BackColor = System.Drawing.Color.Transparent;
             this.vButtonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.vButtonOk.Location = new System.Drawing.Point(13, 297);
+            this.vButtonOk.Location = new System.Drawing.Point(13, 441);
             this.vButtonOk.Name = "vButtonOk";
             this.vButtonOk.RoundedCornersMask = ((byte)(15));
             this.vButtonOk.Size = new System.Drawing.Size(117, 35);
@@ -67,7 +75,7 @@
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(148, 297);
+            this.vButtonCancel.Location = new System.Drawing.Point(148, 441);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
@@ -80,7 +88,7 @@
             // 
             this.textBoxProtocolNum.Location = new System.Drawing.Point(15, 27);
             this.textBoxProtocolNum.Name = "textBoxProtocolNum";
-            this.textBoxProtocolNum.Size = new System.Drawing.Size(250, 21);
+            this.textBoxProtocolNum.Size = new System.Drawing.Size(248, 21);
             this.textBoxProtocolNum.TabIndex = 0;
             // 
             // label2
@@ -202,12 +210,86 @@
             this.dateTimePickerOrderFrom.Size = new System.Drawing.Size(249, 21);
             this.dateTimePickerOrderFrom.TabIndex = 4;
             // 
+            // checkBoxResettle2013to2017
+            // 
+            this.checkBoxResettle2013to2017.AutoSize = true;
+            this.checkBoxResettle2013to2017.Location = new System.Drawing.Point(13, 415);
+            this.checkBoxResettle2013to2017.Name = "checkBoxResettle2013to2017";
+            this.checkBoxResettle2013to2017.Size = new System.Drawing.Size(252, 19);
+            this.checkBoxResettle2013to2017.TabIndex = 74;
+            this.checkBoxResettle2013to2017.Text = "По программе переселения 2013-2017";
+            this.checkBoxResettle2013to2017.UseVisualStyleBackColor = true;
+            // 
+            // textBoxHouse
+            // 
+            this.textBoxHouse.Location = new System.Drawing.Point(14, 82);
+            this.textBoxHouse.MaxLength = 4;
+            this.textBoxHouse.Name = "textBoxHouse";
+            this.textBoxHouse.Size = new System.Drawing.Size(248, 21);
+            this.textBoxHouse.TabIndex = 78;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(14, 64);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(79, 15);
+            this.label5.TabIndex = 76;
+            this.label5.Text = "Номер дома";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(14, 20);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(43, 15);
+            this.label6.TabIndex = 75;
+            this.label6.Text = "Улица";
+            // 
+            // comboBoxStreet
+            // 
+            this.comboBoxStreet.FormattingEnabled = true;
+            this.comboBoxStreet.Location = new System.Drawing.Point(14, 38);
+            this.comboBoxStreet.Name = "comboBoxStreet";
+            this.comboBoxStreet.Size = new System.Drawing.Size(248, 23);
+            this.comboBoxStreet.TabIndex = 77;
+            this.comboBoxStreet.DropDownClosed += new System.EventHandler(this.comboBoxStreet_DropDownClosed);
+            this.comboBoxStreet.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxStreet_KeyUp);
+            this.comboBoxStreet.Leave += new System.EventHandler(this.comboBoxStreet_Leave);
+            // 
+            // groupBoxAddress
+            // 
+            this.groupBoxAddress.Controls.Add(this.textBoxHouse);
+            this.groupBoxAddress.Controls.Add(this.comboBoxStreet);
+            this.groupBoxAddress.Controls.Add(this.label5);
+            this.groupBoxAddress.Controls.Add(this.label6);
+            this.groupBoxAddress.Enabled = false;
+            this.groupBoxAddress.Location = new System.Drawing.Point(1, 293);
+            this.groupBoxAddress.Name = "groupBoxAddress";
+            this.groupBoxAddress.Size = new System.Drawing.Size(276, 116);
+            this.groupBoxAddress.TabIndex = 79;
+            this.groupBoxAddress.TabStop = false;
+            this.groupBoxAddress.Text = "      Адрес";
+            // 
+            // checkBoxEnableAddress
+            // 
+            this.checkBoxEnableAddress.AutoSize = true;
+            this.checkBoxEnableAddress.Location = new System.Drawing.Point(11, 295);
+            this.checkBoxEnableAddress.Name = "checkBoxEnableAddress";
+            this.checkBoxEnableAddress.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxEnableAddress.TabIndex = 80;
+            this.checkBoxEnableAddress.UseVisualStyleBackColor = true;
+            this.checkBoxEnableAddress.CheckedChanged += new System.EventHandler(this.checkBoxEnableAddress_CheckedChanged);
+            // 
             // TenancyOrderSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(279, 342);
+            this.ClientSize = new System.Drawing.Size(279, 484);
+            this.Controls.Add(this.checkBoxEnableAddress);
+            this.Controls.Add(this.groupBoxAddress);
+            this.Controls.Add(this.checkBoxResettle2013to2017);
             this.Controls.Add(this.comboBoxExecutor);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.dateTimePickerRegistrationTo);
@@ -233,6 +315,8 @@
             this.Name = "TenancyOrderSettingsForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Распоряжение";
+            this.groupBoxAddress.ResumeLayout(false);
+            this.groupBoxAddress.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -257,5 +341,12 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.DateTimePicker dateTimePickerOrderFrom;
+        private System.Windows.Forms.CheckBox checkBoxResettle2013to2017;
+        private System.Windows.Forms.TextBox textBoxHouse;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ComboBox comboBoxStreet;
+        private System.Windows.Forms.GroupBox groupBoxAddress;
+        private System.Windows.Forms.CheckBox checkBoxEnableAddress;
     }
 }
