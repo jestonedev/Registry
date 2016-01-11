@@ -435,7 +435,7 @@ namespace Registry.Viewport
                 textBoxPremisesNumber.Focus();
                 return false;
             }
-            if (!Regex.IsMatch(premise.PremisesNum, @"^[0-9]+[а-я]{0,1}([/][0-9]+[а-я]{0,1})?([,-][0-9]+[а-я]{0,1}([/][0-9]+[а-я]{0,1})?)*$"))
+            if (!Regex.IsMatch(premise.PremisesNum, @"^[0-9]+[а-я]{0,1}([/]([а-я]{0,1}|[0-9]+[а-я]{0,1}))?([,-][0-9]+[а-я]{0,1}([/]([а-я]{0,1}|[0-9]+[а-я]{0,1}))?)*$"))
             {
                 MessageBox.Show("Некорректно задан номер помещения. Можно использовать только цифры и не более одной строчной буквы кирилицы, а также знак дроби /. Для объединенных квартир номера должны быть перечислены через запятую или тире. Например: \"1а,2а,3б/4\"", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
