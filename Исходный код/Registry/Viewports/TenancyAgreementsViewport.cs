@@ -39,6 +39,8 @@ namespace Registry.Viewport
         
         private int? id_warrant;
         private bool is_first_visible = true;   // первое отображение формы
+        private List<TenancyPerson> excludePersons = new List<TenancyPerson>(); 
+        private List<TenancyPerson> includePersons = new List<TenancyPerson>(); 
 
         private TenancyAgreementsViewport()
             : this(null, null)
@@ -383,6 +385,18 @@ namespace Registry.Viewport
             dataGridView.Enabled = true;
             is_editable = true;
             MenuCallback.EditingStateUpdate();
+            if (includePersons.Count > 0)
+            {
+                new TenancyAgreementOnSavePersonManager(includePersons,
+                    TenancyAgreementOnSavePersonManager.PersonsOperationType.IncludePersons).ShowDialog();
+                includePersons.Clear();
+            }
+            if (excludePersons.Count > 0)
+            {
+                new TenancyAgreementOnSavePersonManager(excludePersons,
+                    TenancyAgreementOnSavePersonManager.PersonsOperationType.ExcludePersons).ShowDialog();
+                excludePersons.Clear();
+            }
         }
 
         public override bool CanInsertRecord()
@@ -673,12 +687,12 @@ namespace Registry.Viewport
             var element = string.Format(CultureInfo.InvariantCulture, "«{0}. {1}, {2} - {3} г.р.»;", textBoxIncludePoint.Text,
                 textBoxIncludeSNP.Text.Trim(),
                 kinship,
-                dateTimePickerIncludeDateOfBirth.Value.Date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
+                dateTimePickerIncludeDateOfBirth.Value.Date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)); 
+            var snp = textBoxIncludeSNP.Text.Trim();
+            string sSurname, sName, sPatronymic;
+            Declension.GetSNM(snp, out sSurname, out sName, out sPatronymic);
             if (kinship == "наниматель")
             {
-                var snp = textBoxIncludeSNP.Text.Trim();
-                string sSurname, sName, sPatronymic;
-                Declension.GetSNM(snp, out sSurname, out sName, out sPatronymic);
                 var gender = Declension.GetGender(sPatronymic);
                 contentList.Add(string.Format("\u200B{4}) считать по договору № {0} от {1} нанимателем - «{2} - {3} г.р.»;",
                     ParentRow["registration_num"],
@@ -702,6 +716,15 @@ namespace Registry.Viewport
                     contentList.Insert(last_point_index, element);
             }
             textBoxAgreementContent.Lines = contentList.ToArray();
+            includePersons.Add(new TenancyPerson
+            {
+                IdProcess = (int?)ParentRow["id_process"],
+                Surname = sSurname,
+                Name = sName,
+                Patronymic = sPatronymic,
+                DateOfBirth = dateTimePickerIncludeDateOfBirth.Value.Date,
+                IdKinship = (int?)comboBoxIncludeKinship.SelectedValue
+            });
         }
 
         void vButtonExcludePaste_Click(object sender, EventArgs e)
@@ -757,6 +780,16 @@ namespace Registry.Viewport
             else
                 contentList.Insert(last_point_index, element);
             textBoxAgreementContent.Lines = contentList.ToArray();
+            excludePersons.Add(new TenancyPerson
+            {
+                IdProcess = (int?)ParentRow["id_process"],
+                IdPerson = (int?)tenancyPerson["id_person"],
+                Surname = tenancyPerson["surname"].ToString(),
+                Name = tenancyPerson["name"].ToString(),
+                Patronymic = tenancyPerson["patronymic"].ToString(),
+                DateOfBirth = (DateTime?)tenancyPerson["date_of_birth"],
+                IdKinship = (int?)tenancyPerson["id_kinship"]
+            });
         }
 
         void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)

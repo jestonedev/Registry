@@ -48,15 +48,18 @@ namespace Registry.Viewport
             if (dataGridViewTenancyPersons.Rows.Count == 0)
                 return;
             for (var i = 0; i < dataGridViewTenancyPersons.Rows.Count; i++)
-                if (((DataRowView)GeneralBindingSource[i])["id_kinship"] != DBNull.Value &&
-                    Convert.ToInt32(((DataRowView)GeneralBindingSource[i])["id_kinship"], CultureInfo.InvariantCulture) == 1 &&
-                    ((DataRowView)GeneralBindingSource[i])["exclude_date"] == DBNull.Value)
+            {
+                if (GeneralBindingSource.Count <= i) break;
+                if (((DataRowView) GeneralBindingSource[i])["id_kinship"] != DBNull.Value &&
+                    Convert.ToInt32(((DataRowView) GeneralBindingSource[i])["id_kinship"], CultureInfo.InvariantCulture) ==
+                    1 &&
+                    ((DataRowView) GeneralBindingSource[i])["exclude_date"] == DBNull.Value)
                     dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
-                else
-                if (((DataRowView)GeneralBindingSource[i])["exclude_date"] != DBNull.Value)
+                else if (((DataRowView) GeneralBindingSource[i])["exclude_date"] != DBNull.Value)
                     dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.LightCoral;
                 else
                     dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.White;
+            }
         }
 
         private void DataBind()
