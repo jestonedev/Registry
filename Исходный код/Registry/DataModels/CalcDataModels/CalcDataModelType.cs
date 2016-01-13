@@ -12,6 +12,7 @@
         CalcDataModelSubPremisesCurrentFunds,
         CalcDataModelTenancyAggregated,
         CalcDataModelTenancyNotifiesMaxDate,
-        CalcDataModelTenancyPremisesInfo
+        CalcDataModelTenancyPremisesInfo,
+        CalcDataModelLastClaimStates
     }
 }

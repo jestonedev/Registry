@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 
 namespace Registry.Viewport.SearchForms
@@ -24,6 +25,7 @@ namespace Registry.Viewport.SearchForms
             };
             comboBoxLastState.DisplayMember = "state_type";
             comboBoxLastState.ValueMember = "id_state_type";
+            comboBoxDateStartStateExpr.SelectedIndex = 2;
 
             foreach (Control control in Controls)
             {
@@ -64,6 +66,24 @@ namespace Registry.Viewport.SearchForms
                     select stateRow.Field<int>("id_claim");
                 includedClaims = DataModelHelper.Intersect(null, lastStateTypes);
             }
+            if (checkBoxDateStartStateEnable.Checked)
+            {
+                var lastStateBindingSource = new BindingSource
+                {
+                    DataSource = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelLastClaimStates).Select(),
+                    Filter = BuildFilter("date_start_state", comboBoxDateStartStateExpr.Text,
+                    dateTimePickerDateStartStateFrom.Value.Date,
+                    dateTimePickerDateStartStateTo.Value.Date)
+                };
+                var claimsByDateStartState = new List<int>();
+                for (var i = 0; i < lastStateBindingSource.Count; i++)
+                {
+                    var idClaim = (int?)((DataRowView)lastStateBindingSource[i])["id_claim"];
+                    if (idClaim != null)
+                        claimsByDateStartState.Add(idClaim.Value);
+                }
+                includedClaims = DataModelHelper.Intersect(includedClaims, claimsByDateStartState);
+            }
             if (checkBoxAccountChecked.Checked && !string.IsNullOrEmpty(textBoxAccount.Text.Trim()))
             {
                 var accounts =
@@ -100,6 +120,34 @@ namespace Registry.Viewport.SearchForms
             return filter;
         }
 
+        private string BuildFilter(string field, string rawOperator, DateTime from, DateTime to)
+        {
+            var op = ConvertDisplayEqExprToSql(rawOperator);
+            var format = "{0} {1} '{2}'";
+            if (op != "BETWEEN")
+                return string.Format(format, field, op,
+                    from.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture),
+                    to.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture));
+            format = "{0} >= '{1}' AND {0} <= '{2}'";
+            return string.Format(format, field,
+                from.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture),
+                to.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture));
+        }
+
+        private static string ConvertDisplayEqExprToSql(string expr)
+        {
+            switch (expr)
+            {
+                case "=": return "=";
+                case "≥": return ">=";
+                case "≤": return "<=";
+                case "между":
+                    return "BETWEEN";
+                default:
+                    throw new ViewportException("Неизвестный знак сравнения дат");
+            }
+        }
+
         private void vButtonSearch_Click(object sender, EventArgs e)
         {
             if (checkBoxAccountChecked.Checked && string.IsNullOrEmpty(textBoxAccount.Text.Trim()))
@@ -130,6 +178,13 @@ namespace Registry.Viewport.SearchForms
         private void checkBoxAtDateChecked_CheckedChanged(object sender, EventArgs e)
         {
             dateTimePickerAtDate.Enabled = checkBoxAtDateChecked.Checked;
+        }
+
+        private void checkBoxDateStartStateEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            dateTimePickerDateStartStateFrom.Enabled = checkBoxDateStartStateEnable.Checked;
+            dateTimePickerDateStartStateTo.Enabled = checkBoxDateStartStateEnable.Checked;
+            comboBoxDateStartStateExpr.Enabled = checkBoxDateStartStateEnable.Checked;
         }
     }
 }

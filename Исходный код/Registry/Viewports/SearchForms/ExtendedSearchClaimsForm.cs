@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 
 namespace Registry.Viewport.SearchForms
@@ -29,6 +30,7 @@ namespace Registry.Viewport.SearchForms
             comboBoxEndDeptPeriodExpr.SelectedIndex = 2;
             comboBoxAmmountDGIExpr.SelectedIndex = 2;
             comboBoxAmmountTenancyExpr.SelectedIndex = 2;
+            comboBoxDateStartStateExpr.SelectedIndex = 2;
 
             foreach (Control control in Controls)
             {
@@ -54,20 +56,29 @@ namespace Registry.Viewport.SearchForms
 
             if (checkBoxLastStateChecked.Checked && comboBoxLastState.SelectedValue != null)
             {
-                var claimStatesDataModel = DataModel.GetInstance(DataModelType.ClaimStatesDataModel);
-                var lastStates = from stateRow in claimStatesDataModel.FilterDeletedRows()
-                                 group stateRow.Field<int?>("id_state") by stateRow.Field<int>("id_claim") into gs
-                                 select new
-                                 {
-                                     id_claim = gs.Key,
-                                     id_state = gs.Max()
-                                 };
-                var lastStateTypes = from lastStateRow in lastStates
-                    join stateRow in claimStatesDataModel.FilterDeletedRows()
-                        on lastStateRow.id_state equals stateRow.Field<int?>("id_state")
-                    where stateRow.Field<int?>("id_state_type") == (int?) comboBoxLastState.SelectedValue
-                    select stateRow.Field<int>("id_claim");
-                includedClaims = DataModelHelper.Intersect(null, lastStateTypes);
+                var lastStates = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelLastClaimStates);
+                var lastStateTypes = from lastStateRow in lastStates.FilterDeletedRows()
+                                     where lastStateRow.Field<int?>("id_state_type") == (int?)comboBoxLastState.SelectedValue
+                                     select lastStateRow.Field<int>("id_claim");
+                includedClaims = DataModelHelper.Intersect(includedClaims, lastStateTypes);
+            }
+            if (checkBoxDateStartStateEnable.Checked)
+            {
+                var lastStateBindingSource = new BindingSource
+                {
+                    DataSource = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelLastClaimStates).Select(),
+                    Filter = BuildFilter("date_start_state", comboBoxDateStartStateExpr.Text,
+                    dateTimePickerDateStartStateFrom.Value.Date,
+                    dateTimePickerDateStartStateTo.Value.Date)
+                };
+                var claimsByDateStartState = new List<int>();
+                for (var i = 0; i < lastStateBindingSource.Count; i++)
+                {
+                    var idClaim = (int?) ((DataRowView) lastStateBindingSource[i])["id_claim"];
+                    if (idClaim != null)
+                        claimsByDateStartState.Add(idClaim.Value);
+                }
+                includedClaims = DataModelHelper.Intersect(includedClaims, claimsByDateStartState);
             }
             if (checkBoxAccountChecked.Checked && !string.IsNullOrEmpty(textBoxAccount.Text.Trim()))
             {
@@ -75,7 +86,7 @@ namespace Registry.Viewport.SearchForms
                     from accountRow in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
                     where accountRow.Field<string>("account").Contains(textBoxAccount.Text)
                     select accountRow.Field<int>("id_account");
-                includedAccounts = DataModelHelper.Intersect(null, accounts);
+                includedAccounts = DataModelHelper.Intersect(includedClaims, accounts);
             }
             if (checkBoxClaimIdChecked.Checked)
             {
@@ -241,6 +252,13 @@ namespace Registry.Viewport.SearchForms
         private void checkBoxClaimIdChecked_CheckedChanged(object sender, EventArgs e)
         {
             numericUpDownClaimId.Enabled = checkBoxClaimIdChecked.Checked;
+        }
+
+        private void checkBoxDateStartStateEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            dateTimePickerDateStartStateFrom.Enabled = checkBoxDateStartStateEnable.Checked;
+            dateTimePickerDateStartStateTo.Enabled = checkBoxDateStartStateEnable.Checked;
+            comboBoxDateStartStateExpr.Enabled = checkBoxDateStartStateEnable.Checked;
         }
     }
 }

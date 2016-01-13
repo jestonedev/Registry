@@ -63,7 +63,8 @@ namespace Registry.Viewport
             this.id_claim = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.at_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.current_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.date_start_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.state_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.start_dept_period = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.end_dept_period = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -322,7 +323,8 @@ namespace Registry.Viewport
             this.id_claim,
             this.id_account,
             this.at_date,
-            this.current_state,
+            this.date_start_state,
+            this.state_type,
             this.start_dept_period,
             this.end_dept_period,
             this.amount_tenancy,
@@ -367,13 +369,23 @@ namespace Registry.Viewport
             this.at_date.ReadOnly = true;
             this.at_date.Width = 170;
             // 
-            // current_state
+            // date_start_state
             // 
-            this.current_state.HeaderText = "Текущее состояние";
-            this.current_state.MinimumWidth = 150;
-            this.current_state.Name = "current_state";
-            this.current_state.ReadOnly = true;
-            this.current_state.Width = 150;
+            this.date_start_state.HeaderText = "Состояние установлено";
+            this.date_start_state.MinimumWidth = 170;
+            this.date_start_state.Name = "date_start_state";
+            this.date_start_state.ReadOnly = true;
+            this.date_start_state.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.date_start_state.Width = 170;
+            // 
+            // state_type
+            // 
+            this.state_type.HeaderText = "Текущее состояние";
+            this.state_type.MinimumWidth = 150;
+            this.state_type.Name = "state_type";
+            this.state_type.ReadOnly = true;
+            this.state_type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.state_type.Width = 150;
             // 
             // start_dept_period
             // 
@@ -444,15 +456,16 @@ namespace Registry.Viewport
             this.ResumeLayout(false);
 
         }
+        private TextBox textBoxAccount;
         private DataGridViewTextBoxColumn id_claim;
         private DataGridViewTextBoxColumn id_account;
         private DataGridViewTextBoxColumn at_date;
-        private DataGridViewTextBoxColumn current_state;
+        private DataGridViewTextBoxColumn date_start_state;
+        private DataGridViewTextBoxColumn state_type;
         private DataGridViewTextBoxColumn start_dept_period;
         private DataGridViewTextBoxColumn end_dept_period;
         private DataGridViewTextBoxColumn amount_tenancy;
         private DataGridViewTextBoxColumn amount_dgi;
         private DataGridViewTextBoxColumn description;
-        private TextBox textBoxAccount;
     }
 }

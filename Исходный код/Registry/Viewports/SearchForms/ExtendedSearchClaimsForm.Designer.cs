@@ -69,6 +69,11 @@ namespace Registry.Viewport.SearchForms
             this.numericUpDownClaimId = new System.Windows.Forms.NumericUpDown();
             this.checkBoxClaimIdChecked = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
+            this.dateTimePickerDateStartStateTo = new System.Windows.Forms.DateTimePicker();
+            this.comboBoxDateStartStateExpr = new System.Windows.Forms.ComboBox();
+            this.checkBoxDateStartStateEnable = new System.Windows.Forms.CheckBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.dateTimePickerDateStartStateFrom = new System.Windows.Forms.DateTimePicker();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmmountDGITo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmmountDGIFrom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmmountTenancyTo)).BeginInit();
@@ -81,11 +86,11 @@ namespace Registry.Viewport.SearchForms
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(214, 358);
+            this.vButtonCancel.Location = new System.Drawing.Point(214, 403);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
-            this.vButtonCancel.TabIndex = 27;
+            this.vButtonCancel.TabIndex = 31;
             this.vButtonCancel.Text = "Отмена";
             this.vButtonCancel.UseVisualStyleBackColor = false;
             this.vButtonCancel.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -94,11 +99,11 @@ namespace Registry.Viewport.SearchForms
             // 
             this.vButtonSearch.AllowAnimations = true;
             this.vButtonSearch.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSearch.Location = new System.Drawing.Point(76, 358);
+            this.vButtonSearch.Location = new System.Drawing.Point(76, 403);
             this.vButtonSearch.Name = "vButtonSearch";
             this.vButtonSearch.RoundedCornersMask = ((byte)(15));
             this.vButtonSearch.Size = new System.Drawing.Size(117, 35);
-            this.vButtonSearch.TabIndex = 26;
+            this.vButtonSearch.TabIndex = 30;
             this.vButtonSearch.Text = "Поиск";
             this.vButtonSearch.UseVisualStyleBackColor = false;
             this.vButtonSearch.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -109,15 +114,15 @@ namespace Registry.Viewport.SearchForms
             this.dateTimePickerAtDateFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerAtDateFrom.Enabled = false;
-            this.dateTimePickerAtDateFrom.Location = new System.Drawing.Point(94, 150);
+            this.dateTimePickerAtDateFrom.Location = new System.Drawing.Point(94, 195);
             this.dateTimePickerAtDateFrom.Name = "dateTimePickerAtDateFrom";
             this.dateTimePickerAtDateFrom.Size = new System.Drawing.Size(141, 21);
-            this.dateTimePickerAtDateFrom.TabIndex = 8;
+            this.dateTimePickerAtDateFrom.TabIndex = 12;
             // 
             // label103
             // 
             this.label103.AutoSize = true;
-            this.label103.Location = new System.Drawing.Point(9, 89);
+            this.label103.Location = new System.Drawing.Point(9, 134);
             this.label103.Name = "label103";
             this.label103.Size = new System.Drawing.Size(139, 15);
             this.label103.TabIndex = 53;
@@ -126,7 +131,7 @@ namespace Registry.Viewport.SearchForms
             // label91
             // 
             this.label91.AutoSize = true;
-            this.label91.Location = new System.Drawing.Point(9, 132);
+            this.label91.Location = new System.Drawing.Point(9, 177);
             this.label91.Name = "label91";
             this.label91.Size = new System.Drawing.Size(130, 15);
             this.label91.TabIndex = 52;
@@ -155,10 +160,10 @@ namespace Registry.Viewport.SearchForms
             // checkBoxAtDateChecked
             // 
             this.checkBoxAtDateChecked.AutoSize = true;
-            this.checkBoxAtDateChecked.Location = new System.Drawing.Point(12, 154);
+            this.checkBoxAtDateChecked.Location = new System.Drawing.Point(12, 199);
             this.checkBoxAtDateChecked.Name = "checkBoxAtDateChecked";
             this.checkBoxAtDateChecked.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxAtDateChecked.TabIndex = 6;
+            this.checkBoxAtDateChecked.TabIndex = 10;
             this.checkBoxAtDateChecked.UseVisualStyleBackColor = true;
             this.checkBoxAtDateChecked.CheckedChanged += new System.EventHandler(this.checkBoxAtDateChecked_CheckedChanged);
             // 
@@ -175,20 +180,20 @@ namespace Registry.Viewport.SearchForms
             // checkBoxAccountChecked
             // 
             this.checkBoxAccountChecked.AutoSize = true;
-            this.checkBoxAccountChecked.Location = new System.Drawing.Point(12, 111);
+            this.checkBoxAccountChecked.Location = new System.Drawing.Point(12, 156);
             this.checkBoxAccountChecked.Name = "checkBoxAccountChecked";
             this.checkBoxAccountChecked.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxAccountChecked.TabIndex = 4;
+            this.checkBoxAccountChecked.TabIndex = 8;
             this.checkBoxAccountChecked.UseVisualStyleBackColor = true;
             this.checkBoxAccountChecked.CheckedChanged += new System.EventHandler(this.checkBoxAccountChecked_CheckedChanged);
             // 
             // textBoxAccount
             // 
             this.textBoxAccount.Enabled = false;
-            this.textBoxAccount.Location = new System.Drawing.Point(33, 107);
+            this.textBoxAccount.Location = new System.Drawing.Point(33, 152);
             this.textBoxAccount.Name = "textBoxAccount";
             this.textBoxAccount.Size = new System.Drawing.Size(360, 21);
-            this.textBoxAccount.TabIndex = 5;
+            this.textBoxAccount.TabIndex = 9;
             // 
             // comboBoxAtDateExpr
             // 
@@ -200,16 +205,16 @@ namespace Registry.Viewport.SearchForms
             "≤",
             "=",
             "между"});
-            this.comboBoxAtDateExpr.Location = new System.Drawing.Point(34, 149);
+            this.comboBoxAtDateExpr.Location = new System.Drawing.Point(34, 194);
             this.comboBoxAtDateExpr.Name = "comboBoxAtDateExpr";
             this.comboBoxAtDateExpr.Size = new System.Drawing.Size(48, 23);
-            this.comboBoxAtDateExpr.TabIndex = 7;
+            this.comboBoxAtDateExpr.TabIndex = 11;
             // 
             // numericUpDownAmmountDGITo
             // 
             this.numericUpDownAmmountDGITo.DecimalPlaces = 2;
             this.numericUpDownAmmountDGITo.Enabled = false;
-            this.numericUpDownAmmountDGITo.Location = new System.Drawing.Point(245, 322);
+            this.numericUpDownAmmountDGITo.Location = new System.Drawing.Point(245, 367);
             this.numericUpDownAmmountDGITo.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -217,13 +222,13 @@ namespace Registry.Viewport.SearchForms
             0});
             this.numericUpDownAmmountDGITo.Name = "numericUpDownAmmountDGITo";
             this.numericUpDownAmmountDGITo.Size = new System.Drawing.Size(148, 21);
-            this.numericUpDownAmmountDGITo.TabIndex = 25;
+            this.numericUpDownAmmountDGITo.TabIndex = 29;
             // 
             // numericUpDownAmmountDGIFrom
             // 
             this.numericUpDownAmmountDGIFrom.DecimalPlaces = 2;
             this.numericUpDownAmmountDGIFrom.Enabled = false;
-            this.numericUpDownAmmountDGIFrom.Location = new System.Drawing.Point(94, 322);
+            this.numericUpDownAmmountDGIFrom.Location = new System.Drawing.Point(94, 367);
             this.numericUpDownAmmountDGIFrom.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -231,7 +236,7 @@ namespace Registry.Viewport.SearchForms
             0});
             this.numericUpDownAmmountDGIFrom.Name = "numericUpDownAmmountDGIFrom";
             this.numericUpDownAmmountDGIFrom.Size = new System.Drawing.Size(141, 21);
-            this.numericUpDownAmmountDGIFrom.TabIndex = 24;
+            this.numericUpDownAmmountDGIFrom.TabIndex = 28;
             // 
             // comboBoxAmmountDGIExpr
             // 
@@ -243,25 +248,25 @@ namespace Registry.Viewport.SearchForms
             "≤",
             "=",
             "между"});
-            this.comboBoxAmmountDGIExpr.Location = new System.Drawing.Point(33, 321);
+            this.comboBoxAmmountDGIExpr.Location = new System.Drawing.Point(33, 366);
             this.comboBoxAmmountDGIExpr.Name = "comboBoxAmmountDGIExpr";
             this.comboBoxAmmountDGIExpr.Size = new System.Drawing.Size(49, 23);
-            this.comboBoxAmmountDGIExpr.TabIndex = 23;
+            this.comboBoxAmmountDGIExpr.TabIndex = 27;
             // 
             // checkBoxAmmountDGIChecked
             // 
             this.checkBoxAmmountDGIChecked.AutoSize = true;
-            this.checkBoxAmmountDGIChecked.Location = new System.Drawing.Point(12, 326);
+            this.checkBoxAmmountDGIChecked.Location = new System.Drawing.Point(12, 371);
             this.checkBoxAmmountDGIChecked.Name = "checkBoxAmmountDGIChecked";
             this.checkBoxAmmountDGIChecked.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxAmmountDGIChecked.TabIndex = 22;
+            this.checkBoxAmmountDGIChecked.TabIndex = 26;
             this.checkBoxAmmountDGIChecked.UseVisualStyleBackColor = true;
             this.checkBoxAmmountDGIChecked.CheckedChanged += new System.EventHandler(this.checkBoxAmmountDGIChecked_CheckedChanged);
             // 
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(9, 304);
+            this.label21.Location = new System.Drawing.Point(9, 349);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(149, 15);
             this.label21.TabIndex = 176;
@@ -271,7 +276,7 @@ namespace Registry.Viewport.SearchForms
             // 
             this.numericUpDownAmmountTenancyTo.DecimalPlaces = 2;
             this.numericUpDownAmmountTenancyTo.Enabled = false;
-            this.numericUpDownAmmountTenancyTo.Location = new System.Drawing.Point(245, 279);
+            this.numericUpDownAmmountTenancyTo.Location = new System.Drawing.Point(245, 324);
             this.numericUpDownAmmountTenancyTo.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -279,13 +284,13 @@ namespace Registry.Viewport.SearchForms
             0});
             this.numericUpDownAmmountTenancyTo.Name = "numericUpDownAmmountTenancyTo";
             this.numericUpDownAmmountTenancyTo.Size = new System.Drawing.Size(148, 21);
-            this.numericUpDownAmmountTenancyTo.TabIndex = 21;
+            this.numericUpDownAmmountTenancyTo.TabIndex = 25;
             // 
             // numericUpDownAmmountTenancyFrom
             // 
             this.numericUpDownAmmountTenancyFrom.DecimalPlaces = 2;
             this.numericUpDownAmmountTenancyFrom.Enabled = false;
-            this.numericUpDownAmmountTenancyFrom.Location = new System.Drawing.Point(94, 279);
+            this.numericUpDownAmmountTenancyFrom.Location = new System.Drawing.Point(94, 324);
             this.numericUpDownAmmountTenancyFrom.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -293,7 +298,7 @@ namespace Registry.Viewport.SearchForms
             0});
             this.numericUpDownAmmountTenancyFrom.Name = "numericUpDownAmmountTenancyFrom";
             this.numericUpDownAmmountTenancyFrom.Size = new System.Drawing.Size(141, 21);
-            this.numericUpDownAmmountTenancyFrom.TabIndex = 20;
+            this.numericUpDownAmmountTenancyFrom.TabIndex = 24;
             // 
             // comboBoxAmmountTenancyExpr
             // 
@@ -305,25 +310,25 @@ namespace Registry.Viewport.SearchForms
             "≤",
             "=",
             "между"});
-            this.comboBoxAmmountTenancyExpr.Location = new System.Drawing.Point(33, 278);
+            this.comboBoxAmmountTenancyExpr.Location = new System.Drawing.Point(33, 323);
             this.comboBoxAmmountTenancyExpr.Name = "comboBoxAmmountTenancyExpr";
             this.comboBoxAmmountTenancyExpr.Size = new System.Drawing.Size(49, 23);
-            this.comboBoxAmmountTenancyExpr.TabIndex = 19;
+            this.comboBoxAmmountTenancyExpr.TabIndex = 23;
             // 
             // checkBoxAmmountTenancyChecked
             // 
             this.checkBoxAmmountTenancyChecked.AutoSize = true;
-            this.checkBoxAmmountTenancyChecked.Location = new System.Drawing.Point(12, 283);
+            this.checkBoxAmmountTenancyChecked.Location = new System.Drawing.Point(12, 328);
             this.checkBoxAmmountTenancyChecked.Name = "checkBoxAmmountTenancyChecked";
             this.checkBoxAmmountTenancyChecked.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxAmmountTenancyChecked.TabIndex = 18;
+            this.checkBoxAmmountTenancyChecked.TabIndex = 22;
             this.checkBoxAmmountTenancyChecked.UseVisualStyleBackColor = true;
             this.checkBoxAmmountTenancyChecked.CheckedChanged += new System.EventHandler(this.checkBoxAmmountTenancyChecked_CheckedChanged);
             // 
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(9, 261);
+            this.label22.Location = new System.Drawing.Point(9, 306);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(154, 15);
             this.label22.TabIndex = 175;
@@ -334,20 +339,20 @@ namespace Registry.Viewport.SearchForms
             this.dateTimePickerAtDateTo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerAtDateTo.Enabled = false;
-            this.dateTimePickerAtDateTo.Location = new System.Drawing.Point(245, 150);
+            this.dateTimePickerAtDateTo.Location = new System.Drawing.Point(245, 195);
             this.dateTimePickerAtDateTo.Name = "dateTimePickerAtDateTo";
             this.dateTimePickerAtDateTo.Size = new System.Drawing.Size(148, 21);
-            this.dateTimePickerAtDateTo.TabIndex = 9;
+            this.dateTimePickerAtDateTo.TabIndex = 13;
             // 
             // dateTimePickerStartDeptPeriodTo
             // 
             this.dateTimePickerStartDeptPeriodTo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerStartDeptPeriodTo.Enabled = false;
-            this.dateTimePickerStartDeptPeriodTo.Location = new System.Drawing.Point(245, 193);
+            this.dateTimePickerStartDeptPeriodTo.Location = new System.Drawing.Point(245, 238);
             this.dateTimePickerStartDeptPeriodTo.Name = "dateTimePickerStartDeptPeriodTo";
             this.dateTimePickerStartDeptPeriodTo.Size = new System.Drawing.Size(148, 21);
-            this.dateTimePickerStartDeptPeriodTo.TabIndex = 13;
+            this.dateTimePickerStartDeptPeriodTo.TabIndex = 17;
             // 
             // comboBoxStartDeptPeriodExpr
             // 
@@ -359,25 +364,25 @@ namespace Registry.Viewport.SearchForms
             "≤",
             "=",
             "между"});
-            this.comboBoxStartDeptPeriodExpr.Location = new System.Drawing.Point(34, 192);
+            this.comboBoxStartDeptPeriodExpr.Location = new System.Drawing.Point(34, 237);
             this.comboBoxStartDeptPeriodExpr.Name = "comboBoxStartDeptPeriodExpr";
             this.comboBoxStartDeptPeriodExpr.Size = new System.Drawing.Size(48, 23);
-            this.comboBoxStartDeptPeriodExpr.TabIndex = 11;
+            this.comboBoxStartDeptPeriodExpr.TabIndex = 15;
             // 
             // checkBoxStartDeptPeriodChecked
             // 
             this.checkBoxStartDeptPeriodChecked.AutoSize = true;
-            this.checkBoxStartDeptPeriodChecked.Location = new System.Drawing.Point(12, 197);
+            this.checkBoxStartDeptPeriodChecked.Location = new System.Drawing.Point(12, 242);
             this.checkBoxStartDeptPeriodChecked.Name = "checkBoxStartDeptPeriodChecked";
             this.checkBoxStartDeptPeriodChecked.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxStartDeptPeriodChecked.TabIndex = 10;
+            this.checkBoxStartDeptPeriodChecked.TabIndex = 14;
             this.checkBoxStartDeptPeriodChecked.UseVisualStyleBackColor = true;
             this.checkBoxStartDeptPeriodChecked.CheckedChanged += new System.EventHandler(this.checkBoxStartDeptPeriodChecked_CheckedChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 175);
+            this.label2.Location = new System.Drawing.Point(9, 220);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(275, 15);
             this.label2.TabIndex = 180;
@@ -388,20 +393,20 @@ namespace Registry.Viewport.SearchForms
             this.dateTimePickerStartDeptPeriodFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerStartDeptPeriodFrom.Enabled = false;
-            this.dateTimePickerStartDeptPeriodFrom.Location = new System.Drawing.Point(94, 193);
+            this.dateTimePickerStartDeptPeriodFrom.Location = new System.Drawing.Point(94, 238);
             this.dateTimePickerStartDeptPeriodFrom.Name = "dateTimePickerStartDeptPeriodFrom";
             this.dateTimePickerStartDeptPeriodFrom.Size = new System.Drawing.Size(141, 21);
-            this.dateTimePickerStartDeptPeriodFrom.TabIndex = 12;
+            this.dateTimePickerStartDeptPeriodFrom.TabIndex = 16;
             // 
             // dateTimePickerEndDeptPeriodTo
             // 
             this.dateTimePickerEndDeptPeriodTo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerEndDeptPeriodTo.Enabled = false;
-            this.dateTimePickerEndDeptPeriodTo.Location = new System.Drawing.Point(245, 236);
+            this.dateTimePickerEndDeptPeriodTo.Location = new System.Drawing.Point(245, 281);
             this.dateTimePickerEndDeptPeriodTo.Name = "dateTimePickerEndDeptPeriodTo";
             this.dateTimePickerEndDeptPeriodTo.Size = new System.Drawing.Size(148, 21);
-            this.dateTimePickerEndDeptPeriodTo.TabIndex = 17;
+            this.dateTimePickerEndDeptPeriodTo.TabIndex = 21;
             // 
             // comboBoxEndDeptPeriodExpr
             // 
@@ -413,25 +418,25 @@ namespace Registry.Viewport.SearchForms
             "≤",
             "=",
             "между"});
-            this.comboBoxEndDeptPeriodExpr.Location = new System.Drawing.Point(34, 235);
+            this.comboBoxEndDeptPeriodExpr.Location = new System.Drawing.Point(34, 280);
             this.comboBoxEndDeptPeriodExpr.Name = "comboBoxEndDeptPeriodExpr";
             this.comboBoxEndDeptPeriodExpr.Size = new System.Drawing.Size(48, 23);
-            this.comboBoxEndDeptPeriodExpr.TabIndex = 15;
+            this.comboBoxEndDeptPeriodExpr.TabIndex = 19;
             // 
             // checkBoxEndDeptPeriodChecked
             // 
             this.checkBoxEndDeptPeriodChecked.AutoSize = true;
-            this.checkBoxEndDeptPeriodChecked.Location = new System.Drawing.Point(12, 240);
+            this.checkBoxEndDeptPeriodChecked.Location = new System.Drawing.Point(12, 285);
             this.checkBoxEndDeptPeriodChecked.Name = "checkBoxEndDeptPeriodChecked";
             this.checkBoxEndDeptPeriodChecked.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxEndDeptPeriodChecked.TabIndex = 14;
+            this.checkBoxEndDeptPeriodChecked.TabIndex = 18;
             this.checkBoxEndDeptPeriodChecked.UseVisualStyleBackColor = true;
             this.checkBoxEndDeptPeriodChecked.CheckedChanged += new System.EventHandler(this.checkBoxEndDeptPeriodChecked_CheckedChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(9, 218);
+            this.label3.Location = new System.Drawing.Point(9, 263);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(295, 15);
             this.label3.TabIndex = 185;
@@ -442,10 +447,10 @@ namespace Registry.Viewport.SearchForms
             this.dateTimePickerEndDeptPeriodFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerEndDeptPeriodFrom.Enabled = false;
-            this.dateTimePickerEndDeptPeriodFrom.Location = new System.Drawing.Point(94, 236);
+            this.dateTimePickerEndDeptPeriodFrom.Location = new System.Drawing.Point(94, 281);
             this.dateTimePickerEndDeptPeriodFrom.Name = "dateTimePickerEndDeptPeriodFrom";
             this.dateTimePickerEndDeptPeriodFrom.Size = new System.Drawing.Size(141, 21);
-            this.dateTimePickerEndDeptPeriodFrom.TabIndex = 16;
+            this.dateTimePickerEndDeptPeriodFrom.TabIndex = 20;
             // 
             // numericUpDownClaimId
             // 
@@ -479,12 +484,71 @@ namespace Registry.Viewport.SearchForms
             this.label4.TabIndex = 188;
             this.label4.Text = "Внутренний номер";
             // 
+            // dateTimePickerDateStartStateTo
+            // 
+            this.dateTimePickerDateStartStateTo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerDateStartStateTo.Enabled = false;
+            this.dateTimePickerDateStartStateTo.Location = new System.Drawing.Point(245, 108);
+            this.dateTimePickerDateStartStateTo.Name = "dateTimePickerDateStartStateTo";
+            this.dateTimePickerDateStartStateTo.Size = new System.Drawing.Size(148, 21);
+            this.dateTimePickerDateStartStateTo.TabIndex = 7;
+            // 
+            // comboBoxDateStartStateExpr
+            // 
+            this.comboBoxDateStartStateExpr.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxDateStartStateExpr.Enabled = false;
+            this.comboBoxDateStartStateExpr.FormattingEnabled = true;
+            this.comboBoxDateStartStateExpr.Items.AddRange(new object[] {
+            "≥",
+            "≤",
+            "=",
+            "между"});
+            this.comboBoxDateStartStateExpr.Location = new System.Drawing.Point(34, 107);
+            this.comboBoxDateStartStateExpr.Name = "comboBoxDateStartStateExpr";
+            this.comboBoxDateStartStateExpr.Size = new System.Drawing.Size(48, 23);
+            this.comboBoxDateStartStateExpr.TabIndex = 5;
+            // 
+            // checkBoxDateStartStateEnable
+            // 
+            this.checkBoxDateStartStateEnable.AutoSize = true;
+            this.checkBoxDateStartStateEnable.Location = new System.Drawing.Point(12, 112);
+            this.checkBoxDateStartStateEnable.Name = "checkBoxDateStartStateEnable";
+            this.checkBoxDateStartStateEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxDateStartStateEnable.TabIndex = 4;
+            this.checkBoxDateStartStateEnable.UseVisualStyleBackColor = true;
+            this.checkBoxDateStartStateEnable.CheckedChanged += new System.EventHandler(this.checkBoxDateStartStateEnable_CheckedChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(9, 90);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(163, 15);
+            this.label5.TabIndex = 193;
+            this.label5.Text = "Дата установки состояиня";
+            // 
+            // dateTimePickerDateStartStateFrom
+            // 
+            this.dateTimePickerDateStartStateFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerDateStartStateFrom.Enabled = false;
+            this.dateTimePickerDateStartStateFrom.Location = new System.Drawing.Point(94, 108);
+            this.dateTimePickerDateStartStateFrom.Name = "dateTimePickerDateStartStateFrom";
+            this.dateTimePickerDateStartStateFrom.Size = new System.Drawing.Size(141, 21);
+            this.dateTimePickerDateStartStateFrom.TabIndex = 6;
+            // 
             // ExtendedSearchClaimsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(405, 400);
+            this.ClientSize = new System.Drawing.Size(405, 443);
+            this.Controls.Add(this.dateTimePickerDateStartStateTo);
+            this.Controls.Add(this.comboBoxDateStartStateExpr);
+            this.Controls.Add(this.checkBoxDateStartStateEnable);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.dateTimePickerDateStartStateFrom);
             this.Controls.Add(this.numericUpDownClaimId);
             this.Controls.Add(this.checkBoxClaimIdChecked);
             this.Controls.Add(this.label4);
@@ -577,5 +641,10 @@ namespace Registry.Viewport.SearchForms
         private NumericUpDown numericUpDownClaimId;
         private CheckBox checkBoxClaimIdChecked;
         private Label label4;
+        private DateTimePicker dateTimePickerDateStartStateTo;
+        private ComboBox comboBoxDateStartStateExpr;
+        private CheckBox checkBoxDateStartStateEnable;
+        private Label label5;
+        private DateTimePicker dateTimePickerDateStartStateFrom;
     }
 }

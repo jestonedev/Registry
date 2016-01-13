@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Viewport.SearchForms;
@@ -22,6 +23,8 @@ namespace Registry.Viewport
 
         private SearchForm spExtendedSearchForm;
         private SearchForm spSimpleSearchForm;
+
+        private CalcDataModel lastClaimStates;
 
         private int? _idAccount;
 
@@ -239,6 +242,13 @@ namespace Registry.Viewport
             ViewportHelper.SetDoubleBuffered(dataGridViewClaims);
             is_editable = true;
             DataChangeHandlersInit();
+            lastClaimStates = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelLastClaimStates);
+            lastClaimStates.RefreshEvent += lastClaimStates_RefreshEvent;
+        }
+
+        void lastClaimStates_RefreshEvent(object sender, EventArgs e)
+        {
+            dataGridViewClaims.Refresh();
         }
 
         private void BindAccount(int? idAccount)
@@ -672,30 +682,19 @@ namespace Registry.Viewport
                 case "description":
                     e.Value = row["description"];
                     break;
-                case "current_state":
+                case "state_type":
                     if (row["id_claim"] == DBNull.Value || row["id_claim"] == null) return;
                     var idClaim = (int?) row["id_claim"];
-                    var lastClaimStateMaxIds =
-                        from claimStateRow in DataModel.GetInstance(DataModelType.ClaimStatesDataModel).FilterDeletedRows()
-                        where claimStateRow.Field<int?>("id_claim") == idClaim
-                        group claimStateRow.Field<int?>("id_state") by claimStateRow.Field<int?>("id_claim") into gs
-                        select new
-                        {
-                            id_claim = gs.Key,
-                            id_state = gs.Max()
-                        };
-                    var lastClaimState =
-                        (from claimStateRow in
-                            DataModel.GetInstance(DataModelType.ClaimStatesDataModel).FilterDeletedRows()
-                        join lastClaimStateRow in lastClaimStateMaxIds
-                            on claimStateRow.Field<int?>("id_state") equals lastClaimStateRow.id_state
-                        join stateTypeRow in
-                            DataModel.GetInstance(DataModelType.ClaimStateTypesDataModel).FilterDeletedRows()
-                            on claimStateRow.Field<int?>("id_state_type") equals
-                            stateTypeRow.Field<int?>("id_state_type")
-                        select stateTypeRow.Field<string>("state_type")).ToList();
-                    if (lastClaimState.Any())
-                        e.Value = lastClaimState.First();
+                    var lastClaimState = lastClaimStates.Select().Rows.Find(idClaim);
+                    if (lastClaimState != null)
+                        e.Value = lastClaimState.Field<string>("state_type");
+                    break;
+                case "date_start_state":
+                    if (row["id_claim"] == DBNull.Value || row["id_claim"] == null) return;
+                    idClaim = (int?) row["id_claim"];
+                    lastClaimState = lastClaimStates.Select().Rows.Find(idClaim);
+                    if (lastClaimState != null && lastClaimState.Field<DateTime?>("date_start_state") != null)
+                        e.Value = lastClaimState.Field<DateTime>("date_start_state").ToString("dd.MM.yyyy");
                     break;
             }
         }

@@ -86,6 +86,8 @@ namespace Registry.DataModels.CalcDataModels
                     return CalcDataModelTenancyNotifiesMaxDate.GetInstance();
                 case CalcDataModelType.CalcDataModelTenancyPremisesInfo:
                     return CalcDataModelTenancyPremisesInfo.GetInstance(); 
+                case CalcDataModelType.CalcDataModelLastClaimStates:
+                    return CalcDataModelLastClaimStates.GetInstance();
                 default:
                     throw new DataModelException("Неизвестный тип модели");
             }
