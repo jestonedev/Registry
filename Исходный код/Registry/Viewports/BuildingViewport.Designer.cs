@@ -131,6 +131,10 @@ namespace Registry.Viewport
             this.label19 = new System.Windows.Forms.Label();
             this.textBoxCadastralNum = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.numericUpDownMunPremisesPercentage = new System.Windows.Forms.NumericUpDown();
+            this.label24 = new System.Windows.Forms.Label();
+            this.numericUpDownMunPremisesCount = new System.Windows.Forms.NumericUpDown();
+            this.label23 = new System.Windows.Forms.Label();
             this.numericUpDownPremisesCount = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownRoomsCount = new System.Windows.Forms.NumericUpDown();
             this.numericUpDownApartmentsCount = new System.Windows.Forms.NumericUpDown();
@@ -177,10 +181,6 @@ namespace Registry.Viewport
             this.ownership_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.ownership_description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_ownership_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
-            this.numericUpDownMunPremisesCount = new System.Windows.Forms.NumericUpDown();
-            this.label23 = new System.Windows.Forms.Label();
-            this.numericUpDownMunPremisesPercentage = new System.Windows.Forms.NumericUpDown();
-            this.label24 = new System.Windows.Forms.Label();
             this.tableLayoutPanel.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -192,6 +192,8 @@ namespace Registry.Viewport
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceCost)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCadastralCost)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMunPremisesPercentage)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMunPremisesCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPremisesCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRoomsCount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownApartmentsCount)).BeginInit();
@@ -212,8 +214,6 @@ namespace Registry.Viewport
             this.groupBox7.SuspendLayout();
             this.panel4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOwnerships)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMunPremisesCount)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMunPremisesPercentage)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel
@@ -640,6 +640,60 @@ namespace Registry.Viewport
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Количество жилых помещений";
             // 
+            // numericUpDownMunPremisesPercentage
+            // 
+            this.numericUpDownMunPremisesPercentage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownMunPremisesPercentage.DecimalPlaces = 2;
+            this.numericUpDownMunPremisesPercentage.Location = new System.Drawing.Point(381, 134);
+            this.numericUpDownMunPremisesPercentage.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.numericUpDownMunPremisesPercentage.Name = "numericUpDownMunPremisesPercentage";
+            this.numericUpDownMunPremisesPercentage.ReadOnly = true;
+            this.numericUpDownMunPremisesPercentage.Size = new System.Drawing.Size(68, 21);
+            this.numericUpDownMunPremisesPercentage.TabIndex = 10;
+            this.numericUpDownMunPremisesPercentage.Value = new decimal(new int[] {
+            100,
+            0,
+            0,
+            0});
+            // 
+            // label24
+            // 
+            this.label24.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(357, 136);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(18, 15);
+            this.label24.TabIndex = 11;
+            this.label24.Text = "%";
+            // 
+            // numericUpDownMunPremisesCount
+            // 
+            this.numericUpDownMunPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownMunPremisesCount.Location = new System.Drawing.Point(181, 134);
+            this.numericUpDownMunPremisesCount.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.numericUpDownMunPremisesCount.Name = "numericUpDownMunPremisesCount";
+            this.numericUpDownMunPremisesCount.ReadOnly = true;
+            this.numericUpDownMunPremisesCount.Size = new System.Drawing.Size(171, 21);
+            this.numericUpDownMunPremisesCount.TabIndex = 8;
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(16, 136);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(158, 15);
+            this.label23.TabIndex = 9;
+            this.label23.Text = "Всего муниципальных ЖП";
+            // 
             // numericUpDownPremisesCount
             // 
             this.numericUpDownPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -953,7 +1007,7 @@ namespace Registry.Viewport
             // 
             this.textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
             this.textBoxDescription.Location = new System.Drawing.Point(3, 17);
-            this.textBoxDescription.MaxLength = 255;
+            this.textBoxDescription.MaxLength = 65535;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.Size = new System.Drawing.Size(448, 87);
@@ -1205,60 +1259,6 @@ namespace Registry.Viewport
             this.id_ownership_type.ReadOnly = true;
             this.id_ownership_type.Width = 200;
             // 
-            // numericUpDownMunPremisesCount
-            // 
-            this.numericUpDownMunPremisesCount.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownMunPremisesCount.Location = new System.Drawing.Point(181, 134);
-            this.numericUpDownMunPremisesCount.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.numericUpDownMunPremisesCount.Name = "numericUpDownMunPremisesCount";
-            this.numericUpDownMunPremisesCount.ReadOnly = true;
-            this.numericUpDownMunPremisesCount.Size = new System.Drawing.Size(171, 21);
-            this.numericUpDownMunPremisesCount.TabIndex = 8;
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(16, 136);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(158, 15);
-            this.label23.TabIndex = 9;
-            this.label23.Text = "Всего муниципальных ЖП";
-            // 
-            // numericUpDownMunPremisesPercentage
-            // 
-            this.numericUpDownMunPremisesPercentage.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownMunPremisesPercentage.DecimalPlaces = 2;
-            this.numericUpDownMunPremisesPercentage.Location = new System.Drawing.Point(381, 134);
-            this.numericUpDownMunPremisesPercentage.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.numericUpDownMunPremisesPercentage.Name = "numericUpDownMunPremisesPercentage";
-            this.numericUpDownMunPremisesPercentage.ReadOnly = true;
-            this.numericUpDownMunPremisesPercentage.Size = new System.Drawing.Size(68, 21);
-            this.numericUpDownMunPremisesPercentage.TabIndex = 10;
-            this.numericUpDownMunPremisesPercentage.Value = new decimal(new int[] {
-            100,
-            0,
-            0,
-            0});
-            // 
-            // label24
-            // 
-            this.label24.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(357, 136);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(18, 15);
-            this.label24.TabIndex = 11;
-            this.label24.Text = "%";
-            // 
             // BuildingViewport
             // 
             this.AutoScroll = true;
@@ -1285,6 +1285,8 @@ namespace Registry.Viewport
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownCadastralCost)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMunPremisesPercentage)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMunPremisesCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPremisesCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRoomsCount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownApartmentsCount)).EndInit();
@@ -1308,8 +1310,6 @@ namespace Registry.Viewport
             this.groupBox7.ResumeLayout(false);
             this.panel4.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewOwnerships)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMunPremisesCount)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownMunPremisesPercentage)).EndInit();
             this.ResumeLayout(false);
 
         }
