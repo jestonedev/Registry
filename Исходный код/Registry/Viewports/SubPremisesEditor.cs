@@ -123,7 +123,7 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (new[] { 1, 3, 6, 7, 8 }.Contains(subPremise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+            if (new[] { 1, 3, 6, 7, 8, 10 }.Contains(subPremise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
                 MessageBox.Show("У вас нет прав на добавление в базу немуниципальных жилых помещений", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);

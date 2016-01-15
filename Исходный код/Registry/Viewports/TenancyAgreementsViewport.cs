@@ -415,7 +415,7 @@ namespace Registry.Viewport
             if (index != -1)
                 comboBoxExecutor.SelectedValue = ((DataRowView)v_executors[index])["id_executor"];
             if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
-                textBoxAgreementContent.Text = string.Format(CultureInfo.InvariantCulture, "1.1 По настоящему Соглашению Стороны по договору № {0} от {1} договорились",
+                textBoxAgreementContent.Text = string.Format(CultureInfo.InvariantCulture, "1.1 По настоящему Соглашению Стороны по договору № {0} от {1} договорились:",
                     ParentRow["registration_num"],
                     ParentRow["registration_date"] != DBNull.Value ?
                         Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "");

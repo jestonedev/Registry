@@ -292,7 +292,7 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    if (subPremise.IdState != null && (new[] { 1, 3, 6, 7, 8 }.Contains(subPremise.IdState.Value) && 
+                    if (subPremise.IdState != null && (new[] { 1, 3, 6, 7, 8, 10 }.Contains(subPremise.IdState.Value) && 
                         !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)))
                     {
                         MessageBox.Show(@"У вас нет прав на добавление в базу немуниципальных жилых помещений", @"Ошибка",
