@@ -322,6 +322,7 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            dataGridViewClaimStateTypes.EndEdit();
             GeneralDataModel.EditingNewRecord = true;
             // Сохраняем общую информацию о видах состояний
             var list = ClaimStateTypesFromViewport();

@@ -361,6 +361,7 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            dataGridView.EndEdit();
             var resettleBuildingsFromAssoc = DataModel.GetInstance(DataModelType.ResettleBuildingsFromAssocDataModel);
             var resettleBuildingsToAssoc = DataModel.GetInstance(DataModelType.ResettleBuildingsToAssocDataModel);
             resettleBuildingsFromAssoc.EditingNewRecord = true;

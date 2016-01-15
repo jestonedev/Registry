@@ -239,6 +239,7 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            dataGridView.EndEdit();
             GeneralDataModel.EditingNewRecord = true;
             var list = EntitiesListFromViewport();
             if (!ValidateViewportData(list))

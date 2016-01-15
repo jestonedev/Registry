@@ -383,6 +383,7 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            dataGridView.EndEdit();
             tenancy_buildings.EditingNewRecord = true;
             var list = TenancyBuildingsFromViewport();
             if (!ValidateTenancyBuildings(list))

@@ -420,6 +420,7 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             sync_views = false;
+            dataGridView.EndEdit();
             tenancy_premises.EditingNewRecord = true;
             var list = TenancyPremisesFromViewport();
             // Проверяем данные о помещениях
