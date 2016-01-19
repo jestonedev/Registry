@@ -11,11 +11,7 @@ namespace Registry.Viewport.SearchForms
 {
     internal partial class ExtendedSearchTenancyForm : SearchForm
     {
-        DataModel regions;
-
-        BindingSource v_kladr;
-        BindingSource v_regions;
-        BindingSource v_rentTypes;
+        private readonly BindingSource vKladr;
 
         public ExtendedSearchTenancyForm()
         {
@@ -23,32 +19,47 @@ namespace Registry.Viewport.SearchForms
 
             DataModel.GetInstance(DataModelType.KladrStreetsDataModel).Select();
             DataModel.GetInstance(DataModelType.RentTypesDataModel).Select();
-            regions = DataModel.GetInstance(DataModelType.KladrRegionsDataModel);
+            DataModel.GetInstance(DataModelType.TenancyReasonTypesDataModel).Select();
+            var regions = DataModel.GetInstance(DataModelType.KladrRegionsDataModel);
 
             var ds = DataModel.DataSet;
 
-            v_kladr = new BindingSource();
-            v_kladr.DataSource = ds;
-            v_kladr.DataMember = "kladr";
+            vKladr = new BindingSource
+            {
+                DataSource = ds,
+                DataMember = "kladr"
+            };
 
-            v_regions = new BindingSource();
-            v_regions.DataSource = regions.Select();
+            var vRegions = new BindingSource {DataSource = regions.Select()};
 
-            v_rentTypes = new BindingSource();
-            v_rentTypes.DataSource = ds;
-            v_rentTypes.DataMember = "rent_types";
+            var vRentTypes = new BindingSource
+            {
+                DataSource = ds,
+                DataMember = "rent_types"
+            };
 
-            comboBoxStreet.DataSource = v_kladr;
+            var vTenancyReasonTypes = new BindingSource
+            {
+                DataSource = ds,
+                DataMember = "tenancy_reason_types",
+                Sort = "reason_name ASC"
+            };
+
+            comboBoxStreet.DataSource = vKladr;
             comboBoxStreet.ValueMember = "id_street";
             comboBoxStreet.DisplayMember = "street_name";
 
-            comboBoxRentType.DataSource = v_rentTypes;
+            comboBoxRentType.DataSource = vRentTypes;
             comboBoxRentType.ValueMember = "id_rent_type";
             comboBoxRentType.DisplayMember = "rent_type";
 
-            comboBoxRegion.DataSource = v_regions;
+            comboBoxRegion.DataSource = vRegions;
             comboBoxRegion.ValueMember = "id_region";
             comboBoxRegion.DisplayMember = "region";
+
+            comboBoxReasonType.DataSource = vTenancyReasonTypes;
+            comboBoxReasonType.ValueMember = "id_reason_type";
+            comboBoxReasonType.DisplayMember = "reason_name";
 
             comboBoxRegDateExpr.SelectedIndex = 2;
             comboBoxIssueDateExpr.SelectedIndex = 2;
@@ -80,11 +91,21 @@ namespace Registry.Viewport.SearchForms
                     filter += " AND ";
                 filter += string.Format(CultureInfo.InvariantCulture, "registration_num = '%{0}%'", textBoxRegistrationNum.Text.Trim().Replace("'", ""));
             }
-            if (checkBoxResidenceWarrantNumEnable.Checked)
+            if (checkBoxReasonTypeEnable.Checked)
             {
-                if (!string.IsNullOrEmpty(filter.Trim()))
-                    filter += " AND ";
-                filter += string.Format(CultureInfo.InvariantCulture, "residence_warrant_num = '{0}'", textBoxResidenceWarrantNum.Text.Trim().Replace("'", ""));
+                var processesIds =
+                    from reason in DataModel.GetInstance(DataModelType.TenancyReasonsDataModel).FilterDeletedRows()
+                    where reason.Field<int?>("id_reason_type") == (int?)comboBoxReasonType.SelectedValue
+                    select reason.Field<int>("id_process");
+                includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
+            }
+            if (checkBoxReasonNumEnable.Checked)
+            {
+                var processesIds =
+                    from reason in DataModel.GetInstance(DataModelType.TenancyReasonsDataModel).FilterDeletedRows()
+                    where reason.Field<string>("reason_number") == textBoxReasonNum.Text
+                    select reason.Field<int>("id_process");
+                includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (checkBoxProtocolEnable.Checked)
             {
@@ -153,7 +174,7 @@ namespace Registry.Viewport.SearchForms
                     dateTimePickerProtocolDate.Value.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture));
             }
             if (checkBoxIDTenancyEnable.Checked)
-                includedProcesses = DataModelHelper.Intersect(null, new List<int> { Convert.ToInt32(numericUpDownIDTenancy.Value) });
+                includedProcesses = DataModelHelper.Intersect(includedProcesses, new List<int> { Convert.ToInt32(numericUpDownIDTenancy.Value) });
             if (checkBoxTenantSNPEnable.Checked)
             {
                 var snp = textBoxTenantSNP.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
@@ -272,9 +293,9 @@ namespace Registry.Viewport.SearchForms
             textBoxRegistrationNum.Enabled = checkBoxContractNumEnable.Checked;
         }
 
-        private void checkBoxResidenceWarrantNumEnable_CheckedChanged(object sender, EventArgs e)
+        private void checkBoxReasonNumEnable_CheckedChanged(object sender, EventArgs e)
         {
-            textBoxResidenceWarrantNum.Enabled = checkBoxResidenceWarrantNumEnable.Checked;
+            textBoxReasonNum.Enabled = checkBoxReasonNumEnable.Checked;
         }
 
         private void checkBoxProtocolEnable_CheckedChanged(object sender, EventArgs e)
@@ -326,11 +347,11 @@ namespace Registry.Viewport.SearchForms
                 textBoxRegistrationNum.Focus();
                 return;
             }
-            if ((checkBoxResidenceWarrantNumEnable.Checked) && string.IsNullOrEmpty(textBoxResidenceWarrantNum.Text.Trim()))
+            if ((checkBoxReasonNumEnable.Checked) && string.IsNullOrEmpty(textBoxReasonNum.Text.Trim()))
             {
-                MessageBox.Show(@"Введите номер ордера на проживание или уберите галочку поиска по номеру ордера на проживание", @"Ошибка",
+                MessageBox.Show(@"Введите номер документа-основания или уберите галочку поиска по номеру ордера на проживание", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                textBoxResidenceWarrantNum.Focus();
+                textBoxReasonNum.Focus();
                 return;
             }
             if ((checkBoxProtocolEnable.Checked) && string.IsNullOrEmpty(textBoxProtocolNum.Text.Trim()))
@@ -392,7 +413,7 @@ namespace Registry.Viewport.SearchForms
                 var text = comboBoxStreet.Text;
                 var selectionStart = comboBoxStreet.SelectionStart;
                 var selectionLength = comboBoxStreet.SelectionLength;
-                v_kladr.Filter = "street_name like '%" + comboBoxStreet.Text + "%'";
+                vKladr.Filter = "street_name like '%" + comboBoxStreet.Text + "%'";
                 comboBoxStreet.Text = text;
                 comboBoxStreet.SelectionStart = selectionStart;
                 comboBoxStreet.SelectionLength = selectionLength;
@@ -404,8 +425,8 @@ namespace Registry.Viewport.SearchForms
             if (comboBoxStreet.Items.Count > 0)
             {
                 if (comboBoxStreet.SelectedValue == null)
-                    comboBoxStreet.SelectedValue = v_kladr[v_kladr.Position];
-                comboBoxStreet.Text = ((DataRowView)v_kladr[v_kladr.Position])["street_name"].ToString();
+                    comboBoxStreet.SelectedValue = vKladr[vKladr.Position];
+                comboBoxStreet.Text = ((DataRowView)vKladr[vKladr.Position])["street_name"].ToString();
             }
             if (comboBoxStreet.SelectedValue == null)
                 comboBoxStreet.Text = "";
@@ -450,6 +471,11 @@ namespace Registry.Viewport.SearchForms
         private void selectAll_Enter(object sender, EventArgs e)
         {
             ViewportHelper.SelectAllText(sender);
+        }
+
+        private void checkBoxReasonTypeEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            comboBoxReasonType.Enabled = checkBoxReasonTypeEnable.Checked;
         }
     }
 }

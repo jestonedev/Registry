@@ -32,14 +32,14 @@ namespace Registry.Viewport.SearchForms
         /// </summary>
         private void InitializeComponent()
         {
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(ExtendedSearchTenancyForm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ExtendedSearchTenancyForm));
             this.vButtonCancel = new VIBlend.WinForms.Controls.vButton();
             this.vButtonSearch = new VIBlend.WinForms.Controls.vButton();
             this.textBoxRegistrationNum = new System.Windows.Forms.TextBox();
             this.checkBoxContractNumEnable = new System.Windows.Forms.CheckBox();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBoxResidenceWarrantNum = new System.Windows.Forms.TextBox();
-            this.checkBoxResidenceWarrantNumEnable = new System.Windows.Forms.CheckBox();
+            this.textBoxReasonNum = new System.Windows.Forms.TextBox();
+            this.checkBoxReasonNumEnable = new System.Windows.Forms.CheckBox();
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxProtocolNum = new System.Windows.Forms.TextBox();
             this.checkBoxProtocolEnable = new System.Windows.Forms.CheckBox();
@@ -92,6 +92,9 @@ namespace Registry.Viewport.SearchForms
             this.dateTimePickerProtocolDate = new System.Windows.Forms.DateTimePicker();
             this.checkBoxProtocolDateEnable = new System.Windows.Forms.CheckBox();
             this.label17 = new System.Windows.Forms.Label();
+            this.comboBoxReasonType = new System.Windows.Forms.ComboBox();
+            this.checkBoxReasonTypeEnable = new System.Windows.Forms.CheckBox();
+            this.label18 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownIDTenancy)).BeginInit();
             this.SuspendLayout();
             // 
@@ -100,11 +103,11 @@ namespace Registry.Viewport.SearchForms
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(630, 427);
+            this.vButtonCancel.Location = new System.Drawing.Point(630, 469);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
-            this.vButtonCancel.TabIndex = 41;
+            this.vButtonCancel.TabIndex = 43;
             this.vButtonCancel.Text = "Отмена";
             this.vButtonCancel.UseVisualStyleBackColor = false;
             this.vButtonCancel.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -113,11 +116,11 @@ namespace Registry.Viewport.SearchForms
             // 
             this.vButtonSearch.AllowAnimations = true;
             this.vButtonSearch.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSearch.Location = new System.Drawing.Point(630, 386);
+            this.vButtonSearch.Location = new System.Drawing.Point(630, 428);
             this.vButtonSearch.Name = "vButtonSearch";
             this.vButtonSearch.RoundedCornersMask = ((byte)(15));
             this.vButtonSearch.Size = new System.Drawing.Size(117, 35);
-            this.vButtonSearch.TabIndex = 40;
+            this.vButtonSearch.TabIndex = 42;
             this.vButtonSearch.Text = "Поиск";
             this.vButtonSearch.UseVisualStyleBackColor = false;
             this.vButtonSearch.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -151,57 +154,57 @@ namespace Registry.Viewport.SearchForms
             this.label2.TabIndex = 40;
             this.label2.Text = "Номер договора";
             // 
-            // textBoxResidenceWarrantNum
+            // textBoxReasonNum
             // 
-            this.textBoxResidenceWarrantNum.Enabled = false;
-            this.textBoxResidenceWarrantNum.Location = new System.Drawing.Point(42, 107);
-            this.textBoxResidenceWarrantNum.Name = "textBoxResidenceWarrantNum";
-            this.textBoxResidenceWarrantNum.Size = new System.Drawing.Size(437, 21);
-            this.textBoxResidenceWarrantNum.TabIndex = 5;
-            this.textBoxResidenceWarrantNum.Enter += new System.EventHandler(this.selectAll_Enter);
+            this.textBoxReasonNum.Enabled = false;
+            this.textBoxReasonNum.Location = new System.Drawing.Point(42, 107);
+            this.textBoxReasonNum.Name = "textBoxReasonNum";
+            this.textBoxReasonNum.Size = new System.Drawing.Size(437, 21);
+            this.textBoxReasonNum.TabIndex = 5;
+            this.textBoxReasonNum.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
-            // checkBoxResidenceWarrantNumEnable
+            // checkBoxReasonNumEnable
             // 
-            this.checkBoxResidenceWarrantNumEnable.AutoSize = true;
-            this.checkBoxResidenceWarrantNumEnable.Location = new System.Drawing.Point(17, 110);
-            this.checkBoxResidenceWarrantNumEnable.Name = "checkBoxResidenceWarrantNumEnable";
-            this.checkBoxResidenceWarrantNumEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxResidenceWarrantNumEnable.TabIndex = 4;
-            this.checkBoxResidenceWarrantNumEnable.UseVisualStyleBackColor = true;
-            this.checkBoxResidenceWarrantNumEnable.CheckedChanged += new System.EventHandler(this.checkBoxResidenceWarrantNumEnable_CheckedChanged);
+            this.checkBoxReasonNumEnable.AutoSize = true;
+            this.checkBoxReasonNumEnable.Location = new System.Drawing.Point(17, 110);
+            this.checkBoxReasonNumEnable.Name = "checkBoxReasonNumEnable";
+            this.checkBoxReasonNumEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxReasonNumEnable.TabIndex = 4;
+            this.checkBoxReasonNumEnable.UseVisualStyleBackColor = true;
+            this.checkBoxReasonNumEnable.CheckedChanged += new System.EventHandler(this.checkBoxReasonNumEnable_CheckedChanged);
             // 
             // label1
             // 
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(10, 90);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(183, 15);
+            this.label1.Size = new System.Drawing.Size(177, 15);
             this.label1.TabIndex = 43;
-            this.label1.Text = "Номер ордера на проживание";
+            this.label1.Text = "Номер документа-основания";
             // 
             // textBoxProtocolNum
             // 
             this.textBoxProtocolNum.Enabled = false;
-            this.textBoxProtocolNum.Location = new System.Drawing.Point(42, 148);
+            this.textBoxProtocolNum.Location = new System.Drawing.Point(42, 190);
             this.textBoxProtocolNum.Name = "textBoxProtocolNum";
             this.textBoxProtocolNum.Size = new System.Drawing.Size(437, 21);
-            this.textBoxProtocolNum.TabIndex = 7;
+            this.textBoxProtocolNum.TabIndex = 9;
             this.textBoxProtocolNum.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxProtocolEnable
             // 
             this.checkBoxProtocolEnable.AutoSize = true;
-            this.checkBoxProtocolEnable.Location = new System.Drawing.Point(17, 151);
+            this.checkBoxProtocolEnable.Location = new System.Drawing.Point(17, 193);
             this.checkBoxProtocolEnable.Name = "checkBoxProtocolEnable";
             this.checkBoxProtocolEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxProtocolEnable.TabIndex = 6;
+            this.checkBoxProtocolEnable.TabIndex = 8;
             this.checkBoxProtocolEnable.UseVisualStyleBackColor = true;
             this.checkBoxProtocolEnable.CheckedChanged += new System.EventHandler(this.checkBoxProtocolEnable_CheckedChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(10, 131);
+            this.label3.Location = new System.Drawing.Point(10, 173);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(232, 15);
             this.label3.TabIndex = 46;
@@ -210,26 +213,26 @@ namespace Registry.Viewport.SearchForms
             // textBoxTenantSNP
             // 
             this.textBoxTenantSNP.Enabled = false;
-            this.textBoxTenantSNP.Location = new System.Drawing.Point(42, 189);
+            this.textBoxTenantSNP.Location = new System.Drawing.Point(42, 231);
             this.textBoxTenantSNP.Name = "textBoxTenantSNP";
             this.textBoxTenantSNP.Size = new System.Drawing.Size(437, 21);
-            this.textBoxTenantSNP.TabIndex = 9;
+            this.textBoxTenantSNP.TabIndex = 11;
             this.textBoxTenantSNP.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxTenantSNPEnable
             // 
             this.checkBoxTenantSNPEnable.AutoSize = true;
-            this.checkBoxTenantSNPEnable.Location = new System.Drawing.Point(17, 192);
+            this.checkBoxTenantSNPEnable.Location = new System.Drawing.Point(17, 234);
             this.checkBoxTenantSNPEnable.Name = "checkBoxTenantSNPEnable";
             this.checkBoxTenantSNPEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxTenantSNPEnable.TabIndex = 8;
+            this.checkBoxTenantSNPEnable.TabIndex = 10;
             this.checkBoxTenantSNPEnable.UseVisualStyleBackColor = true;
             this.checkBoxTenantSNPEnable.CheckedChanged += new System.EventHandler(this.checkBoxTenantSNPEnable_CheckedChanged);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(10, 172);
+            this.label4.Location = new System.Drawing.Point(10, 214);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(111, 15);
             this.label4.TabIndex = 49;
@@ -238,26 +241,26 @@ namespace Registry.Viewport.SearchForms
             // textBoxPersonSNP
             // 
             this.textBoxPersonSNP.Enabled = false;
-            this.textBoxPersonSNP.Location = new System.Drawing.Point(42, 230);
+            this.textBoxPersonSNP.Location = new System.Drawing.Point(42, 272);
             this.textBoxPersonSNP.Name = "textBoxPersonSNP";
             this.textBoxPersonSNP.Size = new System.Drawing.Size(437, 21);
-            this.textBoxPersonSNP.TabIndex = 11;
+            this.textBoxPersonSNP.TabIndex = 13;
             this.textBoxPersonSNP.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxPersonSNPEnable
             // 
             this.checkBoxPersonSNPEnable.AutoSize = true;
-            this.checkBoxPersonSNPEnable.Location = new System.Drawing.Point(17, 233);
+            this.checkBoxPersonSNPEnable.Location = new System.Drawing.Point(17, 275);
             this.checkBoxPersonSNPEnable.Name = "checkBoxPersonSNPEnable";
             this.checkBoxPersonSNPEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxPersonSNPEnable.TabIndex = 10;
+            this.checkBoxPersonSNPEnable.TabIndex = 12;
             this.checkBoxPersonSNPEnable.UseVisualStyleBackColor = true;
             this.checkBoxPersonSNPEnable.CheckedChanged += new System.EventHandler(this.checkBoxPersonSNPEnable_CheckedChanged);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(10, 213);
+            this.label5.Location = new System.Drawing.Point(10, 255);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(137, 15);
             this.label5.TabIndex = 52;
@@ -301,25 +304,25 @@ namespace Registry.Viewport.SearchForms
             this.comboBoxRentType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxRentType.Enabled = false;
             this.comboBoxRentType.FormattingEnabled = true;
-            this.comboBoxRentType.Location = new System.Drawing.Point(42, 271);
+            this.comboBoxRentType.Location = new System.Drawing.Point(42, 313);
             this.comboBoxRentType.Name = "comboBoxRentType";
             this.comboBoxRentType.Size = new System.Drawing.Size(437, 23);
-            this.comboBoxRentType.TabIndex = 13;
+            this.comboBoxRentType.TabIndex = 15;
             // 
             // checkBoxRentTypeEnable
             // 
             this.checkBoxRentTypeEnable.AutoSize = true;
-            this.checkBoxRentTypeEnable.Location = new System.Drawing.Point(17, 275);
+            this.checkBoxRentTypeEnable.Location = new System.Drawing.Point(17, 317);
             this.checkBoxRentTypeEnable.Name = "checkBoxRentTypeEnable";
             this.checkBoxRentTypeEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxRentTypeEnable.TabIndex = 12;
+            this.checkBoxRentTypeEnable.TabIndex = 14;
             this.checkBoxRentTypeEnable.UseVisualStyleBackColor = true;
             this.checkBoxRentTypeEnable.CheckedChanged += new System.EventHandler(this.checkBoxRentTypeEnable_CheckedChanged);
             // 
             // label6
             // 
             this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(10, 254);
+            this.label6.Location = new System.Drawing.Point(10, 296);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(69, 15);
             this.label6.TabIndex = 59;
@@ -330,25 +333,25 @@ namespace Registry.Viewport.SearchForms
             this.comboBoxRegion.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxRegion.Enabled = false;
             this.comboBoxRegion.FormattingEnabled = true;
-            this.comboBoxRegion.Location = new System.Drawing.Point(42, 314);
+            this.comboBoxRegion.Location = new System.Drawing.Point(42, 356);
             this.comboBoxRegion.Name = "comboBoxRegion";
             this.comboBoxRegion.Size = new System.Drawing.Size(437, 23);
-            this.comboBoxRegion.TabIndex = 15;
+            this.comboBoxRegion.TabIndex = 17;
             // 
             // checkBoxRegionEnable
             // 
             this.checkBoxRegionEnable.AutoSize = true;
-            this.checkBoxRegionEnable.Location = new System.Drawing.Point(17, 318);
+            this.checkBoxRegionEnable.Location = new System.Drawing.Point(17, 360);
             this.checkBoxRegionEnable.Name = "checkBoxRegionEnable";
             this.checkBoxRegionEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxRegionEnable.TabIndex = 14;
+            this.checkBoxRegionEnable.TabIndex = 16;
             this.checkBoxRegionEnable.UseVisualStyleBackColor = true;
             this.checkBoxRegionEnable.CheckedChanged += new System.EventHandler(this.checkBoxRegionEnable_CheckedChanged);
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(10, 297);
+            this.label8.Location = new System.Drawing.Point(10, 339);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(84, 15);
             this.label8.TabIndex = 71;
@@ -357,36 +360,36 @@ namespace Registry.Viewport.SearchForms
             // textBoxHouse
             // 
             this.textBoxHouse.Enabled = false;
-            this.textBoxHouse.Location = new System.Drawing.Point(42, 400);
+            this.textBoxHouse.Location = new System.Drawing.Point(42, 442);
             this.textBoxHouse.Name = "textBoxHouse";
             this.textBoxHouse.Size = new System.Drawing.Size(437, 21);
-            this.textBoxHouse.TabIndex = 19;
+            this.textBoxHouse.TabIndex = 21;
             this.textBoxHouse.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // checkBoxPremisesNumEnable
             // 
             this.checkBoxPremisesNumEnable.AutoSize = true;
-            this.checkBoxPremisesNumEnable.Location = new System.Drawing.Point(17, 444);
+            this.checkBoxPremisesNumEnable.Location = new System.Drawing.Point(17, 486);
             this.checkBoxPremisesNumEnable.Name = "checkBoxPremisesNumEnable";
             this.checkBoxPremisesNumEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxPremisesNumEnable.TabIndex = 20;
+            this.checkBoxPremisesNumEnable.TabIndex = 22;
             this.checkBoxPremisesNumEnable.UseVisualStyleBackColor = true;
             this.checkBoxPremisesNumEnable.CheckedChanged += new System.EventHandler(this.checkBoxPremisesNumEnable_CheckedChanged);
             // 
             // textBoxPremisesNum
             // 
             this.textBoxPremisesNum.Enabled = false;
-            this.textBoxPremisesNum.Location = new System.Drawing.Point(42, 441);
+            this.textBoxPremisesNum.Location = new System.Drawing.Point(42, 483);
             this.textBoxPremisesNum.MaxLength = 4;
             this.textBoxPremisesNum.Name = "textBoxPremisesNum";
             this.textBoxPremisesNum.Size = new System.Drawing.Size(437, 21);
-            this.textBoxPremisesNum.TabIndex = 21;
+            this.textBoxPremisesNum.TabIndex = 23;
             this.textBoxPremisesNum.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(10, 424);
+            this.label7.Location = new System.Drawing.Point(10, 466);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(116, 15);
             this.label7.TabIndex = 67;
@@ -395,27 +398,27 @@ namespace Registry.Viewport.SearchForms
             // checkBoxHouseEnable
             // 
             this.checkBoxHouseEnable.AutoSize = true;
-            this.checkBoxHouseEnable.Location = new System.Drawing.Point(17, 403);
+            this.checkBoxHouseEnable.Location = new System.Drawing.Point(17, 445);
             this.checkBoxHouseEnable.Name = "checkBoxHouseEnable";
             this.checkBoxHouseEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxHouseEnable.TabIndex = 18;
+            this.checkBoxHouseEnable.TabIndex = 20;
             this.checkBoxHouseEnable.UseVisualStyleBackColor = true;
             this.checkBoxHouseEnable.CheckedChanged += new System.EventHandler(this.checkBoxHouseEnable_CheckedChanged);
             // 
             // checkBoxStreetEnable
             // 
             this.checkBoxStreetEnable.AutoSize = true;
-            this.checkBoxStreetEnable.Location = new System.Drawing.Point(17, 361);
+            this.checkBoxStreetEnable.Location = new System.Drawing.Point(17, 403);
             this.checkBoxStreetEnable.Name = "checkBoxStreetEnable";
             this.checkBoxStreetEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxStreetEnable.TabIndex = 16;
+            this.checkBoxStreetEnable.TabIndex = 18;
             this.checkBoxStreetEnable.UseVisualStyleBackColor = true;
             this.checkBoxStreetEnable.CheckedChanged += new System.EventHandler(this.checkBoxStreetEnable_CheckedChanged);
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(10, 383);
+            this.label10.Location = new System.Drawing.Point(10, 425);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(79, 15);
             this.label10.TabIndex = 66;
@@ -424,7 +427,7 @@ namespace Registry.Viewport.SearchForms
             // label11
             // 
             this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(10, 340);
+            this.label11.Location = new System.Drawing.Point(10, 382);
             this.label11.Name = "label11";
             this.label11.Size = new System.Drawing.Size(43, 15);
             this.label11.TabIndex = 65;
@@ -434,10 +437,10 @@ namespace Registry.Viewport.SearchForms
             // 
             this.comboBoxStreet.Enabled = false;
             this.comboBoxStreet.FormattingEnabled = true;
-            this.comboBoxStreet.Location = new System.Drawing.Point(42, 357);
+            this.comboBoxStreet.Location = new System.Drawing.Point(42, 399);
             this.comboBoxStreet.Name = "comboBoxStreet";
             this.comboBoxStreet.Size = new System.Drawing.Size(437, 23);
-            this.comboBoxStreet.TabIndex = 17;
+            this.comboBoxStreet.TabIndex = 19;
             this.comboBoxStreet.DropDownClosed += new System.EventHandler(this.comboBoxStreet_DropDownClosed);
             this.comboBoxStreet.Enter += new System.EventHandler(this.selectAll_Enter);
             this.comboBoxStreet.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxStreet_KeyUp);
@@ -449,7 +452,7 @@ namespace Registry.Viewport.SearchForms
             this.checkBoxRegDateEnable.Location = new System.Drawing.Point(507, 28);
             this.checkBoxRegDateEnable.Name = "checkBoxRegDateEnable";
             this.checkBoxRegDateEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxRegDateEnable.TabIndex = 22;
+            this.checkBoxRegDateEnable.TabIndex = 24;
             this.checkBoxRegDateEnable.UseVisualStyleBackColor = true;
             this.checkBoxRegDateEnable.CheckedChanged += new System.EventHandler(this.checkBoxRegDateEnable_CheckedChanged);
             // 
@@ -468,7 +471,7 @@ namespace Registry.Viewport.SearchForms
             this.dateTimePickerRegDate.Location = new System.Drawing.Point(588, 25);
             this.dateTimePickerRegDate.Name = "dateTimePickerRegDate";
             this.dateTimePickerRegDate.Size = new System.Drawing.Size(159, 21);
-            this.dateTimePickerRegDate.TabIndex = 24;
+            this.dateTimePickerRegDate.TabIndex = 26;
             // 
             // comboBoxRegDateExpr
             // 
@@ -482,7 +485,7 @@ namespace Registry.Viewport.SearchForms
             this.comboBoxRegDateExpr.Location = new System.Drawing.Point(532, 25);
             this.comboBoxRegDateExpr.Name = "comboBoxRegDateExpr";
             this.comboBoxRegDateExpr.Size = new System.Drawing.Size(48, 23);
-            this.comboBoxRegDateExpr.TabIndex = 23;
+            this.comboBoxRegDateExpr.TabIndex = 25;
             // 
             // comboBoxIssueDateExpr
             // 
@@ -496,7 +499,7 @@ namespace Registry.Viewport.SearchForms
             this.comboBoxIssueDateExpr.Location = new System.Drawing.Point(532, 66);
             this.comboBoxIssueDateExpr.Name = "comboBoxIssueDateExpr";
             this.comboBoxIssueDateExpr.Size = new System.Drawing.Size(48, 23);
-            this.comboBoxIssueDateExpr.TabIndex = 26;
+            this.comboBoxIssueDateExpr.TabIndex = 28;
             // 
             // dateTimePickerIssueDate
             // 
@@ -504,7 +507,7 @@ namespace Registry.Viewport.SearchForms
             this.dateTimePickerIssueDate.Location = new System.Drawing.Point(588, 66);
             this.dateTimePickerIssueDate.Name = "dateTimePickerIssueDate";
             this.dateTimePickerIssueDate.Size = new System.Drawing.Size(159, 21);
-            this.dateTimePickerIssueDate.TabIndex = 27;
+            this.dateTimePickerIssueDate.TabIndex = 29;
             // 
             // checkBoxIssueDateEnable
             // 
@@ -512,7 +515,7 @@ namespace Registry.Viewport.SearchForms
             this.checkBoxIssueDateEnable.Location = new System.Drawing.Point(507, 70);
             this.checkBoxIssueDateEnable.Name = "checkBoxIssueDateEnable";
             this.checkBoxIssueDateEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxIssueDateEnable.TabIndex = 25;
+            this.checkBoxIssueDateEnable.TabIndex = 27;
             this.checkBoxIssueDateEnable.UseVisualStyleBackColor = true;
             this.checkBoxIssueDateEnable.CheckedChanged += new System.EventHandler(this.checkBoxIssueDateEnable_CheckedChanged);
             // 
@@ -537,7 +540,7 @@ namespace Registry.Viewport.SearchForms
             this.comboBoxBeginDateExpr.Location = new System.Drawing.Point(532, 107);
             this.comboBoxBeginDateExpr.Name = "comboBoxBeginDateExpr";
             this.comboBoxBeginDateExpr.Size = new System.Drawing.Size(48, 23);
-            this.comboBoxBeginDateExpr.TabIndex = 29;
+            this.comboBoxBeginDateExpr.TabIndex = 31;
             // 
             // dateTimePickerBeginDate
             // 
@@ -545,7 +548,7 @@ namespace Registry.Viewport.SearchForms
             this.dateTimePickerBeginDate.Location = new System.Drawing.Point(588, 107);
             this.dateTimePickerBeginDate.Name = "dateTimePickerBeginDate";
             this.dateTimePickerBeginDate.Size = new System.Drawing.Size(159, 21);
-            this.dateTimePickerBeginDate.TabIndex = 30;
+            this.dateTimePickerBeginDate.TabIndex = 32;
             // 
             // checkBoxBeginDateEnable
             // 
@@ -553,7 +556,7 @@ namespace Registry.Viewport.SearchForms
             this.checkBoxBeginDateEnable.Location = new System.Drawing.Point(507, 111);
             this.checkBoxBeginDateEnable.Name = "checkBoxBeginDateEnable";
             this.checkBoxBeginDateEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxBeginDateEnable.TabIndex = 28;
+            this.checkBoxBeginDateEnable.TabIndex = 30;
             this.checkBoxBeginDateEnable.UseVisualStyleBackColor = true;
             this.checkBoxBeginDateEnable.CheckedChanged += new System.EventHandler(this.checkBoxBeginDateEnable_CheckedChanged);
             // 
@@ -578,7 +581,7 @@ namespace Registry.Viewport.SearchForms
             this.comboBoxEndDateExpr.Location = new System.Drawing.Point(532, 148);
             this.comboBoxEndDateExpr.Name = "comboBoxEndDateExpr";
             this.comboBoxEndDateExpr.Size = new System.Drawing.Size(48, 23);
-            this.comboBoxEndDateExpr.TabIndex = 32;
+            this.comboBoxEndDateExpr.TabIndex = 34;
             // 
             // dateTimePickerEndDate
             // 
@@ -586,7 +589,7 @@ namespace Registry.Viewport.SearchForms
             this.dateTimePickerEndDate.Location = new System.Drawing.Point(588, 148);
             this.dateTimePickerEndDate.Name = "dateTimePickerEndDate";
             this.dateTimePickerEndDate.Size = new System.Drawing.Size(159, 21);
-            this.dateTimePickerEndDate.TabIndex = 33;
+            this.dateTimePickerEndDate.TabIndex = 35;
             // 
             // checkBoxEndDateEnable
             // 
@@ -594,7 +597,7 @@ namespace Registry.Viewport.SearchForms
             this.checkBoxEndDateEnable.Location = new System.Drawing.Point(507, 152);
             this.checkBoxEndDateEnable.Name = "checkBoxEndDateEnable";
             this.checkBoxEndDateEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxEndDateEnable.TabIndex = 31;
+            this.checkBoxEndDateEnable.TabIndex = 33;
             this.checkBoxEndDateEnable.UseVisualStyleBackColor = true;
             this.checkBoxEndDateEnable.CheckedChanged += new System.EventHandler(this.checkBoxEndDateEnable_CheckedChanged);
             // 
@@ -619,7 +622,7 @@ namespace Registry.Viewport.SearchForms
             this.comboBoxResidenceWarrDateExpr.Location = new System.Drawing.Point(532, 189);
             this.comboBoxResidenceWarrDateExpr.Name = "comboBoxResidenceWarrDateExpr";
             this.comboBoxResidenceWarrDateExpr.Size = new System.Drawing.Size(48, 23);
-            this.comboBoxResidenceWarrDateExpr.TabIndex = 35;
+            this.comboBoxResidenceWarrDateExpr.TabIndex = 37;
             // 
             // dateTimePickerResidenceWarrDate
             // 
@@ -627,7 +630,7 @@ namespace Registry.Viewport.SearchForms
             this.dateTimePickerResidenceWarrDate.Location = new System.Drawing.Point(588, 189);
             this.dateTimePickerResidenceWarrDate.Name = "dateTimePickerResidenceWarrDate";
             this.dateTimePickerResidenceWarrDate.Size = new System.Drawing.Size(159, 21);
-            this.dateTimePickerResidenceWarrDate.TabIndex = 36;
+            this.dateTimePickerResidenceWarrDate.TabIndex = 38;
             // 
             // checkBoxResidenceWarrDateEnable
             // 
@@ -635,7 +638,7 @@ namespace Registry.Viewport.SearchForms
             this.checkBoxResidenceWarrDateEnable.Location = new System.Drawing.Point(507, 193);
             this.checkBoxResidenceWarrDateEnable.Name = "checkBoxResidenceWarrDateEnable";
             this.checkBoxResidenceWarrDateEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxResidenceWarrDateEnable.TabIndex = 34;
+            this.checkBoxResidenceWarrDateEnable.TabIndex = 36;
             this.checkBoxResidenceWarrDateEnable.UseVisualStyleBackColor = true;
             this.checkBoxResidenceWarrDateEnable.CheckedChanged += new System.EventHandler(this.checkBoxResidenceWarrDateEnable_CheckedChanged);
             // 
@@ -660,7 +663,7 @@ namespace Registry.Viewport.SearchForms
             this.comboBoxProtocolDateExpr.Location = new System.Drawing.Point(532, 230);
             this.comboBoxProtocolDateExpr.Name = "comboBoxProtocolDateExpr";
             this.comboBoxProtocolDateExpr.Size = new System.Drawing.Size(48, 23);
-            this.comboBoxProtocolDateExpr.TabIndex = 38;
+            this.comboBoxProtocolDateExpr.TabIndex = 40;
             // 
             // dateTimePickerProtocolDate
             // 
@@ -668,7 +671,7 @@ namespace Registry.Viewport.SearchForms
             this.dateTimePickerProtocolDate.Location = new System.Drawing.Point(588, 230);
             this.dateTimePickerProtocolDate.Name = "dateTimePickerProtocolDate";
             this.dateTimePickerProtocolDate.Size = new System.Drawing.Size(159, 21);
-            this.dateTimePickerProtocolDate.TabIndex = 39;
+            this.dateTimePickerProtocolDate.TabIndex = 41;
             // 
             // checkBoxProtocolDateEnable
             // 
@@ -676,7 +679,7 @@ namespace Registry.Viewport.SearchForms
             this.checkBoxProtocolDateEnable.Location = new System.Drawing.Point(507, 234);
             this.checkBoxProtocolDateEnable.Name = "checkBoxProtocolDateEnable";
             this.checkBoxProtocolDateEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxProtocolDateEnable.TabIndex = 37;
+            this.checkBoxProtocolDateEnable.TabIndex = 39;
             this.checkBoxProtocolDateEnable.UseVisualStyleBackColor = true;
             this.checkBoxProtocolDateEnable.CheckedChanged += new System.EventHandler(this.checkBoxProtocolDateEnable_CheckedChanged);
             // 
@@ -689,12 +692,44 @@ namespace Registry.Viewport.SearchForms
             this.label17.TabIndex = 94;
             this.label17.Text = "Дата протокола ЖК";
             // 
+            // comboBoxReasonType
+            // 
+            this.comboBoxReasonType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxReasonType.Enabled = false;
+            this.comboBoxReasonType.FormattingEnabled = true;
+            this.comboBoxReasonType.Location = new System.Drawing.Point(42, 147);
+            this.comboBoxReasonType.Name = "comboBoxReasonType";
+            this.comboBoxReasonType.Size = new System.Drawing.Size(437, 23);
+            this.comboBoxReasonType.TabIndex = 7;
+            // 
+            // checkBoxReasonTypeEnable
+            // 
+            this.checkBoxReasonTypeEnable.AutoSize = true;
+            this.checkBoxReasonTypeEnable.Location = new System.Drawing.Point(17, 151);
+            this.checkBoxReasonTypeEnable.Name = "checkBoxReasonTypeEnable";
+            this.checkBoxReasonTypeEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxReasonTypeEnable.TabIndex = 6;
+            this.checkBoxReasonTypeEnable.UseVisualStyleBackColor = true;
+            this.checkBoxReasonTypeEnable.CheckedChanged += new System.EventHandler(this.checkBoxReasonTypeEnable_CheckedChanged);
+            // 
+            // label18
+            // 
+            this.label18.AutoSize = true;
+            this.label18.Location = new System.Drawing.Point(10, 130);
+            this.label18.Name = "label18";
+            this.label18.Size = new System.Drawing.Size(160, 15);
+            this.label18.TabIndex = 97;
+            this.label18.Text = "Вид документа-основания";
+            // 
             // ExtendedSearchTenancyForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(758, 470);
+            this.ClientSize = new System.Drawing.Size(758, 507);
+            this.Controls.Add(this.comboBoxReasonType);
+            this.Controls.Add(this.checkBoxReasonTypeEnable);
+            this.Controls.Add(this.label18);
             this.Controls.Add(this.comboBoxProtocolDateExpr);
             this.Controls.Add(this.dateTimePickerProtocolDate);
             this.Controls.Add(this.checkBoxProtocolDateEnable);
@@ -746,8 +781,8 @@ namespace Registry.Viewport.SearchForms
             this.Controls.Add(this.textBoxProtocolNum);
             this.Controls.Add(this.checkBoxProtocolEnable);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.textBoxResidenceWarrantNum);
-            this.Controls.Add(this.checkBoxResidenceWarrantNumEnable);
+            this.Controls.Add(this.textBoxReasonNum);
+            this.Controls.Add(this.checkBoxReasonNumEnable);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBoxRegistrationNum);
             this.Controls.Add(this.checkBoxContractNumEnable);
@@ -775,8 +810,8 @@ namespace Registry.Viewport.SearchForms
         private TextBox textBoxRegistrationNum;
         private CheckBox checkBoxContractNumEnable;
         private Label label2;
-        private TextBox textBoxResidenceWarrantNum;
-        private CheckBox checkBoxResidenceWarrantNumEnable;
+        private TextBox textBoxReasonNum;
+        private CheckBox checkBoxReasonNumEnable;
         private Label label1;
         private TextBox textBoxProtocolNum;
         private CheckBox checkBoxProtocolEnable;
@@ -829,5 +864,8 @@ namespace Registry.Viewport.SearchForms
         private DateTimePicker dateTimePickerProtocolDate;
         private CheckBox checkBoxProtocolDateEnable;
         private Label label17;
+        private ComboBox comboBoxReasonType;
+        private CheckBox checkBoxReasonTypeEnable;
+        private Label label18;
     }
 }
