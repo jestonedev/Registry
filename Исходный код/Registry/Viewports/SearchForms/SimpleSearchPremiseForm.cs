@@ -102,10 +102,10 @@ namespace Registry.Viewport.SearchForms
             if (!checkBoxMunicipalOnly.Checked) return filter;
             if (!string.IsNullOrEmpty(filter.Trim()))
                 filter += " AND ";
-            var municipalIds = DataModelHelper.ObjectIdsByStates(EntityType.Premise, new[] { 4, 5, 9 });
+            var municipalIds = DataModelHelper.ObjectIdsByStates(EntityType.Premise, new[] { 4, 5, 9, 11 });
             var ids = municipalIds.Aggregate("", (current, id) => current + (id.ToString(CultureInfo.InvariantCulture) + ","));
             ids = ids.TrimEnd(',');
-            filter += "(id_state IN (4, 5, 9) OR (id_state = 1 AND id_premises IN (0"+ids+")))";
+            filter += "(id_state IN (4, 5, 9, 11) OR (id_state = 1 AND id_premises IN (0"+ids+")))";
             return filter;
         }
 

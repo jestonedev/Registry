@@ -529,7 +529,7 @@ namespace Registry.Viewport
                         e.Value = stateRow["state_female"];
                     break;
                 case "current_fund":
-                    if ((new object[] { 1, 4, 5, 9 }).Contains(row["id_state"]))
+                    if ((new object[] { 1, 4, 5, 9, 11 }).Contains(row["id_state"]))
                     {
                         var fundRow = premises_funds.Select().Rows.Find(row["id_premises"]);
                         if (fundRow != null)

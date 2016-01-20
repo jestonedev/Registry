@@ -117,7 +117,7 @@ namespace Registry.Viewport
 
         private bool ValidatePermissions(SubPremise subPremise)
         {
-            if (new[] { 4, 5, 9 }.Contains(subPremise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+            if (new[] { 4, 5, 9, 11 }.Contains(subPremise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
                 MessageBox.Show("У вас нет прав на добавление в базу муниципальных жилых помещений", "Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);

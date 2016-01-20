@@ -196,7 +196,7 @@ namespace Registry.Viewport
         {
             if (comboBoxCurrentFundType.SelectedValue != null && GeneralBindingSource.Position != -1 &&
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_state"] != DBNull.Value &&
-                (new[] { 1, 4, 5, 9 }).Contains((int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_state"]))
+                (new[] { 1, 4, 5, 9, 11 }).Contains((int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_state"]))
             {
                 label19.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
@@ -373,7 +373,7 @@ namespace Registry.Viewport
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (new [] { 4, 5, 9 }.Contains(building.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+            if (new [] { 4, 5, 9, 11 }.Contains(building.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
                 MessageBox.Show(@"У вас нет прав на добавление в базу муниципальных жилых зданий", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);

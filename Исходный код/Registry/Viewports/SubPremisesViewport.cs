@@ -283,7 +283,7 @@ namespace Registry.Viewport
                 var row = GeneralDataModel.Select().Rows.Find(subPremise.IdSubPremises);
                 if (row == null)
                 {
-                    if (subPremise.IdState != null && (new[] { 4, 5, 9 }.Contains(subPremise.IdState.Value) && 
+                    if (subPremise.IdState != null && (new[] { 4, 5, 9, 11 }.Contains(subPremise.IdState.Value) && 
                         !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal)))
                     {
                         MessageBox.Show(@"У вас нет прав на добавление в базу муниципальных жилых помещений", @"Ошибка",
