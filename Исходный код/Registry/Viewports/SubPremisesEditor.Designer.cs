@@ -32,7 +32,7 @@ namespace Registry.Viewport
         /// </summary>
         private void InitializeComponent()
         {
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(SubPremisesEditor));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SubPremisesEditor));
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxSubPremisesNum = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -94,7 +94,7 @@ namespace Registry.Viewport
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.Size = new System.Drawing.Size(223, 66);
-            this.textBoxDescription.TabIndex = 4;
+            this.textBoxDescription.TabIndex = 5;
             this.textBoxDescription.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label4
@@ -113,7 +113,7 @@ namespace Registry.Viewport
             this.comboBoxIdState.Location = new System.Drawing.Point(177, 96);
             this.comboBoxIdState.Name = "comboBoxIdState";
             this.comboBoxIdState.Size = new System.Drawing.Size(223, 23);
-            this.comboBoxIdState.TabIndex = 2;
+            this.comboBoxIdState.TabIndex = 3;
             // 
             // vButtonCancel
             // 
@@ -124,7 +124,7 @@ namespace Registry.Viewport
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(136, 40);
-            this.vButtonCancel.TabIndex = 6;
+            this.vButtonCancel.TabIndex = 7;
             this.vButtonCancel.Text = "Отменить";
             this.vButtonCancel.UseVisualStyleBackColor = false;
             this.vButtonCancel.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -137,7 +137,7 @@ namespace Registry.Viewport
             this.vButtonSave.Name = "vButtonSave";
             this.vButtonSave.RoundedCornersMask = ((byte)(15));
             this.vButtonSave.Size = new System.Drawing.Size(136, 40);
-            this.vButtonSave.TabIndex = 5;
+            this.vButtonSave.TabIndex = 6;
             this.vButtonSave.Text = "Добавить";
             this.vButtonSave.UseVisualStyleBackColor = false;
             this.vButtonSave.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -158,7 +158,7 @@ namespace Registry.Viewport
             this.dateTimePickerStateDate.Name = "dateTimePickerStateDate";
             this.dateTimePickerStateDate.ShowCheckBox = true;
             this.dateTimePickerStateDate.Size = new System.Drawing.Size(223, 21);
-            this.dateTimePickerStateDate.TabIndex = 3;
+            this.dateTimePickerStateDate.TabIndex = 4;
             // 
             // label5
             // 
@@ -175,7 +175,7 @@ namespace Registry.Viewport
             this.numericUpDownLivingArea.Location = new System.Drawing.Point(177, 68);
             this.numericUpDownLivingArea.Name = "numericUpDownLivingArea";
             this.numericUpDownLivingArea.Size = new System.Drawing.Size(223, 21);
-            this.numericUpDownLivingArea.TabIndex = 10;
+            this.numericUpDownLivingArea.TabIndex = 2;
             this.numericUpDownLivingArea.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // label6
