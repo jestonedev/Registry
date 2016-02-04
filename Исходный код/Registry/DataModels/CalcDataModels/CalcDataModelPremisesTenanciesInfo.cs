@@ -96,6 +96,7 @@ namespace Registry.DataModels.CalcDataModels
             var result = from processRow in tenancyProcessesWithTenants
                          join tenancyAssocRow in tenancyAssoc
                             on processRow.id_process equals tenancyAssocRow.idProcess
+                            where processRow.registration_num == null || !processRow.registration_num.TrimEnd().EndsWith("н")
                             select new
                             {
                                 tenancyAssocRow.idPremises,
