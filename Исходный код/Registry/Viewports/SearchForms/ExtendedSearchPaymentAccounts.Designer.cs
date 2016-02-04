@@ -130,6 +130,12 @@ namespace Registry.Viewport.SearchForms
             this.comboBoxBalanceOutputTenancyExpr = new System.Windows.Forms.ComboBox();
             this.checkBoxBalanceOutputTenancyEnable = new System.Windows.Forms.CheckBox();
             this.label22 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.radioButtonWithoutUncompletedClaims = new System.Windows.Forms.RadioButton();
+            this.radioButtonWithUncompletedClaims = new System.Windows.Forms.RadioButton();
+            this.radioButtonWithoutClaims = new System.Windows.Forms.RadioButton();
+            this.radioButtonWithClaims = new System.Windows.Forms.RadioButton();
+            this.checkBoxByClaimsChecked = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceInputFrom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceInputTo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceInputTenancyTo)).BeginInit();
@@ -158,6 +164,7 @@ namespace Registry.Viewport.SearchForms
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputDGIFrom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputTenancyTo)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputTenancyFrom)).BeginInit();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // vButtonCancel
@@ -443,7 +450,7 @@ namespace Registry.Viewport.SearchForms
             this.comboBoxBalanceInputExpr.Location = new System.Drawing.Point(407, 22);
             this.comboBoxBalanceInputExpr.Name = "comboBoxBalanceInputExpr";
             this.comboBoxBalanceInputExpr.Size = new System.Drawing.Size(48, 23);
-            this.comboBoxBalanceInputExpr.TabIndex = 18;
+            this.comboBoxBalanceInputExpr.TabIndex = 20;
             // 
             // checkBoxBalanceInputEnable
             // 
@@ -451,7 +458,7 @@ namespace Registry.Viewport.SearchForms
             this.checkBoxBalanceInputEnable.Location = new System.Drawing.Point(382, 26);
             this.checkBoxBalanceInputEnable.Name = "checkBoxBalanceInputEnable";
             this.checkBoxBalanceInputEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxBalanceInputEnable.TabIndex = 17;
+            this.checkBoxBalanceInputEnable.TabIndex = 19;
             this.checkBoxBalanceInputEnable.UseVisualStyleBackColor = true;
             this.checkBoxBalanceInputEnable.CheckedChanged += new System.EventHandler(this.checkBoxBalanceInputEnable_CheckedChanged);
             // 
@@ -476,7 +483,7 @@ namespace Registry.Viewport.SearchForms
             0});
             this.numericUpDownBalanceInputFrom.Name = "numericUpDownBalanceInputFrom";
             this.numericUpDownBalanceInputFrom.Size = new System.Drawing.Size(148, 21);
-            this.numericUpDownBalanceInputFrom.TabIndex = 19;
+            this.numericUpDownBalanceInputFrom.TabIndex = 21;
             this.numericUpDownBalanceInputFrom.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // numericUpDownBalanceInputTo
@@ -491,7 +498,7 @@ namespace Registry.Viewport.SearchForms
             0});
             this.numericUpDownBalanceInputTo.Name = "numericUpDownBalanceInputTo";
             this.numericUpDownBalanceInputTo.Size = new System.Drawing.Size(148, 21);
-            this.numericUpDownBalanceInputTo.TabIndex = 20;
+            this.numericUpDownBalanceInputTo.TabIndex = 22;
             this.numericUpDownBalanceInputTo.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // numericUpDownBalanceInputTenancyTo
@@ -506,7 +513,7 @@ namespace Registry.Viewport.SearchForms
             0});
             this.numericUpDownBalanceInputTenancyTo.Name = "numericUpDownBalanceInputTenancyTo";
             this.numericUpDownBalanceInputTenancyTo.Size = new System.Drawing.Size(148, 21);
-            this.numericUpDownBalanceInputTenancyTo.TabIndex = 24;
+            this.numericUpDownBalanceInputTenancyTo.TabIndex = 26;
             this.numericUpDownBalanceInputTenancyTo.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // numericUpDownBalanceInputTenancyFrom
@@ -521,7 +528,7 @@ namespace Registry.Viewport.SearchForms
             0});
             this.numericUpDownBalanceInputTenancyFrom.Name = "numericUpDownBalanceInputTenancyFrom";
             this.numericUpDownBalanceInputTenancyFrom.Size = new System.Drawing.Size(148, 21);
-            this.numericUpDownBalanceInputTenancyFrom.TabIndex = 23;
+            this.numericUpDownBalanceInputTenancyFrom.TabIndex = 25;
             this.numericUpDownBalanceInputTenancyFrom.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // comboBoxBalanceInputTenancyExpr
@@ -537,7 +544,7 @@ namespace Registry.Viewport.SearchForms
             this.comboBoxBalanceInputTenancyExpr.Location = new System.Drawing.Point(407, 63);
             this.comboBoxBalanceInputTenancyExpr.Name = "comboBoxBalanceInputTenancyExpr";
             this.comboBoxBalanceInputTenancyExpr.Size = new System.Drawing.Size(48, 23);
-            this.comboBoxBalanceInputTenancyExpr.TabIndex = 22;
+            this.comboBoxBalanceInputTenancyExpr.TabIndex = 24;
             // 
             // checkBoxBalanceInputTenancyEnable
             // 
@@ -545,7 +552,7 @@ namespace Registry.Viewport.SearchForms
             this.checkBoxBalanceInputTenancyEnable.Location = new System.Drawing.Point(382, 67);
             this.checkBoxBalanceInputTenancyEnable.Name = "checkBoxBalanceInputTenancyEnable";
             this.checkBoxBalanceInputTenancyEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxBalanceInputTenancyEnable.TabIndex = 21;
+            this.checkBoxBalanceInputTenancyEnable.TabIndex = 23;
             this.checkBoxBalanceInputTenancyEnable.UseVisualStyleBackColor = true;
             this.checkBoxBalanceInputTenancyEnable.CheckedChanged += new System.EventHandler(this.checkBoxBalanceInputTenancyEnable_CheckedChanged);
             // 
@@ -1326,12 +1333,80 @@ namespace Registry.Viewport.SearchForms
             this.label22.TabIndex = 161;
             this.label22.Text = "Сальдо исходящее найм";
             // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.radioButtonWithClaims);
+            this.groupBox1.Controls.Add(this.radioButtonWithoutClaims);
+            this.groupBox1.Controls.Add(this.radioButtonWithUncompletedClaims);
+            this.groupBox1.Controls.Add(this.radioButtonWithoutUncompletedClaims);
+            this.groupBox1.Enabled = false;
+            this.groupBox1.Location = new System.Drawing.Point(8, 341);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(356, 137);
+            this.groupBox1.TabIndex = 18;
+            this.groupBox1.TabStop = false;
+            // 
+            // radioButtonWithoutUncompletedClaims
+            // 
+            this.radioButtonWithoutUncompletedClaims.AutoSize = true;
+            this.radioButtonWithoutUncompletedClaims.Location = new System.Drawing.Point(21, 53);
+            this.radioButtonWithoutUncompletedClaims.Name = "radioButtonWithoutUncompletedClaims";
+            this.radioButtonWithoutUncompletedClaims.Size = new System.Drawing.Size(233, 19);
+            this.radioButtonWithoutUncompletedClaims.TabIndex = 1;
+            this.radioButtonWithoutUncompletedClaims.Text = "Нет незавершенных исковых работ";
+            this.radioButtonWithoutUncompletedClaims.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonWithUncompletedClaims
+            // 
+            this.radioButtonWithUncompletedClaims.AutoSize = true;
+            this.radioButtonWithUncompletedClaims.Location = new System.Drawing.Point(21, 78);
+            this.radioButtonWithUncompletedClaims.Name = "radioButtonWithUncompletedClaims";
+            this.radioButtonWithUncompletedClaims.Size = new System.Drawing.Size(197, 19);
+            this.radioButtonWithUncompletedClaims.TabIndex = 2;
+            this.radioButtonWithUncompletedClaims.Text = "Есть незавершенные работы";
+            this.radioButtonWithUncompletedClaims.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonWithoutClaims
+            // 
+            this.radioButtonWithoutClaims.AutoSize = true;
+            this.radioButtonWithoutClaims.Checked = true;
+            this.radioButtonWithoutClaims.Location = new System.Drawing.Point(21, 28);
+            this.radioButtonWithoutClaims.Name = "radioButtonWithoutClaims";
+            this.radioButtonWithoutClaims.Size = new System.Drawing.Size(137, 19);
+            this.radioButtonWithoutClaims.TabIndex = 0;
+            this.radioButtonWithoutClaims.TabStop = true;
+            this.radioButtonWithoutClaims.Text = "Нет исковых работ";
+            this.radioButtonWithoutClaims.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonWithClaims
+            // 
+            this.radioButtonWithClaims.AutoSize = true;
+            this.radioButtonWithClaims.Location = new System.Drawing.Point(21, 103);
+            this.radioButtonWithClaims.Name = "radioButtonWithClaims";
+            this.radioButtonWithClaims.Size = new System.Drawing.Size(152, 19);
+            this.radioButtonWithClaims.TabIndex = 3;
+            this.radioButtonWithClaims.Text = "Есть исковые работы";
+            this.radioButtonWithClaims.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxByClaimsChecked
+            // 
+            this.checkBoxByClaimsChecked.AutoSize = true;
+            this.checkBoxByClaimsChecked.Location = new System.Drawing.Point(17, 340);
+            this.checkBoxByClaimsChecked.Name = "checkBoxByClaimsChecked";
+            this.checkBoxByClaimsChecked.Size = new System.Drawing.Size(229, 19);
+            this.checkBoxByClaimsChecked.TabIndex = 17;
+            this.checkBoxByClaimsChecked.Text = "Искать ЛС с учетом исковых работ";
+            this.checkBoxByClaimsChecked.UseVisualStyleBackColor = true;
+            this.checkBoxByClaimsChecked.CheckedChanged += new System.EventHandler(this.checkBoxByClaimsChecked_CheckedChanged);
+            // 
             // ExtendedSearchPaymentAccounts
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
             this.ClientSize = new System.Drawing.Size(786, 591);
+            this.Controls.Add(this.checkBoxByClaimsChecked);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.numericUpDownBalanceOutputDGITo);
             this.Controls.Add(this.numericUpDownBalanceOutputDGIFrom);
             this.Controls.Add(this.comboBoxBalanceOutputDGIExpr);
@@ -1465,6 +1540,8 @@ namespace Registry.Viewport.SearchForms
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputDGIFrom)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputTenancyTo)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceOutputTenancyFrom)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1569,5 +1646,11 @@ namespace Registry.Viewport.SearchForms
         private ComboBox comboBoxBalanceOutputTenancyExpr;
         private CheckBox checkBoxBalanceOutputTenancyEnable;
         private Label label22;
+        private GroupBox groupBox1;
+        private RadioButton radioButtonWithClaims;
+        private RadioButton radioButtonWithoutClaims;
+        private RadioButton radioButtonWithUncompletedClaims;
+        private RadioButton radioButtonWithoutUncompletedClaims;
+        private CheckBox checkBoxByClaimsChecked;
     }
 }

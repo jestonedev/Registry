@@ -130,6 +130,62 @@ namespace Registry.Viewport.SearchForms
             if (checkBoxBalanceOutputDGIEnable.Checked)
                 includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_output_dgi",
                     comboBoxBalanceOutputDGIExpr.Text, numericUpDownBalanceOutputDGIFrom.Value, numericUpDownBalanceOutputDGITo.Value);
+            if (checkBoxByClaimsChecked.Checked)
+            {
+                if (radioButtonWithClaims.Checked || radioButtonWithoutClaims.Checked)
+                {
+                    var idsByClaims = (from row in DataModel.GetInstance(DataModelType.ClaimsDataModel).FilterDeletedRows()
+                        select row.Field<int>("id_account")).Distinct();
+                    if (radioButtonWithClaims.Checked)
+                    {
+                        includedAccounts = DataModelHelper.Intersect(includedAccounts, idsByClaims);
+                    }
+                    else
+                    {
+                        var ids = from row in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
+                            select row.Field<int>("id_account");
+                        includedAccounts = DataModelHelper.Intersect(includedAccounts, ids.Except(idsByClaims));
+                    }
+                }
+                else
+                if (radioButtonWithUncompletedClaims.Checked || radioButtonWithoutUncompletedClaims.Checked)
+                {
+                    var claimsDataModel = DataModel.GetInstance(DataModelType.ClaimsDataModel);
+                    var claimStatesDataModel = DataModel.GetInstance(DataModelType.ClaimStatesDataModel);
+                    var lastStates = from stateRow in claimStatesDataModel.FilterDeletedRows()
+                                     group stateRow.Field<int?>("id_state") by stateRow.Field<int>("id_claim") into gs
+                                     select new
+                                     {
+                                         id_claim = gs.Key,
+                                         id_state = gs.Max()
+                                     };
+                    var lastStateTypes = from lastStateRow in lastStates
+                                         join stateRow in claimStatesDataModel.FilterDeletedRows()
+                                             on lastStateRow.id_state equals stateRow.Field<int?>("id_state")
+                                         select new
+                                         {
+                                             id_claim = stateRow.Field<int>("id_claim"),
+                                             id_state_type = stateRow.Field<int>("id_state_type")
+                                         };
+                    var withUncomplitedClaims =
+                        (from lastStateTypeRow in lastStateTypes
+                        join claimsRow in claimsDataModel.FilterDeletedRows()
+                            on lastStateTypeRow.id_claim equals claimsRow.Field<int>("id_claim")
+                        where DataModelHelper.ClaimStateTypeIdsByPrevStateType(lastStateTypeRow.id_state_type).Any()
+                        select claimsRow.Field<int>("id_account")).Distinct();
+                    if (radioButtonWithUncompletedClaims.Checked)
+                    {
+                        includedAccounts = DataModelHelper.Intersect(includedAccounts, withUncomplitedClaims);
+                    }
+                    else
+                    {
+                        var ids = from row in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
+                                  select row.Field<int>("id_account");
+                        includedAccounts = DataModelHelper.Intersect(includedAccounts, ids.Except(withUncomplitedClaims));
+                    }
+                }   
+            }
+            
             if (includedAccounts == null) return filter == "" ? "0 = 1" : filter;
             if (!string.IsNullOrEmpty(filter.Trim()))
                 filter += " AND ";
@@ -395,6 +451,11 @@ namespace Registry.Viewport.SearchForms
         {
             if (comboBoxStreet.Items.Count == 0)
                 comboBoxStreet.SelectedIndex = -1;
+        }
+
+        private void checkBoxByClaimsChecked_CheckedChanged(object sender, EventArgs e)
+        {
+            groupBox1.Enabled = checkBoxByClaimsChecked.Checked;
         }
     }
 }
