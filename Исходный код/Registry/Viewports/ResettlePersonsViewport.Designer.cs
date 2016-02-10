@@ -12,11 +12,6 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridView dataGridView;
-        private DataGridViewTextBoxColumn id_person;
-        private DataGridViewTextBoxColumn id_process;
-        private DataGridViewTextBoxColumn surname;
-        private DataGridViewTextBoxColumn name;
-        private DataGridViewTextBoxColumn patronymic;
         #endregion Components
 
 
@@ -30,6 +25,8 @@ namespace Registry.Viewport
             this.surname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.patronymic = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.document_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.document_seria = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -55,7 +52,9 @@ namespace Registry.Viewport
             this.id_process,
             this.surname,
             this.name,
-            this.patronymic});
+            this.patronymic,
+            this.document_num,
+            this.document_seria});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dataGridView.Location = new System.Drawing.Point(0, 0);
@@ -82,6 +81,7 @@ namespace Registry.Viewport
             // 
             this.surname.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.surname.HeaderText = "Фамилия";
+            this.surname.MaxInputLength = 50;
             this.surname.MinimumWidth = 150;
             this.surname.Name = "surname";
             // 
@@ -89,6 +89,7 @@ namespace Registry.Viewport
             // 
             this.name.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.name.HeaderText = "Имя";
+            this.name.MaxInputLength = 50;
             this.name.MinimumWidth = 150;
             this.name.Name = "name";
             // 
@@ -96,8 +97,25 @@ namespace Registry.Viewport
             // 
             this.patronymic.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.patronymic.HeaderText = "Отчество";
+            this.patronymic.MaxInputLength = 255;
             this.patronymic.MinimumWidth = 150;
             this.patronymic.Name = "patronymic";
+            // 
+            // document_num
+            // 
+            this.document_num.HeaderText = "Номер паспорта";
+            this.document_num.MaxInputLength = 8;
+            this.document_num.MinimumWidth = 170;
+            this.document_num.Name = "document_num";
+            this.document_num.Width = 170;
+            // 
+            // document_seria
+            // 
+            this.document_seria.HeaderText = "Серия паспорта";
+            this.document_seria.MaxInputLength = 8;
+            this.document_seria.MinimumWidth = 170;
+            this.document_seria.Name = "document_seria";
+            this.document_seria.Width = 170;
             // 
             // ResettlePersonsViewport
             // 
@@ -111,5 +129,13 @@ namespace Registry.Viewport
             this.ResumeLayout(false);
 
         }
+
+        private DataGridViewTextBoxColumn id_person;
+        private DataGridViewTextBoxColumn id_process;
+        private DataGridViewTextBoxColumn surname;
+        private DataGridViewTextBoxColumn name;
+        private DataGridViewTextBoxColumn patronymic;
+        private DataGridViewTextBoxColumn document_num;
+        private DataGridViewTextBoxColumn document_seria;
     }
 }

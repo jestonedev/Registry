@@ -47,10 +47,11 @@ namespace Registry.DataModels.DataModels
         protected override void ConfigureInsertCommand(DbCommand command, Entity entity)
         {
             command.CommandText = @"INSERT INTO resettle_processes
-                            (resettle_date, id_document_residence, debts, description)
-                            VALUES (?, ?, ?, ?)";
+                            (resettle_date, doc_number, id_document_residence, debts, description)
+                            VALUES (?, ?, ?, ?, ?)";
             var resettle = (ResettleProcess)entity;
             command.Parameters.Add(DBConnection.CreateParameter("resettle_date", resettle.ResettleDate));
+            command.Parameters.Add(DBConnection.CreateParameter("doc_number", resettle.DocNumber));
             command.Parameters.Add(DBConnection.CreateParameter("id_document_residence", resettle.IdDocumentResidence));
             command.Parameters.Add(DBConnection.CreateParameter("debts", resettle.Debts));
             command.Parameters.Add(DBConnection.CreateParameter("description", resettle.Description));
@@ -58,10 +59,11 @@ namespace Registry.DataModels.DataModels
 
         protected override void ConfigureUpdateCommand(DbCommand command, Entity entity)
         {
-            command.CommandText = @"UPDATE resettle_processes SET resettle_date = ?, id_document_residence = ?, debts = ?, 
+            command.CommandText = @"UPDATE resettle_processes SET resettle_date = ?, doc_number = ?, id_document_residence = ?, debts = ?, 
                             description = ? WHERE id_process = ?";
             var resettle = (ResettleProcess) entity;
             command.Parameters.Add(DBConnection.CreateParameter("resettle_date", resettle.ResettleDate));
+            command.Parameters.Add(DBConnection.CreateParameter("doc_number", resettle.DocNumber));
             command.Parameters.Add(DBConnection.CreateParameter("id_document_residence", resettle.IdDocumentResidence));
             command.Parameters.Add(DBConnection.CreateParameter("debts", resettle.Debts));
             command.Parameters.Add(DBConnection.CreateParameter("description", resettle.Description));

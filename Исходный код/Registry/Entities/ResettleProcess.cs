@@ -9,8 +9,7 @@ namespace Registry.Entities
         public DateTime? ResettleDate { get; set; }
         public decimal? Debts { get; set; }
         public string Description { get; set; }
-
-
+        public string DocNumber { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -32,7 +31,8 @@ namespace Registry.Entities
                    first.ResettleDate == second.ResettleDate &&
                    first.IdDocumentResidence == second.IdDocumentResidence &&
                    first.Debts == second.Debts &&
-                   first.Description == second.Description;
+                   first.Description == second.Description &&
+                   first.DocNumber == second.DocNumber;
         }
 
         public static bool operator !=(ResettleProcess first, ResettleProcess second)

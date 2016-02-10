@@ -38,24 +38,28 @@ namespace Registry.DataModels.DataModels
 
         protected override void ConfigureInsertCommand(DbCommand command, Entity entity)
         {
-            command.CommandText = @"INSERT INTO resettle_persons (id_process, surname, name, patronymic)
-                            VALUES (?, ?, ?, ?)";
+            command.CommandText = @"INSERT INTO resettle_persons (id_process, surname, name, patronymic, document_num, document_seria)
+                            VALUES (?, ?, ?, ?, ?, ?)";
             var resettlePerson = (ResettlePerson) entity;
             command.Parameters.Add(DBConnection.CreateParameter("id_process", resettlePerson.IdProcess));
             command.Parameters.Add(DBConnection.CreateParameter("surname", resettlePerson.Surname));
             command.Parameters.Add(DBConnection.CreateParameter("name", resettlePerson.Name));
             command.Parameters.Add(DBConnection.CreateParameter("patronymic", resettlePerson.Patronymic));
+            command.Parameters.Add(DBConnection.CreateParameter("document_num", resettlePerson.DocumentNum));
+            command.Parameters.Add(DBConnection.CreateParameter("document_seria", resettlePerson.DocumentSeria));
         }
 
         protected override void ConfigureUpdateCommand(DbCommand command, Entity entity)
         {
             command.CommandText = @"UPDATE resettle_persons SET id_process = ?, surname = ?, 
-                            name = ?, patronymic = ? WHERE id_person = ?";
+                            name = ?, patronymic = ?, document_num = ?, document_seria = ? WHERE id_person = ?";
             var resettlePerson = (ResettlePerson)entity;
             command.Parameters.Add(DBConnection.CreateParameter("id_process", resettlePerson.IdProcess));
             command.Parameters.Add(DBConnection.CreateParameter("surname", resettlePerson.Surname));
             command.Parameters.Add(DBConnection.CreateParameter("name", resettlePerson.Name));
             command.Parameters.Add(DBConnection.CreateParameter("patronymic", resettlePerson.Patronymic));
+            command.Parameters.Add(DBConnection.CreateParameter("document_num", resettlePerson.DocumentNum));
+            command.Parameters.Add(DBConnection.CreateParameter("document_seria", resettlePerson.DocumentSeria));
             command.Parameters.Add(DBConnection.CreateParameter("id_person", resettlePerson.IdPerson));
         }
     }

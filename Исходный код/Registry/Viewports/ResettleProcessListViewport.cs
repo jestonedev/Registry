@@ -58,6 +58,8 @@ namespace Registry.Viewport
         {
             textBoxDescription.DataBindings.Clear();
             textBoxDescription.DataBindings.Add("Text", GeneralBindingSource, "description", true, DataSourceUpdateMode.Never, "");
+            textBoxDocNumber.DataBindings.Clear();
+            textBoxDocNumber.DataBindings.Add("Text", GeneralBindingSource, "doc_number", true, DataSourceUpdateMode.Never, "");
             dateTimePickerResettleDate.DataBindings.Clear();
             dateTimePickerResettleDate.DataBindings.Add("Value", GeneralBindingSource, "resettle_date", true, DataSourceUpdateMode.Never, null);
             numericUpDownDebts.DataBindings.Clear();
@@ -109,6 +111,7 @@ namespace Registry.Viewport
             resettle_process.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
             resettle_process.Debts = ViewportHelper.ValueOrNull<decimal>(row, "debts");
             resettle_process.ResettleDate = ViewportHelper.ValueOrNull<DateTime>(row, "resettle_date");
+            resettle_process.DocNumber = ViewportHelper.ValueOrNull(row, "doc_number");
             resettle_process.IdDocumentResidence = ViewportHelper.ValueOrNull<int>(row, "id_document_residence");
             resettle_process.Description = ViewportHelper.ValueOrNull(row, "description");
             return resettle_process;
@@ -123,6 +126,7 @@ namespace Registry.Viewport
                 resettle_process.IdProcess = 
                     Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"], CultureInfo.InvariantCulture);
             resettle_process.Debts = numericUpDownDebts.Value;
+            resettle_process.DocNumber = ViewportHelper.ValueOrNull(textBoxDocNumber);
             resettle_process.ResettleDate = ViewportHelper.ValueOrNull(dateTimePickerResettleDate);
             resettle_process.IdDocumentResidence = ViewportHelper.ValueOrNull<int>(comboBoxDocumentResidence);
             resettle_process.Description = ViewportHelper.ValueOrNull(textBoxDescription);
@@ -135,6 +139,7 @@ namespace Registry.Viewport
             dateTimePickerResettleDate.Value = ViewportHelper.ValueOrDefault(resettleProcess.ResettleDate);
             comboBoxDocumentResidence.SelectedValue = ViewportHelper.ValueOrDBNull(resettleProcess.IdDocumentResidence);
             textBoxDescription.Text = resettleProcess.Description;
+            textBoxDocNumber.Text = resettleProcess.DocNumber;
         }
 
         private static void FillRowFromResettleProcess(ResettleProcess resettleProcess, DataRowView row)
@@ -145,6 +150,7 @@ namespace Registry.Viewport
             row["debts"] = ViewportHelper.ValueOrDBNull(resettleProcess.Debts);
             row["id_document_residence"] = ViewportHelper.ValueOrDBNull(resettleProcess.IdDocumentResidence);
             row["description"] = ViewportHelper.ValueOrDBNull(resettleProcess.Description);
+            row["doc_number"] = ViewportHelper.ValueOrDBNull(resettleProcess.DocNumber);
             row.EndEdit();
         }
 
@@ -583,6 +589,9 @@ namespace Registry.Viewport
                 case "resettle_date":
                     e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["resettle_date"] == DBNull.Value ? "" :
                         ((DateTime)((DataRowView)GeneralBindingSource[e.RowIndex])["resettle_date"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+                    break;
+                case "doc_number":
+                    e.Value = ((DataRowView) GeneralBindingSource[e.RowIndex])["doc_number"];
                     break;
                 case "resettle_persons":
                     var row_index = v_resettle_aggregate.Find("id_process", ((DataRowView)GeneralBindingSource[e.RowIndex])["id_process"]);

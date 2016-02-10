@@ -245,6 +245,34 @@ namespace Registry.Viewport
             details.InitializeControl();
             dataGridView.DetailsControl = details;
 
+            //Строим фильтр квартир и комнат выбранных во время первой загрузки
+            if (string.IsNullOrEmpty(DynamicFilter))
+            {
+                if (v_resettle_premises.Count > 0)
+                {
+                    DynamicFilter = "id_premises IN (0";
+                    for (var i = 0; i < v_resettle_premises.Count; i++)
+                        DynamicFilter += "," + ((DataRowView)v_resettle_premises[i])["id_premises"];
+                    DynamicFilter += ")";
+                }
+                if (details.v_snapshot_resettle_sub_premises.Count > 0)
+                {
+                    if (!string.IsNullOrEmpty(DynamicFilter))
+                        DynamicFilter += " OR ";
+                    DynamicFilter += "id_premises IN (0";
+                    for (var i = 0; i < details.v_snapshot_resettle_sub_premises.Count; i++)
+                    {
+                        var row = ((DataRowView)details.v_snapshot_resettle_sub_premises[i]);
+                        var subPremisesRow = sub_premises.Select().Rows.Find(row["id_sub_premises"]);
+                        if (subPremisesRow != null)
+                            DynamicFilter += "," + subPremisesRow["id_premises"];
+                    }
+                    DynamicFilter += ")";
+                }
+            }
+
+            GeneralBindingSource.Filter += DynamicFilter;
+
             GeneralDataModel.Select().RowChanged += PremisesListViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted += PremisesListViewport_RowDeleted;
             resettle_premises.Select().RowChanged += ResettlePremisesViewport_RowChanged;

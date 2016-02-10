@@ -189,6 +189,19 @@ namespace Registry.Viewport
             id_street.ValueMember = "id_street";
             id_street.DisplayMember = "street_name";
 
+            //Строим фильтр арендуемых зданий
+            if (string.IsNullOrEmpty(DynamicFilter))
+            {
+                if (v_resettle_buildings.Count > 0)
+                {
+                    DynamicFilter = "id_building IN (0";
+                    for (var i = 0; i < v_resettle_buildings.Count; i++)
+                        DynamicFilter += "," + ((DataRowView)v_resettle_buildings[i])["id_building"];
+                    DynamicFilter += ")";
+                }
+            }
+            GeneralBindingSource.Filter = DynamicFilter;
+
             GeneralDataModel.Select().RowChanged += BuildingsViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted += BuildingsViewport_RowDeleted;
             resettle_buildings.Select().RowChanged += ResettleBuildingsViewport_RowChanged;

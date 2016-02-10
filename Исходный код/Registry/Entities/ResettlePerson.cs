@@ -7,6 +7,8 @@
         public string Surname { get; set; }
         public string Name { get; set; }
         public string Patronymic { get; set; }
+        public string DocumentNum { get; set; }
+        public string DocumentSeria { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -28,7 +30,9 @@
                    first.IdProcess == second.IdProcess &&
                    first.Surname == second.Surname &&
                    first.Name == second.Name &&
-                   first.Patronymic == second.Patronymic;
+                   first.Patronymic == second.Patronymic &&
+                   first.DocumentSeria == second.DocumentSeria &&
+                   first.DocumentNum == second.DocumentNum;
         }
 
         public static bool operator !=(ResettlePerson first, ResettlePerson second)

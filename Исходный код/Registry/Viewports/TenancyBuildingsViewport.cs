@@ -399,7 +399,7 @@ namespace Registry.Viewport
                     row = tenancy_buildings.Select().Rows.Find(list[i].IdAssoc);
                 if (row == null)
                 {
-                    var id_assoc = GeneralDataModel.Insert(list[i]);
+                    var id_assoc = DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel).Insert(list[i]);
                     if (id_assoc == -1)
                     {
                         sync_views = true;
@@ -414,7 +414,7 @@ namespace Registry.Viewport
                 {
                     if (RowToTenancyBuilding(row) == list[i])
                         continue;
-                    if (GeneralDataModel.Update(list[i]) == -1)
+                    if (DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel).Update(list[i]) == -1)
                     {
                         sync_views = true;
                         tenancy_buildings.EditingNewRecord = false;
@@ -439,7 +439,7 @@ namespace Registry.Viewport
                 }
                 if (row_index == -1)
                 {
-                    if (GeneralDataModel.Delete(list[i].IdAssoc.Value) == -1)
+                    if (DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel).Delete(list[i].IdAssoc.Value) == -1)
                     {
                         sync_views = true;
                         tenancy_buildings.EditingNewRecord = false;

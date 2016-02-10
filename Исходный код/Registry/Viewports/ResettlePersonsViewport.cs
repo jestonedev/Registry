@@ -35,7 +35,9 @@ namespace Registry.Viewport
                 dataRowView["id_process"], 
                 dataRowView["surname"], 
                 dataRowView["name"],
-                dataRowView["patronymic"]
+                dataRowView["patronymic"],
+                dataRowView["document_num"],
+                dataRowView["document_seria"],
             };
         }
 
@@ -86,7 +88,9 @@ namespace Registry.Viewport
                 IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process"),
                 Surname = ViewportHelper.ValueOrNull(row, "surname"),
                 Name = ViewportHelper.ValueOrNull(row, "name"),
-                Patronymic = ViewportHelper.ValueOrNull(row, "patronymic")
+                Patronymic = ViewportHelper.ValueOrNull(row, "patronymic"),
+                DocumentNum = ViewportHelper.ValueOrNull(row, "document_num"),
+                DocumentSeria = ViewportHelper.ValueOrNull(row, "document_seria")
             };
             return resettlePerson;
         }
@@ -104,6 +108,8 @@ namespace Registry.Viewport
                 rp.Surname = ViewportHelper.ValueOrNull(row, "surname");
                 rp.Name = ViewportHelper.ValueOrNull(row, "name");
                 rp.Patronymic = ViewportHelper.ValueOrNull(row, "patronymic");
+                rp.DocumentNum = ViewportHelper.ValueOrNull(row, "document_num");
+                rp.DocumentSeria = ViewportHelper.ValueOrNull(row, "document_seria");
                 list.Add(rp);
             }
             return list;
@@ -121,6 +127,8 @@ namespace Registry.Viewport
                 rp.Surname = ViewportHelper.ValueOrNull(row, "surname");
                 rp.Name = ViewportHelper.ValueOrNull(row, "name");
                 rp.Patronymic = ViewportHelper.ValueOrNull(row, "patronymic");
+                rp.DocumentNum = ViewportHelper.ValueOrNull(row, "document_num");
+                rp.DocumentSeria = ViewportHelper.ValueOrNull(row, "document_seria");
                 list.Add(rp);
             }
             return list;
@@ -169,6 +177,8 @@ namespace Registry.Viewport
             surname.DataPropertyName = "surname";
             name.DataPropertyName = "name";
             patronymic.DataPropertyName = "patronymic";
+            document_num.DataPropertyName = "document_num";
+            document_seria.DataPropertyName = "document_seria";
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
             dataGridView.CellValidated += dataGridView_CellValidated;
             //События изменения данных для проверки соответствия реальным данным в модели
@@ -264,6 +274,8 @@ namespace Registry.Viewport
                     row["surname"] = person.Surname == null ? DBNull.Value : (object)person.Surname;
                     row["name"] = person.Name == null ? DBNull.Value : (object)person.Name;
                     row["patronymic"] = person.Patronymic == null ? DBNull.Value : (object)person.Patronymic;
+                    row["document_num"] = person.DocumentNum == null ? DBNull.Value : (object)person.DocumentNum;
+                    row["document_seria"] = person.DocumentSeria == null ? DBNull.Value : (object)person.DocumentSeria;
                 }
             }
             list = EntitiesListFromView();
@@ -398,7 +410,8 @@ namespace Registry.Viewport
             var rowIndex = GeneralSnapshotBindingSource.Find("id_person", e.Row["id_person"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_person", e.Row["id_person"]) != -1)
             {
-                GeneralSnapshot.Rows.Add(e.Row["id_person"], e.Row["id_process"], e.Row["surname"], e.Row["name"], e.Row["patronymic"]);
+                GeneralSnapshot.Rows.Add(e.Row["id_person"], e.Row["id_process"], e.Row["surname"], e.Row["name"],
+                    e.Row["patronymic"], e.Row["document_num"], e.Row["document_seria"]);
             } else
             if (rowIndex != -1)
             {
@@ -407,6 +420,8 @@ namespace Registry.Viewport
                 row["surname"] = e.Row["surname"];
                 row["name"] = e.Row["name"];
                 row["patronymic"] = e.Row["patronymic"];
+                row["document_num"] = e.Row["document_num"];
+                row["document_seria"] = e.Row["document_seria"];
             }
             if (!Selected) return;
             MenuCallback.NavigationStateUpdate();

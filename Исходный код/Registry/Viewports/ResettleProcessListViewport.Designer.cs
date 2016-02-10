@@ -22,11 +22,6 @@ namespace Registry.Viewport
         private ComboBox comboBoxDocumentResidence;
         private Label label35;
         private DataGridView dataGridView;
-        private DataGridViewTextBoxColumn id_process;
-        private DataGridViewTextBoxColumn resettle_date;
-        private DataGridViewTextBoxColumn resettle_persons;
-        private DataGridViewTextBoxColumn address_from;
-        private DataGridViewTextBoxColumn address_to;
         #endregion Components
 
 
@@ -37,12 +32,15 @@ namespace Registry.Viewport
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.id_process = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.resettle_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.doc_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.resettle_persons = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.address_from = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.address_to = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox15 = new System.Windows.Forms.GroupBox();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
             this.groupBox14 = new System.Windows.Forms.GroupBox();
+            this.textBoxDocNumber = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.numericUpDownDebts = new System.Windows.Forms.NumericUpDown();
             this.dateTimePickerResettleDate = new System.Windows.Forms.DateTimePicker();
             this.label37 = new System.Windows.Forms.Label();
@@ -68,7 +66,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.RowCount = 2;
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 116F));
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 145F));
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel6.Size = new System.Drawing.Size(708, 336);
@@ -85,20 +83,21 @@ namespace Registry.Viewport
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id_process,
             this.resettle_date,
+            this.doc_number,
             this.resettle_persons,
             this.address_from,
             this.address_to});
             this.tableLayoutPanel6.SetColumnSpan(this.dataGridView, 2);
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dataGridView.Location = new System.Drawing.Point(3, 119);
+            this.dataGridView.Location = new System.Drawing.Point(3, 148);
             this.dataGridView.MultiSelect = false;
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.ShowCellToolTips = false;
-            this.dataGridView.Size = new System.Drawing.Size(702, 214);
+            this.dataGridView.Size = new System.Drawing.Size(702, 185);
             this.dataGridView.TabIndex = 0;
             this.dataGridView.VirtualMode = true;
             this.dataGridView.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView_CellValueNeeded);
@@ -119,6 +118,14 @@ namespace Registry.Viewport
             this.resettle_date.Name = "resettle_date";
             this.resettle_date.ReadOnly = true;
             this.resettle_date.Width = 150;
+            // 
+            // doc_number
+            // 
+            this.doc_number.HeaderText = "Номер постановления";
+            this.doc_number.MinimumWidth = 180;
+            this.doc_number.Name = "doc_number";
+            this.doc_number.ReadOnly = true;
+            this.doc_number.Width = 180;
             // 
             // resettle_persons
             // 
@@ -153,7 +160,7 @@ namespace Registry.Viewport
             this.groupBox15.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox15.Location = new System.Drawing.Point(357, 3);
             this.groupBox15.Name = "groupBox15";
-            this.groupBox15.Size = new System.Drawing.Size(348, 110);
+            this.groupBox15.Size = new System.Drawing.Size(348, 139);
             this.groupBox15.TabIndex = 2;
             this.groupBox15.TabStop = false;
             this.groupBox15.Text = "Дополнительные сведения";
@@ -165,11 +172,13 @@ namespace Registry.Viewport
             this.textBoxDescription.MaxLength = 4000;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
-            this.textBoxDescription.Size = new System.Drawing.Size(342, 90);
+            this.textBoxDescription.Size = new System.Drawing.Size(342, 119);
             this.textBoxDescription.TabIndex = 0;
             // 
             // groupBox14
             // 
+            this.groupBox14.Controls.Add(this.textBoxDocNumber);
+            this.groupBox14.Controls.Add(this.label1);
             this.groupBox14.Controls.Add(this.numericUpDownDebts);
             this.groupBox14.Controls.Add(this.dateTimePickerResettleDate);
             this.groupBox14.Controls.Add(this.label37);
@@ -179,24 +188,43 @@ namespace Registry.Viewport
             this.groupBox14.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox14.Location = new System.Drawing.Point(3, 3);
             this.groupBox14.Name = "groupBox14";
-            this.groupBox14.Size = new System.Drawing.Size(348, 110);
+            this.groupBox14.Size = new System.Drawing.Size(348, 139);
             this.groupBox14.TabIndex = 1;
             this.groupBox14.TabStop = false;
             this.groupBox14.Text = "Общие сведения";
+            // 
+            // textBoxDocNumber
+            // 
+            this.textBoxDocNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxDocNumber.Location = new System.Drawing.Point(161, 109);
+            this.textBoxDocNumber.MaxLength = 255;
+            this.textBoxDocNumber.Name = "textBoxDocNumber";
+            this.textBoxDocNumber.Size = new System.Drawing.Size(180, 21);
+            this.textBoxDocNumber.TabIndex = 3;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(14, 112);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(139, 15);
+            this.label1.TabIndex = 6;
+            this.label1.Text = "Номер постановления";
             // 
             // numericUpDownDebts
             // 
             this.numericUpDownDebts.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownDebts.DecimalPlaces = 2;
-            this.numericUpDownDebts.Location = new System.Drawing.Point(160, 51);
+            this.numericUpDownDebts.Location = new System.Drawing.Point(161, 51);
             this.numericUpDownDebts.Maximum = new decimal(new int[] {
             1000000000,
             0,
             0,
             0});
             this.numericUpDownDebts.Name = "numericUpDownDebts";
-            this.numericUpDownDebts.Size = new System.Drawing.Size(181, 21);
+            this.numericUpDownDebts.Size = new System.Drawing.Size(180, 21);
             this.numericUpDownDebts.TabIndex = 1;
             this.numericUpDownDebts.ThousandsSeparator = true;
             // 
@@ -270,5 +298,14 @@ namespace Registry.Viewport
             this.ResumeLayout(false);
 
         }
+
+        private DataGridViewTextBoxColumn id_process;
+        private DataGridViewTextBoxColumn resettle_date;
+        private DataGridViewTextBoxColumn doc_number;
+        private DataGridViewTextBoxColumn resettle_persons;
+        private DataGridViewTextBoxColumn address_from;
+        private DataGridViewTextBoxColumn address_to;
+        private TextBox textBoxDocNumber;
+        private Label label1;
     }
 }
