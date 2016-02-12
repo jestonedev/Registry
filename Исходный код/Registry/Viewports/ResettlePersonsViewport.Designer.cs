@@ -27,6 +27,7 @@ namespace Registry.Viewport
             this.patronymic = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.document_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.document_seria = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.founding_doc = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -54,7 +55,8 @@ namespace Registry.Viewport
             this.name,
             this.patronymic,
             this.document_num,
-            this.document_seria});
+            this.document_seria,
+            this.founding_doc});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dataGridView.Location = new System.Drawing.Point(0, 0);
@@ -62,7 +64,7 @@ namespace Registry.Viewport
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridView.ShowCellToolTips = false;
-            this.dataGridView.Size = new System.Drawing.Size(856, 415);
+            this.dataGridView.Size = new System.Drawing.Size(1011, 415);
             this.dataGridView.TabIndex = 1;
             // 
             // id_person
@@ -117,9 +119,17 @@ namespace Registry.Viewport
             this.document_seria.Name = "document_seria";
             this.document_seria.Width = 170;
             // 
+            // founding_doc
+            // 
+            this.founding_doc.HeaderText = "Правоустанавливающий документ";
+            this.founding_doc.MaxInputLength = 255;
+            this.founding_doc.MinimumWidth = 250;
+            this.founding_doc.Name = "founding_doc";
+            this.founding_doc.Width = 250;
+            // 
             // ResettlePersonsViewport
             // 
-            this.ClientSize = new System.Drawing.Size(856, 415);
+            this.ClientSize = new System.Drawing.Size(1011, 415);
             this.Controls.Add(this.dataGridView);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -137,5 +147,6 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn patronymic;
         private DataGridViewTextBoxColumn document_num;
         private DataGridViewTextBoxColumn document_seria;
+        private DataGridViewTextBoxColumn founding_doc;
     }
 }

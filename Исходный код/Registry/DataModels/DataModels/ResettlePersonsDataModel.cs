@@ -38,8 +38,8 @@ namespace Registry.DataModels.DataModels
 
         protected override void ConfigureInsertCommand(DbCommand command, Entity entity)
         {
-            command.CommandText = @"INSERT INTO resettle_persons (id_process, surname, name, patronymic, document_num, document_seria)
-                            VALUES (?, ?, ?, ?, ?, ?)";
+            command.CommandText = @"INSERT INTO resettle_persons (id_process, surname, name, patronymic, document_num, document_seria, founding_doc)
+                            VALUES (?, ?, ?, ?, ?, ?, ?)";
             var resettlePerson = (ResettlePerson) entity;
             command.Parameters.Add(DBConnection.CreateParameter("id_process", resettlePerson.IdProcess));
             command.Parameters.Add(DBConnection.CreateParameter("surname", resettlePerson.Surname));
@@ -47,12 +47,13 @@ namespace Registry.DataModels.DataModels
             command.Parameters.Add(DBConnection.CreateParameter("patronymic", resettlePerson.Patronymic));
             command.Parameters.Add(DBConnection.CreateParameter("document_num", resettlePerson.DocumentNum));
             command.Parameters.Add(DBConnection.CreateParameter("document_seria", resettlePerson.DocumentSeria));
+            command.Parameters.Add(DBConnection.CreateParameter("founding_doc", resettlePerson.FoundingDoc));
         }
 
         protected override void ConfigureUpdateCommand(DbCommand command, Entity entity)
         {
             command.CommandText = @"UPDATE resettle_persons SET id_process = ?, surname = ?, 
-                            name = ?, patronymic = ?, document_num = ?, document_seria = ? WHERE id_person = ?";
+                            name = ?, patronymic = ?, document_num = ?, document_seria = ?, founding_doc = ? WHERE id_person = ?";
             var resettlePerson = (ResettlePerson)entity;
             command.Parameters.Add(DBConnection.CreateParameter("id_process", resettlePerson.IdProcess));
             command.Parameters.Add(DBConnection.CreateParameter("surname", resettlePerson.Surname));
@@ -60,6 +61,7 @@ namespace Registry.DataModels.DataModels
             command.Parameters.Add(DBConnection.CreateParameter("patronymic", resettlePerson.Patronymic));
             command.Parameters.Add(DBConnection.CreateParameter("document_num", resettlePerson.DocumentNum));
             command.Parameters.Add(DBConnection.CreateParameter("document_seria", resettlePerson.DocumentSeria));
+            command.Parameters.Add(DBConnection.CreateParameter("founding_doc", resettlePerson.FoundingDoc));
             command.Parameters.Add(DBConnection.CreateParameter("id_person", resettlePerson.IdPerson));
         }
     }

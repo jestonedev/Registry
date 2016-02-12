@@ -30,12 +30,6 @@ namespace Registry.Viewport
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ResettleProcessListViewport));
             this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
             this.dataGridView = new System.Windows.Forms.DataGridView();
-            this.id_process = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.resettle_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.doc_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.resettle_persons = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.address_from = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.address_to = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupBox15 = new System.Windows.Forms.GroupBox();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
             this.groupBox14 = new System.Windows.Forms.GroupBox();
@@ -47,6 +41,12 @@ namespace Registry.Viewport
             this.label36 = new System.Windows.Forms.Label();
             this.comboBoxDocumentResidence = new System.Windows.Forms.ComboBox();
             this.label35 = new System.Windows.Forms.Label();
+            this.id_process = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.resettle_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.doc_number = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.resettle_persons = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.address_from = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.address_to = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.groupBox15.SuspendLayout();
@@ -104,56 +104,6 @@ namespace Registry.Viewport
             this.dataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_ColumnHeaderMouseClick);
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             // 
-            // id_process
-            // 
-            this.id_process.HeaderText = "№";
-            this.id_process.MinimumWidth = 100;
-            this.id_process.Name = "id_process";
-            this.id_process.ReadOnly = true;
-            // 
-            // resettle_date
-            // 
-            this.resettle_date.HeaderText = "Дата переселения";
-            this.resettle_date.MinimumWidth = 150;
-            this.resettle_date.Name = "resettle_date";
-            this.resettle_date.ReadOnly = true;
-            this.resettle_date.Width = 150;
-            // 
-            // doc_number
-            // 
-            this.doc_number.HeaderText = "Номер постановления";
-            this.doc_number.MinimumWidth = 180;
-            this.doc_number.Name = "doc_number";
-            this.doc_number.ReadOnly = true;
-            this.doc_number.Width = 180;
-            // 
-            // resettle_persons
-            // 
-            this.resettle_persons.HeaderText = "Участники";
-            this.resettle_persons.MinimumWidth = 250;
-            this.resettle_persons.Name = "resettle_persons";
-            this.resettle_persons.ReadOnly = true;
-            this.resettle_persons.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.resettle_persons.Width = 250;
-            // 
-            // address_from
-            // 
-            this.address_from.HeaderText = "Адрес (откуда)";
-            this.address_from.MinimumWidth = 500;
-            this.address_from.Name = "address_from";
-            this.address_from.ReadOnly = true;
-            this.address_from.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.address_from.Width = 500;
-            // 
-            // address_to
-            // 
-            this.address_to.HeaderText = "Адрес (куда)";
-            this.address_to.MinimumWidth = 500;
-            this.address_to.Name = "address_to";
-            this.address_to.ReadOnly = true;
-            this.address_to.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.address_to.Width = 500;
-            // 
             // groupBox15
             // 
             this.groupBox15.Controls.Add(this.textBoxDescription);
@@ -208,9 +158,9 @@ namespace Registry.Viewport
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(14, 112);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(139, 15);
+            this.label1.Size = new System.Drawing.Size(134, 15);
             this.label1.TabIndex = 6;
-            this.label1.Text = "Номер постановления";
+            this.label1.Text = "Номер распоряжения";
             // 
             // numericUpDownDebts
             // 
@@ -276,6 +226,56 @@ namespace Registry.Viewport
             this.label35.TabIndex = 5;
             this.label35.Text = "Основание проживания";
             // 
+            // id_process
+            // 
+            this.id_process.HeaderText = "№";
+            this.id_process.MinimumWidth = 100;
+            this.id_process.Name = "id_process";
+            this.id_process.ReadOnly = true;
+            // 
+            // resettle_date
+            // 
+            this.resettle_date.HeaderText = "Дата переселения";
+            this.resettle_date.MinimumWidth = 150;
+            this.resettle_date.Name = "resettle_date";
+            this.resettle_date.ReadOnly = true;
+            this.resettle_date.Width = 150;
+            // 
+            // doc_number
+            // 
+            this.doc_number.HeaderText = "Номер распоряжения";
+            this.doc_number.MinimumWidth = 180;
+            this.doc_number.Name = "doc_number";
+            this.doc_number.ReadOnly = true;
+            this.doc_number.Width = 180;
+            // 
+            // resettle_persons
+            // 
+            this.resettle_persons.HeaderText = "Участники";
+            this.resettle_persons.MinimumWidth = 250;
+            this.resettle_persons.Name = "resettle_persons";
+            this.resettle_persons.ReadOnly = true;
+            this.resettle_persons.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.resettle_persons.Width = 250;
+            // 
+            // address_from
+            // 
+            this.address_from.HeaderText = "Адрес (откуда)";
+            this.address_from.MinimumWidth = 500;
+            this.address_from.Name = "address_from";
+            this.address_from.ReadOnly = true;
+            this.address_from.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.address_from.Width = 500;
+            // 
+            // address_to
+            // 
+            this.address_to.HeaderText = "Адрес (куда)";
+            this.address_to.MinimumWidth = 500;
+            this.address_to.Name = "address_to";
+            this.address_to.ReadOnly = true;
+            this.address_to.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.address_to.Width = 500;
+            // 
             // ResettleProcessListViewport
             // 
             this.AutoScroll = true;
@@ -298,14 +298,13 @@ namespace Registry.Viewport
             this.ResumeLayout(false);
 
         }
-
+        private TextBox textBoxDocNumber;
+        private Label label1;
         private DataGridViewTextBoxColumn id_process;
         private DataGridViewTextBoxColumn resettle_date;
         private DataGridViewTextBoxColumn doc_number;
         private DataGridViewTextBoxColumn resettle_persons;
         private DataGridViewTextBoxColumn address_from;
         private DataGridViewTextBoxColumn address_to;
-        private TextBox textBoxDocNumber;
-        private Label label1;
     }
 }

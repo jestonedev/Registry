@@ -38,6 +38,7 @@ namespace Registry.Viewport
                 dataRowView["patronymic"],
                 dataRowView["document_num"],
                 dataRowView["document_seria"],
+                dataRowView["founding_doc"]
             };
         }
 
@@ -90,7 +91,8 @@ namespace Registry.Viewport
                 Name = ViewportHelper.ValueOrNull(row, "name"),
                 Patronymic = ViewportHelper.ValueOrNull(row, "patronymic"),
                 DocumentNum = ViewportHelper.ValueOrNull(row, "document_num"),
-                DocumentSeria = ViewportHelper.ValueOrNull(row, "document_seria")
+                DocumentSeria = ViewportHelper.ValueOrNull(row, "document_seria"),
+                FoundingDoc = ViewportHelper.ValueOrNull(row, "founding_doc")
             };
             return resettlePerson;
         }
@@ -110,6 +112,7 @@ namespace Registry.Viewport
                 rp.Patronymic = ViewportHelper.ValueOrNull(row, "patronymic");
                 rp.DocumentNum = ViewportHelper.ValueOrNull(row, "document_num");
                 rp.DocumentSeria = ViewportHelper.ValueOrNull(row, "document_seria");
+                rp.FoundingDoc = ViewportHelper.ValueOrNull(row, "founding_doc");
                 list.Add(rp);
             }
             return list;
@@ -129,6 +132,7 @@ namespace Registry.Viewport
                 rp.Patronymic = ViewportHelper.ValueOrNull(row, "patronymic");
                 rp.DocumentNum = ViewportHelper.ValueOrNull(row, "document_num");
                 rp.DocumentSeria = ViewportHelper.ValueOrNull(row, "document_seria");
+                rp.FoundingDoc = ViewportHelper.ValueOrNull(row, "founding_doc");
                 list.Add(rp);
             }
             return list;
@@ -179,6 +183,7 @@ namespace Registry.Viewport
             patronymic.DataPropertyName = "patronymic";
             document_num.DataPropertyName = "document_num";
             document_seria.DataPropertyName = "document_seria";
+            founding_doc.DataPropertyName = "founding_doc";
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
             dataGridView.CellValidated += dataGridView_CellValidated;
             //События изменения данных для проверки соответствия реальным данным в модели
@@ -276,6 +281,7 @@ namespace Registry.Viewport
                     row["patronymic"] = person.Patronymic == null ? DBNull.Value : (object)person.Patronymic;
                     row["document_num"] = person.DocumentNum == null ? DBNull.Value : (object)person.DocumentNum;
                     row["document_seria"] = person.DocumentSeria == null ? DBNull.Value : (object)person.DocumentSeria;
+                    row["founding_doc"] = person.FoundingDoc == null ? DBNull.Value : (object)person.FoundingDoc;
                 }
             }
             list = EntitiesListFromView();
@@ -411,7 +417,7 @@ namespace Registry.Viewport
             if (rowIndex == -1 && GeneralBindingSource.Find("id_person", e.Row["id_person"]) != -1)
             {
                 GeneralSnapshot.Rows.Add(e.Row["id_person"], e.Row["id_process"], e.Row["surname"], e.Row["name"],
-                    e.Row["patronymic"], e.Row["document_num"], e.Row["document_seria"]);
+                    e.Row["patronymic"], e.Row["document_num"], e.Row["document_seria"], e.Row["founding_doc"]);
             } else
             if (rowIndex != -1)
             {
@@ -422,6 +428,7 @@ namespace Registry.Viewport
                 row["patronymic"] = e.Row["patronymic"];
                 row["document_num"] = e.Row["document_num"];
                 row["document_seria"] = e.Row["document_seria"];
+                row["founding_doc"] = e.Row["founding_doc"];
             }
             if (!Selected) return;
             MenuCallback.NavigationStateUpdate();
