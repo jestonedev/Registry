@@ -78,7 +78,5 @@ namespace Registry.DataModels.DataModels
                 return connection.SqlSelectTable(TableName, command);
             }   
         }
-
-
     }
 }

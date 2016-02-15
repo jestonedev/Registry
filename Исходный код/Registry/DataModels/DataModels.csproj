@@ -61,6 +61,7 @@
     <Compile Include="CalcDataModels\CalcDataModelType.cs" />
     <Compile Include="DataModelsCallbackUpdater.cs" />
     <Compile Include="DataModelHelper.cs" />
+    <Compile Include="DataModels\ClaimFilesDataModel.cs" />
     <Compile Include="DataModels\DataModelType.cs" />
     <Compile Include="DataModels\DocumentsResidenceDataModel.cs" />
     <Compile Include="DataModels\SelectableSigners.cs" />

@@ -155,5 +155,17 @@ namespace Settings.Properties {
                 this["MSPConnectionString"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("\\\\mcs.br\\adm\\общие_ресурсы\\Registry\\Attachments\\Claims")]
+        public string ClaimsAttachmentsPath {
+            get {
+                return ((string)(this["ClaimsAttachmentsPath"]));
+            }
+            set {
+                this["ClaimsAttachmentsPath"] = value;
+            }
+        }
     }
 }

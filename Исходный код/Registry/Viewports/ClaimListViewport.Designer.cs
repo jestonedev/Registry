@@ -43,6 +43,7 @@ namespace Registry.Viewport
             this.groupBox34 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel16 = new System.Windows.Forms.TableLayoutPanel();
             this.panel8 = new System.Windows.Forms.Panel();
+            this.buttonShowAttachments = new System.Windows.Forms.Button();
             this.textBoxAccount = new System.Windows.Forms.TextBox();
             this.label103 = new System.Windows.Forms.Label();
             this.dateTimePickerAtDate = new System.Windows.Forms.DateTimePicker();
@@ -90,7 +91,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel15.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel15.Name = "tableLayoutPanel15";
             this.tableLayoutPanel15.RowCount = 2;
-            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
+            this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 171F));
             this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel15.Size = new System.Drawing.Size(680, 491);
             this.tableLayoutPanel15.TabIndex = 0;
@@ -102,7 +103,7 @@ namespace Registry.Viewport
             this.groupBox34.Location = new System.Drawing.Point(0, 0);
             this.groupBox34.Margin = new System.Windows.Forms.Padding(0);
             this.groupBox34.Name = "groupBox34";
-            this.groupBox34.Size = new System.Drawing.Size(680, 140);
+            this.groupBox34.Size = new System.Drawing.Size(680, 171);
             this.groupBox34.TabIndex = 1;
             this.groupBox34.TabStop = false;
             this.groupBox34.Text = "Общие сведения";
@@ -120,11 +121,12 @@ namespace Registry.Viewport
             this.tableLayoutPanel16.RowCount = 1;
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 155F));
-            this.tableLayoutPanel16.Size = new System.Drawing.Size(674, 120);
+            this.tableLayoutPanel16.Size = new System.Drawing.Size(674, 151);
             this.tableLayoutPanel16.TabIndex = 0;
             // 
             // panel8
             // 
+            this.panel8.Controls.Add(this.buttonShowAttachments);
             this.panel8.Controls.Add(this.textBoxAccount);
             this.panel8.Controls.Add(this.label103);
             this.panel8.Controls.Add(this.dateTimePickerAtDate);
@@ -138,8 +140,20 @@ namespace Registry.Viewport
             this.panel8.Location = new System.Drawing.Point(0, 0);
             this.panel8.Margin = new System.Windows.Forms.Padding(0);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(337, 120);
+            this.panel8.Size = new System.Drawing.Size(337, 151);
             this.panel8.TabIndex = 0;
+            // 
+            // buttonShowAttachments
+            // 
+            this.buttonShowAttachments.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.buttonShowAttachments.Location = new System.Drawing.Point(15, 120);
+            this.buttonShowAttachments.Name = "buttonShowAttachments";
+            this.buttonShowAttachments.Size = new System.Drawing.Size(311, 25);
+            this.buttonShowAttachments.TabIndex = 53;
+            this.buttonShowAttachments.Text = "Прикрепленные файлы";
+            this.buttonShowAttachments.UseVisualStyleBackColor = true;
+            this.buttonShowAttachments.Click += new System.EventHandler(this.buttonShowAttachments_Click);
             // 
             // textBoxAccount
             // 
@@ -238,7 +252,7 @@ namespace Registry.Viewport
             this.panel9.Location = new System.Drawing.Point(337, 0);
             this.panel9.Margin = new System.Windows.Forms.Padding(0);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(337, 120);
+            this.panel9.Size = new System.Drawing.Size(337, 151);
             this.panel9.TabIndex = 1;
             // 
             // numericUpDownAmountDGI
@@ -274,7 +288,7 @@ namespace Registry.Viewport
             this.textBoxDescription.MaxLength = 4000;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
-            this.textBoxDescription.Size = new System.Drawing.Size(155, 50);
+            this.textBoxDescription.Size = new System.Drawing.Size(155, 75);
             this.textBoxDescription.TabIndex = 2;
             // 
             // numericUpDownAmountTenancy
@@ -296,7 +310,7 @@ namespace Registry.Viewport
             // label99
             // 
             this.label99.AutoSize = true;
-            this.label99.Location = new System.Drawing.Point(14, 65);
+            this.label99.Location = new System.Drawing.Point(14, 63);
             this.label99.Name = "label99";
             this.label99.Size = new System.Drawing.Size(80, 15);
             this.label99.TabIndex = 49;
@@ -332,13 +346,13 @@ namespace Registry.Viewport
             this.description});
             this.dataGridViewClaims.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewClaims.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
-            this.dataGridViewClaims.Location = new System.Drawing.Point(3, 143);
+            this.dataGridViewClaims.Location = new System.Drawing.Point(3, 174);
             this.dataGridViewClaims.Name = "dataGridViewClaims";
             this.dataGridViewClaims.ReadOnly = true;
             this.dataGridViewClaims.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridViewClaims.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewClaims.ShowCellToolTips = false;
-            this.dataGridViewClaims.Size = new System.Drawing.Size(674, 345);
+            this.dataGridViewClaims.Size = new System.Drawing.Size(674, 314);
             this.dataGridViewClaims.TabIndex = 0;
             this.dataGridViewClaims.VirtualMode = true;
             this.dataGridViewClaims.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridViewClaims_CellValueNeeded);
@@ -467,5 +481,6 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn amount_tenancy;
         private DataGridViewTextBoxColumn amount_dgi;
         private DataGridViewTextBoxColumn description;
+        private Button buttonShowAttachments;
     }
 }

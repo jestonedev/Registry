@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AggregatedAddress.cs" />
+    <Compile Include="ClaimFile.cs" />
     <Compile Include="DocumentResidence.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="EntityType.cs" />

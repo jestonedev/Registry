@@ -763,5 +763,23 @@ namespace Registry.Viewport
             BindAccount(_idAccount);
             CheckViewportModifications();
         }
+
+        private void buttonShowAttachments_Click(object sender, EventArgs e)
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            var ids = GetCurrentIds().ToList();
+            if (!ids.Any())
+            {
+                MessageBox.Show(@"Не выбрана исковая работа для отображения прикрепленных файлов", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            using (var form = new ClaimFiles())
+            {
+                form.Initialize(ids.First());
+                form.ShowDialog();
+            }
+        }
     }
 }

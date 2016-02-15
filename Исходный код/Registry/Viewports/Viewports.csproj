@@ -90,6 +90,12 @@
     <Compile Include="BuildingViewport.Designer.cs">
       <DependentUpon>BuildingViewport.cs</DependentUpon>
     </Compile>
+    <Compile Include="ClaimFiles.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ClaimFiles.Designer.cs">
+      <DependentUpon>ClaimFiles.cs</DependentUpon>
+    </Compile>
     <Compile Include="ClaimListViewport.Designer.cs">
       <DependentUpon>ClaimListViewport.cs</DependentUpon>
     </Compile>
@@ -480,6 +486,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="BuildingViewport.resx">
       <DependentUpon>BuildingViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ClaimFiles.resx">
+      <DependentUpon>ClaimFiles.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ClaimListViewport.resx">
       <DependentUpon>ClaimListViewport.cs</DependentUpon>

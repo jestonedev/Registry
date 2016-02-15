@@ -191,6 +191,12 @@ namespace Settings
             }
         }
 
+        public static string ClaimsAttachmentsPath
+        {
+            get { return Properties.Settings.Default.ClaimsAttachmentsPath; }
+            set { Properties.Settings.Default.ClaimsAttachmentsPath = value; }
+        }
+
         public static void Save()
         {
             Properties.Settings.Default.Save();

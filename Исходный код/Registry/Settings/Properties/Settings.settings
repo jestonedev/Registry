@@ -35,5 +35,8 @@
     <Setting Name="MSPConnectionString" Type="System.String" Scope="User">
       <Value Profile="(Default)">IMLU/p0C/8AiREcT98nwUYGpZNwyeb2JPC0kuE4+luCowC9PgFaXVvhiAb1Hau031f4f9crgY5xgMDKDWoXN8A==</Value>
     </Setting>
+    <Setting Name="ClaimsAttachmentsPath" Type="System.String" Scope="User">
+      <Value Profile="(Default)">\\mcs.br\adm\общие_ресурсы\Registry\Attachments\Claims</Value>
+    </Setting>
   </Settings>
 </SettingsFile>
