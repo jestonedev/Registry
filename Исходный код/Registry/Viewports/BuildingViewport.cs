@@ -780,7 +780,7 @@ namespace Registry.Viewport
                     }
                     var dialogResult = DialogResult.Yes;
                     if (building.IdState != buildingFromView.IdState || building.StateDate != buildingFromView.StateDate)
-                        dialogResult = MessageBox.Show(@"Хотите ли вы оставить состояние помещений, расположенным в здании, неизмененным?" +
+                        dialogResult = MessageBox.Show(@"Хотите ли вы оставить состояние помещений, расположенным в здании, неизмененным? - нажмите ""Да""." +
                                         @" Если вы нажмете ""Нет"", состояние здания применится ко всем, расположенным в нем, помещениям", @"Внимание",
                                             MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                     if (dialogResult == DialogResult.Cancel)
