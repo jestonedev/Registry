@@ -78,11 +78,11 @@ namespace Registry.Viewport
             // 
             // id_premises
             // 
-            this.id_premises.HeaderText = "№";
-            this.id_premises.MinimumWidth = 50;
+            this.id_premises.HeaderText = "№ по реестру";
+            this.id_premises.MinimumWidth = 70;
             this.id_premises.Name = "id_premises";
             this.id_premises.ReadOnly = true;
-            this.id_premises.Width = 50;
+            this.id_premises.Width = 70;
             // 
             // id_street
             // 

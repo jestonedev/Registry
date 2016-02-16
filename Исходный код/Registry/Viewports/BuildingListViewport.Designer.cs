@@ -11,14 +11,6 @@ namespace Registry.Viewport
     internal  partial class BuildingListViewport
     {
         private DataGridView dataGridView;
-        private DataGridViewTextBoxColumn id_building;
-        private DataGridViewComboBoxColumn id_street;
-        private DataGridViewTextBoxColumn house;
-        private DataGridViewTextBoxColumn floors;
-        private DataGridViewTextBoxColumn living_area;
-        private DataGridViewTextBoxColumn cadastral_num;
-        private DataGridViewTextBoxColumn startup_year;
-        private DataGridViewTextBoxColumn id_state;
 
         private void InitializeComponent()
         {
@@ -84,10 +76,11 @@ namespace Registry.Viewport
             // id_building
             // 
             this.id_building.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.id_building.HeaderText = "№";
-            this.id_building.MinimumWidth = 100;
+            this.id_building.HeaderText = "№ по реестру";
+            this.id_building.MinimumWidth = 70;
             this.id_building.Name = "id_building";
             this.id_building.ReadOnly = true;
+            this.id_building.Width = 70;
             // 
             // id_street
             // 
@@ -168,5 +161,14 @@ namespace Registry.Viewport
             this.ResumeLayout(false);
 
         }
+
+        private DataGridViewTextBoxColumn id_building;
+        private DataGridViewComboBoxColumn id_street;
+        private DataGridViewTextBoxColumn house;
+        private DataGridViewTextBoxColumn floors;
+        private DataGridViewTextBoxColumn living_area;
+        private DataGridViewTextBoxColumn cadastral_num;
+        private DataGridViewTextBoxColumn startup_year;
+        private DataGridViewTextBoxColumn id_state;
     }
 }
