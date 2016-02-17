@@ -265,15 +265,13 @@ namespace Registry.Viewport
             {
                 label38.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
-                checkBoxIsMemorial.Location = new Point(19, 209);
-                tableLayoutPanel3.RowStyles[0].Height = 269F;
+                checkBoxIsMemorial.Location = new Point(19, 181);
             }
             else
             {
                 label38.Visible = false;
                 comboBoxCurrentFundType.Visible = false;
-                checkBoxIsMemorial.Location = new Point(19, 183);
-                tableLayoutPanel3.RowStyles[0].Height = 240F;
+                checkBoxIsMemorial.Location = new Point(19, 153);
             }
         }
 

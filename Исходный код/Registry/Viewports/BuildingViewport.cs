@@ -200,19 +200,17 @@ namespace Registry.Viewport
             {
                 label19.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
-                checkBoxRubbishChute.Location = new Point(331, 177);
-                checkBoxImprovement.Location = new Point(175, 177);
-                checkBoxElevator.Location = new Point(19, 177);
-                tableLayoutPanel.RowStyles[0].Height = 235F;
+                checkBoxRubbishChute.Location = new Point(331, 152);
+                checkBoxImprovement.Location = new Point(175, 152);
+                checkBoxElevator.Location = new Point(19, 152);
             }
             else
             {
                 label19.Visible = false;
-                comboBoxCurrentFundType.Visible = false; 
-                checkBoxRubbishChute.Location = new Point(331, 151);
-                checkBoxImprovement.Location = new Point(175, 151);
-                checkBoxElevator.Location = new Point(19, 151);
-                tableLayoutPanel.RowStyles[0].Height = 210F;
+                comboBoxCurrentFundType.Visible = false;
+                checkBoxRubbishChute.Location = new Point(331, 124);
+                checkBoxImprovement.Location = new Point(175, 124);
+                checkBoxElevator.Location = new Point(19, 124);
             }
         }
 

@@ -232,7 +232,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel.Location = new System.Drawing.Point(3, 3);
             this.tableLayoutPanel.Name = "tableLayoutPanel";
             this.tableLayoutPanel.RowCount = 4;
-            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 235F));
+            this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 210F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 170F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 113F));
             this.tableLayoutPanel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
@@ -246,7 +246,7 @@ namespace Registry.Viewport
             this.groupBox4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox4.Location = new System.Drawing.Point(3, 3);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Size = new System.Drawing.Size(913, 229);
+            this.groupBox4.Size = new System.Drawing.Size(913, 204);
             this.groupBox4.TabIndex = 0;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Общие сведения";
@@ -267,7 +267,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(907, 209);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(907, 184);
             this.tableLayoutPanel2.TabIndex = 0;
             // 
             // panel1
@@ -287,7 +287,7 @@ namespace Registry.Viewport
             this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(447, 203);
+            this.panel1.Size = new System.Drawing.Size(447, 178);
             this.panel1.TabIndex = 0;
             // 
             // numericUpDownWear
@@ -295,7 +295,7 @@ namespace Registry.Viewport
             this.numericUpDownWear.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.numericUpDownWear.DecimalPlaces = 2;
-            this.numericUpDownWear.Location = new System.Drawing.Point(174, 149);
+            this.numericUpDownWear.Location = new System.Drawing.Point(174, 151);
             this.numericUpDownWear.Maximum = new decimal(new int[] {
             999,
             0,
@@ -309,7 +309,7 @@ namespace Registry.Viewport
             // label21
             // 
             this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(10, 152);
+            this.label21.Location = new System.Drawing.Point(10, 154);
             this.label21.Name = "label21";
             this.label21.Size = new System.Drawing.Size(59, 15);
             this.label21.TabIndex = 36;
@@ -453,13 +453,13 @@ namespace Registry.Viewport
             this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel2.Location = new System.Drawing.Point(456, 3);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(448, 203);
+            this.panel2.Size = new System.Drawing.Size(448, 178);
             this.panel2.TabIndex = 1;
             // 
             // checkBoxRubbishChute
             // 
             this.checkBoxRubbishChute.AutoSize = true;
-            this.checkBoxRubbishChute.Location = new System.Drawing.Point(331, 177);
+            this.checkBoxRubbishChute.Location = new System.Drawing.Point(331, 152);
             this.checkBoxRubbishChute.Name = "checkBoxRubbishChute";
             this.checkBoxRubbishChute.Size = new System.Drawing.Size(111, 19);
             this.checkBoxRubbishChute.TabIndex = 38;
@@ -470,20 +470,22 @@ namespace Registry.Viewport
             // 
             this.dateTimePickerStateDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerStateDate.Location = new System.Drawing.Point(175, 121);
+            this.dateTimePickerStateDate.Location = new System.Drawing.Point(175, 175);
             this.dateTimePickerStateDate.Name = "dateTimePickerStateDate";
             this.dateTimePickerStateDate.ShowCheckBox = true;
             this.dateTimePickerStateDate.Size = new System.Drawing.Size(269, 21);
             this.dateTimePickerStateDate.TabIndex = 4;
+            this.dateTimePickerStateDate.Visible = false;
             // 
             // label22
             // 
             this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(16, 124);
+            this.label22.Location = new System.Drawing.Point(16, 178);
             this.label22.Name = "label22";
             this.label22.Size = new System.Drawing.Size(147, 15);
             this.label22.TabIndex = 37;
             this.label22.Text = "Состояние установлено";
+            this.label22.Visible = false;
             // 
             // label40
             // 
@@ -513,7 +515,7 @@ namespace Registry.Viewport
             this.comboBoxCurrentFundType.Enabled = false;
             this.comboBoxCurrentFundType.ForeColor = System.Drawing.Color.Black;
             this.comboBoxCurrentFundType.FormattingEnabled = true;
-            this.comboBoxCurrentFundType.Location = new System.Drawing.Point(175, 149);
+            this.comboBoxCurrentFundType.Location = new System.Drawing.Point(175, 122);
             this.comboBoxCurrentFundType.Name = "comboBoxCurrentFundType";
             this.comboBoxCurrentFundType.Size = new System.Drawing.Size(269, 23);
             this.comboBoxCurrentFundType.TabIndex = 5;
@@ -554,7 +556,7 @@ namespace Registry.Viewport
             // checkBoxImprovement
             // 
             this.checkBoxImprovement.AutoSize = true;
-            this.checkBoxImprovement.Location = new System.Drawing.Point(175, 177);
+            this.checkBoxImprovement.Location = new System.Drawing.Point(175, 152);
             this.checkBoxImprovement.Name = "checkBoxImprovement";
             this.checkBoxImprovement.Size = new System.Drawing.Size(126, 19);
             this.checkBoxImprovement.TabIndex = 7;
@@ -564,7 +566,7 @@ namespace Registry.Viewport
             // checkBoxElevator
             // 
             this.checkBoxElevator.AutoSize = true;
-            this.checkBoxElevator.Location = new System.Drawing.Point(19, 177);
+            this.checkBoxElevator.Location = new System.Drawing.Point(19, 152);
             this.checkBoxElevator.Name = "checkBoxElevator";
             this.checkBoxElevator.Size = new System.Drawing.Size(118, 19);
             this.checkBoxElevator.TabIndex = 6;
@@ -601,7 +603,7 @@ namespace Registry.Viewport
             // label19
             // 
             this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(16, 151);
+            this.label19.Location = new System.Drawing.Point(16, 124);
             this.label19.Name = "label19";
             this.label19.Size = new System.Drawing.Size(90, 15);
             this.label19.TabIndex = 35;
@@ -633,7 +635,7 @@ namespace Registry.Viewport
             this.groupBox1.Controls.Add(this.label6);
             this.groupBox1.Controls.Add(this.label7);
             this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(3, 238);
+            this.groupBox1.Location = new System.Drawing.Point(3, 213);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(453, 164);
             this.groupBox1.TabIndex = 1;
@@ -797,7 +799,7 @@ namespace Registry.Viewport
             this.groupBox3.Controls.Add(this.label12);
             this.groupBox3.Controls.Add(this.label13);
             this.groupBox3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox3.Location = new System.Drawing.Point(462, 238);
+            this.groupBox3.Location = new System.Drawing.Point(462, 213);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Size = new System.Drawing.Size(454, 164);
             this.groupBox3.TabIndex = 2;
@@ -909,7 +911,7 @@ namespace Registry.Viewport
             this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.label9);
             this.groupBox2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox2.Location = new System.Drawing.Point(3, 408);
+            this.groupBox2.Location = new System.Drawing.Point(3, 383);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Size = new System.Drawing.Size(453, 107);
             this.groupBox2.TabIndex = 3;
@@ -996,7 +998,7 @@ namespace Registry.Viewport
             // 
             this.groupBox5.Controls.Add(this.textBoxDescription);
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox5.Location = new System.Drawing.Point(462, 408);
+            this.groupBox5.Location = new System.Drawing.Point(462, 383);
             this.groupBox5.Name = "groupBox5";
             this.groupBox5.Size = new System.Drawing.Size(454, 107);
             this.groupBox5.TabIndex = 4;
@@ -1018,9 +1020,9 @@ namespace Registry.Viewport
             this.groupBox6.Controls.Add(this.panel3);
             this.groupBox6.Controls.Add(this.dataGridViewRestrictions);
             this.groupBox6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox6.Location = new System.Drawing.Point(3, 521);
+            this.groupBox6.Location = new System.Drawing.Point(3, 496);
             this.groupBox6.Name = "groupBox6";
-            this.groupBox6.Size = new System.Drawing.Size(453, 200);
+            this.groupBox6.Size = new System.Drawing.Size(453, 225);
             this.groupBox6.TabIndex = 5;
             this.groupBox6.TabStop = false;
             this.groupBox6.Text = "Реквизиты";
@@ -1034,7 +1036,7 @@ namespace Registry.Viewport
             this.panel3.Location = new System.Drawing.Point(412, 17);
             this.panel3.Margin = new System.Windows.Forms.Padding(0);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(38, 180);
+            this.panel3.Size = new System.Drawing.Size(38, 205);
             this.panel3.TabIndex = 2;
             // 
             // vButtonRestrictionEdit
@@ -1100,7 +1102,7 @@ namespace Registry.Viewport
             this.dataGridViewRestrictions.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewRestrictions.Name = "dataGridViewRestrictions";
             this.dataGridViewRestrictions.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewRestrictions.Size = new System.Drawing.Size(408, 180);
+            this.dataGridViewRestrictions.Size = new System.Drawing.Size(408, 205);
             this.dataGridViewRestrictions.TabIndex = 0;
             this.dataGridViewRestrictions.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewRestrictions_CellDoubleClick);
             this.dataGridViewRestrictions.Resize += new System.EventHandler(this.dataGridViewRestrictions_Resize);
@@ -1141,9 +1143,9 @@ namespace Registry.Viewport
             this.groupBox7.Controls.Add(this.panel4);
             this.groupBox7.Controls.Add(this.dataGridViewOwnerships);
             this.groupBox7.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox7.Location = new System.Drawing.Point(462, 521);
+            this.groupBox7.Location = new System.Drawing.Point(462, 496);
             this.groupBox7.Name = "groupBox7";
-            this.groupBox7.Size = new System.Drawing.Size(454, 200);
+            this.groupBox7.Size = new System.Drawing.Size(454, 225);
             this.groupBox7.TabIndex = 6;
             this.groupBox7.TabStop = false;
             this.groupBox7.Text = "Ограничения";
@@ -1157,7 +1159,7 @@ namespace Registry.Viewport
             this.panel4.Location = new System.Drawing.Point(413, 17);
             this.panel4.Margin = new System.Windows.Forms.Padding(0);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(38, 180);
+            this.panel4.Size = new System.Drawing.Size(38, 205);
             this.panel4.TabIndex = 3;
             // 
             // vButtonOwnershipEdit
@@ -1223,7 +1225,7 @@ namespace Registry.Viewport
             this.dataGridViewOwnerships.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewOwnerships.Name = "dataGridViewOwnerships";
             this.dataGridViewOwnerships.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewOwnerships.Size = new System.Drawing.Size(409, 180);
+            this.dataGridViewOwnerships.Size = new System.Drawing.Size(409, 205);
             this.dataGridViewOwnerships.TabIndex = 0;
             this.dataGridViewOwnerships.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewOwnerships_CellDoubleClick);
             this.dataGridViewOwnerships.Resize += new System.EventHandler(this.dataGridViewOwnerships_Resize);
