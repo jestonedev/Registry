@@ -230,7 +230,7 @@ namespace Registry.Viewport.SearchForms
             // 
             this.textBoxCadastralNum.Enabled = false;
             this.textBoxCadastralNum.Location = new System.Drawing.Point(42, 275);
-            this.textBoxCadastralNum.MaxLength = 15;
+            this.textBoxCadastralNum.MaxLength = 20;
             this.textBoxCadastralNum.Name = "textBoxCadastralNum";
             this.textBoxCadastralNum.Size = new System.Drawing.Size(437, 21);
             this.textBoxCadastralNum.TabIndex = 13;
