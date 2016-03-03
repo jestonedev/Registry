@@ -592,53 +592,65 @@ namespace Registry.Viewport
 
         void vButtonExplainPaste_Click(object sender, EventArgs e)
         {
-            if (string.IsNullOrEmpty(textBoxExplainPoint.Text.Trim()))
+            if (string.IsNullOrEmpty(textBoxExplainPoint.Text.Trim()) && string.IsNullOrEmpty(textBoxExplainGeneralPoint.Text.Trim()))
             {
-                MessageBox.Show("Не указан номер подпункта", "Ошибка", 
+                MessageBox.Show(@"Не указан ни номер пункта, ни номер подпункта", @"Ошибка", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxExplainPoint.Focus();
                 return;
             }
             if (string.IsNullOrEmpty(textBoxExplainContent.Text.Trim()))
             {
-                MessageBox.Show("Содержание изложения не может быть пустым", "Ошибка", 
+                MessageBox.Show(@"Содержание изложения не может быть пустым", @"Ошибка", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxExplainContent.Focus();
                 return;
             }
             var contentList = textBoxAgreementContent.Lines.ToList();
-            var headers_count = 0;
+            var headersCount = 0;
             for (var i = 0; i < contentList.Count; i++)
             {
                 if (Regex.IsMatch(contentList[i], "^\u200B"))
-                    headers_count++;
+                    headersCount++;
             }
-            var header_index = -1;
-            var last_point_index = -1;
+            var headerIndex = -1;
+            var lastPointIndex = -1;
             for (var i = 0; i < contentList.Count; i++)
             {
                 if (Regex.IsMatch(contentList[i], "^\u200B.*изложить"))
                 {
-                    header_index = i;
+                    headerIndex = i;
                 }
                 else
-                    if (header_index != -1 && Regex.IsMatch(contentList[i],
+                    if (headerIndex != -1 && Regex.IsMatch(contentList[i],
                         "^(\u200B.*из пункта .+ исключить|\u200B.*пункт .+ дополнить|\u200B.*изложить|\u200B.*расторгнуть|\u200B.*считать.+нанимателем)"))
                     {
-                        last_point_index = i;
+                        lastPointIndex = i;
                         break;
                     }
             }
-
-            var element = string.Format(CultureInfo.InvariantCulture, "подпункт {0}. {1}", textBoxExplainPoint.Text, textBoxExplainContent.Text.Trim());
-            if (header_index == -1)
+            var point = "";
+            if (!string.IsNullOrEmpty(textBoxExplainPoint.Text.Trim()) &&
+                !string.IsNullOrEmpty(textBoxExplainGeneralPoint.Text.Trim()))
             {
-                contentList.Add(string.Format("\u200B{0}) изложить в новой редакции:", ++headers_count));
+                point = string.Format("подпункт {0} пункта {1}", textBoxExplainPoint.Text.Trim(), textBoxExplainGeneralPoint.Text.Trim());
+            } else if (!string.IsNullOrEmpty(textBoxExplainPoint.Text.Trim()))
+            {
+                point = string.Format("подпункт {0}", textBoxExplainPoint.Text.Trim());
             }
-            if (last_point_index == -1)
+            else
+            {
+                point = string.Format("пункт {0}", textBoxExplainGeneralPoint.Text.Trim());
+            }
+            var element = string.Format(CultureInfo.InvariantCulture, "{0}. {1}", point, textBoxExplainContent.Text.Trim());
+            if (headerIndex == -1)
+            {
+                contentList.Add(string.Format("\u200B{0}) изложить в новой редакции:", ++headersCount));
+            }
+            if (lastPointIndex == -1)
                 contentList.Add(element);
             else
-                contentList.Insert(last_point_index, element);
+                contentList.Insert(lastPointIndex, element);
             textBoxAgreementContent.Lines = contentList.ToArray();
         }
 

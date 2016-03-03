@@ -111,6 +111,8 @@ namespace Registry.Viewport
             this.vButtonIncludePaste = new VIBlend.WinForms.Controls.vButton();
             this.label75 = new System.Windows.Forms.Label();
             this.tabPageExplain = new System.Windows.Forms.TabPage();
+            this.textBoxExplainGeneralPoint = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
             this.textBoxExplainContent = new System.Windows.Forms.TextBox();
             this.textBoxExplainPoint = new System.Windows.Forms.TextBox();
             this.vButtonExplainPaste = new VIBlend.WinForms.Controls.vButton();
@@ -384,7 +386,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(430, 84);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(430, 80);
             this.dataGridViewTenancyPersons.TabIndex = 3;
             // 
             // surname
@@ -463,10 +465,10 @@ namespace Registry.Viewport
             this.tabPageInclude.Controls.Add(this.label78);
             this.tabPageInclude.Controls.Add(this.vButtonIncludePaste);
             this.tabPageInclude.Controls.Add(this.label75);
-            this.tabPageInclude.Location = new System.Drawing.Point(4, 24);
+            this.tabPageInclude.Location = new System.Drawing.Point(4, 22);
             this.tabPageInclude.Name = "tabPageInclude";
             this.tabPageInclude.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInclude.Size = new System.Drawing.Size(436, 151);
+            this.tabPageInclude.Size = new System.Drawing.Size(436, 153);
             this.tabPageInclude.TabIndex = 1;
             this.tabPageInclude.Text = "Включить";
             // 
@@ -583,6 +585,8 @@ namespace Registry.Viewport
             // tabPageExplain
             // 
             this.tabPageExplain.BackColor = System.Drawing.Color.White;
+            this.tabPageExplain.Controls.Add(this.textBoxExplainGeneralPoint);
+            this.tabPageExplain.Controls.Add(this.label5);
             this.tabPageExplain.Controls.Add(this.textBoxExplainContent);
             this.tabPageExplain.Controls.Add(this.textBoxExplainPoint);
             this.tabPageExplain.Controls.Add(this.vButtonExplainPaste);
@@ -593,15 +597,33 @@ namespace Registry.Viewport
             this.tabPageExplain.TabIndex = 2;
             this.tabPageExplain.Text = "Изложить";
             // 
+            // textBoxExplainGeneralPoint
+            // 
+            this.textBoxExplainGeneralPoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxExplainGeneralPoint.Location = new System.Drawing.Point(163, 6);
+            this.textBoxExplainGeneralPoint.Name = "textBoxExplainGeneralPoint";
+            this.textBoxExplainGeneralPoint.Size = new System.Drawing.Size(234, 21);
+            this.textBoxExplainGeneralPoint.TabIndex = 49;
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(12, 9);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(41, 15);
+            this.label5.TabIndex = 50;
+            this.label5.Text = "Пункт";
+            // 
             // textBoxExplainContent
             // 
             this.textBoxExplainContent.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxExplainContent.Location = new System.Drawing.Point(7, 32);
+            this.textBoxExplainContent.Location = new System.Drawing.Point(7, 61);
             this.textBoxExplainContent.Multiline = true;
             this.textBoxExplainContent.Name = "textBoxExplainContent";
-            this.textBoxExplainContent.Size = new System.Drawing.Size(424, 97);
+            this.textBoxExplainContent.Size = new System.Drawing.Size(424, 85);
             this.textBoxExplainContent.TabIndex = 1;
             this.textBoxExplainContent.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -609,7 +631,7 @@ namespace Registry.Viewport
             // 
             this.textBoxExplainPoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxExplainPoint.Location = new System.Drawing.Point(163, 6);
+            this.textBoxExplainPoint.Location = new System.Drawing.Point(164, 34);
             this.textBoxExplainPoint.Name = "textBoxExplainPoint";
             this.textBoxExplainPoint.Size = new System.Drawing.Size(234, 21);
             this.textBoxExplainPoint.TabIndex = 0;
@@ -633,7 +655,7 @@ namespace Registry.Viewport
             // label79
             // 
             this.label79.AutoSize = true;
-            this.label79.Location = new System.Drawing.Point(12, 9);
+            this.label79.Location = new System.Drawing.Point(13, 37);
             this.label79.Name = "label79";
             this.label79.Size = new System.Drawing.Size(62, 15);
             this.label79.TabIndex = 40;
@@ -647,9 +669,9 @@ namespace Registry.Viewport
             this.tabPageTerminate.Controls.Add(this.vButtonTerminatePaste);
             this.tabPageTerminate.Controls.Add(this.textBoxTerminateAgreement);
             this.tabPageTerminate.Controls.Add(this.label80);
-            this.tabPageTerminate.Location = new System.Drawing.Point(4, 24);
+            this.tabPageTerminate.Location = new System.Drawing.Point(4, 22);
             this.tabPageTerminate.Name = "tabPageTerminate";
-            this.tabPageTerminate.Size = new System.Drawing.Size(436, 151);
+            this.tabPageTerminate.Size = new System.Drawing.Size(436, 153);
             this.tabPageTerminate.TabIndex = 3;
             this.tabPageTerminate.Text = "Расторгнуть";
             // 
@@ -791,5 +813,7 @@ namespace Registry.Viewport
         private vButton vButtonPaymentInsert;
         private IContainer components;
         private Label label4;
+        private TextBox textBoxExplainGeneralPoint;
+        private Label label5;
     }
 }
