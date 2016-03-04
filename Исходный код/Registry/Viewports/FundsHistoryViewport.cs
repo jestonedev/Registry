@@ -43,13 +43,17 @@ namespace Registry.Viewport
                 return;
             var currentFundFounded = false;
             for (var i = dataGridView.Rows.Count - 1; i >= 0; i--)
-                if ((((DataRowView)GeneralBindingSource[i])["exclude_restriction_date"] == DBNull.Value) && (!currentFundFounded))
+            {
+                if ((GeneralBindingSource.Count - 1) >= i && 
+                    (((DataRowView) GeneralBindingSource[i])["exclude_restriction_date"] == DBNull.Value) &&
+                    (!currentFundFounded))
                 {
                     dataGridView.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
                     currentFundFounded = true;
                 }
                 else
                     dataGridView.Rows[i].DefaultCellStyle.BackColor = Color.White;
+            }
         }
 
         private void RebuildFilter()
