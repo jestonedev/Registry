@@ -47,8 +47,8 @@ namespace Registry.DataModels.DataModels
                             (id_process, id_kinship, surname, name, patronymic, date_of_birth, id_document_type, 
                             date_of_document_issue, document_num, document_seria, id_document_issued_by,
                             registration_id_street, registration_house, registration_flat, registration_room,
-                            residence_id_street, residence_house, residence_flat, residence_room, personal_account, include_date, exclude_date)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                            residence_id_street, residence_house, residence_flat, residence_room, personal_account, include_date, exclude_date, registration_date)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             var tenancyPerson = (TenancyPerson) entity;
             command.Parameters.Add(DBConnection.CreateParameter("id_process", tenancyPerson.IdProcess));
             command.Parameters.Add(DBConnection.CreateParameter("id_kinship", tenancyPerson.IdKinship));
@@ -72,6 +72,7 @@ namespace Registry.DataModels.DataModels
             command.Parameters.Add(DBConnection.CreateParameter("personal_account", tenancyPerson.PersonalAccount));
             command.Parameters.Add(DBConnection.CreateParameter("include_date", tenancyPerson.IncludeDate));
             command.Parameters.Add(DBConnection.CreateParameter("exclude_date", tenancyPerson.ExcludeDate));
+            command.Parameters.Add(DBConnection.CreateParameter("registration_date", tenancyPerson.RegistrationDate));
         }
 
         protected override void ConfigureUpdateCommand(DbCommand command, Entity entity)
@@ -106,6 +107,7 @@ namespace Registry.DataModels.DataModels
             command.Parameters.Add(DBConnection.CreateParameter("include_date", tenancyPerson.IncludeDate));
             command.Parameters.Add(DBConnection.CreateParameter("exclude_date", tenancyPerson.ExcludeDate));
             command.Parameters.Add(DBConnection.CreateParameter("id_person", tenancyPerson.IdPerson));
+            // No reg date, because user can't modify it. Only import from msp for information
         }
     }
 }

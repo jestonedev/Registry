@@ -55,11 +55,6 @@ namespace Registry.Viewport
         private ComboBox comboBoxResidenceStreet;
         private DateTimePicker dateTimePickerDateOfBirth;
         private DateTimePicker dateTimePickerDateOfDocumentIssue;
-        private DataGridViewTextBoxColumn surname;
-        private DataGridViewTextBoxColumn name;
-        private DataGridViewTextBoxColumn patronymic;
-        private DataGridViewTextBoxColumn date_of_birth;
-        private DataGridViewComboBoxColumn id_kinship;
         private DateTimePicker dateTimePickerExcludeDate;
         private Label label2;
         private DateTimePicker dateTimePickerIncludeDate;
@@ -124,6 +119,7 @@ namespace Registry.Viewport
             this.patronymic = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.date_of_birth = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_kinship = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.registration_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel11.SuspendLayout();
             this.groupBox23.SuspendLayout();
             this.groupBox27.SuspendLayout();
@@ -149,7 +145,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 220F));
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
             this.tableLayoutPanel11.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel11.Size = new System.Drawing.Size(813, 564);
+            this.tableLayoutPanel11.Size = new System.Drawing.Size(1002, 724);
             this.tableLayoutPanel11.TabIndex = 0;
             // 
             // groupBox23
@@ -170,7 +166,7 @@ namespace Registry.Viewport
             this.groupBox23.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox23.Location = new System.Drawing.Point(3, 3);
             this.groupBox23.Name = "groupBox23";
-            this.groupBox23.Size = new System.Drawing.Size(400, 214);
+            this.groupBox23.Size = new System.Drawing.Size(495, 214);
             this.groupBox23.TabIndex = 1;
             this.groupBox23.TabStop = false;
             this.groupBox23.Text = "Личные данные";
@@ -181,7 +177,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonImportFromMSP.Location = new System.Drawing.Point(164, 183);
             this.buttonImportFromMSP.Name = "buttonImportFromMSP";
-            this.buttonImportFromMSP.Size = new System.Drawing.Size(230, 24);
+            this.buttonImportFromMSP.Size = new System.Drawing.Size(325, 24);
             this.buttonImportFromMSP.TabIndex = 6;
             this.buttonImportFromMSP.Text = "Импортировать из МСП";
             this.buttonImportFromMSP.UseVisualStyleBackColor = true;
@@ -194,7 +190,7 @@ namespace Registry.Viewport
             this.textBoxPersonalAccount.Location = new System.Drawing.Point(164, 157);
             this.textBoxPersonalAccount.MaxLength = 255;
             this.textBoxPersonalAccount.Name = "textBoxPersonalAccount";
-            this.textBoxPersonalAccount.Size = new System.Drawing.Size(230, 21);
+            this.textBoxPersonalAccount.Size = new System.Drawing.Size(325, 21);
             this.textBoxPersonalAccount.TabIndex = 5;
             // 
             // label81
@@ -213,7 +209,7 @@ namespace Registry.Viewport
             this.dateTimePickerDateOfBirth.Location = new System.Drawing.Point(164, 100);
             this.dateTimePickerDateOfBirth.Name = "dateTimePickerDateOfBirth";
             this.dateTimePickerDateOfBirth.ShowCheckBox = true;
-            this.dateTimePickerDateOfBirth.Size = new System.Drawing.Size(230, 21);
+            this.dateTimePickerDateOfBirth.Size = new System.Drawing.Size(325, 21);
             this.dateTimePickerDateOfBirth.TabIndex = 3;
             // 
             // comboBoxKinship
@@ -226,7 +222,7 @@ namespace Registry.Viewport
             this.comboBoxKinship.IntegralHeight = false;
             this.comboBoxKinship.Location = new System.Drawing.Point(164, 127);
             this.comboBoxKinship.Name = "comboBoxKinship";
-            this.comboBoxKinship.Size = new System.Drawing.Size(230, 23);
+            this.comboBoxKinship.Size = new System.Drawing.Size(325, 23);
             this.comboBoxKinship.TabIndex = 4;
             // 
             // label57
@@ -254,7 +250,7 @@ namespace Registry.Viewport
             this.textBoxPatronymic.Location = new System.Drawing.Point(164, 73);
             this.textBoxPatronymic.MaxLength = 255;
             this.textBoxPatronymic.Name = "textBoxPatronymic";
-            this.textBoxPatronymic.Size = new System.Drawing.Size(230, 21);
+            this.textBoxPatronymic.Size = new System.Drawing.Size(325, 21);
             this.textBoxPatronymic.TabIndex = 2;
             this.textBoxPatronymic.Leave += new System.EventHandler(this.textBoxSNP_Leave);
             // 
@@ -274,7 +270,7 @@ namespace Registry.Viewport
             this.textBoxName.Location = new System.Drawing.Point(164, 46);
             this.textBoxName.MaxLength = 50;
             this.textBoxName.Name = "textBoxName";
-            this.textBoxName.Size = new System.Drawing.Size(230, 21);
+            this.textBoxName.Size = new System.Drawing.Size(325, 21);
             this.textBoxName.TabIndex = 1;
             this.textBoxName.Leave += new System.EventHandler(this.textBoxSNP_Leave);
             // 
@@ -294,7 +290,7 @@ namespace Registry.Viewport
             this.textBoxSurname.Location = new System.Drawing.Point(164, 19);
             this.textBoxSurname.MaxLength = 50;
             this.textBoxSurname.Name = "textBoxSurname";
-            this.textBoxSurname.Size = new System.Drawing.Size(230, 21);
+            this.textBoxSurname.Size = new System.Drawing.Size(325, 21);
             this.textBoxSurname.TabIndex = 0;
             this.textBoxSurname.Leave += new System.EventHandler(this.textBoxSNP_Leave);
             // 
@@ -320,7 +316,7 @@ namespace Registry.Viewport
             this.groupBox27.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox27.Location = new System.Drawing.Point(3, 223);
             this.groupBox27.Name = "groupBox27";
-            this.groupBox27.Size = new System.Drawing.Size(400, 134);
+            this.groupBox27.Size = new System.Drawing.Size(495, 134);
             this.groupBox27.TabIndex = 3;
             this.groupBox27.TabStop = false;
             this.groupBox27.Text = "Адрес регистрации";
@@ -341,7 +337,7 @@ namespace Registry.Viewport
             this.textBoxRegistrationRoom.Location = new System.Drawing.Point(164, 106);
             this.textBoxRegistrationRoom.MaxLength = 15;
             this.textBoxRegistrationRoom.Name = "textBoxRegistrationRoom";
-            this.textBoxRegistrationRoom.Size = new System.Drawing.Size(230, 21);
+            this.textBoxRegistrationRoom.Size = new System.Drawing.Size(325, 21);
             this.textBoxRegistrationRoom.TabIndex = 3;
             // 
             // label65
@@ -360,7 +356,7 @@ namespace Registry.Viewport
             this.textBoxRegistrationFlat.Location = new System.Drawing.Point(164, 78);
             this.textBoxRegistrationFlat.MaxLength = 15;
             this.textBoxRegistrationFlat.Name = "textBoxRegistrationFlat";
-            this.textBoxRegistrationFlat.Size = new System.Drawing.Size(230, 21);
+            this.textBoxRegistrationFlat.Size = new System.Drawing.Size(325, 21);
             this.textBoxRegistrationFlat.TabIndex = 2;
             // 
             // label63
@@ -388,7 +384,7 @@ namespace Registry.Viewport
             this.comboBoxRegistrationStreet.FormattingEnabled = true;
             this.comboBoxRegistrationStreet.Location = new System.Drawing.Point(164, 20);
             this.comboBoxRegistrationStreet.Name = "comboBoxRegistrationStreet";
-            this.comboBoxRegistrationStreet.Size = new System.Drawing.Size(230, 23);
+            this.comboBoxRegistrationStreet.Size = new System.Drawing.Size(325, 23);
             this.comboBoxRegistrationStreet.TabIndex = 0;
             this.comboBoxRegistrationStreet.DropDownClosed += new System.EventHandler(this.comboBoxRegistrationStreet_DropDownClosed);
             this.comboBoxRegistrationStreet.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxRegistrationStreet_KeyUp);
@@ -401,7 +397,7 @@ namespace Registry.Viewport
             this.textBoxRegistrationHouse.Location = new System.Drawing.Point(164, 50);
             this.textBoxRegistrationHouse.MaxLength = 10;
             this.textBoxRegistrationHouse.Name = "textBoxRegistrationHouse";
-            this.textBoxRegistrationHouse.Size = new System.Drawing.Size(230, 21);
+            this.textBoxRegistrationHouse.Size = new System.Drawing.Size(325, 21);
             this.textBoxRegistrationHouse.TabIndex = 1;
             // 
             // groupBox26
@@ -421,9 +417,9 @@ namespace Registry.Viewport
             this.groupBox26.Controls.Add(this.comboBoxDocumentType);
             this.groupBox26.Controls.Add(this.label58);
             this.groupBox26.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox26.Location = new System.Drawing.Point(409, 3);
+            this.groupBox26.Location = new System.Drawing.Point(504, 3);
             this.groupBox26.Name = "groupBox26";
-            this.groupBox26.Size = new System.Drawing.Size(401, 214);
+            this.groupBox26.Size = new System.Drawing.Size(495, 214);
             this.groupBox26.TabIndex = 2;
             this.groupBox26.TabStop = false;
             this.groupBox26.Text = "Документ, удостоверяющий личность";
@@ -435,7 +431,7 @@ namespace Registry.Viewport
             this.dateTimePickerExcludeDate.Location = new System.Drawing.Point(164, 184);
             this.dateTimePickerExcludeDate.Name = "dateTimePickerExcludeDate";
             this.dateTimePickerExcludeDate.ShowCheckBox = true;
-            this.dateTimePickerExcludeDate.Size = new System.Drawing.Size(231, 21);
+            this.dateTimePickerExcludeDate.Size = new System.Drawing.Size(325, 21);
             this.dateTimePickerExcludeDate.TabIndex = 41;
             // 
             // label2
@@ -454,7 +450,7 @@ namespace Registry.Viewport
             this.dateTimePickerIncludeDate.Location = new System.Drawing.Point(164, 157);
             this.dateTimePickerIncludeDate.Name = "dateTimePickerIncludeDate";
             this.dateTimePickerIncludeDate.ShowCheckBox = true;
-            this.dateTimePickerIncludeDate.Size = new System.Drawing.Size(231, 21);
+            this.dateTimePickerIncludeDate.Size = new System.Drawing.Size(325, 21);
             this.dateTimePickerIncludeDate.TabIndex = 39;
             // 
             // label1
@@ -473,7 +469,7 @@ namespace Registry.Viewport
             this.comboBoxIssuedBy.FormattingEnabled = true;
             this.comboBoxIssuedBy.Location = new System.Drawing.Point(164, 128);
             this.comboBoxIssuedBy.Name = "comboBoxIssuedBy";
-            this.comboBoxIssuedBy.Size = new System.Drawing.Size(231, 23);
+            this.comboBoxIssuedBy.Size = new System.Drawing.Size(325, 23);
             this.comboBoxIssuedBy.TabIndex = 4;
             this.comboBoxIssuedBy.DropDownClosed += new System.EventHandler(this.comboBoxIssuedBy_DropDownClosed);
             this.comboBoxIssuedBy.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxIssuedBy_KeyUp);
@@ -495,7 +491,7 @@ namespace Registry.Viewport
             this.dateTimePickerDateOfDocumentIssue.Location = new System.Drawing.Point(164, 101);
             this.dateTimePickerDateOfDocumentIssue.Name = "dateTimePickerDateOfDocumentIssue";
             this.dateTimePickerDateOfDocumentIssue.ShowCheckBox = true;
-            this.dateTimePickerDateOfDocumentIssue.Size = new System.Drawing.Size(231, 21);
+            this.dateTimePickerDateOfDocumentIssue.Size = new System.Drawing.Size(325, 21);
             this.dateTimePickerDateOfDocumentIssue.TabIndex = 3;
             // 
             // label61
@@ -514,7 +510,7 @@ namespace Registry.Viewport
             this.textBoxDocumentNumber.Location = new System.Drawing.Point(164, 74);
             this.textBoxDocumentNumber.MaxLength = 8;
             this.textBoxDocumentNumber.Name = "textBoxDocumentNumber";
-            this.textBoxDocumentNumber.Size = new System.Drawing.Size(231, 21);
+            this.textBoxDocumentNumber.Size = new System.Drawing.Size(325, 21);
             this.textBoxDocumentNumber.TabIndex = 2;
             // 
             // label60
@@ -533,7 +529,7 @@ namespace Registry.Viewport
             this.textBoxDocumentSeria.Location = new System.Drawing.Point(164, 47);
             this.textBoxDocumentSeria.MaxLength = 8;
             this.textBoxDocumentSeria.Name = "textBoxDocumentSeria";
-            this.textBoxDocumentSeria.Size = new System.Drawing.Size(231, 21);
+            this.textBoxDocumentSeria.Size = new System.Drawing.Size(325, 21);
             this.textBoxDocumentSeria.TabIndex = 1;
             // 
             // label59
@@ -553,7 +549,7 @@ namespace Registry.Viewport
             this.comboBoxDocumentType.FormattingEnabled = true;
             this.comboBoxDocumentType.Location = new System.Drawing.Point(164, 18);
             this.comboBoxDocumentType.Name = "comboBoxDocumentType";
-            this.comboBoxDocumentType.Size = new System.Drawing.Size(231, 23);
+            this.comboBoxDocumentType.Size = new System.Drawing.Size(325, 23);
             this.comboBoxDocumentType.TabIndex = 0;
             // 
             // label58
@@ -576,9 +572,9 @@ namespace Registry.Viewport
             this.groupBox28.Controls.Add(this.comboBoxResidenceStreet);
             this.groupBox28.Controls.Add(this.textBoxResidenceHouse);
             this.groupBox28.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox28.Location = new System.Drawing.Point(409, 223);
+            this.groupBox28.Location = new System.Drawing.Point(504, 223);
             this.groupBox28.Name = "groupBox28";
-            this.groupBox28.Size = new System.Drawing.Size(401, 134);
+            this.groupBox28.Size = new System.Drawing.Size(495, 134);
             this.groupBox28.TabIndex = 4;
             this.groupBox28.TabStop = false;
             this.groupBox28.Text = "Адрес проживания";
@@ -599,7 +595,7 @@ namespace Registry.Viewport
             this.textBoxResidenceRoom.Location = new System.Drawing.Point(164, 106);
             this.textBoxResidenceRoom.MaxLength = 15;
             this.textBoxResidenceRoom.Name = "textBoxResidenceRoom";
-            this.textBoxResidenceRoom.Size = new System.Drawing.Size(231, 21);
+            this.textBoxResidenceRoom.Size = new System.Drawing.Size(325, 21);
             this.textBoxResidenceRoom.TabIndex = 3;
             // 
             // label68
@@ -618,7 +614,7 @@ namespace Registry.Viewport
             this.textBoxResidenceFlat.Location = new System.Drawing.Point(164, 78);
             this.textBoxResidenceFlat.MaxLength = 15;
             this.textBoxResidenceFlat.Name = "textBoxResidenceFlat";
-            this.textBoxResidenceFlat.Size = new System.Drawing.Size(231, 21);
+            this.textBoxResidenceFlat.Size = new System.Drawing.Size(325, 21);
             this.textBoxResidenceFlat.TabIndex = 2;
             // 
             // label69
@@ -646,7 +642,7 @@ namespace Registry.Viewport
             this.comboBoxResidenceStreet.FormattingEnabled = true;
             this.comboBoxResidenceStreet.Location = new System.Drawing.Point(164, 20);
             this.comboBoxResidenceStreet.Name = "comboBoxResidenceStreet";
-            this.comboBoxResidenceStreet.Size = new System.Drawing.Size(231, 23);
+            this.comboBoxResidenceStreet.Size = new System.Drawing.Size(325, 23);
             this.comboBoxResidenceStreet.TabIndex = 0;
             this.comboBoxResidenceStreet.DropDownClosed += new System.EventHandler(this.comboBoxResidenceStreet_DropDownClosed);
             this.comboBoxResidenceStreet.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxResidenceStreet_KeyUp);
@@ -659,7 +655,7 @@ namespace Registry.Viewport
             this.textBoxResidenceHouse.Location = new System.Drawing.Point(164, 50);
             this.textBoxResidenceHouse.MaxLength = 10;
             this.textBoxResidenceHouse.Name = "textBoxResidenceHouse";
-            this.textBoxResidenceHouse.Size = new System.Drawing.Size(231, 21);
+            this.textBoxResidenceHouse.Size = new System.Drawing.Size(325, 21);
             this.textBoxResidenceHouse.TabIndex = 1;
             // 
             // dataGridViewTenancyPersons
@@ -685,7 +681,8 @@ namespace Registry.Viewport
             this.name,
             this.patronymic,
             this.date_of_birth,
-            this.id_kinship});
+            this.id_kinship,
+            this.registration_date});
             this.tableLayoutPanel11.SetColumnSpan(this.dataGridViewTenancyPersons, 2);
             this.dataGridViewTenancyPersons.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewTenancyPersons.Location = new System.Drawing.Point(3, 363);
@@ -693,34 +690,34 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(807, 198);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(996, 358);
             this.dataGridViewTenancyPersons.TabIndex = 0;
             // 
             // surname
             // 
             this.surname.HeaderText = "Фамилия";
-            this.surname.MinimumWidth = 100;
+            this.surname.MinimumWidth = 140;
             this.surname.Name = "surname";
             this.surname.ReadOnly = true;
             // 
             // name
             // 
             this.name.HeaderText = "Имя";
-            this.name.MinimumWidth = 100;
+            this.name.MinimumWidth = 140;
             this.name.Name = "name";
             this.name.ReadOnly = true;
             // 
             // patronymic
             // 
             this.patronymic.HeaderText = "Отчество";
-            this.patronymic.MinimumWidth = 100;
+            this.patronymic.MinimumWidth = 140;
             this.patronymic.Name = "patronymic";
             this.patronymic.ReadOnly = true;
             // 
             // date_of_birth
             // 
             this.date_of_birth.HeaderText = "Дата рождения";
-            this.date_of_birth.MinimumWidth = 130;
+            this.date_of_birth.MinimumWidth = 140;
             this.date_of_birth.Name = "date_of_birth";
             this.date_of_birth.ReadOnly = true;
             // 
@@ -728,16 +725,23 @@ namespace Registry.Viewport
             // 
             this.id_kinship.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
             this.id_kinship.HeaderText = "Отношение/связь";
-            this.id_kinship.MinimumWidth = 100;
+            this.id_kinship.MinimumWidth = 140;
             this.id_kinship.Name = "id_kinship";
             this.id_kinship.ReadOnly = true;
+            // 
+            // registration_date
+            // 
+            this.registration_date.HeaderText = "Дата регистрации";
+            this.registration_date.MinimumWidth = 140;
+            this.registration_date.Name = "registration_date";
+            this.registration_date.ReadOnly = true;
             // 
             // TenancyPersonsViewport
             // 
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(660, 420);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(819, 570);
+            this.ClientSize = new System.Drawing.Size(1008, 730);
             this.Controls.Add(this.tableLayoutPanel11);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -759,5 +763,11 @@ namespace Registry.Viewport
         }
 
         private Button buttonImportFromMSP;
+        private DataGridViewTextBoxColumn surname;
+        private DataGridViewTextBoxColumn name;
+        private DataGridViewTextBoxColumn patronymic;
+        private DataGridViewTextBoxColumn date_of_birth;
+        private DataGridViewComboBoxColumn id_kinship;
+        private DataGridViewTextBoxColumn registration_date;
     }
 }

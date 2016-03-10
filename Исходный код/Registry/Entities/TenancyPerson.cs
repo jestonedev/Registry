@@ -27,6 +27,7 @@ namespace Registry.Entities
         public string PersonalAccount { get; set; }
         public DateTime? IncludeDate { get; set; }
         public DateTime? ExcludeDate { get; set; }
+        public DateTime? RegistrationDate { get; set; }     // Information only field (user can't rewrite it), then no reasons to equal this field
 
         public override bool Equals(object obj)
         {

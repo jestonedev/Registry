@@ -135,6 +135,7 @@ namespace Registry.Viewport
             id_kinship.DisplayMember = "kinship";
             id_kinship.ValueMember = "id_kinship";
             id_kinship.DataPropertyName = "id_kinship";
+            registration_date.DataPropertyName = "registration_date";
         }
 
         private void UnbindedCheckBoxesUpdate()
@@ -301,6 +302,10 @@ namespace Registry.Viewport
             row["registration_house"] = ViewportHelper.ValueOrDBNull(tenancyPerson.RegistrationHouse);
             row["registration_flat"] = ViewportHelper.ValueOrDBNull(tenancyPerson.RegistrationFlat);
             row["registration_room"] = ViewportHelper.ValueOrDBNull(tenancyPerson.RegistrationRoom);
+            if (tenancyPerson.RegistrationDate != null)
+            {
+                row["registration_date"] = ViewportHelper.ValueOrDBNull(tenancyPerson.RegistrationDate);
+            }
             row["residence_id_street"] = ViewportHelper.ValueOrDBNull(tenancyPerson.ResidenceIdStreet);
             row["residence_house"] = ViewportHelper.ValueOrDBNull(tenancyPerson.ResidenceHouse);
             row["residence_flat"] = ViewportHelper.ValueOrDBNull(tenancyPerson.ResidenceFlat);
@@ -824,7 +829,7 @@ namespace Registry.Viewport
                     {
                         Connection = connection,
                         CommandText = @"
-                        SELECT v.family, name, father, v.birth
+                        SELECT v.family, name, father, v.birth, v.reg_date
                         FROM (
                         SELECT 
                           CASE SUBSTRING(ts.base_month,1,3) 
@@ -841,7 +846,7 @@ namespace Registry.Viewport
                           WHEN 'Nov' THEN SUBSTRING(ts.base_month,4,4)+'11'
                           WHEN 'Dec' THEN SUBSTRING(ts.base_month,4,4)+'12'
                           ELSE ts.base_month
-                          END AS mon, family, name, father, birth
+                          END AS mon, family, name, father, birth, c AS reg_date
                         FROM dbo.t_bks ts
                         WHERE ts.street = @street AND house = @house AND flat = @flat) v
                         WHERE mon = (
@@ -894,6 +899,7 @@ namespace Registry.Viewport
                             var nameValue = reader.GetString(1);
                             var patronymicValue = reader.GetString(2);
                             var birthValue = reader.GetDateTime(3);
+                            var regDateValue = reader.GetDateTime(4);
                             var person = new TenancyPerson
                             {
                                 Surname = surnameValue,
@@ -902,7 +908,8 @@ namespace Registry.Viewport
                                 DateOfBirth = birthValue,
                                 IdProcess = (int)ParentRow["id_process"],
                                 IdKinship = 64,
-                                IdDocumentType = 255
+                                IdDocumentType = 255,
+                                RegistrationDate = regDateValue
                             };
                             var idPerson = GeneralDataModel.Insert(person);
                             if (idPerson == -1)
