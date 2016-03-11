@@ -248,6 +248,7 @@ namespace Registry
             if (viewport != null)
             {
                 viewport.Show(dockPanel, DockState.Document);
+                viewport.Focus();
             }
         }
 
