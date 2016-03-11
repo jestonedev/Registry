@@ -1080,6 +1080,7 @@ namespace Registry.Viewport
                 person.RegistrationHouse,
                 person.RegistrationFlat,
                 person.RegistrationRoom,
+                person.RegistrationDate,
                 person.ResidenceIdStreet,
                 person.ResidenceHouse,
                 person.ResidenceFlat,
