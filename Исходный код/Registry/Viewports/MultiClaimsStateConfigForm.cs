@@ -23,7 +23,7 @@ namespace Registry.Viewport
 
         public string Description
         {
-            get { return textBoxDescription.Text; }
+            get { return string.IsNullOrEmpty(textBoxDescription.Text) ? null : textBoxDescription.Text; }
         }
 
         public DateTime? TransfertToLegalDepartmentDate
@@ -38,12 +38,12 @@ namespace Registry.Viewport
 
         public string TransfertToLegalDepartmentWho
         {
-            get { return textBoxTransferToLegalDepartmentWho.Text; }
+            get { return string.IsNullOrEmpty(textBoxTransferToLegalDepartmentWho.Text) ? null : textBoxTransferToLegalDepartmentWho.Text; }
         }
 
         public string AcceptedByLegalDepartmentWho
         {
-            get { return textBoxAcceptedByLegalDepartmentWho.Text; }
+            get { return string.IsNullOrEmpty(textBoxAcceptedByLegalDepartmentWho.Text) ? null : textBoxAcceptedByLegalDepartmentWho.Text; }
         }
 
 
