@@ -281,7 +281,14 @@ namespace Registry.Viewport
                     };
                     var idRestriction = restrictions.Insert(restriction);
                     if (idRestriction == -1)
+                    {
+                        MessageBox.Show(
+                            string.Format(
+                                "Для помещения с реестровым номером {0} и всех следующих в списке после него не был проставлен реквизит. ",
+                                idPremises),
+                            @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                         break;
+                    }
                     
                     var assoc = new RestrictionObjectAssoc(idPremises, idRestriction, null);
                     restrictionsAssoc.Insert(assoc);
@@ -353,7 +360,12 @@ namespace Registry.Viewport
                     };
                     var idOwnershipRight = ownershipsRights.Insert(ownershipRight);
                     if (idOwnershipRight == -1)
+                    {
+                        MessageBox.Show(
+                            string.Format("Для помещения с реестровым номером {0} и всех следующих в списке после него не было проставлено ограничение. ", idPremises),
+                            @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                         break;
+                    }
 
                     var assoc = new OwnershipRightObjectAssoc(idPremises, idOwnershipRight);
                     ownershipsRightsAssoc.Insert(assoc);

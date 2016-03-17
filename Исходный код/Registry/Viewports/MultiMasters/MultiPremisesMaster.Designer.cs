@@ -21,12 +21,12 @@ namespace Registry.Viewport
             this.toolStripButtonRestrictions = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonOwnerships = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonObjectStates = new System.Windows.Forms.ToolStripButton();
+            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.id_premises = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_street = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.house = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.premises_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -164,6 +164,12 @@ namespace Registry.Viewport
             this.toolStripButtonObjectStates.Text = "Проставить текущее состояние";
             this.toolStripButtonObjectStates.Click += new System.EventHandler(this.toolStripButtonObjectStates_Click);
             // 
+            // toolStripProgressBar1
+            // 
+            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
+            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 22);
+            this.toolStripProgressBar1.Visible = false;
+            // 
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
@@ -195,6 +201,7 @@ namespace Registry.Viewport
             this.id_premises.MinimumWidth = 50;
             this.id_premises.Name = "id_premises";
             this.id_premises.ReadOnly = true;
+            this.id_premises.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.id_premises.Width = 50;
             // 
             // id_street
@@ -204,6 +211,7 @@ namespace Registry.Viewport
             this.id_street.MinimumWidth = 300;
             this.id_street.Name = "id_street";
             this.id_street.ReadOnly = true;
+            this.id_street.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // house
             // 
@@ -211,6 +219,7 @@ namespace Registry.Viewport
             this.house.MinimumWidth = 50;
             this.house.Name = "house";
             this.house.ReadOnly = true;
+            this.house.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.house.Width = 50;
             // 
             // premises_num
@@ -219,13 +228,8 @@ namespace Registry.Viewport
             this.premises_num.MinimumWidth = 75;
             this.premises_num.Name = "premises_num";
             this.premises_num.ReadOnly = true;
+            this.premises_num.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.premises_num.Width = 75;
-            // 
-            // toolStripProgressBar1
-            // 
-            this.toolStripProgressBar1.Name = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size = new System.Drawing.Size(100, 22);
-            this.toolStripProgressBar1.Visible = false;
             // 
             // MultiPremisesMaster
             // 
@@ -257,14 +261,14 @@ namespace Registry.Viewport
         private ToolStripSeparator toolStripSeparator2;
         private ToolStripButton toolStripButtonGenerateExcerpt;
         private DataGridView dataGridView;
-        private DataGridViewTextBoxColumn id_premises;
-        private DataGridViewTextBoxColumn id_street;
-        private DataGridViewTextBoxColumn house;
-        private DataGridViewTextBoxColumn premises_num;
         private ToolStripButton toolStripButtonRestrictions;
         private ToolStripButton toolStripButtonOwnerships;
         private ToolStripButton toolStripButtonObjectStates;
         private ToolStripProgressBar toolStripProgressBar1;
+        private DataGridViewTextBoxColumn id_premises;
+        private DataGridViewTextBoxColumn id_street;
+        private DataGridViewTextBoxColumn house;
+        private DataGridViewTextBoxColumn premises_num;
 
     }
 }
