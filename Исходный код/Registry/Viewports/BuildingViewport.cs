@@ -1181,6 +1181,13 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
+            if (_restrictions.EditingNewRecord)
+            {
+                MessageBox.Show(@"Одна из вкладок реквизитов уже находится в режиме добавления новой записи. " +
+                    @"Одновременно можно добавлять не более одного реквизита.",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
             if (GeneralBindingSource.Position == -1)
             {
                 MessageBox.Show(@"Не выбрано здание", @"Ошибка",
@@ -1258,6 +1265,13 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
+            if (_ownershipRights.EditingNewRecord)
+            {
+                MessageBox.Show(@"Одна из вкладок ограничений уже находится в режиме добавления новой записи. " +
+                    @"Одновременно можно добавлять не более одного ограничения.",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
             if (GeneralBindingSource.Position == -1)
             {
                 MessageBox.Show(@"Не выбрано здание", @"Ошибка",

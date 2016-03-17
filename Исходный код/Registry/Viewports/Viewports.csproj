@@ -108,16 +108,16 @@
     <Compile Include="DataGridViewport.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MultiClaimsStateConfigForm.cs">
+    <Compile Include="ModalEditors\MultiClaimsStateConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MultiClaimsStateConfigForm.Designer.cs">
+    <Compile Include="ModalEditors\MultiClaimsStateConfigForm.Designer.cs">
       <DependentUpon>MultiClaimsStateConfigForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="MultiPaymentAccountsAtDateForm.cs">
+    <Compile Include="ModalEditors\MultiPaymentAccountsAtDateForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MultiPaymentAccountsAtDateForm.Designer.cs">
+    <Compile Include="ModalEditors\MultiPaymentAccountsAtDateForm.Designer.cs">
       <DependentUpon>MultiPaymentAccountsAtDateForm.cs</DependentUpon>
     </Compile>
     <Compile Include="DocumentIssuedByViewport.Designer.cs">
@@ -134,6 +134,24 @@
     </Compile>
     <Compile Include="ExecutorsViewport.Designer.cs">
       <DependentUpon>ExecutorsViewport.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModalEditors\OwnershipsEditorMultiMaster.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalEditors\OwnershipsEditorMultiMaster.Designer.cs">
+      <DependentUpon>OwnershipsEditorMultiMaster.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModalEditors\RestrictionsEditorMultiMaster.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalEditors\RestrictionsEditorMultiMaster.Designer.cs">
+      <DependentUpon>RestrictionsEditorMultiMaster.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModalEditors\ObjectStateEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalEditors\ObjectStateEditor.Designer.cs">
+      <DependentUpon>ObjectStateEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="SearchForms\ExtendedSearchResettleForm.cs">
       <SubType>Form</SubType>
@@ -158,23 +176,23 @@
     </Compile>
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="IMultiMaster.cs" />
-    <Compile Include="MultiClaimsMaster.cs">
+    <Compile Include="MultiMasters\MultiClaimsMaster.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MultiClaimsMaster.Designer.cs">
+    <Compile Include="MultiMasters\MultiClaimsMaster.Designer.cs">
       <DependentUpon>MultiClaimsMaster.cs</DependentUpon>
     </Compile>
-    <Compile Include="MultiPaymentAccountsMaster.cs">
+    <Compile Include="MultiMasters\MultiPaymentAccountsMaster.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MultiPaymentAccountsMaster.Designer.cs">
+    <Compile Include="MultiMasters\MultiPaymentAccountsMaster.Designer.cs">
       <DependentUpon>MultiPaymentAccountsMaster.cs</DependentUpon>
     </Compile>
-    <Compile Include="MultiExcerptsMaster.cs">
+    <Compile Include="MultiMasters\MultiPremisesMaster.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="MultiExcerptsMaster.Designer.cs">
-      <DependentUpon>MultiExcerptsMaster.cs</DependentUpon>
+    <Compile Include="MultiMasters\MultiPremisesMaster.Designer.cs">
+      <DependentUpon>MultiPremisesMaster.cs</DependentUpon>
     </Compile>
     <Compile Include="OwnershipListViewport.Designer.cs">
       <DependentUpon>OwnershipListViewport.cs</DependentUpon>
@@ -223,10 +241,10 @@
     <Compile Include="ResettleProcessListViewport.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OwnershipsEditor.cs">
+    <Compile Include="ModalEditors\OwnershipsEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="OwnershipsEditor.Designer.cs">
+    <Compile Include="ModalEditors\OwnershipsEditor.Designer.cs">
       <DependentUpon>OwnershipsEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="ResettleProcessListViewport.Designer.cs">
@@ -253,16 +271,16 @@
     <Compile Include="StructureTypeListViewport.Designer.cs">
       <DependentUpon>StructureTypeListViewport.cs</DependentUpon>
     </Compile>
-    <Compile Include="SubPremisesEditor.cs">
+    <Compile Include="ModalEditors\SubPremisesEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="SubPremisesEditor.Designer.cs">
+    <Compile Include="ModalEditors\SubPremisesEditor.Designer.cs">
       <DependentUpon>SubPremisesEditor.cs</DependentUpon>
     </Compile>
-    <Compile Include="RestrictionsEditor.cs">
+    <Compile Include="ModalEditors\RestrictionsEditor.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="RestrictionsEditor.Designer.cs">
+    <Compile Include="ModalEditors\RestrictionsEditor.Designer.cs">
       <DependentUpon>RestrictionsEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="SearchForms\SimpleSearchResettleForm.cs">
@@ -499,10 +517,10 @@
     <EmbeddedResource Include="ClaimStateTypesViewport.resx">
       <DependentUpon>ClaimStateTypesViewport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MultiClaimsStateConfigForm.resx">
+    <EmbeddedResource Include="ModalEditors\MultiClaimsStateConfigForm.resx">
       <DependentUpon>MultiClaimsStateConfigForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MultiPaymentAccountsAtDateForm.resx">
+    <EmbeddedResource Include="ModalEditors\MultiPaymentAccountsAtDateForm.resx">
       <DependentUpon>MultiPaymentAccountsAtDateForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="DocumentIssuedByViewport.resx">
@@ -513,6 +531,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ExecutorsViewport.resx">
       <DependentUpon>ExecutorsViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalEditors\OwnershipsEditorMultiMaster.resx">
+      <DependentUpon>OwnershipsEditorMultiMaster.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalEditors\RestrictionsEditorMultiMaster.resx">
+      <DependentUpon>RestrictionsEditorMultiMaster.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalEditors\ObjectStateEditor.resx">
+      <DependentUpon>ObjectStateEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SearchForms\ExtendedSearchBuildingForm.resx">
       <DependentUpon>ExtendedSearchBuildingForm.cs</DependentUpon>
@@ -532,14 +559,14 @@
     <EmbeddedResource Include="FundsHistoryViewport.resx">
       <DependentUpon>FundsHistoryViewport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MultiClaimsMaster.resx">
+    <EmbeddedResource Include="MultiMasters\MultiClaimsMaster.resx">
       <DependentUpon>MultiClaimsMaster.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MultiPaymentAccountsMaster.resx">
+    <EmbeddedResource Include="MultiMasters\MultiPaymentAccountsMaster.resx">
       <DependentUpon>MultiPaymentAccountsMaster.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="MultiExcerptsMaster.resx">
-      <DependentUpon>MultiExcerptsMaster.cs</DependentUpon>
+    <EmbeddedResource Include="MultiMasters\MultiPremisesMaster.resx">
+      <DependentUpon>MultiPremisesMaster.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="OwnershipListViewport.resx">
       <DependentUpon>OwnershipListViewport.cs</DependentUpon>
@@ -579,7 +606,7 @@
     <EmbeddedResource Include="RestrictionListViewport.resx">
       <DependentUpon>RestrictionListViewport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="OwnershipsEditor.resx">
+    <EmbeddedResource Include="ModalEditors\OwnershipsEditor.resx">
       <DependentUpon>OwnershipsEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="SearchForms\ExtendedSearchClaimsForm.resx">
@@ -588,10 +615,10 @@
     <EmbeddedResource Include="SearchForms\SimpleSearchClaimsForm.resx">
       <DependentUpon>SimpleSearchClaimsForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="SubPremisesEditor.resx">
+    <EmbeddedResource Include="ModalEditors\SubPremisesEditor.resx">
       <DependentUpon>SubPremisesEditor.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="RestrictionsEditor.resx">
+    <EmbeddedResource Include="ModalEditors\RestrictionsEditor.resx">
       <DependentUpon>RestrictionsEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RestrictionTypeListViewport.resx">

@@ -62,7 +62,7 @@ namespace Registry
             this.ribbonButtonOrbRegistryExcerptPremise = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbRegistryExcerptSubPremise = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbRegistryExcerptSubPremises = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonOrbRegistryMultiExcerpt = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonOrbRegistryMultiPremises = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbMultiPaymentAccount = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbMultiClaims = new System.Windows.Forms.RibbonButton();
             this.ribbonSeparator3 = new System.Windows.Forms.RibbonSeparator();
@@ -203,12 +203,12 @@ namespace Registry
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptPremise);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptSubPremise);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptSubPremises);
-            this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryMultiExcerpt);
+            this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryMultiPremises);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbMultiPaymentAccount);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbMultiClaims);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonSeparator3);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonExportOds);
-            this.ribbon1.OrbDropDown.RecentItemsCaption = "Печать";
+            this.ribbon1.OrbDropDown.RecentItemsCaption = "Печать и мастеры массовых операций";
             this.ribbon1.OrbDropDown.Size = new System.Drawing.Size(527, 383);
             this.ribbon1.OrbDropDown.TabIndex = 0;
             this.ribbon1.OrbImage = null;
@@ -395,15 +395,15 @@ namespace Registry
             this.ribbonButtonOrbRegistryExcerptSubPremises.ToolTipTitle = "Выписка (на все муниципальные комнаты)";
             this.ribbonButtonOrbRegistryExcerptSubPremises.Click += new System.EventHandler(this.ribbonButtonOrbRegistryExcerptSubPremises_Click);
             // 
-            // ribbonButtonOrbRegistryMultiExcerpt
+            // ribbonButtonOrbRegistryMultiPremises
             // 
-            this.ribbonButtonOrbRegistryMultiExcerpt.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryMultiExcerpt.Image")));
-            this.ribbonButtonOrbRegistryMultiExcerpt.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryMultiExcerpt.SmallImage")));
-            this.ribbonButtonOrbRegistryMultiExcerpt.Text = "Массовая выписка";
-            this.ribbonButtonOrbRegistryMultiExcerpt.ToolTip = "При нажатии на данную кнопку откроется мастер формирования массовых выпискок";
-            this.ribbonButtonOrbRegistryMultiExcerpt.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryMultiExcerpt.ToolTipImage")));
-            this.ribbonButtonOrbRegistryMultiExcerpt.ToolTipTitle = "Массовая выписка";
-            this.ribbonButtonOrbRegistryMultiExcerpt.Click += new System.EventHandler(this.ribbonButtonOrbRegistryMultiExcerpt_Click);
+            this.ribbonButtonOrbRegistryMultiPremises.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryMultiPremises.Image")));
+            this.ribbonButtonOrbRegistryMultiPremises.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryMultiPremises.SmallImage")));
+            this.ribbonButtonOrbRegistryMultiPremises.Text = "Массовые операции над помещениями";
+            this.ribbonButtonOrbRegistryMultiPremises.ToolTip = "При нажатии на данную кнопку откроется мастер массовых операций над помещениями";
+            this.ribbonButtonOrbRegistryMultiPremises.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbRegistryMultiPremises.ToolTipImage")));
+            this.ribbonButtonOrbRegistryMultiPremises.ToolTipTitle = "Массовые операции над помещениями";
+            this.ribbonButtonOrbRegistryMultiPremises.Click += new System.EventHandler(this.ribbonButtonOrbMultiPremises_Click);
             // 
             // ribbonButtonOrbMultiPaymentAccount
             // 
@@ -1730,7 +1730,7 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButtonAllPremises;
         private System.Windows.Forms.RibbonSeparator ribbonSeparator3;
         private System.Windows.Forms.RibbonButton ribbonButtonExportOds;
-        private System.Windows.Forms.RibbonButton ribbonButtonOrbRegistryMultiExcerpt;
+        private System.Windows.Forms.RibbonButton ribbonButtonOrbRegistryMultiPremises;
         private System.Windows.Forms.RibbonOrbMenuItem ribbonOrbMenuItemPayments;
         private System.Windows.Forms.RibbonButton ribbonButtonAccounts;
         private System.Windows.Forms.RibbonButton ribbonButtonAccountHistory;

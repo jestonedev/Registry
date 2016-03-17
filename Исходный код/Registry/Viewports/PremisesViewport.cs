@@ -423,26 +423,26 @@ namespace Registry.Viewport
         {
             if (premise.IdBuilding == null)
             {
-                MessageBox.Show("Необходимо выбрать здание","Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Необходимо выбрать здание",@"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxHouse.Focus();
                 return false;
             }
             if (premise.PremisesNum == null || string.IsNullOrEmpty(premise.PremisesNum.Trim()))
             {
-                MessageBox.Show("Необходимо указать номер помещения", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Необходимо указать номер помещения", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxPremisesNumber.Focus();
                 return false;
             }
             if (!Regex.IsMatch(premise.PremisesNum, @"^[0-9]+[а-я]{0,1}([/]([а-я]{0,1}|[0-9]+[а-я]{0,1}))?([,-][0-9]+[а-я]{0,1}([/]([а-я]{0,1}|[0-9]+[а-я]{0,1}))?)*$"))
             {
-                MessageBox.Show("Некорректно задан номер помещения. Можно использовать только цифры и не более одной строчной буквы кирилицы, а также знак дроби /. Для объединенных квартир номера должны быть перечислены через запятую или тире. Например: \"1а,2а,3б/4\"", "Ошибка",
+                MessageBox.Show(@"Некорректно задан номер помещения. Можно использовать только цифры и не более одной строчной буквы кирилицы, а также знак дроби /. Для объединенных квартир номера должны быть перечислены через запятую или тире. Например: ""1а,2а,3б/4""", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxPremisesNumber.Focus();
                 return false;
             }
             if (premise.IdState == null)
             {
-                MessageBox.Show("Необходимо выбрать текущее состояние помещения", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Необходимо выбрать текущее состояние помещения", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxState.Focus();
                 return false;
             }
@@ -451,33 +451,33 @@ namespace Registry.Viewport
             if (premiseFromView.IdPremises != null && DataModelHelper.HasMunicipal(premiseFromView.IdPremises.Value, EntityType.Premise)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
-                MessageBox.Show("Вы не можете изменить информацию по данному помещению, т.к. оно является муниципальным или содержит в себе муниципальные комнаты",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Вы не можете изменить информацию по данному помещению, т.к. оно является муниципальным или содержит в себе муниципальные комнаты",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             if (premiseFromView.IdPremises != null && DataModelHelper.HasNotMunicipal(premiseFromView.IdPremises.Value, EntityType.Premise)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
-                MessageBox.Show("Вы не можете изменить информацию по данному помещения, т.к. оно является немуниципальным или содержит в себе немуниципальные комнаты",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Вы не можете изменить информацию по данному помещения, т.к. оно является немуниципальным или содержит в себе немуниципальные комнаты",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             if (new int[] { 4, 5, 9, 11 }.Contains(premise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
-                MessageBox.Show("У вас нет прав на добавление в базу муниципальных жилых помещений", "Ошибка",
+                MessageBox.Show(@"У вас нет прав на добавление в базу муниципальных жилых помещений", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             if (new int[] { 1, 3, 6, 7, 8, 10 }.Contains(premise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
-                MessageBox.Show("У вас нет прав на добавление в базу немуниципальных жилых помещений", "Ошибка",
+                MessageBox.Show(@"У вас нет прав на добавление в базу немуниципальных жилых помещений", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             // Проверяем дубликаты квартир
             if ((premise.PremisesNum != premiseFromView.PremisesNum) || (premise.IdBuilding != premiseFromView.IdBuilding))
                 if (DataModelHelper.PremisesDuplicateCount(premise) != 0 &&
-                    MessageBox.Show("В указанном доме уже есть квартира с таким номером. Все равно продолжить сохранение?", "Внимание", 
+                    MessageBox.Show(@"В указанном доме уже есть квартира с таким номером. Все равно продолжить сохранение?", "Внимание", 
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                     return false;
             return true;
@@ -884,21 +884,21 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите удалить это помещение?", "Внимание",
+            if (MessageBox.Show(@"Вы действительно хотите удалить это помещение?", "Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 if (DataModelHelper.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                 {
-                    MessageBox.Show("У вас нет прав на удаление муниципальных жилых помещений и помещений, в которых присутствуют муниципальные комнаты",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(@"У вас нет прав на удаление муниципальных жилых помещений и помещений, в которых присутствуют муниципальные комнаты",
+                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
                 if (DataModelHelper.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                 {
-                    MessageBox.Show("У вас нет прав на удаление немуниципальных жилых помещений и помещений, в которых присутствуют немуниципальные комнаты",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(@"У вас нет прав на удаление немуниципальных жилых помещений и помещений, в которых присутствуют немуниципальные комнаты",
+                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
                 if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_premises"]) == -1)
@@ -923,7 +923,7 @@ namespace Registry.Viewport
             var premise = (Premise)EntityFromViewport();
             if (!ValidatePremise(premise))
                 return;
-            string Filter = "";
+            var Filter = "";
             if (!string.IsNullOrEmpty(GeneralBindingSource.Filter))
                 Filter += " OR ";
             else
@@ -931,7 +931,7 @@ namespace Registry.Viewport
             switch (viewportState)
             {
                 case ViewportState.ReadState:
-                    MessageBox.Show("Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
+                    MessageBox.Show(@"Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
@@ -958,8 +958,8 @@ namespace Registry.Viewport
                 case ViewportState.ModifyRowState:
                     if (premise.IdPremises == null)
                     {
-                        MessageBox.Show("Вы пытаетесь изменить помещение без внутренного номера. " +
-                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", 
+                        MessageBox.Show(@"Вы пытаетесь изменить помещение без внутренного номера. " +
+                            "Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка", 
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
@@ -1410,9 +1410,16 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
+            if (restrictions.EditingNewRecord)
+            {
+                MessageBox.Show(@"Одна из вкладок реквизитов уже находится в режиме добавления новой записи. " +
+                    @"Одновременно можно добавлять не более одного реквизита.",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
             if (GeneralBindingSource.Position == -1)
             {
-                MessageBox.Show("Не выбрано помещение", "Ошибка",
+                MessageBox.Show(@"Не выбрано помещение", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
@@ -1431,13 +1438,13 @@ namespace Registry.Viewport
                 return;
             if (GeneralBindingSource.Position == -1)
             {
-                MessageBox.Show("Не выбрано помещение", "Ошибка",
+                MessageBox.Show(@"Не выбрано помещение", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             if (v_restrictions.Position == -1)
             {
-                MessageBox.Show("Не выбран реквизит для редактирования", "Ошибка",
+                MessageBox.Show(@"Не выбран реквизит для редактирования", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
@@ -1495,9 +1502,16 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
+            if (ownershipRights.EditingNewRecord)
+            {
+                MessageBox.Show(@"Одна из вкладок ограничений уже находится в режиме добавления новой записи. " +
+                    @"Одновременно можно добавлять не более одного ограничения.",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
             if (GeneralBindingSource.Position == -1)
             {
-                MessageBox.Show("Не выбрано помещение", "Ошибка",
+                MessageBox.Show(@"Не выбрано помещение", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
@@ -1516,17 +1530,17 @@ namespace Registry.Viewport
                 return;
             if (GeneralBindingSource.Position == -1)
             {
-                MessageBox.Show("Не выбрано помещение", "Ошибка",
+                MessageBox.Show(@"Не выбрано помещение", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             if (v_ownershipRights.Position == -1)
             {
-                MessageBox.Show("Не выбрано ограничение для удаления", "Ошибка",
+                MessageBox.Show(@"Не выбрано ограничение для удаления", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if (MessageBox.Show("Вы уверены, что хотите удалить это ограничение?", "Внимание",
+            if (MessageBox.Show(@"Вы уверены, что хотите удалить это ограничение?", @"Внимание",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                 return;
             int idOwnershipRight = (int)((DataRowView)v_ownershipRights[v_ownershipRights.Position])["id_ownership_right"];
@@ -1541,13 +1555,13 @@ namespace Registry.Viewport
                 return;
             if (GeneralBindingSource.Position == -1)
             {
-                MessageBox.Show("Не выбрано помещение", "Ошибка",
+                MessageBox.Show(@"Не выбрано помещение", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             if (v_ownershipRights.Position == -1)
             {
-                MessageBox.Show("Не выбрано ограничение для редактирования", "Ошибка",
+                MessageBox.Show(@"Не выбрано ограничение для редактирования", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
@@ -1582,11 +1596,18 @@ namespace Registry.Viewport
                 return;
             if (GeneralBindingSource.Position == -1)
             {
-                MessageBox.Show("Не выбрано помещение", "Ошибка",
+                MessageBox.Show(@"Не выбрано помещение", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            using (SubPremisesEditor editor = new SubPremisesEditor())
+            if (sub_premises.EditingNewRecord)
+            {
+                MessageBox.Show(@"Одна из вкладок комнат уже находится в режиме добавления новых записей. " +
+                    @"Одновременно можно добавлять не более одной комнаты.",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            using (var editor = new SubPremisesEditor())
             {
                 editor.State = ViewportState.NewRowState;
                 editor.ParentType = ParentTypeEnum.Premises;
@@ -1601,17 +1622,17 @@ namespace Registry.Viewport
                 return;
             if (GeneralBindingSource.Position == -1)
             {
-                MessageBox.Show("Не выбрано помещение", "Ошибка",
+                MessageBox.Show(@"Не выбрано помещение", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             if (v_sub_premises.Position == -1)
             {
-                MessageBox.Show("Не выбрана комната для удаления", "Ошибка",
+                MessageBox.Show(@"Не выбрана комната для удаления", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if (MessageBox.Show("Вы уверены, что хотите удалить эту комнату?", "Внимание",
+            if (MessageBox.Show(@"Вы уверены, что хотите удалить эту комнату?", @"Внимание",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                 return;
             int idSubPremise = (int)((DataRowView)v_sub_premises[v_sub_premises.Position])["id_sub_premises"];
@@ -1626,13 +1647,13 @@ namespace Registry.Viewport
                 return;
             if (GeneralBindingSource.Position == -1)
             {
-                MessageBox.Show("Не выбрано помещение", "Ошибка",
+                MessageBox.Show(@"Не выбрано помещение", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             if (v_sub_premises.Position == -1)
             {
-                MessageBox.Show("Не выбрана комната для редактирования", "Ошибка",
+                MessageBox.Show(@"Не выбрана комната для редактирования", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }

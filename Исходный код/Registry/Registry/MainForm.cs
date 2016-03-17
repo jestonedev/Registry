@@ -379,7 +379,7 @@ namespace Registry
             if (document == null)
             {
                 if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
-                    ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryMultiExcerpt);
+                    ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryMultiPremises);
                 if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
                 {
                     ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbMultiPaymentAccount);
@@ -405,7 +405,7 @@ namespace Registry
             if (document.HasReport(ReporterType.RegistryExcerptReporterAllMunSubPremises))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptSubPremises);
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
-                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryMultiExcerpt);
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryMultiPremises);
             if (AccessControl.HasPrivelege(Priveleges.ClaimsRead))
             {
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbMultiPaymentAccount);
@@ -1013,19 +1013,18 @@ namespace Registry
                 document.GenerateReport(ReporterType.ExportReporter); 
         }
 
-
-        private void ribbonButtonOrbRegistryMultiExcerpt_Click(object sender, EventArgs e)
-        {
-            var multiExcerptsMasterForm = new MultiExcerptsMaster(this);
-            multiExcerptsMasterForm.Show(dockPanel, DockState.DockBottom);
-            multiExcerptsMasterForm.UpdateToolbar();
-        }
-
         private void ribbonButtonOrbMultiPaymentAccount_Click(object sender, EventArgs e)
         {
             var multiPaymentAccountsMaster = new MultiPaymentAccountsMaster(this);
             multiPaymentAccountsMaster.Show(dockPanel, DockState.DockBottom);
             multiPaymentAccountsMaster.UpdateToolbar();
+        }
+
+        private void ribbonButtonOrbMultiPremises_Click(object sender, EventArgs e)
+        {
+            var multiExcerptsMasterForm = new MultiPremisesMaster(this);
+            multiExcerptsMasterForm.Show(dockPanel, DockState.DockBottom);
+            multiExcerptsMasterForm.UpdateToolbar();
         }
 
         private void ribbonButtonOrbMultiClaims_Click(object sender, EventArgs e)
