@@ -89,7 +89,7 @@ namespace Registry.Viewport
                             person.Name, person.Patronymic, person.DateOfBirth,
                             person.IdDocumentType,
                             person.DateOfDocumentIssue, person.DocumentNum, person.DocumentSeria, person.IdDocumentIssuedBy,
-                            person.RegistrationIdStreet, person.RegistrationHouse, person.RegistrationFlat, person.RegistrationRoom,
+                            person.RegistrationIdStreet, person.RegistrationHouse, person.RegistrationFlat, person.RegistrationRoom, person.RegistrationDate,
                             person.ResidenceIdStreet, person.ResidenceHouse, person.ResidenceFlat, person.ResidenceRoom,
                             person.PersonalAccount, person.IncludeDate, person.ExcludeDate, 0);
                     }

@@ -799,7 +799,7 @@ namespace Registry.Viewport
                 Surname = tenancyPerson["surname"].ToString(),
                 Name = tenancyPerson["name"].ToString(),
                 Patronymic = tenancyPerson["patronymic"].ToString(),
-                DateOfBirth = (DateTime?)tenancyPerson["date_of_birth"],
+                DateOfBirth = (DateTime?)(tenancyPerson["date_of_birth"] == DBNull.Value ? null : tenancyPerson["date_of_birth"]),
                 IdKinship = (int?)tenancyPerson["id_kinship"]
             });
         }
