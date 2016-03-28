@@ -714,42 +714,56 @@ namespace Registry.Viewport
             GeneralDataModel.Select().RowChanged += PremisesViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted += PremisesViewport_RowDeleted;
 
-            v_premises_types = new BindingSource();
-            v_premises_types.DataMember = "premises_types";
-            v_premises_types.DataSource = ds;
+            v_premises_types = new BindingSource
+            {
+                DataMember = "premises_types",
+                DataSource = ds
+            };
 
-            v_premises_kinds = new BindingSource();
-            v_premises_kinds.DataMember = "premises_kinds";
-            v_premises_kinds.DataSource = ds;
+            v_premises_kinds = new BindingSource
+            {
+                DataMember = "premises_kinds",
+                DataSource = ds
+            };
 
-            v_restrictions = new BindingSource();
-            v_restrictions.DataMember = "restrictions";
-            v_restrictions.DataSource = ds;
+            v_restrictions = new BindingSource
+            {
+                DataMember = "restrictions",
+                DataSource = ds,
+                Sort = "date"
+            };
 
-            v_ownershipRights = new BindingSource();
-            v_ownershipRights.DataMember = "ownership_rights";
-            v_ownershipRights.DataSource = ds;
+            v_ownershipRights = new BindingSource
+            {
+                DataMember = "ownership_rights",
+                DataSource = ds,
+                Sort = "date"
+            };
 
-            v_restrictonTypes = new BindingSource();
-            v_restrictonTypes.DataSource = ds;
-            v_restrictonTypes.DataMember = "restriction_types";
+            v_restrictonTypes = new BindingSource
+            {
+                DataSource = ds,
+                DataMember = "restriction_types"
+            };
 
-            v_ownershipRightTypes = new BindingSource();
-            v_ownershipRightTypes.DataMember = "ownership_right_types";
-            v_ownershipRightTypes.DataSource = ds;
+            v_ownershipRightTypes = new BindingSource
+            {
+                DataMember = "ownership_right_types",
+                DataSource = ds
+            };
 
-            v_sub_premises = new BindingSource();
-            v_sub_premises.DataMember = "premises_sub_premises";
-            v_sub_premises.DataSource = GeneralBindingSource;
+            v_sub_premises = new BindingSource
+            {
+                DataMember = "premises_sub_premises",
+                DataSource = GeneralBindingSource
+            };
             v_sub_premises.CurrentItemChanged += v_sub_premises_CurrentItemChanged;
 
-            v_restrictionPremisesAssoc = new BindingSource();
-            v_restrictionPremisesAssoc.DataMember = "premises_restrictions_premises_assoc";
+            v_restrictionPremisesAssoc = new BindingSource {DataMember = "premises_restrictions_premises_assoc"};
             v_restrictionPremisesAssoc.CurrentItemChanged += v_restrictionPremisesAssoc_CurrentItemChanged;
             v_restrictionPremisesAssoc.DataSource = GeneralBindingSource;
 
-            v_restrictionBuildingsAssoc = new BindingSource();
-            v_restrictionBuildingsAssoc.DataMember = "restrictions_buildings_assoc";
+            v_restrictionBuildingsAssoc = new BindingSource {DataMember = "restrictions_buildings_assoc"};
             v_restrictionBuildingsAssoc.CurrentItemChanged += v_restrictionBuildingsAssoc_CurrentItemChanged;
             v_restrictionBuildingsAssoc.DataSource = ds;
 
@@ -759,13 +773,11 @@ namespace Registry.Viewport
             restrictionBuildingsAssoc.Select().RowChanged += restrictionBuildingsAssoc_RowChanged;
             restrictionBuildingsAssoc.Select().RowDeleted += restrictionBuildingsAssoc_RowDeleted;
 
-            v_ownershipPremisesAssoc = new BindingSource();
-            v_ownershipPremisesAssoc.DataMember = "premises_ownership_premises_assoc";
+            v_ownershipPremisesAssoc = new BindingSource {DataMember = "premises_ownership_premises_assoc"};
             v_ownershipPremisesAssoc.CurrentItemChanged += v_ownershipPremisesAssoc_CurrentItemChanged;
             v_ownershipPremisesAssoc.DataSource = GeneralBindingSource;
 
-            v_ownershipBuildingsAssoc = new BindingSource();
-            v_ownershipBuildingsAssoc.DataMember = "ownership_buildings_assoc";
+            v_ownershipBuildingsAssoc = new BindingSource {DataMember = "ownership_buildings_assoc"};
             v_ownershipBuildingsAssoc.CurrentItemChanged += v_ownershipBuildingsAssoc_CurrentItemChanged;
             v_ownershipBuildingsAssoc.DataSource = ds;
 

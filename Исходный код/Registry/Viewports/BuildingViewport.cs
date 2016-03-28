@@ -585,13 +585,15 @@ namespace Registry.Viewport
             _vRestrictions = new BindingSource
             {
                 DataMember = "restrictions",
-                DataSource = ds
+                DataSource = ds,
+                Sort = "date"
             };
 
             _vOwnershipRights = new BindingSource
             {
                 DataMember = "ownership_rights",
-                DataSource = ds
+                DataSource = ds,
+                Sort = "date"
             };
 
             _vRestrictonTypes = new BindingSource
