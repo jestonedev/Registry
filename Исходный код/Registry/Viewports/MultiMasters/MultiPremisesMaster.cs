@@ -224,18 +224,9 @@ namespace Registry.Viewport
             }
             return true;
         }
-        
-        private void toolStripButtonRestrictions_Click(object sender, EventArgs e)
+
+        private bool ValidatePermissionsAll()
         {
-            var restrictions = DataModel.GetInstance(DataModelType.RestrictionsDataModel);
-            var restrictionsAssoc = DataModel.GetInstance(DataModelType.RestrictionsPremisesAssocDataModel);
-            if (restrictions.EditingNewRecord || restrictionsAssoc.EditingNewRecord)
-            {
-                MessageBox.Show(@"Форма реквизитов уже находится в режиме добавления новой записи. "+
-                    @"Просмотрите все вкладки и отмените добавление новой записи перед тем, как воспользоваться мастером.",
-                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                return;
-            }
             for (var i = 0; i < _premises.Count; i++)
             {
                 int? idPremises = null;
@@ -249,8 +240,54 @@ namespace Registry.Viewport
                 }
                 if (!ValidatePermissions(idPremises.Value))
                 {
-                    return;
+                    return false;
                 }
+            }
+            return true;
+        }
+
+        private Premise PremiseFromRow(DataRowView row)
+        {
+            var premise = new Premise
+            {
+                IdPremises = ViewportHelper.ValueOrNull<int>(row, "id_premises"),
+                IdBuilding = ViewportHelper.ValueOrNull<int>(row, "id_building"),
+                IdState = ViewportHelper.ValueOrNull<int>(row, "id_state"),
+                PremisesNum = ViewportHelper.ValueOrNull(row, "premises_num"),
+                LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area"),
+                TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area"),
+                Height = ViewportHelper.ValueOrNull<double>(row, "height"),
+                NumRooms = ViewportHelper.ValueOrNull<short>(row, "num_rooms"),
+                NumBeds = ViewportHelper.ValueOrNull<short>(row, "num_beds"),
+                IdPremisesType = ViewportHelper.ValueOrNull<int>(row, "id_premises_type"),
+                IdPremisesKind = ViewportHelper.ValueOrNull<int>(row, "id_premises_kind"),
+                Floor = ViewportHelper.ValueOrNull<short>(row, "floor"),
+                CadastralNum = ViewportHelper.ValueOrNull(row, "cadastral_num"),
+                CadastralCost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost"),
+                BalanceCost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost"),
+                Description = ViewportHelper.ValueOrNull(row, "description"),
+                IsMemorial = ViewportHelper.ValueOrNull<bool>(row, "is_memorial"),
+                Account = ViewportHelper.ValueOrNull(row, "account"),
+                RegDate = ViewportHelper.ValueOrNull<DateTime>(row, "reg_date"),
+                StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date")
+            };
+            return premise;
+        }
+
+        private void toolStripButtonRestrictions_Click(object sender, EventArgs e)
+        {
+            var restrictions = DataModel.GetInstance(DataModelType.RestrictionsDataModel);
+            var restrictionsAssoc = DataModel.GetInstance(DataModelType.RestrictionsPremisesAssocDataModel);
+            if (restrictions.EditingNewRecord || restrictionsAssoc.EditingNewRecord)
+            {
+                MessageBox.Show(@"Форма реквизитов уже находится в режиме добавления новой записи. "+
+                    @"Просмотрите все вкладки и отмените добавление новой записи перед тем, как воспользоваться мастером.",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            if (!ValidatePermissionsAll())
+            {
+                return;
             }
             using (var form = new RestrictionsEditorMultiMaster())
             {
@@ -315,21 +352,9 @@ namespace Registry.Viewport
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            for (var i = 0; i < _premises.Count; i++)
+            if (!ValidatePermissionsAll())
             {
-                int? idPremises = null;
-                if (((DataRowView)_premises[i])["id_premises"] != DBNull.Value)
-                {
-                    idPremises = (int)((DataRowView)_premises[i])["id_premises"];
-                }
-                if (idPremises == null)
-                {
-                    continue;
-                }
-                if (!ValidatePermissions(idPremises.Value))
-                {
-                    return;
-                }
+                return;
             }
             using (var form = new OwnershipsEditorMultiMaster())
             {
@@ -384,21 +409,9 @@ namespace Registry.Viewport
 
         private void toolStripButtonObjectStates_Click(object sender, EventArgs e)
         {
-            for (var i = 0; i < _premises.Count; i++)
+            if (!ValidatePermissionsAll())
             {
-                int? idPremises = null;
-                if (((DataRowView)_premises[i])["id_premises"] != DBNull.Value)
-                {
-                    idPremises = (int)((DataRowView)_premises[i])["id_premises"];
-                }
-                if (idPremises == null)
-                {
-                    continue;
-                }
-                if (!ValidatePermissions(idPremises.Value))
-                {
-                    return;
-                }
+                return;
             }
             using (var form = new ObjectStateEditor())
             {
@@ -435,32 +448,45 @@ namespace Registry.Viewport
             }
         }
 
-        private Premise PremiseFromRow(DataRowView row)
+        private void toolStripButtonRegDate_Click(object sender, EventArgs e)
         {
-            var premise = new Premise
+            if (!ValidatePermissionsAll())
             {
-                IdPremises = ViewportHelper.ValueOrNull<int>(row, "id_premises"),
-                IdBuilding = ViewportHelper.ValueOrNull<int>(row, "id_building"),
-                IdState = ViewportHelper.ValueOrNull<int>(row, "id_state"),
-                PremisesNum = ViewportHelper.ValueOrNull(row, "premises_num"),
-                LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area"),
-                TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area"),
-                Height = ViewportHelper.ValueOrNull<double>(row, "height"),
-                NumRooms = ViewportHelper.ValueOrNull<short>(row, "num_rooms"),
-                NumBeds = ViewportHelper.ValueOrNull<short>(row, "num_beds"),
-                IdPremisesType = ViewportHelper.ValueOrNull<int>(row, "id_premises_type"),
-                IdPremisesKind = ViewportHelper.ValueOrNull<int>(row, "id_premises_kind"),
-                Floor = ViewportHelper.ValueOrNull<short>(row, "floor"),
-                CadastralNum = ViewportHelper.ValueOrNull(row, "cadastral_num"),
-                CadastralCost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost"),
-                BalanceCost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost"),
-                Description = ViewportHelper.ValueOrNull(row, "description"),
-                IsMemorial = ViewportHelper.ValueOrNull<bool>(row, "is_memorial"),
-                Account = ViewportHelper.ValueOrNull(row, "account"),
-                RegDate = ViewportHelper.ValueOrNull<DateTime>(row, "reg_date"),
-                StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date")
-            };
-            return premise;
+                return;
+            }
+            using (var form = new RegDateEditor())
+            {
+                if (form.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
+                toolStripProgressBar1.Value = 0;
+                toolStripProgressBar1.Maximum = _premises.Count - 1;
+                toolStripProgressBar1.Visible = true;
+                for (var i = 0; i < _premises.Count; i++)
+                {
+                    int? idPremises = null;
+                    if (((DataRowView)_premises[i])["id_premises"] != DBNull.Value)
+                    {
+                        idPremises = (int)((DataRowView)_premises[i])["id_premises"];
+                    }
+                    if (idPremises == null)
+                    {
+                        continue;
+                    }
+                    var premise = PremiseFromRow((DataRowView)_premises[i]);
+                    premise.RegDate = form.RegDate;
+                    if (_premisesDataModel.Update(premise) == -1)
+                    {
+                        return;
+                    }
+                    ((DataRowView)_premises[i])["reg_date"] = form.RegDate;
+                    toolStripProgressBar1.Value = i;
+                }
+                MessageBox.Show(@"Массовое проставление даты включения в РМИ помещений успешно завершено. ",
+                    @"Информация", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                toolStripProgressBar1.Visible = false;
+            }
         }
     }
 }

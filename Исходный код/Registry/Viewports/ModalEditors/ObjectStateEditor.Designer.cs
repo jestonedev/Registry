@@ -42,7 +42,7 @@ namespace Registry.Viewport.ModalEditors
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(12, 9);
+            this.label4.Location = new System.Drawing.Point(12, 12);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(119, 15);
             this.label4.TabIndex = 6;
@@ -52,7 +52,7 @@ namespace Registry.Viewport.ModalEditors
             // 
             this.comboBoxIdState.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxIdState.FormattingEnabled = true;
-            this.comboBoxIdState.Location = new System.Drawing.Point(137, 6);
+            this.comboBoxIdState.Location = new System.Drawing.Point(137, 9);
             this.comboBoxIdState.Name = "comboBoxIdState";
             this.comboBoxIdState.Size = new System.Drawing.Size(266, 23);
             this.comboBoxIdState.TabIndex = 3;

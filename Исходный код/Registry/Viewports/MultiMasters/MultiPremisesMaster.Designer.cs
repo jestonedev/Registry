@@ -27,6 +27,7 @@ namespace Registry.Viewport
             this.id_street = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.house = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.premises_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.toolStripButtonRegDate = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -46,6 +47,7 @@ namespace Registry.Viewport
             this.toolStripButtonRestrictions,
             this.toolStripButtonOwnerships,
             this.toolStripButtonObjectStates,
+            this.toolStripButtonRegDate,
             this.toolStripProgressBar1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -231,6 +233,16 @@ namespace Registry.Viewport
             this.premises_num.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.premises_num.Width = 75;
             // 
+            // toolStripButtonRegDate
+            // 
+            this.toolStripButtonRegDate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonRegDate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRegDate.Image")));
+            this.toolStripButtonRegDate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRegDate.Name = "toolStripButtonRegDate";
+            this.toolStripButtonRegDate.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRegDate.Text = "Проставить дату включения в РМИ";
+            this.toolStripButtonRegDate.Click += new System.EventHandler(this.toolStripButtonRegDate_Click);
+            // 
             // MultiPremisesMaster
             // 
             this.ClientSize = new System.Drawing.Size(570, 157);
@@ -269,6 +281,7 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn id_street;
         private DataGridViewTextBoxColumn house;
         private DataGridViewTextBoxColumn premises_num;
+        private ToolStripButton toolStripButtonRegDate;
 
     }
 }
