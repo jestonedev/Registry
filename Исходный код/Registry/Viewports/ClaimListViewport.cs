@@ -343,8 +343,8 @@ namespace Registry.Viewport
             {
                 _idAccount =
                     (from row in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
-                        where row.Field<string>("account") == textBoxAccount.Text.Trim()
-                        select row.Field<int?>("id_account")).FirstOrDefault();
+                     where row.Field<string>("account") == textBoxAccount.Text.Trim()
+                     select row.Field<int?>("id_account")).LastOrDefault();
             }
 
             var claim = (Claim) EntityFromViewport();
@@ -790,7 +790,7 @@ namespace Registry.Viewport
         {
             _idAccount = (from row in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
                 where row.Field<string>("account") == textBoxAccount.Text.Trim()
-                select row.Field<int?>("id_account")).FirstOrDefault();
+                select row.Field<int?>("id_account")).LastOrDefault();
             BindAccount(_idAccount);
             CheckViewportModifications();
         }
