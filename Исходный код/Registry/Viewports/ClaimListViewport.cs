@@ -339,9 +339,13 @@ namespace Registry.Viewport
 
         public override void SaveRecord()
         {
-            _idAccount = (from row in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
-                          where row.Field<string>("account") == textBoxAccount.Text.Trim()
-                          select row.Field<int?>("id_account")).FirstOrDefault();
+            if (textBoxAccount.Enabled)
+            {
+                _idAccount =
+                    (from row in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
+                        where row.Field<string>("account") == textBoxAccount.Text.Trim()
+                        select row.Field<int?>("id_account")).FirstOrDefault();
+            }
 
             var claim = (Claim) EntityFromViewport();
             if (!ValidateClaim(claim))
