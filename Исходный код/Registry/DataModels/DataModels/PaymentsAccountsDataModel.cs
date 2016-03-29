@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
+using Registry.Entities;
 
 namespace Registry.DataModels.DataModels
 {
@@ -198,6 +199,23 @@ namespace Registry.DataModels.DataModels
                         INNER JOIN sub_premises sp ON paspa.id_sub_premises = sp.id_sub_premises) v
                     WHERE {0}", whereStatement);
                 return connection.SqlSelectTable("ids", command).AsEnumerable().Select(row => row.Field<int>("id_premises"));
+            }
+        }
+
+        public static DataTable GetBalanceInfoOnDate(IEnumerable<int> idAccounts, int year, int month)
+        {
+            using (var connection = new DBConnection())
+            using (var command = DBConnection.CreateCommand())
+            {
+                command.CommandText =
+                    string.Format(@"SELECT p.id_account, p.balance_output_tenancy, p.balance_output_dgi
+                        FROM payments p
+                        WHERE p.id_account IN (0{0}) AND MONTH(p.date) = ? AND YEAR(p.date) = ?",
+                        idAccounts.Select(v => v.ToString()).Aggregate(
+                            (v, acc) => "," + v));
+                command.Parameters.Add(DBConnection.CreateParameter("month", month));
+                command.Parameters.Add(DBConnection.CreateParameter("year", year));
+                return connection.SqlSelectTable("balance_info", command);
             }
         }
     }

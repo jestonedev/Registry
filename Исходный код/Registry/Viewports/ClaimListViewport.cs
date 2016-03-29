@@ -6,6 +6,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using System.Windows.Navigation;
 using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
@@ -122,7 +123,6 @@ namespace Registry.Viewport
 
         private bool ValidateClaim(Claim claim)
         {
-
             if (claim.IdAccount == null)
             {
                 MessageBox.Show(@"Лицевого счета с указанным номером не существует",
@@ -346,6 +346,33 @@ namespace Registry.Viewport
             var claim = (Claim) EntityFromViewport();
             if (!ValidateClaim(claim))
                 return;
+            if (((viewportState == ViewportState.ModifyRowState && ((Claim)EntityFromView()).EndDeptPeriod != claim.EndDeptPeriod) ||
+                viewportState == ViewportState.NewRowState) && claim.EndDeptPeriod != null && claim.IdAccount != null &&
+                MessageBox.Show(@"Вы хотите обновить суммы взыскания на предъявленный период?",@"Внимание",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            {
+                var balanceInfoTable = PaymentsAccountsDataModel.GetBalanceInfoOnDate(
+                    new List<int> {claim.IdAccount.Value}, claim.EndDeptPeriod.Value.Year,
+                    claim.EndDeptPeriod.Value.Month);
+                var balanceInfoList = (from row in balanceInfoTable.Select()
+                                  where row.Field<int>("id_account") == claim.IdAccount.Value
+                    select new
+                    {
+                        BalanceOutputTenancy = row.Field<decimal>("balance_output_tenancy"),
+                        BalanceOutputDgi = row.Field<decimal>("balance_output_dgi")
+                    }).ToList();
+                if (!balanceInfoList.Any())
+                {
+                    MessageBox.Show(@"На конец указанного периода отсутствуют данные по задолженности", @"Внимание",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                }
+                else
+                {
+                    var balanceInfo = balanceInfoList.First();
+                    claim.AmountTenancy = balanceInfo.BalanceOutputTenancy;
+                    claim.AmountDgi = balanceInfo.BalanceOutputDgi;
+                }
+            }
             switch (viewportState)
             {
                 case ViewportState.ReadState:
