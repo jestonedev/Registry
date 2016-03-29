@@ -18,13 +18,13 @@ namespace Registry.Viewport.SearchForms
             InitializeComponent();
 
             DataModel.GetInstance(DataModelType.ClaimStatesDataModel).Select();
-            comboBoxLastState.DataSource = new BindingSource
+            comboBoxState.DataSource = new BindingSource
             {
                 DataSource = DataModel.DataSet,
                 DataMember = "claim_state_types"
             };
-            comboBoxLastState.DisplayMember = "state_type";
-            comboBoxLastState.ValueMember = "id_state_type";
+            comboBoxState.DisplayMember = "state_type";
+            comboBoxState.ValueMember = "id_state_type";
             comboBoxDateStartStateExpr.SelectedIndex = 2;
 
             foreach (Control control in Controls)
@@ -48,49 +48,71 @@ namespace Registry.Viewport.SearchForms
             var filter = "";
             IEnumerable<int> includedClaims = null;
             IEnumerable<int> includedAccounts = null;
-
-            if (checkBoxLastStateChecked.Checked && comboBoxLastState.SelectedValue != null)
+            if (checkBoxLastState.Checked)
             {
-                var claimStatesDataModel = DataModel.GetInstance(DataModelType.ClaimStatesDataModel);
-                var lastStates = from stateRow in claimStatesDataModel.FilterDeletedRows()
-                                 group stateRow.Field<int?>("id_state") by stateRow.Field<int>("id_claim") into gs
-                                 select new
-                                 {
-                                     id_claim = gs.Key,
-                                     id_state = gs.Max()
-                                 };
-                var lastStateTypes = from lastStateRow in lastStates
-                    join stateRow in claimStatesDataModel.FilterDeletedRows()
-                        on lastStateRow.id_state equals stateRow.Field<int?>("id_state")
-                    where stateRow.Field<int?>("id_state_type") == (int?) comboBoxLastState.SelectedValue
-                    select stateRow.Field<int>("id_claim");
-                includedClaims = DataModelHelper.Intersect(null, lastStateTypes);
-            }
-            if (checkBoxDateStartStateEnable.Checked)
-            {
-                var lastStateBindingSource = new BindingSource
+                if (checkBoxStateEnable.Checked && comboBoxState.SelectedValue != null)
                 {
-                    DataSource = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelLastClaimStates).Select(),
-                    Filter = BuildFilter("date_start_state", comboBoxDateStartStateExpr.Text,
-                    dateTimePickerDateStartStateFrom.Value.Date,
-                    dateTimePickerDateStartStateTo.Value.Date)
-                };
-                var claimsByDateStartState = new List<int>();
-                for (var i = 0; i < lastStateBindingSource.Count; i++)
-                {
-                    var idClaim = (int?)((DataRowView)lastStateBindingSource[i])["id_claim"];
-                    if (idClaim != null)
-                        claimsByDateStartState.Add(idClaim.Value);
+                    var claimStatesDataModel = DataModel.GetInstance(DataModelType.ClaimStatesDataModel);
+                    var lastStates = from stateRow in claimStatesDataModel.FilterDeletedRows()
+                        group stateRow.Field<int?>("id_state") by stateRow.Field<int>("id_claim")
+                        into gs
+                        select new
+                        {
+                            id_claim = gs.Key,
+                            id_state = gs.Max()
+                        };
+                    var lastStateTypes = from lastStateRow in lastStates
+                        join stateRow in claimStatesDataModel.FilterDeletedRows()
+                            on lastStateRow.id_state equals stateRow.Field<int?>("id_state")
+                        where stateRow.Field<int?>("id_state_type") == (int?) comboBoxState.SelectedValue
+                        select stateRow.Field<int>("id_claim");
+                    includedClaims = DataModelHelper.Intersect(null, lastStateTypes);
                 }
-                includedClaims = DataModelHelper.Intersect(includedClaims, claimsByDateStartState);
+                if (checkBoxDateStartStateEnable.Checked)
+                {
+                    var lastStateBindingSource = new BindingSource
+                    {
+                        DataSource = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelLastClaimStates).Select(),
+                        Filter = BuildFilter("date_start_state", comboBoxDateStartStateExpr.Text,
+                            dateTimePickerDateStartStateFrom.Value.Date,
+                            dateTimePickerDateStartStateTo.Value.Date)
+                    };
+                    var claimsByDateStartState = new List<int>();
+                    for (var i = 0; i < lastStateBindingSource.Count; i++)
+                    {
+                        var idClaim = (int?) ((DataRowView) lastStateBindingSource[i])["id_claim"];
+                        if (idClaim != null)
+                            claimsByDateStartState.Add(idClaim.Value);
+                    }
+                    includedClaims = DataModelHelper.Intersect(includedClaims, claimsByDateStartState);
+                }
+            } else
+            {
+                var claims = from row in DataModel.GetInstance(DataModelType.ClaimStatesDataModel).FilterDeletedRows()
+                             where (!checkBoxStateEnable.Checked || row.Field<int?>("id_state_type") == (int?)comboBoxState.SelectedValue) &&
+                                (!checkBoxDateStartStateEnable.Checked || 
+                                DateSatisfiesExpression(
+                                    row["date_start_state"] == DBNull.Value ? null : (DateTime?)row["date_start_state"],
+                                    comboBoxDateStartStateExpr.Text,
+                                    dateTimePickerDateStartStateFrom.Value.Date,
+                                    dateTimePickerDateStartStateTo.Value.Date))
+                    select row.Field<int>("id_claim");
+                includedClaims = DataModelHelper.Intersect(null, claims);
             }
             if (checkBoxAccountChecked.Checked && !string.IsNullOrEmpty(textBoxAccount.Text.Trim()))
             {
                 var accounts =
                     from accountRow in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
-                    where accountRow.Field<string>("account").Contains(textBoxAccount.Text)
+                    where accountRow.Field<string>("account").Contains(textBoxAccount.Text.Trim())
                     select accountRow.Field<int>("id_account");
                 includedAccounts = DataModelHelper.Intersect(null, accounts);
+            }
+            if (checkBoxSRNEnable.Checked && !string.IsNullOrEmpty(textBoxSRN.Text.Trim()))
+            {
+                var accounts = from accountRow in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
+                               where accountRow.Field<string>("crn").Contains(textBoxSRN.Text.Trim())
+                               select accountRow.Field<int>("id_account");
+                includedAccounts = DataModelHelper.Intersect(includedAccounts, accounts);
             }
             if (checkBoxAtDateChecked.Checked)
             {
@@ -118,6 +140,24 @@ namespace Registry.Viewport.SearchForms
                 filter = filter.TrimEnd(',') + ")";
             }
             return filter;
+        }
+
+        private static bool DateSatisfiesExpression(DateTime? dateStartState, string rawOperator, DateTime dateStartStateFrom, DateTime dateStartStateTo)
+        {
+            if (dateStartState == null) return false;
+            switch (rawOperator)
+            {
+                case "≥":
+                    return dateStartState.Value.Date >= dateStartStateFrom;
+                case "≤":
+                    return dateStartState.Value.Date <= dateStartStateFrom;
+                case "=":
+                    return dateStartState.Value.Date == dateStartStateFrom;
+                case "между":
+                    return dateStartState.Value.Date >= dateStartStateFrom &&
+                           dateStartState.Value.Date <= dateStartStateTo;
+            }
+            return false;
         }
 
         private string BuildFilter(string field, string rawOperator, DateTime from, DateTime to)
@@ -156,7 +196,13 @@ namespace Registry.Viewport.SearchForms
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if (checkBoxLastStateChecked.Checked && comboBoxLastState.SelectedValue == null)
+            if (checkBoxSRNEnable.Checked && string.IsNullOrEmpty(textBoxSRN.Text.Trim()))
+            {
+                MessageBox.Show(@"Укажите СРН или уберите галочку фильтрации по СРН", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            if (checkBoxStateEnable.Checked && comboBoxState.SelectedValue == null)
             {
                 MessageBox.Show(@"Выберите состояние исковой работы или уберите галочку фильтрации по последнему состоянию исковой работы", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -167,7 +213,7 @@ namespace Registry.Viewport.SearchForms
 
         private void checkBoxLastStateChecked_CheckedChanged(object sender, EventArgs e)
         {
-            comboBoxLastState.Enabled = checkBoxLastStateChecked.Checked;
+            comboBoxState.Enabled = checkBoxStateEnable.Checked;
         }
 
         private void checkBoxAccountChecked_CheckedChanged(object sender, EventArgs e)
@@ -185,6 +231,11 @@ namespace Registry.Viewport.SearchForms
             dateTimePickerDateStartStateFrom.Enabled = checkBoxDateStartStateEnable.Checked;
             dateTimePickerDateStartStateTo.Enabled = checkBoxDateStartStateEnable.Checked;
             comboBoxDateStartStateExpr.Enabled = checkBoxDateStartStateEnable.Checked;
+        }
+
+        private void checkBoxSRNEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxSRN.Enabled = checkBoxSRNEnable.Checked;
         }
     }
 }
