@@ -432,5 +432,50 @@ namespace Registry.Viewport
             };
             return claim;
         }
+
+        private void toolStripButtonToLegalDepartment_Click(object sender, EventArgs e)
+        {
+            if (_claims.Count == 0) return;
+            var claimStatesDataModel = DataModel.GetInstance(DataModelType.ClaimStatesDataModel);
+            for (var i = 0; i < _claims.Count; i++)
+            {
+                var row = ((DataRowView)_claims[i]);
+
+                var completedStates = from claimRow in claimStatesDataModel.FilterDeletedRows()
+                    where claimRow.Field<int?>("id_state_type") == 6
+                    select claimRow.Field<int>("id_claim");
+
+                var sentToLegalDepartment = from claimRow in claimStatesDataModel.FilterDeletedRows()
+                    where claimRow.Field<int?>("id_state_type") == 2
+                    select claimRow.Field<int>("id_claim");
+                var correctClaims = sentToLegalDepartment.Except(completedStates).Distinct();
+
+                var idClaim = (from claimRowId in correctClaims
+                    join claimRow in DataModel.GetInstance(DataModelType.ClaimsDataModel).FilterDeletedRows()
+                        on claimRowId equals claimRow.Field<int?>("id_claim")
+                    where claimRow.Field<int?>("id_account") == (int?) row["id_account"] 
+                    select claimRow.Field<int?>("id_claim")).LastOrDefault();
+                if (idClaim != null)
+                    continue;
+                MessageBox.Show(
+                    string.Format(
+                        "По исковой работе №{0} отсутствуют стадия передачи в юр. отдел",
+                        row["id_claim"]), @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button1);
+                return;
+            }
+            var reporter = ReporterFactory.CreateReporter(ReporterType.TransfertToLegalDepartmentReporter);
+            var filter = "";
+            var arguments = new Dictionary<string, string>();
+            for (var i = 0; i < _claims.Count; i++)
+            {
+                var row = ((DataRowView)_claims[i]);
+                if (row["id_claim"] != DBNull.Value)
+                    filter += row["id_claim"] + ",";
+            }
+            filter = filter.TrimEnd(',');
+            arguments.Add("filter", filter);
+            reporter.Run(arguments);
+        }
     }
 }

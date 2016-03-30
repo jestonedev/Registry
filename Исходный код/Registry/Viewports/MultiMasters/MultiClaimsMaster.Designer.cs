@@ -18,6 +18,7 @@ namespace Registry.Viewport
             this.toolStripButtonClaimDelete = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonClaimDeleteAll = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonCreateClaims = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonDeptPeriod = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonJudicialOrder = new System.Windows.Forms.ToolStripButton();
             this.toolStripProgressBarMultiOperations = new System.Windows.Forms.ToolStripProgressBar();
             this.dataGridView = new System.Windows.Forms.DataGridView();
@@ -30,7 +31,7 @@ namespace Registry.Viewport
             this.amount_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolStripButtonDeptPeriod = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonToLegalDepartment = new System.Windows.Forms.ToolStripButton();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -57,6 +58,7 @@ namespace Registry.Viewport
             this.toolStripButtonCreateClaims,
             this.toolStripButtonDeptPeriod,
             this.toolStripButtonJudicialOrder,
+            this.toolStripButtonToLegalDepartment,
             this.toolStripProgressBarMultiOperations});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
@@ -114,6 +116,16 @@ namespace Registry.Viewport
             this.toolStripButtonCreateClaims.Size = new System.Drawing.Size(23, 22);
             this.toolStripButtonCreateClaims.Text = "Создать стадию претензионно-исковой работы";
             this.toolStripButtonCreateClaims.Click += new System.EventHandler(this.toolStripButtonCreateClaimStates_Click);
+            // 
+            // toolStripButtonDeptPeriod
+            // 
+            this.toolStripButtonDeptPeriod.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonDeptPeriod.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonDeptPeriod.Image")));
+            this.toolStripButtonDeptPeriod.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonDeptPeriod.Name = "toolStripButtonDeptPeriod";
+            this.toolStripButtonDeptPeriod.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonDeptPeriod.Text = "Установить период предъявления";
+            this.toolStripButtonDeptPeriod.Click += new System.EventHandler(this.toolStripButtonDeptPeriod_Click);
             // 
             // toolStripButtonJudicialOrder
             // 
@@ -241,15 +253,15 @@ namespace Registry.Viewport
             this.description.Name = "description";
             this.description.ReadOnly = true;
             // 
-            // toolStripButtonDeptPeriod
+            // toolStripButtonToLegalDepartment
             // 
-            this.toolStripButtonDeptPeriod.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonDeptPeriod.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonDeptPeriod.Image")));
-            this.toolStripButtonDeptPeriod.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonDeptPeriod.Name = "toolStripButtonDeptPeriod";
-            this.toolStripButtonDeptPeriod.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonDeptPeriod.Text = "Установить период предъявления";
-            this.toolStripButtonDeptPeriod.Click += new System.EventHandler(this.toolStripButtonDeptPeriod_Click);
+            this.toolStripButtonToLegalDepartment.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonToLegalDepartment.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToLegalDepartment.Image")));
+            this.toolStripButtonToLegalDepartment.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonToLegalDepartment.Name = "toolStripButtonToLegalDepartment";
+            this.toolStripButtonToLegalDepartment.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonToLegalDepartment.Text = "Передача в юридический отдел";
+            this.toolStripButtonToLegalDepartment.Click += new System.EventHandler(this.toolStripButtonToLegalDepartment_Click);
             // 
             // MultiClaimsMaster
             // 
@@ -290,6 +302,7 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn amount_dgi;
         private DataGridViewTextBoxColumn description;
         private ToolStripButton toolStripButtonDeptPeriod;
+        private ToolStripButton toolStripButtonToLegalDepartment;
 
     }
 }
