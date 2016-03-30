@@ -135,6 +135,12 @@
     <Compile Include="ExecutorsViewport.Designer.cs">
       <DependentUpon>ExecutorsViewport.cs</DependentUpon>
     </Compile>
+    <Compile Include="ModalEditors\DeptPeriodEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalEditors\DeptPeriodEditor.Designer.cs">
+      <DependentUpon>DeptPeriodEditor.cs</DependentUpon>
+    </Compile>
     <Compile Include="ModalEditors\RegDateEditor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -537,6 +543,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ExecutorsViewport.resx">
       <DependentUpon>ExecutorsViewport.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalEditors\DeptPeriodEditor.resx">
+      <DependentUpon>DeptPeriodEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ModalEditors\RegDateEditor.resx">
       <DependentUpon>RegDateEditor.cs</DependentUpon>

@@ -212,7 +212,7 @@ namespace Registry.DataModels.DataModels
                         FROM payments p
                         WHERE p.id_account IN (0{0}) AND MONTH(p.date) = ? AND YEAR(p.date) = ?",
                         idAccounts.Select(v => v.ToString()).Aggregate(
-                            (v, acc) => "," + v));
+                            (acc, v) => acc + "," + v));
                 command.Parameters.Add(DBConnection.CreateParameter("month", month));
                 command.Parameters.Add(DBConnection.CreateParameter("year", year));
                 return connection.SqlSelectTable("balance_info", command);

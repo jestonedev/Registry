@@ -8,6 +8,7 @@ using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Reporting;
+using Registry.Viewport.ModalEditors;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -179,7 +180,7 @@ namespace Registry.Viewport
                 return;
             }
             var form = new MultiClaimsStateConfigForm();
-            if (form.ShowDialog() == DialogResult.Cancel) return;
+            if (form.ShowDialog() != DialogResult.OK) return;
             if (form.IdStateType == null)
                 return;
             var claimStatesDataModel = DataModel.GetInstance(DataModelType.ClaimStatesDataModel);
@@ -268,8 +269,8 @@ namespace Registry.Viewport
                 MessageBox.Show(@"Стадия успешно добавлена", @"Сообщение", MessageBoxButtons.OK,
                     MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
             else
-                MessageBox.Show(@"Во время добавления стадий возникли ошибки", @"Внимание", MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Во время добавления стадий возникли ошибки", @"Ошибка", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
         }
 
         public void UpdateToolbar()
@@ -312,6 +313,124 @@ namespace Registry.Viewport
             filter = filter.TrimEnd(',');
             arguments.Add("filter", filter);
             reporter.Run(arguments);
+        }
+
+        private void toolStripButtonDeptPeriod_Click(object sender, EventArgs e)
+        {
+            if (_claims.Count == 0)
+                return;
+            if (DataModel.GetInstance(DataModelType.ClaimStatesDataModel).EditingNewRecord)
+            {
+                MessageBox.Show(@"Невозможно провести массовую операцию пока форма состояний исковых работ находится в состоянии добавления новой записи. Отмените добавление новой записи или сохраните ее.",
+                    @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            var form = new DeptPeriodEditor();
+            if (form.ShowDialog() != DialogResult.OK) return;
+            var idsAccounts = new List<int>();
+            DataTable balanceInfoTable = null;
+            if (form.HasDeptPeriodTo && form.DeptPeriodTo != null &&
+                MessageBox.Show(@"Вы указали конечную дату периода предъявления. Хотите ли вы автоматически проставить суммы к взысканию на данную дату?",
+                    @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+            {
+                for (var i = 0; i < _claims.Count; i++)
+                {
+                    var id = (int?) ((DataRowView) _claims[i])["id_account"];
+                    if (id != null)
+                        idsAccounts.Add(id.Value);
+                }
+                idsAccounts = idsAccounts.Distinct().ToList();
+                balanceInfoTable = PaymentsAccountsDataModel.GetBalanceInfoOnDate(idsAccounts, form.DeptPeriodTo.Value.Year,
+                    form.DeptPeriodTo.Value.Month);
+            }
+            var idsClaimsWithIncorrectBalanceInfo = new List<int>();
+            toolStripProgressBarMultiOperations.Visible = true;
+            toolStripProgressBarMultiOperations.Value = 0;
+            toolStripProgressBarMultiOperations.Maximum = _claims.Count - 1;
+            for (var i = 0; i < _claims.Count; i++)
+            {
+                toolStripProgressBarMultiOperations.Value = i;
+                var claimRow = (DataRowView) _claims[i];
+                var claim = EntityFromView(claimRow);
+                if (form.HasDeptPeriodFrom)
+                {
+                    claim.StartDeptPeriod = form.DeptPeriodFrom;
+                }
+                if (form.HasDeptPeriodTo)
+                {
+                    claim.EndDeptPeriod = form.DeptPeriodTo;
+                }
+                if (claim.IdClaim == null) continue;
+                if (balanceInfoTable != null)
+                {
+                    var balanceInfo = (from row in balanceInfoTable.Select()
+                        where row.Field<int?>("id_account") == claim.IdAccount
+                        select new
+                        {
+                            IdAccount = row.Field<int>("id_account"),
+                            BalanceOutputTenancy = row.Field<decimal?>("balance_output_tenancy"),
+                            BalanceOutputDgi = row.Field<decimal?>("balance_output_dgi")
+                        }).LastOrDefault();
+                    if (balanceInfo != null)
+                    {
+                        claim.AmountTenancy = balanceInfo.BalanceOutputTenancy;
+                        claim.AmountDgi = balanceInfo.BalanceOutputDgi;
+                    }
+                    else
+                    {
+                        idsClaimsWithIncorrectBalanceInfo.Add(claim.IdClaim.Value);
+                    }
+                }
+                if (DataModel.GetInstance(DataModelType.ClaimsDataModel).Update(claim) != -1)
+                {
+                    claimRow.BeginEdit();
+                    claimRow["start_dept_period"] = claim.StartDeptPeriod;
+                    claimRow["end_dept_period"] = claim.EndDeptPeriod;
+                    claimRow["amount_tenancy"] = claim.AmountTenancy;
+                    claimRow["amount_dgi"] = claim.AmountDgi;
+                    claimRow.EndEdit();
+                }
+                Application.DoEvents();
+            }
+            toolStripProgressBarMultiOperations.Visible = false;
+            if (toolStripProgressBarMultiOperations.Value == toolStripProgressBarMultiOperations.Maximum)
+            {
+                if (idsClaimsWithIncorrectBalanceInfo.Count == 0)
+                {
+                    MessageBox.Show(@"Период предъявления успешно проставлен", @"Сообщение", MessageBoxButtons.OK,
+                        MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+                }
+                else
+                {
+                    MessageBox.Show(
+                        string.Format(
+                            @"Период предъявления успешно проставлен, но для исковой(ых) работ(ы) № {0} не была автоматически проставлена сумма к взысканию",
+                            idsClaimsWithIncorrectBalanceInfo.Select(v => v.ToString())
+                                .Aggregate((acc, v) => acc + ", " + v)
+                                .Trim(',',' ')),
+                        @"Сообщение", MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                }
+            }
+            else
+                MessageBox.Show(@"Во время массовой операции возникли ошибки", @"Ошибка", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+        }
+
+        private Claim EntityFromView(DataRowView row)
+        {
+            var claim = new Claim
+            {
+                IdClaim = ViewportHelper.ValueOrNull<int>(row, "id_claim"),
+                IdAccount = ViewportHelper.ValueOrNull<int>(row, "id_account"),
+                AmountTenancy = ViewportHelper.ValueOrNull<decimal>(row, "amount_tenancy"),
+                AmountDgi = ViewportHelper.ValueOrNull<decimal>(row, "amount_dgi"),
+                AtDate = ViewportHelper.ValueOrNull<DateTime>(row, "at_date"),
+                StartDeptPeriod = ViewportHelper.ValueOrNull<DateTime>(row, "start_dept_period"),
+                EndDeptPeriod = ViewportHelper.ValueOrNull<DateTime>(row, "end_dept_period"),
+                Description = ViewportHelper.ValueOrNull(row, "description")
+            };
+            return claim;
         }
     }
 }
