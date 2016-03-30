@@ -2,15 +2,14 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using System.Windows.Navigation;
 using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Viewport.ModalEditors;
 using Registry.Viewport.SearchForms;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -341,12 +340,21 @@ namespace Registry.Viewport
         {
             if (textBoxAccount.Enabled)
             {
-                _idAccount =
-                    (from row in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
-                     where row.Field<string>("account") == textBoxAccount.Text.Trim()
-                     select row.Field<int?>("id_account")).LastOrDefault();
+                var accounts = (from row in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
+                                where row.Field<string>("account") == textBoxAccount.Text.Trim()
+                                select row.Field<int?>("id_account")).ToList();
+                if (accounts.Count == 1)
+                    _idAccount = accounts.First();
+                else
+                if (accounts.Count > 1)
+                {
+                    using (var form = new SelectAccountForm(accounts))
+                    {
+                        if (form.ShowDialog() != DialogResult.OK) return;
+                        _idAccount = form.IdAccount;
+                    }
+                }
             }
-
             var claim = (Claim) EntityFromViewport();
             if (!ValidateClaim(claim))
                 return;

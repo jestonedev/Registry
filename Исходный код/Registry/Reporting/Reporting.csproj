@@ -68,6 +68,7 @@
     </Compile>
     <Compile Include="ClaimsReporters\JudicialOrderReporter.cs" />
     <Compile Include="ClaimsReporters\RequestToBksReporter.cs" />
+    <Compile Include="ClaimsReporters\TransfertToLegalDepartmentReporter.cs" />
     <Compile Include="JudicialOrderSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>

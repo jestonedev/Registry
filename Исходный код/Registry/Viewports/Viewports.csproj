@@ -165,6 +165,12 @@
     <Compile Include="ModalEditors\ObjectStateEditor.Designer.cs">
       <DependentUpon>ObjectStateEditor.cs</DependentUpon>
     </Compile>
+    <Compile Include="ModalEditors\SelectAccountForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalEditors\SelectAccountForm.Designer.cs">
+      <DependentUpon>SelectAccountForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="SearchForms\ExtendedSearchResettleForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -304,10 +310,10 @@
     <Compile Include="SubPremisesViewport.Designer.cs">
       <DependentUpon>SubPremisesViewport.cs</DependentUpon>
     </Compile>
-    <Compile Include="TenancyAgreementOnSavePersonManager.cs">
+    <Compile Include="ModalEditors\TenancyAgreementOnSavePersonManager.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TenancyAgreementOnSavePersonManager.Designer.cs">
+    <Compile Include="ModalEditors\TenancyAgreementOnSavePersonManager.Designer.cs">
       <DependentUpon>TenancyAgreementOnSavePersonManager.cs</DependentUpon>
     </Compile>
     <Compile Include="TenancyAgreementsViewport.cs">
@@ -559,6 +565,9 @@
     <EmbeddedResource Include="ModalEditors\ObjectStateEditor.resx">
       <DependentUpon>ObjectStateEditor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ModalEditors\SelectAccountForm.resx">
+      <DependentUpon>SelectAccountForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="SearchForms\ExtendedSearchBuildingForm.resx">
       <DependentUpon>ExtendedSearchBuildingForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -666,7 +675,7 @@
     <EmbeddedResource Include="ResettlePremisesViewport.resx">
       <DependentUpon>ResettlePremisesViewport.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="TenancyAgreementOnSavePersonManager.resx">
+    <EmbeddedResource Include="ModalEditors\TenancyAgreementOnSavePersonManager.resx">
       <DependentUpon>TenancyAgreementOnSavePersonManager.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="TenancySubPremisesDetails.resx">

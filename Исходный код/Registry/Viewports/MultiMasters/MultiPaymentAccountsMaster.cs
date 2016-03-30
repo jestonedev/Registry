@@ -328,6 +328,7 @@ namespace Registry.Viewport
 
         private void toolStripButtonRequestToBks_Click(object sender, EventArgs e)
         {
+            if (_paymentAccount.Count == 0) return;
             // select all claims with stage 1 and with existed next stage
             var claimStatesDataModel = DataModel.GetInstance(DataModelType.ClaimStatesDataModel);
             for (var i = 0; i < _paymentAccount.Count; i++)
@@ -364,7 +365,7 @@ namespace Registry.Viewport
                 MessageBox.Show(
                     string.Format(
                         "Не удалось найти подходящую исковую работу по лицевому счету №{0} для формирования запроса в БКС. Возможно по данному лицевому счету отсутствуют незавершенные исковые работы",
-                        row["id_account"]), @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning,
+                        row["account"]), @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning,
                     MessageBoxDefaultButton.Button1);
                 return;
             }
@@ -380,6 +381,49 @@ namespace Registry.Viewport
             }
             filter = filter.TrimEnd(',');
             arguments.Add("filter", filter);
+            reporter.Run(arguments);
+        }
+
+        private void toolStripButtonToLegalDepartment_Click(object sender, EventArgs e)
+        {
+            if (_paymentAccount.Count == 0) return;
+            var claimStatesDataModel = DataModel.GetInstance(DataModelType.ClaimStatesDataModel);
+            var idsClaims = new List<int>();
+            for (var i = 0; i < _paymentAccount.Count; i++)
+            {
+                var row = ((DataRowView)_paymentAccount[i]);
+
+                var completedStates = from claimRow in claimStatesDataModel.FilterDeletedRows()
+                    where claimRow.Field<int?>("id_state_type") == 6
+                    select claimRow.Field<int>("id_claim");
+
+                var sentToLegalDepartment = from claimRow in claimStatesDataModel.FilterDeletedRows()
+                    where claimRow.Field<int?>("id_state_type") == 2
+                    select claimRow.Field<int>("id_claim");
+                var correctClaims = sentToLegalDepartment.Except(completedStates).Distinct();
+
+                var idClaim = (from claimRowId in correctClaims
+                    join claimRow in DataModel.GetInstance(DataModelType.ClaimsDataModel).FilterDeletedRows()
+                        on claimRowId equals claimRow.Field<int?>("id_claim")
+                    where claimRow.Field<int?>("id_account") == (int?) row["id_account"] 
+                    select claimRow.Field<int?>("id_claim")).LastOrDefault();
+                if (idClaim != null)
+                {
+                    idsClaims.Add(idClaim.Value);
+                    continue;
+                }
+                MessageBox.Show(
+                    string.Format(
+                        "По лицевому счету №{0} отсутствуют незавершенные исковые работы со стадией передачи в юр. отдел",
+                        row["account"]), @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning,
+                    MessageBoxDefaultButton.Button1);
+                return;
+            }
+            var reporter = ReporterFactory.CreateReporter(ReporterType.TransfertToLegalDepartmentReporter);
+            var arguments = new Dictionary<string, string>
+            {
+                {"filter", idsClaims.Select(v => v.ToString()).Aggregate((acc, v) => acc + "," + v).Trim(',')}
+            };
             reporter.Run(arguments);
         }
     }

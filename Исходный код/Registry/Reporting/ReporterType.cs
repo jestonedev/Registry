@@ -40,6 +40,7 @@ namespace Registry.Reporting
         RegistryExcerptReporterAllMunSubPremises,
         MultiExcerptReporter,
         RequestToBksReporter,
-        JudicialOrderReporter
+        JudicialOrderReporter,
+        TransfertToLegalDepartmentReporter
     }
 }
