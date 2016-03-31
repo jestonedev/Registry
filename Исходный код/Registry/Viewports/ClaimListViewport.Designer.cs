@@ -54,6 +54,8 @@ namespace Registry.Viewport
             this.dateTimePickerStartDeptPeriod = new System.Windows.Forms.DateTimePicker();
             this.label97 = new System.Windows.Forms.Label();
             this.panel9 = new System.Windows.Forms.Panel();
+            this.numericUpDownAmountTotal = new System.Windows.Forms.NumericUpDown();
+            this.label1 = new System.Windows.Forms.Label();
             this.numericUpDownAmountDGI = new System.Windows.Forms.NumericUpDown();
             this.label95 = new System.Windows.Forms.Label();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
@@ -62,7 +64,9 @@ namespace Registry.Viewport
             this.label94 = new System.Windows.Forms.Label();
             this.dataGridViewClaims = new System.Windows.Forms.DataGridView();
             this.id_claim = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_account = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.account = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.raw_address = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tenant = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.at_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.date_start_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.state_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -70,12 +74,12 @@ namespace Registry.Viewport
             this.end_dept_period = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel15.SuspendLayout();
             this.groupBox34.SuspendLayout();
             this.tableLayoutPanel16.SuspendLayout();
             this.panel8.SuspendLayout();
             this.panel9.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountTotal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountDGI)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountTenancy)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewClaims)).BeginInit();
@@ -93,7 +97,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel15.RowCount = 2;
             this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 171F));
             this.tableLayoutPanel15.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel15.Size = new System.Drawing.Size(680, 491);
+            this.tableLayoutPanel15.Size = new System.Drawing.Size(1002, 485);
             this.tableLayoutPanel15.TabIndex = 0;
             // 
             // groupBox34
@@ -103,7 +107,7 @@ namespace Registry.Viewport
             this.groupBox34.Location = new System.Drawing.Point(0, 0);
             this.groupBox34.Margin = new System.Windows.Forms.Padding(0);
             this.groupBox34.Name = "groupBox34";
-            this.groupBox34.Size = new System.Drawing.Size(680, 171);
+            this.groupBox34.Size = new System.Drawing.Size(1002, 171);
             this.groupBox34.TabIndex = 1;
             this.groupBox34.TabStop = false;
             this.groupBox34.Text = "Общие сведения";
@@ -121,7 +125,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel16.RowCount = 1;
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel16.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 155F));
-            this.tableLayoutPanel16.Size = new System.Drawing.Size(674, 151);
+            this.tableLayoutPanel16.Size = new System.Drawing.Size(996, 151);
             this.tableLayoutPanel16.TabIndex = 0;
             // 
             // panel8
@@ -140,7 +144,7 @@ namespace Registry.Viewport
             this.panel8.Location = new System.Drawing.Point(0, 0);
             this.panel8.Margin = new System.Windows.Forms.Padding(0);
             this.panel8.Name = "panel8";
-            this.panel8.Size = new System.Drawing.Size(337, 151);
+            this.panel8.Size = new System.Drawing.Size(498, 151);
             this.panel8.TabIndex = 0;
             // 
             // buttonShowAttachments
@@ -149,7 +153,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.buttonShowAttachments.Location = new System.Drawing.Point(15, 120);
             this.buttonShowAttachments.Name = "buttonShowAttachments";
-            this.buttonShowAttachments.Size = new System.Drawing.Size(311, 25);
+            this.buttonShowAttachments.Size = new System.Drawing.Size(472, 25);
             this.buttonShowAttachments.TabIndex = 53;
             this.buttonShowAttachments.Text = "Прикрепленные файлы";
             this.buttonShowAttachments.UseVisualStyleBackColor = true;
@@ -161,7 +165,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.textBoxAccount.Location = new System.Drawing.Point(170, 6);
             this.textBoxAccount.Name = "textBoxAccount";
-            this.textBoxAccount.Size = new System.Drawing.Size(156, 21);
+            this.textBoxAccount.Size = new System.Drawing.Size(317, 21);
             this.textBoxAccount.TabIndex = 52;
             this.textBoxAccount.Leave += new System.EventHandler(this.textBoxAccount_Leave);
             // 
@@ -181,7 +185,7 @@ namespace Registry.Viewport
             this.dateTimePickerAtDate.Location = new System.Drawing.Point(170, 35);
             this.dateTimePickerAtDate.Name = "dateTimePickerAtDate";
             this.dateTimePickerAtDate.ShowCheckBox = true;
-            this.dateTimePickerAtDate.Size = new System.Drawing.Size(156, 21);
+            this.dateTimePickerAtDate.Size = new System.Drawing.Size(317, 21);
             this.dateTimePickerAtDate.TabIndex = 1;
             // 
             // label91
@@ -200,7 +204,7 @@ namespace Registry.Viewport
             this.dateTimePickerEndDeptPeriod.Location = new System.Drawing.Point(170, 92);
             this.dateTimePickerEndDeptPeriod.Name = "dateTimePickerEndDeptPeriod";
             this.dateTimePickerEndDeptPeriod.ShowCheckBox = true;
-            this.dateTimePickerEndDeptPeriod.Size = new System.Drawing.Size(156, 21);
+            this.dateTimePickerEndDeptPeriod.Size = new System.Drawing.Size(317, 21);
             this.dateTimePickerEndDeptPeriod.TabIndex = 3;
             // 
             // label96
@@ -228,7 +232,7 @@ namespace Registry.Viewport
             this.dateTimePickerStartDeptPeriod.Location = new System.Drawing.Point(170, 63);
             this.dateTimePickerStartDeptPeriod.Name = "dateTimePickerStartDeptPeriod";
             this.dateTimePickerStartDeptPeriod.ShowCheckBox = true;
-            this.dateTimePickerStartDeptPeriod.Size = new System.Drawing.Size(156, 21);
+            this.dateTimePickerStartDeptPeriod.Size = new System.Drawing.Size(317, 21);
             this.dateTimePickerStartDeptPeriod.TabIndex = 2;
             // 
             // label97
@@ -242,6 +246,8 @@ namespace Registry.Viewport
             // 
             // panel9
             // 
+            this.panel9.Controls.Add(this.numericUpDownAmountTotal);
+            this.panel9.Controls.Add(this.label1);
             this.panel9.Controls.Add(this.numericUpDownAmountDGI);
             this.panel9.Controls.Add(this.label95);
             this.panel9.Controls.Add(this.textBoxDescription);
@@ -249,11 +255,37 @@ namespace Registry.Viewport
             this.panel9.Controls.Add(this.label99);
             this.panel9.Controls.Add(this.label94);
             this.panel9.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel9.Location = new System.Drawing.Point(337, 0);
+            this.panel9.Location = new System.Drawing.Point(498, 0);
             this.panel9.Margin = new System.Windows.Forms.Padding(0);
             this.panel9.Name = "panel9";
-            this.panel9.Size = new System.Drawing.Size(337, 151);
+            this.panel9.Size = new System.Drawing.Size(498, 151);
             this.panel9.TabIndex = 1;
+            // 
+            // numericUpDownAmountTotal
+            // 
+            this.numericUpDownAmountTotal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownAmountTotal.DecimalPlaces = 2;
+            this.numericUpDownAmountTotal.Location = new System.Drawing.Point(172, 63);
+            this.numericUpDownAmountTotal.Maximum = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            this.numericUpDownAmountTotal.Name = "numericUpDownAmountTotal";
+            this.numericUpDownAmountTotal.ReadOnly = true;
+            this.numericUpDownAmountTotal.Size = new System.Drawing.Size(316, 21);
+            this.numericUpDownAmountTotal.TabIndex = 3;
+            this.numericUpDownAmountTotal.ThousandsSeparator = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(14, 65);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(81, 15);
+            this.label1.TabIndex = 51;
+            this.label1.Text = "Сумма итого";
             // 
             // numericUpDownAmountDGI
             // 
@@ -267,9 +299,10 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownAmountDGI.Name = "numericUpDownAmountDGI";
-            this.numericUpDownAmountDGI.Size = new System.Drawing.Size(155, 21);
-            this.numericUpDownAmountDGI.TabIndex = 1;
+            this.numericUpDownAmountDGI.Size = new System.Drawing.Size(316, 21);
+            this.numericUpDownAmountDGI.TabIndex = 2;
             this.numericUpDownAmountDGI.ThousandsSeparator = true;
+            this.numericUpDownAmountDGI.ValueChanged += new System.EventHandler(this.numericUpDownAmountDGI_ValueChanged);
             // 
             // label95
             // 
@@ -284,12 +317,12 @@ namespace Registry.Viewport
             // 
             this.textBoxDescription.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDescription.Location = new System.Drawing.Point(172, 63);
+            this.textBoxDescription.Location = new System.Drawing.Point(172, 92);
             this.textBoxDescription.MaxLength = 4000;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
-            this.textBoxDescription.Size = new System.Drawing.Size(155, 75);
-            this.textBoxDescription.TabIndex = 2;
+            this.textBoxDescription.Size = new System.Drawing.Size(316, 46);
+            this.textBoxDescription.TabIndex = 4;
             // 
             // numericUpDownAmountTenancy
             // 
@@ -303,14 +336,15 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownAmountTenancy.Name = "numericUpDownAmountTenancy";
-            this.numericUpDownAmountTenancy.Size = new System.Drawing.Size(155, 21);
-            this.numericUpDownAmountTenancy.TabIndex = 0;
+            this.numericUpDownAmountTenancy.Size = new System.Drawing.Size(316, 21);
+            this.numericUpDownAmountTenancy.TabIndex = 1;
             this.numericUpDownAmountTenancy.ThousandsSeparator = true;
+            this.numericUpDownAmountTenancy.ValueChanged += new System.EventHandler(this.numericUpDownAmountTenancy_ValueChanged);
             // 
             // label99
             // 
             this.label99.AutoSize = true;
-            this.label99.Location = new System.Drawing.Point(14, 63);
+            this.label99.Location = new System.Drawing.Point(14, 92);
             this.label99.Name = "label99";
             this.label99.Size = new System.Drawing.Size(80, 15);
             this.label99.TabIndex = 49;
@@ -322,7 +356,7 @@ namespace Registry.Viewport
             this.label94.Location = new System.Drawing.Point(14, 8);
             this.label94.Name = "label94";
             this.label94.Size = new System.Drawing.Size(154, 15);
-            this.label94.TabIndex = 37;
+            this.label94.TabIndex = 0;
             this.label94.Text = "Сумма к взысканию найм";
             // 
             // dataGridViewClaims
@@ -335,15 +369,16 @@ namespace Registry.Viewport
             this.dataGridViewClaims.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridViewClaims.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.id_claim,
-            this.id_account,
+            this.account,
+            this.raw_address,
+            this.tenant,
             this.at_date,
             this.date_start_state,
             this.state_type,
             this.start_dept_period,
             this.end_dept_period,
             this.amount_tenancy,
-            this.amount_dgi,
-            this.description});
+            this.amount_dgi});
             this.dataGridViewClaims.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewClaims.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dataGridViewClaims.Location = new System.Drawing.Point(3, 174);
@@ -352,7 +387,7 @@ namespace Registry.Viewport
             this.dataGridViewClaims.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridViewClaims.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridViewClaims.ShowCellToolTips = false;
-            this.dataGridViewClaims.Size = new System.Drawing.Size(674, 314);
+            this.dataGridViewClaims.Size = new System.Drawing.Size(996, 308);
             this.dataGridViewClaims.TabIndex = 0;
             this.dataGridViewClaims.VirtualMode = true;
             this.dataGridViewClaims.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridViewClaims_CellValueNeeded);
@@ -367,30 +402,49 @@ namespace Registry.Viewport
             this.id_claim.ReadOnly = true;
             this.id_claim.Width = 50;
             // 
-            // id_account
+            // account
             // 
-            this.id_account.HeaderText = "Лицевой счет";
-            this.id_account.MinimumWidth = 150;
-            this.id_account.Name = "id_account";
-            this.id_account.ReadOnly = true;
-            this.id_account.Width = 150;
+            this.account.HeaderText = "Лицевой счет";
+            this.account.MinimumWidth = 110;
+            this.account.Name = "account";
+            this.account.ReadOnly = true;
+            this.account.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.account.Width = 110;
+            // 
+            // raw_address
+            // 
+            this.raw_address.FillWeight = 200F;
+            this.raw_address.HeaderText = "Адрес";
+            this.raw_address.Name = "raw_address";
+            this.raw_address.ReadOnly = true;
+            this.raw_address.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.raw_address.Width = 200;
+            // 
+            // tenant
+            // 
+            this.tenant.FillWeight = 200F;
+            this.tenant.HeaderText = "Наниматель";
+            this.tenant.Name = "tenant";
+            this.tenant.ReadOnly = true;
+            this.tenant.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.tenant.Width = 200;
             // 
             // at_date
             // 
             this.at_date.HeaderText = "Дата формирования";
-            this.at_date.MinimumWidth = 170;
+            this.at_date.MinimumWidth = 110;
             this.at_date.Name = "at_date";
             this.at_date.ReadOnly = true;
-            this.at_date.Width = 170;
+            this.at_date.Width = 110;
             // 
             // date_start_state
             // 
             this.date_start_state.HeaderText = "Состояние установлено";
-            this.date_start_state.MinimumWidth = 170;
+            this.date_start_state.MinimumWidth = 110;
             this.date_start_state.Name = "date_start_state";
             this.date_start_state.ReadOnly = true;
             this.date_start_state.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.date_start_state.Width = 170;
+            this.date_start_state.Width = 110;
             // 
             // state_type
             // 
@@ -404,53 +458,45 @@ namespace Registry.Viewport
             // start_dept_period
             // 
             this.start_dept_period.HeaderText = "Период с";
-            this.start_dept_period.MinimumWidth = 150;
+            this.start_dept_period.MinimumWidth = 110;
             this.start_dept_period.Name = "start_dept_period";
             this.start_dept_period.ReadOnly = true;
-            this.start_dept_period.Width = 150;
+            this.start_dept_period.Width = 110;
             // 
             // end_dept_period
             // 
             this.end_dept_period.HeaderText = "Период по";
-            this.end_dept_period.MinimumWidth = 150;
+            this.end_dept_period.MinimumWidth = 110;
             this.end_dept_period.Name = "end_dept_period";
             this.end_dept_period.ReadOnly = true;
-            this.end_dept_period.Width = 150;
+            this.end_dept_period.Width = 110;
             // 
             // amount_tenancy
             // 
             dataGridViewCellStyle1.Format = "#0.0# руб.";
             this.amount_tenancy.DefaultCellStyle = dataGridViewCellStyle1;
             this.amount_tenancy.HeaderText = "Сумма долга найм";
-            this.amount_tenancy.MinimumWidth = 200;
+            this.amount_tenancy.MinimumWidth = 110;
             this.amount_tenancy.Name = "amount_tenancy";
             this.amount_tenancy.ReadOnly = true;
-            this.amount_tenancy.Width = 200;
+            this.amount_tenancy.Width = 110;
             // 
             // amount_dgi
             // 
             dataGridViewCellStyle2.Format = "#0.0# руб.";
             this.amount_dgi.DefaultCellStyle = dataGridViewCellStyle2;
             this.amount_dgi.HeaderText = "Сумма долга ДГИ";
-            this.amount_dgi.MinimumWidth = 200;
+            this.amount_dgi.MinimumWidth = 110;
             this.amount_dgi.Name = "amount_dgi";
             this.amount_dgi.ReadOnly = true;
-            this.amount_dgi.Width = 200;
-            // 
-            // description
-            // 
-            this.description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.description.HeaderText = "Примечание";
-            this.description.MinimumWidth = 200;
-            this.description.Name = "description";
-            this.description.ReadOnly = true;
+            this.amount_dgi.Width = 110;
             // 
             // ClaimListViewport
             // 
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(680, 300);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(681, 497);
+            this.ClientSize = new System.Drawing.Size(1008, 491);
             this.Controls.Add(this.tableLayoutPanel15);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -464,6 +510,7 @@ namespace Registry.Viewport
             this.panel8.PerformLayout();
             this.panel9.ResumeLayout(false);
             this.panel9.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountTotal)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountDGI)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownAmountTenancy)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewClaims)).EndInit();
@@ -471,8 +518,11 @@ namespace Registry.Viewport
 
         }
         private TextBox textBoxAccount;
+        private Button buttonShowAttachments;
         private DataGridViewTextBoxColumn id_claim;
-        private DataGridViewTextBoxColumn id_account;
+        private DataGridViewTextBoxColumn account;
+        private DataGridViewTextBoxColumn raw_address;
+        private DataGridViewTextBoxColumn tenant;
         private DataGridViewTextBoxColumn at_date;
         private DataGridViewTextBoxColumn date_start_state;
         private DataGridViewTextBoxColumn state_type;
@@ -480,7 +530,7 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn end_dept_period;
         private DataGridViewTextBoxColumn amount_tenancy;
         private DataGridViewTextBoxColumn amount_dgi;
-        private DataGridViewTextBoxColumn description;
-        private Button buttonShowAttachments;
+        private NumericUpDown numericUpDownAmountTotal;
+        private Label label1;
     }
 }

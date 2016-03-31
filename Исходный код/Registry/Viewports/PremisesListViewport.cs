@@ -492,6 +492,9 @@ namespace Registry.Viewport
                 GeneralBindingSource.Position = -1;
         }
 
+        private int _rowIndex = int.MinValue;
+        private IEnumerable<DataRow> _tenancyInfoRows; 
+
         void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (GeneralBindingSource.Count <= e.RowIndex) return;
@@ -542,15 +545,19 @@ namespace Registry.Viewport
                 case "residence_warrant_date":
                 case "tenant":
                 case "end_date":
-                    var tenancyInfoRows =
-                        from tenancyInfoRow in _premisesTenanciesInfo.FilterDeletedRows()
-                        where tenancyInfoRow.Field<int>("id_premises") == (int?) row["id_premises"]
-                        orderby tenancyInfoRow.Field<DateTime?>("registration_date") ?? 
-                            DateTime.Now descending 
-                        select tenancyInfoRow;
-                    if (!tenancyInfoRows.Any())
+                    if (e.RowIndex != _rowIndex)
+                    {   
+                        _tenancyInfoRows =
+                            (from tenancyInfoRow in _premisesTenanciesInfo.FilterDeletedRows()
+                            where tenancyInfoRow.Field<int>("id_premises") == (int?) row["id_premises"]
+                            orderby tenancyInfoRow.Field<DateTime?>("registration_date") ?? 
+                                DateTime.Now descending 
+                            select tenancyInfoRow).ToList();
+                        _rowIndex = e.RowIndex;
+                    }
+                    if (_tenancyInfoRows == null || !_tenancyInfoRows.Any())
                         return;
-                    var tenancyRow = tenancyInfoRows.First();
+                    var tenancyRow = _tenancyInfoRows.First();
                     switch (dataGridView.Columns[e.ColumnIndex].Name)
                     {
                         case "registration_date":

@@ -683,6 +683,9 @@ namespace Registry.Viewport
                 GeneralBindingSource.Position = -1;
         }
 
+        private int _rowIndex = int.MinValue;
+        private IEnumerable<DataRow> _accountList; 
+
         void dataGridViewClaims_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (GeneralBindingSource.Count <= e.RowIndex) return;
@@ -692,13 +695,23 @@ namespace Registry.Viewport
                 case "id_claim":
                     e.Value = row["id_claim"];
                     break;
-                case "id_account":
+                case "account":
+                case "raw_address":
+                case "tenant":
                     if (row["id_account"] == DBNull.Value) return;
-                    var accountList = (from paymentAccountRow in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
-                                       where paymentAccountRow.Field<int?>("id_account") == (int?)row["id_account"]
-                                       select paymentAccountRow).ToList();
-                    if (accountList.Any())
-                        e.Value = accountList.First().Field<string>("account");
+                    if (_rowIndex != e.RowIndex)
+                    {
+                        _accountList =
+                            (from paymentAccountRow in
+                                DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
+                                where paymentAccountRow.Field<int?>("id_account") == (int?) row["id_account"]
+                                select paymentAccountRow).ToList();
+                        _rowIndex = e.RowIndex;
+                    }
+                    if (_accountList != null && _accountList.Any())
+                    {
+                        e.Value = _accountList.First().Field<string>(dataGridViewClaims.Columns[e.ColumnIndex].Name);
+                    }
                     break;
                 case "start_dept_period":
                     e.Value = row["start_dept_period"] == DBNull.Value ? "" :
@@ -717,9 +730,6 @@ namespace Registry.Viewport
                 case "at_date":
                     e.Value = row["at_date"] == DBNull.Value ? "" :
                         ((DateTime)row["at_date"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
-                    break;
-                case "description":
-                    e.Value = row["description"];
                     break;
                 case "state_type":
                     if (row["id_claim"] == DBNull.Value || row["id_claim"] == null) return;
@@ -819,6 +829,25 @@ namespace Registry.Viewport
                 form.Initialize(ids.First());
                 form.ShowDialog();
             }
+        }
+
+        private void numericUpDownAmountTenancy_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDownAmountTotalChange();
+        }
+
+        private void numericUpDownAmountDGI_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDownAmountTotalChange();
+        }
+
+        private void NumericUpDownAmountTotalChange()
+        {
+            numericUpDownAmountTotal.Minimum = decimal.MinValue;
+            numericUpDownAmountTotal.Maximum = decimal.MaxValue;
+            numericUpDownAmountTotal.Value =
+                numericUpDownAmountTotal.Minimum =
+                    numericUpDownAmountTotal.Maximum = numericUpDownAmountDGI.Value + numericUpDownAmountTenancy.Value;
         }
     }
 }
