@@ -99,7 +99,7 @@ namespace Registry.Viewport
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PremisesViewport));
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label29 = new System.Windows.Forms.Label();
             this.textBoxSubPremisesNumber = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
@@ -268,6 +268,7 @@ namespace Registry.Viewport
             this.textBoxDescription.MaxLength = 65535;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
+            this.textBoxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxDescription.Size = new System.Drawing.Size(447, 54);
             this.textBoxDescription.TabIndex = 0;
             // 
@@ -1194,8 +1195,8 @@ namespace Registry.Viewport
             // 
             // sub_premises_total_area
             // 
-            dataGridViewCellStyle2.Format = "#0.0## м²";
-            this.sub_premises_total_area.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle1.Format = "#0.0## м²";
+            this.sub_premises_total_area.DefaultCellStyle = dataGridViewCellStyle1;
             this.sub_premises_total_area.HeaderText = "Общая площадь";
             this.sub_premises_total_area.MinimumWidth = 125;
             this.sub_premises_total_area.Name = "sub_premises_total_area";
