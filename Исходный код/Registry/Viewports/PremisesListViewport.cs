@@ -545,7 +545,7 @@ namespace Registry.Viewport
                 case "residence_warrant_date":
                 case "tenant":
                 case "end_date":
-                    if (e.RowIndex != _rowIndex)
+                    if (e.RowIndex != _rowIndex || _tenancyInfoRows.Any(entry => entry.RowState == DataRowState.Deleted || entry.RowState == DataRowState.Detached))
                     {   
                         _tenancyInfoRows =
                             (from tenancyInfoRow in _premisesTenanciesInfo.FilterDeletedRows()
