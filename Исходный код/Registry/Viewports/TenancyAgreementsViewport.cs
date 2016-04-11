@@ -218,11 +218,11 @@ namespace Registry.Viewport
             dataGridView.AutoGenerateColumns = false;
             dataGridViewTenancyPersons.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.TenancyAgreementsDataModel);
-            tenancy_persons = DataModel.GetInstance(DataModelType.TenancyPersonsDataModel);
-            executors = DataModel.GetInstance(DataModelType.ExecutorsDataModel);
-            warrants = DataModel.GetInstance(DataModelType.WarrantsDataModel);
-            kinships = DataModel.GetInstance(DataModelType.KinshipsDataModel);
+            GeneralDataModel = DataModel.GetInstance<TenancyAgreementsDataModel>();
+            tenancy_persons = DataModel.GetInstance<TenancyPersonsDataModel>();
+            executors = DataModel.GetInstance<ExecutorsDataModel>();
+            warrants = DataModel.GetInstance<WarrantsDataModel>();
+            kinships = DataModel.GetInstance<KinshipsDataModel>();
 
             // Ожидаем дозагрузки, если это необходимо
             GeneralDataModel.Select();
@@ -587,7 +587,7 @@ namespace Registry.Viewport
                         Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "",
                         textBoxTerminateAgreement.Text.StartsWith("по ") ? textBoxTerminateAgreement.Text.Substring(3).Trim() : textBoxTerminateAgreement.Text.Trim(),
                     dateTimePickerTerminateDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture),
-                    DataModel.GetInstance(DataModelType.RentTypesDataModel).Select().Rows.Find(ParentRow["id_rent_type"])["rent_type_genetive"]);
+                    DataModel.GetInstance<RentTypesDataModel>().Select().Rows.Find(ParentRow["id_rent_type"])["rent_type_genetive"]);
         }
 
         void vButtonExplainPaste_Click(object sender, EventArgs e)

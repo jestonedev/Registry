@@ -10,14 +10,14 @@ using Registry.DataModels.DataModels;
 
 namespace Registry.Viewport.SearchForms
 {
-    public partial class SimpleSearchClaimsForm : SearchForm
+    internal partial class SimpleSearchClaimsForm : SearchForm
     {
 
         public SimpleSearchClaimsForm()
         {
             InitializeComponent();
 
-            DataModel.GetInstance(DataModelType.ClaimStatesDataModel).Select();
+            DataModel.GetInstance<ClaimStatesDataModel>().Select();
             comboBoxState.DataSource = new BindingSource
             {
                 DataSource = DataModel.DataSet,
@@ -52,7 +52,7 @@ namespace Registry.Viewport.SearchForms
             {
                 if (checkBoxStateEnable.Checked && comboBoxState.SelectedValue != null)
                 {
-                    var claimStatesDataModel = DataModel.GetInstance(DataModelType.ClaimStatesDataModel);
+                    var claimStatesDataModel = DataModel.GetInstance<ClaimStatesDataModel>();
                     var lastStates = from stateRow in claimStatesDataModel.FilterDeletedRows()
                         group stateRow.Field<int?>("id_state") by stateRow.Field<int>("id_claim")
                         into gs
@@ -88,7 +88,7 @@ namespace Registry.Viewport.SearchForms
                 }
             } else
             {
-                var claims = from row in DataModel.GetInstance(DataModelType.ClaimStatesDataModel).FilterDeletedRows()
+                var claims = from row in DataModel.GetInstance<ClaimStatesDataModel>().FilterDeletedRows()
                              where (!checkBoxStateEnable.Checked || row.Field<int?>("id_state_type") == (int?)comboBoxState.SelectedValue) &&
                                 (!checkBoxDateStartStateEnable.Checked || 
                                 DateSatisfiesExpression(
@@ -102,14 +102,14 @@ namespace Registry.Viewport.SearchForms
             if (checkBoxAccountChecked.Checked && !string.IsNullOrEmpty(textBoxAccount.Text.Trim()))
             {
                 var accounts =
-                    from accountRow in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
+                    from accountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
                     where accountRow.Field<string>("account").Contains(textBoxAccount.Text.Trim())
                     select accountRow.Field<int>("id_account");
                 includedAccounts = DataModelHelper.Intersect(null, accounts);
             }
             if (checkBoxSRNEnable.Checked && !string.IsNullOrEmpty(textBoxSRN.Text.Trim()))
             {
-                var accounts = from accountRow in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
+                var accounts = from accountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
                                where accountRow.Field<string>("crn").Contains(textBoxSRN.Text.Trim())
                                select accountRow.Field<int>("id_account");
                 includedAccounts = DataModelHelper.Intersect(includedAccounts, accounts);

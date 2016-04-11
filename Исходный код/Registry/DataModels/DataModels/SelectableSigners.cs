@@ -6,7 +6,8 @@ using System.Windows.Forms;
 
 namespace Registry.DataModels.DataModels
 {
-    internal class SelectableSigners: DataModel
+    //public class SelectableSigners: DataModel
+    public class SelectableSigners : DataModel
     {
         private static SelectableSigners _dataModel;
         private const string SelectQuery = @"SELECT s.id_record, CONCAT(s.surname, ' ', s.`name`, 

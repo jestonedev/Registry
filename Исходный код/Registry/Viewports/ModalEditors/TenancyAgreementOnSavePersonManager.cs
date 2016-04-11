@@ -12,7 +12,7 @@ using Registry.Entities;
 
 namespace Registry.Viewport
 {
-    public partial class TenancyAgreementOnSavePersonManager : Form
+    internal partial class TenancyAgreementOnSavePersonManager : Form
     {
         public enum PersonsOperationType
         {
@@ -33,7 +33,7 @@ namespace Registry.Viewport
             _personsOperationType = personsOperationType;
             foreach (var person in persons)
             {
-                var kinshipRow = DataModel.GetInstance(DataModelType.KinshipsDataModel).FilterDeletedRows().
+                var kinshipRow = DataModel.GetInstance<KinshipsDataModel>().FilterDeletedRows().
                     FirstOrDefault(k => k.Field<int?>("id_kinship") == person.IdKinship);
                 dataGridView.Rows.Add(true, person.IdPerson, person.IdProcess, person.Surname, person.Name, person.Patronymic,
                     person.DateOfBirth,
@@ -72,7 +72,7 @@ namespace Registry.Viewport
                     });
                 }
             }
-            var tenancyPersons = DataModel.GetInstance(DataModelType.TenancyPersonsDataModel);
+            var tenancyPersons = DataModel.GetInstance<TenancyPersonsDataModel>();
             switch (_personsOperationType)
             {
                 case PersonsOperationType.IncludePersons:

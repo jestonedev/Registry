@@ -60,12 +60,12 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.PremisesDataModel);
-            kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
-            buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel);
-            premises_types = DataModel.GetInstance(DataModelType.PremisesTypesDataModel);
-            object_states = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
-            fund_types = DataModel.GetInstance(DataModelType.FundTypesDataModel);
+            GeneralDataModel = DataModel.GetInstance<PremisesDataModel>();
+            kladr = DataModel.GetInstance<KladrStreetsDataModel>();
+            buildings = DataModel.GetInstance<BuildingsDataModel>();
+            premises_types = DataModel.GetInstance<PremisesTypesDataModel>();
+            object_states = DataModel.GetInstance<ObjectStatesDataModel>();
+            fund_types = DataModel.GetInstance<FundTypesDataModel>();
             premises_funds = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelPremisesCurrentFunds);
 
             // Ожидаем дозагрузки данных, если это необходимо
@@ -342,7 +342,7 @@ namespace Registry.Viewport
             viewport.CopyRecord();
         }
 
-        public override bool HasAssocViewport(ViewportType viewportType)
+        public override bool HasAssocViewport<T>()
         {
             var reports = new List<ViewportType>
             {
@@ -353,17 +353,17 @@ namespace Registry.Viewport
                 ViewportType.TenancyListViewport,
                 ViewportType.PaymentsAccountsViewport
             };
-            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
+            return reports.Any(v => v.ToString() == typeof(T).Name) && (GeneralBindingSource.Position > -1);
         }
 
-        public override void ShowAssocViewport(ViewportType viewportType)
+        public override void ShowAssocViewport<T>()
         {
             if (GeneralBindingSource.Position == -1)
             {
                 MessageBox.Show(@"Не выбрано помещение", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport(MenuCallback, viewportType,
+            ShowAssocViewport<T>(MenuCallback, 
                 "id_premises = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"], CultureInfo.InvariantCulture),
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
                 ParentTypeEnum.Premises);

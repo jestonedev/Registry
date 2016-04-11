@@ -51,9 +51,9 @@ namespace Registry.Viewport
         public override void LoadData()
         {
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.BuildingsDataModel);
-            _kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
-            _objectStates = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
+            GeneralDataModel = DataModel.GetInstance<BuildingsDataModel>();
+            _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
+            _objectStates = DataModel.GetInstance<ObjectStatesDataModel>();
             
             // Ожидаем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
@@ -234,7 +234,7 @@ namespace Registry.Viewport
             viewport.CopyRecord();
         }
 
-        public override bool HasAssocViewport(ViewportType viewportType)
+        public override bool HasAssocViewport<T>()
         {
             var reports = new List<ViewportType>
             {
@@ -244,17 +244,17 @@ namespace Registry.Viewport
                 ViewportType.FundsHistoryViewport,
                 ViewportType.TenancyListViewport
             };
-            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
+            return reports.Any(v => v.ToString() == typeof(T).Name) && (GeneralBindingSource.Position > -1);
         }
         
-        public override void ShowAssocViewport(ViewportType viewportType)
+        public override void ShowAssocViewport<T>()
         {
             if (GeneralBindingSource.Position == -1)
             {
                 MessageBox.Show(@"Не выбрано здание для отображения истории найма", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport(MenuCallback, viewportType,
+            ShowAssocViewport<T>(MenuCallback,
                 "id_building = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"], CultureInfo.InvariantCulture),
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
                 ParentTypeEnum.Building);

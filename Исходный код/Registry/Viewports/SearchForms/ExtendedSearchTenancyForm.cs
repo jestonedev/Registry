@@ -17,10 +17,10 @@ namespace Registry.Viewport.SearchForms
         {
             InitializeComponent();
 
-            DataModel.GetInstance(DataModelType.KladrStreetsDataModel).Select();
-            DataModel.GetInstance(DataModelType.RentTypesDataModel).Select();
-            DataModel.GetInstance(DataModelType.TenancyReasonTypesDataModel).Select();
-            var regions = DataModel.GetInstance(DataModelType.KladrRegionsDataModel);
+            DataModel.GetInstance<KladrStreetsDataModel>().Select();
+            DataModel.GetInstance<RentTypesDataModel>().Select();
+            DataModel.GetInstance<TenancyReasonTypesDataModel>().Select();
+            var regions = DataModel.GetInstance<KladrRegionsDataModel>();
 
             var ds = DataModel.DataSet;
 
@@ -94,7 +94,7 @@ namespace Registry.Viewport.SearchForms
             if (checkBoxReasonTypeEnable.Checked)
             {
                 var processesIds =
-                    from reason in DataModel.GetInstance(DataModelType.TenancyReasonsDataModel).FilterDeletedRows()
+                    from reason in DataModel.GetInstance<TenancyReasonsDataModel>().FilterDeletedRows()
                     where reason.Field<int?>("id_reason_type") == (int?)comboBoxReasonType.SelectedValue
                     select reason.Field<int>("id_process");
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
@@ -102,7 +102,7 @@ namespace Registry.Viewport.SearchForms
             if (checkBoxReasonNumEnable.Checked)
             {
                 var processesIds =
-                    from reason in DataModel.GetInstance(DataModelType.TenancyReasonsDataModel).FilterDeletedRows()
+                    from reason in DataModel.GetInstance<TenancyReasonsDataModel>().FilterDeletedRows()
                     where reason.Field<string>("reason_number") == textBoxReasonNum.Text
                     select reason.Field<int>("id_process");
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);

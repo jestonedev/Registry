@@ -10,7 +10,7 @@ using Security;
 
 namespace Registry.Viewport
 {
-    public partial class RestrictionsEditorMultiMaster : Form
+    internal partial class RestrictionsEditorMultiMaster : Form
     {
         public DateTime? Date
         {
@@ -33,7 +33,7 @@ namespace Registry.Viewport
         public RestrictionsEditorMultiMaster()
         {
             InitializeComponent();
-            var restrictionTypes = DataModel.GetInstance(DataModelType.RestrictionTypesDataModel);
+            var restrictionTypes = DataModel.GetInstance<RestrictionTypesDataModel>();
             var vRestrictionTypes = new BindingSource {DataSource = restrictionTypes.Select()};
             comboBoxIdRestrictionType.DataSource = vRestrictionTypes;
             comboBoxIdRestrictionType.ValueMember = "id_restriction_type";

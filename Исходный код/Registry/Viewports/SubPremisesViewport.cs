@@ -157,8 +157,8 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.SubPremisesDataModel);
-            _objectStates = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
+            GeneralDataModel = DataModel.GetInstance<SubPremisesDataModel>();
+            _objectStates = DataModel.GetInstance<ObjectStatesDataModel>();
             // Дожидаемся дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
             _objectStates.Select();
@@ -447,7 +447,7 @@ namespace Registry.Viewport
             Close();
         }
 
-        public override bool HasAssocViewport(ViewportType viewportType)
+        public override bool HasAssocViewport<T>()
         {
             var reports = new List<ViewportType>
             {
@@ -455,10 +455,10 @@ namespace Registry.Viewport
                 ViewportType.TenancyListViewport,
                 ViewportType.PaymentsAccountsViewport
             };
-            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
+            return reports.Any(v => v.ToString() == typeof(T).Name) && (GeneralBindingSource.Position > -1);
         }
 
-        public override void ShowAssocViewport(ViewportType viewportType)
+        public override void ShowAssocViewport<T>()
         {
             if (SnapshotHasChanges())
             {
@@ -483,7 +483,7 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport(MenuCallback, viewportType, "id_sub_premises = " +
+            ShowAssocViewport<T>(MenuCallback,  "id_sub_premises = " +
                 Convert.ToInt32(((DataRowView)GeneralSnapshotBindingSource[GeneralSnapshotBindingSource.Position])["id_sub_premises"], CultureInfo.InvariantCulture),
                 ((DataRowView)GeneralSnapshotBindingSource[GeneralSnapshotBindingSource.Position]).Row, ParentTypeEnum.SubPremises);
         }

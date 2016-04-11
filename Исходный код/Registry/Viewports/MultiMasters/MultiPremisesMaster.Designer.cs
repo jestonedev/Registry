@@ -2,7 +2,7 @@
 
 namespace Registry.Viewport
 {
-    public partial class MultiPremisesMaster
+    internal partial class MultiPremisesMaster
     {
 
         private void InitializeComponent()

@@ -10,7 +10,7 @@ using Registry.DataModels.DataModels;
 
 namespace Registry.Viewport.ModalEditors
 {
-    public partial class SelectAccountForm : Form
+    internal partial class SelectAccountForm : Form
     {
         private readonly BindingSource _viewModel;
         public int? IdAccount
@@ -27,7 +27,7 @@ namespace Registry.Viewport.ModalEditors
         {
             InitializeComponent();
             dataGridView.AutoGenerateColumns = false;
-            var model = DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel);
+            var model = DataModel.GetInstance<PaymentsAccountsDataModel>();
             model.Select();
             _viewModel = new BindingSource
             {

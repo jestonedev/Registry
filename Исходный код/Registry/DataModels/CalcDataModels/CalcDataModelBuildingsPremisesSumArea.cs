@@ -17,10 +17,10 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.PremisesDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.SubPremisesDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.RestrictionsBuildingsAssocDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.RestrictionsPremisesAssocDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance<PremisesDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<SubPremisesDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<RestrictionsPremisesAssocDataModel>().Select());
         }
 
         private static DataTable InitializeTable()
@@ -39,10 +39,10 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelBuildingsPremisesSumArea");
             // Фильтруем удаленные строки
-            var premises = DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows();
-            var subPremises = DataModel.GetInstance(DataModelType.SubPremisesDataModel).FilterDeletedRows();
-            var restrictionsBuildignsAssoc = DataModel.GetInstance(DataModelType.RestrictionsBuildingsAssocDataModel).FilterDeletedRows();
-            var restrictionsPremisesAssoc = DataModel.GetInstance(DataModelType.RestrictionsPremisesAssocDataModel).FilterDeletedRows(); 
+            var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
+            var subPremises = DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows();
+            var restrictionsBuildignsAssoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>().FilterDeletedRows();
+            var restrictionsPremisesAssoc = DataModel.GetInstance<RestrictionsPremisesAssocDataModel>().FilterDeletedRows(); 
             
             // Вычисляем агрегационную информацию
             var subPremisesSumArea = from premisesRow in premises

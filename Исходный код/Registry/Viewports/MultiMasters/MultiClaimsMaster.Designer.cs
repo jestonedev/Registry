@@ -2,7 +2,7 @@
 
 namespace Registry.Viewport
 {
-    public partial class MultiClaimsMaster
+    internal partial class MultiClaimsMaster
     {
 
         private void InitializeComponent()

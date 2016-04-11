@@ -12,7 +12,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
-    public sealed partial class MultiPremisesMaster : DockContent, IMultiMaster
+    internal sealed partial class MultiPremisesMaster : DockContent, IMultiMaster
     {
         private readonly BindingSource _premises = new BindingSource();
         private readonly DataModel _premisesDataModel;
@@ -25,7 +25,7 @@ namespace Registry.Viewport
                          | DockAreas.DockTop)
                         | DockAreas.DockBottom;
             _menuCallback = menuCallback;
-            _premisesDataModel = DataModel.GetInstance(DataModelType.PremisesDataModel);
+            _premisesDataModel = DataModel.GetInstance<PremisesDataModel>();
             _premisesDataModel.Select();
             _premises.DataSource = DataModel.DataSet;
             _premises.DataMember = "premises";
@@ -63,7 +63,7 @@ namespace Registry.Viewport
         {
             if (_premises.Count <= e.RowIndex) return;
             var row = ((DataRowView)_premises[e.RowIndex]);
-            var buildingRow = DataModel.GetInstance(DataModelType.BuildingsDataModel).Select().Rows.Find(row["id_building"]);
+            var buildingRow = DataModel.GetInstance<BuildingsDataModel>().Select().Rows.Find(row["id_building"]);
             if (buildingRow == null)
                 return;
             switch (dataGridView.Columns[e.ColumnIndex].Name)
@@ -72,7 +72,7 @@ namespace Registry.Viewport
                     e.Value = row["id_premises"];
                     break;
                 case "id_street":
-                    var kladrRow = DataModel.GetInstance(DataModelType.KladrStreetsDataModel).Select().Rows.Find(buildingRow["id_street"]);
+                    var kladrRow = DataModel.GetInstance<KladrStreetsDataModel>().Select().Rows.Find(buildingRow["id_street"]);
                     string streetName = null;
                     if (kladrRow != null)
                         streetName = kladrRow["street_name"].ToString();
@@ -276,8 +276,8 @@ namespace Registry.Viewport
 
         private void toolStripButtonRestrictions_Click(object sender, EventArgs e)
         {
-            var restrictions = DataModel.GetInstance(DataModelType.RestrictionsDataModel);
-            var restrictionsAssoc = DataModel.GetInstance(DataModelType.RestrictionsPremisesAssocDataModel);
+            var restrictions = DataModel.GetInstance<RestrictionsDataModel>();
+            var restrictionsAssoc = DataModel.GetInstance<RestrictionsPremisesAssocDataModel>();
             if (restrictions.EditingNewRecord || restrictionsAssoc.EditingNewRecord)
             {
                 MessageBox.Show(@"Форма реквизитов уже находится в режиме добавления новой записи. "+
@@ -343,8 +343,8 @@ namespace Registry.Viewport
 
         private void toolStripButtonOwnerships_Click(object sender, EventArgs e)
         {
-            var ownershipsRights = DataModel.GetInstance(DataModelType.OwnershipsRightsDataModel);
-            var ownershipsRightsAssoc = DataModel.GetInstance(DataModelType.OwnershipPremisesAssocDataModel);
+            var ownershipsRights = DataModel.GetInstance<OwnershipsRightsDataModel>();
+            var ownershipsRightsAssoc = DataModel.GetInstance<OwnershipPremisesAssocDataModel>();
             if (ownershipsRights.EditingNewRecord || ownershipsRightsAssoc.EditingNewRecord)
             {
                 MessageBox.Show(@"Форма ограничений уже находится в режиме добавления новой записи. " +

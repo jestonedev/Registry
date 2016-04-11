@@ -17,8 +17,8 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.FundsHistoryDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.FundsSubPremisesAssocDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance<FundsHistoryDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<FundsSubPremisesAssocDataModel>().Select());
         }
 
         private static DataTable InitializeTable()
@@ -36,8 +36,8 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelSubPremisesCurrentFunds");
             // Фильтруем удаленные строки
-            var fundsHistory = DataModel.GetInstance(DataModelType.FundsHistoryDataModel).FilterDeletedRows();
-            var fundsSubPremisesAssoc = DataModel.GetInstance(DataModelType.FundsSubPremisesAssocDataModel).FilterDeletedRows();
+            var fundsHistory = DataModel.GetInstance<FundsHistoryDataModel>().FilterDeletedRows();
+            var fundsSubPremisesAssoc = DataModel.GetInstance<FundsSubPremisesAssocDataModel>().FilterDeletedRows();
 
             // Вычисляем агрегационную информацию
             var maxIdBySubPremises = DataModelHelper.MaxFundIDsByObject(fundsSubPremisesAssoc, EntityType.SubPremise); 

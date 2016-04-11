@@ -68,9 +68,9 @@ namespace Registry.Viewport
             snapshot_resettle_sub_premises.Columns.Add("is_checked").DataType = typeof(bool);
 
             if (way == ResettleEstateObjectWay.From)
-                resettle_sub_premises = DataModel.GetInstance(DataModelType.ResettleSubPremisesFromAssocDataModel);
+                resettle_sub_premises = DataModel.GetInstance<ResettleSubPremisesFromAssocDataModel>();
             else
-                resettle_sub_premises = DataModel.GetInstance(DataModelType.ResettleSubPremisesToAssocDataModel);
+                resettle_sub_premises = DataModel.GetInstance<ResettleSubPremisesToAssocDataModel>();
             resettle_sub_premises.Select();
 
             var ds = DataModel.DataSet;
@@ -198,8 +198,8 @@ namespace Registry.Viewport
         public void SaveRecord()
         {
             sync_views = false;
-            var resettleSubPremisesFromAssoc = DataModel.GetInstance(DataModelType.ResettleSubPremisesFromAssocDataModel);
-            var resettleSubPremisesToAssoc = DataModel.GetInstance(DataModelType.ResettleSubPremisesToAssocDataModel);
+            var resettleSubPremisesFromAssoc = DataModel.GetInstance<ResettleSubPremisesFromAssocDataModel>();
+            var resettleSubPremisesToAssoc = DataModel.GetInstance<ResettleSubPremisesToAssocDataModel>();
             resettleSubPremisesFromAssoc.EditingNewRecord = true;
             resettleSubPremisesToAssoc.EditingNewRecord = true;
             var list = ResettleSubPremisesFromViewport();

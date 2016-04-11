@@ -94,128 +94,6 @@ namespace Registry.DataModels.DataModels
             }, progressBar); 
         }
 
-        public static DataModel GetInstance(DataModelType dataModelType)
-        {
-            return GetInstance(null, 0, dataModelType);
-        }
-
-        public static DataModel GetInstance(ToolStripProgressBar progressBar, int incrementor, DataModelType dataModelType)
-        {
-            switch (dataModelType)
-            {
-                case DataModelType.BuildingsDataModel:
-                    return BuildingsDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.ClaimsDataModel:
-                    return ClaimsDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.ClaimStatesDataModel:
-                    return ClaimStatesDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.ClaimStateTypesDataModel:
-                    return ClaimStateTypesDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.ClaimStateTypesRelationsDataModel:
-                    return ClaimStateTypesRelationsDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.DocumentsIssuedByDataModel:
-                    return DocumentsIssuedByDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.DocumentsResidenceDataModel:
-                    return DocumentsResidenceDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.DocumentTypesDataModel:
-                    return DocumentTypesDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.ExecutorsDataModel:
-                    return ExecutorsDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.FundsBuildingsAssocDataModel:
-                    return FundsBuildingsAssocDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.FundsHistoryDataModel:
-                    return FundsHistoryDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.FundsPremisesAssocDataModel:
-                    return FundsPremisesAssocDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.FundsSubPremisesAssocDataModel:
-                    return FundsSubPremisesAssocDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.FundTypesDataModel:
-                    return FundTypesDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.KinshipsDataModel:
-                    return KinshipsDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.KladrRegionsDataModel:
-                    return KladrRegionsDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.KladrStreetsDataModel:
-                    return KladrStreetsDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.ObjectStatesDataModel:
-                    return ObjectStatesDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.OwnershipBuildingsAssocDataModel:
-                    return OwnershipBuildingsAssocDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.OwnershipPremisesAssocDataModel:
-                    return OwnershipPremisesAssocDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.OwnershipRightTypesDataModel:
-                    return OwnershipRightTypesDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.OwnershipsRightsDataModel:
-                    return OwnershipsRightsDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.PremisesDataModel:
-                    return PremisesDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.PremisesKindsDataModel:
-                    return PremisesKindsDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.PremisesTypesDataModel:
-                    return PremisesTypesDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.RentTypesDataModel:
-                    return RentTypesDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.ResettleBuildingsFromAssocDataModel:
-                    return ResettleBuildingsFromAssocDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.ResettleBuildingsToAssocDataModel:
-                    return ResettleBuildingsToAssocDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.ResettlePersonsDataModel:
-                    return ResettlePersonsDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.ResettlePremisesFromAssocDataModel:
-                    return ResettlePremisesFromAssocDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.ResettlePremisesToAssocDataModel:
-                    return ResettlePremisesToAssocDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.ResettleProcessesDataModel:
-                    return ResettleProcessesDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.ResettleSubPremisesFromAssocDataModel:
-                    return ResettleSubPremisesFromAssocDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.ResettleSubPremisesToAssocDataModel:
-                    return ResettleSubPremisesToAssocDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.RestrictionsBuildingsAssocDataModel:
-                    return RestrictionsBuildingsAssocDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.RestrictionsDataModel:
-                    return RestrictionsDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.RestrictionsPremisesAssocDataModel:
-                    return RestrictionsPremisesAssocDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.RestrictionTypesDataModel:
-                    return RestrictionTypesDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.StructureTypesDataModel:
-                    return StructureTypesDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.SubPremisesDataModel:
-                    return SubPremisesDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.TenancyAgreementsDataModel:
-                    return TenancyAgreementsDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.TenancyBuildingsAssocDataModel:
-                    return TenancyBuildingsAssocDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.TenancyNotifiesDataModel:
-                    return TenancyNotifiesDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.TenancyPersonsDataModel:
-                    return TenancyPersonsDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.TenancyPremisesAssocDataModel:
-                    return TenancyPremisesAssocDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.TenancyProcessesDataModel:
-                    return TenancyProcessesDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.TenancyReasonsDataModel:
-                    return TenancyReasonsDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.TenancyReasonTypesDataModel:
-                    return TenancyReasonTypesDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.TenancySubPremisesAssocDataModel:
-                    return TenancySubPremisesAssocDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.WarrantDocTypesDataModel:
-                    return WarrantDocTypesDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.WarrantsDataModel:
-                    return WarrantsDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.PaymentsAccountsDataModel:
-                    return PaymentsAccountsDataModel.GetInstance(progressBar, incrementor);
-                case DataModelType.PaymentsDataModel:
-                    return PaymentsDataModel.GetInstance();
-                case DataModelType.SelectableHeadHousingDepDataModel:
-                    return SelectableSigners.GetInstance();
-                default:
-                    throw new DataModelException("Неизвестный тип модели");
-            }
-        }
-
         public static DataModel GetLoadedInstance(string tableName)
         {
             DataModel dm = null;
@@ -225,7 +103,7 @@ namespace Registry.DataModels.DataModels
                     dm = (DataModel)dataSet.Tables[tableName].ExtendedProperties["model"];
             }
             return dm;
-        }
+        }              
 
         protected static void AddRelation(string masterTableName, string masterColumnName, string slaveTableName,
             string slaveColumnName)
@@ -371,6 +249,27 @@ namespace Registry.DataModels.DataModels
                    where (tableRow.RowState != DataRowState.Deleted) &&
                          (tableRow.RowState != DataRowState.Detached)
                    select tableRow;
-        }    
+        }
+    
+          //public static DataModel GetInstance(DataModelType dataModelType)
+        public static DataModel GetInstance<T>() where T : DataModel
+        {            
+             return GetInstance<T>(null,0);
+        }
+
+        public static DataModel GetInstance<T>(ToolStripProgressBar progressBar, int incrementor) where T :  DataModel
+        {
+            Type currentDataModel = typeof(T);
+            var method = currentDataModel.GetMethod("GetInstance",new Type[] { typeof(ToolStripProgressBar), typeof(int)});
+            var instanceDM =(T) method.Invoke(null,new object[] { progressBar, incrementor });
+            return instanceDM;
+                //case DataModelType.PaymentsDataModel:
+                //    return PaymentsDataModel.GetInstance();
+                //case DataModelType.SelectableHeadHousingDepDataModel:
+                //    return SelectableSigners.GetInstance();
+                //default:
+                //    throw new DataModelException("Неизвестный тип модели");
+            }
+        }
     }
-}
+

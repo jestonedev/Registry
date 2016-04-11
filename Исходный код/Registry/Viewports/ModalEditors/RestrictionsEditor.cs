@@ -10,12 +10,12 @@ using Security;
 
 namespace Registry.Viewport
 {
-    public partial class RestrictionsEditor : Form
+    internal partial class RestrictionsEditor : Form
     {
         private ViewportState state = ViewportState.NewRowState;
         private Restriction restriction;
         private ParentTypeEnum parentType;
-        private DataModel restrictions = DataModel.GetInstance(DataModelType.RestrictionsDataModel);
+        private DataModel restrictions = DataModel.GetInstance<RestrictionsDataModel>();
         private DataModel restriction_assoc;
         private DataModel restriction_types;
         private BindingSource v_restriction_types;
@@ -29,10 +29,10 @@ namespace Registry.Viewport
             set
             {
                 if (value == ParentTypeEnum.Premises)
-                    restriction_assoc = DataModel.GetInstance(DataModelType.RestrictionsPremisesAssocDataModel);
+                    restriction_assoc = DataModel.GetInstance<RestrictionsPremisesAssocDataModel>();
                 else
                     if (value == ParentTypeEnum.Building)
-                        restriction_assoc = DataModel.GetInstance(DataModelType.RestrictionsBuildingsAssocDataModel);
+                        restriction_assoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>();
                     else
                         throw new ViewportException("Неизвестный тип родительского объекта");
                 parentType = value;
@@ -95,7 +95,7 @@ namespace Registry.Viewport
         public RestrictionsEditor()
         {
             InitializeComponent();
-            restriction_types = DataModel.GetInstance(DataModelType.RestrictionTypesDataModel);
+            restriction_types = DataModel.GetInstance<RestrictionTypesDataModel>();
             v_restriction_types = new BindingSource();
             v_restriction_types.DataSource = restriction_types.Select();
             comboBoxIdRestrictionType.DataSource = v_restriction_types;
@@ -170,10 +170,10 @@ namespace Registry.Viewport
                 switch (ParentType)
                 {
                     case ParentTypeEnum.Building:
-                        DataModel.GetInstance(DataModelType.RestrictionsBuildingsAssocDataModel).Insert(assoc);
+                        DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>().Insert(assoc);
                         break;
                     case ParentTypeEnum.Premises:
-                        DataModel.GetInstance(DataModelType.RestrictionsPremisesAssocDataModel).Insert(assoc);
+                        DataModel.GetInstance<RestrictionsPremisesAssocDataModel>().Insert(assoc);
                         break;
                 }
                 restrictions.EditingNewRecord = true;

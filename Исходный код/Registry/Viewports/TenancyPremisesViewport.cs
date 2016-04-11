@@ -161,7 +161,7 @@ namespace Registry.Viewport
             {
                 if (ViewportHelper.PremiseFundAndRentMatch(premises.IdObject.Value, (int) ParentRow["id_rent_type"]))
                     continue;
-                var idBuilding = (int)DataModel.GetInstance(DataModelType.PremisesDataModel).Select().Rows.Find(premises.IdObject.Value)["id_building"];
+                var idBuilding = (int)DataModel.GetInstance<PremisesDataModel>().Select().Rows.Find(premises.IdObject.Value)["id_building"];
                 if (!ViewportHelper.BuildingFundAndRentMatch(idBuilding, (int)ParentRow["id_rent_type"]) &&
                     MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемого помещения. Все равно продолжить сохранение?",
                         "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != 
@@ -181,15 +181,15 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.PremisesDataModel);
-            kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
-            buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel);
-            premises_types = DataModel.GetInstance(DataModelType.PremisesTypesDataModel);
-            sub_premises = DataModel.GetInstance(DataModelType.SubPremisesDataModel);
-            tenancy_premises = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel);
-            object_states = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
+            GeneralDataModel = DataModel.GetInstance<PremisesDataModel>();
+            kladr = DataModel.GetInstance<KladrStreetsDataModel>();
+            buildings = DataModel.GetInstance<BuildingsDataModel>();
+            premises_types = DataModel.GetInstance<PremisesTypesDataModel>();
+            sub_premises = DataModel.GetInstance<SubPremisesDataModel>();
+            tenancy_premises = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
+            object_states = DataModel.GetInstance<ObjectStatesDataModel>();
             premises_funds = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelPremisesCurrentFunds);
-            fund_types = DataModel.GetInstance(DataModelType.FundTypesDataModel);
+            fund_types = DataModel.GetInstance<FundTypesDataModel>();
             object_states.Select();
             premises_funds.Select();
             fund_types.Select();
@@ -446,7 +446,7 @@ namespace Registry.Viewport
                     row = tenancy_premises.Select().Rows.Find(list[i].IdAssoc);
                 if (row == null)
                 {
-                    var id_assoc = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).Insert(list[i]);
+                    var id_assoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>().Insert(list[i]);
                     if (id_assoc == -1)
                     {
                         sync_views = true;
@@ -461,7 +461,7 @@ namespace Registry.Viewport
                 {
                     if (RowToTenancyPremises(row) == list[i])
                         continue;
-                    if (DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).Update(list[i]) == -1)
+                    if (DataModel.GetInstance<TenancyPremisesAssocDataModel>().Update(list[i]) == -1)
                     {
                         sync_views = true;
                         tenancy_premises.EditingNewRecord = false;
@@ -486,7 +486,7 @@ namespace Registry.Viewport
                 }
                 if (row_index == -1)
                 {
-                    if (DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).Delete(list[i].IdAssoc.Value) == -1)
+                    if (DataModel.GetInstance<TenancyPremisesAssocDataModel>().Delete(list[i].IdAssoc.Value) == -1)
                     {
                         sync_views = true;
                         tenancy_premises.EditingNewRecord = false;
@@ -585,7 +585,7 @@ namespace Registry.Viewport
             base.OnClosing(e);
         }
 
-        public override bool HasAssocViewport(ViewportType viewportType)
+        public override bool HasAssocViewport<T>()
         {
             var reports = new List<ViewportType>
             {
@@ -595,17 +595,17 @@ namespace Registry.Viewport
                 ViewportType.FundsHistoryViewport,
                 ViewportType.TenancyListViewport
             };
-            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
+            return reports.Any(v => v.ToString() == typeof(T).Name) && (GeneralBindingSource.Position > -1);
         }
 
-        public override void ShowAssocViewport(ViewportType viewportType)
+        public override void ShowAssocViewport<T>()
         {
             if (GeneralBindingSource.Position == -1)
             {
                 MessageBox.Show(@"Не выбрано помещение", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport(MenuCallback, viewportType,
+            ShowAssocViewport<T>(MenuCallback, 
                 "id_premises = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"], CultureInfo.InvariantCulture),
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
                 ParentTypeEnum.Premises);

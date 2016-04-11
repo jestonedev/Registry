@@ -7,7 +7,7 @@ using Registry.Entities;
 
 namespace Registry.Viewport.SearchForms
 {
-    public partial class SimpleSearchResettleForm : SearchForm
+    internal partial class SimpleSearchResettleForm : SearchForm
     {
 
         public SimpleSearchResettleForm()

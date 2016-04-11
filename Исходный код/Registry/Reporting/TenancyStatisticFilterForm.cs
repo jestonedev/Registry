@@ -24,10 +24,10 @@ namespace Registry.Reporting
         public TenancyStatisticFilterForm()
         {
             InitializeComponent();
-            DataModel.GetInstance(DataModelType.KladrStreetsDataModel).Select();
-            regions = DataModel.GetInstance(DataModelType.KladrRegionsDataModel);
-            DataModel.GetInstance(DataModelType.RentTypesDataModel).Select();
-            DataModel.GetInstance(DataModelType.TenancyReasonTypesDataModel).Select();
+            DataModel.GetInstance<KladrStreetsDataModel>().Select();
+            regions = DataModel.GetInstance<KladrRegionsDataModel>();
+            DataModel.GetInstance<RentTypesDataModel>().Select();
+            DataModel.GetInstance<TenancyReasonTypesDataModel>().Select();
 
             DataSet ds = DataModel.DataSet;
 

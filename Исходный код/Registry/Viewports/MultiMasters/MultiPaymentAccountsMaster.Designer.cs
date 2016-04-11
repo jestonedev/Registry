@@ -2,7 +2,7 @@
 
 namespace Registry.Viewport
 {
-    public partial class MultiPaymentAccountsMaster
+    internal partial class MultiPaymentAccountsMaster
     {
 
         private void InitializeComponent()

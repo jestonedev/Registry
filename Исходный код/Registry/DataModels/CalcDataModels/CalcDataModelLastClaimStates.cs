@@ -17,8 +17,8 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();      
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.ClaimStatesDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.ClaimsDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance<ClaimStatesDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<ClaimsDataModel>().Select());
         }
 
         private static DataTable InitializeTable()
@@ -38,7 +38,7 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModeTenancyAggregated");
             // Фильтруем удаленные строки
-            var claimStates = DataModel.GetInstance(DataModelType.ClaimStatesDataModel).FilterDeletedRows();
+            var claimStates = DataModel.GetInstance<ClaimStatesDataModel>().FilterDeletedRows();
             // Вычисляем агрегационную информацию
             var lastClaimStateMaxIds =
                         from claimStateRow in claimStates
@@ -53,7 +53,7 @@ namespace Registry.DataModels.CalcDataModels
                 join lastClaimStateRow in lastClaimStateMaxIds
                     on claimStateRow.Field<int?>("id_state") equals lastClaimStateRow.id_state
                 join stateTypeRow in
-                    DataModel.GetInstance(DataModelType.ClaimStateTypesDataModel).FilterDeletedRows()
+                    DataModel.GetInstance<ClaimStateTypesDataModel>().FilterDeletedRows()
                     on claimStateRow.Field<int?>("id_state_type") equals
                     stateTypeRow.Field<int?>("id_state_type")
                 select new

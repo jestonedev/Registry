@@ -61,9 +61,9 @@ namespace Registry.Reporting
             InitializeComponent();
 
             dataGridView.AutoGenerateColumns = false;
-            tenancies = DataModel.GetInstance(DataModelType.TenancyProcessesDataModel);
-            rent_types = DataModel.GetInstance(DataModelType.RentTypesDataModel);
-            executors = DataModel.GetInstance(DataModelType.ExecutorsDataModel);
+            tenancies = DataModel.GetInstance<TenancyProcessesDataModel>();
+            rent_types = DataModel.GetInstance<RentTypesDataModel>();
+            executors = DataModel.GetInstance<ExecutorsDataModel>();
             tenancies_aggregate = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelTenancyAggregated);
             tenancy_notifies_max_date = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelTenancyNotifiesMaxDate);
 

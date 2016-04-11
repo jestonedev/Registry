@@ -36,7 +36,7 @@ namespace Registry.Reporting
         public RegistryExcerptSettingsForm()
         {
             InitializeComponent();
-            var signers = DataModel.GetInstance(DataModelType.SelectableHeadHousingDepDataModel).Select();
+            var signers = DataModel.GetInstance<SelectableSigners>().Select();
             comboBoxSigner.DataSource = new BindingSource {DataSource = signers, Filter = "id_signer_group = 1"};
             comboBoxSigner.ValueMember = "id_record";
             comboBoxSigner.DisplayMember = "snp";

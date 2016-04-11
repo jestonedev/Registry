@@ -158,8 +158,8 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.WarrantsDataModel);
-            warrant_doc_types = DataModel.GetInstance(DataModelType.WarrantDocTypesDataModel);
+            GeneralDataModel = DataModel.GetInstance<WarrantsDataModel>();
+            warrant_doc_types = DataModel.GetInstance<WarrantDocTypesDataModel>();
 
             // Ожидаем дозагрузки, если это необходимо
             GeneralDataModel.Select();

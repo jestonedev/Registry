@@ -14,7 +14,7 @@ using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport
 {
-    public sealed partial class MultiClaimsMaster : DockContent, IMultiMaster
+    internal sealed partial class MultiClaimsMaster : DockContent, IMultiMaster
     {
         private readonly BindingSource _claims = new BindingSource();
         private readonly IMenuCallback _menuCallback;
@@ -26,7 +26,7 @@ namespace Registry.Viewport
                         | DockAreas.DockTop
                         | DockAreas.DockBottom;
             _menuCallback = menuCallback;
-            DataModel.GetInstance(DataModelType.ClaimsDataModel).Select();
+            DataModel.GetInstance<ClaimsDataModel>().Select();
             _claims.DataSource = DataModel.DataSet;
             _claims.DataMember = "claims";
             _claims.Filter = "0 = 1";
@@ -70,7 +70,7 @@ namespace Registry.Viewport
                     break;
                 case "id_account":
                     if (row["id_account"] == DBNull.Value) return;
-                    var accountList = (from paymentsAccountRow in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
+                    var accountList = (from paymentsAccountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
                                        where paymentsAccountRow.Field<int?>("id_account") == (int?)row["id_account"]
                                        select paymentsAccountRow).ToList();
                     if (accountList.Any())
@@ -101,7 +101,7 @@ namespace Registry.Viewport
                     if (row["id_claim"] == DBNull.Value || row["id_claim"] == null) return;
                     var idClaim = (int?)row["id_claim"];
                     var lastClaimStateMaxIds =
-                        from claimStateRow in DataModel.GetInstance(DataModelType.ClaimStatesDataModel).FilterDeletedRows()
+                        from claimStateRow in DataModel.GetInstance<ClaimStatesDataModel>().FilterDeletedRows()
                         where claimStateRow.Field<int?>("id_claim") == idClaim
                         group claimStateRow.Field<int?>("id_state") by claimStateRow.Field<int?>("id_claim") into gs
                         select new
@@ -111,11 +111,11 @@ namespace Registry.Viewport
                         };
                     var lastClaimState =
                         (from claimStateRow in
-                             DataModel.GetInstance(DataModelType.ClaimStatesDataModel).FilterDeletedRows()
+                             DataModel.GetInstance<ClaimStatesDataModel>().FilterDeletedRows()
                          join lastClaimStateRow in lastClaimStateMaxIds
                              on claimStateRow.Field<int?>("id_state") equals lastClaimStateRow.id_state
                          join stateTypeRow in
-                             DataModel.GetInstance(DataModelType.ClaimStateTypesDataModel).FilterDeletedRows()
+                             DataModel.GetInstance<ClaimStateTypesDataModel>().FilterDeletedRows()
                              on claimStateRow.Field<int?>("id_state_type") equals
                              stateTypeRow.Field<int?>("id_state_type")
                          select stateTypeRow.Field<string>("state_type")).ToList();
@@ -173,7 +173,7 @@ namespace Registry.Viewport
         {
             if (_claims.Count == 0)
                 return;
-            if (DataModel.GetInstance(DataModelType.ClaimStatesDataModel).EditingNewRecord)
+            if (DataModel.GetInstance<ClaimStatesDataModel>().EditingNewRecord)
             {
                 MessageBox.Show(@"Невозможно провести массовую операцию пока форма состояний исковых работ находится в состоянии добавления новой записи. Отмените добавление новой записи или сохраните ее.",
                     @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
@@ -183,7 +183,7 @@ namespace Registry.Viewport
             if (form.ShowDialog() != DialogResult.OK) return;
             if (form.IdStateType == null)
                 return;
-            var claimStatesDataModel = DataModel.GetInstance(DataModelType.ClaimStatesDataModel);
+            var claimStatesDataModel = DataModel.GetInstance<ClaimStatesDataModel>();
             var claimStatesBindingSource = new BindingSource
             {
                 DataSource = claimStatesDataModel.Select()
@@ -290,7 +290,7 @@ namespace Registry.Viewport
             {
                 var row = ((DataRowView)_claims[i]);
                 var hasState =
-                    (from currentRow in DataModel.GetInstance(DataModelType.ClaimStatesDataModel).FilterDeletedRows()
+                    (from currentRow in DataModel.GetInstance<ClaimStatesDataModel>().FilterDeletedRows()
                         where
                             currentRow.Field<int?>("id_claim") == (int)row["id_claim"] &&
                             currentRow.Field<int?>("id_state_type") == 4
@@ -319,7 +319,7 @@ namespace Registry.Viewport
         {
             if (_claims.Count == 0)
                 return;
-            if (DataModel.GetInstance(DataModelType.ClaimStatesDataModel).EditingNewRecord)
+            if (DataModel.GetInstance<ClaimStatesDataModel>().EditingNewRecord)
             {
                 MessageBox.Show(@"Невозможно провести массовую операцию пока форма состояний исковых работ находится в состоянии добавления новой записи. Отмените добавление новой записи или сохраните ее.",
                     @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
@@ -381,7 +381,7 @@ namespace Registry.Viewport
                         idsClaimsWithIncorrectBalanceInfo.Add(claim.IdClaim.Value);
                     }
                 }
-                if (DataModel.GetInstance(DataModelType.ClaimsDataModel).Update(claim) != -1)
+                if (DataModel.GetInstance<ClaimsDataModel>().Update(claim) != -1)
                 {
                     claimRow.BeginEdit();
                     claimRow["start_dept_period"] = claim.StartDeptPeriod;
@@ -436,7 +436,7 @@ namespace Registry.Viewport
         private void toolStripButtonToLegalDepartment_Click(object sender, EventArgs e)
         {
             if (_claims.Count == 0) return;
-            var claimStatesDataModel = DataModel.GetInstance(DataModelType.ClaimStatesDataModel);
+            var claimStatesDataModel = DataModel.GetInstance<ClaimStatesDataModel>();
             for (var i = 0; i < _claims.Count; i++)
             {
                 var row = ((DataRowView)_claims[i]);
@@ -451,7 +451,7 @@ namespace Registry.Viewport
                 var correctClaims = sentToLegalDepartment.Except(completedStates).Distinct();
 
                 var idClaim = (from claimRowId in correctClaims
-                    join claimRow in DataModel.GetInstance(DataModelType.ClaimsDataModel).FilterDeletedRows()
+                    join claimRow in DataModel.GetInstance<ClaimsDataModel>().FilterDeletedRows()
                         on claimRowId equals claimRow.Field<int?>("id_claim")
                     where claimRow.Field<int?>("id_account") == (int?) row["id_account"] 
                     select claimRow.Field<int?>("id_claim")).LastOrDefault();

@@ -113,9 +113,9 @@ namespace Registry.Reporting
         public TenancyOrderSettingsForm()
         {
             InitializeComponent();
-            DataModel.GetInstance(DataModelType.RentTypesDataModel).Select();
-            DataModel.GetInstance(DataModelType.ExecutorsDataModel).Select();
-            DataModel.GetInstance(DataModelType.KladrStreetsDataModel).Select();
+            DataModel.GetInstance<RentTypesDataModel>().Select();
+            DataModel.GetInstance<ExecutorsDataModel>().Select();
+            DataModel.GetInstance<KladrStreetsDataModel>().Select();
 
             var ds = DataModel.DataSet;
 

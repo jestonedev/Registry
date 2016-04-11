@@ -104,7 +104,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.RestrictionTypesDataModel);
+            GeneralDataModel = DataModel.GetInstance<RestrictionTypesDataModel>();
             GeneralDataModel.Select();
 
             GeneralBindingSource = new BindingSource

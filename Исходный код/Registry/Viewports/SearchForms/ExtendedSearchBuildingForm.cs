@@ -174,11 +174,11 @@ namespace Registry.Viewport.SearchForms
         public ExtendedSearchBuildingForm()
         {
             InitializeComponent();
-            kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
-            fundTypes = DataModel.GetInstance(DataModelType.FundTypesDataModel);
-            object_states = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
-            regions = DataModel.GetInstance(DataModelType.KladrRegionsDataModel);
-            ownership_right_types = DataModel.GetInstance(DataModelType.OwnershipRightTypesDataModel);
+            kladr = DataModel.GetInstance<KladrStreetsDataModel>();
+            fundTypes = DataModel.GetInstance<FundTypesDataModel>();
+            object_states = DataModel.GetInstance<ObjectStatesDataModel>();
+            regions = DataModel.GetInstance<KladrRegionsDataModel>();
+            ownership_right_types = DataModel.GetInstance<OwnershipRightTypesDataModel>();
 
             v_kladr = new BindingSource {DataSource = kladr.Select()};
 

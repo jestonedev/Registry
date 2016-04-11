@@ -153,7 +153,7 @@ namespace Registry.Viewport
                     var sumArea = Convert.ToDecimal((double)row["sum_area"], CultureInfo.InvariantCulture);
                     var totalMunCount = Convert.ToDecimal((int)row["mun_premises_count"], CultureInfo.InvariantCulture);
                     var totalPremisesCount = 
-                        (from premisesRow in DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows()
+                        (from premisesRow in DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows()
                         where premisesRow.Field<int>("id_building") == (int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"]
                         group premisesRow by premisesRow.Field<int>("id_building") into gs
                         select gs.Count()).First();
@@ -538,17 +538,17 @@ namespace Registry.Viewport
             dataGridViewOwnerships.AutoGenerateColumns = false;
             dataGridViewRestrictions.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.BuildingsDataModel);
-            _kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
-            _structureTypes = DataModel.GetInstance(DataModelType.StructureTypesDataModel);
-            _restrictions = DataModel.GetInstance(DataModelType.RestrictionsDataModel);
-            _restrictionTypes = DataModel.GetInstance(DataModelType.RestrictionTypesDataModel);
-            _restrictionBuildingsAssoc = DataModel.GetInstance(DataModelType.RestrictionsBuildingsAssocDataModel);
-            _ownershipRights = DataModel.GetInstance(DataModelType.OwnershipsRightsDataModel);
-            _ownershipRightTypes = DataModel.GetInstance(DataModelType.OwnershipRightTypesDataModel);
-            _ownershipBuildingsAssoc = DataModel.GetInstance(DataModelType.OwnershipBuildingsAssocDataModel);
-            _fundTypes = DataModel.GetInstance(DataModelType.FundTypesDataModel);
-            _objectStates = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
+            GeneralDataModel = DataModel.GetInstance<BuildingsDataModel>();
+            _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
+            _structureTypes = DataModel.GetInstance<StructureTypesDataModel>();
+            _restrictions = DataModel.GetInstance<RestrictionsDataModel>();
+            _restrictionTypes = DataModel.GetInstance<RestrictionTypesDataModel>();
+            _restrictionBuildingsAssoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>();
+            _ownershipRights = DataModel.GetInstance<OwnershipsRightsDataModel>();
+            _ownershipRightTypes = DataModel.GetInstance<OwnershipRightTypesDataModel>();
+            _ownershipBuildingsAssoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>();
+            _fundTypes = DataModel.GetInstance<FundTypesDataModel>();
+            _objectStates = DataModel.GetInstance<ObjectStatesDataModel>();
 
             //Вычисляемые модели
             _buildingsPremisesFunds = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelBuildingsPremisesFunds);
@@ -794,7 +794,7 @@ namespace Registry.Viewport
                     FillRowFromBuilding(building, row);
                     if (dialogResult == DialogResult.No)
                     {
-                        var premises = from premisesRow in DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows()
+                        var premises = from premisesRow in DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows()
                                        where premisesRow.Field<int>("id_building") == building.IdBuilding
                                        select premisesRow;
                         foreach (var premiseRow in premises)
@@ -802,7 +802,7 @@ namespace Registry.Viewport
                             var premise = PremiseFromDataRow(premiseRow);
                             premise.IdState = building.IdState;
                             premise.StateDate = building.StateDate;
-                            if (DataModel.GetInstance(DataModelType.PremisesDataModel).Update(premise) == -1)
+                            if (DataModel.GetInstance<PremisesDataModel>().Update(premise) == -1)
                                 return;
                         }
                     }
@@ -950,7 +950,7 @@ namespace Registry.Viewport
             }
         }
 
-        public override bool HasAssocViewport(ViewportType viewportType)
+        public override bool HasAssocViewport<T>()
         {
             var reports = new List<ViewportType>
             {
@@ -960,10 +960,11 @@ namespace Registry.Viewport
                 ViewportType.FundsHistoryViewport,
                 ViewportType.TenancyListViewport
             };
-            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
+            return reports.Any(v => v.ToString() == typeof(T).Name) && (GeneralBindingSource.Position > -1);
+            //return reports.Any(v => v.ToString() == typeof(T).Name) && (GeneralBindingSource.Position > -1);
         }
 
-        public override void ShowAssocViewport(ViewportType viewportType)
+        public override void ShowAssocViewport<T>()
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
@@ -972,7 +973,7 @@ namespace Registry.Viewport
                 MessageBox.Show(@"Не выбрано здание для отображения истории найма", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport(MenuCallback, viewportType,
+            ShowAssocViewport<T>(MenuCallback, 
                 "id_building = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"], CultureInfo.InvariantCulture),
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
                 ParentTypeEnum.Building);
@@ -1159,16 +1160,16 @@ namespace Registry.Viewport
         {
             if (e.RowIndex == -1)
                 return;
-            if (HasAssocViewport(ViewportType.RestrictionListViewport))
-                ShowAssocViewport(ViewportType.RestrictionListViewport);
+            if (HasAssocViewport<RestrictionListViewport>())
+                ShowAssocViewport<RestrictionListViewport>();
         }
 
         private void dataGridViewOwnerships_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1)
                 return;
-            if (HasAssocViewport(ViewportType.OwnershipListViewport))
-                ShowAssocViewport(ViewportType.OwnershipListViewport);
+            if (HasAssocViewport<OwnershipListViewport>())
+                ShowAssocViewport<OwnershipListViewport>();
         }
 
         private void textBoxHouse_KeyPress(object sender, KeyPressEventArgs e)

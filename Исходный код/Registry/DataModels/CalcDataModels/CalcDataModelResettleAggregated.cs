@@ -15,14 +15,14 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.ResettleProcessesDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.ResettlePersonsDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.ResettleBuildingsFromAssocDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.ResettlePremisesFromAssocDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.ResettleSubPremisesFromAssocDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.ResettleBuildingsToAssocDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.ResettlePremisesToAssocDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.ResettleSubPremisesToAssocDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance<ResettleProcessesDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<ResettlePersonsDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<ResettleBuildingsFromAssocDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<ResettlePremisesFromAssocDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<ResettleSubPremisesFromAssocDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<ResettleBuildingsToAssocDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<ResettlePremisesToAssocDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<ResettleSubPremisesToAssocDataModel>().Select());
         }
 
         private static DataTable InitializeTable()
@@ -42,8 +42,8 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModeTenancyAggregated");
             // Фильтруем удаленные строки
-            var resettles = DataModel.GetInstance(DataModelType.ResettleProcessesDataModel).FilterDeletedRows();
-            var resettlePersons = DataModel.GetInstance(DataModelType.ResettlePersonsDataModel).FilterDeletedRows();
+            var resettles = DataModel.GetInstance<ResettleProcessesDataModel>().FilterDeletedRows();
+            var resettlePersons = DataModel.GetInstance<ResettlePersonsDataModel>().FilterDeletedRows();
 
             // Вычисляем агрегационную информацию
             var resettlers = from resettlePersonsRow in resettlePersons
@@ -56,13 +56,13 @@ namespace Registry.DataModels.CalcDataModels
                                  resettlers = gs.Aggregate((a, b) => a + ", " + b)
                              };
             var addressesFrom = DataModelHelper.AggregateAddressByIdProcess(
-                DataModel.GetInstance(DataModelType.ResettleBuildingsFromAssocDataModel).FilterDeletedRows(),
-                DataModel.GetInstance(DataModelType.ResettlePremisesFromAssocDataModel).FilterDeletedRows(),
-                DataModel.GetInstance(DataModelType.ResettleSubPremisesFromAssocDataModel).FilterDeletedRows());
+                DataModel.GetInstance<ResettleBuildingsFromAssocDataModel>().FilterDeletedRows(),
+                DataModel.GetInstance<ResettlePremisesFromAssocDataModel>().FilterDeletedRows(),
+                DataModel.GetInstance<ResettleSubPremisesFromAssocDataModel>().FilterDeletedRows());
             var addressesTo = DataModelHelper.AggregateAddressByIdProcess(
-                DataModel.GetInstance(DataModelType.ResettleBuildingsToAssocDataModel).FilterDeletedRows(),
-                DataModel.GetInstance(DataModelType.ResettlePremisesToAssocDataModel).FilterDeletedRows(),
-                DataModel.GetInstance(DataModelType.ResettleSubPremisesToAssocDataModel).FilterDeletedRows());
+                DataModel.GetInstance<ResettleBuildingsToAssocDataModel>().FilterDeletedRows(),
+                DataModel.GetInstance<ResettlePremisesToAssocDataModel>().FilterDeletedRows(),
+                DataModel.GetInstance<ResettleSubPremisesToAssocDataModel>().FilterDeletedRows());
             var result = from resettlesRow in resettles
                          join resettlersRow in resettlers
                          on resettlesRow.Field<int>("id_process") equals resettlersRow.id_process into a

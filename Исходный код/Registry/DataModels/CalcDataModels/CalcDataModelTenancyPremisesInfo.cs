@@ -13,13 +13,13 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.TenancySubPremisesAssocDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.KladrStreetsDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.BuildingsDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.PremisesDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.SubPremisesDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance<TenancySubPremisesAssocDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<TenancyPremisesAssocDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<TenancyBuildingsAssocDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<KladrStreetsDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<BuildingsDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<PremisesDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<SubPremisesDataModel>().Select());
         }
 
         private static DataTable InitializeTable()
@@ -39,13 +39,13 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelTenancyPremisesInfo");
             // Вычисляем агрегационную информацию
-            var assocSubPremises = DataModel.GetInstance(DataModelType.TenancySubPremisesAssocDataModel).FilterDeletedRows();
-            var assocPremises = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).FilterDeletedRows();
-            var assocBuildings = DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel).FilterDeletedRows();
-            var kladrStreet = DataModel.GetInstance(DataModelType.KladrStreetsDataModel).FilterDeletedRows();
-            var buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel).FilterDeletedRows();
-            var premises = DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows();
-            var subPremises = DataModel.GetInstance(DataModelType.SubPremisesDataModel).FilterDeletedRows();
+            var assocSubPremises = DataModel.GetInstance<TenancySubPremisesAssocDataModel>().FilterDeletedRows();
+            var assocPremises = DataModel.GetInstance<TenancyPremisesAssocDataModel>().FilterDeletedRows();
+            var assocBuildings = DataModel.GetInstance<TenancyBuildingsAssocDataModel>().FilterDeletedRows();
+            var kladrStreet = DataModel.GetInstance<KladrStreetsDataModel>().FilterDeletedRows();
+            var buildings = DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows();
+            var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
+            var subPremises = DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows();
 
             var aSubPremises = from assocSubPremisesRow in assocSubPremises
                                     join subPremisesRow in subPremises

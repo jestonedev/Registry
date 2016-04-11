@@ -4,7 +4,7 @@ using Registry.DataModels.DataModels;
 
 namespace Registry.Viewport.ModalEditors
 {
-    public partial class ObjectStateEditor : Form
+    internal partial class ObjectStateEditor : Form
     {
         public int? IdObjectState {
             get { return ViewportHelper.ValueOrNull<int>(comboBoxIdState); }
@@ -13,7 +13,7 @@ namespace Registry.Viewport.ModalEditors
         public ObjectStateEditor()
         {
             InitializeComponent();
-            var objectStates = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
+            var objectStates = DataModel.GetInstance<ObjectStatesDataModel>();
             var vObjectStates = new BindingSource {DataSource = objectStates.Select()};
             comboBoxIdState.DataSource = vObjectStates;
             comboBoxIdState.ValueMember = "id_state";

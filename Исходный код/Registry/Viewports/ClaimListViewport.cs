@@ -203,11 +203,11 @@ namespace Registry.Viewport
         {
             DockAreas = DockAreas.Document;
             dataGridViewClaims.AutoGenerateColumns = false;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.ClaimsDataModel);
+            GeneralDataModel = DataModel.GetInstance<ClaimsDataModel>();
 
             // Ожидаем дозагрузки, если это необходимо
             GeneralDataModel.Select();
-            DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).Select();
+            DataModel.GetInstance<PaymentsAccountsDataModel>().Select();
 
             GeneralBindingSource = new BindingSource();
             GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
@@ -258,7 +258,7 @@ namespace Registry.Viewport
             {
                 if (idAccount == null) return;
                 textBoxAccount.Text =
-                    (from row in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
+                    (from row in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
                         where row.Field<int>("id_account") == idAccount.Value
                         select row.Field<string>("account")).FirstOrDefault();
             }
@@ -340,7 +340,7 @@ namespace Registry.Viewport
         {
             if (textBoxAccount.Enabled)
             {
-                var accounts = (from row in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
+                var accounts = (from row in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
                                 where row.Field<string>("account") == textBoxAccount.Text.Trim()
                                 select row.Field<int?>("id_account")).ToList();
                 if (accounts.Count == 1)
@@ -407,7 +407,7 @@ namespace Registry.Viewport
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     FillRowFromClaim(claim, newRow);
                     // Add first state automaticaly
-                    if (DataModel.GetInstance(DataModelType.ClaimStatesDataModel).EditingNewRecord)
+                    if (DataModel.GetInstance<ClaimStatesDataModel>().EditingNewRecord)
                     {
                         MessageBox.Show(@"Не удалось автоматически вставить первый этап претензионно-исковой работы, т.к. форма состояний исковых работ находится в состоянии добавления новой записи.",
                             @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
@@ -418,7 +418,7 @@ namespace Registry.Viewport
                     if (firstStateTypes.Any())
                     {
                         var firstStateType = firstStateTypes.First();
-                        var claimStatesDataModel = DataModel.GetInstance(DataModelType.ClaimStatesDataModel);
+                        var claimStatesDataModel = DataModel.GetInstance<ClaimStatesDataModel>();
                         var claimStatesBindingSource = new BindingSource
                         {
                             DataSource = claimStatesDataModel.Select()
@@ -577,17 +577,17 @@ namespace Registry.Viewport
             Close();
         }
 
-        public override bool HasAssocViewport(ViewportType viewportType)
+        public override bool HasAssocViewport<T>()
         {
             var reports = new List<ViewportType>
             {
                 ViewportType.ClaimStatesViewport,
                 ViewportType.PaymentsAccountsViewport
             };
-            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
+            return reports.Any(v => v.ToString() == typeof(T).Name) && (GeneralBindingSource.Position > -1);
         }
 
-        public override void ShowAssocViewport(ViewportType viewportType)
+        public override void ShowAssocViewport<T>()
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
@@ -597,7 +597,7 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport(MenuCallback, viewportType,
+            ShowAssocViewport<T>(MenuCallback, 
                 "id_claim = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"], CultureInfo.InvariantCulture),
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row, ParentTypeEnum.Claim);
         }
@@ -703,7 +703,7 @@ namespace Registry.Viewport
                     {
                         _accountList =
                             (from paymentAccountRow in
-                                DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
+                                DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
                                 where paymentAccountRow.Field<int?>("id_account") == (int?) row["id_account"]
                                 select paymentAccountRow).ToList();
                         _rowIndex = e.RowIndex;
@@ -806,7 +806,7 @@ namespace Registry.Viewport
 
         private void textBoxAccount_Leave(object sender, EventArgs e)
         {
-            _idAccount = (from row in DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel).FilterDeletedRows()
+            _idAccount = (from row in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
                 where row.Field<string>("account") == textBoxAccount.Text.Trim()
                 select row.Field<int?>("id_account")).LastOrDefault();
             BindAccount(_idAccount);

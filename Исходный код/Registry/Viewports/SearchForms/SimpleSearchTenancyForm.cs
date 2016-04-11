@@ -7,7 +7,7 @@ using Registry.DataModels;
 
 namespace Registry.Viewport.SearchForms
 {
-    public partial class SimpleSearchTenancyForm : SearchForm
+    internal partial class SimpleSearchTenancyForm : SearchForm
     {
 
         public SimpleSearchTenancyForm()

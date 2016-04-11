@@ -374,11 +374,11 @@ namespace Registry.Viewport
         {
             dataGridViewTenancyPersons.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.TenancyPersonsDataModel);
-            kinships = DataModel.GetInstance(DataModelType.KinshipsDataModel);
-            document_types = DataModel.GetInstance(DataModelType.DocumentTypesDataModel);
-            document_issued_by = DataModel.GetInstance(DataModelType.DocumentsIssuedByDataModel);
-            kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel); 
+            GeneralDataModel = DataModel.GetInstance<TenancyPersonsDataModel>();
+            kinships = DataModel.GetInstance<KinshipsDataModel>();
+            document_types = DataModel.GetInstance<DocumentTypesDataModel>();
+            document_issued_by = DataModel.GetInstance<DocumentsIssuedByDataModel>();
+            kladr = DataModel.GetInstance<KladrStreetsDataModel>(); 
 
             // Ожидаем дозагрузки, если это необходимо
             GeneralDataModel.Select();
@@ -551,10 +551,10 @@ namespace Registry.Viewport
             if (comboBoxIssuedBy.SelectedValue == null && !string.IsNullOrEmpty(comboBoxIssuedBy.Text))
             {
                 var document = new DocumentIssuedBy {DocumentIssuedByName = comboBoxIssuedBy.Text};
-                var idDocument = DataModel.GetInstance(DataModelType.DocumentsIssuedByDataModel).Insert(document);
+                var idDocument = DataModel.GetInstance<DocumentsIssuedByDataModel>().Insert(document);
                 if (idDocument == -1) return;
                 document.IdDocumentIssuedBy = idDocument;
-                DataModel.GetInstance(DataModelType.DocumentsIssuedByDataModel).Select().Rows.
+                DataModel.GetInstance<DocumentsIssuedByDataModel>().Select().Rows.
                     Add(document.IdDocumentIssuedBy, document.DocumentIssuedByName);
                 comboBoxIssuedBy.SelectedValue = document.IdDocumentIssuedBy;
             }
@@ -798,10 +798,10 @@ namespace Registry.Viewport
             if ((GeneralBindingSource.Count == 0 || (GeneralBindingSource.Count == 1 && viewportState == ViewportState.NewRowState))
                 && ParentType == ParentTypeEnum.Tenancy)
             {
-                var premisesAssoc = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel);
-                var premises = DataModel.GetInstance(DataModelType.PremisesDataModel);
-                var buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel);
-                var streets = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
+                var premisesAssoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
+                var premises = DataModel.GetInstance<PremisesDataModel>();
+                var buildings = DataModel.GetInstance<BuildingsDataModel>();
+                var streets = DataModel.GetInstance<KladrStreetsDataModel>();
                 var currentPremise = (from premisesAssocRow in premisesAssoc.FilterDeletedRows()
                     join premisesRow in premises.FilterDeletedRows()
                         on premisesAssocRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")

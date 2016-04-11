@@ -10,7 +10,7 @@ using Security;
 
 namespace Registry.Viewport
 {
-    public partial class OwnershipsEditorMultiMaster : Form
+    internal partial class OwnershipsEditorMultiMaster : Form
     {
         public string OwnershipNumber {
             get { return string.IsNullOrEmpty(textBoxOwnershipNumber.Text) ? null : textBoxOwnershipNumber.Text; }
@@ -33,7 +33,7 @@ namespace Registry.Viewport
         public OwnershipsEditorMultiMaster()
         {
             InitializeComponent();
-            var ownershipRightTypes = DataModel.GetInstance(DataModelType.OwnershipRightTypesDataModel);
+            var ownershipRightTypes = DataModel.GetInstance<OwnershipRightTypesDataModel>();
             var vOwnershipRightTypes = new BindingSource {DataSource = ownershipRightTypes.Select()};
             comboBoxIdOwnershipType.DataSource = vOwnershipRightTypes;
             comboBoxIdOwnershipType.ValueMember = "id_ownership_right_type";

@@ -186,17 +186,17 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.RestrictionsDataModel);
-            _restrictionTypes = DataModel.GetInstance(DataModelType.RestrictionTypesDataModel);
+            GeneralDataModel = DataModel.GetInstance<RestrictionsDataModel>();
+            _restrictionTypes = DataModel.GetInstance<RestrictionTypesDataModel>();
             // Дожидаемся дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
             _restrictionTypes.Select();
 
             if (ParentType == ParentTypeEnum.Premises)
-                _restrictionAssoc =  DataModel.GetInstance(DataModelType.RestrictionsPremisesAssocDataModel);
+                _restrictionAssoc =  DataModel.GetInstance<RestrictionsPremisesAssocDataModel>();
             else
                 if (ParentType == ParentTypeEnum.Building)
-                    _restrictionAssoc = DataModel.GetInstance(DataModelType.RestrictionsBuildingsAssocDataModel);
+                    _restrictionAssoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>();
                 else
                     throw new ViewportException("Неизвестный тип родительского объекта");
             _restrictionAssoc.Select();
@@ -350,10 +350,10 @@ namespace Registry.Viewport
                     switch (ParentType)
                     {
                         case ParentTypeEnum.Building:
-                            DataModel.GetInstance(DataModelType.RestrictionsBuildingsAssocDataModel).Insert(assoc);
+                            DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>().Insert(assoc);
                             break;
                         case ParentTypeEnum.Premises:
-                            DataModel.GetInstance(DataModelType.RestrictionsPremisesAssocDataModel).Insert(assoc);
+                            DataModel.GetInstance<RestrictionsPremisesAssocDataModel>().Insert(assoc);
                             break;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_restriction"] = idRestriction;
