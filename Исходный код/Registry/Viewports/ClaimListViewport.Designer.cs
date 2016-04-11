@@ -321,6 +321,7 @@ namespace Registry.Viewport
             this.textBoxDescription.MaxLength = 4000;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
+            this.textBoxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxDescription.Size = new System.Drawing.Size(316, 46);
             this.textBoxDescription.TabIndex = 4;
             // 

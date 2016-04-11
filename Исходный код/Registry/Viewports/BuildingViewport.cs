@@ -30,6 +30,7 @@ namespace Registry.Viewport
         private DataModel _ownershipBuildingsAssoc;
         private DataModel _fundTypes;
         private DataModel _objectStates;
+        private DataModel _buildings;
         private CalcDataModel _buildingsPremisesFunds;
         private CalcDataModel _buildingsCurrentFund;
         private CalcDataModel _buildingsPremisesSumArea;
@@ -152,11 +153,13 @@ namespace Registry.Viewport
                     var row = ((DataRowView) _vBuildingPremisesSumArea[position]);
                     var sumArea = Convert.ToDecimal((double)row["sum_area"], CultureInfo.InvariantCulture);
                     var totalMunCount = Convert.ToDecimal((int)row["mun_premises_count"], CultureInfo.InvariantCulture);
-                    var totalPremisesCount = 
-                        (from premisesRow in DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows()
-                        where premisesRow.Field<int>("id_building") == (int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"]
-                        group premisesRow by premisesRow.Field<int>("id_building") into gs
-                        select gs.Count()).First();
+                    var totalPremisesCount = _buildings.Select().Rows.Find((int)row["id_building"]).Field<int>("num_apartments");
+
+                    //var totalPremisesCount = 
+                    //    (from premisesRow in DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows()
+                    //    where premisesRow.Field<int>("id_building") == (int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"]
+                    //    group premisesRow by premisesRow.Field<int>("id_building") into gs
+                    //    select gs.Count()).First();
                     if (totalPremisesCount > 0)
                     {
                         var percentage = (totalMunCount/totalPremisesCount)*100;
@@ -549,6 +552,8 @@ namespace Registry.Viewport
             _ownershipBuildingsAssoc = DataModel.GetInstance(DataModelType.OwnershipBuildingsAssocDataModel);
             _fundTypes = DataModel.GetInstance(DataModelType.FundTypesDataModel);
             _objectStates = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
+            _buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel);
+
 
             //Вычисляемые модели
             _buildingsPremisesFunds = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelBuildingsPremisesFunds);
@@ -567,6 +572,7 @@ namespace Registry.Viewport
             _ownershipBuildingsAssoc.Select();
             _fundTypes.Select();
             _objectStates.Select();
+            _buildings.Select();
 
             var ds = DataModel.DataSet;
 

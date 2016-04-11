@@ -95,6 +95,7 @@ namespace Registry.Viewport
             this.groupBoxTenancyContract = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel10 = new System.Windows.Forms.TableLayoutPanel();
             this.panel6 = new System.Windows.Forms.Panel();
+            this.checkBoxUntilDismissal = new System.Windows.Forms.CheckBox();
             this.label52 = new System.Windows.Forms.Label();
             this.label51 = new System.Windows.Forms.Label();
             this.dateTimePickerEndDate = new System.Windows.Forms.DateTimePicker();
@@ -132,7 +133,6 @@ namespace Registry.Viewport
             this.total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.living_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.rent_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.checkBoxUntilDismissal = new System.Windows.Forms.CheckBox();
             this.tableLayoutPanel9.SuspendLayout();
             this.groupBox31.SuspendLayout();
             this.groupBox22.SuspendLayout();
@@ -194,6 +194,7 @@ namespace Registry.Viewport
             this.textBoxDescription.MaxLength = 4000;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
+            this.textBoxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxDescription.Size = new System.Drawing.Size(489, 59);
             this.textBoxDescription.TabIndex = 0;
             this.textBoxDescription.Enter += new System.EventHandler(this.selectAll_Enter);
@@ -370,6 +371,17 @@ namespace Registry.Viewport
             this.panel6.Name = "panel6";
             this.panel6.Size = new System.Drawing.Size(495, 119);
             this.panel6.TabIndex = 1;
+            // 
+            // checkBoxUntilDismissal
+            // 
+            this.checkBoxUntilDismissal.AutoSize = true;
+            this.checkBoxUntilDismissal.Location = new System.Drawing.Point(179, 92);
+            this.checkBoxUntilDismissal.Name = "checkBoxUntilDismissal";
+            this.checkBoxUntilDismissal.Size = new System.Drawing.Size(271, 19);
+            this.checkBoxUntilDismissal.TabIndex = 29;
+            this.checkBoxUntilDismissal.Text = "На период действия трудовых отношений";
+            this.checkBoxUntilDismissal.UseVisualStyleBackColor = true;
+            this.checkBoxUntilDismissal.CheckedChanged += new System.EventHandler(this.checkBoxUntilDismissal_CheckedChanged);
             // 
             // label52
             // 
@@ -764,17 +776,6 @@ namespace Registry.Viewport
             this.rent_area.MinimumWidth = 200;
             this.rent_area.Name = "rent_area";
             this.rent_area.ReadOnly = true;
-            // 
-            // checkBoxUntilDismissal
-            // 
-            this.checkBoxUntilDismissal.AutoSize = true;
-            this.checkBoxUntilDismissal.Location = new System.Drawing.Point(179, 92);
-            this.checkBoxUntilDismissal.Name = "checkBoxUntilDismissal";
-            this.checkBoxUntilDismissal.Size = new System.Drawing.Size(271, 19);
-            this.checkBoxUntilDismissal.TabIndex = 29;
-            this.checkBoxUntilDismissal.Text = "На период действия трудовых отношений";
-            this.checkBoxUntilDismissal.UseVisualStyleBackColor = true;
-            this.checkBoxUntilDismissal.CheckedChanged += new System.EventHandler(this.checkBoxUntilDismissal_CheckedChanged);
             // 
             // TenancyViewport
             // 
