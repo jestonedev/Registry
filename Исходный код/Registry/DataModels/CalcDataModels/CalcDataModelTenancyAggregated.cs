@@ -39,8 +39,8 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModeTenancyAggregated");
             // Фильтруем удаленные строки
-            var tenancies = GetInstance<TenancyProcessesDataModel>().FilterDeletedRows();
-            var tenancyPersons = GetInstance<TenancyPersonsDataModel>().FilterDeletedRows();
+            var tenancies = DataModel.GetInstance<TenancyProcessesDataModel>().FilterDeletedRows();
+            var tenancyPersons = DataModel.GetInstance<TenancyPersonsDataModel>().FilterDeletedRows();
             // Вычисляем агрегационную информацию
             var tenants = from tenancyPersonsRow in tenancyPersons
                           where tenancyPersonsRow.Field<int?>("id_kinship") == 1
@@ -51,9 +51,9 @@ namespace Registry.DataModels.CalcDataModels
                               tenant = (gs.First().Field<string>("surname")+" "+gs.First().Field<string>("name")+" "+gs.First().Field<string>("patronymic")).Trim()
                           };
             var addresses = DataModelHelper.AggregateAddressByIdProcess(
-                GetInstance<TenancyBuildingsAssocDataModel>().FilterDeletedRows(),
-                GetInstance<TenancyPremisesAssocDataModel>().FilterDeletedRows(),
-                GetInstance<TenancySubPremisesAssocDataModel>().FilterDeletedRows());
+                DataModel.GetInstance<TenancyBuildingsAssocDataModel>().FilterDeletedRows(),
+                DataModel.GetInstance<TenancyPremisesAssocDataModel>().FilterDeletedRows(),
+                DataModel.GetInstance<TenancySubPremisesAssocDataModel>().FilterDeletedRows());
             var result = from tenanciesRow in tenancies
                          join tenantsRow in tenants
                          on tenanciesRow.Field<int>("id_process") equals tenantsRow.id_process into spT

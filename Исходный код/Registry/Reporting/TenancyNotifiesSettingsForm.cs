@@ -64,8 +64,8 @@ namespace Registry.Reporting
             tenancies = DataModel.GetInstance<TenancyProcessesDataModel>();
             rent_types = DataModel.GetInstance<RentTypesDataModel>();
             executors = DataModel.GetInstance<ExecutorsDataModel>();
-            tenancies_aggregate = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelTenancyAggregated);
-            tenancy_notifies_max_date = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelTenancyNotifiesMaxDate);
+            tenancies_aggregate = (CalcDataModel)CalcDataModel.GetInstance<CalcDataModelTenancyAggregated>();
+            tenancy_notifies_max_date = (CalcDataModel) CalcDataModel.GetInstance<CalcDataModelTenancyNotifiesMaxDate>();
 
             //Ожидаем загрузки данных, если это необходимо
             tenancies.Select();

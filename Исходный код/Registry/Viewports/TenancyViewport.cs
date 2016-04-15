@@ -542,7 +542,7 @@ namespace Registry.Viewport
             tenancy_persons = DataModel.GetInstance<TenancyPersonsDataModel>();
             tenancy_reasons = DataModel.GetInstance<TenancyReasonsDataModel>();
             kinships = DataModel.GetInstance<KinshipsDataModel>();
-            tenancy_premises_info = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelTenancyPremisesInfo);
+            tenancy_premises_info = CalcDataModel.GetInstance<CalcDataModelTenancyPremisesInfo>();
 
             //Ожидаем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
@@ -909,7 +909,7 @@ namespace Registry.Viewport
                     // Обновляем информацию по помещениям (живое обновление не реализуемо)
                     if (v_tenancy_addresses != null)
                     {
-                        v_tenancy_addresses.DataSource = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelTenancyPremisesInfo);
+                        v_tenancy_addresses.DataSource = CalcDataModel.GetInstance<CalcDataModelTenancyPremisesInfo>();
                         FiltersRebuild();
                     }
                     GeneralDataModel.EditingNewRecord = false;

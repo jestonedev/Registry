@@ -160,7 +160,7 @@ namespace Registry.Viewport
 
         internal static bool BuildingFundAndRentMatch(int idBuilding, int idRentType)
         {
-            var bRow = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelBuildingsCurrentFunds).Select().Rows.Find(idBuilding);
+            var bRow = CalcDataModel.GetInstance<CalcDataModelBuildingsCurrentFunds>().Select().Rows.Find(idBuilding);
             if (bRow == null) return false;
             var idFundType = (int)bRow["id_fund_type"];
             if (idRentType == TranslateFundIdToRentId(idFundType))
@@ -170,7 +170,7 @@ namespace Registry.Viewport
 
         internal static bool PremiseFundAndRentMatch(int idPremise, int idRentType)
         {
-            var bRow = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelPremisesCurrentFunds).Select().Rows.Find(idPremise);
+            var bRow = CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>().Select().Rows.Find(idPremise);
             if (bRow == null) return false;
             var idFundType = (int)bRow["id_fund_type"];
             if (idRentType == TranslateFundIdToRentId(idFundType))
@@ -180,7 +180,7 @@ namespace Registry.Viewport
 
         internal static bool SubPremiseFundAndRentMatch(int idSubPremise, int idRentType)
         {
-            var bRow = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelSubPremisesCurrentFunds).Select().Rows.Find(idSubPremise);
+            var bRow = CalcDataModel.GetInstance<CalcDataModelSubPremisesCurrentFunds>().Select().Rows.Find(idSubPremise);
             if (bRow == null) return false;
             var idFundType = (int)bRow["id_fund_type"];
             if (idRentType == TranslateFundIdToRentId(idFundType))

@@ -72,7 +72,7 @@ namespace Registry.Viewport.SearchForms
                 {
                     var lastStateBindingSource = new BindingSource
                     {
-                        DataSource = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelLastClaimStates).Select(),
+                        DataSource = ((CalcDataModel) CalcDataModel.GetInstance<CalcDataModelLastClaimStates>()).Select(),
                         Filter = BuildFilter("date_start_state", comboBoxDateStartStateExpr.Text,
                             dateTimePickerDateStartStateFrom.Value.Date,
                             dateTimePickerDateStartStateTo.Value.Date)

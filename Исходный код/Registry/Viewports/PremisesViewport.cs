@@ -633,9 +633,9 @@ namespace Registry.Viewport
             object_states = DataModel.GetInstance<ObjectStatesDataModel>(); 
 
             // Вычисляемые модели
-            premisesCurrentFund = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelPremisesCurrentFunds);
-            premiseSubPremisesSumArea = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelPremiseSubPremisesSumArea);
-            subPremisesCurrentFund = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelSubPremisesCurrentFunds);
+            premisesCurrentFund = CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>();
+            premiseSubPremisesSumArea = CalcDataModel.GetInstance<CalcDataModelPremiseSubPremisesSumArea>();
+            subPremisesCurrentFund = CalcDataModel.GetInstance<CalcDataModelSubPremisesCurrentFunds>();
 
             // Ожидаем дозагрузки, если это необходмо
             GeneralDataModel.Select();

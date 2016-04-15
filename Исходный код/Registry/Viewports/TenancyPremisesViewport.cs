@@ -188,7 +188,7 @@ namespace Registry.Viewport
             sub_premises = DataModel.GetInstance<SubPremisesDataModel>();
             tenancy_premises = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
             object_states = DataModel.GetInstance<ObjectStatesDataModel>();
-            premises_funds = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelPremisesCurrentFunds);
+            premises_funds = CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>();
             fund_types = DataModel.GetInstance<FundTypesDataModel>();
             object_states.Select();
             premises_funds.Select();

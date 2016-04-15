@@ -166,7 +166,7 @@ namespace Registry.Viewport
             dataGridView.AutoGenerateColumns = false;
             GeneralDataModel = DataModel.GetInstance<ResettleProcessesDataModel>();
             documents_residence = DataModel.GetInstance<DocumentsResidenceDataModel>();
-            resettle_aggregate = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelResettleAggregated);
+            resettle_aggregate = CalcDataModel.GetInstance<CalcDataModelResettleAggregated>();
 
             // Ожидаем дозагрузки, если это необходимо
             GeneralDataModel.Select();

@@ -57,7 +57,7 @@ namespace Registry.Viewport.SearchForms
             {
                 if (checkBoxStateEnable.Checked && comboBoxState.SelectedValue != null)
                 {
-                    var lastStates = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelLastClaimStates);
+                    var lastStates = (CalcDataModel) CalcDataModel.GetInstance<CalcDataModelLastClaimStates>();
                     var lastStateTypes = from lastStateRow in lastStates.FilterDeletedRows()
                         where lastStateRow.Field<int?>("id_state_type") == (int?) comboBoxState.SelectedValue
                         select lastStateRow.Field<int>("id_claim");
@@ -67,7 +67,7 @@ namespace Registry.Viewport.SearchForms
                 {
                     var lastStateBindingSource = new BindingSource
                     {
-                        DataSource = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelLastClaimStates).Select(),
+                        DataSource = ((CalcDataModel)CalcDataModel.GetInstance<CalcDataModelLastClaimStates>()).Select(),
                         Filter = BuildFilter("date_start_state", comboBoxDateStartStateExpr.Text,
                             dateTimePickerDateStartStateFrom.Value.Date,
                             dateTimePickerDateStartStateTo.Value.Date)

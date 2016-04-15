@@ -115,7 +115,7 @@ namespace Registry.Viewport
             DockAreas = DockAreas.Document;
             GeneralDataModel = DataModel.GetInstance<TenancyProcessesDataModel>();
             rent_types = DataModel.GetInstance<RentTypesDataModel>();
-            tenancies_aggregate = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelTenancyAggregated);
+            tenancies_aggregate = CalcDataModel.GetInstance<CalcDataModelTenancyAggregated>();
 
             //Ожидаем загрузки данных, если это необходимо
             GeneralDataModel.Select();

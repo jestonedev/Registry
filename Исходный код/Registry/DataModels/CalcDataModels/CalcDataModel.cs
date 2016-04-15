@@ -60,38 +60,22 @@ namespace Registry.DataModels.CalcDataModels
             }, null);
         }
 
-        public static CalcDataModel GetInstance(CalcDataModelType dataModelType)
+        public static CalcDataModel GetInstance<T>() where T : CalcDataModel
         {
-            switch (dataModelType)
-            {
-                case CalcDataModelType.CalcDataModelBuildingsCurrentFunds:
-                    return CalcDataModelBuildingsCurrentFunds.GetInstance();
-                case CalcDataModelType.CalcDataModelBuildingsPremisesFunds:
-                    return CalcDataModelBuildingsPremisesFunds.GetInstance();
-                case CalcDataModelType.CalcDataModelBuildingsPremisesSumArea:
-                    return CalcDataModelBuildingsPremisesSumArea.GetInstance();
-                case CalcDataModelType.CalcDataModelPremisesCurrentFunds:
-                    return CalcDataModelPremisesCurrentFunds.GetInstance();
-                case CalcDataModelType.CalcDataModelPremisesTenanciesInfo:
-                    return CalcDataModelPremisesTenanciesInfo.GetInstance();
-                case CalcDataModelType.CalcDataModelPremiseSubPremisesSumArea:
-                    return CalcDataModelPremiseSubPremisesSumArea.GetInstance();
-                case CalcDataModelType.CalcDataModelResettleAggregated:
-                    return CalcDataModelResettleAggregated.GetInstance();
-                case CalcDataModelType.CalcDataModelSubPremisesCurrentFunds:
-                    return CalcDataModelSubPremisesCurrentFunds.GetInstance();
-                case CalcDataModelType.CalcDataModelTenancyAggregated:
-                    return CalcDataModelTenancyAggregated.GetInstance();
-                case CalcDataModelType.CalcDataModelTenancyNotifiesMaxDate:
-                    return CalcDataModelTenancyNotifiesMaxDate.GetInstance();
-                case CalcDataModelType.CalcDataModelTenancyPremisesInfo:
-                    return CalcDataModelTenancyPremisesInfo.GetInstance(); 
-                case CalcDataModelType.CalcDataModelLastClaimStates:
-                    return CalcDataModelLastClaimStates.GetInstance();
-                default:
-                    throw new DataModelException("Неизвестный тип модели");
-            }
+            Type currentDataModel = typeof(T);          
+            var method = currentDataModel.GetMethod("GetInstance", new Type[] { });
+            var instanceDM = (T)method.Invoke(null, new object[] { });
+            return instanceDM;                        
         }
+
+        //public static CalcDataModel GetInstance<T>() where T : CalcDataModel
+        //{
+        //    Type currentDataModel = typeof(T);
+        //    var method = currentDataModel.GetMethod("GetInstance", new Type[] { });
+        //    var instanceDM = (T)method.Invoke(null, new object[] { });
+        //    return instanceDM;
+        //}
+       
 
         public void Refresh()
         {

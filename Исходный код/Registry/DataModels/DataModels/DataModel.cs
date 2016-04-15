@@ -259,17 +259,26 @@ namespace Registry.DataModels.DataModels
 
         public static DataModel GetInstance<T>(ToolStripProgressBar progressBar, int incrementor) where T :  DataModel
         {
-            Type currentDataModel = typeof(T);
-            var method = currentDataModel.GetMethod("GetInstance",new Type[] { typeof(ToolStripProgressBar), typeof(int)});
-            var instanceDM =(T) method.Invoke(null,new object[] { progressBar, incrementor });
-            return instanceDM;
+            Type currentDataModel = typeof(T);            
+            if(typeof(T) == typeof(PaymentsDataModel) || typeof(T) == typeof(SelectableSigners))
+            {
+                var method = currentDataModel.GetMethod("GetInstance",new Type[] {});
+                var instanceDM = (T)method.Invoke(null, new object[] { });
+                return instanceDM;
+            }
+            else
+            {
+                var method = currentDataModel.GetMethod("GetInstance", new Type[] { typeof(ToolStripProgressBar), typeof(int) });
+                var instanceDM = (T)method.Invoke(null, new object[] { progressBar, incrementor });
+                return instanceDM;
+            }            
                 //case DataModelType.PaymentsDataModel:
                 //    return PaymentsDataModel.GetInstance();
                 //case DataModelType.SelectableHeadHousingDepDataModel:
                 //    return SelectableSigners.GetInstance();
                 //default:
                 //    throw new DataModelException("Неизвестный тип модели");
-            }
         }
     }
+}
 

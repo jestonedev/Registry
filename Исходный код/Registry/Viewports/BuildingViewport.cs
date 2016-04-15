@@ -34,6 +34,7 @@ namespace Registry.Viewport
         private CalcDataModel _buildingsPremisesFunds;
         private CalcDataModel _buildingsCurrentFund;
         private CalcDataModel _buildingsPremisesSumArea;
+        private CalcDataModel _municipalPremises;
         #endregion Models
 
         #region Views
@@ -50,6 +51,7 @@ namespace Registry.Viewport
         private BindingSource _vBuildingPremisesFunds;
         private BindingSource _vBuildingCurrentFund;
         private BindingSource _vBuildingPremisesSumArea;
+        private BindingSource _vMunicipalPremises;
         #endregion Views
 
         //Forms
@@ -90,18 +92,23 @@ namespace Registry.Viewport
 
         private void FiltersRebuild()
         {
+            var id_building = (int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"];
             if (_vBuildingPremisesFunds != null)
             {
-                var position = -1;
+                var position = -1;                
                 if ((GeneralBindingSource.Position != -1) && !(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] is DBNull))
                     position =
                         _vBuildingPremisesFunds.Find("id_building", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"]);
                 if (position != -1)
-                {
-                    var socialCount = Convert.ToDecimal(((DataRowView)_vBuildingPremisesFunds[position])["social_premises_count"], CultureInfo.InvariantCulture);
-                    var specialCount = Convert.ToDecimal(((DataRowView)_vBuildingPremisesFunds[position])["special_premises_count"], CultureInfo.InvariantCulture);
-                    var commercialCount = Convert.ToDecimal(((DataRowView)_vBuildingPremisesFunds[position])["commercial_premises_count"], CultureInfo.InvariantCulture);
-                    var otherCount = Convert.ToDecimal(((DataRowView)_vBuildingPremisesFunds[position])["other_premises_count"], CultureInfo.InvariantCulture);
+                {                    
+                    //var socialCount = Convert.ToDecimal(((DataRowView)_vBuildingPremisesFunds[position])["social_premises_count"], CultureInfo.InvariantCulture);
+                    //var specialCount = Convert.ToDecimal(((DataRowView)_vBuildingPremisesFunds[position])["special_premises_count"], CultureInfo.InvariantCulture);
+                    //var commercialCount = Convert.ToDecimal(((DataRowView)_vBuildingPremisesFunds[position])["commercial_premises_count"], CultureInfo.InvariantCulture);
+                    //var otherCount = Convert.ToDecimal(((DataRowView)_vBuildingPremisesFunds[position])["other_premises_count"], CultureInfo.InvariantCulture);
+                    var socialCount = _municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == id_building && s.Field<int>("id_fund_type") == 1).Count();
+                    var commercialCount = _municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == id_building && s.Field<int>("id_fund_type") == 2).Count();
+                    var specialCount = _municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == id_building && s.Field<int>("id_fund_type") == 3).Count();                   
+                    var otherCount = _municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == id_building && s.Field<int>("id_fund_type") == 4).Count();
                     numericUpDownSocialPremisesCount.Minimum = socialCount;
                     numericUpDownSpecialPremisesCount.Minimum = specialCount;
                     numericUpDownOtherPremisesCount.Minimum = otherCount;
@@ -152,13 +159,14 @@ namespace Registry.Viewport
                 {
                     var row = ((DataRowView) _vBuildingPremisesSumArea[position]);
                     var sumArea = Convert.ToDecimal((double)row["sum_area"], CultureInfo.InvariantCulture);
-                    var totalMunCount = Convert.ToDecimal((int)row["mun_premises_count"], CultureInfo.InvariantCulture);
+                    var totalMunCount =Convert.ToDecimal(_municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == id_building).Count());
+                    //var totalMunCount = Convert.ToDecimal((int)row["mun_premises_count"], CultureInfo.InvariantCulture);
                     //var totalPremisesCount = 
                     //    (from premisesRow in DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows()
                     //    where premisesRow.Field<int>("id_building") == (int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"]
                     //    group premisesRow by premisesRow.Field<int>("id_building") into gs
                     //    select gs.Count()).First();
-                    var totalPremisesCount = _buildings.Select().Rows.Find((int)row["id_building"]).Field<int>("num_apartments");
+                    var totalPremisesCount =Convert.ToDecimal(_buildings.Select().Rows.Find((int)row["id_building"]).Field<int>("num_apartments"));
 
                     if (totalPremisesCount > 0)
                     {
@@ -555,9 +563,10 @@ namespace Registry.Viewport
             _buildings = DataModel.GetInstance<BuildingsDataModel>();
 
             //Вычисляемые модели
-            _buildingsPremisesFunds = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelBuildingsPremisesFunds);
-            _buildingsCurrentFund = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelBuildingsCurrentFunds);
-            _buildingsPremisesSumArea = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelBuildingsPremisesSumArea);
+            _buildingsPremisesFunds = CalcDataModel.GetInstance<CalcDataModelBuildingsPremisesFunds>();
+            _buildingsCurrentFund = CalcDataModel.GetInstance<CalcDataModelBuildingsCurrentFunds>();
+            _buildingsPremisesSumArea = CalcDataModel.GetInstance<CalcDataModelBuildingsPremisesSumArea>();
+            _municipalPremises = CalcDataModel.GetInstance<CalcDataModelMunicipalPremises>();            
 
             //Ожидаем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
@@ -619,6 +628,12 @@ namespace Registry.Viewport
                 DataSource = _buildingsPremisesFunds.Select()
             };
 
+            _vMunicipalPremises = new BindingSource
+            {
+                DataMember = "municipal_premises_current_funds",
+                DataSource = _municipalPremises.Select()
+            };
+
             _vBuildingCurrentFund = new BindingSource
             {
                 DataMember = "buildings_current_funds",
@@ -653,7 +668,7 @@ namespace Registry.Viewport
             GeneralBindingSource.Filter += DynamicFilter;
             GeneralDataModel.Select().RowDeleted += BuildingViewport_RowDeleted;
             GeneralDataModel.Select().RowChanged += BuildingViewport_RowChanged;
-
+            
             _vRestrictionBuildingsAssoc = new BindingSource();
             _vRestrictionBuildingsAssoc.CurrentItemChanged += v_restrictionBuildingsAssoc_CurrentItemChanged;
             _vRestrictionBuildingsAssoc.DataMember = "buildings_restrictions_buildings_assoc";
