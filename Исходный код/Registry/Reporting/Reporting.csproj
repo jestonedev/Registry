@@ -55,9 +55,6 @@
     <Reference Include="VIBlend.WinForms.Utilities">
       <HintPath>..\..\VIBlend.WinForms.Utilities.dll</HintPath>
     </Reference>
-    <Reference Include="WeifenLuo.WinFormsUI.Docking">
-      <HintPath>..\..\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActPremiseExtInfoForm.cs">
@@ -174,6 +171,10 @@
     <ProjectReference Include="..\Settings\Settings.csproj">
       <Project>{A81032B6-05F8-4D34-8D01-4A268743E2D5}</Project>
       <Name>Settings</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WinFormsUI\WinFormsUI.csproj">
+      <Project>{c75532c4-765b-418e-b09b-46d36b2abdb1}</Project>
+      <Name>WinFormsUI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

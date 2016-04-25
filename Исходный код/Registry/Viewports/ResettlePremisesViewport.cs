@@ -14,6 +14,7 @@ using Registry.Viewport.Properties;
 using Registry.Viewport.SearchForms;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
+using System.Linq;
 
 namespace Registry.Viewport
 {
@@ -159,16 +160,16 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.PremisesDataModel);
-            kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
-            buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel);
-            premises_types = DataModel.GetInstance(DataModelType.PremisesTypesDataModel);
-            sub_premises = DataModel.GetInstance(DataModelType.SubPremisesDataModel);
+            GeneralDataModel = DataModel.GetInstance<PremisesDataModel>();
+            kladr = DataModel.GetInstance<KladrStreetsDataModel>();
+            buildings = DataModel.GetInstance<BuildingsDataModel>();
+            premises_types = DataModel.GetInstance<PremisesTypesDataModel>();
+            sub_premises = DataModel.GetInstance<SubPremisesDataModel>();
 
             if (way == ResettleEstateObjectWay.From)
-                resettle_premises = DataModel.GetInstance(DataModelType.ResettlePremisesFromAssocDataModel);
+                resettle_premises = DataModel.GetInstance<ResettlePremisesFromAssocDataModel>();
             else
-                resettle_premises = DataModel.GetInstance(DataModelType.ResettlePremisesToAssocDataModel);
+                resettle_premises = DataModel.GetInstance<ResettlePremisesToAssocDataModel>();
 
             // Ожидаем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
@@ -402,8 +403,8 @@ namespace Registry.Viewport
         {
             sync_views = false;
             dataGridView.EndEdit();
-            var resettlePremisesFromAssoc = DataModel.GetInstance(DataModelType.ResettlePremisesFromAssocDataModel);
-            var resettlePremisesToAssoc = DataModel.GetInstance(DataModelType.ResettlePremisesToAssocDataModel);
+            var resettlePremisesFromAssoc = DataModel.GetInstance<ResettlePremisesFromAssocDataModel>();
+            var resettlePremisesToAssoc = DataModel.GetInstance<ResettlePremisesToAssocDataModel>();
             resettlePremisesFromAssoc.EditingNewRecord = true;
             resettlePremisesToAssoc.EditingNewRecord = true;
             var list = ResettlePremisesFromViewport();
@@ -595,7 +596,7 @@ namespace Registry.Viewport
             base.ForceClose();
         }
 
-        public override bool HasAssocViewport(ViewportType viewportType)
+        public override bool HasAssocViewport<T>()
         {
             var reports = new List<ViewportType>
             {
@@ -605,17 +606,17 @@ namespace Registry.Viewport
                 ViewportType.FundsHistoryViewport,
                 ViewportType.TenancyListViewport
             };
-            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
+            return reports.Any(v => v.ToString() == typeof(T).Name) && (GeneralBindingSource.Position > -1);
         }
 
-        public override void ShowAssocViewport(ViewportType viewportType)
+        public override void ShowAssocViewport<T>()
         {
             if (GeneralBindingSource.Position == -1)
             {
                 MessageBox.Show(@"Не выбрано помещение", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport(MenuCallback, viewportType,
+            ShowAssocViewport<T>(MenuCallback, 
                 "id_premises = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"], CultureInfo.InvariantCulture),
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
                 ParentTypeEnum.Premises);

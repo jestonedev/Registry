@@ -29,7 +29,7 @@
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -55,7 +55,7 @@
     <ApplicationIcon>icon.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>false</SignAssembly>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>Registry.snk</AssemblyOriginatorKeyFile>
@@ -74,9 +74,6 @@
     <Reference Include="System.Security" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web.Services" />
-    <Reference Include="System.Windows.Forms.Ribbon35">
-      <HintPath>..\..\System.Windows.Forms.Ribbon35\System.Windows.Forms.Ribbon\bin\Release\System.Windows.Forms.Ribbon35.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
@@ -89,9 +86,6 @@
     </Reference>
     <Reference Include="VIBlend.WinForms.Utilities">
       <HintPath>..\..\VIBlend.WinForms.Utilities.dll</HintPath>
-    </Reference>
-    <Reference Include="WeifenLuo.WinFormsUI.Docking">
-      <HintPath>..\..\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
   </ItemGroup>
@@ -174,9 +168,17 @@
       <Project>{A81032B6-05F8-4D34-8D01-4A268743E2D5}</Project>
       <Name>Settings</Name>
     </ProjectReference>
+    <ProjectReference Include="..\System.Windows.Forms.Ribbon\System.Windows.Forms.Ribbon35.csproj">
+      <Project>{46a18a55-5ae8-49ce-91cd-c7421b642e7e}</Project>
+      <Name>System.Windows.Forms.Ribbon35</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Viewports\Viewports.csproj">
       <Project>{382C5ED0-7C1B-414D-AB01-54D42220DEC3}</Project>
       <Name>Viewports</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\WinFormsUI\WinFormsUI.csproj">
+      <Project>{c75532c4-765b-418e-b09b-46d36b2abdb1}</Project>
+      <Name>WinFormsUI</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

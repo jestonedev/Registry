@@ -7,7 +7,7 @@ using Registry.DataModels.DataModels;
 
 namespace Registry.Viewport
 {
-    public partial class SelectWarrantForm : Form
+    internal partial class SelectWarrantForm : Form
     {
         private DataModel warrants;
 
@@ -36,7 +36,7 @@ namespace Registry.Viewport
 
         private void SelectWarrantForm_Load(object sender, EventArgs e)
         {
-            warrants = DataModel.GetInstance(DataModelType.WarrantsDataModel);
+            warrants = DataModel.GetInstance<WarrantsDataModel>();
 
             v_warrants = new BindingSource();
             v_warrants.DataSource = warrants.Select();

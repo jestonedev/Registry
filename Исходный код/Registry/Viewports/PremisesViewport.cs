@@ -38,6 +38,7 @@ namespace Registry.Viewport
         private CalcDataModel premisesCurrentFund = null;
         private CalcDataModel premiseSubPremisesSumArea = null;
         private CalcDataModel subPremisesCurrentFund = null;
+        private CalcDataModel municipalPremisesSumArea = null;
         #endregion Models
 
         #region Views
@@ -126,6 +127,7 @@ namespace Registry.Viewport
 
         private void FiltersRebuild()
         {
+            var id_premises = (int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"];
             if (v_premisesCurrentFund != null)
             {
                 int position = -1;
@@ -145,7 +147,9 @@ namespace Registry.Viewport
                     position = v_premisesSubPremisesSumArea.Find("id_premises", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"]);
                 if (position != -1)
                 {
-                    decimal value = Convert.ToDecimal((double)((DataRowView)v_premisesSubPremisesSumArea[position])["sum_area"]);
+                    //decimal value = Convert.ToDecimal((double)((DataRowView)v_premisesSubPremisesSumArea[position])["sum_area"]);
+                    var temp = municipalPremisesSumArea.Select().AsEnumerable().Where(m => m.Field<int>("id_premises") == id_premises);
+                    decimal value = Convert.ToDecimal(municipalPremisesSumArea.Select().AsEnumerable().Where(m => m.Field<int>("id_premises") == id_premises).Sum(m => m.Field<double>("total_area")));
                     numericUpDownMunicipalArea.Minimum = value;
                     numericUpDownMunicipalArea.Maximum = value;
                     numericUpDownMunicipalArea.Value = value;
@@ -615,27 +619,28 @@ namespace Registry.Viewport
             dataGridViewRooms.AutoGenerateColumns = false;
             DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
 
-            GeneralDataModel = DataModel.GetInstance(DataModelType.PremisesDataModel);
-            kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
-            buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel);
-            premises_types = DataModel.GetInstance(DataModelType.PremisesTypesDataModel);
-            premises_kinds = DataModel.GetInstance(DataModelType.PremisesKindsDataModel);
-            sub_premises = DataModel.GetInstance(DataModelType.SubPremisesDataModel);
-            restrictions = DataModel.GetInstance(DataModelType.RestrictionsDataModel);
-            restrictionTypes = DataModel.GetInstance(DataModelType.RestrictionTypesDataModel);
-            restrictionPremisesAssoc = DataModel.GetInstance(DataModelType.RestrictionsPremisesAssocDataModel);
-            restrictionBuildingsAssoc = DataModel.GetInstance(DataModelType.RestrictionsBuildingsAssocDataModel);
-            ownershipRights = DataModel.GetInstance(DataModelType.OwnershipsRightsDataModel);
-            ownershipRightTypes = DataModel.GetInstance(DataModelType.OwnershipRightTypesDataModel);
-            ownershipPremisesAssoc = DataModel.GetInstance(DataModelType.OwnershipPremisesAssocDataModel);
-            ownershipBuildingsAssoc = DataModel.GetInstance(DataModelType.OwnershipBuildingsAssocDataModel);
-            fundTypes = DataModel.GetInstance(DataModelType.FundTypesDataModel);
-            object_states = DataModel.GetInstance(DataModelType.ObjectStatesDataModel); 
+            GeneralDataModel = DataModel.GetInstance<PremisesDataModel>();
+            kladr = DataModel.GetInstance<KladrStreetsDataModel>();
+            buildings = DataModel.GetInstance<BuildingsDataModel>();
+            premises_types = DataModel.GetInstance<PremisesTypesDataModel>();
+            premises_kinds = DataModel.GetInstance<PremisesKindsDataModel>();
+            sub_premises = DataModel.GetInstance<SubPremisesDataModel>();
+            restrictions = DataModel.GetInstance<RestrictionsDataModel>();
+            restrictionTypes = DataModel.GetInstance<RestrictionTypesDataModel>();
+            restrictionPremisesAssoc = DataModel.GetInstance<RestrictionsPremisesAssocDataModel>();
+            restrictionBuildingsAssoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>();
+            ownershipRights = DataModel.GetInstance<OwnershipsRightsDataModel>();
+            ownershipRightTypes = DataModel.GetInstance<OwnershipRightTypesDataModel>();
+            ownershipPremisesAssoc = DataModel.GetInstance<OwnershipPremisesAssocDataModel>();
+            ownershipBuildingsAssoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>();
+            fundTypes = DataModel.GetInstance<FundTypesDataModel>();
+            object_states = DataModel.GetInstance<ObjectStatesDataModel>(); 
 
             // Вычисляемые модели
-            premisesCurrentFund = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelPremisesCurrentFunds);
-            premiseSubPremisesSumArea = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelPremiseSubPremisesSumArea);
-            subPremisesCurrentFund = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelSubPremisesCurrentFunds);
+            premisesCurrentFund = CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>();
+            premiseSubPremisesSumArea = CalcDataModel.GetInstance<CalcDataModelPremiseSubPremisesSumArea>();
+            subPremisesCurrentFund = CalcDataModel.GetInstance<CalcDataModelSubPremisesCurrentFunds>();
+            municipalPremisesSumArea = CalcDataModel.GetInstance<CalcDataModelMunicipalPremises>();
 
             // Ожидаем дозагрузки, если это необходмо
             GeneralDataModel.Select();
@@ -1063,7 +1068,7 @@ namespace Registry.Viewport
             Close();
         }
 
-        public override bool HasAssocViewport(ViewportType viewportType)
+        public override bool HasAssocViewport<T>()
         {
             var reports = new List<ViewportType>
             {
@@ -1074,10 +1079,10 @@ namespace Registry.Viewport
                 ViewportType.TenancyListViewport,
                 ViewportType.PaymentsAccountsViewport
             };
-            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
+            return reports.Any(v => v.ToString() == typeof(T).Name) && (GeneralBindingSource.Position > -1);
         }
 
-        public override void ShowAssocViewport(ViewportType viewportType)
+        public override void ShowAssocViewport<T>()
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
@@ -1087,7 +1092,7 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport(MenuCallback, viewportType,
+            ShowAssocViewport<T>(MenuCallback, 
                 "id_premises = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"], CultureInfo.InvariantCulture),
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
                 ParentTypeEnum.Premises);
@@ -1390,24 +1395,24 @@ namespace Registry.Viewport
         {
             if (e.RowIndex == -1)
                 return;
-            if (HasAssocViewport(ViewportType.RestrictionListViewport))
-                ShowAssocViewport(ViewportType.RestrictionListViewport);
+            if (HasAssocViewport<RestrictionListViewport>())
+                ShowAssocViewport<RestrictionListViewport>();
         }
 
         private void dataGridViewOwnerships_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1)
                 return;
-            if (HasAssocViewport(ViewportType.OwnershipListViewport))
-                ShowAssocViewport(ViewportType.OwnershipListViewport);
+            if (HasAssocViewport<OwnershipListViewport>())
+                ShowAssocViewport<OwnershipListViewport>();
         }
 
         private void dataGridViewRooms_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1)
                 return;
-            if (HasAssocViewport(ViewportType.SubPremisesViewport))
-                ShowAssocViewport(ViewportType.SubPremisesViewport);
+            if (HasAssocViewport<SubPremisesViewport>())
+                ShowAssocViewport<SubPremisesViewport>();
         }
 
         private void textBoxPremisesNumber_KeyPress(object sender, KeyPressEventArgs e)

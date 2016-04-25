@@ -496,9 +496,9 @@ namespace Registry.Viewport
         {
             DockAreas = DockAreas.Document;
             dataGridView.AutoGenerateColumns = false;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.ClaimStatesDataModel);
-            claim_state_types = DataModel.GetInstance(DataModelType.ClaimStateTypesDataModel);
-            claim_state_types_relations = DataModel.GetInstance(DataModelType.ClaimStateTypesRelationsDataModel);
+            GeneralDataModel = DataModel.GetInstance<ClaimStatesDataModel>();
+            claim_state_types = DataModel.GetInstance<ClaimStateTypesDataModel>();
+            claim_state_types_relations = DataModel.GetInstance<ClaimStateTypesRelationsDataModel>();
 
             //Ожидаем дозагрузки, если это необходимо
             GeneralDataModel.Select();

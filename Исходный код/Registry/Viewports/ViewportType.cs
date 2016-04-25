@@ -33,6 +33,8 @@
         ResettleToBuildingsViewport,
         ResettleFromPremisesViewport,
         ResettleToPremisesViewport,
+        ResettleBuildingsViewport,
+        ResettlePremisesViewport,
         PaymentsAccountsViewport,
         PaymentsViewport
     }

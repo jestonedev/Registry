@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace Registry.Viewport.ModalEditors
 {
-    public partial class DeptPeriodEditor : Form
+    internal partial class DeptPeriodEditor : Form
     {
         public bool HasDeptPeriodFrom
         {

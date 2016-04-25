@@ -12,6 +12,7 @@ using Registry.Entities;
 using Registry.Viewport.SearchForms;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
+using System.Linq;
 
 namespace Registry.Viewport
 {
@@ -163,9 +164,9 @@ namespace Registry.Viewport
         {
             DockAreas = DockAreas.Document;
             dataGridView.AutoGenerateColumns = false;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.ResettleProcessesDataModel);
-            documents_residence = DataModel.GetInstance(DataModelType.DocumentsResidenceDataModel);
-            resettle_aggregate = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelResettleAggregated);
+            GeneralDataModel = DataModel.GetInstance<ResettleProcessesDataModel>();
+            documents_residence = DataModel.GetInstance<DocumentsResidenceDataModel>();
+            resettle_aggregate = CalcDataModel.GetInstance<CalcDataModelResettleAggregated>();
 
             // Ожидаем дозагрузки, если это необходимо
             GeneralDataModel.Select();
@@ -434,7 +435,7 @@ namespace Registry.Viewport
             Close();
         }
 
-        public override bool HasAssocViewport(ViewportType viewportType)
+        public override bool HasAssocViewport<T>()
         {
             var reports = new List<ViewportType>
             {
@@ -444,40 +445,21 @@ namespace Registry.Viewport
                 ViewportType.ResettleToBuildingsViewport,
                 ViewportType.ResettleToPremisesViewport
             };
-            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
+            return reports.Any(v => v.ToString() == typeof(T).Name) && (GeneralBindingSource.Position > -1);
         }
 
-        public override void ShowAssocViewport(ViewportType viewportType)
+        public override bool HasAssocViewport<T>(ResettleEstateObjectWay way)
         {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                return;
-            if (GeneralBindingSource.Position == -1)
+            var reports = new List<ViewportType>
             {
-                MessageBox.Show(@"Не выбран процесс переселения", @"Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                return;
-            }
-
-            switch (viewportType)
-            {               
-                case ViewportType.ResettlePersonsViewport:                   
-                    ShowAssocViewport(MenuCallback, viewportType,
-                        "id_process = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"], CultureInfo.InvariantCulture),
-                        ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
-                        ParentTypeEnum.ResettleProcess);
-                    break;
-                case ViewportType.ResettleFromBuildingsViewport:
-                case ViewportType.ResettleFromPremisesViewport:
-                    ShowAssocViewport(viewportType, ResettleEstateObjectWay.From);
-                    break;
-                case ViewportType.ResettleToBuildingsViewport:
-                case ViewportType.ResettleToPremisesViewport:
-                    ShowAssocViewport(viewportType, ResettleEstateObjectWay.To);
-                    break;
-            }
+                ViewportType.ResettlePersonsViewport,              
+                ViewportType.ResettleBuildingsViewport,
+                ViewportType.ResettlePremisesViewport
+            };
+            return reports.Any(v => v.ToString() == typeof(T).Name) && (GeneralBindingSource.Position > -1);
         }
 
-        private void ShowAssocViewport(ViewportType viewportType, ResettleEstateObjectWay way)
+        public override void ShowAssocViewport<T>(ResettleEstateObjectWay way)
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
@@ -489,28 +471,31 @@ namespace Registry.Viewport
             }
             if (MenuCallback == null)
                 throw new ViewportException("Не заданна ссылка на интерфейс menuCallback");
-            var viewport = ViewportFactory.CreateViewport(MenuCallback, viewportType);
-            viewport.StaticFilter = "id_process = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"], 
-                CultureInfo.InvariantCulture);
-            viewport.ParentRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row;
-            viewport.ParentType = ParentTypeEnum.ResettleProcess;
-            switch (viewportType)
-            {
-                case ViewportType.ResettleFromBuildingsViewport:
-                case ViewportType.ResettleToBuildingsViewport:
-                    ((ResettleBuildingsViewport)viewport).Way = way;
-                    break;
-                case ViewportType.ResettleFromPremisesViewport:
-                case ViewportType.ResettleToPremisesViewport:
-                    ((ResettlePremisesViewport)viewport).Way = way;
-                    break;
-                default:
-                    throw new ViewportException("Неподдерживаемый тип viewport");
+            if(typeof(T) == typeof(ResettlePersonsViewport))               
+            {                                 
+                    ShowAssocViewport<T>(MenuCallback,
+                        "id_process = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"], CultureInfo.InvariantCulture),
+                        ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
+                        ParentTypeEnum.ResettleProcess);
             }
-            if (((IMenuController) viewport).CanLoadData())
-                ((IMenuController) viewport).LoadData();
-            MenuCallback.AddViewport(viewport);
+            if (typeof(T) == typeof(ResettleBuildingsViewport) || typeof(T) == typeof(ResettlePremisesViewport))
+            {
+               
+                var viewport = ViewportFactory.CreateViewport<T>(MenuCallback);
+                viewport.StaticFilter = "id_process = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"],
+                    CultureInfo.InvariantCulture);
+                viewport.ParentRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row;
+                viewport.ParentType = ParentTypeEnum.ResettleProcess;
+                if (viewport is ResettleBuildingsViewport)
+                    ((ResettleBuildingsViewport)viewport).Way = way;
+                if (viewport is ResettlePremisesViewport)
+                    ((ResettlePremisesViewport)viewport).Way = way;
+                if (((IMenuController)viewport).CanLoadData())
+                    ((IMenuController)viewport).LoadData();
+                MenuCallback.AddViewport(viewport);   
+            }                          
         }
+       
 
         void resettles_aggregate_RefreshEvent(object sender, EventArgs e)
         {

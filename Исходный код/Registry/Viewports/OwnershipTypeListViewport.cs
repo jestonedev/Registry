@@ -102,7 +102,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.OwnershipRightTypesDataModel); 
+            GeneralDataModel = DataModel.GetInstance<OwnershipRightTypesDataModel>(); 
             GeneralDataModel.Select();
 
             GeneralBindingSource = new BindingSource

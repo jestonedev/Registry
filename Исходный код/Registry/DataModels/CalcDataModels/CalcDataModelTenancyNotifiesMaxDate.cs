@@ -16,7 +16,7 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.TenancyNotifiesDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance<TenancyNotifiesDataModel>().Select());
         }
 
         private static DataTable InitializeTable()
@@ -34,7 +34,7 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelTenancyNotifiesMaxDate");
             // Фильтруем удаленные строки
-            var tenancyNotifies = DataModel.GetInstance(DataModelType.TenancyNotifiesDataModel).FilterDeletedRows();
+            var tenancyNotifies = DataModel.GetInstance<TenancyNotifiesDataModel>().FilterDeletedRows();
             // Вычисляем агрегационную информацию
             var result = from tenancyNotifiesRow in tenancyNotifies
                          group tenancyNotifiesRow.Field<DateTime>("notify_date") by

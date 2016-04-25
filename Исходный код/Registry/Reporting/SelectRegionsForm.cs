@@ -19,7 +19,7 @@ namespace Registry.Reporting
         public SelectRegionsForm()
         {
             InitializeComponent();
-            regions = DataModel.GetInstance(DataModelType.KladrRegionsDataModel);
+            regions = DataModel.GetInstance<KladrRegionsDataModel>();
             v_regions = new BindingSource();
             v_regions.DataSource = regions.Select();
             v_regions.Sort = "region ASC";

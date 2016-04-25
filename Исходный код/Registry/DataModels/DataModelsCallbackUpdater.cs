@@ -11,7 +11,7 @@ using Settings;
 
 namespace Registry.DataModels
 {
-    public sealed class DataModelsCallbackUpdater
+    internal sealed class DataModelsCallbackUpdater
     {
         private static DataModelsCallbackUpdater _instance;
         private const string Query = @"SELECT id_record, `table`, id_key, field_name, field_new_value, operation_type 

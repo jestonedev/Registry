@@ -65,7 +65,7 @@ namespace Registry.Viewport
             snapshot_tenancy_sub_premises.Columns.Add("is_checked").DataType = typeof(bool);
             snapshot_tenancy_sub_premises.Columns.Add("rent_total_area").DataType = typeof(double);
 
-            tenancy_sub_premises = DataModel.GetInstance(DataModelType.TenancySubPremisesAssocDataModel);
+            tenancy_sub_premises = DataModel.GetInstance<TenancySubPremisesAssocDataModel>();
             tenancy_sub_premises.Select();
 
             var ds = DataModel.DataSet;
@@ -158,10 +158,10 @@ namespace Registry.Viewport
             {
                 if (!ViewportHelper.SubPremiseFundAndRentMatch(subPremises.IdObject.Value, (int)ParentRow["id_rent_type"]))
                 {
-                    var idPremises = (int)DataModel.GetInstance(DataModelType.SubPremisesDataModel).Select().Rows.Find(subPremises.IdObject.Value)["id_premises"];
+                    var idPremises = (int)DataModel.GetInstance<SubPremisesDataModel>().Select().Rows.Find(subPremises.IdObject.Value)["id_premises"];
                     if (!ViewportHelper.PremiseFundAndRentMatch(idPremises, (int)ParentRow["id_rent_type"]))
                     {
-                        var idBuilding = (int)DataModel.GetInstance(DataModelType.PremisesDataModel).Select().Rows.Find(idPremises)["id_building"];
+                        var idBuilding = (int)DataModel.GetInstance<PremisesDataModel>().Select().Rows.Find(idPremises)["id_building"];
                         if (!ViewportHelper.BuildingFundAndRentMatch(idBuilding, (int)ParentRow["id_rent_type"]) &&
                                     MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемой комнаты. Все равно продолжить сохранение?",
                                     "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) !=

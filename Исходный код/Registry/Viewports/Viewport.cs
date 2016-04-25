@@ -151,12 +151,12 @@ namespace Registry.Viewport
             throw new ViewportException("Не реализовано");
         }
 
-        protected virtual Viewport ShowAssocViewport(IMenuCallback menuCallback, ViewportType viewportType, 
-            string staticFilter, DataRow parentRow, ParentTypeEnum parentType)
+        protected virtual Viewport ShowAssocViewport<T>(IMenuCallback menuCallback, 
+            string staticFilter, DataRow parentRow, ParentTypeEnum parentType) where T : Viewport
         {
             if (menuCallback == null)
                 throw new ViewportException("Не заданна ссылка на интерфейс menuCallback");
-            var viewport = ViewportFactory.CreateViewport(menuCallback, viewportType);
+            var viewport = ViewportFactory.CreateViewport<T>(menuCallback);
             viewport.StaticFilter = staticFilter;
             viewport.ParentRow = parentRow;
             viewport.ParentType = parentType;
@@ -256,16 +256,25 @@ namespace Registry.Viewport
             return ((ParentRow != null) && ((ParentRow.RowState == DataRowState.Detached) || (ParentRow.RowState == DataRowState.Deleted)));
         }
 
-        public virtual void ShowAssocViewport(ViewportType viewportType)
+        public virtual void ShowAssocViewport<T>() where T : Viewport
         {
             throw new ViewportException("Не реализовано");
         }
 
-        public virtual bool HasAssocViewport(ViewportType viewportType)
+        public virtual void ShowAssocViewport<T>(ResettleEstateObjectWay way) where T : Viewport
+        {
+            throw new ViewportException("Не реализовано");
+        }
+
+        public virtual bool HasAssocViewport<T>() where T : Viewport
         {
             return false;
         }
 
+        public virtual bool HasAssocViewport<T>(ResettleEstateObjectWay way) where T : Viewport
+        {
+            return false;
+        }
         public virtual void GenerateReport(ReporterType reporterType)
         {
             throw new ViewportException("Не реализовано");

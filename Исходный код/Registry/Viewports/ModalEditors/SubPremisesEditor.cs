@@ -12,12 +12,12 @@ using Security;
 
 namespace Registry.Viewport
 {
-    public partial class SubPremisesEditor : Form
+    internal partial class SubPremisesEditor : Form
     {
         private ViewportState state = ViewportState.NewRowState;
         private SubPremise subPremise;
         private ParentTypeEnum parentType;
-        private DataModel sub_premises = DataModel.GetInstance(DataModelType.SubPremisesDataModel);
+        private DataModel sub_premises = DataModel.GetInstance<SubPremisesDataModel>();
         private DataModel object_states;
         private BindingSource v_object_states;
 
@@ -107,7 +107,7 @@ namespace Registry.Viewport
         public SubPremisesEditor()
         {
             InitializeComponent();
-            object_states = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
+            object_states = DataModel.GetInstance<ObjectStatesDataModel>();
             v_object_states = new BindingSource();
             v_object_states.DataSource = object_states.Select();
             comboBoxIdState.DataSource = v_object_states;

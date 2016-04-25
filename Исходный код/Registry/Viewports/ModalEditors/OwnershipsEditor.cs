@@ -10,12 +10,12 @@ using Security;
 
 namespace Registry.Viewport
 {
-    public partial class OwnershipsEditor : Form
+    internal partial class OwnershipsEditor : Form
     {
         private ViewportState state = ViewportState.NewRowState;
         private OwnershipRight ownershipRight;
         private ParentTypeEnum parentType;
-        private DataModel ownership_rights = DataModel.GetInstance(DataModelType.OwnershipsRightsDataModel);
+        private DataModel ownership_rights = DataModel.GetInstance<OwnershipsRightsDataModel>();
         private DataModel ownership_assoc;
         private DataModel ownership_right_types;
         private BindingSource v_ownership_right_types;
@@ -31,10 +31,10 @@ namespace Registry.Viewport
                 switch (value)
                 {
                     case ParentTypeEnum.Premises:
-                        ownership_assoc = DataModel.GetInstance(DataModelType.OwnershipPremisesAssocDataModel);
+                        ownership_assoc = DataModel.GetInstance<OwnershipPremisesAssocDataModel>();
                         break;
                     case ParentTypeEnum.Building:
-                        ownership_assoc = DataModel.GetInstance(DataModelType.OwnershipBuildingsAssocDataModel);
+                        ownership_assoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>();
                         break;
                     default:
                         throw new ViewportException("Неизвестный тип родительского объекта");
@@ -99,7 +99,7 @@ namespace Registry.Viewport
         public OwnershipsEditor()
         {
             InitializeComponent();
-            ownership_right_types = DataModel.GetInstance(DataModelType.OwnershipRightTypesDataModel);
+            ownership_right_types = DataModel.GetInstance<OwnershipRightTypesDataModel>();
             v_ownership_right_types = new BindingSource();
             v_ownership_right_types.DataSource = ownership_right_types.Select();
             comboBoxIdOwnershipType.DataSource = v_ownership_right_types;
@@ -175,10 +175,10 @@ namespace Registry.Viewport
                 switch (ParentType)
                 {
                     case ParentTypeEnum.Building:
-                        DataModel.GetInstance(DataModelType.OwnershipBuildingsAssocDataModel).Insert(assoc);
+                        DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Insert(assoc);
                         break;
                     case ParentTypeEnum.Premises:
-                        DataModel.GetInstance(DataModelType.OwnershipPremisesAssocDataModel).Insert(assoc);
+                        DataModel.GetInstance<OwnershipPremisesAssocDataModel>().Insert(assoc);
                         break;
                 }
                 ownership_rights.Select().Rows.Add(id_ownership_right, ownershipRight.IdOwnershipRightType, ownershipRight.Number, ownershipRight.Date, ownershipRight.Description);

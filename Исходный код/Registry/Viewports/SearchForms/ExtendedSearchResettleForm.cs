@@ -21,8 +21,8 @@ namespace Registry.Viewport.SearchForms
         {
             InitializeComponent();
 
-            DataModel.GetInstance(DataModelType.KladrStreetsDataModel).Select();
-            regions = DataModel.GetInstance(DataModelType.KladrRegionsDataModel);
+            DataModel.GetInstance<KladrStreetsDataModel>().Select();
+            regions = DataModel.GetInstance<KladrRegionsDataModel>();
 
             var ds = DataModel.DataSet;
 

@@ -186,18 +186,18 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.OwnershipsRightsDataModel);
-            _ownershipsRightsTypes = DataModel.GetInstance(DataModelType.OwnershipRightTypesDataModel);
+            GeneralDataModel = DataModel.GetInstance<OwnershipsRightsDataModel>();
+            _ownershipsRightsTypes = DataModel.GetInstance<OwnershipRightTypesDataModel>();
             // Дожидаемся дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
             _ownershipsRightsTypes.Select();
             switch (ParentType)
             {
                 case ParentTypeEnum.Premises:
-                    _ownershipAssoc = DataModel.GetInstance(DataModelType.OwnershipPremisesAssocDataModel);
+                    _ownershipAssoc = DataModel.GetInstance<OwnershipPremisesAssocDataModel>();
                     break;
                 case ParentTypeEnum.Building:
-                    _ownershipAssoc = DataModel.GetInstance(DataModelType.OwnershipBuildingsAssocDataModel);
+                    _ownershipAssoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>();
                     break;
                 default:
                     throw new ViewportException("Неизвестный тип родительского объекта");
@@ -355,10 +355,10 @@ namespace Registry.Viewport
                     switch (ParentType)
                     {
                         case ParentTypeEnum.Building:
-                            DataModel.GetInstance(DataModelType.OwnershipBuildingsAssocDataModel).Insert(assoc);
+                            DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Insert(assoc);
                             break;
                         case ParentTypeEnum.Premises:
-                            DataModel.GetInstance(DataModelType.OwnershipPremisesAssocDataModel).Insert(assoc);
+                            DataModel.GetInstance<OwnershipPremisesAssocDataModel>().Insert(assoc);
                             break;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_ownership_right"] = idOwnershipRight;

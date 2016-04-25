@@ -21,8 +21,8 @@ namespace Registry.DataModels
         public static IEnumerable<int> BuildingIdsBySnp(string[] snp, Func<DataRow, bool> condition)
         {
             var tenancyBuildingsAssoc =
-                DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel).FilterDeletedRows();
-            var tenancyPersons = DataModel.GetInstance(DataModelType.TenancyPersonsDataModel).FilterDeletedRows();
+                DataModel.GetInstance<TenancyBuildingsAssocDataModel>().FilterDeletedRows();
+            var tenancyPersons = DataModel.GetInstance<TenancyPersonsDataModel>().FilterDeletedRows();
             return
             (from tenancyBuildingsAssocRow in tenancyBuildingsAssoc
              join tenancyPersonsRow in tenancyPersons
@@ -39,8 +39,8 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> PremisesIdsBySnp(string[] snp, Func<DataRow, bool> condition)
         {
-            var tenancyPremisesAssoc = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).FilterDeletedRows();
-            var tenancyPersons = DataModel.GetInstance(DataModelType.TenancyPersonsDataModel).FilterDeletedRows();
+            var tenancyPremisesAssoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>().FilterDeletedRows();
+            var tenancyPersons = DataModel.GetInstance<TenancyPersonsDataModel>().FilterDeletedRows();
             return
             (from tenancyPremisesAssocRow in tenancyPremisesAssoc
              join tenancyPersonsRow in tenancyPersons
@@ -57,7 +57,7 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> TenancyProcessIdsBySnp(string[] snp, Func<DataRow, bool> condition)
         {
-            var tenancyPersons = DataModel.GetInstance(DataModelType.TenancyPersonsDataModel).FilterDeletedRows();
+            var tenancyPersons = DataModel.GetInstance<TenancyPersonsDataModel>().FilterDeletedRows();
 
             return
             (from tenancyPersonsRow in tenancyPersons
@@ -73,7 +73,7 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> ResettleProcessIdsBySnp(string[] snp)
         {
-            var resettlePersons = DataModel.GetInstance(DataModelType.ResettlePersonsDataModel).FilterDeletedRows();
+            var resettlePersons = DataModel.GetInstance<ResettlePersonsDataModel>().FilterDeletedRows();
             return
             (from resettlePersonsRow in resettlePersons
              where ((snp.Any()) && (resettlePersonsRow.Field<string>("surname") != null &&
@@ -87,8 +87,8 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> BuildingIDsByAddress(string[] addressParts)
         {
-            var buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel).FilterDeletedRows();
-            var kladrStreets = DataModel.GetInstance(DataModelType.KladrStreetsDataModel).FilterDeletedRows();
+            var buildings = DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows();
+            var kladrStreets = DataModel.GetInstance<KladrStreetsDataModel>().FilterDeletedRows();
             return (from buildingRow in buildings
                     join kladrRow in kladrStreets
                     on buildingRow.Field<string>("id_street") equals kladrRow.Field<string>("id_street")
@@ -102,9 +102,9 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> PremiseIDsByAddress(string[] addressParts)
         {
-            var buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel).FilterDeletedRows();
-            var kladrStreets = DataModel.GetInstance(DataModelType.KladrStreetsDataModel).FilterDeletedRows();
-            var premises = DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows();
+            var buildings = DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows();
+            var kladrStreets = DataModel.GetInstance<KladrStreetsDataModel>().FilterDeletedRows();
+            var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
             return (from premisesRow in premises
                     join buildingRow in buildings
                     on premisesRow.Field<int>("id_building") equals buildingRow.Field<int>("id_building")
@@ -125,13 +125,13 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> TenancyProcessIDsByAddress(string[] addressParts)
         {
-            var kladrStreets = DataModel.GetInstance(DataModelType.KladrStreetsDataModel).FilterDeletedRows();
-            var buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel).FilterDeletedRows();
-            var premises = DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows();
-            var subPremises = DataModel.GetInstance(DataModelType.SubPremisesDataModel).FilterDeletedRows();
-            var tenancyBuildingsAssoc = DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel).FilterDeletedRows();
-            var tenancyPremisesAssoc = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).FilterDeletedRows();
-            var tenancySubPremisesAssoc = DataModel.GetInstance(DataModelType.TenancySubPremisesAssocDataModel).FilterDeletedRows();
+            var kladrStreets = DataModel.GetInstance<KladrStreetsDataModel>().FilterDeletedRows();
+            var buildings = DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows();
+            var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
+            var subPremises = DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows();
+            var tenancyBuildingsAssoc = DataModel.GetInstance<TenancyBuildingsAssocDataModel>().FilterDeletedRows();
+            var tenancyPremisesAssoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>().FilterDeletedRows();
+            var tenancySubPremisesAssoc = DataModel.GetInstance<TenancySubPremisesAssocDataModel>().FilterDeletedRows();
             var tenancyBuildings = from tenancyBuildingsRow in tenancyBuildingsAssoc
                                     join buildingsRow in buildings
                                     on tenancyBuildingsRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
@@ -185,19 +185,19 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> ResettleProcessIDsByAddress(string[] addressParts, ResettleEstateObjectWay way)
         {
-            var kladrStreets = DataModel.GetInstance(DataModelType.KladrStreetsDataModel).FilterDeletedRows();
-            var buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel).FilterDeletedRows();
-            var premises = DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows();
-            var subPremises = DataModel.GetInstance(DataModelType.SubPremisesDataModel).FilterDeletedRows();
+            var kladrStreets = DataModel.GetInstance<KladrStreetsDataModel>().FilterDeletedRows();
+            var buildings = DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows();
+            var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
+            var subPremises = DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows();
             var resettleBuildingsAssoc = way == ResettleEstateObjectWay.From ? 
-                DataModel.GetInstance(DataModelType.ResettleBuildingsFromAssocDataModel).FilterDeletedRows() :
-                DataModel.GetInstance(DataModelType.ResettleBuildingsToAssocDataModel).FilterDeletedRows();
+                DataModel.GetInstance<ResettleBuildingsFromAssocDataModel>().FilterDeletedRows() :
+                DataModel.GetInstance<ResettleBuildingsToAssocDataModel>().FilterDeletedRows();
             var resettlePremisesAssoc = way == ResettleEstateObjectWay.From ?
-                DataModel.GetInstance(DataModelType.ResettlePremisesFromAssocDataModel).FilterDeletedRows() :
-                DataModel.GetInstance(DataModelType.ResettlePremisesToAssocDataModel).FilterDeletedRows();
+                DataModel.GetInstance<ResettlePremisesFromAssocDataModel>().FilterDeletedRows() :
+                DataModel.GetInstance<ResettlePremisesToAssocDataModel>().FilterDeletedRows();
             var resettleSubPremisesAssoc = way == ResettleEstateObjectWay.From ?
-                DataModel.GetInstance(DataModelType.ResettleSubPremisesFromAssocDataModel).FilterDeletedRows() :
-                DataModel.GetInstance(DataModelType.ResettleSubPremisesToAssocDataModel).FilterDeletedRows();
+                DataModel.GetInstance<ResettleSubPremisesFromAssocDataModel>().FilterDeletedRows() :
+                DataModel.GetInstance<ResettleSubPremisesToAssocDataModel>().FilterDeletedRows();
             var resettleBuildings = from resettleBuildingsRow in resettleBuildingsAssoc
                                     join buildingsRow in buildings
                                     on resettleBuildingsRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
@@ -252,12 +252,12 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> TenancyProcessIDsByCondition(Func<DataRow, bool> condition, ConditionType conditionType)
         {
-            var buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel).FilterDeletedRows();
-            var premises = DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows();
-            var subPremises = DataModel.GetInstance(DataModelType.SubPremisesDataModel).FilterDeletedRows();
-            var tenancyBuildingsAssoc = DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel).FilterDeletedRows();
-            var tenancyPremisesAssoc = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).FilterDeletedRows();
-            var tenancySubPremisesAssoc = DataModel.GetInstance(DataModelType.TenancySubPremisesAssocDataModel).FilterDeletedRows();
+            var buildings = DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows();
+            var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
+            var subPremises = DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows();
+            var tenancyBuildingsAssoc = DataModel.GetInstance<TenancyBuildingsAssocDataModel>().FilterDeletedRows();
+            var tenancyPremisesAssoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>().FilterDeletedRows();
+            var tenancySubPremisesAssoc = DataModel.GetInstance<TenancySubPremisesAssocDataModel>().FilterDeletedRows();
             var tenancyBuildings = from tenancyBuildingsRow in tenancyBuildingsAssoc
                                     join buildingsRow in buildings
                                     on tenancyBuildingsRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
@@ -285,18 +285,18 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> ResettleProcessIDsByCondition(Func<DataRow, bool> condition, ConditionType conditionType, ResettleEstateObjectWay way)
         {
-            var buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel).FilterDeletedRows();
-            var premises = DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows();
-            var subPremises = DataModel.GetInstance(DataModelType.SubPremisesDataModel).FilterDeletedRows();
+            var buildings = DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows();
+            var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
+            var subPremises = DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows();
             var resettleBuildingsAssoc = way == ResettleEstateObjectWay.From ?
-                DataModel.GetInstance(DataModelType.ResettleBuildingsFromAssocDataModel).FilterDeletedRows() :
-                DataModel.GetInstance(DataModelType.ResettleBuildingsToAssocDataModel).FilterDeletedRows();
+                DataModel.GetInstance<ResettleBuildingsFromAssocDataModel>().FilterDeletedRows() :
+                DataModel.GetInstance<ResettleBuildingsToAssocDataModel>().FilterDeletedRows();
             var resettlePremisesAssoc = way == ResettleEstateObjectWay.From ?
-                DataModel.GetInstance(DataModelType.ResettlePremisesFromAssocDataModel).FilterDeletedRows() :
-                DataModel.GetInstance(DataModelType.ResettlePremisesToAssocDataModel).FilterDeletedRows();
+                DataModel.GetInstance<ResettlePremisesFromAssocDataModel>().FilterDeletedRows() :
+                DataModel.GetInstance<ResettlePremisesToAssocDataModel>().FilterDeletedRows();
             var resettleSubPremisesAssoc = way == ResettleEstateObjectWay.From ?
-                DataModel.GetInstance(DataModelType.ResettleSubPremisesFromAssocDataModel).FilterDeletedRows() :
-                DataModel.GetInstance(DataModelType.ResettleSubPremisesToAssocDataModel).FilterDeletedRows();
+                DataModel.GetInstance<ResettleSubPremisesFromAssocDataModel>().FilterDeletedRows() :
+                DataModel.GetInstance<ResettleSubPremisesToAssocDataModel>().FilterDeletedRows();
             var resettleBuildings = from resettleBuildingsRow in resettleBuildingsAssoc
                                     join buildingsRow in buildings
                                     on resettleBuildingsRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
@@ -324,7 +324,7 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> TenancyProcessIDsByBuildingId(int id)
         {
-            var tenancyBuildingsAssoc = DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel).FilterDeletedRows();
+            var tenancyBuildingsAssoc = DataModel.GetInstance<TenancyBuildingsAssocDataModel>().FilterDeletedRows();
             var tenancyBuildings = from tenancyBuildingsRow in tenancyBuildingsAssoc
                                     where tenancyBuildingsRow.Field<int?>("id_building") == id
                                     select tenancyBuildingsRow.Field<int>("id_process");
@@ -333,7 +333,7 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> TenancyProcessIDsByPremisesId(int id)
         {
-            var tenancyPremisesAssoc = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).FilterDeletedRows();
+            var tenancyPremisesAssoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>().FilterDeletedRows();
             var tenancyPremises = from tenancyPremisesRow in tenancyPremisesAssoc
                                     where tenancyPremisesRow.Field<int?>("id_premises") == id
                                     select tenancyPremisesRow.Field<int>("id_process");
@@ -342,7 +342,7 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> TenancyProcessIDsBySubPremisesId(int id)
         {
-            var tenancySubPremisesAssoc = DataModel.GetInstance(DataModelType.TenancySubPremisesAssocDataModel).FilterDeletedRows();
+            var tenancySubPremisesAssoc = DataModel.GetInstance<TenancySubPremisesAssocDataModel>().FilterDeletedRows();
             var tenancySubPremises = from tenancySubPremisesRow in tenancySubPremisesAssoc
                                    where tenancySubPremisesRow.Field<int?>("id_sub_premises") == id
                                    select tenancySubPremisesRow.Field<int>("id_process");
@@ -351,8 +351,8 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> BuildingIDsByRegistrationNumber(string number)
         {
-            var tenancyBuildingsAssoc = DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel).FilterDeletedRows();
-            var tenancyProcesses = DataModel.GetInstance(DataModelType.TenancyProcessesDataModel).FilterDeletedRows();
+            var tenancyBuildingsAssoc = DataModel.GetInstance<TenancyBuildingsAssocDataModel>().FilterDeletedRows();
+            var tenancyProcesses = DataModel.GetInstance<TenancyProcessesDataModel>().FilterDeletedRows();
             return (from tenancyProcessesRow in tenancyProcesses
                     join tenancyBuildingsAssocRow in tenancyBuildingsAssoc
                     on tenancyProcessesRow.Field<int>("id_process") equals tenancyBuildingsAssocRow.Field<int>("id_process")
@@ -362,8 +362,8 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> PremiseIDsByRegistrationNumber(string number)
         {
-            var tenancyPremisesAssoc = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).FilterDeletedRows();
-            var tenancyProcesses = DataModel.GetInstance(DataModelType.TenancyProcessesDataModel).FilterDeletedRows();
+            var tenancyPremisesAssoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>().FilterDeletedRows();
+            var tenancyProcesses = DataModel.GetInstance<TenancyProcessesDataModel>().FilterDeletedRows();
             return (from tenancyProcessesRow in tenancyProcesses
                     join tenancyPremisesAssocRow in tenancyPremisesAssoc
                     on tenancyProcessesRow.Field<int>("id_process") equals tenancyPremisesAssocRow.Field<int>("id_process")
@@ -378,20 +378,20 @@ namespace Registry.DataModels
             var premisesFunds = CalcDataModelPremisesCurrentFunds.GetInstance().Select();
             var subPremisesFunds = CalcDataModelSubPremisesCurrentFunds.GetInstance().Select();
             var premisesIds = from subPremisesFundsRow in subPremisesFunds.AsEnumerable()
-                              join subPremisesRow in DataModel.GetInstance(DataModelType.SubPremisesDataModel).FilterDeletedRows()
+                              join subPremisesRow in DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows()
                               on subPremisesFundsRow.Field<int>("id_sub_premises") equals subPremisesRow.Field<int>("id_sub_premises")
                               where new [] { 1, 4, 5, 9, 11 }.Contains(subPremisesRow.Field<int>("id_state")) &&
                               subPremisesFundsRow.Field<int>("id_fund_type") == idFund
                               select subPremisesRow.Field<int>("id_premises");
             var buildingsIds = from premisesFundsRow in premisesFunds.AsEnumerable()
-                               join premisesRow in DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows()
+                               join premisesRow in DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows()
                                on premisesFundsRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")
                                where new [] { 1, 4, 5, 9, 11 }.Contains(premisesRow.Field<int>("id_state")) &&
                                 premisesFundsRow.Field<int>("id_fund_type") == idFund ||
                                 (premisesFundsRow.Field<int>("id_fund_type") == 4 && premisesIds.Contains(premisesFundsRow.Field<int>("id_premises")))
                                select premisesRow.Field<int>("id_building");
             return (from buildingsFundsRow in buildingsFunds.AsEnumerable()
-                    join buildingsRow in DataModel.GetInstance(DataModelType.BuildingsDataModel).FilterDeletedRows()
+                    join buildingsRow in DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows()
                               on buildingsFundsRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
                     where new [] { 1, 4, 5, 9, 11 }.Contains(buildingsRow.Field<int>("id_state")) && 
                     buildingsFundsRow.Field<int>("id_fund_type") == idFund ||
@@ -405,13 +405,13 @@ namespace Registry.DataModels
             var premisesFunds = CalcDataModelPremisesCurrentFunds.GetInstance().Select();
             var subPremisesFunds = CalcDataModelSubPremisesCurrentFunds.GetInstance().Select();
             var premisesIds = from subPremisesFundsRow in subPremisesFunds.AsEnumerable()
-                              join subPremisesRow in DataModel.GetInstance(DataModelType.SubPremisesDataModel).FilterDeletedRows()
+                              join subPremisesRow in DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows()
                               on subPremisesFundsRow.Field<int>("id_sub_premises") equals subPremisesRow.Field<int>("id_sub_premises")
                               where new [] { 1, 4, 5, 9, 11 }.Contains(subPremisesRow.Field<int>("id_state")) &&
                               subPremisesFundsRow.Field<int>("id_fund_type") == idFund
                               select subPremisesRow.Field<int>("id_premises");
             return (from premisesFundsRow in premisesFunds.AsEnumerable()
-                    join premisesRow in DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows()
+                    join premisesRow in DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows()
                                on premisesFundsRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")
                     where new [] { 1, 4, 5, 9, 11 }.Contains(premisesRow.Field<int>("id_state")) && 
                         premisesFundsRow.Field<int>("id_fund_type") == idFund ||
@@ -421,7 +421,7 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> BuildingIDsByRegion(string region)
         {
-            var buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel).FilterDeletedRows();
+            var buildings = DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows();
             return (from buildingRow in buildings
                     where (buildingRow.Field<string>("id_street").StartsWith(region, StringComparison.Ordinal))
                     select buildingRow.Field<int>("id_building"));
@@ -429,7 +429,7 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> BuildingIDsByStreet(string street)
         {
-            var buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel).FilterDeletedRows();
+            var buildings = DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows();
             return (from buildingRow in buildings
                     where (buildingRow.Field<string>("id_street") == street)
                     select buildingRow.Field<int>("id_building"));
@@ -437,7 +437,7 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> BuildingIDsByHouse(string house)
         {
-            var buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel).FilterDeletedRows();
+            var buildings = DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows();
             return (from buildingRow in buildings
                     where (buildingRow.Field<string>("house").ToUpper().Contains(house.ToUpper()))
                     select buildingRow.Field<int>("id_building"));
@@ -445,8 +445,8 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> ClaimStateTypeIdsByNextStateType(int nextStateType)
         {
-            var claimStateTypes = DataModel.GetInstance(DataModelType.ClaimStateTypesDataModel).FilterDeletedRows();
-            var claimStateTypeRelations = DataModel.GetInstance(DataModelType.ClaimStateTypesRelationsDataModel).FilterDeletedRows();
+            var claimStateTypes = DataModel.GetInstance<ClaimStateTypesDataModel>().FilterDeletedRows();
+            var claimStateTypeRelations = DataModel.GetInstance<ClaimStateTypesRelationsDataModel>().FilterDeletedRows();
             return (from claimStateTypesRow in claimStateTypes
                     join claimStateTypesRelRow in claimStateTypeRelations
                     on claimStateTypesRow.Field<int>("id_state_type") equals claimStateTypesRelRow.Field<int>("id_state_from")
@@ -457,8 +457,8 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> ClaimStateTypeIdsByPrevStateType(int prevStateType)
         {
-            var claimStateTypes = DataModel.GetInstance(DataModelType.ClaimStateTypesDataModel).FilterDeletedRows();
-            var claimStateTypeRelations = DataModel.GetInstance(DataModelType.ClaimStateTypesRelationsDataModel).FilterDeletedRows();
+            var claimStateTypes = DataModel.GetInstance<ClaimStateTypesDataModel>().FilterDeletedRows();
+            var claimStateTypeRelations = DataModel.GetInstance<ClaimStateTypesRelationsDataModel>().FilterDeletedRows();
             return (from claimStateTypesRow in claimStateTypes
                     join claimStateTypesRelRow in claimStateTypeRelations
                     on claimStateTypesRow.Field<int>("id_state_type") equals claimStateTypesRelRow.Field<int>("id_state_from")
@@ -468,7 +468,7 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> ClaimStateTypeIdsByNextAndPrevStateTypes(int nextStateType, int prevStateType)
         {
-            var claimStateTypeRelations = DataModel.GetInstance(DataModelType.ClaimStateTypesRelationsDataModel).FilterDeletedRows();
+            var claimStateTypeRelations = DataModel.GetInstance<ClaimStateTypesRelationsDataModel>().FilterDeletedRows();
             var fromStates = from claimStateTypesRelRow in claimStateTypeRelations
                               where claimStateTypesRelRow.Field<int>("id_state_from") == prevStateType
                               select claimStateTypesRelRow.Field<int>("id_state_to");
@@ -480,7 +480,7 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> ClaimStartStateTypeIds()
         {
-            var claimStateTypes = DataModel.GetInstance(DataModelType.ClaimStateTypesDataModel).FilterDeletedRows();
+            var claimStateTypes = DataModel.GetInstance<ClaimStateTypesDataModel>().FilterDeletedRows();
             return (from claimStateTypesRow in claimStateTypes
                     where Convert.ToBoolean(claimStateTypesRow.Field<object>("is_start_state_type"), CultureInfo.InvariantCulture)
                     select claimStateTypesRow.Field<int>("id_state_type"));
@@ -488,7 +488,7 @@ namespace Registry.DataModels
     
         public static bool TenancyProcessHasTenant(int idProcess)
         {
-            var persons = DataModel.GetInstance(DataModelType.TenancyPersonsDataModel).FilterDeletedRows();
+            var persons = DataModel.GetInstance<TenancyPersonsDataModel>().FilterDeletedRows();
             return (from personsRow in persons
                     where (personsRow.Field<int?>("id_kinship") == 1) && (personsRow.Field<int>("id_process") == idProcess
                         && (personsRow.Field<DateTime?>("exclude_date") == null))
@@ -497,7 +497,7 @@ namespace Registry.DataModels
 
         public static int TenancyAgreementsForProcess(int idProcess)
         {
-            var agreements = DataModel.GetInstance(DataModelType.TenancyAgreementsDataModel).FilterDeletedRows();
+            var agreements = DataModel.GetInstance<TenancyAgreementsDataModel>().FilterDeletedRows();
             return (from agreementsRow in agreements
                     where agreementsRow.Field<int>("id_process") == idProcess
                     select agreementsRow).Count();
@@ -505,7 +505,7 @@ namespace Registry.DataModels
 
         public static int BuildingsDuplicateCount(Building building)
         {
-            var buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel).FilterDeletedRows();
+            var buildings = DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows();
             return (from buildingsRow in buildings
                     where buildingsRow.Field<string>("id_street") == building.IdStreet &&
                           buildingsRow.Field<string>("house") == building.House &&
@@ -515,7 +515,7 @@ namespace Registry.DataModels
 
         public static int PremisesDuplicateCount(Premise premise)
         {
-            var premises = DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows();
+            var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
             return (from premisesRow in premises
                     where premisesRow.Field<int>("id_building") == premise.IdBuilding &&
                           premisesRow.Field<string>("premises_num") == premise.PremisesNum &&
@@ -525,7 +525,7 @@ namespace Registry.DataModels
 
         public static int TenancyProcessesDuplicateCount(TenancyProcess process)
         {
-            var tenancyProcesses = DataModel.GetInstance(DataModelType.TenancyProcessesDataModel).FilterDeletedRows();
+            var tenancyProcesses = DataModel.GetInstance<TenancyProcessesDataModel>().FilterDeletedRows();
             return (from tenancyProcessesRow in tenancyProcesses
                     where tenancyProcessesRow.Field<string>("registration_num") == process.RegistrationNum &&
                           tenancyProcessesRow.Field<int>("id_process") != process.IdProcess
@@ -536,9 +536,9 @@ namespace Registry.DataModels
         {
             if (entity == EntityType.Building)
             {
-                var buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel).FilterDeletedRows();
-                var premises = DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows();
-                var subPremises = DataModel.GetInstance(DataModelType.SubPremisesDataModel).FilterDeletedRows();
+                var buildings = DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows();
+                var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
+                var subPremises = DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows();
                 var result = from buildingsRow in buildings
                              join premisesRow in premises
                              on buildingsRow.Field<int>("id_building") equals premisesRow.Field<int>("id_building") into bp
@@ -553,8 +553,8 @@ namespace Registry.DataModels
             }
             else
             {
-                var premises = DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows();
-                var subPremises = DataModel.GetInstance(DataModelType.SubPremisesDataModel).FilterDeletedRows();
+                var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
+                var subPremises = DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows();
                 var result = from premisesRow in premises
                              join subPremisesRow in subPremises
                              on premisesRow.Field<int>("id_premises") equals subPremisesRow.Field<int>("id_premises") into ps
@@ -571,9 +571,9 @@ namespace Registry.DataModels
             {
                 case EntityType.Building:
                 {
-                    var buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel).FilterDeletedRows();
-                    var premises = DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows();
-                    var subPremises = DataModel.GetInstance(DataModelType.SubPremisesDataModel).FilterDeletedRows();
+                    var buildings = DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows();
+                    var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
+                    var subPremises = DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows();
                     var mBuilding = (from buildingRow in buildings
                         where buildingRow.Field<int>("id_building") == id &&
                               states.Contains(buildingRow.Field<int>("id_state"))
@@ -592,8 +592,8 @@ namespace Registry.DataModels
                 }
                 case EntityType.Premise:
                 {
-                    var premises = DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows();
-                    var subPremises = DataModel.GetInstance(DataModelType.SubPremisesDataModel).FilterDeletedRows();
+                    var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
+                    var subPremises = DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows();
                     var mPremises = (from premisesRow in premises
                         where premisesRow.Field<int>("id_premises") == id &&
                               states.Contains(premisesRow.Field<int>("id_state"))
@@ -606,7 +606,7 @@ namespace Registry.DataModels
                 }
                 case EntityType.SubPremise:
                 {
-                    var subPremises = DataModel.GetInstance(DataModelType.SubPremisesDataModel).FilterDeletedRows();
+                    var subPremises = DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows();
                     return (from subPremisesRow in subPremises
                         where subPremisesRow.Field<int>("id_sub_premises") == id &&
                               states.Contains(subPremisesRow.Field<int>("id_state"))
@@ -629,8 +629,8 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> DemolishedBuildingIDs()
         {
-            var ownershipRights = DataModel.GetInstance(DataModelType.OwnershipsRightsDataModel).FilterDeletedRows();
-            var ownershipBuildingdsAssoc = DataModel.GetInstance(DataModelType.OwnershipBuildingsAssocDataModel).FilterDeletedRows();
+            var ownershipRights = DataModel.GetInstance<OwnershipsRightsDataModel>().FilterDeletedRows();
+            var ownershipBuildingdsAssoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().FilterDeletedRows();
             return from ownershipBuildingsAssocRow in ownershipBuildingdsAssoc
                    join ownershipRightsRow in ownershipRights
                    on ownershipBuildingsAssocRow.Field<int>("id_ownership_right") equals ownershipRightsRow.Field<int>("id_ownership_right")
@@ -640,8 +640,8 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> DemolishedPremisesIDs()
         {
-            var ownershipRights = DataModel.GetInstance(DataModelType.OwnershipsRightsDataModel).FilterDeletedRows();
-            var ownershipPremisesAssoc = DataModel.GetInstance(DataModelType.OwnershipPremisesAssocDataModel).FilterDeletedRows();
+            var ownershipRights = DataModel.GetInstance<OwnershipsRightsDataModel>().FilterDeletedRows();
+            var ownershipPremisesAssoc = DataModel.GetInstance<OwnershipPremisesAssocDataModel>().FilterDeletedRows();
             return from ownershipPremisesAssocRow in ownershipPremisesAssoc
                    join ownershipRightsRow in ownershipRights
                    on ownershipPremisesAssocRow.Field<int>("id_ownership_right") equals ownershipRightsRow.Field<int>("id_ownership_right")
@@ -651,8 +651,8 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> BuildingIDsByOwnershipType(int idOwnershipType)
         {
-            var ownershipRights = DataModel.GetInstance(DataModelType.OwnershipsRightsDataModel).FilterDeletedRows();
-            var ownershipBuildingdsAssoc = DataModel.GetInstance(DataModelType.OwnershipBuildingsAssocDataModel).FilterDeletedRows();
+            var ownershipRights = DataModel.GetInstance<OwnershipsRightsDataModel>().FilterDeletedRows();
+            var ownershipBuildingdsAssoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().FilterDeletedRows();
             // Если используется непользовательское ограничение "Аварийное", то не выводить здания еще и снесеные
             var demolishedBuildings = DemolishedBuildingIDs();
             return from ownershipRightsRow in ownershipRights
@@ -665,9 +665,9 @@ namespace Registry.DataModels
 
         public static IEnumerable<int> PremiseIDsByOwnershipType(int idOwnershipType)
         {
-            var ownershipRights = DataModel.GetInstance(DataModelType.OwnershipsRightsDataModel).FilterDeletedRows();
-            var ownershipPremisesAssoc = DataModel.GetInstance(DataModelType.OwnershipPremisesAssocDataModel).FilterDeletedRows();
-            var premises = DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows();
+            var ownershipRights = DataModel.GetInstance<OwnershipsRightsDataModel>().FilterDeletedRows();
+            var ownershipPremisesAssoc = DataModel.GetInstance<OwnershipPremisesAssocDataModel>().FilterDeletedRows();
+            var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
             var buildingdIds = BuildingIDsByOwnershipType(idOwnershipType);
             // Если используется ограничение "Аварийное", то не выводить помещения, если они или их здание имеют ограничение "Снесено"
             var demolishedPremises = DemolishedPremisesIDs();
@@ -698,7 +698,7 @@ namespace Registry.DataModels
         /// <returns>Перечень объектов</returns>
         public static IEnumerable<RestrictionObjectAssoc> ObjectIDsExcludedFromMunicipal(IEnumerable<DataRow> objectAssocDataRows, EntityType entity)
         {
-            var restrictions = DataModel.GetInstance(DataModelType.RestrictionsDataModel).FilterDeletedRows();
+            var restrictions = DataModel.GetInstance<RestrictionsDataModel>().FilterDeletedRows();
             string fieldName = null;
             switch (entity)
             {
@@ -749,7 +749,7 @@ namespace Registry.DataModels
         /// <returns>Перечень объектов</returns>
         public static IEnumerable<RestrictionObjectAssoc> ObjectIDsIncludedIntoMunicipal(IEnumerable<DataRow> objectAssocDataRows, EntityType entity)
         {
-            var restrictions = DataModel.GetInstance(DataModelType.RestrictionsDataModel).FilterDeletedRows();
+            var restrictions = DataModel.GetInstance<RestrictionsDataModel>().FilterDeletedRows();
             string fieldName = null;
             switch (entity)
             {
@@ -817,7 +817,7 @@ namespace Registry.DataModels
             }
             if (fieldName == null)
                 throw new DataModelException("Не указано название поля идентификатора в методе ObjectIDsIncludedIntoMunicipal");
-            var fundsHistory = DataModel.GetInstance(DataModelType.FundsHistoryDataModel).FilterDeletedRows();
+            var fundsHistory = DataModel.GetInstance<FundsHistoryDataModel>().FilterDeletedRows();
             var maxIdByObject = from assocRow in objectAssocDataRows
                                      join fundHistoryRow in fundsHistory
                                         on assocRow.Field<int>("id_fund") equals fundHistoryRow.Field<int>("id_fund")
@@ -839,10 +839,10 @@ namespace Registry.DataModels
         {
             if (assocBuildings == null || assocPremises == null || assocSubPremises == null)
                 throw new DataModelException("Не переданы все ссылки на ассоциативные модели");
-            var kladrStreet = DataModel.GetInstance(DataModelType.KladrStreetsDataModel).FilterDeletedRows();
-            var buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel).FilterDeletedRows();
-            var premises = DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows();
-            var subPremises = DataModel.GetInstance(DataModelType.SubPremisesDataModel).FilterDeletedRows();
+            var kladrStreet = DataModel.GetInstance<KladrStreetsDataModel>().FilterDeletedRows();
+            var buildings = DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows();
+            var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
+            var subPremises = DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows();
             var aSubPremisesGc = from assocSubPremisesRow in assocSubPremises
                                     join subPremisesRow in subPremises
                                     on assocSubPremisesRow.Field<int>("id_sub_premises") equals subPremisesRow.Field<int>("id_sub_premises")
@@ -916,7 +916,7 @@ namespace Registry.DataModels
         public static IEnumerable<int> OldTenancyProcesses()
         {
             // Собираем строку проверки уникальности сдаваемой группы помещений. Выглядеть эта строка будет примерно подобным образом з1з12п23п122к32 и т.п.
-            var assocSubPremises = from assocSubPremisesRow in DataModel.GetInstance(DataModelType.TenancySubPremisesAssocDataModel).FilterDeletedRows()
+            var assocSubPremises = from assocSubPremisesRow in DataModel.GetInstance<TenancySubPremisesAssocDataModel>().FilterDeletedRows()
                                      group assocSubPremisesRow.Field<int>("id_sub_premises").ToString(CultureInfo.InvariantCulture)
                                      by assocSubPremisesRow.Field<int>("id_process") into gs
                                      select new
@@ -924,7 +924,7 @@ namespace Registry.DataModels
                                          id_process = gs.Key,
                                          value = gs.Count() > 1 ? gs.OrderBy(val => val).Aggregate((str1, str2) => 'к'+str1+'к'+str2) : 'к'+gs.First()
                                      };
-            var assocPremises = from assocPremisesRow in DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel).FilterDeletedRows()
+            var assocPremises = from assocPremisesRow in DataModel.GetInstance<TenancyPremisesAssocDataModel>().FilterDeletedRows()
                                      group assocPremisesRow.Field<int>("id_premises").ToString(CultureInfo.InvariantCulture)
                                      by assocPremisesRow.Field<int>("id_process") into gs
                                      select new
@@ -932,7 +932,7 @@ namespace Registry.DataModels
                                          id_process = gs.Key,
                                          value = gs.Count() > 1 ? gs.OrderBy(val => val).Aggregate((str1, str2) => 'п' + str1 + 'п' + str2) : 'п' + gs.First()
                                      };
-            var assocBuildings = from assocBuildingsRow in DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel).FilterDeletedRows()
+            var assocBuildings = from assocBuildingsRow in DataModel.GetInstance<TenancyBuildingsAssocDataModel>().FilterDeletedRows()
                                   group assocBuildingsRow.Field<int>("id_building").ToString(CultureInfo.InvariantCulture)
                                  by assocBuildingsRow.Field<int>("id_process") into gs
                                  select new
@@ -947,13 +947,14 @@ namespace Registry.DataModels
                                 {
                                     id_process = gs.Key,
                                     value = gs.Count() > 1 ? gs.OrderBy(val => val).Aggregate((str1, str2) => str1 + str2) : gs.First()
-                                };
+                                };           
             var moreOneIdentStrings = from identRow in identStrings
-                                         group identRow.id_process by identRow.value into gs
-                                         where gs.Count() > 1
-                                         select gs.Key;
+                                      group identRow.id_process by identRow.value into gs
+                                      where gs.Count() > 1
+                                      select gs.Key;
+                                          
             var duplicateProcesses = from identRow in identStrings
-                                        join tenancyRow in DataModel.GetInstance(DataModelType.TenancyProcessesDataModel).FilterDeletedRows()
+                                        join tenancyRow in DataModel.GetInstance<TenancyProcessesDataModel>().FilterDeletedRows()
                                         on identRow.id_process equals tenancyRow.Field<int>("id_process")
                                         join moreOneIdentStringsRow in moreOneIdentStrings
                                         on identRow.value equals moreOneIdentStringsRow

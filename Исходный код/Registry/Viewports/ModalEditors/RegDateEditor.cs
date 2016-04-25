@@ -4,7 +4,7 @@ using Registry.DataModels.DataModels;
 
 namespace Registry.Viewport.ModalEditors
 {
-    public partial class RegDateEditor : Form
+    internal partial class RegDateEditor : Form
     {
         public DateTime RegDate {
             get { return dateTimePickerRegDate.Value.Date; }

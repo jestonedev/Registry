@@ -365,7 +365,7 @@ namespace Registry.Viewport
                         {
                             if (!ViewportHelper.PremiseFundAndRentMatch((int)ParentRow["id_premises"], tenancy.IdRentType.Value))
                             {
-                                var idBuilding = (int)DataModel.GetInstance(DataModelType.PremisesDataModel).Select().Rows.Find((int)ParentRow["id_premises"])["id_building"];
+                                var idBuilding = (int)DataModel.GetInstance<PremisesDataModel>().Select().Rows.Find((int)ParentRow["id_premises"])["id_building"];
                                 if (!ViewportHelper.BuildingFundAndRentMatch(idBuilding, tenancy.IdRentType.Value) &&
                                     MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемой комнаты. Все равно продолжить сохранение?",
                                     "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
@@ -443,7 +443,7 @@ namespace Registry.Viewport
             if (viewportState != ViewportState.NewRowState)
             {
                 var reasons =
-                    (from reason_row in DataModel.GetInstance(DataModelType.TenancyReasonsDataModel).FilterDeletedRows() 
+                    (from reason_row in DataModel.GetInstance<TenancyReasonsDataModel>().FilterDeletedRows() 
                         where reason_row.Field<int>("id_process") == (int) row["id_process"] &&
                               reason_row.Field<string>("reason_prepared").ToUpper().Contains("ОРДЕР")
                         select new
@@ -534,15 +534,15 @@ namespace Registry.Viewport
             dataGridViewTenancyPersons.AutoGenerateColumns = false;
             dataGridViewTenancyReasons.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.TenancyProcessesDataModel);
-            executors = DataModel.GetInstance(DataModelType.ExecutorsDataModel);
-            rent_types = DataModel.GetInstance(DataModelType.RentTypesDataModel);
-            tenancy_agreements = DataModel.GetInstance(DataModelType.TenancyAgreementsDataModel);
-            warrants = DataModel.GetInstance(DataModelType.WarrantsDataModel);
-            tenancy_persons = DataModel.GetInstance(DataModelType.TenancyPersonsDataModel);
-            tenancy_reasons = DataModel.GetInstance(DataModelType.TenancyReasonsDataModel);
-            kinships = DataModel.GetInstance(DataModelType.KinshipsDataModel);
-            tenancy_premises_info = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelTenancyPremisesInfo);
+            GeneralDataModel = DataModel.GetInstance<TenancyProcessesDataModel>();
+            executors = DataModel.GetInstance<ExecutorsDataModel>();
+            rent_types = DataModel.GetInstance<RentTypesDataModel>();
+            tenancy_agreements = DataModel.GetInstance<TenancyAgreementsDataModel>();
+            warrants = DataModel.GetInstance<WarrantsDataModel>();
+            tenancy_persons = DataModel.GetInstance<TenancyPersonsDataModel>();
+            tenancy_reasons = DataModel.GetInstance<TenancyReasonsDataModel>();
+            kinships = DataModel.GetInstance<KinshipsDataModel>();
+            tenancy_premises_info = CalcDataModel.GetInstance<CalcDataModelTenancyPremisesInfo>();
 
             //Ожидаем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
@@ -619,17 +619,17 @@ namespace Registry.Viewport
                 switch (ParentType)
                 {
                     case ParentTypeEnum.Building:
-                        tenancy_building_assoc = DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel);
+                        tenancy_building_assoc = DataModel.GetInstance<TenancyBuildingsAssocDataModel>();
                         tenancy_building_assoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
                         tenancy_building_assoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
                         break;
                     case ParentTypeEnum.Premises:
-                        tenancy_premises_assoc = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel);
+                        tenancy_premises_assoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
                         tenancy_premises_assoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
                         tenancy_premises_assoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
                         break;
                     case ParentTypeEnum.SubPremises:
-                        tenancy_sub_premises_assoc = DataModel.GetInstance(DataModelType.TenancySubPremisesAssocDataModel);
+                        tenancy_sub_premises_assoc = DataModel.GetInstance<TenancySubPremisesAssocDataModel>();
                         tenancy_sub_premises_assoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
                         tenancy_sub_premises_assoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
                         break;
@@ -871,7 +871,7 @@ namespace Registry.Viewport
                             switch (ParentType)
                             {
                                 case ParentTypeEnum.Building:
-                                    var tenancy_buildings = DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel);
+                                    var tenancy_buildings = DataModel.GetInstance<TenancyBuildingsAssocDataModel>();
                                     to.IdObject = Convert.ToInt32(ParentRow["id_building"], CultureInfo.InvariantCulture);
                                     tenancy_buildings.EditingNewRecord = true;
                                     id_assoc = tenancy_buildings.Insert(to);
@@ -882,7 +882,7 @@ namespace Registry.Viewport
                                     tenancy_buildings.EditingNewRecord = false;
                                     break;
                                 case ParentTypeEnum.Premises:
-                                    var tenancy_premises = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel);
+                                    var tenancy_premises = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
                                     to.IdObject = Convert.ToInt32(ParentRow["id_premises"], CultureInfo.InvariantCulture);
                                     tenancy_premises.EditingNewRecord = true;
                                     id_assoc = tenancy_premises.Insert(to);
@@ -893,7 +893,7 @@ namespace Registry.Viewport
                                     tenancy_premises.EditingNewRecord = false;
                                     break;
                                 case ParentTypeEnum.SubPremises:
-                                    var tenancy_sub_premises = DataModel.GetInstance(DataModelType.TenancySubPremisesAssocDataModel);
+                                    var tenancy_sub_premises = DataModel.GetInstance<TenancySubPremisesAssocDataModel>();
                                     to.IdObject = Convert.ToInt32(ParentRow["id_sub_premises"], CultureInfo.InvariantCulture);
                                     tenancy_sub_premises.EditingNewRecord = true;
                                     id_assoc = tenancy_sub_premises.Insert(to);
@@ -909,7 +909,7 @@ namespace Registry.Viewport
                     // Обновляем информацию по помещениям (живое обновление не реализуемо)
                     if (v_tenancy_addresses != null)
                     {
-                        v_tenancy_addresses.DataSource = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelTenancyPremisesInfo);
+                        v_tenancy_addresses.DataSource = CalcDataModel.GetInstance<CalcDataModelTenancyPremisesInfo>();
                         FiltersRebuild();
                     }
                     GeneralDataModel.EditingNewRecord = false;
@@ -961,7 +961,7 @@ namespace Registry.Viewport
                 tenancy_persons.Select().Rows.Add(PersonToObjectArray(person));
             }
             tenancy_persons.EditingNewRecord = false;
-            var tenancyBuildingsAssoc = DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel);
+            var tenancyBuildingsAssoc = DataModel.GetInstance<TenancyBuildingsAssocDataModel>();
             var buildings = from row in tenancyBuildingsAssoc.FilterDeletedRows()
                             where row.Field<int>("id_process") == id_copy_process
                             select row;
@@ -984,7 +984,7 @@ namespace Registry.Viewport
                     obj.RentTotalArea, obj.RentLivingArea);
             }
             tenancyBuildingsAssoc.EditingNewRecord = false;
-            var tenancyPremisesAssoc = DataModel.GetInstance(DataModelType.TenancyPremisesAssocDataModel);
+            var tenancyPremisesAssoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
             var premises = from row in tenancyPremisesAssoc.FilterDeletedRows()
                             where row.Field<int>("id_process") == id_copy_process
                            select row;
@@ -1007,7 +1007,7 @@ namespace Registry.Viewport
                     obj.RentTotalArea, obj.RentLivingArea);
             }
             tenancyPremisesAssoc.EditingNewRecord = false;
-            var tenancySubPremisesAssoc = DataModel.GetInstance(DataModelType.TenancySubPremisesAssocDataModel);
+            var tenancySubPremisesAssoc = DataModel.GetInstance<TenancySubPremisesAssocDataModel>();
             var sub_premises = from row in tenancySubPremisesAssoc.FilterDeletedRows()
                            where row.Field<int>("id_process") == id_copy_process
                                select row;
@@ -1131,7 +1131,7 @@ namespace Registry.Viewport
             base.ForceClose();
         }
 
-        public override bool HasAssocViewport(ViewportType viewportType)
+        public override bool HasAssocViewport<T>()
         {
             var reports = new List<ViewportType>
             {
@@ -1141,10 +1141,10 @@ namespace Registry.Viewport
                 ViewportType.TenancyPremisesViewport,
                 ViewportType.TenancyAgreementsViewport
             };
-            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
+            return reports.Any(v => v.ToString() == typeof(T).Name) && (GeneralBindingSource.Position > -1);
         }
 
-        public override void ShowAssocViewport(ViewportType viewportType)
+        public override void ShowAssocViewport<T>()
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
@@ -1154,7 +1154,7 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport(MenuCallback, viewportType,
+            ShowAssocViewport<T>(MenuCallback, 
                 "id_process = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"], CultureInfo.InvariantCulture),
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
                 ParentTypeEnum.Tenancy);
@@ -1370,36 +1370,36 @@ namespace Registry.Viewport
 
         private void dataGridViewTenancyAgreements_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (!HasAssocViewport(ViewportType.TenancyAgreementsViewport))
+            if (!HasAssocViewport<TenancyAgreementsViewport>())
                 return;
             if (e.RowIndex == -1)
                 return;
-            ShowAssocViewport(ViewportType.TenancyAgreementsViewport);
+            ShowAssocViewport<TenancyAgreementsViewport>();
         }
 
         private void dataGridViewTenancyPersons_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (!HasAssocViewport(ViewportType.TenancyPersonsViewport))
+            if (!HasAssocViewport<TenancyPersonsViewport>())
                 return;
             if (e.RowIndex == -1)
                 return;
-            ShowAssocViewport(ViewportType.TenancyPersonsViewport);
+            ShowAssocViewport<TenancyPersonsViewport>();
         }
 
         private void dataGridViewTenancyAddress_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1)
                 return;
-            if (HasAssocViewport(ViewportType.TenancyPremisesViewport))
-                ShowAssocViewport(ViewportType.TenancyPremisesViewport);
+            if (HasAssocViewport<TenancyPremisesViewport>())
+                ShowAssocViewport<TenancyPremisesViewport>();
         }
 
         private void dataGridViewTenancyReasons_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1)
                 return;
-            if (HasAssocViewport(ViewportType.TenancyReasonsViewport))
-                ShowAssocViewport(ViewportType.TenancyReasonsViewport);
+            if (HasAssocViewport<TenancyReasonsViewport>())
+                ShowAssocViewport<TenancyReasonsViewport>();
         }
 
         private void selectAll_Enter(object sender, EventArgs e)

@@ -37,7 +37,7 @@ namespace Registry.Viewport
         {
             DockAreas = DockAreas.Document;
             dataGridView.AutoGenerateColumns = false;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.PaymentsDataModel);
+            GeneralDataModel = DataModel.GetInstance<PaymentsDataModel>();
 
             var title = "История лицевого счета №{0}";
             if (ParentType != ParentTypeEnum.PaymentAccount || ParentRow == null)

@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace Registry.Viewport
 {
-    public partial class MultiPaymentAccountsAtDateForm : Form
+    internal partial class MultiPaymentAccountsAtDateForm : Form
     {
         public DateTime DateAt
         {

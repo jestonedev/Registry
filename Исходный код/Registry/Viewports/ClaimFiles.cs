@@ -14,7 +14,7 @@ using Settings;
 
 namespace Registry.Viewport
 {
-    public partial class ClaimFiles : Form
+    internal partial class ClaimFiles : Form
     {
         private int _idClaim = 0;
 

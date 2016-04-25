@@ -4,7 +4,7 @@ using Registry.DataModels.DataModels;
 
 namespace Registry.Viewport
 {
-    public partial class MultiClaimsStateConfigForm : Form
+    internal partial class MultiClaimsStateConfigForm : Form
     {
         public int? IdStateType
         {
@@ -52,7 +52,7 @@ namespace Registry.Viewport
             InitializeComponent();
             var source = new BindingSource
             {
-                DataSource = DataModel.GetInstance(DataModelType.ClaimStateTypesDataModel).Select()
+                DataSource = DataModel.GetInstance<ClaimStateTypesDataModel>().Select()
             };
             comboBoxClaimStateType.ValueMember = "id_state_type";
             comboBoxClaimStateType.DisplayMember = "state_type";

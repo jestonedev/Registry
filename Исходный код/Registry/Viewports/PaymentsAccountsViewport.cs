@@ -40,7 +40,7 @@ namespace Registry.Viewport
         {
             DockAreas = DockAreas.Document;
             dataGridView.AutoGenerateColumns = false;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.PaymentsAccountsDataModel);
+            GeneralDataModel = DataModel.GetInstance<PaymentsAccountsDataModel>();
             GeneralDataModel.Select();
             GeneralBindingSource = new BindingSource();
             GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
@@ -333,7 +333,7 @@ namespace Registry.Viewport
             dataGridView.Refresh();
         }
 
-        public override bool HasAssocViewport(ViewportType viewportType)
+        public override bool HasAssocViewport<T>()
         {
             var reports = new List<ViewportType>
             {
@@ -341,10 +341,10 @@ namespace Registry.Viewport
                 ViewportType.ClaimListViewport,
                 ViewportType.PremisesListViewport
             };
-            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
+            return reports.Any(v => v.ToString() == typeof(T).Name) && (GeneralBindingSource.Position > -1);
         }
 
-        public override void ShowAssocViewport(ViewportType viewportType)
+        public override void ShowAssocViewport<T>()
         {
             if (GeneralBindingSource.Position == -1)
             {
@@ -352,11 +352,13 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
+            
             var filter = "id_account = " +
                          Convert.ToInt32(
                              ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_account"],
                              CultureInfo.InvariantCulture);
-            if (viewportType == ViewportType.PremisesListViewport)
+            Type viewportType = typeof(T);
+            if (typeof(T) == typeof(PremisesListViewport))
             {
                 var ids = PaymentsAccountsDataModel.GetPremisesIdsByAccountFilter(filter).ToList();
                 if (!ids.Any())
@@ -367,14 +369,23 @@ namespace Registry.Viewport
                 }
                 if (ids.Count == 1)
                 {
-                    viewportType = ViewportType.PremisesViewport;
+                    //viewportType = ViewportType.PremisesViewport;
+                    viewportType = typeof(PremisesViewport);
                 }
                 filter = string.Format("id_premises IN (0{0})", ids.Select(id => id.ToString()).Aggregate((x,y) => x + "," + y));
-            }
-            ShowAssocViewport(MenuCallback, viewportType,
+                ShowAssocViewport<PremisesViewport>(MenuCallback, 
                 filter,
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
                 ParentTypeEnum.PaymentAccount);
+            }
+            else
+            {
+                ShowAssocViewport<T>(MenuCallback,
+                filter,
+                ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
+                ParentTypeEnum.PaymentAccount);
+            }
+            
         }
 
         void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)

@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Registry.Viewport
 {
-    internal  partial class BuildingListViewport
+    internal partial class BuildingListViewport
     {
         private DataGridView dataGridView;
 

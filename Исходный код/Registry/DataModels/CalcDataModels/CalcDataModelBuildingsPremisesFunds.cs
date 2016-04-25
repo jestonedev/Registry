@@ -16,10 +16,10 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.BuildingsDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.PremisesDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.FundsHistoryDataModel).Select());
-            RefreshOnTableModify(DataModel.GetInstance(DataModelType.FundsPremisesAssocDataModel).Select());
+            RefreshOnTableModify(DataModel.GetInstance<BuildingsDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<PremisesDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<FundsHistoryDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<FundsPremisesAssocDataModel>().Select());
         }
 
         private static DataTable InitializeTable()
@@ -40,10 +40,10 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelBuildingsPremisesFunds");
             // Фильтруем удаленные строки
-            var buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel).FilterDeletedRows();
-            var premises = DataModel.GetInstance(DataModelType.PremisesDataModel).FilterDeletedRows();
-            var fundsHistory = DataModel.GetInstance(DataModelType.FundsHistoryDataModel).FilterDeletedRows();
-            var fundsPremisesAssoc = DataModel.GetInstance(DataModelType.FundsPremisesAssocDataModel).FilterDeletedRows();
+            var buildings = DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows();
+            var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
+            var fundsHistory = DataModel.GetInstance<FundsHistoryDataModel>().FilterDeletedRows();
+            var fundsPremisesAssoc = DataModel.GetInstance<FundsPremisesAssocDataModel>().FilterDeletedRows();
 
             // Вычисляем агрегационную информацию
             var maxIdByPremises = DataModelHelper.MaxFundIDsByObject(fundsPremisesAssoc, EntityType.Premise);  

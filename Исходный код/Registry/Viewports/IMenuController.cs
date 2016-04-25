@@ -48,8 +48,11 @@ namespace Registry.Viewport
         bool CanFilterSpecialFund();
         bool CanFilterOtherFunds();
 
-        void ShowAssocViewport(ViewportType viewportType);
-        bool HasAssocViewport(ViewportType viewportType);
+        void ShowAssocViewport<T>() where T : Viewport;
+        void ShowAssocViewport<T>(Registry.Entities.ResettleEstateObjectWay way) where T : Viewport;
+        bool HasAssocViewport<T>() where T : Viewport;
+        bool HasAssocViewport<T>(Registry.Entities.ResettleEstateObjectWay way) where T : Viewport;
+        //bool HasAssocViewport<T>();
         void GenerateReport(ReporterType reporterType);
         bool HasReport(ReporterType reporterType);
     }

@@ -72,54 +72,54 @@ namespace Registry
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead) || AccessControl.HasPrivelege(Priveleges.TenancyRead)
                 || AccessControl.HasPrivelege(Priveleges.ResettleRead))
             {
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.BuildingsDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.PremisesDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.SubPremisesDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.KladrStreetsDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.KladrRegionsDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.PremisesTypesDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.FundTypesDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ObjectStatesDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.OwnershipRightTypesDataModel);
+                DataModel.GetInstance<BuildingsDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<PremisesDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<SubPremisesDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<KladrStreetsDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<KladrRegionsDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<PremisesTypesDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<FundTypesDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<ObjectStatesDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<OwnershipRightTypesDataModel>(toolStripProgressBar, 1);
             }
             // Реестр жилого фонда
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
             {
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.StructureTypesDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.PremisesKindsDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.FundsBuildingsAssocDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.FundsPremisesAssocDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.FundsSubPremisesAssocDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.FundsHistoryDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.OwnershipBuildingsAssocDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.OwnershipPremisesAssocDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.OwnershipsRightsDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.RestrictionsBuildingsAssocDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.RestrictionsPremisesAssocDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.RestrictionsDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.RestrictionTypesDataModel);
+                DataModel.GetInstance<StructureTypesDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<PremisesKindsDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<FundsBuildingsAssocDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<FundsPremisesAssocDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<FundsSubPremisesAssocDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<FundsHistoryDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<OwnershipBuildingsAssocDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<OwnershipPremisesAssocDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<OwnershipsRightsDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<RestrictionsPremisesAssocDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<RestrictionsDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<RestrictionTypesDataModel>(toolStripProgressBar, 1);
             }
             // Процессы найма
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
             {
                 // При поиске здания или помещения по нанимателю предварительная подгрузка не производится 
                 // Данные подгружаются по необходимости
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancyPersonsDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.KinshipsDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancyBuildingsAssocDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancyPremisesAssocDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancySubPremisesAssocDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancyReasonsDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancyReasonTypesDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.RentTypesDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.DocumentTypesDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.ExecutorsDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancyAgreementsDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.WarrantsDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.WarrantDocTypesDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.DocumentsIssuedByDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancyNotifiesDataModel);
-                DataModel.GetInstance(toolStripProgressBar, 1, DataModelType.TenancyProcessesDataModel);
+                DataModel.GetInstance<TenancyPersonsDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<KinshipsDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<TenancyBuildingsAssocDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<TenancyPremisesAssocDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<TenancySubPremisesAssocDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<TenancyReasonsDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<TenancyReasonTypesDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<RentTypesDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<DocumentTypesDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<ExecutorsDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<TenancyAgreementsDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<WarrantsDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<WarrantDocTypesDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<DocumentsIssuedByDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<TenancyNotifiesDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<TenancyProcessesDataModel>(toolStripProgressBar, 1);
             }
             if (toolStripProgressBar.Maximum == 0)
                 toolStripProgressBar.Visible = false;
@@ -310,13 +310,13 @@ namespace Registry
             if (!AccessControl.HasPrivelege(Priveleges.ResettleRead)) return;
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document == null) return;
-            if (document.HasAssocViewport(ViewportType.ResettlePersonsViewport))
+            if (document.HasAssocViewport<ResettlePersonsViewport>())
                 ribbonPanelRelations.Items.Add(ribbonButtonResettlePersons);
-            if (document.HasAssocViewport(ViewportType.ResettleFromBuildingsViewport) ||
-                document.HasAssocViewport(ViewportType.ResettleFromPremisesViewport))
+            if (document.HasAssocViewport<ResettleBuildingsViewport>(ResettleEstateObjectWay.From) ||
+                document.HasAssocViewport<ResettlePremisesViewport>(ResettleEstateObjectWay.From))
                 ribbonPanelRelations.Items.Add(ribbonButtonResettleFromObjects);
-            if (document.HasAssocViewport(ViewportType.ResettleToBuildingsViewport) ||
-                document.HasAssocViewport(ViewportType.ResettleToPremisesViewport))
+            if (document.HasAssocViewport<ResettleBuildingsViewport>(ResettleEstateObjectWay.To) ||
+               document.HasAssocViewport<ResettlePremisesViewport>(ResettleEstateObjectWay.To))
                 ribbonPanelRelations.Items.Add(ribbonButtonResettleToObjects);
         }
 
@@ -325,13 +325,13 @@ namespace Registry
             if (!AccessControl.HasPrivelege(Priveleges.ClaimsRead)) return;
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document == null) return;
-            if (document.HasAssocViewport(ViewportType.ClaimListViewport))
+            if (document.HasAssocViewport<ClaimListViewport>())
                 ribbonPanelRelations.Items.Add(ribbonButtonClaims);
-            if (document.HasAssocViewport(ViewportType.ClaimStatesViewport))
+            if (document.HasAssocViewport<ClaimStatesViewport>())
                 ribbonPanelRelations.Items.Add(ribbonButtonClaimStates);
-            if (document.HasAssocViewport(ViewportType.PaymentsAccountsViewport))
+            if (document.HasAssocViewport<PaymentsAccountsViewport>())
                 ribbonPanelRelations.Items.Add(ribbonButtonAccounts);
-            if (document.HasAssocViewport(ViewportType.PaymentsViewport))
+            if (document.HasAssocViewport<PaymentsViewport>())
                 ribbonPanelRelations.Items.Add(ribbonButtonAccountHistory);
         }
 
@@ -340,16 +340,16 @@ namespace Registry
             if (!AccessControl.HasPrivelege(Priveleges.TenancyRead)) return;
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document == null) return;
-            if (document.HasAssocViewport(ViewportType.TenancyBuildingsViewport) ||
-                document.HasAssocViewport(ViewportType.TenancyPremisesViewport))
+            if (document.HasAssocViewport<TenancyBuildingsViewport>() ||
+                document.HasAssocViewport<TenancyPremisesViewport>())
                 ribbonPanelRelations.Items.Add(ribbonButtonTenancyObjects);
-            if (document.HasAssocViewport(ViewportType.TenancyPersonsViewport))
+            if (document.HasAssocViewport<TenancyPersonsViewport>())
                 ribbonPanelRelations.Items.Add(ribbonButtonTenancyPersons);
-            if (document.HasAssocViewport(ViewportType.TenancyReasonsViewport))
+            if (document.HasAssocViewport<TenancyReasonsViewport>())
                 ribbonPanelRelations.Items.Add(ribbonButtonTenancyReasons);
-            if (document.HasAssocViewport(ViewportType.TenancyAgreementsViewport))
+            if (document.HasAssocViewport<TenancyAgreementsViewport>())
                 ribbonPanelRelations.Items.Add(ribbonButtonTenancyAgreements);
-            if (document.HasAssocViewport(ViewportType.TenancyListViewport))
+            if (document.HasAssocViewport<TenancyListViewport>())
                 ribbonPanelRelations.Items.Add(ribbonButtonAssocTenancies);
         }
 
@@ -358,17 +358,17 @@ namespace Registry
             if (!AccessControl.HasPrivelege(Priveleges.RegistryRead)) return;
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document == null) return;
-            if (document.HasAssocViewport(ViewportType.BuildingListViewport))
+            if (document.HasAssocViewport<BuildingListViewport>())
                 ribbonPanelRelations.Items.Add(ribbonButtonBuildings);
-            if (document.HasAssocViewport(ViewportType.SubPremisesViewport))
+            if (document.HasAssocViewport<SubPremisesViewport>())
                 ribbonPanelRelations.Items.Add(ribbonButtonSubPremises);
-            if (document.HasAssocViewport(ViewportType.PremisesListViewport))
+            if (document.HasAssocViewport<PremisesListViewport>())
                 ribbonPanelRelations.Items.Add(ribbonButtonPremises);
-            if (document.HasAssocViewport(ViewportType.OwnershipListViewport))
+            if (document.HasAssocViewport<OwnershipListViewport>())
                 ribbonPanelRelations.Items.Add(ribbonButtonOwnerships);
-            if (document.HasAssocViewport(ViewportType.RestrictionListViewport))
+            if (document.HasAssocViewport<RestrictionListViewport>())
                 ribbonPanelRelations.Items.Add(ribbonButtonRestrictions);
-            if (document.HasAssocViewport(ViewportType.FundsHistoryViewport))
+            if (document.HasAssocViewport<FundsHistoryViewport>())
                 ribbonPanelRelations.Items.Add(ribbonButtonFundsHistory);
         }
 
@@ -526,98 +526,98 @@ namespace Registry
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.BuildingListViewport);
+                document.ShowAssocViewport<BuildingListViewport>();
         }
 
         private void ribbonButtonPremises_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.PremisesListViewport);
+                document.ShowAssocViewport<PremisesListViewport>();
         }
 
         private void ribbonButtonSubPremises_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.SubPremisesViewport);
+                document.ShowAssocViewport<SubPremisesViewport>();
         }
 
         private void ribbonButtonRestrictions_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.RestrictionListViewport);
+                document.ShowAssocViewport<RestrictionListViewport>();
         }
 
         private void ribbonButtonOwnership_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.OwnershipListViewport);
+                document.ShowAssocViewport<OwnershipListViewport>();
         }
 
         private void ribbonButtonFundsHistory_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.FundsHistoryViewport);
+                document.ShowAssocViewport<FundsHistoryViewport>();
         }
 
         private void ribbonButtonPersons_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.TenancyPersonsViewport);
+                document.ShowAssocViewport<TenancyPersonsViewport>();
         }
 
         private void ribbonButtonTenancyReasons_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.TenancyReasonsViewport);
+                document.ShowAssocViewport<TenancyReasonsViewport>();
         }
 
         private void ribbonButtonAgreements_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.TenancyAgreementsViewport);
+                document.ShowAssocViewport<TenancyAgreementsViewport>();
         }
 
         private void ribbonButtonTenancyPremises_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.TenancyPremisesViewport);
+                document.ShowAssocViewport<TenancyPremisesViewport>();
         }
 
         private void ribbonButtonTenancyBuildings_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.TenancyBuildingsViewport);
+                document.ShowAssocViewport<TenancyBuildingsViewport>();
         }
 
         private void ribbonButtonClaims_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.ClaimListViewport);
+                document.ShowAssocViewport<ClaimListViewport>();
         }
 
         private void ribbonButtonClaimStates_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.ClaimStatesViewport);
+                document.ShowAssocViewport<ClaimStatesViewport>();
         }
 
         private void ribbonButtonAccounts_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.PaymentsAccountsViewport);
+                document.ShowAssocViewport<PaymentsAccountsViewport>();
         }
 
         private void ribbonButtonAccountHistory_Click(object sender, EventArgs e)
@@ -625,54 +625,54 @@ namespace Registry
 
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.PaymentsViewport);
+                document.ShowAssocViewport<PaymentsViewport>();
         }
 
         private void ribbonButtonAssocTenancies_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.TenancyListViewport);
+                document.ShowAssocViewport<TenancyListViewport>();
         }
 
         private void ribbonButtonResettlePersons_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.ResettlePersonsViewport);
+                document.ShowAssocViewport<ResettlePersonsViewport>();
         }
 
         private void ribbonButtonResettleFromPremises_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.ResettleFromPremisesViewport);
+                document.ShowAssocViewport<ResettlePremisesViewport>(ResettleEstateObjectWay.From);
         }
 
         private void ribbonButtonResettleFromBuildings_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.ResettleFromBuildingsViewport);
+                document.ShowAssocViewport<ResettleBuildingsViewport>(ResettleEstateObjectWay.From);
         }
 
         private void ribbonButtonResettleToPremises_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.ResettleToPremisesViewport);
+                document.ShowAssocViewport<ResettlePremisesViewport>(ResettleEstateObjectWay.To);
         }
 
         private void ribbonButtonResettleToBuildings_Click(object sender, EventArgs e)
         {
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
-                document.ShowAssocViewport(ViewportType.ResettleToBuildingsViewport);
+                document.ShowAssocViewport<ResettleBuildingsViewport>(ResettleEstateObjectWay.To);
         }
 
         private void ribbonOrbMenuItemBuildings_Click(object sender, EventArgs e)
         {
-            CreateViewport(ViewportType.BuildingListViewport);
+            CreateViewport<BuildingListViewport>();
         }
 
         private void ribbonOrbMenuItemPremises_Click(object sender, EventArgs e)
@@ -682,7 +682,7 @@ namespace Registry
             var ids = municipalIds.Aggregate("", (current, id) => current + (id.ToString(CultureInfo.InvariantCulture) + ","));
             ids = ids.TrimEnd(',');
             filter += "(id_state IN (4, 5, 9, 11) OR (id_state = 1 AND id_premises IN (0" + ids + ")))";
-            var viewport = ViewportFactory.CreateViewport(this, ViewportType.PremisesListViewport);
+            var viewport = ViewportFactory.CreateViewport<PremisesListViewport>(this);
             viewport.DynamicFilter = filter;
             if (((IMenuController) viewport).CanLoadData())
                 ((IMenuController) viewport).LoadData();
@@ -694,72 +694,72 @@ namespace Registry
 
         private void ribbonOrbMenuItemSocNaim_Click(object sender, EventArgs e)
         {
-            CreateViewport(ViewportType.TenancyListViewport);
+            CreateViewport<TenancyListViewport>();
         }
 
         private void ribbonOrbMenuItemResettles_Click(object sender, EventArgs e)
         {
-            CreateViewport(ViewportType.ResettleProcessListViewport);
+            CreateViewport<ResettleProcessListViewport>();
         }
 
         private void ribbonButtonStructureTypes_Click(object sender, EventArgs e)
         {
-            CreateViewport(ViewportType.StructureTypeListViewport);
+            CreateViewport<StructureTypeListViewport>();
         }
 
         private void ribbonButtonRestrictionTypes_Click(object sender, EventArgs e)
         {
-            CreateViewport(ViewportType.RestrictionTypeListViewport);
+            CreateViewport<RestrictionTypeListViewport>();
         }
 
         private void ribbonButtonOwnershipTypes_Click(object sender, EventArgs e)
         {
-            CreateViewport(ViewportType.OwnershipTypeListViewport);
+            CreateViewport<OwnershipTypeListViewport>();
         }
 
         private void ribbonButtonWarrants_Click(object sender, EventArgs e)
         {
-            CreateViewport(ViewportType.WarrantsViewport);
+            CreateViewport<WarrantsViewport>();
         }
 
         private void ribbonButtonReasonTypes_Click(object sender, EventArgs e)
         {
-            CreateViewport(ViewportType.TenancyReasonTypesViewport);
+            CreateViewport<TenancyReasonTypesViewport>();
         }
 
         private void ribbonButtonExecutors_Click(object sender, EventArgs e)
         {
-            CreateViewport(ViewportType.ExecutorsViewport);
+            CreateViewport<ExecutorsViewport>();
         }
 
         private void ribbonButtonIssuedBy_Click(object sender, EventArgs e)
         {
-            CreateViewport(ViewportType.DocumentIssuedByViewport);
+            CreateViewport<DocumentIssuedByViewport>();
         }
 
         private void ribbonOrbMenuItemClaims_Click(object sender, EventArgs e)
         {
-            CreateViewport(ViewportType.ClaimListViewport);
+            CreateViewport<ClaimListViewport>();
         }
 
         private void ribbonButtonClaimStateTypes_Click(object sender, EventArgs e)
         {
-            CreateViewport(ViewportType.ClaimStateTypesViewport);
+            CreateViewport<ClaimStateTypesViewport>();
         }
 
         private void ribbonOrbMenuItemPayments_Click(object sender, EventArgs e)
         {
-            CreateViewport(ViewportType.PaymentsAccountsViewport);
+            CreateViewport<PaymentsAccountsViewport>();
         }
 
         private void ribbonButtonDocumentResidence_Click(object sender, EventArgs e)
         {
-            CreateViewport(ViewportType.DocumentsResidenceViewport);
+            CreateViewport<DocumentsResidenceViewport>();
         }
 
-        private void CreateViewport(ViewportType viewportType)
+        private void CreateViewport<T>() where T : Viewport.Viewport
         {
-            var viewport = ViewportFactory.CreateViewport(this, viewportType);
+            var viewport = ViewportFactory.CreateViewport<T>(this);
             if (((IMenuController) viewport).CanLoadData())
                 ((IMenuController) viewport).LoadData();
             AddViewport(viewport);

@@ -190,12 +190,12 @@ namespace Registry.Viewport
             // textBoxDescription
             // 
             this.textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxDescription.Location = new System.Drawing.Point(3, 17);
+            this.textBoxDescription.Location = new System.Drawing.Point(3, 20);
             this.textBoxDescription.MaxLength = 4000;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxDescription.Size = new System.Drawing.Size(489, 59);
+            this.textBoxDescription.Size = new System.Drawing.Size(489, 56);
             this.textBoxDescription.TabIndex = 0;
             this.textBoxDescription.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -221,7 +221,7 @@ namespace Registry.Viewport
             this.comboBoxExecutor.FormattingEnabled = true;
             this.comboBoxExecutor.Location = new System.Drawing.Point(168, 48);
             this.comboBoxExecutor.Name = "comboBoxExecutor";
-            this.comboBoxExecutor.Size = new System.Drawing.Size(318, 23);
+            this.comboBoxExecutor.Size = new System.Drawing.Size(318, 26);
             this.comboBoxExecutor.TabIndex = 1;
             // 
             // label41
@@ -231,7 +231,7 @@ namespace Registry.Viewport
             this.label41.AutoSize = true;
             this.label41.Location = new System.Drawing.Point(12, 51);
             this.label41.Name = "label41";
-            this.label41.Size = new System.Drawing.Size(141, 15);
+            this.label41.Size = new System.Drawing.Size(169, 18);
             this.label41.TabIndex = 1;
             this.label41.Text = "Составитель договора";
             // 
@@ -243,7 +243,7 @@ namespace Registry.Viewport
             this.comboBoxRentType.FormattingEnabled = true;
             this.comboBoxRentType.Location = new System.Drawing.Point(168, 19);
             this.comboBoxRentType.Name = "comboBoxRentType";
-            this.comboBoxRentType.Size = new System.Drawing.Size(318, 23);
+            this.comboBoxRentType.Size = new System.Drawing.Size(318, 26);
             this.comboBoxRentType.TabIndex = 0;
             // 
             // label46
@@ -251,7 +251,7 @@ namespace Registry.Viewport
             this.label46.AutoSize = true;
             this.label46.Location = new System.Drawing.Point(12, 22);
             this.label46.Name = "label46";
-            this.label46.Size = new System.Drawing.Size(108, 15);
+            this.label46.Size = new System.Drawing.Size(128, 18);
             this.label46.TabIndex = 16;
             this.label46.Text = "Тип найма жилья";
             // 
@@ -282,12 +282,12 @@ namespace Registry.Viewport
             this.date_of_birth,
             this.id_kinship});
             this.dataGridViewTenancyPersons.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewTenancyPersons.Location = new System.Drawing.Point(3, 17);
+            this.dataGridViewTenancyPersons.Location = new System.Drawing.Point(3, 20);
             this.dataGridViewTenancyPersons.MultiSelect = false;
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(489, 264);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(489, 261);
             this.dataGridViewTenancyPersons.TabIndex = 0;
             this.dataGridViewTenancyPersons.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyPersons_CellDoubleClick);
             // 
@@ -348,11 +348,11 @@ namespace Registry.Viewport
             this.tableLayoutPanel10.Controls.Add(this.panel6, 1, 0);
             this.tableLayoutPanel10.Controls.Add(this.panel5, 0, 0);
             this.tableLayoutPanel10.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel10.Location = new System.Drawing.Point(3, 17);
+            this.tableLayoutPanel10.Location = new System.Drawing.Point(3, 20);
             this.tableLayoutPanel10.Name = "tableLayoutPanel10";
             this.tableLayoutPanel10.RowCount = 1;
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-            this.tableLayoutPanel10.Size = new System.Drawing.Size(990, 119);
+            this.tableLayoutPanel10.Size = new System.Drawing.Size(990, 116);
             this.tableLayoutPanel10.TabIndex = 1;
             // 
             // panel6
@@ -369,7 +369,7 @@ namespace Registry.Viewport
             this.panel6.Location = new System.Drawing.Point(495, 0);
             this.panel6.Margin = new System.Windows.Forms.Padding(0);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(495, 119);
+            this.panel6.Size = new System.Drawing.Size(495, 116);
             this.panel6.TabIndex = 1;
             // 
             // checkBoxUntilDismissal
@@ -377,7 +377,7 @@ namespace Registry.Viewport
             this.checkBoxUntilDismissal.AutoSize = true;
             this.checkBoxUntilDismissal.Location = new System.Drawing.Point(179, 92);
             this.checkBoxUntilDismissal.Name = "checkBoxUntilDismissal";
-            this.checkBoxUntilDismissal.Size = new System.Drawing.Size(271, 19);
+            this.checkBoxUntilDismissal.Size = new System.Drawing.Size(321, 22);
             this.checkBoxUntilDismissal.TabIndex = 29;
             this.checkBoxUntilDismissal.Text = "На период действия трудовых отношений";
             this.checkBoxUntilDismissal.UseVisualStyleBackColor = true;
@@ -388,7 +388,7 @@ namespace Registry.Viewport
             this.label52.AutoSize = true;
             this.label52.Location = new System.Drawing.Point(150, 65);
             this.label52.Name = "label52";
-            this.label52.Size = new System.Drawing.Size(21, 15);
+            this.label52.Size = new System.Drawing.Size(25, 18);
             this.label52.TabIndex = 28;
             this.label52.Text = "по";
             // 
@@ -397,7 +397,7 @@ namespace Registry.Viewport
             this.label51.AutoSize = true;
             this.label51.Location = new System.Drawing.Point(158, 36);
             this.label51.Name = "label51";
-            this.label51.Size = new System.Drawing.Size(13, 15);
+            this.label51.Size = new System.Drawing.Size(16, 18);
             this.label51.TabIndex = 27;
             this.label51.Text = "с";
             // 
@@ -408,7 +408,7 @@ namespace Registry.Viewport
             this.dateTimePickerEndDate.Location = new System.Drawing.Point(174, 62);
             this.dateTimePickerEndDate.Name = "dateTimePickerEndDate";
             this.dateTimePickerEndDate.ShowCheckBox = true;
-            this.dateTimePickerEndDate.Size = new System.Drawing.Size(313, 21);
+            this.dateTimePickerEndDate.Size = new System.Drawing.Size(313, 24);
             this.dateTimePickerEndDate.TabIndex = 2;
             // 
             // label50
@@ -416,7 +416,7 @@ namespace Registry.Viewport
             this.label50.AutoSize = true;
             this.label50.Location = new System.Drawing.Point(15, 36);
             this.label50.Name = "label50";
-            this.label50.Size = new System.Drawing.Size(93, 15);
+            this.label50.Size = new System.Drawing.Size(112, 18);
             this.label50.TabIndex = 25;
             this.label50.Text = "Срок действия";
             // 
@@ -427,7 +427,7 @@ namespace Registry.Viewport
             this.dateTimePickerBeginDate.Location = new System.Drawing.Point(174, 33);
             this.dateTimePickerBeginDate.Name = "dateTimePickerBeginDate";
             this.dateTimePickerBeginDate.ShowCheckBox = true;
-            this.dateTimePickerBeginDate.Size = new System.Drawing.Size(313, 21);
+            this.dateTimePickerBeginDate.Size = new System.Drawing.Size(313, 24);
             this.dateTimePickerBeginDate.TabIndex = 1;
             // 
             // label49
@@ -435,7 +435,7 @@ namespace Registry.Viewport
             this.label49.AutoSize = true;
             this.label49.Location = new System.Drawing.Point(15, 7);
             this.label49.Name = "label49";
-            this.label49.Size = new System.Drawing.Size(83, 15);
+            this.label49.Size = new System.Drawing.Size(99, 18);
             this.label49.TabIndex = 23;
             this.label49.Text = "Дата выдачи";
             // 
@@ -446,7 +446,7 @@ namespace Registry.Viewport
             this.dateTimePickerIssueDate.Location = new System.Drawing.Point(174, 4);
             this.dateTimePickerIssueDate.Name = "dateTimePickerIssueDate";
             this.dateTimePickerIssueDate.ShowCheckBox = true;
-            this.dateTimePickerIssueDate.Size = new System.Drawing.Size(313, 21);
+            this.dateTimePickerIssueDate.Size = new System.Drawing.Size(313, 24);
             this.dateTimePickerIssueDate.TabIndex = 0;
             // 
             // panel5
@@ -462,7 +462,7 @@ namespace Registry.Viewport
             this.panel5.Location = new System.Drawing.Point(0, 0);
             this.panel5.Margin = new System.Windows.Forms.Padding(0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(495, 119);
+            this.panel5.Size = new System.Drawing.Size(495, 116);
             this.panel5.TabIndex = 0;
             // 
             // vButtonWarrant
@@ -487,7 +487,7 @@ namespace Registry.Viewport
             this.textBoxSelectedWarrant.Location = new System.Drawing.Point(172, 62);
             this.textBoxSelectedWarrant.Name = "textBoxSelectedWarrant";
             this.textBoxSelectedWarrant.ReadOnly = true;
-            this.textBoxSelectedWarrant.Size = new System.Drawing.Size(281, 21);
+            this.textBoxSelectedWarrant.Size = new System.Drawing.Size(281, 24);
             this.textBoxSelectedWarrant.TabIndex = 2;
             // 
             // label82
@@ -495,7 +495,7 @@ namespace Registry.Viewport
             this.label82.AutoSize = true;
             this.label82.Location = new System.Drawing.Point(14, 65);
             this.label82.Name = "label82";
-            this.label82.Size = new System.Drawing.Size(92, 15);
+            this.label82.Size = new System.Drawing.Size(109, 18);
             this.label82.TabIndex = 23;
             this.label82.Text = "Доверенность";
             // 
@@ -504,7 +504,7 @@ namespace Registry.Viewport
             this.label48.AutoSize = true;
             this.label48.Location = new System.Drawing.Point(14, 36);
             this.label48.Name = "label48";
-            this.label48.Size = new System.Drawing.Size(114, 15);
+            this.label48.Size = new System.Drawing.Size(132, 18);
             this.label48.TabIndex = 21;
             this.label48.Text = "Дата регистрации";
             // 
@@ -514,7 +514,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerRegistrationDate.Location = new System.Drawing.Point(172, 33);
             this.dateTimePickerRegistrationDate.Name = "dateTimePickerRegistrationDate";
-            this.dateTimePickerRegistrationDate.Size = new System.Drawing.Size(314, 21);
+            this.dateTimePickerRegistrationDate.Size = new System.Drawing.Size(314, 24);
             this.dateTimePickerRegistrationDate.TabIndex = 1;
             // 
             // textBoxRegistrationNumber
@@ -524,7 +524,7 @@ namespace Registry.Viewport
             this.textBoxRegistrationNumber.Location = new System.Drawing.Point(172, 4);
             this.textBoxRegistrationNumber.MaxLength = 255;
             this.textBoxRegistrationNumber.Name = "textBoxRegistrationNumber";
-            this.textBoxRegistrationNumber.Size = new System.Drawing.Size(314, 21);
+            this.textBoxRegistrationNumber.Size = new System.Drawing.Size(314, 24);
             this.textBoxRegistrationNumber.TabIndex = 0;
             this.textBoxRegistrationNumber.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -533,7 +533,7 @@ namespace Registry.Viewport
             this.label47.AutoSize = true;
             this.label47.Location = new System.Drawing.Point(14, 7);
             this.label47.Name = "label47";
-            this.label47.Size = new System.Drawing.Size(152, 15);
+            this.label47.Size = new System.Drawing.Size(179, 18);
             this.label47.TabIndex = 18;
             this.label47.Text = "Регистрационный номер";
             // 
@@ -544,7 +544,7 @@ namespace Registry.Viewport
             this.checkBoxContractEnable.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxContractEnable.Location = new System.Drawing.Point(11, 0);
             this.checkBoxContractEnable.Name = "checkBoxContractEnable";
-            this.checkBoxContractEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxContractEnable.Size = new System.Drawing.Size(18, 17);
             this.checkBoxContractEnable.TabIndex = 0;
             this.checkBoxContractEnable.UseVisualStyleBackColor = true;
             this.checkBoxContractEnable.CheckedChanged += new System.EventHandler(this.checkBoxProcessEnable_CheckedChanged);
@@ -571,12 +571,12 @@ namespace Registry.Viewport
             this.agreement_date,
             this.agreement_content});
             this.dataGridViewTenancyAgreements.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewTenancyAgreements.Location = new System.Drawing.Point(3, 17);
+            this.dataGridViewTenancyAgreements.Location = new System.Drawing.Point(3, 20);
             this.dataGridViewTenancyAgreements.MultiSelect = false;
             this.dataGridViewTenancyAgreements.Name = "dataGridViewTenancyAgreements";
             this.dataGridViewTenancyAgreements.ReadOnly = true;
             this.dataGridViewTenancyAgreements.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyAgreements.Size = new System.Drawing.Size(489, 178);
+            this.dataGridViewTenancyAgreements.Size = new System.Drawing.Size(489, 175);
             this.dataGridViewTenancyAgreements.TabIndex = 0;
             this.dataGridViewTenancyAgreements.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyAgreements_CellDoubleClick);
             // 
@@ -616,12 +616,12 @@ namespace Registry.Viewport
             this.reason_number,
             this.reason_date});
             this.dataGridViewTenancyReasons.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewTenancyReasons.Location = new System.Drawing.Point(3, 17);
+            this.dataGridViewTenancyReasons.Location = new System.Drawing.Point(3, 20);
             this.dataGridViewTenancyReasons.MultiSelect = false;
             this.dataGridViewTenancyReasons.Name = "dataGridViewTenancyReasons";
             this.dataGridViewTenancyReasons.ReadOnly = true;
             this.dataGridViewTenancyReasons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyReasons.Size = new System.Drawing.Size(489, 178);
+            this.dataGridViewTenancyReasons.Size = new System.Drawing.Size(489, 175);
             this.dataGridViewTenancyReasons.TabIndex = 0;
             this.dataGridViewTenancyReasons.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyReasons_CellDoubleClick);
             // 
@@ -664,7 +664,7 @@ namespace Registry.Viewport
             this.label45.AutoSize = true;
             this.label45.Location = new System.Drawing.Point(12, 52);
             this.label45.Name = "label45";
-            this.label45.Size = new System.Drawing.Size(102, 15);
+            this.label45.Size = new System.Drawing.Size(122, 18);
             this.label45.TabIndex = 18;
             this.label45.Text = "Дата протокола";
             // 
@@ -674,7 +674,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerProtocolDate.Location = new System.Drawing.Point(171, 48);
             this.dateTimePickerProtocolDate.Name = "dateTimePickerProtocolDate";
-            this.dateTimePickerProtocolDate.Size = new System.Drawing.Size(313, 21);
+            this.dateTimePickerProtocolDate.Size = new System.Drawing.Size(313, 24);
             this.dateTimePickerProtocolDate.TabIndex = 2;
             // 
             // label42
@@ -682,7 +682,7 @@ namespace Registry.Viewport
             this.label42.AutoSize = true;
             this.label42.Location = new System.Drawing.Point(12, 22);
             this.label42.Name = "label42";
-            this.label42.Size = new System.Drawing.Size(111, 15);
+            this.label42.Size = new System.Drawing.Size(134, 18);
             this.label42.TabIndex = 12;
             this.label42.Text = "Номер протокола";
             // 
@@ -693,7 +693,7 @@ namespace Registry.Viewport
             this.textBoxProtocolNumber.Location = new System.Drawing.Point(171, 19);
             this.textBoxProtocolNumber.MaxLength = 50;
             this.textBoxProtocolNumber.Name = "textBoxProtocolNumber";
-            this.textBoxProtocolNumber.Size = new System.Drawing.Size(313, 21);
+            this.textBoxProtocolNumber.Size = new System.Drawing.Size(313, 24);
             this.textBoxProtocolNumber.TabIndex = 1;
             this.textBoxProtocolNumber.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -704,7 +704,7 @@ namespace Registry.Viewport
             this.checkBoxProtocolEnable.CheckState = System.Windows.Forms.CheckState.Checked;
             this.checkBoxProtocolEnable.Location = new System.Drawing.Point(11, 0);
             this.checkBoxProtocolEnable.Name = "checkBoxProtocolEnable";
-            this.checkBoxProtocolEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxProtocolEnable.Size = new System.Drawing.Size(18, 17);
             this.checkBoxProtocolEnable.TabIndex = 0;
             this.checkBoxProtocolEnable.UseVisualStyleBackColor = true;
             this.checkBoxProtocolEnable.CheckedChanged += new System.EventHandler(this.checkBoxProtocolEnable_CheckedChanged);
@@ -734,12 +734,12 @@ namespace Registry.Viewport
             this.living_area,
             this.rent_area});
             this.dataGridViewTenancyAddress.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewTenancyAddress.Location = new System.Drawing.Point(3, 17);
+            this.dataGridViewTenancyAddress.Location = new System.Drawing.Point(3, 20);
             this.dataGridViewTenancyAddress.MultiSelect = false;
             this.dataGridViewTenancyAddress.Name = "dataGridViewTenancyAddress";
             this.dataGridViewTenancyAddress.ReadOnly = true;
             this.dataGridViewTenancyAddress.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyAddress.Size = new System.Drawing.Size(489, 179);
+            this.dataGridViewTenancyAddress.Size = new System.Drawing.Size(489, 176);
             this.dataGridViewTenancyAddress.TabIndex = 0;
             this.dataGridViewTenancyAddress.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyAddress_CellDoubleClick);
             // 

@@ -167,11 +167,11 @@ namespace Registry.Viewport.SearchForms
         {
             InitializeComponent();
 
-            DataModel.GetInstance(DataModelType.KladrStreetsDataModel).Select();
-            DataModel.GetInstance(DataModelType.FundTypesDataModel).Select();
-            DataModel.GetInstance(DataModelType.ObjectStatesDataModel).Select();
-            regions = DataModel.GetInstance(DataModelType.KladrRegionsDataModel);
-            ownership_right_types = DataModel.GetInstance(DataModelType.OwnershipRightTypesDataModel);
+            DataModel.GetInstance<KladrStreetsDataModel>().Select();
+            DataModel.GetInstance<FundTypesDataModel>().Select();
+            DataModel.GetInstance<ObjectStatesDataModel>().Select();
+            regions = DataModel.GetInstance<KladrRegionsDataModel>();
+            ownership_right_types = DataModel.GetInstance<OwnershipRightTypesDataModel>();
 
             var ds = DataModel.DataSet;
 

@@ -27,7 +27,7 @@ namespace Registry.Viewport.Properties {
     [GeneratedCode("System.Resources.Tools.StronglyTypedResourceBuilder", "4.0.0.0")]
     [DebuggerNonUserCode()]
     [CompilerGenerated()]
-    internal class Resources {
+    public class Resources {
         
         private static ResourceManager resourceMan;
         

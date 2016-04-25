@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Linq;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
@@ -148,9 +149,9 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.BuildingsDataModel);
-            kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
-            tenancy_buildings = DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel);
+            GeneralDataModel = DataModel.GetInstance<BuildingsDataModel>();
+            kladr = DataModel.GetInstance<KladrStreetsDataModel>();
+            tenancy_buildings = DataModel.GetInstance<TenancyBuildingsAssocDataModel>();
             // Ожидаем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
             kladr.Select();
@@ -399,7 +400,7 @@ namespace Registry.Viewport
                     row = tenancy_buildings.Select().Rows.Find(list[i].IdAssoc);
                 if (row == null)
                 {
-                    var id_assoc = DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel).Insert(list[i]);
+                    var id_assoc = DataModel.GetInstance<TenancyBuildingsAssocDataModel>().Insert(list[i]);
                     if (id_assoc == -1)
                     {
                         sync_views = true;
@@ -414,7 +415,7 @@ namespace Registry.Viewport
                 {
                     if (RowToTenancyBuilding(row) == list[i])
                         continue;
-                    if (DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel).Update(list[i]) == -1)
+                    if (DataModel.GetInstance<TenancyBuildingsAssocDataModel>().Update(list[i]) == -1)
                     {
                         sync_views = true;
                         tenancy_buildings.EditingNewRecord = false;
@@ -439,7 +440,7 @@ namespace Registry.Viewport
                 }
                 if (row_index == -1)
                 {
-                    if (DataModel.GetInstance(DataModelType.TenancyBuildingsAssocDataModel).Delete(list[i].IdAssoc.Value) == -1)
+                    if (DataModel.GetInstance<TenancyBuildingsAssocDataModel>().Delete(list[i].IdAssoc.Value) == -1)
                     {
                         sync_views = true;
                         tenancy_buildings.EditingNewRecord = false;
@@ -465,7 +466,7 @@ namespace Registry.Viewport
             MenuCallback.EditingStateUpdate();
         }
 
-        public override bool HasAssocViewport(ViewportType viewportType)
+        public override bool HasAssocViewport<T>()
         {
             var reports = new List<ViewportType>
             {
@@ -475,17 +476,17 @@ namespace Registry.Viewport
                 ViewportType.FundsHistoryViewport,
                 ViewportType.TenancyListViewport
             };
-            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
+            return reports.Any(v => v.ToString() == typeof(T).Name) && (GeneralBindingSource.Position > -1);
         }
 
-        public override void ShowAssocViewport(ViewportType viewportType)
+        public override void ShowAssocViewport<T>()
         {
             if (GeneralBindingSource.Position == -1)
             {
                 MessageBox.Show(@"Не выбрано здание для отображения связных объектов", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport(MenuCallback, viewportType,
+            ShowAssocViewport<T>(MenuCallback, 
                 "id_building = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"], CultureInfo.InvariantCulture),
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
                 ParentTypeEnum.Building);

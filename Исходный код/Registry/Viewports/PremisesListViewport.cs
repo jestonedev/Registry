@@ -60,13 +60,13 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.PremisesDataModel);
-            kladr = DataModel.GetInstance(DataModelType.KladrStreetsDataModel);
-            buildings = DataModel.GetInstance(DataModelType.BuildingsDataModel);
-            premises_types = DataModel.GetInstance(DataModelType.PremisesTypesDataModel);
-            object_states = DataModel.GetInstance(DataModelType.ObjectStatesDataModel);
-            fund_types = DataModel.GetInstance(DataModelType.FundTypesDataModel);
-            premises_funds = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelPremisesCurrentFunds);
+            GeneralDataModel = DataModel.GetInstance<PremisesDataModel>();
+            kladr = DataModel.GetInstance<KladrStreetsDataModel>();
+            buildings = DataModel.GetInstance<BuildingsDataModel>();
+            premises_types = DataModel.GetInstance<PremisesTypesDataModel>();
+            object_states = DataModel.GetInstance<ObjectStatesDataModel>();
+            fund_types = DataModel.GetInstance<FundTypesDataModel>();
+            premises_funds = CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>();
 
             // Ожидаем дозагрузки данных, если это необходимо
             kladr.Select();
@@ -78,7 +78,7 @@ namespace Registry.Viewport
 
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
             {
-                _premisesTenanciesInfo = CalcDataModel.GetInstance(CalcDataModelType.CalcDataModelPremisesTenanciesInfo);
+                _premisesTenanciesInfo = CalcDataModel.GetInstance<CalcDataModelPremisesTenanciesInfo>();
                 _premisesTenanciesInfo.Select();
                 var registrationNumColumn = new DataGridViewTextBoxColumn
                 {
@@ -342,7 +342,7 @@ namespace Registry.Viewport
             viewport.CopyRecord();
         }
 
-        public override bool HasAssocViewport(ViewportType viewportType)
+        public override bool HasAssocViewport<T>()
         {
             var reports = new List<ViewportType>
             {
@@ -353,17 +353,17 @@ namespace Registry.Viewport
                 ViewportType.TenancyListViewport,
                 ViewportType.PaymentsAccountsViewport
             };
-            return reports.Contains(viewportType) && (GeneralBindingSource.Position > -1);
+            return reports.Any(v => v.ToString() == typeof(T).Name) && (GeneralBindingSource.Position > -1);
         }
 
-        public override void ShowAssocViewport(ViewportType viewportType)
+        public override void ShowAssocViewport<T>()
         {
             if (GeneralBindingSource.Position == -1)
             {
                 MessageBox.Show(@"Не выбрано помещение", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport(MenuCallback, viewportType,
+            ShowAssocViewport<T>(MenuCallback, 
                 "id_premises = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"], CultureInfo.InvariantCulture),
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
                 ParentTypeEnum.Premises);
@@ -545,7 +545,7 @@ namespace Registry.Viewport
                 case "residence_warrant_date":
                 case "tenant":
                 case "end_date":
-                    if (e.RowIndex != _rowIndex || _tenancyInfoRows.Any(entry => entry.RowState == DataRowState.Deleted || entry.RowState == DataRowState.Detached))
+                    if (e.RowIndex != _rowIndex || _tenancyInfoRows.Any(entry => entry.RowState == DataRowState.Deleted || entry.RowState == DataRowState.Detached) || dataGridView.RowCount == 1)
                     {   
                         _tenancyInfoRows =
                             (from tenancyInfoRow in _premisesTenanciesInfo.FilterDeletedRows()
@@ -556,7 +556,10 @@ namespace Registry.Viewport
                         _rowIndex = e.RowIndex;
                     }
                     if (_tenancyInfoRows == null || !_tenancyInfoRows.Any())
+                    {                        
                         return;
+                    }
+                        
                     var tenancyRow = _tenancyInfoRows.First();
                     switch (dataGridView.Columns[e.ColumnIndex].Name)
                     {

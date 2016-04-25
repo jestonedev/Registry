@@ -9,7 +9,7 @@ using Registry.Entities;
 
 namespace Registry.Viewport.SearchForms
 {
-    public partial class SimpleSearchPremiseForm : SearchForm
+    internal partial class SimpleSearchPremiseForm : SearchForm
     {
         public SimpleSearchPremiseForm()
         {

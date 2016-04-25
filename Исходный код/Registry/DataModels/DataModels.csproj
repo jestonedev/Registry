@@ -51,6 +51,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CalcDataModels\CalcDataModelMunicipalPremises.cs" />
     <Compile Include="CalcDataModels\CalcDataModelPremisesTenanciesInfo.cs" />
     <Compile Include="CalcDataModels\CalcDataModelSubPremisesCurrentFunds.cs" />
     <Compile Include="CalcDataModels\CalcDataModelPremiseSubPremisesSumArea.cs" />
@@ -130,11 +131,21 @@
     <Compile Include="DataModels\TenancySubPremisesAssocDataModel.cs" />
     <Compile Include="DataModels\WarrantDocTypesDataModel.cs" />
     <Compile Include="DataModels\WarrantsDataModel.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
     <None Include="ClassDiagram3.cd" />
+    <None Include="ClassDiagram4.cd" />
     <None Include="DataModels.snk" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Entities\Entities.csproj">

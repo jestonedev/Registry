@@ -147,7 +147,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance(DataModelType.ResettlePersonsDataModel);
+            GeneralDataModel = DataModel.GetInstance<ResettlePersonsDataModel>();
             // Дожидаемся дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
 
