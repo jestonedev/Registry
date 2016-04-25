@@ -108,7 +108,7 @@ namespace Registry.Viewport
                     var socialCount = _municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == id_building && s.Field<int>("id_fund_type") == 1).Count();
                     var commercialCount = _municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == id_building && s.Field<int>("id_fund_type") == 2).Count();
                     var specialCount = _municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == id_building && s.Field<int>("id_fund_type") == 3).Count();                   
-                    var otherCount = _municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == id_building && s.Field<int>("id_fund_type") == 4).Count();
+                    var otherCount = _municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == id_building && s.Field<int>("id_fund_type") == 0).Count();
                     numericUpDownSocialPremisesCount.Minimum = socialCount;
                     numericUpDownSpecialPremisesCount.Minimum = specialCount;
                     numericUpDownOtherPremisesCount.Minimum = otherCount;
@@ -154,11 +154,14 @@ namespace Registry.Viewport
             {
                 var position = -1;
                 if ((GeneralBindingSource.Position != -1) && !(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] is DBNull))
-                    position = _vBuildingPremisesSumArea.Find("id_building", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"]);
+                    //position = _vBuildingPremisesSumArea.Find("id_building", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"]);
+
+                    position = _vBuildingPremisesFunds.Find("id_building", id_building);
                 if (position != -1)
                 {
-                    var row = ((DataRowView) _vBuildingPremisesSumArea[position]);
-                    var sumArea = Convert.ToDecimal((double)row["sum_area"], CultureInfo.InvariantCulture);
+                    //var row = ((DataRowView) _vBuildingPremisesSumArea[position]);
+                    //var sumArea = Convert.ToDecimal((double)row["sum_area"], CultureInfo.InvariantCulture);
+                    var sumArea = Convert.ToDecimal(_municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == id_building).Sum(m => m.Field<double>("total_area")));
                     var totalMunCount =Convert.ToDecimal(_municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == id_building).Count());
                     //var totalMunCount = Convert.ToDecimal((int)row["mun_premises_count"], CultureInfo.InvariantCulture);
                     //var totalPremisesCount = 
@@ -166,7 +169,7 @@ namespace Registry.Viewport
                     //    where premisesRow.Field<int>("id_building") == (int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"]
                     //    group premisesRow by premisesRow.Field<int>("id_building") into gs
                     //    select gs.Count()).First();
-                    var totalPremisesCount =Convert.ToDecimal(_buildings.Select().Rows.Find((int)row["id_building"]).Field<int>("num_apartments"));
+                    var totalPremisesCount =Convert.ToDecimal(_buildings.Select().Rows.Find(id_building).Field<int>("num_apartments"));
 
                     if (totalPremisesCount > 0)
                     {

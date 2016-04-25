@@ -38,6 +38,7 @@ namespace Registry.Viewport
         private CalcDataModel premisesCurrentFund = null;
         private CalcDataModel premiseSubPremisesSumArea = null;
         private CalcDataModel subPremisesCurrentFund = null;
+        private CalcDataModel municipalPremisesSumArea = null;
         #endregion Models
 
         #region Views
@@ -126,6 +127,7 @@ namespace Registry.Viewport
 
         private void FiltersRebuild()
         {
+            var id_premises = (int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"];
             if (v_premisesCurrentFund != null)
             {
                 int position = -1;
@@ -145,7 +147,9 @@ namespace Registry.Viewport
                     position = v_premisesSubPremisesSumArea.Find("id_premises", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"]);
                 if (position != -1)
                 {
-                    decimal value = Convert.ToDecimal((double)((DataRowView)v_premisesSubPremisesSumArea[position])["sum_area"]);
+                    //decimal value = Convert.ToDecimal((double)((DataRowView)v_premisesSubPremisesSumArea[position])["sum_area"]);
+                    var temp = municipalPremisesSumArea.Select().AsEnumerable().Where(m => m.Field<int>("id_premises") == id_premises);
+                    decimal value = Convert.ToDecimal(municipalPremisesSumArea.Select().AsEnumerable().Where(m => m.Field<int>("id_premises") == id_premises).Sum(m => m.Field<double>("total_area")));
                     numericUpDownMunicipalArea.Minimum = value;
                     numericUpDownMunicipalArea.Maximum = value;
                     numericUpDownMunicipalArea.Value = value;
@@ -636,6 +640,7 @@ namespace Registry.Viewport
             premisesCurrentFund = CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>();
             premiseSubPremisesSumArea = CalcDataModel.GetInstance<CalcDataModelPremiseSubPremisesSumArea>();
             subPremisesCurrentFund = CalcDataModel.GetInstance<CalcDataModelSubPremisesCurrentFunds>();
+            municipalPremisesSumArea = CalcDataModel.GetInstance<CalcDataModelMunicipalPremises>();
 
             // Ожидаем дозагрузки, если это необходмо
             GeneralDataModel.Select();

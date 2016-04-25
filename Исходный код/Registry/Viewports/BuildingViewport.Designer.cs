@@ -871,9 +871,9 @@ namespace Registry.Viewport
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(16, 107);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(60, 18);
+            this.label10.Size = new System.Drawing.Size(90, 18);
             this.label10.TabIndex = 4;
-            this.label10.Text = "Прочие";
+            this.label10.Text = "Свободные";
             // 
             // label11
             // 

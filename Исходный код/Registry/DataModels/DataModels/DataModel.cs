@@ -271,13 +271,7 @@ namespace Registry.DataModels.DataModels
                 var method = currentDataModel.GetMethod("GetInstance", new Type[] { typeof(ToolStripProgressBar), typeof(int) });
                 var instanceDM = (T)method.Invoke(null, new object[] { progressBar, incrementor });
                 return instanceDM;
-            }            
-                //case DataModelType.PaymentsDataModel:
-                //    return PaymentsDataModel.GetInstance();
-                //case DataModelType.SelectableHeadHousingDepDataModel:
-                //    return SelectableSigners.GetInstance();
-                //default:
-                //    throw new DataModelException("Неизвестный тип модели");
+            }                            
         }
     }
 }

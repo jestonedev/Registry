@@ -947,11 +947,12 @@ namespace Registry.DataModels
                                 {
                                     id_process = gs.Key,
                                     value = gs.Count() > 1 ? gs.OrderBy(val => val).Aggregate((str1, str2) => str1 + str2) : gs.First()
-                                };
+                                };           
             var moreOneIdentStrings = from identRow in identStrings
-                                         group identRow.id_process by identRow.value into gs
-                                         where gs.Count() > 1
-                                         select gs.Key;
+                                      group identRow.id_process by identRow.value into gs
+                                      where gs.Count() > 1
+                                      select gs.Key;
+                                          
             var duplicateProcesses = from identRow in identStrings
                                         join tenancyRow in DataModel.GetInstance<TenancyProcessesDataModel>().FilterDeletedRows()
                                         on identRow.id_process equals tenancyRow.Field<int>("id_process")

@@ -17,7 +17,8 @@ namespace Registry.Viewport
         public enum PersonsOperationType
         {
             IncludePersons,
-            ExcludePersons
+            ExcludePersons,
+            ChangePersons
         }
 
         private readonly PersonsOperationType _personsOperationType;
@@ -25,12 +26,13 @@ namespace Registry.Viewport
         public TenancyAgreementOnSavePersonManager(List<TenancyPerson> persons, PersonsOperationType personsOperationType)
         {
             InitializeComponent();
-            if (persons == null || persons.Count == 0)
+            if ((persons == null || persons.Count == 0))
             {
                 DialogResult = DialogResult.OK;
                 return;
             }
             _personsOperationType = personsOperationType;
+           
             foreach (var person in persons)
             {
                 var kinshipRow = DataModel.GetInstance<KinshipsDataModel>().FilterDeletedRows().
@@ -39,6 +41,7 @@ namespace Registry.Viewport
                     person.DateOfBirth,
                     kinshipRow != null ? kinshipRow.Field<string>("kinship") : "", person.IdKinship);
             }
+                           
         }
 
         private void TenancyAgreementOnSavePersonManager_Shown(object sender, EventArgs e)
@@ -47,6 +50,11 @@ namespace Registry.Viewport
             {
                 Text = @"Исключить участников найма";
                 labelDate.Text = @"Дата исключения";
+            }
+            if (_personsOperationType == PersonsOperationType.ChangePersons)
+            {
+                Text = @"Сменить участников найма";
+                labelDate.Text = @"Дата изменения";
             }
         }
 
@@ -109,6 +117,33 @@ namespace Registry.Viewport
                         row.BeginEdit();
                         row["exclude_date"] = person.ExcludeDate;
                         row.EndEdit();
+                    }
+                    break;
+                case PersonsOperationType.ChangePersons:
+                    if (persons.Count != 2)
+                        break;
+                    else
+                    {
+                        for (int i = 0; i < persons.Count; i++ )
+                        {                          
+                            var row = tenancyPersons.Select().Rows.Find(persons[i].IdPerson);
+                            if (row == null) continue;
+                            var tenancyPerson = PersonFromRow(row);
+                            if(i == 0)
+                            {
+                                tenancyPerson.ExcludeDate = dateTimePickerDate.Value.Date;                                
+                            }
+                            else
+                            {
+                                tenancyPerson.IncludeDate = dateTimePickerDate.Value.Date;
+                            }
+                            tenancyPerson.IdKinship = persons[i].IdKinship;   
+                            var affected = tenancyPersons.Update(tenancyPerson);
+                            if (affected == -1)
+                            {
+                                break;
+                            }                                                                                
+                        }                        
                     }
                     break;
                 default:

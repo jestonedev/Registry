@@ -26,7 +26,7 @@ namespace Registry.Viewport
         DataModel warrants;
         DataModel kinships;
         #endregion Modeles
-
+        
         #region Views
         BindingSource v_tenancy_persons;
         BindingSource v_executors;
@@ -40,7 +40,8 @@ namespace Registry.Viewport
         private int? id_warrant;
         private bool is_first_visible = true;   // первое отображение формы
         private List<TenancyPerson> excludePersons = new List<TenancyPerson>(); 
-        private List<TenancyPerson> includePersons = new List<TenancyPerson>(); 
+        private List<TenancyPerson> includePersons = new List<TenancyPerson>();
+        private List<TenancyPerson> changePersons = new List<TenancyPerson>();
 
         private TenancyAgreementsViewport()
             : this(null, null)
@@ -52,6 +53,39 @@ namespace Registry.Viewport
         {
             InitializeComponent();
             DataGridView = dataGridView;
+        }
+
+        private void RedrawChangeTenantsTab()
+        {            
+            var dictTenants = new Dictionary<int, string>();            
+            foreach (var tenant in v_tenancy_persons.Cast<DataRowView>())
+            {
+                dictTenants.Add((int)tenant["id_person"], tenant["surname"] + " " + tenant["name"] + " " + tenant["patronymic"]);
+            }
+            curTenCB.DataSource = dictTenants.Count > 0 ? new BindingSource(dictTenants, null) :
+                new BindingSource(new Dictionary<int, string>() { { 0, "На данный момент нанимателя нет" } },null);       
+            curTenCB.DisplayMember = "Value";
+            curTenCB.ValueMember = "Key";
+            var weqe = v_tenancy_persons.Cast<DataRowView>().Where(tp => ((int)tp["id_kinship"]) == 1 && (tp["exclude_date"] == DBNull.Value)).Count();
+            curTenCB.SelectedValue = v_tenancy_persons.Cast<DataRowView>().Where(tp => ((int)tp["id_kinship"]) == 1 && (tp["exclude_date"] == DBNull.Value)).Count() > 0 ? v_tenancy_persons.Cast<DataRowView>().Where(tp => ((int)tp["id_kinship"]) == 1 && (tp["exclude_date"] == DBNull.Value)).FirstOrDefault()["id_person"] : 0;
+            newTenCB.DataSource = dictTenants.Count > 0 ? new BindingSource(dictTenants, null) :
+                new BindingSource(new Dictionary<int, string>() { { 0, "На данный момент участников найма нет" } }, null);
+            newTenCB.DisplayMember = "Value";
+            newTenCB.ValueMember = "Key";
+          
+            curTenRelationCB.DataSource = new BindingSource(v_kinships, null);
+            curTenRelationCB.ValueMember = "id_kinship";
+            curTenRelationCB.DisplayMember = "kinship";
+            curTenRelationCB.SelectedValue = curTenCB.SelectedValue == null ? 0 : (int)curTenCB.SelectedValue == 0 ? 0 :
+                v_tenancy_persons.Cast<DataRowView>().Where(tp => ((int)tp["id_person"]) == ((KeyValuePair<int, string>)curTenCB.SelectedItem).Key).FirstOrDefault()["id_kinship"];
+            curTenRelationCB.Enabled = (curTenRelationCB.SelectedValue == null) ? false : true;
+
+            newTenRelationCB.DataSource = new BindingSource(v_kinships, null);
+            newTenRelationCB.ValueMember = "id_kinship";
+            newTenRelationCB.DisplayMember = "kinship";
+            newTenRelationCB.SelectedValue = newTenCB.SelectedValue == null ? 0 : (int)newTenCB.SelectedValue == 0 ? 0 :
+                v_tenancy_persons.Cast<DataRowView>().Where(tp => ((int)tp["id_person"]) == ((KeyValuePair<int, string>)newTenCB.SelectedItem).Key).FirstOrDefault()["id_kinship"];
+            newTenRelationCB.Enabled = (newTenRelationCB.SelectedValue == null) ? false : true;
         }
 
         private void RedrawDataGridTenancyPersonsRows()
@@ -78,12 +112,15 @@ namespace Registry.Viewport
             comboBoxIncludeKinship.ValueMember = "id_kinship";
             comboBoxIncludeKinship.DisplayMember = "kinship";
 
+            RedrawChangeTenantsTab();
+
             textBoxAgreementContent.DataBindings.Clear();
             textBoxAgreementContent.DataBindings.Add("Text", GeneralBindingSource, "agreement_content", true, DataSourceUpdateMode.Never, "");
 
             dateTimePickerAgreementDate.DataBindings.Clear();
             dateTimePickerAgreementDate.DataBindings.Add("Value", GeneralBindingSource, "agreement_date", true, DataSourceUpdateMode.Never, DateTime.Now);
 
+            var ooo = v_tenancy_persons.Cast<DataRowView>();
             dataGridViewTenancyPersons.DataSource = v_tenancy_persons;
             surname.DataPropertyName = "surname";
             name.DataPropertyName = "name";
@@ -385,6 +422,7 @@ namespace Registry.Viewport
             dataGridView.Enabled = true;
             is_editable = true;
             MenuCallback.EditingStateUpdate();
+            
             if (includePersons.Count > 0)
             {
                 new TenancyAgreementOnSavePersonManager(includePersons,
@@ -397,6 +435,13 @@ namespace Registry.Viewport
                     TenancyAgreementOnSavePersonManager.PersonsOperationType.ExcludePersons).ShowDialog();
                 excludePersons.Clear();
             }
+            if (changePersons.Count > 0)
+            {
+                new TenancyAgreementOnSavePersonManager(changePersons,
+                    TenancyAgreementOnSavePersonManager.PersonsOperationType.ChangePersons).ShowDialog();
+                changePersons.Clear();                            
+            }
+            return;
         }
 
         public override bool CanInsertRecord()
@@ -514,6 +559,7 @@ namespace Registry.Viewport
         protected override void OnVisibleChanged(EventArgs e)
         {
             RedrawDataGridTenancyPersonsRows();
+            RedrawChangeTenantsTab();
             if (is_first_visible)
             {
                 is_first_visible = false;
@@ -830,6 +876,77 @@ namespace Registry.Viewport
             is_editable = true;
         }
 
+        private void vButtonChangeTenancy_Click(object sender, EventArgs e)
+        {            
+            if (curTenCB.SelectedValue == null || ((int)curTenCB.SelectedValue == 0))
+            {
+                MessageBox.Show("Не выбран текущий наниматель", "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            if (newTenCB.SelectedValue == null || ((int)newTenCB.SelectedValue == 0))
+            {
+                MessageBox.Show("Не выбран новый наниматель", "Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            if ((int)curTenCB.SelectedValue == (int)newTenCB.SelectedValue)
+            {
+                MessageBox.Show("Вы не изменили нанимателя", "Ошибка",
+                   MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            if ((int)newTenRelationCB.SelectedValue != 1)
+            {
+                MessageBox.Show("Отношение/связь для нового нанимателя неправильно выбрано", "Ошибка",
+                   MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
+                textBoxAgreementContent.Text = string.Format(CultureInfo.InvariantCulture, "1.1 По настоящему Соглашению Стороны по договору № {0} от {1}, ",
+                    ParentRow["registration_num"],
+                    ParentRow["registration_date"] != DBNull.Value ?
+                        Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "");
+            var curTenant = v_tenancy_persons.Cast<DataRowView>().Where(p => (int)p["id_person"] == (int)curTenCB.SelectedValue).First();
+            var newTenant = v_tenancy_persons.Cast<DataRowView>().Where(p => (int)p["id_person"] == (int)newTenCB.SelectedValue).First();
+            //Исключаем старого нанимателя
+            var snp =((KeyValuePair<int,string>)curTenCB.SelectedItem).Value.Trim();
+            string sSurname, sName, sPatronymic;
+            Declension.GetSNM(snp, out sSurname, out sName, out sPatronymic);
+            var gender = Declension.GetGender(sPatronymic);
+            textBoxAgreementContent.Text += string.Format("в связи со смертью нанимателя «{0}», договорились:",
+                gender == Gender.NotDefind ? snp : Declension.GetSNPDeclension(snp, gender, DeclensionCase.Rodit));
+            //Исключаем нового нанимателя
+            var snp2 = ((KeyValuePair<int, string>)newTenCB.SelectedItem).Value.Trim();
+            string sSurname2, sName2, sPatronymic2;
+            Declension.GetSNM(snp2, out sSurname2, out sName2, out sPatronymic2);
+            gender = Declension.GetGender(sPatronymic2);
+            textBoxAgreementContent.Text += Environment.NewLine + 
+                string.Format("1) считать стороной по договору - нанимателем - «{0}, {1}» ",
+                gender == Gender.NotDefind ? snp2 : Declension.GetSNPDeclension(snp2, gender, DeclensionCase.Vinit),
+            ((DateTime)newTenant["date_of_birth"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
+            changePersons.Add( new TenancyPerson
+            {
+                IdProcess =(int) curTenant["id_process"],
+                IdPerson =(int) curTenCB.SelectedValue,
+                Surname = curTenant["surname"].ToString(),
+                Name = curTenant["name"].ToString(),
+                Patronymic = curTenant["patronymic"].ToString(),
+                DateOfBirth = (DateTime?)(curTenant["date_of_birth"] == DBNull.Value ? null : curTenant["date_of_birth"]),
+                IdKinship =(int) curTenRelationCB.SelectedValue
+            });
+            changePersons.Add(new TenancyPerson
+            {
+                IdProcess =(int) newTenant["id_process"],
+                IdPerson = (int)newTenCB.SelectedValue,
+                Surname = newTenant["surname"].ToString(),
+                Name = newTenant["name"].ToString(),
+                Patronymic = newTenant["patronymic"].ToString(),
+                DateOfBirth = (DateTime?) (newTenant["date_of_birth"] == DBNull.Value ? null : newTenant["date_of_birth"]),
+                IdKinship = (int)newTenRelationCB.SelectedValue
+            });                                              
+        }
+
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
             if (keyData == Keys.Enter)
@@ -870,6 +987,18 @@ namespace Registry.Viewport
                     break;
             }
             textBoxAgreementContent.Text += textBoxAgreementContent.Text.EndsWith("\n") ? add : Environment.NewLine + add;                                       
-        }      
+        }       
+
+        private void curTenCB_SelectedIndexChanged(object sender, EventArgs e)
+        {            
+            //curTenRelationCB.SelectedValue = tenancy_persons.Select().AsEnumerable().Where(tp => tp.Field<int>("id_person") == ((KeyValuePair<int, string>)curTenCB.SelectedItem).Key).SingleOrDefault().Field<int>("id_kinship");                                       
+        }
+
+        private void newTenCB_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            newTenRelationCB.SelectedValue = (int)newTenCB.SelectedValue == 0 ? 0 :
+                v_tenancy_persons.Cast<DataRowView>().Where(tp => ((int)tp["id_person"]) == ((KeyValuePair<int, string>)newTenCB.SelectedItem).Key).FirstOrDefault()["id_kinship"];
+        }
+
     }
 }

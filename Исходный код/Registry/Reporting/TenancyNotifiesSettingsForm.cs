@@ -84,7 +84,7 @@ namespace Registry.Reporting
                 StaticFilter += " AND id_process NOT IN (0";
                 foreach (int id in exclude_processes)
                     StaticFilter += "," + id.ToString(CultureInfo.InvariantCulture);
-                StaticFilter += ")";
+                StaticFilter += ") ";
             }   
             RebuildFilter();
             v_tenancies.Sort = "end_date DESC";
@@ -124,19 +124,35 @@ namespace Registry.Reporting
         private void RebuildFilter()
         {
             string Filter = StaticFilter;
-            if ((!checkBoxExpired.Checked) && (!checkBoxExpiring.Checked))
-                Filter += " AND 1=0";
+            if (checkBoxExpired.Checked || checkBoxExpiring.Checked || checkBoxWithoutRegNum.Checked)
+            {
+                if(checkBoxExpired.Checked && (!checkBoxExpiring.Checked))
+                {                   
+                    Filter += String.Format(CultureInfo.InvariantCulture, " AND end_date < '{0:yyyy-MM-dd}'", DateTime.Now.Date);
+                }
+                if ((!checkBoxExpired.Checked) && checkBoxExpiring.Checked)
+                {                    
+                    Filter += String.Format(CultureInfo.InvariantCulture, " AND end_date >= '{0:yyyy-MM-dd}' AND end_date < '{1:yyyy-MM-dd}'", DateTime.Now.Date, DateTime.Now.Date.AddMonths(4));
+                }
+                if (checkBoxExpired.Checked && checkBoxExpiring.Checked)
+                {                    
+                    Filter += String.Format(CultureInfo.InvariantCulture, " AND end_date < '{0:yyyy-MM-dd}'", DateTime.Now.Date.AddMonths(4));
+                }
+                if(checkBoxWithoutRegNum.Checked)
+                {
+                    if (!checkBoxExpired.Checked && !checkBoxExpiring.Checked)                
+                        Filter = " registration_num IS NULL";
+                    else
+                        Filter += " OR registration_num IS NULL";
+                }
+            }
             else
-            if (checkBoxExpired.Checked && (!checkBoxExpiring.Checked))
-                Filter += String.Format(CultureInfo.InvariantCulture, " AND end_date < '{0:yyyy-MM-dd}'", DateTime.Now.Date);
-            else
-            if ((!checkBoxExpired.Checked) && checkBoxExpiring.Checked)
-                Filter += String.Format(CultureInfo.InvariantCulture, " AND end_date >= '{0:yyyy-MM-dd}' AND end_date < '{1:yyyy-MM-dd}'", DateTime.Now.Date, DateTime.Now.Date.AddMonths(4));
-            else
-                Filter += String.Format(CultureInfo.InvariantCulture, " AND end_date < '{0:yyyy-MM-dd}'", DateTime.Now.Date.AddMonths(4));
-            v_tenancies.Filter = Filter;
+            {
+                Filter += "AND 1=0";
+            }
+             v_tenancies.Filter = Filter;
             dataGridView.RowCount = v_tenancies.Count;
-            dataGridView.Refresh();
+            dataGridView.Refresh();          
         }
 
         void tenancy_notifies_max_date_RefreshEvent(object sender, EventArgs e)
@@ -336,6 +352,13 @@ namespace Registry.Reporting
             RebuildFilter();
         }
 
+        private void checkBoxWithoutRegNum_CheckedChanged(object sender, EventArgs e)
+        {
+            checked_tenancies.Clear();
+            checkBoxCheckAll.CheckState = CheckState.Unchecked;
+            RebuildFilter();
+        }
+
         private void checkBoxCheckAll_CheckedChanged(object sender, EventArgs e)
         {
             if (checkBoxCheckAll.CheckState == CheckState.Checked || checkBoxCheckAll.CheckState == CheckState.Unchecked)
@@ -358,7 +381,9 @@ namespace Registry.Reporting
         {
             ReportType = TenancyNotifiesReportType.PrintNotifiesSecondary;
             DialogResult = System.Windows.Forms.DialogResult.OK;
-        }
+        }        
+
+       
     }
 
     public enum TenancyNotifiesReportType { ExportAsIs, PrintNotifiesPrimary, PrintNotifiesSecondary }
