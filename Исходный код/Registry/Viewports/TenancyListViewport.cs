@@ -397,8 +397,8 @@ namespace Registry.Viewport
             {
                 {"type", "3"},
                 {"filter", GeneralBindingSource.Filter.Trim() == "" ? "(1=1)" : GeneralBindingSource.Filter},
-                {"columnHeaders", "["+columnHeaders+"]"},
-                {"columnPatterns", "["+columnPatterns+"]"}
+                {"columnHeaders", "["+columnHeaders+",{\"columnHeader\":\"Дополнительные сведения\"}]"},
+                {"columnPatterns", "["+columnPatterns+",{\"columnPattern\":\"$description$\"}]"}
             };
             return arguments;
         }

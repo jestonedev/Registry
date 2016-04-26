@@ -66,7 +66,7 @@
             this.vButtonOk.Name = "vButtonOk";
             this.vButtonOk.RoundedCornersMask = ((byte)(15));
             this.vButtonOk.Size = new System.Drawing.Size(117, 35);
-            this.vButtonOk.TabIndex = 7;
+            this.vButtonOk.TabIndex = 13;
             this.vButtonOk.Text = "Сформировать";
             this.vButtonOk.UseVisualStyleBackColor = false;
             this.vButtonOk.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -80,7 +80,7 @@
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
-            this.vButtonCancel.TabIndex = 8;
+            this.vButtonCancel.TabIndex = 14;
             this.vButtonCancel.Text = "Отменить";
             this.vButtonCancel.UseVisualStyleBackColor = false;
             this.vButtonCancel.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -140,7 +140,7 @@
             this.dateTimePickerRegistrationTo.Location = new System.Drawing.Point(44, 266);
             this.dateTimePickerRegistrationTo.Name = "dateTimePickerRegistrationTo";
             this.dateTimePickerRegistrationTo.Size = new System.Drawing.Size(220, 21);
-            this.dateTimePickerRegistrationTo.TabIndex = 6;
+            this.dateTimePickerRegistrationTo.TabIndex = 8;
             // 
             // label9
             // 
@@ -148,7 +148,7 @@
             this.label9.Location = new System.Drawing.Point(20, 269);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(21, 15);
-            this.label9.TabIndex = 70;
+            this.label9.TabIndex = 7;
             this.label9.Text = "по";
             // 
             // label10
@@ -157,7 +157,7 @@
             this.label10.Location = new System.Drawing.Point(22, 239);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(13, 15);
-            this.label10.TabIndex = 69;
+            this.label10.TabIndex = 5;
             this.label10.Text = "с";
             // 
             // dateTimePickerRegistrationFrom
@@ -165,7 +165,7 @@
             this.dateTimePickerRegistrationFrom.Location = new System.Drawing.Point(44, 236);
             this.dateTimePickerRegistrationFrom.Name = "dateTimePickerRegistrationFrom";
             this.dateTimePickerRegistrationFrom.Size = new System.Drawing.Size(220, 21);
-            this.dateTimePickerRegistrationFrom.TabIndex = 5;
+            this.dateTimePickerRegistrationFrom.TabIndex = 6;
             // 
             // label11
             // 
@@ -217,7 +217,7 @@
             this.checkBoxResettle2013to2017.Location = new System.Drawing.Point(14, 417);
             this.checkBoxResettle2013to2017.Name = "checkBoxResettle2013to2017";
             this.checkBoxResettle2013to2017.Size = new System.Drawing.Size(252, 19);
-            this.checkBoxResettle2013to2017.TabIndex = 74;
+            this.checkBoxResettle2013to2017.TabIndex = 11;
             this.checkBoxResettle2013to2017.Text = "По программе переселения 2013-2017";
             this.checkBoxResettle2013to2017.UseVisualStyleBackColor = true;
             this.checkBoxResettle2013to2017.CheckStateChanged += new System.EventHandler(this.checkBoxResettle2013to2017_CheckedChanged);
@@ -228,7 +228,7 @@
             this.textBoxHouse.MaxLength = 4;
             this.textBoxHouse.Name = "textBoxHouse";
             this.textBoxHouse.Size = new System.Drawing.Size(248, 21);
-            this.textBoxHouse.TabIndex = 78;
+            this.textBoxHouse.TabIndex = 1;
             // 
             // label5
             // 
@@ -254,7 +254,7 @@
             this.comboBoxStreet.Location = new System.Drawing.Point(14, 38);
             this.comboBoxStreet.Name = "comboBoxStreet";
             this.comboBoxStreet.Size = new System.Drawing.Size(248, 23);
-            this.comboBoxStreet.TabIndex = 77;
+            this.comboBoxStreet.TabIndex = 0;
             this.comboBoxStreet.DropDownClosed += new System.EventHandler(this.comboBoxStreet_DropDownClosed);
             this.comboBoxStreet.KeyUp += new System.Windows.Forms.KeyEventHandler(this.comboBoxStreet_KeyUp);
             this.comboBoxStreet.Leave += new System.EventHandler(this.comboBoxStreet_Leave);
@@ -269,7 +269,7 @@
             this.groupBoxAddress.Location = new System.Drawing.Point(1, 293);
             this.groupBoxAddress.Name = "groupBoxAddress";
             this.groupBoxAddress.Size = new System.Drawing.Size(276, 116);
-            this.groupBoxAddress.TabIndex = 79;
+            this.groupBoxAddress.TabIndex = 10;
             this.groupBoxAddress.TabStop = false;
             this.groupBoxAddress.Text = "      Адрес";
             // 
@@ -279,7 +279,7 @@
             this.checkBoxEnableAddress.Location = new System.Drawing.Point(11, 295);
             this.checkBoxEnableAddress.Name = "checkBoxEnableAddress";
             this.checkBoxEnableAddress.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxEnableAddress.TabIndex = 80;
+            this.checkBoxEnableAddress.TabIndex = 9;
             this.checkBoxEnableAddress.UseVisualStyleBackColor = true;
             this.checkBoxEnableAddress.CheckedChanged += new System.EventHandler(this.checkBoxEnableAddress_CheckedChanged);
             // 
@@ -289,7 +289,7 @@
             this.checkBoxCheckanovskiy.Location = new System.Drawing.Point(14, 442);
             this.checkBoxCheckanovskiy.Name = "checkBoxCheckanovskiy";
             this.checkBoxCheckanovskiy.Size = new System.Drawing.Size(243, 19);
-            this.checkBoxCheckanovskiy.TabIndex = 81;
+            this.checkBoxCheckanovskiy.TabIndex = 12;
             this.checkBoxCheckanovskiy.Text = "Чекановский (по делу № 2-2355/2011)";
             this.checkBoxCheckanovskiy.UseVisualStyleBackColor = true;
             this.checkBoxCheckanovskiy.CheckStateChanged += new System.EventHandler(this.checkBoxCheckanovskiy_CheckedChanged);
