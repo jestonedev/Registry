@@ -8,11 +8,8 @@ namespace Registry.Viewport
     {
         public static Viewport CreateViewport<T>(IMenuCallback menuCallback) where T : Viewport
         {
-            Type viewport = typeof(T);
-            var constructorViewport = viewport.GetConstructor( new Type[] { typeof(Viewport), typeof(IMenuCallback) });
-            //var constructorViewport = viewport.GetMethod(".ctor", BindingFlags.CreateInstance | BindingFlags.Public | BindingFlags.Instance);
-            //return (T) constructorViewport.Invoke(null, new object[] {  menuCallback });
-            return (T) Activator.CreateInstance(viewport, new object[] { null, menuCallback });            
+            var viewport = typeof(T);
+            return (T) Activator.CreateInstance(viewport, null, menuCallback);            
         }
     }
 }

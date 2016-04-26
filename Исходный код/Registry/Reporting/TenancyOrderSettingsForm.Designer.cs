@@ -53,6 +53,7 @@
             this.comboBoxStreet = new System.Windows.Forms.ComboBox();
             this.groupBoxAddress = new System.Windows.Forms.GroupBox();
             this.checkBoxEnableAddress = new System.Windows.Forms.CheckBox();
+            this.checkBoxCheckanovskiy = new System.Windows.Forms.CheckBox();
             this.groupBoxAddress.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -61,7 +62,7 @@
             this.vButtonOk.AllowAnimations = true;
             this.vButtonOk.BackColor = System.Drawing.Color.Transparent;
             this.vButtonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.vButtonOk.Location = new System.Drawing.Point(13, 441);
+            this.vButtonOk.Location = new System.Drawing.Point(12, 473);
             this.vButtonOk.Name = "vButtonOk";
             this.vButtonOk.RoundedCornersMask = ((byte)(15));
             this.vButtonOk.Size = new System.Drawing.Size(117, 35);
@@ -75,7 +76,7 @@
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(148, 441);
+            this.vButtonCancel.Location = new System.Drawing.Point(147, 473);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
@@ -213,12 +214,13 @@
             // checkBoxResettle2013to2017
             // 
             this.checkBoxResettle2013to2017.AutoSize = true;
-            this.checkBoxResettle2013to2017.Location = new System.Drawing.Point(13, 415);
+            this.checkBoxResettle2013to2017.Location = new System.Drawing.Point(14, 417);
             this.checkBoxResettle2013to2017.Name = "checkBoxResettle2013to2017";
             this.checkBoxResettle2013to2017.Size = new System.Drawing.Size(252, 19);
             this.checkBoxResettle2013to2017.TabIndex = 74;
             this.checkBoxResettle2013to2017.Text = "По программе переселения 2013-2017";
             this.checkBoxResettle2013to2017.UseVisualStyleBackColor = true;
+            this.checkBoxResettle2013to2017.CheckStateChanged += new System.EventHandler(this.checkBoxResettle2013to2017_CheckedChanged);
             // 
             // textBoxHouse
             // 
@@ -281,12 +283,24 @@
             this.checkBoxEnableAddress.UseVisualStyleBackColor = true;
             this.checkBoxEnableAddress.CheckedChanged += new System.EventHandler(this.checkBoxEnableAddress_CheckedChanged);
             // 
+            // checkBoxCheckanovskiy
+            // 
+            this.checkBoxCheckanovskiy.AutoSize = true;
+            this.checkBoxCheckanovskiy.Location = new System.Drawing.Point(14, 442);
+            this.checkBoxCheckanovskiy.Name = "checkBoxCheckanovskiy";
+            this.checkBoxCheckanovskiy.Size = new System.Drawing.Size(243, 19);
+            this.checkBoxCheckanovskiy.TabIndex = 81;
+            this.checkBoxCheckanovskiy.Text = "Чекановский (по делу № 2-2355/2011)";
+            this.checkBoxCheckanovskiy.UseVisualStyleBackColor = true;
+            this.checkBoxCheckanovskiy.CheckStateChanged += new System.EventHandler(this.checkBoxCheckanovskiy_CheckedChanged);
+            // 
             // TenancyOrderSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(279, 484);
+            this.ClientSize = new System.Drawing.Size(279, 519);
+            this.Controls.Add(this.checkBoxCheckanovskiy);
             this.Controls.Add(this.checkBoxEnableAddress);
             this.Controls.Add(this.groupBoxAddress);
             this.Controls.Add(this.checkBoxResettle2013to2017);
@@ -348,5 +362,6 @@
         private System.Windows.Forms.ComboBox comboBoxStreet;
         private System.Windows.Forms.GroupBox groupBoxAddress;
         private System.Windows.Forms.CheckBox checkBoxEnableAddress;
+        private System.Windows.Forms.CheckBox checkBoxCheckanovskiy;
     }
 }

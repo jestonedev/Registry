@@ -357,7 +357,6 @@ namespace Registry.Viewport
                          Convert.ToInt32(
                              ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_account"],
                              CultureInfo.InvariantCulture);
-            Type viewportType = typeof(T);
             if (typeof(T) == typeof(PremisesListViewport))
             {
                 var ids = PaymentsAccountsDataModel.GetPremisesIdsByAccountFilter(filter).ToList();
@@ -366,11 +365,6 @@ namespace Registry.Viewport
                     MessageBox.Show(@"К данному лицевому счету не привязано ни одного объекта недвижимости", @"Внимание",
                     MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                     return;
-                }
-                if (ids.Count == 1)
-                {
-                    //viewportType = ViewportType.PremisesViewport;
-                    viewportType = typeof(PremisesViewport);
                 }
                 filter = string.Format("id_premises IN (0{0})", ids.Select(id => id.ToString()).Aggregate((x,y) => x + "," + y));
                 ShowAssocViewport<PremisesViewport>(MenuCallback, 

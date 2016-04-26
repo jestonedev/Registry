@@ -20,52 +20,52 @@ namespace Registry.Viewport
     internal sealed partial class PremisesViewport : FormViewport
     {
         #region Models
-        private DataModel buildings = null;
-        private DataModel kladr = null;
-        private DataModel premises_types = null;
-        private DataModel premises_kinds = null;
-        private DataModel sub_premises = null;
-        private DataModel restrictions = null;
-        private DataModel restrictionTypes = null;
-        private DataModel restrictionPremisesAssoc = null;
-        private DataModel restrictionBuildingsAssoc = null;
-        private DataModel ownershipRights = null;
-        private DataModel ownershipRightTypes = null;
-        private DataModel ownershipPremisesAssoc = null;
-        private DataModel ownershipBuildingsAssoc = null;
-        private DataModel fundTypes = null;
-        private DataModel object_states = null;
-        private CalcDataModel premisesCurrentFund = null;
-        private CalcDataModel premiseSubPremisesSumArea = null;
-        private CalcDataModel subPremisesCurrentFund = null;
-        private CalcDataModel municipalPremisesSumArea = null;
+        private DataModel buildings;
+        private DataModel kladr;
+        private DataModel premises_types;
+        private DataModel premises_kinds;
+        private DataModel sub_premises;
+        private DataModel restrictions;
+        private DataModel restrictionTypes;
+        private DataModel restrictionPremisesAssoc;
+        private DataModel restrictionBuildingsAssoc;
+        private DataModel ownershipRights;
+        private DataModel ownershipRightTypes;
+        private DataModel ownershipPremisesAssoc;
+        private DataModel ownershipBuildingsAssoc;
+        private DataModel fundTypes;
+        private DataModel object_states;
+        private CalcDataModel premisesCurrentFund;
+        private CalcDataModel premiseSubPremisesSumArea;
+        private CalcDataModel subPremisesCurrentFund;
+
         #endregion Models
 
         #region Views
-        private BindingSource v_premisesCurrentFund = null;
-        private BindingSource v_buildings = null;
-        private BindingSource v_kladr = null;
-        private BindingSource v_premises_types = null;
-        private BindingSource v_premises_kinds = null;
-        private BindingSource v_sub_premises = null;
-        private BindingSource v_restrictions = null;
-        private BindingSource v_restrictonTypes = null;
-        private BindingSource v_restrictionPremisesAssoc = null;
-        private BindingSource v_restrictionBuildingsAssoc = null;
-        private BindingSource v_ownershipRights = null;
-        private BindingSource v_ownershipRightTypes = null;
-        private BindingSource v_ownershipPremisesAssoc = null;
-        private BindingSource v_ownershipBuildingsAssoc = null;
-        private BindingSource v_fundType = null;
-        private BindingSource v_object_states = null;
-        private BindingSource v_sub_premises_object_states = null;
-        private BindingSource v_premisesSubPremisesSumArea = null;
-        private BindingSource v_subPremisesCurrentFund = null;
+        private BindingSource v_premisesCurrentFund;
+        private BindingSource v_buildings;
+        private BindingSource v_kladr;
+        private BindingSource v_premises_types;
+        private BindingSource v_premises_kinds;
+        private BindingSource v_sub_premises;
+        private BindingSource v_restrictions;
+        private BindingSource v_restrictonTypes;
+        private BindingSource v_restrictionPremisesAssoc;
+        private BindingSource v_restrictionBuildingsAssoc;
+        private BindingSource v_ownershipRights;
+        private BindingSource v_ownershipRightTypes;
+        private BindingSource v_ownershipPremisesAssoc;
+        private BindingSource v_ownershipBuildingsAssoc;
+        private BindingSource v_fundType;
+        private BindingSource v_object_states;
+        private BindingSource v_sub_premises_object_states;
+        private BindingSource v_premisesSubPremisesSumArea;
+        private BindingSource v_subPremisesCurrentFund;
         #endregion Views
 
         //Forms
-        private SearchForm spExtendedSearchForm = null;
-        private SearchForm spSimpleSearchForm = null;
+        private SearchForm spExtendedSearchForm;
+        private SearchForm spSimpleSearchForm;
 
         private bool is_first_visibility = true;
 
@@ -92,7 +92,7 @@ namespace Registry.Viewport
                 v_restrictionBuildingsAssoc.Filter = "id_building = " + ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"].ToString();
                 restrictionsFilter += " OR id_restriction IN (0";
                 for (int i = 0; i < v_restrictionBuildingsAssoc.Count; i++)
-                    restrictionsFilter += ((DataRowView)v_restrictionBuildingsAssoc[i])["id_restriction"].ToString() + ",";
+                    restrictionsFilter += ((DataRowView)v_restrictionBuildingsAssoc[i])["id_restriction"] + ",";
                 restrictionsFilter = restrictionsFilter.TrimEnd(new char[] { ',' });
                 restrictionsFilter += ")";
             }
@@ -127,29 +127,30 @@ namespace Registry.Viewport
 
         private void FiltersRebuild()
         {
-            var id_premises = (int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"];
+            if (GeneralBindingSource.Position == -1)
+            {
+                ClearPremiseCalcInfo();
+                return;
+            }
+            var row = (DataRowView) GeneralBindingSource[GeneralBindingSource.Position];
+            if (row["id_premises"] == DBNull.Value)
+            {
+                ClearPremiseCalcInfo();
+                return;
+            }
             if (v_premisesCurrentFund != null)
             {
-                int position = -1;
-                if ((GeneralBindingSource.Position != -1) && !(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"] is DBNull))
-                    position = 
-                        v_premisesCurrentFund.Find("id_premises", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"]);
-                if (position != -1)
-                    comboBoxCurrentFundType.SelectedValue = ((DataRowView)v_premisesCurrentFund[position])["id_fund_type"];
-                else
-                    comboBoxCurrentFundType.SelectedValue = DBNull.Value;
+                var position = v_premisesCurrentFund.Find("id_premises", row["id_premises"]);
+                comboBoxCurrentFundType.SelectedValue = position != -1 ? 
+                    ((DataRowView)v_premisesCurrentFund[position])["id_fund_type"] : DBNull.Value;
                 ShowOrHideCurrentFund();
             }
             if (v_premisesSubPremisesSumArea != null)
             {
-                int position = -1;
-                if ((GeneralBindingSource.Position != -1) && !(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"] is DBNull))
-                    position = v_premisesSubPremisesSumArea.Find("id_premises", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"]);
+                var position = v_premisesSubPremisesSumArea.Find("id_premises", row["id_premises"]);
                 if (position != -1)
                 {
-                    //decimal value = Convert.ToDecimal((double)((DataRowView)v_premisesSubPremisesSumArea[position])["sum_area"]);
-                    var temp = municipalPremisesSumArea.Select().AsEnumerable().Where(m => m.Field<int>("id_premises") == id_premises);
-                    decimal value = Convert.ToDecimal(municipalPremisesSumArea.Select().AsEnumerable().Where(m => m.Field<int>("id_premises") == id_premises).Sum(m => m.Field<double>("total_area")));
+                    var value = Convert.ToDecimal((double)((DataRowView)v_premisesSubPremisesSumArea[position])["sum_area"]);
                     numericUpDownMunicipalArea.Minimum = value;
                     numericUpDownMunicipalArea.Maximum = value;
                     numericUpDownMunicipalArea.Value = value;
@@ -161,6 +162,14 @@ namespace Registry.Viewport
                     numericUpDownMunicipalArea.Value = 0;
                 }
             }
+        }
+
+        private void ClearPremiseCalcInfo()
+        {
+            comboBoxCurrentFundType.SelectedValue = DBNull.Value;
+            numericUpDownMunicipalArea.Minimum = 0;
+            numericUpDownMunicipalArea.Maximum = 0;
+            numericUpDownMunicipalArea.Value = 0;
         }
 
         private void RedrawRestrictionDataGridRows()
@@ -640,7 +649,7 @@ namespace Registry.Viewport
             premisesCurrentFund = CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>();
             premiseSubPremisesSumArea = CalcDataModel.GetInstance<CalcDataModelPremiseSubPremisesSumArea>();
             subPremisesCurrentFund = CalcDataModel.GetInstance<CalcDataModelSubPremisesCurrentFunds>();
-            municipalPremisesSumArea = CalcDataModel.GetInstance<CalcDataModelMunicipalPremises>();
+            CalcDataModel.GetInstance<CalcDataModelMunicipalPremises>();
 
             // Ожидаем дозагрузки, если это необходмо
             GeneralDataModel.Select();

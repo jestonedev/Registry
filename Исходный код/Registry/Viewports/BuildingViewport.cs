@@ -30,7 +30,6 @@ namespace Registry.Viewport
         private DataModel _ownershipBuildingsAssoc;
         private DataModel _fundTypes;
         private DataModel _objectStates;
-        private DataModel _buildings;
         private CalcDataModel _buildingsPremisesFunds;
         private CalcDataModel _buildingsCurrentFund;
         private CalcDataModel _buildingsPremisesSumArea;
@@ -48,10 +47,8 @@ namespace Registry.Viewport
         private BindingSource _vOwnershipBuildingsAssoc;
         private BindingSource _vFundType;
         private BindingSource _vObjectStates;
-        private BindingSource _vBuildingPremisesFunds;
         private BindingSource _vBuildingCurrentFund;
-        private BindingSource _vBuildingPremisesSumArea;
-        private BindingSource _vMunicipalPremises;
+
         #endregion Views
 
         //Forms
@@ -92,118 +89,89 @@ namespace Registry.Viewport
 
         private void FiltersRebuild()
         {
-            var id_building = (int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"];
-            if (_vBuildingPremisesFunds != null)
+            if (GeneralBindingSource.Position == -1)
             {
-                var position = -1;                
-                if ((GeneralBindingSource.Position != -1) && !(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] is DBNull))
-                    position =
-                        _vBuildingPremisesFunds.Find("id_building", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"]);
-                if (position != -1)
-                {                    
-                    //var socialCount = Convert.ToDecimal(((DataRowView)_vBuildingPremisesFunds[position])["social_premises_count"], CultureInfo.InvariantCulture);
-                    //var specialCount = Convert.ToDecimal(((DataRowView)_vBuildingPremisesFunds[position])["special_premises_count"], CultureInfo.InvariantCulture);
-                    //var commercialCount = Convert.ToDecimal(((DataRowView)_vBuildingPremisesFunds[position])["commercial_premises_count"], CultureInfo.InvariantCulture);
-                    //var otherCount = Convert.ToDecimal(((DataRowView)_vBuildingPremisesFunds[position])["other_premises_count"], CultureInfo.InvariantCulture);
-                    var socialCount = _municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == id_building && s.Field<int>("id_fund_type") == 1).Count();
-                    var commercialCount = _municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == id_building && s.Field<int>("id_fund_type") == 2).Count();
-                    var specialCount = _municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == id_building && s.Field<int>("id_fund_type") == 3).Count();                   
-                    var otherCount = _municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == id_building && s.Field<int>("id_fund_type") == 0).Count();
-                    numericUpDownSocialPremisesCount.Minimum = socialCount;
-                    numericUpDownSpecialPremisesCount.Minimum = specialCount;
-                    numericUpDownOtherPremisesCount.Minimum = otherCount;
-                    numericUpDownCommercialPremisesCount.Minimum = commercialCount;
-                    numericUpDownSocialPremisesCount.Maximum = socialCount;
-                    numericUpDownSpecialPremisesCount.Maximum = specialCount;
-                    numericUpDownOtherPremisesCount.Maximum = otherCount;
-                    numericUpDownCommercialPremisesCount.Maximum = commercialCount;
-                    numericUpDownSocialPremisesCount.Value = socialCount;
-                    numericUpDownSpecialPremisesCount.Value = specialCount;
-                    numericUpDownOtherPremisesCount.Value = otherCount;
-                    numericUpDownCommercialPremisesCount.Value = commercialCount;
-                }
-                else
-                {
-                    numericUpDownSocialPremisesCount.Minimum = 0;
-                    numericUpDownSpecialPremisesCount.Minimum = 0;
-                    numericUpDownOtherPremisesCount.Minimum = 0;
-                    numericUpDownCommercialPremisesCount.Minimum = 0;
-                    numericUpDownSocialPremisesCount.Maximum = 0;
-                    numericUpDownSpecialPremisesCount.Maximum = 0;
-                    numericUpDownOtherPremisesCount.Maximum = 0;
-                    numericUpDownCommercialPremisesCount.Maximum = 0;
-                    numericUpDownSocialPremisesCount.Value = 0;
-                    numericUpDownSpecialPremisesCount.Value = 0;
-                    numericUpDownOtherPremisesCount.Value = 0;
-                    numericUpDownCommercialPremisesCount.Value = 0;
-                }
+                ResetMunicipalInfo();
+                return;
             }
+            var row = (DataRowView) GeneralBindingSource[GeneralBindingSource.Position];
+            if (row["id_building"] == DBNull.Value)
+            {
+                ResetMunicipalInfo(); 
+                return;
+            }
+            var idBuilding = (int)row["id_building"];
             if (_vBuildingCurrentFund != null)
             {
-                var position = -1;
-                if ((GeneralBindingSource.Position != -1) && !(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] is DBNull))
-                    position =
-                        _vBuildingCurrentFund.Find("id_building", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"]);
-                if (position != -1)
-                    comboBoxCurrentFundType.SelectedValue = ((DataRowView)_vBuildingCurrentFund[position])["id_fund_type"];
-                else
-                    comboBoxCurrentFundType.SelectedValue = DBNull.Value;
+                var position = _vBuildingCurrentFund.Find("id_building", row["id_building"]);
+                comboBoxCurrentFundType.SelectedValue = position != -1 ? ((DataRowView)_vBuildingCurrentFund[position])["id_fund_type"] : DBNull.Value;
                 ShowOrHideCurrentFund();
             }
-            if (_vBuildingPremisesSumArea != null)
+            var socialCount = _municipalPremises.Select().AsEnumerable().Count(s => s.Field<int>("id_building") == idBuilding && s.Field<int>("id_fund_type") == 1);
+            var commercialCount = _municipalPremises.Select().AsEnumerable().Count(s => s.Field<int>("id_building") == idBuilding && s.Field<int>("id_fund_type") == 2);
+            var specialCount = _municipalPremises.Select().AsEnumerable().Count(s => s.Field<int>("id_building") == idBuilding && s.Field<int>("id_fund_type") == 3);                   
+            var otherCount = _municipalPremises.Select().AsEnumerable().Count(s => s.Field<int>("id_building") == idBuilding && s.Field<int>("id_fund_type") == 0);
+            numericUpDownSocialPremisesCount.Minimum = socialCount;
+            numericUpDownSpecialPremisesCount.Minimum = specialCount;
+            numericUpDownOtherPremisesCount.Minimum = otherCount;
+            numericUpDownCommercialPremisesCount.Minimum = commercialCount;
+            numericUpDownSocialPremisesCount.Maximum = socialCount;
+            numericUpDownSpecialPremisesCount.Maximum = specialCount;
+            numericUpDownOtherPremisesCount.Maximum = otherCount;
+            numericUpDownCommercialPremisesCount.Maximum = commercialCount;
+            numericUpDownSocialPremisesCount.Value = socialCount;
+            numericUpDownSpecialPremisesCount.Value = specialCount;
+            numericUpDownOtherPremisesCount.Value = otherCount;
+            numericUpDownCommercialPremisesCount.Value = commercialCount;
+            var sumArea = Convert.ToDecimal(_municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == idBuilding).Sum(m => m.Field<double>("total_area")));
+            var totalMunCount = Convert.ToDecimal(_municipalPremises.Select().AsEnumerable().Count(s => s.Field<int>("id_building") == idBuilding));
+            var totalPremisesCount = Convert.ToDecimal(
+                Math.Max(DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows().Count(b => b.Field<int>("id_building") == idBuilding),
+                row["num_apartments"] == DBNull.Value ? 0 : (int)row["num_apartments"]));
+            if (totalPremisesCount > 0)
             {
-                var position = -1;
-                if ((GeneralBindingSource.Position != -1) && !(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] is DBNull))
-                    //position = _vBuildingPremisesSumArea.Find("id_building", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"]);
-
-                    position = _vBuildingPremisesFunds.Find("id_building", id_building);
-                if (position != -1)
-                {
-                    //var row = ((DataRowView) _vBuildingPremisesSumArea[position]);
-                    //var sumArea = Convert.ToDecimal((double)row["sum_area"], CultureInfo.InvariantCulture);
-                    var sumArea = Convert.ToDecimal(_municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == id_building).Sum(m => m.Field<double>("total_area")));
-                    var totalMunCount =Convert.ToDecimal(_municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == id_building).Count());
-                    //var totalMunCount = Convert.ToDecimal((int)row["mun_premises_count"], CultureInfo.InvariantCulture);
-                    //var totalPremisesCount = 
-                    //    (from premisesRow in DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows()
-                    //    where premisesRow.Field<int>("id_building") == (int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"]
-                    //    group premisesRow by premisesRow.Field<int>("id_building") into gs
-                    //    select gs.Count()).First();
-                    var totalPremisesCount =Convert.ToDecimal(_buildings.Select().Rows.Find(id_building).Field<int>("num_apartments"));
-
-                    if (totalPremisesCount > 0)
-                    {
-                        var percentage = (totalMunCount/totalPremisesCount)*100;
-                        numericUpDownMunPremisesPercentage.Maximum = percentage;
-                        numericUpDownMunPremisesPercentage.Minimum = percentage;
-                        numericUpDownMunPremisesPercentage.Value = percentage;
-                    }
-                    else
-                    {
-                        numericUpDownMunPremisesPercentage.Maximum = 0;
-                        numericUpDownMunPremisesPercentage.Minimum = 0;
-                        numericUpDownMunPremisesPercentage.Value = 0;
-                    }
-                    numericUpDownMunicipalArea.Minimum = sumArea;
-                    numericUpDownMunicipalArea.Maximum = sumArea;
-                    numericUpDownMunicipalArea.Value = sumArea;
-                    numericUpDownMunPremisesCount.Minimum = totalMunCount;
-                    numericUpDownMunPremisesCount.Maximum = totalMunCount;
-                    numericUpDownMunPremisesCount.Value = totalMunCount;
-                }
-                else
-                {
-                    numericUpDownMunicipalArea.Maximum = 0;
-                    numericUpDownMunicipalArea.Minimum = 0;
-                    numericUpDownMunicipalArea.Value = 0;
-                    numericUpDownMunPremisesCount.Maximum = 0;
-                    numericUpDownMunPremisesCount.Minimum = 0;
-                    numericUpDownMunPremisesCount.Value = 0;
-                    numericUpDownMunPremisesPercentage.Maximum = 0;
-                    numericUpDownMunPremisesPercentage.Minimum = 0;
-                    numericUpDownMunPremisesPercentage.Value = 0;
-                }
+                var percentage = (totalMunCount/totalPremisesCount)*100;
+                numericUpDownMunPremisesPercentage.Maximum = percentage;
+                numericUpDownMunPremisesPercentage.Minimum = percentage;
+                numericUpDownMunPremisesPercentage.Value = percentage;
             }
+            else
+            {
+                numericUpDownMunPremisesPercentage.Maximum = 0;
+                numericUpDownMunPremisesPercentage.Minimum = 0;
+                numericUpDownMunPremisesPercentage.Value = 0;
+            }
+            numericUpDownMunicipalArea.Minimum = sumArea;
+            numericUpDownMunicipalArea.Maximum = sumArea;
+            numericUpDownMunicipalArea.Value = sumArea;
+            numericUpDownMunPremisesCount.Minimum = totalMunCount;
+            numericUpDownMunPremisesCount.Maximum = totalMunCount;
+            numericUpDownMunPremisesCount.Value = totalMunCount;           
+        }
+
+        private void ResetMunicipalInfo()
+        {
+            numericUpDownSocialPremisesCount.Minimum = 0;
+            numericUpDownSpecialPremisesCount.Minimum = 0;
+            numericUpDownOtherPremisesCount.Minimum = 0;
+            numericUpDownCommercialPremisesCount.Minimum = 0;
+            numericUpDownSocialPremisesCount.Maximum = 0;
+            numericUpDownSpecialPremisesCount.Maximum = 0;
+            numericUpDownOtherPremisesCount.Maximum = 0;
+            numericUpDownCommercialPremisesCount.Maximum = 0;
+            numericUpDownSocialPremisesCount.Value = 0;
+            numericUpDownSpecialPremisesCount.Value = 0;
+            numericUpDownOtherPremisesCount.Value = 0;
+            numericUpDownCommercialPremisesCount.Value = 0;
+            numericUpDownMunPremisesPercentage.Maximum = 0;
+            numericUpDownMunPremisesPercentage.Minimum = 0;
+            numericUpDownMunPremisesPercentage.Value = 0;
+            numericUpDownMunicipalArea.Minimum = 0;
+            numericUpDownMunicipalArea.Maximum = 0;
+            numericUpDownMunicipalArea.Value = 0;
+            numericUpDownMunPremisesCount.Minimum = 0;
+            numericUpDownMunPremisesCount.Maximum = 0;
+            numericUpDownMunPremisesCount.Value = 0;    
         }
 
         private void ShowOrHideCurrentFund()
@@ -563,7 +531,6 @@ namespace Registry.Viewport
             _ownershipBuildingsAssoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>();
             _fundTypes = DataModel.GetInstance<FundTypesDataModel>();
             _objectStates = DataModel.GetInstance<ObjectStatesDataModel>();
-            _buildings = DataModel.GetInstance<BuildingsDataModel>();
 
             //Вычисляемые модели
             _buildingsPremisesFunds = CalcDataModel.GetInstance<CalcDataModelBuildingsPremisesFunds>();
@@ -583,7 +550,6 @@ namespace Registry.Viewport
             _ownershipBuildingsAssoc.Select();
             _fundTypes.Select();
             _objectStates.Select();
-            _buildings.Select();
 
             var ds = DataModel.DataSet;
 
@@ -625,13 +591,13 @@ namespace Registry.Viewport
                 DataSource = ds
             };
 
-            _vBuildingPremisesFunds = new BindingSource
+            new BindingSource
             {
                 DataMember = "buildings_premises_funds",
                 DataSource = _buildingsPremisesFunds.Select()
             };
 
-            _vMunicipalPremises = new BindingSource
+            new BindingSource
             {
                 DataMember = "municipal_premises_current_funds",
                 DataSource = _municipalPremises.Select()
@@ -643,7 +609,7 @@ namespace Registry.Viewport
                 DataSource = _buildingsCurrentFund.Select()
             };
 
-            _vBuildingPremisesSumArea = new BindingSource
+            new BindingSource
             {
                 DataMember = "buildings_premises_sum_area",
                 DataSource = _buildingsPremisesSumArea.Select()

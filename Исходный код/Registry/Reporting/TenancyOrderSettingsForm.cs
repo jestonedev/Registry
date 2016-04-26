@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
-using Registry.DataModels;
 using System.Globalization;
 using Registry.DataModels.DataModels;
 
@@ -14,10 +8,7 @@ namespace Registry.Reporting
 {
     public partial class TenancyOrderSettingsForm : Form
     {
-
-        BindingSource v_rent_types = null;
-        BindingSource v_executors = null;
-        private BindingSource v_kladr = null;
+        private readonly BindingSource _vKladr;
 
         public int IdRentType
         {
@@ -79,9 +70,21 @@ namespace Registry.Reporting
             }
         }
 
-        public bool IsResettle2013To2017
+        public string MainText
         {
-            get { return checkBoxResettle2013to2017.Checked; }
+            get
+            {
+                if (checkBoxResettle2013to2017.Checked)
+                {
+                    return "Руководствуясь распоряжением администрации муниципального образования города Братска от $protocol_date$ № $protocol_num$ «Об утверждении сводного предварительного списка переселения граждан из аварийного жилищного фонда территориального округа города Братска, Правобережного территориального округа города Братска за счет средств бюджета города Братска, выделенных в 2015 году на реализацию региональной адресной программы Иркутской области «Переселение граждан, проживающих на территории Иркутской области, из аварийного жилищного фонда, признанного непригодным для проживания, в 2013 - 2017 годах», утвержденной постановлением Правительства Иркутской области от 29.05.2013 № 199-пп, и муниципальной программы города Братска «Развитие градостроительного комплекса и обеспечение населения доступным жильем» на 2014-2025 годы», утвержденной постановлением администрации муниципального образования города Братска от 15.10.2013 № 2759», руководствуясь статьями 45, 67 Устава муниципального образования города Братска, ";
+                } 
+                if (checkBoxCheckanovskiy.Checked)
+                {
+                    return "Во исполнение решения Братского городского суда Иркутской области от 02.09.2011 по гражданскому делу № 2-2355/2011 по иску Западно-Байкальского межрайонного прокурора в защиту интересов Российской Федерации, неопределенного круга лиц к Открытому акционерному обществу «РУСАЛ Братский алюминиевый завод» (далее - ОАО «РУСАЛ Братск»), администрации муниципального образования города Братска об обязании переселить жителей жилого района Чекановский города Братска в жилье, соответствующее нормам действующего законодательства, за пределы санитарно-защитной зоны ОАО «РУСАЛ Братск», руководствуясь статьями 45, 67 Устава муниципального образования города Братска, ";
+                }
+                return "Рассмотрев протокол заседания комиссии по жилищным вопросам  администрации муниципального образования города Братска от $protocol_date$ № $protocol_num$, в соответствии с Порядком предоставления жилых помещений жилищного фонда коммерческого использования муниципального образования города Братска, утвержденным постановлением мэра города Братска от 19.09.2007 № 2706, руководствуясь статьями 45, 67 Устава муниципального образования города Братска, ";
+
+            }
         }
 
         public string AddressFilter
@@ -119,34 +122,34 @@ namespace Registry.Reporting
 
             var ds = DataModel.DataSet;
 
-            v_rent_types = new BindingSource
+            var vRentTypes = new BindingSource
             {
                 DataSource = ds,
                 DataMember = "rent_types"
             };
 
-            v_executors = new BindingSource
+            var vExecutors = new BindingSource
             {
                 DataSource = ds,
                 DataMember = "executors",
                 Filter = "is_inactive = 0"
             };
 
-            v_kladr = new BindingSource
+            _vKladr = new BindingSource
             {
                 DataSource = ds,
                 DataMember = "kladr"
             };
 
-            comboBoxStreet.DataSource = v_kladr;
+            comboBoxStreet.DataSource = _vKladr;
             comboBoxStreet.ValueMember = "id_street";
             comboBoxStreet.DisplayMember = "street_name";
 
-            comboBoxRentType.DataSource = v_rent_types;
+            comboBoxRentType.DataSource = vRentTypes;
             comboBoxRentType.ValueMember = "id_rent_type";
             comboBoxRentType.DisplayMember = "rent_type";
 
-            comboBoxExecutor.DataSource = v_executors;
+            comboBoxExecutor.DataSource = vExecutors;
             comboBoxExecutor.ValueMember = "id_executor";
             comboBoxExecutor.DisplayMember = "executor_name";
 
@@ -173,8 +176,8 @@ namespace Registry.Reporting
             if (comboBoxStreet.Items.Count > 0)
             {
                 if (comboBoxStreet.SelectedValue == null)
-                    comboBoxStreet.SelectedValue = v_kladr[v_kladr.Position];
-                comboBoxStreet.Text = ((DataRowView)v_kladr[v_kladr.Position])["street_name"].ToString();
+                    comboBoxStreet.SelectedValue = _vKladr[_vKladr.Position];
+                comboBoxStreet.Text = ((DataRowView)_vKladr[_vKladr.Position])["street_name"].ToString();
             }
             if (comboBoxStreet.SelectedValue == null)
                 comboBoxStreet.Text = "";
@@ -188,7 +191,7 @@ namespace Registry.Reporting
                 var text = comboBoxStreet.Text;
                 var selectionStart = comboBoxStreet.SelectionStart;
                 var selectionLength = comboBoxStreet.SelectionLength;
-                v_kladr.Filter = "street_name like '%" + comboBoxStreet.Text + "%'";
+                _vKladr.Filter = "street_name like '%" + comboBoxStreet.Text + "%'";
                 comboBoxStreet.Text = text;
                 comboBoxStreet.SelectionStart = selectionStart;
                 comboBoxStreet.SelectionLength = selectionLength;
@@ -204,6 +207,20 @@ namespace Registry.Reporting
         private void checkBoxEnableAddress_CheckedChanged(object sender, EventArgs e)
         {
             groupBoxAddress.Enabled = checkBoxEnableAddress.Checked;
+        }
+
+        private void checkBoxResettle2013to2017_CheckedChanged(object sender, EventArgs e)
+        {
+            var state = checkBoxResettle2013to2017.Checked;
+            checkBoxCheckanovskiy.Checked = false;
+            checkBoxResettle2013to2017.Checked = state;
+        }
+
+        private void checkBoxCheckanovskiy_CheckedChanged(object sender, EventArgs e)
+        {
+            var state = checkBoxCheckanovskiy.Checked;
+            checkBoxResettle2013to2017.Checked = false;
+            checkBoxCheckanovskiy.Checked = state;
         }
     }
 }

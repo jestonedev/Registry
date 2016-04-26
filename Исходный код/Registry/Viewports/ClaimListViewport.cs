@@ -241,7 +241,7 @@ namespace Registry.Viewport
             ViewportHelper.SetDoubleBuffered(dataGridViewClaims);
             is_editable = true;
             DataChangeHandlersInit();
-            lastClaimStates = (CalcDataModel) CalcDataModel.GetInstance<CalcDataModelLastClaimStates>();
+            lastClaimStates = CalcDataModel.GetInstance<CalcDataModelLastClaimStates>();
             lastClaimStates.RefreshEvent += lastClaimStates_RefreshEvent;
         }
 

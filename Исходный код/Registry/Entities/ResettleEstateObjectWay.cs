@@ -3,6 +3,7 @@
     public enum ResettleEstateObjectWay
     {
         From,
-        To
+        To,
+        None
     }
 }

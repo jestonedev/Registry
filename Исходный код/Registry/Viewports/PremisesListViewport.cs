@@ -449,6 +449,7 @@ namespace Registry.Viewport
 
         void PremisesListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
+            _idPremises = int.MinValue;
             dataGridView.RowCount = GeneralBindingSource.Count;
             dataGridView.Refresh();
             MenuCallback.ForceCloseDetachedViewports();
@@ -458,6 +459,7 @@ namespace Registry.Viewport
 
         void PremisesListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
+            _idPremises = int.MinValue;
             if (e.Action == DataRowAction.Change || e.Action == DataRowAction.ChangeCurrentAndOriginal || e.Action == DataRowAction.ChangeOriginal)
                 dataGridView.Refresh();
             dataGridView.RowCount = GeneralBindingSource.Count;
@@ -492,7 +494,7 @@ namespace Registry.Viewport
                 GeneralBindingSource.Position = -1;
         }
 
-        private int _rowIndex = int.MinValue;
+        private int _idPremises = int.MinValue;
         private IEnumerable<DataRow> _tenancyInfoRows; 
 
         void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
@@ -545,7 +547,7 @@ namespace Registry.Viewport
                 case "residence_warrant_date":
                 case "tenant":
                 case "end_date":
-                    if (e.RowIndex != _rowIndex || _tenancyInfoRows.Any(entry => entry.RowState == DataRowState.Deleted || entry.RowState == DataRowState.Detached) || dataGridView.RowCount == 1)
+                    if ((int)row["id_premises"] != _idPremises || _tenancyInfoRows.Any(entry => entry.RowState == DataRowState.Deleted || entry.RowState == DataRowState.Detached))
                     {   
                         _tenancyInfoRows =
                             (from tenancyInfoRow in _premisesTenanciesInfo.FilterDeletedRows()
@@ -553,7 +555,7 @@ namespace Registry.Viewport
                             orderby tenancyInfoRow.Field<DateTime?>("registration_date") ?? 
                                 DateTime.Now descending 
                             select tenancyInfoRow).ToList();
-                        _rowIndex = e.RowIndex;
+                        _idPremises = (int)row["id_premises"];
                     }
                     if (_tenancyInfoRows == null || !_tenancyInfoRows.Any())
                     {                        
@@ -607,6 +609,7 @@ namespace Registry.Viewport
 
         void _premisesTenanciesInfo_RefreshEvent(object sender, EventArgs e)
         {
+            _idPremises = int.MinValue;
             dataGridView.Refresh();
         }
 

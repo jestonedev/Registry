@@ -4,6 +4,7 @@ using System.Globalization;
 using System.Reflection;
 using System.Windows.Forms;
 using Registry.DataModels.CalcDataModels;
+using Registry.Entities;
 
 namespace Registry.Viewport
 {
@@ -204,6 +205,37 @@ namespace Registry.Viewport
                 var control = ((ComboBox)sender);
                 control.SelectAll();
             }
+        }
+
+        internal static TenancyPerson PersonFromRow(DataRow row)
+        {
+            var tenancyPerson = new TenancyPerson
+            {
+                IdPerson = ValueOrNull<int>(row, "id_person"),
+                IdProcess = ValueOrNull<int>(row, "id_process"),
+                IdKinship = ValueOrNull<int>(row, "id_kinship"),
+                IdDocumentType = ValueOrNull<int>(row, "id_document_type"),
+                IdDocumentIssuedBy = ValueOrNull<int>(row, "id_document_issued_by"),
+                Surname = ValueOrNull(row, "surname"),
+                Name = ValueOrNull(row, "name"),
+                Patronymic = ValueOrNull(row, "patronymic"),
+                DateOfBirth = ValueOrNull<DateTime>(row, "date_of_birth"),
+                DateOfDocumentIssue = ValueOrNull<DateTime>(row, "date_of_document_issue"),
+                DocumentNum = ValueOrNull(row, "document_num"),
+                DocumentSeria = ValueOrNull(row, "document_seria"),
+                RegistrationIdStreet = ValueOrNull(row, "registration_id_street"),
+                RegistrationHouse = ValueOrNull(row, "registration_house"),
+                RegistrationFlat = ValueOrNull(row, "registration_flat"),
+                RegistrationRoom = ValueOrNull(row, "registration_room"),
+                ResidenceIdStreet = ValueOrNull(row, "residence_id_street"),
+                ResidenceHouse = ValueOrNull(row, "residence_house"),
+                ResidenceFlat = ValueOrNull(row, "residence_flat"),
+                ResidenceRoom = ValueOrNull(row, "residence_room"),
+                PersonalAccount = ValueOrNull(row, "personal_account"),
+                IncludeDate = ValueOrNull<DateTime>(row, "include_date"),
+                ExcludeDate = ValueOrNull<DateTime>(row, "exclude_date")
+            };
+            return tenancyPerson;
         }
     }
 }

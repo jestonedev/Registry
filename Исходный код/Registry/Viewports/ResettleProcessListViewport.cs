@@ -471,32 +471,28 @@ namespace Registry.Viewport
             }
             if (MenuCallback == null)
                 throw new ViewportException("Не заданна ссылка на интерфейс menuCallback");
-            if(typeof(T) == typeof(ResettlePersonsViewport))               
-            {                                 
-                    ShowAssocViewport<T>(MenuCallback,
-                        "id_process = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"], CultureInfo.InvariantCulture),
-                        ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
-                        ParentTypeEnum.ResettleProcess);
-            }
+            var viewport = ViewportFactory.CreateViewport<T>(MenuCallback);
+            viewport.StaticFilter = "id_process = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"],
+                    CultureInfo.InvariantCulture);
+            viewport.ParentRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row;
+            viewport.ParentType = ParentTypeEnum.ResettleProcess;
             if (typeof(T) == typeof(ResettleBuildingsViewport) || typeof(T) == typeof(ResettlePremisesViewport))
             {
-               
-                var viewport = ViewportFactory.CreateViewport<T>(MenuCallback);
-                viewport.StaticFilter = "id_process = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"],
-                    CultureInfo.InvariantCulture);
-                viewport.ParentRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row;
-                viewport.ParentType = ParentTypeEnum.ResettleProcess;
                 if (viewport is ResettleBuildingsViewport)
                     ((ResettleBuildingsViewport)viewport).Way = way;
                 if (viewport is ResettlePremisesViewport)
                     ((ResettlePremisesViewport)viewport).Way = way;
-                if (((IMenuController)viewport).CanLoadData())
-                    ((IMenuController)viewport).LoadData();
-                MenuCallback.AddViewport(viewport);   
-            }                          
+            }
+            if (((IMenuController)viewport).CanLoadData())
+                ((IMenuController)viewport).LoadData();
+            MenuCallback.AddViewport(viewport);                     
+        }
+
+        public override void ShowAssocViewport<T>()
+        {
+            ShowAssocViewport<T>(ResettleEstateObjectWay.None);
         }
        
-
         void resettles_aggregate_RefreshEvent(object sender, EventArgs e)
         {
             dataGridView.Refresh();

@@ -167,6 +167,7 @@
             // 
             this.id_process.HeaderText = "id_process";
             this.id_process.Name = "id_process";
+            this.id_process.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.id_process.Visible = false;
             // 
             // surname
@@ -223,6 +224,7 @@
             // 
             this.id_kinship.HeaderText = "id_kinship";
             this.id_kinship.Name = "id_kinship";
+            this.id_kinship.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.id_kinship.Visible = false;
             // 
             // TenancyAgreementOnSavePersonManager

@@ -4,7 +4,7 @@ using Registry.Entities;
 
 namespace Registry.DataModels.DataModels
 {
-    public class ResettleProcessesDataModel : DataModel
+    internal class ResettleProcessesDataModel : DataModel
     {
         private static ResettleProcessesDataModel _dataModel;
         private const string SelectQuery = "SELECT * FROM resettle_processes WHERE deleted = 0";

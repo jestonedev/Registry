@@ -107,7 +107,7 @@ namespace Registry.Viewport
                     {
                         var row = tenancyPersons.Select().Rows.Find(person.IdPerson);
                         if (row == null) continue;
-                        var tenancyPerson = PersonFromRow(row);
+                        var tenancyPerson = ViewportHelper.PersonFromRow(row);
                         tenancyPerson.ExcludeDate = person.ExcludeDate;
                         var affected = tenancyPersons.Update(tenancyPerson);
                         if (affected == -1)
@@ -122,65 +122,45 @@ namespace Registry.Viewport
                 case PersonsOperationType.ChangePersons:
                     if (persons.Count != 2)
                         break;
-                    else
-                    {
-                        for (int i = 0; i < persons.Count; i++ )
-                        {                          
-                            var row = tenancyPersons.Select().Rows.Find(persons[i].IdPerson);
-                            if (row == null) continue;
-                            var tenancyPerson = PersonFromRow(row);
-                            if(i == 0)
-                            {
-                                tenancyPerson.ExcludeDate = dateTimePickerDate.Value.Date;                                
-                            }
-                            else
-                            {
-                                tenancyPerson.IncludeDate = dateTimePickerDate.Value.Date;
-                            }
-                            tenancyPerson.IdKinship = persons[i].IdKinship;   
-                            var affected = tenancyPersons.Update(tenancyPerson);
-                            if (affected == -1)
-                            {
-                                break;
-                            }                                                                                
-                        }                        
+                    for (var i = 0; i < persons.Count; i++ )
+                    {                          
+                        var row = tenancyPersons.Select().Rows.Find(persons[i].IdPerson);
+                        if (row == null) continue;
+                        var tenancyPerson = ViewportHelper.PersonFromRow(row);
+                        if(i == 0)
+                        {
+                            tenancyPerson.ExcludeDate = dateTimePickerDate.Value.Date;    
+                        }
+                        else
+                        {
+                            tenancyPerson.IncludeDate = dateTimePickerDate.Value.Date;
+                        }
+                        tenancyPerson.IdKinship = persons[i].IdKinship;   
+                        var affected = tenancyPersons.Update(tenancyPerson);
+                        if (affected == -1)
+                        {
+                            break;
+                        }
+                        if (i == 0)
+                        {
+                            row.BeginEdit();
+                            row["exclude_date"] = tenancyPerson.ExcludeDate;
+                            row["id_kinship"] = tenancyPerson.IdKinship;
+                            row.EndEdit();
+                        }
+                        else
+                        {
+                            row.BeginEdit();
+                            row["include_date"] = tenancyPerson.IncludeDate;
+                            row["id_kinship"] = tenancyPerson.IdKinship;
+                            row.EndEdit();
+                        }
                     }
                     break;
                 default:
                     throw new ViewportException("Неизвестный тип операции над участниками найма");
             }
             DialogResult = DialogResult.OK;
-        }
-
-        protected TenancyPerson PersonFromRow(DataRow row)
-        {
-            var tenancyPerson = new TenancyPerson
-            {
-                IdPerson = ViewportHelper.ValueOrNull<int>(row, "id_person"),
-                IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process"),
-                IdKinship = ViewportHelper.ValueOrNull<int>(row, "id_kinship"),
-                IdDocumentType = ViewportHelper.ValueOrNull<int>(row, "id_document_type"),
-                IdDocumentIssuedBy = ViewportHelper.ValueOrNull<int>(row, "id_document_issued_by"),
-                Surname = ViewportHelper.ValueOrNull(row, "surname"),
-                Name = ViewportHelper.ValueOrNull(row, "name"),
-                Patronymic = ViewportHelper.ValueOrNull(row, "patronymic"),
-                DateOfBirth = ViewportHelper.ValueOrNull<DateTime>(row, "date_of_birth"),
-                DateOfDocumentIssue = ViewportHelper.ValueOrNull<DateTime>(row, "date_of_document_issue"),
-                DocumentNum = ViewportHelper.ValueOrNull(row, "document_num"),
-                DocumentSeria = ViewportHelper.ValueOrNull(row, "document_seria"),
-                RegistrationIdStreet = ViewportHelper.ValueOrNull(row, "registration_id_street"),
-                RegistrationHouse = ViewportHelper.ValueOrNull(row, "registration_house"),
-                RegistrationFlat = ViewportHelper.ValueOrNull(row, "registration_flat"),
-                RegistrationRoom = ViewportHelper.ValueOrNull(row, "registration_room"),
-                ResidenceIdStreet = ViewportHelper.ValueOrNull(row, "residence_id_street"),
-                ResidenceHouse = ViewportHelper.ValueOrNull(row, "residence_house"),
-                ResidenceFlat = ViewportHelper.ValueOrNull(row, "residence_flat"),
-                ResidenceRoom = ViewportHelper.ValueOrNull(row, "residence_room"),
-                PersonalAccount = ViewportHelper.ValueOrNull(row, "personal_account"),
-                IncludeDate = ViewportHelper.ValueOrNull<DateTime>(row, "include_date"),
-                ExcludeDate = ViewportHelper.ValueOrNull<DateTime>(row, "exclude_date")
-            };
-            return tenancyPerson;
         }
     }
 }

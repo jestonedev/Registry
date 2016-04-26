@@ -105,6 +105,12 @@
     <Compile Include="DataGridViewport.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ModalEditors\PersonExcludeDateForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalEditors\PersonExcludeDateForm.Designer.cs">
+      <DependentUpon>PersonExcludeDateForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="ModalEditors\MultiClaimsStateConfigForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -536,6 +542,9 @@
     <EmbeddedResource Include="ClaimStateTypesViewport.resx">
       <DependentUpon>ClaimStateTypesViewport.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="ModalEditors\PersonExcludeDateForm.resx">
+      <DependentUpon>PersonExcludeDateForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="ModalEditors\MultiClaimsStateConfigForm.resx">
       <DependentUpon>MultiClaimsStateConfigForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -717,7 +726,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClassDiagram1.cd" />
     <None Include="Resources\insert-object %28min%29.png" />
     <None Include="Viewports.snk" />
   </ItemGroup>
