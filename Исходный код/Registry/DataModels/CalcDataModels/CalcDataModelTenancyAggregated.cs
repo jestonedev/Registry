@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -43,7 +44,7 @@ namespace Registry.DataModels.CalcDataModels
             var tenancyPersons = DataModel.GetInstance<TenancyPersonsDataModel>().FilterDeletedRows();
             // Вычисляем агрегационную информацию
             var tenants = from tenancyPersonsRow in tenancyPersons
-                          where tenancyPersonsRow.Field<int?>("id_kinship") == 1
+                          where tenancyPersonsRow.Field<int?>("id_kinship") == 1 && tenancyPersonsRow.Field<DateTime?>("exclude_date") == null
                           group tenancyPersonsRow by tenancyPersonsRow.Field<int>("id_process") into gs
                           select new 
                           {
