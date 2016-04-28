@@ -193,13 +193,13 @@
             this.tableLayoutPanel5.Controls.Add(this.label19, 1, 0);
             this.tableLayoutPanel5.Controls.Add(this.numericUpDownPaymentTenancy, 0, 1);
             this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(3, 19);
             this.tableLayoutPanel5.Name = "tableLayoutPanel5";
             this.tableLayoutPanel5.Padding = new System.Windows.Forms.Padding(3);
             this.tableLayoutPanel5.RowCount = 2;
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
             this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(396, 50);
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(396, 47);
             this.tableLayoutPanel5.TabIndex = 71;
             // 
             // numericUpDownPaymentDGI
@@ -214,7 +214,7 @@
             0,
             0});
             this.numericUpDownPaymentDGI.Name = "numericUpDownPaymentDGI";
-            this.numericUpDownPaymentDGI.Size = new System.Drawing.Size(124, 20);
+            this.numericUpDownPaymentDGI.Size = new System.Drawing.Size(124, 23);
             this.numericUpDownPaymentDGI.TabIndex = 1;
             this.numericUpDownPaymentDGI.ThousandsSeparator = true;
             // 
@@ -223,7 +223,7 @@
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(6, 3);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(73, 13);
+            this.label20.Size = new System.Drawing.Size(95, 16);
             this.label20.TabIndex = 77;
             this.label20.Text = "Оплата найм";
             // 
@@ -232,7 +232,7 @@
             this.label19.AutoSize = true;
             this.label19.Location = new System.Drawing.Point(136, 3);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(70, 13);
+            this.label19.Size = new System.Drawing.Size(91, 16);
             this.label19.TabIndex = 79;
             this.label19.Text = "Оплата ДГИ";
             // 
@@ -248,7 +248,7 @@
             0,
             0});
             this.numericUpDownPaymentTenancy.Name = "numericUpDownPaymentTenancy";
-            this.numericUpDownPaymentTenancy.Size = new System.Drawing.Size(124, 20);
+            this.numericUpDownPaymentTenancy.Size = new System.Drawing.Size(124, 23);
             this.numericUpDownPaymentTenancy.TabIndex = 0;
             this.numericUpDownPaymentTenancy.ThousandsSeparator = true;
             // 
@@ -276,13 +276,13 @@
             this.tableLayoutPanel3.Controls.Add(this.numericUpDownChargingTenancy, 1, 1);
             this.tableLayoutPanel3.Controls.Add(this.label15, 1, 0);
             this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(3, 19);
             this.tableLayoutPanel3.Name = "tableLayoutPanel3";
             this.tableLayoutPanel3.Padding = new System.Windows.Forms.Padding(3);
             this.tableLayoutPanel3.RowCount = 2;
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
             this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(396, 50);
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(396, 47);
             this.tableLayoutPanel3.TabIndex = 69;
             // 
             // numericUpDownChargingDGI
@@ -297,7 +297,7 @@
             0,
             0});
             this.numericUpDownChargingDGI.Name = "numericUpDownChargingDGI";
-            this.numericUpDownChargingDGI.Size = new System.Drawing.Size(124, 20);
+            this.numericUpDownChargingDGI.Size = new System.Drawing.Size(124, 23);
             this.numericUpDownChargingDGI.TabIndex = 2;
             this.numericUpDownChargingDGI.ThousandsSeparator = true;
             // 
@@ -306,7 +306,7 @@
             this.label16.AutoSize = true;
             this.label16.Location = new System.Drawing.Point(6, 3);
             this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(99, 13);
+            this.label16.Size = new System.Drawing.Size(93, 16);
             this.label16.TabIndex = 79;
             this.label16.Text = "Начисление итого";
             // 
@@ -315,7 +315,7 @@
             this.label17.AutoSize = true;
             this.label17.Location = new System.Drawing.Point(266, 3);
             this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(94, 13);
+            this.label17.Size = new System.Drawing.Size(122, 16);
             this.label17.TabIndex = 83;
             this.label17.Text = "Начисление ДГИ";
             // 
@@ -331,7 +331,7 @@
             0,
             0});
             this.numericUpDownChargingTotal.Name = "numericUpDownChargingTotal";
-            this.numericUpDownChargingTotal.Size = new System.Drawing.Size(124, 20);
+            this.numericUpDownChargingTotal.Size = new System.Drawing.Size(124, 23);
             this.numericUpDownChargingTotal.TabIndex = 0;
             this.numericUpDownChargingTotal.ThousandsSeparator = true;
             // 
@@ -347,7 +347,7 @@
             0,
             0});
             this.numericUpDownChargingTenancy.Name = "numericUpDownChargingTenancy";
-            this.numericUpDownChargingTenancy.Size = new System.Drawing.Size(124, 20);
+            this.numericUpDownChargingTenancy.Size = new System.Drawing.Size(124, 23);
             this.numericUpDownChargingTenancy.TabIndex = 1;
             this.numericUpDownChargingTenancy.ThousandsSeparator = true;
             // 
@@ -356,7 +356,7 @@
             this.label15.AutoSize = true;
             this.label15.Location = new System.Drawing.Point(136, 3);
             this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(97, 13);
+            this.label15.Size = new System.Drawing.Size(93, 16);
             this.label15.TabIndex = 81;
             this.label15.Text = "Начисление найм";
             // 
@@ -384,13 +384,13 @@
             this.tableLayoutPanel4.Controls.Add(this.label14, 1, 0);
             this.tableLayoutPanel4.Controls.Add(this.label12, 2, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 19);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.Padding = new System.Windows.Forms.Padding(3);
             this.tableLayoutPanel4.RowCount = 2;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(396, 50);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(396, 47);
             this.tableLayoutPanel4.TabIndex = 70;
             // 
             // numericUpDownTransferBalance
@@ -405,7 +405,7 @@
             0,
             0});
             this.numericUpDownTransferBalance.Name = "numericUpDownTransferBalance";
-            this.numericUpDownTransferBalance.Size = new System.Drawing.Size(124, 20);
+            this.numericUpDownTransferBalance.Size = new System.Drawing.Size(124, 23);
             this.numericUpDownTransferBalance.TabIndex = 2;
             this.numericUpDownTransferBalance.ThousandsSeparator = true;
             // 
@@ -421,7 +421,7 @@
             0,
             0});
             this.numericUpDownRecalcDGI.Name = "numericUpDownRecalcDGI";
-            this.numericUpDownRecalcDGI.Size = new System.Drawing.Size(124, 20);
+            this.numericUpDownRecalcDGI.Size = new System.Drawing.Size(124, 23);
             this.numericUpDownRecalcDGI.TabIndex = 1;
             this.numericUpDownRecalcDGI.ThousandsSeparator = true;
             // 
@@ -430,7 +430,7 @@
             this.label13.AutoSize = true;
             this.label13.Location = new System.Drawing.Point(6, 3);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(96, 13);
+            this.label13.Size = new System.Drawing.Size(92, 16);
             this.label13.TabIndex = 77;
             this.label13.Text = "Перерасчет найм";
             // 
@@ -446,7 +446,7 @@
             0,
             0});
             this.numericUpDownRecalcTenancy.Name = "numericUpDownRecalcTenancy";
-            this.numericUpDownRecalcTenancy.Size = new System.Drawing.Size(124, 20);
+            this.numericUpDownRecalcTenancy.Size = new System.Drawing.Size(124, 23);
             this.numericUpDownRecalcTenancy.TabIndex = 0;
             this.numericUpDownRecalcTenancy.ThousandsSeparator = true;
             // 
@@ -455,7 +455,7 @@
             this.label14.AutoSize = true;
             this.label14.Location = new System.Drawing.Point(136, 3);
             this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(93, 13);
+            this.label14.Size = new System.Drawing.Size(121, 16);
             this.label14.TabIndex = 79;
             this.label14.Text = "Перерасчет ДГИ";
             // 
@@ -464,7 +464,7 @@
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(266, 3);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(90, 13);
+            this.label12.Size = new System.Drawing.Size(115, 16);
             this.label12.TabIndex = 75;
             this.label12.Text = "Перенос сальдо";
             // 
@@ -492,13 +492,13 @@
             this.tableLayoutPanel6.Controls.Add(this.numericUpDownBalanceTenancyOutput, 1, 1);
             this.tableLayoutPanel6.Controls.Add(this.label10, 1, 0);
             this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(3, 19);
             this.tableLayoutPanel6.Name = "tableLayoutPanel6";
             this.tableLayoutPanel6.Padding = new System.Windows.Forms.Padding(3);
             this.tableLayoutPanel6.RowCount = 2;
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
             this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(396, 45);
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(396, 42);
             this.tableLayoutPanel6.TabIndex = 72;
             // 
             // numericUpDownBalanceDGIOutput
@@ -513,7 +513,7 @@
             0,
             0});
             this.numericUpDownBalanceDGIOutput.Name = "numericUpDownBalanceDGIOutput";
-            this.numericUpDownBalanceDGIOutput.Size = new System.Drawing.Size(124, 20);
+            this.numericUpDownBalanceDGIOutput.Size = new System.Drawing.Size(124, 23);
             this.numericUpDownBalanceDGIOutput.TabIndex = 2;
             this.numericUpDownBalanceDGIOutput.ThousandsSeparator = true;
             // 
@@ -522,7 +522,7 @@
             this.label11.AutoSize = true;
             this.label11.Location = new System.Drawing.Point(6, 3);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(103, 13);
+            this.label11.Size = new System.Drawing.Size(80, 16);
             this.label11.TabIndex = 69;
             this.label11.Text = "Сальдо исходящее";
             // 
@@ -531,7 +531,7 @@
             this.label9.AutoSize = true;
             this.label9.Location = new System.Drawing.Point(266, 3);
             this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(70, 13);
+            this.label9.Size = new System.Drawing.Size(89, 16);
             this.label9.TabIndex = 73;
             this.label9.Text = "Сальдо ДГИ";
             // 
@@ -547,7 +547,7 @@
             0,
             0});
             this.numericUpDownBalanceTotalOutput.Name = "numericUpDownBalanceTotalOutput";
-            this.numericUpDownBalanceTotalOutput.Size = new System.Drawing.Size(124, 20);
+            this.numericUpDownBalanceTotalOutput.Size = new System.Drawing.Size(124, 23);
             this.numericUpDownBalanceTotalOutput.TabIndex = 0;
             this.numericUpDownBalanceTotalOutput.ThousandsSeparator = true;
             // 
@@ -563,7 +563,7 @@
             0,
             0});
             this.numericUpDownBalanceTenancyOutput.Name = "numericUpDownBalanceTenancyOutput";
-            this.numericUpDownBalanceTenancyOutput.Size = new System.Drawing.Size(124, 20);
+            this.numericUpDownBalanceTenancyOutput.Size = new System.Drawing.Size(124, 23);
             this.numericUpDownBalanceTenancyOutput.TabIndex = 1;
             this.numericUpDownBalanceTenancyOutput.ThousandsSeparator = true;
             // 
@@ -572,7 +572,7 @@
             this.label10.AutoSize = true;
             this.label10.Location = new System.Drawing.Point(136, 3);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(73, 13);
+            this.label10.Size = new System.Drawing.Size(93, 16);
             this.label10.TabIndex = 71;
             this.label10.Text = "Сальдо найм";
             // 
@@ -600,13 +600,13 @@
             this.tableLayoutPanel2.Controls.Add(this.label8, 2, 0);
             this.tableLayoutPanel2.Controls.Add(this.label7, 1, 0);
             this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 16);
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(3, 19);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
             this.tableLayoutPanel2.Padding = new System.Windows.Forms.Padding(3);
             this.tableLayoutPanel2.RowCount = 2;
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(396, 50);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(396, 47);
             this.tableLayoutPanel2.TabIndex = 68;
             // 
             // numericUpDownBalanceDGIInput
@@ -620,7 +620,7 @@
             0,
             0});
             this.numericUpDownBalanceDGIInput.Name = "numericUpDownBalanceDGIInput";
-            this.numericUpDownBalanceDGIInput.Size = new System.Drawing.Size(124, 20);
+            this.numericUpDownBalanceDGIInput.Size = new System.Drawing.Size(124, 23);
             this.numericUpDownBalanceDGIInput.TabIndex = 2;
             this.numericUpDownBalanceDGIInput.ThousandsSeparator = true;
             // 
@@ -629,7 +629,7 @@
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(6, 3);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(97, 13);
+            this.label6.Size = new System.Drawing.Size(124, 16);
             this.label6.TabIndex = 63;
             this.label6.Text = "Сальдо входящее";
             // 
@@ -645,7 +645,7 @@
             0,
             0});
             this.numericUpDownBalanceTotalInput.Name = "numericUpDownBalanceTotalInput";
-            this.numericUpDownBalanceTotalInput.Size = new System.Drawing.Size(124, 20);
+            this.numericUpDownBalanceTotalInput.Size = new System.Drawing.Size(124, 23);
             this.numericUpDownBalanceTotalInput.TabIndex = 0;
             this.numericUpDownBalanceTotalInput.ThousandsSeparator = true;
             // 
@@ -660,7 +660,7 @@
             0,
             0});
             this.numericUpDownBalanceTenancyInput.Name = "numericUpDownBalanceTenancyInput";
-            this.numericUpDownBalanceTenancyInput.Size = new System.Drawing.Size(124, 20);
+            this.numericUpDownBalanceTenancyInput.Size = new System.Drawing.Size(124, 23);
             this.numericUpDownBalanceTenancyInput.TabIndex = 1;
             this.numericUpDownBalanceTenancyInput.ThousandsSeparator = true;
             // 
@@ -669,7 +669,7 @@
             this.label8.AutoSize = true;
             this.label8.Location = new System.Drawing.Point(266, 3);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(70, 13);
+            this.label8.Size = new System.Drawing.Size(89, 16);
             this.label8.TabIndex = 67;
             this.label8.Text = "Сальдо ДГИ";
             // 
@@ -678,7 +678,7 @@
             this.label7.AutoSize = true;
             this.label7.Location = new System.Drawing.Point(136, 3);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(73, 13);
+            this.label7.Size = new System.Drawing.Size(93, 16);
             this.label7.TabIndex = 65;
             this.label7.Text = "Сальдо найм";
             // 
@@ -915,7 +915,7 @@
             this.textBoxTenant.Location = new System.Drawing.Point(167, 123);
             this.textBoxTenant.MaxLength = 4000;
             this.textBoxTenant.Name = "textBoxTenant";
-            this.textBoxTenant.Size = new System.Drawing.Size(227, 20);
+            this.textBoxTenant.Size = new System.Drawing.Size(227, 23);
             this.textBoxTenant.TabIndex = 4;
             // 
             // label18
@@ -923,7 +923,7 @@
             this.label18.AutoSize = true;
             this.label18.Location = new System.Drawing.Point(9, 127);
             this.label18.Name = "label18";
-            this.label18.Size = new System.Drawing.Size(70, 13);
+            this.label18.Size = new System.Drawing.Size(89, 17);
             this.label18.TabIndex = 67;
             this.label18.Text = "Наниматель";
             // 
@@ -938,7 +938,7 @@
             0,
             0});
             this.numericUpDownPrescribed.Name = "numericUpDownPrescribed";
-            this.numericUpDownPrescribed.Size = new System.Drawing.Size(227, 20);
+            this.numericUpDownPrescribed.Size = new System.Drawing.Size(227, 23);
             this.numericUpDownPrescribed.TabIndex = 7;
             this.numericUpDownPrescribed.ThousandsSeparator = true;
             // 
@@ -947,7 +947,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(9, 207);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(63, 13);
+            this.label5.Size = new System.Drawing.Size(81, 17);
             this.label5.TabIndex = 65;
             this.label5.Text = "Прописано";
             // 
@@ -963,7 +963,7 @@
             0,
             0});
             this.numericUpDownLivingArea.Name = "numericUpDownLivingArea";
-            this.numericUpDownLivingArea.Size = new System.Drawing.Size(227, 20);
+            this.numericUpDownLivingArea.Size = new System.Drawing.Size(227, 23);
             this.numericUpDownLivingArea.TabIndex = 6;
             this.numericUpDownLivingArea.ThousandsSeparator = true;
             // 
@@ -972,7 +972,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(9, 179);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(90, 13);
+            this.label4.Size = new System.Drawing.Size(115, 17);
             this.label4.TabIndex = 63;
             this.label4.Text = "Жилая площадь";
             // 
@@ -988,7 +988,7 @@
             0,
             0});
             this.numericUpDownTotalArea.Name = "numericUpDownTotalArea";
-            this.numericUpDownTotalArea.Size = new System.Drawing.Size(227, 20);
+            this.numericUpDownTotalArea.Size = new System.Drawing.Size(227, 23);
             this.numericUpDownTotalArea.TabIndex = 5;
             this.numericUpDownTotalArea.ThousandsSeparator = true;
             // 
@@ -997,7 +997,7 @@
             this.label92.AutoSize = true;
             this.label92.Location = new System.Drawing.Point(9, 151);
             this.label92.Name = "label92";
-            this.label92.Size = new System.Drawing.Size(90, 13);
+            this.label92.Size = new System.Drawing.Size(116, 17);
             this.label92.TabIndex = 61;
             this.label92.Text = "Общая площадь";
             // 
@@ -1008,7 +1008,7 @@
             this.dateTimePickerAtDate.Enabled = false;
             this.dateTimePickerAtDate.Location = new System.Drawing.Point(167, 232);
             this.dateTimePickerAtDate.Name = "dateTimePickerAtDate";
-            this.dateTimePickerAtDate.Size = new System.Drawing.Size(227, 20);
+            this.dateTimePickerAtDate.Size = new System.Drawing.Size(227, 23);
             this.dateTimePickerAtDate.TabIndex = 8;
             // 
             // label91
@@ -1016,7 +1016,7 @@
             this.label91.AutoSize = true;
             this.label91.Location = new System.Drawing.Point(9, 235);
             this.label91.Name = "label91";
-            this.label91.Size = new System.Drawing.Size(132, 13);
+            this.label91.Size = new System.Drawing.Size(175, 17);
             this.label91.TabIndex = 60;
             this.label91.Text = "Состояние счета на дату";
             // 
@@ -1027,7 +1027,7 @@
             this.textBoxAccount.Location = new System.Drawing.Point(167, 98);
             this.textBoxAccount.MaxLength = 4000;
             this.textBoxAccount.Name = "textBoxAccount";
-            this.textBoxAccount.Size = new System.Drawing.Size(227, 20);
+            this.textBoxAccount.Size = new System.Drawing.Size(227, 23);
             this.textBoxAccount.TabIndex = 3;
             // 
             // label3
@@ -1035,7 +1035,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(9, 102);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(76, 13);
+            this.label3.Size = new System.Drawing.Size(99, 17);
             this.label3.TabIndex = 57;
             this.label3.Text = "Лицевой счет";
             // 
@@ -1046,7 +1046,7 @@
             this.textBoxAddress.Location = new System.Drawing.Point(167, 71);
             this.textBoxAddress.MaxLength = 4000;
             this.textBoxAddress.Name = "textBoxAddress";
-            this.textBoxAddress.Size = new System.Drawing.Size(227, 20);
+            this.textBoxAddress.Size = new System.Drawing.Size(227, 23);
             this.textBoxAddress.TabIndex = 2;
             // 
             // label2
@@ -1054,7 +1054,7 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(9, 75);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(110, 13);
+            this.label2.Size = new System.Drawing.Size(139, 17);
             this.label2.TabIndex = 55;
             this.label2.Text = "Адрес в реестр ЖФ";
             // 
@@ -1065,7 +1065,7 @@
             this.textBoxRawAddress.Location = new System.Drawing.Point(167, 45);
             this.textBoxRawAddress.MaxLength = 4000;
             this.textBoxRawAddress.Name = "textBoxRawAddress";
-            this.textBoxRawAddress.Size = new System.Drawing.Size(227, 20);
+            this.textBoxRawAddress.Size = new System.Drawing.Size(227, 23);
             this.textBoxRawAddress.TabIndex = 1;
             // 
             // label1
@@ -1073,7 +1073,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(9, 49);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(77, 13);
+            this.label1.Size = new System.Drawing.Size(99, 17);
             this.label1.TabIndex = 53;
             this.label1.Text = "Адрес по БКС";
             // 
@@ -1084,7 +1084,7 @@
             this.textBoxCRN.Location = new System.Drawing.Point(167, 19);
             this.textBoxCRN.MaxLength = 4000;
             this.textBoxCRN.Name = "textBoxCRN";
-            this.textBoxCRN.Size = new System.Drawing.Size(227, 20);
+            this.textBoxCRN.Size = new System.Drawing.Size(227, 23);
             this.textBoxCRN.TabIndex = 0;
             // 
             // label99
@@ -1092,13 +1092,13 @@
             this.label99.AutoSize = true;
             this.label99.Location = new System.Drawing.Point(9, 22);
             this.label99.Name = "label99";
-            this.label99.Size = new System.Drawing.Size(29, 13);
+            this.label99.Size = new System.Drawing.Size(36, 17);
             this.label99.TabIndex = 51;
             this.label99.Text = "СРН";
             // 
             // PaymentsAccountsViewport
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 17F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(800, 600);

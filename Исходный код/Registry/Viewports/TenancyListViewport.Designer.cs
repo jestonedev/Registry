@@ -18,6 +18,8 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn tenant;
         private DataGridViewTextBoxColumn rent_type;
         private DataGridViewTextBoxColumn address;
+        private DataGridViewTextBoxColumn registration_date;
+        private DataGridViewTextBoxColumn end_date;
         #endregion Components
 
 
@@ -28,6 +30,8 @@ namespace Registry.Viewport
             dataGridView = new DataGridView();
             id_process = new DataGridViewTextBoxColumn();
             registration_num = new DataGridViewTextBoxColumn();
+            registration_date = new DataGridViewTextBoxColumn();
+            end_date = new DataGridViewTextBoxColumn();
             residence_warrant_num = new DataGridViewTextBoxColumn();
             tenant = new DataGridViewTextBoxColumn();
             rent_type = new DataGridViewTextBoxColumn();
@@ -52,7 +56,7 @@ namespace Registry.Viewport
             dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
             dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Columns.AddRange(id_process, registration_num, residence_warrant_num, tenant, rent_type, address);
+            dataGridView.Columns.AddRange(id_process, registration_num, registration_date, end_date, residence_warrant_num, tenant, rent_type, address);
             dataGridView.Dock = DockStyle.Fill;
             dataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
             dataGridView.Location = new Point(3, 3);
@@ -87,6 +91,24 @@ namespace Registry.Viewport
             registration_num.Name = "registration_num";
             registration_num.ReadOnly = true;
             registration_num.Width = 130;
+            //
+            // registration_date
+            //
+            registration_date.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            registration_date.HeaderText = "Дата договора";
+            registration_date.MinimumWidth = 100;
+            registration_date.Name = "registration_date";
+            registration_date.ReadOnly = true;
+            registration_date.Width = 100;
+            //
+            // end_date
+            //
+            end_date.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            end_date.HeaderText = "Дата окончания договора";
+            end_date.MinimumWidth = 100;
+            end_date.Name = "end_date";
+            end_date.ReadOnly = true;
+            end_date.Width = 100;
             // 
             // residence_warrant_num
             // 

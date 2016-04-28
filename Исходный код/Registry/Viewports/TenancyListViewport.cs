@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
@@ -223,7 +224,7 @@ namespace Registry.Viewport
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 Filter += " AND ";
             Filter += DynamicFilter;
-            dataGridView.RowCount = 0;
+            dataGridView.RowCount = 0;                              
             GeneralBindingSource.Filter = Filter;
             dataGridView.RowCount = GeneralBindingSource.Count;
         }
@@ -504,6 +505,15 @@ namespace Registry.Viewport
                     break;
                 case "registration_num":
                     e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["registration_num"];
+                    break;
+                case "registration_date":
+                    var date = ((DataRowView)GeneralBindingSource[e.RowIndex])["registration_date"];
+                    e.Value = date is DateTime ? ((DateTime)date).ToString("dd.MM.yyyy") : null;
+                    break;
+                case "end_date":
+                    var date2 = ((DataRowView)GeneralBindingSource[e.RowIndex])["end_date"];
+                    bool yes = date2 == DBNull.Value;
+                    e.Value = date2 is DateTime ? ((DateTime)date2).ToString("dd.MM.yyyy") : null;
                     break;
                 case "residence_warrant_num":
                     e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["residence_warrant_num"];
