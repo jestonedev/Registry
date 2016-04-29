@@ -84,7 +84,7 @@ namespace Registry.Viewport.SearchForms
                 filter += string.Format(CultureInfo.InvariantCulture, "resettle_date {0} '{1}'",
                     ConvertDisplayEqExprToSql(
                         comboBoxResettleDateExpr.SelectedItem.ToString()),
-                        dateTimePickerResettleDate.Value.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture));
+                        dateTimePickerResettleDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             }
             if (checkBoxIDResettleEnable.Checked)
                 includedProcesses = DataModelHelper.Intersect(null, new List<int>() { Convert.ToInt32(numericUpDownIDResettle.Value) });

@@ -88,48 +88,66 @@ namespace Registry.Viewport.SearchForms
                 includedAccounts = DataModelHelper.Intersect(includedAccounts, PaymentsAccountsDataModel.GetAccountIdsByHouse(textBoxHouse.Text));
             if (checkBoxPremisesNumEnable.Checked)
                 includedAccounts = DataModelHelper.Intersect(includedAccounts, PaymentsAccountsDataModel.GetAccountIdsByPremiseNumber(textBoxPremisesNum.Text));
-            if (checkBoxBalanceInputEnable.Checked)
-                includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_input", 
-                    comboBoxBalanceInputExpr.Text, numericUpDownBalanceInputFrom.Value, numericUpDownBalanceInputTo.Value);
-            if (checkBoxBalanceInputTenancyEnable.Checked)
-                includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_tenancy",
-                    comboBoxBalanceInputTenancyExpr.Text, numericUpDownBalanceInputTenancyFrom.Value, numericUpDownBalanceInputTenancyTo.Value);
-            if (checkBoxBalanceInputDGIEnable.Checked)
-                includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_dgi",
-                    comboBoxBalanceInputDGIExpr.Text, numericUpDownBalanceInputDGIFrom.Value, numericUpDownBalanceInputDGITo.Value);
-            if (checkBoxChargingEnable.Checked)
-                includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "charging_total",
-                    comboBoxChargingExpr.Text, numericUpDownChargingFrom.Value, numericUpDownChargingTo.Value);
-            if (checkBoxChargingTenancyEnable.Checked)
-                includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "charging_tenancy",
-                    comboBoxChargingTenancyExpr.Text, numericUpDownChargingTenancyFrom.Value, numericUpDownChargingTenancyTo.Value);
-            if (checkBoxChargingDGIEnable.Checked)
-                includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "charging_dgi",
-                    comboBoxChargingDGIExpr.Text, numericUpDownChargingDGIFrom.Value, numericUpDownChargingDGITo.Value);
-            if (checkBoxRecalcTenancyEnable.Checked)
-                includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "recalc_tenancy",
-                    comboBoxRecalcTenancyExpr.Text, numericUpDownRecalcTenancyFrom.Value, numericUpDownRecalcTenancyTo.Value);
-            if (checkBoxRecalcDGIEnable.Checked)
-                includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "recalc_dgi",
-                    comboBoxRecalcDGIExpr.Text, numericUpDownRecalcDGIFrom.Value, numericUpDownRecalcDGITo.Value);
-            if (checkBoxPaymentTenancyEnable.Checked)
-                includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "payment_tenancy",
-                    comboBoxPaymentTenancyExpr.Text, numericUpDownPaymentTenancyFrom.Value, numericUpDownPaymentTenancyTo.Value);
-            if (checkBoxPaymentDGIEnable.Checked)
-                includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "payment_dgi",
-                    comboBoxPaymentDGIExpr.Text, numericUpDownPaymentDGIFrom.Value, numericUpDownPaymentDGITo.Value);
-            if (checkBoxTransferBalanceEnable.Checked)
-                includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "transfer_balance",
-                    comboBoxTransferBalanceExpr.Text, numericUpDownTransferBalanceFrom.Value, numericUpDownTransferBalanceTo.Value);
-            if (checkBoxBalanceOutputEnable.Checked)
-                includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_output_total",
-                    comboBoxBalanceOutputExpr.Text, numericUpDownBalanceOutputFrom.Value, numericUpDownBalanceOutputTo.Value);
-            if (checkBoxBalanceOutputTenancyEnable.Checked)
-                includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_output_tenancy",
-                    comboBoxBalanceOutputTenancyExpr.Text, numericUpDownBalanceOutputTenancyFrom.Value, numericUpDownBalanceOutputTenancyTo.Value);
-            if (checkBoxBalanceOutputDGIEnable.Checked)
-                includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_output_dgi",
-                    comboBoxBalanceOutputDGIExpr.Text, numericUpDownBalanceOutputDGIFrom.Value, numericUpDownBalanceOutputDGITo.Value);
+            if (checkBoxDateEnable.Checked && !checkBoxBalanceInputEnable.Checked &&
+                !checkBoxBalanceInputTenancyEnable.Checked
+                && !checkBoxBalanceInputDGIEnable.Checked && !checkBoxChargingEnable.Checked &&
+                !checkBoxChargingTenancyEnable.Checked &&
+                !checkBoxChargingDGIEnable.Checked && !checkBoxRecalcTenancyEnable.Checked &&
+                !checkBoxRecalcDGIEnable.Checked &&
+                !checkBoxPaymentTenancyEnable.Checked && !checkBoxPaymentDGIEnable.Checked &&
+                !checkBoxTransferBalanceEnable.Checked && !checkBoxBalanceOutputEnable.Checked &&
+                !checkBoxBalanceOutputTenancyEnable.Checked
+                && !checkBoxBalanceOutputDGIEnable.Checked)
+            {
+                if (!string.IsNullOrEmpty(filter))
+                    filter += " AND ";
+                filter += string.Format("date {0} '{1}'", ConvertDisplayEqExprToSql(comboBoxDateExpr.Text), dateTimePickerDate.Value.ToString("yyyy-MM-dd"));
+            }
+            else
+            {
+                if (checkBoxBalanceInputEnable.Checked)
+                    includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_input",
+                        comboBoxBalanceInputExpr.Text, numericUpDownBalanceInputFrom.Value, numericUpDownBalanceInputTo.Value);
+                if (checkBoxBalanceInputTenancyEnable.Checked)
+                    includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_tenancy",
+                        comboBoxBalanceInputTenancyExpr.Text, numericUpDownBalanceInputTenancyFrom.Value, numericUpDownBalanceInputTenancyTo.Value);
+                if (checkBoxBalanceInputDGIEnable.Checked)
+                    includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_dgi",
+                        comboBoxBalanceInputDGIExpr.Text, numericUpDownBalanceInputDGIFrom.Value, numericUpDownBalanceInputDGITo.Value);
+                if (checkBoxChargingEnable.Checked)
+                    includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "charging_total",
+                        comboBoxChargingExpr.Text, numericUpDownChargingFrom.Value, numericUpDownChargingTo.Value);
+                if (checkBoxChargingTenancyEnable.Checked)
+                    includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "charging_tenancy",
+                        comboBoxChargingTenancyExpr.Text, numericUpDownChargingTenancyFrom.Value, numericUpDownChargingTenancyTo.Value);
+                if (checkBoxChargingDGIEnable.Checked)
+                    includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "charging_dgi",
+                        comboBoxChargingDGIExpr.Text, numericUpDownChargingDGIFrom.Value, numericUpDownChargingDGITo.Value);
+                if (checkBoxRecalcTenancyEnable.Checked)
+                    includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "recalc_tenancy",
+                        comboBoxRecalcTenancyExpr.Text, numericUpDownRecalcTenancyFrom.Value, numericUpDownRecalcTenancyTo.Value);
+                if (checkBoxRecalcDGIEnable.Checked)
+                    includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "recalc_dgi",
+                        comboBoxRecalcDGIExpr.Text, numericUpDownRecalcDGIFrom.Value, numericUpDownRecalcDGITo.Value);
+                if (checkBoxPaymentTenancyEnable.Checked)
+                    includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "payment_tenancy",
+                        comboBoxPaymentTenancyExpr.Text, numericUpDownPaymentTenancyFrom.Value, numericUpDownPaymentTenancyTo.Value);
+                if (checkBoxPaymentDGIEnable.Checked)
+                    includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "payment_dgi",
+                        comboBoxPaymentDGIExpr.Text, numericUpDownPaymentDGIFrom.Value, numericUpDownPaymentDGITo.Value);
+                if (checkBoxTransferBalanceEnable.Checked)
+                    includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "transfer_balance",
+                        comboBoxTransferBalanceExpr.Text, numericUpDownTransferBalanceFrom.Value, numericUpDownTransferBalanceTo.Value);
+                if (checkBoxBalanceOutputEnable.Checked)
+                    includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_output_total",
+                        comboBoxBalanceOutputExpr.Text, numericUpDownBalanceOutputFrom.Value, numericUpDownBalanceOutputTo.Value);
+                if (checkBoxBalanceOutputTenancyEnable.Checked)
+                    includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_output_tenancy",
+                        comboBoxBalanceOutputTenancyExpr.Text, numericUpDownBalanceOutputTenancyFrom.Value, numericUpDownBalanceOutputTenancyTo.Value);
+                if (checkBoxBalanceOutputDGIEnable.Checked)
+                    includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_output_dgi",
+                        comboBoxBalanceOutputDGIExpr.Text, numericUpDownBalanceOutputDGIFrom.Value, numericUpDownBalanceOutputDGITo.Value);
+            }
             if (checkBoxByClaimsChecked.Checked)
             {
                 if (radioButtonWithClaims.Checked || radioButtonWithoutClaims.Checked)
@@ -185,7 +203,6 @@ namespace Registry.Viewport.SearchForms
                     }
                 }   
             }
-            
             if (includedAccounts == null) return filter == "" ? "0 = 1" : filter;
             if (!string.IsNullOrEmpty(filter.Trim()))
                 filter += " AND ";

@@ -118,7 +118,7 @@ namespace Registry.Viewport.SearchForms
             {
                 if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += string.Format("at_date = '{0}'", dateTimePickerAtDate.Value.Date.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture));
+                filter += string.Format("at_date = '{0}'", dateTimePickerAtDate.Value.Date.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             }
 
             if (includedClaims != null)

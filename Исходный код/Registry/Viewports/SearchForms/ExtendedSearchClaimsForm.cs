@@ -67,7 +67,7 @@ namespace Registry.Viewport.SearchForms
                 {
                     var lastStateBindingSource = new BindingSource
                     {
-                        DataSource = ((CalcDataModel)CalcDataModel.GetInstance<CalcDataModelLastClaimStates>()).Select(),
+                        DataSource = CalcDataModel.GetInstance<CalcDataModelLastClaimStates>().Select(),
                         Filter = BuildFilter("date_start_state", comboBoxDateStartStateExpr.Text,
                             dateTimePickerDateStartStateFrom.Value.Date,
                             dateTimePickerDateStartStateTo.Value.Date)
@@ -85,7 +85,8 @@ namespace Registry.Viewport.SearchForms
             else
             {
                 var claims = from row in DataModel.GetInstance<ClaimStatesDataModel>().FilterDeletedRows()
-                             where (!checkBoxStateEnable.Checked || row.Field<int?>("id_state_type") == (int?)comboBoxState.SelectedValue) &&
+                             where 
+                                (!checkBoxStateEnable.Checked || row.Field<int?>("id_state_type") == (int?)comboBoxState.SelectedValue) &&
                                 (!checkBoxDateStartStateEnable.Checked || 
                                 DateSatisfiesExpression(
                                     row["date_start_state"] == DBNull.Value ? null : (DateTime?)row["date_start_state"],
@@ -205,12 +206,12 @@ namespace Registry.Viewport.SearchForms
             var format = "{0} {1} '{2}'";
             if (op != "BETWEEN")
                 return string.Format(format, field, op,
-                    from.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture),
-                    to.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture));
+                    from.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                    to.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             format = "{0} >= '{1}' AND {0} <= '{2}'";
-            return string.Format(format, field, 
-                from.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture),
-                to.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture));
+            return string.Format(format, field,
+                from.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture),
+                to.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
         }
 
         private static string ConvertDisplayEqExprToSql(string expr)

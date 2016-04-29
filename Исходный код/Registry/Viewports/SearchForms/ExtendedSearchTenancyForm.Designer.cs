@@ -726,7 +726,7 @@ namespace Registry.Viewport.SearchForms
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(758, 507);
+            this.ClientSize = new System.Drawing.Size(758, 512);
             this.Controls.Add(this.comboBoxReasonType);
             this.Controls.Add(this.checkBoxReasonTypeEnable);
             this.Controls.Add(this.label18);

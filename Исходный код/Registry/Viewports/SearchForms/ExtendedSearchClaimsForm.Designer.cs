@@ -604,7 +604,7 @@ namespace Registry.Viewport.SearchForms
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(405, 557);
+            this.ClientSize = new System.Drawing.Size(405, 562);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.textBoxSRN);
             this.Controls.Add(this.checkBoxSRNEnable);

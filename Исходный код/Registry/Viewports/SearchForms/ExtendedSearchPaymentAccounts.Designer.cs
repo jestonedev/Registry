@@ -131,10 +131,10 @@ namespace Registry.Viewport.SearchForms
             this.checkBoxBalanceOutputTenancyEnable = new System.Windows.Forms.CheckBox();
             this.label22 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.radioButtonWithoutUncompletedClaims = new System.Windows.Forms.RadioButton();
-            this.radioButtonWithUncompletedClaims = new System.Windows.Forms.RadioButton();
-            this.radioButtonWithoutClaims = new System.Windows.Forms.RadioButton();
             this.radioButtonWithClaims = new System.Windows.Forms.RadioButton();
+            this.radioButtonWithoutClaims = new System.Windows.Forms.RadioButton();
+            this.radioButtonWithUncompletedClaims = new System.Windows.Forms.RadioButton();
+            this.radioButtonWithoutUncompletedClaims = new System.Windows.Forms.RadioButton();
             this.checkBoxByClaimsChecked = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceInputFrom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceInputTo)).BeginInit();
@@ -383,9 +383,9 @@ namespace Registry.Viewport.SearchForms
             this.label12.AutoSize = true;
             this.label12.Location = new System.Drawing.Point(15, 293);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(136, 15);
+            this.label12.Size = new System.Drawing.Size(95, 15);
             this.label12.TabIndex = 74;
-            this.label12.Text = "Искать суммы на дату";
+            this.label12.Text = "Искать на дату";
             // 
             // dateTimePickerDate
             // 
@@ -481,6 +481,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownBalanceInputFrom.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownBalanceInputFrom.Name = "numericUpDownBalanceInputFrom";
             this.numericUpDownBalanceInputFrom.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownBalanceInputFrom.TabIndex = 21;
@@ -496,6 +501,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownBalanceInputTo.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownBalanceInputTo.Name = "numericUpDownBalanceInputTo";
             this.numericUpDownBalanceInputTo.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownBalanceInputTo.TabIndex = 22;
@@ -511,6 +521,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownBalanceInputTenancyTo.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownBalanceInputTenancyTo.Name = "numericUpDownBalanceInputTenancyTo";
             this.numericUpDownBalanceInputTenancyTo.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownBalanceInputTenancyTo.TabIndex = 26;
@@ -526,6 +541,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownBalanceInputTenancyFrom.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownBalanceInputTenancyFrom.Name = "numericUpDownBalanceInputTenancyFrom";
             this.numericUpDownBalanceInputTenancyFrom.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownBalanceInputTenancyFrom.TabIndex = 25;
@@ -575,6 +595,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownBalanceInputDGITo.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownBalanceInputDGITo.Name = "numericUpDownBalanceInputDGITo";
             this.numericUpDownBalanceInputDGITo.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownBalanceInputDGITo.TabIndex = 28;
@@ -590,6 +615,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownBalanceInputDGIFrom.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownBalanceInputDGIFrom.Name = "numericUpDownBalanceInputDGIFrom";
             this.numericUpDownBalanceInputDGIFrom.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownBalanceInputDGIFrom.TabIndex = 27;
@@ -639,6 +669,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownChargingDGITo.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownChargingDGITo.Name = "numericUpDownChargingDGITo";
             this.numericUpDownChargingDGITo.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownChargingDGITo.TabIndex = 40;
@@ -654,6 +689,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownChargingDGIFrom.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownChargingDGIFrom.Name = "numericUpDownChargingDGIFrom";
             this.numericUpDownChargingDGIFrom.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownChargingDGIFrom.TabIndex = 39;
@@ -703,6 +743,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownChargingTenancyTo.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownChargingTenancyTo.Name = "numericUpDownChargingTenancyTo";
             this.numericUpDownChargingTenancyTo.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownChargingTenancyTo.TabIndex = 36;
@@ -718,6 +763,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownChargingTenancyFrom.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownChargingTenancyFrom.Name = "numericUpDownChargingTenancyFrom";
             this.numericUpDownChargingTenancyFrom.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownChargingTenancyFrom.TabIndex = 35;
@@ -767,6 +817,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownChargingTo.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownChargingTo.Name = "numericUpDownChargingTo";
             this.numericUpDownChargingTo.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownChargingTo.TabIndex = 32;
@@ -782,6 +837,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownChargingFrom.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownChargingFrom.Name = "numericUpDownChargingFrom";
             this.numericUpDownChargingFrom.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownChargingFrom.TabIndex = 31;
@@ -831,6 +891,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownTransferBalanceTo.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownTransferBalanceTo.Name = "numericUpDownTransferBalanceTo";
             this.numericUpDownTransferBalanceTo.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownTransferBalanceTo.TabIndex = 52;
@@ -846,6 +911,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownTransferBalanceFrom.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownTransferBalanceFrom.Name = "numericUpDownTransferBalanceFrom";
             this.numericUpDownTransferBalanceFrom.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownTransferBalanceFrom.TabIndex = 51;
@@ -895,6 +965,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownRecalcDGITo.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownRecalcDGITo.Name = "numericUpDownRecalcDGITo";
             this.numericUpDownRecalcDGITo.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownRecalcDGITo.TabIndex = 48;
@@ -910,6 +985,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownRecalcDGIFrom.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownRecalcDGIFrom.Name = "numericUpDownRecalcDGIFrom";
             this.numericUpDownRecalcDGIFrom.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownRecalcDGIFrom.TabIndex = 47;
@@ -959,6 +1039,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownRecalcTenancyTo.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownRecalcTenancyTo.Name = "numericUpDownRecalcTenancyTo";
             this.numericUpDownRecalcTenancyTo.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownRecalcTenancyTo.TabIndex = 44;
@@ -974,6 +1059,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownRecalcTenancyFrom.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownRecalcTenancyFrom.Name = "numericUpDownRecalcTenancyFrom";
             this.numericUpDownRecalcTenancyFrom.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownRecalcTenancyFrom.TabIndex = 43;
@@ -1023,6 +1113,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownBalanceOutputTo.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownBalanceOutputTo.Name = "numericUpDownBalanceOutputTo";
             this.numericUpDownBalanceOutputTo.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownBalanceOutputTo.TabIndex = 64;
@@ -1038,6 +1133,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownBalanceOutputFrom.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownBalanceOutputFrom.Name = "numericUpDownBalanceOutputFrom";
             this.numericUpDownBalanceOutputFrom.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownBalanceOutputFrom.TabIndex = 63;
@@ -1087,6 +1187,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownPaymentDGITo.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownPaymentDGITo.Name = "numericUpDownPaymentDGITo";
             this.numericUpDownPaymentDGITo.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownPaymentDGITo.TabIndex = 60;
@@ -1102,6 +1207,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownPaymentDGIFrom.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownPaymentDGIFrom.Name = "numericUpDownPaymentDGIFrom";
             this.numericUpDownPaymentDGIFrom.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownPaymentDGIFrom.TabIndex = 59;
@@ -1151,6 +1261,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownPaymentTenancyTo.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownPaymentTenancyTo.Name = "numericUpDownPaymentTenancyTo";
             this.numericUpDownPaymentTenancyTo.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownPaymentTenancyTo.TabIndex = 56;
@@ -1166,6 +1281,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownPaymentTenancyFrom.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownPaymentTenancyFrom.Name = "numericUpDownPaymentTenancyFrom";
             this.numericUpDownPaymentTenancyFrom.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownPaymentTenancyFrom.TabIndex = 55;
@@ -1215,6 +1335,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownBalanceOutputDGITo.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownBalanceOutputDGITo.Name = "numericUpDownBalanceOutputDGITo";
             this.numericUpDownBalanceOutputDGITo.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownBalanceOutputDGITo.TabIndex = 72;
@@ -1230,6 +1355,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownBalanceOutputDGIFrom.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownBalanceOutputDGIFrom.Name = "numericUpDownBalanceOutputDGIFrom";
             this.numericUpDownBalanceOutputDGIFrom.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownBalanceOutputDGIFrom.TabIndex = 71;
@@ -1279,6 +1409,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownBalanceOutputTenancyTo.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownBalanceOutputTenancyTo.Name = "numericUpDownBalanceOutputTenancyTo";
             this.numericUpDownBalanceOutputTenancyTo.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownBalanceOutputTenancyTo.TabIndex = 68;
@@ -1294,6 +1429,11 @@ namespace Registry.Viewport.SearchForms
             0,
             0,
             0});
+            this.numericUpDownBalanceOutputTenancyFrom.Minimum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            -2147483648});
             this.numericUpDownBalanceOutputTenancyFrom.Name = "numericUpDownBalanceOutputTenancyFrom";
             this.numericUpDownBalanceOutputTenancyFrom.Size = new System.Drawing.Size(148, 21);
             this.numericUpDownBalanceOutputTenancyFrom.TabIndex = 67;
@@ -1346,25 +1486,15 @@ namespace Registry.Viewport.SearchForms
             this.groupBox1.TabIndex = 18;
             this.groupBox1.TabStop = false;
             // 
-            // radioButtonWithoutUncompletedClaims
+            // radioButtonWithClaims
             // 
-            this.radioButtonWithoutUncompletedClaims.AutoSize = true;
-            this.radioButtonWithoutUncompletedClaims.Location = new System.Drawing.Point(21, 53);
-            this.radioButtonWithoutUncompletedClaims.Name = "radioButtonWithoutUncompletedClaims";
-            this.radioButtonWithoutUncompletedClaims.Size = new System.Drawing.Size(233, 19);
-            this.radioButtonWithoutUncompletedClaims.TabIndex = 1;
-            this.radioButtonWithoutUncompletedClaims.Text = "Нет незавершенных исковых работ";
-            this.radioButtonWithoutUncompletedClaims.UseVisualStyleBackColor = true;
-            // 
-            // radioButtonWithUncompletedClaims
-            // 
-            this.radioButtonWithUncompletedClaims.AutoSize = true;
-            this.radioButtonWithUncompletedClaims.Location = new System.Drawing.Point(21, 78);
-            this.radioButtonWithUncompletedClaims.Name = "radioButtonWithUncompletedClaims";
-            this.radioButtonWithUncompletedClaims.Size = new System.Drawing.Size(197, 19);
-            this.radioButtonWithUncompletedClaims.TabIndex = 2;
-            this.radioButtonWithUncompletedClaims.Text = "Есть незавершенные работы";
-            this.radioButtonWithUncompletedClaims.UseVisualStyleBackColor = true;
+            this.radioButtonWithClaims.AutoSize = true;
+            this.radioButtonWithClaims.Location = new System.Drawing.Point(21, 103);
+            this.radioButtonWithClaims.Name = "radioButtonWithClaims";
+            this.radioButtonWithClaims.Size = new System.Drawing.Size(152, 19);
+            this.radioButtonWithClaims.TabIndex = 3;
+            this.radioButtonWithClaims.Text = "Есть исковые работы";
+            this.radioButtonWithClaims.UseVisualStyleBackColor = true;
             // 
             // radioButtonWithoutClaims
             // 
@@ -1378,15 +1508,25 @@ namespace Registry.Viewport.SearchForms
             this.radioButtonWithoutClaims.Text = "Нет исковых работ";
             this.radioButtonWithoutClaims.UseVisualStyleBackColor = true;
             // 
-            // radioButtonWithClaims
+            // radioButtonWithUncompletedClaims
             // 
-            this.radioButtonWithClaims.AutoSize = true;
-            this.radioButtonWithClaims.Location = new System.Drawing.Point(21, 103);
-            this.radioButtonWithClaims.Name = "radioButtonWithClaims";
-            this.radioButtonWithClaims.Size = new System.Drawing.Size(152, 19);
-            this.radioButtonWithClaims.TabIndex = 3;
-            this.radioButtonWithClaims.Text = "Есть исковые работы";
-            this.radioButtonWithClaims.UseVisualStyleBackColor = true;
+            this.radioButtonWithUncompletedClaims.AutoSize = true;
+            this.radioButtonWithUncompletedClaims.Location = new System.Drawing.Point(21, 78);
+            this.radioButtonWithUncompletedClaims.Name = "radioButtonWithUncompletedClaims";
+            this.radioButtonWithUncompletedClaims.Size = new System.Drawing.Size(197, 19);
+            this.radioButtonWithUncompletedClaims.TabIndex = 2;
+            this.radioButtonWithUncompletedClaims.Text = "Есть незавершенные работы";
+            this.radioButtonWithUncompletedClaims.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonWithoutUncompletedClaims
+            // 
+            this.radioButtonWithoutUncompletedClaims.AutoSize = true;
+            this.radioButtonWithoutUncompletedClaims.Location = new System.Drawing.Point(21, 53);
+            this.radioButtonWithoutUncompletedClaims.Name = "radioButtonWithoutUncompletedClaims";
+            this.radioButtonWithoutUncompletedClaims.Size = new System.Drawing.Size(233, 19);
+            this.radioButtonWithoutUncompletedClaims.TabIndex = 1;
+            this.radioButtonWithoutUncompletedClaims.Text = "Нет незавершенных исковых работ";
+            this.radioButtonWithoutUncompletedClaims.UseVisualStyleBackColor = true;
             // 
             // checkBoxByClaimsChecked
             // 

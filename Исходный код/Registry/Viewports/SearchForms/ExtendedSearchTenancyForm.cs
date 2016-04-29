@@ -126,7 +126,7 @@ namespace Registry.Viewport.SearchForms
                 filter += string.Format(CultureInfo.InvariantCulture, "registration_date {0} '{1}'",
                     ConvertDisplayEqExprToSql(
                         comboBoxRegDateExpr.SelectedItem.ToString()),
-                        dateTimePickerRegDate.Value.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture));
+                        dateTimePickerRegDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             }
             if (checkBoxIssueDateEnable.Checked)
             {
@@ -135,7 +135,7 @@ namespace Registry.Viewport.SearchForms
                 filter += string.Format(CultureInfo.InvariantCulture, "issue_date {0} '{1}'",
                     ConvertDisplayEqExprToSql(
                         comboBoxIssueDateExpr.SelectedItem.ToString()),
-                        dateTimePickerIssueDate.Value.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture));
+                        dateTimePickerIssueDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             }
             if (checkBoxBeginDateEnable.Checked)
             {
@@ -144,7 +144,7 @@ namespace Registry.Viewport.SearchForms
                 filter += string.Format(CultureInfo.InvariantCulture, "begin_date {0} '{1}'",
                     ConvertDisplayEqExprToSql(
                         comboBoxBeginDateExpr.SelectedItem.ToString()),
-                        dateTimePickerBeginDate.Value.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture));
+                        dateTimePickerBeginDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             }
             if (checkBoxEndDateEnable.Checked)
             {
@@ -153,7 +153,7 @@ namespace Registry.Viewport.SearchForms
                 filter += string.Format(CultureInfo.InvariantCulture, "end_date {0} '{1}'",
                     ConvertDisplayEqExprToSql(
                     comboBoxEndDateExpr.SelectedItem.ToString()),
-                    dateTimePickerEndDate.Value.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture));
+                    dateTimePickerEndDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             }
             if (checkBoxResidenceWarrDateEnable.Checked)
             {
@@ -162,7 +162,7 @@ namespace Registry.Viewport.SearchForms
                 filter += string.Format(CultureInfo.InvariantCulture, "residence_warrant_date {0} '{1}'",
                     ConvertDisplayEqExprToSql(
                         comboBoxResidenceWarrDateExpr.SelectedItem.ToString()),
-                        dateTimePickerResidenceWarrDate.Value.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture));
+                        dateTimePickerResidenceWarrDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             }
             if (checkBoxProtocolDateEnable.Checked)
             {
@@ -171,7 +171,7 @@ namespace Registry.Viewport.SearchForms
                 filter += string.Format(CultureInfo.InvariantCulture, "protocol_date {0} '{1}'",
                     ConvertDisplayEqExprToSql(
                     comboBoxProtocolDateExpr.SelectedItem.ToString()),
-                    dateTimePickerProtocolDate.Value.ToString("MM.dd.yyyy", CultureInfo.InvariantCulture));
+                    dateTimePickerProtocolDate.Value.ToString("yyyy-MM-dd", CultureInfo.InvariantCulture));
             }
             if (checkBoxIDTenancyEnable.Checked)
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, new List<int> { Convert.ToInt32(numericUpDownIDTenancy.Value) });

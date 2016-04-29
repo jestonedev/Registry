@@ -52,7 +52,7 @@ namespace Registry.Viewport
 
         private void RebuildStaticFilter()
         {
-            IEnumerable<int> ids = null;
+            IEnumerable<int> ids;
             if (ParentRow == null)
                 return;
             switch (ParentType)
@@ -435,6 +435,16 @@ namespace Registry.Viewport
                 return false;
             }
             return true;
+        }
+
+        private Dictionary<string, string> RegistryExcerptPremiseReportArguments()
+        {
+            var arguments = new Dictionary<string, string>
+            {
+                {"ids", ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_premises"].ToString()},
+                {"excerpt_type", "1"}
+            };
+            return arguments;
         }
 
         protected override void OnClosing(CancelEventArgs e)

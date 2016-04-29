@@ -9,6 +9,7 @@ using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Reporting;
 using Registry.Viewport.ModalEditors;
 using Registry.Viewport.SearchForms;
 using Security;
@@ -654,6 +655,42 @@ namespace Registry.Viewport
                 else
                     _idAccount = null;
             }
+        }
+
+        public override bool HasReport(ReporterType reporterType)
+        {
+            var reports = new List<ReporterType>
+            {
+                ReporterType.ExportReporter
+            };
+            return reports.Contains(reporterType);
+        }
+
+        public override void GenerateReport(ReporterType reporterType)
+        {
+            var reporter = ReporterFactory.CreateReporter(reporterType);
+            var arguments = new Dictionary<string, string>();
+            if (reporterType == ReporterType.ExportReporter)
+            {
+                arguments = ExportReportArguments();
+            }
+            reporter.Run(arguments);
+        }
+
+        private Dictionary<string, string> ExportReportArguments()
+        {
+            var columnHeaders = dataGridViewClaims.Columns.Cast<DataGridViewColumn>().
+                Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnHeader\":\"" + column.HeaderText + "\"}");
+            var columnPatterns = dataGridViewClaims.Columns.Cast<DataGridViewColumn>().
+                Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnPattern\":\"$column" + column.DisplayIndex + "$\"}");
+            var arguments = new Dictionary<string, string>
+            {
+                {"type", "4"},
+                {"filter", GeneralBindingSource.Filter.Trim() == "" ? "(1=1)" : GeneralBindingSource.Filter},
+                {"columnHeaders", "["+columnHeaders+",{\"columnHeader\":\"Примечание\"}]"},
+                {"columnPatterns", "["+columnPatterns+",{\"columnPattern\":\"$description$\"}]"}
+            };
+            return arguments;
         }
 
         void dataGridViewClaims_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
