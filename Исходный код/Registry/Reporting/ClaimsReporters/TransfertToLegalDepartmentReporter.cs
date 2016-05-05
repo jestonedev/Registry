@@ -23,7 +23,7 @@ namespace Registry.Reporting.ClaimsReporters
                 sw.Write(filter);
             arguments.Remove("filter");
             arguments.Add("filterTmpFile", fileName);
-            using (var resForm = new RequestToBksSettingsForm())
+            using (var resForm = new TransferToLegalDepartment())
             {
                 if (resForm.ShowDialog() != DialogResult.OK) return;
                 arguments.Add("request_date_from", resForm.RequestDateFrom.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
