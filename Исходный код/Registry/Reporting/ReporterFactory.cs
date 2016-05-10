@@ -84,6 +84,8 @@ namespace Registry.Reporting
                     return new JudicialOrderReporter();
                 case ReporterType.TransfertToLegalDepartmentReporter:
                     return new TransfertToLegalDepartmentReporter();
+                case ReporterType.TenancyNotifyContractAgreement:
+                    return new TenancyNotifyContractAgreement();
             }
             throw new ReporterException(
                 String.Format(CultureInfo.InvariantCulture, "В фабрику ReporterFactory передан неизвестный тип {0}", reporterType.ToString()));

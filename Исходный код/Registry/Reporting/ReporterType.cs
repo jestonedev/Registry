@@ -41,6 +41,7 @@ namespace Registry.Reporting
         MultiExcerptReporter,
         RequestToBksReporter,
         JudicialOrderReporter,
-        TransfertToLegalDepartmentReporter
+        TransfertToLegalDepartmentReporter,
+        TenancyNotifyContractAgreement
     }
 }

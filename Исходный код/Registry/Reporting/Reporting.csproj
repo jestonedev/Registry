@@ -67,6 +67,7 @@
     <Compile Include="JudicialOrderSettingsForm.Designer.cs">
       <DependentUpon>JudicialOrderSettingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TenancyReporters\TenancyNotifyContractAgreement.cs" />
     <Compile Include="TransferToLegalDepartment.cs">
       <SubType>Form</SubType>
     </Compile>

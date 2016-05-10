@@ -1180,7 +1180,8 @@ namespace Registry.Viewport
                 case ReporterType.TenancyContractSpecial1712Reporter:
                     return idProcess != null && idRentType == 2;
                 case ReporterType.TenancyActReporter:
-                    return true;
+                case ReporterType.TenancyNotifyContractAgreement:
+                    return idProcess != null;
                 case ReporterType.TenancyAgreementReporter:
                     return idProcess != null && (DataModelHelper.TenancyAgreementsForProcess(idProcess.Value) > 0);
             }
@@ -1205,6 +1206,10 @@ namespace Registry.Viewport
                     break;
                 case ReporterType.TenancyActReporter:
                     arguments = TenancyActReporterArguments();
+                    break;
+                case ReporterType.TenancyNotifyContractAgreement:
+                    arguments = TenancyContractReporterArguments();
+                    arguments.Add("report_type", "1");
                     break;
                 case ReporterType.TenancyAgreementReporter:
                     if (v_tenancy_agreements.Position == -1)

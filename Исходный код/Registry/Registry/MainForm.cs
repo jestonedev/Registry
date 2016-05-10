@@ -401,6 +401,8 @@ namespace Registry
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyAct);
             if (document.HasReport(ReporterType.TenancyAgreementReporter))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbTenancyAgreement);
+            if (document.HasReport(ReporterType.TenancyNotifyContractAgreement))
+                ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonNotifyContractAgreement);
             if (document.HasReport(ReporterType.RegistryExcerptReporterPremise))
                 ribbon1.OrbDropDown.RecentItems.Add(ribbonButtonOrbRegistryExcerptPremise);
             if (document.HasReport(ReporterType.RegistryExcerptReporterSubPremise))
@@ -1014,6 +1016,13 @@ namespace Registry
             var document = dockPanel.ActiveDocument as IMenuController;
             if (document != null)
                 document.GenerateReport(ReporterType.ExportReporter); 
+        }
+
+        private void ribbonButtonNotifyContractAgreement_Click(object sender, EventArgs e)
+        {
+            var document = dockPanel.ActiveDocument as IMenuController;
+            if (document != null)
+                document.GenerateReport(ReporterType.TenancyNotifyContractAgreement);
         }
 
         private void ribbonButtonOrbMultiPaymentAccount_Click(object sender, EventArgs e)

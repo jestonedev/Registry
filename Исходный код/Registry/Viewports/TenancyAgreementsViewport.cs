@@ -572,8 +572,18 @@ namespace Registry.Viewport
 
         public override bool HasReport(ReporterType reporterType)
         {
-            return reporterType == ReporterType.TenancyAgreementReporter && 
-                (GeneralBindingSource.Position > -1);
+            if (GeneralBindingSource.Position == -1)
+                return false;
+            var idAgreement = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_agreement"] != DBNull.Value
+                ? (int?)Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_agreement"],
+                    CultureInfo.InvariantCulture) : null;
+            switch (reporterType)
+            {
+                case ReporterType.TenancyAgreementReporter:
+                case ReporterType.TenancyNotifyContractAgreement:
+                    return idAgreement != null;
+            }
+            return false;
         }
 
         public override void GenerateReport(ReporterType reporterType)
@@ -589,8 +599,20 @@ namespace Registry.Viewport
                 return;
             }
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            ReporterFactory.CreateReporter(ReporterType.TenancyAgreementReporter).Run(
-                new Dictionary<string, string> { { "id_agreement", row["id_agreement"].ToString() } });
+            switch (reporterType)
+            {
+                case ReporterType.TenancyAgreementReporter:
+                    ReporterFactory.CreateReporter(reporterType).Run(new Dictionary<string, string> { { "id_agreement", row["id_agreement"].ToString() } });
+                    break;
+                case ReporterType.TenancyNotifyContractAgreement:
+                    var arguments = new Dictionary<string, string>
+                    {
+                        {"id_process", row["id_process"].ToString()},
+                        {"report_type", "2"}
+                    };
+                    ReporterFactory.CreateReporter(reporterType).Run(arguments);
+                    break;
+            }
         }
 
         private bool TenancyValidForReportGenerate()

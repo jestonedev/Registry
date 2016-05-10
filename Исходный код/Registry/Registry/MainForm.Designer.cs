@@ -53,6 +53,7 @@ namespace Registry
             this.ribbonOrbMenuItemPayments = new System.Windows.Forms.RibbonOrbMenuItem();
             this.ribbonOrbMenuItemResettles = new System.Windows.Forms.RibbonOrbMenuItem();
             this.ribbonSeparator4 = new System.Windows.Forms.RibbonSeparator();
+            this.ribbonOrbMenuItemHelp = new System.Windows.Forms.RibbonOrbMenuItem();
             this.ribbonOrbMenuItemExit = new System.Windows.Forms.RibbonOrbMenuItem();
             this.ribbonButtonOrbTenancyContract = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbTenancyContract1711 = new System.Windows.Forms.RibbonButton();
@@ -171,7 +172,7 @@ namespace Registry
             this.toolStripLabelRecordCount = new System.Windows.Forms.ToolStripLabel();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.ribbonButton3 = new System.Windows.Forms.RibbonButton();
-            this.ribbonOrbMenuItemHelp = new System.Windows.Forms.RibbonOrbMenuItem();
+            this.ribbonButtonNotifyContractAgreement = new System.Windows.Forms.RibbonButton();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -202,6 +203,7 @@ namespace Registry
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbTenancyContract1712);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbTenancyAct);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbTenancyAgreement);
+            this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonNotifyContractAgreement);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptPremise);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptSubPremise);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbRegistryExcerptSubPremises);
@@ -299,6 +301,16 @@ namespace Registry
             this.ribbonOrbMenuItemResettles.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemResettles.ToolTipImage")));
             this.ribbonOrbMenuItemResettles.ToolTipTitle = "Переселение";
             this.ribbonOrbMenuItemResettles.Click += new System.EventHandler(this.ribbonOrbMenuItemResettles_Click);
+            // 
+            // ribbonOrbMenuItemHelp
+            // 
+            this.ribbonOrbMenuItemHelp.DropDownArrowDirection = System.Windows.Forms.RibbonArrowDirection.Left;
+            this.ribbonOrbMenuItemHelp.Image = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemHelp.Image")));
+            this.ribbonOrbMenuItemHelp.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemHelp.SmallImage")));
+            this.ribbonOrbMenuItemHelp.Text = "Руководство пользователя";
+            this.ribbonOrbMenuItemHelp.ToolTip = "Руководство пользователя";
+            this.ribbonOrbMenuItemHelp.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemHelp.ToolTipImage")));
+            this.ribbonOrbMenuItemHelp.Click += new System.EventHandler(this.ribbonOrbMenuItemHelp_Click);
             // 
             // ribbonOrbMenuItemExit
             // 
@@ -1590,15 +1602,16 @@ namespace Registry
             this.ribbonButton3.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButton3.SmallImage")));
             this.ribbonButton3.Text = "Лицевые счета";
             // 
-            // ribbonOrbMenuItemHelp
+            // ribbonButtonNotifyContractAgreement
             // 
-            this.ribbonOrbMenuItemHelp.DropDownArrowDirection = System.Windows.Forms.RibbonArrowDirection.Left;
-            this.ribbonOrbMenuItemHelp.Image = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemHelp.Image")));
-            this.ribbonOrbMenuItemHelp.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemHelp.SmallImage")));
-            this.ribbonOrbMenuItemHelp.Text = "Руководство пользователя";
-            this.ribbonOrbMenuItemHelp.ToolTip = "Руководство пользователя";
-            this.ribbonOrbMenuItemHelp.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemHelp.ToolTipImage")));
-            this.ribbonOrbMenuItemHelp.Click += new System.EventHandler(this.ribbonOrbMenuItemHelp_Click);
+            this.ribbonButtonNotifyContractAgreement.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyContractAgreement.Image")));
+            this.ribbonButtonNotifyContractAgreement.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyContractAgreement.SmallImage")));
+            this.ribbonButtonNotifyContractAgreement.Text = "Уведомление";
+            this.ribbonButtonNotifyContractAgreement.ToolTip = "При нажатии на данную кнопку будет сформировано уведомление о необходимости прийт" +
+    "и в отдел жилищных отношений за документами";
+            this.ribbonButtonNotifyContractAgreement.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyContractAgreement.ToolTipImage")));
+            this.ribbonButtonNotifyContractAgreement.ToolTipTitle = "Уведомление";
+            this.ribbonButtonNotifyContractAgreement.Click += new System.EventHandler(this.ribbonButtonNotifyContractAgreement_Click);
             // 
             // MainForm
             // 
@@ -1752,6 +1765,7 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButtonOrbMultiPaymentAccount;
         private System.Windows.Forms.RibbonButton ribbonButtonOrbMultiClaims;
         private System.Windows.Forms.RibbonOrbMenuItem ribbonOrbMenuItemHelp;
+        private System.Windows.Forms.RibbonButton ribbonButtonNotifyContractAgreement;
     }
 }
 
