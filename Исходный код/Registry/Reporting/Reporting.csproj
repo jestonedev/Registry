@@ -73,6 +73,12 @@
     <Compile Include="JudicialOrderSettingsForm.Designer.cs">
       <DependentUpon>JudicialOrderSettingsForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="TransferToLegalDepartment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TransferToLegalDepartment.Designer.cs">
+      <DependentUpon>TransferToLegalDepartment.cs</DependentUpon>
+    </Compile>
     <Compile Include="RequestToBksSettingsForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -190,6 +196,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="JudicialOrderSettingsForm.resx">
       <DependentUpon>JudicialOrderSettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TransferToLegalDepartment.resx">
+      <DependentUpon>TransferToLegalDepartment.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="RequestToBksSettingsForm.resx">
       <DependentUpon>RequestToBksSettingsForm.cs</DependentUpon>

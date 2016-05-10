@@ -171,6 +171,7 @@ namespace Registry
             this.toolStripLabelRecordCount = new System.Windows.Forms.ToolStripLabel();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.ribbonButton3 = new System.Windows.Forms.RibbonButton();
+            this.ribbonOrbMenuItemHelp = new System.Windows.Forms.RibbonOrbMenuItem();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -193,6 +194,7 @@ namespace Registry
             this.ribbon1.OrbDropDown.MenuItems.Add(this.ribbonOrbMenuItemPayments);
             this.ribbon1.OrbDropDown.MenuItems.Add(this.ribbonOrbMenuItemResettles);
             this.ribbon1.OrbDropDown.MenuItems.Add(this.ribbonSeparator4);
+            this.ribbon1.OrbDropDown.MenuItems.Add(this.ribbonOrbMenuItemHelp);
             this.ribbon1.OrbDropDown.MenuItems.Add(this.ribbonOrbMenuItemExit);
             this.ribbon1.OrbDropDown.Name = "";
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonOrbTenancyContract);
@@ -209,7 +211,7 @@ namespace Registry
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonSeparator3);
             this.ribbon1.OrbDropDown.RecentItems.Add(this.ribbonButtonExportOds);
             this.ribbon1.OrbDropDown.RecentItemsCaption = "Печать и мастеры массовых операций";
-            this.ribbon1.OrbDropDown.Size = new System.Drawing.Size(527, 383);
+            this.ribbon1.OrbDropDown.Size = new System.Drawing.Size(527, 427);
             this.ribbon1.OrbDropDown.TabIndex = 0;
             this.ribbon1.OrbImage = null;
             this.ribbon1.OrbStyle = System.Windows.Forms.RibbonOrbStyle.Office_2010;
@@ -1539,6 +1541,7 @@ namespace Registry
             tabGradient1.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
             tabGradient1.TextColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             autoHideStripSkin1.TabGradient = tabGradient1;
+            autoHideStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
             dockPanelSkin1.AutoHideStripSkin = autoHideStripSkin1;
             tabGradient2.EndColor = System.Drawing.Color.White;
             tabGradient2.StartColor = System.Drawing.Color.White;
@@ -1553,6 +1556,7 @@ namespace Registry
             tabGradient3.TextColor = System.Drawing.SystemColors.ControlText;
             dockPaneStripGradient1.InactiveTabGradient = tabGradient3;
             dockPaneStripSkin1.DocumentGradient = dockPaneStripGradient1;
+            dockPaneStripSkin1.TextFont = new System.Drawing.Font("Segoe UI", 9F);
             tabGradient4.EndColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
             tabGradient4.LinearGradientMode = System.Drawing.Drawing2D.LinearGradientMode.Vertical;
             tabGradient4.StartColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
@@ -1585,6 +1589,16 @@ namespace Registry
             this.ribbonButton3.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButton3.Image")));
             this.ribbonButton3.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButton3.SmallImage")));
             this.ribbonButton3.Text = "Лицевые счета";
+            // 
+            // ribbonOrbMenuItemHelp
+            // 
+            this.ribbonOrbMenuItemHelp.DropDownArrowDirection = System.Windows.Forms.RibbonArrowDirection.Left;
+            this.ribbonOrbMenuItemHelp.Image = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemHelp.Image")));
+            this.ribbonOrbMenuItemHelp.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemHelp.SmallImage")));
+            this.ribbonOrbMenuItemHelp.Text = "Руководство пользователя";
+            this.ribbonOrbMenuItemHelp.ToolTip = "Руководство пользователя";
+            this.ribbonOrbMenuItemHelp.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonOrbMenuItemHelp.ToolTipImage")));
+            this.ribbonOrbMenuItemHelp.Click += new System.EventHandler(this.ribbonOrbMenuItemHelp_Click);
             // 
             // MainForm
             // 
@@ -1737,6 +1751,7 @@ namespace Registry
         private System.Windows.Forms.RibbonButton ribbonButton3;
         private System.Windows.Forms.RibbonButton ribbonButtonOrbMultiPaymentAccount;
         private System.Windows.Forms.RibbonButton ribbonButtonOrbMultiClaims;
+        private System.Windows.Forms.RibbonOrbMenuItem ribbonOrbMenuItemHelp;
     }
 }
 

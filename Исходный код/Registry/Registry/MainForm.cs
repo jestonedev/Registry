@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -1097,6 +1099,25 @@ namespace Registry
         public Viewport.Viewport GetCurrentViewport()
         {
             return dockPanel.ActiveDocument as Viewport.Viewport;
+        }
+
+        private void ribbonOrbMenuItemHelp_Click(object sender, EventArgs e)
+        {
+            var fileName = Path.Combine(AppDomain.CurrentDomain.BaseDirectory,
+                @"Руководство пользователя.doc");
+            if (!File.Exists(fileName))
+            {
+                MessageBox.Show(
+                    string.Format(@"Не удалось найти руководство пользователя по пути {0}", fileName),
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            using (var process = new Process())
+            {
+                var psi = new ProcessStartInfo(fileName);
+                process.StartInfo = psi;
+                process.Start();
+            }
         }
     }
 }
