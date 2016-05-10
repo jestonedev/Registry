@@ -13,14 +13,15 @@ namespace Registry.Viewport
 {
     internal sealed partial class StructureTypeListViewport : EditableDataGridViewport
     {
-        private StructureTypeListViewport() : this(null, null)
+        private StructureTypeListViewport()
+            : this(null, null)
         {
         }
 
         public StructureTypeListViewport(Viewport viewport, IMenuCallback menuCallback)
             : base(viewport, menuCallback)
         {
-            InitializeComponent(); 
+            InitializeComponent();
             GeneralSnapshot = new DataTable("snapshot_structure_types") { Locale = CultureInfo.InvariantCulture };
         }
 
@@ -36,14 +37,14 @@ namespace Registry.Viewport
         {
             foreach (var entity in list)
             {
-                var structureType = (StructureType) entity;
+                var structureType = (StructureType)entity;
                 if (structureType.StructureTypeName == null)
                 {
-                    MessageBox.Show(@"Не заполнено наименование структуры здания", @"Ошибка", 
+                    MessageBox.Show(@"Не заполнено наименование структуры здания", @"Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
                 }
-                if (structureType.StructureTypeName == null || structureType.StructureTypeName.Length <= 255) 
+                if (structureType.StructureTypeName == null || structureType.StructureTypeName.Length <= 255)
                     continue;
                 MessageBox.Show(@"Длина названия структуры здания не может превышать 255 символов",
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -117,7 +118,7 @@ namespace Registry.Viewport
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
                 GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
-            GeneralSnapshotBindingSource = new BindingSource {DataSource = GeneralSnapshot};
+            GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
             GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_structure_types_CurrentItemChanged;
 
             dataGridView.DataSource = GeneralSnapshotBindingSource;
@@ -135,7 +136,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return  AccessControl.HasPrivelege(Priveleges.RegistryDirectoriesReadWrite);
+            return AccessControl.HasPrivelege(Priveleges.RegistryDirectoriesReadWrite);
         }
 
         public override void InsertRecord()
@@ -186,7 +187,7 @@ namespace Registry.Viewport
             }
             for (var i = 0; i < list.Count; i++)
             {
-                var structureType = (StructureType) list[i];
+                var structureType = (StructureType)list[i];
                 var row = GeneralDataModel.Select().Rows.Find(structureType.IdStructureType);
                 if (row == null)
                 {
@@ -225,7 +226,7 @@ namespace Registry.Viewport
                         ((int)dataGridView.Rows[j].Cells["id_structure_type"].Value == structureType.IdStructureType))
                         rowIndex = j;
                 if (rowIndex != -1) continue;
-                if (structureType.IdStructureType != null && 
+                if (structureType.IdStructureType != null &&
                     GeneralDataModel.Delete(structureType.IdStructureType.Value) == -1)
                 {
                     sync_views = true;

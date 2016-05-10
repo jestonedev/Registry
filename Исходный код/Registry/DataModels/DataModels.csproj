@@ -65,6 +65,7 @@
     <Compile Include="DataModelHelper.cs" />
     <Compile Include="DataModels\ClaimFilesDataModel.cs" />
     <Compile Include="DataModels\DocumentsResidenceDataModel.cs" />
+    <Compile Include="DataModels\HeatingTypesDataModel.cs" />
     <Compile Include="DataModels\SelectableSigners.cs" />
     <Compile Include="DataModels\PaymentsAccountsDataModel.cs" />
     <Compile Include="DataModels\PaymentsDataModel.cs" />

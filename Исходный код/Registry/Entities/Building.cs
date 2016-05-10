@@ -26,6 +26,12 @@ namespace Registry.Entities
         public bool? RubbishChute { get; set; }
         public double? Wear { get; set; }
         public DateTime? StateDate { get; set; }
+        public bool? Plumbing { get; set; }
+        public bool? HotWaterSupply { get; set; }
+        public bool? Canalization { get; set; }
+        public bool? Electricity { get; set; }
+        public bool? RadioNetwork { get; set; }
+        public int? IdHeatingType { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -64,7 +70,13 @@ namespace Registry.Entities
                    first.RubbishChute == second.RubbishChute &&
                    first.IdState == second.IdState &&
                    first.Wear == second.Wear &&
-                   first.StateDate == second.StateDate;
+                   first.StateDate == second.StateDate &&
+                    first.Plumbing == second.Plumbing &&
+                    first.Electricity == second.Electricity &&
+                    first.HotWaterSupply == second.HotWaterSupply &&
+                    first.Canalization == second.Canalization &&
+                    first.RadioNetwork == second.RadioNetwork &&
+                    first.IdHeatingType == second.IdHeatingType;
         }
 
         public static bool operator !=(Building first, Building second)

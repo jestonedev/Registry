@@ -10,49 +10,7 @@ using System.Windows.Forms;
 namespace Registry.Reporting
 {
     public partial class ActPremiseExtInfoForm : Form
-    {
-        public bool HasAqueduct
-        {
-            get { return checkBoxHasAqueduct.Checked; }
-        }
-
-        public bool HasHotWater
-        {
-            get { return checkBoxHasHotWater.Checked; }
-        }
-
-        public bool HasSewerage
-        {
-            get { return checkBoxHasSewerage.Checked; }
-        }
-
-        public bool HasLighting
-        {
-            get { return checkBoxHasLighting.Checked; }
-        }
-
-        public bool HasRadio
-        {
-            get { return checkBoxHasRadio.Checked; }
-        }
-
-        public bool HasHeating
-        {
-            get { return checkBoxHasHeating.Checked; }
-        }
-
-        public int HeatingType
-        {
-            get
-            {
-                if (radioButtonStoveHeating.Checked)
-                    return 1;
-                if (radioButtonLocalHeating.Checked)
-                    return 2;
-                return radioButtonCentralHeating.Checked ? 3 : 0;
-            }
-        }
-
+    {        
         public bool OpenedDate
         {
             get { return checkBoxOpenDate.Checked; }
@@ -62,10 +20,6 @@ namespace Registry.Reporting
         {
             InitializeComponent();
         }
-
-        private void checkBoxHasHeating_CheckedChanged(object sender, EventArgs e)
-        {
-            radioButtonCentralHeating.Enabled = radioButtonLocalHeating.Enabled = radioButtonStoveHeating.Enabled = checkBoxHasHeating.Checked;
-        }
+       
     }
 }

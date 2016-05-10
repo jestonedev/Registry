@@ -85,7 +85,7 @@ namespace Registry
             // Реестр жилого фонда
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
             {
-                DataModel.GetInstance<StructureTypesDataModel>(toolStripProgressBar, 1);
+                DataModel.GetInstance<HeatingTypesDataModel>(toolStripProgressBar, 1);
                 DataModel.GetInstance<PremisesKindsDataModel>(toolStripProgressBar, 1);
                 DataModel.GetInstance<FundsBuildingsAssocDataModel>(toolStripProgressBar, 1);
                 DataModel.GetInstance<FundsPremisesAssocDataModel>(toolStripProgressBar, 1);

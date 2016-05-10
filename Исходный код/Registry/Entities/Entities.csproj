@@ -55,6 +55,7 @@
     <Compile Include="DocumentResidence.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="EntityType.cs" />
+    <Compile Include="HeatingTypes.cs" />
     <Compile Include="RestrictionRightObjectAssoc.cs" />
     <Compile Include="OwnershipRightObjectAssoc.cs" />
     <Compile Include="FundObjectAssoc.cs" />

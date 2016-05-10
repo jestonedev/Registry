@@ -22,6 +22,7 @@ namespace Registry.Viewport
         #region Models
         private DataModel _kladr;
         private DataModel _structureTypes;
+        private DataModel _heatingTypes;
         private DataModel _restrictions;
         private DataModel _restrictionTypes;
         private DataModel _restrictionBuildingsAssoc;
@@ -48,6 +49,7 @@ namespace Registry.Viewport
         private BindingSource _vFundType;
         private BindingSource _vObjectStates;
         private BindingSource _vBuildingCurrentFund;
+        private BindingSource _vHeatingType;
 
         #endregion Views
 
@@ -185,6 +187,13 @@ namespace Registry.Viewport
                 checkBoxRubbishChute.Location = new Point(331, 152);
                 checkBoxImprovement.Location = new Point(175, 152);
                 checkBoxElevator.Location = new Point(19, 152);
+                checkBoxPlumbing.Location = new Point(474,152);
+                checkBoxHotWaterSupply.Location = new Point(19, 172);
+                checkBoxCanalization.Location = new Point(175, 172);
+                checkBoxElectricity.Location = new Point(331, 172);
+                checkBoxRadioNetwork.Location = new Point(474, 172);
+                label25.Location = new Point(19, 192);
+                comboBoxHeatingType.Location = new Point(175, 192);
             }
             else
             {
@@ -193,6 +202,13 @@ namespace Registry.Viewport
                 checkBoxRubbishChute.Location = new Point(331, 124);
                 checkBoxImprovement.Location = new Point(175, 124);
                 checkBoxElevator.Location = new Point(19, 124);
+                checkBoxPlumbing.Location = new Point(474, 124);
+                checkBoxHotWaterSupply.Location = new Point(19, 144);
+                checkBoxCanalization.Location = new Point(175, 144);
+                checkBoxElectricity.Location = new Point(331, 144);
+                checkBoxRadioNetwork.Location = new Point(474, 144);
+                label25.Location = new Point(19, 164);
+                comboBoxHeatingType.Location = new Point(175, 164);
             }
         }
 
@@ -236,6 +252,21 @@ namespace Registry.Viewport
             checkBoxElevator.DataBindings.Add("Checked", GeneralBindingSource, "elevator", true, DataSourceUpdateMode.Never, false);
             checkBoxRubbishChute.DataBindings.Clear();
             checkBoxRubbishChute.DataBindings.Add("Checked", GeneralBindingSource, "rubbish_chute", true, DataSourceUpdateMode.Never, false);
+            checkBoxPlumbing.DataBindings.Clear();
+            checkBoxPlumbing.DataBindings.Add("Checked", GeneralBindingSource, "plumbing", true, 
+                DataSourceUpdateMode.Never, false);
+            checkBoxHotWaterSupply.DataBindings.Clear();
+            checkBoxHotWaterSupply.DataBindings.Add("Checked", GeneralBindingSource, "hot_water_supply", true,
+                DataSourceUpdateMode.Never, false);
+            checkBoxCanalization.DataBindings.Clear();
+            checkBoxCanalization.DataBindings.Add("Checked", GeneralBindingSource, "canalization", true,
+                DataSourceUpdateMode.Never, false);
+            checkBoxElectricity.DataBindings.Clear();
+            checkBoxElectricity.DataBindings.Add("Checked", GeneralBindingSource, "electricity", true,
+                DataSourceUpdateMode.Never, false);
+            checkBoxRadioNetwork.DataBindings.Clear();
+            checkBoxRadioNetwork.DataBindings.Add("Checked", GeneralBindingSource, "radio_network", true,
+                DataSourceUpdateMode.Never, false);                      
             textBoxDescription.DataBindings.Clear();
             textBoxDescription.DataBindings.Add("Text", GeneralBindingSource, "description", true, DataSourceUpdateMode.Never, "");
             numericUpDownPremisesCount.DataBindings.Clear();
@@ -261,6 +292,12 @@ namespace Registry.Viewport
             comboBoxStructureType.DisplayMember = "structure_type";
             comboBoxStructureType.DataBindings.Clear();
             comboBoxStructureType.DataBindings.Add("SelectedValue", GeneralBindingSource, "id_structure_type", true, DataSourceUpdateMode.Never, DBNull.Value);
+
+            comboBoxHeatingType.DataSource = _vHeatingType;
+            comboBoxHeatingType.ValueMember = "id_heating_type";
+            comboBoxHeatingType.DisplayMember = "heating_type";
+            comboBoxHeatingType.DataBindings.Clear();
+            comboBoxHeatingType.DataBindings.Add("SelectedValue", GeneralBindingSource, "id_heating_type", true, DataSourceUpdateMode.Never, DBNull.Value);
 
             comboBoxCurrentFundType.DataSource = _vFundType;
             comboBoxCurrentFundType.ValueMember = "id_fund_type";
@@ -422,7 +459,13 @@ namespace Registry.Viewport
                 LivingArea = Convert.ToDouble(numericUpDownLivingArea.Value),
                 TotalArea = Convert.ToDouble(numericUpDownTotalArea.Value),
                 Wear = Convert.ToDouble(numericUpDownWear.Value),
-                StateDate = ViewportHelper.ValueOrNull(dateTimePickerStateDate)
+                StateDate = ViewportHelper.ValueOrNull(dateTimePickerStateDate),
+                Plumbing = checkBoxPlumbing.Checked,
+                HotWaterSupply = checkBoxHotWaterSupply.Checked,
+                Canalization = checkBoxCanalization.Checked,
+                Electricity = checkBoxElectricity.Checked,
+                RadioNetwork = checkBoxRadioNetwork.Checked,
+                IdHeatingType =(int?) comboBoxHeatingType.SelectedValue
             };
             return building;
         }
@@ -453,7 +496,13 @@ namespace Registry.Viewport
                 Elevator = ViewportHelper.ValueOrNull<bool>(row, "elevator"),
                 RubbishChute = ViewportHelper.ValueOrNull<bool>(row, "rubbish_chute"),
                 Wear = ViewportHelper.ValueOrNull<double>(row, "wear"),
-                StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date")
+                StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date"),
+                Plumbing = ViewportHelper.ValueOrNull<bool>(row, "plumbing"),
+                HotWaterSupply = ViewportHelper.ValueOrNull<bool>(row, "hot_water_supply"),
+                Canalization = ViewportHelper.ValueOrNull<bool>(row, "canalization"),
+                Electricity = ViewportHelper.ValueOrNull<bool>(row, "electricity"),
+                RadioNetwork = ViewportHelper.ValueOrNull<bool>(row, "radio_network"),
+                IdHeatingType = ViewportHelper.ValueOrNull<int>(row, "id_heating_type")
             };
             return building;
         }
@@ -480,6 +529,12 @@ namespace Registry.Viewport
             textBoxCadastralNum.Text = building.CadastralNum;
             textBoxDescription.Text = building.Description;
             dateTimePickerStateDate.Value = ViewportHelper.ValueOrDefault(building.StateDate);
+            checkBoxPlumbing.Checked = ViewportHelper.ValueOrDefault(building.Plumbing);
+            checkBoxHotWaterSupply.Checked = ViewportHelper.ValueOrDefault(building.HotWaterSupply);
+            checkBoxCanalization.Checked = ViewportHelper.ValueOrDefault(building.Canalization);
+            checkBoxElectricity.Checked = ViewportHelper.ValueOrDefault(building.Electricity);
+            checkBoxRadioNetwork.Checked = ViewportHelper.ValueOrDefault(building.RadioNetwork);
+            comboBoxHeatingType.SelectedValue = ViewportHelper.ValueOrDefault(building.IdHeatingType);
         }
 
         private static void FillRowFromBuilding(Building building, DataRowView row)
@@ -507,6 +562,12 @@ namespace Registry.Viewport
             row["total_area"] = ViewportHelper.ValueOrDBNull(building.TotalArea);
             row["wear"] = ViewportHelper.ValueOrDBNull(building.Wear);
             row["state_date"] = ViewportHelper.ValueOrDBNull(building.StateDate);
+            row["plumbing"] = ViewportHelper.ValueOrDBNull(building.Plumbing);
+            row["hot_water_supply"] = ViewportHelper.ValueOrDBNull(building.HotWaterSupply);
+            row["canalization"] = ViewportHelper.ValueOrDBNull(building.Canalization);
+            row["electricity"] = ViewportHelper.ValueOrDBNull(building.Electricity);
+            row["radio_network"] = ViewportHelper.ValueOrDBNull(building.RadioNetwork);
+            row["id_heating_type"] = ViewportHelper.ValueOrDBNull(building.IdHeatingType);         
             row.EndEdit();
         }
 
@@ -523,6 +584,7 @@ namespace Registry.Viewport
             GeneralDataModel = DataModel.GetInstance<BuildingsDataModel>();
             _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
             _structureTypes = DataModel.GetInstance<StructureTypesDataModel>();
+            _heatingTypes = DataModel.GetInstance<HeatingTypesDataModel>();
             _restrictions = DataModel.GetInstance<RestrictionsDataModel>();
             _restrictionTypes = DataModel.GetInstance<RestrictionTypesDataModel>();
             _restrictionBuildingsAssoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>();
@@ -588,6 +650,12 @@ namespace Registry.Viewport
             _vOwnershipRightTypes = new BindingSource
             {
                 DataMember = "ownership_right_types",
+                DataSource = ds
+            };
+
+            _vHeatingType = new BindingSource
+            {
+                DataMember = "heating_type",
                 DataSource = ds
             };
 
@@ -1344,5 +1412,6 @@ namespace Registry.Viewport
                 return (int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"];
             return -1;
         }
+       
     }
 }

@@ -22,7 +22,7 @@ namespace Registry.DataModels.DataModels
 
         protected override void ConfigureTable()
         {
-            Table.PrimaryKey = new [] { Table.Columns["id_structure_type"] };
+            Table.PrimaryKey = new[] { Table.Columns["id_structure_type"] };
         }
 
         protected override void ConfigureRelations()
@@ -39,7 +39,7 @@ namespace Registry.DataModels.DataModels
         protected override void ConfigureInsertCommand(DbCommand command, Entity entity)
         {
             command.CommandText = @"INSERT INTO structure_types (structure_type) VALUES (?)";
-            var structureType = (StructureType) entity;
+            var structureType = (StructureType)entity;
             command.Parameters.Add(DBConnection.CreateParameter("structure_type", structureType.StructureTypeName));
         }
 
