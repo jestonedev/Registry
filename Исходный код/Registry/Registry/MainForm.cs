@@ -67,7 +67,7 @@ namespace Registry
                 || AccessControl.HasPrivelege(Priveleges.ResettleRead))
                 toolStripProgressBar.Maximum += 9;   
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
-                toolStripProgressBar.Maximum += 13;
+                toolStripProgressBar.Maximum += 14;
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
                 toolStripProgressBar.Maximum += 16;
             //Общие таблицы для реестра жилого фонда, процессов найма и процессов переселения
@@ -87,6 +87,7 @@ namespace Registry
             // Реестр жилого фонда
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
             {
+                DataModel.GetInstance<StructureTypesDataModel>(toolStripProgressBar, 1);
                 DataModel.GetInstance<HeatingTypesDataModel>(toolStripProgressBar, 1);
                 DataModel.GetInstance<PremisesKindsDataModel>(toolStripProgressBar, 1);
                 DataModel.GetInstance<FundsBuildingsAssocDataModel>(toolStripProgressBar, 1);

@@ -1,4 +1,4 @@
-*.suo
+﻿*.suo
 *.user
 *.userosscache
 [Dd]ebug/
@@ -6,4 +6,3 @@
 *.user
 *.bak
 [Tt]humbs.db
-/Исходный код/Registry/Registry/bin/Release

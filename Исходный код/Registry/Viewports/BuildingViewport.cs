@@ -184,31 +184,11 @@ namespace Registry.Viewport
             {
                 label19.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
-                checkBoxRubbishChute.Location = new Point(331, 152);
-                checkBoxImprovement.Location = new Point(175, 152);
-                checkBoxElevator.Location = new Point(19, 152);
-                checkBoxPlumbing.Location = new Point(474,152);
-                checkBoxHotWaterSupply.Location = new Point(19, 172);
-                checkBoxCanalization.Location = new Point(175, 172);
-                checkBoxElectricity.Location = new Point(331, 172);
-                checkBoxRadioNetwork.Location = new Point(474, 172);
-                label25.Location = new Point(19, 192);
-                comboBoxHeatingType.Location = new Point(175, 192);
             }
             else
             {
                 label19.Visible = false;
                 comboBoxCurrentFundType.Visible = false;
-                checkBoxRubbishChute.Location = new Point(331, 124);
-                checkBoxImprovement.Location = new Point(175, 124);
-                checkBoxElevator.Location = new Point(19, 124);
-                checkBoxPlumbing.Location = new Point(474, 124);
-                checkBoxHotWaterSupply.Location = new Point(19, 144);
-                checkBoxCanalization.Location = new Point(175, 144);
-                checkBoxElectricity.Location = new Point(331, 144);
-                checkBoxRadioNetwork.Location = new Point(474, 144);
-                label25.Location = new Point(19, 164);
-                comboBoxHeatingType.Location = new Point(175, 164);
             }
         }
 
@@ -374,6 +354,12 @@ namespace Registry.Viewport
                 comboBoxStructureType.Focus();
                 return false;
             }
+            if (building.IdHeatingType == null)
+            {
+                MessageBox.Show(@"Не указан тип отопления здания", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return false;
+            }
             // Проверяем права на модификацию муниципального или не муниципального здания
             var buildingFromView = (Building)EntityFromView();
             if (buildingFromView.IdBuilding != null && DataModelHelper.HasMunicipal(buildingFromView.IdBuilding.Value, EntityType.Building)
@@ -465,7 +451,7 @@ namespace Registry.Viewport
                 Canalization = checkBoxCanalization.Checked,
                 Electricity = checkBoxElectricity.Checked,
                 RadioNetwork = checkBoxRadioNetwork.Checked,
-                IdHeatingType =(int?) comboBoxHeatingType.SelectedValue
+                IdHeatingType =ViewportHelper.ValueOrNull<int>(comboBoxHeatingType)
             };
             return building;
         }

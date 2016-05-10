@@ -39,10 +39,10 @@ namespace Registry.DataModels.DataModels
             Table.Columns["cadastral_cost"].DefaultValue = 0;
             Table.Columns["balance_cost"].DefaultValue = 0;
             Table.Columns["wear"].DefaultValue = 0;
-            Table.Columns["plumbing"].DefaultValue = false;
-            Table.Columns["hot_water_supply"].DefaultValue = false;
-            Table.Columns["canalization"].DefaultValue = false;
-            Table.Columns["electricity"].DefaultValue = false;
+            Table.Columns["plumbing"].DefaultValue = true;
+            Table.Columns["hot_water_supply"].DefaultValue = true;
+            Table.Columns["canalization"].DefaultValue = true;
+            Table.Columns["electricity"].DefaultValue = true;
             Table.Columns["radio_network"].DefaultValue = false;
             Table.Columns["id_heating_type"].DefaultValue = DBNull.Value;
         }

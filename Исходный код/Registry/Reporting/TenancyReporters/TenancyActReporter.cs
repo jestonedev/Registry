@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Windows.Forms;
 using Settings;
 
 namespace Registry.Reporting.TenancyReporters
@@ -13,18 +14,18 @@ namespace Registry.Reporting.TenancyReporters
         {
             if (arguments == null)
                 arguments = new Dictionary<string, string>();
-            using (var form = new ActPremiseExtInfoForm())
+            var dialogResult =
+                MessageBox.Show(@"Сформировать с открытой датой?", @"Информация", MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Information, MessageBoxDefaultButton.Button1);
+            if (dialogResult == DialogResult.Cancel)
             {
-                if (form.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                {
-                    arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "tenancy\\act-10052016.xml"));
-                    arguments.Add("connectionString", RegistrySettings.ConnectionString);                  
-                    arguments.Add("opened_date", form.OpenedDate ? "1" : "0");
-                    base.Run(arguments);
-                }
-                else
-                    Cancel();
+                Cancel();
+                return;
             }
+            arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "tenancy\\act-10052016.xml"));
+            arguments.Add("connectionString", RegistrySettings.ConnectionString);
+            arguments.Add("opened_date", dialogResult == DialogResult.Yes ? "1" : "0");
+            base.Run(arguments);
         }
     }
 }

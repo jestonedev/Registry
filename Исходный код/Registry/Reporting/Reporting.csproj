@@ -58,12 +58,6 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActPremiseExtInfoForm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ActPremiseExtInfoForm.Designer.cs">
-      <DependentUpon>ActPremiseExtInfoForm.cs</DependentUpon>
-    </Compile>
     <Compile Include="ClaimsReporters\JudicialOrderReporter.cs" />
     <Compile Include="ClaimsReporters\RequestToBksReporter.cs" />
     <Compile Include="ClaimsReporters\TransfertToLegalDepartmentReporter.cs" />
@@ -185,9 +179,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ActPremiseExtInfoForm.resx">
-      <DependentUpon>ActPremiseExtInfoForm.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="ClaimsFilterForm.resx">
       <DependentUpon>ClaimsFilterForm.cs</DependentUpon>
     </EmbeddedResource>

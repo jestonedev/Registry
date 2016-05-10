@@ -55,7 +55,7 @@ namespace Registry.Viewport
             this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.ShowCellToolTips = false;
-            this.dataGridView.Size = new System.Drawing.Size(320, 255);
+            this.dataGridView.Size = new System.Drawing.Size(480, 261);
             this.dataGridView.TabIndex = 3;
             // 
             // id_structure_type
@@ -72,7 +72,7 @@ namespace Registry.Viewport
             // StructureTypeListViewport
             // 
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(326, 261);
+            this.ClientSize = new System.Drawing.Size(486, 267);
             this.Controls.Add(this.dataGridView);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
