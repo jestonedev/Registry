@@ -124,9 +124,9 @@ namespace Registry.Viewport
             })
             {
                 keyValuePair.Value.DataBindings.Clear();
-                keyValuePair.Value.DataBindings.Add("Value", GeneralBindingSource, keyValuePair.Key, true, DataSourceUpdateMode.Never, 0);
                 keyValuePair.Value.DataBindings.Add("Minimum", GeneralBindingSource, keyValuePair.Key, true, DataSourceUpdateMode.Never, 0);
                 keyValuePair.Value.DataBindings.Add("Maximum", GeneralBindingSource, keyValuePair.Key, true, DataSourceUpdateMode.Never, 0);
+                keyValuePair.Value.DataBindings.Add("Value", GeneralBindingSource, keyValuePair.Key, true, DataSourceUpdateMode.Never, 0);
             }
 
             dateTimePickerAtDate.DataBindings.Clear();

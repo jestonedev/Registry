@@ -30,6 +30,54 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PaymentsViewport));
             this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            this.groupBoxBalanceOutput = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
+            this.numericUpDownPenaltiesOutput = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownBalanceDGIOutput = new System.Windows.Forms.NumericUpDown();
+            this.label11 = new System.Windows.Forms.Label();
+            this.label9 = new System.Windows.Forms.Label();
+            this.numericUpDownBalanceTotalOutput = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownBalanceTenancyOutput = new System.Windows.Forms.NumericUpDown();
+            this.label10 = new System.Windows.Forms.Label();
+            this.label25 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
+            this.numericUpDownPaymentPenalties = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownPaymentDGI = new System.Windows.Forms.NumericUpDown();
+            this.label20 = new System.Windows.Forms.Label();
+            this.label19 = new System.Windows.Forms.Label();
+            this.numericUpDownPaymentTenancy = new System.Windows.Forms.NumericUpDown();
+            this.label24 = new System.Windows.Forms.Label();
+            this.groupBoxRecalcs = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
+            this.numericUpDownRecalcPenalties = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownTransferBalance = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownRecalcDGI = new System.Windows.Forms.NumericUpDown();
+            this.label13 = new System.Windows.Forms.Label();
+            this.numericUpDownRecalcTenancy = new System.Windows.Forms.NumericUpDown();
+            this.label14 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
+            this.label23 = new System.Windows.Forms.Label();
+            this.groupBoxChargings = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            this.numericUpDownChargingPenalties = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownChargingDGI = new System.Windows.Forms.NumericUpDown();
+            this.label16 = new System.Windows.Forms.Label();
+            this.label17 = new System.Windows.Forms.Label();
+            this.numericUpDownChargingTotal = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownChargingTenancy = new System.Windows.Forms.NumericUpDown();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label22 = new System.Windows.Forms.Label();
+            this.groupBoxBalanceInput = new System.Windows.Forms.GroupBox();
+            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
+            this.numericUpDownPenaltiesInput = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownBalanceDGIInput = new System.Windows.Forms.NumericUpDown();
+            this.label6 = new System.Windows.Forms.Label();
+            this.numericUpDownBalanceTotalInput = new System.Windows.Forms.NumericUpDown();
+            this.numericUpDownBalanceTenancyInput = new System.Windows.Forms.NumericUpDown();
+            this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label21 = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_account = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -74,89 +122,41 @@
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxCRN = new System.Windows.Forms.TextBox();
             this.label99 = new System.Windows.Forms.Label();
-            this.groupBoxBalanceInput = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
-            this.numericUpDownPenaltiesInput = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownBalanceDGIInput = new System.Windows.Forms.NumericUpDown();
-            this.label6 = new System.Windows.Forms.Label();
-            this.numericUpDownBalanceTotalInput = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownBalanceTenancyInput = new System.Windows.Forms.NumericUpDown();
-            this.label8 = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.label21 = new System.Windows.Forms.Label();
-            this.groupBoxChargings = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.numericUpDownChargingPenalties = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownChargingDGI = new System.Windows.Forms.NumericUpDown();
-            this.label16 = new System.Windows.Forms.Label();
-            this.label17 = new System.Windows.Forms.Label();
-            this.numericUpDownChargingTotal = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownChargingTenancy = new System.Windows.Forms.NumericUpDown();
-            this.label15 = new System.Windows.Forms.Label();
-            this.label22 = new System.Windows.Forms.Label();
-            this.groupBoxRecalcs = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel4 = new System.Windows.Forms.TableLayoutPanel();
-            this.numericUpDownRecalcPenalties = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownTransferBalance = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownRecalcDGI = new System.Windows.Forms.NumericUpDown();
-            this.label13 = new System.Windows.Forms.Label();
-            this.numericUpDownRecalcTenancy = new System.Windows.Forms.NumericUpDown();
-            this.label14 = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.label23 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel5 = new System.Windows.Forms.TableLayoutPanel();
-            this.numericUpDownPaymentPenalties = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownPaymentDGI = new System.Windows.Forms.NumericUpDown();
-            this.label20 = new System.Windows.Forms.Label();
-            this.label19 = new System.Windows.Forms.Label();
-            this.numericUpDownPaymentTenancy = new System.Windows.Forms.NumericUpDown();
-            this.label24 = new System.Windows.Forms.Label();
-            this.groupBoxBalanceOutput = new System.Windows.Forms.GroupBox();
-            this.tableLayoutPanel6 = new System.Windows.Forms.TableLayoutPanel();
-            this.numericUpDownPenaltiesOutput = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownBalanceDGIOutput = new System.Windows.Forms.NumericUpDown();
-            this.label11 = new System.Windows.Forms.Label();
-            this.label9 = new System.Windows.Forms.Label();
-            this.numericUpDownBalanceTotalOutput = new System.Windows.Forms.NumericUpDown();
-            this.numericUpDownBalanceTenancyOutput = new System.Windows.Forms.NumericUpDown();
-            this.label10 = new System.Windows.Forms.Label();
-            this.label25 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
-            this.groupBoxGeneralInfo.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPrescribed)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLivingArea)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalArea)).BeginInit();
-            this.groupBoxBalanceInput.SuspendLayout();
-            this.tableLayoutPanel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenaltiesInput)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceDGIInput)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceTotalInput)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceTenancyInput)).BeginInit();
-            this.groupBoxChargings.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChargingPenalties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChargingDGI)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChargingTotal)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChargingTenancy)).BeginInit();
-            this.groupBoxRecalcs.SuspendLayout();
-            this.tableLayoutPanel4.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRecalcPenalties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTransferBalance)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRecalcDGI)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRecalcTenancy)).BeginInit();
-            this.groupBox1.SuspendLayout();
-            this.tableLayoutPanel5.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaymentPenalties)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaymentDGI)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaymentTenancy)).BeginInit();
             this.groupBoxBalanceOutput.SuspendLayout();
             this.tableLayoutPanel6.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenaltiesOutput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceDGIOutput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceTotalOutput)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceTenancyOutput)).BeginInit();
+            this.groupBox1.SuspendLayout();
+            this.tableLayoutPanel5.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaymentPenalties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaymentDGI)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaymentTenancy)).BeginInit();
+            this.groupBoxRecalcs.SuspendLayout();
+            this.tableLayoutPanel4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRecalcPenalties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTransferBalance)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRecalcDGI)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRecalcTenancy)).BeginInit();
+            this.groupBoxChargings.SuspendLayout();
+            this.tableLayoutPanel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChargingPenalties)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChargingDGI)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChargingTotal)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChargingTenancy)).BeginInit();
+            this.groupBoxBalanceInput.SuspendLayout();
+            this.tableLayoutPanel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenaltiesInput)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceDGIInput)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceTotalInput)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceTenancyInput)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.groupBoxGeneralInfo.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPrescribed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLivingArea)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalArea)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel1
@@ -174,7 +174,7 @@
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tableLayoutPanel1.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 7;
+            this.tableLayoutPanel1.RowCount = 6;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 65F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 65F));
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 65F));
@@ -184,6 +184,706 @@
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
             this.tableLayoutPanel1.Size = new System.Drawing.Size(1008, 730);
             this.tableLayoutPanel1.TabIndex = 0;
+            // 
+            // groupBoxBalanceOutput
+            // 
+            this.groupBoxBalanceOutput.Controls.Add(this.tableLayoutPanel6);
+            this.groupBoxBalanceOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxBalanceOutput.Location = new System.Drawing.Point(506, 262);
+            this.groupBoxBalanceOutput.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBoxBalanceOutput.Name = "groupBoxBalanceOutput";
+            this.groupBoxBalanceOutput.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBoxBalanceOutput.Size = new System.Drawing.Size(500, 61);
+            this.groupBoxBalanceOutput.TabIndex = 5;
+            this.groupBoxBalanceOutput.TabStop = false;
+            this.groupBoxBalanceOutput.Text = "Исходящее сальдо";
+            // 
+            // tableLayoutPanel6
+            // 
+            this.tableLayoutPanel6.ColumnCount = 4;
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel6.Controls.Add(this.numericUpDownPenaltiesOutput, 3, 1);
+            this.tableLayoutPanel6.Controls.Add(this.numericUpDownBalanceDGIOutput, 2, 1);
+            this.tableLayoutPanel6.Controls.Add(this.label11, 0, 0);
+            this.tableLayoutPanel6.Controls.Add(this.label9, 2, 0);
+            this.tableLayoutPanel6.Controls.Add(this.numericUpDownBalanceTotalOutput, 0, 1);
+            this.tableLayoutPanel6.Controls.Add(this.numericUpDownBalanceTenancyOutput, 1, 1);
+            this.tableLayoutPanel6.Controls.Add(this.label10, 1, 0);
+            this.tableLayoutPanel6.Controls.Add(this.label25, 3, 0);
+            this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel6.Location = new System.Drawing.Point(2, 15);
+            this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(2);
+            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
+            this.tableLayoutPanel6.Padding = new System.Windows.Forms.Padding(2);
+            this.tableLayoutPanel6.RowCount = 2;
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 12F));
+            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel6.Size = new System.Drawing.Size(496, 44);
+            this.tableLayoutPanel6.TabIndex = 72;
+            // 
+            // numericUpDownPenaltiesOutput
+            // 
+            this.numericUpDownPenaltiesOutput.DecimalPlaces = 2;
+            this.numericUpDownPenaltiesOutput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numericUpDownPenaltiesOutput.Location = new System.Drawing.Point(373, 16);
+            this.numericUpDownPenaltiesOutput.Margin = new System.Windows.Forms.Padding(2);
+            this.numericUpDownPenaltiesOutput.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownPenaltiesOutput.Name = "numericUpDownPenaltiesOutput";
+            this.numericUpDownPenaltiesOutput.Size = new System.Drawing.Size(119, 20);
+            this.numericUpDownPenaltiesOutput.TabIndex = 3;
+            this.numericUpDownPenaltiesOutput.ThousandsSeparator = true;
+            // 
+            // numericUpDownBalanceDGIOutput
+            // 
+            this.numericUpDownBalanceDGIOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownBalanceDGIOutput.DecimalPlaces = 2;
+            this.numericUpDownBalanceDGIOutput.Location = new System.Drawing.Point(250, 16);
+            this.numericUpDownBalanceDGIOutput.Margin = new System.Windows.Forms.Padding(2);
+            this.numericUpDownBalanceDGIOutput.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownBalanceDGIOutput.Name = "numericUpDownBalanceDGIOutput";
+            this.numericUpDownBalanceDGIOutput.Size = new System.Drawing.Size(119, 20);
+            this.numericUpDownBalanceDGIOutput.TabIndex = 2;
+            this.numericUpDownBalanceDGIOutput.ThousandsSeparator = true;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(4, 2);
+            this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(103, 12);
+            this.label11.TabIndex = 69;
+            this.label11.Text = "Сальдо исходящее";
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(250, 2);
+            this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(70, 12);
+            this.label9.TabIndex = 73;
+            this.label9.Text = "Сальдо ДГИ";
+            // 
+            // numericUpDownBalanceTotalOutput
+            // 
+            this.numericUpDownBalanceTotalOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownBalanceTotalOutput.DecimalPlaces = 2;
+            this.numericUpDownBalanceTotalOutput.Location = new System.Drawing.Point(4, 16);
+            this.numericUpDownBalanceTotalOutput.Margin = new System.Windows.Forms.Padding(2);
+            this.numericUpDownBalanceTotalOutput.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownBalanceTotalOutput.Name = "numericUpDownBalanceTotalOutput";
+            this.numericUpDownBalanceTotalOutput.Size = new System.Drawing.Size(119, 20);
+            this.numericUpDownBalanceTotalOutput.TabIndex = 0;
+            this.numericUpDownBalanceTotalOutput.ThousandsSeparator = true;
+            // 
+            // numericUpDownBalanceTenancyOutput
+            // 
+            this.numericUpDownBalanceTenancyOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownBalanceTenancyOutput.DecimalPlaces = 2;
+            this.numericUpDownBalanceTenancyOutput.Location = new System.Drawing.Point(127, 16);
+            this.numericUpDownBalanceTenancyOutput.Margin = new System.Windows.Forms.Padding(2);
+            this.numericUpDownBalanceTenancyOutput.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownBalanceTenancyOutput.Name = "numericUpDownBalanceTenancyOutput";
+            this.numericUpDownBalanceTenancyOutput.Size = new System.Drawing.Size(119, 20);
+            this.numericUpDownBalanceTenancyOutput.TabIndex = 1;
+            this.numericUpDownBalanceTenancyOutput.ThousandsSeparator = true;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(127, 2);
+            this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(73, 12);
+            this.label10.TabIndex = 71;
+            this.label10.Text = "Сальдо найм";
+            // 
+            // label25
+            // 
+            this.label25.AutoSize = true;
+            this.label25.Location = new System.Drawing.Point(373, 2);
+            this.label25.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label25.Name = "label25";
+            this.label25.Size = new System.Drawing.Size(33, 12);
+            this.label25.TabIndex = 81;
+            this.label25.Text = "Пени";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.tableLayoutPanel5);
+            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBox1.Location = new System.Drawing.Point(506, 197);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBox1.Size = new System.Drawing.Size(500, 61);
+            this.groupBox1.TabIndex = 4;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Оплата";
+            // 
+            // tableLayoutPanel5
+            // 
+            this.tableLayoutPanel5.ColumnCount = 3;
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            this.tableLayoutPanel5.Controls.Add(this.numericUpDownPaymentPenalties, 2, 1);
+            this.tableLayoutPanel5.Controls.Add(this.numericUpDownPaymentDGI, 1, 1);
+            this.tableLayoutPanel5.Controls.Add(this.label20, 0, 0);
+            this.tableLayoutPanel5.Controls.Add(this.label19, 1, 0);
+            this.tableLayoutPanel5.Controls.Add(this.numericUpDownPaymentTenancy, 0, 1);
+            this.tableLayoutPanel5.Controls.Add(this.label24, 2, 0);
+            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel5.Location = new System.Drawing.Point(2, 15);
+            this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(2);
+            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
+            this.tableLayoutPanel5.Padding = new System.Windows.Forms.Padding(2);
+            this.tableLayoutPanel5.RowCount = 2;
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 12F));
+            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel5.Size = new System.Drawing.Size(496, 44);
+            this.tableLayoutPanel5.TabIndex = 71;
+            // 
+            // numericUpDownPaymentPenalties
+            // 
+            this.numericUpDownPaymentPenalties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownPaymentPenalties.DecimalPlaces = 2;
+            this.numericUpDownPaymentPenalties.Location = new System.Drawing.Point(332, 16);
+            this.numericUpDownPaymentPenalties.Margin = new System.Windows.Forms.Padding(2);
+            this.numericUpDownPaymentPenalties.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownPaymentPenalties.Name = "numericUpDownPaymentPenalties";
+            this.numericUpDownPaymentPenalties.Size = new System.Drawing.Size(160, 20);
+            this.numericUpDownPaymentPenalties.TabIndex = 2;
+            this.numericUpDownPaymentPenalties.ThousandsSeparator = true;
+            // 
+            // numericUpDownPaymentDGI
+            // 
+            this.numericUpDownPaymentDGI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownPaymentDGI.DecimalPlaces = 2;
+            this.numericUpDownPaymentDGI.Location = new System.Drawing.Point(168, 16);
+            this.numericUpDownPaymentDGI.Margin = new System.Windows.Forms.Padding(2);
+            this.numericUpDownPaymentDGI.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownPaymentDGI.Name = "numericUpDownPaymentDGI";
+            this.numericUpDownPaymentDGI.Size = new System.Drawing.Size(160, 20);
+            this.numericUpDownPaymentDGI.TabIndex = 1;
+            this.numericUpDownPaymentDGI.ThousandsSeparator = true;
+            // 
+            // label20
+            // 
+            this.label20.AutoSize = true;
+            this.label20.Location = new System.Drawing.Point(4, 2);
+            this.label20.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(73, 12);
+            this.label20.TabIndex = 77;
+            this.label20.Text = "Оплата найм";
+            // 
+            // label19
+            // 
+            this.label19.AutoSize = true;
+            this.label19.Location = new System.Drawing.Point(168, 2);
+            this.label19.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(70, 12);
+            this.label19.TabIndex = 79;
+            this.label19.Text = "Оплата ДГИ";
+            // 
+            // numericUpDownPaymentTenancy
+            // 
+            this.numericUpDownPaymentTenancy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownPaymentTenancy.DecimalPlaces = 2;
+            this.numericUpDownPaymentTenancy.Location = new System.Drawing.Point(4, 16);
+            this.numericUpDownPaymentTenancy.Margin = new System.Windows.Forms.Padding(2);
+            this.numericUpDownPaymentTenancy.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownPaymentTenancy.Name = "numericUpDownPaymentTenancy";
+            this.numericUpDownPaymentTenancy.Size = new System.Drawing.Size(160, 20);
+            this.numericUpDownPaymentTenancy.TabIndex = 0;
+            this.numericUpDownPaymentTenancy.ThousandsSeparator = true;
+            // 
+            // label24
+            // 
+            this.label24.AutoSize = true;
+            this.label24.Location = new System.Drawing.Point(332, 2);
+            this.label24.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label24.Name = "label24";
+            this.label24.Size = new System.Drawing.Size(33, 12);
+            this.label24.TabIndex = 80;
+            this.label24.Text = "Пени";
+            // 
+            // groupBoxRecalcs
+            // 
+            this.groupBoxRecalcs.Controls.Add(this.tableLayoutPanel4);
+            this.groupBoxRecalcs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxRecalcs.Location = new System.Drawing.Point(506, 132);
+            this.groupBoxRecalcs.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBoxRecalcs.Name = "groupBoxRecalcs";
+            this.groupBoxRecalcs.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBoxRecalcs.Size = new System.Drawing.Size(500, 61);
+            this.groupBoxRecalcs.TabIndex = 3;
+            this.groupBoxRecalcs.TabStop = false;
+            this.groupBoxRecalcs.Text = "Разовый перерасчет и перенос сальдо";
+            // 
+            // tableLayoutPanel4
+            // 
+            this.tableLayoutPanel4.ColumnCount = 4;
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel4.Controls.Add(this.numericUpDownRecalcPenalties, 2, 1);
+            this.tableLayoutPanel4.Controls.Add(this.numericUpDownTransferBalance, 3, 1);
+            this.tableLayoutPanel4.Controls.Add(this.numericUpDownRecalcDGI, 1, 1);
+            this.tableLayoutPanel4.Controls.Add(this.label13, 0, 0);
+            this.tableLayoutPanel4.Controls.Add(this.numericUpDownRecalcTenancy, 0, 1);
+            this.tableLayoutPanel4.Controls.Add(this.label14, 1, 0);
+            this.tableLayoutPanel4.Controls.Add(this.label12, 3, 0);
+            this.tableLayoutPanel4.Controls.Add(this.label23, 2, 0);
+            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(2, 15);
+            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(2);
+            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
+            this.tableLayoutPanel4.Padding = new System.Windows.Forms.Padding(2);
+            this.tableLayoutPanel4.RowCount = 2;
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 12F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(496, 44);
+            this.tableLayoutPanel4.TabIndex = 70;
+            // 
+            // numericUpDownRecalcPenalties
+            // 
+            this.numericUpDownRecalcPenalties.DecimalPlaces = 2;
+            this.numericUpDownRecalcPenalties.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numericUpDownRecalcPenalties.Location = new System.Drawing.Point(250, 16);
+            this.numericUpDownRecalcPenalties.Margin = new System.Windows.Forms.Padding(2);
+            this.numericUpDownRecalcPenalties.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownRecalcPenalties.Name = "numericUpDownRecalcPenalties";
+            this.numericUpDownRecalcPenalties.Size = new System.Drawing.Size(119, 20);
+            this.numericUpDownRecalcPenalties.TabIndex = 2;
+            this.numericUpDownRecalcPenalties.ThousandsSeparator = true;
+            // 
+            // numericUpDownTransferBalance
+            // 
+            this.numericUpDownTransferBalance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownTransferBalance.DecimalPlaces = 2;
+            this.numericUpDownTransferBalance.Location = new System.Drawing.Point(373, 16);
+            this.numericUpDownTransferBalance.Margin = new System.Windows.Forms.Padding(2);
+            this.numericUpDownTransferBalance.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownTransferBalance.Name = "numericUpDownTransferBalance";
+            this.numericUpDownTransferBalance.Size = new System.Drawing.Size(119, 20);
+            this.numericUpDownTransferBalance.TabIndex = 3;
+            this.numericUpDownTransferBalance.ThousandsSeparator = true;
+            // 
+            // numericUpDownRecalcDGI
+            // 
+            this.numericUpDownRecalcDGI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownRecalcDGI.DecimalPlaces = 2;
+            this.numericUpDownRecalcDGI.Location = new System.Drawing.Point(127, 16);
+            this.numericUpDownRecalcDGI.Margin = new System.Windows.Forms.Padding(2);
+            this.numericUpDownRecalcDGI.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownRecalcDGI.Name = "numericUpDownRecalcDGI";
+            this.numericUpDownRecalcDGI.Size = new System.Drawing.Size(119, 20);
+            this.numericUpDownRecalcDGI.TabIndex = 1;
+            this.numericUpDownRecalcDGI.ThousandsSeparator = true;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(4, 2);
+            this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(96, 12);
+            this.label13.TabIndex = 77;
+            this.label13.Text = "Перерасчет найм";
+            // 
+            // numericUpDownRecalcTenancy
+            // 
+            this.numericUpDownRecalcTenancy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownRecalcTenancy.DecimalPlaces = 2;
+            this.numericUpDownRecalcTenancy.Location = new System.Drawing.Point(4, 16);
+            this.numericUpDownRecalcTenancy.Margin = new System.Windows.Forms.Padding(2);
+            this.numericUpDownRecalcTenancy.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownRecalcTenancy.Name = "numericUpDownRecalcTenancy";
+            this.numericUpDownRecalcTenancy.Size = new System.Drawing.Size(119, 20);
+            this.numericUpDownRecalcTenancy.TabIndex = 0;
+            this.numericUpDownRecalcTenancy.ThousandsSeparator = true;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(127, 2);
+            this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(93, 12);
+            this.label14.TabIndex = 79;
+            this.label14.Text = "Перерасчет ДГИ";
+            // 
+            // label12
+            // 
+            this.label12.AutoSize = true;
+            this.label12.Location = new System.Drawing.Point(373, 2);
+            this.label12.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(90, 12);
+            this.label12.TabIndex = 75;
+            this.label12.Text = "Перенос сальдо";
+            // 
+            // label23
+            // 
+            this.label23.AutoSize = true;
+            this.label23.Location = new System.Drawing.Point(250, 2);
+            this.label23.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label23.Name = "label23";
+            this.label23.Size = new System.Drawing.Size(100, 12);
+            this.label23.TabIndex = 85;
+            this.label23.Text = "Пени (перерасчет)";
+            // 
+            // groupBoxChargings
+            // 
+            this.groupBoxChargings.Controls.Add(this.tableLayoutPanel3);
+            this.groupBoxChargings.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxChargings.Location = new System.Drawing.Point(506, 67);
+            this.groupBoxChargings.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBoxChargings.Name = "groupBoxChargings";
+            this.groupBoxChargings.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBoxChargings.Size = new System.Drawing.Size(500, 61);
+            this.groupBoxChargings.TabIndex = 2;
+            this.groupBoxChargings.TabStop = false;
+            this.groupBoxChargings.Text = "Начисления";
+            // 
+            // tableLayoutPanel3
+            // 
+            this.tableLayoutPanel3.ColumnCount = 4;
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel3.Controls.Add(this.numericUpDownChargingPenalties, 3, 1);
+            this.tableLayoutPanel3.Controls.Add(this.numericUpDownChargingDGI, 2, 1);
+            this.tableLayoutPanel3.Controls.Add(this.label16, 0, 0);
+            this.tableLayoutPanel3.Controls.Add(this.label17, 2, 0);
+            this.tableLayoutPanel3.Controls.Add(this.numericUpDownChargingTotal, 0, 1);
+            this.tableLayoutPanel3.Controls.Add(this.numericUpDownChargingTenancy, 1, 1);
+            this.tableLayoutPanel3.Controls.Add(this.label15, 1, 0);
+            this.tableLayoutPanel3.Controls.Add(this.label22, 3, 0);
+            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel3.Location = new System.Drawing.Point(2, 15);
+            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(2);
+            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
+            this.tableLayoutPanel3.Padding = new System.Windows.Forms.Padding(2);
+            this.tableLayoutPanel3.RowCount = 2;
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 12F));
+            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel3.Size = new System.Drawing.Size(496, 44);
+            this.tableLayoutPanel3.TabIndex = 69;
+            // 
+            // numericUpDownChargingPenalties
+            // 
+            this.numericUpDownChargingPenalties.DecimalPlaces = 2;
+            this.numericUpDownChargingPenalties.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numericUpDownChargingPenalties.Location = new System.Drawing.Point(373, 16);
+            this.numericUpDownChargingPenalties.Margin = new System.Windows.Forms.Padding(2);
+            this.numericUpDownChargingPenalties.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownChargingPenalties.Name = "numericUpDownChargingPenalties";
+            this.numericUpDownChargingPenalties.Size = new System.Drawing.Size(119, 20);
+            this.numericUpDownChargingPenalties.TabIndex = 3;
+            this.numericUpDownChargingPenalties.ThousandsSeparator = true;
+            // 
+            // numericUpDownChargingDGI
+            // 
+            this.numericUpDownChargingDGI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownChargingDGI.DecimalPlaces = 2;
+            this.numericUpDownChargingDGI.Location = new System.Drawing.Point(250, 16);
+            this.numericUpDownChargingDGI.Margin = new System.Windows.Forms.Padding(2);
+            this.numericUpDownChargingDGI.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownChargingDGI.Name = "numericUpDownChargingDGI";
+            this.numericUpDownChargingDGI.Size = new System.Drawing.Size(119, 20);
+            this.numericUpDownChargingDGI.TabIndex = 2;
+            this.numericUpDownChargingDGI.ThousandsSeparator = true;
+            // 
+            // label16
+            // 
+            this.label16.AutoSize = true;
+            this.label16.Location = new System.Drawing.Point(4, 2);
+            this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(99, 12);
+            this.label16.TabIndex = 79;
+            this.label16.Text = "Начисление итого";
+            // 
+            // label17
+            // 
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(250, 2);
+            this.label17.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(94, 12);
+            this.label17.TabIndex = 83;
+            this.label17.Text = "Начисление ДГИ";
+            // 
+            // numericUpDownChargingTotal
+            // 
+            this.numericUpDownChargingTotal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownChargingTotal.DecimalPlaces = 2;
+            this.numericUpDownChargingTotal.Location = new System.Drawing.Point(4, 16);
+            this.numericUpDownChargingTotal.Margin = new System.Windows.Forms.Padding(2);
+            this.numericUpDownChargingTotal.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownChargingTotal.Name = "numericUpDownChargingTotal";
+            this.numericUpDownChargingTotal.Size = new System.Drawing.Size(119, 20);
+            this.numericUpDownChargingTotal.TabIndex = 0;
+            this.numericUpDownChargingTotal.ThousandsSeparator = true;
+            // 
+            // numericUpDownChargingTenancy
+            // 
+            this.numericUpDownChargingTenancy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownChargingTenancy.DecimalPlaces = 2;
+            this.numericUpDownChargingTenancy.Location = new System.Drawing.Point(127, 16);
+            this.numericUpDownChargingTenancy.Margin = new System.Windows.Forms.Padding(2);
+            this.numericUpDownChargingTenancy.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownChargingTenancy.Name = "numericUpDownChargingTenancy";
+            this.numericUpDownChargingTenancy.Size = new System.Drawing.Size(119, 20);
+            this.numericUpDownChargingTenancy.TabIndex = 1;
+            this.numericUpDownChargingTenancy.ThousandsSeparator = true;
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(127, 2);
+            this.label15.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(97, 12);
+            this.label15.TabIndex = 81;
+            this.label15.Text = "Начисление найм";
+            // 
+            // label22
+            // 
+            this.label22.AutoSize = true;
+            this.label22.Location = new System.Drawing.Point(373, 2);
+            this.label22.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label22.Name = "label22";
+            this.label22.Size = new System.Drawing.Size(33, 12);
+            this.label22.TabIndex = 84;
+            this.label22.Text = "Пени";
+            // 
+            // groupBoxBalanceInput
+            // 
+            this.groupBoxBalanceInput.Controls.Add(this.tableLayoutPanel2);
+            this.groupBoxBalanceInput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxBalanceInput.Location = new System.Drawing.Point(506, 2);
+            this.groupBoxBalanceInput.Margin = new System.Windows.Forms.Padding(2);
+            this.groupBoxBalanceInput.Name = "groupBoxBalanceInput";
+            this.groupBoxBalanceInput.Padding = new System.Windows.Forms.Padding(2);
+            this.groupBoxBalanceInput.Size = new System.Drawing.Size(500, 61);
+            this.groupBoxBalanceInput.TabIndex = 1;
+            this.groupBoxBalanceInput.TabStop = false;
+            this.groupBoxBalanceInput.Text = "Входящее сальдо";
+            // 
+            // tableLayoutPanel2
+            // 
+            this.tableLayoutPanel2.ColumnCount = 4;
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
+            this.tableLayoutPanel2.Controls.Add(this.numericUpDownPenaltiesInput, 3, 1);
+            this.tableLayoutPanel2.Controls.Add(this.numericUpDownBalanceDGIInput, 2, 1);
+            this.tableLayoutPanel2.Controls.Add(this.label6, 0, 0);
+            this.tableLayoutPanel2.Controls.Add(this.numericUpDownBalanceTotalInput, 0, 1);
+            this.tableLayoutPanel2.Controls.Add(this.numericUpDownBalanceTenancyInput, 1, 1);
+            this.tableLayoutPanel2.Controls.Add(this.label8, 2, 0);
+            this.tableLayoutPanel2.Controls.Add(this.label7, 1, 0);
+            this.tableLayoutPanel2.Controls.Add(this.label21, 3, 0);
+            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.tableLayoutPanel2.Location = new System.Drawing.Point(2, 15);
+            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(2);
+            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
+            this.tableLayoutPanel2.Padding = new System.Windows.Forms.Padding(2);
+            this.tableLayoutPanel2.RowCount = 2;
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 12F));
+            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(496, 44);
+            this.tableLayoutPanel2.TabIndex = 68;
+            // 
+            // numericUpDownPenaltiesInput
+            // 
+            this.numericUpDownPenaltiesInput.DecimalPlaces = 2;
+            this.numericUpDownPenaltiesInput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numericUpDownPenaltiesInput.Location = new System.Drawing.Point(373, 16);
+            this.numericUpDownPenaltiesInput.Margin = new System.Windows.Forms.Padding(2);
+            this.numericUpDownPenaltiesInput.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownPenaltiesInput.Name = "numericUpDownPenaltiesInput";
+            this.numericUpDownPenaltiesInput.Size = new System.Drawing.Size(119, 20);
+            this.numericUpDownPenaltiesInput.TabIndex = 3;
+            this.numericUpDownPenaltiesInput.ThousandsSeparator = true;
+            // 
+            // numericUpDownBalanceDGIInput
+            // 
+            this.numericUpDownBalanceDGIInput.DecimalPlaces = 2;
+            this.numericUpDownBalanceDGIInput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numericUpDownBalanceDGIInput.Location = new System.Drawing.Point(250, 16);
+            this.numericUpDownBalanceDGIInput.Margin = new System.Windows.Forms.Padding(2);
+            this.numericUpDownBalanceDGIInput.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownBalanceDGIInput.Name = "numericUpDownBalanceDGIInput";
+            this.numericUpDownBalanceDGIInput.Size = new System.Drawing.Size(119, 20);
+            this.numericUpDownBalanceDGIInput.TabIndex = 2;
+            this.numericUpDownBalanceDGIInput.ThousandsSeparator = true;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(4, 2);
+            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(97, 12);
+            this.label6.TabIndex = 63;
+            this.label6.Text = "Сальдо входящее";
+            // 
+            // numericUpDownBalanceTotalInput
+            // 
+            this.numericUpDownBalanceTotalInput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.numericUpDownBalanceTotalInput.DecimalPlaces = 2;
+            this.numericUpDownBalanceTotalInput.Location = new System.Drawing.Point(4, 16);
+            this.numericUpDownBalanceTotalInput.Margin = new System.Windows.Forms.Padding(2);
+            this.numericUpDownBalanceTotalInput.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownBalanceTotalInput.Name = "numericUpDownBalanceTotalInput";
+            this.numericUpDownBalanceTotalInput.Size = new System.Drawing.Size(119, 20);
+            this.numericUpDownBalanceTotalInput.TabIndex = 0;
+            this.numericUpDownBalanceTotalInput.ThousandsSeparator = true;
+            // 
+            // numericUpDownBalanceTenancyInput
+            // 
+            this.numericUpDownBalanceTenancyInput.DecimalPlaces = 2;
+            this.numericUpDownBalanceTenancyInput.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.numericUpDownBalanceTenancyInput.Location = new System.Drawing.Point(127, 16);
+            this.numericUpDownBalanceTenancyInput.Margin = new System.Windows.Forms.Padding(2);
+            this.numericUpDownBalanceTenancyInput.Maximum = new decimal(new int[] {
+            1000000000,
+            0,
+            0,
+            0});
+            this.numericUpDownBalanceTenancyInput.Name = "numericUpDownBalanceTenancyInput";
+            this.numericUpDownBalanceTenancyInput.Size = new System.Drawing.Size(119, 20);
+            this.numericUpDownBalanceTenancyInput.TabIndex = 1;
+            this.numericUpDownBalanceTenancyInput.ThousandsSeparator = true;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(250, 2);
+            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(70, 12);
+            this.label8.TabIndex = 67;
+            this.label8.Text = "Сальдо ДГИ";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(127, 2);
+            this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(73, 12);
+            this.label7.TabIndex = 65;
+            this.label7.Text = "Сальдо найм";
+            // 
+            // label21
+            // 
+            this.label21.AutoSize = true;
+            this.label21.Location = new System.Drawing.Point(373, 2);
+            this.label21.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            this.label21.Name = "label21";
+            this.label21.Size = new System.Drawing.Size(33, 12);
+            this.label21.TabIndex = 68;
+            this.label21.Text = "Пени";
             // 
             // dataGridView
             // 
@@ -223,7 +923,7 @@
             this.dataGridView.MultiSelect = false;
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.Size = new System.Drawing.Size(1002, 379);
+            this.dataGridView.Size = new System.Drawing.Size(1002, 399);
             this.dataGridView.TabIndex = 6;
             this.dataGridView.VirtualMode = true;
             this.dataGridView.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView_CellValueNeeded);
@@ -605,706 +1305,6 @@
             this.label99.TabIndex = 51;
             this.label99.Text = "СРН";
             // 
-            // groupBoxBalanceInput
-            // 
-            this.groupBoxBalanceInput.Controls.Add(this.tableLayoutPanel2);
-            this.groupBoxBalanceInput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxBalanceInput.Location = new System.Drawing.Point(506, 2);
-            this.groupBoxBalanceInput.Margin = new System.Windows.Forms.Padding(2);
-            this.groupBoxBalanceInput.Name = "groupBoxBalanceInput";
-            this.groupBoxBalanceInput.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBoxBalanceInput.Size = new System.Drawing.Size(500, 61);
-            this.groupBoxBalanceInput.TabIndex = 1;
-            this.groupBoxBalanceInput.TabStop = false;
-            this.groupBoxBalanceInput.Text = "Входящее сальдо";
-            // 
-            // tableLayoutPanel2
-            // 
-            this.tableLayoutPanel2.ColumnCount = 4;
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel2.Controls.Add(this.numericUpDownPenaltiesInput, 3, 1);
-            this.tableLayoutPanel2.Controls.Add(this.numericUpDownBalanceDGIInput, 2, 1);
-            this.tableLayoutPanel2.Controls.Add(this.label6, 0, 0);
-            this.tableLayoutPanel2.Controls.Add(this.numericUpDownBalanceTotalInput, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.numericUpDownBalanceTenancyInput, 1, 1);
-            this.tableLayoutPanel2.Controls.Add(this.label8, 2, 0);
-            this.tableLayoutPanel2.Controls.Add(this.label7, 1, 0);
-            this.tableLayoutPanel2.Controls.Add(this.label21, 3, 0);
-            this.tableLayoutPanel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel2.Location = new System.Drawing.Point(2, 15);
-            this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(2);
-            this.tableLayoutPanel2.Name = "tableLayoutPanel2";
-            this.tableLayoutPanel2.Padding = new System.Windows.Forms.Padding(2);
-            this.tableLayoutPanel2.RowCount = 2;
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 12F));
-            this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(496, 44);
-            this.tableLayoutPanel2.TabIndex = 68;
-            // 
-            // numericUpDownPenaltiesInput
-            // 
-            this.numericUpDownPenaltiesInput.DecimalPlaces = 2;
-            this.numericUpDownPenaltiesInput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numericUpDownPenaltiesInput.Location = new System.Drawing.Point(373, 16);
-            this.numericUpDownPenaltiesInput.Margin = new System.Windows.Forms.Padding(2);
-            this.numericUpDownPenaltiesInput.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownPenaltiesInput.Name = "numericUpDownPenaltiesInput";
-            this.numericUpDownPenaltiesInput.Size = new System.Drawing.Size(119, 20);
-            this.numericUpDownPenaltiesInput.TabIndex = 3;
-            this.numericUpDownPenaltiesInput.ThousandsSeparator = true;
-            // 
-            // numericUpDownBalanceDGIInput
-            // 
-            this.numericUpDownBalanceDGIInput.DecimalPlaces = 2;
-            this.numericUpDownBalanceDGIInput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numericUpDownBalanceDGIInput.Location = new System.Drawing.Point(250, 16);
-            this.numericUpDownBalanceDGIInput.Margin = new System.Windows.Forms.Padding(2);
-            this.numericUpDownBalanceDGIInput.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownBalanceDGIInput.Name = "numericUpDownBalanceDGIInput";
-            this.numericUpDownBalanceDGIInput.Size = new System.Drawing.Size(119, 20);
-            this.numericUpDownBalanceDGIInput.TabIndex = 2;
-            this.numericUpDownBalanceDGIInput.ThousandsSeparator = true;
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(4, 2);
-            this.label6.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(97, 12);
-            this.label6.TabIndex = 63;
-            this.label6.Text = "Сальдо входящее";
-            // 
-            // numericUpDownBalanceTotalInput
-            // 
-            this.numericUpDownBalanceTotalInput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownBalanceTotalInput.DecimalPlaces = 2;
-            this.numericUpDownBalanceTotalInput.Location = new System.Drawing.Point(4, 16);
-            this.numericUpDownBalanceTotalInput.Margin = new System.Windows.Forms.Padding(2);
-            this.numericUpDownBalanceTotalInput.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownBalanceTotalInput.Name = "numericUpDownBalanceTotalInput";
-            this.numericUpDownBalanceTotalInput.Size = new System.Drawing.Size(119, 20);
-            this.numericUpDownBalanceTotalInput.TabIndex = 0;
-            this.numericUpDownBalanceTotalInput.ThousandsSeparator = true;
-            // 
-            // numericUpDownBalanceTenancyInput
-            // 
-            this.numericUpDownBalanceTenancyInput.DecimalPlaces = 2;
-            this.numericUpDownBalanceTenancyInput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numericUpDownBalanceTenancyInput.Location = new System.Drawing.Point(127, 16);
-            this.numericUpDownBalanceTenancyInput.Margin = new System.Windows.Forms.Padding(2);
-            this.numericUpDownBalanceTenancyInput.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownBalanceTenancyInput.Name = "numericUpDownBalanceTenancyInput";
-            this.numericUpDownBalanceTenancyInput.Size = new System.Drawing.Size(119, 20);
-            this.numericUpDownBalanceTenancyInput.TabIndex = 1;
-            this.numericUpDownBalanceTenancyInput.ThousandsSeparator = true;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(250, 2);
-            this.label8.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(70, 12);
-            this.label8.TabIndex = 67;
-            this.label8.Text = "Сальдо ДГИ";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(127, 2);
-            this.label7.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(73, 12);
-            this.label7.TabIndex = 65;
-            this.label7.Text = "Сальдо найм";
-            // 
-            // label21
-            // 
-            this.label21.AutoSize = true;
-            this.label21.Location = new System.Drawing.Point(373, 2);
-            this.label21.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(33, 12);
-            this.label21.TabIndex = 68;
-            this.label21.Text = "Пени";
-            // 
-            // groupBoxChargings
-            // 
-            this.groupBoxChargings.Controls.Add(this.tableLayoutPanel3);
-            this.groupBoxChargings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxChargings.Location = new System.Drawing.Point(506, 67);
-            this.groupBoxChargings.Margin = new System.Windows.Forms.Padding(2);
-            this.groupBoxChargings.Name = "groupBoxChargings";
-            this.groupBoxChargings.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBoxChargings.Size = new System.Drawing.Size(500, 61);
-            this.groupBoxChargings.TabIndex = 2;
-            this.groupBoxChargings.TabStop = false;
-            this.groupBoxChargings.Text = "Начисления";
-            // 
-            // tableLayoutPanel3
-            // 
-            this.tableLayoutPanel3.ColumnCount = 4;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel3.Controls.Add(this.numericUpDownChargingPenalties, 3, 1);
-            this.tableLayoutPanel3.Controls.Add(this.numericUpDownChargingDGI, 2, 1);
-            this.tableLayoutPanel3.Controls.Add(this.label16, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.label17, 2, 0);
-            this.tableLayoutPanel3.Controls.Add(this.numericUpDownChargingTotal, 0, 1);
-            this.tableLayoutPanel3.Controls.Add(this.numericUpDownChargingTenancy, 1, 1);
-            this.tableLayoutPanel3.Controls.Add(this.label15, 1, 0);
-            this.tableLayoutPanel3.Controls.Add(this.label22, 3, 0);
-            this.tableLayoutPanel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(2, 15);
-            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(2);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.Padding = new System.Windows.Forms.Padding(2);
-            this.tableLayoutPanel3.RowCount = 2;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 12F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(496, 44);
-            this.tableLayoutPanel3.TabIndex = 69;
-            // 
-            // numericUpDownChargingPenalties
-            // 
-            this.numericUpDownChargingPenalties.DecimalPlaces = 2;
-            this.numericUpDownChargingPenalties.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numericUpDownChargingPenalties.Location = new System.Drawing.Point(373, 16);
-            this.numericUpDownChargingPenalties.Margin = new System.Windows.Forms.Padding(2);
-            this.numericUpDownChargingPenalties.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownChargingPenalties.Name = "numericUpDownChargingPenalties";
-            this.numericUpDownChargingPenalties.Size = new System.Drawing.Size(119, 20);
-            this.numericUpDownChargingPenalties.TabIndex = 3;
-            this.numericUpDownChargingPenalties.ThousandsSeparator = true;
-            // 
-            // numericUpDownChargingDGI
-            // 
-            this.numericUpDownChargingDGI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownChargingDGI.DecimalPlaces = 2;
-            this.numericUpDownChargingDGI.Location = new System.Drawing.Point(250, 16);
-            this.numericUpDownChargingDGI.Margin = new System.Windows.Forms.Padding(2);
-            this.numericUpDownChargingDGI.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownChargingDGI.Name = "numericUpDownChargingDGI";
-            this.numericUpDownChargingDGI.Size = new System.Drawing.Size(119, 20);
-            this.numericUpDownChargingDGI.TabIndex = 2;
-            this.numericUpDownChargingDGI.ThousandsSeparator = true;
-            // 
-            // label16
-            // 
-            this.label16.AutoSize = true;
-            this.label16.Location = new System.Drawing.Point(4, 2);
-            this.label16.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(99, 12);
-            this.label16.TabIndex = 79;
-            this.label16.Text = "Начисление итого";
-            // 
-            // label17
-            // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(250, 2);
-            this.label17.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(94, 12);
-            this.label17.TabIndex = 83;
-            this.label17.Text = "Начисление ДГИ";
-            // 
-            // numericUpDownChargingTotal
-            // 
-            this.numericUpDownChargingTotal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownChargingTotal.DecimalPlaces = 2;
-            this.numericUpDownChargingTotal.Location = new System.Drawing.Point(4, 16);
-            this.numericUpDownChargingTotal.Margin = new System.Windows.Forms.Padding(2);
-            this.numericUpDownChargingTotal.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownChargingTotal.Name = "numericUpDownChargingTotal";
-            this.numericUpDownChargingTotal.Size = new System.Drawing.Size(119, 20);
-            this.numericUpDownChargingTotal.TabIndex = 0;
-            this.numericUpDownChargingTotal.ThousandsSeparator = true;
-            // 
-            // numericUpDownChargingTenancy
-            // 
-            this.numericUpDownChargingTenancy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownChargingTenancy.DecimalPlaces = 2;
-            this.numericUpDownChargingTenancy.Location = new System.Drawing.Point(127, 16);
-            this.numericUpDownChargingTenancy.Margin = new System.Windows.Forms.Padding(2);
-            this.numericUpDownChargingTenancy.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownChargingTenancy.Name = "numericUpDownChargingTenancy";
-            this.numericUpDownChargingTenancy.Size = new System.Drawing.Size(119, 20);
-            this.numericUpDownChargingTenancy.TabIndex = 1;
-            this.numericUpDownChargingTenancy.ThousandsSeparator = true;
-            // 
-            // label15
-            // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(127, 2);
-            this.label15.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(97, 12);
-            this.label15.TabIndex = 81;
-            this.label15.Text = "Начисление найм";
-            // 
-            // label22
-            // 
-            this.label22.AutoSize = true;
-            this.label22.Location = new System.Drawing.Point(373, 2);
-            this.label22.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(33, 12);
-            this.label22.TabIndex = 84;
-            this.label22.Text = "Пени";
-            // 
-            // groupBoxRecalcs
-            // 
-            this.groupBoxRecalcs.Controls.Add(this.tableLayoutPanel4);
-            this.groupBoxRecalcs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxRecalcs.Location = new System.Drawing.Point(506, 132);
-            this.groupBoxRecalcs.Margin = new System.Windows.Forms.Padding(2);
-            this.groupBoxRecalcs.Name = "groupBoxRecalcs";
-            this.groupBoxRecalcs.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBoxRecalcs.Size = new System.Drawing.Size(500, 61);
-            this.groupBoxRecalcs.TabIndex = 3;
-            this.groupBoxRecalcs.TabStop = false;
-            this.groupBoxRecalcs.Text = "Разовый перерасчет и перенос сальдо";
-            // 
-            // tableLayoutPanel4
-            // 
-            this.tableLayoutPanel4.ColumnCount = 4;
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel4.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel4.Controls.Add(this.numericUpDownRecalcPenalties, 2, 1);
-            this.tableLayoutPanel4.Controls.Add(this.numericUpDownTransferBalance, 3, 1);
-            this.tableLayoutPanel4.Controls.Add(this.numericUpDownRecalcDGI, 1, 1);
-            this.tableLayoutPanel4.Controls.Add(this.label13, 0, 0);
-            this.tableLayoutPanel4.Controls.Add(this.numericUpDownRecalcTenancy, 0, 1);
-            this.tableLayoutPanel4.Controls.Add(this.label14, 1, 0);
-            this.tableLayoutPanel4.Controls.Add(this.label12, 3, 0);
-            this.tableLayoutPanel4.Controls.Add(this.label23, 2, 0);
-            this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(2, 15);
-            this.tableLayoutPanel4.Margin = new System.Windows.Forms.Padding(2);
-            this.tableLayoutPanel4.Name = "tableLayoutPanel4";
-            this.tableLayoutPanel4.Padding = new System.Windows.Forms.Padding(2);
-            this.tableLayoutPanel4.RowCount = 2;
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 12F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(496, 44);
-            this.tableLayoutPanel4.TabIndex = 70;
-            // 
-            // numericUpDownRecalcPenalties
-            // 
-            this.numericUpDownRecalcPenalties.DecimalPlaces = 2;
-            this.numericUpDownRecalcPenalties.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numericUpDownRecalcPenalties.Location = new System.Drawing.Point(250, 16);
-            this.numericUpDownRecalcPenalties.Margin = new System.Windows.Forms.Padding(2);
-            this.numericUpDownRecalcPenalties.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownRecalcPenalties.Name = "numericUpDownRecalcPenalties";
-            this.numericUpDownRecalcPenalties.Size = new System.Drawing.Size(119, 20);
-            this.numericUpDownRecalcPenalties.TabIndex = 2;
-            this.numericUpDownRecalcPenalties.ThousandsSeparator = true;
-            // 
-            // numericUpDownTransferBalance
-            // 
-            this.numericUpDownTransferBalance.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownTransferBalance.DecimalPlaces = 2;
-            this.numericUpDownTransferBalance.Location = new System.Drawing.Point(373, 16);
-            this.numericUpDownTransferBalance.Margin = new System.Windows.Forms.Padding(2);
-            this.numericUpDownTransferBalance.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownTransferBalance.Name = "numericUpDownTransferBalance";
-            this.numericUpDownTransferBalance.Size = new System.Drawing.Size(119, 20);
-            this.numericUpDownTransferBalance.TabIndex = 3;
-            this.numericUpDownTransferBalance.ThousandsSeparator = true;
-            // 
-            // numericUpDownRecalcDGI
-            // 
-            this.numericUpDownRecalcDGI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownRecalcDGI.DecimalPlaces = 2;
-            this.numericUpDownRecalcDGI.Location = new System.Drawing.Point(127, 16);
-            this.numericUpDownRecalcDGI.Margin = new System.Windows.Forms.Padding(2);
-            this.numericUpDownRecalcDGI.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownRecalcDGI.Name = "numericUpDownRecalcDGI";
-            this.numericUpDownRecalcDGI.Size = new System.Drawing.Size(119, 20);
-            this.numericUpDownRecalcDGI.TabIndex = 1;
-            this.numericUpDownRecalcDGI.ThousandsSeparator = true;
-            // 
-            // label13
-            // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(4, 2);
-            this.label13.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(96, 12);
-            this.label13.TabIndex = 77;
-            this.label13.Text = "Перерасчет найм";
-            // 
-            // numericUpDownRecalcTenancy
-            // 
-            this.numericUpDownRecalcTenancy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownRecalcTenancy.DecimalPlaces = 2;
-            this.numericUpDownRecalcTenancy.Location = new System.Drawing.Point(4, 16);
-            this.numericUpDownRecalcTenancy.Margin = new System.Windows.Forms.Padding(2);
-            this.numericUpDownRecalcTenancy.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownRecalcTenancy.Name = "numericUpDownRecalcTenancy";
-            this.numericUpDownRecalcTenancy.Size = new System.Drawing.Size(119, 20);
-            this.numericUpDownRecalcTenancy.TabIndex = 0;
-            this.numericUpDownRecalcTenancy.ThousandsSeparator = true;
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(127, 2);
-            this.label14.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(93, 12);
-            this.label14.TabIndex = 79;
-            this.label14.Text = "Перерасчет ДГИ";
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(373, 2);
-            this.label12.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(90, 12);
-            this.label12.TabIndex = 75;
-            this.label12.Text = "Перенос сальдо";
-            // 
-            // label23
-            // 
-            this.label23.AutoSize = true;
-            this.label23.Location = new System.Drawing.Point(250, 2);
-            this.label23.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(100, 12);
-            this.label23.TabIndex = 85;
-            this.label23.Text = "Пени (перерасчет)";
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.tableLayoutPanel5);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(506, 197);
-            this.groupBox1.Margin = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox1.Size = new System.Drawing.Size(500, 61);
-            this.groupBox1.TabIndex = 4;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Оплата";
-            // 
-            // tableLayoutPanel5
-            // 
-            this.tableLayoutPanel5.ColumnCount = 3;
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel5.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel5.Controls.Add(this.numericUpDownPaymentPenalties, 2, 1);
-            this.tableLayoutPanel5.Controls.Add(this.numericUpDownPaymentDGI, 1, 1);
-            this.tableLayoutPanel5.Controls.Add(this.label20, 0, 0);
-            this.tableLayoutPanel5.Controls.Add(this.label19, 1, 0);
-            this.tableLayoutPanel5.Controls.Add(this.numericUpDownPaymentTenancy, 0, 1);
-            this.tableLayoutPanel5.Controls.Add(this.label24, 2, 0);
-            this.tableLayoutPanel5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel5.Location = new System.Drawing.Point(2, 15);
-            this.tableLayoutPanel5.Margin = new System.Windows.Forms.Padding(2);
-            this.tableLayoutPanel5.Name = "tableLayoutPanel5";
-            this.tableLayoutPanel5.Padding = new System.Windows.Forms.Padding(2);
-            this.tableLayoutPanel5.RowCount = 2;
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 12F));
-            this.tableLayoutPanel5.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel5.Size = new System.Drawing.Size(496, 44);
-            this.tableLayoutPanel5.TabIndex = 71;
-            // 
-            // numericUpDownPaymentPenalties
-            // 
-            this.numericUpDownPaymentPenalties.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownPaymentPenalties.DecimalPlaces = 2;
-            this.numericUpDownPaymentPenalties.Location = new System.Drawing.Point(332, 16);
-            this.numericUpDownPaymentPenalties.Margin = new System.Windows.Forms.Padding(2);
-            this.numericUpDownPaymentPenalties.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownPaymentPenalties.Name = "numericUpDownPaymentPenalties";
-            this.numericUpDownPaymentPenalties.Size = new System.Drawing.Size(160, 20);
-            this.numericUpDownPaymentPenalties.TabIndex = 2;
-            this.numericUpDownPaymentPenalties.ThousandsSeparator = true;
-            // 
-            // numericUpDownPaymentDGI
-            // 
-            this.numericUpDownPaymentDGI.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownPaymentDGI.DecimalPlaces = 2;
-            this.numericUpDownPaymentDGI.Location = new System.Drawing.Point(168, 16);
-            this.numericUpDownPaymentDGI.Margin = new System.Windows.Forms.Padding(2);
-            this.numericUpDownPaymentDGI.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownPaymentDGI.Name = "numericUpDownPaymentDGI";
-            this.numericUpDownPaymentDGI.Size = new System.Drawing.Size(160, 20);
-            this.numericUpDownPaymentDGI.TabIndex = 1;
-            this.numericUpDownPaymentDGI.ThousandsSeparator = true;
-            // 
-            // label20
-            // 
-            this.label20.AutoSize = true;
-            this.label20.Location = new System.Drawing.Point(4, 2);
-            this.label20.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(73, 12);
-            this.label20.TabIndex = 77;
-            this.label20.Text = "Оплата найм";
-            // 
-            // label19
-            // 
-            this.label19.AutoSize = true;
-            this.label19.Location = new System.Drawing.Point(168, 2);
-            this.label19.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(70, 12);
-            this.label19.TabIndex = 79;
-            this.label19.Text = "Оплата ДГИ";
-            // 
-            // numericUpDownPaymentTenancy
-            // 
-            this.numericUpDownPaymentTenancy.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownPaymentTenancy.DecimalPlaces = 2;
-            this.numericUpDownPaymentTenancy.Location = new System.Drawing.Point(4, 16);
-            this.numericUpDownPaymentTenancy.Margin = new System.Windows.Forms.Padding(2);
-            this.numericUpDownPaymentTenancy.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownPaymentTenancy.Name = "numericUpDownPaymentTenancy";
-            this.numericUpDownPaymentTenancy.Size = new System.Drawing.Size(160, 20);
-            this.numericUpDownPaymentTenancy.TabIndex = 0;
-            this.numericUpDownPaymentTenancy.ThousandsSeparator = true;
-            // 
-            // label24
-            // 
-            this.label24.AutoSize = true;
-            this.label24.Location = new System.Drawing.Point(332, 2);
-            this.label24.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(33, 12);
-            this.label24.TabIndex = 80;
-            this.label24.Text = "Пени";
-            // 
-            // groupBoxBalanceOutput
-            // 
-            this.groupBoxBalanceOutput.Controls.Add(this.tableLayoutPanel6);
-            this.groupBoxBalanceOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxBalanceOutput.Location = new System.Drawing.Point(506, 262);
-            this.groupBoxBalanceOutput.Margin = new System.Windows.Forms.Padding(2);
-            this.groupBoxBalanceOutput.Name = "groupBoxBalanceOutput";
-            this.groupBoxBalanceOutput.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBoxBalanceOutput.Size = new System.Drawing.Size(500, 61);
-            this.groupBoxBalanceOutput.TabIndex = 5;
-            this.groupBoxBalanceOutput.TabStop = false;
-            this.groupBoxBalanceOutput.Text = "Исходящее сальдо";
-            // 
-            // tableLayoutPanel6
-            // 
-            this.tableLayoutPanel6.ColumnCount = 4;
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel6.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 25F));
-            this.tableLayoutPanel6.Controls.Add(this.numericUpDownPenaltiesOutput, 3, 1);
-            this.tableLayoutPanel6.Controls.Add(this.numericUpDownBalanceDGIOutput, 2, 1);
-            this.tableLayoutPanel6.Controls.Add(this.label11, 0, 0);
-            this.tableLayoutPanel6.Controls.Add(this.label9, 2, 0);
-            this.tableLayoutPanel6.Controls.Add(this.numericUpDownBalanceTotalOutput, 0, 1);
-            this.tableLayoutPanel6.Controls.Add(this.numericUpDownBalanceTenancyOutput, 1, 1);
-            this.tableLayoutPanel6.Controls.Add(this.label10, 1, 0);
-            this.tableLayoutPanel6.Controls.Add(this.label25, 3, 0);
-            this.tableLayoutPanel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel6.Location = new System.Drawing.Point(2, 15);
-            this.tableLayoutPanel6.Margin = new System.Windows.Forms.Padding(2);
-            this.tableLayoutPanel6.Name = "tableLayoutPanel6";
-            this.tableLayoutPanel6.Padding = new System.Windows.Forms.Padding(2);
-            this.tableLayoutPanel6.RowCount = 2;
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 12F));
-            this.tableLayoutPanel6.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel6.Size = new System.Drawing.Size(496, 44);
-            this.tableLayoutPanel6.TabIndex = 72;
-            // 
-            // numericUpDownPenaltiesOutput
-            // 
-            this.numericUpDownPenaltiesOutput.DecimalPlaces = 2;
-            this.numericUpDownPenaltiesOutput.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.numericUpDownPenaltiesOutput.Location = new System.Drawing.Point(373, 16);
-            this.numericUpDownPenaltiesOutput.Margin = new System.Windows.Forms.Padding(2);
-            this.numericUpDownPenaltiesOutput.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownPenaltiesOutput.Name = "numericUpDownPenaltiesOutput";
-            this.numericUpDownPenaltiesOutput.Size = new System.Drawing.Size(119, 20);
-            this.numericUpDownPenaltiesOutput.TabIndex = 3;
-            this.numericUpDownPenaltiesOutput.ThousandsSeparator = true;
-            // 
-            // numericUpDownBalanceDGIOutput
-            // 
-            this.numericUpDownBalanceDGIOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownBalanceDGIOutput.DecimalPlaces = 2;
-            this.numericUpDownBalanceDGIOutput.Location = new System.Drawing.Point(250, 16);
-            this.numericUpDownBalanceDGIOutput.Margin = new System.Windows.Forms.Padding(2);
-            this.numericUpDownBalanceDGIOutput.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownBalanceDGIOutput.Name = "numericUpDownBalanceDGIOutput";
-            this.numericUpDownBalanceDGIOutput.Size = new System.Drawing.Size(119, 20);
-            this.numericUpDownBalanceDGIOutput.TabIndex = 2;
-            this.numericUpDownBalanceDGIOutput.ThousandsSeparator = true;
-            // 
-            // label11
-            // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(4, 2);
-            this.label11.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(103, 12);
-            this.label11.TabIndex = 69;
-            this.label11.Text = "Сальдо исходящее";
-            // 
-            // label9
-            // 
-            this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(250, 2);
-            this.label9.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label9.Name = "label9";
-            this.label9.Size = new System.Drawing.Size(70, 12);
-            this.label9.TabIndex = 73;
-            this.label9.Text = "Сальдо ДГИ";
-            // 
-            // numericUpDownBalanceTotalOutput
-            // 
-            this.numericUpDownBalanceTotalOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownBalanceTotalOutput.DecimalPlaces = 2;
-            this.numericUpDownBalanceTotalOutput.Location = new System.Drawing.Point(4, 16);
-            this.numericUpDownBalanceTotalOutput.Margin = new System.Windows.Forms.Padding(2);
-            this.numericUpDownBalanceTotalOutput.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownBalanceTotalOutput.Name = "numericUpDownBalanceTotalOutput";
-            this.numericUpDownBalanceTotalOutput.Size = new System.Drawing.Size(119, 20);
-            this.numericUpDownBalanceTotalOutput.TabIndex = 0;
-            this.numericUpDownBalanceTotalOutput.ThousandsSeparator = true;
-            // 
-            // numericUpDownBalanceTenancyOutput
-            // 
-            this.numericUpDownBalanceTenancyOutput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.numericUpDownBalanceTenancyOutput.DecimalPlaces = 2;
-            this.numericUpDownBalanceTenancyOutput.Location = new System.Drawing.Point(127, 16);
-            this.numericUpDownBalanceTenancyOutput.Margin = new System.Windows.Forms.Padding(2);
-            this.numericUpDownBalanceTenancyOutput.Maximum = new decimal(new int[] {
-            1000000000,
-            0,
-            0,
-            0});
-            this.numericUpDownBalanceTenancyOutput.Name = "numericUpDownBalanceTenancyOutput";
-            this.numericUpDownBalanceTenancyOutput.Size = new System.Drawing.Size(119, 20);
-            this.numericUpDownBalanceTenancyOutput.TabIndex = 1;
-            this.numericUpDownBalanceTenancyOutput.ThousandsSeparator = true;
-            // 
-            // label10
-            // 
-            this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(127, 2);
-            this.label10.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(73, 12);
-            this.label10.TabIndex = 71;
-            this.label10.Text = "Сальдо найм";
-            // 
-            // label25
-            // 
-            this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(373, 2);
-            this.label25.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(33, 12);
-            this.label25.TabIndex = 81;
-            this.label25.Text = "Пени";
-            // 
             // PaymentsViewport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1319,39 +1319,6 @@
             this.Name = "PaymentsViewport";
             this.Text = "История лицевого счета №{0}";
             this.tableLayoutPanel1.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
-            this.groupBoxGeneralInfo.ResumeLayout(false);
-            this.groupBoxGeneralInfo.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPrescribed)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLivingArea)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalArea)).EndInit();
-            this.groupBoxBalanceInput.ResumeLayout(false);
-            this.tableLayoutPanel2.ResumeLayout(false);
-            this.tableLayoutPanel2.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenaltiesInput)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceDGIInput)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceTotalInput)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceTenancyInput)).EndInit();
-            this.groupBoxChargings.ResumeLayout(false);
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.tableLayoutPanel3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChargingPenalties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChargingDGI)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChargingTotal)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChargingTenancy)).EndInit();
-            this.groupBoxRecalcs.ResumeLayout(false);
-            this.tableLayoutPanel4.ResumeLayout(false);
-            this.tableLayoutPanel4.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRecalcPenalties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTransferBalance)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRecalcDGI)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRecalcTenancy)).EndInit();
-            this.groupBox1.ResumeLayout(false);
-            this.tableLayoutPanel5.ResumeLayout(false);
-            this.tableLayoutPanel5.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaymentPenalties)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaymentDGI)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaymentTenancy)).EndInit();
             this.groupBoxBalanceOutput.ResumeLayout(false);
             this.tableLayoutPanel6.ResumeLayout(false);
             this.tableLayoutPanel6.PerformLayout();
@@ -1359,6 +1326,39 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceDGIOutput)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceTotalOutput)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceTenancyOutput)).EndInit();
+            this.groupBox1.ResumeLayout(false);
+            this.tableLayoutPanel5.ResumeLayout(false);
+            this.tableLayoutPanel5.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaymentPenalties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaymentDGI)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPaymentTenancy)).EndInit();
+            this.groupBoxRecalcs.ResumeLayout(false);
+            this.tableLayoutPanel4.ResumeLayout(false);
+            this.tableLayoutPanel4.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRecalcPenalties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTransferBalance)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRecalcDGI)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownRecalcTenancy)).EndInit();
+            this.groupBoxChargings.ResumeLayout(false);
+            this.tableLayoutPanel3.ResumeLayout(false);
+            this.tableLayoutPanel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChargingPenalties)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChargingDGI)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChargingTotal)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownChargingTenancy)).EndInit();
+            this.groupBoxBalanceInput.ResumeLayout(false);
+            this.tableLayoutPanel2.ResumeLayout(false);
+            this.tableLayoutPanel2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPenaltiesInput)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceDGIInput)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceTotalInput)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownBalanceTenancyInput)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.groupBoxGeneralInfo.ResumeLayout(false);
+            this.groupBoxGeneralInfo.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownPrescribed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownLivingArea)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericUpDownTotalArea)).EndInit();
             this.ResumeLayout(false);
 
         }
