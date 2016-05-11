@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Windows.Documents;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
@@ -100,90 +97,37 @@ namespace Registry.Viewport
             textBoxTenant.DataBindings.Clear();
             textBoxTenant.DataBindings.Add("Text", GeneralBindingSource, "tenant", true, DataSourceUpdateMode.Never, "");
 
-            numericUpDownTotalArea.DataBindings.Clear();
-            numericUpDownTotalArea.DataBindings.Add("Value", GeneralBindingSource, "total_area", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownTotalArea.DataBindings.Add("Minimum", GeneralBindingSource, "total_area", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownTotalArea.DataBindings.Add("Maximum", GeneralBindingSource, "total_area", true, DataSourceUpdateMode.Never, 0);
-
-            numericUpDownLivingArea.DataBindings.Clear();
-            numericUpDownLivingArea.DataBindings.Add("Value", GeneralBindingSource, "living_area", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownLivingArea.DataBindings.Add("Minimum", GeneralBindingSource, "living_area", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownLivingArea.DataBindings.Add("Maximum", GeneralBindingSource, "living_area", true, DataSourceUpdateMode.Never, 0);
-
-            numericUpDownPrescribed.DataBindings.Clear();
-            numericUpDownPrescribed.DataBindings.Add("Value", GeneralBindingSource, "prescribed", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownPrescribed.DataBindings.Add("Minimum", GeneralBindingSource, "prescribed", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownPrescribed.DataBindings.Add("Maximum", GeneralBindingSource, "prescribed", true, DataSourceUpdateMode.Never, 0);
-
-            numericUpDownBalanceTotalInput.DataBindings.Clear();
-            numericUpDownBalanceTotalInput.DataBindings.Add("Value", GeneralBindingSource, "balance_input", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownBalanceTotalInput.DataBindings.Add("Minimum", GeneralBindingSource, "balance_input", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownBalanceTotalInput.DataBindings.Add("Maximum", GeneralBindingSource, "balance_input", true, DataSourceUpdateMode.Never, 0);
-
-            numericUpDownBalanceTenancyInput.DataBindings.Clear();
-            numericUpDownBalanceTenancyInput.DataBindings.Add("Value", GeneralBindingSource, "balance_tenancy", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownBalanceTenancyInput.DataBindings.Add("Minimum", GeneralBindingSource, "balance_tenancy", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownBalanceTenancyInput.DataBindings.Add("Maximum", GeneralBindingSource, "balance_tenancy", true, DataSourceUpdateMode.Never, 0);
-
-            numericUpDownBalanceDGIInput.DataBindings.Clear();
-            numericUpDownBalanceDGIInput.DataBindings.Add("Value", GeneralBindingSource, "balance_dgi", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownBalanceDGIInput.DataBindings.Add("Minimum", GeneralBindingSource, "balance_dgi", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownBalanceDGIInput.DataBindings.Add("Maximum", GeneralBindingSource, "balance_dgi", true, DataSourceUpdateMode.Never, 0);
-
-            numericUpDownChargingTotal.DataBindings.Clear();
-            numericUpDownChargingTotal.DataBindings.Add("Value", GeneralBindingSource, "charging_total", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownChargingTotal.DataBindings.Add("Minimum", GeneralBindingSource, "charging_total", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownChargingTotal.DataBindings.Add("Maximum", GeneralBindingSource, "charging_total", true, DataSourceUpdateMode.Never, 0);
-
-            numericUpDownChargingTenancy.DataBindings.Clear();
-            numericUpDownChargingTenancy.DataBindings.Add("Value", GeneralBindingSource, "charging_tenancy", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownChargingTenancy.DataBindings.Add("Minimum", GeneralBindingSource, "charging_tenancy", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownChargingTenancy.DataBindings.Add("Maximum", GeneralBindingSource, "charging_tenancy", true, DataSourceUpdateMode.Never, 0);
-
-            numericUpDownChargingDGI.DataBindings.Clear();
-            numericUpDownChargingDGI.DataBindings.Add("Value", GeneralBindingSource, "charging_dgi", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownChargingDGI.DataBindings.Add("Minimum", GeneralBindingSource, "charging_dgi", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownChargingDGI.DataBindings.Add("Maximum", GeneralBindingSource, "charging_dgi", true, DataSourceUpdateMode.Never, 0);
-
-            numericUpDownRecalcTenancy.DataBindings.Clear();
-            numericUpDownRecalcTenancy.DataBindings.Add("Value", GeneralBindingSource, "recalc_tenancy", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownRecalcTenancy.DataBindings.Add("Minimum", GeneralBindingSource, "recalc_tenancy", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownRecalcTenancy.DataBindings.Add("Maximum", GeneralBindingSource, "recalc_tenancy", true, DataSourceUpdateMode.Never, 0);
-
-            numericUpDownRecalcDGI.DataBindings.Clear();
-            numericUpDownRecalcDGI.DataBindings.Add("Value", GeneralBindingSource, "recalc_dgi", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownRecalcDGI.DataBindings.Add("Minimum", GeneralBindingSource, "recalc_dgi", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownRecalcDGI.DataBindings.Add("Maximum", GeneralBindingSource, "recalc_dgi", true, DataSourceUpdateMode.Never, 0);
-
-            numericUpDownPaymentTenancy.DataBindings.Clear();
-            numericUpDownPaymentTenancy.DataBindings.Add("Value", GeneralBindingSource, "payment_tenancy", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownPaymentTenancy.DataBindings.Add("Minimum", GeneralBindingSource, "payment_tenancy", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownPaymentTenancy.DataBindings.Add("Maximum", GeneralBindingSource, "payment_tenancy", true, DataSourceUpdateMode.Never, 0);
-
-            numericUpDownPaymentDGI.DataBindings.Clear();
-            numericUpDownPaymentDGI.DataBindings.Add("Value", GeneralBindingSource, "payment_dgi", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownPaymentDGI.DataBindings.Add("Minimum", GeneralBindingSource, "payment_dgi", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownPaymentDGI.DataBindings.Add("Maximum", GeneralBindingSource, "payment_dgi", true, DataSourceUpdateMode.Never, 0);
-
-            numericUpDownTransferBalance.DataBindings.Clear();
-            numericUpDownTransferBalance.DataBindings.Add("Value", GeneralBindingSource, "transfer_balance", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownTransferBalance.DataBindings.Add("Minimum", GeneralBindingSource, "transfer_balance", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownTransferBalance.DataBindings.Add("Maximum", GeneralBindingSource, "transfer_balance", true, DataSourceUpdateMode.Never, 0);
-
-            numericUpDownBalanceTotalOutput.DataBindings.Clear();
-            numericUpDownBalanceTotalOutput.DataBindings.Add("Value", GeneralBindingSource, "balance_output_total", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownBalanceTotalOutput.DataBindings.Add("Minimum", GeneralBindingSource, "balance_output_total", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownBalanceTotalOutput.DataBindings.Add("Maximum", GeneralBindingSource, "balance_output_total", true, DataSourceUpdateMode.Never, 0);
-
-            numericUpDownBalanceTenancyOutput.DataBindings.Clear();
-            numericUpDownBalanceTenancyOutput.DataBindings.Add("Value", GeneralBindingSource, "balance_output_tenancy", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownBalanceTenancyOutput.DataBindings.Add("Minimum", GeneralBindingSource, "balance_output_tenancy", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownBalanceTenancyOutput.DataBindings.Add("Maximum", GeneralBindingSource, "balance_output_tenancy", true, DataSourceUpdateMode.Never, 0);
-
-            numericUpDownBalanceDGIOutput.DataBindings.Clear();
-            numericUpDownBalanceDGIOutput.DataBindings.Add("Value", GeneralBindingSource, "balance_output_dgi", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownBalanceDGIOutput.DataBindings.Add("Minimum", GeneralBindingSource, "balance_output_dgi", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownBalanceDGIOutput.DataBindings.Add("Maximum", GeneralBindingSource, "balance_output_dgi", true, DataSourceUpdateMode.Never, 0);
+            foreach (var keyValuePair in new Dictionary<string, NumericUpDown>
+            {
+                {"total_area",numericUpDownTotalArea},
+                {"living_area",numericUpDownLivingArea},
+                {"prescribed",numericUpDownPrescribed},
+                {"balance_input",numericUpDownBalanceTotalInput},
+                {"balance_tenancy",numericUpDownBalanceTenancyInput},
+                {"balance_dgi",numericUpDownBalanceDGIInput},
+                {"balance_input_penalties",numericUpDownPenaltiesInput},
+                {"charging_total",numericUpDownChargingTotal},
+                {"charging_tenancy",numericUpDownChargingTenancy},
+                {"charging_dgi",numericUpDownChargingDGI},
+                {"charging_penalties",numericUpDownChargingPenalties},
+                {"recalc_tenancy",numericUpDownRecalcTenancy},
+                {"recalc_dgi",numericUpDownRecalcDGI},
+                {"recalc_penalties",numericUpDownRecalcPenalties},
+                {"payment_tenancy",numericUpDownPaymentTenancy},
+                {"payment_dgi",numericUpDownPaymentDGI},
+                {"payment_penalties",numericUpDownPaymentPenalties},
+                {"transfer_balance",numericUpDownTransferBalance},
+                {"balance_output_total",numericUpDownBalanceTotalOutput},
+                {"balance_output_tenancy",numericUpDownBalanceTenancyOutput},
+                {"balance_output_dgi",numericUpDownBalanceDGIOutput},
+                {"balance_output_penalties",numericUpDownPenaltiesOutput}
+            })
+            {
+                keyValuePair.Value.DataBindings.Clear();
+                keyValuePair.Value.DataBindings.Add("Value", GeneralBindingSource, keyValuePair.Key, true, DataSourceUpdateMode.Never, 0);
+                keyValuePair.Value.DataBindings.Add("Minimum", GeneralBindingSource, keyValuePair.Key, true, DataSourceUpdateMode.Never, 0);
+                keyValuePair.Value.DataBindings.Add("Maximum", GeneralBindingSource, keyValuePair.Key, true, DataSourceUpdateMode.Never, 0);
+            }
 
             dateTimePickerAtDate.DataBindings.Clear();
             dateTimePickerAtDate.DataBindings.Add("Value", GeneralBindingSource, "date", true, DataSourceUpdateMode.Never, 0);
@@ -234,74 +178,11 @@ namespace Registry.Viewport
             if (GeneralBindingSource.Count <= e.RowIndex) return;
             switch (dataGridView.Columns[e.ColumnIndex].Name)
             {
-                case "crn":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["crn"];
-                    break;
-                case "raw_address":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["raw_address"];
-                    break;
-                case "parsed_address":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["parsed_address"];
-                    break;
-                case "account":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["account"];
-                    break;
-                case "tenant":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["tenant"];
-                    break;
-                case "total_area":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["total_area"];
-                    break;
-                case "living_area":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["living_area"];
-                    break;
-                case "prescribed":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["prescribed"];
-                    break;
                 case "date":
                     e.Value = ((DateTime)((DataRowView)GeneralBindingSource[e.RowIndex])["date"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                     break;
-                case "balance_input":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["balance_input"];
-                    break;
-                case "balance_tenancy":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["balance_tenancy"];
-                    break;
-                case "balance_dgi":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["balance_dgi"];
-                    break;
-                case "charging_tenancy":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["charging_tenancy"];
-                    break;
-                case "charging_dgi":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["charging_dgi"];
-                    break;
-                case "charging_total":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["charging_total"];
-                    break;
-                case "recalc_tenancy":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["recalc_tenancy"];
-                    break;
-                case "recalc_dgi":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["recalc_dgi"];
-                    break;
-                case "payment_tenancy":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["payment_tenancy"];
-                    break;
-                case "payment_dgi":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["payment_dgi"];
-                    break;
-                case "transfer_balance":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["transfer_balance"];
-                    break;
-                case "balance_output_total":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["balance_output_total"];
-                    break;
-                case "balance_output_tenancy":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["balance_output_tenancy"];
-                    break;
-                case "balance_output_dgi":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["balance_output_dgi"];
+                default:
+                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])[dataGridView.Columns[e.ColumnIndex].Name];
                     break;
             }
         }

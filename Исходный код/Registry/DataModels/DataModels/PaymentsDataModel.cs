@@ -22,17 +22,22 @@ namespace Registry.DataModels.DataModels
                                               pm.balance_input,
                                               pm.balance_tenancy,
                                               pm.balance_dgi,
+                                              pm.balance_input_penalties,
                                               pm.charging_tenancy,
                                               pm.charging_dgi,
                                               pm.charging_total,
+                                              pm.charging_penalties,
                                               pm.recalc_tenancy,
                                               pm.recalc_dgi,
+                                              pm.recalc_penalties,
                                               pm.payment_tenancy,
                                               pm.payment_dgi,
+                                              pm.payment_penalties,
                                               pm.transfer_balance,
                                               pm.balance_output_total,
                                               pm.balance_output_tenancy,
-                                              pm.balance_output_dgi
+                                              pm.balance_output_dgi,
+                                              pm.balance_output_penalties
                                             FROM (
                                             SELECT v.id_account, p.id_building, GROUP_CONCAT(
                                                 CONCAT(p.premises_num,
