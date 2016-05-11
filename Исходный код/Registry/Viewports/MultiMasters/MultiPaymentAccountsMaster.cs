@@ -64,74 +64,11 @@ namespace Registry.Viewport
             var row = (DataRowView)_paymentAccount[e.RowIndex];
             switch (dataGridView.Columns[e.ColumnIndex].Name)
             {
-                case "crn":
-                    e.Value = row["crn"];
-                    break;
-                case "raw_address":
-                    e.Value = row["raw_address"];
-                    break;
-                case "parsed_address":
-                    e.Value = row["parsed_address"];
-                    break;
-                case "account":
-                    e.Value = row["account"];
-                    break;
-                case "tenant":
-                    e.Value = row["tenant"];
-                    break;
-                case "total_area":
-                    e.Value = row["total_area"];
-                    break;
-                case "living_area":
-                    e.Value = row["living_area"];
-                    break;
-                case "prescribed":
-                    e.Value = row["prescribed"];
-                    break;
                 case "date":
                     e.Value = ((DateTime)row["date"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                     break;
-                case "balance_input":
-                    e.Value = row["balance_input"];
-                    break;
-                case "balance_tenancy":
-                    e.Value = row["balance_tenancy"];
-                    break;
-                case "balance_dgi":
-                    e.Value = row["balance_dgi"];
-                    break;
-                case "charging_tenancy":
-                    e.Value = row["charging_tenancy"];
-                    break;
-                case "charging_dgi":
-                    e.Value = row["charging_dgi"];
-                    break;
-                case "charging_total":
-                    e.Value = row["charging_total"];
-                    break;
-                case "recalc_tenancy":
-                    e.Value = row["recalc_tenancy"];
-                    break;
-                case "recalc_dgi":
-                    e.Value = row["recalc_dgi"];
-                    break;
-                case "payment_tenancy":
-                    e.Value = row["payment_tenancy"];
-                    break;
-                case "payment_dgi":
-                    e.Value = row["payment_dgi"];
-                    break;
-                case "transfer_balance":
-                    e.Value = row["transfer_balance"];
-                    break;
-                case "balance_output_total":
-                    e.Value = row["balance_output_total"];
-                    break;
-                case "balance_output_tenancy":
-                    e.Value = row["balance_output_tenancy"];
-                    break;
-                case "balance_output_dgi":
-                    e.Value = row["balance_output_dgi"];
+                default:
+                    e.Value = row[dataGridView.Columns[e.ColumnIndex].Name];
                     break;
             }
         }
@@ -247,6 +184,7 @@ namespace Registry.Viewport
                     IdAccount = (int) row["id_account"],
                     AmountTenancy = ViewportHelper.ValueOrNull<decimal>(row, "balance_output_tenancy"),
                     AmountDgi = ViewportHelper.ValueOrNull<decimal>(row, "balance_output_dgi"),
+                    AmountPenalties = ViewportHelper.ValueOrNull<decimal>(row, "balance_output_penalties"),
                     AtDate = atDateForm.DateAt
                 };
                 var id = claimsDataModel.Insert(claim);
@@ -268,6 +206,7 @@ namespace Registry.Viewport
                 claimRow["id_account"] = ViewportHelper.ValueOrDBNull(claim.IdAccount);
                 claimRow["amount_tenancy"] = ViewportHelper.ValueOrDBNull(claim.AmountTenancy);
                 claimRow["amount_dgi"] = ViewportHelper.ValueOrDBNull(claim.AmountDgi);
+                claimRow["amount_penalties"] = ViewportHelper.ValueOrDBNull(claim.AmountPenalties);
                 claimRow["at_date"] = ViewportHelper.ValueOrDBNull(claim.AtDate);
                 claimRow.EndEdit();
                 // Add first state automaticaly

@@ -71,20 +71,20 @@
             this.panel1.Controls.Add(this.vButtonNotify);
             this.panel1.Controls.Add(this.vButtonCancel);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.panel1.Location = new System.Drawing.Point(0, 777);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4);
+            this.panel1.Location = new System.Drawing.Point(0, 631);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1325, 86);
+            this.panel1.Size = new System.Drawing.Size(994, 70);
             this.panel1.TabIndex = 0;
             // 
             // checkBoxWithoutRegNum
             // 
             this.checkBoxWithoutRegNum.AutoSize = true;
-            this.checkBoxWithoutRegNum.Location = new System.Drawing.Point(16, 62);
+            this.checkBoxWithoutRegNum.Location = new System.Drawing.Point(12, 50);
+            this.checkBoxWithoutRegNum.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
             this.checkBoxWithoutRegNum.Name = "checkBoxWithoutRegNum";
-            this.checkBoxWithoutRegNum.Size = new System.Drawing.Size(262, 21);
+            this.checkBoxWithoutRegNum.Size = new System.Drawing.Size(190, 17);
             this.checkBoxWithoutRegNum.TabIndex = 76;
-            this.checkBoxWithoutRegNum.Text = "Договоры без номера регистрации";
+            this.checkBoxWithoutRegNum.Text = "Процессы найма без договоров";
             this.checkBoxWithoutRegNum.UseVisualStyleBackColor = true;
             this.checkBoxWithoutRegNum.CheckedChanged += new System.EventHandler(this.checkBoxWithoutRegNum_CheckedChanged);
             // 
@@ -92,19 +92,17 @@
             // 
             this.comboBoxExecutor.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxExecutor.FormattingEnabled = true;
-            this.comboBoxExecutor.Location = new System.Drawing.Point(397, 30);
-            this.comboBoxExecutor.Margin = new System.Windows.Forms.Padding(4);
+            this.comboBoxExecutor.Location = new System.Drawing.Point(298, 24);
             this.comboBoxExecutor.Name = "comboBoxExecutor";
-            this.comboBoxExecutor.Size = new System.Drawing.Size(380, 24);
+            this.comboBoxExecutor.Size = new System.Drawing.Size(286, 21);
             this.comboBoxExecutor.TabIndex = 2;
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(393, 11);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label4.Location = new System.Drawing.Point(295, 9);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(95, 17);
+            this.label4.Size = new System.Drawing.Size(74, 13);
             this.label4.TabIndex = 75;
             this.label4.Text = "Исполнитель";
             // 
@@ -113,11 +111,10 @@
             this.vButtonExport.AllowAnimations = true;
             this.vButtonExport.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonExport.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonExport.Location = new System.Drawing.Point(796, 12);
-            this.vButtonExport.Margin = new System.Windows.Forms.Padding(4);
+            this.vButtonExport.Location = new System.Drawing.Point(597, 10);
             this.vButtonExport.Name = "vButtonExport";
             this.vButtonExport.RoundedCornersMask = ((byte)(15));
-            this.vButtonExport.Size = new System.Drawing.Size(156, 43);
+            this.vButtonExport.Size = new System.Drawing.Size(117, 35);
             this.vButtonExport.TabIndex = 3;
             this.vButtonExport.Text = "Экспорт";
             this.vButtonExport.UseVisualStyleBackColor = false;
@@ -127,10 +124,9 @@
             // checkBoxExpired
             // 
             this.checkBoxExpired.AutoSize = true;
-            this.checkBoxExpired.Location = new System.Drawing.Point(16, 36);
-            this.checkBoxExpired.Margin = new System.Windows.Forms.Padding(4);
+            this.checkBoxExpired.Location = new System.Drawing.Point(12, 29);
             this.checkBoxExpired.Name = "checkBoxExpired";
-            this.checkBoxExpired.Size = new System.Drawing.Size(330, 21);
+            this.checkBoxExpired.Size = new System.Drawing.Size(262, 17);
             this.checkBoxExpired.TabIndex = 1;
             this.checkBoxExpired.Text = "Договоры с закончившимся сроком действия";
             this.checkBoxExpired.UseVisualStyleBackColor = true;
@@ -141,10 +137,9 @@
             this.checkBoxExpiring.AutoSize = true;
             this.checkBoxExpiring.Checked = true;
             this.checkBoxExpiring.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.checkBoxExpiring.Location = new System.Drawing.Point(16, 10);
-            this.checkBoxExpiring.Margin = new System.Windows.Forms.Padding(4);
+            this.checkBoxExpiring.Location = new System.Drawing.Point(12, 8);
             this.checkBoxExpiring.Name = "checkBoxExpiring";
-            this.checkBoxExpiring.Size = new System.Drawing.Size(348, 21);
+            this.checkBoxExpiring.Size = new System.Drawing.Size(277, 17);
             this.checkBoxExpiring.TabIndex = 0;
             this.checkBoxExpiring.Text = "Договоры с заканчивающимся сроком действия";
             this.checkBoxExpiring.UseVisualStyleBackColor = true;
@@ -155,11 +150,10 @@
             this.vButtonNotify.AllowAnimations = true;
             this.vButtonNotify.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonNotify.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonNotify.Location = new System.Drawing.Point(976, 12);
-            this.vButtonNotify.Margin = new System.Windows.Forms.Padding(4);
+            this.vButtonNotify.Location = new System.Drawing.Point(732, 10);
             this.vButtonNotify.Name = "vButtonNotify";
             this.vButtonNotify.RoundedCornersMask = ((byte)(15));
-            this.vButtonNotify.Size = new System.Drawing.Size(156, 43);
+            this.vButtonNotify.Size = new System.Drawing.Size(117, 35);
             this.vButtonNotify.TabIndex = 4;
             this.vButtonNotify.Text = "Уведомление";
             this.vButtonNotify.UseVisualStyleBackColor = false;
@@ -172,11 +166,10 @@
             this.vButtonCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(1156, 12);
-            this.vButtonCancel.Margin = new System.Windows.Forms.Padding(4);
+            this.vButtonCancel.Location = new System.Drawing.Point(867, 10);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
-            this.vButtonCancel.Size = new System.Drawing.Size(156, 43);
+            this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
             this.vButtonCancel.TabIndex = 5;
             this.vButtonCancel.Text = "Отменить";
             this.vButtonCancel.UseVisualStyleBackColor = false;
@@ -212,14 +205,13 @@
             this.address});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.Location = new System.Drawing.Point(0, 0);
-            this.dataGridView.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridView.MultiSelect = false;
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowHeadersVisible = false;
             this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridView.ShowCellToolTips = false;
-            this.dataGridView.Size = new System.Drawing.Size(1325, 777);
+            this.dataGridView.Size = new System.Drawing.Size(994, 631);
             this.dataGridView.TabIndex = 0;
             this.dataGridView.VirtualMode = true;
             this.dataGridView.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView_CellValueNeeded);
@@ -319,10 +311,9 @@
             // 
             this.checkBoxCheckAll.AutoSize = true;
             this.checkBoxCheckAll.BackColor = System.Drawing.Color.White;
-            this.checkBoxCheckAll.Location = new System.Drawing.Point(12, 9);
-            this.checkBoxCheckAll.Margin = new System.Windows.Forms.Padding(4);
+            this.checkBoxCheckAll.Location = new System.Drawing.Point(9, 7);
             this.checkBoxCheckAll.Name = "checkBoxCheckAll";
-            this.checkBoxCheckAll.Size = new System.Drawing.Size(18, 17);
+            this.checkBoxCheckAll.Size = new System.Drawing.Size(15, 14);
             this.checkBoxCheckAll.TabIndex = 8;
             this.checkBoxCheckAll.UseVisualStyleBackColor = false;
             this.checkBoxCheckAll.CheckedChanged += new System.EventHandler(this.checkBoxCheckAll_CheckedChanged);
@@ -334,35 +325,34 @@
             this.повторноеToolStripMenuItem,
             this.повторноеToolStripMenuItem1});
             this.contextMenuStripNotify.Name = "contextMenuStripNotify";
-            this.contextMenuStripNotify.Size = new System.Drawing.Size(164, 56);
+            this.contextMenuStripNotify.Size = new System.Drawing.Size(137, 48);
             // 
             // повторноеToolStripMenuItem
             // 
             this.повторноеToolStripMenuItem.Name = "повторноеToolStripMenuItem";
-            this.повторноеToolStripMenuItem.Size = new System.Drawing.Size(163, 26);
+            this.повторноеToolStripMenuItem.Size = new System.Drawing.Size(136, 22);
             this.повторноеToolStripMenuItem.Text = "Первичное";
             this.повторноеToolStripMenuItem.Click += new System.EventHandler(this.повторноеToolStripMenuItem_Click);
             // 
             // повторноеToolStripMenuItem1
             // 
             this.повторноеToolStripMenuItem1.Name = "повторноеToolStripMenuItem1";
-            this.повторноеToolStripMenuItem1.Size = new System.Drawing.Size(163, 26);
+            this.повторноеToolStripMenuItem1.Size = new System.Drawing.Size(136, 22);
             this.повторноеToolStripMenuItem1.Text = "Повторное";
             this.повторноеToolStripMenuItem1.Click += new System.EventHandler(this.повторноеToolStripMenuItem1_Click);
             // 
             // TenancyNotifiesSettingsForm
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(1325, 863);
+            this.ClientSize = new System.Drawing.Size(994, 701);
             this.Controls.Add(this.checkBoxCheckAll);
             this.Controls.Add(this.dataGridView);
             this.Controls.Add(this.panel1);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Margin = new System.Windows.Forms.Padding(4);
             this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(1278, 358);
+            this.MinimumSize = new System.Drawing.Size(962, 298);
             this.Name = "TenancyNotifiesSettingsForm";
             this.Text = "Печать уведомлений";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;

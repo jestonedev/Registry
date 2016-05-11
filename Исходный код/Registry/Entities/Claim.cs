@@ -12,6 +12,7 @@ namespace Registry.Entities
         public string Description { get; set; }
         public decimal? AmountTenancy { get; set; }
         public decimal? AmountDgi { get; set; }
+        public decimal? AmountPenalties { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -36,7 +37,8 @@ namespace Registry.Entities
                    first.StartDeptPeriod == second.StartDeptPeriod &&
                    first.EndDeptPeriod == second.EndDeptPeriod &&
                    first.AmountTenancy == second.AmountTenancy &&
-                   first.AmountDgi == second.AmountDgi;
+                   first.AmountDgi == second.AmountDgi &&
+                   first.AmountPenalties == second.AmountPenalties;
         }
 
         public static bool operator !=(Claim first, Claim second)

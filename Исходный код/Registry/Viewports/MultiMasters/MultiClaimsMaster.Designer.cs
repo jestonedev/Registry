@@ -20,6 +20,7 @@ namespace Registry.Viewport
             this.toolStripButtonCreateClaims = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonDeptPeriod = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonJudicialOrder = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonToLegalDepartment = new System.Windows.Forms.ToolStripButton();
             this.toolStripProgressBarMultiOperations = new System.Windows.Forms.ToolStripProgressBar();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.id_claim = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -30,8 +31,7 @@ namespace Registry.Viewport
             this.end_dept_period = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolStripButtonToLegalDepartment = new System.Windows.Forms.ToolStripButton();
+            this.amount_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -137,6 +137,16 @@ namespace Registry.Viewport
             this.toolStripButtonJudicialOrder.Text = "Сформировать заявление о выдаче судебного приказа";
             this.toolStripButtonJudicialOrder.Click += new System.EventHandler(this.toolStripButtonJudicialOrder_Click);
             // 
+            // toolStripButtonToLegalDepartment
+            // 
+            this.toolStripButtonToLegalDepartment.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonToLegalDepartment.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToLegalDepartment.Image")));
+            this.toolStripButtonToLegalDepartment.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonToLegalDepartment.Name = "toolStripButtonToLegalDepartment";
+            this.toolStripButtonToLegalDepartment.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonToLegalDepartment.Text = "Передача в юридический отдел";
+            this.toolStripButtonToLegalDepartment.Click += new System.EventHandler(this.toolStripButtonToLegalDepartment_Click);
+            // 
             // toolStripProgressBarMultiOperations
             // 
             this.toolStripProgressBarMultiOperations.Name = "toolStripProgressBarMultiOperations";
@@ -160,7 +170,7 @@ namespace Registry.Viewport
             this.end_dept_period,
             this.amount_tenancy,
             this.amount_dgi,
-            this.description});
+            this.amount_penalties});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dataGridView.Location = new System.Drawing.Point(0, 25);
@@ -245,23 +255,13 @@ namespace Registry.Viewport
             this.amount_dgi.ReadOnly = true;
             this.amount_dgi.Width = 200;
             // 
-            // description
+            // amount_penalties
             // 
-            this.description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.description.HeaderText = "Примечание";
-            this.description.MinimumWidth = 200;
-            this.description.Name = "description";
-            this.description.ReadOnly = true;
-            // 
-            // toolStripButtonToLegalDepartment
-            // 
-            this.toolStripButtonToLegalDepartment.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonToLegalDepartment.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonToLegalDepartment.Image")));
-            this.toolStripButtonToLegalDepartment.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonToLegalDepartment.Name = "toolStripButtonToLegalDepartment";
-            this.toolStripButtonToLegalDepartment.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonToLegalDepartment.Text = "Передача в юридический отдел";
-            this.toolStripButtonToLegalDepartment.Click += new System.EventHandler(this.toolStripButtonToLegalDepartment_Click);
+            this.amount_penalties.HeaderText = "Сумма долга пени";
+            this.amount_penalties.MinimumWidth = 200;
+            this.amount_penalties.Name = "amount_penalties";
+            this.amount_penalties.ReadOnly = true;
+            this.amount_penalties.Width = 200;
             // 
             // MultiClaimsMaster
             // 
@@ -292,6 +292,8 @@ namespace Registry.Viewport
         private ToolStripProgressBar toolStripProgressBarMultiOperations;
         private DataGridView dataGridView;
         private ToolStripButton toolStripButtonJudicialOrder;
+        private ToolStripButton toolStripButtonDeptPeriod;
+        private ToolStripButton toolStripButtonToLegalDepartment;
         private DataGridViewTextBoxColumn id_claim;
         private DataGridViewTextBoxColumn id_account;
         private DataGridViewTextBoxColumn at_date;
@@ -300,9 +302,7 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn end_dept_period;
         private DataGridViewTextBoxColumn amount_tenancy;
         private DataGridViewTextBoxColumn amount_dgi;
-        private DataGridViewTextBoxColumn description;
-        private ToolStripButton toolStripButtonDeptPeriod;
-        private ToolStripButton toolStripButtonToLegalDepartment;
+        private DataGridViewTextBoxColumn amount_penalties;
 
     }
 }

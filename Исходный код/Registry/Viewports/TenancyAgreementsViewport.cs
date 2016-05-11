@@ -1028,7 +1028,9 @@ namespace Registry.Viewport
             var snp = oldTenantRow["surname"] + @" " + oldTenantRow["name"] + @" " + oldTenantRow["patronymic"];
             var sPatronymic = oldTenantRow["patronymic"].ToString(); 
             var gender = Declension.GetGender(sPatronymic);
-            textBoxAgreementContent.Text += string.Format("в связи со смертью нанимателя «{0}», договорились:",
+            textBoxAgreementContent.Text += string.Format("в связи                                                                                     " +
+                                                          "                                                                                               " +
+                                                          "нанимателя «{0}», договорились:",
                 gender == Gender.NotDefind ? snp : Declension.GetSNPDeclension(snp, gender, DeclensionCase.Rodit));
             // Включаем нового нанимателя
             var newTenantRow = ((DataRowView) _vPersonsChangeTenant[_vPersonsChangeTenant.Position]);

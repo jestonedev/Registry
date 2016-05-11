@@ -26,6 +26,7 @@ namespace Registry.DataModels.DataModels
             Table.PrimaryKey = new[] { Table.Columns["id_claim"] };
             Table.Columns["amount_tenancy"].DefaultValue = 0;
             Table.Columns["amount_dgi"].DefaultValue = 0;
+            Table.Columns["amount_penalties"].DefaultValue = 0;
         }
 
         protected override void ConfigureRelations()
@@ -44,7 +45,7 @@ namespace Registry.DataModels.DataModels
         {
             command.CommandText = @"UPDATE claims SET id_account = ?,
                             at_date = ?, start_dept_period = ?, end_dept_period = ?, 
-                            amount_tenancy = ?, amount_dgi = ?, description = ? WHERE id_claim = ?";
+                            amount_tenancy = ?, amount_dgi = ?, amount_penalties = ?, description = ? WHERE id_claim = ?";
             var claim = (Claim)entity;
             command.Parameters.Add(DBConnection.CreateParameter("id_account", claim.IdAccount));
             command.Parameters.Add(DBConnection.CreateParameter("at_date", claim.AtDate));
@@ -52,6 +53,7 @@ namespace Registry.DataModels.DataModels
             command.Parameters.Add(DBConnection.CreateParameter("end_dept_period", claim.EndDeptPeriod));
             command.Parameters.Add(DBConnection.CreateParameter("amount_tenancy", claim.AmountTenancy));
             command.Parameters.Add(DBConnection.CreateParameter("amount_dgi", claim.AmountDgi));
+            command.Parameters.Add(DBConnection.CreateParameter("amount_penalties", claim.AmountDgi));
             command.Parameters.Add(DBConnection.CreateParameter("description", claim.Description));
             command.Parameters.Add(DBConnection.CreateParameter("id_claim", claim.IdClaim));
         }
@@ -60,8 +62,8 @@ namespace Registry.DataModels.DataModels
         {
             command.CommandText = @"INSERT INTO claims
                             (id_account, at_date, start_dept_period, end_dept_period, amount_tenancy, 
-                            amount_dgi,  description)
-                            VALUES (?, ?, ?, ?, ?, ?, ?)";
+                            amount_dgi, amount_penalties,  description)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             var claim = (Claim)entity;
             command.Parameters.Add(DBConnection.CreateParameter("id_account", claim.IdAccount));
             command.Parameters.Add(DBConnection.CreateParameter("at_date", claim.AtDate));
@@ -69,6 +71,7 @@ namespace Registry.DataModels.DataModels
             command.Parameters.Add(DBConnection.CreateParameter("end_dept_period", claim.EndDeptPeriod));
             command.Parameters.Add(DBConnection.CreateParameter("amount_tenancy", claim.AmountTenancy));
             command.Parameters.Add(DBConnection.CreateParameter("amount_dgi", claim.AmountDgi));
+            command.Parameters.Add(DBConnection.CreateParameter("amount_penalties", claim.AmountDgi));
             command.Parameters.Add(DBConnection.CreateParameter("description", claim.Description));
         }
     }

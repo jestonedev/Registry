@@ -90,6 +90,9 @@ namespace Registry.Viewport
                 case "amount_dgi":
                     e.Value = row["amount_dgi"];
                     break;
+                case "amount_penalties":
+                    e.Value = row["amount_penalties"];
+                    break;
                 case "at_date":
                     e.Value = row["at_date"] == DBNull.Value ? "" :
                         ((DateTime)row["at_date"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);

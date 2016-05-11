@@ -84,6 +84,8 @@ namespace Registry.Viewport
             numericUpDownAmountDGI.DataBindings.Add("Value", GeneralBindingSource, "amount_dgi", true, DataSourceUpdateMode.Never, 0);
             numericUpDownAmountTenancy.DataBindings.Clear();
             numericUpDownAmountTenancy.DataBindings.Add("Value", GeneralBindingSource, "amount_tenancy", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownAmountPenalties.DataBindings.Clear();
+            numericUpDownAmountPenalties.DataBindings.Add("Value", GeneralBindingSource, "amount_penalties", true, DataSourceUpdateMode.Never, 0);
         }
 
         private void UnbindedCheckBoxesUpdate()
@@ -144,6 +146,7 @@ namespace Registry.Viewport
                 IdAccount = ViewportHelper.ValueOrNull<int>(row, "id_account"),
                 AmountTenancy = ViewportHelper.ValueOrNull<decimal>(row, "amount_tenancy"),
                 AmountDgi = ViewportHelper.ValueOrNull<decimal>(row, "amount_dgi"),
+                AmountPenalties = ViewportHelper.ValueOrNull<decimal>(row, "amount_penalties"),
                 AtDate = ViewportHelper.ValueOrNull<DateTime>(row, "at_date"),
                 StartDeptPeriod = ViewportHelper.ValueOrNull<DateTime>(row, "start_dept_period"),
                 EndDeptPeriod = ViewportHelper.ValueOrNull<DateTime>(row, "end_dept_period"),
@@ -162,6 +165,7 @@ namespace Registry.Viewport
             claim.IdAccount = _idAccount;
             claim.AmountTenancy = numericUpDownAmountTenancy.Value;
             claim.AmountDgi = numericUpDownAmountDGI.Value;
+            claim.AmountPenalties = numericUpDownAmountPenalties.Value;
             claim.AtDate = ViewportHelper.ValueOrNull(dateTimePickerAtDate);
             claim.StartDeptPeriod = ViewportHelper.ValueOrNull(dateTimePickerStartDeptPeriod);
             claim.EndDeptPeriod = ViewportHelper.ValueOrNull(dateTimePickerEndDeptPeriod);
@@ -172,6 +176,7 @@ namespace Registry.Viewport
         private void ViewportFromClaim(Claim claim)
         {
             numericUpDownAmountDGI.Value = ViewportHelper.ValueOrDefault(claim.AmountDgi);
+            numericUpDownAmountPenalties.Value = ViewportHelper.ValueOrDefault(claim.AmountPenalties);
             numericUpDownAmountTenancy.Value = ViewportHelper.ValueOrDefault(claim.AmountTenancy);
             dateTimePickerAtDate.Value = ViewportHelper.ValueOrDefault(claim.AtDate);
             dateTimePickerStartDeptPeriod.Value = ViewportHelper.ValueOrDefault(claim.StartDeptPeriod);
@@ -191,6 +196,7 @@ namespace Registry.Viewport
             row["end_dept_period"] = ViewportHelper.ValueOrDBNull(claim.EndDeptPeriod);
             row["amount_tenancy"] = ViewportHelper.ValueOrDBNull(claim.AmountTenancy);
             row["amount_dgi"] = ViewportHelper.ValueOrDBNull(claim.AmountDgi);
+            row["amount_penalties"] = ViewportHelper.ValueOrDBNull(claim.AmountPenalties);
             row["description"] = ViewportHelper.ValueOrDBNull(claim.Description);
             row.EndEdit();
         }
@@ -281,6 +287,7 @@ namespace Registry.Viewport
             {
                 numericUpDownAmountTenancy.Value = ViewportHelper.ValueOrDefault((decimal?)ParentRow["balance_output_tenancy"]);
                 numericUpDownAmountDGI.Value = ViewportHelper.ValueOrDefault((decimal?)ParentRow["balance_output_dgi"]);
+                numericUpDownAmountPenalties.Value = ViewportHelper.ValueOrDefault((decimal?)ParentRow["balance_output_penalties"]);
             }
             is_editable = true;
             dataGridViewClaims.Enabled = false;
@@ -372,7 +379,8 @@ namespace Registry.Viewport
                     select new
                     {
                         BalanceOutputTenancy = row.Field<decimal>("balance_output_tenancy"),
-                        BalanceOutputDgi = row.Field<decimal>("balance_output_dgi")
+                        BalanceOutputDgi = row.Field<decimal>("balance_output_dgi"),
+                        BalanceOutputPenalties = row.Field<decimal>("balance_output_penalties")
                     }).ToList();
                 if (!balanceInfoList.Any())
                 {
@@ -384,6 +392,7 @@ namespace Registry.Viewport
                     var balanceInfo = balanceInfoList.First();
                     claim.AmountTenancy = balanceInfo.BalanceOutputTenancy;
                     claim.AmountDgi = balanceInfo.BalanceOutputDgi;
+                    claim.AmountPenalties = balanceInfo.BalanceOutputPenalties;
                 }
             }
             switch (viewportState)
@@ -878,13 +887,19 @@ namespace Registry.Viewport
             NumericUpDownAmountTotalChange();
         }
 
+        private void numericUpDownAmountPenalties_ValueChanged(object sender, EventArgs e)
+        {
+            NumericUpDownAmountTotalChange();
+        }
+
         private void NumericUpDownAmountTotalChange()
         {
             numericUpDownAmountTotal.Minimum = decimal.MinValue;
             numericUpDownAmountTotal.Maximum = decimal.MaxValue;
             numericUpDownAmountTotal.Value =
                 numericUpDownAmountTotal.Minimum =
-                    numericUpDownAmountTotal.Maximum = numericUpDownAmountDGI.Value + numericUpDownAmountTenancy.Value;
+                    numericUpDownAmountTotal.Maximum = numericUpDownAmountDGI.Value + numericUpDownAmountTenancy.Value +
+                    numericUpDownAmountPenalties.Value;
         }
     }
 }
