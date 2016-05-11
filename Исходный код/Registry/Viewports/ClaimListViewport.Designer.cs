@@ -76,6 +76,7 @@ namespace Registry.Viewport
             this.end_dept_period = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.amount_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel15.SuspendLayout();
             this.groupBox34.SuspendLayout();
             this.tableLayoutPanel16.SuspendLayout();
@@ -409,7 +410,8 @@ namespace Registry.Viewport
             this.start_dept_period,
             this.end_dept_period,
             this.amount_tenancy,
-            this.amount_dgi});
+            this.amount_dgi,
+            this.amount_penalties});
             this.dataGridViewClaims.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridViewClaims.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dataGridViewClaims.Location = new System.Drawing.Point(3, 174);
@@ -522,6 +524,14 @@ namespace Registry.Viewport
             this.amount_dgi.ReadOnly = true;
             this.amount_dgi.Width = 110;
             // 
+            // amount_penalties
+            // 
+            this.amount_penalties.HeaderText = "Сумма долга пени";
+            this.amount_penalties.MinimumWidth = 110;
+            this.amount_penalties.Name = "amount_penalties";
+            this.amount_penalties.ReadOnly = true;
+            this.amount_penalties.Width = 110;
+            // 
             // ClaimListViewport
             // 
             this.AutoScroll = true;
@@ -551,6 +561,10 @@ namespace Registry.Viewport
         }
         private TextBox textBoxAccount;
         private Button buttonShowAttachments;
+        private NumericUpDown numericUpDownAmountTotal;
+        private Label label1;
+        private NumericUpDown numericUpDownAmountPenalties;
+        private Label label2;
         private DataGridViewTextBoxColumn id_claim;
         private DataGridViewTextBoxColumn account;
         private DataGridViewTextBoxColumn raw_address;
@@ -562,9 +576,6 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn end_dept_period;
         private DataGridViewTextBoxColumn amount_tenancy;
         private DataGridViewTextBoxColumn amount_dgi;
-        private NumericUpDown numericUpDownAmountTotal;
-        private Label label1;
-        private NumericUpDown numericUpDownAmountPenalties;
-        private Label label2;
+        private DataGridViewTextBoxColumn amount_penalties;
     }
 }
