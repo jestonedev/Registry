@@ -44,7 +44,7 @@ namespace Registry.DataModels.DataModels
             Table.Columns["canalization"].DefaultValue = true;
             Table.Columns["electricity"].DefaultValue = true;
             Table.Columns["radio_network"].DefaultValue = false;
-            Table.Columns["id_heating_type"].DefaultValue = DBNull.Value;
+            Table.Columns["id_heating_type"].DefaultValue = 4;
         }
 
         protected override void ConfigureRelations()
