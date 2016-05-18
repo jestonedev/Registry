@@ -95,7 +95,7 @@ namespace Registry.Reporting
             foreach (var argument in arguments)
                 argumentsString += String.Format(CultureInfo.InvariantCulture, "{0}=\"{1}\" ", 
                     argument.Key.Replace("\"", "\\\""), 
-                    argument.Value.Replace("\"", "\\\""));
+                    argument.Value == null ? "" : argument.Value.Replace("\"", "\\\""));
             return argumentsString; ;
         }
 

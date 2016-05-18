@@ -30,6 +30,7 @@ namespace Registry.Reporting.TenancyReporters
                     arguments.Add("registration_date_to", tosForm.RegistrationDateTo.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
                     arguments.Add("order_date_from", tosForm.OrderDateFrom.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
                     arguments.Add("main_text", tosForm.MainText);
+                    arguments.Add("report_type", tosForm.MainText == null ? "1" : "0");
                     arguments.Add("show_address", tosForm.AddressFilter == "(1=1)" ? "0" : "1");
                     arguments.Add("id_street", tosForm.IdStreet.Trim());
                     arguments.Add("house", tosForm.House.Trim());
