@@ -55,6 +55,7 @@
             this.checkBoxEnableAddress = new System.Windows.Forms.CheckBox();
             this.checkBoxCheckanovskiy = new System.Windows.Forms.CheckBox();
             this.checkBoxResettle2013to2017retransfer = new System.Windows.Forms.CheckBox();
+            this.checkBoxOrphans = new System.Windows.Forms.CheckBox();
             this.groupBoxAddress.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -63,7 +64,7 @@
             this.vButtonOk.AllowAnimations = true;
             this.vButtonOk.BackColor = System.Drawing.Color.Transparent;
             this.vButtonOk.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.vButtonOk.Location = new System.Drawing.Point(45, 493);
+            this.vButtonOk.Location = new System.Drawing.Point(45, 520);
             this.vButtonOk.Name = "vButtonOk";
             this.vButtonOk.RoundedCornersMask = ((byte)(15));
             this.vButtonOk.Size = new System.Drawing.Size(117, 35);
@@ -77,7 +78,7 @@
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(180, 493);
+            this.vButtonCancel.Location = new System.Drawing.Point(180, 520);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(117, 35);
@@ -221,7 +222,7 @@
             this.checkBoxResettle2013to2017freeLists.TabIndex = 10;
             this.checkBoxResettle2013to2017freeLists.Text = "Переселение 2013-2017 (по сводным спискам)";
             this.checkBoxResettle2013to2017freeLists.UseVisualStyleBackColor = true;
-            this.checkBoxResettle2013to2017freeLists.CheckStateChanged += new System.EventHandler(this.checkBoxResettle2013to2017freeLists_CheckedChanged);
+            this.checkBoxResettle2013to2017freeLists.CheckedChanged += new System.EventHandler(this.checkBoxResettle2013to2017freeLists_CheckedChanged);
             // 
             // textBoxHouse
             // 
@@ -293,7 +294,7 @@
             this.checkBoxCheckanovskiy.TabIndex = 12;
             this.checkBoxCheckanovskiy.Text = "Чекановский (по делу № 2-2355/2011)";
             this.checkBoxCheckanovskiy.UseVisualStyleBackColor = true;
-            this.checkBoxCheckanovskiy.CheckStateChanged += new System.EventHandler(this.checkBoxCheckanovskiy_CheckedChanged);
+            this.checkBoxCheckanovskiy.CheckedChanged += new System.EventHandler(this.checkBoxCheckanovskiy_CheckedChanged);
             // 
             // checkBoxResettle2013to2017retransfer
             // 
@@ -306,12 +307,24 @@
             this.checkBoxResettle2013to2017retransfer.UseVisualStyleBackColor = true;
             this.checkBoxResettle2013to2017retransfer.CheckedChanged += new System.EventHandler(this.checkBoxResettle2013to2017retransfer_CheckedChanged);
             // 
+            // checkBoxOrphans
+            // 
+            this.checkBoxOrphans.AutoSize = true;
+            this.checkBoxOrphans.Location = new System.Drawing.Point(19, 493);
+            this.checkBoxOrphans.Name = "checkBoxOrphans";
+            this.checkBoxOrphans.Size = new System.Drawing.Size(103, 19);
+            this.checkBoxOrphans.TabIndex = 74;
+            this.checkBoxOrphans.Text = "Дети-сироты";
+            this.checkBoxOrphans.UseVisualStyleBackColor = true;
+            this.checkBoxOrphans.CheckedChanged += new System.EventHandler(this.checkBoxOrphans_CheckedChanged);
+            // 
             // TenancyOrderSettingsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(338, 533);
+            this.ClientSize = new System.Drawing.Size(338, 560);
+            this.Controls.Add(this.checkBoxOrphans);
             this.Controls.Add(this.checkBoxResettle2013to2017retransfer);
             this.Controls.Add(this.checkBoxCheckanovskiy);
             this.Controls.Add(this.checkBoxEnableAddress);
@@ -377,5 +390,6 @@
         private System.Windows.Forms.CheckBox checkBoxEnableAddress;
         private System.Windows.Forms.CheckBox checkBoxCheckanovskiy;
         private System.Windows.Forms.CheckBox checkBoxResettle2013to2017retransfer;
+        private System.Windows.Forms.CheckBox checkBoxOrphans;
     }
 }

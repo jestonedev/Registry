@@ -82,6 +82,10 @@ namespace Registry.Reporting
                 {
                     return null;
                 }
+                if (checkBoxOrphans.Checked)
+                {
+                    return "На основании служебной записки Управления социальной политики администрации города Братска от $protocol_date$ № $protocol_num$, в соответствии с Порядком предоставления жилых помещений жилищного фонда социального использования муниципального образования города Братска, утвержденным постановлением мэра города Братска от 29.06.2010 № 1356, руководствуясь статьями 45, 67 Устава муниципального образования города Братска, ";
+                }
                 if (checkBoxCheckanovskiy.Checked)
                 {
                     return "Во исполнение решения Братского городского суда Иркутской области от 02.09.2011 по гражданскому делу № 2-2355/2011 по иску Западно-Байкальского межрайонного прокурора в защиту интересов Российской Федерации, неопределенного круга лиц к Открытому акционерному обществу «РУСАЛ Братский алюминиевый завод» (далее - ОАО «РУСАЛ Братск»), администрации муниципального образования города Братска об обязании переселить жителей жилого района Чекановский города Братска в жилье, соответствующее нормам действующего законодательства, за пределы санитарно-защитной зоны ОАО «РУСАЛ Братск», руководствуясь статьями 45, 67 Устава муниципального образования города Братска, ";
@@ -215,43 +219,54 @@ namespace Registry.Reporting
 
         private void checkBoxCheckanovskiy_CheckedChanged(object sender, EventArgs e)
         {
-            var state = checkBoxCheckanovskiy.Checked;
-            checkBoxResettle2013to2017freeLists.Checked = false;
-            checkBoxResettle2013to2017retransfer.Checked = false;
-            checkBoxCheckanovskiy.Checked = state;
-            UpdateForm();
+            UpdateForm((CheckBox)sender);
         }
 
         private void checkBoxResettle2013to2017freeLists_CheckedChanged(object sender, EventArgs e)
         {
-            var state = checkBoxResettle2013to2017freeLists.Checked;
-            checkBoxCheckanovskiy.Checked = false;
-            checkBoxResettle2013to2017retransfer.Checked = false;
-            checkBoxResettle2013to2017freeLists.Checked = state;
-            UpdateForm();
+            UpdateForm((CheckBox)sender);
         }
 
         private void checkBoxResettle2013to2017retransfer_CheckedChanged(object sender, EventArgs e)
         {
-
-            var state = checkBoxResettle2013to2017retransfer.Checked;
-            checkBoxResettle2013to2017freeLists.Checked = false;
-            checkBoxCheckanovskiy.Checked = false;
-            checkBoxResettle2013to2017retransfer.Checked = state;
-            UpdateForm();
+            UpdateForm((CheckBox)sender);
         }
 
-        private void UpdateForm()
+        private void checkBoxOrphans_CheckedChanged(object sender, EventArgs e)
         {
-            if (!checkBoxResettle2013to2017retransfer.Checked && !checkBoxResettle2013to2017freeLists.Checked)
-            {
-                label1.Text = @"Дата протокола";
-                label2.Text = @"Номер протокола";
-            }
-            else
+            UpdateForm((CheckBox)sender);
+        }
+
+        private void UpdateForm(CheckBox checkbox)
+        {
+            checkBoxResettle2013to2017freeLists.CheckedChanged -= checkBoxResettle2013to2017freeLists_CheckedChanged;
+            checkBoxResettle2013to2017retransfer.CheckedChanged -= checkBoxResettle2013to2017retransfer_CheckedChanged;
+            checkBoxCheckanovskiy.CheckedChanged -= checkBoxCheckanovskiy_CheckedChanged;
+            checkBoxOrphans.CheckedChanged -= checkBoxOrphans_CheckedChanged;
+            var state = checkbox.Checked;
+            checkBoxResettle2013to2017freeLists.Checked = false;
+            checkBoxResettle2013to2017retransfer.Checked = false;
+            checkBoxCheckanovskiy.Checked = false;
+            checkBoxOrphans.Checked = false;
+            checkbox.Checked = state;
+            checkBoxResettle2013to2017freeLists.CheckedChanged += checkBoxResettle2013to2017freeLists_CheckedChanged;
+            checkBoxResettle2013to2017retransfer.CheckedChanged += checkBoxResettle2013to2017retransfer_CheckedChanged;
+            checkBoxCheckanovskiy.CheckedChanged += checkBoxCheckanovskiy_CheckedChanged;
+            checkBoxOrphans.CheckedChanged += checkBoxOrphans_CheckedChanged;
+            if (checkBoxResettle2013to2017retransfer.Checked || checkBoxResettle2013to2017freeLists.Checked)
             {
                 label1.Text = @"От указанной даты";
                 label2.Text = @"Руководствуясь распоряжением номер";
+            } else
+            if (checkBoxOrphans.Checked)
+            {
+                label1.Text = @"От указанной даты";
+                label2.Text = @"На основании служебной записки номер";
+            }
+            else
+            {
+                label1.Text = @"Дата протокола";
+                label2.Text = @"Номер протокола";
             }
         }
     }
