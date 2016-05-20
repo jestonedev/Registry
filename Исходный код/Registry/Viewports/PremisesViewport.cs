@@ -337,6 +337,7 @@ namespace Registry.Viewport
             comboBoxStreet.ValueMember = "id_street";
             comboBoxStreet.DisplayMember = "street_name";
             comboBoxHouse.DataSource = v_buildings;
+            v_buildings.Sort = "id_building DESC";
             comboBoxHouse.ValueMember = "id_building";
             comboBoxHouse.DisplayMember = "house";
             comboBoxPremisesKind.DataSource = v_premises_kinds;
