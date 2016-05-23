@@ -543,7 +543,7 @@ namespace Registry.Viewport
             if (index != -1)
                 comboBoxExecutor.SelectedValue = ((DataRowView)_vExecutors[index])["id_executor"];
             if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
-                textBoxAgreementContent.Text = string.Format(CultureInfo.InvariantCulture, "1.1 По настоящему Соглашению Стороны по договору № {0} от {1} договорились:",
+                textBoxAgreementContent.Text = string.Format(CultureInfo.InvariantCulture, "1.1. По настоящему Соглашению Стороны по договору № {0} от {1} договорились:",
                     ParentRow["registration_num"],
                     ParentRow["registration_date"] != DBNull.Value ?
                         Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "");
@@ -734,7 +734,7 @@ namespace Registry.Viewport
             textBoxAgreementContent.Text =
                 string.Format(CultureInfo.InvariantCulture,
                     "1.1. По настоящему Соглашению Стороны договорились расторгнуть  с {3} договор № {0} от {1} {4} найма (далее - договор) жилого помещения по {2}.\r\n" +
-                    "1.2.Обязательства, возникшие из указанного договора до момента расторжения, подлежат исполнению в соответствии с указанным договором. Стороны не имеют взаимных претензий по исполнению условий договора № {0} от {1}.",
+                    "1.2. Обязательства, возникшие из указанного договора до момента расторжения, подлежат исполнению в соответствии с указанным договором. Стороны не имеют взаимных претензий по исполнению условий договора № {0} от {1}.",
                     ParentRow["registration_num"],
                     ParentRow["registration_date"] != DBNull.Value ?
                         Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "",
@@ -1016,7 +1016,7 @@ namespace Registry.Viewport
                 return;
             }
             if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
-                textBoxAgreementContent.Text = string.Format(CultureInfo.InvariantCulture, "1.1 По настоящему Соглашению Стороны по договору № {0} от {1}, ",
+                textBoxAgreementContent.Text = string.Format(CultureInfo.InvariantCulture, "1.1. По настоящему Соглашению Стороны по договору № {0} от {1}, ",
                     ParentRow["registration_num"],
                     ParentRow["registration_date"] != DBNull.Value ?
                         Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : ""
