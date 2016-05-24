@@ -848,7 +848,7 @@ namespace Registry.Viewport
                           ELSE ts.base_month
                           END AS mon, family, name, father, birth, c AS reg_date
                         FROM dbo.t_bks ts
-                        WHERE ts.street = @street AND house = @house AND flat = @flat) v
+                        WHERE ts.street = @street AND house = @house AND flat IN (@flat, 'ком.'+@flat, 'ком'+@flat, 'ком. '+@flat)) v
                         WHERE mon = (
                           SELECT 
                           MAX(CASE SUBSTRING(ts.base_month,1,3) 
@@ -867,7 +867,7 @@ namespace Registry.Viewport
                           ELSE ts.base_month
                           END) AS mon
                           FROM dbo.t_bks ts
-                          WHERE ts.street = @street AND house = @house AND flat = @flat
+                          WHERE ts.street = @street AND house = @house AND flat IN (@flat, 'ком.'+@flat, 'ком'+@flat, 'ком. '+@flat)
                           )
                         ORDER BY mon;"
                     };
