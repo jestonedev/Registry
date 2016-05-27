@@ -390,7 +390,7 @@ namespace Registry.Viewport
             // 
             this.dateTimePickerStateDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerStateDate.Location = new System.Drawing.Point(175, 219);
+            this.dateTimePickerStateDate.Location = new System.Drawing.Point(175, 229);
             this.dateTimePickerStateDate.Name = "dateTimePickerStateDate";
             this.dateTimePickerStateDate.ShowCheckBox = true;
             this.dateTimePickerStateDate.Size = new System.Drawing.Size(305, 21);

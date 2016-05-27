@@ -78,6 +78,7 @@ namespace Registry.Viewport
             // 
             // id_premises
             // 
+            this.id_premises.Frozen = true;
             this.id_premises.HeaderText = "№ по реестру";
             this.id_premises.MinimumWidth = 60;
             this.id_premises.Name = "id_premises";
@@ -86,6 +87,7 @@ namespace Registry.Viewport
             // 
             // id_street
             // 
+            this.id_street.Frozen = true;
             this.id_street.HeaderText = "Адрес";
             this.id_street.MinimumWidth = 250;
             this.id_street.Name = "id_street";
@@ -95,6 +97,7 @@ namespace Registry.Viewport
             // 
             // house
             // 
+            this.house.Frozen = true;
             this.house.HeaderText = "Дом";
             this.house.MinimumWidth = 50;
             this.house.Name = "house";
@@ -104,6 +107,7 @@ namespace Registry.Viewport
             // 
             // premises_num
             // 
+            this.premises_num.Frozen = true;
             this.premises_num.HeaderText = "Пом.";
             this.premises_num.MinimumWidth = 50;
             this.premises_num.Name = "premises_num";
