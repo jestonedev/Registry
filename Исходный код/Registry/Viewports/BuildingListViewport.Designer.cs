@@ -25,6 +25,7 @@ namespace Registry.Viewport
             this.living_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cadastral_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.startup_year = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.id_structure_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.id_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -54,6 +55,7 @@ namespace Registry.Viewport
             this.living_area,
             this.cadastral_num,
             this.startup_year,
+            this.id_structure_type,
             this.id_state});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
@@ -77,10 +79,10 @@ namespace Registry.Viewport
             // 
             this.id_building.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.id_building.HeaderText = "№ по реестру";
-            this.id_building.MinimumWidth = 70;
+            this.id_building.MinimumWidth = 60;
             this.id_building.Name = "id_building";
             this.id_building.ReadOnly = true;
-            this.id_building.Width = 70;
+            this.id_building.Width = 60;
             // 
             // id_street
             // 
@@ -97,55 +99,65 @@ namespace Registry.Viewport
             // 
             this.house.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.house.HeaderText = "Дом";
-            this.house.MinimumWidth = 100;
+            this.house.MinimumWidth = 50;
             this.house.Name = "house";
             this.house.ReadOnly = true;
+            this.house.Width = 50;
             // 
             // floors
             // 
             this.floors.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.floors.HeaderText = "Этажность";
-            this.floors.MinimumWidth = 100;
+            this.floors.HeaderText = "Этажн.";
+            this.floors.MinimumWidth = 60;
             this.floors.Name = "floors";
             this.floors.ReadOnly = true;
+            this.floors.Width = 60;
             // 
             // living_area
             // 
             this.living_area.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             dataGridViewCellStyle2.Format = "#0.0## м²";
             this.living_area.DefaultCellStyle = dataGridViewCellStyle2;
-            this.living_area.HeaderText = "Жилая площадь";
-            this.living_area.MinimumWidth = 150;
+            this.living_area.HeaderText = "Жил. площадь";
+            this.living_area.MinimumWidth = 70;
             this.living_area.Name = "living_area";
             this.living_area.ReadOnly = true;
-            this.living_area.Width = 150;
+            this.living_area.Width = 70;
             // 
             // cadastral_num
             // 
             this.cadastral_num.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.cadastral_num.HeaderText = "Кадастровый номер";
-            this.cadastral_num.MinimumWidth = 170;
+            this.cadastral_num.MinimumWidth = 120;
             this.cadastral_num.Name = "cadastral_num";
             this.cadastral_num.ReadOnly = true;
-            this.cadastral_num.Width = 170;
+            this.cadastral_num.Width = 120;
             // 
             // startup_year
             // 
             this.startup_year.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.startup_year.HeaderText = "Год ввода в эксплуатацию";
-            this.startup_year.MinimumWidth = 190;
+            this.startup_year.MinimumWidth = 100;
             this.startup_year.Name = "startup_year";
             this.startup_year.ReadOnly = true;
-            this.startup_year.Width = 190;
+            // 
+            // id_structure_type
+            // 
+            this.id_structure_type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.id_structure_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
+            this.id_structure_type.HeaderText = "Тип строения (материал)";
+            this.id_structure_type.MinimumWidth = 100;
+            this.id_structure_type.Name = "id_structure_type";
+            this.id_structure_type.ReadOnly = true;
             // 
             // id_state
             // 
             this.id_state.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.id_state.HeaderText = "Текущее состояние";
-            this.id_state.MinimumWidth = 170;
+            this.id_state.MinimumWidth = 200;
             this.id_state.Name = "id_state";
             this.id_state.ReadOnly = true;
-            this.id_state.Width = 170;
+            this.id_state.Width = 200;
             // 
             // BuildingListViewport
             // 
@@ -169,6 +181,7 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn living_area;
         private DataGridViewTextBoxColumn cadastral_num;
         private DataGridViewTextBoxColumn startup_year;
+        private DataGridViewComboBoxColumn id_structure_type;
         private DataGridViewTextBoxColumn id_state;
     }
 }

@@ -12,155 +12,166 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridView dataGridView;
-        private DataGridViewTextBoxColumn id_process;
-        private DataGridViewTextBoxColumn registration_num;
-        private DataGridViewTextBoxColumn residence_warrant_num;
-        private DataGridViewTextBoxColumn tenant;
-        private DataGridViewTextBoxColumn rent_type;
-        private DataGridViewTextBoxColumn address;
-        private DataGridViewTextBoxColumn registration_date;
-        private DataGridViewTextBoxColumn end_date;
         #endregion Components
 
 
         private void InitializeComponent()
         {
-            var dataGridViewCellStyle1 = new DataGridViewCellStyle();
-            var resources = new ComponentResourceManager(typeof(TenancyListViewport));
-            dataGridView = new DataGridView();
-            id_process = new DataGridViewTextBoxColumn();
-            registration_num = new DataGridViewTextBoxColumn();
-            registration_date = new DataGridViewTextBoxColumn();
-            end_date = new DataGridViewTextBoxColumn();
-            residence_warrant_num = new DataGridViewTextBoxColumn();
-            tenant = new DataGridViewTextBoxColumn();
-            rent_type = new DataGridViewTextBoxColumn();
-            address = new DataGridViewTextBoxColumn();
-            ((ISupportInitialize)(dataGridView)).BeginInit();
-            SuspendLayout();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyListViewport));
+            this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.id_process = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.registration_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.registration_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.end_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.residence_warrant_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.tenant = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rent_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.address = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
+            this.SuspendLayout();
             // 
             // dataGridView
             // 
-            dataGridView.AllowUserToAddRows = false;
-            dataGridView.AllowUserToDeleteRows = false;
-            dataGridView.AllowUserToResizeRows = false;
-            dataGridView.BackgroundColor = Color.White;
-            dataGridView.BorderStyle = BorderStyle.None;
-            dataGridViewCellStyle1.Alignment = DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle1.BackColor = SystemColors.Control;
-            dataGridViewCellStyle1.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            dataGridViewCellStyle1.ForeColor = SystemColors.WindowText;
-            dataGridViewCellStyle1.Padding = new Padding(0, 2, 0, 2);
-            dataGridViewCellStyle1.SelectionBackColor = SystemColors.Highlight;
-            dataGridViewCellStyle1.SelectionForeColor = SystemColors.HighlightText;
-            dataGridViewCellStyle1.WrapMode = DataGridViewTriState.True;
-            dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            dataGridView.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            dataGridView.Columns.AddRange(id_process, registration_num, registration_date, end_date, residence_warrant_num, tenant, rent_type, address);
-            dataGridView.Dock = DockStyle.Fill;
-            dataGridView.EditMode = DataGridViewEditMode.EditProgrammatically;
-            dataGridView.Location = new Point(3, 3);
-            dataGridView.MultiSelect = false;
-            dataGridView.Name = "dataGridView";
-            dataGridView.ReadOnly = true;
-            dataGridView.RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing;
-            dataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            dataGridView.ShowCellToolTips = false;
-            dataGridView.Size = new Size(1166, 255);
-            dataGridView.TabIndex = 0;
-            dataGridView.VirtualMode = true;
-            dataGridView.CellDoubleClick += dataGridView_CellDoubleClick;
-            dataGridView.CellValueNeeded += dataGridView_CellValueNeeded;
-            dataGridView.ColumnHeaderMouseClick += dataGridView_ColumnHeaderMouseClick;
-            dataGridView.SelectionChanged += dataGridView_SelectionChanged;
-            dataGridView.Resize += dataGridView_Resize;
+            this.dataGridView.AllowUserToAddRows = false;
+            this.dataGridView.AllowUserToDeleteRows = false;
+            this.dataGridView.AllowUserToResizeRows = false;
+            this.dataGridView.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridView.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.Padding = new System.Windows.Forms.Padding(0, 2, 0, 2);
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dataGridView.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
+            this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.id_process,
+            this.registration_num,
+            this.registration_date,
+            this.end_date,
+            this.residence_warrant_num,
+            this.tenant,
+            this.rent_type,
+            this.address});
+            this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
+            this.dataGridView.Location = new System.Drawing.Point(3, 3);
+            this.dataGridView.MultiSelect = false;
+            this.dataGridView.Name = "dataGridView";
+            this.dataGridView.ReadOnly = true;
+            this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
+            this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridView.ShowCellToolTips = false;
+            this.dataGridView.Size = new System.Drawing.Size(1166, 255);
+            this.dataGridView.TabIndex = 0;
+            this.dataGridView.VirtualMode = true;
+            this.dataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellDoubleClick);
+            this.dataGridView.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView_CellValueNeeded);
+            this.dataGridView.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_ColumnHeaderMouseClick);
+            this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
+            this.dataGridView.Resize += new System.EventHandler(this.dataGridView_Resize);
             // 
             // id_process
             // 
-            id_process.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            id_process.HeaderText = "№";
-            id_process.MinimumWidth = 100;
-            id_process.Name = "id_process";
-            id_process.ReadOnly = true;
+            this.id_process.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.id_process.HeaderText = "№";
+            this.id_process.MinimumWidth = 60;
+            this.id_process.Name = "id_process";
+            this.id_process.ReadOnly = true;
+            this.id_process.Width = 60;
             // 
             // registration_num
             // 
-            registration_num.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            registration_num.HeaderText = "№ договора";
-            registration_num.MinimumWidth = 130;
-            registration_num.Name = "registration_num";
-            registration_num.ReadOnly = true;
-            registration_num.Width = 130;
-            //
+            this.registration_num.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.registration_num.HeaderText = "№ договора";
+            this.registration_num.MinimumWidth = 80;
+            this.registration_num.Name = "registration_num";
+            this.registration_num.ReadOnly = true;
+            this.registration_num.Width = 80;
+            // 
             // registration_date
-            //
-            registration_date.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            registration_date.HeaderText = "Дата договора";
-            registration_date.MinimumWidth = 100;
-            registration_date.Name = "registration_date";
-            registration_date.ReadOnly = true;
-            registration_date.Width = 100;
-            //
+            // 
+            this.registration_date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.registration_date.HeaderText = "Дата договора";
+            this.registration_date.MinimumWidth = 80;
+            this.registration_date.Name = "registration_date";
+            this.registration_date.ReadOnly = true;
+            this.registration_date.Width = 80;
+            // 
             // end_date
-            //
-            end_date.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            end_date.HeaderText = "Дата окончания договора";
-            end_date.MinimumWidth = 100;
-            end_date.Name = "end_date";
-            end_date.ReadOnly = true;
-            end_date.Width = 100;
+            // 
+            this.end_date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.end_date.HeaderText = "Дата окончания договора";
+            this.end_date.MinimumWidth = 80;
+            this.end_date.Name = "end_date";
+            this.end_date.ReadOnly = true;
+            this.end_date.Width = 80;
             // 
             // residence_warrant_num
             // 
-            residence_warrant_num.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            residence_warrant_num.HeaderText = "№ ордера";
-            residence_warrant_num.MinimumWidth = 130;
-            residence_warrant_num.Name = "residence_warrant_num";
-            residence_warrant_num.ReadOnly = true;
-            residence_warrant_num.Width = 130;
+            this.residence_warrant_num.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.residence_warrant_num.HeaderText = "№ ордера";
+            this.residence_warrant_num.MinimumWidth = 80;
+            this.residence_warrant_num.Name = "residence_warrant_num";
+            this.residence_warrant_num.ReadOnly = true;
+            this.residence_warrant_num.Width = 80;
             // 
             // tenant
             // 
-            tenant.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            tenant.HeaderText = "Наниматель";
-            tenant.MinimumWidth = 250;
-            tenant.Name = "tenant";
-            tenant.ReadOnly = true;
-            tenant.SortMode = DataGridViewColumnSortMode.NotSortable;
-            tenant.Width = 250;
+            this.tenant.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.tenant.HeaderText = "Наниматель";
+            this.tenant.MinimumWidth = 250;
+            this.tenant.Name = "tenant";
+            this.tenant.ReadOnly = true;
+            this.tenant.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.tenant.Width = 250;
             // 
             // rent_type
             // 
-            rent_type.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            rent_type.HeaderText = "Тип найма";
-            rent_type.MinimumWidth = 150;
-            rent_type.Name = "rent_type";
-            rent_type.ReadOnly = true;
-            rent_type.SortMode = DataGridViewColumnSortMode.NotSortable;
-            rent_type.Width = 150;
+            this.rent_type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.rent_type.HeaderText = "Тип найма";
+            this.rent_type.MinimumWidth = 140;
+            this.rent_type.Name = "rent_type";
+            this.rent_type.ReadOnly = true;
+            this.rent_type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.rent_type.Width = 140;
             // 
             // address
             // 
-            address.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            address.HeaderText = "Нанимаемое жилье";
-            address.MinimumWidth = 500;
-            address.Name = "address";
-            address.ReadOnly = true;
-            address.SortMode = DataGridViewColumnSortMode.NotSortable;
-            address.Width = 500;
+            this.address.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.address.HeaderText = "Нанимаемое жилье";
+            this.address.MinimumWidth = 400;
+            this.address.Name = "address";
+            this.address.ReadOnly = true;
+            this.address.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.address.Width = 400;
             // 
             // TenancyListViewport
             // 
-            BackColor = Color.White;
-            ClientSize = new Size(1172, 261);
-            Controls.Add(dataGridView);
-            Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point, 204);
-            Icon = ((Icon)(resources.GetObject("$this.Icon")));
-            Name = "TenancyListViewport";
-            Padding = new Padding(3);
-            Text = "Процессы найма жилья";
-            ((ISupportInitialize)(dataGridView)).EndInit();
-            ResumeLayout(false);
+            this.BackColor = System.Drawing.Color.White;
+            this.ClientSize = new System.Drawing.Size(1172, 261);
+            this.Controls.Add(this.dataGridView);
+            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Name = "TenancyListViewport";
+            this.Padding = new System.Windows.Forms.Padding(3);
+            this.Text = "Процессы найма жилья";
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).EndInit();
+            this.ResumeLayout(false);
+
         }
+
+        private DataGridViewTextBoxColumn id_process;
+        private DataGridViewTextBoxColumn registration_num;
+        private DataGridViewTextBoxColumn registration_date;
+        private DataGridViewTextBoxColumn end_date;
+        private DataGridViewTextBoxColumn residence_warrant_num;
+        private DataGridViewTextBoxColumn tenant;
+        private DataGridViewTextBoxColumn rent_type;
+        private DataGridViewTextBoxColumn address;
     }
 }

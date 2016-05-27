@@ -79,10 +79,10 @@ namespace Registry.Viewport
             // id_premises
             // 
             this.id_premises.HeaderText = "№ по реестру";
-            this.id_premises.MinimumWidth = 70;
+            this.id_premises.MinimumWidth = 60;
             this.id_premises.Name = "id_premises";
             this.id_premises.ReadOnly = true;
-            this.id_premises.Width = 70;
+            this.id_premises.Width = 60;
             // 
             // id_street
             // 
@@ -104,31 +104,31 @@ namespace Registry.Viewport
             // 
             // premises_num
             // 
-            this.premises_num.HeaderText = "Помещение";
-            this.premises_num.MinimumWidth = 85;
+            this.premises_num.HeaderText = "Пом.";
+            this.premises_num.MinimumWidth = 50;
             this.premises_num.Name = "premises_num";
             this.premises_num.ReadOnly = true;
-            this.premises_num.Width = 85;
+            this.premises_num.Width = 50;
             // 
             // id_premises_type
             // 
             this.id_premises_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
             this.id_premises_type.HeaderText = "Тип помещения";
-            this.id_premises_type.MinimumWidth = 125;
+            this.id_premises_type.MinimumWidth = 90;
             this.id_premises_type.Name = "id_premises_type";
             this.id_premises_type.ReadOnly = true;
             this.id_premises_type.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
-            this.id_premises_type.Width = 125;
+            this.id_premises_type.Width = 90;
             // 
             // total_area
             // 
             dataGridViewCellStyle2.Format = "#0.0## м²";
             this.total_area.DefaultCellStyle = dataGridViewCellStyle2;
             this.total_area.HeaderText = "Общая площадь";
-            this.total_area.MinimumWidth = 125;
+            this.total_area.MinimumWidth = 70;
             this.total_area.Name = "total_area";
             this.total_area.ReadOnly = true;
-            this.total_area.Width = 125;
+            this.total_area.Width = 70;
             // 
             // id_state
             // 
@@ -141,11 +141,11 @@ namespace Registry.Viewport
             // current_fund
             // 
             this.current_fund.HeaderText = "Текущий фонд";
-            this.current_fund.MinimumWidth = 125;
+            this.current_fund.MinimumWidth = 140;
             this.current_fund.Name = "current_fund";
             this.current_fund.ReadOnly = true;
             this.current_fund.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
-            this.current_fund.Width = 125;
+            this.current_fund.Width = 140;
             // 
             // PremisesListViewport
             // 
