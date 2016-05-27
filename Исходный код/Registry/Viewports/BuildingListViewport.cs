@@ -387,6 +387,7 @@ namespace Registry.Viewport
                 case "startup_year":
                 case "id_premises_type":
                 case "id_structure_type":
+                case "BTI_rooms":
                     e.Value = row[dataGridView.Columns[e.ColumnIndex].Name];
                     break;
                 case "id_state":

@@ -213,6 +213,8 @@ namespace Registry.Viewport
             comboBoxStreet.DataBindings.Clear();
             comboBoxStreet.DataBindings.Add("SelectedValue", GeneralBindingSource, "id_street", true, DataSourceUpdateMode.Never, DBNull.Value);
 
+            textBoxRoomsBTI.DataBindings.Clear();
+            textBoxRoomsBTI.DataBindings.Add("Text", GeneralBindingSource, "BTI_rooms", true, DataSourceUpdateMode.Never, "");
             textBoxHouse.DataBindings.Clear();
             textBoxHouse.DataBindings.Add("Text", GeneralBindingSource, "house", true, DataSourceUpdateMode.Never, "");
             numericUpDownFloors.DataBindings.Clear();

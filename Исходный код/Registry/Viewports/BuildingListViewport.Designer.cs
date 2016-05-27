@@ -27,6 +27,7 @@ namespace Registry.Viewport
             this.startup_year = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_structure_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.id_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.BTI_rooms = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -56,7 +57,8 @@ namespace Registry.Viewport
             this.cadastral_num,
             this.startup_year,
             this.id_structure_type,
-            this.id_state});
+            this.id_state,
+            this.BTI_rooms});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dataGridView.Location = new System.Drawing.Point(3, 3);
@@ -158,6 +160,14 @@ namespace Registry.Viewport
             this.id_state.Name = "id_state";
             this.id_state.ReadOnly = true;
             this.id_state.Width = 200;
+            //
+            //BTI_rooms
+            //
+            this.BTI_rooms.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            this.BTI_rooms.HeaderText = "Приватиз. кв. по данным БТИ";
+            this.BTI_rooms.MinimumWidth = 200;
+            this.BTI_rooms.ReadOnly = true;
+            this.BTI_rooms.Name = "BTI_rooms";
             // 
             // BuildingListViewport
             // 
@@ -183,5 +193,6 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn startup_year;
         private DataGridViewComboBoxColumn id_structure_type;
         private DataGridViewTextBoxColumn id_state;
+        private DataGridViewTextBoxColumn BTI_rooms;
     }
 }
