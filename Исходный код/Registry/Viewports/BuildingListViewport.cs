@@ -25,6 +25,7 @@ namespace Registry.Viewport
 
         #region Views
         private BindingSource _vKladr;
+        private BindingSource _vStructureType;
         #endregion
 
         //Forms
@@ -79,6 +80,16 @@ namespace Registry.Viewport
             id_street.DataSource = _vKladr;
             id_street.ValueMember = "id_street";
             id_street.DisplayMember = "street_name";
+
+            _vStructureType = new BindingSource
+            {
+                DataMember = "structure_types",
+                DataSource = ds
+            };
+
+            id_structure_type.DataSource = _vStructureType;
+            id_structure_type.ValueMember = "id_structure_type";
+            id_structure_type.DisplayMember = "structure_type";
 
             GeneralDataModel.Select().RowChanged += BuildingListViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted += BuildingListViewport_RowDeleted;
@@ -374,6 +385,8 @@ namespace Registry.Viewport
                 case "living_area":
                 case "cadastral_num":
                 case "startup_year":
+                case "id_premises_type":
+                case "id_structure_type":
                     e.Value = row[dataGridView.Columns[e.ColumnIndex].Name];
                     break;
                 case "id_state":
@@ -388,7 +401,7 @@ namespace Registry.Viewport
         {
             var idStreetColumn = dataGridView.Columns["id_street"];
             if (idStreetColumn == null) return;
-            if (dataGridView.Size.Width > 1100)
+            if (dataGridView.Size.Width > 1010)
             {
                 if (idStreetColumn.AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     idStreetColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;

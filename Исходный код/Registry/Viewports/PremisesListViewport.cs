@@ -84,35 +84,35 @@ namespace Registry.Viewport
                 {
                     Name = "registration_num",
                     HeaderText = @"№ договора найма",
-                    Width = 150,
+                    Width = 80,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
                 var registrationDateColumn = new DataGridViewTextBoxColumn
                 {
                     Name = "registration_date",
                     HeaderText = @"Дата договора найма",
-                    Width = 150,
+                    Width = 80,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
                 var endDateColumn = new DataGridViewTextBoxColumn
                 {
                     Name = "end_date",
                     HeaderText = @"Дата окончания договора",
-                    Width = 170,
+                    Width = 80,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
                 var residenceWarrantNumColumn = new DataGridViewTextBoxColumn
                 {
                     Name = "residence_warrant_num",
                     HeaderText = @"№ ордера найма",
-                    Width = 150,
+                    Width = 80,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
                 var residenceWarrantDateColumn = new DataGridViewTextBoxColumn
                 {
                     Name = "residence_warrant_date",
                     HeaderText = @"Дата ордера найма",
-                    Width = 150,
+                    Width = 80,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
                 var tenantColumn = new DataGridViewTextBoxColumn
@@ -595,7 +595,8 @@ namespace Registry.Viewport
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
-            if (dataGridView.Size.Width > 960)
+            if ((AccessControl.HasPrivelege(Priveleges.TenancyRead) && dataGridView.Size.Width > 1495) || 
+               (!AccessControl.HasPrivelege(Priveleges.TenancyRead) && dataGridView.Size.Width > 845))
             {
                 if (dataGridView.Columns["id_street"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     dataGridView.Columns["id_street"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;

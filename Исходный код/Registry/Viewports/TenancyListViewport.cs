@@ -442,16 +442,6 @@ namespace Registry.Viewport
             return true;
         }
 
-        private Dictionary<string, string> RegistryExcerptPremiseReportArguments()
-        {
-            var arguments = new Dictionary<string, string>
-            {
-                {"ids", ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_premises"].ToString()},
-                {"excerpt_type", "1"}
-            };
-            return arguments;
-        }
-
         protected override void OnClosing(CancelEventArgs e)
         {
             GeneralDataModel.Select().RowChanged -= TenancyListViewport_RowChanged;
@@ -588,7 +578,7 @@ namespace Registry.Viewport
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
-            if (dataGridView.Size.Width > 1260)
+            if (dataGridView.Size.Width > 1170)
             {
                 if (dataGridView.Columns["address"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     dataGridView.Columns["address"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
