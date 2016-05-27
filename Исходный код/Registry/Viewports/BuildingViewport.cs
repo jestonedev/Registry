@@ -451,7 +451,8 @@ namespace Registry.Viewport
                 Canalization = checkBoxCanalization.Checked,
                 Electricity = checkBoxElectricity.Checked,
                 RadioNetwork = checkBoxRadioNetwork.Checked,
-                IdHeatingType =ViewportHelper.ValueOrNull<int>(comboBoxHeatingType)
+                IdHeatingType =ViewportHelper.ValueOrNull<int>(comboBoxHeatingType),
+                RoomsBTI = ViewportHelper.ValueOrNull(textBoxRoomsBTI)
             };
             return building;
         }
@@ -487,8 +488,9 @@ namespace Registry.Viewport
                 HotWaterSupply = ViewportHelper.ValueOrNull<bool>(row, "hot_water_supply"),
                 Canalization = ViewportHelper.ValueOrNull<bool>(row, "canalization"),
                 Electricity = ViewportHelper.ValueOrNull<bool>(row, "electricity"),
-                RadioNetwork = ViewportHelper.ValueOrNull<bool>(row, "radio_network"),
-                IdHeatingType = ViewportHelper.ValueOrNull<int>(row, "id_heating_type")
+                RadioNetwork = ViewportHelper.ValueOrNull<bool>(row, "radio_network"),                
+                IdHeatingType = ViewportHelper.ValueOrNull<int>(row, "id_heating_type"),
+                RoomsBTI = ViewportHelper.ValueOrNull(row,"BTI_rooms")
             };
             return building;
         }
@@ -521,6 +523,7 @@ namespace Registry.Viewport
             checkBoxElectricity.Checked = ViewportHelper.ValueOrDefault(building.Electricity);
             checkBoxRadioNetwork.Checked = ViewportHelper.ValueOrDefault(building.RadioNetwork);
             comboBoxHeatingType.SelectedValue = ViewportHelper.ValueOrDefault(building.IdHeatingType);
+            textBoxRoomsBTI.Text = building.RoomsBTI;
         }
 
         private static void FillRowFromBuilding(Building building, DataRowView row)
@@ -553,7 +556,8 @@ namespace Registry.Viewport
             row["canalization"] = ViewportHelper.ValueOrDBNull(building.Canalization);
             row["electricity"] = ViewportHelper.ValueOrDBNull(building.Electricity);
             row["radio_network"] = ViewportHelper.ValueOrDBNull(building.RadioNetwork);
-            row["id_heating_type"] = ViewportHelper.ValueOrDBNull(building.IdHeatingType);         
+            row["id_heating_type"] = ViewportHelper.ValueOrDBNull(building.IdHeatingType);
+            row["BTI_rooms"] = ViewportHelper.ValueOrDBNull(building.RoomsBTI);
             row.EndEdit();
         }
 

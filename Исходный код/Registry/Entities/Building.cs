@@ -32,6 +32,7 @@ namespace Registry.Entities
         public bool? Electricity { get; set; }
         public bool? RadioNetwork { get; set; }
         public int? IdHeatingType { get; set; }
+        public string RoomsBTI { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -76,7 +77,8 @@ namespace Registry.Entities
                     first.HotWaterSupply == second.HotWaterSupply &&
                     first.Canalization == second.Canalization &&
                     first.RadioNetwork == second.RadioNetwork &&
-                    first.IdHeatingType == second.IdHeatingType;
+                    first.IdHeatingType == second.IdHeatingType &&
+                    first.RoomsBTI == second.RoomsBTI;
         }
 
         public static bool operator !=(Building first, Building second)

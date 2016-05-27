@@ -45,6 +45,7 @@ namespace Registry.DataModels.DataModels
             Table.Columns["electricity"].DefaultValue = true;
             Table.Columns["radio_network"].DefaultValue = false;
             Table.Columns["id_heating_type"].DefaultValue = 4;
+            Table.Columns["BTI_rooms"].DefaultValue = DBNull.Value;
         }
 
         protected override void ConfigureRelations()
@@ -75,7 +76,7 @@ namespace Registry.DataModels.DataModels
                             num_apartments = ?, num_shared_apartments = ?, total_area = ?, living_area = ?, cadastral_num = ?, 
                             cadastral_cost = ?, balance_cost = ?, description = ?, startup_year = ?, 
                             improvement = ?, elevator = ?, rubbish_chute = ?, wear = ?, state_date = ?, plumbing = ?,
-                             hot_water_supply = ?, canalization = ?, electricity = ?, radio_network = ?, id_heating_type = ?
+                             hot_water_supply = ?, canalization = ?, electricity = ?, radio_network = ?, id_heating_type = ?, BTI_rooms = ?
                             WHERE id_building = ?";
             var building = (Building) entity;
             command.Parameters.Add(DBConnection.CreateParameter("id_state", building.IdState));
@@ -105,6 +106,7 @@ namespace Registry.DataModels.DataModels
             command.Parameters.Add(DBConnection.CreateParameter("electricity", building.Electricity));
             command.Parameters.Add(DBConnection.CreateParameter("radio_network", building.RadioNetwork));
             command.Parameters.Add(DBConnection.CreateParameter("id_heating_type", building.IdHeatingType));
+            command.Parameters.Add(DBConnection.CreateParameter("BTI_rooms", building.RoomsBTI));
             command.Parameters.Add(DBConnection.CreateParameter("id_building", building.IdBuilding));
         }
 
@@ -116,8 +118,8 @@ namespace Registry.DataModels.DataModels
                              , num_shared_apartments, total_area, living_area, cadastral_num
                              , cadastral_cost, balance_cost, description, startup_year
                              , improvement, elevator, rubbish_chute, wear, state_date,plumbing,hot_water_supply,
-                                canalization,electricity,radio_network,id_heating_type)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                                canalization,electricity,radio_network,id_heating_type,BTI_rooms)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
             var building = (Building)entity;
             command.Parameters.Add(DBConnection.CreateParameter("id_state", building.IdState));
             command.Parameters.Add(DBConnection.CreateParameter("id_structure_type", building.IdStructureType));
@@ -144,8 +146,9 @@ namespace Registry.DataModels.DataModels
             command.Parameters.Add(DBConnection.CreateParameter("hot_water_supply", building.HotWaterSupply));
             command.Parameters.Add(DBConnection.CreateParameter("canalization", building.Canalization));
             command.Parameters.Add(DBConnection.CreateParameter("electricity", building.Electricity));
-            command.Parameters.Add(DBConnection.CreateParameter("radio_network", building.RadioNetwork));
+            command.Parameters.Add(DBConnection.CreateParameter("radio_network", building.RadioNetwork));            
             command.Parameters.Add(DBConnection.CreateParameter("id_heating_type", building.IdHeatingType));
+            command.Parameters.Add(DBConnection.CreateParameter("BTI_rooms", building.RoomsBTI));
         }
     }
 }
