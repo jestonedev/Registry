@@ -558,6 +558,8 @@ namespace Registry.Viewport
             dataGridViewClaims.RowCount = 0;
             GeneralBindingSource.Filter = filter;
             dataGridViewClaims.RowCount = GeneralBindingSource.Count;
+            if (dataGridViewClaims.RowCount > 0)
+                dataGridViewClaims.InvalidateRow(0);
         }
 
         public override void ClearSearch()
