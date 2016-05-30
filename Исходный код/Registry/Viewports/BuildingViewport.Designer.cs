@@ -1336,11 +1336,12 @@ namespace Registry.Viewport
             this.tableLayoutPanel1.Controls.Add(this.groupBox5, 0, 0);
             this.tableLayoutPanel1.Controls.Add(this.groupBox8, 1, 0);
             this.tableLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(631, 433);
+            this.tableLayoutPanel1.Location = new System.Drawing.Point(628, 430);
+            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel1.Name = "tableLayoutPanel1";
             this.tableLayoutPanel1.RowCount = 1;
             this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(622, 107);
+            this.tableLayoutPanel1.Size = new System.Drawing.Size(628, 113);
             this.tableLayoutPanel1.TabIndex = 7;
             // 
             // groupBox5
@@ -1349,22 +1350,20 @@ namespace Registry.Viewport
             this.groupBox5.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox5.Location = new System.Drawing.Point(3, 3);
             this.groupBox5.Name = "groupBox5";
-            this.groupBox5.Size = new System.Drawing.Size(305, 101);
+            this.groupBox5.Size = new System.Drawing.Size(308, 107);
             this.groupBox5.TabIndex = 0;
             this.groupBox5.TabStop = false;
             this.groupBox5.Text = "Приватиз. кв. по данным БТИ";
             // 
             // textBoxRoomsBTI
             // 
-            this.textBoxRoomsBTI.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxRoomsBTI.Location = new System.Drawing.Point(0, 20);
+            this.textBoxRoomsBTI.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxRoomsBTI.Location = new System.Drawing.Point(3, 17);
             this.textBoxRoomsBTI.MaxLength = 1512;
             this.textBoxRoomsBTI.Multiline = true;
             this.textBoxRoomsBTI.Name = "textBoxRoomsBTI";
             this.textBoxRoomsBTI.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxRoomsBTI.Size = new System.Drawing.Size(305, 81);
+            this.textBoxRoomsBTI.Size = new System.Drawing.Size(302, 87);
             this.textBoxRoomsBTI.TabIndex = 0;
             // 
             // groupBox8
@@ -1373,23 +1372,21 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox8.Controls.Add(this.textBoxDescription);
-            this.groupBox8.Location = new System.Drawing.Point(314, 3);
+            this.groupBox8.Location = new System.Drawing.Point(317, 3);
             this.groupBox8.Name = "groupBox8";
-            this.groupBox8.Size = new System.Drawing.Size(305, 101);
+            this.groupBox8.Size = new System.Drawing.Size(308, 107);
             this.groupBox8.TabIndex = 1;
             this.groupBox8.TabStop = false;
             this.groupBox8.Text = "Доп. сведения";
             // 
             // textBoxDescription
             // 
-            this.textBoxDescription.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxDescription.Location = new System.Drawing.Point(0, 20);
+            this.textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.textBoxDescription.Location = new System.Drawing.Point(3, 17);
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxDescription.Size = new System.Drawing.Size(305, 81);
+            this.textBoxDescription.Size = new System.Drawing.Size(302, 87);
             this.textBoxDescription.TabIndex = 0;
             // 
             // BuildingViewport
