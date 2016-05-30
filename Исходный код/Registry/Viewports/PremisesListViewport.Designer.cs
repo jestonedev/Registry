@@ -74,7 +74,6 @@ namespace Registry.Viewport
             this.dataGridView.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView_CellValueNeeded);
             this.dataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_ColumnHeaderMouseClick);
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
-            this.dataGridView.Resize += new System.EventHandler(this.dataGridView_Resize);
             // 
             // id_premises
             // 

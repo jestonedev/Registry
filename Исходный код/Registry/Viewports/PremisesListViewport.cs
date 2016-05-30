@@ -593,21 +593,6 @@ namespace Registry.Viewport
             }
         }
 
-        private void dataGridView_Resize(object sender, EventArgs e)
-        {
-            if ((AccessControl.HasPrivelege(Priveleges.TenancyRead) && dataGridView.Size.Width > 1495) || 
-               (!AccessControl.HasPrivelege(Priveleges.TenancyRead) && dataGridView.Size.Width > 845))
-            {
-                if (dataGridView.Columns["id_street"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
-                    dataGridView.Columns["id_street"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-            }
-            else
-            {
-                if (dataGridView.Columns["id_street"].AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
-                    dataGridView.Columns["id_street"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
-            }
-        }
-
         void _premisesTenanciesInfo_RefreshEvent(object sender, EventArgs e)
         {
             _idPremises = int.MinValue;
