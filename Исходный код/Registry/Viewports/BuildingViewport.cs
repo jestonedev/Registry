@@ -213,8 +213,8 @@ namespace Registry.Viewport
             comboBoxStreet.DataBindings.Clear();
             comboBoxStreet.DataBindings.Add("SelectedValue", GeneralBindingSource, "id_street", true, DataSourceUpdateMode.Never, DBNull.Value);
 
-            textBoxRoomsBTI.DataBindings.Clear();
-            textBoxRoomsBTI.DataBindings.Add("Text", GeneralBindingSource, "BTI_rooms", true, DataSourceUpdateMode.Never, "");
+            textBoxDescription.DataBindings.Clear();
+            textBoxDescription.DataBindings.Add("Text", GeneralBindingSource, "description", true, DataSourceUpdateMode.Never, "");
             textBoxHouse.DataBindings.Clear();
             textBoxHouse.DataBindings.Add("Text", GeneralBindingSource, "house", true, DataSourceUpdateMode.Never, "");
             numericUpDownFloors.DataBindings.Clear();
@@ -249,8 +249,8 @@ namespace Registry.Viewport
             checkBoxRadioNetwork.DataBindings.Clear();
             checkBoxRadioNetwork.DataBindings.Add("Checked", GeneralBindingSource, "radio_network", true,
                 DataSourceUpdateMode.Never, false);                      
-            textBoxDescription.DataBindings.Clear();
-            textBoxDescription.DataBindings.Add("Text", GeneralBindingSource, "description", true, DataSourceUpdateMode.Never, "");
+            textBoxRoomsBTI.DataBindings.Clear();
+            textBoxRoomsBTI.DataBindings.Add("Text", GeneralBindingSource, "BTI_rooms", true, DataSourceUpdateMode.Never, "");
             numericUpDownPremisesCount.DataBindings.Clear();
             numericUpDownPremisesCount.DataBindings.Add("Value", GeneralBindingSource, "num_premises", true, DataSourceUpdateMode.Never, 0);
             numericUpDownRoomsCount.DataBindings.Clear();

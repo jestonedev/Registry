@@ -57,8 +57,7 @@ namespace Registry.Viewport
             this.cadastral_num,
             this.startup_year,
             this.id_structure_type,
-            this.id_state,
-            this.BTI_rooms});
+            this.id_state});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
             this.dataGridView.Location = new System.Drawing.Point(3, 3);
@@ -163,11 +162,11 @@ namespace Registry.Viewport
             //
             //BTI_rooms
             //
-            this.BTI_rooms.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            this.BTI_rooms.HeaderText = "Приватиз. кв. по данным БТИ";
-            this.BTI_rooms.MinimumWidth = 200;
-            this.BTI_rooms.ReadOnly = true;
-            this.BTI_rooms.Name = "BTI_rooms";
+            //this.BTI_rooms.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
+            //this.BTI_rooms.HeaderText = "Приватиз. кв. по данным БТИ";
+            //this.BTI_rooms.MinimumWidth = 200;
+            //this.BTI_rooms.ReadOnly = true;
+            //this.BTI_rooms.Name = "BTI_rooms";
             // 
             // BuildingListViewport
             // 
