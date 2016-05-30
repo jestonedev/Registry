@@ -10,6 +10,7 @@ using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Reporting;
 using Registry.Viewport;
+using Registry.Viewport.MultiMasters;
 using Registry.Viewport.SearchForms;
 using Security;
 using Settings;

@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Registry.Viewport
+namespace Registry.Viewport.MultiMasters
 {
     internal partial class MultiClaimsMaster
     {
@@ -22,6 +22,7 @@ namespace Registry.Viewport
             this.toolStripButtonJudicialOrder = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonToLegalDepartment = new System.Windows.Forms.ToolStripButton();
             this.toolStripProgressBarMultiOperations = new System.Windows.Forms.ToolStripProgressBar();
+            this.toolStripLabelRowCount = new System.Windows.Forms.ToolStripLabel();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.id_claim = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_account = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -32,6 +33,7 @@ namespace Registry.Viewport
             this.amount_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.amount_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -59,7 +61,9 @@ namespace Registry.Viewport
             this.toolStripButtonDeptPeriod,
             this.toolStripButtonJudicialOrder,
             this.toolStripButtonToLegalDepartment,
-            this.toolStripProgressBarMultiOperations});
+            this.toolStripProgressBarMultiOperations,
+            this.toolStripSeparator3,
+            this.toolStripLabelRowCount});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(608, 25);
@@ -153,6 +157,12 @@ namespace Registry.Viewport
             this.toolStripProgressBarMultiOperations.Size = new System.Drawing.Size(100, 22);
             this.toolStripProgressBarMultiOperations.Visible = false;
             // 
+            // toolStripLabelRowCount
+            // 
+            this.toolStripLabelRowCount.Name = "toolStripLabelRowCount";
+            this.toolStripLabelRowCount.Size = new System.Drawing.Size(154, 22);
+            this.toolStripLabelRowCount.Text = "Всего записей в мастере: 0";
+            // 
             // dataGridView
             // 
             this.dataGridView.AllowUserToAddRows = false;
@@ -185,6 +195,8 @@ namespace Registry.Viewport
             this.dataGridView.VirtualMode = true;
             this.dataGridView.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView_CellValueNeeded);
             this.dataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_ColumnHeaderMouseClick);
+            this.dataGridView.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView_RowsAdded);
+            this.dataGridView.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dataGridView_RowsRemoved);
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             // 
             // id_claim
@@ -263,6 +275,11 @@ namespace Registry.Viewport
             this.amount_penalties.ReadOnly = true;
             this.amount_penalties.Width = 200;
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
             // MultiClaimsMaster
             // 
             this.ClientSize = new System.Drawing.Size(608, 157);
@@ -303,6 +320,8 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn amount_tenancy;
         private DataGridViewTextBoxColumn amount_dgi;
         private DataGridViewTextBoxColumn amount_penalties;
+        private ToolStripLabel toolStripLabelRowCount;
+        private ToolStripSeparator toolStripSeparator3;
 
     }
 }

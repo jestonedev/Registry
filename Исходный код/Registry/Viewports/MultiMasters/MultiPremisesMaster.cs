@@ -488,5 +488,20 @@ namespace Registry.Viewport
                 toolStripProgressBar1.Visible = false;
             }
         }
+
+        private void dataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            RowCountChanged();
+        }
+
+        private void dataGridView_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        {
+            RowCountChanged();
+        }
+
+        private void RowCountChanged()
+        {
+            toolStripLabelRowCount.Text = string.Format("Всего записей в мастере: {0}", dataGridView.RowCount);
+        }
     }
 }

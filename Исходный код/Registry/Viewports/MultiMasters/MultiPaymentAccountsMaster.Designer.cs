@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Registry.Viewport
+namespace Registry.Viewport.MultiMasters
 {
     internal partial class MultiPaymentAccountsMaster
     {
@@ -48,6 +48,8 @@ namespace Registry.Viewport
             this.balance_output_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_output_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_output_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabelRowCount = new System.Windows.Forms.ToolStripLabel();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -124,7 +126,9 @@ namespace Registry.Viewport
             this.toolStripSeparator2,
             this.toolStripButtonCreateClaims,
             this.toolStripButtonRequestToBks,
-            this.toolStripProgressBarMultiOperations});
+            this.toolStripProgressBarMultiOperations,
+            this.toolStripSeparator3,
+            this.toolStripLabelRowCount});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(608, 25);
@@ -194,6 +198,8 @@ namespace Registry.Viewport
             this.dataGridView.VirtualMode = true;
             this.dataGridView.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView_CellValueNeeded);
             this.dataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_ColumnHeaderMouseClick);
+            this.dataGridView.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView_RowsAdded);
+            this.dataGridView.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dataGridView_RowsRemoved);
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             // 
             // date
@@ -379,6 +385,17 @@ namespace Registry.Viewport
             this.balance_output_penalties.Name = "balance_output_penalties";
             this.balance_output_penalties.ReadOnly = true;
             // 
+            // toolStripSeparator3
+            // 
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripLabelRowCount
+            // 
+            this.toolStripLabelRowCount.Name = "toolStripLabelRowCount";
+            this.toolStripLabelRowCount.Size = new System.Drawing.Size(154, 22);
+            this.toolStripLabelRowCount.Text = "Всего записей в мастере: 0";
+            // 
             // MultiPaymentAccountsMaster
             // 
             this.ClientSize = new System.Drawing.Size(608, 157);
@@ -437,6 +454,8 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn balance_output_tenancy;
         private DataGridViewTextBoxColumn balance_output_dgi;
         private DataGridViewTextBoxColumn balance_output_penalties;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripLabel toolStripLabelRowCount;
 
     }
 }

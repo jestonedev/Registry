@@ -86,16 +86,19 @@ namespace Registry.Viewport.SearchForms
                     }
                     includedClaims = DataModelHelper.Intersect(includedClaims, claimsByDateStartState);
                 }
-            } else
+            } else if (checkBoxStateEnable.Checked || checkBoxDateStartStateEnable.Checked)
             {
+
                 var claims = from row in DataModel.GetInstance<ClaimStatesDataModel>().FilterDeletedRows()
-                             where (!checkBoxStateEnable.Checked || row.Field<int?>("id_state_type") == (int?)comboBoxState.SelectedValue) &&
-                                (!checkBoxDateStartStateEnable.Checked || 
-                                DateSatisfiesExpression(
-                                    row["date_start_state"] == DBNull.Value ? null : (DateTime?)row["date_start_state"],
-                                    comboBoxDateStartStateExpr.Text,
-                                    dateTimePickerDateStartStateFrom.Value.Date,
-                                    dateTimePickerDateStartStateTo.Value.Date))
+                    where
+                        (!checkBoxStateEnable.Checked ||
+                         row.Field<int?>("id_state_type") == (int?) comboBoxState.SelectedValue) &&
+                        (!checkBoxDateStartStateEnable.Checked ||
+                         DateSatisfiesExpression(
+                             row["date_start_state"] == DBNull.Value ? null : (DateTime?) row["date_start_state"],
+                             comboBoxDateStartStateExpr.Text,
+                             dateTimePickerDateStartStateFrom.Value.Date,
+                             dateTimePickerDateStartStateTo.Value.Date))
                     select row.Field<int>("id_claim");
                 includedClaims = DataModelHelper.Intersect(null, claims);
             }

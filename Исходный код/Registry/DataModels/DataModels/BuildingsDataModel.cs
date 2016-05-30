@@ -46,6 +46,7 @@ namespace Registry.DataModels.DataModels
             Table.Columns["radio_network"].DefaultValue = false;
             Table.Columns["id_heating_type"].DefaultValue = 4;
             Table.Columns["BTI_rooms"].DefaultValue = DBNull.Value;
+            Table.Columns["id_structure_type"].DefaultValue = 1;
         }
 
         protected override void ConfigureRelations()

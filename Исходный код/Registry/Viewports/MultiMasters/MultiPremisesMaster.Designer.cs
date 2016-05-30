@@ -21,13 +21,15 @@ namespace Registry.Viewport
             this.toolStripButtonRestrictions = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonOwnerships = new System.Windows.Forms.ToolStripButton();
             this.toolStripButtonObjectStates = new System.Windows.Forms.ToolStripButton();
+            this.toolStripButtonRegDate = new System.Windows.Forms.ToolStripButton();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.id_premises = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_street = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.house = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.premises_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.toolStripButtonRegDate = new System.Windows.Forms.ToolStripButton();
+            this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
+            this.toolStripLabelRowCount = new System.Windows.Forms.ToolStripLabel();
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -48,7 +50,9 @@ namespace Registry.Viewport
             this.toolStripButtonOwnerships,
             this.toolStripButtonObjectStates,
             this.toolStripButtonRegDate,
-            this.toolStripProgressBar1});
+            this.toolStripProgressBar1,
+            this.toolStripSeparator3,
+            this.toolStripLabelRowCount});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(570, 25);
@@ -166,6 +170,16 @@ namespace Registry.Viewport
             this.toolStripButtonObjectStates.Text = "Проставить текущее состояние";
             this.toolStripButtonObjectStates.Click += new System.EventHandler(this.toolStripButtonObjectStates_Click);
             // 
+            // toolStripButtonRegDate
+            // 
+            this.toolStripButtonRegDate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.toolStripButtonRegDate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRegDate.Image")));
+            this.toolStripButtonRegDate.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolStripButtonRegDate.Name = "toolStripButtonRegDate";
+            this.toolStripButtonRegDate.Size = new System.Drawing.Size(23, 22);
+            this.toolStripButtonRegDate.Text = "Проставить дату включения в РМИ";
+            this.toolStripButtonRegDate.Click += new System.EventHandler(this.toolStripButtonRegDate_Click);
+            // 
             // toolStripProgressBar1
             // 
             this.toolStripProgressBar1.Name = "toolStripProgressBar1";
@@ -195,6 +209,8 @@ namespace Registry.Viewport
             this.dataGridView.VirtualMode = true;
             this.dataGridView.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView_CellValueNeeded);
             this.dataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_ColumnHeaderMouseClick);
+            this.dataGridView.RowsAdded += new System.Windows.Forms.DataGridViewRowsAddedEventHandler(this.dataGridView_RowsAdded);
+            this.dataGridView.RowsRemoved += new System.Windows.Forms.DataGridViewRowsRemovedEventHandler(this.dataGridView_RowsRemoved);
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             // 
             // id_premises
@@ -233,15 +249,16 @@ namespace Registry.Viewport
             this.premises_num.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.premises_num.Width = 75;
             // 
-            // toolStripButtonRegDate
+            // toolStripSeparator3
             // 
-            this.toolStripButtonRegDate.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.toolStripButtonRegDate.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButtonRegDate.Image")));
-            this.toolStripButtonRegDate.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.toolStripButtonRegDate.Name = "toolStripButtonRegDate";
-            this.toolStripButtonRegDate.Size = new System.Drawing.Size(23, 22);
-            this.toolStripButtonRegDate.Text = "Проставить дату включения в РМИ";
-            this.toolStripButtonRegDate.Click += new System.EventHandler(this.toolStripButtonRegDate_Click);
+            this.toolStripSeparator3.Name = "toolStripSeparator3";
+            this.toolStripSeparator3.Size = new System.Drawing.Size(6, 25);
+            // 
+            // toolStripLabelRowCount
+            // 
+            this.toolStripLabelRowCount.Name = "toolStripLabelRowCount";
+            this.toolStripLabelRowCount.Size = new System.Drawing.Size(154, 22);
+            this.toolStripLabelRowCount.Text = "Всего записей в мастере: 0";
             // 
             // MultiPremisesMaster
             // 
@@ -282,6 +299,8 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn house;
         private DataGridViewTextBoxColumn premises_num;
         private ToolStripButton toolStripButtonRegDate;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripLabel toolStripLabelRowCount;
 
     }
 }

@@ -12,7 +12,7 @@ using Registry.Viewport.ModalEditors;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace Registry.Viewport
+namespace Registry.Viewport.MultiMasters
 {
     internal sealed partial class MultiClaimsMaster : DockContent, IMultiMaster
     {
@@ -474,6 +474,21 @@ namespace Registry.Viewport
             filter = filter.TrimEnd(',');
             arguments.Add("filter", filter);
             reporter.Run(arguments);
+        }
+
+        private void dataGridView_RowsAdded(object sender, DataGridViewRowsAddedEventArgs e)
+        {
+            RowCountChanged();
+        }
+
+        private void dataGridView_RowsRemoved(object sender, DataGridViewRowsRemovedEventArgs e)
+        {
+            RowCountChanged();
+        }
+
+        private void RowCountChanged()
+        {
+            toolStripLabelRowCount.Text = string.Format("Всего записей в мастере: {0}", dataGridView.RowCount);
         }
     }
 }
