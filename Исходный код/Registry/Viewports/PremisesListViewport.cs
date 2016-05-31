@@ -611,5 +611,28 @@ namespace Registry.Viewport
         {
             return GeneralBindingSource.Filter;
         }
+
+        private void dataGridView_Resize(object sender, EventArgs e)
+        {
+            if ((AccessControl.HasPrivelege(Priveleges.TenancyRead) && dataGridView.Size.Width > 1495) ||
+                (!AccessControl.HasPrivelege(Priveleges.TenancyRead) && dataGridView.Size.Width > 845))
+            {
+                premises_num.Frozen = false;
+                house.Frozen = false;
+                id_street.Frozen = false;
+                id_premises.Frozen = false;
+                if (id_street.AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
+                    id_street.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+            }
+            else
+            {
+                premises_num.Frozen = true;
+                house.Frozen = true;
+                id_street.Frozen = true;
+                id_premises.Frozen = true;
+                if (id_street.AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
+                    id_street.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+            }
+        }
     }
 }
