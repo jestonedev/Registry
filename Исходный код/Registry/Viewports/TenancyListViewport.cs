@@ -136,7 +136,7 @@ namespace Registry.Viewport
 
             _vRentTypes = new BindingSource
             {
-                DataMember = "_rentTypes",
+                DataMember = "rent_types",
                 DataSource = ds
             };
 
