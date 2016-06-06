@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
@@ -22,21 +20,21 @@ namespace Registry.Viewport
     {
 
         #region Models
-        private DataModel tenancy_building_assoc;
-        private DataModel tenancy_premises_assoc;
-        private DataModel tenancy_sub_premises_assoc;
-        private CalcDataModel tenancies_aggregate;
-        private DataModel rent_types;
+        private DataModel _tenancyBuildingAssoc;
+        private DataModel _tenancyPremisesAssoc;
+        private DataModel _tenancySubPremisesAssoc;
+        private CalcDataModel _tenanciesAggregate;
+        private DataModel _rentTypes;
         #endregion Models
 
         #region Views
-        private BindingSource GeneralBindingSource_aggregate;
-        private BindingSource v_rent_types;
+        private BindingSource _generalBindingSourceAggregate;
+        private BindingSource _vRentTypes;
         #endregion Views
 
         //Forms
-        private SearchForm stExtendedSearchForm;
-        private SearchForm stSimpleSearchForm;
+        private SearchForm _stExtendedSearchForm;
+        private SearchForm _stSimpleSearchForm;
 
         private TenancyListViewport()
             : this(null, null)
@@ -76,17 +74,17 @@ namespace Registry.Viewport
                     StaticFilter += id.ToString(CultureInfo.InvariantCulture) + ",";
                 StaticFilter = StaticFilter.TrimEnd(',') + ")";
             }
-            var Filter = StaticFilter;
+            var filter = StaticFilter;
             GeneralBindingSource.Filter = StaticFilter;
-            if (!string.IsNullOrEmpty(Filter) && !string.IsNullOrEmpty(DynamicFilter))
-                Filter += " AND ";
-            GeneralBindingSource.Filter = Filter + DynamicFilter;
+            if (!string.IsNullOrEmpty(filter) && !string.IsNullOrEmpty(DynamicFilter))
+                filter += " AND ";
+            GeneralBindingSource.Filter = filter + DynamicFilter;
         }
 
         private void SetViewportCaption()
         {
             if (ParentRow == null)
-                Text = "Процессы найма жилья";
+                Text = @"Процессы найма жилья";
             else
             {
                 switch (ParentType)
@@ -115,19 +113,18 @@ namespace Registry.Viewport
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
             GeneralDataModel = DataModel.GetInstance<TenancyProcessesDataModel>();
-            rent_types = DataModel.GetInstance<RentTypesDataModel>();
-            tenancies_aggregate = CalcDataModel.GetInstance<CalcDataModelTenancyAggregated>();
+            _rentTypes = DataModel.GetInstance<RentTypesDataModel>();
+            _tenanciesAggregate = CalcDataModel.GetInstance<CalcDataModelTenancyAggregated>();
 
             //Ожидаем загрузки данных, если это необходимо
             GeneralDataModel.Select();
-            rent_types.Select();
+            _rentTypes.Select();
 
             SetViewportCaption();
 
             var ds = DataModel.DataSet;
 
-            GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.DataMember = "tenancy_processes";
+            GeneralBindingSource = new BindingSource {DataMember = "tenancy_processes"};
             GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
             GeneralBindingSource.DataSource = ds;
             RebuildStaticFilter();
@@ -135,12 +132,13 @@ namespace Registry.Viewport
                 GeneralBindingSource.Filter += " AND ";
             GeneralBindingSource.Filter += DynamicFilter;
 
-            GeneralBindingSource_aggregate = new BindingSource();
-            GeneralBindingSource_aggregate.DataSource = tenancies_aggregate.Select();
+            _generalBindingSourceAggregate = new BindingSource {DataSource = _tenanciesAggregate.Select()};
 
-            v_rent_types = new BindingSource();
-            v_rent_types.DataMember = "rent_types";
-            v_rent_types.DataSource = ds;
+            _vRentTypes = new BindingSource
+            {
+                DataMember = "_rentTypes",
+                DataSource = ds
+            };
 
             GeneralDataModel.Select().RowChanged += TenancyListViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted += TenancyListViewport_RowDeleted;
@@ -149,25 +147,25 @@ namespace Registry.Viewport
                 switch (ParentType)
                 {
                     case ParentTypeEnum.Building:
-                        tenancy_building_assoc = DataModel.GetInstance<TenancyBuildingsAssocDataModel>();
-                        tenancy_building_assoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
-                        tenancy_building_assoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
+                        _tenancyBuildingAssoc = DataModel.GetInstance<TenancyBuildingsAssocDataModel>();
+                        _tenancyBuildingAssoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
+                        _tenancyBuildingAssoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
                         break;
                     case ParentTypeEnum.Premises:
-                        tenancy_premises_assoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
-                        tenancy_premises_assoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
-                        tenancy_premises_assoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
+                        _tenancyPremisesAssoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
+                        _tenancyPremisesAssoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
+                        _tenancyPremisesAssoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
                         break;
                     case ParentTypeEnum.SubPremises:
-                        tenancy_sub_premises_assoc = DataModel.GetInstance<TenancySubPremisesAssocDataModel>();
-                        tenancy_sub_premises_assoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
-                        tenancy_sub_premises_assoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
+                        _tenancySubPremisesAssoc = DataModel.GetInstance<TenancySubPremisesAssocDataModel>();
+                        _tenancySubPremisesAssoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
+                        _tenancySubPremisesAssoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
                         break;
                     default: throw new ViewportException("Неизвестный тип родительского объекта");
                 }
             }
             dataGridView.RowCount = GeneralBindingSource.Count;
-            tenancies_aggregate.RefreshEvent += tenancies_aggregate_RefreshEvent;
+            _tenanciesAggregate.RefreshEvent += tenancies_aggregate_RefreshEvent;
             ViewportHelper.SetDoubleBuffered(dataGridView);
         }
 
@@ -178,7 +176,7 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите удалить этот процесс найма жилья?", "Внимание",
+            if (MessageBox.Show(@"Вы действительно хотите удалить этот процесс найма жилья?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_process"]) == -1)
@@ -206,26 +204,26 @@ namespace Registry.Viewport
             switch (searchFormType)
             {
                 case SearchFormType.SimpleSearchForm:
-                    if (stSimpleSearchForm == null)
-                        stSimpleSearchForm = new SimpleSearchTenancyForm();
-                    if (stSimpleSearchForm.ShowDialog() != DialogResult.OK)
+                    if (_stSimpleSearchForm == null)
+                        _stSimpleSearchForm = new SimpleSearchTenancyForm();
+                    if (_stSimpleSearchForm.ShowDialog() != DialogResult.OK)
                         return;
-                    DynamicFilter = stSimpleSearchForm.GetFilter();
+                    DynamicFilter = _stSimpleSearchForm.GetFilter();
                     break;
                 case SearchFormType.ExtendedSearchForm:
-                    if (stExtendedSearchForm == null)
-                        stExtendedSearchForm = new ExtendedSearchTenancyForm();
-                    if (stExtendedSearchForm.ShowDialog() != DialogResult.OK)
+                    if (_stExtendedSearchForm == null)
+                        _stExtendedSearchForm = new ExtendedSearchTenancyForm();
+                    if (_stExtendedSearchForm.ShowDialog() != DialogResult.OK)
                         return;
-                    DynamicFilter = stExtendedSearchForm.GetFilter();
+                    DynamicFilter = _stExtendedSearchForm.GetFilter();
                     break;
             }
-            var Filter = StaticFilter;
+            var filter = StaticFilter;
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
-                Filter += " AND ";
-            Filter += DynamicFilter;
+                filter += " AND ";
+            filter += DynamicFilter;
             dataGridView.RowCount = 0;                              
-            GeneralBindingSource.Filter = Filter;
+            GeneralBindingSource.Filter = filter;
             dataGridView.RowCount = GeneralBindingSource.Count;
         }
 
@@ -429,13 +427,13 @@ namespace Registry.Viewport
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
             if (!DataModelHelper.TenancyProcessHasTenant(Convert.ToInt32(row["id_process"], CultureInfo.InvariantCulture)))
             {
-                MessageBox.Show("Для формирования отчетной документации необходимо указать нанимателя процесса найма","Ошибка", 
+                MessageBox.Show(@"Для формирования отчетной документации необходимо указать нанимателя процесса найма",@"Ошибка", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             if (ViewportHelper.ValueOrNull<DateTime>(row, "registration_date") == null || ViewportHelper.ValueOrNull(row, "registration_num") == null)
             {
-                MessageBox.Show("Для формирования отчетной документации необходимо завести договор найма и указать его номер и дату регистрации","Ошибка", 
+                MessageBox.Show(@"Для формирования отчетной документации необходимо завести договор найма и указать его номер и дату регистрации",@"Ошибка", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
@@ -446,38 +444,38 @@ namespace Registry.Viewport
         {
             GeneralDataModel.Select().RowChanged -= TenancyListViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted -= TenancyListViewport_RowDeleted;
-            tenancies_aggregate.RefreshEvent -= tenancies_aggregate_RefreshEvent;
+            _tenanciesAggregate.RefreshEvent -= tenancies_aggregate_RefreshEvent;
             GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
-            if (tenancy_building_assoc != null)
+            if (_tenancyBuildingAssoc != null)
             {
-                tenancy_building_assoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
-                tenancy_building_assoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
+                _tenancyBuildingAssoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
+                _tenancyBuildingAssoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
             }
-            if (tenancy_premises_assoc != null)
+            if (_tenancyPremisesAssoc != null)
             {
-                tenancy_premises_assoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
-                tenancy_premises_assoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
+                _tenancyPremisesAssoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
+                _tenancyPremisesAssoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
             }
-            if (tenancy_sub_premises_assoc != null)
+            if (_tenancySubPremisesAssoc != null)
             {
-                tenancy_sub_premises_assoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
-                tenancy_sub_premises_assoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
+                _tenancySubPremisesAssoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
+                _tenancySubPremisesAssoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
             }
             base.OnClosing(e);
         }
 
-        void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1) return;
             if (CanOpenDetails())
                 OpenDetails();
         }
 
-        void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (dataGridView.Columns[e.ColumnIndex].SortMode == DataGridViewColumnSortMode.NotSortable)
                 return;
-            Func<SortOrder, bool> changeSortColumn = (way) =>
+            Func<SortOrder, bool> changeSortColumn = way =>
             {
                 foreach (DataGridViewColumn column in dataGridView.Columns)
                     column.HeaderCell.SortGlyphDirection = SortOrder.None;
@@ -485,10 +483,9 @@ namespace Registry.Viewport
                 dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = way;
                 return true;
             };
-            if (dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection == SortOrder.Ascending)
-                changeSortColumn(SortOrder.Descending);
-            else
-                changeSortColumn(SortOrder.Ascending);
+            changeSortColumn(dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection == SortOrder.Ascending
+                ? SortOrder.Descending
+                : SortOrder.Ascending);
             dataGridView.Refresh();
         }
 
@@ -517,26 +514,25 @@ namespace Registry.Viewport
                     break;
                 case "end_date":
                     var date2 = ((DataRowView)GeneralBindingSource[e.RowIndex])["end_date"];
-                    bool yes = date2 == DBNull.Value;
                     e.Value = date2 is DateTime ? ((DateTime)date2).ToString("dd.MM.yyyy") : null;
                     break;
                 case "residence_warrant_num":
                     e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["residence_warrant_num"];
                     break;
                 case "tenant":
-                    var row_index = GeneralBindingSource_aggregate.Find("id_process", ((DataRowView)GeneralBindingSource[e.RowIndex])["id_process"]);
-                    if (row_index != -1)
-                        e.Value = ((DataRowView)GeneralBindingSource_aggregate[row_index])["tenant"];
+                    var rowIndex = _generalBindingSourceAggregate.Find("id_process", ((DataRowView)GeneralBindingSource[e.RowIndex])["id_process"]);
+                    if (rowIndex != -1)
+                        e.Value = ((DataRowView)_generalBindingSourceAggregate[rowIndex])["tenant"];
                     break;
                 case "rent_type":
-                    row_index = v_rent_types.Find("id_rent_type", ((DataRowView)GeneralBindingSource[e.RowIndex])["id_rent_type"]);
-                    if (row_index != -1)
-                        e.Value = ((DataRowView)v_rent_types[row_index])["rent_type"];
+                    rowIndex = _vRentTypes.Find("id_rent_type", ((DataRowView)GeneralBindingSource[e.RowIndex])["id_rent_type"]);
+                    if (rowIndex != -1)
+                        e.Value = ((DataRowView)_vRentTypes[rowIndex])["rent_type"];
                     break;
                 case "address":
-                    row_index = GeneralBindingSource_aggregate.Find("id_process", ((DataRowView)GeneralBindingSource[e.RowIndex])["id_process"]);
-                    if (row_index != -1)
-                        e.Value = ((DataRowView)GeneralBindingSource_aggregate[row_index])["address"];
+                    rowIndex = _generalBindingSourceAggregate.Find("id_process", ((DataRowView)GeneralBindingSource[e.RowIndex])["id_process"]);
+                    if (rowIndex != -1)
+                        e.Value = ((DataRowView)_generalBindingSourceAggregate[rowIndex])["address"];
                     break;
             }
         }
@@ -555,7 +551,7 @@ namespace Registry.Viewport
                 MenuCallback.StatusBarStateUpdate();
         }
 
-        void TenancyListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void TenancyListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Change || e.Action == DataRowAction.ChangeCurrentAndOriginal || e.Action == DataRowAction.ChangeOriginal)
                 dataGridView.Refresh();
@@ -580,13 +576,13 @@ namespace Registry.Viewport
         {
             if (dataGridView.Size.Width > 1170)
             {
-                if (dataGridView.Columns["address"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
-                    dataGridView.Columns["address"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                if (address.AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
+                    address.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             }
             else
             {
-                if (dataGridView.Columns["address"].AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
-                    dataGridView.Columns["address"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                if (address.AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
+                    address.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
         }
     }

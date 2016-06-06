@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
-using Registry.Entities;
 
 namespace Registry.DataModels.DataModels
 {
@@ -16,7 +13,7 @@ namespace Registry.DataModels.DataModels
                   pa.raw_address,
                   CONCAT(vks.street_name, ', д. ', b.house, ', кв. ', v.premises) AS parsed_address,
                   pa.account,
-                  pa.tenant,
+                  pm.tenant,
                   pm.date,
                   pm.total_area,
                   pm.living_area,

@@ -70,12 +70,6 @@ namespace Registry.Viewport.SearchForms
                     filter += " AND ";
                 filter += string.Format("account LIKE '%{0}%'", textBoxAccount.Text);
             }
-            if (checkBoxTenantSNPEnable.Checked)
-            {
-                if (!string.IsNullOrEmpty(filter))
-                    filter += " AND ";
-                filter += string.Format("tenant LIKE '%{0}%'", textBoxTenantSNP.Text);
-            }
             if (checkBoxRawAddressEnable.Checked)
             {
                 if (!string.IsNullOrEmpty(filter))
@@ -87,7 +81,7 @@ namespace Registry.Viewport.SearchForms
             if (checkBoxHouseEnable.Checked)
                 includedAccounts = DataModelHelper.Intersect(includedAccounts, PaymentsAccountsDataModel.GetAccountIdsByHouse(textBoxHouse.Text));
             if (checkBoxPremisesNumEnable.Checked)
-                includedAccounts = DataModelHelper.Intersect(includedAccounts, PaymentsAccountsDataModel.GetAccountIdsByPremiseNumber(textBoxPremisesNum.Text));
+                includedAccounts = DataModelHelper.Intersect(includedAccounts, PaymentsAccountsDataModel.GetAccountIdsByPremiseNumber(textBoxPremisesNum.Text));         
             if (checkBoxDateEnable.Checked && !checkBoxBalanceInputEnable.Checked &&
                 !checkBoxBalanceInputTenancyEnable.Checked
                 && !checkBoxBalanceInputDGIEnable.Checked && !checkBoxChargingEnable.Checked &&
@@ -97,7 +91,7 @@ namespace Registry.Viewport.SearchForms
                 !checkBoxPaymentTenancyEnable.Checked && !checkBoxPaymentDGIEnable.Checked &&
                 !checkBoxTransferBalanceEnable.Checked && !checkBoxBalanceOutputEnable.Checked &&
                 !checkBoxBalanceOutputTenancyEnable.Checked
-                && !checkBoxBalanceOutputDGIEnable.Checked)
+                && !checkBoxBalanceOutputDGIEnable.Checked && !checkBoxTenantSNPEnable.Checked)
             {
                 if (!string.IsNullOrEmpty(filter))
                     filter += " AND ";
@@ -105,6 +99,9 @@ namespace Registry.Viewport.SearchForms
             }
             else
             {
+                if (checkBoxTenantSNPEnable.Checked)
+                    includedAccounts =
+                        PaymentsAccountsDataModel.GetAccountIdsByPaymentFilter(string.Format("tenant LIKE '%{0}%'", textBoxTenantSNP.Text.Trim()));
                 if (checkBoxBalanceInputEnable.Checked)
                     includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_input",
                         comboBoxBalanceInputExpr.Text, numericUpDownBalanceInputFrom.Value, numericUpDownBalanceInputTo.Value);

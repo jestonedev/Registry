@@ -79,6 +79,25 @@
             this.label7 = new System.Windows.Forms.Label();
             this.label21 = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.groupBoxGeneralInfo = new System.Windows.Forms.GroupBox();
+            this.textBoxTenant = new System.Windows.Forms.TextBox();
+            this.label18 = new System.Windows.Forms.Label();
+            this.numericUpDownPrescribed = new System.Windows.Forms.NumericUpDown();
+            this.label5 = new System.Windows.Forms.Label();
+            this.numericUpDownLivingArea = new System.Windows.Forms.NumericUpDown();
+            this.label4 = new System.Windows.Forms.Label();
+            this.numericUpDownTotalArea = new System.Windows.Forms.NumericUpDown();
+            this.label92 = new System.Windows.Forms.Label();
+            this.dateTimePickerAtDate = new System.Windows.Forms.DateTimePicker();
+            this.label91 = new System.Windows.Forms.Label();
+            this.textBoxAccount = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBoxAddress = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.textBoxRawAddress = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
+            this.textBoxCRN = new System.Windows.Forms.TextBox();
+            this.label99 = new System.Windows.Forms.Label();
             this.date = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.crn = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -103,25 +122,6 @@
             this.balance_output_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_output_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_output_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.groupBoxGeneralInfo = new System.Windows.Forms.GroupBox();
-            this.textBoxTenant = new System.Windows.Forms.TextBox();
-            this.label18 = new System.Windows.Forms.Label();
-            this.numericUpDownPrescribed = new System.Windows.Forms.NumericUpDown();
-            this.label5 = new System.Windows.Forms.Label();
-            this.numericUpDownLivingArea = new System.Windows.Forms.NumericUpDown();
-            this.label4 = new System.Windows.Forms.Label();
-            this.numericUpDownTotalArea = new System.Windows.Forms.NumericUpDown();
-            this.label92 = new System.Windows.Forms.Label();
-            this.dateTimePickerAtDate = new System.Windows.Forms.DateTimePicker();
-            this.label91 = new System.Windows.Forms.Label();
-            this.textBoxAccount = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBoxAddress = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBoxRawAddress = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBoxCRN = new System.Windows.Forms.TextBox();
-            this.label99 = new System.Windows.Forms.Label();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBoxBalanceOutput.SuspendLayout();
             this.tableLayoutPanel6.SuspendLayout();
@@ -930,164 +930,6 @@
             this.dataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_ColumnHeaderMouseClick);
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             // 
-            // date
-            // 
-            this.date.HeaderText = "Состояние на дату";
-            this.date.Name = "date";
-            this.date.ReadOnly = true;
-            // 
-            // id_account
-            // 
-            this.id_account.HeaderText = "№";
-            this.id_account.Name = "id_account";
-            this.id_account.ReadOnly = true;
-            this.id_account.Visible = false;
-            // 
-            // crn
-            // 
-            this.crn.HeaderText = "СРН";
-            this.crn.Name = "crn";
-            this.crn.ReadOnly = true;
-            this.crn.Visible = false;
-            // 
-            // raw_address
-            // 
-            this.raw_address.HeaderText = "Адрес по БКС";
-            this.raw_address.MinimumWidth = 300;
-            this.raw_address.Name = "raw_address";
-            this.raw_address.ReadOnly = true;
-            this.raw_address.Visible = false;
-            this.raw_address.Width = 300;
-            // 
-            // parsed_address
-            // 
-            this.parsed_address.HeaderText = "Адрес в реестре ЖФ";
-            this.parsed_address.MinimumWidth = 300;
-            this.parsed_address.Name = "parsed_address";
-            this.parsed_address.ReadOnly = true;
-            this.parsed_address.Visible = false;
-            this.parsed_address.Width = 300;
-            // 
-            // account
-            // 
-            this.account.HeaderText = "Лицевой счет";
-            this.account.MinimumWidth = 150;
-            this.account.Name = "account";
-            this.account.ReadOnly = true;
-            this.account.Visible = false;
-            this.account.Width = 150;
-            // 
-            // tenant
-            // 
-            this.tenant.HeaderText = "Наниматель";
-            this.tenant.MinimumWidth = 150;
-            this.tenant.Name = "tenant";
-            this.tenant.ReadOnly = true;
-            this.tenant.Visible = false;
-            this.tenant.Width = 150;
-            // 
-            // total_area
-            // 
-            this.total_area.HeaderText = "Общая площадь";
-            this.total_area.Name = "total_area";
-            this.total_area.ReadOnly = true;
-            // 
-            // living_area
-            // 
-            this.living_area.HeaderText = "Жилая площадь";
-            this.living_area.Name = "living_area";
-            this.living_area.ReadOnly = true;
-            // 
-            // prescribed
-            // 
-            this.prescribed.HeaderText = "Прописано";
-            this.prescribed.Name = "prescribed";
-            this.prescribed.ReadOnly = true;
-            // 
-            // balance_input
-            // 
-            this.balance_input.HeaderText = "Сальдо вх.";
-            this.balance_input.Name = "balance_input";
-            this.balance_input.ReadOnly = true;
-            // 
-            // balance_tenancy
-            // 
-            this.balance_tenancy.HeaderText = "Сальдо вх. найм";
-            this.balance_tenancy.Name = "balance_tenancy";
-            this.balance_tenancy.ReadOnly = true;
-            // 
-            // balance_dgi
-            // 
-            this.balance_dgi.HeaderText = "Сальдо вх. ДГИ";
-            this.balance_dgi.Name = "balance_dgi";
-            this.balance_dgi.ReadOnly = true;
-            // 
-            // charging_tenancy
-            // 
-            this.charging_tenancy.HeaderText = "Начислено найм";
-            this.charging_tenancy.Name = "charging_tenancy";
-            this.charging_tenancy.ReadOnly = true;
-            // 
-            // charging_dgi
-            // 
-            this.charging_dgi.HeaderText = "Начислено ДГИ";
-            this.charging_dgi.Name = "charging_dgi";
-            this.charging_dgi.ReadOnly = true;
-            // 
-            // charging_total
-            // 
-            this.charging_total.HeaderText = "Начислено итого";
-            this.charging_total.Name = "charging_total";
-            this.charging_total.ReadOnly = true;
-            // 
-            // recalc_tenancy
-            // 
-            this.recalc_tenancy.HeaderText = "Перерасчет найм";
-            this.recalc_tenancy.Name = "recalc_tenancy";
-            this.recalc_tenancy.ReadOnly = true;
-            // 
-            // recalc_dgi
-            // 
-            this.recalc_dgi.HeaderText = "Перерасчет ДГИ";
-            this.recalc_dgi.Name = "recalc_dgi";
-            this.recalc_dgi.ReadOnly = true;
-            // 
-            // payment_tenancy
-            // 
-            this.payment_tenancy.HeaderText = "Оплата найм";
-            this.payment_tenancy.Name = "payment_tenancy";
-            this.payment_tenancy.ReadOnly = true;
-            // 
-            // payment_dgi
-            // 
-            this.payment_dgi.HeaderText = "Оплата ДГИ";
-            this.payment_dgi.Name = "payment_dgi";
-            this.payment_dgi.ReadOnly = true;
-            // 
-            // transfer_balance
-            // 
-            this.transfer_balance.HeaderText = "Перенос сальдо";
-            this.transfer_balance.Name = "transfer_balance";
-            this.transfer_balance.ReadOnly = true;
-            // 
-            // balance_output_total
-            // 
-            this.balance_output_total.HeaderText = "Сальдо исх.";
-            this.balance_output_total.Name = "balance_output_total";
-            this.balance_output_total.ReadOnly = true;
-            // 
-            // balance_output_tenancy
-            // 
-            this.balance_output_tenancy.HeaderText = "Сальдо исх. найм";
-            this.balance_output_tenancy.Name = "balance_output_tenancy";
-            this.balance_output_tenancy.ReadOnly = true;
-            // 
-            // balance_output_dgi
-            // 
-            this.balance_output_dgi.HeaderText = "Сальдо исх. ДГИ";
-            this.balance_output_dgi.Name = "balance_output_dgi";
-            this.balance_output_dgi.ReadOnly = true;
-            // 
             // groupBoxGeneralInfo
             // 
             this.groupBoxGeneralInfo.Controls.Add(this.textBoxTenant);
@@ -1305,6 +1147,163 @@
             this.label99.TabIndex = 51;
             this.label99.Text = "СРН";
             // 
+            // date
+            // 
+            this.date.HeaderText = "Состояние на дату";
+            this.date.Name = "date";
+            this.date.ReadOnly = true;
+            // 
+            // id_account
+            // 
+            this.id_account.HeaderText = "№";
+            this.id_account.Name = "id_account";
+            this.id_account.ReadOnly = true;
+            this.id_account.Visible = false;
+            // 
+            // crn
+            // 
+            this.crn.HeaderText = "СРН";
+            this.crn.Name = "crn";
+            this.crn.ReadOnly = true;
+            this.crn.Visible = false;
+            // 
+            // raw_address
+            // 
+            this.raw_address.HeaderText = "Адрес по БКС";
+            this.raw_address.MinimumWidth = 300;
+            this.raw_address.Name = "raw_address";
+            this.raw_address.ReadOnly = true;
+            this.raw_address.Visible = false;
+            this.raw_address.Width = 300;
+            // 
+            // parsed_address
+            // 
+            this.parsed_address.HeaderText = "Адрес в реестре ЖФ";
+            this.parsed_address.MinimumWidth = 300;
+            this.parsed_address.Name = "parsed_address";
+            this.parsed_address.ReadOnly = true;
+            this.parsed_address.Visible = false;
+            this.parsed_address.Width = 300;
+            // 
+            // account
+            // 
+            this.account.HeaderText = "Лицевой счет";
+            this.account.MinimumWidth = 150;
+            this.account.Name = "account";
+            this.account.ReadOnly = true;
+            this.account.Visible = false;
+            this.account.Width = 150;
+            // 
+            // tenant
+            // 
+            this.tenant.HeaderText = "Наниматель";
+            this.tenant.MinimumWidth = 150;
+            this.tenant.Name = "tenant";
+            this.tenant.ReadOnly = true;
+            this.tenant.Width = 150;
+            // 
+            // total_area
+            // 
+            this.total_area.HeaderText = "Общая площадь";
+            this.total_area.Name = "total_area";
+            this.total_area.ReadOnly = true;
+            // 
+            // living_area
+            // 
+            this.living_area.HeaderText = "Жилая площадь";
+            this.living_area.Name = "living_area";
+            this.living_area.ReadOnly = true;
+            // 
+            // prescribed
+            // 
+            this.prescribed.HeaderText = "Прописано";
+            this.prescribed.Name = "prescribed";
+            this.prescribed.ReadOnly = true;
+            // 
+            // balance_input
+            // 
+            this.balance_input.HeaderText = "Сальдо вх.";
+            this.balance_input.Name = "balance_input";
+            this.balance_input.ReadOnly = true;
+            // 
+            // balance_tenancy
+            // 
+            this.balance_tenancy.HeaderText = "Сальдо вх. найм";
+            this.balance_tenancy.Name = "balance_tenancy";
+            this.balance_tenancy.ReadOnly = true;
+            // 
+            // balance_dgi
+            // 
+            this.balance_dgi.HeaderText = "Сальдо вх. ДГИ";
+            this.balance_dgi.Name = "balance_dgi";
+            this.balance_dgi.ReadOnly = true;
+            // 
+            // charging_tenancy
+            // 
+            this.charging_tenancy.HeaderText = "Начислено найм";
+            this.charging_tenancy.Name = "charging_tenancy";
+            this.charging_tenancy.ReadOnly = true;
+            // 
+            // charging_dgi
+            // 
+            this.charging_dgi.HeaderText = "Начислено ДГИ";
+            this.charging_dgi.Name = "charging_dgi";
+            this.charging_dgi.ReadOnly = true;
+            // 
+            // charging_total
+            // 
+            this.charging_total.HeaderText = "Начислено итого";
+            this.charging_total.Name = "charging_total";
+            this.charging_total.ReadOnly = true;
+            // 
+            // recalc_tenancy
+            // 
+            this.recalc_tenancy.HeaderText = "Перерасчет найм";
+            this.recalc_tenancy.Name = "recalc_tenancy";
+            this.recalc_tenancy.ReadOnly = true;
+            // 
+            // recalc_dgi
+            // 
+            this.recalc_dgi.HeaderText = "Перерасчет ДГИ";
+            this.recalc_dgi.Name = "recalc_dgi";
+            this.recalc_dgi.ReadOnly = true;
+            // 
+            // payment_tenancy
+            // 
+            this.payment_tenancy.HeaderText = "Оплата найм";
+            this.payment_tenancy.Name = "payment_tenancy";
+            this.payment_tenancy.ReadOnly = true;
+            // 
+            // payment_dgi
+            // 
+            this.payment_dgi.HeaderText = "Оплата ДГИ";
+            this.payment_dgi.Name = "payment_dgi";
+            this.payment_dgi.ReadOnly = true;
+            // 
+            // transfer_balance
+            // 
+            this.transfer_balance.HeaderText = "Перенос сальдо";
+            this.transfer_balance.Name = "transfer_balance";
+            this.transfer_balance.ReadOnly = true;
+            // 
+            // balance_output_total
+            // 
+            this.balance_output_total.HeaderText = "Сальдо исх.";
+            this.balance_output_total.Name = "balance_output_total";
+            this.balance_output_total.ReadOnly = true;
+            // 
+            // balance_output_tenancy
+            // 
+            this.balance_output_tenancy.HeaderText = "Сальдо исх. найм";
+            this.balance_output_tenancy.Name = "balance_output_tenancy";
+            this.balance_output_tenancy.ReadOnly = true;
+            // 
+            // balance_output_dgi
+            // 
+            this.balance_output_dgi.HeaderText = "Сальдо исх. ДГИ";
+            this.balance_output_dgi.Name = "balance_output_dgi";
+            this.balance_output_dgi.ReadOnly = true;
+            // 
             // PaymentsViewport
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1386,30 +1385,6 @@
         private System.Windows.Forms.Label label91;
         private System.Windows.Forms.TextBox textBoxTenant;
         private System.Windows.Forms.Label label18;
-        private System.Windows.Forms.DataGridViewTextBoxColumn date;
-        private System.Windows.Forms.DataGridViewTextBoxColumn id_account;
-        private System.Windows.Forms.DataGridViewTextBoxColumn crn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn raw_address;
-        private System.Windows.Forms.DataGridViewTextBoxColumn parsed_address;
-        private System.Windows.Forms.DataGridViewTextBoxColumn account;
-        private System.Windows.Forms.DataGridViewTextBoxColumn tenant;
-        private System.Windows.Forms.DataGridViewTextBoxColumn total_area;
-        private System.Windows.Forms.DataGridViewTextBoxColumn living_area;
-        private System.Windows.Forms.DataGridViewTextBoxColumn prescribed;
-        private System.Windows.Forms.DataGridViewTextBoxColumn balance_input;
-        private System.Windows.Forms.DataGridViewTextBoxColumn balance_tenancy;
-        private System.Windows.Forms.DataGridViewTextBoxColumn balance_dgi;
-        private System.Windows.Forms.DataGridViewTextBoxColumn charging_tenancy;
-        private System.Windows.Forms.DataGridViewTextBoxColumn charging_dgi;
-        private System.Windows.Forms.DataGridViewTextBoxColumn charging_total;
-        private System.Windows.Forms.DataGridViewTextBoxColumn recalc_tenancy;
-        private System.Windows.Forms.DataGridViewTextBoxColumn recalc_dgi;
-        private System.Windows.Forms.DataGridViewTextBoxColumn payment_tenancy;
-        private System.Windows.Forms.DataGridViewTextBoxColumn payment_dgi;
-        private System.Windows.Forms.DataGridViewTextBoxColumn transfer_balance;
-        private System.Windows.Forms.DataGridViewTextBoxColumn balance_output_total;
-        private System.Windows.Forms.DataGridViewTextBoxColumn balance_output_tenancy;
-        private System.Windows.Forms.DataGridViewTextBoxColumn balance_output_dgi;
         private System.Windows.Forms.GroupBox groupBoxBalanceInput;
         private System.Windows.Forms.TableLayoutPanel tableLayoutPanel2;
         private System.Windows.Forms.NumericUpDown numericUpDownPenaltiesInput;
@@ -1458,5 +1433,29 @@
         private System.Windows.Forms.NumericUpDown numericUpDownBalanceTenancyOutput;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label25;
+        private System.Windows.Forms.DataGridViewTextBoxColumn date;
+        private System.Windows.Forms.DataGridViewTextBoxColumn id_account;
+        private System.Windows.Forms.DataGridViewTextBoxColumn crn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn raw_address;
+        private System.Windows.Forms.DataGridViewTextBoxColumn parsed_address;
+        private System.Windows.Forms.DataGridViewTextBoxColumn account;
+        private System.Windows.Forms.DataGridViewTextBoxColumn tenant;
+        private System.Windows.Forms.DataGridViewTextBoxColumn total_area;
+        private System.Windows.Forms.DataGridViewTextBoxColumn living_area;
+        private System.Windows.Forms.DataGridViewTextBoxColumn prescribed;
+        private System.Windows.Forms.DataGridViewTextBoxColumn balance_input;
+        private System.Windows.Forms.DataGridViewTextBoxColumn balance_tenancy;
+        private System.Windows.Forms.DataGridViewTextBoxColumn balance_dgi;
+        private System.Windows.Forms.DataGridViewTextBoxColumn charging_tenancy;
+        private System.Windows.Forms.DataGridViewTextBoxColumn charging_dgi;
+        private System.Windows.Forms.DataGridViewTextBoxColumn charging_total;
+        private System.Windows.Forms.DataGridViewTextBoxColumn recalc_tenancy;
+        private System.Windows.Forms.DataGridViewTextBoxColumn recalc_dgi;
+        private System.Windows.Forms.DataGridViewTextBoxColumn payment_tenancy;
+        private System.Windows.Forms.DataGridViewTextBoxColumn payment_dgi;
+        private System.Windows.Forms.DataGridViewTextBoxColumn transfer_balance;
+        private System.Windows.Forms.DataGridViewTextBoxColumn balance_output_total;
+        private System.Windows.Forms.DataGridViewTextBoxColumn balance_output_tenancy;
+        private System.Windows.Forms.DataGridViewTextBoxColumn balance_output_dgi;
     }
 }
