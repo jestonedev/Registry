@@ -21,23 +21,22 @@ namespace Registry.Viewport
     {
 
         #region Models
-        private DataModel buildings;
-        private DataModel kladr;
-        private DataModel premises_types;
-        private DataModel object_states;
-        private CalcDataModel premises_funds;
+        private DataModel _buildings;
+        private DataModel _kladr;
+        private DataModel _premisesTypes;
+        private DataModel _objectStates;
+        private CalcDataModel _premisesFunds;
         private CalcDataModel _premisesTenanciesInfo;
-        private DataModel fund_types;
+        private DataModel _fundTypes;
         #endregion Models
 
         #region Views
-        private BindingSource v_buildings;
-        private BindingSource v_premises_types;
+        private BindingSource _vPremisesTypes;
         #endregion Views
 
         //Forms
-        private SearchForm spExtendedSearchForm;
-        private SearchForm spSimpleSearchForm;
+        private SearchForm _spExtendedSearchForm;
+        private SearchForm _spSimpleSearchForm;
 
         private PremisesListViewport()
             : this(null, null)
@@ -61,20 +60,20 @@ namespace Registry.Viewport
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
             GeneralDataModel = DataModel.GetInstance<PremisesDataModel>();
-            kladr = DataModel.GetInstance<KladrStreetsDataModel>();
-            buildings = DataModel.GetInstance<BuildingsDataModel>();
-            premises_types = DataModel.GetInstance<PremisesTypesDataModel>();
-            object_states = DataModel.GetInstance<ObjectStatesDataModel>();
-            fund_types = DataModel.GetInstance<FundTypesDataModel>();
-            premises_funds = CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>();
+            _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
+            _buildings = DataModel.GetInstance<BuildingsDataModel>();
+            _premisesTypes = DataModel.GetInstance<PremisesTypesDataModel>();
+            _objectStates = DataModel.GetInstance<ObjectStatesDataModel>();
+            _fundTypes = DataModel.GetInstance<FundTypesDataModel>();
+            _premisesFunds = CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>();
 
             // Ожидаем дозагрузки данных, если это необходимо
-            kladr.Select();
-            buildings.Select();
-            premises_types.Select();
-            object_states.Select();
-            premises_funds.Select();
-            fund_types.Select();
+            _kladr.Select();
+            _buildings.Select();
+            _premisesTypes.Select();
+            _objectStates.Select();
+            _premisesFunds.Select();
+            _fundTypes.Select();
 
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
             {
@@ -151,25 +150,19 @@ namespace Registry.Viewport
                 Text = string.Format("Помещения по лицевому счету №{0}", ParentRow["account"]);
             }
 
-            v_buildings = new BindingSource
-            {
-                DataMember = "buildings",
-                DataSource = ds
-            };
-
-            v_premises_types = new BindingSource
+            _vPremisesTypes = new BindingSource
             {
                 DataMember = "premises_types",
                 DataSource = ds
             };
 
-            id_premises_type.DataSource = v_premises_types;
+            id_premises_type.DataSource = _vPremisesTypes;
             id_premises_type.ValueMember = "id_premises_type";
             id_premises_type.DisplayMember = "premises_type";
 
             GeneralDataModel.Select().RowChanged += PremisesListViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted += PremisesListViewport_RowDeleted;
-            premises_funds.RefreshEvent += premises_funds_RefreshEvent;
+            _premisesFunds.RefreshEvent += premises_funds_RefreshEvent;
             dataGridView.RowCount = GeneralBindingSource.Count;
 
             ViewportHelper.SetDoubleBuffered(dataGridView);
@@ -183,21 +176,21 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите удалить это помещение?", "Внимание",
+            if (MessageBox.Show(@"Вы действительно хотите удалить это помещение?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 if (DataModelHelper.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                 {
-                    MessageBox.Show("У вас нет прав на удаление муниципальных жилых помещений и помещений, в которых присутствуют муниципальные комнаты",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(@"У вас нет прав на удаление муниципальных жилых помещений и помещений, в которых присутствуют муниципальные комнаты",
+                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
                 if (DataModelHelper.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                 {
-                    MessageBox.Show("У вас нет прав на удаление немуниципальных жилых помещений и помещений, в которых присутствуют немуниципальные комнаты",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(@"У вас нет прав на удаление немуниципальных жилых помещений и помещений, в которых присутствуют немуниципальные комнаты",
+                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
                 if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_premises"]) == -1)
@@ -218,8 +211,8 @@ namespace Registry.Viewport
                 GeneralDataModel.Select().RowChanged -= PremisesListViewport_RowChanged;
                 GeneralDataModel.Select().RowDeleted -= PremisesListViewport_RowDeleted;
             }
-            if (premises_funds != null)
-                premises_funds.RefreshEvent -= premises_funds_RefreshEvent;
+            if (_premisesFunds != null)
+                _premisesFunds.RefreshEvent -= premises_funds_RefreshEvent;
             base.OnClosing(e);
         }
 
@@ -238,18 +231,18 @@ namespace Registry.Viewport
             switch (searchFormType)
             {
                 case SearchFormType.SimpleSearchForm:
-                    if (spSimpleSearchForm == null)
-                        spSimpleSearchForm = new SimpleSearchPremiseForm();
-                    if (spSimpleSearchForm.ShowDialog() != DialogResult.OK)
+                    if (_spSimpleSearchForm == null)
+                        _spSimpleSearchForm = new SimpleSearchPremiseForm();
+                    if (_spSimpleSearchForm.ShowDialog() != DialogResult.OK)
                         return;
-                    DynamicFilter = spSimpleSearchForm.GetFilter();
+                    DynamicFilter = _spSimpleSearchForm.GetFilter();
                     break;
                 case SearchFormType.ExtendedSearchForm:
-                    if (spExtendedSearchForm == null)
-                        spExtendedSearchForm = new ExtendedSearchPremisesForm();
-                    if (spExtendedSearchForm.ShowDialog() != DialogResult.OK)
+                    if (_spExtendedSearchForm == null)
+                        _spExtendedSearchForm = new ExtendedSearchPremisesForm();
+                    if (_spExtendedSearchForm.ShowDialog() != DialogResult.OK)
                         return;
-                    DynamicFilter = spExtendedSearchForm.GetFilter();
+                    DynamicFilter = _spExtendedSearchForm.GetFilter();
                     break;
             }
             var filter = StaticFilter;
@@ -270,10 +263,7 @@ namespace Registry.Viewport
 
         public override bool CanOpenDetails()
         {
-            if (GeneralBindingSource.Position == -1)
-                return false;
-            else
-                return true;
+            return GeneralBindingSource.Position != -1;
         }
 
         public override void OpenDetails()
@@ -471,7 +461,7 @@ namespace Registry.Viewport
         {
             if (dataGridView.Columns[e.ColumnIndex].SortMode == DataGridViewColumnSortMode.NotSortable)
                 return;
-            Func<SortOrder, bool> changeSortColumn = (way) =>
+            Func<SortOrder, bool> changeSortColumn = way =>
             {
                 foreach (DataGridViewColumn column in dataGridView.Columns)
                     column.HeaderCell.SortGlyphDirection = SortOrder.None;
@@ -479,10 +469,9 @@ namespace Registry.Viewport
                 dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = way;
                 return true;
             };
-            if (dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection == SortOrder.Ascending)
-                changeSortColumn(SortOrder.Descending);
-            else
-                changeSortColumn(SortOrder.Ascending);
+            changeSortColumn(dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection == SortOrder.Ascending
+                ? SortOrder.Descending
+                : SortOrder.Ascending);
             dataGridView.Refresh();
         }
 
@@ -495,13 +484,13 @@ namespace Registry.Viewport
         }
 
         private int _idPremises = int.MinValue;
-        private IEnumerable<DataRow> _tenancyInfoRows; 
+        private IEnumerable<DataRow> _tenancyInfoRows;
 
-        void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        private void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (GeneralBindingSource.Count <= e.RowIndex) return;
             var row = ((DataRowView)GeneralBindingSource[e.RowIndex]);
-            var buildingRow = buildings.Select().Rows.Find(row["id_building"]);
+            var buildingRow = _buildings.Select().Rows.Find(row["id_building"]);
             if (buildingRow == null)
                 return;
             switch (dataGridView.Columns[e.ColumnIndex].Name)
@@ -510,7 +499,7 @@ namespace Registry.Viewport
                     e.Value = row["id_premises"];
                     break;
                 case "id_street":
-                    var kladrRow = kladr.Select().Rows.Find(buildingRow["id_street"]);
+                    var kladrRow = _kladr.Select().Rows.Find(buildingRow["id_street"]);
                     string streetName = null;
                     if (kladrRow != null)
                         streetName = kladrRow["street_name"].ToString();
@@ -529,16 +518,16 @@ namespace Registry.Viewport
                     e.Value = row["total_area"];
                     break;
                 case "id_state":
-                    var stateRow = object_states.Select().Rows.Find(row["id_state"]);
+                    var stateRow = _objectStates.Select().Rows.Find(row["id_state"]);
                     if (stateRow != null)
                         e.Value = stateRow["state_female"];
                     break;
                 case "current_fund":
                     if ((new object[] { 1, 4, 5, 9, 11 }).Contains(row["id_state"]))
                     {
-                        var fundRow = premises_funds.Select().Rows.Find(row["id_premises"]);
+                        var fundRow = _premisesFunds.Select().Rows.Find(row["id_premises"]);
                         if (fundRow != null)
-                            e.Value = fund_types.Select().Rows.Find(fundRow["id_fund_type"])["fund_type"];
+                            e.Value = _fundTypes.Select().Rows.Find(fundRow["id_fund_type"])["fund_type"];
                     }
                     break;
                 case "registration_num":

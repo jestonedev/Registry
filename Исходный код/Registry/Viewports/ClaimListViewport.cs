@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
@@ -19,13 +20,13 @@ namespace Registry.Viewport
 {
     internal sealed partial class ClaimListViewport : FormWithGridViewport
     {
-        private BindingSource v_accounts;
+        private BindingSource _vAccounts;
 
 
-        private SearchForm spExtendedSearchForm;
-        private SearchForm spSimpleSearchForm;
+        private SearchForm _spExtendedSearchForm;
+        private SearchForm _spSimpleSearchForm;
 
-        private CalcDataModel lastClaimStates;
+        private CalcDataModel _lastClaimStates;
 
         private int? _idAccount;
 
@@ -232,7 +233,7 @@ namespace Registry.Viewport
             }
             BindAccount(_idAccount);
 
-            v_accounts = new BindingSource
+            _vAccounts = new BindingSource
             {
                 DataSource = DataModel.DataSet,
                 DataMember = "payments_accounts"
@@ -248,8 +249,8 @@ namespace Registry.Viewport
             ViewportHelper.SetDoubleBuffered(dataGridViewClaims);
             is_editable = true;
             DataChangeHandlersInit();
-            lastClaimStates = CalcDataModel.GetInstance<CalcDataModelLastClaimStates>();
-            lastClaimStates.RefreshEvent += lastClaimStates_RefreshEvent;
+            _lastClaimStates = CalcDataModel.GetInstance<CalcDataModelLastClaimStates>();
+            _lastClaimStates.RefreshEvent += lastClaimStates_RefreshEvent;
         }
 
         void lastClaimStates_RefreshEvent(object sender, EventArgs e)
@@ -537,18 +538,18 @@ namespace Registry.Viewport
             switch (searchFormType)
             {
                 case SearchFormType.SimpleSearchForm:
-                    if (spSimpleSearchForm == null)
-                        spSimpleSearchForm = new SimpleSearchClaimsForm();
-                    if (spSimpleSearchForm.ShowDialog() != DialogResult.OK)
+                    if (_spSimpleSearchForm == null)
+                        _spSimpleSearchForm = new SimpleSearchClaimsForm();
+                    if (_spSimpleSearchForm.ShowDialog() != DialogResult.OK)
                         return;
-                    DynamicFilter = spSimpleSearchForm.GetFilter();
+                    DynamicFilter = _spSimpleSearchForm.GetFilter();
                     break;
                 case SearchFormType.ExtendedSearchForm:
-                    if (spExtendedSearchForm == null)
-                        spExtendedSearchForm = new ExtendedSearchClaimsForm();
-                    if (spExtendedSearchForm.ShowDialog() != DialogResult.OK)
+                    if (_spExtendedSearchForm == null)
+                        _spExtendedSearchForm = new ExtendedSearchClaimsForm();
+                    if (_spExtendedSearchForm.ShowDialog() != DialogResult.OK)
                         return;
-                    DynamicFilter = spExtendedSearchForm.GetFilter();
+                    DynamicFilter = _spExtendedSearchForm.GetFilter();
                     break;
             }
             var filter = StaticFilter;
@@ -558,8 +559,6 @@ namespace Registry.Viewport
             dataGridViewClaims.RowCount = 0;
             GeneralBindingSource.Filter = filter;
             dataGridViewClaims.RowCount = GeneralBindingSource.Count;
-            if (dataGridViewClaims.RowCount > 0)
-                dataGridViewClaims.InvalidateRow(0);
         }
 
         public override void ClearSearch()
@@ -617,7 +616,7 @@ namespace Registry.Viewport
         void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
             SetViewportCaption();
-            if (v_accounts != null) v_accounts.Filter = "";
+            if (_vAccounts != null) _vAccounts.Filter = "";
             if (GeneralBindingSource.Position == -1 || dataGridViewClaims.RowCount == 0)
                 dataGridViewClaims.ClearSelection();
             else
@@ -731,10 +730,10 @@ namespace Registry.Viewport
                 GeneralBindingSource.Position = -1;
         }
 
-        private int _rowIndex = int.MinValue;
-        private IEnumerable<DataRow> _accountList; 
+        private int _idClaim = int.MinValue;
+        private IEnumerable<DataRow> _accountList;
 
-        void dataGridViewClaims_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        private void dataGridViewClaims_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (GeneralBindingSource.Count <= e.RowIndex) return;
             var row = ((DataRowView)GeneralBindingSource[e.RowIndex]);
@@ -747,14 +746,14 @@ namespace Registry.Viewport
                 case "raw_address":
                 case "tenant":
                     if (row["id_account"] == DBNull.Value) return;
-                    if (_rowIndex != e.RowIndex)
-                    {
+                    if ((int)row["id_claim"] != _idClaim || _accountList.Any(entry => entry.RowState == DataRowState.Deleted || entry.RowState == DataRowState.Detached))
+                    {   
                         _accountList =
                             (from paymentAccountRow in
                                 DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
                                 where paymentAccountRow.Field<int?>("id_account") == (int?) row["id_account"]
                                 select paymentAccountRow).ToList();
-                        _rowIndex = e.RowIndex;
+                        _idClaim = (int)row["id_claim"];
                     }
                     if (_accountList != null && _accountList.Any())
                     {
@@ -785,14 +784,14 @@ namespace Registry.Viewport
                 case "state_type":
                     if (row["id_claim"] == DBNull.Value || row["id_claim"] == null) return;
                     var idClaim = (int?) row["id_claim"];
-                    var lastClaimState = lastClaimStates.Select().Rows.Find(idClaim);
+                    var lastClaimState = _lastClaimStates.Select().Rows.Find(idClaim);
                     if (lastClaimState != null)
                         e.Value = lastClaimState.Field<string>("state_type");
                     break;
                 case "date_start_state":
                     if (row["id_claim"] == DBNull.Value || row["id_claim"] == null) return;
                     idClaim = (int?) row["id_claim"];
-                    lastClaimState = lastClaimStates.Select().Rows.Find(idClaim);
+                    lastClaimState = _lastClaimStates.Select().Rows.Find(idClaim);
                     if (lastClaimState != null && lastClaimState.Field<DateTime?>("date_start_state") != null)
                         e.Value = lastClaimState.Field<DateTime>("date_start_state").ToString("dd.MM.yyyy");
                     break;
