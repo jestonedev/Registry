@@ -16,18 +16,20 @@ namespace Registry.Viewport
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BuildingListViewport));
             this.dataGridView = new System.Windows.Forms.DataGridView();
+            this.BTI_rooms = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_building = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_street = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.house = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.floors = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.living_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.mun_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cadastral_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.startup_year = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_structure_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.id_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.BTI_rooms = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -54,6 +56,7 @@ namespace Registry.Viewport
             this.house,
             this.floors,
             this.living_area,
+            this.mun_area,
             this.cadastral_num,
             this.startup_year,
             this.id_structure_type,
@@ -75,6 +78,10 @@ namespace Registry.Viewport
             this.dataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_ColumnHeaderMouseClick);
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             this.dataGridView.Resize += new System.EventHandler(this.dataGridView_Resize);
+            // 
+            // BTI_rooms
+            // 
+            this.BTI_rooms.Name = "BTI_rooms";
             // 
             // id_building
             // 
@@ -125,6 +132,18 @@ namespace Registry.Viewport
             this.living_area.ReadOnly = true;
             this.living_area.Width = 70;
             // 
+            // mun_area
+            // 
+            this.mun_area.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            dataGridViewCellStyle3.Format = "#0.0## м²";
+            this.mun_area.DefaultCellStyle = dataGridViewCellStyle3;
+            this.mun_area.HeaderText = "Мун. площадь";
+            this.mun_area.MinimumWidth = 70;
+            this.mun_area.Name = "mun_area";
+            this.mun_area.ReadOnly = true;
+            this.mun_area.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            this.mun_area.Width = 70;
+            // 
             // cadastral_num
             // 
             this.cadastral_num.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
@@ -159,14 +178,6 @@ namespace Registry.Viewport
             this.id_state.Name = "id_state";
             this.id_state.ReadOnly = true;
             this.id_state.Width = 200;
-            //
-            //BTI_rooms
-            //
-            //this.BTI_rooms.AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-            //this.BTI_rooms.HeaderText = "Приватиз. кв. по данным БТИ";
-            //this.BTI_rooms.MinimumWidth = 200;
-            //this.BTI_rooms.ReadOnly = true;
-            //this.BTI_rooms.Name = "BTI_rooms";
             // 
             // BuildingListViewport
             // 
@@ -182,16 +193,16 @@ namespace Registry.Viewport
             this.ResumeLayout(false);
 
         }
-
+        private DataGridViewTextBoxColumn BTI_rooms;
         private DataGridViewTextBoxColumn id_building;
         private DataGridViewComboBoxColumn id_street;
         private DataGridViewTextBoxColumn house;
         private DataGridViewTextBoxColumn floors;
         private DataGridViewTextBoxColumn living_area;
+        private DataGridViewTextBoxColumn mun_area;
         private DataGridViewTextBoxColumn cadastral_num;
         private DataGridViewTextBoxColumn startup_year;
         private DataGridViewComboBoxColumn id_structure_type;
         private DataGridViewTextBoxColumn id_state;
-        private DataGridViewTextBoxColumn BTI_rooms;
     }
 }

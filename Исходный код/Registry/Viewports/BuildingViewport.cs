@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -20,17 +19,10 @@ namespace Registry.Viewport
     internal sealed partial class BuildingViewport : FormViewport
     {
         #region Models
-        private DataModel _kladr;
-        private DataModel _structureTypes;
-        private DataModel _heatingTypes;
         private DataModel _restrictions;
-        private DataModel _restrictionTypes;
         private DataModel _restrictionBuildingsAssoc;
         private DataModel _ownershipRights;
-        private DataModel _ownershipRightTypes;
         private DataModel _ownershipBuildingsAssoc;
-        private DataModel _fundTypes;
-        private DataModel _objectStates;
         private CalcDataModel _buildingsPremisesFunds;
         private CalcDataModel _buildingsCurrentFund;
         private CalcDataModel _buildingsPremisesSumArea;
@@ -73,7 +65,7 @@ namespace Registry.Viewport
         {
             var restrictionsFilter = "id_restriction IN (0";
             for (var i = 0; i < _vRestrictionBuildingsAssoc.Count; i++)
-                restrictionsFilter += ((DataRowView)_vRestrictionBuildingsAssoc[i])["id_restriction"].ToString() + ",";
+                restrictionsFilter += ((DataRowView)_vRestrictionBuildingsAssoc[i])["id_restriction"] + ",";
             restrictionsFilter = restrictionsFilter.TrimEnd(',');
             restrictionsFilter += ")";
             _vRestrictions.Filter = restrictionsFilter;
@@ -83,7 +75,7 @@ namespace Registry.Viewport
         {
             var ownershipFilter = "id_ownership_right IN (0";
             for (var i = 0; i < _vOwnershipBuildingsAssoc.Count; i++)
-                ownershipFilter += ((DataRowView)_vOwnershipBuildingsAssoc[i])["id_ownership_right"].ToString() + ",";
+                ownershipFilter += ((DataRowView)_vOwnershipBuildingsAssoc[i])["id_ownership_right"] + ",";
             ownershipFilter = ownershipFilter.TrimEnd(',');
             ownershipFilter += ")";
             _vOwnershipRights.Filter = ownershipFilter;
@@ -125,7 +117,6 @@ namespace Registry.Viewport
             numericUpDownSpecialPremisesCount.Value = specialCount;
             numericUpDownOtherPremisesCount.Value = otherCount;
             numericUpDownCommercialPremisesCount.Value = commercialCount;
-            var sumArea = Convert.ToDecimal(_municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == idBuilding).Sum(m => m.Field<double>("total_area")));
             var totalMunCount = Convert.ToDecimal(_municipalPremises.Select().AsEnumerable().Count(s => s.Field<int>("id_building") == idBuilding));
             var totalPremisesCount = Convert.ToDecimal(
                 Math.Max(DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows().Count(b => b.Field<int>("id_building") == idBuilding),
@@ -143,6 +134,7 @@ namespace Registry.Viewport
                 numericUpDownMunPremisesPercentage.Minimum = 0;
                 numericUpDownMunPremisesPercentage.Value = 0;
             }
+            var sumArea = Convert.ToDecimal(_municipalPremises.Select().AsEnumerable().Where(s => s.Field<int>("id_building") == idBuilding).Sum(m => m.Field<double>("total_area")));
             numericUpDownMunicipalArea.Minimum = sumArea;
             numericUpDownMunicipalArea.Maximum = sumArea;
             numericUpDownMunicipalArea.Value = sumArea;
@@ -574,17 +566,17 @@ namespace Registry.Viewport
             dataGridViewRestrictions.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
             GeneralDataModel = DataModel.GetInstance<BuildingsDataModel>();
-            _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
-            _structureTypes = DataModel.GetInstance<StructureTypesDataModel>();
-            _heatingTypes = DataModel.GetInstance<HeatingTypesDataModel>();
+            DataModel.GetInstance<KladrStreetsDataModel>().Select();
+            DataModel.GetInstance<StructureTypesDataModel>().Select();
+            DataModel.GetInstance<HeatingTypesDataModel>().Select();
             _restrictions = DataModel.GetInstance<RestrictionsDataModel>();
-            _restrictionTypes = DataModel.GetInstance<RestrictionTypesDataModel>();
+            DataModel.GetInstance<RestrictionTypesDataModel>().Select();
             _restrictionBuildingsAssoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>();
             _ownershipRights = DataModel.GetInstance<OwnershipsRightsDataModel>();
-            _ownershipRightTypes = DataModel.GetInstance<OwnershipRightTypesDataModel>();
+            DataModel.GetInstance<OwnershipRightTypesDataModel>().Select();
             _ownershipBuildingsAssoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>();
-            _fundTypes = DataModel.GetInstance<FundTypesDataModel>();
-            _objectStates = DataModel.GetInstance<ObjectStatesDataModel>();
+            DataModel.GetInstance<FundTypesDataModel>().Select();
+            DataModel.GetInstance<ObjectStatesDataModel>().Select();
 
             //Вычисляемые модели
             _buildingsPremisesFunds = CalcDataModel.GetInstance<CalcDataModelBuildingsPremisesFunds>();
@@ -594,16 +586,13 @@ namespace Registry.Viewport
 
             //Ожидаем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
-            _kladr.Select();
-            _structureTypes.Select();
             _restrictions.Select();
-            _restrictionTypes.Select();
             _restrictionBuildingsAssoc.Select();
             _ownershipRights.Select();
-            _ownershipRightTypes.Select();
             _ownershipBuildingsAssoc.Select();
-            _fundTypes.Select();
-            _objectStates.Select();
+            _buildingsPremisesFunds.Select();
+            _municipalPremises.Select();
+            _buildingsPremisesSumArea.Select();
 
             var ds = DataModel.DataSet;
 
@@ -651,28 +640,10 @@ namespace Registry.Viewport
                 DataSource = ds
             };
 
-            new BindingSource
-            {
-                DataMember = "buildings_premises_funds",
-                DataSource = _buildingsPremisesFunds.Select()
-            };
-
-            new BindingSource
-            {
-                DataMember = "municipal_premises_current_funds",
-                DataSource = _municipalPremises.Select()
-            };
-
             _vBuildingCurrentFund = new BindingSource
             {
                 DataMember = "buildings_current_funds",
                 DataSource = _buildingsCurrentFund.Select()
-            };
-
-            new BindingSource
-            {
-                DataMember = "buildings_premises_sum_area",
-                DataSource = _buildingsPremisesSumArea.Select()
             };
 
             _vFundType = new BindingSource
@@ -692,7 +663,7 @@ namespace Registry.Viewport
             GeneralBindingSource.DataMember = "buildings";
             GeneralBindingSource.DataSource = ds;
             GeneralBindingSource.Filter = StaticFilter;
-            if (!string.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
+            if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 GeneralBindingSource.Filter += " AND ";
             GeneralBindingSource.Filter += DynamicFilter;
             GeneralDataModel.Select().RowDeleted += BuildingViewport_RowDeleted;
@@ -1181,13 +1152,13 @@ namespace Registry.Viewport
         {
             if (dataGridViewRestrictions.Size.Width > 600)
             {
-                if (dataGridViewRestrictions.Columns["restriction_description"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
-                    dataGridViewRestrictions.Columns["restriction_description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                if (restriction_description.AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
+                    restriction_description.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             }
             else
             {
-                if (dataGridViewRestrictions.Columns["restriction_description"].AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
-                    dataGridViewRestrictions.Columns["restriction_description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                if (restriction_description.AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
+                    restriction_description.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
         }
 
@@ -1195,13 +1166,13 @@ namespace Registry.Viewport
         {
             if (dataGridViewOwnerships.Size.Width > 600)
             {
-                if (dataGridViewOwnerships.Columns["ownership_description"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
-                    dataGridViewOwnerships.Columns["ownership_description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                if (ownership_description.AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
+                    ownership_description.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             }
             else
             {
-                if (dataGridViewOwnerships.Columns["ownership_description"].AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
-                    dataGridViewOwnerships.Columns["ownership_description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                if (ownership_description.AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
+                    ownership_description.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
         }
 

@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Reporting;
@@ -21,6 +22,7 @@ namespace Registry.Viewport
         #region Models
         private DataModel _kladr;
         private DataModel _objectStates;
+        private CalcDataModel _municipalPremises;
         #endregion
 
         #region Views
@@ -55,11 +57,13 @@ namespace Registry.Viewport
             GeneralDataModel = DataModel.GetInstance<BuildingsDataModel>();
             _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
             _objectStates = DataModel.GetInstance<ObjectStatesDataModel>();
+            _municipalPremises = CalcDataModel.GetInstance<CalcDataModelMunicipalPremises>();
             
             // Ожидаем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
             _kladr.Select();
             _objectStates.Select();
+            _municipalPremises.Select();
 
             var ds = DataModel.DataSet;
 
@@ -93,8 +97,17 @@ namespace Registry.Viewport
 
             GeneralDataModel.Select().RowChanged += BuildingListViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted += BuildingListViewport_RowDeleted;
+            _municipalPremises.RefreshEvent += _municipalPremises_RefreshEvent;
             dataGridView.RowCount = GeneralBindingSource.Count;
             ViewportHelper.SetDoubleBuffered(dataGridView);
+        }
+
+        void _municipalPremises_RefreshEvent(object sender, EventArgs e)
+        {
+            if (dataGridView.Columns["mun_area"] != null)
+            {
+                dataGridView.InvalidateColumn(dataGridView.Columns["mun_area"].Index);
+            }
         }
 
         public override bool CanSearchRecord()
@@ -321,14 +334,14 @@ namespace Registry.Viewport
             base.OnClosing(e);
         }
 
-        void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1) return;
             if (CanOpenDetails())
                 OpenDetails();
         }
 
-        void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (dataGridView.Columns[e.ColumnIndex].SortMode == DataGridViewColumnSortMode.NotSortable)
                 return;
@@ -346,7 +359,7 @@ namespace Registry.Viewport
             dataGridView.Refresh();
         }
 
-        void BuildingListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        private void BuildingListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             dataGridView.RowCount = GeneralBindingSource.Count;
             dataGridView.Refresh();
@@ -355,7 +368,7 @@ namespace Registry.Viewport
                 MenuCallback.StatusBarStateUpdate();
         }
 
-        void BuildingListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void BuildingListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Change || e.Action == DataRowAction.ChangeCurrentAndOriginal || e.Action == DataRowAction.ChangeOriginal)
                 dataGridView.Refresh();
@@ -364,7 +377,7 @@ namespace Registry.Viewport
                 MenuCallback.StatusBarStateUpdate();
         }
 
-        void dataGridView_SelectionChanged(object sender, EventArgs e)
+        private void dataGridView_SelectionChanged(object sender, EventArgs e)
         {
             if (dataGridView.SelectedRows.Count > 0)
                 GeneralBindingSource.Position = dataGridView.SelectedRows[0].Index;
@@ -372,7 +385,7 @@ namespace Registry.Viewport
                 GeneralBindingSource.Position = -1;
         }
 
-        void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        private void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (GeneralBindingSource.Count <= e.RowIndex) return;
             var row = ((DataRowView) GeneralBindingSource[e.RowIndex]);
@@ -393,6 +406,10 @@ namespace Registry.Viewport
                     var stateRow = _objectStates.Select().Rows.Find(row["id_state"]);
                     if (stateRow != null)
                         e.Value = stateRow["state_female"];
+                    break;
+                case "mun_area":
+                    e.Value = Convert.ToDecimal(_municipalPremises.Select().AsEnumerable().
+                        Where(s => s.Field<int>("id_building") == (int?)row["id_building"]).Sum(m => m.Field<double>("total_area")));
                     break;
             }
         } 
