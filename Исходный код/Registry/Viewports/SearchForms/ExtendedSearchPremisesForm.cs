@@ -46,19 +46,19 @@ namespace Registry.Viewport.SearchForms
                 else
                     filter += "cadastral_num is null";
             }
-            if ((checkBoxStateEnable.Checked) && ((checkedListBox1.CheckedItems.Count > 0)))
+            if (checkBoxStateEnable.Checked && (checkedListBox1.CheckedItems.Count > 0))
             {
                 if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                string array = string.Empty;
-                for(int i = 0; i < checkedListBox1.CheckedItems.Count; i++)
+                var array = string.Empty;
+                for(var i = 0; i < checkedListBox1.CheckedItems.Count; i++)
                 {
                     var row =(DataRowView) checkedListBox1.CheckedItems[i];
                     array += checkedListBox1.CheckedItems.IndexOf(row) == checkedListBox1.CheckedItems.Count - 1 ?
                         row["id_state"] : row["id_state"] + ", ";
                 }
                 filter += "id_state IN (" + array + ")";
-            }         
+            }
 
             if (checkBoxIDPremisesEnable.Checked)
                 includedPremises = DataModelHelper.Intersect(null, new List<int>() { Convert.ToInt32(numericUpDownIDPremises.Value) });

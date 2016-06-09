@@ -44,96 +44,81 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelMunicipalPremises");            
             // Фильтруем удаленные строки
-            var fundsHistory = DataModel.GetInstance<FundsHistoryDataModel>().FilterDeletedRows();
-            var fundsPremisesAssoc = DataModel.GetInstance<FundsPremisesAssocDataModel>().FilterDeletedRows();
-            var fundsSubPremisesAssoc = DataModel.GetInstance<FundsSubPremisesAssocDataModel>().FilterDeletedRows();
-            var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
-            var subPremises = DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows();
-            var buildings = DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows();
+            var fundsHistory = DataModel.GetInstance<FundsHistoryDataModel>().FilterDeletedRows().ToList();
+            var fundsPremisesAssoc = DataModel.GetInstance<FundsPremisesAssocDataModel>().FilterDeletedRows().ToList();
+            var fundsSubPremisesAssoc = DataModel.GetInstance<FundsSubPremisesAssocDataModel>().FilterDeletedRows().ToList();
+            var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows().ToList();
+            var subPremises = DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows().ToList();
 
             // Вычисляем агрегационную информацию
-            var maxIdByPremises = DataModelHelper.MaxFundIDsByObject(fundsPremisesAssoc, EntityType.Premise);
-            var maxIdBySubPremises = DataModelHelper.MaxFundIDsByObject(fundsSubPremisesAssoc, EntityType.SubPremise);
-            // выбираем муниц. помещения, принадлежащие какому-либо фонду, а также имеющие состояния: 4, 5 или 9
-            var premisesDataSet = (from buildingRow in buildings
-                                   join premisesRow in premises
-                                   on buildingRow.Field<int>("id_building") equals premisesRow.Field<int>("id_building")
-                                   join maxIdByPremisesRow in maxIdByPremises
-                                   on premisesRow.Field<int>("id_premises") equals maxIdByPremisesRow.IdObject
-                                   join fundHistoryRow in fundsHistory
-                                   on maxIdByPremisesRow.IdFund equals fundHistoryRow.Field<int>("id_fund")
-                                   where (new object[] { 4, 5, 9 }).Contains(premisesRow.Field<int>("id_state"))
-                                   select new MunicipalPremises
-                                   {
-                                       id_building = premisesRow.Field<int>("id_building"),
-                                       id_premises = maxIdByPremisesRow.IdObject,
-                                       id_sub_premises = 0,
-                                       id_fund = maxIdByPremisesRow.IdFund,
-                                       id_fund_type = fundHistoryRow.Field<int>("id_fund_type"),
-                                       total_area = premisesRow.Field<double>("total_area")
-                                   }).ToList();
-            // выбираем муниц. комнаты, принадлежащие какому-либо фонду, а также имеющие состояния: 4, 5 или 9
-            var subPremisesDataSet = (from buildingRow in buildings
-                                      join premisesRow in premises
-                                      on buildingRow.Field<int>("id_building") equals premisesRow.Field<int>("id_building")
-                                      join spRow in subPremises
-                                      on premisesRow.Field<int>("id_premises") equals spRow.Field<int>("id_premises")
-                                      join maxIdBySubPremisesRow in maxIdBySubPremises
-                                      on spRow.Field<int>("id_sub_premises") equals maxIdBySubPremisesRow.IdObject
-                                      join fundHistoryRow in fundsHistory
-                                      on maxIdBySubPremisesRow.IdFund equals fundHistoryRow.Field<int>("id_fund")
-                                      where (new object[] { 4, 5, 9 }).Contains(spRow.Field<int>("id_state")) &&
-                                        (new object[] { 4, 5, 9 }).Contains(premisesRow.Field<int>("id_state"))
-                                      select new MunicipalPremises
-                                      {
-                                          id_building = premisesRow.Field<int>("id_building"),
-                                          id_premises = premisesRow.Field<int>("id_premises"),
-                                          id_sub_premises = maxIdBySubPremisesRow.IdObject,
-                                          id_fund = maxIdBySubPremisesRow.IdFund,
-                                          id_fund_type = fundHistoryRow.Field<int>("id_fund_type"),
-                                          total_area = spRow.Field<double>("total_area")
-                                      }).ToList();
-            // выбираем муниц. свободные помещения без фонда, а также имеющие состояние 5
-            var premisesWithoutFund = buildings.Join(premises,
-                b => b.Field<int>("id_building"),
-                p => p.Field<int>("id_building"),
-                (b, p) => p)
-                .Where(p => p.Field<int>("id_state") == 5 && !fundsPremisesAssoc.Select(f => f.Field<int>("id_premises")).Contains(p.Field<int>("id_premises")))
-                .Select(premisesRow => new MunicipalPremises
+            var fundInfoPremises =
+                (from fundRow in DataModelHelper.MaxFundIDsByObject(fundsPremisesAssoc, EntityType.Premise)
+                join fundsHistoryRow in fundsHistory
+                    on fundRow.IdFund equals fundsHistoryRow.Field<int?>("id_fund")
+                select new
+                {
+                    id_premises = fundRow.IdObject,
+                    id_fund = fundRow.IdFund,
+                    id_fund_type = fundsHistoryRow.Field<int?>("id_fund_type")
+                }).ToList();
+            var fundInfoSubPremises =
+                 (from fundRow in DataModelHelper.MaxFundIDsByObject(fundsSubPremisesAssoc, EntityType.SubPremise)
+                 join fundsHistoryRow in fundsHistory
+                     on fundRow.IdFund equals fundsHistoryRow.Field<int?>("id_fund")
+                 select new
+                 {
+                     id_sub_premises = fundRow.IdObject,
+                     id_fund = fundRow.IdFund,
+                     id_fund_type = fundsHistoryRow.Field<int?>("id_fund_type")
+                 }).ToList();
+
+            var premisesDataSet = (from premisesRow in premises
+                join fundInfoRow in fundInfoPremises
+                    on premisesRow.Field<int>("id_premises") equals fundInfoRow.id_premises into fi
+                from fiRow in fi.DefaultIfEmpty()
+                where (new object[] {4, 5, 9}.Contains(premisesRow.Field<int>("id_state")) && fiRow != null) ||
+                      (premisesRow.Field<int>("id_state") == 5 && fiRow == null)
+                select new MunicipalPremises
                 {
                     id_building = premisesRow.Field<int>("id_building"),
                     id_premises = premisesRow.Field<int>("id_premises"),
                     id_sub_premises = 0,
-                    id_fund = 0,
-                    id_fund_type = 0,
+                    id_fund = fiRow == null ? null : fiRow.id_fund,
+                    id_fund_type = premisesRow.Field<int>("id_state") == 5
+                        ? 0
+                        : (fiRow == null ? -1 : fiRow.id_fund_type.Value),
                     total_area = premisesRow.Field<double>("total_area")
                 }).ToList();
-            // выбираем муниц. свободные комнаты без фонда, а также имеющие состояние 5
-            var subpremisesWithoutFund = (from buildingRow in buildings
-                                   join premisesRow in premises
-                                   on buildingRow.Field<int>("id_building") equals premisesRow.Field<int>("id_building")
-                                   join spRow in subPremises
-                                   on premisesRow.Field<int>("id_premises") equals spRow.Field<int>("id_premises")
-                                   where spRow.Field<int>("id_state") == 5 && 
-                                   !fundsSubPremisesAssoc.Select(f => f.Field<int>("id_sub_premises")).Contains(spRow.Field<int>("id_sub_premises"))
-                                   select new MunicipalPremises
-                                   {
-                                        id_building = premisesRow.Field<int>("id_building"),
-                                        id_premises = premisesRow.Field<int>("id_premises"),
-                                        id_sub_premises = spRow.Field<int>("id_sub_premises"),
-                                        id_fund = 0,
-                                        id_fund_type = 0,
-                                        total_area = spRow.Field<double>("total_area")
-            
-                                   }).ToList();
 
-            // исключаем все помещения в которых есть свободные без фонда комнаты, т.е учитываем только свободные без фонда комнаты и помещения в которых нет комнат
-            var premisesWithoutFundAndSubPr = premisesWithoutFund.Where(p => !subpremisesWithoutFund.Select(s => s.id_premises).Contains(p.id_premises));
-            var allFreeMunicipal = premisesWithoutFundAndSubPr.Union(subpremisesWithoutFund).ToList();
+            // выбираем муниц. комнаты, принадлежащие какому-либо фонду, а также имеющие состояния: 4, 5 или 9
+            var subPremisesDataSet = (from premisesRow in premises
+                join spRow in subPremises
+                    on premisesRow.Field<int>("id_premises") equals spRow.Field<int>("id_premises")
+                join fundInfoRow in fundInfoSubPremises
+                    on spRow.Field<int>("id_sub_premises") equals fundInfoRow.id_sub_premises into fi
+                from fiRow in fi.DefaultIfEmpty()
+                join fundInfoPremiseRow in fundInfoPremises
+                    on premisesRow.Field<int>("id_premises") equals fundInfoPremiseRow.id_premises into fip
+                from fipRow in fip.DefaultIfEmpty()
+                where
+                    (new object[] {4, 5, 9}.Contains(spRow.Field<int>("id_state")) && (fiRow != null || fipRow != null)) ||
+                    (spRow.Field<int>("id_state") == 5 && fiRow == null && fipRow == null)
+                select new MunicipalPremises
+                {
+                    id_building = premisesRow.Field<int>("id_building"),
+                    id_premises = premisesRow.Field<int>("id_premises"),
+                    id_sub_premises = spRow.Field<int>("id_sub_premises"),
+                    id_fund = fiRow == null ? null : fiRow.id_fund,
+                    id_fund_type = spRow.Field<int>("id_state") == 5
+                        ? 0
+                        : (fiRow == null ? (fipRow == null ? -1 : fipRow.id_fund_type.Value) : fiRow.id_fund_type.Value),
+                    total_area = spRow.Field<double>("total_area")
+                }).ToList();
 
-            // исключаем все помещения в которых есть комнаты, т.е учитываем только комнаты и помещения в которых нет комнат
-            var municipalPrWithoutInnerSubPr = premisesDataSet.Where(p => !subPremisesDataSet.Select(sp => sp.id_premises).Contains(p.id_premises) || (!allFreeMunicipal.Select(sp => sp.id_premises).Contains(p.id_premises) && p.id_sub_premises == 0));                      
-            var allMunicipal = municipalPrWithoutInnerSubPr.Union(subPremisesDataSet).Union(allFreeMunicipal);
+            var allMunicipal =
+                subPremisesDataSet.Union(
+                    premisesDataSet.Where(p => subPremisesDataSet.All(sp => sp.id_premises != p.id_premises)));
+                   
             var table = InitializeTable();
             table.BeginLoadData();
             allMunicipal.ToList().ForEach(x =>

@@ -103,7 +103,7 @@ namespace Registry.Viewport
             }
             var socialCount = _municipalPremises.Select().AsEnumerable().Count(s => s.Field<int>("id_building") == idBuilding && s.Field<int>("id_fund_type") == 1);
             var commercialCount = _municipalPremises.Select().AsEnumerable().Count(s => s.Field<int>("id_building") == idBuilding && s.Field<int>("id_fund_type") == 2);
-            var specialCount = _municipalPremises.Select().AsEnumerable().Count(s => s.Field<int>("id_building") == idBuilding && s.Field<int>("id_fund_type") == 3);                   
+            var specialCount = _municipalPremises.Select().AsEnumerable().Count(s => s.Field<int>("id_building") == idBuilding && s.Field<int>("id_fund_type") == 3);
             var otherCount = _municipalPremises.Select().AsEnumerable().Count(s => s.Field<int>("id_building") == idBuilding && s.Field<int>("id_fund_type") == 0);
             numericUpDownSocialPremisesCount.Minimum = socialCount;
             numericUpDownSpecialPremisesCount.Minimum = specialCount;
