@@ -76,19 +76,19 @@ namespace Registry.DataModels.CalcDataModels
                 join fundInfoRow in fundInfoPremises
                     on premisesRow.Field<int>("id_premises") equals fundInfoRow.id_premises into fi
                 from fiRow in fi.DefaultIfEmpty()
-                where (new object[] {4, 5, 9}.Contains(premisesRow.Field<int>("id_state")) && fiRow != null) ||
-                      (premisesRow.Field<int>("id_state") == 5 && fiRow == null)
+                where new object[] {4, 5, 9}.Contains(premisesRow.Field<int>("id_state"))
                 select new MunicipalPremises
                 {
                     id_building = premisesRow.Field<int>("id_building"),
                     id_premises = premisesRow.Field<int>("id_premises"),
                     id_sub_premises = 0,
                     id_fund = fiRow == null ? null : fiRow.id_fund,
-                    id_fund_type = premisesRow.Field<int>("id_state") == 5
+                    id_fund_type = premisesRow.Field<int>("id_state") == 5 || fiRow == null
                         ? 0
-                        : (fiRow == null ? -1 : fiRow.id_fund_type.Value),
+                        : fiRow.id_fund_type.Value,
                     total_area = premisesRow.Field<double>("total_area")
                 }).ToList();
+            var test = premisesDataSet.Where(v => v.id_building == 3482);
 
             // выбираем муниц. комнаты, принадлежащие какому-либо фонду, а также имеющие состояния: 4, 5 или 9
             var subPremisesDataSet = (from premisesRow in premises
@@ -100,18 +100,16 @@ namespace Registry.DataModels.CalcDataModels
                 join fundInfoPremiseRow in fundInfoPremises
                     on premisesRow.Field<int>("id_premises") equals fundInfoPremiseRow.id_premises into fip
                 from fipRow in fip.DefaultIfEmpty()
-                where
-                    (new object[] {4, 5, 9}.Contains(spRow.Field<int>("id_state")) && (fiRow != null || fipRow != null)) ||
-                    (spRow.Field<int>("id_state") == 5 && fiRow == null && fipRow == null)
+                where new object[] {4, 5, 9}.Contains(spRow.Field<int>("id_state"))
                 select new MunicipalPremises
                 {
                     id_building = premisesRow.Field<int>("id_building"),
                     id_premises = premisesRow.Field<int>("id_premises"),
                     id_sub_premises = spRow.Field<int>("id_sub_premises"),
                     id_fund = fiRow == null ? null : fiRow.id_fund,
-                    id_fund_type = spRow.Field<int>("id_state") == 5
+                    id_fund_type = spRow.Field<int>("id_state") == 5 || (fiRow == null && fipRow == null)
                         ? 0
-                        : (fiRow == null ? (fipRow == null ? -1 : fipRow.id_fund_type.Value) : fiRow.id_fund_type.Value),
+                        : (fiRow == null ? fipRow.id_fund_type.Value : fiRow.id_fund_type.Value),
                     total_area = spRow.Field<double>("total_area")
                 }).ToList();
 
