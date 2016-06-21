@@ -13,11 +13,6 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridView dataGridView;
-        private DataGridViewTextBoxColumn id_restriction;
-        private DataGridViewTextBoxColumn number;
-        private DataGridViewDateTimeColumn date;
-        private DataGridViewTextBoxColumn description;
-        private DataGridViewComboBoxColumn id_restriction_type;
         #endregion Components
 
 
@@ -89,6 +84,7 @@ namespace Registry.Viewport
             this.date.HeaderText = "Дата";
             this.date.MinimumWidth = 150;
             this.date.Name = "date";
+            this.date.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.date.Width = 150;
             // 
             // description
@@ -121,5 +117,11 @@ namespace Registry.Viewport
             this.ResumeLayout(false);
 
         }
+
+        private DataGridViewTextBoxColumn id_restriction;
+        private DataGridViewTextBoxColumn number;
+        private DataGridViewDateTimeColumn date;
+        private DataGridViewTextBoxColumn description;
+        private DataGridViewComboBoxColumn id_restriction_type;
     }
 }
