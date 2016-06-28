@@ -111,17 +111,22 @@
             this.balance_input = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.balance_input_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.charging_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.charging_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.charging_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.charging_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.recalc_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.recalc_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.recalc_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.payment_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.payment_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.payment_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.transfer_balance = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_output_total = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_output_tenancy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_output_dgi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.balance_output_penalties = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel1.SuspendLayout();
             this.groupBoxBalanceOutput.SuspendLayout();
             this.tableLayoutPanel6.SuspendLayout();
@@ -906,17 +911,22 @@
             this.balance_input,
             this.balance_tenancy,
             this.balance_dgi,
+            this.balance_input_penalties,
             this.charging_tenancy,
             this.charging_dgi,
             this.charging_total,
+            this.charging_penalties,
             this.recalc_tenancy,
             this.recalc_dgi,
+            this.recalc_penalties,
             this.payment_tenancy,
             this.payment_dgi,
+            this.payment_penalties,
             this.transfer_balance,
             this.balance_output_total,
             this.balance_output_tenancy,
-            this.balance_output_dgi});
+            this.balance_output_dgi,
+            this.balance_output_penalties});
             this.tableLayoutPanel1.SetColumnSpan(this.dataGridView, 2);
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.Location = new System.Drawing.Point(3, 328);
@@ -1238,6 +1248,12 @@
             this.balance_dgi.Name = "balance_dgi";
             this.balance_dgi.ReadOnly = true;
             // 
+            // balance_input_penalties
+            // 
+            this.balance_input_penalties.HeaderText = "Пени (вх.)";
+            this.balance_input_penalties.Name = "balance_input_penalties";
+            this.balance_input_penalties.ReadOnly = true;
+            // 
             // charging_tenancy
             // 
             this.charging_tenancy.HeaderText = "Начислено найм";
@@ -1256,6 +1272,12 @@
             this.charging_total.Name = "charging_total";
             this.charging_total.ReadOnly = true;
             // 
+            // charging_penalties
+            // 
+            this.charging_penalties.HeaderText = "Пени (начислено)";
+            this.charging_penalties.Name = "charging_penalties";
+            this.charging_penalties.ReadOnly = true;
+            // 
             // recalc_tenancy
             // 
             this.recalc_tenancy.HeaderText = "Перерасчет найм";
@@ -1268,6 +1290,12 @@
             this.recalc_dgi.Name = "recalc_dgi";
             this.recalc_dgi.ReadOnly = true;
             // 
+            // recalc_penalties
+            // 
+            this.recalc_penalties.HeaderText = "Пени (перерасчет)";
+            this.recalc_penalties.Name = "recalc_penalties";
+            this.recalc_penalties.ReadOnly = true;
+            // 
             // payment_tenancy
             // 
             this.payment_tenancy.HeaderText = "Оплата найм";
@@ -1279,6 +1307,12 @@
             this.payment_dgi.HeaderText = "Оплата ДГИ";
             this.payment_dgi.Name = "payment_dgi";
             this.payment_dgi.ReadOnly = true;
+            // 
+            // payment_penalties
+            // 
+            this.payment_penalties.HeaderText = "Пени (оплата)";
+            this.payment_penalties.Name = "payment_penalties";
+            this.payment_penalties.ReadOnly = true;
             // 
             // transfer_balance
             // 
@@ -1303,6 +1337,12 @@
             this.balance_output_dgi.HeaderText = "Сальдо исх. ДГИ";
             this.balance_output_dgi.Name = "balance_output_dgi";
             this.balance_output_dgi.ReadOnly = true;
+            // 
+            // balance_output_penalties
+            // 
+            this.balance_output_penalties.HeaderText = "Пени (исх.)";
+            this.balance_output_penalties.Name = "balance_output_penalties";
+            this.balance_output_penalties.ReadOnly = true;
             // 
             // PaymentsViewport
             // 
@@ -1446,16 +1486,21 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn balance_input;
         private System.Windows.Forms.DataGridViewTextBoxColumn balance_tenancy;
         private System.Windows.Forms.DataGridViewTextBoxColumn balance_dgi;
+        private System.Windows.Forms.DataGridViewTextBoxColumn balance_input_penalties;
         private System.Windows.Forms.DataGridViewTextBoxColumn charging_tenancy;
         private System.Windows.Forms.DataGridViewTextBoxColumn charging_dgi;
         private System.Windows.Forms.DataGridViewTextBoxColumn charging_total;
+        private System.Windows.Forms.DataGridViewTextBoxColumn charging_penalties;
         private System.Windows.Forms.DataGridViewTextBoxColumn recalc_tenancy;
         private System.Windows.Forms.DataGridViewTextBoxColumn recalc_dgi;
+        private System.Windows.Forms.DataGridViewTextBoxColumn recalc_penalties;
         private System.Windows.Forms.DataGridViewTextBoxColumn payment_tenancy;
         private System.Windows.Forms.DataGridViewTextBoxColumn payment_dgi;
+        private System.Windows.Forms.DataGridViewTextBoxColumn payment_penalties;
         private System.Windows.Forms.DataGridViewTextBoxColumn transfer_balance;
         private System.Windows.Forms.DataGridViewTextBoxColumn balance_output_total;
         private System.Windows.Forms.DataGridViewTextBoxColumn balance_output_tenancy;
         private System.Windows.Forms.DataGridViewTextBoxColumn balance_output_dgi;
+        private System.Windows.Forms.DataGridViewTextBoxColumn balance_output_penalties;
     }
 }
