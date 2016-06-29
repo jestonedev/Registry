@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Runtime.Remoting.Channels;
 using System.Windows.Forms;
 using Registry.Entities;
 
@@ -214,8 +215,15 @@ namespace Registry.Viewport
             {
                 if (control is NumericUpDown)
                 {
-                    (control as NumericUpDown).ValueChanged += (sender, args) => CheckViewportModifications();
-                    (control as NumericUpDown).Enter += (sender, args) => ViewportHelper.SelectAllText(sender);
+                    var numUpDown = control as NumericUpDown;
+                    numUpDown.ValueChanged += (sender, args) => CheckViewportModifications();
+                    numUpDown.Enter += (sender, args) => ViewportHelper.SelectAllText(sender);
+                    numUpDown.Leave += (sender, args) =>
+                    {
+                        if (numUpDown.Text != "") return;
+                        numUpDown.Text = @"0";
+                        numUpDown.Value = 0;
+                    };
                 } else
                 if (control is DateTimePicker)
                     (control as DateTimePicker).ValueChanged += (sender, args) => CheckViewportModifications();
