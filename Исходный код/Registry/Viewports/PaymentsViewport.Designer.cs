@@ -1159,6 +1159,7 @@
             // 
             // date
             // 
+            this.date.Frozen = true;
             this.date.HeaderText = "Состояние на дату";
             this.date.Name = "date";
             this.date.ReadOnly = true;
@@ -1206,6 +1207,7 @@
             // 
             // tenant
             // 
+            this.tenant.Frozen = true;
             this.tenant.HeaderText = "Наниматель";
             this.tenant.MinimumWidth = 150;
             this.tenant.Name = "tenant";
