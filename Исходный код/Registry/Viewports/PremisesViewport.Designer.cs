@@ -760,11 +760,14 @@ namespace Registry.Viewport
             // 
             this.comboBoxHouse.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.comboBoxHouse.BackColor = System.Drawing.SystemColors.Window;
             this.comboBoxHouse.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxHouse.ForeColor = System.Drawing.SystemColors.WindowText;
             this.comboBoxHouse.Location = new System.Drawing.Point(169, 37);
             this.comboBoxHouse.Name = "comboBoxHouse";
             this.comboBoxHouse.Size = new System.Drawing.Size(272, 23);
             this.comboBoxHouse.TabIndex = 1;
+            this.comboBoxHouse.SelectedValueChanged += new System.EventHandler(this.comboBoxHouse_SelectedValueChanged);
             // 
             // label19
             // 

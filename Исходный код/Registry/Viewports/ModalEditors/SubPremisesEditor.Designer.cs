@@ -130,7 +130,7 @@ namespace Registry.Viewport
             this.vButtonCancel.AllowAnimations = true;
             this.vButtonCancel.BackColor = System.Drawing.Color.Transparent;
             this.vButtonCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButtonCancel.Location = new System.Drawing.Point(221, 316);
+            this.vButtonCancel.Location = new System.Drawing.Point(221, 317);
             this.vButtonCancel.Name = "vButtonCancel";
             this.vButtonCancel.RoundedCornersMask = ((byte)(15));
             this.vButtonCancel.Size = new System.Drawing.Size(136, 40);
@@ -143,7 +143,7 @@ namespace Registry.Viewport
             // 
             this.vButtonSave.AllowAnimations = true;
             this.vButtonSave.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSave.Location = new System.Drawing.Point(60, 316);
+            this.vButtonSave.Location = new System.Drawing.Point(60, 317);
             this.vButtonSave.Name = "vButtonSave";
             this.vButtonSave.RoundedCornersMask = ((byte)(15));
             this.vButtonSave.Size = new System.Drawing.Size(136, 40);

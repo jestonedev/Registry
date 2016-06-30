@@ -1723,5 +1723,17 @@ namespace Registry.Viewport
         {
             return GeneralBindingSource.Filter;
         }
+
+        private void comboBoxHouse_SelectedValueChanged(object sender, EventArgs e)
+        {
+            label20.Text = @"Номер дома";
+            label20.ForeColor = SystemColors.ControlText;
+            if (!(comboBoxHouse.SelectedValue is int)) return;
+            var idBuilding = (int)comboBoxHouse.SelectedValue;
+            var isDemolished = DataModelHelper.DemolishedBuildingIDs().Any(v => v == idBuilding);
+            if (!isDemolished) return;
+            label20.Text = @"Номер дома (снесен)";
+            label20.ForeColor = Color.Red;
+        }
     }
 }
