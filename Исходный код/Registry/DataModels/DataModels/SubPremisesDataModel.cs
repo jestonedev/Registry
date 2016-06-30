@@ -25,6 +25,8 @@ namespace Registry.DataModels.DataModels
             Table.PrimaryKey = new [] { Table.Columns["id_sub_premises"] };
             Table.Columns["total_area"].DefaultValue = 0;
             Table.Columns["living_area"].DefaultValue = 0;
+            Table.Columns["cadastral_cost"].DefaultValue = 0;
+            Table.Columns["balance_cost"].DefaultValue = 0;
             Table.Columns["deleted"].DefaultValue = 0;
             Table.Columns["id_state"].DefaultValue = 1;
         }
@@ -48,7 +50,9 @@ namespace Registry.DataModels.DataModels
         protected override void ConfigureUpdateCommand(DbCommand command, Entity entity)
         {
             command.CommandText = @"UPDATE sub_premises SET id_premises = ?, id_state = ?, sub_premises_num = ?, 
-                            total_area = ?, living_area = ?, description = ?, state_date = ? WHERE id_sub_premises = ?";
+                            total_area = ?, living_area = ?, description = ?, state_date = ?,
+                            cadastral_num = ?, cadastral_cost = ?, balance_cost = ?, account = ?
+                            WHERE id_sub_premises = ?";
             var subPremise = (SubPremise) entity;
             command.Parameters.Add(DBConnection.CreateParameter("id_premises", subPremise.IdPremises));
             command.Parameters.Add(DBConnection.CreateParameter("id_state", subPremise.IdState));
@@ -57,14 +61,18 @@ namespace Registry.DataModels.DataModels
             command.Parameters.Add(DBConnection.CreateParameter("living_area", subPremise.LivingArea));
             command.Parameters.Add(DBConnection.CreateParameter("description", subPremise.Description));
             command.Parameters.Add(DBConnection.CreateParameter("state_date", subPremise.StateDate));
+            command.Parameters.Add(DBConnection.CreateParameter("cadastral_num", subPremise.CadastralNum));
+            command.Parameters.Add(DBConnection.CreateParameter("cadastral_cost", subPremise.CadastralCost));
+            command.Parameters.Add(DBConnection.CreateParameter("balance_cost", subPremise.BalanceCost));
+            command.Parameters.Add(DBConnection.CreateParameter("account", subPremise.Account));
             command.Parameters.Add(DBConnection.CreateParameter("id_sub_premises", subPremise.IdSubPremises));
         }
 
         protected override void ConfigureInsertCommand(DbCommand command, Entity entity)
         {
             command.CommandText = @"INSERT INTO sub_premises 
-                            (id_premises, id_state, sub_premises_num, total_area, living_area, description, state_date)
-                            VALUES (?, ?, ?, ?, ?, ?, ?)";
+                            (id_premises, id_state, sub_premises_num, total_area, living_area, description, state_date, cadastral_num, cadastral_cost, balance_cost, account)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
             var subPremise = (SubPremise)entity;
             command.Parameters.Add(DBConnection.CreateParameter("id_premises", subPremise.IdPremises));
             command.Parameters.Add(DBConnection.CreateParameter("id_state", subPremise.IdState));
@@ -73,6 +81,10 @@ namespace Registry.DataModels.DataModels
             command.Parameters.Add(DBConnection.CreateParameter("living_area", subPremise.LivingArea));
             command.Parameters.Add(DBConnection.CreateParameter("description", subPremise.Description));
             command.Parameters.Add(DBConnection.CreateParameter("state_date", subPremise.StateDate));
+            command.Parameters.Add(DBConnection.CreateParameter("cadastral_num", subPremise.CadastralNum));
+            command.Parameters.Add(DBConnection.CreateParameter("cadastral_cost", subPremise.CadastralCost));
+            command.Parameters.Add(DBConnection.CreateParameter("balance_cost", subPremise.BalanceCost));
+            command.Parameters.Add(DBConnection.CreateParameter("account", subPremise.Account));
         }
     }
 }

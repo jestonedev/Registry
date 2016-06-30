@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Data;
-using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Registry.DataModels;
-using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
@@ -51,13 +48,13 @@ namespace Registry.Viewport
                 }
                 if (value == ViewportState.ModifyRowState)
                 {
-                    Text = "Изменить комнату";
-                    vButtonSave.Text = "Изменить";
+                    Text = @"Изменить комнату";
+                    vButtonSave.Text = @"Изменить";
                 }
                 else
                 {
-                    Text = "Добавить комнату";
-                    vButtonSave.Text = "Добавить";
+                    Text = @"Добавить комнату";
+                    vButtonSave.Text = @"Добавить";
                 }
                 state = value;
             }
@@ -67,15 +64,21 @@ namespace Registry.Viewport
         {
             get
             {
-                var subPremiseValue = new SubPremise();
-                subPremiseValue.TotalArea = (double)numericUpDownTotalArea.Value;
+                var subPremiseValue = new SubPremise
+                {
+                    TotalArea = (double) numericUpDownTotalArea.Value,
+                    Description = ViewportHelper.ValueOrNull(textBoxDescription),
+                    SubPremisesNum = ViewportHelper.ValueOrNull(textBoxSubPremisesNum),
+                    IdState = ViewportHelper.ValueOrNull<int>(comboBoxIdState),
+                    CadastralNum = ViewportHelper.ValueOrNull(textBoxCadastralNum),
+                    CadastralCost = numericUpDownCadastralCost.Value,
+                    BalanceCost = numericUpDownBalanceCost.Value,
+                    Account = ViewportHelper.ValueOrNull(textBoxAccount)
+                };
                 if ((double)numericUpDownLivingArea.Value == 0)
                     subPremiseValue.LivingArea = (double)numericUpDownTotalArea.Value;
                 else
                     subPremiseValue.LivingArea = (double)numericUpDownLivingArea.Value;
-                subPremiseValue.Description = ViewportHelper.ValueOrNull(textBoxDescription);
-                subPremiseValue.SubPremisesNum = ViewportHelper.ValueOrNull(textBoxSubPremisesNum);
-                subPremiseValue.IdState = ViewportHelper.ValueOrNull<int>(comboBoxIdState);
                 if (state == ViewportState.ModifyRowState)
                     subPremiseValue.IdSubPremises = subPremise.IdSubPremises;
                 if (dateTimePickerStateDate.Checked)
@@ -92,6 +95,10 @@ namespace Registry.Viewport
                 numericUpDownTotalArea.Value = value.TotalArea == null ? 0 : (decimal)value.TotalArea;
                 numericUpDownLivingArea.Value = value.LivingArea == null ? 0 : (decimal)value.LivingArea;
                 comboBoxIdState.SelectedValue = value.IdState;
+                textBoxCadastralNum.Text = value.CadastralNum;
+                numericUpDownCadastralCost.Value = value.CadastralCost ?? 0;
+                numericUpDownBalanceCost.Value = value.BalanceCost ?? 0;
+                textBoxAccount.Text = value.Account;
                 if (value.StateDate != null)
                 {
                     dateTimePickerStateDate.Value = value.StateDate.Value;
@@ -108,8 +115,7 @@ namespace Registry.Viewport
         {
             InitializeComponent();
             object_states = DataModel.GetInstance<ObjectStatesDataModel>();
-            v_object_states = new BindingSource();
-            v_object_states.DataSource = object_states.Select();
+            v_object_states = new BindingSource {DataSource = object_states.Select()};
             comboBoxIdState.DataSource = v_object_states;
             comboBoxIdState.ValueMember = "id_state";
             comboBoxIdState.DisplayMember = "state_female";
@@ -119,13 +125,13 @@ namespace Registry.Viewport
         {
             if (new[] { 4, 5, 9, 11 }.Contains(subPremise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
-                MessageBox.Show("У вас нет прав на добавление в базу муниципальных жилых помещений", "Ошибка",
+                MessageBox.Show(@"У вас нет прав на добавление в базу муниципальных жилых помещений", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             if (new[] { 1, 3, 6, 7, 8, 10 }.Contains(subPremise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
-                MessageBox.Show("У вас нет прав на добавление в базу немуниципальных жилых помещений", "Ошибка",
+                MessageBox.Show(@"У вас нет прав на добавление в базу немуниципальных жилых помещений", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
@@ -138,13 +144,13 @@ namespace Registry.Viewport
                 return false;
             if (subPremise.IdState == null)
             {
-                MessageBox.Show("Необходимо выбрать состояние помещения", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Необходимо выбрать состояние помещения", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             if (subPremise.SubPremisesNum != null && !Regex.IsMatch(subPremise.SubPremisesNum, "^([0-9]+[а-я]{0,1}|[а-я])$"))
             {
-                MessageBox.Show("Некорректно задан номер комнаты. Можно использовать только цифры и не более одной строчной буквы кириллицы",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Некорректно задан номер комнаты. Можно использовать только цифры и не более одной строчной буквы кириллицы",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             return true;
@@ -155,33 +161,39 @@ namespace Registry.Viewport
             var subPremise = SubPremiseValue;
             if (!ValidateData(subPremise))
                 return;
-            var id_parent = ((ParentType == ParentTypeEnum.Premises) && ParentRow != null) ? (int)ParentRow["id_premises"] : -1;
-            subPremise.IdPremises = id_parent;
+            var idParent = ((ParentType == ParentTypeEnum.Premises) && ParentRow != null) ? (int)ParentRow["id_premises"] : -1;
+            subPremise.IdPremises = idParent;
             if (state == ViewportState.NewRowState)
             {
-                if (id_parent == -1)
+                if (idParent == -1)
                 {
-                    MessageBox.Show("Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(@"Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
+                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
                 sub_premises.EditingNewRecord = true;
-                var id_sub_premise = sub_premises.Insert(subPremise);
-                if (id_sub_premise == -1)
+                var idSubPremise = sub_premises.Insert(subPremise);
+                if (idSubPremise == -1)
                     return;
-                sub_premises.Select().Rows.Add(id_sub_premise, subPremise.IdPremises, subPremise.IdState, subPremise.SubPremisesNum, subPremise.TotalArea, subPremise.LivingArea, subPremise.Description, subPremise.StateDate);
+                sub_premises.Select().Rows.Add(idSubPremise, subPremise.IdPremises, subPremise.IdState, subPremise.SubPremisesNum, 
+                    subPremise.TotalArea, subPremise.LivingArea, subPremise.Description, subPremise.StateDate, subPremise.CadastralNum, 
+                    subPremise.CadastralCost, subPremise.BalanceCost, subPremise.Account);
                 sub_premises.EditingNewRecord = false;
             } else
             {
                 if (sub_premises.Update(subPremise) == -1)
                     return;
                 var row = sub_premises.Select().Rows.Find(subPremise.IdSubPremises);
-                row["id_state"] = subPremise.IdState == null ? DBNull.Value : (object)subPremise.IdState;
-                row["sub_premises_num"] = subPremise.SubPremisesNum == null ? DBNull.Value : (object)subPremise.SubPremisesNum;
-                row["total_area"] = subPremise.TotalArea == null ? DBNull.Value : (object)subPremise.TotalArea;
-                row["living_area"] = subPremise.LivingArea == null ? DBNull.Value : (object)subPremise.LivingArea;
-                row["description"] = subPremise.Description == null ? DBNull.Value : (object)subPremise.Description;
-                row["state_date"] = subPremise.StateDate == null ? DBNull.Value : (object)subPremise.StateDate;
+                row["id_state"] = ViewportHelper.ValueOrDBNull(subPremise.IdState);
+                row["sub_premises_num"] = ViewportHelper.ValueOrDBNull(subPremise.SubPremisesNum);
+                row["total_area"] = ViewportHelper.ValueOrDBNull(subPremise.TotalArea);
+                row["living_area"] = ViewportHelper.ValueOrDBNull(subPremise.LivingArea);
+                row["description"] = ViewportHelper.ValueOrDBNull(subPremise.Description);
+                row["state_date"] = ViewportHelper.ValueOrDBNull(subPremise.StateDate);
+                row["cadastral_num"] = ViewportHelper.ValueOrDBNull(subPremise.CadastralNum);
+                row["cadastral_cost"] = ViewportHelper.ValueOrDBNull(subPremise.CadastralCost);
+                row["balance_cost"] = ViewportHelper.ValueOrDBNull(subPremise.BalanceCost);
+                row["account"] = ViewportHelper.ValueOrDBNull(subPremise.Account);
             }
             DialogResult = DialogResult.OK;
         }
@@ -193,12 +205,9 @@ namespace Registry.Viewport
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (keyData == Keys.Enter)
-            {
-                SendKeys.Send("{TAB}");
-                return true;
-            }
-            return base.ProcessCmdKey(ref msg, keyData);
+            if (keyData != Keys.Enter) return base.ProcessCmdKey(ref msg, keyData);
+            SendKeys.Send("{TAB}");
+            return true;
         }
     }
 }

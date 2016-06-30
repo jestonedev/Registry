@@ -100,6 +100,8 @@ namespace Registry.Viewport
             this.groupBox4 = new System.Windows.Forms.GroupBox();
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label26 = new System.Windows.Forms.Label();
+            this.textBoxHousingCooperative = new System.Windows.Forms.TextBox();
             this.numericUpDownWear = new System.Windows.Forms.NumericUpDown();
             this.label21 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
@@ -189,8 +191,6 @@ namespace Registry.Viewport
             this.textBoxRoomsBTI = new System.Windows.Forms.TextBox();
             this.groupBox8 = new System.Windows.Forms.GroupBox();
             this.textBoxDescription = new System.Windows.Forms.TextBox();
-            this.label26 = new System.Windows.Forms.Label();
-            this.textBoxHousingCooperative = new System.Windows.Forms.TextBox();
             this.tableLayoutPanel.SuspendLayout();
             this.groupBox4.SuspendLayout();
             this.tableLayoutPanel2.SuspendLayout();
@@ -309,6 +309,25 @@ namespace Registry.Viewport
             this.panel1.Size = new System.Drawing.Size(616, 233);
             this.panel1.TabIndex = 0;
             // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Location = new System.Drawing.Point(10, 181);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(127, 15);
+            this.label26.TabIndex = 38;
+            this.label26.Text = "Упр. компания / ТСЖ";
+            // 
+            // textBoxHousingCooperative
+            // 
+            this.textBoxHousingCooperative.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxHousingCooperative.Location = new System.Drawing.Point(175, 178);
+            this.textBoxHousingCooperative.MaxLength = 255;
+            this.textBoxHousingCooperative.Name = "textBoxHousingCooperative";
+            this.textBoxHousingCooperative.Size = new System.Drawing.Size(437, 21);
+            this.textBoxHousingCooperative.TabIndex = 6;
+            // 
             // numericUpDownWear
             // 
             this.numericUpDownWear.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -402,6 +421,7 @@ namespace Registry.Viewport
             this.dateTimePickerStateDate.ShowCheckBox = true;
             this.dateTimePickerStateDate.Size = new System.Drawing.Size(437, 21);
             this.dateTimePickerStateDate.TabIndex = 7;
+            this.dateTimePickerStateDate.TabStop = false;
             this.dateTimePickerStateDate.Visible = false;
             // 
             // label22
@@ -1392,25 +1412,6 @@ namespace Registry.Viewport
             this.textBoxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxDescription.Size = new System.Drawing.Size(302, 87);
             this.textBoxDescription.TabIndex = 0;
-            // 
-            // label26
-            // 
-            this.label26.AutoSize = true;
-            this.label26.Location = new System.Drawing.Point(10, 181);
-            this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(127, 15);
-            this.label26.TabIndex = 38;
-            this.label26.Text = "Упр. компания / ТСЖ";
-            // 
-            // textBoxHousingCooperative
-            // 
-            this.textBoxHousingCooperative.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxHousingCooperative.Location = new System.Drawing.Point(175, 178);
-            this.textBoxHousingCooperative.MaxLength = 255;
-            this.textBoxHousingCooperative.Name = "textBoxHousingCooperative";
-            this.textBoxHousingCooperative.Size = new System.Drawing.Size(437, 21);
-            this.textBoxHousingCooperative.TabIndex = 6;
             // 
             // BuildingViewport
             // 

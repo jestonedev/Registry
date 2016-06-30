@@ -21,6 +21,8 @@ namespace Registry.Viewport
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle5 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SubPremisesViewport));
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.id_sub_premises = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -31,6 +33,10 @@ namespace Registry.Viewport
             this.description = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_state = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.state_date = new CustomControls.DataGridViewDateTimeColumn();
+            this.cadastral_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cadastral_cost = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.balance_cost = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -59,7 +65,11 @@ namespace Registry.Viewport
             this.living_area,
             this.description,
             this.id_state,
-            this.state_date});
+            this.state_date,
+            this.cadastral_num,
+            this.cadastral_cost,
+            this.balance_cost,
+            this.account});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dataGridView.Location = new System.Drawing.Point(3, 3);
@@ -67,7 +77,7 @@ namespace Registry.Viewport
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.DisableResizing;
             this.dataGridView.ShowCellToolTips = false;
-            this.dataGridView.Size = new System.Drawing.Size(966, 333);
+            this.dataGridView.Size = new System.Drawing.Size(1002, 333);
             this.dataGridView.TabIndex = 0;
             // 
             // id_sub_premises
@@ -86,9 +96,9 @@ namespace Registry.Viewport
             // 
             this.sub_premises_num.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
             this.sub_premises_num.HeaderText = "Номер комнаты";
-            this.sub_premises_num.MinimumWidth = 150;
+            this.sub_premises_num.MinimumWidth = 100;
             this.sub_premises_num.Name = "sub_premises_num";
-            this.sub_premises_num.Width = 150;
+            this.sub_premises_num.Width = 115;
             // 
             // total_area
             // 
@@ -96,9 +106,9 @@ namespace Registry.Viewport
             dataGridViewCellStyle2.Format = "#0.0## м²";
             this.total_area.DefaultCellStyle = dataGridViewCellStyle2;
             this.total_area.HeaderText = "Общая площадь";
-            this.total_area.MinimumWidth = 150;
+            this.total_area.MinimumWidth = 100;
             this.total_area.Name = "total_area";
-            this.total_area.Width = 150;
+            this.total_area.Width = 114;
             // 
             // living_area
             // 
@@ -106,15 +116,15 @@ namespace Registry.Viewport
             dataGridViewCellStyle3.Format = "#0.0## м²";
             this.living_area.DefaultCellStyle = dataGridViewCellStyle3;
             this.living_area.HeaderText = "Жилая площадь";
-            this.living_area.MinimumWidth = 150;
+            this.living_area.MinimumWidth = 100;
             this.living_area.Name = "living_area";
-            this.living_area.Width = 150;
+            this.living_area.Width = 114;
             // 
             // description
             // 
             this.description.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
             this.description.HeaderText = "Примечание";
-            this.description.MinimumWidth = 300;
+            this.description.MinimumWidth = 250;
             this.description.Name = "description";
             // 
             // id_state
@@ -133,10 +143,48 @@ namespace Registry.Viewport
             this.state_date.Visible = false;
             this.state_date.Width = 170;
             // 
+            // cadastral_num
+            // 
+            this.cadastral_num.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.cadastral_num.HeaderText = "Кадастровый номер";
+            this.cadastral_num.MaxInputLength = 20;
+            this.cadastral_num.MinimumWidth = 100;
+            this.cadastral_num.Name = "cadastral_num";
+            this.cadastral_num.Width = 138;
+            // 
+            // cadastral_cost
+            // 
+            this.cadastral_cost.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle4.Format = "#0.0# руб.";
+            this.cadastral_cost.DefaultCellStyle = dataGridViewCellStyle4;
+            this.cadastral_cost.HeaderText = "Кадастровая стоимость";
+            this.cadastral_cost.MinimumWidth = 100;
+            this.cadastral_cost.Name = "cadastral_cost";
+            this.cadastral_cost.Width = 159;
+            // 
+            // balance_cost
+            // 
+            this.balance_cost.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            dataGridViewCellStyle5.Format = "#0.0# руб.";
+            this.balance_cost.DefaultCellStyle = dataGridViewCellStyle5;
+            this.balance_cost.HeaderText = "Балансовая стоимость";
+            this.balance_cost.MinimumWidth = 100;
+            this.balance_cost.Name = "balance_cost";
+            this.balance_cost.Width = 153;
+            // 
+            // account
+            // 
+            this.account.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.account.HeaderText = "Лицевой счет";
+            this.account.MaxInputLength = 255;
+            this.account.MinimumWidth = 100;
+            this.account.Name = "account";
+            this.account.Width = 102;
+            // 
             // SubPremisesViewport
             // 
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(972, 339);
+            this.ClientSize = new System.Drawing.Size(1008, 339);
             this.Controls.Add(this.dataGridView);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -156,5 +204,9 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn description;
         private DataGridViewComboBoxColumn id_state;
         private DataGridViewDateTimeColumn state_date;
+        private DataGridViewTextBoxColumn cadastral_num;
+        private DataGridViewTextBoxColumn cadastral_cost;
+        private DataGridViewTextBoxColumn balance_cost;
+        private DataGridViewTextBoxColumn account;
     }
 }

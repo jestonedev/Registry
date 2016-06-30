@@ -120,7 +120,7 @@ namespace Registry.DataModels.DataModels
                              , num_shared_apartments, total_area, living_area, cadastral_num
                              , cadastral_cost, balance_cost, description, startup_year
                              , improvement, elevator, rubbish_chute, wear, state_date,plumbing,hot_water_supply,
-                                canalization,electricity,radio_network,id_heating_type,BTI_rooms)
+                                canalization,electricity,radio_network,id_heating_type,BTI_rooms,housing_cooperative)
                             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
             var building = (Building)entity;
             command.Parameters.Add(DBConnection.CreateParameter("id_state", building.IdState));

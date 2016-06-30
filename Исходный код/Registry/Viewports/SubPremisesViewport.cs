@@ -51,7 +51,11 @@ namespace Registry.Viewport
                 dataRowView["total_area"],
                 dataRowView["living_area"],
                 dataRowView["description"],
-                dataRowView["state_date"]
+                dataRowView["state_date"],
+                dataRowView["cadastral_num"],
+                dataRowView["cadastral_cost"],
+                dataRowView["balance_cost"],
+                dataRowView["account"]
             };
         }
 
@@ -99,7 +103,11 @@ namespace Registry.Viewport
                 TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area"),
                 LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area"),
                 Description = ViewportHelper.ValueOrNull(row, "description"),
-                StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date")
+                StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date"),
+                CadastralNum = ViewportHelper.ValueOrNull(row, "cadastral_num"),
+                CadastralCost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost"),
+                BalanceCost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost"),
+                Account = ViewportHelper.ValueOrNull(row, "account")
             };
             return subPremise;
         }
@@ -123,6 +131,10 @@ namespace Registry.Viewport
                 sp.LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area");
                 sp.Description = ViewportHelper.ValueOrNull(row, "description");
                 sp.StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date");
+                sp.CadastralNum = ViewportHelper.ValueOrNull(row, "cadastral_num");
+                sp.CadastralCost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost");
+                sp.BalanceCost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost");
+                sp.Account = ViewportHelper.ValueOrNull(row, "account");
                 list.Add(sp);
             }
             return list;
@@ -143,6 +155,10 @@ namespace Registry.Viewport
                 sp.LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area");
                 sp.Description = ViewportHelper.ValueOrNull(row, "description");
                 sp.StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date");
+                sp.CadastralNum = ViewportHelper.ValueOrNull(row, "cadastral_num");
+                sp.CadastralCost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost");
+                sp.BalanceCost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost");
+                sp.Account = ViewportHelper.ValueOrNull(row, "account");
                 list.Add(sp);
             }
             return list;
@@ -205,6 +221,10 @@ namespace Registry.Viewport
             id_state.DisplayMember = "state_female";
             id_state.DataPropertyName = "id_state";
             state_date.DataPropertyName = "state_date";
+            cadastral_num.DataPropertyName = "cadastral_num";
+            cadastral_cost.DataPropertyName = "cadastral_cost";
+            balance_cost.DataPropertyName = "balance_cost";
+            account.DataPropertyName = "account";
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
             dataGridView.EditingControlShowing += dataGridView_EditingControlShowing;
             dataGridView.CellValidated += dataGridView_CellValidated;
@@ -232,6 +252,8 @@ namespace Registry.Viewport
             row["id_premises"] = ParentRow["id_premises"];
             row["total_area"] = 0;
             row["living_area"] = 0;
+            row["cadastral_cost"] = 0;
+            row["balance_cost"] = 0;
             row.EndEdit();
         }
 
@@ -342,13 +364,17 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    row["id_premises"] = subPremise.IdPremises == null ? DBNull.Value : (object)subPremise.IdPremises;
-                    row["id_state"] = subPremise.IdState == null ? DBNull.Value : (object)subPremise.IdState;
-                    row["sub_premises_num"] = subPremise.SubPremisesNum == null ? DBNull.Value : (object)subPremise.SubPremisesNum;
-                    row["total_area"] = subPremise.TotalArea == null ? DBNull.Value : (object)subPremise.TotalArea;
-                    row["living_area"] = subPremise.LivingArea == null ? DBNull.Value : (object)subPremise.LivingArea;
-                    row["description"] = subPremise.Description == null ? DBNull.Value : (object)subPremise.Description;
-                    row["state_date"] = subPremise.StateDate == null ? DBNull.Value : (object)subPremise.StateDate;
+                    row["id_premises"] = ViewportHelper.ValueOrDBNull(subPremise.IdPremises);
+                    row["id_state"] = ViewportHelper.ValueOrDBNull(subPremise.IdState);
+                    row["sub_premises_num"] = ViewportHelper.ValueOrDBNull(subPremise.SubPremisesNum);
+                    row["total_area"] = ViewportHelper.ValueOrDBNull(subPremise.TotalArea);
+                    row["living_area"] = ViewportHelper.ValueOrDBNull(subPremise.LivingArea);
+                    row["description"] = ViewportHelper.ValueOrDBNull(subPremise.Description);
+                    row["state_date"] = ViewportHelper.ValueOrDBNull(subPremise.StateDate); 
+                    row["cadastral_num"] = ViewportHelper.ValueOrDBNull(subPremise.CadastralNum);
+                    row["cadastral_cost"] = ViewportHelper.ValueOrDBNull(subPremise.CadastralCost);
+                    row["balance_cost"] = ViewportHelper.ValueOrDBNull(subPremise.BalanceCost);
+                    row["account"] = ViewportHelper.ValueOrDBNull(subPremise.Account);
                 }
             }
             list = EntitiesListFromView();
@@ -595,6 +621,8 @@ namespace Registry.Viewport
             {
                 case "total_area":
                 case "living_area":
+                case "cadastral_cost":
+                case "balance_cost":
                     double stub;
                     if ((string.IsNullOrEmpty(cell.Value.ToString()) || (!double.TryParse(cell.Value.ToString(), out stub))))
                         cell.Value = 0;
@@ -646,7 +674,9 @@ namespace Registry.Viewport
             var rowIndex = GeneralSnapshotBindingSource.Find("id_sub_premises", e.Row["id_sub_premises"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_sub_premises", e.Row["id_sub_premises"]) != -1)
             {
-                GeneralSnapshot.Rows.Add(e.Row["id_sub_premises"], e.Row["id_premises"], e.Row["id_state"], e.Row["sub_premises_num"], e.Row["total_area"], e.Row["living_area"], e.Row["description"], e.Row["state_date"]);
+                GeneralSnapshot.Rows.Add(e.Row["id_sub_premises"], e.Row["id_premises"], e.Row["id_state"], e.Row["sub_premises_num"], 
+                    e.Row["total_area"], e.Row["living_area"], e.Row["description"], e.Row["state_date"], e.Row["cadastral_num"],
+                    e.Row["cadastral_cost"], e.Row["balance_cost"], e.Row["account"]);
             } else
             if (rowIndex != -1)
             {
@@ -658,6 +688,10 @@ namespace Registry.Viewport
                 row["living_area"] = e.Row["living_area"];
                 row["description"] = e.Row["description"];
                 row["state_date"] = e.Row["state_date"];
+                row["cadastral_num"] = e.Row["cadastral_num"];
+                row["cadastral_cost"] = e.Row["cadastral_cost"];
+                row["balance_cost"] = e.Row["balance_cost"];
+                row["account"] = e.Row["account"];
             }
             if (!Selected) return;
             MenuCallback.NavigationStateUpdate();
@@ -673,14 +707,15 @@ namespace Registry.Viewport
 
         void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            if (dataGridView.CurrentCell.OwningColumn.Name == "total_area" || dataGridView.CurrentCell.OwningColumn.Name == "living_area")
+            if (dataGridView.SelectedCells.Count > 0 && 
+                new[] { "total_area", "living_area", "cadastral_cost", "balance_cost" }.Contains(dataGridView.SelectedCells[0].OwningColumn.Name))
             {
                 dataGridView.EditingControl.KeyPress -= EditingControl_KeyPress;
                 dataGridView.EditingControl.KeyPress += EditingControl_KeyPress;
-                if (string.IsNullOrEmpty(((TextBox)e.Control).Text.Trim()))
-                    ((TextBox)e.Control).Text = ((TextBox)e.Control).Text = @"0";
-                else
-                    ((TextBox)e.Control).Text = ((TextBox)e.Control).Text.Substring(0, ((TextBox)e.Control).Text.Length - 3);
+                var textBox = (TextBox) e.Control;
+                textBox.Text = string.IsNullOrEmpty(textBox.Text.Trim()) ? 
+                    @"0" : 
+                    textBox.Text.Substring(0, textBox.Text.Trim().IndexOf(" ", StringComparison.Ordinal));
             } else
                 if (dataGridView.CurrentCell.OwningColumn.Name == "sub_premises_num")
                 {
@@ -717,12 +752,21 @@ namespace Registry.Viewport
                     MessageBox.Show(@"Значение жилой площади комнаты является некорректным", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     e.ThrowException = false;
                     break;
+                case "cadastral_cost":
+                    MessageBox.Show(@"Значение кадастровой стоимости комнаты является некорректным", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    e.ThrowException = false;
+                    break;
+                case "balance_cost":
+                    MessageBox.Show(@"Значение балансовой стоимости комнаты является некорректным", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    e.ThrowException = false;
+                    break;
             }
         }
         
         void EditingControl_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (dataGridView.SelectedCells[0].OwningColumn.Name == "total_area" || dataGridView.SelectedCells[0].OwningColumn.Name == "living_area")
+            if (dataGridView.SelectedCells.Count > 0 && 
+                new[] { "total_area", "living_area", "cadastral_cost", "balance_cost" }.Contains(dataGridView.SelectedCells[0].OwningColumn.Name))
             {
                 if ((e.KeyChar >= '0' && e.KeyChar <= '9') || (e.KeyChar == (char)8))
                     e.Handled = false;

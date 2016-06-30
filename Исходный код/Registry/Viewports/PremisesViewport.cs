@@ -421,7 +421,10 @@ namespace Registry.Viewport
             sub_premises_id_state.DataPropertyName = "id_state";
             sub_premises_id_state.ValueMember = "id_state";
             sub_premises_id_state.DisplayMember = "state_female";
-
+            sub_premises_cadastral_num.DataPropertyName = "cadastral_num";
+            sub_premises_cadastral_cost.DataPropertyName = "cadastral_cost";
+            sub_premises_balance_cost.DataPropertyName = "balance_cost";
+            sub_premises_account.DataPropertyName = "account";
         }
 
         protected override bool ChangeViewportStateTo(ViewportState state)
@@ -1389,7 +1392,7 @@ namespace Registry.Viewport
 
         private void dataGridViewRooms_Resize(object sender, EventArgs e)
         {
-            if (dataGridViewRooms.Size.Width > 525)
+            if (dataGridViewRooms.Size.Width > 900)
             {
                 if (dataGridViewRooms.Columns["sub_premises_id_state"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     dataGridViewRooms.Columns["sub_premises_id_state"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -1694,6 +1697,10 @@ namespace Registry.Viewport
             subPremise.LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area");
             subPremise.Description = row["description"].ToString();
             subPremise.StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date");
+            subPremise.CadastralNum = ViewportHelper.ValueOrNull(row, "cadastral_num");
+            subPremise.CadastralCost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost");
+            subPremise.BalanceCost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost");
+            subPremise.Account = ViewportHelper.ValueOrNull(row, "account");
             using (SubPremisesEditor editor = new SubPremisesEditor())
             {
                 editor.State = ViewportState.ModifyRowState;

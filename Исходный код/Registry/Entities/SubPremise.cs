@@ -12,6 +12,10 @@ namespace Registry.Entities
         public double? TotalArea { get; set; }
         public double? LivingArea { get; set; }
         public DateTime? StateDate { get; set; }
+        public string CadastralNum { get; set; }
+        public decimal? CadastralCost { get; set; }
+        public decimal? BalanceCost { get; set; }
+        public string Account { get; set; }
 
         public override bool Equals(object obj)
         {
@@ -36,7 +40,11 @@ namespace Registry.Entities
                    first.LivingArea == second.LivingArea &&
                    first.Description == second.Description &&
                    first.IdState == second.IdState &&
-                   first.StateDate == second.StateDate;
+                   first.StateDate == second.StateDate &&
+                   first.CadastralNum == second.CadastralNum &&
+                   first.CadastralCost == second.CadastralCost &&
+                   first.BalanceCost == second.BalanceCost &&
+                   first.Account == second.Account;
         }
 
         public static bool operator !=(SubPremise first, SubPremise second)

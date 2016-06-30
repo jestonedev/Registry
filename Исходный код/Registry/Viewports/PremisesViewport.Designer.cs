@@ -89,10 +89,6 @@ namespace Registry.Viewport
         private Label label5;
         private DateTimePicker dateTimePickerStateDate;
         private Label label6;
-        private DataGridViewTextBoxColumn sub_premises_num;
-        private DataGridViewTextBoxColumn sub_premises_total_area;
-        private DataGridViewComboBoxColumn sub_premises_id_state;
-        private DataGridViewTextBoxColumn current_fund;
         #endregion Components
 
 
@@ -184,6 +180,10 @@ namespace Registry.Viewport
             this.sub_premises_total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sub_premises_id_state = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.current_fund = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sub_premises_cadastral_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sub_premises_cadastral_cost = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sub_premises_balance_cost = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sub_premises_account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel3.SuspendLayout();
             this.groupBox13.SuspendLayout();
             this.groupBox9.SuspendLayout();
@@ -225,7 +225,7 @@ namespace Registry.Viewport
             // 
             this.textBoxSubPremisesNumber.Location = new System.Drawing.Point(0, 0);
             this.textBoxSubPremisesNumber.Name = "textBoxSubPremisesNumber";
-            this.textBoxSubPremisesNumber.Size = new System.Drawing.Size(100, 22);
+            this.textBoxSubPremisesNumber.Size = new System.Drawing.Size(100, 20);
             this.textBoxSubPremisesNumber.TabIndex = 0;
             // 
             // tableLayoutPanel3
@@ -264,12 +264,12 @@ namespace Registry.Viewport
             // textBoxDescription
             // 
             this.textBoxDescription.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.textBoxDescription.Location = new System.Drawing.Point(3, 20);
+            this.textBoxDescription.Location = new System.Drawing.Point(3, 17);
             this.textBoxDescription.MaxLength = 65535;
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxDescription.Size = new System.Drawing.Size(447, 51);
+            this.textBoxDescription.Size = new System.Drawing.Size(447, 54);
             this.textBoxDescription.TabIndex = 0;
             // 
             // groupBox9
@@ -290,10 +290,10 @@ namespace Registry.Viewport
             this.panel1.Controls.Add(this.vButtonRestrictionDelete);
             this.panel1.Controls.Add(this.vButtonRestrictionAdd);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel1.Location = new System.Drawing.Point(412, 20);
+            this.panel1.Location = new System.Drawing.Point(412, 17);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(38, 178);
+            this.panel1.Size = new System.Drawing.Size(38, 181);
             this.panel1.TabIndex = 1;
             // 
             // vButtonRestrictionEdit
@@ -429,10 +429,10 @@ namespace Registry.Viewport
             this.panel2.Controls.Add(this.vButtonOwnershipDelete);
             this.panel2.Controls.Add(this.vButtonOwnershipAdd);
             this.panel2.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel2.Location = new System.Drawing.Point(412, 20);
+            this.panel2.Location = new System.Drawing.Point(412, 17);
             this.panel2.Margin = new System.Windows.Forms.Padding(0);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(38, 178);
+            this.panel2.Size = new System.Drawing.Size(38, 181);
             this.panel2.TabIndex = 2;
             // 
             // vButtonOwnershipEdit
@@ -570,12 +570,12 @@ namespace Registry.Viewport
             this.tableLayoutPanel4.Controls.Add(this.panel3, 0, 0);
             this.tableLayoutPanel4.Controls.Add(this.panel4, 1, 0);
             this.tableLayoutPanel4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 20);
+            this.tableLayoutPanel4.Location = new System.Drawing.Point(3, 17);
             this.tableLayoutPanel4.Name = "tableLayoutPanel4";
             this.tableLayoutPanel4.RowCount = 1;
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel4.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 160F));
-            this.tableLayoutPanel4.Size = new System.Drawing.Size(906, 209);
+            this.tableLayoutPanel4.Size = new System.Drawing.Size(906, 212);
             this.tableLayoutPanel4.TabIndex = 0;
             // 
             // panel3
@@ -599,7 +599,7 @@ namespace Registry.Viewport
             this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel3.Location = new System.Drawing.Point(3, 3);
             this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(447, 203);
+            this.panel3.Size = new System.Drawing.Size(447, 206);
             this.panel3.TabIndex = 1;
             // 
             // dateTimePickerRegDate
@@ -608,7 +608,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerRegDate.Location = new System.Drawing.Point(169, 179);
             this.dateTimePickerRegDate.Name = "dateTimePickerRegDate";
-            this.dateTimePickerRegDate.Size = new System.Drawing.Size(272, 24);
+            this.dateTimePickerRegDate.Size = new System.Drawing.Size(272, 21);
             this.dateTimePickerRegDate.TabIndex = 7;
             // 
             // label4
@@ -616,7 +616,7 @@ namespace Registry.Viewport
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(10, 182);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(173, 18);
+            this.label4.Size = new System.Drawing.Size(144, 15);
             this.label4.TabIndex = 10;
             this.label4.Text = "Дата включения в РМИ";
             // 
@@ -625,7 +625,7 @@ namespace Registry.Viewport
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(10, 126);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(147, 18);
+            this.label1.Size = new System.Drawing.Size(122, 15);
             this.label1.TabIndex = 9;
             this.label1.Text = "Количество комнат";
             // 
@@ -637,7 +637,7 @@ namespace Registry.Viewport
             this.comboBoxPremisesKind.FormattingEnabled = true;
             this.comboBoxPremisesKind.Location = new System.Drawing.Point(169, 206);
             this.comboBoxPremisesKind.Name = "comboBoxPremisesKind";
-            this.comboBoxPremisesKind.Size = new System.Drawing.Size(272, 26);
+            this.comboBoxPremisesKind.Size = new System.Drawing.Size(272, 23);
             this.comboBoxPremisesKind.TabIndex = 4;
             this.comboBoxPremisesKind.Visible = false;
             // 
@@ -646,7 +646,7 @@ namespace Registry.Viewport
             this.label28.AutoSize = true;
             this.label28.Location = new System.Drawing.Point(10, 210);
             this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(118, 18);
+            this.label28.Size = new System.Drawing.Size(99, 15);
             this.label28.TabIndex = 5;
             this.label28.Text = "Вид помещения";
             this.label28.Visible = false;
@@ -662,7 +662,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownNumRooms.Name = "numericUpDownNumRooms";
-            this.numericUpDownNumRooms.Size = new System.Drawing.Size(272, 24);
+            this.numericUpDownNumRooms.Size = new System.Drawing.Size(272, 21);
             this.numericUpDownNumRooms.TabIndex = 5;
             // 
             // comboBoxPremisesType
@@ -674,7 +674,7 @@ namespace Registry.Viewport
             "Номер квартиры"});
             this.comboBoxPremisesType.Location = new System.Drawing.Point(9, 66);
             this.comboBoxPremisesType.Name = "comboBoxPremisesType";
-            this.comboBoxPremisesType.Size = new System.Drawing.Size(154, 26);
+            this.comboBoxPremisesType.Size = new System.Drawing.Size(154, 23);
             this.comboBoxPremisesType.TabIndex = 2;
             // 
             // textBoxPremisesNumber
@@ -684,7 +684,7 @@ namespace Registry.Viewport
             this.textBoxPremisesNumber.Location = new System.Drawing.Point(169, 67);
             this.textBoxPremisesNumber.MaxLength = 255;
             this.textBoxPremisesNumber.Name = "textBoxPremisesNumber";
-            this.textBoxPremisesNumber.Size = new System.Drawing.Size(272, 24);
+            this.textBoxPremisesNumber.Size = new System.Drawing.Size(272, 21);
             this.textBoxPremisesNumber.TabIndex = 3;
             this.textBoxPremisesNumber.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxPremisesNumber_KeyPress);
             // 
@@ -693,7 +693,7 @@ namespace Registry.Viewport
             this.label27.AutoSize = true;
             this.label27.Location = new System.Drawing.Point(10, 154);
             this.label27.Name = "label27";
-            this.label27.Size = new System.Drawing.Size(177, 18);
+            this.label27.Size = new System.Drawing.Size(145, 15);
             this.label27.TabIndex = 4;
             this.label27.Text = "Количество койко-мест";
             // 
@@ -702,7 +702,7 @@ namespace Registry.Viewport
             this.label21.AutoSize = true;
             this.label21.Location = new System.Drawing.Point(10, 98);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(45, 18);
+            this.label21.Size = new System.Drawing.Size(38, 15);
             this.label21.TabIndex = 6;
             this.label21.Text = "Этаж";
             // 
@@ -717,7 +717,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownNumBeds.Name = "numericUpDownNumBeds";
-            this.numericUpDownNumBeds.Size = new System.Drawing.Size(272, 24);
+            this.numericUpDownNumBeds.Size = new System.Drawing.Size(272, 21);
             this.numericUpDownNumBeds.TabIndex = 6;
             // 
             // numericUpDownFloor
@@ -731,7 +731,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownFloor.Name = "numericUpDownFloor";
-            this.numericUpDownFloor.Size = new System.Drawing.Size(272, 24);
+            this.numericUpDownFloor.Size = new System.Drawing.Size(272, 21);
             this.numericUpDownFloor.TabIndex = 4;
             // 
             // comboBoxStreet
@@ -740,7 +740,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.comboBoxStreet.Location = new System.Drawing.Point(169, 7);
             this.comboBoxStreet.Name = "comboBoxStreet";
-            this.comboBoxStreet.Size = new System.Drawing.Size(272, 26);
+            this.comboBoxStreet.Size = new System.Drawing.Size(272, 23);
             this.comboBoxStreet.TabIndex = 0;
             this.comboBoxStreet.DropDownClosed += new System.EventHandler(this.comboBoxStreet_DropDownClosed);
             this.comboBoxStreet.VisibleChanged += new System.EventHandler(this.comboBoxStreet_VisibleChanged);
@@ -752,7 +752,7 @@ namespace Registry.Viewport
             this.label20.AutoSize = true;
             this.label20.Location = new System.Drawing.Point(10, 41);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(96, 18);
+            this.label20.Size = new System.Drawing.Size(79, 15);
             this.label20.TabIndex = 7;
             this.label20.Text = "Номер дома";
             // 
@@ -763,7 +763,7 @@ namespace Registry.Viewport
             this.comboBoxHouse.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxHouse.Location = new System.Drawing.Point(169, 37);
             this.comboBoxHouse.Name = "comboBoxHouse";
-            this.comboBoxHouse.Size = new System.Drawing.Size(272, 26);
+            this.comboBoxHouse.Size = new System.Drawing.Size(272, 23);
             this.comboBoxHouse.TabIndex = 1;
             // 
             // label19
@@ -771,7 +771,7 @@ namespace Registry.Viewport
             this.label19.AutoSize = true;
             this.label19.Location = new System.Drawing.Point(10, 11);
             this.label19.Name = "label19";
-            this.label19.Size = new System.Drawing.Size(51, 18);
+            this.label19.Size = new System.Drawing.Size(43, 15);
             this.label19.TabIndex = 8;
             this.label19.Text = "Улица";
             // 
@@ -795,7 +795,7 @@ namespace Registry.Viewport
             this.panel4.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panel4.Location = new System.Drawing.Point(456, 3);
             this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(447, 203);
+            this.panel4.Size = new System.Drawing.Size(447, 206);
             this.panel4.TabIndex = 2;
             // 
             // dateTimePickerStateDate
@@ -805,8 +805,9 @@ namespace Registry.Viewport
             this.dateTimePickerStateDate.Location = new System.Drawing.Point(170, 206);
             this.dateTimePickerStateDate.Name = "dateTimePickerStateDate";
             this.dateTimePickerStateDate.ShowCheckBox = true;
-            this.dateTimePickerStateDate.Size = new System.Drawing.Size(272, 24);
+            this.dateTimePickerStateDate.Size = new System.Drawing.Size(272, 21);
             this.dateTimePickerStateDate.TabIndex = 6;
+            this.dateTimePickerStateDate.TabStop = false;
             this.dateTimePickerStateDate.Visible = false;
             // 
             // label6
@@ -814,7 +815,7 @@ namespace Registry.Viewport
             this.label6.AutoSize = true;
             this.label6.Location = new System.Drawing.Point(16, 209);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(177, 18);
+            this.label6.Size = new System.Drawing.Size(147, 15);
             this.label6.TabIndex = 15;
             this.label6.Text = "Состояние установлено";
             this.label6.Visible = false;
@@ -824,7 +825,7 @@ namespace Registry.Viewport
             this.checkBoxIsMemorial.AutoSize = true;
             this.checkBoxIsMemorial.Location = new System.Drawing.Point(19, 181);
             this.checkBoxIsMemorial.Name = "checkBoxIsMemorial";
-            this.checkBoxIsMemorial.Size = new System.Drawing.Size(168, 22);
+            this.checkBoxIsMemorial.Size = new System.Drawing.Size(141, 19);
             this.checkBoxIsMemorial.TabIndex = 8;
             this.checkBoxIsMemorial.Text = "Памятник культуры";
             this.checkBoxIsMemorial.UseVisualStyleBackColor = true;
@@ -836,7 +837,7 @@ namespace Registry.Viewport
             this.textBoxAccount.Location = new System.Drawing.Point(170, 38);
             this.textBoxAccount.MaxLength = 20;
             this.textBoxAccount.Name = "textBoxAccount";
-            this.textBoxAccount.Size = new System.Drawing.Size(272, 24);
+            this.textBoxAccount.Size = new System.Drawing.Size(272, 21);
             this.textBoxAccount.TabIndex = 1;
             // 
             // label5
@@ -844,7 +845,7 @@ namespace Registry.Viewport
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(16, 41);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(140, 18);
+            this.label5.Size = new System.Drawing.Size(116, 15);
             this.label5.TabIndex = 13;
             this.label5.Text = "Лицевой счет ФКР";
             // 
@@ -853,7 +854,7 @@ namespace Registry.Viewport
             this.label39.AutoSize = true;
             this.label39.Location = new System.Drawing.Point(16, 127);
             this.label39.Name = "label39";
-            this.label39.Size = new System.Drawing.Size(144, 18);
+            this.label39.Size = new System.Drawing.Size(119, 15);
             this.label39.TabIndex = 0;
             this.label39.Text = "Текущее состояние";
             // 
@@ -865,7 +866,7 @@ namespace Registry.Viewport
             this.comboBoxState.FormattingEnabled = true;
             this.comboBoxState.Location = new System.Drawing.Point(170, 123);
             this.comboBoxState.Name = "comboBoxState";
-            this.comboBoxState.Size = new System.Drawing.Size(272, 26);
+            this.comboBoxState.Size = new System.Drawing.Size(272, 23);
             this.comboBoxState.TabIndex = 5;
             // 
             // label38
@@ -873,7 +874,7 @@ namespace Registry.Viewport
             this.label38.AutoSize = true;
             this.label38.Location = new System.Drawing.Point(16, 154);
             this.label38.Name = "label38";
-            this.label38.Size = new System.Drawing.Size(110, 18);
+            this.label38.Size = new System.Drawing.Size(90, 15);
             this.label38.TabIndex = 2;
             this.label38.Text = "Текущий фонд";
             // 
@@ -887,7 +888,7 @@ namespace Registry.Viewport
             this.comboBoxCurrentFundType.FormattingEnabled = true;
             this.comboBoxCurrentFundType.Location = new System.Drawing.Point(170, 151);
             this.comboBoxCurrentFundType.Name = "comboBoxCurrentFundType";
-            this.comboBoxCurrentFundType.Size = new System.Drawing.Size(272, 26);
+            this.comboBoxCurrentFundType.Size = new System.Drawing.Size(272, 23);
             this.comboBoxCurrentFundType.TabIndex = 7;
             // 
             // numericUpDownBalanceCost
@@ -902,7 +903,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownBalanceCost.Name = "numericUpDownBalanceCost";
-            this.numericUpDownBalanceCost.Size = new System.Drawing.Size(272, 24);
+            this.numericUpDownBalanceCost.Size = new System.Drawing.Size(272, 21);
             this.numericUpDownBalanceCost.TabIndex = 3;
             this.numericUpDownBalanceCost.ThousandsSeparator = true;
             // 
@@ -911,7 +912,7 @@ namespace Registry.Viewport
             this.label22.AutoSize = true;
             this.label22.Location = new System.Drawing.Point(16, 98);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(171, 18);
+            this.label22.Size = new System.Drawing.Size(143, 15);
             this.label22.TabIndex = 9;
             this.label22.Text = "Балансовая стоимость";
             // 
@@ -922,7 +923,7 @@ namespace Registry.Viewport
             this.textBoxCadastralNum.Location = new System.Drawing.Point(170, 8);
             this.textBoxCadastralNum.MaxLength = 20;
             this.textBoxCadastralNum.Name = "textBoxCadastralNum";
-            this.textBoxCadastralNum.Size = new System.Drawing.Size(272, 24);
+            this.textBoxCadastralNum.Size = new System.Drawing.Size(272, 21);
             this.textBoxCadastralNum.TabIndex = 0;
             // 
             // numericUpDownCadastralCost
@@ -937,7 +938,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownCadastralCost.Name = "numericUpDownCadastralCost";
-            this.numericUpDownCadastralCost.Size = new System.Drawing.Size(272, 24);
+            this.numericUpDownCadastralCost.Size = new System.Drawing.Size(272, 21);
             this.numericUpDownCadastralCost.TabIndex = 2;
             this.numericUpDownCadastralCost.ThousandsSeparator = true;
             // 
@@ -946,7 +947,7 @@ namespace Registry.Viewport
             this.label23.AutoSize = true;
             this.label23.Location = new System.Drawing.Point(16, 11);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(150, 18);
+            this.label23.Size = new System.Drawing.Size(126, 15);
             this.label23.TabIndex = 10;
             this.label23.Text = "Кадастровый номер";
             // 
@@ -955,7 +956,7 @@ namespace Registry.Viewport
             this.label24.AutoSize = true;
             this.label24.Location = new System.Drawing.Point(16, 70);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(178, 18);
+            this.label24.Size = new System.Drawing.Size(150, 15);
             this.label24.TabIndex = 11;
             this.label24.Text = "Кадастровая стоимость";
             // 
@@ -1004,7 +1005,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownHeight.Name = "numericUpDownHeight";
-            this.numericUpDownHeight.Size = new System.Drawing.Size(272, 24);
+            this.numericUpDownHeight.Size = new System.Drawing.Size(272, 21);
             this.numericUpDownHeight.TabIndex = 3;
             this.numericUpDownHeight.ThousandsSeparator = true;
             // 
@@ -1013,7 +1014,7 @@ namespace Registry.Viewport
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(16, 108);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(144, 18);
+            this.label3.Size = new System.Drawing.Size(121, 15);
             this.label3.TabIndex = 17;
             this.label3.Text = "Высота помещения";
             // 
@@ -1030,7 +1031,7 @@ namespace Registry.Viewport
             0});
             this.numericUpDownMunicipalArea.Name = "numericUpDownMunicipalArea";
             this.numericUpDownMunicipalArea.ReadOnly = true;
-            this.numericUpDownMunicipalArea.Size = new System.Drawing.Size(272, 24);
+            this.numericUpDownMunicipalArea.Size = new System.Drawing.Size(272, 21);
             this.numericUpDownMunicipalArea.TabIndex = 2;
             this.numericUpDownMunicipalArea.ThousandsSeparator = true;
             // 
@@ -1039,7 +1040,7 @@ namespace Registry.Viewport
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(15, 79);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(162, 18);
+            this.label2.Size = new System.Drawing.Size(133, 15);
             this.label2.TabIndex = 15;
             this.label2.Text = "Площадь мун. комнат";
             // 
@@ -1055,7 +1056,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownLivingArea.Name = "numericUpDownLivingArea";
-            this.numericUpDownLivingArea.Size = new System.Drawing.Size(272, 24);
+            this.numericUpDownLivingArea.Size = new System.Drawing.Size(272, 21);
             this.numericUpDownLivingArea.TabIndex = 1;
             this.numericUpDownLivingArea.ThousandsSeparator = true;
             // 
@@ -1071,7 +1072,7 @@ namespace Registry.Viewport
             0,
             0});
             this.numericUpDownTotalArea.Name = "numericUpDownTotalArea";
-            this.numericUpDownTotalArea.Size = new System.Drawing.Size(272, 24);
+            this.numericUpDownTotalArea.Size = new System.Drawing.Size(272, 21);
             this.numericUpDownTotalArea.TabIndex = 0;
             this.numericUpDownTotalArea.ThousandsSeparator = true;
             // 
@@ -1080,7 +1081,7 @@ namespace Registry.Viewport
             this.label25.AutoSize = true;
             this.label25.Location = new System.Drawing.Point(16, 50);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(121, 18);
+            this.label25.Size = new System.Drawing.Size(100, 15);
             this.label25.TabIndex = 12;
             this.label25.Text = "Жилая площадь";
             // 
@@ -1089,7 +1090,7 @@ namespace Registry.Viewport
             this.label26.AutoSize = true;
             this.label26.Location = new System.Drawing.Point(16, 21);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(122, 18);
+            this.label26.Size = new System.Drawing.Size(100, 15);
             this.label26.TabIndex = 13;
             this.label26.Text = "Общая площадь";
             // 
@@ -1112,10 +1113,10 @@ namespace Registry.Viewport
             this.panel5.Controls.Add(this.vButtonRoomDelete);
             this.panel5.Controls.Add(this.vButtonRoomAdd);
             this.panel5.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel5.Location = new System.Drawing.Point(412, 20);
+            this.panel5.Location = new System.Drawing.Point(412, 17);
             this.panel5.Margin = new System.Windows.Forms.Padding(0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(38, 191);
+            this.panel5.Size = new System.Drawing.Size(38, 194);
             this.panel5.TabIndex = 3;
             // 
             // vButtonRoomEdit
@@ -1177,7 +1178,11 @@ namespace Registry.Viewport
             this.sub_premises_num,
             this.sub_premises_total_area,
             this.sub_premises_id_state,
-            this.current_fund});
+            this.current_fund,
+            this.sub_premises_cadastral_num,
+            this.sub_premises_cadastral_cost,
+            this.sub_premises_balance_cost,
+            this.sub_premises_account});
             this.dataGridViewRooms.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewRooms.Name = "dataGridViewRooms";
             this.dataGridViewRooms.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -1198,10 +1203,9 @@ namespace Registry.Viewport
             dataGridViewCellStyle1.Format = "#0.0## м²";
             this.sub_premises_total_area.DefaultCellStyle = dataGridViewCellStyle1;
             this.sub_premises_total_area.HeaderText = "Общая площадь";
-            this.sub_premises_total_area.MinimumWidth = 125;
+            this.sub_premises_total_area.MinimumWidth = 100;
             this.sub_premises_total_area.Name = "sub_premises_total_area";
             this.sub_premises_total_area.ReadOnly = true;
-            this.sub_premises_total_area.Width = 125;
             // 
             // sub_premises_id_state
             // 
@@ -1220,6 +1224,30 @@ namespace Registry.Viewport
             this.current_fund.MinimumWidth = 150;
             this.current_fund.Name = "current_fund";
             this.current_fund.Width = 150;
+            // 
+            // sub_premises_cadastral_num
+            // 
+            this.sub_premises_cadastral_num.HeaderText = "Кадастровый номер";
+            this.sub_premises_cadastral_num.MinimumWidth = 100;
+            this.sub_premises_cadastral_num.Name = "sub_premises_cadastral_num";
+            // 
+            // sub_premises_cadastral_cost
+            // 
+            this.sub_premises_cadastral_cost.HeaderText = "Кадастровая стоимость";
+            this.sub_premises_cadastral_cost.MinimumWidth = 100;
+            this.sub_premises_cadastral_cost.Name = "sub_premises_cadastral_cost";
+            // 
+            // sub_premises_balance_cost
+            // 
+            this.sub_premises_balance_cost.HeaderText = "Балансовая стоимость";
+            this.sub_premises_balance_cost.MinimumWidth = 100;
+            this.sub_premises_balance_cost.Name = "sub_premises_balance_cost";
+            // 
+            // sub_premises_account
+            // 
+            this.sub_premises_account.HeaderText = "Лицевой счет ФКР";
+            this.sub_premises_account.MinimumWidth = 100;
+            this.sub_premises_account.Name = "sub_premises_account";
             // 
             // PremisesViewport
             // 
@@ -1266,5 +1294,14 @@ namespace Registry.Viewport
             this.ResumeLayout(false);
 
         }
+
+        private DataGridViewTextBoxColumn sub_premises_num;
+        private DataGridViewTextBoxColumn sub_premises_total_area;
+        private DataGridViewComboBoxColumn sub_premises_id_state;
+        private DataGridViewTextBoxColumn current_fund;
+        private DataGridViewTextBoxColumn sub_premises_cadastral_num;
+        private DataGridViewTextBoxColumn sub_premises_cadastral_cost;
+        private DataGridViewTextBoxColumn sub_premises_balance_cost;
+        private DataGridViewTextBoxColumn sub_premises_account;
     }
 }
