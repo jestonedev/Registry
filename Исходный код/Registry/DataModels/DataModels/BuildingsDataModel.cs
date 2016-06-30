@@ -77,7 +77,7 @@ namespace Registry.DataModels.DataModels
                             num_apartments = ?, num_shared_apartments = ?, total_area = ?, living_area = ?, cadastral_num = ?, 
                             cadastral_cost = ?, balance_cost = ?, description = ?, startup_year = ?, 
                             improvement = ?, elevator = ?, rubbish_chute = ?, wear = ?, state_date = ?, plumbing = ?,
-                             hot_water_supply = ?, canalization = ?, electricity = ?, radio_network = ?, id_heating_type = ?, BTI_rooms = ?
+                             hot_water_supply = ?, canalization = ?, electricity = ?, radio_network = ?, id_heating_type = ?, BTI_rooms = ?, housing_cooperative = ?
                             WHERE id_building = ?";
             var building = (Building) entity;
             command.Parameters.Add(DBConnection.CreateParameter("id_state", building.IdState));
@@ -108,6 +108,7 @@ namespace Registry.DataModels.DataModels
             command.Parameters.Add(DBConnection.CreateParameter("radio_network", building.RadioNetwork));
             command.Parameters.Add(DBConnection.CreateParameter("id_heating_type", building.IdHeatingType));
             command.Parameters.Add(DBConnection.CreateParameter("BTI_rooms", building.RoomsBTI));
+            command.Parameters.Add(DBConnection.CreateParameter("housing_cooperative", building.HousingCooperative));
             command.Parameters.Add(DBConnection.CreateParameter("id_building", building.IdBuilding));
         }
 
@@ -120,7 +121,7 @@ namespace Registry.DataModels.DataModels
                              , cadastral_cost, balance_cost, description, startup_year
                              , improvement, elevator, rubbish_chute, wear, state_date,plumbing,hot_water_supply,
                                 canalization,electricity,radio_network,id_heating_type,BTI_rooms)
-                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?)";
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
             var building = (Building)entity;
             command.Parameters.Add(DBConnection.CreateParameter("id_state", building.IdState));
             command.Parameters.Add(DBConnection.CreateParameter("id_structure_type", building.IdStructureType));
@@ -150,6 +151,7 @@ namespace Registry.DataModels.DataModels
             command.Parameters.Add(DBConnection.CreateParameter("radio_network", building.RadioNetwork));            
             command.Parameters.Add(DBConnection.CreateParameter("id_heating_type", building.IdHeatingType));
             command.Parameters.Add(DBConnection.CreateParameter("BTI_rooms", building.RoomsBTI));
+            command.Parameters.Add(DBConnection.CreateParameter("housing_cooperative", building.HousingCooperative));
         }
     }
 }

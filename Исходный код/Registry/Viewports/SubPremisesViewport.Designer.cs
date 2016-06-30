@@ -13,14 +13,6 @@ namespace Registry.Viewport
     {
         #region Components
         private DataGridView dataGridView;
-        private DataGridViewTextBoxColumn id_sub_premises;
-        private DataGridViewTextBoxColumn id_premises;
-        private DataGridViewTextBoxColumn sub_premises_num;
-        private DataGridViewTextBoxColumn total_area;
-        private DataGridViewTextBoxColumn living_area;
-        private DataGridViewTextBoxColumn description;
-        private DataGridViewComboBoxColumn id_state;
-        private DataGridViewDateTimeColumn state_date;
         #endregion Components
 
 
@@ -28,6 +20,7 @@ namespace Registry.Viewport
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SubPremisesViewport));
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.id_sub_premises = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -110,7 +103,8 @@ namespace Registry.Viewport
             // living_area
             // 
             this.living_area.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.living_area.DefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle3.Format = "#0.0## м²";
+            this.living_area.DefaultCellStyle = dataGridViewCellStyle3;
             this.living_area.HeaderText = "Жилая площадь";
             this.living_area.MinimumWidth = 150;
             this.living_area.Name = "living_area";
@@ -136,6 +130,7 @@ namespace Registry.Viewport
             this.state_date.HeaderText = "Дата установки состояния";
             this.state_date.MinimumWidth = 170;
             this.state_date.Name = "state_date";
+            this.state_date.Visible = false;
             this.state_date.Width = 170;
             // 
             // SubPremisesViewport
@@ -152,5 +147,14 @@ namespace Registry.Viewport
             this.ResumeLayout(false);
 
         }
+
+        private DataGridViewTextBoxColumn id_sub_premises;
+        private DataGridViewTextBoxColumn id_premises;
+        private DataGridViewTextBoxColumn sub_premises_num;
+        private DataGridViewTextBoxColumn total_area;
+        private DataGridViewTextBoxColumn living_area;
+        private DataGridViewTextBoxColumn description;
+        private DataGridViewComboBoxColumn id_state;
+        private DataGridViewDateTimeColumn state_date;
     }
 }

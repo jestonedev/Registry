@@ -34,6 +34,8 @@ namespace Registry.Entities
         public int? IdHeatingType { get; set; }
         public string RoomsBTI { get; set; }
 
+        public string HousingCooperative { get; set; }
+
         public override bool Equals(object obj)
         {
             return (this == (obj as Building));
@@ -78,7 +80,8 @@ namespace Registry.Entities
                     first.Canalization == second.Canalization &&
                     first.RadioNetwork == second.RadioNetwork &&
                     first.IdHeatingType == second.IdHeatingType &&
-                    first.RoomsBTI == second.RoomsBTI;
+                    first.RoomsBTI == second.RoomsBTI &&
+                    first.HousingCooperative == second.HousingCooperative;
         }
 
         public static bool operator !=(Building first, Building second)

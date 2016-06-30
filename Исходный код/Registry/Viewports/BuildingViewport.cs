@@ -243,6 +243,8 @@ namespace Registry.Viewport
                 DataSourceUpdateMode.Never, false);                      
             textBoxRoomsBTI.DataBindings.Clear();
             textBoxRoomsBTI.DataBindings.Add("Text", GeneralBindingSource, "BTI_rooms", true, DataSourceUpdateMode.Never, "");
+            textBoxHousingCooperative.DataBindings.Clear();
+            textBoxHousingCooperative.DataBindings.Add("Text", GeneralBindingSource, "housing_cooperative", true, DataSourceUpdateMode.Never, "");
             numericUpDownPremisesCount.DataBindings.Clear();
             numericUpDownPremisesCount.DataBindings.Add("Value", GeneralBindingSource, "num_premises", true, DataSourceUpdateMode.Never, 0);
             numericUpDownRoomsCount.DataBindings.Clear();
@@ -446,7 +448,8 @@ namespace Registry.Viewport
                 Electricity = checkBoxElectricity.Checked,
                 RadioNetwork = checkBoxRadioNetwork.Checked,
                 IdHeatingType =ViewportHelper.ValueOrNull<int>(comboBoxHeatingType),
-                RoomsBTI = ViewportHelper.ValueOrNull(textBoxRoomsBTI)
+                RoomsBTI = ViewportHelper.ValueOrNull(textBoxRoomsBTI),
+                HousingCooperative = ViewportHelper.ValueOrNull(textBoxHousingCooperative)
             };
             return building;
         }
@@ -484,7 +487,8 @@ namespace Registry.Viewport
                 Electricity = ViewportHelper.ValueOrNull<bool>(row, "electricity"),
                 RadioNetwork = ViewportHelper.ValueOrNull<bool>(row, "radio_network"),                
                 IdHeatingType = ViewportHelper.ValueOrNull<int>(row, "id_heating_type"),
-                RoomsBTI = ViewportHelper.ValueOrNull(row,"BTI_rooms")
+                RoomsBTI = ViewportHelper.ValueOrNull(row,"BTI_rooms"),
+                HousingCooperative = ViewportHelper.ValueOrNull(row, "housing_cooperative")
             };
             return building;
         }
@@ -518,6 +522,7 @@ namespace Registry.Viewport
             checkBoxRadioNetwork.Checked = ViewportHelper.ValueOrDefault(building.RadioNetwork);
             comboBoxHeatingType.SelectedValue = ViewportHelper.ValueOrDefault(building.IdHeatingType);
             textBoxRoomsBTI.Text = building.RoomsBTI;
+            textBoxHousingCooperative.Text = building.HousingCooperative;
         }
 
         private static void FillRowFromBuilding(Building building, DataRowView row)
@@ -552,6 +557,7 @@ namespace Registry.Viewport
             row["radio_network"] = ViewportHelper.ValueOrDBNull(building.RadioNetwork);
             row["id_heating_type"] = ViewportHelper.ValueOrDBNull(building.IdHeatingType);
             row["BTI_rooms"] = ViewportHelper.ValueOrDBNull(building.RoomsBTI);
+            row["housing_cooperative"] = ViewportHelper.ValueOrDBNull(building.HousingCooperative);
             row.EndEdit();
         }
 
