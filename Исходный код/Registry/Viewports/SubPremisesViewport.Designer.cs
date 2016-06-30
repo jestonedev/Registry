@@ -34,9 +34,9 @@ namespace Registry.Viewport
             this.id_state = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.state_date = new CustomControls.DataGridViewDateTimeColumn();
             this.cadastral_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cadastral_cost = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.balance_cost = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
             // 
@@ -67,9 +67,9 @@ namespace Registry.Viewport
             this.id_state,
             this.state_date,
             this.cadastral_num,
+            this.account,
             this.cadastral_cost,
-            this.balance_cost,
-            this.account});
+            this.balance_cost});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView.EditMode = System.Windows.Forms.DataGridViewEditMode.EditOnEnter;
             this.dataGridView.Location = new System.Drawing.Point(3, 3);
@@ -152,6 +152,15 @@ namespace Registry.Viewport
             this.cadastral_num.Name = "cadastral_num";
             this.cadastral_num.Width = 138;
             // 
+            // account
+            // 
+            this.account.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
+            this.account.HeaderText = "Лицевой счет ФКР";
+            this.account.MaxInputLength = 255;
+            this.account.MinimumWidth = 100;
+            this.account.Name = "account";
+            this.account.Width = 105;
+            // 
             // cadastral_cost
             // 
             this.cadastral_cost.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
@@ -171,15 +180,6 @@ namespace Registry.Viewport
             this.balance_cost.MinimumWidth = 100;
             this.balance_cost.Name = "balance_cost";
             this.balance_cost.Width = 153;
-            // 
-            // account
-            // 
-            this.account.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.account.HeaderText = "Лицевой счет ФКР";
-            this.account.MaxInputLength = 255;
-            this.account.MinimumWidth = 100;
-            this.account.Name = "account";
-            this.account.Width = 105;
             // 
             // SubPremisesViewport
             // 
@@ -205,8 +205,8 @@ namespace Registry.Viewport
         private DataGridViewComboBoxColumn id_state;
         private DataGridViewDateTimeColumn state_date;
         private DataGridViewTextBoxColumn cadastral_num;
+        private DataGridViewTextBoxColumn account;
         private DataGridViewTextBoxColumn cadastral_cost;
         private DataGridViewTextBoxColumn balance_cost;
-        private DataGridViewTextBoxColumn account;
     }
 }

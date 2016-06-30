@@ -230,7 +230,7 @@ namespace Registry.Viewport
             // numericUpDownBalanceCost
             // 
             this.numericUpDownBalanceCost.DecimalPlaces = 2;
-            this.numericUpDownBalanceCost.Location = new System.Drawing.Point(177, 182);
+            this.numericUpDownBalanceCost.Location = new System.Drawing.Point(177, 211);
             this.numericUpDownBalanceCost.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -238,12 +238,12 @@ namespace Registry.Viewport
             0});
             this.numericUpDownBalanceCost.Name = "numericUpDownBalanceCost";
             this.numericUpDownBalanceCost.Size = new System.Drawing.Size(223, 21);
-            this.numericUpDownBalanceCost.TabIndex = 6;
+            this.numericUpDownBalanceCost.TabIndex = 7;
             // 
             // label8
             // 
             this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(25, 185);
+            this.label8.Location = new System.Drawing.Point(25, 214);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(143, 15);
             this.label8.TabIndex = 17;
@@ -252,7 +252,7 @@ namespace Registry.Viewport
             // numericUpDownCadastralCost
             // 
             this.numericUpDownCadastralCost.DecimalPlaces = 2;
-            this.numericUpDownCadastralCost.Location = new System.Drawing.Point(177, 154);
+            this.numericUpDownCadastralCost.Location = new System.Drawing.Point(177, 183);
             this.numericUpDownCadastralCost.Maximum = new decimal(new int[] {
             1000000000,
             0,
@@ -260,12 +260,12 @@ namespace Registry.Viewport
             0});
             this.numericUpDownCadastralCost.Name = "numericUpDownCadastralCost";
             this.numericUpDownCadastralCost.Size = new System.Drawing.Size(223, 21);
-            this.numericUpDownCadastralCost.TabIndex = 5;
+            this.numericUpDownCadastralCost.TabIndex = 6;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(18, 156);
+            this.label9.Location = new System.Drawing.Point(18, 185);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(150, 15);
             this.label9.TabIndex = 16;
@@ -273,16 +273,16 @@ namespace Registry.Viewport
             // 
             // textBoxAccount
             // 
-            this.textBoxAccount.Location = new System.Drawing.Point(177, 209);
+            this.textBoxAccount.Location = new System.Drawing.Point(177, 154);
             this.textBoxAccount.MaxLength = 255;
             this.textBoxAccount.Name = "textBoxAccount";
             this.textBoxAccount.Size = new System.Drawing.Size(223, 21);
-            this.textBoxAccount.TabIndex = 7;
+            this.textBoxAccount.TabIndex = 5;
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(51, 212);
+            this.label10.Location = new System.Drawing.Point(51, 157);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(116, 15);
             this.label10.TabIndex = 19;

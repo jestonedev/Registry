@@ -181,9 +181,9 @@ namespace Registry.Viewport
             this.sub_premises_id_state = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.current_fund = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sub_premises_cadastral_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.sub_premises_account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sub_premises_cadastral_cost = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.sub_premises_balance_cost = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.sub_premises_account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.tableLayoutPanel3.SuspendLayout();
             this.groupBox13.SuspendLayout();
             this.groupBox9.SuspendLayout();
@@ -1180,9 +1180,9 @@ namespace Registry.Viewport
             this.sub_premises_id_state,
             this.current_fund,
             this.sub_premises_cadastral_num,
+            this.sub_premises_account,
             this.sub_premises_cadastral_cost,
-            this.sub_premises_balance_cost,
-            this.sub_premises_account});
+            this.sub_premises_balance_cost});
             this.dataGridViewRooms.Location = new System.Drawing.Point(3, 17);
             this.dataGridViewRooms.Name = "dataGridViewRooms";
             this.dataGridViewRooms.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -1231,6 +1231,12 @@ namespace Registry.Viewport
             this.sub_premises_cadastral_num.MinimumWidth = 100;
             this.sub_premises_cadastral_num.Name = "sub_premises_cadastral_num";
             // 
+            // sub_premises_account
+            // 
+            this.sub_premises_account.HeaderText = "Лицевой счет ФКР";
+            this.sub_premises_account.MinimumWidth = 100;
+            this.sub_premises_account.Name = "sub_premises_account";
+            // 
             // sub_premises_cadastral_cost
             // 
             this.sub_premises_cadastral_cost.HeaderText = "Кадастровая стоимость";
@@ -1242,12 +1248,6 @@ namespace Registry.Viewport
             this.sub_premises_balance_cost.HeaderText = "Балансовая стоимость";
             this.sub_premises_balance_cost.MinimumWidth = 100;
             this.sub_premises_balance_cost.Name = "sub_premises_balance_cost";
-            // 
-            // sub_premises_account
-            // 
-            this.sub_premises_account.HeaderText = "Лицевой счет ФКР";
-            this.sub_premises_account.MinimumWidth = 100;
-            this.sub_premises_account.Name = "sub_premises_account";
             // 
             // PremisesViewport
             // 
@@ -1300,8 +1300,8 @@ namespace Registry.Viewport
         private DataGridViewComboBoxColumn sub_premises_id_state;
         private DataGridViewTextBoxColumn current_fund;
         private DataGridViewTextBoxColumn sub_premises_cadastral_num;
+        private DataGridViewTextBoxColumn sub_premises_account;
         private DataGridViewTextBoxColumn sub_premises_cadastral_cost;
         private DataGridViewTextBoxColumn sub_premises_balance_cost;
-        private DataGridViewTextBoxColumn sub_premises_account;
     }
 }
