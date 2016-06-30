@@ -175,11 +175,11 @@ namespace Registry.Viewport
             // account
             // 
             this.account.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.AllCells;
-            this.account.HeaderText = "Лицевой счет";
+            this.account.HeaderText = "Лицевой счет ФКР";
             this.account.MaxInputLength = 255;
             this.account.MinimumWidth = 100;
             this.account.Name = "account";
-            this.account.Width = 102;
+            this.account.Width = 105;
             // 
             // SubPremisesViewport
             // 
