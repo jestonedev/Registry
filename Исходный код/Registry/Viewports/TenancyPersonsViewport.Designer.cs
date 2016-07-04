@@ -198,9 +198,9 @@ namespace Registry.Viewport
             this.label81.AutoSize = true;
             this.label81.Location = new System.Drawing.Point(17, 160);
             this.label81.Name = "label81";
-            this.label81.Size = new System.Drawing.Size(86, 15);
+            this.label81.Size = new System.Drawing.Size(109, 15);
             this.label81.TabIndex = 30;
-            this.label81.Text = "Лицевой счет";
+            this.label81.Text = "Номер телефона";
             // 
             // dateTimePickerDateOfBirth
             // 
