@@ -24,13 +24,20 @@ namespace Registry.Reporting.TenancyReporters
                 {
                     arguments.Add("id_rent_type", tosForm.IdRentType.ToString(CultureInfo.InvariantCulture));
                     arguments.Add("id_executor", tosForm.IdExecutor.ToString(CultureInfo.InvariantCulture));
-                    arguments.Add("protocol_num", tosForm.ProtocolNum);
-                    arguments.Add("protocol_date", tosForm.ProtocolDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
+                    arguments.Add("general_num", tosForm.GeneralNumber);
+                    arguments.Add("general_date", tosForm.GeneralDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
+                    arguments.Add("orphans_num", tosForm.OrphansNumber);
+                    arguments.Add("orphans_date", tosForm.OrphansDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
+                    arguments.Add("resettle_num", tosForm.ResettleNumber);
+                    arguments.Add("resettle_date", tosForm.ResettleDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
+                    arguments.Add("resettle_type", tosForm.ResettleType.ToString());
+                    arguments.Add("court_num", tosForm.CourtNumber);
+                    arguments.Add("court_date", tosForm.CourtDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
+                    arguments.Add("court", tosForm.Court);
+                    arguments.Add("order_type", tosForm.OrderType.ToString());
                     arguments.Add("registration_date_from", tosForm.RegistrationDateFrom.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
                     arguments.Add("registration_date_to", tosForm.RegistrationDateTo.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
                     arguments.Add("order_date_from", tosForm.OrderDateFrom.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
-                    arguments.Add("main_text", tosForm.MainText);
-                    arguments.Add("report_type", tosForm.MainText == null ? "1" : "0");
                     arguments.Add("show_address", tosForm.AddressFilter == "(1=1)" ? "0" : "1");
                     arguments.Add("id_street", tosForm.IdStreet.Trim());
                     arguments.Add("house", tosForm.House.Trim());

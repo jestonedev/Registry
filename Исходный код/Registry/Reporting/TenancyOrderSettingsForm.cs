@@ -10,6 +10,74 @@ namespace Registry.Reporting
     {
         private readonly BindingSource _vKladr;
 
+        public string GeneralNumber
+        {
+            get { return textBoxGeneralNumber.Text; }
+        }
+
+        public DateTime GeneralDate
+        {
+            get { return dateTimePickerGeneralDate.Value; }
+        }
+
+        public string OrphansNumber
+        {
+            get { return textBoxOrphansNumber.Text; }
+        }
+
+        public DateTime OrphansDate
+        {
+            get { return dateTimePickerOrphansDate.Value; }
+        }
+
+        public string ResettleNumber
+        {
+            get { return textBoxResettleNumber.Text; }
+        }
+
+        public DateTime ResettleDate
+        {
+            get { return dateTimePickerResettleDate.Value; }
+        }
+
+        public int ResettleType
+        {
+            get { return radioButtonResettleFreeList.Checked ? 1 : radioButtonResettleRetransfer.Checked ? 2 : -1; }
+        }
+
+        public string CourtNumber
+        {
+            get { return textBoxCourtNumber.Text; }
+        }
+
+        public DateTime CourtDate
+        {
+            get { return dateTimePickerCourtDate.Value; }
+        }
+
+        public string Court
+        {
+            get
+            {
+                return comboBoxCourt.SelectedItem == null
+                    ? ""
+                    : comboBoxCourt.SelectedItem.ToString();
+            }
+        }
+
+        public int OrderType
+        {
+            get
+            {
+                int type;
+                if (!int.TryParse(tabControlExtInfo.SelectedTab.Tag.ToString(), out type))
+                {
+                    return -1;
+                }
+                return type;
+            }
+        }
+
         public int IdRentType
         {
             get
@@ -27,22 +95,6 @@ namespace Registry.Reporting
                 if (comboBoxRentType.SelectedValue != null)
                     return Convert.ToInt32(comboBoxExecutor.SelectedValue, CultureInfo.InvariantCulture);
                 return -1;
-            }
-        }
-
-        public string ProtocolNum
-        {
-            get
-            {
-                return textBoxProtocolNum.Text;
-            }
-        }
-
-        public DateTime ProtocolDate
-        {
-            get
-            {
-                return dateTimePickerProtocolDate.Value;
             }
         }
 
@@ -67,31 +119,6 @@ namespace Registry.Reporting
             get
             {
                 return dateTimePickerOrderFrom.Value;
-            }
-        }
-
-        public string MainText
-        {
-            get
-            {
-                if (checkBoxResettle2013to2017freeLists.Checked)
-                {
-                    return "Руководствуясь распоряжением заместителя мэра по городскому хозяйству и строительству от $protocol_date$ № $protocol_num$ «Об утверждении сводного предварительного списка переселения граждан из аварийного жилищного фонда территориального округа города Братска, Правобережного территориального округа города Братска за счет средств бюджета города Братска, выделенных в 2015 году на реализацию региональной адресной программы Иркутской области «Переселение граждан, проживающих на территории Иркутской области, из аварийного жилищного фонда, признанного непригодным для проживания, в 2013 - 2017 годах», утвержденной постановлением Правительства Иркутской области от 29.05.2013 № 199-пп, и муниципальной программы города Братска «Развитие градостроительного комплекса и обеспечение населения доступным жильем» на 2014-2025 годы», утвержденной постановлением администрации муниципального образования города Братска от 15.10.2013 № 2759», руководствуясь статьями 45, 67 Устава муниципального образования города Братска, ";
-                }
-                if (checkBoxResettle2013to2017retransfer.Checked)
-                {
-                    return null;
-                }
-                if (checkBoxOrphans.Checked)
-                {
-                    return "На основании служебной записки Управления социальной политики администрации города Братска от $protocol_date$ № $protocol_num$, в соответствии с Порядком предоставления жилых помещений жилищного фонда социального использования муниципального образования города Братска, утвержденным постановлением мэра города Братска от 29.06.2010 № 1356, руководствуясь статьями 45, 67 Устава муниципального образования города Братска, ";
-                }
-                if (checkBoxCheckanovskiy.Checked)
-                {
-                    return "Во исполнение решения Братского городского суда Иркутской области от 02.09.2011 по гражданскому делу № 2-2355/2011 по иску Западно-Байкальского межрайонного прокурора в защиту интересов Российской Федерации, неопределенного круга лиц к Открытому акционерному обществу «РУСАЛ Братский алюминиевый завод» (далее - ОАО «РУСАЛ Братск»), администрации муниципального образования города Братска об обязании переселить жителей жилого района Чекановский города Братска в жилье, соответствующее нормам действующего законодательства, за пределы санитарно-защитной зоны ОАО «РУСАЛ Братск», руководствуясь статьями 45, 67 Устава муниципального образования города Братска, ";
-                }
-                return "Рассмотрев протокол заседания комиссии по жилищным вопросам  администрации муниципального образования города Братска от $protocol_date$ № $protocol_num$, в соответствии с Порядком предоставления жилых помещений жилищного фонда $rent_type$ использования муниципального образования города Братска, утвержденным постановлением мэра города Братска от 19.09.2007 № 2706, руководствуясь статьями 45, 67 Устава муниципального образования города Братска, ";
-
             }
         }
 
@@ -161,10 +188,12 @@ namespace Registry.Reporting
             comboBoxExecutor.ValueMember = "id_executor";
             comboBoxExecutor.DisplayMember = "executor_name";
 
+            comboBoxCourt.SelectedIndex = 0;
+
             foreach (Control control in Controls)
                 control.KeyDown += (sender, e) =>
                 {
-                    ComboBox comboBox = sender as ComboBox;
+                    var comboBox = sender as ComboBox;
                     if (comboBox != null && comboBox.DroppedDown)
                         return;
                     switch (e.KeyCode)
@@ -215,59 +244,6 @@ namespace Registry.Reporting
         private void checkBoxEnableAddress_CheckedChanged(object sender, EventArgs e)
         {
             groupBoxAddress.Enabled = checkBoxEnableAddress.Checked;
-        }
-
-        private void checkBoxCheckanovskiy_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateForm((CheckBox)sender);
-        }
-
-        private void checkBoxResettle2013to2017freeLists_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateForm((CheckBox)sender);
-        }
-
-        private void checkBoxResettle2013to2017retransfer_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateForm((CheckBox)sender);
-        }
-
-        private void checkBoxOrphans_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateForm((CheckBox)sender);
-        }
-
-        private void UpdateForm(CheckBox checkbox)
-        {
-            checkBoxResettle2013to2017freeLists.CheckedChanged -= checkBoxResettle2013to2017freeLists_CheckedChanged;
-            checkBoxResettle2013to2017retransfer.CheckedChanged -= checkBoxResettle2013to2017retransfer_CheckedChanged;
-            checkBoxCheckanovskiy.CheckedChanged -= checkBoxCheckanovskiy_CheckedChanged;
-            checkBoxOrphans.CheckedChanged -= checkBoxOrphans_CheckedChanged;
-            var state = checkbox.Checked;
-            checkBoxResettle2013to2017freeLists.Checked = false;
-            checkBoxResettle2013to2017retransfer.Checked = false;
-            checkBoxCheckanovskiy.Checked = false;
-            checkBoxOrphans.Checked = false;
-            checkbox.Checked = state;
-            checkBoxResettle2013to2017freeLists.CheckedChanged += checkBoxResettle2013to2017freeLists_CheckedChanged;
-            checkBoxResettle2013to2017retransfer.CheckedChanged += checkBoxResettle2013to2017retransfer_CheckedChanged;
-            checkBoxCheckanovskiy.CheckedChanged += checkBoxCheckanovskiy_CheckedChanged;
-            checkBoxOrphans.CheckedChanged += checkBoxOrphans_CheckedChanged;
-            if (checkBoxResettle2013to2017retransfer.Checked || checkBoxResettle2013to2017freeLists.Checked)
-            {
-                label1.Text = @"От указанной даты";
-                label2.Text = @"Руководствуясь распоряжением номер";
-            } else
-            if (checkBoxOrphans.Checked)
-            {
-                label1.Text = @"От указанной даты";
-                label2.Text = @"На основании служебной записки номер";
-            }
-            else
-            {
-                label1.Text = @"Дата протокола";
-                label2.Text = @"Номер протокола";
-            }
         }
     }
 }

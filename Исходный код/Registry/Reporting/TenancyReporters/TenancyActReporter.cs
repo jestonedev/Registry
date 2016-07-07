@@ -22,7 +22,7 @@ namespace Registry.Reporting.TenancyReporters
                 Cancel();
                 return;
             }
-            arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "tenancy\\act-10052016.xml"));
+            arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "tenancy\\act.xml"));
             arguments.Add("connectionString", RegistrySettings.ConnectionString);
             arguments.Add("opened_date", dialogResult == DialogResult.Yes ? "1" : "0");
             base.Run(arguments);
