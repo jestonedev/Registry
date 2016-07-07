@@ -1037,7 +1037,7 @@ namespace Registry.Viewport
             this.numericUpDownTotalArea.DecimalPlaces = 3;
             this.numericUpDownTotalArea.Location = new System.Drawing.Point(181, 18);
             this.numericUpDownTotalArea.Maximum = new decimal(new int[] {
-            9999,
+            99999,
             0,
             0,
             0});
@@ -1062,7 +1062,7 @@ namespace Registry.Viewport
             this.numericUpDownLivingArea.DecimalPlaces = 3;
             this.numericUpDownLivingArea.Location = new System.Drawing.Point(181, 47);
             this.numericUpDownLivingArea.Maximum = new decimal(new int[] {
-            9999,
+            99999,
             0,
             0,
             0});
