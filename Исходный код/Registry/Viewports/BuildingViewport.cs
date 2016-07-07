@@ -761,7 +761,6 @@ namespace Registry.Viewport
         public override void SaveRecord()
         {
             var building = (Building) EntityFromViewport();
-            var buildingFromView = (Building) EntityFromView();
             if (!ValidateBuilding(building))
                 return;
             var filter = "";
@@ -804,13 +803,6 @@ namespace Registry.Viewport
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
-                    var dialogResult = DialogResult.Yes;
-                    if (building.IdState != buildingFromView.IdState || building.StateDate != buildingFromView.StateDate)
-                        dialogResult = MessageBox.Show(@"Хотите ли вы оставить состояние помещений, расположенным в здании, неизмененным? - нажмите ""Да""." +
-                                        @" Если вы нажмете ""Нет"", состояние здания применится ко всем, расположенным в нем, помещениям", @"Внимание",
-                                            MessageBoxButtons.YesNoCancel, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
-                    if (dialogResult == DialogResult.Cancel)
-                        return;
                     if (GeneralDataModel.Update(building) == -1)
                         return;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
@@ -818,20 +810,6 @@ namespace Registry.Viewport
                     filter += string.Format(CultureInfo.CurrentCulture, "(id_building = {0})", building.IdBuilding);
                     GeneralBindingSource.Filter += filter;
                     FillRowFromBuilding(building, row);
-                    if (dialogResult == DialogResult.No)
-                    {
-                        var premises = from premisesRow in DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows()
-                                       where premisesRow.Field<int>("id_building") == building.IdBuilding
-                                       select premisesRow;
-                        foreach (var premiseRow in premises)
-                        {
-                            var premise = PremiseFromDataRow(premiseRow);
-                            premise.IdState = building.IdState;
-                            premise.StateDate = building.StateDate;
-                            if (DataModel.GetInstance<PremisesDataModel>().Update(premise) == -1)
-                                return;
-                        }
-                    }
                     viewportState = ViewportState.ReadState;
                     break;
             }
@@ -841,35 +819,7 @@ namespace Registry.Viewport
             SetViewportCaption();
             ShowOrHideCurrentFund();
         }
-
-        private static Premise PremiseFromDataRow(DataRow row)
-        {
-            var premise = new Premise
-            {
-                IdPremises = ViewportHelper.ValueOrNull<int>(row, "id_premises"),
-                IdBuilding = ViewportHelper.ValueOrNull<int>(row, "id_building"),
-                IdState = ViewportHelper.ValueOrNull<int>(row, "id_state"),
-                PremisesNum = ViewportHelper.ValueOrNull(row, "premises_num"),
-                LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area"),
-                TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area"),
-                Height = ViewportHelper.ValueOrNull<double>(row, "height"),
-                NumRooms = ViewportHelper.ValueOrNull<short>(row, "num_rooms"),
-                NumBeds = ViewportHelper.ValueOrNull<short>(row, "num_beds"),
-                IdPremisesType = ViewportHelper.ValueOrNull<int>(row, "id_premises_type"),
-                IdPremisesKind = ViewportHelper.ValueOrNull<int>(row, "id_premises_kind"),
-                Floor = ViewportHelper.ValueOrNull<short>(row, "floor"),
-                CadastralNum = ViewportHelper.ValueOrNull(row, "cadastral_num"),
-                CadastralCost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost"),
-                BalanceCost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost"),
-                Description = ViewportHelper.ValueOrNull(row, "description"),
-                IsMemorial = ViewportHelper.ValueOrNull<bool>(row, "is_memorial"),
-                Account = ViewportHelper.ValueOrNull(row, "account"),
-                RegDate = ViewportHelper.ValueOrNull<DateTime>(row, "reg_date"),
-                StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date")
-            };
-            return premise;
-        }
-
+ 
         public override bool CanCancelRecord()
         {
             return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
