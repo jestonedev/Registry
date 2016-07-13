@@ -638,6 +638,17 @@ namespace Registry.DataModels
                    select ownershipBuildingsAssocRow.Field<int>("id_building");
         }
 
+        public static IEnumerable<int> EmergencyExcludedBuildingIDs()
+        {
+            var ownershipRights = DataModel.GetInstance<OwnershipsRightsDataModel>().FilterDeletedRows();
+            var ownershipBuildingdsAssoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().FilterDeletedRows();
+            return from ownershipBuildingsAssocRow in ownershipBuildingdsAssoc
+                   join ownershipRightsRow in ownershipRights
+                   on ownershipBuildingsAssocRow.Field<int>("id_ownership_right") equals ownershipRightsRow.Field<int>("id_ownership_right")
+                   where ownershipRightsRow.Field<int>("id_ownership_right_type") == 6
+                   select ownershipBuildingsAssocRow.Field<int>("id_building");
+        }
+
         public static IEnumerable<int> DemolishedPremisesIDs()
         {
             var ownershipRights = DataModel.GetInstance<OwnershipsRightsDataModel>().FilterDeletedRows();
@@ -649,16 +660,29 @@ namespace Registry.DataModels
                    select ownershipPremisesAssocRow.Field<int>("id_premises");
         }
 
+        public static IEnumerable<int> EmergencyExcludedPremisesIDs()
+        {
+            var ownershipRights = DataModel.GetInstance<OwnershipsRightsDataModel>().FilterDeletedRows();
+            var ownershipPremisesAssoc = DataModel.GetInstance<OwnershipPremisesAssocDataModel>().FilterDeletedRows();
+            return from ownershipPremisesAssocRow in ownershipPremisesAssoc
+                   join ownershipRightsRow in ownershipRights
+                   on ownershipPremisesAssocRow.Field<int>("id_ownership_right") equals ownershipRightsRow.Field<int>("id_ownership_right")
+                   where ownershipRightsRow.Field<int>("id_ownership_right_type") == 6
+                   select ownershipPremisesAssocRow.Field<int>("id_premises");
+        }
+
         public static IEnumerable<int> BuildingIDsByOwnershipType(int idOwnershipType)
         {
             var ownershipRights = DataModel.GetInstance<OwnershipsRightsDataModel>().FilterDeletedRows();
             var ownershipBuildingdsAssoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().FilterDeletedRows();
             // Если используется непользовательское ограничение "Аварийное", то не выводить здания еще и снесеные
-            var demolishedBuildings = DemolishedBuildingIDs();
+            var demolishedBuildings = DemolishedBuildingIDs().ToList();
+            var emergencyExcludedBuilding = EmergencyExcludedBuildingIDs().ToList();
             return from ownershipRightsRow in ownershipRights
                    join ownershipBuildingdsAssocRow in ownershipBuildingdsAssoc
                    on ownershipRightsRow.Field<int>("id_ownership_right") equals ownershipBuildingdsAssocRow.Field<int>("id_ownership_right")
-                   where (idOwnershipType != 2 || !demolishedBuildings.Contains(ownershipBuildingdsAssocRow.Field<int>("id_building"))) && 
+                   where (idOwnershipType != 2 || !demolishedBuildings.Contains(ownershipBuildingdsAssocRow.Field<int>("id_building")) && 
+                          !emergencyExcludedBuilding.Contains(ownershipBuildingdsAssocRow.Field<int>("id_building"))) && 
                         ownershipRightsRow.Field<int>("id_ownership_right_type") == idOwnershipType
                    select ownershipBuildingdsAssocRow.Field<int>("id_building");
         }
@@ -670,12 +694,14 @@ namespace Registry.DataModels
             var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
             var buildingdIds = BuildingIDsByOwnershipType(idOwnershipType);
             // Если используется ограничение "Аварийное", то не выводить помещения, если они или их здание имеют ограничение "Снесено"
-            var demolishedPremises = DemolishedPremisesIDs();
+            var demolishedPremises = DemolishedPremisesIDs().ToList();
+            var emergencyExcludedPremises = EmergencyExcludedPremisesIDs().ToList();
             //Выбираются помещения с установленным ограничением и помещения, находящиеся в зданиях с установленным ограничением
             var premisesIds = from ownershipRightsRow in ownershipRights
                                    join ownershipPremisesAssocRow in ownershipPremisesAssoc
                                    on ownershipRightsRow.Field<int>("id_ownership_right") equals ownershipPremisesAssocRow.Field<int>("id_ownership_right")
-                                   where (idOwnershipType != 2 || !demolishedPremises.Contains(ownershipPremisesAssocRow.Field<int>("id_premises"))) &&
+                                   where (idOwnershipType != 2 || !demolishedPremises.Contains(ownershipPremisesAssocRow.Field<int>("id_premises")) &&
+                                   !emergencyExcludedPremises.Contains(ownershipPremisesAssocRow.Field<int>("id_premises"))) &&
                                         ownershipRightsRow.Field<int>("id_ownership_right_type") == idOwnershipType
                                    select ownershipPremisesAssocRow.Field<int>("id_premises");
 
