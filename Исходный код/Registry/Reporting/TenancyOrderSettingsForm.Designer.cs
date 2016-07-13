@@ -54,35 +54,36 @@
             this.checkBoxEnableAddress = new System.Windows.Forms.CheckBox();
             this.tabControlExtInfo = new System.Windows.Forms.TabControl();
             this.tabPageGeneral = new System.Windows.Forms.TabPage();
-            this.tabPageResettle2013to2017 = new System.Windows.Forms.TabPage();
             this.tabPageCheckanovskiy = new System.Windows.Forms.TabPage();
+            this.label14 = new System.Windows.Forms.Label();
             this.tabPageOrphans = new System.Windows.Forms.TabPage();
-            this.tabPageCourt = new System.Windows.Forms.TabPage();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.dateTimePickerOrphansDate = new System.Windows.Forms.DateTimePicker();
             this.label12 = new System.Windows.Forms.Label();
             this.textBoxOrphansNumber = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
+            this.tabPageCourt = new System.Windows.Forms.TabPage();
+            this.label17 = new System.Windows.Forms.Label();
+            this.comboBoxCourt = new System.Windows.Forms.ComboBox();
+            this.dateTimePickerCourtDate = new System.Windows.Forms.DateTimePicker();
+            this.label15 = new System.Windows.Forms.Label();
+            this.textBoxCourtNumber = new System.Windows.Forms.TextBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.tabPageResettle2013to2017 = new System.Windows.Forms.TabPage();
             this.radioButtonResettleRetransfer = new System.Windows.Forms.RadioButton();
             this.radioButtonResettleFreeList = new System.Windows.Forms.RadioButton();
             this.dateTimePickerResettleDate = new System.Windows.Forms.DateTimePicker();
             this.label7 = new System.Windows.Forms.Label();
             this.textBoxResettleNumber = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.dateTimePickerCourtDate = new System.Windows.Forms.DateTimePicker();
-            this.label15 = new System.Windows.Forms.Label();
-            this.textBoxCourtNumber = new System.Windows.Forms.TextBox();
-            this.label16 = new System.Windows.Forms.Label();
-            this.comboBoxCourt = new System.Windows.Forms.ComboBox();
-            this.label17 = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.radioButtonGeneral = new System.Windows.Forms.RadioButton();
             this.groupBoxAddress.SuspendLayout();
             this.tabControlExtInfo.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
-            this.tabPageResettle2013to2017.SuspendLayout();
             this.tabPageCheckanovskiy.SuspendLayout();
             this.tabPageOrphans.SuspendLayout();
             this.tabPageCourt.SuspendLayout();
+            this.tabPageResettle2013to2017.SuspendLayout();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -331,34 +332,26 @@
             this.tabPageGeneral.Text = "Общее распоряжение";
             this.tabPageGeneral.UseVisualStyleBackColor = true;
             // 
-            // tabPageResettle2013to2017
-            // 
-            this.tabPageResettle2013to2017.Controls.Add(this.radioButtonResettleRetransfer);
-            this.tabPageResettle2013to2017.Controls.Add(this.radioButtonResettleFreeList);
-            this.tabPageResettle2013to2017.Controls.Add(this.dateTimePickerResettleDate);
-            this.tabPageResettle2013to2017.Controls.Add(this.label7);
-            this.tabPageResettle2013to2017.Controls.Add(this.textBoxResettleNumber);
-            this.tabPageResettle2013to2017.Controls.Add(this.label8);
-            this.tabPageResettle2013to2017.Location = new System.Drawing.Point(4, 44);
-            this.tabPageResettle2013to2017.Name = "tabPageResettle2013to2017";
-            this.tabPageResettle2013to2017.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageResettle2013to2017.Size = new System.Drawing.Size(360, 245);
-            this.tabPageResettle2013to2017.TabIndex = 1;
-            this.tabPageResettle2013to2017.Tag = "5";
-            this.tabPageResettle2013to2017.Text = "Переселение 2013-2017";
-            this.tabPageResettle2013to2017.UseVisualStyleBackColor = true;
-            // 
             // tabPageCheckanovskiy
             // 
             this.tabPageCheckanovskiy.Controls.Add(this.label14);
             this.tabPageCheckanovskiy.Location = new System.Drawing.Point(4, 44);
             this.tabPageCheckanovskiy.Name = "tabPageCheckanovskiy";
             this.tabPageCheckanovskiy.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCheckanovskiy.Size = new System.Drawing.Size(360, 245);
+            this.tabPageCheckanovskiy.Size = new System.Drawing.Size(360, 246);
             this.tabPageCheckanovskiy.TabIndex = 2;
             this.tabPageCheckanovskiy.Tag = "2";
             this.tabPageCheckanovskiy.Text = "Чекановский (дело № 2-2355/2011)";
             this.tabPageCheckanovskiy.UseVisualStyleBackColor = true;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(63, 23);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(232, 15);
+            this.label14.TabIndex = 61;
+            this.label14.Text = "Нет дополнительных полей для ввода";
             // 
             // tabPageOrphans
             // 
@@ -369,39 +362,11 @@
             this.tabPageOrphans.Location = new System.Drawing.Point(4, 44);
             this.tabPageOrphans.Name = "tabPageOrphans";
             this.tabPageOrphans.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageOrphans.Size = new System.Drawing.Size(360, 245);
+            this.tabPageOrphans.Size = new System.Drawing.Size(360, 246);
             this.tabPageOrphans.TabIndex = 3;
             this.tabPageOrphans.Tag = "3";
             this.tabPageOrphans.Text = "Дети сироты";
             this.tabPageOrphans.UseVisualStyleBackColor = true;
-            // 
-            // tabPageCourt
-            // 
-            this.tabPageCourt.Controls.Add(this.label17);
-            this.tabPageCourt.Controls.Add(this.comboBoxCourt);
-            this.tabPageCourt.Controls.Add(this.dateTimePickerCourtDate);
-            this.tabPageCourt.Controls.Add(this.label15);
-            this.tabPageCourt.Controls.Add(this.textBoxCourtNumber);
-            this.tabPageCourt.Controls.Add(this.label16);
-            this.tabPageCourt.Location = new System.Drawing.Point(4, 44);
-            this.tabPageCourt.Name = "tabPageCourt";
-            this.tabPageCourt.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCourt.Size = new System.Drawing.Size(360, 245);
-            this.tabPageCourt.TabIndex = 4;
-            this.tabPageCourt.Tag = "4";
-            this.tabPageCourt.Text = "По решению суда";
-            this.tabPageCourt.UseVisualStyleBackColor = true;
-            // 
-            // groupBox1
-            // 
-            this.groupBox1.Controls.Add(this.tabControlExtInfo);
-            this.groupBox1.Location = new System.Drawing.Point(370, 7);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Padding = new System.Windows.Forms.Padding(5);
-            this.groupBox1.Size = new System.Drawing.Size(378, 317);
-            this.groupBox1.TabIndex = 7;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Вид распоряжения";
             // 
             // dateTimePickerOrphansDate
             // 
@@ -435,68 +400,44 @@
             this.label13.TabIndex = 62;
             this.label13.Text = "От указанной даты";
             // 
-            // radioButtonResettleRetransfer
+            // tabPageCourt
             // 
-            this.radioButtonResettleRetransfer.AutoSize = true;
-            this.radioButtonResettleRetransfer.Location = new System.Drawing.Point(9, 126);
-            this.radioButtonResettleRetransfer.Name = "radioButtonResettleRetransfer";
-            this.radioButtonResettleRetransfer.Size = new System.Drawing.Size(145, 19);
-            this.radioButtonResettleRetransfer.TabIndex = 70;
-            this.radioButtonResettleRetransfer.Text = "Перераспределение";
-            this.radioButtonResettleRetransfer.UseVisualStyleBackColor = true;
+            this.tabPageCourt.Controls.Add(this.label17);
+            this.tabPageCourt.Controls.Add(this.comboBoxCourt);
+            this.tabPageCourt.Controls.Add(this.dateTimePickerCourtDate);
+            this.tabPageCourt.Controls.Add(this.label15);
+            this.tabPageCourt.Controls.Add(this.textBoxCourtNumber);
+            this.tabPageCourt.Controls.Add(this.label16);
+            this.tabPageCourt.Location = new System.Drawing.Point(4, 44);
+            this.tabPageCourt.Name = "tabPageCourt";
+            this.tabPageCourt.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageCourt.Size = new System.Drawing.Size(360, 246);
+            this.tabPageCourt.TabIndex = 4;
+            this.tabPageCourt.Tag = "4";
+            this.tabPageCourt.Text = "По решению суда";
+            this.tabPageCourt.UseVisualStyleBackColor = true;
             // 
-            // radioButtonResettleFreeList
+            // label17
             // 
-            this.radioButtonResettleFreeList.AutoSize = true;
-            this.radioButtonResettleFreeList.Checked = true;
-            this.radioButtonResettleFreeList.Location = new System.Drawing.Point(9, 100);
-            this.radioButtonResettleFreeList.Name = "radioButtonResettleFreeList";
-            this.radioButtonResettleFreeList.Size = new System.Drawing.Size(161, 19);
-            this.radioButtonResettleFreeList.TabIndex = 69;
-            this.radioButtonResettleFreeList.TabStop = true;
-            this.radioButtonResettleFreeList.Text = "По свободным спискам";
-            this.radioButtonResettleFreeList.UseVisualStyleBackColor = true;
+            this.label17.AutoSize = true;
+            this.label17.Location = new System.Drawing.Point(6, 93);
+            this.label17.Name = "label17";
+            this.label17.Size = new System.Drawing.Size(148, 15);
+            this.label17.TabIndex = 64;
+            this.label17.Text = "Во исполнение решения";
             // 
-            // dateTimePickerResettleDate
+            // comboBoxCourt
             // 
-            this.dateTimePickerResettleDate.Location = new System.Drawing.Point(6, 64);
-            this.dateTimePickerResettleDate.Name = "dateTimePickerResettleDate";
-            this.dateTimePickerResettleDate.Size = new System.Drawing.Size(349, 21);
-            this.dateTimePickerResettleDate.TabIndex = 66;
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(6, 6);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(236, 15);
-            this.label7.TabIndex = 67;
-            this.label7.Text = "Руководствуясь распоряжением номер";
-            // 
-            // textBoxResettleNumber
-            // 
-            this.textBoxResettleNumber.Location = new System.Drawing.Point(6, 23);
-            this.textBoxResettleNumber.Name = "textBoxResettleNumber";
-            this.textBoxResettleNumber.Size = new System.Drawing.Size(349, 21);
-            this.textBoxResettleNumber.TabIndex = 65;
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Location = new System.Drawing.Point(6, 47);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(118, 15);
-            this.label8.TabIndex = 68;
-            this.label8.Text = "От указанной даты";
-            // 
-            // label14
-            // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(63, 23);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(232, 15);
-            this.label14.TabIndex = 61;
-            this.label14.Text = "Нет дополнительных полей для ввода";
+            this.comboBoxCourt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxCourt.FormattingEnabled = true;
+            this.comboBoxCourt.Items.AddRange(new object[] {
+            "Братского городского суда",
+            "Падунского районного суда г. Братска и Иркутской области",
+            "Иркутского областного суда"});
+            this.comboBoxCourt.Location = new System.Drawing.Point(6, 111);
+            this.comboBoxCourt.Name = "comboBoxCourt";
+            this.comboBoxCourt.Size = new System.Drawing.Size(348, 23);
+            this.comboBoxCourt.TabIndex = 2;
             // 
             // dateTimePickerCourtDate
             // 
@@ -530,27 +471,98 @@
             this.label16.TabIndex = 62;
             this.label16.Text = "От указанной даты";
             // 
-            // comboBoxCourt
+            // tabPageResettle2013to2017
             // 
-            this.comboBoxCourt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBoxCourt.FormattingEnabled = true;
-            this.comboBoxCourt.Items.AddRange(new object[] {
-            "Братского городского суда",
-            "Падунского районного суда г. Братска и Иркутской области",
-            "Иркутского областного суда"});
-            this.comboBoxCourt.Location = new System.Drawing.Point(6, 111);
-            this.comboBoxCourt.Name = "comboBoxCourt";
-            this.comboBoxCourt.Size = new System.Drawing.Size(348, 23);
-            this.comboBoxCourt.TabIndex = 2;
+            this.tabPageResettle2013to2017.Controls.Add(this.radioButtonGeneral);
+            this.tabPageResettle2013to2017.Controls.Add(this.radioButtonResettleRetransfer);
+            this.tabPageResettle2013to2017.Controls.Add(this.radioButtonResettleFreeList);
+            this.tabPageResettle2013to2017.Controls.Add(this.dateTimePickerResettleDate);
+            this.tabPageResettle2013to2017.Controls.Add(this.label7);
+            this.tabPageResettle2013to2017.Controls.Add(this.textBoxResettleNumber);
+            this.tabPageResettle2013to2017.Controls.Add(this.label8);
+            this.tabPageResettle2013to2017.Location = new System.Drawing.Point(4, 44);
+            this.tabPageResettle2013to2017.Name = "tabPageResettle2013to2017";
+            this.tabPageResettle2013to2017.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageResettle2013to2017.Size = new System.Drawing.Size(360, 245);
+            this.tabPageResettle2013to2017.TabIndex = 1;
+            this.tabPageResettle2013to2017.Tag = "5";
+            this.tabPageResettle2013to2017.Text = "Переселение 2013-2017";
+            this.tabPageResettle2013to2017.UseVisualStyleBackColor = true;
             // 
-            // label17
+            // radioButtonResettleRetransfer
             // 
-            this.label17.AutoSize = true;
-            this.label17.Location = new System.Drawing.Point(6, 93);
-            this.label17.Name = "label17";
-            this.label17.Size = new System.Drawing.Size(148, 15);
-            this.label17.TabIndex = 64;
-            this.label17.Text = "Во исполнение решения";
+            this.radioButtonResettleRetransfer.AutoSize = true;
+            this.radioButtonResettleRetransfer.Location = new System.Drawing.Point(9, 149);
+            this.radioButtonResettleRetransfer.Name = "radioButtonResettleRetransfer";
+            this.radioButtonResettleRetransfer.Size = new System.Drawing.Size(145, 19);
+            this.radioButtonResettleRetransfer.TabIndex = 4;
+            this.radioButtonResettleRetransfer.Text = "Перераспределение";
+            this.radioButtonResettleRetransfer.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonResettleFreeList
+            // 
+            this.radioButtonResettleFreeList.AutoSize = true;
+            this.radioButtonResettleFreeList.Location = new System.Drawing.Point(9, 123);
+            this.radioButtonResettleFreeList.Name = "radioButtonResettleFreeList";
+            this.radioButtonResettleFreeList.Size = new System.Drawing.Size(236, 19);
+            this.radioButtonResettleFreeList.TabIndex = 3;
+            this.radioButtonResettleFreeList.Text = "По свободным спискам (изменения)";
+            this.radioButtonResettleFreeList.UseVisualStyleBackColor = true;
+            // 
+            // dateTimePickerResettleDate
+            // 
+            this.dateTimePickerResettleDate.Location = new System.Drawing.Point(6, 64);
+            this.dateTimePickerResettleDate.Name = "dateTimePickerResettleDate";
+            this.dateTimePickerResettleDate.Size = new System.Drawing.Size(349, 21);
+            this.dateTimePickerResettleDate.TabIndex = 1;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(6, 6);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(236, 15);
+            this.label7.TabIndex = 67;
+            this.label7.Text = "Руководствуясь распоряжением номер";
+            // 
+            // textBoxResettleNumber
+            // 
+            this.textBoxResettleNumber.Location = new System.Drawing.Point(6, 23);
+            this.textBoxResettleNumber.Name = "textBoxResettleNumber";
+            this.textBoxResettleNumber.Size = new System.Drawing.Size(349, 21);
+            this.textBoxResettleNumber.TabIndex = 0;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 47);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(118, 15);
+            this.label8.TabIndex = 68;
+            this.label8.Text = "От указанной даты";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.tabControlExtInfo);
+            this.groupBox1.Location = new System.Drawing.Point(370, 7);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(5);
+            this.groupBox1.Size = new System.Drawing.Size(378, 317);
+            this.groupBox1.TabIndex = 7;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Вид распоряжения";
+            // 
+            // radioButtonGeneral
+            // 
+            this.radioButtonGeneral.AutoSize = true;
+            this.radioButtonGeneral.Checked = true;
+            this.radioButtonGeneral.Location = new System.Drawing.Point(9, 98);
+            this.radioButtonGeneral.Name = "radioButtonGeneral";
+            this.radioButtonGeneral.Size = new System.Drawing.Size(170, 19);
+            this.radioButtonGeneral.TabIndex = 2;
+            this.radioButtonGeneral.TabStop = true;
+            this.radioButtonGeneral.Text = "Основное распоряжение";
+            this.radioButtonGeneral.UseVisualStyleBackColor = true;
             // 
             // TenancyOrderSettingsForm
             // 
@@ -587,14 +599,14 @@
             this.tabControlExtInfo.ResumeLayout(false);
             this.tabPageGeneral.ResumeLayout(false);
             this.tabPageGeneral.PerformLayout();
-            this.tabPageResettle2013to2017.ResumeLayout(false);
-            this.tabPageResettle2013to2017.PerformLayout();
             this.tabPageCheckanovskiy.ResumeLayout(false);
             this.tabPageCheckanovskiy.PerformLayout();
             this.tabPageOrphans.ResumeLayout(false);
             this.tabPageOrphans.PerformLayout();
             this.tabPageCourt.ResumeLayout(false);
             this.tabPageCourt.PerformLayout();
+            this.tabPageResettle2013to2017.ResumeLayout(false);
+            this.tabPageResettle2013to2017.PerformLayout();
             this.groupBox1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -650,5 +662,6 @@
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.TextBox textBoxCourtNumber;
         private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.RadioButton radioButtonGeneral;
     }
 }

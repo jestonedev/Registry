@@ -42,7 +42,12 @@ namespace Registry.Reporting
 
         public int ResettleType
         {
-            get { return radioButtonResettleFreeList.Checked ? 1 : radioButtonResettleRetransfer.Checked ? 2 : -1; }
+            get
+            {
+                return radioButtonResettleFreeList.Checked ? 1
+                    : radioButtonResettleRetransfer.Checked ? 2 
+                    : radioButtonGeneral.Checked ? 3 : -1;
+            }
         }
 
         public string CourtNumber
