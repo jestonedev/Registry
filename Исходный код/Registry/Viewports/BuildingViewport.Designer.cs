@@ -1386,6 +1386,7 @@ namespace Registry.Viewport
             this.textBoxRoomsBTI.MaxLength = 1512;
             this.textBoxRoomsBTI.Multiline = true;
             this.textBoxRoomsBTI.Name = "textBoxRoomsBTI";
+            this.textBoxRoomsBTI.ReadOnly = true;
             this.textBoxRoomsBTI.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.textBoxRoomsBTI.Size = new System.Drawing.Size(302, 87);
             this.textBoxRoomsBTI.TabIndex = 0;

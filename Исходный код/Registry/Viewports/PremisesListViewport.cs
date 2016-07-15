@@ -163,11 +163,28 @@ namespace Registry.Viewport
             GeneralDataModel.Select().RowChanged += PremisesListViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted += PremisesListViewport_RowDeleted;
             _premisesFunds.RefreshEvent += premises_funds_RefreshEvent;
+            DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select().RowChanged += BuildingsOwnershipChanged;
+            DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select().RowDeleted += BuildingsOwnershipChanged;
+            DataModel.GetInstance<OwnershipPremisesAssocDataModel>().Select().RowChanged += PremisesOwnershipChanged;
+            DataModel.GetInstance<OwnershipPremisesAssocDataModel>().Select().RowDeleted += PremisesOwnershipChanged;
             dataGridView.RowCount = GeneralBindingSource.Count;
 
             ViewportHelper.SetDoubleBuffered(dataGridView);
         }
-        
+
+        private void BuildingsOwnershipChanged(object sender, DataRowChangeEventArgs dataRowChangeEventArgs)
+        {
+            _demolishedBuildings = DataModelHelper.DemolishedBuildingIDs().ToList();
+            dataGridView.Refresh();
+        }
+
+        private void PremisesOwnershipChanged(object sender, DataRowChangeEventArgs dataRowChangeEventArgs)
+        {
+            _demolishedPremises = DataModelHelper.DemolishedPremisesIDs().ToList();
+            dataGridView.Refresh();
+        }
+
+
         public override bool CanDeleteRecord()
         {
             return (GeneralBindingSource.Position > -1) &&
@@ -213,6 +230,10 @@ namespace Registry.Viewport
             }
             if (_premisesFunds != null)
                 _premisesFunds.RefreshEvent -= premises_funds_RefreshEvent;
+            DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select().RowChanged -= BuildingsOwnershipChanged;
+            DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select().RowDeleted -= BuildingsOwnershipChanged;
+            DataModel.GetInstance<OwnershipPremisesAssocDataModel>().Select().RowChanged -= PremisesOwnershipChanged;
+            DataModel.GetInstance<OwnershipPremisesAssocDataModel>().Select().RowDeleted -= PremisesOwnershipChanged;
             base.OnClosing(e);
         }
 
@@ -485,6 +506,8 @@ namespace Registry.Viewport
 
         private int _idPremises = int.MinValue;
         private IEnumerable<DataRow> _tenancyInfoRows;
+        private IEnumerable<int> _demolishedBuildings = DataModelHelper.DemolishedBuildingIDs().ToList();
+        private IEnumerable<int> _demolishedPremises = DataModelHelper.DemolishedPremisesIDs().ToList();
 
         private void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
@@ -497,6 +520,17 @@ namespace Registry.Viewport
             {
                 case "id_premises":
                     e.Value = row["id_premises"];
+                    if (_demolishedBuildings.Contains((int) row["id_building"]) ||
+                        _demolishedPremises.Contains((int) row["id_premises"]))
+                    {
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.Red;
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.DarkRed;
+                    }
+                    else
+                    {
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.White;
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = SystemColors.Highlight;
+                    }
                     break;
                 case "id_street":
                     var kladrRow = _kladr.Select().Rows.Find(buildingRow["id_street"]);
@@ -523,7 +557,7 @@ namespace Registry.Viewport
                         e.Value = stateRow["state_female"];
                     break;
                 case "current_fund":
-                    if ((new object[] { 1, 4, 5, 9, 11 }).Contains(row["id_state"]))
+                    if (new object[] { 1, 4, 5, 9, 11 }.Contains(row["id_state"]))
                     {
                         var fundRow = _premisesFunds.Select().Rows.Find(row["id_premises"]);
                         if (fundRow != null)
@@ -548,7 +582,7 @@ namespace Registry.Viewport
                     }
                     if (_tenancyInfoRows == null || !_tenancyInfoRows.Any())
                     {                        
-                        return;
+                        break;
                     }
                         
                     var tenancyRow = _tenancyInfoRows.First();

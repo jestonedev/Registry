@@ -607,6 +607,7 @@ namespace Registry.Viewport
             this.dateTimePickerRegDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerRegDate.Location = new System.Drawing.Point(169, 179);
+            this.dateTimePickerRegDate.MinDate = new System.DateTime(1999, 10, 29, 0, 0, 0, 0);
             this.dateTimePickerRegDate.Name = "dateTimePickerRegDate";
             this.dateTimePickerRegDate.Size = new System.Drawing.Size(272, 21);
             this.dateTimePickerRegDate.TabIndex = 7;
