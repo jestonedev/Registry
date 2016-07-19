@@ -125,6 +125,14 @@ namespace Registry.Viewport
             this.vButtonTerminatePaste = new VIBlend.WinForms.Controls.vButton();
             this.textBoxTerminateAgreement = new System.Windows.Forms.TextBox();
             this.label80 = new System.Windows.Forms.Label();
+            this.tabPageProlong = new System.Windows.Forms.TabPage();
+            this.dateTimePickerProlongTo = new System.Windows.Forms.DateTimePicker();
+            this.label8 = new System.Windows.Forms.Label();
+            this.dateTimePickerProlongFrom = new System.Windows.Forms.DateTimePicker();
+            this.label7 = new System.Windows.Forms.Label();
+            this.dateTimePickerRequest = new System.Windows.Forms.DateTimePicker();
+            this.label6 = new System.Windows.Forms.Label();
+            this.vButtonProlong = new VIBlend.WinForms.Controls.vButton();
             this.tabPageChangeTenancy = new System.Windows.Forms.TabPage();
             this.textBoxChangeTenantChangeFIO = new System.Windows.Forms.TextBox();
             this.dataGridViewChangeTenant = new System.Windows.Forms.DataGridView();
@@ -152,6 +160,7 @@ namespace Registry.Viewport
             this.tabPageInclude.SuspendLayout();
             this.tabPageExplain.SuspendLayout();
             this.tabPageTerminate.SuspendLayout();
+            this.tabPageProlong.SuspendLayout();
             this.tabPageChangeTenancy.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewChangeTenant)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -335,6 +344,7 @@ namespace Registry.Viewport
             this.tabControl1.Controls.Add(this.tabPageInclude);
             this.tabControl1.Controls.Add(this.tabPageExplain);
             this.tabControl1.Controls.Add(this.tabPageTerminate);
+            this.tabControl1.Controls.Add(this.tabPageProlong);
             this.tabControl1.Controls.Add(this.tabPageChangeTenancy);
             this.tabControl1.Location = new System.Drawing.Point(0, 140);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(0);
@@ -408,7 +418,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(487, 75);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(487, 67);
             this.dataGridViewTenancyPersons.TabIndex = 3;
             // 
             // surname
@@ -487,10 +497,10 @@ namespace Registry.Viewport
             this.tabPageInclude.Controls.Add(this.label78);
             this.tabPageInclude.Controls.Add(this.vButtonIncludePaste);
             this.tabPageInclude.Controls.Add(this.label75);
-            this.tabPageInclude.Location = new System.Drawing.Point(4, 22);
+            this.tabPageInclude.Location = new System.Drawing.Point(4, 24);
             this.tabPageInclude.Name = "tabPageInclude";
             this.tabPageInclude.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInclude.Size = new System.Drawing.Size(493, 194);
+            this.tabPageInclude.Size = new System.Drawing.Size(493, 192);
             this.tabPageInclude.TabIndex = 1;
             this.tabPageInclude.Text = "Включить";
             // 
@@ -645,7 +655,7 @@ namespace Registry.Viewport
             this.textBoxExplainContent.Location = new System.Drawing.Point(15, 61);
             this.textBoxExplainContent.Multiline = true;
             this.textBoxExplainContent.Name = "textBoxExplainContent";
-            this.textBoxExplainContent.Size = new System.Drawing.Size(440, 109);
+            this.textBoxExplainContent.Size = new System.Drawing.Size(440, 105);
             this.textBoxExplainContent.TabIndex = 1;
             this.textBoxExplainContent.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -747,6 +757,92 @@ namespace Registry.Viewport
             this.label80.TabIndex = 43;
             this.label80.Text = "По какой причине";
             // 
+            // tabPageProlong
+            // 
+            this.tabPageProlong.Controls.Add(this.dateTimePickerProlongTo);
+            this.tabPageProlong.Controls.Add(this.label8);
+            this.tabPageProlong.Controls.Add(this.dateTimePickerProlongFrom);
+            this.tabPageProlong.Controls.Add(this.label7);
+            this.tabPageProlong.Controls.Add(this.dateTimePickerRequest);
+            this.tabPageProlong.Controls.Add(this.label6);
+            this.tabPageProlong.Controls.Add(this.vButtonProlong);
+            this.tabPageProlong.Location = new System.Drawing.Point(4, 24);
+            this.tabPageProlong.Name = "tabPageProlong";
+            this.tabPageProlong.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageProlong.Size = new System.Drawing.Size(493, 192);
+            this.tabPageProlong.TabIndex = 5;
+            this.tabPageProlong.Text = "Продлить договор (ком. найм)";
+            this.tabPageProlong.UseVisualStyleBackColor = true;
+            // 
+            // dateTimePickerProlongTo
+            // 
+            this.dateTimePickerProlongTo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerProlongTo.Location = new System.Drawing.Point(188, 61);
+            this.dateTimePickerProlongTo.Name = "dateTimePickerProlongTo";
+            this.dateTimePickerProlongTo.Size = new System.Drawing.Size(266, 21);
+            this.dateTimePickerProlongTo.TabIndex = 2;
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(151, 64);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(21, 15);
+            this.label8.TabIndex = 50;
+            this.label8.Text = "по";
+            // 
+            // dateTimePickerProlongFrom
+            // 
+            this.dateTimePickerProlongFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerProlongFrom.Location = new System.Drawing.Point(188, 33);
+            this.dateTimePickerProlongFrom.Name = "dateTimePickerProlongFrom";
+            this.dateTimePickerProlongFrom.Size = new System.Drawing.Size(266, 21);
+            this.dateTimePickerProlongFrom.TabIndex = 1;
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(12, 36);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(160, 15);
+            this.label7.TabIndex = 49;
+            this.label7.Text = "Продлить срок договора с";
+            // 
+            // dateTimePickerRequest
+            // 
+            this.dateTimePickerRequest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerRequest.Location = new System.Drawing.Point(188, 6);
+            this.dateTimePickerRequest.Name = "dateTimePickerRequest";
+            this.dateTimePickerRequest.Size = new System.Drawing.Size(266, 21);
+            this.dateTimePickerRequest.TabIndex = 0;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(12, 9);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(170, 15);
+            this.label6.TabIndex = 47;
+            this.label6.Text = "На основании заявления от";
+            // 
+            // vButtonProlong
+            // 
+            this.vButtonProlong.AllowAnimations = true;
+            this.vButtonProlong.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.vButtonProlong.BackColor = System.Drawing.Color.Transparent;
+            this.vButtonProlong.Location = new System.Drawing.Point(461, 6);
+            this.vButtonProlong.Name = "vButtonProlong";
+            this.vButtonProlong.RoundedCornersMask = ((byte)(15));
+            this.vButtonProlong.Size = new System.Drawing.Size(27, 20);
+            this.vButtonProlong.TabIndex = 3;
+            this.vButtonProlong.Text = "→";
+            this.vButtonProlong.UseVisualStyleBackColor = false;
+            this.vButtonProlong.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonProlong.Click += new System.EventHandler(this.vButtonProlong_Click);
+            // 
             // tabPageChangeTenancy
             // 
             this.tabPageChangeTenancy.BackColor = System.Drawing.Color.White;
@@ -758,12 +854,12 @@ namespace Registry.Viewport
             this.tabPageChangeTenancy.Controls.Add(this.label100);
             this.tabPageChangeTenancy.Controls.Add(this.newTenancy);
             this.tabPageChangeTenancy.Controls.Add(this.curTenancy);
-            this.tabPageChangeTenancy.Location = new System.Drawing.Point(4, 24);
+            this.tabPageChangeTenancy.Location = new System.Drawing.Point(4, 22);
             this.tabPageChangeTenancy.Name = "tabPageChangeTenancy";
             this.tabPageChangeTenancy.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageChangeTenancy.Size = new System.Drawing.Size(493, 192);
+            this.tabPageChangeTenancy.Size = new System.Drawing.Size(493, 194);
             this.tabPageChangeTenancy.TabIndex = 4;
-            this.tabPageChangeTenancy.Text = "Смена нанимателя";
+            this.tabPageChangeTenancy.Text = "Сменить нанимателя";
             // 
             // textBoxChangeTenantChangeFIO
             // 
@@ -802,7 +898,7 @@ namespace Registry.Viewport
             this.dataGridViewChangeTenant.Name = "dataGridViewChangeTenant";
             this.dataGridViewChangeTenant.ReadOnly = true;
             this.dataGridViewChangeTenant.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewChangeTenant.Size = new System.Drawing.Size(487, 84);
+            this.dataGridViewChangeTenant.Size = new System.Drawing.Size(487, 82);
             this.dataGridViewChangeTenant.TabIndex = 3;
             // 
             // surnameChangeTenant
@@ -985,6 +1081,8 @@ namespace Registry.Viewport
             this.tabPageExplain.PerformLayout();
             this.tabPageTerminate.ResumeLayout(false);
             this.tabPageTerminate.PerformLayout();
+            this.tabPageProlong.ResumeLayout(false);
+            this.tabPageProlong.PerformLayout();
             this.tabPageChangeTenancy.ResumeLayout(false);
             this.tabPageChangeTenancy.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewChangeTenant)).EndInit();
@@ -1011,5 +1109,13 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn patronymicChangeTenant;
         private DataGridViewTextBoxColumn dateofbirthChangeTenant;
         private TextBox textBoxChangeTenantChangeFIO;
+        private TabPage tabPageProlong;
+        private DateTimePicker dateTimePickerProlongTo;
+        private Label label8;
+        private DateTimePicker dateTimePickerProlongFrom;
+        private Label label7;
+        private DateTimePicker dateTimePickerRequest;
+        private Label label6;
+        private vButton vButtonProlong;
     }
 }
