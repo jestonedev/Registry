@@ -133,6 +133,12 @@ namespace Registry.Viewport
             this.dateTimePickerRequest = new System.Windows.Forms.DateTimePicker();
             this.label6 = new System.Windows.Forms.Label();
             this.vButtonProlong = new VIBlend.WinForms.Controls.vButton();
+            this.tabPageProlongSpecial = new System.Windows.Forms.TabPage();
+            this.textBoxSpecialGeneralPoint = new System.Windows.Forms.TextBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.textBoxSpecialPoint = new System.Windows.Forms.TextBox();
+            this.label10 = new System.Windows.Forms.Label();
+            this.vButtonProlongSpecial = new VIBlend.WinForms.Controls.vButton();
             this.tabPageChangeTenancy = new System.Windows.Forms.TabPage();
             this.textBoxChangeTenantChangeFIO = new System.Windows.Forms.TextBox();
             this.dataGridViewChangeTenant = new System.Windows.Forms.DataGridView();
@@ -161,6 +167,7 @@ namespace Registry.Viewport
             this.tabPageExplain.SuspendLayout();
             this.tabPageTerminate.SuspendLayout();
             this.tabPageProlong.SuspendLayout();
+            this.tabPageProlongSpecial.SuspendLayout();
             this.tabPageChangeTenancy.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewChangeTenant)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -345,6 +352,7 @@ namespace Registry.Viewport
             this.tabControl1.Controls.Add(this.tabPageExplain);
             this.tabControl1.Controls.Add(this.tabPageTerminate);
             this.tabControl1.Controls.Add(this.tabPageProlong);
+            this.tabControl1.Controls.Add(this.tabPageProlongSpecial);
             this.tabControl1.Controls.Add(this.tabPageChangeTenancy);
             this.tabControl1.Location = new System.Drawing.Point(0, 140);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(0);
@@ -418,7 +426,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(487, 67);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(487, 121);
             this.dataGridViewTenancyPersons.TabIndex = 3;
             // 
             // surname
@@ -497,10 +505,10 @@ namespace Registry.Viewport
             this.tabPageInclude.Controls.Add(this.label78);
             this.tabPageInclude.Controls.Add(this.vButtonIncludePaste);
             this.tabPageInclude.Controls.Add(this.label75);
-            this.tabPageInclude.Location = new System.Drawing.Point(4, 24);
+            this.tabPageInclude.Location = new System.Drawing.Point(4, 22);
             this.tabPageInclude.Name = "tabPageInclude";
             this.tabPageInclude.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageInclude.Size = new System.Drawing.Size(493, 192);
+            this.tabPageInclude.Size = new System.Drawing.Size(493, 194);
             this.tabPageInclude.TabIndex = 1;
             this.tabPageInclude.Text = "Включить";
             // 
@@ -623,9 +631,9 @@ namespace Registry.Viewport
             this.tabPageExplain.Controls.Add(this.textBoxExplainPoint);
             this.tabPageExplain.Controls.Add(this.vButtonExplainPaste);
             this.tabPageExplain.Controls.Add(this.label79);
-            this.tabPageExplain.Location = new System.Drawing.Point(4, 22);
+            this.tabPageExplain.Location = new System.Drawing.Point(4, 24);
             this.tabPageExplain.Name = "tabPageExplain";
-            this.tabPageExplain.Size = new System.Drawing.Size(493, 194);
+            this.tabPageExplain.Size = new System.Drawing.Size(493, 192);
             this.tabPageExplain.TabIndex = 2;
             this.tabPageExplain.Text = "Изложить";
             // 
@@ -655,7 +663,7 @@ namespace Registry.Viewport
             this.textBoxExplainContent.Location = new System.Drawing.Point(15, 61);
             this.textBoxExplainContent.Multiline = true;
             this.textBoxExplainContent.Name = "textBoxExplainContent";
-            this.textBoxExplainContent.Size = new System.Drawing.Size(440, 105);
+            this.textBoxExplainContent.Size = new System.Drawing.Size(440, 101);
             this.textBoxExplainContent.TabIndex = 1;
             this.textBoxExplainContent.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -766,12 +774,12 @@ namespace Registry.Viewport
             this.tabPageProlong.Controls.Add(this.dateTimePickerRequest);
             this.tabPageProlong.Controls.Add(this.label6);
             this.tabPageProlong.Controls.Add(this.vButtonProlong);
-            this.tabPageProlong.Location = new System.Drawing.Point(4, 24);
+            this.tabPageProlong.Location = new System.Drawing.Point(4, 22);
             this.tabPageProlong.Name = "tabPageProlong";
             this.tabPageProlong.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageProlong.Size = new System.Drawing.Size(493, 192);
+            this.tabPageProlong.Size = new System.Drawing.Size(493, 194);
             this.tabPageProlong.TabIndex = 5;
-            this.tabPageProlong.Text = "Продлить договор (ком. найм)";
+            this.tabPageProlong.Text = "Срок по ком. найму";
             this.tabPageProlong.UseVisualStyleBackColor = true;
             // 
             // dateTimePickerProlongTo
@@ -843,6 +851,72 @@ namespace Registry.Viewport
             this.vButtonProlong.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
             this.vButtonProlong.Click += new System.EventHandler(this.vButtonProlong_Click);
             // 
+            // tabPageProlongSpecial
+            // 
+            this.tabPageProlongSpecial.Controls.Add(this.textBoxSpecialGeneralPoint);
+            this.tabPageProlongSpecial.Controls.Add(this.label9);
+            this.tabPageProlongSpecial.Controls.Add(this.textBoxSpecialPoint);
+            this.tabPageProlongSpecial.Controls.Add(this.label10);
+            this.tabPageProlongSpecial.Controls.Add(this.vButtonProlongSpecial);
+            this.tabPageProlongSpecial.Location = new System.Drawing.Point(4, 24);
+            this.tabPageProlongSpecial.Name = "tabPageProlongSpecial";
+            this.tabPageProlongSpecial.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPageProlongSpecial.Size = new System.Drawing.Size(493, 192);
+            this.tabPageProlongSpecial.TabIndex = 6;
+            this.tabPageProlongSpecial.Text = "Срок по спец. найму";
+            this.tabPageProlongSpecial.UseVisualStyleBackColor = true;
+            // 
+            // textBoxSpecialGeneralPoint
+            // 
+            this.textBoxSpecialGeneralPoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSpecialGeneralPoint.Location = new System.Drawing.Point(163, 6);
+            this.textBoxSpecialGeneralPoint.Name = "textBoxSpecialGeneralPoint";
+            this.textBoxSpecialGeneralPoint.Size = new System.Drawing.Size(291, 21);
+            this.textBoxSpecialGeneralPoint.TabIndex = 0;
+            // 
+            // label9
+            // 
+            this.label9.AutoSize = true;
+            this.label9.Location = new System.Drawing.Point(11, 9);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(41, 15);
+            this.label9.TabIndex = 54;
+            this.label9.Text = "Пункт";
+            // 
+            // textBoxSpecialPoint
+            // 
+            this.textBoxSpecialPoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSpecialPoint.Location = new System.Drawing.Point(163, 34);
+            this.textBoxSpecialPoint.Name = "textBoxSpecialPoint";
+            this.textBoxSpecialPoint.Size = new System.Drawing.Size(291, 21);
+            this.textBoxSpecialPoint.TabIndex = 1;
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(12, 37);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(62, 15);
+            this.label10.TabIndex = 52;
+            this.label10.Text = "Подпункт";
+            // 
+            // vButtonProlongSpecial
+            // 
+            this.vButtonProlongSpecial.AllowAnimations = true;
+            this.vButtonProlongSpecial.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.vButtonProlongSpecial.BackColor = System.Drawing.Color.Transparent;
+            this.vButtonProlongSpecial.Location = new System.Drawing.Point(461, 6);
+            this.vButtonProlongSpecial.Name = "vButtonProlongSpecial";
+            this.vButtonProlongSpecial.RoundedCornersMask = ((byte)(15));
+            this.vButtonProlongSpecial.Size = new System.Drawing.Size(27, 20);
+            this.vButtonProlongSpecial.TabIndex = 2;
+            this.vButtonProlongSpecial.Text = "→";
+            this.vButtonProlongSpecial.UseVisualStyleBackColor = false;
+            this.vButtonProlongSpecial.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            this.vButtonProlongSpecial.Click += new System.EventHandler(this.vButtonProlongSpecial_Click);
+            // 
             // tabPageChangeTenancy
             // 
             this.tabPageChangeTenancy.BackColor = System.Drawing.Color.White;
@@ -898,7 +972,7 @@ namespace Registry.Viewport
             this.dataGridViewChangeTenant.Name = "dataGridViewChangeTenant";
             this.dataGridViewChangeTenant.ReadOnly = true;
             this.dataGridViewChangeTenant.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewChangeTenant.Size = new System.Drawing.Size(487, 82);
+            this.dataGridViewChangeTenant.Size = new System.Drawing.Size(487, 80);
             this.dataGridViewChangeTenant.TabIndex = 3;
             // 
             // surnameChangeTenant
@@ -1083,6 +1157,8 @@ namespace Registry.Viewport
             this.tabPageTerminate.PerformLayout();
             this.tabPageProlong.ResumeLayout(false);
             this.tabPageProlong.PerformLayout();
+            this.tabPageProlongSpecial.ResumeLayout(false);
+            this.tabPageProlongSpecial.PerformLayout();
             this.tabPageChangeTenancy.ResumeLayout(false);
             this.tabPageChangeTenancy.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewChangeTenant)).EndInit();
@@ -1117,5 +1193,11 @@ namespace Registry.Viewport
         private DateTimePicker dateTimePickerRequest;
         private Label label6;
         private vButton vButtonProlong;
+        private TabPage tabPageProlongSpecial;
+        private TextBox textBoxSpecialGeneralPoint;
+        private Label label9;
+        private TextBox textBoxSpecialPoint;
+        private Label label10;
+        private vButton vButtonProlongSpecial;
     }
 }
