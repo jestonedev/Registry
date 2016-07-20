@@ -471,24 +471,6 @@ namespace Registry.Viewport
                 OpenDetails();
         }
 
-        private void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
-        {
-            if (dataGridView.Columns[e.ColumnIndex].SortMode == DataGridViewColumnSortMode.NotSortable)
-                return;
-            Func<SortOrder, bool> changeSortColumn = way =>
-            {
-                foreach (DataGridViewColumn column in dataGridView.Columns)
-                    column.HeaderCell.SortGlyphDirection = SortOrder.None;
-                GeneralBindingSource.Sort = dataGridView.Columns[e.ColumnIndex].Name + " " + ((way == SortOrder.Ascending) ? "ASC" : "DESC");
-                dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = way;
-                return true;
-            };
-            changeSortColumn(dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection == SortOrder.Ascending
-                ? SortOrder.Descending
-                : SortOrder.Ascending);
-            dataGridView.Refresh();
-        }
-
         void dataGridView_SelectionChanged(object sender, EventArgs e)
         {
             if (dataGridView.SelectedRows.Count > 0)
@@ -584,6 +566,24 @@ namespace Registry.Viewport
                 if (address.AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
                     address.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
+        }
+
+        private void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (dataGridView.Columns[e.ColumnIndex].SortMode == DataGridViewColumnSortMode.NotSortable)
+                return;
+            Func<SortOrder, bool> changeSortColumn = way =>
+            {
+                foreach (DataGridViewColumn column in dataGridView.Columns)
+                    column.HeaderCell.SortGlyphDirection = SortOrder.None;
+                GeneralBindingSource.Sort = dataGridView.Columns[e.ColumnIndex].Name + " " + ((way == SortOrder.Ascending) ? "ASC" : "DESC");
+                dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = way;
+                return true;
+            };
+            changeSortColumn(dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection == SortOrder.Ascending
+                ? SortOrder.Descending
+                : SortOrder.Ascending);
+            dataGridView.Refresh();
         }
     }
 }

@@ -71,7 +71,7 @@ namespace Registry.Viewport
             this.dataGridView.VirtualMode = true;
             this.dataGridView.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellDoubleClick);
             this.dataGridView.CellValueNeeded += new System.Windows.Forms.DataGridViewCellValueEventHandler(this.dataGridView_CellValueNeeded);
-            this.dataGridView.RowHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_ColumnHeaderMouseClick);
+            this.dataGridView.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dataGridView_ColumnHeaderMouseClick);
             this.dataGridView.SelectionChanged += new System.EventHandler(this.dataGridView_SelectionChanged);
             this.dataGridView.Resize += new System.EventHandler(this.dataGridView_Resize);
             // 
