@@ -14,7 +14,7 @@ namespace Registry.Viewport
 {
     internal partial class PaymentsAccountsViewport : FormWithGridViewport
     {
-        private SearchForm spExtendedSearchForm;
+        private SearchForm _spExtendedSearchForm;
 
         private PaymentsAccountsViewport()
             : this(null, null)
@@ -150,11 +150,11 @@ namespace Registry.Viewport
             {
                 case SearchFormType.SimpleSearchForm:
                 case SearchFormType.ExtendedSearchForm:
-                    if (spExtendedSearchForm == null)
-                        spExtendedSearchForm = new ExtendedSearchPaymentAccounts();
-                    if (spExtendedSearchForm.ShowDialog() != DialogResult.OK)
+                    if (_spExtendedSearchForm == null)
+                        _spExtendedSearchForm = new ExtendedSearchPaymentAccounts();
+                    if (_spExtendedSearchForm.ShowDialog() != DialogResult.OK)
                         return;
-                    DynamicFilter = spExtendedSearchForm.GetFilter();
+                    DynamicFilter = _spExtendedSearchForm.GetFilter();
                     break;
             }
             var filter = StaticFilter;

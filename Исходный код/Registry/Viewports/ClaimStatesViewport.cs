@@ -10,6 +10,7 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -18,13 +19,13 @@ namespace Registry.Viewport
     internal sealed partial class ClaimStatesViewport : FormWithGridViewport
     {
         #region Models
-        DataModel claim_state_types;
-        DataModel claim_state_types_relations;
+        private DataModel _claimStateTypes;
+        private DataModel _claimStateTypesRelations;
         #endregion Models
 
         #region Views
-        BindingSource v_claim_state_types;
-        BindingSource v_claim_state_types_for_grid;
+        private BindingSource _vClaimStateTypes;
+        private BindingSource _vClaimStateTypesForGrid;
         #endregion Views
 
         private bool _noUpdateFieldList;
@@ -84,17 +85,17 @@ namespace Registry.Viewport
                     filter += id.ToString(CultureInfo.InvariantCulture) + ",";
                 filter = filter.TrimEnd(',') + ")";
             }
-            v_claim_state_types.Filter = filter;
+            _vClaimStateTypes.Filter = filter;
             //Делаем перепривязку ComboboxStateType
             if (GeneralBindingSource.Position != -1)
             {
                 var idStateType = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_state_type"];
                 // Состояние существует, но его возможные тип определить не удалось из-за изменений в ветке зависимостей типов состояний
-                if ((v_claim_state_types.Find("id_state_type", idStateType) == -1) && (viewportState != ViewportState.NewRowState))
+                if ((_vClaimStateTypes.Find("id_state_type", idStateType) == -1) && (viewportState != ViewportState.NewRowState))
                 {
                     label109.ForeColor = Color.Red;
                     label109.Text = @"Вид состояния (ошибка)";
-                    v_claim_state_types.Filter = "";
+                    _vClaimStateTypes.Filter = "";
                 }
                 else
                 {
@@ -109,7 +110,7 @@ namespace Registry.Viewport
         {
             comboBoxClaimStateType.ValueMember = "id_state_type";
             comboBoxClaimStateType.DisplayMember = "state_type";
-            comboBoxClaimStateType.DataSource = v_claim_state_types;
+            comboBoxClaimStateType.DataSource = _vClaimStateTypes;
             comboBoxClaimStateType.DataBindings.Clear();
             comboBoxClaimStateType.DataBindings.Add("SelectedValue", GeneralBindingSource, "id_state_type", true, DataSourceUpdateMode.Never, DBNull.Value);
 
@@ -119,7 +120,7 @@ namespace Registry.Viewport
             dateTimePickerStartState.DataBindings.Add("Value", GeneralBindingSource, "date_start_state", true, DataSourceUpdateMode.Never, null);
 
             dataGridView.DataSource = GeneralBindingSource;
-            id_state_type.DataSource = v_claim_state_types_for_grid;
+            id_state_type.DataSource = _vClaimStateTypesForGrid;
             id_state_type.DisplayMember = "state_type";
             id_state_type.ValueMember = "id_state_type";
             id_state_type.DataPropertyName = "id_state_type";
@@ -311,50 +312,6 @@ namespace Registry.Viewport
             return true;
         }
 
-        private static void FillRowFromClaimState(ClaimState claimState, DataRowView row)
-        {
-            row.BeginEdit();
-            row["id_state"] = ViewportHelper.ValueOrDBNull(claimState.IdState);
-            row["id_claim"] = ViewportHelper.ValueOrDBNull(claimState.IdClaim);
-            row["id_state_type"] = ViewportHelper.ValueOrDBNull(claimState.IdStateType);
-            row["date_start_state"] = ViewportHelper.ValueOrDBNull(claimState.DateStartState);
-            row["description"] = ViewportHelper.ValueOrDBNull(claimState.Description);
-
-            row["transfert_to_legal_department_date"] = ViewportHelper.ValueOrDBNull(claimState.TransfertToLegalDepartmentDate);
-            row["transfer_to_legal_department_who"] = ViewportHelper.ValueOrDBNull(claimState.TransferToLegalDepartmentWho);
-            row["accepted_by_legal_department_date"] = ViewportHelper.ValueOrDBNull(claimState.AcceptedByLegalDepartmentDate);
-            row["accepted_by_legal_department_who"] = ViewportHelper.ValueOrDBNull(claimState.AcceptedByLegalDepartmentWho);
-
-            row["claim_direction_date"] = ViewportHelper.ValueOrDBNull(claimState.ClaimDirectionDate);
-            row["claim_direction_description"] = ViewportHelper.ValueOrDBNull(claimState.ClaimDirectionDescription);
-            row["court_order_date"] = ViewportHelper.ValueOrDBNull(claimState.CourtOrderDate);
-            row["court_order_num"] = ViewportHelper.ValueOrDBNull(claimState.CourtOrderNum);
-            row["obtaining_court_order_date"] = ViewportHelper.ValueOrDBNull(claimState.ObtainingCourtOrderDate);
-            row["obtaining_court_order_description"] = ViewportHelper.ValueOrDBNull(claimState.ObtainingCourtOrderDescription);
-
-            row["direction_court_order_bailiffs_date"] = ViewportHelper.ValueOrDBNull(claimState.DirectionCourtOrderBailiffsDate);
-            row["direction_court_order_bailiffs_description"] = ViewportHelper.ValueOrDBNull(claimState.DirectionCourtOrderBailiffsDescription);
-            row["enforcement_proceeding_start_date"] = ViewportHelper.ValueOrDBNull(claimState.EnforcementProceedingStartDate);
-            row["enforcement_proceeding_start_description"] = ViewportHelper.ValueOrDBNull(claimState.EnforcementProceedingStartDescription);
-            row["enforcement_proceeding_end_date"] = ViewportHelper.ValueOrDBNull(claimState.EnforcementProceedingEndDate);
-            row["enforcement_proceeding_end_description"] = ViewportHelper.ValueOrDBNull(claimState.EnforcementProceedingEndDescription);
-            row["enforcement_proceeding_terminate_date"] = ViewportHelper.ValueOrDBNull(claimState.EnforcementProceedingTerminateDate);
-            row["enforcement_proceeding_terminate_description"] = ViewportHelper.ValueOrDBNull(claimState.EnforcementProceedingTerminateDescription);
-            row["repeated_direction_court_order_bailiffs_date"] = ViewportHelper.ValueOrDBNull(claimState.RepeatedDirectionCourtOrderBailiffsDate);
-            row["repeated_direction_court_order_bailiffs_description"] = ViewportHelper.ValueOrDBNull(claimState.RepeatedDirectionCourtOrderBailiffsDescription);
-            row["repeated_enforcement_proceeding_start_date"] = ViewportHelper.ValueOrDBNull(claimState.RepeatedEnforcementProceedingStartDate);
-            row["repeated_enforcement_proceeding_start_description"] = ViewportHelper.ValueOrDBNull(claimState.RepeatedEnforcementProceedingStartDescription);
-            row["repeated_enforcement_proceeding_end_date"] = ViewportHelper.ValueOrDBNull(claimState.RepeatedEnforcementProceedingEndDate);
-            row["repeated_enforcement_proceeding_end_description"] = ViewportHelper.ValueOrDBNull(claimState.RepeatedEnforcementProceedingEndDescription);
-
-            row["court_order_cancel_date"] = ViewportHelper.ValueOrDBNull(claimState.CourtOrderCancelDate);
-            row["court_order_cancel_description"] = ViewportHelper.ValueOrDBNull(claimState.CourtOrderCancelDescription);
-            row["claim_complete_date"] = ViewportHelper.ValueOrDBNull(claimState.ClaimCompleteDate);
-            row["claim_complete_description"] = ViewportHelper.ValueOrDBNull(claimState.ClaimCompleteDescription);
-            row["claim_complete_reason"] = ViewportHelper.ValueOrDBNull(claimState.ClaimCompleteReason);
-            row.EndEdit();
-        }
-
         private void ViewportFromClaimState(ClaimState claimState)
         {
             comboBoxClaimStateType.SelectedValue = ViewportHelper.ValueOrDBNull(claimState.IdStateType);
@@ -443,48 +400,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            var claimState = new ClaimState
-            {
-                IdState = ViewportHelper.ValueOrNull<int>(row, "id_state"),
-                IdStateType = ViewportHelper.ValueOrNull<int>(row, "id_state_type"),
-                IdClaim = ViewportHelper.ValueOrNull<int>(row, "id_claim"),
-                Description = ViewportHelper.ValueOrNull(row, "description"),
-                DateStartState = ViewportHelper.ValueOrNull<DateTime>(row, "date_start_state"),
-
-                TransfertToLegalDepartmentDate = ViewportHelper.ValueOrNull<DateTime>(row, "transfert_to_legal_department_date"),
-                TransferToLegalDepartmentWho = ViewportHelper.ValueOrNull(row, "transfer_to_legal_department_who"),
-                AcceptedByLegalDepartmentDate = ViewportHelper.ValueOrNull<DateTime>(row, "accepted_by_legal_department_date"),
-                AcceptedByLegalDepartmentWho = ViewportHelper.ValueOrNull(row, "accepted_by_legal_department_who"),
-
-                ClaimDirectionDate = ViewportHelper.ValueOrNull<DateTime>(row, "claim_direction_date"),
-                ClaimDirectionDescription = ViewportHelper.ValueOrNull(row, "claim_direction_description"),
-                CourtOrderDate = ViewportHelper.ValueOrNull<DateTime>(row, "court_order_date"),
-                CourtOrderNum = ViewportHelper.ValueOrNull(row, "court_order_num"),
-                ObtainingCourtOrderDate = ViewportHelper.ValueOrNull<DateTime>(row, "obtaining_court_order_date"),
-                ObtainingCourtOrderDescription = ViewportHelper.ValueOrNull(row, "obtaining_court_order_description"),
-
-                DirectionCourtOrderBailiffsDate = ViewportHelper.ValueOrNull<DateTime>(row, "direction_court_order_bailiffs_date"),
-                DirectionCourtOrderBailiffsDescription = ViewportHelper.ValueOrNull(row, "direction_court_order_bailiffs_description"),
-                EnforcementProceedingStartDate = ViewportHelper.ValueOrNull<DateTime>(row, "enforcement_proceeding_start_date"),
-                EnforcementProceedingStartDescription = ViewportHelper.ValueOrNull(row, "enforcement_proceeding_start_description"),
-                EnforcementProceedingEndDate = ViewportHelper.ValueOrNull<DateTime>(row, "enforcement_proceeding_end_date"),
-                EnforcementProceedingEndDescription = ViewportHelper.ValueOrNull(row, "enforcement_proceeding_end_description"),
-                EnforcementProceedingTerminateDate = ViewportHelper.ValueOrNull<DateTime>(row, "enforcement_proceeding_terminate_date"),
-                EnforcementProceedingTerminateDescription = ViewportHelper.ValueOrNull(row, "enforcement_proceeding_terminate_description"),
-                RepeatedDirectionCourtOrderBailiffsDate = ViewportHelper.ValueOrNull<DateTime>(row, "repeated_direction_court_order_bailiffs_date"),
-                RepeatedDirectionCourtOrderBailiffsDescription = ViewportHelper.ValueOrNull(row, "repeated_direction_court_order_bailiffs_description"),
-                RepeatedEnforcementProceedingStartDate = ViewportHelper.ValueOrNull<DateTime>(row, "repeated_enforcement_proceeding_start_date"),
-                RepeatedEnforcementProceedingStartDescription = ViewportHelper.ValueOrNull(row, "repeated_enforcement_proceeding_start_description"),
-                RepeatedEnforcementProceedingEndDate = ViewportHelper.ValueOrNull<DateTime>(row, "repeated_enforcement_proceeding_end_date"),
-                RepeatedEnforcementProceedingEndDescription = ViewportHelper.ValueOrNull(row, "repeated_enforcement_proceeding_end_description"),
-
-                CourtOrderCancelDate = ViewportHelper.ValueOrNull<DateTime>(row, "court_order_cancel_date"),
-                CourtOrderCancelDescription = ViewportHelper.ValueOrNull(row, "court_order_cancel_description"),
-                ClaimCompleteDate = ViewportHelper.ValueOrNull<DateTime>(row, "claim_complete_date"),
-                ClaimCompleteDescription = ViewportHelper.ValueOrNull(row, "claim_complete_description"),
-                ClaimCompleteReason = ViewportHelper.ValueOrNull(row, "claim_complete_reason"),
-            };
-            return claimState;
+            return ClaimStateConverter.FromRow(row);
         }
 
         public override bool CanLoadData()
@@ -497,13 +413,13 @@ namespace Registry.Viewport
             DockAreas = DockAreas.Document;
             dataGridView.AutoGenerateColumns = false;
             GeneralDataModel = DataModel.GetInstance<ClaimStatesDataModel>();
-            claim_state_types = DataModel.GetInstance<ClaimStateTypesDataModel>();
-            claim_state_types_relations = DataModel.GetInstance<ClaimStateTypesRelationsDataModel>();
+            _claimStateTypes = DataModel.GetInstance<ClaimStateTypesDataModel>();
+            _claimStateTypesRelations = DataModel.GetInstance<ClaimStateTypesRelationsDataModel>();
 
             //Ожидаем дозагрузки, если это необходимо
             GeneralDataModel.Select();
-            claim_state_types.Select();
-            claim_state_types_relations.Select();
+            _claimStateTypes.Select();
+            _claimStateTypesRelations.Select();
 
             var ds = DataModel.DataSet;
 
@@ -512,21 +428,15 @@ namespace Registry.Viewport
             else
                 throw new ViewportException("Неизвестный тип родительского объекта");
 
-            v_claim_state_types = new BindingSource
+            _vClaimStateTypes = new BindingSource
             {
                 DataMember = "claim_state_types",
                 DataSource = ds
             };
 
-            v_claim_state_types_for_grid = new BindingSource
+            _vClaimStateTypesForGrid = new BindingSource
             {
                 DataMember = "claim_state_types",
-                DataSource = ds
-            };
-
-            new BindingSource
-            {
-                DataMember = "claim_state_types_relations",
                 DataSource = ds
             };
 
@@ -540,10 +450,10 @@ namespace Registry.Viewport
 
             GeneralDataModel.Select().RowChanged += ClaimStatesViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted += ClaimStatesViewport_RowDeleted;
-            claim_state_types.Select().RowChanged += ClaimStateTypesViewport_RowChanged;
-            claim_state_types.Select().RowDeleted += ClaimStateTypesViewport_RowDeleted;
-            claim_state_types_relations.Select().RowChanged += ClaimStateTypesRelationsViewport_RowChanged;
-            claim_state_types_relations.Select().RowDeleted += ClaimStateTypesRelationsViewport_RowDeleted;
+            _claimStateTypes.Select().RowChanged += ClaimStateTypesViewport_RowChanged;
+            _claimStateTypes.Select().RowDeleted += ClaimStateTypesViewport_RowDeleted;
+            _claimStateTypesRelations.Select().RowChanged += ClaimStateTypesRelationsViewport_RowChanged;
+            _claimStateTypesRelations.Select().RowDeleted += ClaimStateTypesRelationsViewport_RowDeleted;
             is_editable = true;
             DataChangeHandlersInit();
         }
@@ -579,7 +489,7 @@ namespace Registry.Viewport
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    FillRowFromClaimState(claimState, newRow);
+                    ClaimStateConverter.FillRow(claimState, newRow);
                     GeneralBindingSource.Position = GeneralBindingSource.Count - 1;
                     GeneralDataModel.EditingNewRecord = false;
                     break;
@@ -594,7 +504,7 @@ namespace Registry.Viewport
                         return;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     is_editable = false;
-                    FillRowFromClaimState(claimState, row);
+                    ClaimStateConverter.FillRow(claimState, row);
                     break;
             }
             UnbindedCheckBoxesUpdate();
@@ -650,8 +560,8 @@ namespace Registry.Viewport
                 return;
             is_editable = false;
             GeneralBindingSource.AddNew();
-            if (v_claim_state_types.Count > 0)
-                comboBoxClaimStateType.SelectedValue = ((DataRowView)v_claim_state_types[0])["id_state_type"];
+            if (_vClaimStateTypes.Count > 0)
+                comboBoxClaimStateType.SelectedValue = ((DataRowView)_vClaimStateTypes[0])["id_state_type"];
             textBoxTransferToLegalDepartmentWho.Text = UserDomain.Current.DisplayName;
             textBoxAcceptedByLegalDepartmentWho.Text = UserDomain.Current.DisplayName;
             is_editable = true;
@@ -677,7 +587,7 @@ namespace Registry.Viewport
             {
                 var nextClaimStateType = 
                     Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position + 1])["id_state_type"], CultureInfo.InvariantCulture);
-                stateCount = (from claimStateTypesRow in claim_state_types.FilterDeletedRows()
+                stateCount = (from claimStateTypesRow in _claimStateTypes.FilterDeletedRows()
                     where Convert.ToBoolean(claimStateTypesRow.Field<object>("is_start_state_type"), CultureInfo.InvariantCulture) &&
                           (claimStateTypesRow.Field<int>("id_state_type") == nextClaimStateType)
                     select claimStateTypesRow.Field<int>("id_state_type")).Count();
@@ -690,7 +600,7 @@ namespace Registry.Viewport
                         Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position - 1])["id_state_type"], CultureInfo.InvariantCulture);
                     var nextClaimStateType = 
                         Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position + 1])["id_state_type"], CultureInfo.InvariantCulture);
-                    stateCount = (from claimStateTypesRelRow in claim_state_types_relations.FilterDeletedRows()
+                    stateCount = (from claimStateTypesRelRow in _claimStateTypesRelations.FilterDeletedRows()
                         where claimStateTypesRelRow.Field<int>("id_state_from") == previosClaimStateType &&
                               claimStateTypesRelRow.Field<int>("id_state_to") == nextClaimStateType
                         select claimStateTypesRelRow.Field<int>("id_state_to")).Count();
@@ -755,22 +665,15 @@ namespace Registry.Viewport
                 GeneralBindingSource.CurrentItemChanged -= v_claim_states_CurrentItemChanged;
                 GeneralDataModel.Select().RowChanged -= ClaimStatesViewport_RowChanged;
                 GeneralDataModel.Select().RowDeleted -= ClaimStatesViewport_RowDeleted;
-                claim_state_types.Select().RowChanged -= ClaimStateTypesViewport_RowChanged;
-                claim_state_types.Select().RowDeleted -= ClaimStateTypesViewport_RowDeleted;
-                claim_state_types_relations.Select().RowChanged -= ClaimStateTypesRelationsViewport_RowChanged;
-                claim_state_types_relations.Select().RowDeleted -= ClaimStateTypesRelationsViewport_RowDeleted;
+                _claimStateTypes.Select().RowChanged -= ClaimStateTypesViewport_RowChanged;
+                _claimStateTypes.Select().RowDeleted -= ClaimStateTypesViewport_RowDeleted;
+                _claimStateTypesRelations.Select().RowChanged -= ClaimStateTypesRelationsViewport_RowChanged;
+                _claimStateTypesRelations.Select().RowDeleted -= ClaimStateTypesRelationsViewport_RowDeleted;
             }
             base.OnClosing(e);
         }
 
-        public override void ForceClose()
-        {
-            if (viewportState == ViewportState.NewRowState)
-                GeneralDataModel.EditingNewRecord = false;
-            Close();
-        }
-
-        void v_claim_states_CurrentItemChanged(object sender, EventArgs e)
+        private void v_claim_states_CurrentItemChanged(object sender, EventArgs e)
         {
             _noUpdateFieldList = true;
             if (GeneralBindingSource.Position == -1 || dataGridView.RowCount == 0)
@@ -800,7 +703,7 @@ namespace Registry.Viewport
             is_editable = true;
         }
 
-        void ClaimStatesViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        private void ClaimStatesViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
             {
@@ -810,7 +713,7 @@ namespace Registry.Viewport
             }
         }
 
-        void ClaimStatesViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void ClaimStatesViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             UnbindedCheckBoxesUpdate();
             if (Selected)
@@ -818,22 +721,22 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
-        void ClaimStateTypesViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        private void ClaimStateTypesViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             RebuildFilter();
         }
 
-        void ClaimStateTypesViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void ClaimStateTypesViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             RebuildFilter();
         }
 
-        void ClaimStateTypesRelationsViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        private void ClaimStateTypesRelationsViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             RebuildFilter();
         }
 
-        void ClaimStateTypesRelationsViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void ClaimStateTypesRelationsViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             RebuildFilter();
         }

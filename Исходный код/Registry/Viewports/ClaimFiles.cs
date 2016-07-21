@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
@@ -16,7 +10,7 @@ namespace Registry.Viewport
 {
     internal partial class ClaimFiles : Form
     {
-        private int _idClaim = 0;
+        private int _idClaim;
 
         public ClaimFiles()
         {
@@ -34,9 +28,9 @@ namespace Registry.Viewport
         private void DataBind(int idClaim)
         {
             dataGridView.DataSource = ClaimFilesDataModel.GetInstance().Select(idClaim);
-            dataGridView.Columns["id_file"].DataPropertyName = "id_file";
-            dataGridView.Columns["file_name"].DataPropertyName = "file_name";
-            dataGridView.Columns["display_name"].DataPropertyName = "display_name";
+            id_file.DataPropertyName = "id_file";
+            file_name.DataPropertyName = "file_name";
+            display_name.DataPropertyName = "display_name";
         }
 
         private void vButtonAddFile_Click(object sender, EventArgs e)
@@ -97,26 +91,24 @@ namespace Registry.Viewport
                 var fullName = Path.Combine(RegistrySettings.ClaimsAttachmentsPath, fileName);
                 if (ClaimFilesDataModel.GetInstance().Delete(idFile) == -1)
                     return;
-                if (File.Exists(fullName))
+                if (!File.Exists(fullName)) continue;
+                try
                 {
-                    try
-                    {
-                        File.Delete(fullName);
-                    }
-                    catch (UnauthorizedAccessException)
-                    {
-                        MessageBox.Show(
-                            string.Format("Отсутствуют права на удаление файла {0}", fullName), @"Ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        return;
-                    }
-                    catch (SystemException exc)
-                    {
-                        MessageBox.Show(
-                            string.Format("Ошибка при удалении файла. Подробнее: {0}", exc.Message), @"Ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        return;
-                    }
+                    File.Delete(fullName);
+                }
+                catch (UnauthorizedAccessException)
+                {
+                    MessageBox.Show(
+                        string.Format("Отсутствуют права на удаление файла {0}", fullName), @"Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return;
+                }
+                catch (SystemException exc)
+                {
+                    MessageBox.Show(
+                        string.Format("Ошибка при удалении файла. Подробнее: {0}", exc.Message), @"Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return;
                 }
             }
             DataBind(_idClaim);

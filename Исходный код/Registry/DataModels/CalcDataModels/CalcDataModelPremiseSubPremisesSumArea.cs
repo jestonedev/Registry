@@ -41,7 +41,7 @@ namespace Registry.DataModels.CalcDataModels
             var result = from premisesRow in premises
                          join subPremisesRow in subPremises
                          on premisesRow.Field<int>("id_premises") equals subPremisesRow.Field<int>("id_premises")
-                         where new [] {4, 5, 9, 11}.Contains(subPremisesRow.Field<int>("id_state"))
+                         where DataModelHelper.MunicipalObjectStates().Contains(subPremisesRow.Field<int>("id_state"))
                          group subPremisesRow.Field<double>("total_area") by premisesRow.Field<int>("id_premises") into gs
                          select new
                          {

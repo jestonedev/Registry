@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.Data;
 using Registry.DataModels;
@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Reporting;
+using Registry.Viewport.EntityConverters;
 using Registry.Viewport.SearchForms;
 
 namespace Registry.Viewport
@@ -20,54 +21,54 @@ namespace Registry.Viewport
     internal sealed partial class PremisesViewport : FormViewport
     {
         #region Models
-        private DataModel buildings;
-        private DataModel kladr;
-        private DataModel premises_types;
-        private DataModel premises_kinds;
-        private DataModel sub_premises;
-        private DataModel restrictions;
-        private DataModel restrictionTypes;
-        private DataModel restrictionPremisesAssoc;
-        private DataModel restrictionBuildingsAssoc;
-        private DataModel ownershipRights;
-        private DataModel ownershipRightTypes;
-        private DataModel ownershipPremisesAssoc;
-        private DataModel ownershipBuildingsAssoc;
-        private DataModel fundTypes;
-        private DataModel object_states;
-        private CalcDataModel premisesCurrentFund;
-        private CalcDataModel premiseSubPremisesSumArea;
-        private CalcDataModel subPremisesCurrentFund;
+        private DataModel _buildings;
+        private DataModel _kladr;
+        private DataModel _premisesTypes;
+        private DataModel _premisesKinds;
+        private DataModel _subPremises;
+        private DataModel _restrictions;
+        private DataModel _restrictionTypes;
+        private DataModel _restrictionPremisesAssoc;
+        private DataModel _restrictionBuildingsAssoc;
+        private DataModel _ownershipRights;
+        private DataModel _ownershipRightTypes;
+        private DataModel _ownershipPremisesAssoc;
+        private DataModel _ownershipBuildingsAssoc;
+        private DataModel _fundTypes;
+        private DataModel _objectStates;
+        private CalcDataModel _premisesCurrentFund;
+        private CalcDataModel _premiseSubPremisesSumArea;
+        private CalcDataModel _subPremisesCurrentFund;
 
         #endregion Models
 
         #region Views
-        private BindingSource v_premisesCurrentFund;
-        private BindingSource v_buildings;
-        private BindingSource v_kladr;
-        private BindingSource v_premises_types;
-        private BindingSource v_premises_kinds;
-        private BindingSource v_sub_premises;
-        private BindingSource v_restrictions;
-        private BindingSource v_restrictonTypes;
-        private BindingSource v_restrictionPremisesAssoc;
-        private BindingSource v_restrictionBuildingsAssoc;
-        private BindingSource v_ownershipRights;
-        private BindingSource v_ownershipRightTypes;
-        private BindingSource v_ownershipPremisesAssoc;
-        private BindingSource v_ownershipBuildingsAssoc;
-        private BindingSource v_fundType;
-        private BindingSource v_object_states;
-        private BindingSource v_sub_premises_object_states;
-        private BindingSource v_premisesSubPremisesSumArea;
-        private BindingSource v_subPremisesCurrentFund;
+        private BindingSource _vPremisesCurrentFund;
+        private BindingSource _vBuildings;
+        private BindingSource _vKladr;
+        private BindingSource _vPremisesTypes;
+        private BindingSource _vPremisesKinds;
+        private BindingSource _vSubPremises;
+        private BindingSource _vRestrictions;
+        private BindingSource _vRestrictonTypes;
+        private BindingSource _vRestrictionPremisesAssoc;
+        private BindingSource _vRestrictionBuildingsAssoc;
+        private BindingSource _vOwnershipRights;
+        private BindingSource _vOwnershipRightTypes;
+        private BindingSource _vOwnershipPremisesAssoc;
+        private BindingSource _vOwnershipBuildingsAssoc;
+        private BindingSource _vFundType;
+        private BindingSource _vObjectStates;
+        private BindingSource _vSubPremisesObjectStates;
+        private BindingSource _vPremisesSubPremisesSumArea;
+        private BindingSource _vSubPremisesCurrentFund;
         #endregion Views
 
         //Forms
-        private SearchForm spExtendedSearchForm;
-        private SearchForm spSimpleSearchForm;
+        private SearchForm _spExtendedSearchForm;
+        private SearchForm _spSimpleSearchForm;
 
-        private bool is_first_visibility = true;
+        private bool _isFirstVisibility = true;
 
         private PremisesViewport()
             : this(null, null)
@@ -82,46 +83,46 @@ namespace Registry.Viewport
 
         private void RestrictionsFilterRebuild()
         {
-            string restrictionsFilter = "id_restriction IN (0";
-            for (int i = 0; i < v_restrictionPremisesAssoc.Count; i++)
-                restrictionsFilter += ((DataRowView)v_restrictionPremisesAssoc[i])["id_restriction"].ToString() + ",";
-            restrictionsFilter = restrictionsFilter.TrimEnd(new char[] { ',' });
+            var restrictionsFilter = "id_restriction IN (0";
+            for (var i = 0; i < _vRestrictionPremisesAssoc.Count; i++)
+                restrictionsFilter += ((DataRowView)_vRestrictionPremisesAssoc[i])["id_restriction"] + ",";
+            restrictionsFilter = restrictionsFilter.TrimEnd(',');
             restrictionsFilter += ")";
-            if (GeneralBindingSource.Position > -1 && v_restrictionBuildingsAssoc != null && ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] != DBNull.Value)
+            if (GeneralBindingSource.Position > -1 && _vRestrictionBuildingsAssoc != null && ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] != DBNull.Value)
             {
-                v_restrictionBuildingsAssoc.Filter = "id_building = " + ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"].ToString();
+                _vRestrictionBuildingsAssoc.Filter = "id_building = " + ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"];
                 restrictionsFilter += " OR id_restriction IN (0";
-                for (int i = 0; i < v_restrictionBuildingsAssoc.Count; i++)
-                    restrictionsFilter += ((DataRowView)v_restrictionBuildingsAssoc[i])["id_restriction"] + ",";
-                restrictionsFilter = restrictionsFilter.TrimEnd(new char[] { ',' });
+                for (var i = 0; i < _vRestrictionBuildingsAssoc.Count; i++)
+                    restrictionsFilter += ((DataRowView)_vRestrictionBuildingsAssoc[i])["id_restriction"] + ",";
+                restrictionsFilter = restrictionsFilter.TrimEnd(',');
                 restrictionsFilter += ")";
             }
-            v_restrictions.Filter = restrictionsFilter;
+            _vRestrictions.Filter = restrictionsFilter;
             if (dataGridViewRestrictions.Columns.Contains("id_restriction"))
-                dataGridViewRestrictions.Columns["id_restriction"].Visible = false;
+                id_restriction.Visible = false;
             RedrawRestrictionDataGridRows();
         }
 
         private void OwnershipsFilterRebuild()
         {
-            string ownershipFilter = "id_ownership_right IN (0";
-            for (int i = 0; i < v_ownershipPremisesAssoc.Count; i++)
-                ownershipFilter += ((DataRowView)v_ownershipPremisesAssoc[i])["id_ownership_right"].ToString() + ",";
-            ownershipFilter = ownershipFilter.TrimEnd(new char[] { ',' });
+            var ownershipFilter = "id_ownership_right IN (0";
+            for (var i = 0; i < _vOwnershipPremisesAssoc.Count; i++)
+                ownershipFilter += ((DataRowView)_vOwnershipPremisesAssoc[i])["id_ownership_right"] + ",";
+            ownershipFilter = ownershipFilter.TrimEnd(',');
             ownershipFilter += ")";
-            if (GeneralBindingSource.Position > -1 && v_ownershipBuildingsAssoc != null && ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] != DBNull.Value)
+            if (GeneralBindingSource.Position > -1 && _vOwnershipBuildingsAssoc != null && ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] != DBNull.Value)
             {
-                v_ownershipBuildingsAssoc.Filter = "id_building = " + ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"].ToString();
+                _vOwnershipBuildingsAssoc.Filter = "id_building = " + ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"];
                 ownershipFilter += " OR id_ownership_right IN (0";
-                for (int i = 0; i < v_ownershipBuildingsAssoc.Count; i++)
-                    ownershipFilter += ((DataRowView)v_ownershipBuildingsAssoc[i])["id_ownership_right"].ToString() + ",";
-                ownershipFilter = ownershipFilter.TrimEnd(new char[] { ',' });
+                for (var i = 0; i < _vOwnershipBuildingsAssoc.Count; i++)
+                    ownershipFilter += ((DataRowView)_vOwnershipBuildingsAssoc[i])["id_ownership_right"] + ",";
+                ownershipFilter = ownershipFilter.TrimEnd(',');
                 ownershipFilter += ")";
             }
-            v_ownershipRights.Filter = ownershipFilter;
+            _vOwnershipRights.Filter = ownershipFilter;
             
             if (dataGridViewOwnerships.Columns.Contains("id_ownership_right"))
-                dataGridViewOwnerships.Columns["id_ownership_right"].Visible = false;
+                id_ownership_right.Visible = false;
             RedrawOwnershipDataGridRows();
         }
 
@@ -138,19 +139,19 @@ namespace Registry.Viewport
                 ClearPremiseCalcInfo();
                 return;
             }
-            if (v_premisesCurrentFund != null)
+            if (_vPremisesCurrentFund != null)
             {
-                var position = v_premisesCurrentFund.Find("id_premises", row["id_premises"]);
+                var position = _vPremisesCurrentFund.Find("id_premises", row["id_premises"]);
                 comboBoxCurrentFundType.SelectedValue = position != -1 ? 
-                    ((DataRowView)v_premisesCurrentFund[position])["id_fund_type"] : DBNull.Value;
+                    ((DataRowView)_vPremisesCurrentFund[position])["id_fund_type"] : DBNull.Value;
                 ShowOrHideCurrentFund();
             }
-            if (v_premisesSubPremisesSumArea != null)
+            if (_vPremisesSubPremisesSumArea != null)
             {
-                var position = v_premisesSubPremisesSumArea.Find("id_premises", row["id_premises"]);
+                var position = _vPremisesSubPremisesSumArea.Find("id_premises", row["id_premises"]);
                 if (position != -1)
                 {
-                    var value = Convert.ToDecimal((double)((DataRowView)v_premisesSubPremisesSumArea[position])["sum_area"]);
+                    var value = Convert.ToDecimal((double)((DataRowView)_vPremisesSubPremisesSumArea[position])["sum_area"]);
                     numericUpDownMunicipalArea.Minimum = value;
                     numericUpDownMunicipalArea.Maximum = value;
                     numericUpDownMunicipalArea.Value = value;
@@ -174,8 +175,8 @@ namespace Registry.Viewport
 
         private void RedrawRestrictionDataGridRows()
         {
-            for (int i = 0; i < dataGridViewRestrictions.Rows.Count; i++)
-                if (v_restrictionBuildingsAssoc.Find("id_restriction", dataGridViewRestrictions.Rows[i].Cells["id_restriction"].Value) != -1)
+            for (var i = 0; i < dataGridViewRestrictions.Rows.Count; i++)
+                if (_vRestrictionBuildingsAssoc.Find("id_restriction", dataGridViewRestrictions.Rows[i].Cells["id_restriction"].Value) != -1)
                 {
                     dataGridViewRestrictions.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
                     dataGridViewRestrictions.Rows[i].DefaultCellStyle.SelectionBackColor = Color.Green;
@@ -191,8 +192,8 @@ namespace Registry.Viewport
 
         private void RedrawOwnershipDataGridRows()
         {
-            for (int i = 0; i < dataGridViewOwnerships.Rows.Count; i++)
-                if (v_ownershipBuildingsAssoc.Find("id_ownership_right", dataGridViewOwnerships.Rows[i].Cells["id_ownership_right"].Value) != -1)
+            for (var i = 0; i < dataGridViewOwnerships.Rows.Count; i++)
+                if (_vOwnershipBuildingsAssoc.Find("id_ownership_right", dataGridViewOwnerships.Rows[i].Cells["id_ownership_right"].Value) != -1)
                 {
                     dataGridViewOwnerships.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
                     dataGridViewOwnerships.Rows[i].DefaultCellStyle.SelectionBackColor = Color.Green;
@@ -208,19 +209,19 @@ namespace Registry.Viewport
 
         private void RedrawSubPremiseDataGridRows()
         {
-            if (v_sub_premises == null)
+            if (_vSubPremises == null)
                 return;
-            if (v_sub_premises.Count != dataGridViewRooms.Rows.Count)
+            if (_vSubPremises.Count != dataGridViewRooms.Rows.Count)
                 return;
-            for (int i = 0; i < v_sub_premises.Count; i++)
+            for (var i = 0; i < _vSubPremises.Count; i++)
             {
-                int id_sub_premises = (int)((DataRowView)v_sub_premises[i])["id_sub_premises"];
-                int id = v_subPremisesCurrentFund.Find("id_sub_premises", id_sub_premises);
+                var idSubPremises = (int)((DataRowView)_vSubPremises[i])["id_sub_premises"];
+                var id = _vSubPremisesCurrentFund.Find("id_sub_premises", idSubPremises);
                 if (id == -1)
                     continue;
-                int id_fund_type = (int)((DataRowView)v_subPremisesCurrentFund[id])["id_fund_type"];
-                string fundType = ((DataRowView)v_fundType[v_fundType.Find("id_fund_type", id_fund_type)])["fund_type"].ToString();
-                if ((new[] {1, 4, 5, 9, 11}).Contains((int)((DataRowView)v_sub_premises[i])["id_state"]))
+                var idFundType = (int)((DataRowView)_vSubPremisesCurrentFund[id])["id_fund_type"];
+                var fundType = ((DataRowView)_vFundType[_vFundType.Find("id_fund_type", idFundType)])["fund_type"].ToString();
+                if (DataModelHelper.MunicipalAndUnknownObjectStates().Contains((int)((DataRowView)_vSubPremises[i])["id_state"]))
                     dataGridViewRooms.Rows[i].Cells["current_fund"].Value = fundType;
                 else
                     dataGridViewRooms.Rows[i].Cells["current_fund"].Value = "";
@@ -274,7 +275,7 @@ namespace Registry.Viewport
         {
             if (comboBoxCurrentFundType.SelectedValue != null && GeneralBindingSource.Position != -1 &&
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_state"] != DBNull.Value &&
-                (new int[] { 1, 4, 5, 9, 11 }).Contains((int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_state"]))
+                DataModelHelper.MunicipalAndUnknownObjectStates().Contains((int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_state"]))
             {
                 label38.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
@@ -292,26 +293,26 @@ namespace Registry.Viewport
         {
             if ((comboBoxHouse.DataSource != null) && (comboBoxStreet.DataSource != null))
             {
-                int? id_building = null;
+                int? idBuilding = null;
                 if ((GeneralBindingSource.Position != -1) && (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] != DBNull.Value))
-                    id_building = Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"], CultureInfo.InvariantCulture);
+                    idBuilding = Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"], CultureInfo.InvariantCulture);
                 else 
                 if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                    id_building = Convert.ToInt32(ParentRow["id_building"], CultureInfo.InvariantCulture);
-                string id_street = null;
-                if (id_building != null)
+                    idBuilding = Convert.ToInt32(ParentRow["id_building"], CultureInfo.InvariantCulture);
+                string idStreet = null;
+                if (idBuilding != null)
                 {
-                    DataRow building_row = buildings.Select().Rows.Find(id_building);
-                    if (building_row != null)
-                        id_street = building_row["id_street"].ToString();
+                    var buildingRow = _buildings.Select().Rows.Find(idBuilding);
+                    if (buildingRow != null)
+                        idStreet = buildingRow["id_street"].ToString();
                 }
-                v_kladr.Filter = "";
-                if (id_street != null)
-                    comboBoxStreet.SelectedValue = id_street;
+                _vKladr.Filter = "";
+                if (idStreet != null)
+                    comboBoxStreet.SelectedValue = idStreet;
                 else
                     comboBoxStreet.SelectedValue = DBNull.Value;
-                if (id_building != null)
-                    comboBoxHouse.SelectedValue = id_building;
+                if (idBuilding != null)
+                    comboBoxHouse.SelectedValue = idBuilding;
                 else
                     comboBoxHouse.SelectedValue = DBNull.Value;
                 CheckViewportModifications();
@@ -333,19 +334,19 @@ namespace Registry.Viewport
 
         private void DataBind()
         {
-            comboBoxStreet.DataSource = v_kladr;
+            comboBoxStreet.DataSource = _vKladr;
             comboBoxStreet.ValueMember = "id_street";
             comboBoxStreet.DisplayMember = "street_name";
-            comboBoxHouse.DataSource = v_buildings;
-            v_buildings.Sort = "id_building DESC";
+            comboBoxHouse.DataSource = _vBuildings;
+            _vBuildings.Sort = "id_building DESC";
             comboBoxHouse.ValueMember = "id_building";
             comboBoxHouse.DisplayMember = "house";
-            comboBoxPremisesKind.DataSource = v_premises_kinds;
+            comboBoxPremisesKind.DataSource = _vPremisesKinds;
             comboBoxPremisesKind.ValueMember = "id_premises_kind";
             comboBoxPremisesKind.DisplayMember = "premises_kind";
             comboBoxPremisesKind.DataBindings.Clear();
             comboBoxPremisesKind.DataBindings.Add("SelectedValue", GeneralBindingSource, "id_premises_kind", true, DataSourceUpdateMode.Never, 1);
-            comboBoxPremisesType.DataSource = v_premises_types;
+            comboBoxPremisesType.DataSource = _vPremisesTypes;
             comboBoxPremisesType.ValueMember = "id_premises_type";
             comboBoxPremisesType.DisplayMember = "premises_type_as_num";
             comboBoxPremisesType.DataBindings.Clear();
@@ -375,11 +376,11 @@ namespace Registry.Viewport
             numericUpDownHeight.DataBindings.Clear();
             numericUpDownHeight.DataBindings.Add("Value", GeneralBindingSource, "height", true, DataSourceUpdateMode.Never, 0);
 
-            comboBoxCurrentFundType.DataSource = v_fundType;
+            comboBoxCurrentFundType.DataSource = _vFundType;
             comboBoxCurrentFundType.ValueMember = "id_fund_type";
             comboBoxCurrentFundType.DisplayMember = "fund_type";
 
-            comboBoxState.DataSource = v_object_states;
+            comboBoxState.DataSource = _vObjectStates;
             comboBoxState.ValueMember = "id_state";
             comboBoxState.DisplayMember = "state_neutral";
             comboBoxState.DataBindings.Clear();
@@ -394,9 +395,9 @@ namespace Registry.Viewport
             dateTimePickerStateDate.DataBindings.Clear();
             dateTimePickerStateDate.DataBindings.Add("Value", GeneralBindingSource, "state_date", true, DataSourceUpdateMode.Never, null);
 
-            dataGridViewRestrictions.DataSource = v_restrictions;
+            dataGridViewRestrictions.DataSource = _vRestrictions;
             id_restriction.DataPropertyName = "id_restriction";
-            id_restriction_type.DataSource = v_restrictonTypes;
+            id_restriction_type.DataSource = _vRestrictonTypes;
             id_restriction_type.DataPropertyName = "id_restriction_type";
             id_restriction_type.ValueMember = "id_restriction_type";
             id_restriction_type.DisplayMember = "restriction_type";
@@ -404,9 +405,9 @@ namespace Registry.Viewport
             restriction_date.DataPropertyName = "date";
             restriction_description.DataPropertyName = "description";
 
-            dataGridViewOwnerships.DataSource = v_ownershipRights;
+            dataGridViewOwnerships.DataSource = _vOwnershipRights;
             id_ownership_right.DataPropertyName = "id_ownership_right";
-            id_ownership_type.DataSource = v_ownershipRightTypes;
+            id_ownership_type.DataSource = _vOwnershipRightTypes;
             id_ownership_type.DataPropertyName = "id_ownership_right_type";
             id_ownership_type.ValueMember = "id_ownership_right_type";
             id_ownership_type.DisplayMember = "ownership_right_type";
@@ -414,10 +415,10 @@ namespace Registry.Viewport
             ownership_date.DataPropertyName = "date";
             ownership_description.DataPropertyName = "description";
 
-            dataGridViewRooms.DataSource = v_sub_premises;
+            dataGridViewRooms.DataSource = _vSubPremises;
             sub_premises_num.DataPropertyName = "sub_premises_num";
             sub_premises_total_area.DataPropertyName = "total_area";
-            sub_premises_id_state.DataSource = v_sub_premises_object_states;
+            sub_premises_id_state.DataSource = _vSubPremisesObjectStates;
             sub_premises_id_state.DataPropertyName = "id_state";
             sub_premises_id_state.ValueMember = "id_state";
             sub_premises_id_state.DisplayMember = "state_female";
@@ -479,13 +480,14 @@ namespace Registry.Viewport
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (new int[] { 4, 5, 9, 11 }.Contains(premise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+            if (DataModelHelper.MunicipalObjectStates().Contains(premise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
                 MessageBox.Show(@"У вас нет прав на добавление в базу муниципальных жилых помещений", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (new int[] { 1, 3, 6, 7, 8, 10 }.Contains(premise.IdState.Value) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+            if (DataModelHelper.NonMunicipalAndUnknownObjectStates().Contains(premise.IdState.Value) && 
+                !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
                 MessageBox.Show(@"У вас нет прав на добавление в базу немуниципальных жилых помещений", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -494,7 +496,7 @@ namespace Registry.Viewport
             // Проверяем дубликаты квартир
             if ((premise.PremisesNum != premiseFromView.PremisesNum) || (premise.IdBuilding != premiseFromView.IdBuilding))
                 if (DataModelHelper.PremisesDuplicateCount(premise) != 0 &&
-                    MessageBox.Show(@"В указанном доме уже есть квартира с таким номером. Все равно продолжить сохранение?", "Внимание", 
+                    MessageBox.Show(@"В указанном доме уже есть квартира с таким номером. Все равно продолжить сохранение?", @"Внимание", 
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                     return false;
             return true;
@@ -503,30 +505,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            var premise = new Premise
-            {
-                IdPremises = ViewportHelper.ValueOrNull<int>(row, "id_premises"),
-                IdBuilding = ViewportHelper.ValueOrNull<int>(row, "id_building"),
-                IdState = ViewportHelper.ValueOrNull<int>(row, "id_state"),
-                PremisesNum = ViewportHelper.ValueOrNull(row, "premises_num"),
-                LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area"),
-                TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area"),
-                Height = ViewportHelper.ValueOrNull<double>(row, "height"),
-                NumRooms = ViewportHelper.ValueOrNull<short>(row, "num_rooms"),
-                NumBeds = ViewportHelper.ValueOrNull<short>(row, "num_beds"),
-                IdPremisesType = ViewportHelper.ValueOrNull<int>(row, "id_premises_type"),
-                IdPremisesKind = ViewportHelper.ValueOrNull<int>(row, "id_premises_kind"),
-                Floor = ViewportHelper.ValueOrNull<short>(row, "floor"),
-                CadastralNum = ViewportHelper.ValueOrNull(row, "cadastral_num"),
-                CadastralCost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost"),
-                BalanceCost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost"),
-                Description = ViewportHelper.ValueOrNull(row, "description"),
-                IsMemorial = ViewportHelper.ValueOrNull<bool>(row, "is_memorial"),
-                Account = ViewportHelper.ValueOrNull(row, "account"),
-                RegDate = ViewportHelper.ValueOrNull<DateTime>(row, "reg_date"),
-                StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date")
-            };
-            return premise;
+            return PremiseConverter.FromRow(row);
         }
 
         protected override Entity EntityFromViewport()
@@ -566,11 +545,11 @@ namespace Registry.Viewport
         {
             if (premise.IdBuilding != null)
             {
-                DataRow building_row = buildings.Select().Rows.Find(premise.IdBuilding);
-                if (building_row != null)
+                var buildingRow = _buildings.Select().Rows.Find(premise.IdBuilding);
+                if (buildingRow != null)
                 {
-                    v_kladr.Filter = "";
-                    comboBoxStreet.SelectedValue = building_row["id_street"];
+                    _vKladr.Filter = "";
+                    comboBoxStreet.SelectedValue = buildingRow["id_street"];
                     comboBoxHouse.SelectedValue = ViewportHelper.ValueOrDBNull(premise.IdBuilding);
                 }
             }
@@ -594,32 +573,6 @@ namespace Registry.Viewport
             textBoxAccount.Text = premise.Account;
         }
 
-        private static void FillRowFromPremise(Premise premise, DataRowView row)
-        {
-            row.BeginEdit();
-            row["id_premises"] = ViewportHelper.ValueOrDBNull(premise.IdPremises);
-            row["id_building"] = ViewportHelper.ValueOrDBNull(premise.IdBuilding);
-            row["id_state"] = ViewportHelper.ValueOrDBNull(premise.IdState);
-            row["premises_num"] = ViewportHelper.ValueOrDBNull(premise.PremisesNum);
-            row["total_area"] = ViewportHelper.ValueOrDBNull(premise.TotalArea);
-            row["living_area"] = ViewportHelper.ValueOrDBNull(premise.LivingArea);
-            row["height"] = ViewportHelper.ValueOrDBNull(premise.Height);
-            row["num_rooms"] = ViewportHelper.ValueOrDBNull(premise.NumRooms);
-            row["num_beds"] = ViewportHelper.ValueOrDBNull(premise.NumBeds);
-            row["id_premises_type"] = ViewportHelper.ValueOrDBNull(premise.IdPremisesType);
-            row["id_premises_kind"] = ViewportHelper.ValueOrDBNull(premise.IdPremisesKind);
-            row["floor"] = ViewportHelper.ValueOrDBNull(premise.Floor);
-            row["cadastral_num"] = ViewportHelper.ValueOrDBNull(premise.CadastralNum);
-            row["cadastral_cost"] = ViewportHelper.ValueOrDBNull(premise.CadastralCost);
-            row["balance_cost"] = ViewportHelper.ValueOrDBNull(premise.BalanceCost);
-            row["description"] = ViewportHelper.ValueOrDBNull(premise.Description);
-            row["reg_date"] = ViewportHelper.ValueOrDBNull(premise.RegDate);
-            row["is_memorial"] = ViewportHelper.ValueOrDBNull(premise.IsMemorial);
-            row["account"] = ViewportHelper.ValueOrDBNull(premise.Account);
-            row["state_date"] = ViewportHelper.ValueOrDBNull(premise.StateDate);
-            row.EndEdit();
-        }
-
         public override bool CanLoadData()
         {
             return true;
@@ -633,93 +586,95 @@ namespace Registry.Viewport
             DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
 
             GeneralDataModel = DataModel.GetInstance<PremisesDataModel>();
-            kladr = DataModel.GetInstance<KladrStreetsDataModel>();
-            buildings = DataModel.GetInstance<BuildingsDataModel>();
-            premises_types = DataModel.GetInstance<PremisesTypesDataModel>();
-            premises_kinds = DataModel.GetInstance<PremisesKindsDataModel>();
-            sub_premises = DataModel.GetInstance<SubPremisesDataModel>();
-            restrictions = DataModel.GetInstance<RestrictionsDataModel>();
-            restrictionTypes = DataModel.GetInstance<RestrictionTypesDataModel>();
-            restrictionPremisesAssoc = DataModel.GetInstance<RestrictionsPremisesAssocDataModel>();
-            restrictionBuildingsAssoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>();
-            ownershipRights = DataModel.GetInstance<OwnershipsRightsDataModel>();
-            ownershipRightTypes = DataModel.GetInstance<OwnershipRightTypesDataModel>();
-            ownershipPremisesAssoc = DataModel.GetInstance<OwnershipPremisesAssocDataModel>();
-            ownershipBuildingsAssoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>();
-            fundTypes = DataModel.GetInstance<FundTypesDataModel>();
-            object_states = DataModel.GetInstance<ObjectStatesDataModel>(); 
+            _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
+            _buildings = DataModel.GetInstance<BuildingsDataModel>();
+            _premisesTypes = DataModel.GetInstance<PremisesTypesDataModel>();
+            _premisesKinds = DataModel.GetInstance<PremisesKindsDataModel>();
+            _subPremises = DataModel.GetInstance<SubPremisesDataModel>();
+            _restrictions = DataModel.GetInstance<RestrictionsDataModel>();
+            _restrictionTypes = DataModel.GetInstance<RestrictionTypesDataModel>();
+            _restrictionPremisesAssoc = DataModel.GetInstance<RestrictionsPremisesAssocDataModel>();
+            _restrictionBuildingsAssoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>();
+            _ownershipRights = DataModel.GetInstance<OwnershipsRightsDataModel>();
+            _ownershipRightTypes = DataModel.GetInstance<OwnershipRightTypesDataModel>();
+            _ownershipPremisesAssoc = DataModel.GetInstance<OwnershipPremisesAssocDataModel>();
+            _ownershipBuildingsAssoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>();
+            _fundTypes = DataModel.GetInstance<FundTypesDataModel>();
+            _objectStates = DataModel.GetInstance<ObjectStatesDataModel>(); 
 
             // Вычисляемые модели
-            premisesCurrentFund = CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>();
-            premiseSubPremisesSumArea = CalcDataModel.GetInstance<CalcDataModelPremiseSubPremisesSumArea>();
-            subPremisesCurrentFund = CalcDataModel.GetInstance<CalcDataModelSubPremisesCurrentFunds>();
+            _premisesCurrentFund = CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>();
+            _premiseSubPremisesSumArea = CalcDataModel.GetInstance<CalcDataModelPremiseSubPremisesSumArea>();
+            _subPremisesCurrentFund = CalcDataModel.GetInstance<CalcDataModelSubPremisesCurrentFunds>();
             CalcDataModel.GetInstance<CalcDataModelMunicipalPremises>();
 
             // Ожидаем дозагрузки, если это необходмо
             GeneralDataModel.Select();
-            kladr.Select();
-            buildings.Select();
-            premises_types.Select();
-            premises_kinds.Select();
-            sub_premises.Select();
-            restrictions.Select();
-            restrictionTypes.Select();
-            restrictionPremisesAssoc.Select();
-            restrictionBuildingsAssoc.Select();
-            ownershipRights.Select();
-            ownershipRightTypes.Select();
-            ownershipPremisesAssoc.Select();
-            ownershipBuildingsAssoc.Select();
-            fundTypes.Select();
-            object_states.Select();
+            _kladr.Select();
+            _buildings.Select();
+            _premisesTypes.Select();
+            _premisesKinds.Select();
+            _subPremises.Select();
+            _restrictions.Select();
+            _restrictionTypes.Select();
+            _restrictionPremisesAssoc.Select();
+            _restrictionBuildingsAssoc.Select();
+            _ownershipRights.Select();
+            _ownershipRightTypes.Select();
+            _ownershipPremisesAssoc.Select();
+            _ownershipBuildingsAssoc.Select();
+            _fundTypes.Select();
+            _objectStates.Select();
 
             var ds = DataModel.DataSet;
 
-            v_kladr = new BindingSource
+            _vKladr = new BindingSource
             {
                 DataMember = "kladr",
                 DataSource = ds
             };
 
-            v_buildings = new BindingSource
+            _vBuildings = new BindingSource
             {
                 DataMember = "kladr_buildings",
-                DataSource = v_kladr
+                DataSource = _vKladr
             };
 
-            v_premisesCurrentFund = new BindingSource
+            _vPremisesCurrentFund = new BindingSource
             {
                 DataMember = "premises_current_funds",
-                DataSource = premisesCurrentFund.Select()
+                DataSource = _premisesCurrentFund.Select()
             };
 
-            v_premisesSubPremisesSumArea = new BindingSource
+            _vPremisesSubPremisesSumArea = new BindingSource
             {
                 DataMember = "premise_sub_premises_sum_area",
-                DataSource = premiseSubPremisesSumArea.Select()
+                DataSource = _premiseSubPremisesSumArea.Select()
             };
 
-            v_subPremisesCurrentFund = new BindingSource
+            _vSubPremisesCurrentFund = new BindingSource
             {
                 DataMember = "sub_premises_current_funds",
-                DataSource = subPremisesCurrentFund.Select()
+                DataSource = _subPremisesCurrentFund.Select()
             };
 
-            v_fundType = new BindingSource
+            _vFundType = new BindingSource
             {
                 DataMember = "fund_types",
                 DataSource = ds
             };
 
-            v_object_states = new BindingSource
+            _vObjectStates = new BindingSource
             {
                 DataMember = "object_states",
                 DataSource = ds
             };
 
-            v_sub_premises_object_states = new BindingSource();
-            v_sub_premises_object_states.DataMember = "object_states";
-            v_sub_premises_object_states.DataSource = ds;
+            _vSubPremisesObjectStates = new BindingSource
+            {
+                DataMember = "object_states",
+                DataSource = ds
+            };
 
             GeneralBindingSource = new BindingSource();
             GeneralBindingSource.CurrentItemChanged += v_premises_CurrentItemChanged;
@@ -732,86 +687,86 @@ namespace Registry.Viewport
             GeneralDataModel.Select().RowChanged += PremisesViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted += PremisesViewport_RowDeleted;
 
-            v_premises_types = new BindingSource
+            _vPremisesTypes = new BindingSource
             {
                 DataMember = "premises_types",
                 DataSource = ds
             };
 
-            v_premises_kinds = new BindingSource
+            _vPremisesKinds = new BindingSource
             {
                 DataMember = "premises_kinds",
                 DataSource = ds
             };
 
-            v_restrictions = new BindingSource
+            _vRestrictions = new BindingSource
             {
                 DataMember = "restrictions",
                 DataSource = ds,
                 Sort = "date"
             };
 
-            v_ownershipRights = new BindingSource
+            _vOwnershipRights = new BindingSource
             {
                 DataMember = "ownership_rights",
                 DataSource = ds,
                 Sort = "date"
             };
 
-            v_restrictonTypes = new BindingSource
+            _vRestrictonTypes = new BindingSource
             {
                 DataSource = ds,
                 DataMember = "restriction_types"
             };
 
-            v_ownershipRightTypes = new BindingSource
+            _vOwnershipRightTypes = new BindingSource
             {
                 DataMember = "ownership_right_types",
                 DataSource = ds
             };
 
-            v_sub_premises = new BindingSource
+            _vSubPremises = new BindingSource
             {
                 DataMember = "premises_sub_premises",
                 DataSource = GeneralBindingSource
             };
-            v_sub_premises.CurrentItemChanged += v_sub_premises_CurrentItemChanged;
+            _vSubPremises.CurrentItemChanged += v_sub_premises_CurrentItemChanged;
 
-            v_restrictionPremisesAssoc = new BindingSource {DataMember = "premises_restrictions_premises_assoc"};
-            v_restrictionPremisesAssoc.CurrentItemChanged += v_restrictionPremisesAssoc_CurrentItemChanged;
-            v_restrictionPremisesAssoc.DataSource = GeneralBindingSource;
+            _vRestrictionPremisesAssoc = new BindingSource {DataMember = "premises_restrictions_premises_assoc"};
+            _vRestrictionPremisesAssoc.CurrentItemChanged += v_restrictionPremisesAssoc_CurrentItemChanged;
+            _vRestrictionPremisesAssoc.DataSource = GeneralBindingSource;
 
-            v_restrictionBuildingsAssoc = new BindingSource {DataMember = "restrictions_buildings_assoc"};
-            v_restrictionBuildingsAssoc.CurrentItemChanged += v_restrictionBuildingsAssoc_CurrentItemChanged;
-            v_restrictionBuildingsAssoc.DataSource = ds;
+            _vRestrictionBuildingsAssoc = new BindingSource {DataMember = "restrictions_buildings_assoc"};
+            _vRestrictionBuildingsAssoc.CurrentItemChanged += v_restrictionBuildingsAssoc_CurrentItemChanged;
+            _vRestrictionBuildingsAssoc.DataSource = ds;
 
             RestrictionsFilterRebuild();
-            restrictionPremisesAssoc.Select().RowChanged += RestrictionsAssoc_RowChanged;
-            restrictionPremisesAssoc.Select().RowDeleted += RestrictionsAssoc_RowDeleted;
-            restrictionBuildingsAssoc.Select().RowChanged += restrictionBuildingsAssoc_RowChanged;
-            restrictionBuildingsAssoc.Select().RowDeleted += restrictionBuildingsAssoc_RowDeleted;
+            _restrictionPremisesAssoc.Select().RowChanged += RestrictionsAssoc_RowChanged;
+            _restrictionPremisesAssoc.Select().RowDeleted += RestrictionsAssoc_RowDeleted;
+            _restrictionBuildingsAssoc.Select().RowChanged += restrictionBuildingsAssoc_RowChanged;
+            _restrictionBuildingsAssoc.Select().RowDeleted += restrictionBuildingsAssoc_RowDeleted;
 
-            v_ownershipPremisesAssoc = new BindingSource {DataMember = "premises_ownership_premises_assoc"};
-            v_ownershipPremisesAssoc.CurrentItemChanged += v_ownershipPremisesAssoc_CurrentItemChanged;
-            v_ownershipPremisesAssoc.DataSource = GeneralBindingSource;
+            _vOwnershipPremisesAssoc = new BindingSource {DataMember = "premises_ownership_premises_assoc"};
+            _vOwnershipPremisesAssoc.CurrentItemChanged += v_ownershipPremisesAssoc_CurrentItemChanged;
+            _vOwnershipPremisesAssoc.DataSource = GeneralBindingSource;
 
-            v_ownershipBuildingsAssoc = new BindingSource {DataMember = "ownership_buildings_assoc"};
-            v_ownershipBuildingsAssoc.CurrentItemChanged += v_ownershipBuildingsAssoc_CurrentItemChanged;
-            v_ownershipBuildingsAssoc.DataSource = ds;
+            _vOwnershipBuildingsAssoc = new BindingSource {DataMember = "ownership_buildings_assoc"};
+            _vOwnershipBuildingsAssoc.CurrentItemChanged += v_ownershipBuildingsAssoc_CurrentItemChanged;
+            _vOwnershipBuildingsAssoc.DataSource = ds;
 
             OwnershipsFilterRebuild();
-            ownershipPremisesAssoc.Select().RowChanged += OwnershipsAssoc_RowChanged;
-            ownershipPremisesAssoc.Select().RowDeleted += OwnershipsAssoc_RowDeleted;
-            ownershipBuildingsAssoc.Select().RowChanged += ownershipBuildingsAssoc_RowChanged;
-            ownershipBuildingsAssoc.Select().RowDeleted += ownershipBuildingsAssoc_RowDeleted;
+            _ownershipPremisesAssoc.Select().RowChanged += OwnershipsAssoc_RowChanged;
+            _ownershipPremisesAssoc.Select().RowDeleted += OwnershipsAssoc_RowDeleted;
+            _ownershipBuildingsAssoc.Select().RowChanged += ownershipBuildingsAssoc_RowChanged;
+            _ownershipBuildingsAssoc.Select().RowDeleted += ownershipBuildingsAssoc_RowDeleted;
 
-            sub_premises.Select().RowChanged += SubPremises_RowChanged;
+            _subPremises.Select().RowChanged += SubPremises_RowChanged;
 
             DataBind();
 
-            premisesCurrentFund.RefreshEvent += premisesCurrentFund_RefreshEvent;
-            premiseSubPremisesSumArea.RefreshEvent += premiseSubPremisesSumArea_RefreshEvent;
-            subPremisesCurrentFund.RefreshEvent += subPremisesCurrentFund_RefreshEvent;
+            _premisesCurrentFund.RefreshEvent += premisesCurrentFund_RefreshEvent;
+            _premiseSubPremisesSumArea.RefreshEvent += premiseSubPremisesSumArea_RefreshEvent;
+            _subPremisesCurrentFund.RefreshEvent += subPremisesCurrentFund_RefreshEvent;
             FiltersRebuild();
             SetViewportCaption();
             DataChangeHandlersInit();
@@ -874,26 +829,26 @@ namespace Registry.Viewport
             switch (searchFormType)
             {
                 case SearchFormType.SimpleSearchForm:
-                    if (spSimpleSearchForm == null)
-                        spSimpleSearchForm = new SimpleSearchPremiseForm();
-                    if (spSimpleSearchForm.ShowDialog() != DialogResult.OK)
+                    if (_spSimpleSearchForm == null)
+                        _spSimpleSearchForm = new SimpleSearchPremiseForm();
+                    if (_spSimpleSearchForm.ShowDialog() != DialogResult.OK)
                         return;
-                    DynamicFilter = spSimpleSearchForm.GetFilter();
+                    DynamicFilter = _spSimpleSearchForm.GetFilter();
                     break;
                 case SearchFormType.ExtendedSearchForm:
-                    if (spExtendedSearchForm == null)
-                        spExtendedSearchForm = new ExtendedSearchPremisesForm();
-                    if (spExtendedSearchForm.ShowDialog() != DialogResult.OK)
+                    if (_spExtendedSearchForm == null)
+                        _spExtendedSearchForm = new ExtendedSearchPremisesForm();
+                    if (_spExtendedSearchForm.ShowDialog() != DialogResult.OK)
                         return;
-                    DynamicFilter = spExtendedSearchForm.GetFilter();
+                    DynamicFilter = _spExtendedSearchForm.GetFilter();
                     break;
             }
-            string Filter = StaticFilter;
+            var filter = StaticFilter;
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
-                Filter += " AND ";
-            Filter += DynamicFilter;
+                filter += " AND ";
+            filter += DynamicFilter;
             is_editable = false;
-            GeneralBindingSource.Filter = Filter;
+            GeneralBindingSource.Filter = filter;
             is_editable = true;
         }
 
@@ -914,7 +869,7 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show(@"Вы действительно хотите удалить это помещение?", "Внимание",
+            if (MessageBox.Show(@"Вы действительно хотите удалить это помещение?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 if (DataModelHelper.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
@@ -953,11 +908,7 @@ namespace Registry.Viewport
             var premise = (Premise)EntityFromViewport();
             if (!ValidatePremise(premise))
                 return;
-            var Filter = "";
-            if (!string.IsNullOrEmpty(GeneralBindingSource.Filter))
-                Filter += " OR ";
-            else
-                Filter += "(1 = 1) OR ";
+            is_editable = false;
             switch (viewportState)
             {
                 case ViewportState.ReadState:
@@ -965,49 +916,63 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
-                    int id_premise = GeneralDataModel.Insert(premise);
-                    if (id_premise == -1)
-                    {
-                        GeneralDataModel.EditingNewRecord = false;
-                        return;
-                    }
-                    DataRowView newRow;
-                    premise.IdPremises = id_premise;
-                    is_editable = false;
-                    if (GeneralBindingSource.Position == -1)
-                        newRow = (DataRowView)GeneralBindingSource.AddNew();
-                    else
-                        newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    Filter += string.Format(CultureInfo.CurrentCulture, "(id_premises = {0})", premise.IdPremises);
-                    GeneralBindingSource.Filter += Filter;
-                    FillRowFromPremise(premise, newRow);
-                    viewportState = ViewportState.ReadState;
-                    is_editable = true;
+                    InsertRecord(premise);
                     GeneralDataModel.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
-                    if (premise.IdPremises == null)
-                    {
-                        MessageBox.Show(@"Вы пытаетесь изменить помещение без внутренного номера. " +
-                            "Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка", 
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        return;
-                    }
-                    if (GeneralDataModel.Update(premise) == -1)
-                        return;
-                    DataRowView row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    is_editable = false;
-                    Filter += string.Format(CultureInfo.CurrentCulture, "(id_premises = {0})", premise.IdPremises);
-                    GeneralBindingSource.Filter += Filter;
-                    FillRowFromPremise(premise, row);
-                    viewportState = ViewportState.ReadState;
+                    UpdateRecord(premise);
                     break;
             }
             UnbindedCheckBoxesUpdate();
             is_editable = true;
+            viewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
             ShowOrHideCurrentFund();
+        }
+
+        public void InsertRecord(Premise premise)
+        {
+            var idPremise = GeneralDataModel.Insert(premise);
+            if (idPremise == -1)
+            {
+                return;
+            }
+            DataRowView newRow;
+            premise.IdPremises = idPremise;
+            RebuildFilterAfterSave(GeneralBindingSource, premise.IdPremises);
+            if (GeneralBindingSource.Position == -1)
+                newRow = (DataRowView)GeneralBindingSource.AddNew();
+            else
+                newRow = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
+            PremiseConverter.FillRow(premise, newRow);
+        }
+
+        public void UpdateRecord(Premise premise)
+        {
+            if (premise.IdPremises == null)
+            {
+                MessageBox.Show(@"Вы пытаетесь изменить помещение без внутренного номера. " +
+                    @"Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            if (GeneralDataModel.Update(premise) == -1)
+                return;
+            RebuildFilterAfterSave(GeneralBindingSource, premise.IdPremises);
+            var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
+            PremiseConverter.FillRow(premise, row);
+        }
+
+        private void RebuildFilterAfterSave(IBindingListView bindingSource, int? idPremise)
+        {
+            var filter = "";
+            if (!string.IsNullOrEmpty(bindingSource.Filter))
+                filter += " OR ";
+            else
+                filter += "(1 = 1) OR ";
+            filter += string.Format(CultureInfo.CurrentCulture, "(id_premises = {0})", idPremise);
+            bindingSource.Filter += filter;
         }
 
         public override bool CanCancelRecord()
@@ -1028,7 +993,7 @@ namespace Registry.Viewport
                         ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
                     }
                     else
-                        Text = "Здания отсутствуют";
+                        Text = @"Здания отсутствуют";
                     viewportState = ViewportState.ReadState;
                     break;
                 case ViewportState.ModifyRowState:
@@ -1044,41 +1009,34 @@ namespace Registry.Viewport
             SetViewportCaption();
         }
 
-        protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
+        protected override void OnClosing(CancelEventArgs e)
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
             else
             {
-                ownershipPremisesAssoc.Select().RowChanged -= OwnershipsAssoc_RowChanged;
-                ownershipPremisesAssoc.Select().RowDeleted -= OwnershipsAssoc_RowDeleted;
-                ownershipBuildingsAssoc.Select().RowChanged -= ownershipBuildingsAssoc_RowChanged;
-                ownershipBuildingsAssoc.Select().RowDeleted -= ownershipBuildingsAssoc_RowDeleted;
-                restrictionPremisesAssoc.Select().RowChanged -= RestrictionsAssoc_RowChanged;
-                restrictionPremisesAssoc.Select().RowDeleted -= RestrictionsAssoc_RowDeleted;
-                restrictionBuildingsAssoc.Select().RowChanged -= restrictionBuildingsAssoc_RowChanged;
-                restrictionBuildingsAssoc.Select().RowDeleted -= restrictionBuildingsAssoc_RowDeleted;
-                sub_premises.Select().RowChanged -= SubPremises_RowChanged;
-                premisesCurrentFund.RefreshEvent -= premisesCurrentFund_RefreshEvent;
-                premiseSubPremisesSumArea.RefreshEvent -= premiseSubPremisesSumArea_RefreshEvent;
-                subPremisesCurrentFund.RefreshEvent -= subPremisesCurrentFund_RefreshEvent;
-                v_sub_premises.CurrentItemChanged -= v_sub_premises_CurrentItemChanged;
-                v_restrictionPremisesAssoc.CurrentItemChanged -= v_restrictionPremisesAssoc_CurrentItemChanged;
-                v_restrictionBuildingsAssoc.CurrentItemChanged -= v_restrictionBuildingsAssoc_CurrentItemChanged;
-                v_ownershipPremisesAssoc.CurrentItemChanged -= v_ownershipPremisesAssoc_CurrentItemChanged;
-                v_ownershipBuildingsAssoc.CurrentItemChanged -= v_ownershipBuildingsAssoc_CurrentItemChanged;
+                _ownershipPremisesAssoc.Select().RowChanged -= OwnershipsAssoc_RowChanged;
+                _ownershipPremisesAssoc.Select().RowDeleted -= OwnershipsAssoc_RowDeleted;
+                _ownershipBuildingsAssoc.Select().RowChanged -= ownershipBuildingsAssoc_RowChanged;
+                _ownershipBuildingsAssoc.Select().RowDeleted -= ownershipBuildingsAssoc_RowDeleted;
+                _restrictionPremisesAssoc.Select().RowChanged -= RestrictionsAssoc_RowChanged;
+                _restrictionPremisesAssoc.Select().RowDeleted -= RestrictionsAssoc_RowDeleted;
+                _restrictionBuildingsAssoc.Select().RowChanged -= restrictionBuildingsAssoc_RowChanged;
+                _restrictionBuildingsAssoc.Select().RowDeleted -= restrictionBuildingsAssoc_RowDeleted;
+                _subPremises.Select().RowChanged -= SubPremises_RowChanged;
+                _premisesCurrentFund.RefreshEvent -= premisesCurrentFund_RefreshEvent;
+                _premiseSubPremisesSumArea.RefreshEvent -= premiseSubPremisesSumArea_RefreshEvent;
+                _subPremisesCurrentFund.RefreshEvent -= subPremisesCurrentFund_RefreshEvent;
+                _vSubPremises.CurrentItemChanged -= v_sub_premises_CurrentItemChanged;
+                _vRestrictionPremisesAssoc.CurrentItemChanged -= v_restrictionPremisesAssoc_CurrentItemChanged;
+                _vRestrictionBuildingsAssoc.CurrentItemChanged -= v_restrictionBuildingsAssoc_CurrentItemChanged;
+                _vOwnershipPremisesAssoc.CurrentItemChanged -= v_ownershipPremisesAssoc_CurrentItemChanged;
+                _vOwnershipBuildingsAssoc.CurrentItemChanged -= v_ownershipBuildingsAssoc_CurrentItemChanged;
                 GeneralDataModel.Select().RowChanged -= PremisesViewport_RowChanged;
                 GeneralDataModel.Select().RowDeleted -= PremisesViewport_RowDeleted;
                 GeneralBindingSource.CurrentItemChanged -= v_premises_CurrentItemChanged;
             }
             base.OnClosing(e);
-        }
-
-        public override void ForceClose()
-        {
-            if (viewportState == ViewportState.NewRowState)
-                GeneralDataModel.EditingNewRecord = false;
-            Close();
         }
 
         public override bool HasAssocViewport<T>()
@@ -1119,7 +1077,7 @@ namespace Registry.Viewport
                 case ReporterType.RegistryExcerptReporterAllMunSubPremises:
                     return (GeneralBindingSource.Position > -1);
                 case ReporterType.RegistryExcerptReporterSubPremise:
-                    return (v_sub_premises.Position > -1);
+                    return (_vSubPremises.Position > -1);
             }
             return false;
         }
@@ -1159,7 +1117,7 @@ namespace Registry.Viewport
         {
             var arguments = new Dictionary<string, string>
             {
-                {"ids", ((DataRowView) v_sub_premises[v_sub_premises.Position])["id_sub_premises"].ToString()},
+                {"ids", ((DataRowView) _vSubPremises[_vSubPremises.Position])["id_sub_premises"].ToString()},
                 {"excerpt_type", "2"}
             };
             return arguments;
@@ -1185,17 +1143,17 @@ namespace Registry.Viewport
             base.OnVisibleChanged(e);
         }
 
-        void premisesCurrentFund_RefreshEvent(object sender, EventArgs e)
+        private void premisesCurrentFund_RefreshEvent(object sender, EventArgs e)
         {
             FiltersRebuild();
         }
 
-        void premiseSubPremisesSumArea_RefreshEvent(object sender, EventArgs e)
+        private void premiseSubPremisesSumArea_RefreshEvent(object sender, EventArgs e)
         {
             FiltersRebuild();
         }
 
-        void subPremisesCurrentFund_RefreshEvent(object sender, EventArgs e)
+        private void subPremisesCurrentFund_RefreshEvent(object sender, EventArgs e)
         {
             RedrawSubPremiseDataGridRows();
         }
@@ -1205,7 +1163,7 @@ namespace Registry.Viewport
             RedrawSubPremiseDataGridRows();
         }
 
-        void PremisesViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        private void PremisesViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
                 UnbindedCheckBoxesUpdate();
@@ -1214,7 +1172,7 @@ namespace Registry.Viewport
                 MenuCallback.StatusBarStateUpdate();
         }
 
-        void PremisesViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void PremisesViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             ShowOrHideCurrentFund();
             UnbindedCheckBoxesUpdate();
@@ -1247,93 +1205,93 @@ namespace Registry.Viewport
                 RestrictionsFilterRebuild();
         }
 
-        void RestrictionsAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
+        private void RestrictionsAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
                 RestrictionsFilterRebuild();
         }
 
-        void RestrictionsAssoc_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void RestrictionsAssoc_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Add)
                 RestrictionsFilterRebuild();
         }
 
-        void OwnershipsAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
+        private void OwnershipsAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
                 OwnershipsFilterRebuild();
         }
 
-        void OwnershipsAssoc_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void OwnershipsAssoc_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Add)
                 OwnershipsFilterRebuild();
         }
 
-        void v_ownershipPremisesAssoc_CurrentItemChanged(object sender, EventArgs e)
+        private void v_ownershipPremisesAssoc_CurrentItemChanged(object sender, EventArgs e)
         {
             OwnershipsFilterRebuild();
         }
 
-        void v_restrictionPremisesAssoc_CurrentItemChanged(object sender, EventArgs e)
+        private void v_restrictionPremisesAssoc_CurrentItemChanged(object sender, EventArgs e)
         {
             RestrictionsFilterRebuild();
         }
 
-        void v_ownershipBuildingsAssoc_CurrentItemChanged(object sender, EventArgs e)
+        private void v_ownershipBuildingsAssoc_CurrentItemChanged(object sender, EventArgs e)
         {
             OwnershipsFilterRebuild();
         }
 
-        void v_restrictionBuildingsAssoc_CurrentItemChanged(object sender, EventArgs e)
+        private void v_restrictionBuildingsAssoc_CurrentItemChanged(object sender, EventArgs e)
         {
             RestrictionsFilterRebuild();
         }
 
-        void comboBoxStreet_VisibleChanged(object sender, EventArgs e)
+        private void comboBoxStreet_VisibleChanged(object sender, EventArgs e)
         {
-            if (is_first_visibility)
+            if (_isFirstVisibility)
             {
                 SelectCurrentBuilding();
-                is_first_visibility = false;
+                _isFirstVisibility = false;
             }
         }
 
-        void comboBoxStreet_DropDownClosed(object sender, EventArgs e)
+        private void comboBoxStreet_DropDownClosed(object sender, EventArgs e)
         {
             if (comboBoxStreet.Items.Count == 0)
                 comboBoxStreet.SelectedIndex = -1;
         }
 
-        void comboBoxStreet_KeyUp(object sender, KeyEventArgs e)
+        private void comboBoxStreet_KeyUp(object sender, KeyEventArgs e)
         {
             if ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode == Keys.Back) || (e.KeyCode == Keys.Delete) || 
                 (e.KeyCode >= Keys.D0 && e.KeyCode <= Keys.D9) || (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9))
             {
-                string text = comboBoxStreet.Text;
-                int selectionStart = comboBoxStreet.SelectionStart;
-                int selectionLength = comboBoxStreet.SelectionLength;
-                v_kladr.Filter = "street_name like '%" + comboBoxStreet.Text + "%'";
+                var text = comboBoxStreet.Text;
+                var selectionStart = comboBoxStreet.SelectionStart;
+                var selectionLength = comboBoxStreet.SelectionLength;
+                _vKladr.Filter = "street_name like '%" + comboBoxStreet.Text + "%'";
                 comboBoxStreet.Text = text;
                 comboBoxStreet.SelectionStart = selectionStart;
                 comboBoxStreet.SelectionLength = selectionLength;
             }
         }
 
-        void comboBoxStreet_Leave(object sender, EventArgs e)
+        private void comboBoxStreet_Leave(object sender, EventArgs e)
         {
             if (comboBoxStreet.Items.Count > 0)
             {
                 if (comboBoxStreet.SelectedValue == null)
-                    comboBoxStreet.SelectedValue = v_kladr[v_kladr.Position];
-                comboBoxStreet.Text = ((DataRowView)v_kladr[v_kladr.Position])["street_name"].ToString();
+                    comboBoxStreet.SelectedValue = _vKladr[_vKladr.Position];
+                comboBoxStreet.Text = ((DataRowView)_vKladr[_vKladr.Position])["street_name"].ToString();
             }
             if (comboBoxStreet.SelectedValue == null)
                 comboBoxStreet.Text = "";
         }
-        
-        void v_premises_CurrentItemChanged(object sender, EventArgs e)
+
+        private void v_premises_CurrentItemChanged(object sender, EventArgs e)
         {
             SetViewportCaption();
             FiltersRebuild();
@@ -1353,7 +1311,7 @@ namespace Registry.Viewport
             is_editable = true;
         }
 
-        void v_sub_premises_CurrentItemChanged(object sender, EventArgs e)
+        private void v_sub_premises_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
             {
@@ -1366,13 +1324,13 @@ namespace Registry.Viewport
         {
             if (dataGridViewRestrictions.Size.Width > 700)
             {
-                if (dataGridViewRestrictions.Columns["restriction_description"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
-                    dataGridViewRestrictions.Columns["restriction_description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                if (restriction_description.AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
+                    restriction_description.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             }
             else
             {
-                if (dataGridViewRestrictions.Columns["restriction_description"].AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
-                    dataGridViewRestrictions.Columns["restriction_description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                if (restriction_description.AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
+                    restriction_description.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
         }
 
@@ -1380,13 +1338,13 @@ namespace Registry.Viewport
         {
             if (dataGridViewOwnerships.Size.Width > 700)
             {
-                if (dataGridViewOwnerships.Columns["ownership_description"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
-                    dataGridViewOwnerships.Columns["ownership_description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                if (ownership_description.AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
+                    ownership_description.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             }
             else
             {
-                if (dataGridViewOwnerships.Columns["ownership_description"].AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
-                    dataGridViewOwnerships.Columns["ownership_description"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                if (ownership_description.AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
+                    ownership_description.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
         }
 
@@ -1394,13 +1352,13 @@ namespace Registry.Viewport
         {
             if (dataGridViewRooms.Size.Width > 900)
             {
-                if (dataGridViewRooms.Columns["sub_premises_id_state"].AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
-                    dataGridViewRooms.Columns["sub_premises_id_state"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                if (sub_premises_id_state.AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
+                    sub_premises_id_state.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             }
             else
             {
-                if (dataGridViewRooms.Columns["sub_premises_id_state"].AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
-                    dataGridViewRooms.Columns["sub_premises_id_state"].AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                if (sub_premises_id_state.AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
+                    sub_premises_id_state.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
         }
 
@@ -1440,7 +1398,7 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
-            if (restrictions.EditingNewRecord)
+            if (_restrictions.EditingNewRecord)
             {
                 MessageBox.Show(@"Одна из вкладок реквизитов уже находится в режиме добавления новой записи. " +
                     @"Одновременно можно добавлять не более одного реквизита.",
@@ -1453,7 +1411,7 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            using (RestrictionsEditor editor = new RestrictionsEditor())
+            using (var editor = new RestrictionsEditor())
             {
                 editor.State = ViewportState.NewRowState;
                 editor.ParentType = ParentTypeEnum.Premises;
@@ -1472,26 +1430,28 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if (v_restrictions.Position == -1)
+            if (_vRestrictions.Position == -1)
             {
                 MessageBox.Show(@"Не выбран реквизит для редактирования", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            Restriction restriction = new Restriction();
-            DataRowView row = (DataRowView)v_restrictions[v_restrictions.Position];
-            restriction.IdRestriction = ViewportHelper.ValueOrNull<int>(row, "id_restriction");
-            restriction.IdRestrictionType = ViewportHelper.ValueOrNull<int>(row, "id_restriction_type");
-            restriction.Number = row["number"].ToString();
-            restriction.Date = ViewportHelper.ValueOrNull<DateTime>(row, "date");
-            restriction.Description = row["description"].ToString();
-            using (RestrictionsEditor editor = new RestrictionsEditor())
+            var row = (DataRowView)_vRestrictions[_vRestrictions.Position];
+            var restriction = new Restriction
+            {
+                IdRestriction = ViewportHelper.ValueOrNull<int>(row, "id_restriction"),
+                IdRestrictionType = ViewportHelper.ValueOrNull<int>(row, "id_restriction_type"),
+                Number = row["number"].ToString(),
+                Date = ViewportHelper.ValueOrNull<DateTime>(row, "date"),
+                Description = row["description"].ToString()
+            };
+            using (var editor = new RestrictionsEditor())
             {
                 editor.State = ViewportState.ModifyRowState;
-                if (v_restrictionBuildingsAssoc.Find("id_restriction", restriction.IdRestriction) != -1)
+                if (_vRestrictionBuildingsAssoc.Find("id_restriction", restriction.IdRestriction) != -1)
                 {
                     editor.ParentType = ParentTypeEnum.Building;
-                    editor.ParentRow = buildings.Select().Rows.Find(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"]);
+                    editor.ParentRow = _buildings.Select().Rows.Find(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"]);
                 }
                 else
                 {
@@ -1513,7 +1473,7 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if (v_restrictions.Position == -1)
+            if (_vRestrictions.Position == -1)
             {
                 MessageBox.Show(@"Не выбран реквизит для удаления", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -1522,17 +1482,17 @@ namespace Registry.Viewport
             if (MessageBox.Show(@"Вы уверены, что хотите удалить этот реквизит?", @"Внимание",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                 return;
-            int idRestriction = (int)((DataRowView)v_restrictions[v_restrictions.Position])["id_restriction"];
-            if (restrictions.Delete(idRestriction) == -1)
+            var idRestriction = (int)((DataRowView)_vRestrictions[_vRestrictions.Position])["id_restriction"];
+            if (_restrictions.Delete(idRestriction) == -1)
                 return;
-            restrictions.Select().Rows.Find(idRestriction).Delete();
+            _restrictions.Select().Rows.Find(idRestriction).Delete();
         }
 
         private void vButtonOwnershipAdd_Click(object sender, EventArgs e)
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
-            if (ownershipRights.EditingNewRecord)
+            if (_ownershipRights.EditingNewRecord)
             {
                 MessageBox.Show(@"Одна из вкладок ограничений уже находится в режиме добавления новой записи. " +
                     @"Одновременно можно добавлять не более одного ограничения.",
@@ -1545,7 +1505,7 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            using (OwnershipsEditor editor = new OwnershipsEditor())
+            using (var editor = new OwnershipsEditor())
             {
                 editor.State = ViewportState.NewRowState;
                 editor.ParentType = ParentTypeEnum.Premises;
@@ -1564,7 +1524,7 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if (v_ownershipRights.Position == -1)
+            if (_vOwnershipRights.Position == -1)
             {
                 MessageBox.Show(@"Не выбрано ограничение для удаления", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -1573,10 +1533,10 @@ namespace Registry.Viewport
             if (MessageBox.Show(@"Вы уверены, что хотите удалить это ограничение?", @"Внимание",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                 return;
-            int idOwnershipRight = (int)((DataRowView)v_ownershipRights[v_ownershipRights.Position])["id_ownership_right"];
-            if (ownershipRights.Delete(idOwnershipRight) == -1)
+            var idOwnershipRight = (int)((DataRowView)_vOwnershipRights[_vOwnershipRights.Position])["id_ownership_right"];
+            if (_ownershipRights.Delete(idOwnershipRight) == -1)
                 return;
-            ownershipRights.Select().Rows.Find(idOwnershipRight).Delete();
+            _ownershipRights.Select().Rows.Find(idOwnershipRight).Delete();
         }
 
         private void vButtonOwnershipEdit_Click(object sender, EventArgs e)
@@ -1589,26 +1549,21 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if (v_ownershipRights.Position == -1)
+            if (_vOwnershipRights.Position == -1)
             {
                 MessageBox.Show(@"Не выбрано ограничение для редактирования", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            OwnershipRight ownershipRight = new OwnershipRight();
-            DataRowView row = (DataRowView)v_ownershipRights[v_ownershipRights.Position];
-            ownershipRight.IdOwnershipRight = ViewportHelper.ValueOrNull<int>(row, "id_ownership_right");
-            ownershipRight.IdOwnershipRightType = ViewportHelper.ValueOrNull<int>(row, "id_ownership_right_type");
-            ownershipRight.Number = row["number"].ToString();
-            ownershipRight.Date = ViewportHelper.ValueOrNull<DateTime>(row, "date");
-            ownershipRight.Description = row["description"].ToString();
-            using (OwnershipsEditor editor = new OwnershipsEditor())
+            var row = (DataRowView)_vOwnershipRights[_vOwnershipRights.Position];
+            var ownershipRight = OwnershipRightConverter.FromRow(row);
+            using (var editor = new OwnershipsEditor())
             {
                 editor.State = ViewportState.ModifyRowState;
-                if (v_ownershipBuildingsAssoc.Find("id_ownership_right", ownershipRight.IdOwnershipRight) != -1)
+                if (_vOwnershipBuildingsAssoc.Find("id_ownership_right", ownershipRight.IdOwnershipRight) != -1)
                 {
                     editor.ParentType = ParentTypeEnum.Building;
-                    editor.ParentRow = buildings.Select().Rows.Find(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"]);
+                    editor.ParentRow = _buildings.Select().Rows.Find(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"]);
                 }
                 else
                 {
@@ -1630,7 +1585,7 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if (sub_premises.EditingNewRecord)
+            if (_subPremises.EditingNewRecord)
             {
                 MessageBox.Show(@"Одна из вкладок комнат уже находится в режиме добавления новых записей. " +
                     @"Одновременно можно добавлять не более одной комнаты.",
@@ -1656,7 +1611,7 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if (v_sub_premises.Position == -1)
+            if (_vSubPremises.Position == -1)
             {
                 MessageBox.Show(@"Не выбрана комната для удаления", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -1665,10 +1620,10 @@ namespace Registry.Viewport
             if (MessageBox.Show(@"Вы уверены, что хотите удалить эту комнату?", @"Внимание",
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                 return;
-            int idSubPremise = (int)((DataRowView)v_sub_premises[v_sub_premises.Position])["id_sub_premises"];
-            if (sub_premises.Delete(idSubPremise) == -1)
+            var idSubPremise = (int)((DataRowView)_vSubPremises[_vSubPremises.Position])["id_sub_premises"];
+            if (_subPremises.Delete(idSubPremise) == -1)
                 return;
-            sub_premises.Select().Rows.Find(idSubPremise).Delete();
+            _subPremises.Select().Rows.Find(idSubPremise).Delete();
         }
 
         private void vButtonSubPremisesEdit_Click(object sender, EventArgs e)
@@ -1681,27 +1636,29 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if (v_sub_premises.Position == -1)
+            if (_vSubPremises.Position == -1)
             {
                 MessageBox.Show(@"Не выбрана комната для редактирования", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            SubPremise subPremise = new SubPremise();
-            DataRowView row = (DataRowView)v_sub_premises[v_sub_premises.Position];
-            subPremise.IdSubPremises = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises");
-            subPremise.IdPremises = ViewportHelper.ValueOrNull<int>(row, "id_premises");
-            subPremise.IdState = ViewportHelper.ValueOrNull<int>(row, "id_state");
-            subPremise.SubPremisesNum = row["sub_premises_num"].ToString();
-            subPremise.TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area");
-            subPremise.LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area");
-            subPremise.Description = row["description"].ToString();
-            subPremise.StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date");
-            subPremise.CadastralNum = ViewportHelper.ValueOrNull(row, "cadastral_num");
-            subPremise.CadastralCost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost");
-            subPremise.BalanceCost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost");
-            subPremise.Account = ViewportHelper.ValueOrNull(row, "account");
-            using (SubPremisesEditor editor = new SubPremisesEditor())
+            var row = (DataRowView)_vSubPremises[_vSubPremises.Position];
+            var subPremise = new SubPremise
+            {
+                IdSubPremises = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises"),
+                IdPremises = ViewportHelper.ValueOrNull<int>(row, "id_premises"),
+                IdState = ViewportHelper.ValueOrNull<int>(row, "id_state"),
+                SubPremisesNum = row["sub_premises_num"].ToString(),
+                TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area"),
+                LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area"),
+                Description = row["description"].ToString(),
+                StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date"),
+                CadastralNum = ViewportHelper.ValueOrNull(row, "cadastral_num"),
+                CadastralCost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost"),
+                BalanceCost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost"),
+                Account = ViewportHelper.ValueOrNull(row, "account")
+            };
+            using (var editor = new SubPremisesEditor())
             {
                 editor.State = ViewportState.ModifyRowState;
                 editor.ParentType = ParentTypeEnum.Premises;

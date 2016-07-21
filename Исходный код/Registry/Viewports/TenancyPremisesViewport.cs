@@ -45,7 +45,7 @@ namespace Registry.Viewport
         private SearchForm spSimpleSearchForm;
 
         //Флаг разрешения синхронизации snapshot и original моделей
-        bool sync_views = true;
+        private bool sync_views = true;
 
         //Идентификатор развернутого помещения
         private int id_expanded = -1;
@@ -611,12 +611,12 @@ namespace Registry.Viewport
                 ParentTypeEnum.Premises);
         }
 
-        void premises_funds_RefreshEvent(object sender, EventArgs e)
+        private void premises_funds_RefreshEvent(object sender, EventArgs e)
         {
             dataGridView.Refresh();
         }
 
-        void TenancyPremisesViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
+        private void TenancyPremisesViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
             if (!sync_views)
                 return;
@@ -631,7 +631,7 @@ namespace Registry.Viewport
             dataGridView.Refresh();
         }
 
-        void TenancyPremisesViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void TenancyPremisesViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (!sync_views)
                 return;
@@ -653,7 +653,7 @@ namespace Registry.Viewport
             dataGridView.Invalidate();
         }
 
-        void PremisesListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        private void PremisesListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (!sync_views)
                 return;
@@ -664,7 +664,7 @@ namespace Registry.Viewport
                 MenuCallback.StatusBarStateUpdate();
         }
 
-        void PremisesListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void PremisesListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (!sync_views)
                 return;
@@ -674,12 +674,12 @@ namespace Registry.Viewport
                 MenuCallback.StatusBarStateUpdate();
         }
 
-        void dataGridView_BeforeCollapseDetails(object sender, DataGridViewDetailsEventArgs e)
+        private void dataGridView_BeforeCollapseDetails(object sender, DataGridViewDetailsEventArgs e)
         {
             dataGridView.Rows[e.RowIndex].Cells["is_checked"].Style.Alignment = DataGridViewContentAlignment.TopCenter;
         }
 
-        void dataGridView_BeforeExpandDetails(object sender, DataGridViewDetailsEventArgs e)
+        private void dataGridView_BeforeExpandDetails(object sender, DataGridViewDetailsEventArgs e)
         {
             dataGridView.Rows[e.RowIndex].Cells["is_checked"].Style.Alignment = DataGridViewContentAlignment.TopCenter;
             ((TenancySubPremisesDetails)dataGridView.DetailsControl).CalcControlHeight();
@@ -690,7 +690,7 @@ namespace Registry.Viewport
             ((TenancySubPremisesDetails)dataGridView.DetailsControl).SetControlWidth(width);
         }
 
-        void dataGridView_Resize(object sender, EventArgs e)
+        private void dataGridView_Resize(object sender, EventArgs e)
         {
             var width = 0;
             for (var i = 0; i < dataGridView.Columns.Count; i++)
@@ -709,7 +709,7 @@ namespace Registry.Viewport
             }
         }
 
-        void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
             if (dataGridView.Columns[e.ColumnIndex].Name == "image")
             {
@@ -728,7 +728,7 @@ namespace Registry.Viewport
             }
         }
 
-        void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (dataGridView.Columns[e.ColumnIndex].SortMode == DataGridViewColumnSortMode.NotSortable)
                 return;
@@ -749,7 +749,7 @@ namespace Registry.Viewport
             dataGridView.Refresh();
         }
 
-        void dataGridView_SelectionChanged(object sender, EventArgs e)
+        private void dataGridView_SelectionChanged(object sender, EventArgs e)
         {
             if (dataGridView.SelectedRows.Count > 0)
                 GeneralBindingSource.Position = dataGridView.SelectedRows[0].Index;
@@ -759,7 +759,7 @@ namespace Registry.Viewport
             dataGridView.CollapseDetails();
         }
 
-        void dataGridView_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)
+        private void dataGridView_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)
         {
             if (GeneralBindingSource.Count <= e.RowIndex || GeneralBindingSource.Count == 0) return;
             var id_premises = Convert.ToInt32(((DataRowView)GeneralBindingSource[e.RowIndex])["id_premises"], CultureInfo.InvariantCulture);
@@ -797,47 +797,44 @@ namespace Registry.Viewport
             MenuCallback.EditingStateUpdate();
         }
 
-        void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        private void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (GeneralBindingSource.Count <= e.RowIndex || GeneralBindingSource.Count == 0) return;
             var id_premises = Convert.ToInt32(((DataRowView)GeneralBindingSource[e.RowIndex])["id_premises"], CultureInfo.InvariantCulture);
-            var row_index = v_snapshot_tenancy_premises.Find("id_premises", id_premises);
+            var rowIndex = v_snapshot_tenancy_premises.Find("id_premises", id_premises);
             var row = ((DataRowView)GeneralBindingSource[e.RowIndex]);
-            var building_row = buildings.Select().Rows.Find(row["id_building"]);
-            if (building_row == null)
+            var buildingRow = buildings.Select().Rows.Find(row["id_building"]);
+            if (buildingRow == null)
                 return;
             switch (dataGridView.Columns[e.ColumnIndex].Name)
             {
                 case "image":
-                    if (id_expanded == id_premises)
-                        e.Value = Resource.minus;
-                    else
-                        e.Value = Resource.plus;
+                    e.Value = id_expanded == id_premises ? Resource.minus : Resource.plus;
                     break;
                 case "is_checked":
-                    if (row_index != -1)
-                        e.Value = ((DataRowView)v_snapshot_tenancy_premises[row_index])["is_checked"];
+                    if (rowIndex != -1)
+                        e.Value = ((DataRowView)v_snapshot_tenancy_premises[rowIndex])["is_checked"];
                     break;
                 case "rent_total_area":
-                    if (row_index != -1)
-                        e.Value = ((DataRowView)v_snapshot_tenancy_premises[row_index])["rent_total_area"];
+                    if (rowIndex != -1)
+                        e.Value = ((DataRowView)v_snapshot_tenancy_premises[rowIndex])["rent_total_area"];
                     break;
                 case "rent_living_area":
-                    if (row_index != -1)
-                        e.Value = ((DataRowView)v_snapshot_tenancy_premises[row_index])["rent_living_area"];
+                    if (rowIndex != -1)
+                        e.Value = ((DataRowView)v_snapshot_tenancy_premises[rowIndex])["rent_living_area"];
                     break;
                 case "id_premises":
                     e.Value = row["id_premises"];
                     break;
                 case "id_street":
-                    var kladr_row = kladr.Select().Rows.Find(building_row["id_street"]);
-                    string street_name = null;
-                    if (kladr_row != null)
-                        street_name = kladr_row["street_name"].ToString();
-                    e.Value = street_name;
+                    var kladrRow = kladr.Select().Rows.Find(buildingRow["id_street"]);
+                    string streetName = null;
+                    if (kladrRow != null)
+                        streetName = kladrRow["street_name"].ToString();
+                    e.Value = streetName;
                     break;
                 case "house":
-                    e.Value = building_row["house"];
+                    e.Value = buildingRow["house"];
                     break;
                 case "premises_num":
                     e.Value = row["premises_num"];
@@ -849,36 +846,34 @@ namespace Registry.Viewport
                     e.Value = row["total_area"];
                     break;
                 case "id_state":
-                    var state_row = object_states.Select().Rows.Find(row["id_state"]);
-                    if (state_row != null)
-                        e.Value = state_row["state_female"];
+                    var stateRow = object_states.Select().Rows.Find(row["id_state"]);
+                    if (stateRow != null)
+                        e.Value = stateRow["state_female"];
                     break;
                 case "current_fund":
-                    if ((new object[] { 1, 4, 5, 9, 11 }).Contains(row["id_state"]))
+                    if (DataModelHelper.MunicipalAndUnknownObjectStates().ToList().Contains((int)row["id_state"]))
                     {
-                        var fund_row = premises_funds.Select().Rows.Find(row["id_premises"]);
-                        if (fund_row != null)
-                            e.Value = fund_types.Select().Rows.Find(fund_row["id_fund_type"])["fund_type"];
+                        var fundRow = premises_funds.Select().Rows.Find(row["id_premises"]);
+                        if (fundRow != null)
+                            e.Value = fund_types.Select().Rows.Find(fundRow["id_fund_type"])["fund_type"];
                     }
                     break;
             }
         }
 
-        void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        private void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
-            if ((dataGridView.CurrentCell.OwningColumn.Name == "rent_total_area") ||
-                (dataGridView.CurrentCell.OwningColumn.Name == "rent_living_area"))
-            {
-                dataGridView.EditingControl.KeyPress -= EditingControl_KeyPress;
-                dataGridView.EditingControl.KeyPress += EditingControl_KeyPress;
-                if (string.IsNullOrEmpty(((TextBox)e.Control).Text.Trim()))
-                    ((TextBox)e.Control).Text = ((TextBox)e.Control).Text = "0";
-                else
-                    ((TextBox)e.Control).Text = ((TextBox)e.Control).Text.Substring(0, ((TextBox)e.Control).Text.Length - 3);
-            }
+            if ((dataGridView.CurrentCell.OwningColumn.Name != "rent_total_area") &&
+                (dataGridView.CurrentCell.OwningColumn.Name != "rent_living_area")) return;
+            dataGridView.EditingControl.KeyPress -= EditingControl_KeyPress;
+            dataGridView.EditingControl.KeyPress += EditingControl_KeyPress;
+            if (string.IsNullOrEmpty(((TextBox)e.Control).Text.Trim()))
+                ((TextBox)e.Control).Text = ((TextBox)e.Control).Text = @"0";
+            else
+                ((TextBox)e.Control).Text = ((TextBox)e.Control).Text.Substring(0, ((TextBox)e.Control).Text.Length - 3);
         }
 
-        void EditingControl_KeyPress(object sender, KeyPressEventArgs e)
+        private void EditingControl_KeyPress(object sender, KeyPressEventArgs e)
         {
             if ((dataGridView.CurrentCell.OwningColumn.Name == "rent_total_area") ||
                 (dataGridView.CurrentCell.OwningColumn.Name == "rent_living_area"))
@@ -898,7 +893,8 @@ namespace Registry.Viewport
                         e.Handled = true;
             }
         }
-        void dataGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+
+        private void dataGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (dataGridView.CurrentCell is DataGridViewCheckBoxCell)
                 dataGridView.EndEdit();

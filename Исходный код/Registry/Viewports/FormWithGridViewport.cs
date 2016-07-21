@@ -1,8 +1,4 @@
-﻿
-using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using Registry.Entities;
+﻿using System.Windows.Forms;
 
 namespace Registry.Viewport
 {

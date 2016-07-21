@@ -1,8 +1,5 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Data;
-using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;

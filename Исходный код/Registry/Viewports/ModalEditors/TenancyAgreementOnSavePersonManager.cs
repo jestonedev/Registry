@@ -9,6 +9,7 @@ using System.Text;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Viewport.EntityConverters;
 
 namespace Registry.Viewport
 {
@@ -107,7 +108,7 @@ namespace Registry.Viewport
                     {
                         var row = tenancyPersons.Select().Rows.Find(person.IdPerson);
                         if (row == null) continue;
-                        var tenancyPerson = ViewportHelper.PersonFromRow(row);
+                        var tenancyPerson = TenancyPersonConverter.FromRow(row);
                         tenancyPerson.ExcludeDate = person.ExcludeDate;
                         var affected = tenancyPersons.Update(tenancyPerson);
                         if (affected == -1)
@@ -126,7 +127,7 @@ namespace Registry.Viewport
                     {                          
                         var row = tenancyPersons.Select().Rows.Find(persons[i].IdPerson);
                         if (row == null) continue;
-                        var tenancyPerson = ViewportHelper.PersonFromRow(row);
+                        var tenancyPerson = TenancyPersonConverter.FromRow(row);
                         if(i == 0)
                         {
                             tenancyPerson.ExcludeDate = dateTimePickerDate.Value.Date;    

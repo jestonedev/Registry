@@ -177,13 +177,13 @@ namespace Registry.Viewport
 
         public override void SaveRecord()
         {
-            sync_views = false;
+            SyncViews = false;
             dataGridView.EndEdit();
             GeneralDataModel.EditingNewRecord = true;
             var list = EntitiesListFromViewport();
             if (!ValidateViewportData(list))
             {
-                sync_views = true;
+                SyncViews = true;
                 GeneralDataModel.EditingNewRecord = false;
                 return;
             }
@@ -196,7 +196,7 @@ namespace Registry.Viewport
                     var idRestrictionType = GeneralDataModel.Insert(restrictionType);
                     if (idRestrictionType == -1)
                     {
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
@@ -209,7 +209,7 @@ namespace Registry.Viewport
                         continue;
                     if (GeneralDataModel.Update(restrictionType) == -1)
                     {
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
@@ -232,14 +232,14 @@ namespace Registry.Viewport
                     if (restrictionType.IdRestrictionType != null && 
                         GeneralDataModel.Delete(restrictionType.IdRestrictionType.Value) == -1)
                     {
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
                     GeneralDataModel.Select().Rows.Find(restrictionType.IdRestrictionType).Delete();
                 }
             }
-            sync_views = true;
+            SyncViews = true;
             GeneralDataModel.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
         }
@@ -295,7 +295,7 @@ namespace Registry.Viewport
 
         void RestrictionTypeListViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
-            if (!sync_views)
+            if (!SyncViews)
                 return;
             if (e.Action != DataRowAction.Delete) return;
             var rowIndex = GeneralSnapshotBindingSource.Find("id_restriction_type", e.Row["id_restriction_type"]);
@@ -305,7 +305,7 @@ namespace Registry.Viewport
 
         void RestrictionTypeListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
-            if (!sync_views)
+            if (!SyncViews)
                 return;
             var rowIndex = GeneralSnapshotBindingSource.Find("id_restriction_type", e.Row["id_restriction_type"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_restriction_type", e.Row["id_restriction_type"]) != -1)

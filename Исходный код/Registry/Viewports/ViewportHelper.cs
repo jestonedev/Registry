@@ -117,19 +117,16 @@ namespace Registry.Viewport
         {
             if (row[property] is DBNull)
                 return null;
-            else
-                return row[property].ToString().Trim();
+            return row[property].ToString().Trim();
         }
 
         internal static T? ValueOrNull<T>(DataGridViewRow row, string property) where T : struct
         {
             if (row.Cells[property].Value is DBNull)
                 return null;
-            else
             if (row.Cells[property].Value == null)
                 return null;
-            else
-                return (T?)Convert.ChangeType(row.Cells[property].Value, typeof(T), CultureInfo.InvariantCulture);
+            return (T?)Convert.ChangeType(row.Cells[property].Value, typeof(T), CultureInfo.InvariantCulture);
         }
 
         internal static string ValueOrNull(DataGridViewRow row, string property)
@@ -205,37 +202,6 @@ namespace Registry.Viewport
                 var control = ((ComboBox)sender);
                 control.SelectAll();
             }
-        }
-
-        internal static TenancyPerson PersonFromRow(DataRow row)
-        {
-            var tenancyPerson = new TenancyPerson
-            {
-                IdPerson = ValueOrNull<int>(row, "id_person"),
-                IdProcess = ValueOrNull<int>(row, "id_process"),
-                IdKinship = ValueOrNull<int>(row, "id_kinship"),
-                IdDocumentType = ValueOrNull<int>(row, "id_document_type"),
-                IdDocumentIssuedBy = ValueOrNull<int>(row, "id_document_issued_by"),
-                Surname = ValueOrNull(row, "surname"),
-                Name = ValueOrNull(row, "name"),
-                Patronymic = ValueOrNull(row, "patronymic"),
-                DateOfBirth = ValueOrNull<DateTime>(row, "date_of_birth"),
-                DateOfDocumentIssue = ValueOrNull<DateTime>(row, "date_of_document_issue"),
-                DocumentNum = ValueOrNull(row, "document_num"),
-                DocumentSeria = ValueOrNull(row, "document_seria"),
-                RegistrationIdStreet = ValueOrNull(row, "registration_id_street"),
-                RegistrationHouse = ValueOrNull(row, "registration_house"),
-                RegistrationFlat = ValueOrNull(row, "registration_flat"),
-                RegistrationRoom = ValueOrNull(row, "registration_room"),
-                ResidenceIdStreet = ValueOrNull(row, "residence_id_street"),
-                ResidenceHouse = ValueOrNull(row, "residence_house"),
-                ResidenceFlat = ValueOrNull(row, "residence_flat"),
-                ResidenceRoom = ValueOrNull(row, "residence_room"),
-                PersonalAccount = ValueOrNull(row, "personal_account"),
-                IncludeDate = ValueOrNull<DateTime>(row, "include_date"),
-                ExcludeDate = ValueOrNull<DateTime>(row, "exclude_date")
-            };
-            return tenancyPerson;
         }
     }
 }

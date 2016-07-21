@@ -175,13 +175,13 @@ namespace Registry.Viewport
 
         public override void SaveRecord()
         {
-            sync_views = false;
+            SyncViews = false;
             dataGridView.EndEdit();
             GeneralDataModel.EditingNewRecord = true;
             var list = EntitiesListFromViewport();
             if (!ValidateViewportData(list))
             {
-                sync_views = true;
+                SyncViews = true;
                 GeneralDataModel.EditingNewRecord = false;
                 return;
             }
@@ -194,7 +194,7 @@ namespace Registry.Viewport
                     var idStructureType = GeneralDataModel.Insert(structureType);
                     if (idStructureType == -1)
                     {
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
@@ -207,7 +207,7 @@ namespace Registry.Viewport
                         continue;
                     if (GeneralDataModel.Update(structureType) == -1)
                     {
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
@@ -229,13 +229,13 @@ namespace Registry.Viewport
                 if (structureType.IdStructureType != null &&
                     GeneralDataModel.Delete(structureType.IdStructureType.Value) == -1)
                 {
-                    sync_views = true;
+                    SyncViews = true;
                     GeneralDataModel.EditingNewRecord = false;
                     return;
                 }
                 GeneralDataModel.Select().Rows.Find(structureType.IdStructureType).Delete();
             }
-            sync_views = true;
+            SyncViews = true;
             GeneralDataModel.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
         }
@@ -292,7 +292,7 @@ namespace Registry.Viewport
 
         void StructureTypeListViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
-            if (!sync_views)
+            if (!SyncViews)
                 return;
             if (e.Action != DataRowAction.Delete) return;
             var rowIndex = GeneralSnapshotBindingSource.Find("id_structure_type", e.Row["id_structure_type"]);
@@ -302,7 +302,7 @@ namespace Registry.Viewport
 
         void StructureTypeListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
-            if (!sync_views)
+            if (!SyncViews)
                 return;
             var rowIndex = GeneralSnapshotBindingSource.Find("id_structure_type", e.Row["id_structure_type"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_structure_type", e.Row["id_structure_type"]) != -1)

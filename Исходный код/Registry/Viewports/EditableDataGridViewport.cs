@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Registry.Entities;
 
@@ -14,7 +11,7 @@ namespace Registry.Viewport
         protected BindingSource GeneralSnapshotBindingSource;
 
         //Флаг разрешения синхронизации snapshot и original моделей
-        protected bool sync_views = true;
+        protected bool SyncViews = true;
 
         protected EditableDataGridViewport(): this(null, null)
         {

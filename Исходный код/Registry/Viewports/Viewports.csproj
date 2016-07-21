@@ -106,6 +106,23 @@
     <Compile Include="DataGridViewport.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="EntityConverters\BuildingConverter.cs" />
+    <Compile Include="EntityConverters\ClaimConverter.cs" />
+    <Compile Include="EntityConverters\ClaimStateConverter.cs" />
+    <Compile Include="EntityConverters\ClaimStateTypeConverter.cs" />
+    <Compile Include="EntityConverters\ClaimStateTypeRelationConverter.cs" />
+    <Compile Include="EntityConverters\DocumentIssuedByConverter.cs" />
+    <Compile Include="EntityConverters\DocumentResidenceConverter.cs" />
+    <Compile Include="EntityConverters\ExecutorConverter.cs" />
+    <Compile Include="EntityConverters\FundHistoryConverter.cs" />
+    <Compile Include="EntityConverters\OwnershipRightConverter.cs" />
+    <Compile Include="EntityConverters\OwnershipRightTypeConverter.cs" />
+    <Compile Include="EntityConverters\PremiseConverter.cs" />
+    <Compile Include="EntityConverters\ResettleBuildingConverter.cs" />
+    <Compile Include="EntityConverters\ResettlePersonConverter.cs" />
+    <Compile Include="EntityConverters\ResettlePremiseConverter.cs" />
+    <Compile Include="EntityConverters\ResettleProcessConverter.cs" />
+    <Compile Include="EntityConverters\TenancyPersonConverter.cs" />
     <Compile Include="EntityConverters\TenancyProcessConverter.cs" />
     <Compile Include="ModalEditors\PersonExcludeDateForm.cs">
       <SubType>Form</SubType>

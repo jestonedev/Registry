@@ -380,20 +380,20 @@ namespace Registry.DataModels
             var premisesIds = from subPremisesFundsRow in subPremisesFunds.AsEnumerable()
                               join subPremisesRow in DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows()
                               on subPremisesFundsRow.Field<int>("id_sub_premises") equals subPremisesRow.Field<int>("id_sub_premises")
-                              where new [] { 1, 4, 5, 9, 11 }.Contains(subPremisesRow.Field<int>("id_state")) &&
+                              where MunicipalAndUnknownObjectStates().Contains(subPremisesRow.Field<int>("id_state")) &&
                               subPremisesFundsRow.Field<int>("id_fund_type") == idFund
                               select subPremisesRow.Field<int>("id_premises");
             var buildingsIds = from premisesFundsRow in premisesFunds.AsEnumerable()
                                join premisesRow in DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows()
                                on premisesFundsRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")
-                               where new [] { 1, 4, 5, 9, 11 }.Contains(premisesRow.Field<int>("id_state")) &&
+                               where MunicipalAndUnknownObjectStates().Contains(premisesRow.Field<int>("id_state")) &&
                                 premisesFundsRow.Field<int>("id_fund_type") == idFund ||
                                 (premisesFundsRow.Field<int>("id_fund_type") == 4 && premisesIds.Contains(premisesFundsRow.Field<int>("id_premises")))
                                select premisesRow.Field<int>("id_building");
             return (from buildingsFundsRow in buildingsFunds.AsEnumerable()
                     join buildingsRow in DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows()
                               on buildingsFundsRow.Field<int>("id_building") equals buildingsRow.Field<int>("id_building")
-                    where new [] { 1, 4, 5, 9, 11 }.Contains(buildingsRow.Field<int>("id_state")) && 
+                    where MunicipalAndUnknownObjectStates().Contains(buildingsRow.Field<int>("id_state")) && 
                     buildingsFundsRow.Field<int>("id_fund_type") == idFund ||
                                    (buildingsFundsRow.Field<int>("id_fund_type") == 4 && buildingsIds.Contains(buildingsFundsRow.Field<int>("id_building")))
                     select buildingsFundsRow.Field<int>("id_building"));
@@ -407,13 +407,13 @@ namespace Registry.DataModels
             var premisesIds = from subPremisesFundsRow in subPremisesFunds.AsEnumerable()
                               join subPremisesRow in DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows()
                               on subPremisesFundsRow.Field<int>("id_sub_premises") equals subPremisesRow.Field<int>("id_sub_premises")
-                              where new [] { 1, 4, 5, 9, 11 }.Contains(subPremisesRow.Field<int>("id_state")) &&
+                              where MunicipalAndUnknownObjectStates().Contains(subPremisesRow.Field<int>("id_state")) &&
                               subPremisesFundsRow.Field<int>("id_fund_type") == idFund
                               select subPremisesRow.Field<int>("id_premises");
             return (from premisesFundsRow in premisesFunds.AsEnumerable()
                     join premisesRow in DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows()
                                on premisesFundsRow.Field<int>("id_premises") equals premisesRow.Field<int>("id_premises")
-                    where new [] { 1, 4, 5, 9, 11 }.Contains(premisesRow.Field<int>("id_state")) && 
+                    where MunicipalAndUnknownObjectStates().Contains(premisesRow.Field<int>("id_state")) && 
                         premisesFundsRow.Field<int>("id_fund_type") == idFund ||
                         (premisesFundsRow.Field<int>("id_fund_type") == 4 && premisesIds.Contains(premisesFundsRow.Field<int>("id_premises")))
                     select premisesFundsRow.Field<int>("id_premises"));
@@ -619,12 +619,12 @@ namespace Registry.DataModels
 
         public static bool HasMunicipal(int id, EntityType entity)
         {
-            return HasObjectState(id, entity, new [] { 4, 5, 9, 11 });
+            return HasObjectState(id, entity, MunicipalObjectStates().ToArray());
         }
 
         public static bool HasNotMunicipal(int id, EntityType entity)
         {
-            return HasObjectState(id, entity, new [] { 1, 3, 6, 7, 8, 10 });
+            return HasObjectState(id, entity, NonMunicipalAndUnknownObjectStates().ToArray());
         }
 
         public static IEnumerable<int> DemolishedBuildingIDs()
@@ -1006,6 +1006,26 @@ namespace Registry.DataModels
             var duplicateProcessIds = from row in duplicateProcesses
                                         select row.id_process;
             return duplicateProcessIds.Except(maxProcessIds);
+        }
+
+        public static IEnumerable<int> MunicipalObjectStates()
+        {
+            return new List<int> { 4, 5, 9, 11, 12 };
+        }
+
+        public static IEnumerable<int> NonMunicipalObjectStates()
+        {
+            return new List<int> { 3, 6, 7, 8, 10 };
+        }
+
+        public static IEnumerable<int> MunicipalAndUnknownObjectStates()
+        {
+            return new List<int> { 1 }.Concat(MunicipalObjectStates());
+        }
+
+        public static IEnumerable<int> NonMunicipalAndUnknownObjectStates()
+        {
+            return new List<int> { 1 }.Concat(NonMunicipalObjectStates());
         }
     }
 }

@@ -6,6 +6,7 @@ using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Reporting;
+using Registry.Viewport.EntityConverters;
 using Registry.Viewport.ModalEditors;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -69,7 +70,9 @@ namespace Registry.Viewport
             switch (dataGridView.Columns[e.ColumnIndex].Name)
             {
                 case "id_premises":
-                    e.Value = row["id_premises"];
+                case "house":
+                case "premises_num":
+                    e.Value = row[dataGridView.Columns[e.ColumnIndex].Name];
                     break;
                 case "id_street":
                     var kladrRow = DataModel.GetInstance<KladrStreetsDataModel>().Select().Rows.Find(buildingRow["id_street"]);
@@ -77,12 +80,6 @@ namespace Registry.Viewport
                     if (kladrRow != null)
                         streetName = kladrRow["street_name"].ToString();
                     e.Value = streetName;
-                    break;
-                case "house":
-                    e.Value = buildingRow["house"];
-                    break;
-                case "premises_num":
-                    e.Value = row["premises_num"];
                     break;
             }
         }
@@ -246,34 +243,6 @@ namespace Registry.Viewport
             return true;
         }
 
-        private Premise PremiseFromRow(DataRowView row)
-        {
-            var premise = new Premise
-            {
-                IdPremises = ViewportHelper.ValueOrNull<int>(row, "id_premises"),
-                IdBuilding = ViewportHelper.ValueOrNull<int>(row, "id_building"),
-                IdState = ViewportHelper.ValueOrNull<int>(row, "id_state"),
-                PremisesNum = ViewportHelper.ValueOrNull(row, "premises_num"),
-                LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area"),
-                TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area"),
-                Height = ViewportHelper.ValueOrNull<double>(row, "height"),
-                NumRooms = ViewportHelper.ValueOrNull<short>(row, "num_rooms"),
-                NumBeds = ViewportHelper.ValueOrNull<short>(row, "num_beds"),
-                IdPremisesType = ViewportHelper.ValueOrNull<int>(row, "id_premises_type"),
-                IdPremisesKind = ViewportHelper.ValueOrNull<int>(row, "id_premises_kind"),
-                Floor = ViewportHelper.ValueOrNull<short>(row, "floor"),
-                CadastralNum = ViewportHelper.ValueOrNull(row, "cadastral_num"),
-                CadastralCost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost"),
-                BalanceCost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost"),
-                Description = ViewportHelper.ValueOrNull(row, "description"),
-                IsMemorial = ViewportHelper.ValueOrNull<bool>(row, "is_memorial"),
-                Account = ViewportHelper.ValueOrNull(row, "account"),
-                RegDate = ViewportHelper.ValueOrNull<DateTime>(row, "reg_date"),
-                StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date")
-            };
-            return premise;
-        }
-
         private void toolStripButtonRestrictions_Click(object sender, EventArgs e)
         {
             var restrictions = DataModel.GetInstance<RestrictionsDataModel>();
@@ -433,7 +402,7 @@ namespace Registry.Viewport
                     {
                         continue;
                     }
-                    var premise = PremiseFromRow((DataRowView) _premises[i]);
+                    var premise = PremiseConverter.FromRow((DataRowView) _premises[i]);
                     premise.IdState = form.IdObjectState;
                     if (_premisesDataModel.Update(premise) == -1)
                     {
@@ -474,7 +443,7 @@ namespace Registry.Viewport
                     {
                         continue;
                     }
-                    var premise = PremiseFromRow((DataRowView)_premises[i]);
+                    var premise = PremiseConverter.FromRow((DataRowView)_premises[i]);
                     premise.RegDate = form.RegDate;
                     if (_premisesDataModel.Update(premise) == -1)
                     {

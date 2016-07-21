@@ -273,5 +273,13 @@ namespace Registry.Viewport
         {
             return true;
         }
+
+        public override void ForceClose()
+        {
+            if (viewportState == ViewportState.NewRowState)
+                GeneralDataModel.EditingNewRecord = false;
+            viewportState = ViewportState.ReadState;
+            Close();
+        }
     }
 }

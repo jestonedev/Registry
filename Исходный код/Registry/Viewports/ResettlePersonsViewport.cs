@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -25,20 +26,6 @@ namespace Registry.Viewport
             GeneralSnapshot = new DataTable("snapshot_resettle_persons")
             {
                 Locale = CultureInfo.InvariantCulture
-            };
-        }
-
-        private static object[] DataRowViewToArray(DataRowView dataRowView)
-        {
-            return new[] { 
-                dataRowView["id_person"], 
-                dataRowView["id_process"], 
-                dataRowView["surname"], 
-                dataRowView["name"],
-                dataRowView["patronymic"],
-                dataRowView["document_num"],
-                dataRowView["document_seria"],
-                dataRowView["founding_doc"]
             };
         }
 
@@ -79,22 +66,6 @@ namespace Registry.Viewport
                 }
             }
             return true;
-        }
-
-        private static ResettlePerson RowToResettlePerson(DataRow row)
-        {
-            var resettlePerson = new ResettlePerson
-            {
-                IdPerson = ViewportHelper.ValueOrNull<int>(row, "id_person"),
-                IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process"),
-                Surname = ViewportHelper.ValueOrNull(row, "surname"),
-                Name = ViewportHelper.ValueOrNull(row, "name"),
-                Patronymic = ViewportHelper.ValueOrNull(row, "patronymic"),
-                DocumentNum = ViewportHelper.ValueOrNull(row, "document_num"),
-                DocumentSeria = ViewportHelper.ValueOrNull(row, "document_seria"),
-                FoundingDoc = ViewportHelper.ValueOrNull(row, "founding_doc")
-            };
-            return resettlePerson;
         }
 
         protected override List<Entity> EntitiesListFromViewport()
@@ -171,7 +142,7 @@ namespace Registry.Viewport
                 GeneralSnapshot.Columns.Add(new DataColumn(GeneralDataModel.Select().Columns[i].ColumnName, GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
+                GeneralSnapshot.Rows.Add(ResettlePersonConverter.ToArray((DataRowView)GeneralBindingSource[i]));
             GeneralSnapshotBindingSource = new BindingSource {DataSource = GeneralSnapshot};
             GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_resettle_persons_CurrentItemChanged;
 
@@ -228,7 +199,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
+                GeneralSnapshot.Rows.Add(ResettlePersonConverter.ToArray((DataRowView)GeneralBindingSource[i]));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -239,13 +210,13 @@ namespace Registry.Viewport
 
         public override void SaveRecord()
         {
-            sync_views = false;
+            SyncViews = false;
             dataGridView.EndEdit();
             GeneralDataModel.EditingNewRecord = true;
             var list = EntitiesListFromViewport();
             if (!ValidateResettlePersons(list))
             {
-                sync_views = true;
+                SyncViews = true;
                 GeneralDataModel.EditingNewRecord = false;
                 return;
             }
@@ -258,30 +229,24 @@ namespace Registry.Viewport
                     var idPerson = GeneralDataModel.Insert(person);
                     if (idPerson == -1)
                     {
-                        sync_views = true; 
+                        SyncViews = true; 
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_person"] = idPerson;
-                    GeneralDataModel.Select().Rows.Add(DataRowViewToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(ResettlePersonConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
-                    if (RowToResettlePerson(row) == person)
+                    if (ResettlePersonConverter.FromRow(row) == person)
                         continue;
                     if (GeneralDataModel.Update(person) == -1)
                     {
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    row["id_process"] = person.IdProcess == null ? DBNull.Value : (object)person.IdProcess;
-                    row["surname"] = person.Surname == null ? DBNull.Value : (object)person.Surname;
-                    row["name"] = person.Name == null ? DBNull.Value : (object)person.Name;
-                    row["patronymic"] = person.Patronymic == null ? DBNull.Value : (object)person.Patronymic;
-                    row["document_num"] = person.DocumentNum == null ? DBNull.Value : (object)person.DocumentNum;
-                    row["document_seria"] = person.DocumentSeria == null ? DBNull.Value : (object)person.DocumentSeria;
-                    row["founding_doc"] = person.FoundingDoc == null ? DBNull.Value : (object)person.FoundingDoc;
+                    ResettlePersonConverter.FillRow(person, row);
                 }
             }
             list = EntitiesListFromView();
@@ -297,13 +262,13 @@ namespace Registry.Viewport
                 if (rowIndex != -1) continue;
                 if (person.IdPerson != null && GeneralDataModel.Delete(person.IdPerson.Value) == -1)
                 {
-                    sync_views = true;
+                    SyncViews = true;
                     GeneralDataModel.EditingNewRecord = false;
                     return;
                 }
                 GeneralDataModel.Select().Rows.Find(person.IdPerson).Delete();
             }
-            sync_views = true;
+            SyncViews = true;
             GeneralDataModel.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
         }
@@ -339,7 +304,7 @@ namespace Registry.Viewport
                         e.Cancel = true;
                         return;
                 }
-            } 
+            }
             GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_resettle_persons_CurrentItemChanged;
             dataGridView.CellValidated -= dataGridView_CellValidated;
             dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
@@ -347,14 +312,6 @@ namespace Registry.Viewport
             GeneralDataModel.Select().RowDeleting -= ResettlePersonsViewport_RowDeleting;
             GeneralDataModel.Select().RowDeleted -= ResettlePersonsViewport_RowDeleted;
             base.OnClosing(e);
-        }
-
-        public override void ForceClose()
-        {
-            GeneralDataModel.Select().RowChanged -= ResettlePersonsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting -= ResettlePersonsViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted -= ResettlePersonsViewport_RowDeleted;
-            Close();
         }
 
         void v_snapshot_resettle_persons_CurrentItemChanged(object sender, EventArgs e)
@@ -401,7 +358,7 @@ namespace Registry.Viewport
 
         void ResettlePersonsViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
-            if (!sync_views)
+            if (!SyncViews)
                 return;
             if (e.Action != DataRowAction.Delete) return;
             var rowIndex = GeneralSnapshotBindingSource.Find("id_person", e.Row["id_person"]);
@@ -411,7 +368,7 @@ namespace Registry.Viewport
 
         void ResettlePersonsViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
-            if (!sync_views)
+            if (!SyncViews)
                 return;
             var rowIndex = GeneralSnapshotBindingSource.Find("id_person", e.Row["id_person"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_person", e.Row["id_person"]) != -1)

@@ -4,10 +4,10 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using CustomControls;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -16,13 +16,15 @@ namespace Registry.Viewport
     internal sealed partial class FundsHistoryViewport : FormWithGridViewport
     {
         #region Models
-        DataModel fund_types;
-        DataModel fund_assoc;
+
+        private DataModel _fundTypes;
+        private DataModel _fundAssoc;
         #endregion Models
 
         #region Views
-        BindingSource v_fund_types;
-        BindingSource v_fund_assoc;
+
+        private BindingSource _vFundTypes;
+        private BindingSource _vFundAssoc;
         #endregion Views
 
         private FundsHistoryViewport()
@@ -59,7 +61,7 @@ namespace Registry.Viewport
         private void RebuildFilter()
         {
             var filter = "id_fund IN (0";
-            foreach (var fund in v_fund_assoc)
+            foreach (var fund in _vFundAssoc)
                 filter += ((DataRowView)fund)["id_fund"] + ",";
             filter = filter.TrimEnd(',');
             filter += ")";
@@ -68,7 +70,7 @@ namespace Registry.Viewport
 
         private void DataBind()
         {
-            comboBoxFundType.DataSource = v_fund_types;
+            comboBoxFundType.DataSource = _vFundTypes;
             comboBoxFundType.ValueMember = "id_fund_type";
             comboBoxFundType.DisplayMember = "fund_type";
             comboBoxFundType.DataBindings.Clear();
@@ -96,7 +98,7 @@ namespace Registry.Viewport
             dataGridView.DataSource = GeneralBindingSource;
             id_fund.DataPropertyName = "id_fund";
             id_fund_type.DataPropertyName = "id_fund_type";
-            id_fund_type.DataSource = v_fund_types;
+            id_fund_type.DataSource = _vFundTypes;
             id_fund_type.ValueMember = "id_fund_type";
             id_fund_type.DisplayMember = "fund_type";
             protocol_date.DataPropertyName = "protocol_date";
@@ -134,37 +136,39 @@ namespace Registry.Viewport
 
         private bool ValidatePermissions()
         {
-            var entity = EntityType.Unknown;
-            string fieldName = null;
-            if (ParentType == ParentTypeEnum.Building)
+            EntityType entity;
+            string fieldName;
+            switch (ParentType)
             {
-                entity = EntityType.Building;
-                fieldName = "id_building";
-            }
-            else
-                if (ParentType == ParentTypeEnum.Premises)
-                {
+                case ParentTypeEnum.Building:
+                    entity = EntityType.Building;
+                    fieldName = "id_building";
+                    break;
+                case ParentTypeEnum.Premises:
                     entity = EntityType.Premise;
                     fieldName = "id_premises";
-                }
-                else
-                    if (ParentType == ParentTypeEnum.SubPremises)
-                    {
-                        entity = EntityType.SubPremise;
-                        fieldName = "id_sub_premises";
-                    }
+                    break;
+                case ParentTypeEnum.SubPremises:
+                    entity = EntityType.SubPremise;
+                    fieldName = "id_sub_premises";
+                    break;
+                default:
+                    MessageBox.Show(@"Неизвестный тип родительского объекта",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    return false;
+            }
             if (DataModelHelper.HasMunicipal((int)ParentRow[fieldName], entity)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
-                MessageBox.Show("У вас нет прав на изменение информации об истории фондов муниципальных объектов",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"У вас нет прав на изменение информации об истории фондов муниципальных объектов",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             if (DataModelHelper.HasNotMunicipal((int)ParentRow[fieldName], entity)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
-                MessageBox.Show("У вас нет прав на изменение информации об истории фондов немуниципальных объектов",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"У вас нет прав на изменение информации об истории фондов немуниципальных объектов",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             return true;
@@ -176,19 +180,19 @@ namespace Registry.Viewport
                 return false;
             if (checkBoxIncludeRest.Checked && fundHistory.IncludeRestrictionNumber == null)
             {
-                MessageBox.Show("Необходимо задать номер реквизитов НПА по включению в фонд или отключить реквизит", "Ошибка",
+                MessageBox.Show(@"Необходимо задать номер реквизитов НПА по включению в фонд или отключить реквизит", @"Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             if (checkBoxExcludeRest.Checked && fundHistory.ExcludeRestrictionNumber == null)
             {
-                MessageBox.Show("Необходимо задать номер реквизитов НПА по исключению из фонда или отключить реквизит", "Ошибка",
+                MessageBox.Show(@"Необходимо задать номер реквизитов НПА по исключению из фонда или отключить реквизит", @"Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             if (fundHistory.IdFundType == null)
             {
-                MessageBox.Show("Необходимо выбрать тип найма", "Ошибка",
+                MessageBox.Show(@"Необходимо выбрать тип найма", @"Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
@@ -244,20 +248,8 @@ namespace Registry.Viewport
 
         protected override Entity EntityFromView()
         {
-            var fundHistory = new FundHistory();
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            fundHistory.IdFund = ViewportHelper.ValueOrNull<int>(row, "id_fund");
-            fundHistory.IdFundType = ViewportHelper.ValueOrNull<int>(row, "id_fund_type");
-            fundHistory.ProtocolNumber = ViewportHelper.ValueOrNull(row, "protocol_number");
-            fundHistory.ProtocolDate = ViewportHelper.ValueOrNull<DateTime>(row, "protocol_date");
-            fundHistory.IncludeRestrictionNumber = ViewportHelper.ValueOrNull(row, "include_restriction_number");
-            fundHistory.IncludeRestrictionDate = ViewportHelper.ValueOrNull<DateTime>(row, "include_restriction_date");
-            fundHistory.IncludeRestrictionDescription = ViewportHelper.ValueOrNull(row, "include_restriction_description");
-            fundHistory.ExcludeRestrictionNumber = ViewportHelper.ValueOrNull(row, "exclude_restriction_number");
-            fundHistory.ExcludeRestrictionDate = ViewportHelper.ValueOrNull<DateTime>(row, "exclude_restriction_date");
-            fundHistory.ExcludeRestrictionDescription = ViewportHelper.ValueOrNull(row, "exclude_restriction_description");
-            fundHistory.Description = ViewportHelper.ValueOrNull(row, "description");         
-            return fundHistory;
+            return FundHistoryConverter.FromRow(row);
         }
 
         private void ViewportFromFundHistory(FundHistory fundHistory)
@@ -273,23 +265,6 @@ namespace Registry.Viewport
             textBoxExcludeRestDesc.Text = fundHistory.ExcludeRestrictionDescription;
         }
 
-        private static void FillRowFromFundHistory(FundHistory fundHistory, DataRowView row)
-        {
-            row.BeginEdit();
-            row["id_fund"] = ViewportHelper.ValueOrDBNull(fundHistory.IdFund);
-            row["id_fund_type"] = ViewportHelper.ValueOrDBNull(fundHistory.IdFundType);
-            row["protocol_number"] = ViewportHelper.ValueOrDBNull(fundHistory.ProtocolNumber);
-            row["protocol_date"] = ViewportHelper.ValueOrDBNull(fundHistory.ProtocolDate);
-            row["include_restriction_number"] = ViewportHelper.ValueOrDBNull(fundHistory.IncludeRestrictionNumber);
-            row["include_restriction_date"] = ViewportHelper.ValueOrDBNull(fundHistory.IncludeRestrictionDate);
-            row["include_restriction_description"] = ViewportHelper.ValueOrDBNull(fundHistory.IncludeRestrictionDescription);
-            row["exclude_restriction_number"] = ViewportHelper.ValueOrDBNull(fundHistory.ExcludeRestrictionNumber);
-            row["exclude_restriction_date"] = ViewportHelper.ValueOrDBNull(fundHistory.ExcludeRestrictionDate);
-            row["exclude_restriction_description"] = ViewportHelper.ValueOrDBNull(fundHistory.ExcludeRestrictionDescription);
-            row["description"] = ViewportHelper.ValueOrDBNull(fundHistory.Description);
-            row.EndEdit();
-        }
-
         public override bool CanLoadData()
         {
             return true;
@@ -300,52 +275,52 @@ namespace Registry.Viewport
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
             GeneralDataModel = DataModel.GetInstance<FundsHistoryDataModel>();
-            fund_types = DataModel.GetInstance<FundTypesDataModel>();
+            _fundTypes = DataModel.GetInstance<FundTypesDataModel>();
 
             // Ожидаем дозагрузки, если это необходимо
             GeneralDataModel.Select();
-            fund_types.Select();
+            _fundTypes.Select();
 
             if (ParentType == ParentTypeEnum.SubPremises)
-                fund_assoc = DataModel.GetInstance<FundsSubPremisesAssocDataModel>();
+                _fundAssoc = DataModel.GetInstance<FundsSubPremisesAssocDataModel>();
             else
                 if (ParentType == ParentTypeEnum.Premises)
-                    fund_assoc = DataModel.GetInstance<FundsPremisesAssocDataModel>();
+                    _fundAssoc = DataModel.GetInstance<FundsPremisesAssocDataModel>();
                 else
                     if (ParentType == ParentTypeEnum.Building)
-                        fund_assoc = DataModel.GetInstance<FundsBuildingsAssocDataModel>();
+                        _fundAssoc = DataModel.GetInstance<FundsBuildingsAssocDataModel>();
                     else
                         throw new ViewportException("Неизвестный тип родительского объекта");
 
             var ds = DataModel.DataSet;
 
-            v_fund_assoc = new BindingSource();
+            _vFundAssoc = new BindingSource();
             if ((ParentType == ParentTypeEnum.SubPremises) && (ParentRow != null))
             {
-                v_fund_assoc.DataMember = "funds_sub_premises_assoc";
-                v_fund_assoc.Filter = "id_sub_premises = " + ParentRow["id_sub_premises"];
+                _vFundAssoc.DataMember = "funds_sub_premises_assoc";
+                _vFundAssoc.Filter = "id_sub_premises = " + ParentRow["id_sub_premises"];
                 Text = string.Format(CultureInfo.InvariantCulture, "История фонда комнаты №{0} помещения №{1}", ParentRow["sub_premises_num"],
                     ParentRow["id_premises"]);
             }
             else
                 if ((ParentType == ParentTypeEnum.Premises) && (ParentRow != null))
                 {
-                    v_fund_assoc.DataMember = "funds_premises_assoc";
-                    v_fund_assoc.Filter = "id_premises = " + ParentRow["id_premises"];
+                    _vFundAssoc.DataMember = "funds_premises_assoc";
+                    _vFundAssoc.Filter = "id_premises = " + ParentRow["id_premises"];
                     Text = string.Format(CultureInfo.InvariantCulture, "История фонда помещения №{0}", ParentRow["id_premises"]);
                 }
                 else
                     if ((ParentType == ParentTypeEnum.Building) && (ParentRow != null))
                     {
-                        v_fund_assoc.DataMember = "funds_buildings_assoc";
-                        v_fund_assoc.Filter = "id_building = " + ParentRow["id_building"];
+                        _vFundAssoc.DataMember = "funds_buildings_assoc";
+                        _vFundAssoc.Filter = "id_building = " + ParentRow["id_building"];
                         Text = string.Format(CultureInfo.InvariantCulture, "История фонда здания №{0}", ParentRow["id_building"]);
                     }
                     else
                         throw new ViewportException("Неизвестный тип родительского объекта");
-            v_fund_assoc.DataSource = ds;
+            _vFundAssoc.DataSource = ds;
 
-            v_fund_types = new BindingSource
+            _vFundTypes = new BindingSource
             {
                 DataMember = "fund_types",
                 DataSource = ds
@@ -362,8 +337,8 @@ namespace Registry.Viewport
 
             GeneralDataModel.Select().RowChanged += FundsHistoryViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted += FundsHistoryViewport_RowDeleted;
-            fund_assoc.Select().RowChanged += FundAssoc_RowChanged;
-            fund_assoc.Select().RowDeleted += FundAssoc_RowDeleted;
+            _fundAssoc.Select().RowChanged += FundAssoc_RowChanged;
+            _fundAssoc.Select().RowDeleted += FundAssoc_RowDeleted;
             comboBoxFundType.SelectedIndexChanged += comboBoxFundType_SelectedIndexChanged;
             is_editable = true;
             DataChangeHandlersInit();
@@ -385,7 +360,7 @@ namespace Registry.Viewport
             switch (viewportState)
             {
                 case ViewportState.ReadState:
-                    MessageBox.Show("Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
+                    MessageBox.Show(@"Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
@@ -396,8 +371,8 @@ namespace Registry.Viewport
                         -1;
                     if (idParent == -1)
                     {
-                        MessageBox.Show("Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
-                            "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        MessageBox.Show(@"Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
+                            @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
                     var idFund = GeneralDataModel.Insert(fundHistory);
@@ -426,8 +401,8 @@ namespace Registry.Viewport
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    FillRowFromFundHistory(fundHistory, newRow);
-                    fund_assoc.Select().Rows.Add(idParent, idFund);
+                    FundHistoryConverter.FillRow(fundHistory, newRow);
+                    _fundAssoc.Select().Rows.Add(idParent, idFund);
                     RebuildFilter();
                     GeneralBindingSource.Position = GeneralBindingSource.Count - 1;
                     GeneralDataModel.EditingNewRecord = false;
@@ -436,14 +411,15 @@ namespace Registry.Viewport
                     if (fundHistory.IdFund == null)
                     {
                         MessageBox.Show(@"Вы пытаетесь изменить запись о принадлежности фонду без внутренного номера. " +
-                            @"Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                            @"Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка", 
+                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
                     if (GeneralDataModel.Update(fundHistory) == -1)
                         return;
                     is_editable = false;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    FillRowFromFundHistory(fundHistory, row);
+                    FundHistoryConverter.FillRow(fundHistory, row);
                     break;
             }
             RedrawDataGridRows();
@@ -565,8 +541,8 @@ namespace Registry.Viewport
                 GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
                 GeneralDataModel.Select().RowChanged -= FundsHistoryViewport_RowChanged;
                 GeneralDataModel.Select().RowDeleted -= FundsHistoryViewport_RowDeleted;
-                fund_assoc.Select().RowChanged -= FundAssoc_RowChanged;
-                fund_assoc.Select().RowDeleted -= FundAssoc_RowDeleted;
+                _fundAssoc.Select().RowChanged -= FundAssoc_RowChanged;
+                _fundAssoc.Select().RowDeleted -= FundAssoc_RowDeleted;
                 comboBoxFundType.SelectedIndexChanged -= comboBoxFundType_SelectedIndexChanged;
             }
             base.OnClosing(e);
@@ -579,7 +555,7 @@ namespace Registry.Viewport
             Close();
         }
 
-        void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
+        private void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
             if (GeneralBindingSource.Position == -1 || dataGridView.RowCount == 0)
                 dataGridView.ClearSelection();
@@ -605,7 +581,7 @@ namespace Registry.Viewport
             is_editable = true;
         }
 
-        void FundsHistoryViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        private void FundsHistoryViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
             {
@@ -615,7 +591,7 @@ namespace Registry.Viewport
             }
         }
 
-        void FundsHistoryViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void FundsHistoryViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             UnbindedCheckBoxesUpdate();
             if (Selected)
@@ -631,32 +607,30 @@ namespace Registry.Viewport
             base.OnVisibleChanged(e);
         }
 
-        void comboBoxFundType_SelectedIndexChanged(object sender, EventArgs e)
+        private void comboBoxFundType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            textBoxProtocolNumber.Enabled = ((comboBoxFundType.SelectedValue) != null &&
-                (Convert.ToInt32(comboBoxFundType.SelectedValue, CultureInfo.InvariantCulture) != 1));
-            dateTimePickerProtocolDate.Enabled = ((comboBoxFundType.SelectedValue) != null &&
-                (Convert.ToInt32(comboBoxFundType.SelectedValue, CultureInfo.InvariantCulture) != 1));
+            textBoxProtocolNumber.Enabled = comboBoxFundType.SelectedValue != null &&
+                                            (Convert.ToInt32(comboBoxFundType.SelectedValue, CultureInfo.InvariantCulture) != 1);
+            dateTimePickerProtocolDate.Enabled = comboBoxFundType.SelectedValue != null &&
+                                                 (Convert.ToInt32(comboBoxFundType.SelectedValue, CultureInfo.InvariantCulture) != 1);
         }
 
-        void FundAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
+        private void FundAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
-            if (e.Action == DataRowAction.Delete)
-            {
-                RebuildFilter();
-                UnbindedCheckBoxesUpdate();
-                RedrawDataGridRows();
-            }
+            if (e.Action != DataRowAction.Delete) return;
+            RebuildFilter();
+            UnbindedCheckBoxesUpdate();
+            RedrawDataGridRows();
         }
 
-        void FundAssoc_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void FundAssoc_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             RebuildFilter();
             UnbindedCheckBoxesUpdate();
             RedrawDataGridRows();
         }
 
-        void checkBoxExcludeRest_CheckedChanged(object sender, EventArgs e)
+        private void checkBoxExcludeRest_CheckedChanged(object sender, EventArgs e)
         {
             textBoxExcludeRestNum.Enabled = checkBoxExcludeRest.Checked;
             textBoxExcludeRestDesc.Enabled = checkBoxExcludeRest.Checked;
@@ -664,7 +638,7 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
-        void checkBoxIncludeRest_CheckedChanged(object sender, EventArgs e)
+        private void checkBoxIncludeRest_CheckedChanged(object sender, EventArgs e)
         {
             textBoxIncludeRestNum.Enabled = checkBoxIncludeRest.Checked;
             textBoxIncludeRestDesc.Enabled = checkBoxIncludeRest.Checked;

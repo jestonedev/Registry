@@ -48,7 +48,7 @@ namespace Registry.DataModels.CalcDataModels
             var subPremisesSumArea = from premisesRow in premises
                                         join subPremisesRow in subPremises
                                         on premisesRow.Field<int>("id_premises") equals subPremisesRow.Field<int>("id_premises")
-                                        where new[] { 4, 5, 9, 11 }.Contains(subPremisesRow.Field<int>("id_state"))
+                                        where DataModelHelper.MunicipalObjectStates().Contains(subPremisesRow.Field<int>("id_state"))
                                         group subPremisesRow.Field<double>("total_area") by premisesRow.Field<int>("id_premises") into gs
                                         select new
                                         {
@@ -89,7 +89,7 @@ namespace Registry.DataModels.CalcDataModels
                          where dbrRow == 0 && dprRow == 0 &&
                                (befmrRow == null || (piimrRow != null && befmrRow.Date <= piimrRow.Date)) && 
                                (pefmrRow == null || (biimrRow != null && pefmrRow.Date <= biimrRow.Date))
-                         group new[] { 4, 5, 9, 11 }.Contains(premisesRow.Field<int>("id_state")) ? 
+                         group DataModelHelper.MunicipalObjectStates().Contains(premisesRow.Field<int>("id_state")) ? 
                                 premisesRow.Field<double>("total_area") :
                                 premisesRow.Field<int>("id_state") == 1 ?
                                 (spsarRow == null ? 0 : spsarRow.sum_area) : 0 

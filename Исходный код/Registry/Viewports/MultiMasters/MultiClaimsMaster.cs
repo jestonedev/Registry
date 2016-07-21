@@ -65,9 +65,6 @@ namespace Registry.Viewport.MultiMasters
             var row = (DataRowView)_claims[e.RowIndex];
             switch (dataGridView.Columns[e.ColumnIndex].Name)
             {
-                case "id_claim":
-                    e.Value = row["id_claim"];
-                    break;
                 case "id_account":
                     if (row["id_account"] == DBNull.Value) return;
                     var accountList = (from paymentsAccountRow in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
@@ -77,28 +74,17 @@ namespace Registry.Viewport.MultiMasters
                         e.Value = accountList.First().Field<string>("account");
                     break;
                 case "start_dept_period":
-                    e.Value = row["start_dept_period"] == DBNull.Value ? "" :
-                        ((DateTime)row["start_dept_period"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
-                    break;
                 case "end_dept_period":
-                    e.Value = row["end_dept_period"] == DBNull.Value ? "" :
-                        ((DateTime)row["end_dept_period"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
-                    break;
-                case "amount_tenancy":
-                    e.Value = row["amount_tenancy"];
-                    break;
-                case "amount_dgi":
-                    e.Value = row["amount_dgi"];
-                    break;
-                case "amount_penalties":
-                    e.Value = row["amount_penalties"];
-                    break;
                 case "at_date":
-                    e.Value = row["at_date"] == DBNull.Value ? "" :
-                        ((DateTime)row["at_date"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
+                    e.Value = row[dataGridView.Columns[e.ColumnIndex].Name] == DBNull.Value ? "" :
+                        ((DateTime)row[dataGridView.Columns[e.ColumnIndex].Name]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                     break;
+                case "id_claim":
+                case "amount_tenancy":
+                case "amount_dgi":
+                case "amount_penalties":
                 case "description":
-                    e.Value = row["description"];
+                    e.Value = row[dataGridView.Columns[e.ColumnIndex].Name];
                     break;
                 case "current_state":
                     if (row["id_claim"] == DBNull.Value || row["id_claim"] == null) return;
@@ -137,8 +123,9 @@ namespace Registry.Viewport.MultiMasters
         private void toolStripButtonClaimDelete_Click(object sender, EventArgs e)
         {
             if (_claims.Position < 0) return;
-            if (((DataRowView)_claims[_claims.Position])["id_claim"] == DBNull.Value) return;
-            var idAccount = (int)((DataRowView)_claims[_claims.Position])["id_claim"];
+            var row = (DataRowView) _claims[_claims.Position];
+            if (row["id_claim"] == DBNull.Value) return;
+            var idAccount = (int)row["id_claim"];
             _claims.Filter = string.Format("({0}) AND (id_claim <> {1})", _claims.Filter, idAccount);
             dataGridView.RowCount = _claims.Count;
             dataGridView.Refresh();
@@ -265,6 +252,7 @@ namespace Registry.Viewport.MultiMasters
                 claimsStateRow["accepted_by_legal_department_who"] = ViewportHelper.ValueOrDBNull(claimState.AcceptedByLegalDepartmentWho);
                 claimsStateRow["accepted_by_legal_department_date"] = ViewportHelper.ValueOrDBNull(claimState.AcceptedByLegalDepartmentDate);
                 claimsStateRow.EndEdit();
+
                 Application.DoEvents();
             }
             toolStripProgressBarMultiOperations.Visible = false;

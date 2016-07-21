@@ -4,13 +4,13 @@ using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Reporting;
+using Registry.Viewport.EntityConverters;
 using Registry.Viewport.ModalEditors;
 using Registry.Viewport.SearchForms;
 using Security;
@@ -139,21 +139,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-
-
-            var claim = new Claim
-            {
-                IdClaim = ViewportHelper.ValueOrNull<int>(row, "id_claim"),
-                IdAccount = ViewportHelper.ValueOrNull<int>(row, "id_account"),
-                AmountTenancy = ViewportHelper.ValueOrNull<decimal>(row, "amount_tenancy"),
-                AmountDgi = ViewportHelper.ValueOrNull<decimal>(row, "amount_dgi"),
-                AmountPenalties = ViewportHelper.ValueOrNull<decimal>(row, "amount_penalties"),
-                AtDate = ViewportHelper.ValueOrNull<DateTime>(row, "at_date"),
-                StartDeptPeriod = ViewportHelper.ValueOrNull<DateTime>(row, "start_dept_period"),
-                EndDeptPeriod = ViewportHelper.ValueOrNull<DateTime>(row, "end_dept_period"),
-                Description = ViewportHelper.ValueOrNull(row, "description")
-            };
-            return claim;
+            return ClaimConverter.FromRow(row);
         }
 
         protected override Entity EntityFromViewport()
@@ -185,21 +171,6 @@ namespace Registry.Viewport
             textBoxDescription.Text = claim.Description;
             _idAccount = claim.IdAccount;
             BindAccount(claim.IdAccount);
-        }
-
-        private static void FillRowFromClaim(Claim claim, DataRowView row)
-        {
-            row.BeginEdit();
-            row["id_claim"] = ViewportHelper.ValueOrDBNull(claim.IdClaim);
-            row["id_account"] = ViewportHelper.ValueOrDBNull(claim.IdAccount);
-            row["at_date"] = ViewportHelper.ValueOrDBNull(claim.AtDate);
-            row["start_dept_period"] = ViewportHelper.ValueOrDBNull(claim.StartDeptPeriod);
-            row["end_dept_period"] = ViewportHelper.ValueOrDBNull(claim.EndDeptPeriod);
-            row["amount_tenancy"] = ViewportHelper.ValueOrDBNull(claim.AmountTenancy);
-            row["amount_dgi"] = ViewportHelper.ValueOrDBNull(claim.AmountDgi);
-            row["amount_penalties"] = ViewportHelper.ValueOrDBNull(claim.AmountPenalties);
-            row["description"] = ViewportHelper.ValueOrDBNull(claim.Description);
-            row.EndEdit();
         }
 
         public override bool CanLoadData()
@@ -253,7 +224,7 @@ namespace Registry.Viewport
             _lastClaimStates.RefreshEvent += lastClaimStates_RefreshEvent;
         }
 
-        void lastClaimStates_RefreshEvent(object sender, EventArgs e)
+        private void lastClaimStates_RefreshEvent(object sender, EventArgs e)
         {
             dataGridViewClaims.Refresh();
         }
@@ -396,6 +367,7 @@ namespace Registry.Viewport
                     claim.AmountPenalties = balanceInfo.BalanceOutputPenalties;
                 }
             }
+            is_editable = false;
             switch (viewportState)
             {
                 case ViewportState.ReadState:
@@ -403,87 +375,100 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
-                    var idClaim = GeneralDataModel.Insert(claim);
-                    if (idClaim == -1)
-                    {
-                        GeneralDataModel.EditingNewRecord = false;
-                        return;
-                    }
-                    DataRowView newRow;
-                    claim.IdClaim = idClaim;
-                    is_editable = false;
-                    if (GeneralBindingSource.Position == -1)
-                        newRow = (DataRowView)GeneralBindingSource.AddNew();
-                    else
-                        newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    FillRowFromClaim(claim, newRow);
-                    // Add first state automaticaly
-                    if (DataModel.GetInstance<ClaimStatesDataModel>().EditingNewRecord)
-                    {
-                        MessageBox.Show(@"Не удалось автоматически вставить первый этап претензионно-исковой работы, т.к. форма состояний исковых работ находится в состоянии добавления новой записи.",
-                            @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
-                        GeneralDataModel.EditingNewRecord = false;
-                        break;
-                    }
-                    var firstStateTypes = DataModelHelper.ClaimStartStateTypeIds().ToList();
-                    if (firstStateTypes.Any())
-                    {
-                        var firstStateType = firstStateTypes.First();
-                        var claimStatesDataModel = DataModel.GetInstance<ClaimStatesDataModel>();
-                        var claimStatesBindingSource = new BindingSource
-                        {
-                            DataSource = claimStatesDataModel.Select()
-                        };
-                        var claimState = new ClaimState
-                        {
-                            IdClaim = claim.IdClaim,
-                            IdStateType = firstStateType,
-                            TransferToLegalDepartmentWho = UserDomain.Current.DisplayName,
-                            AcceptedByLegalDepartmentWho = UserDomain.Current.DisplayName,
-                            DateStartState = DateTime.Now.Date
-                        };
-                        var idState = claimStatesDataModel.Insert(claimState);
-                        if (idState != -1)
-                        {
-                            claimState.IdState = idState;
-                            var claimsStateRow = (DataRowView)claimStatesBindingSource.AddNew();
-                            if (claimsStateRow != null)
-                            {
-                                claimsStateRow.BeginEdit();
-                                claimsStateRow["id_state"] = ViewportHelper.ValueOrDBNull(claimState.IdState);
-                                claimsStateRow["id_claim"] = ViewportHelper.ValueOrDBNull(claimState.IdClaim);
-                                claimsStateRow["id_state_type"] = ViewportHelper.ValueOrDBNull(claimState.IdStateType);
-                                claimsStateRow["transfer_to_legal_department_who"] = ViewportHelper.ValueOrDBNull(claimState.TransferToLegalDepartmentWho);
-                                claimsStateRow["accepted_by_legal_department_who"] = ViewportHelper.ValueOrDBNull(claimState.AcceptedByLegalDepartmentWho);
-                                claimsStateRow["date_start_state"] = ViewportHelper.ValueOrDBNull(claimState.DateStartState);
-                                claimsStateRow.EndEdit();
-                            }
-                        }                     
-                    }
+                    InsertRecord(claim);
                     GeneralDataModel.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
-                    if (claim.IdClaim == null)
-                    {
-                        MessageBox.Show(@"Вы пытаетесь изменить запись о претензионно-исковой работе без внутреннего номера. " +
-                            @"Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка", 
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        return;
-                    }
-                    if (GeneralDataModel.Update(claim) == -1)
-                        return;
-                    var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    is_editable = false;
-                    FillRowFromClaim(claim, row);
+                    UpdateRecord(claim);
                     break;
             }
             UnbindedCheckBoxesUpdate();
+            dataGridViewClaims.RowCount = GeneralBindingSource.Count;
             dataGridViewClaims.Enabled = true;
             is_editable = true;
-            dataGridViewClaims.RowCount = GeneralBindingSource.Count;
             viewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
+        }
+
+        private void UpdateRecord(Claim claim)
+        {
+            if (claim.IdClaim == null)
+            {
+                MessageBox.Show(@"Вы пытаетесь изменить запись о претензионно-исковой работе без внутреннего номера. " +
+                    @"Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            if (GeneralDataModel.Update(claim) == -1)
+                return;
+            RebuildFilterAfterSave(GeneralBindingSource, claim.IdClaim);
+            var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
+            ClaimConverter.FillRow(claim, row);
+        }
+
+        private void InsertRecord(Claim claim)
+        {
+            var idClaim = GeneralDataModel.Insert(claim);
+            if (idClaim == -1)
+            {
+                return;
+            }
+            DataRowView newRow;
+            claim.IdClaim = idClaim;
+            RebuildFilterAfterSave(GeneralBindingSource, claim.IdClaim);
+            if (GeneralBindingSource.Position == -1)
+                newRow = (DataRowView)GeneralBindingSource.AddNew();
+            else
+                newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
+            ClaimConverter.FillRow(claim, newRow);
+
+            InsertFirstClaimState(claim.IdClaim);
+        }
+
+        private void InsertFirstClaimState(int? idClaim)
+        {
+            var claimStatesDataModel = DataModel.GetInstance<ClaimStatesDataModel>();
+            if (claimStatesDataModel.EditingNewRecord)
+            {
+                MessageBox.Show(@"Не удалось автоматически вставить первый этап претензионно-исковой работы, т.к. форма состояний исковых работ находится в состоянии добавления новой записи.",
+                    @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            var firstStateTypes = DataModelHelper.ClaimStartStateTypeIds().ToList();
+            if (!firstStateTypes.Any()) return;
+            var firstStateType = firstStateTypes.First();
+            var claimStatesBindingSource = new BindingSource
+            {
+                DataSource = claimStatesDataModel.Select()
+            };
+            var claimState = new ClaimState
+            {
+                IdClaim = idClaim,
+                IdStateType = firstStateType,
+                TransferToLegalDepartmentWho = UserDomain.Current.DisplayName,
+                AcceptedByLegalDepartmentWho = UserDomain.Current.DisplayName,
+                DateStartState = DateTime.Now.Date
+            };
+            var idState = claimStatesDataModel.Insert(claimState);
+            if (idState == -1) return;
+            claimState.IdState = idState;
+            var claimsStateRow = (DataRowView)claimStatesBindingSource.AddNew();
+            if (claimsStateRow != null)
+            {
+                ClaimStateConverter.FillRow(claimState, claimsStateRow);
+            }
+        }
+
+        private void RebuildFilterAfterSave(IBindingListView bindingSource, int? idClaim)
+        {
+            var filter = "";
+            if (!string.IsNullOrEmpty(bindingSource.Filter))
+                filter += " OR ";
+            else
+                filter += "(1 = 1) OR ";
+            filter += string.Format(CultureInfo.CurrentCulture, "(id_claim = {0})", idClaim);
+            bindingSource.Filter += filter;
         }
 
         public override bool CanCancelRecord()
@@ -581,13 +566,6 @@ namespace Registry.Viewport
             base.OnClosing(e);
         }
 
-        public override void ForceClose()
-        {
-            if (viewportState == ViewportState.NewRowState)
-                GeneralDataModel.EditingNewRecord = false;
-            Close();
-        }
-
         public override bool HasAssocViewport<T>()
         {
             var reports = new List<ViewportType>
@@ -613,7 +591,7 @@ namespace Registry.Viewport
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row, ParentTypeEnum.Claim);
         }
 
-        void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
+        private void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
             SetViewportCaption();
             if (_vAccounts != null) _vAccounts.Filter = "";
@@ -703,7 +681,7 @@ namespace Registry.Viewport
             return arguments;
         }
 
-        void dataGridViewClaims_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void dataGridViewClaims_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (dataGridViewClaims.Columns[e.ColumnIndex].SortMode == DataGridViewColumnSortMode.NotSortable)
                 return;
@@ -722,7 +700,7 @@ namespace Registry.Viewport
             dataGridViewClaims.Refresh();
         }
 
-        void dataGridViewClaims_SelectionChanged(object sender, EventArgs e)
+        private void dataGridViewClaims_SelectionChanged(object sender, EventArgs e)
         {
             if (dataGridViewClaims.SelectedRows.Count > 0)
                 GeneralBindingSource.Position = dataGridViewClaims.SelectedRows[0].Index;
@@ -769,13 +747,9 @@ namespace Registry.Viewport
                         ((DateTime)row["end_dept_period"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                     break;
                 case "amount_tenancy":
-                    e.Value = row["amount_tenancy"];
-                    break;
                 case "amount_dgi":
-                    e.Value = row["amount_dgi"];
-                    break;
                 case "amount_penalties":
-                    e.Value = row["amount_penalties"];
+                    e.Value = row[dataGridViewClaims.Columns[e.ColumnIndex].Name];
                     break;
                 case "at_date":
                     e.Value = row["at_date"] == DBNull.Value ? "" :
@@ -798,22 +772,20 @@ namespace Registry.Viewport
             }
         }
 
-        void ClaimListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        private void ClaimListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
-            if (e.Action == DataRowAction.Delete)
-            {
-                dataGridViewClaims.RowCount = GeneralBindingSource.Count;
-                dataGridViewClaims.Refresh();
-                UnbindedCheckBoxesUpdate();
-                UpdateIdAccount();
-                BindAccount(_idAccount);
-                MenuCallback.ForceCloseDetachedViewports();
-                if (Selected)
-                    MenuCallback.StatusBarStateUpdate();
-            }
+            if (e.Action != DataRowAction.Delete) return;
+            dataGridViewClaims.RowCount = GeneralBindingSource.Count;
+            dataGridViewClaims.Refresh();
+            UnbindedCheckBoxesUpdate();
+            UpdateIdAccount();
+            BindAccount(_idAccount);
+            MenuCallback.ForceCloseDetachedViewports();
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
         }
 
-        void ClaimListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void ClaimListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Change || e.Action == DataRowAction.ChangeCurrentAndOriginal || e.Action == DataRowAction.ChangeOriginal)
                 dataGridViewClaims.Refresh();
@@ -834,9 +806,7 @@ namespace Registry.Viewport
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (keyData == Keys.Enter)
-                return false;
-            return base.ProcessCmdKey(ref msg, keyData);
+            return keyData != Keys.Enter && base.ProcessCmdKey(ref msg, keyData);
         }
 
         internal IEnumerable<int> GetCurrentIds()

@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Viewport.EntityConverters;
 using Security;
 using Settings;
 using WeifenLuo.WinFormsUI.Docking;
@@ -26,17 +27,6 @@ namespace Registry.Viewport
             GeneralSnapshot = new DataTable("snapshot_executors")
             {
                 Locale = CultureInfo.InvariantCulture
-            };
-        }
-
-        private static object[] DataRowViewToArray(DataRowView dataRowView)
-        {
-            return new[] { 
-                dataRowView["id_executor"], 
-                dataRowView["executor_name"],
-                dataRowView["executor_login"],
-                dataRowView["phone"],
-                ViewportHelper.ValueOrNull<bool>(dataRowView,"is_inactive") == true
             };
         }
 
@@ -62,19 +52,6 @@ namespace Registry.Viewport
             return true;
         }
 
-        private static Executor RowToExecutor(DataRow row)
-        {
-            var executor = new Executor
-            {
-                IdExecutor = ViewportHelper.ValueOrNull<int>(row, "id_executor"),
-                ExecutorName = ViewportHelper.ValueOrNull(row, "executor_name"),
-                ExecutorLogin = ViewportHelper.ValueOrNull(row, "executor_login"),
-                Phone = ViewportHelper.ValueOrNull(row, "phone"),
-                IsInactive = ViewportHelper.ValueOrNull<bool>(row, "is_inactive")
-            };
-            return executor;
-        }
-
         protected override List<Entity> EntitiesListFromViewport()
         {
             var list = new List<Entity>();
@@ -82,15 +59,7 @@ namespace Registry.Viewport
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
                 var row = dataGridView.Rows[i];
-                var e = new Executor
-                {
-                    IdExecutor = ViewportHelper.ValueOrNull<int>(row, "id_executor"),
-                    ExecutorName = ViewportHelper.ValueOrNull(row, "executor_name"),
-                    ExecutorLogin = ViewportHelper.ValueOrNull(row, "executor_login"),
-                    Phone = ViewportHelper.ValueOrNull(row, "phone"),
-                    IsInactive = ViewportHelper.ValueOrNull<bool>(row, "is_inactive") == true
-                };
-                list.Add(e);
+                list.Add(ExecutorConverter.FromRow(row));
             }
             return list;
         }
@@ -101,15 +70,7 @@ namespace Registry.Viewport
             foreach (var executor in GeneralBindingSource)
             {
                 var row = ((DataRowView)executor);
-                var e = new Executor
-                {
-                    IdExecutor = ViewportHelper.ValueOrNull<int>(row, "id_executor"),
-                    ExecutorName = ViewportHelper.ValueOrNull(row, "executor_name"),
-                    ExecutorLogin = ViewportHelper.ValueOrNull(row, "executor_login"),
-                    Phone = ViewportHelper.ValueOrNull(row, "phone"),
-                    IsInactive = ViewportHelper.ValueOrNull<bool>(row, "is_inactive") == true
-                };
-                list.Add(e);
+                list.Add(ExecutorConverter.FromRow(row));
             }
             return list;
         }
@@ -138,7 +99,7 @@ namespace Registry.Viewport
                     GeneralDataModel.Select().Columns[i].ColumnName, GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             foreach (var executor in GeneralBindingSource)
-                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)executor)));
+                GeneralSnapshot.Rows.Add(ExecutorConverter.ToArray((DataRowView)executor));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
             GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_executors_CurrentItemChanged;
 
@@ -190,7 +151,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             foreach (var executor in GeneralBindingSource)
-                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)executor)));
+                GeneralSnapshot.Rows.Add(ExecutorConverter.ToArray((DataRowView)executor));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -201,13 +162,13 @@ namespace Registry.Viewport
 
         public override void SaveRecord()
         {
-            sync_views = false;
+            SyncViews = false;
             dataGridView.EndEdit();
             GeneralDataModel.EditingNewRecord = true;
             var list = EntitiesListFromViewport();
             if (!ValidateViewportData(list))
             {
-                sync_views = true;
+                SyncViews = true;
                 GeneralDataModel.EditingNewRecord = false;
                 return;
             }
@@ -220,28 +181,24 @@ namespace Registry.Viewport
                     var idExecutor = GeneralDataModel.Insert(list[i]);
                     if (idExecutor == -1)
                     {
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_executor"] = idExecutor;
-                    GeneralDataModel.Select().Rows.Add(DataRowViewToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(ExecutorConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
-
-                    if (RowToExecutor(row) == executor)
+                    if (ExecutorConverter.FromRow(row) == executor)
                         continue;
                     if (GeneralDataModel.Update(list[i]) == -1)
                     {
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    row["executor_name"] = executor.ExecutorName == null ? DBNull.Value : (object)executor.ExecutorName;
-                    row["executor_login"] = executor.ExecutorLogin == null ? DBNull.Value : (object)executor.ExecutorLogin;
-                    row["phone"] = executor.Phone == null ? DBNull.Value : (object)executor.Phone;
-                    row["is_inactive"] = executor.IsInactive == null ? DBNull.Value : (object)executor.IsInactive;
+                    ExecutorConverter.FillRow(executor, row);
                 }
             }
             list = EntitiesListFromView();
@@ -258,14 +215,14 @@ namespace Registry.Viewport
                 {
                     if (executor.IdExecutor != null && GeneralDataModel.Delete(executor.IdExecutor.Value) == -1)
                     {
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
                     GeneralDataModel.Select().Rows.Find(executor.IdExecutor).Delete();
                 }
             }
-            sync_views = true;
+            SyncViews = true;
             GeneralDataModel.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
         }
@@ -311,7 +268,7 @@ namespace Registry.Viewport
             base.OnClosing(e);
         }
 
-        void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
         {
             var cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
             switch (cell.OwningColumn.Name)
@@ -322,67 +279,61 @@ namespace Registry.Viewport
             }
         }
 
-        void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             MenuCallback.EditingStateUpdate();
         }
 
         private void ExecutorsViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
-            if (Selected)
-            {
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.StatusBarStateUpdate();
-            }
+            if (!Selected) return;
+            MenuCallback.EditingStateUpdate();
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.StatusBarStateUpdate();
         }
 
-        void ExecutorsViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
+        private void ExecutorsViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
-            if (!sync_views)
+            if (!SyncViews)
                 return;
-            if (e.Action == DataRowAction.Delete)
-            {
-                var rowIndex = GeneralSnapshotBindingSource.Find("id_executor", e.Row["id_executor"]);
-                if (rowIndex != -1)
-                    ((DataRowView)GeneralSnapshotBindingSource[rowIndex]).Delete();
-            }
+            if (e.Action != DataRowAction.Delete) return;
+            var rowIndex = GeneralSnapshotBindingSource.Find("id_executor", e.Row["id_executor"]);
+            if (rowIndex != -1)
+                ((DataRowView)GeneralSnapshotBindingSource[rowIndex]).Delete();
         }
 
-        void ExecutorsViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void ExecutorsViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
-            if (!sync_views)
+            if (!SyncViews)
                 return;
             var rowIndex = GeneralSnapshotBindingSource.Find("id_executor", e.Row["id_executor"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_executor", e.Row["id_executor"]) != -1)
             {
-                GeneralSnapshot.Rows.Add(e.Row["id_executor"], e.Row["executor_name"], e.Row["executor_login"], e.Row["phone"], e.Row["is_inactive"]);
+                GeneralSnapshot.Rows.Add(ExecutorConverter.ToArray(e.Row));
             }
             else
                 if (rowIndex != -1)
                 {
-                    var row = ((DataRowView)GeneralSnapshotBindingSource[rowIndex]);
+                    var row = (DataRowView)GeneralSnapshotBindingSource[rowIndex];
                     row["executor_name"] = e.Row["executor_name"];
                     row["executor_login"] = e.Row["executor_login"];
                     row["phone"] = e.Row["phone"];
                     row["is_inactive"] = e.Row["is_inactive"];
                 }
-            if (Selected)
-            {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.StatusBarStateUpdate();
-                MenuCallback.EditingStateUpdate();
-            }
+            if (!Selected) return;
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.StatusBarStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
-        void v_snapshot_executors_CurrentItemChanged(object sender, EventArgs e)
+        private void v_snapshot_executors_CurrentItemChanged(object sender, EventArgs e)
         {
             if (!Selected) return;
             MenuCallback.NavigationStateUpdate();
             MenuCallback.EditingStateUpdate();
         }
 
-        void dataGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        private void dataGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (dataGridView.CurrentCell is DataGridViewCheckBoxCell)
                 dataGridView.EndEdit();

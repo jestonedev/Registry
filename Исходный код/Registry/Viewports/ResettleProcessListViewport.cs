@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
-using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
@@ -13,23 +11,26 @@ using Registry.Viewport.SearchForms;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 using System.Linq;
+using Registry.Viewport.EntityConverters;
 
 namespace Registry.Viewport
 {
     internal sealed partial class ResettleProcessListViewport: FormWithGridViewport
     {
         #region Models
-        DataModel documents_residence;
-        CalcDataModel resettle_aggregate;
+
+        private DataModel _documentsResidence;
+        private CalcDataModel _resettleAggregate;
         #endregion Models
 
         #region Views
-        BindingSource v_documents_residence;
-        BindingSource v_resettle_aggregate;
+
+        private BindingSource _vDocumentsResidence;
+        private BindingSource _vResettleAggregate;
         #endregion Views
 
-        private SearchForm spExtendedSearchForm;
-        private SearchForm spSimpleSearchForm;
+        private SearchForm _spExtendedSearchForm;
+        private SearchForm _spSimpleSearchForm;
 
         private ResettleProcessListViewport()
             : this(null, null)
@@ -46,13 +47,13 @@ namespace Registry.Viewport
         private void SetViewportCaption()
         {
             if (viewportState == ViewportState.NewRowState)
-                Text = "Новая исковая работа";
+                Text = @"Новая исковая работа";
             else
                 if (GeneralBindingSource.Position != -1)
                         Text = string.Format(CultureInfo.InvariantCulture, "Процесс переселения №{0}",
                             ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"]);
                 else
-                        Text = "Процессы переселения отсутствуют";
+                        Text = @"Процессы переселения отсутствуют";
         }
 
         private void DataBind()
@@ -65,7 +66,7 @@ namespace Registry.Viewport
             dateTimePickerResettleDate.DataBindings.Add("Value", GeneralBindingSource, "resettle_date", true, DataSourceUpdateMode.Never, null);
             numericUpDownDebts.DataBindings.Clear();
             numericUpDownDebts.DataBindings.Add("Value", GeneralBindingSource, "debts", true, DataSourceUpdateMode.Never, 0);
-            comboBoxDocumentResidence.DataSource = v_documents_residence;
+            comboBoxDocumentResidence.DataSource = _vDocumentsResidence;
             comboBoxDocumentResidence.ValueMember = "id_document_residence";
             comboBoxDocumentResidence.DisplayMember = "document_residence";
             comboBoxDocumentResidence.DataBindings.Clear();
@@ -97,7 +98,7 @@ namespace Registry.Viewport
         {
             if (resettleProcess.IdDocumentResidence == null)
             {
-                MessageBox.Show("Необходимо выбрать документ-основание на проживание", "Ошибка", 
+                MessageBox.Show(@"Необходимо выбрать документ-основание на проживание", @"Ошибка", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxDocumentResidence.Focus();
                 return false;
@@ -107,31 +108,24 @@ namespace Registry.Viewport
 
         protected override Entity EntityFromView()
         {
-            var resettle_process = new ResettleProcess();
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            resettle_process.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
-            resettle_process.Debts = ViewportHelper.ValueOrNull<decimal>(row, "debts");
-            resettle_process.ResettleDate = ViewportHelper.ValueOrNull<DateTime>(row, "resettle_date");
-            resettle_process.DocNumber = ViewportHelper.ValueOrNull(row, "doc_number");
-            resettle_process.IdDocumentResidence = ViewportHelper.ValueOrNull<int>(row, "id_document_residence");
-            resettle_process.Description = ViewportHelper.ValueOrNull(row, "description");
-            return resettle_process;
+            return ResettleProcessConverter.FromRow(row);
         }
 
         protected override Entity EntityFromViewport()
         {
-            var resettle_process = new ResettleProcess();
+            var resettleProcess = new ResettleProcess();
             if ((GeneralBindingSource.Position == -1) || ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"] is DBNull)
-                resettle_process.IdProcess = null;
+                resettleProcess.IdProcess = null;
             else
-                resettle_process.IdProcess = 
+                resettleProcess.IdProcess = 
                     Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"], CultureInfo.InvariantCulture);
-            resettle_process.Debts = numericUpDownDebts.Value;
-            resettle_process.DocNumber = ViewportHelper.ValueOrNull(textBoxDocNumber);
-            resettle_process.ResettleDate = ViewportHelper.ValueOrNull(dateTimePickerResettleDate);
-            resettle_process.IdDocumentResidence = ViewportHelper.ValueOrNull<int>(comboBoxDocumentResidence);
-            resettle_process.Description = ViewportHelper.ValueOrNull(textBoxDescription);
-            return resettle_process;
+            resettleProcess.Debts = numericUpDownDebts.Value;
+            resettleProcess.DocNumber = ViewportHelper.ValueOrNull(textBoxDocNumber);
+            resettleProcess.ResettleDate = ViewportHelper.ValueOrNull(dateTimePickerResettleDate);
+            resettleProcess.IdDocumentResidence = ViewportHelper.ValueOrNull<int>(comboBoxDocumentResidence);
+            resettleProcess.Description = ViewportHelper.ValueOrNull(textBoxDescription);
+            return resettleProcess;
         }
 
         private void ViewportFromResettleProcess(ResettleProcess resettleProcess)
@@ -141,18 +135,6 @@ namespace Registry.Viewport
             comboBoxDocumentResidence.SelectedValue = ViewportHelper.ValueOrDBNull(resettleProcess.IdDocumentResidence);
             textBoxDescription.Text = resettleProcess.Description;
             textBoxDocNumber.Text = resettleProcess.DocNumber;
-        }
-
-        private static void FillRowFromResettleProcess(ResettleProcess resettleProcess, DataRowView row)
-        {
-            row.BeginEdit();
-            row["id_process"] = ViewportHelper.ValueOrDBNull(resettleProcess.IdProcess);
-            row["resettle_date"] = ViewportHelper.ValueOrDBNull(resettleProcess.ResettleDate);
-            row["debts"] = ViewportHelper.ValueOrDBNull(resettleProcess.Debts);
-            row["id_document_residence"] = ViewportHelper.ValueOrDBNull(resettleProcess.IdDocumentResidence);
-            row["description"] = ViewportHelper.ValueOrDBNull(resettleProcess.Description);
-            row["doc_number"] = ViewportHelper.ValueOrDBNull(resettleProcess.DocNumber);
-            row.EndEdit();
         }
 
         public override bool CanLoadData()
@@ -165,18 +147,20 @@ namespace Registry.Viewport
             DockAreas = DockAreas.Document;
             dataGridView.AutoGenerateColumns = false;
             GeneralDataModel = DataModel.GetInstance<ResettleProcessesDataModel>();
-            documents_residence = DataModel.GetInstance<DocumentsResidenceDataModel>();
-            resettle_aggregate = CalcDataModel.GetInstance<CalcDataModelResettleAggregated>();
+            _documentsResidence = DataModel.GetInstance<DocumentsResidenceDataModel>();
+            _resettleAggregate = CalcDataModel.GetInstance<CalcDataModelResettleAggregated>();
 
             // Ожидаем дозагрузки, если это необходимо
             GeneralDataModel.Select();
-            documents_residence.Select();
+            _documentsResidence.Select();
 
             var ds = DataModel.DataSet;
 
-            v_documents_residence = new BindingSource();
-            v_documents_residence.DataMember = "documents_residence";
-            v_documents_residence.DataSource = ds;
+            _vDocumentsResidence = new BindingSource
+            {
+                DataMember = "documents_residence",
+                DataSource = ds
+            };
 
             GeneralBindingSource = new BindingSource();
             GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
@@ -187,8 +171,7 @@ namespace Registry.Viewport
                 GeneralBindingSource.Filter += " AND ";
             GeneralBindingSource.Filter += DynamicFilter;
 
-            v_resettle_aggregate = new BindingSource();
-            v_resettle_aggregate.DataSource = resettle_aggregate.Select();
+            _vResettleAggregate = new BindingSource {DataSource = _resettleAggregate.Select()};
 
             DataBind();
 
@@ -198,7 +181,7 @@ namespace Registry.Viewport
             dataGridView.RowCount = GeneralBindingSource.Count;
             SetViewportCaption();
             ViewportHelper.SetDoubleBuffered(dataGridView);
-            resettle_aggregate.RefreshEvent += resettles_aggregate_RefreshEvent;
+            _resettleAggregate.RefreshEvent += resettles_aggregate_RefreshEvent;
             is_editable = true;
             DataChangeHandlersInit();
         }
@@ -249,7 +232,7 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание",
+            if (MessageBox.Show(@"Вы действительно хотите удалить эту запись?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_process"]) == -1)
@@ -281,26 +264,26 @@ namespace Registry.Viewport
             switch (searchFormType)
             {
                 case SearchFormType.SimpleSearchForm:
-                    if (spSimpleSearchForm == null)
-                        spSimpleSearchForm = new SimpleSearchResettleForm();
-                    if (spSimpleSearchForm.ShowDialog() != DialogResult.OK)
+                    if (_spSimpleSearchForm == null)
+                        _spSimpleSearchForm = new SimpleSearchResettleForm();
+                    if (_spSimpleSearchForm.ShowDialog() != DialogResult.OK)
                         return;
-                    DynamicFilter = spSimpleSearchForm.GetFilter();
+                    DynamicFilter = _spSimpleSearchForm.GetFilter();
                     break;
                 case SearchFormType.ExtendedSearchForm:
-                    if (spExtendedSearchForm == null)
-                        spExtendedSearchForm = new ExtendedSearchResettleForm();
-                    if (spExtendedSearchForm.ShowDialog() != DialogResult.OK)
+                    if (_spExtendedSearchForm == null)
+                        _spExtendedSearchForm = new ExtendedSearchResettleForm();
+                    if (_spExtendedSearchForm.ShowDialog() != DialogResult.OK)
                         return;
-                    DynamicFilter = spExtendedSearchForm.GetFilter();
+                    DynamicFilter = _spExtendedSearchForm.GetFilter();
                     break;
             }
-            var Filter = StaticFilter;
+            var filter = StaticFilter;
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
-                Filter += " AND ";
-            Filter += DynamicFilter;
+                filter += " AND ";
+            filter += DynamicFilter;
             dataGridView.RowCount = 0;
-            GeneralBindingSource.Filter = Filter;
+            GeneralBindingSource.Filter = filter;
             dataGridView.RowCount = GeneralBindingSource.Count;
         }
 
@@ -322,41 +305,41 @@ namespace Registry.Viewport
             var resettleProcess = (ResettleProcess) EntityFromViewport();
             if (!ValidateResettleProcess(resettleProcess))
                 return;
-            var Filter = "";
+            var filter = "";
             if (!string.IsNullOrEmpty(GeneralBindingSource.Filter))
-                Filter += " OR ";
+                filter += " OR ";
             else
-                Filter += "(1 = 1) OR ";
+                filter += "(1 = 1) OR ";
             switch (viewportState)
             {
                 case ViewportState.ReadState:
-                    MessageBox.Show("Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
+                    MessageBox.Show(@"Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
-                    var id_process = GeneralDataModel.Insert(resettleProcess);
-                    if (id_process == -1)
+                    var idProcess = GeneralDataModel.Insert(resettleProcess);
+                    if (idProcess == -1)
                     {
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
                     DataRowView newRow;
-                    resettleProcess.IdProcess = id_process;
+                    resettleProcess.IdProcess = idProcess;
                     is_editable = false;
                     if (GeneralBindingSource.Position == -1)
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    Filter += string.Format(CultureInfo.CurrentCulture, "(id_process = {0})", resettleProcess.IdProcess);
-                    GeneralBindingSource.Filter += Filter;
-                    FillRowFromResettleProcess(resettleProcess, newRow);
+                    filter += string.Format(CultureInfo.CurrentCulture, "(id_process = {0})", resettleProcess.IdProcess);
+                    GeneralBindingSource.Filter += filter;
+                    ResettleProcessConverter.FillRow(resettleProcess, newRow);
                     GeneralDataModel.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
                     if (resettleProcess.IdProcess == null)
                     {
-                        MessageBox.Show("Вы пытаетесь изменить запись о процессе переселения без внутреннего номера. " +
-                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
+                        MessageBox.Show(@"Вы пытаетесь изменить запись о процессе переселения без внутреннего номера. " +
+                            @"Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
@@ -364,9 +347,9 @@ namespace Registry.Viewport
                         return;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     is_editable = false;
-                    Filter += string.Format(CultureInfo.CurrentCulture, "(id_process = {0})", resettleProcess.IdProcess);
-                    GeneralBindingSource.Filter += Filter;
-                    FillRowFromResettleProcess(resettleProcess, row);
+                    filter += string.Format(CultureInfo.CurrentCulture, "(id_process = {0})", resettleProcess.IdProcess);
+                    GeneralBindingSource.Filter += filter;
+                    ResettleProcessConverter.FillRow(resettleProcess, row);
                     break;
             }
             UnbindedCheckBoxesUpdate();
@@ -419,20 +402,11 @@ namespace Registry.Viewport
             else
             {
                 GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
-                resettle_aggregate.RefreshEvent -= resettles_aggregate_RefreshEvent;
+                _resettleAggregate.RefreshEvent -= resettles_aggregate_RefreshEvent;
                 GeneralDataModel.Select().RowChanged -= ResettleProcessListViewport_RowChanged;
                 GeneralDataModel.Select().RowDeleted -= ResettleProcessListViewport_RowDeleted;
             }
             base.OnClosing(e);
-        }
-
-        public override void ForceClose()
-        {
-            if (viewportState == ViewportState.NewRowState)
-                GeneralDataModel.EditingNewRecord = false;
-            GeneralDataModel.Select().RowChanged -= ResettleProcessListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted -= ResettleProcessListViewport_RowDeleted;
-            Close();
         }
 
         public override bool HasAssocViewport<T>()
@@ -492,13 +466,13 @@ namespace Registry.Viewport
         {
             ShowAssocViewport<T>(ResettleEstateObjectWay.None);
         }
-       
-        void resettles_aggregate_RefreshEvent(object sender, EventArgs e)
+
+        private void resettles_aggregate_RefreshEvent(object sender, EventArgs e)
         {
             dataGridView.Refresh();
         }
 
-        void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
+        private void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
             SetViewportCaption();
             if (GeneralBindingSource.Position == -1 || dataGridView.RowCount == 0)
@@ -531,7 +505,7 @@ namespace Registry.Viewport
             is_editable = true;
         }
 
-        void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (dataGridView.Columns[e.ColumnIndex].SortMode == DataGridViewColumnSortMode.NotSortable)
                 return;
@@ -543,14 +517,13 @@ namespace Registry.Viewport
                 dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = way;
                 return true;
             };
-            if (dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection == SortOrder.Ascending)
-                changeSortColumn(SortOrder.Descending);
-            else
-                changeSortColumn(SortOrder.Ascending);
+            changeSortColumn(dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection == SortOrder.Ascending
+                ? SortOrder.Descending
+                : SortOrder.Ascending);
             dataGridView.Refresh();
         }
 
-        void dataGridView_SelectionChanged(object sender, EventArgs e)
+        private void dataGridView_SelectionChanged(object sender, EventArgs e)
         {
             if (dataGridView.SelectedRows.Count > 0)
                 GeneralBindingSource.Position = dataGridView.SelectedRows[0].Index;
@@ -559,40 +532,39 @@ namespace Registry.Viewport
             dataGridView.Refresh();
         }
 
-        void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        private void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (GeneralBindingSource.Count <= e.RowIndex) return;
+            var row = (DataRowView)GeneralBindingSource[e.RowIndex];
             switch (dataGridView.Columns[e.ColumnIndex].Name)
             {
                 case "id_process":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["id_process"];
+                case "doc_number":
+                    e.Value = row[dataGridView.Columns[e.ColumnIndex].Name];
                     break;
                 case "resettle_date":
-                    e.Value = ((DataRowView)GeneralBindingSource[e.RowIndex])["resettle_date"] == DBNull.Value ? "" :
-                        ((DateTime)((DataRowView)GeneralBindingSource[e.RowIndex])["resettle_date"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
-                    break;
-                case "doc_number":
-                    e.Value = ((DataRowView) GeneralBindingSource[e.RowIndex])["doc_number"];
+                    e.Value = row["resettle_date"] == DBNull.Value ? "" :
+                        ((DateTime)row["resettle_date"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                     break;
                 case "resettle_persons":
-                    var row_index = v_resettle_aggregate.Find("id_process", ((DataRowView)GeneralBindingSource[e.RowIndex])["id_process"]);
-                    if (row_index != -1)
-                        e.Value = ((DataRowView)v_resettle_aggregate[row_index])["resettlers"];
+                    var rowIndex = _vResettleAggregate.Find("id_process", row["id_process"]);
+                    if (rowIndex != -1)
+                        e.Value = ((DataRowView)_vResettleAggregate[rowIndex])["resettlers"];
                     break;
                 case "address_from":
-                    row_index = v_resettle_aggregate.Find("id_process", ((DataRowView)GeneralBindingSource[e.RowIndex])["id_process"]);
-                    if (row_index != -1)
-                        e.Value = ((DataRowView)v_resettle_aggregate[row_index])["address_from"];
+                    rowIndex = _vResettleAggregate.Find("id_process", row["id_process"]);
+                    if (rowIndex != -1)
+                        e.Value = ((DataRowView)_vResettleAggregate[rowIndex])["address_from"];
                     break;
                 case "address_to":
-                    row_index = v_resettle_aggregate.Find("id_process", ((DataRowView)GeneralBindingSource[e.RowIndex])["id_process"]);
-                    if (row_index != -1)
-                        e.Value = ((DataRowView)v_resettle_aggregate[row_index])["address_to"];
+                    rowIndex = _vResettleAggregate.Find("id_process", row["id_process"]);
+                    if (rowIndex != -1)
+                        e.Value = ((DataRowView)_vResettleAggregate[rowIndex])["address_to"];
                     break;   
             }
         }
 
-        void ResettleProcessListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        private void ResettleProcessListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
             {
@@ -605,7 +577,7 @@ namespace Registry.Viewport
             }
         }
 
-        void ResettleProcessListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void ResettleProcessListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Change || e.Action == DataRowAction.ChangeCurrentAndOriginal || e.Action == DataRowAction.ChangeOriginal)
                 dataGridView.Refresh();

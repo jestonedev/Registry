@@ -311,13 +311,13 @@ namespace Registry.Viewport
 
         public override void SaveRecord()
         {
-            sync_views = false;
+            SyncViews = false;
             dataGridView.EndEdit();
             GeneralDataModel.EditingNewRecord = true;
             var list = EntitiesListFromViewport();
             if (!ValidateViewportData(list))
             {
-                sync_views = true;
+                SyncViews = true;
                 return;
             }
             for (var i = 0; i < list.Count; i++)
@@ -333,7 +333,7 @@ namespace Registry.Viewport
                     {
                         MessageBox.Show(@"Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
                             @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         RebuildFilter();
                         return;
@@ -341,7 +341,7 @@ namespace Registry.Viewport
                     var idRestriction = GeneralDataModel.Insert(restriction);
                     if (idRestriction == -1)
                     {
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         RebuildFilter();
                         return;
@@ -366,7 +366,7 @@ namespace Registry.Viewport
                         continue;
                     if (GeneralDataModel.Update(restriction) == -1)
                     {
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         RebuildFilter();
                         return;
@@ -391,7 +391,7 @@ namespace Registry.Viewport
                 if (restriction.IdRestriction != null && 
                     GeneralDataModel.Delete(restriction.IdRestriction.Value) == -1)
                 {
-                    sync_views = true;
+                    SyncViews = true;
                     GeneralDataModel.EditingNewRecord = false;
                     RebuildFilter();
                     return;
@@ -399,7 +399,7 @@ namespace Registry.Viewport
                 GeneralDataModel.Select().Rows.Find(restriction.IdRestriction).Delete();
             }
             RebuildFilter();
-            sync_views = true;
+            SyncViews = true;
             GeneralDataModel.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
         }
@@ -477,7 +477,7 @@ namespace Registry.Viewport
 
         void RestrictionAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
-            if (!sync_views)
+            if (!SyncViews)
                 return;
             //Если удалена ассоциативная связь, то перестраиваем фильтр v_ownerships_rights.Filter
             if (e.Action == DataRowAction.Delete)
@@ -486,7 +486,7 @@ namespace Registry.Viewport
 
         void RestrictionAssoc_RowChanged(object sender, DataRowChangeEventArgs e)
         {
-            if (!sync_views)
+            if (!SyncViews)
                 return;
             //Если добавлена новая ассоциативная связь, то перестраиваем фильтр v_restriction.Filter
             RebuildFilter();
@@ -505,7 +505,7 @@ namespace Registry.Viewport
 
         void RestrictionListViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
-            if (!sync_views)
+            if (!SyncViews)
                 return;
             if (e.Action == DataRowAction.Delete)
             {
@@ -517,7 +517,7 @@ namespace Registry.Viewport
 
         void RestrictionListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
-            if (!sync_views)
+            if (!SyncViews)
                 return;
             switch (e.Action)
             {

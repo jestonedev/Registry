@@ -566,8 +566,8 @@ namespace Registry.Viewport
                 DataModel
                     .GetInstance<TenancyPersonsDataModel>()
                     .FilterDeletedRows().FirstOrDefault(v => v.Field<int>("id_person") == idNewTenant.Value);
-            var oldTenant = oldTenantRow != null ? ViewportHelper.PersonFromRow(oldTenantRow) : null;
-            var newTenant = newTenantRow != null ? ViewportHelper.PersonFromRow(newTenantRow) : null;
+            var oldTenant = oldTenantRow != null ? TenancyPersonConverter.FromRow(oldTenantRow) : null;
+            var newTenant = newTenantRow != null ? TenancyPersonConverter.FromRow(newTenantRow) : null;
 
             if (oldTenant == null || newTenant == null)
             {

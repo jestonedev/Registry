@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -25,14 +26,6 @@ namespace Registry.Viewport
             GeneralSnapshot = new DataTable("snapshot_documents_issued_by")
             {
                 Locale = CultureInfo.InvariantCulture
-            };
-        }
-
-        private static object[] DataRowViewToArray(DataRowView dataRowView)
-        {
-            return new[] { 
-                dataRowView["id_document_issued_by"], 
-                dataRowView["document_issued_by"]
             };
         }
 
@@ -57,27 +50,14 @@ namespace Registry.Viewport
             return true;
         }
 
-        private static DocumentIssuedBy RowToDocumentIssuedBy(DataRow row)
-        {
-            var documentIssuedBy = new DocumentIssuedBy
-            {
-                IdDocumentIssuedBy = ViewportHelper.ValueOrNull<int>(row, "id_document_issued_by"),
-                DocumentIssuedByName = ViewportHelper.ValueOrNull(row, "document_issued_by")
-            };
-            return documentIssuedBy;
-        }
-
         protected override List<Entity> EntitiesListFromViewport()
         {
             var list = new List<Entity>();
             for (var i = 0; i < dataGridView.Rows.Count; i++)
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
-                var dib = new DocumentIssuedBy();
                 var row = dataGridView.Rows[i];
-                dib.IdDocumentIssuedBy = ViewportHelper.ValueOrNull<int>(row, "id_document_issued_by");
-                dib.DocumentIssuedByName = ViewportHelper.ValueOrNull(row, "document_issued_by");
-                list.Add(dib);
+                list.Add(DocumentIssuedByConverter.FromRow(row));
             }
             return list;
         }
@@ -87,11 +67,8 @@ namespace Registry.Viewport
             var list = new List<Entity>();
             foreach (var document in GeneralBindingSource)
             {
-                var dib = new DocumentIssuedBy();
-                var row = ((DataRowView)document);
-                dib.IdDocumentIssuedBy = ViewportHelper.ValueOrNull<int>(row, "id_document_issued_by");
-                dib.DocumentIssuedByName = ViewportHelper.ValueOrNull(row, "document_issued_by");
-                list.Add(dib);
+                var row = (DataRowView)document;
+                list.Add(DocumentIssuedByConverter.FromRow(row));
             }
             return list;
         }
@@ -119,7 +96,7 @@ namespace Registry.Viewport
                     GeneralDataModel.Select().Columns[i].ColumnName, GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             foreach (var document in GeneralBindingSource)
-                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)document)));
+                GeneralSnapshot.Rows.Add(DocumentIssuedByConverter.ToArray((DataRowView)document));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
             GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_documents_issued_by_CurrentItemChanged;
 
@@ -196,7 +173,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             foreach (var document in GeneralBindingSource)
-                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)document)));
+                GeneralSnapshot.Rows.Add(DocumentIssuedByConverter.ToArray(((DataRowView)document)));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -207,13 +184,13 @@ namespace Registry.Viewport
 
         public override void SaveRecord()
         {
-            sync_views = false;
+            SyncViews = false;
             dataGridView.EndEdit();
             GeneralDataModel.EditingNewRecord = true;
             var list = EntitiesListFromViewport();
             if (!ValidateViewportData(list))
             {
-                sync_views = true;
+                SyncViews = true;
                 GeneralDataModel.EditingNewRecord = false;
                 return;
             }
@@ -226,21 +203,21 @@ namespace Registry.Viewport
                     var idDocumentIssuedBy = GeneralDataModel.Insert(list[i]);
                     if (idDocumentIssuedBy == -1)
                     {
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_document_issued_by"] = idDocumentIssuedBy;
-                    GeneralDataModel.Select().Rows.Add(DataRowViewToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(DocumentIssuedByConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
 
-                    if (RowToDocumentIssuedBy(row) == document)
+                    if (DocumentIssuedByConverter.FromRow(row) == document)
                         continue;
                     if (GeneralDataModel.Update(list[i]) == -1)
                     {
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
@@ -260,13 +237,13 @@ namespace Registry.Viewport
                 if (rowIndex != -1) continue;
                 if (document.IdDocumentIssuedBy != null && GeneralDataModel.Delete(document.IdDocumentIssuedBy.Value) == -1)
                 {
-                    sync_views = true;
+                    SyncViews = true;
                     GeneralDataModel.EditingNewRecord = false;
                     return;
                 }
                 GeneralDataModel.Select().Rows.Find(document.IdDocumentIssuedBy).Delete();
             }
-            sync_views = true;
+            SyncViews = true;
             GeneralDataModel.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
         }
@@ -296,7 +273,7 @@ namespace Registry.Viewport
 
         void DocumentIssuedByViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
-            if (!sync_views)
+            if (!SyncViews)
                 return;
             if (e.Action == DataRowAction.Delete)
             {
@@ -308,7 +285,7 @@ namespace Registry.Viewport
 
         void DocumentIssuedByViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
-            if (!sync_views)
+            if (!SyncViews)
                 return;
             var rowIndex = GeneralSnapshotBindingSource.Find("id_document_issued_by", e.Row["id_document_issued_by"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_document_issued_by", e.Row["id_document_issued_by"]) != -1)

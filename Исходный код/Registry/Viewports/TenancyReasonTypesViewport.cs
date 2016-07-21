@@ -204,13 +204,13 @@ namespace Registry.Viewport
 
         public override void SaveRecord()
         {
-            sync_views = false;
+            SyncViews = false;
             dataGridView.EndEdit();
             GeneralDataModel.EditingNewRecord = true;
             var list = EntitiesListFromViewport();
             if (!ValidateViewportData(list))
             {
-                sync_views = true;
+                SyncViews = true;
                 GeneralDataModel.EditingNewRecord = false;
                 return;
             }
@@ -223,7 +223,7 @@ namespace Registry.Viewport
                     var idReasonType = GeneralDataModel.Insert(reasonType);
                     if (idReasonType == -1)
                     {
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
@@ -237,7 +237,7 @@ namespace Registry.Viewport
                         continue;
                     if (GeneralDataModel.Update(reasonType) == -1)
                     {
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
@@ -260,14 +260,14 @@ namespace Registry.Viewport
                     if (reasonType.IdReasonType != null && 
                         GeneralDataModel.Delete(reasonType.IdReasonType.Value) == -1)
                     {
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
                     GeneralDataModel.Select().Rows.Find(reasonType.IdReasonType).Delete();
                 }
             }
-            sync_views = true;
+            SyncViews = true;
             GeneralDataModel.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
         }
@@ -356,7 +356,7 @@ namespace Registry.Viewport
 
         void ReasonTypesViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
-            if (!sync_views)
+            if (!SyncViews)
                 return;
             if (e.Action == DataRowAction.Delete)
             {
@@ -368,7 +368,7 @@ namespace Registry.Viewport
 
         void ReasonTypesViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
-            if (!sync_views)
+            if (!SyncViews)
                 return;
             var rowIndex = GeneralSnapshotBindingSource.Find("id_reason_type", e.Row["id_reason_type"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_reason_type", e.Row["id_reason_type"]) != -1)

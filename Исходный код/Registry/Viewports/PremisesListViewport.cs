@@ -446,19 +446,19 @@ namespace Registry.Viewport
             return arguments;
         }
 
-        void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1) return;
             if (CanOpenDetails())
                 OpenDetails();
         }
 
-        void premises_funds_RefreshEvent(object sender, EventArgs e)
+        private void premises_funds_RefreshEvent(object sender, EventArgs e)
         {
             dataGridView.Refresh();
         }
 
-        void PremisesListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        private void PremisesListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             _idPremises = int.MinValue;
             dataGridView.RowCount = GeneralBindingSource.Count;
@@ -468,7 +468,7 @@ namespace Registry.Viewport
                 MenuCallback.StatusBarStateUpdate();
         }
 
-        void PremisesListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void PremisesListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             _idPremises = int.MinValue;
             if (e.Action == DataRowAction.Change || e.Action == DataRowAction.ChangeCurrentAndOriginal || e.Action == DataRowAction.ChangeOriginal)
@@ -478,7 +478,7 @@ namespace Registry.Viewport
                 MenuCallback.StatusBarStateUpdate();
         }
 
-        void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        private void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (dataGridView.Columns[e.ColumnIndex].SortMode == DataGridViewColumnSortMode.NotSortable)
                 return;
@@ -496,7 +496,7 @@ namespace Registry.Viewport
             dataGridView.Refresh();
         }
 
-        void dataGridView_SelectionChanged(object sender, EventArgs e)
+        private void dataGridView_SelectionChanged(object sender, EventArgs e)
         {
             if (dataGridView.SelectedRows.Count > 0)
                 GeneralBindingSource.Position = dataGridView.SelectedRows[0].Index;
@@ -543,13 +543,9 @@ namespace Registry.Viewport
                     e.Value = buildingRow["house"];
                     break;
                 case "premises_num":
-                    e.Value = row["premises_num"];
-                    break;
                 case "id_premises_type":
-                    e.Value = row["id_premises_type"];
-                    break;
                 case "total_area":
-                    e.Value = row["total_area"];
+                    e.Value = row[dataGridView.Columns[e.ColumnIndex].Name];
                     break;
                 case "id_state":
                     var stateRow = _objectStates.Select().Rows.Find(row["id_state"]);
@@ -557,7 +553,7 @@ namespace Registry.Viewport
                         e.Value = stateRow["state_female"];
                     break;
                 case "current_fund":
-                    if (new object[] { 1, 4, 5, 9, 11 }.Contains(row["id_state"]))
+                    if (DataModelHelper.MunicipalAndUnknownObjectStates().ToList().Contains((int)row["id_state"]))
                     {
                         var fundRow = _premisesFunds.Select().Rows.Find(row["id_premises"]);
                         if (fundRow != null)
@@ -616,7 +612,7 @@ namespace Registry.Viewport
             }
         }
 
-        void _premisesTenanciesInfo_RefreshEvent(object sender, EventArgs e)
+        private void _premisesTenanciesInfo_RefreshEvent(object sender, EventArgs e)
         {
             _idPremises = int.MinValue;
             dataGridView.Refresh();

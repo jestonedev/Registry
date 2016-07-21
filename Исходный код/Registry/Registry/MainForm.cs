@@ -685,10 +685,12 @@ namespace Registry
         private void ribbonOrbMenuItemPremises_Click(object sender, EventArgs e)
         {
             var filter = "";
-            var municipalIds = DataModelHelper.ObjectIdsByStates(EntityType.Premise, new[] { 4, 5, 9, 11 });
-            var ids = municipalIds.Aggregate("", (current, id) => current + (id.ToString(CultureInfo.InvariantCulture) + ","));
+            var municipalIds = DataModelHelper.ObjectIdsByStates(EntityType.Premise, DataModelHelper.MunicipalObjectStates().ToArray());
+            var ids = municipalIds.Aggregate("", (current, id) => current + id.ToString(CultureInfo.InvariantCulture) + ",");
+            var municipalStateIds = DataModelHelper.MunicipalObjectStates()
+                .Aggregate("", (current, id) => current + id.ToString(CultureInfo.InvariantCulture) + ",");
             ids = ids.TrimEnd(',');
-            filter += "(id_state IN (4, 5, 9, 11) OR (id_state = 1 AND id_premises IN (0" + ids + ")))";
+            filter += string.Format("(id_state IN ({0}) OR (id_state = 1 AND id_premises IN (0{1})))", municipalStateIds, ids);
             var viewport = ViewportFactory.CreateViewport<PremisesListViewport>(this);
             viewport.DynamicFilter = filter;
             if (((IMenuController) viewport).CanLoadData())

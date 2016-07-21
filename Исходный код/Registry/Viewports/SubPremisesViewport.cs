@@ -289,13 +289,13 @@ namespace Registry.Viewport
 
         public override void SaveRecord()
         {
-            sync_views = false;
+            SyncViews = false;
             dataGridView.EndEdit();
             GeneralDataModel.EditingNewRecord = true;
             var list = EntitiesListFromViewport();
             if (!ValidateSubPremises(list))
             {
-                sync_views = true;
+                SyncViews = true;
                 GeneralDataModel.EditingNewRecord = false;
                 return;
             }
@@ -305,28 +305,28 @@ namespace Registry.Viewport
                 var row = GeneralDataModel.Select().Rows.Find(subPremise.IdSubPremises);
                 if (row == null)
                 {
-                    if (subPremise.IdState != null && (new[] { 4, 5, 9, 11 }.Contains(subPremise.IdState.Value) && 
-                        !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal)))
+                    if (subPremise.IdState != null && DataModelHelper.MunicipalObjectStates().Contains(subPremise.IdState.Value) && 
+                        !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                     {
                         MessageBox.Show(@"У вас нет прав на добавление в базу муниципальных жилых помещений", @"Ошибка",
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    if (subPremise.IdState != null && (new[] { 1, 3, 6, 7, 8, 10 }.Contains(subPremise.IdState.Value) && 
-                        !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)))
+                    if (subPremise.IdState != null && DataModelHelper.NonMunicipalAndUnknownObjectStates().Contains(subPremise.IdState.Value) && 
+                        !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                     {
                         MessageBox.Show(@"У вас нет прав на добавление в базу немуниципальных жилых помещений", @"Ошибка",
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
                     var idSubPremises = GeneralDataModel.Insert(subPremise);
                     if (idSubPremises == -1)
                     {
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
@@ -344,7 +344,7 @@ namespace Registry.Viewport
                     {
                         MessageBox.Show(@"Вы не можете изменить информацию по данной комнате, т.к. она является муниципальной",
                             @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
@@ -354,13 +354,13 @@ namespace Registry.Viewport
                     {
                         MessageBox.Show(@"Вы не можете изменить информацию по данной комнате, т.к. она является немуниципальной",
                             @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
                     if (GeneralDataModel.Update(subPremise) == -1)
                     {
-                        sync_views = true;
+                        SyncViews = true;
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
@@ -394,7 +394,7 @@ namespace Registry.Viewport
                 {
                     MessageBox.Show(@"Вы не можете удалить муниципальную комнату, т.к. не имеете на это прав",
                         @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    sync_views = true;
+                    SyncViews = true;
                     GeneralDataModel.EditingNewRecord = false;
                     return;
                 }
@@ -404,20 +404,20 @@ namespace Registry.Viewport
                 {
                     MessageBox.Show(@"Вы не можете удалить немуниципальную комнату, т.к. не имеете на это прав",
                         @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    sync_views = true;
+                    SyncViews = true;
                     GeneralDataModel.EditingNewRecord = false;
                     return;
                 }
                 if (subPremise.IdSubPremises != null 
                     && GeneralDataModel.Delete(subPremise.IdSubPremises.Value) == -1)
                 {
-                    sync_views = true;
+                    SyncViews = true;
                     GeneralDataModel.EditingNewRecord = false;
                     return;
                 }
                 GeneralDataModel.Select().Rows.Find(subPremise.IdSubPremises).Delete();
             }
-            sync_views = true;
+            SyncViews = true;
             GeneralDataModel.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
         }
@@ -657,7 +657,7 @@ namespace Registry.Viewport
 
         void SubPremisesViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
-            if (!sync_views)
+            if (!SyncViews)
                 return;
             if (e.Action == DataRowAction.Delete)
             {
@@ -669,7 +669,7 @@ namespace Registry.Viewport
 
         void SubPremisesViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
-            if (!sync_views)
+            if (!SyncViews)
                 return;
             var rowIndex = GeneralSnapshotBindingSource.Find("id_sub_premises", e.Row["id_sub_premises"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_sub_premises", e.Row["id_sub_premises"]) != -1)
