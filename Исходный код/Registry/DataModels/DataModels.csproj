@@ -93,6 +93,7 @@
     <Compile Include="DataModels\DataModel.cs" />
     <Compile Include="DataModels\DataModelLoadState.cs" />
     <Compile Include="DataModels\DataModelLoadSyncType.cs" />
+    <Compile Include="DataModels\TenancyRentPeriodsHistoryDataModel.cs" />
     <Compile Include="DBConnection.cs" />
     <Compile Include="DataModels\DocumentsIssuedByDataModel.cs" />
     <Compile Include="DataModels\DocumentTypesDataModel.cs" />

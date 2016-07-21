@@ -126,18 +126,27 @@ namespace Registry.Viewport
             this.textBoxTerminateAgreement = new System.Windows.Forms.TextBox();
             this.label80 = new System.Windows.Forms.Label();
             this.tabPageProlong = new System.Windows.Forms.TabPage();
-            this.dateTimePickerProlongTo = new System.Windows.Forms.DateTimePicker();
+            this.checkBoxCommercialProlongUntilDismissal = new System.Windows.Forms.CheckBox();
+            this.textBoxCommercialProlongGeneralPoint = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.dateTimePickerCommercialProlongTo = new System.Windows.Forms.DateTimePicker();
             this.label8 = new System.Windows.Forms.Label();
-            this.dateTimePickerProlongFrom = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePickerCommercialProlongFrom = new System.Windows.Forms.DateTimePicker();
             this.label7 = new System.Windows.Forms.Label();
-            this.dateTimePickerRequest = new System.Windows.Forms.DateTimePicker();
+            this.dateTimePickerCommercialProlongRequest = new System.Windows.Forms.DateTimePicker();
             this.label6 = new System.Windows.Forms.Label();
             this.vButtonProlong = new VIBlend.WinForms.Controls.vButton();
             this.tabPageProlongSpecial = new System.Windows.Forms.TabPage();
-            this.textBoxSpecialGeneralPoint = new System.Windows.Forms.TextBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.textBoxSpecialProlongGeneralPoint = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
-            this.textBoxSpecialPoint = new System.Windows.Forms.TextBox();
+            this.textBoxSpecialProlongPoint = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
+            this.checkBoxSpecialProlongUntilDismissal = new System.Windows.Forms.CheckBox();
+            this.dateTimePickerSpecialProlongTo = new System.Windows.Forms.DateTimePicker();
+            this.label13 = new System.Windows.Forms.Label();
+            this.dateTimePickerSpecialProlongFrom = new System.Windows.Forms.DateTimePicker();
+            this.label14 = new System.Windows.Forms.Label();
             this.vButtonProlongSpecial = new VIBlend.WinForms.Controls.vButton();
             this.tabPageChangeTenancy = new System.Windows.Forms.TabPage();
             this.textBoxChangeTenantChangeFIO = new System.Windows.Forms.TextBox();
@@ -168,6 +177,7 @@ namespace Registry.Viewport
             this.tabPageTerminate.SuspendLayout();
             this.tabPageProlong.SuspendLayout();
             this.tabPageProlongSpecial.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.tabPageChangeTenancy.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewChangeTenant)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -191,7 +201,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 140F));
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 220F));
             this.tableLayoutPanel12.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableLayoutPanel12.Size = new System.Drawing.Size(1002, 724);
+            this.tableLayoutPanel12.Size = new System.Drawing.Size(1002, 712);
             this.tableLayoutPanel12.TabIndex = 0;
             // 
             // panel7
@@ -226,7 +236,7 @@ namespace Registry.Viewport
             // 
             this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(341, 109);
+            this.label4.Location = new System.Drawing.Point(338, 109);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(120, 15);
             this.label4.TabIndex = 40;
@@ -237,7 +247,7 @@ namespace Registry.Viewport
             this.vButtonPaymentInsert.AllowAnimations = true;
             this.vButtonPaymentInsert.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonPaymentInsert.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonPaymentInsert.Location = new System.Drawing.Point(467, 108);
+            this.vButtonPaymentInsert.Location = new System.Drawing.Point(464, 108);
             this.vButtonPaymentInsert.Name = "vButtonPaymentInsert";
             this.vButtonPaymentInsert.RoundedCornersMask = ((byte)(15));
             this.vButtonPaymentInsert.Size = new System.Drawing.Size(27, 20);
@@ -255,7 +265,7 @@ namespace Registry.Viewport
             this.comboBoxExecutor.FormattingEnabled = true;
             this.comboBoxExecutor.Location = new System.Drawing.Point(164, 77);
             this.comboBoxExecutor.Name = "comboBoxExecutor";
-            this.comboBoxExecutor.Size = new System.Drawing.Size(330, 23);
+            this.comboBoxExecutor.Size = new System.Drawing.Size(327, 23);
             this.comboBoxExecutor.TabIndex = 3;
             // 
             // label73
@@ -272,7 +282,7 @@ namespace Registry.Viewport
             this.vButtonSelectWarrant.AllowAnimations = true;
             this.vButtonSelectWarrant.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonSelectWarrant.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonSelectWarrant.Location = new System.Drawing.Point(467, 48);
+            this.vButtonSelectWarrant.Location = new System.Drawing.Point(464, 48);
             this.vButtonSelectWarrant.Name = "vButtonSelectWarrant";
             this.vButtonSelectWarrant.RoundedCornersMask = ((byte)(15));
             this.vButtonSelectWarrant.Size = new System.Drawing.Size(27, 20);
@@ -289,7 +299,7 @@ namespace Registry.Viewport
             this.textBoxAgreementWarrant.Location = new System.Drawing.Point(164, 48);
             this.textBoxAgreementWarrant.Name = "textBoxAgreementWarrant";
             this.textBoxAgreementWarrant.ReadOnly = true;
-            this.textBoxAgreementWarrant.Size = new System.Drawing.Size(297, 21);
+            this.textBoxAgreementWarrant.Size = new System.Drawing.Size(293, 21);
             this.textBoxAgreementWarrant.TabIndex = 1;
             // 
             // label72
@@ -307,7 +317,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerAgreementDate.Location = new System.Drawing.Point(164, 19);
             this.dateTimePickerAgreementDate.Name = "dateTimePickerAgreementDate";
-            this.dateTimePickerAgreementDate.Size = new System.Drawing.Size(330, 21);
+            this.dateTimePickerAgreementDate.Size = new System.Drawing.Size(327, 21);
             this.dateTimePickerAgreementDate.TabIndex = 0;
             // 
             // label71
@@ -426,7 +436,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(487, 121);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(487, 122);
             this.dataGridViewTenancyPersons.TabIndex = 3;
             // 
             // surname
@@ -631,9 +641,9 @@ namespace Registry.Viewport
             this.tabPageExplain.Controls.Add(this.textBoxExplainPoint);
             this.tabPageExplain.Controls.Add(this.vButtonExplainPaste);
             this.tabPageExplain.Controls.Add(this.label79);
-            this.tabPageExplain.Location = new System.Drawing.Point(4, 24);
+            this.tabPageExplain.Location = new System.Drawing.Point(4, 22);
             this.tabPageExplain.Name = "tabPageExplain";
-            this.tabPageExplain.Size = new System.Drawing.Size(493, 192);
+            this.tabPageExplain.Size = new System.Drawing.Size(493, 194);
             this.tabPageExplain.TabIndex = 2;
             this.tabPageExplain.Text = "Изложить";
             // 
@@ -663,7 +673,7 @@ namespace Registry.Viewport
             this.textBoxExplainContent.Location = new System.Drawing.Point(15, 61);
             this.textBoxExplainContent.Multiline = true;
             this.textBoxExplainContent.Name = "textBoxExplainContent";
-            this.textBoxExplainContent.Size = new System.Drawing.Size(440, 101);
+            this.textBoxExplainContent.Size = new System.Drawing.Size(440, 97);
             this.textBoxExplainContent.TabIndex = 1;
             this.textBoxExplainContent.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -709,14 +719,16 @@ namespace Registry.Viewport
             this.tabPageTerminate.Controls.Add(this.vButtonTerminatePaste);
             this.tabPageTerminate.Controls.Add(this.textBoxTerminateAgreement);
             this.tabPageTerminate.Controls.Add(this.label80);
-            this.tabPageTerminate.Location = new System.Drawing.Point(4, 22);
+            this.tabPageTerminate.Location = new System.Drawing.Point(4, 24);
             this.tabPageTerminate.Name = "tabPageTerminate";
-            this.tabPageTerminate.Size = new System.Drawing.Size(493, 194);
+            this.tabPageTerminate.Size = new System.Drawing.Size(493, 192);
             this.tabPageTerminate.TabIndex = 3;
             this.tabPageTerminate.Text = "Расторгнуть";
             // 
             // dateTimePickerTerminateDate
             // 
+            this.dateTimePickerTerminateDate.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerTerminateDate.Location = new System.Drawing.Point(163, 34);
             this.dateTimePickerTerminateDate.Name = "dateTimePickerTerminateDate";
             this.dateTimePickerTerminateDate.Size = new System.Drawing.Size(291, 21);
@@ -767,11 +779,14 @@ namespace Registry.Viewport
             // 
             // tabPageProlong
             // 
-            this.tabPageProlong.Controls.Add(this.dateTimePickerProlongTo);
+            this.tabPageProlong.Controls.Add(this.checkBoxCommercialProlongUntilDismissal);
+            this.tabPageProlong.Controls.Add(this.textBoxCommercialProlongGeneralPoint);
+            this.tabPageProlong.Controls.Add(this.label11);
+            this.tabPageProlong.Controls.Add(this.dateTimePickerCommercialProlongTo);
             this.tabPageProlong.Controls.Add(this.label8);
-            this.tabPageProlong.Controls.Add(this.dateTimePickerProlongFrom);
+            this.tabPageProlong.Controls.Add(this.dateTimePickerCommercialProlongFrom);
             this.tabPageProlong.Controls.Add(this.label7);
-            this.tabPageProlong.Controls.Add(this.dateTimePickerRequest);
+            this.tabPageProlong.Controls.Add(this.dateTimePickerCommercialProlongRequest);
             this.tabPageProlong.Controls.Add(this.label6);
             this.tabPageProlong.Controls.Add(this.vButtonProlong);
             this.tabPageProlong.Location = new System.Drawing.Point(4, 22);
@@ -782,14 +797,44 @@ namespace Registry.Viewport
             this.tabPageProlong.Text = "Срок по ком. найму";
             this.tabPageProlong.UseVisualStyleBackColor = true;
             // 
-            // dateTimePickerProlongTo
+            // checkBoxCommercialProlongUntilDismissal
             // 
-            this.dateTimePickerProlongTo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.checkBoxCommercialProlongUntilDismissal.AutoSize = true;
+            this.checkBoxCommercialProlongUntilDismissal.Location = new System.Drawing.Point(189, 88);
+            this.checkBoxCommercialProlongUntilDismissal.Name = "checkBoxCommercialProlongUntilDismissal";
+            this.checkBoxCommercialProlongUntilDismissal.Size = new System.Drawing.Size(213, 19);
+            this.checkBoxCommercialProlongUntilDismissal.TabIndex = 3;
+            this.checkBoxCommercialProlongUntilDismissal.Text = "На период трудовых отношений";
+            this.checkBoxCommercialProlongUntilDismissal.UseVisualStyleBackColor = true;
+            this.checkBoxCommercialProlongUntilDismissal.CheckedChanged += new System.EventHandler(this.checkBoxCommercialProlongUntilDismissal_CheckedChanged);
+            // 
+            // textBoxCommercialProlongGeneralPoint
+            // 
+            this.textBoxCommercialProlongGeneralPoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerProlongTo.Location = new System.Drawing.Point(188, 61);
-            this.dateTimePickerProlongTo.Name = "dateTimePickerProlongTo";
-            this.dateTimePickerProlongTo.Size = new System.Drawing.Size(266, 21);
-            this.dateTimePickerProlongTo.TabIndex = 2;
+            this.textBoxCommercialProlongGeneralPoint.Location = new System.Drawing.Point(188, 112);
+            this.textBoxCommercialProlongGeneralPoint.Name = "textBoxCommercialProlongGeneralPoint";
+            this.textBoxCommercialProlongGeneralPoint.Size = new System.Drawing.Size(266, 21);
+            this.textBoxCommercialProlongGeneralPoint.TabIndex = 4;
+            // 
+            // label11
+            // 
+            this.label11.AutoSize = true;
+            this.label11.Location = new System.Drawing.Point(12, 115);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(106, 15);
+            this.label11.TabIndex = 56;
+            this.label11.Text = "Пункт исключить";
+            // 
+            // dateTimePickerCommercialProlongTo
+            // 
+            this.dateTimePickerCommercialProlongTo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerCommercialProlongTo.Location = new System.Drawing.Point(188, 61);
+            this.dateTimePickerCommercialProlongTo.Name = "dateTimePickerCommercialProlongTo";
+            this.dateTimePickerCommercialProlongTo.ShowCheckBox = true;
+            this.dateTimePickerCommercialProlongTo.Size = new System.Drawing.Size(266, 21);
+            this.dateTimePickerCommercialProlongTo.TabIndex = 2;
             // 
             // label8
             // 
@@ -800,14 +845,15 @@ namespace Registry.Viewport
             this.label8.TabIndex = 50;
             this.label8.Text = "по";
             // 
-            // dateTimePickerProlongFrom
+            // dateTimePickerCommercialProlongFrom
             // 
-            this.dateTimePickerProlongFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.dateTimePickerCommercialProlongFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerProlongFrom.Location = new System.Drawing.Point(188, 33);
-            this.dateTimePickerProlongFrom.Name = "dateTimePickerProlongFrom";
-            this.dateTimePickerProlongFrom.Size = new System.Drawing.Size(266, 21);
-            this.dateTimePickerProlongFrom.TabIndex = 1;
+            this.dateTimePickerCommercialProlongFrom.Location = new System.Drawing.Point(188, 33);
+            this.dateTimePickerCommercialProlongFrom.Name = "dateTimePickerCommercialProlongFrom";
+            this.dateTimePickerCommercialProlongFrom.ShowCheckBox = true;
+            this.dateTimePickerCommercialProlongFrom.Size = new System.Drawing.Size(266, 21);
+            this.dateTimePickerCommercialProlongFrom.TabIndex = 1;
             // 
             // label7
             // 
@@ -818,14 +864,14 @@ namespace Registry.Viewport
             this.label7.TabIndex = 49;
             this.label7.Text = "Продлить срок договора с";
             // 
-            // dateTimePickerRequest
+            // dateTimePickerCommercialProlongRequest
             // 
-            this.dateTimePickerRequest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.dateTimePickerCommercialProlongRequest.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.dateTimePickerRequest.Location = new System.Drawing.Point(188, 6);
-            this.dateTimePickerRequest.Name = "dateTimePickerRequest";
-            this.dateTimePickerRequest.Size = new System.Drawing.Size(266, 21);
-            this.dateTimePickerRequest.TabIndex = 0;
+            this.dateTimePickerCommercialProlongRequest.Location = new System.Drawing.Point(188, 6);
+            this.dateTimePickerCommercialProlongRequest.Name = "dateTimePickerCommercialProlongRequest";
+            this.dateTimePickerCommercialProlongRequest.Size = new System.Drawing.Size(266, 21);
+            this.dateTimePickerCommercialProlongRequest.TabIndex = 0;
             // 
             // label6
             // 
@@ -845,18 +891,20 @@ namespace Registry.Viewport
             this.vButtonProlong.Name = "vButtonProlong";
             this.vButtonProlong.RoundedCornersMask = ((byte)(15));
             this.vButtonProlong.Size = new System.Drawing.Size(27, 20);
-            this.vButtonProlong.TabIndex = 3;
+            this.vButtonProlong.TabIndex = 4;
             this.vButtonProlong.Text = "→";
             this.vButtonProlong.UseVisualStyleBackColor = false;
             this.vButtonProlong.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
-            this.vButtonProlong.Click += new System.EventHandler(this.vButtonProlong_Click);
+            this.vButtonProlong.Click += new System.EventHandler(this.vButtonProlongCommercial_Click);
             // 
             // tabPageProlongSpecial
             // 
-            this.tabPageProlongSpecial.Controls.Add(this.textBoxSpecialGeneralPoint);
-            this.tabPageProlongSpecial.Controls.Add(this.label9);
-            this.tabPageProlongSpecial.Controls.Add(this.textBoxSpecialPoint);
-            this.tabPageProlongSpecial.Controls.Add(this.label10);
+            this.tabPageProlongSpecial.Controls.Add(this.groupBox1);
+            this.tabPageProlongSpecial.Controls.Add(this.checkBoxSpecialProlongUntilDismissal);
+            this.tabPageProlongSpecial.Controls.Add(this.dateTimePickerSpecialProlongTo);
+            this.tabPageProlongSpecial.Controls.Add(this.label13);
+            this.tabPageProlongSpecial.Controls.Add(this.dateTimePickerSpecialProlongFrom);
+            this.tabPageProlongSpecial.Controls.Add(this.label14);
             this.tabPageProlongSpecial.Controls.Add(this.vButtonProlongSpecial);
             this.tabPageProlongSpecial.Location = new System.Drawing.Point(4, 24);
             this.tabPageProlongSpecial.Name = "tabPageProlongSpecial";
@@ -866,41 +914,105 @@ namespace Registry.Viewport
             this.tabPageProlongSpecial.Text = "Срок по спец. найму";
             this.tabPageProlongSpecial.UseVisualStyleBackColor = true;
             // 
-            // textBoxSpecialGeneralPoint
+            // groupBox1
             // 
-            this.textBoxSpecialGeneralPoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxSpecialGeneralPoint.Location = new System.Drawing.Point(163, 6);
-            this.textBoxSpecialGeneralPoint.Name = "textBoxSpecialGeneralPoint";
-            this.textBoxSpecialGeneralPoint.Size = new System.Drawing.Size(291, 21);
-            this.textBoxSpecialGeneralPoint.TabIndex = 0;
+            this.groupBox1.Controls.Add(this.textBoxSpecialProlongGeneralPoint);
+            this.groupBox1.Controls.Add(this.label9);
+            this.groupBox1.Controls.Add(this.textBoxSpecialProlongPoint);
+            this.groupBox1.Controls.Add(this.label10);
+            this.groupBox1.Location = new System.Drawing.Point(6, 81);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(481, 84);
+            this.groupBox1.TabIndex = 3;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Изложить в новой редакции";
+            // 
+            // textBoxSpecialProlongGeneralPoint
+            // 
+            this.textBoxSpecialProlongGeneralPoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.textBoxSpecialProlongGeneralPoint.Location = new System.Drawing.Point(182, 26);
+            this.textBoxSpecialProlongGeneralPoint.Name = "textBoxSpecialProlongGeneralPoint";
+            this.textBoxSpecialProlongGeneralPoint.Size = new System.Drawing.Size(266, 21);
+            this.textBoxSpecialProlongGeneralPoint.TabIndex = 0;
             // 
             // label9
             // 
             this.label9.AutoSize = true;
-            this.label9.Location = new System.Drawing.Point(11, 9);
+            this.label9.Location = new System.Drawing.Point(7, 29);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(41, 15);
-            this.label9.TabIndex = 54;
+            this.label9.TabIndex = 58;
             this.label9.Text = "Пункт";
             // 
-            // textBoxSpecialPoint
+            // textBoxSpecialProlongPoint
             // 
-            this.textBoxSpecialPoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.textBoxSpecialProlongPoint.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBoxSpecialPoint.Location = new System.Drawing.Point(163, 34);
-            this.textBoxSpecialPoint.Name = "textBoxSpecialPoint";
-            this.textBoxSpecialPoint.Size = new System.Drawing.Size(291, 21);
-            this.textBoxSpecialPoint.TabIndex = 1;
+            this.textBoxSpecialProlongPoint.Location = new System.Drawing.Point(182, 54);
+            this.textBoxSpecialProlongPoint.Name = "textBoxSpecialProlongPoint";
+            this.textBoxSpecialProlongPoint.Size = new System.Drawing.Size(266, 21);
+            this.textBoxSpecialProlongPoint.TabIndex = 1;
             // 
             // label10
             // 
             this.label10.AutoSize = true;
-            this.label10.Location = new System.Drawing.Point(12, 37);
+            this.label10.Location = new System.Drawing.Point(8, 57);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(62, 15);
-            this.label10.TabIndex = 52;
+            this.label10.TabIndex = 57;
             this.label10.Text = "Подпункт";
+            // 
+            // checkBoxSpecialProlongUntilDismissal
+            // 
+            this.checkBoxSpecialProlongUntilDismissal.AutoSize = true;
+            this.checkBoxSpecialProlongUntilDismissal.Location = new System.Drawing.Point(189, 60);
+            this.checkBoxSpecialProlongUntilDismissal.Name = "checkBoxSpecialProlongUntilDismissal";
+            this.checkBoxSpecialProlongUntilDismissal.Size = new System.Drawing.Size(213, 19);
+            this.checkBoxSpecialProlongUntilDismissal.TabIndex = 2;
+            this.checkBoxSpecialProlongUntilDismissal.Text = "На период трудовых отношений";
+            this.checkBoxSpecialProlongUntilDismissal.UseVisualStyleBackColor = true;
+            this.checkBoxSpecialProlongUntilDismissal.CheckedChanged += new System.EventHandler(this.checkBoxSpecialProlongUntilDismissal_CheckedChanged);
+            // 
+            // dateTimePickerSpecialProlongTo
+            // 
+            this.dateTimePickerSpecialProlongTo.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerSpecialProlongTo.Location = new System.Drawing.Point(188, 33);
+            this.dateTimePickerSpecialProlongTo.Name = "dateTimePickerSpecialProlongTo";
+            this.dateTimePickerSpecialProlongTo.ShowCheckBox = true;
+            this.dateTimePickerSpecialProlongTo.Size = new System.Drawing.Size(266, 21);
+            this.dateTimePickerSpecialProlongTo.TabIndex = 1;
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(151, 36);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(21, 15);
+            this.label13.TabIndex = 62;
+            this.label13.Text = "по";
+            // 
+            // dateTimePickerSpecialProlongFrom
+            // 
+            this.dateTimePickerSpecialProlongFrom.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dateTimePickerSpecialProlongFrom.Location = new System.Drawing.Point(188, 6);
+            this.dateTimePickerSpecialProlongFrom.Name = "dateTimePickerSpecialProlongFrom";
+            this.dateTimePickerSpecialProlongFrom.ShowCheckBox = true;
+            this.dateTimePickerSpecialProlongFrom.Size = new System.Drawing.Size(266, 21);
+            this.dateTimePickerSpecialProlongFrom.TabIndex = 0;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(12, 9);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(160, 15);
+            this.label14.TabIndex = 61;
+            this.label14.Text = "Продлить срок договора с";
             // 
             // vButtonProlongSpecial
             // 
@@ -911,7 +1023,7 @@ namespace Registry.Viewport
             this.vButtonProlongSpecial.Name = "vButtonProlongSpecial";
             this.vButtonProlongSpecial.RoundedCornersMask = ((byte)(15));
             this.vButtonProlongSpecial.Size = new System.Drawing.Size(27, 20);
-            this.vButtonProlongSpecial.TabIndex = 2;
+            this.vButtonProlongSpecial.TabIndex = 4;
             this.vButtonProlongSpecial.Text = "→";
             this.vButtonProlongSpecial.UseVisualStyleBackColor = false;
             this.vButtonProlongSpecial.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -972,7 +1084,7 @@ namespace Registry.Viewport
             this.dataGridViewChangeTenant.Name = "dataGridViewChangeTenant";
             this.dataGridViewChangeTenant.ReadOnly = true;
             this.dataGridViewChangeTenant.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewChangeTenant.Size = new System.Drawing.Size(487, 80);
+            this.dataGridViewChangeTenant.Size = new System.Drawing.Size(487, 95);
             this.dataGridViewChangeTenant.TabIndex = 3;
             // 
             // surnameChangeTenant
@@ -1098,7 +1210,7 @@ namespace Registry.Viewport
             this.dataGridView.Name = "dataGridView";
             this.dataGridView.ReadOnly = true;
             this.dataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridView.Size = new System.Drawing.Size(996, 358);
+            this.dataGridView.Size = new System.Drawing.Size(996, 346);
             this.dataGridView.TabIndex = 2;
             // 
             // id_agreement
@@ -1132,7 +1244,7 @@ namespace Registry.Viewport
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(660, 360);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1008, 730);
+            this.ClientSize = new System.Drawing.Size(1008, 718);
             this.Controls.Add(this.tableLayoutPanel12);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1159,6 +1271,8 @@ namespace Registry.Viewport
             this.tabPageProlong.PerformLayout();
             this.tabPageProlongSpecial.ResumeLayout(false);
             this.tabPageProlongSpecial.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.tabPageChangeTenancy.ResumeLayout(false);
             this.tabPageChangeTenancy.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewChangeTenant)).EndInit();
@@ -1186,18 +1300,27 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn dateofbirthChangeTenant;
         private TextBox textBoxChangeTenantChangeFIO;
         private TabPage tabPageProlong;
-        private DateTimePicker dateTimePickerProlongTo;
+        private DateTimePicker dateTimePickerCommercialProlongTo;
         private Label label8;
-        private DateTimePicker dateTimePickerProlongFrom;
+        private DateTimePicker dateTimePickerCommercialProlongFrom;
         private Label label7;
-        private DateTimePicker dateTimePickerRequest;
+        private DateTimePicker dateTimePickerCommercialProlongRequest;
         private Label label6;
         private vButton vButtonProlong;
         private TabPage tabPageProlongSpecial;
-        private TextBox textBoxSpecialGeneralPoint;
-        private Label label9;
-        private TextBox textBoxSpecialPoint;
-        private Label label10;
         private vButton vButtonProlongSpecial;
+        private TextBox textBoxCommercialProlongGeneralPoint;
+        private Label label11;
+        private CheckBox checkBoxCommercialProlongUntilDismissal;
+        private CheckBox checkBoxSpecialProlongUntilDismissal;
+        private DateTimePicker dateTimePickerSpecialProlongTo;
+        private Label label13;
+        private DateTimePicker dateTimePickerSpecialProlongFrom;
+        private Label label14;
+        private GroupBox groupBox1;
+        private TextBox textBoxSpecialProlongGeneralPoint;
+        private Label label9;
+        private TextBox textBoxSpecialProlongPoint;
+        private Label label10;
     }
 }

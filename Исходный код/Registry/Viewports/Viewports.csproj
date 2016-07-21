@@ -106,6 +106,7 @@
     <Compile Include="DataGridViewport.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="EntityConverters\TenancyProcessConverter.cs" />
     <Compile Include="ModalEditors\PersonExcludeDateForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -156,6 +157,12 @@
     </Compile>
     <Compile Include="ModalEditors\OwnershipsEditorMultiMaster.Designer.cs">
       <DependentUpon>OwnershipsEditorMultiMaster.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ModalEditors\RentPeriodsEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ModalEditors\RentPeriodsEditor.Designer.cs">
+      <DependentUpon>RentPeriodsEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="ModalEditors\RestrictionsEditorMultiMaster.cs">
       <SubType>Form</SubType>
@@ -569,6 +576,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ModalEditors\OwnershipsEditorMultiMaster.resx">
       <DependentUpon>OwnershipsEditorMultiMaster.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ModalEditors\RentPeriodsEditor.resx">
+      <DependentUpon>RentPeriodsEditor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ModalEditors\RestrictionsEditorMultiMaster.resx">
       <DependentUpon>RestrictionsEditorMultiMaster.cs</DependentUpon>

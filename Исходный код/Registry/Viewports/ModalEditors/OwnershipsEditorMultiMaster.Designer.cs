@@ -32,7 +32,7 @@ namespace Registry.Viewport
         /// </summary>
         private void InitializeComponent()
         {
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(OwnershipsEditor));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(OwnershipsEditorMultiMaster));
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxOwnershipNumber = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -144,7 +144,7 @@ namespace Registry.Viewport
             this.vButtonSave.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
             this.vButtonSave.Click += new System.EventHandler(this.vButtonSave_Click);
             // 
-            // OwnershipsEditor
+            // OwnershipsEditorMultiMaster
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -161,8 +161,9 @@ namespace Registry.Viewport
             this.Controls.Add(this.textBoxOwnershipNumber);
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "OwnershipsEditor";
+            this.Name = "OwnershipsEditorMultiMaster";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Добавить ограничение";
             this.ResumeLayout(false);

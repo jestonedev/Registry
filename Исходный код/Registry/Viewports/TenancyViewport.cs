@@ -12,6 +12,7 @@ using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Reporting;
+using Registry.Viewport.ModalEditors;
 using Registry.Viewport.SearchForms;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -21,38 +22,40 @@ namespace Registry.Viewport
     internal sealed partial class TenancyViewport: FormViewport
     {
         #region Models
-        private DataModel tenancy_building_assoc;
-        private DataModel tenancy_premises_assoc;
-        private DataModel tenancy_sub_premises_assoc;
-        private DataModel executors;
-        private DataModel rent_types;
-        private DataModel tenancy_agreements;
-        private DataModel warrants;
-        private DataModel tenancy_persons;
-        private DataModel tenancy_reasons;
-        private DataModel kinships;
-        private CalcDataModel tenancy_premises_info;
+        private DataModel _tenancyBuildingAssoc;
+        private DataModel _tenancyPremisesAssoc;
+        private DataModel _tenancySubPremisesAssoc;
+        private DataModel _executors;
+        private DataModel _rentTypes;
+        private DataModel _tenancyAgreements;
+        private DataModel _warrants;
+        private DataModel _tenancyPersons;
+        private DataModel _tenancyReasons;
+        private DataModel _kinships;
+        private DataModel _rentPeriods;
+        private CalcDataModel _tenancyPremisesInfo;
         #endregion Models
 
         #region Views
-        private BindingSource v_executors;
-        private BindingSource v_rent_types;
-        private BindingSource v_tenancy_agreements;
-        private BindingSource v_warrants;
-        private BindingSource v_tenancy_persons;
-        private BindingSource v_tenancy_addresses;
-        private BindingSource v_tenancy_reasons;
-        private BindingSource v_kinships;
+        private BindingSource _vExecutors;
+        private BindingSource _vRentTypes;
+        private BindingSource _vTenancyAgreements;
+        private BindingSource _vWarrants;
+        private BindingSource _vTenancyPersons;
+        private BindingSource _vTenancyAddresses;
+        private BindingSource _vTenancyReasons;
+        private BindingSource _vKinships;
+        private BindingSource _vRentPeriods;
         #endregion Views
 
         //Forms
-        private SearchForm stExtendedSearchForm;
-        private SearchForm stSimpleSearchForm;
-        private SelectWarrantForm swForm;
+        private SearchForm _stExtendedSearchForm;
+        private SearchForm _stSimpleSearchForm;
+        private SelectWarrantForm _swForm;
 
-        private int? id_warrant;
-        private bool is_copy;
-        private int? id_copy_process;
+        private int? _idWarrant;
+        private bool _isCopy;
+        private int? _idCopyProcess;
 
         private TenancyViewport()
             : this(null, null)
@@ -67,14 +70,14 @@ namespace Registry.Viewport
 
         private void FiltersRebuild()
         {
-            if (v_tenancy_addresses == null)
+            if (_vTenancyAddresses == null)
                 return;
-            v_tenancy_addresses.Filter = (GeneralBindingSource.Position >= 0 ? "id_process = 0" + ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"] : "id_process = 0");
+            _vTenancyAddresses.Filter = (GeneralBindingSource.Position >= 0 ? "id_process = 0" + ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"] : "id_process = 0");
         }
 
         private void RebuildStaticFilter()
         {
-            IEnumerable<int> ids = null;
+            IEnumerable<int> ids;
             if (ParentRow == null)
                 return;
             switch (ParentType)
@@ -106,12 +109,12 @@ namespace Registry.Viewport
             if (ParentRow == null)
             {
                 if (viewportState == ViewportState.NewRowState)
-                    Text = "Новый найм";
+                    Text = @"Новый найм";
                 else
                     if (GeneralBindingSource.Position != -1)
                         Text = string.Format(CultureInfo.InvariantCulture, "Процесс найма №{0}", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"]);
                     else
-                        Text = "Процессы отсутствуют";
+                        Text = @"Процессы отсутствуют";
             }
             else
             {
@@ -157,47 +160,47 @@ namespace Registry.Viewport
             if (dataGridViewTenancyPersons.Rows.Count == 0)
                 return;
             for (var i = 0; i < dataGridViewTenancyPersons.Rows.Count; i++)
-                if (((DataRowView)v_tenancy_persons[i])["id_kinship"] != DBNull.Value &&
-                    Convert.ToInt32(((DataRowView)v_tenancy_persons[i])["id_kinship"], CultureInfo.InvariantCulture) == 1 &&
-                    ((DataRowView)v_tenancy_persons[i])["exclude_date"] == DBNull.Value)
+                if (((DataRowView)_vTenancyPersons[i])["id_kinship"] != DBNull.Value &&
+                    Convert.ToInt32(((DataRowView)_vTenancyPersons[i])["id_kinship"], CultureInfo.InvariantCulture) == 1 &&
+                    ((DataRowView)_vTenancyPersons[i])["exclude_date"] == DBNull.Value)
                     dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
                 else
-                    if (((DataRowView)v_tenancy_persons[i])["exclude_date"] != DBNull.Value)
+                    if (((DataRowView)_vTenancyPersons[i])["exclude_date"] != DBNull.Value)
                         dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.LightCoral;
                     else
                         dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.White;
         }
 
-        private string WarrantStringByID(int id_warrant)
+        private string WarrantStringById(int idWarrant)
         {
-            if (v_warrants.Position == -1)
+            if (_vWarrants.Position == -1)
                 return null;
             else
             {
-                var row_index = v_warrants.Find("id_warrant", id_warrant);
-                if (row_index == -1)
+                var rowIndex = _vWarrants.Find("id_warrant", idWarrant);
+                if (rowIndex == -1)
                     return null;
-                var registration_date = Convert.ToDateTime(((DataRowView)v_warrants[row_index])["registration_date"], CultureInfo.InvariantCulture);
-                var registration_num = ((DataRowView)v_warrants[row_index])["registration_num"].ToString();
+                var registrationDate = Convert.ToDateTime(((DataRowView)_vWarrants[rowIndex])["registration_date"], CultureInfo.InvariantCulture);
+                var registrationNum = ((DataRowView)_vWarrants[rowIndex])["registration_num"].ToString();
                 return string.Format(CultureInfo.InvariantCulture, "№ {0} от {1}", 
-                    registration_num, registration_date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
+                    registrationNum, registrationDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
             }
         }
 
-        private void BindWarrantID()
+        private void BindWarrantId()
         {
             if ((GeneralBindingSource.Position > -1) && ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_warrant"] != DBNull.Value)
             {
-                id_warrant = Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_warrant"], CultureInfo.InvariantCulture);
+                _idWarrant = Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_warrant"], CultureInfo.InvariantCulture);
                 textBoxSelectedWarrant.Text =
-                    WarrantStringByID(id_warrant.Value);
-                vButtonWarrant.Text = "x";
+                    WarrantStringById(_idWarrant.Value);
+                vButtonWarrant.Text = @"x";
             }
             else
             {
-                id_warrant = null;
+                _idWarrant = null;
                 textBoxSelectedWarrant.Text = "";
-                vButtonWarrant.Text = "...";
+                vButtonWarrant.Text = @"...";
             }
         }
 
@@ -233,7 +236,7 @@ namespace Registry.Viewport
 
         private void DataBind()
         {
-            comboBoxRentType.DataSource = v_rent_types;
+            comboBoxRentType.DataSource = _vRentTypes;
             comboBoxRentType.ValueMember = "id_rent_type";
             comboBoxRentType.DisplayMember = "rent_type";
             comboBoxRentType.DataBindings.Clear();
@@ -254,31 +257,35 @@ namespace Registry.Viewport
             dateTimePickerEndDate.DataBindings.Clear();
             dateTimePickerEndDate.DataBindings.Add("Value", GeneralBindingSource, "end_date", true, DataSourceUpdateMode.Never, null);
 
-            dataGridViewTenancyPersons.DataSource = v_tenancy_persons;
+            dataGridViewTenancyPersons.DataSource = _vTenancyPersons;
             surname.DataPropertyName = "surname";
             name.DataPropertyName = "name";
             patronymic.DataPropertyName = "patronymic";
             date_of_birth.DataPropertyName = "date_of_birth";
-            id_kinship.DataSource = v_kinships;
+            id_kinship.DataSource = _vKinships;
             id_kinship.ValueMember = "id_kinship";
             id_kinship.DisplayMember = "kinship";
             id_kinship.DataPropertyName = "id_kinship";
 
-
-            dataGridViewTenancyAgreements.DataSource = v_tenancy_agreements;
+            dataGridViewTenancyAgreements.DataSource = _vTenancyAgreements;
             agreement_date.DataPropertyName = "agreement_date";
             agreement_content.DataPropertyName = "agreement_content";
 
-            dataGridViewTenancyReasons.DataSource = v_tenancy_reasons;
+            dataGridViewTenancyReasons.DataSource = _vTenancyReasons;
             reason_date.DataPropertyName = "reason_date";
             reason_number.DataPropertyName = "reason_number";
             reason_prepared.DataPropertyName = "reason_prepared";
 
-            dataGridViewTenancyAddress.DataSource = v_tenancy_addresses;
+            dataGridViewTenancyAddress.DataSource = _vTenancyAddresses;
             address.DataPropertyName = "address";
             total_area.DataPropertyName = "total_area";
             living_area.DataPropertyName = "living_area";
             rent_area.DataPropertyName = "rent_area";
+
+            dataGridViewRentPeriods.DataSource = _vRentPeriods;
+            rent_periods_begin_date.DataPropertyName = "begin_date";
+            rent_periods_end_date.DataPropertyName = "end_date";
+            rent_periods_until_dismissal.DataPropertyName = "until_dismissal";
 
             textBoxProtocolNumber.DataBindings.Clear();
             textBoxProtocolNumber.DataBindings.Add("Text", GeneralBindingSource, "protocol_num", true, DataSourceUpdateMode.Never, "");
@@ -289,7 +296,7 @@ namespace Registry.Viewport
             textBoxDescription.DataBindings.Clear();
             textBoxDescription.DataBindings.Add("Text", GeneralBindingSource, "description", true, DataSourceUpdateMode.Never, "");
 
-            comboBoxExecutor.DataSource = v_executors;
+            comboBoxExecutor.DataSource = _vExecutors;
             comboBoxExecutor.ValueMember = "id_executor";
             comboBoxExecutor.DisplayMember = "executor_name";
             comboBoxExecutor.DataBindings.Clear();
@@ -312,7 +319,7 @@ namespace Registry.Viewport
         {
             if (tenancy.IdRentType == null)
             {
-                MessageBox.Show("Необходимо выбрать тип найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Необходимо выбрать тип найма", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxRentType.Focus();
                 return false;
             }
@@ -320,7 +327,7 @@ namespace Registry.Viewport
             {
                 if (tenancy.RegistrationNum == null)
                 {
-                    MessageBox.Show("Не указан номер договора найма", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(@"Не указан номер договора найма", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     textBoxRegistrationNumber.Focus();
                     return false;
                 }
@@ -329,7 +336,7 @@ namespace Registry.Viewport
             {
                 if (tenancy.ProtocolNum == null)
                 {
-                    MessageBox.Show("Не указан номер протокола жилищной комиссии", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(@"Не указан номер протокола жилищной комиссии", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     textBoxProtocolNumber.Focus();
                     return false;
                 }
@@ -337,7 +344,7 @@ namespace Registry.Viewport
             var tenancyFromView = (TenancyProcess) EntityFromView();
             if (tenancy.RegistrationNum != null && tenancy.RegistrationNum != tenancyFromView.RegistrationNum)
                 if (DataModelHelper.TenancyProcessesDuplicateCount(tenancy) != 0 &&
-                    MessageBox.Show("В базе уже имеется договор с таким номером. Все равно продолжить сохранение?", "Внимание",
+                    MessageBox.Show(@"В базе уже имеется договор с таким номером. Все равно продолжить сохранение?", @"Внимание",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                     return false;
             // Проверить соответствие вида найма
@@ -347,16 +354,16 @@ namespace Registry.Viewport
                 {
                     case ParentTypeEnum.Building:
                         if (!ViewportHelper.BuildingFundAndRentMatch((int)ParentRow["id_building"], tenancy.IdRentType.Value) &&
-                            MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемого здания. Все равно продолжить сохранение?",
-                            "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                            MessageBox.Show(@"Выбранный вид найма не соответствует фонду сдаваемого здания. Все равно продолжить сохранение?",
+                            @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                             return false;
                         break;
                     case ParentTypeEnum.Premises:
                         if (!ViewportHelper.PremiseFundAndRentMatch((int)ParentRow["id_premises"], tenancy.IdRentType.Value))
                         {
                             if (!ViewportHelper.BuildingFundAndRentMatch((int)ParentRow["id_building"], tenancy.IdRentType.Value) &&
-                            MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемого помещения. Все равно продолжить сохранение?",
-                            "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                            MessageBox.Show(@"Выбранный вид найма не соответствует фонду сдаваемого помещения. Все равно продолжить сохранение?",
+                            @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                                 return false;
                         }
                         break;
@@ -367,8 +374,8 @@ namespace Registry.Viewport
                             {
                                 var idBuilding = (int)DataModel.GetInstance<PremisesDataModel>().Select().Rows.Find((int)ParentRow["id_premises"])["id_building"];
                                 if (!ViewportHelper.BuildingFundAndRentMatch(idBuilding, tenancy.IdRentType.Value) &&
-                                    MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемой комнаты. Все равно продолжить сохранение?",
-                                    "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                                    MessageBox.Show(@"Выбранный вид найма не соответствует фонду сдаваемой комнаты. Все равно продолжить сохранение?",
+                                    @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                                         return false;
                             }
                         }
@@ -412,7 +419,7 @@ namespace Registry.Viewport
             tenancy.Description = ViewportHelper.ValueOrNull(textBoxDescription);
             if (checkBoxContractEnable.Checked)
             {
-                tenancy.IdWarrant = id_warrant;
+                tenancy.IdWarrant = _idWarrant;
                 tenancy.RegistrationNum = ViewportHelper.ValueOrNull(textBoxRegistrationNumber);
                 tenancy.RegistrationDate = dateTimePickerRegistrationDate.Value.Date;
                 tenancy.IssueDate = ViewportHelper.ValueOrNull(dateTimePickerIssueDate);
@@ -443,13 +450,13 @@ namespace Registry.Viewport
             if (viewportState != ViewportState.NewRowState)
             {
                 var reasons =
-                    (from reason_row in DataModel.GetInstance<TenancyReasonsDataModel>().FilterDeletedRows() 
-                        where reason_row.Field<int>("id_process") == (int) row["id_process"] &&
-                              reason_row.Field<string>("reason_prepared").ToUpper().Contains("ОРДЕР")
+                    (from reasonRow in DataModel.GetInstance<TenancyReasonsDataModel>().FilterDeletedRows() 
+                        where reasonRow.Field<int>("id_process") == (int) row["id_process"] &&
+                              reasonRow.Field<string>("reason_prepared").ToUpper().Contains("ОРДЕР")
                         select new
                         {
-                            number = reason_row.Field<string>("reason_number"),
-                            date = reason_row.Field<DateTime?>("reason_date")
+                            number = reasonRow.Field<string>("reason_number"),
+                            date = reasonRow.Field<DateTime?>("reason_date")
                         });
 
                 var reasonsList = reasons.ToList();
@@ -491,13 +498,13 @@ namespace Registry.Viewport
             textBoxDescription.Text = tenancy.Description;
             if (tenancy.IdWarrant != null)
             {
-                textBoxSelectedWarrant.Text = WarrantStringByID(tenancy.IdWarrant.Value);
-                id_warrant = tenancy.IdWarrant;
+                textBoxSelectedWarrant.Text = WarrantStringById(tenancy.IdWarrant.Value);
+                _idWarrant = tenancy.IdWarrant;
             }
             else
             {
                 textBoxSelectedWarrant.Text = "";
-                id_warrant = null;
+                _idWarrant = null;
             }
         }
 
@@ -533,51 +540,29 @@ namespace Registry.Viewport
             dataGridViewTenancyAddress.AutoGenerateColumns = false;
             dataGridViewTenancyPersons.AutoGenerateColumns = false;
             dataGridViewTenancyReasons.AutoGenerateColumns = false;
+            dataGridViewRentPeriods.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
             GeneralDataModel = DataModel.GetInstance<TenancyProcessesDataModel>();
-            executors = DataModel.GetInstance<ExecutorsDataModel>();
-            rent_types = DataModel.GetInstance<RentTypesDataModel>();
-            tenancy_agreements = DataModel.GetInstance<TenancyAgreementsDataModel>();
-            warrants = DataModel.GetInstance<WarrantsDataModel>();
-            tenancy_persons = DataModel.GetInstance<TenancyPersonsDataModel>();
-            tenancy_reasons = DataModel.GetInstance<TenancyReasonsDataModel>();
-            kinships = DataModel.GetInstance<KinshipsDataModel>();
-            tenancy_premises_info = CalcDataModel.GetInstance<CalcDataModelTenancyPremisesInfo>();
+            _executors = DataModel.GetInstance<ExecutorsDataModel>();
+            _rentTypes = DataModel.GetInstance<RentTypesDataModel>();
+            _tenancyAgreements = DataModel.GetInstance<TenancyAgreementsDataModel>();
+            _warrants = DataModel.GetInstance<WarrantsDataModel>();
+            _tenancyPersons = DataModel.GetInstance<TenancyPersonsDataModel>();
+            _tenancyReasons = DataModel.GetInstance<TenancyReasonsDataModel>();
+            _kinships = DataModel.GetInstance<KinshipsDataModel>();
+            _rentPeriods = DataModel.GetInstance<TenancyRentPeriodsHistoryDataModel>();
+            _tenancyPremisesInfo = CalcDataModel.GetInstance<CalcDataModelTenancyPremisesInfo>();
 
             //Ожидаем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
-            executors.Select();
-            rent_types.Select();
-            tenancy_agreements.Select();
-            warrants.Select();
-            tenancy_persons.Select();
-            tenancy_reasons.Select();
-            kinships.Select();
-
-            v_executors = new BindingSource
-            {
-                DataSource = DataModel.DataSet,
-                DataMember = "executors",
-                Filter = "is_inactive = 0"
-            };
-
-            v_rent_types = new BindingSource
-            {
-                DataSource = DataModel.DataSet,
-                DataMember = "rent_types"
-            };
-
-            v_kinships = new BindingSource
-            {
-                DataSource = DataModel.DataSet,
-                DataMember = "kinships"
-            };
-
-            v_warrants = new BindingSource
-            {
-                DataSource = DataModel.DataSet,
-                DataMember = "warrants"
-            };
+            _executors.Select();
+            _rentTypes.Select();
+            _tenancyAgreements.Select();
+            _warrants.Select();
+            _tenancyPersons.Select();
+            _tenancyReasons.Select();
+            _kinships.Select();
+            _rentPeriods.Select();
 
             GeneralBindingSource = new BindingSource();
             GeneralBindingSource.CurrentItemChanged += v_tenancies_CurrentItemChanged;
@@ -588,30 +573,65 @@ namespace Registry.Viewport
                 GeneralBindingSource.Filter += " AND ";
             GeneralBindingSource.Filter += DynamicFilter;
 
-            v_tenancy_persons = new BindingSource
+            _vExecutors = new BindingSource
+            {
+                DataSource = DataModel.DataSet,
+                DataMember = "executors",
+                Filter = "is_inactive = 0"
+            };
+
+            _vRentTypes = new BindingSource
+            {
+                DataSource = DataModel.DataSet,
+                DataMember = "rent_types"
+            };
+
+            _vKinships = new BindingSource
+            {
+                DataSource = DataModel.DataSet,
+                DataMember = "kinships"
+            };
+
+            _vWarrants = new BindingSource
+            {
+                DataSource = DataModel.DataSet,
+                DataMember = "warrants"
+            };
+
+            _vRentPeriods = new BindingSource
+            {
+                DataSource = DataModel.DataSet,
+                DataMember = "tenancy_rent_periods_history",
+                Sort = "begin_date DESC"
+            };
+
+            _vTenancyPersons = new BindingSource
             {
                 DataMember = "tenancy_processes_tenancy_persons",
                 DataSource = GeneralBindingSource
             };
 
-            v_tenancy_agreements = new BindingSource
+            _vTenancyAgreements = new BindingSource
             {
                 DataMember = "tenancy_processes_tenancy_agreements",
                 DataSource = GeneralBindingSource
             };
 
-            v_tenancy_reasons = new BindingSource
+            _vTenancyReasons = new BindingSource
             {
                 DataMember = "tenancy_processes_tenancy_reasons",
                 DataSource = GeneralBindingSource
             };
 
-            v_tenancy_addresses = new BindingSource {DataSource = tenancy_premises_info.Select()};
+            _vTenancyAddresses = new BindingSource
+            {
+                DataSource = _tenancyPremisesInfo.Select()
+            };
 
             DataBind();
 
-            tenancy_persons.Select().RowChanged += TenancyPersons_RowChanged;
-            tenancy_persons.Select().RowDeleted += TenancyPersons_RowDeleted;
+            _tenancyPersons.Select().RowChanged += TenancyPersons_RowChanged;
+            _tenancyPersons.Select().RowDeleted += TenancyPersons_RowDeleted;
             GeneralDataModel.Select().RowChanged += TenancyViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted += TenancyViewport_RowDeleted;
             if (ParentRow != null)
@@ -619,25 +639,26 @@ namespace Registry.Viewport
                 switch (ParentType)
                 {
                     case ParentTypeEnum.Building:
-                        tenancy_building_assoc = DataModel.GetInstance<TenancyBuildingsAssocDataModel>();
-                        tenancy_building_assoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
-                        tenancy_building_assoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
+                        _tenancyBuildingAssoc = DataModel.GetInstance<TenancyBuildingsAssocDataModel>();
+                        _tenancyBuildingAssoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
+                        _tenancyBuildingAssoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
                         break;
                     case ParentTypeEnum.Premises:
-                        tenancy_premises_assoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
-                        tenancy_premises_assoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
-                        tenancy_premises_assoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
+                        _tenancyPremisesAssoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
+                        _tenancyPremisesAssoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
+                        _tenancyPremisesAssoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
                         break;
                     case ParentTypeEnum.SubPremises:
-                        tenancy_sub_premises_assoc = DataModel.GetInstance<TenancySubPremisesAssocDataModel>();
-                        tenancy_sub_premises_assoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
-                        tenancy_sub_premises_assoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
+                        _tenancySubPremisesAssoc = DataModel.GetInstance<TenancySubPremisesAssocDataModel>();
+                        _tenancySubPremisesAssoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
+                        _tenancySubPremisesAssoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
                         break;
                     default: throw new ViewportException("Неизвестный тип родительского объекта");
                 }
             }
-            v_tenancy_persons.ListChanged += v_persons_ListChanged;   
-            tenancy_premises_info.RefreshEvent +=tenancy_premises_info_RefreshEvent;
+
+            _vTenancyPersons.ListChanged += v_persons_ListChanged;   
+            _tenancyPremisesInfo.RefreshEvent +=tenancy_premises_info_RefreshEvent;
             FiltersRebuild();
             DataChangeHandlersInit();
         }
@@ -645,10 +666,10 @@ namespace Registry.Viewport
         private void tenancy_premises_info_RefreshEvent(object sender, EventArgs e)
         {
             // Обновляем информацию по помещениям (живое обновление не реализуемо)
-            if (v_tenancy_addresses != null)
+            if (_vTenancyAddresses != null)
             {
-                v_tenancy_addresses.DataSource =
-                    tenancy_premises_info.Select();
+                _vTenancyAddresses.DataSource =
+                    _tenancyPremisesInfo.Select();
                 FiltersRebuild();
             }
         }
@@ -669,11 +690,11 @@ namespace Registry.Viewport
                 return;
             is_editable = false;
             GeneralBindingSource.AddNew();
-            var index = v_executors.Find("executor_login", WindowsIdentity.GetCurrent().Name);
+            var index = _vExecutors.Find("executor_login", WindowsIdentity.GetCurrent().Name);
             if (index != -1)
-                comboBoxExecutor.SelectedValue = ((DataRowView)v_executors[index])["id_executor"];
-            is_copy = false;
-            id_copy_process = null;
+                comboBoxExecutor.SelectedValue = ((DataRowView)_vExecutors[index])["id_executor"];
+            _isCopy = false;
+            _idCopyProcess = null;
             is_editable = true;
             GeneralDataModel.EditingNewRecord = true;
             UnbindedCheckBoxesUpdate();
@@ -699,11 +720,11 @@ namespace Registry.Viewport
             dateTimePickerIssueDate.Checked = (tenancy.IssueDate != null);
             dateTimePickerBeginDate.Checked = (tenancy.BeginDate != null);
             dateTimePickerEndDate.Checked = (tenancy.EndDate != null);
-            var index = v_executors.Find("executor_login", WindowsIdentity.GetCurrent().Name);
+            var index = _vExecutors.Find("executor_login", WindowsIdentity.GetCurrent().Name);
             if (index != -1)
-                comboBoxExecutor.SelectedValue = ((DataRowView)v_executors[index])["id_executor"];
-            is_copy = true;
-            id_copy_process = tenancy.IdProcess;
+                comboBoxExecutor.SelectedValue = ((DataRowView)_vExecutors[index])["id_executor"];
+            _isCopy = true;
+            _idCopyProcess = tenancy.IdProcess;
             is_editable = true;
         }
 
@@ -722,26 +743,26 @@ namespace Registry.Viewport
             switch (searchFormType)
             {
                 case SearchFormType.SimpleSearchForm:
-                    if (stSimpleSearchForm == null)
-                        stSimpleSearchForm = new SimpleSearchTenancyForm();
-                    if (stSimpleSearchForm.ShowDialog() != DialogResult.OK)
+                    if (_stSimpleSearchForm == null)
+                        _stSimpleSearchForm = new SimpleSearchTenancyForm();
+                    if (_stSimpleSearchForm.ShowDialog() != DialogResult.OK)
                         return;
-                    DynamicFilter = stSimpleSearchForm.GetFilter();
+                    DynamicFilter = _stSimpleSearchForm.GetFilter();
                     break;
                 case SearchFormType.ExtendedSearchForm:
-                    if (stExtendedSearchForm == null)
-                        stExtendedSearchForm = new ExtendedSearchTenancyForm();
-                    if (stExtendedSearchForm.ShowDialog() != DialogResult.OK)
+                    if (_stExtendedSearchForm == null)
+                        _stExtendedSearchForm = new ExtendedSearchTenancyForm();
+                    if (_stExtendedSearchForm.ShowDialog() != DialogResult.OK)
                         return;
-                    DynamicFilter = stExtendedSearchForm.GetFilter();
+                    DynamicFilter = _stExtendedSearchForm.GetFilter();
                     break;
             }
-            var Filter = StaticFilter;
+            var filter = StaticFilter;
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
-                Filter += " AND ";
-            Filter += DynamicFilter;
+                filter += " AND ";
+            filter += DynamicFilter;
             is_editable = false;
-            GeneralBindingSource.Filter = Filter;
+            GeneralBindingSource.Filter = filter;
             is_editable = true;
         }
 
@@ -764,7 +785,7 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите удалить этот процесс найма?", "Внимание", 
+            if (MessageBox.Show(@"Вы действительно хотите удалить этот процесс найма?", @"Внимание", 
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_process"]) == -1)
@@ -796,19 +817,19 @@ namespace Registry.Viewport
                         ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
                     }
                     else
-                        Text = "Процессы отсутствуют";
+                        Text = @"Процессы отсутствуют";
                     viewportState = ViewportState.ReadState;
                     break;
                 case ViewportState.ModifyRowState:
                     is_editable = false;
                     DataBind();
-                    BindWarrantID();
+                    BindWarrantId();
                     viewportState = ViewportState.ReadState;
                     break;
             }
             UnbindedCheckBoxesUpdate();
-            is_copy = false;
-            id_copy_process = null;
+            _isCopy = false;
+            _idCopyProcess = null;
             is_editable = true;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
@@ -825,91 +846,93 @@ namespace Registry.Viewport
             var tenancy = (TenancyProcess) EntityFromViewport();
             if (!ValidateTenancy(tenancy))
                 return;
-            var Filter = "";
+            var filter = "";
             if (!string.IsNullOrEmpty(GeneralBindingSource.Filter))
-                Filter += " OR ";
+                filter += " OR ";
             else
-                Filter += "(1 = 1) OR ";
+                filter += "(1 = 1) OR ";
             switch (viewportState)
             {
                 case ViewportState.ReadState:
-                    MessageBox.Show("Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
+                    MessageBox.Show(@"Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
-                    var id_process = GeneralDataModel.Insert(tenancy);
-                    if (id_process == -1)
+                    var idProcess = GeneralDataModel.Insert(tenancy);
+                    if (idProcess == -1)
                     {
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
                     DataRowView newRow;
-                    tenancy.IdProcess = id_process;
+                    tenancy.IdProcess = idProcess;
                     is_editable = false;
                     if (GeneralBindingSource.Position == -1)
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    Filter += string.Format(CultureInfo.CurrentCulture, "(id_process = {0})", tenancy.IdProcess);
-                    GeneralBindingSource.Filter += Filter;
+                    filter += string.Format(CultureInfo.CurrentCulture, "(id_process = {0})", tenancy.IdProcess);
+                    GeneralBindingSource.Filter += filter;
                     FillRowFromTenancy(tenancy, newRow);
                     // Если производится копирование, а не создание новой записи, то надо скопировать участников найма и нанимаемое жилье
-                    if (is_copy && id_copy_process != null)
+                    if (_isCopy && _idCopyProcess != null)
                     {
-                        if (!CopyTenancyProcessRelData(id_process, id_copy_process.Value))
-                            MessageBox.Show("Произошла ошибка во время копирования данных", "Ошибка",
+                        if (!CopyTenancyProcessRelData(idProcess, _idCopyProcess.Value))
+                            MessageBox.Show(@"Произошла ошибка во время копирования данных", @"Ошибка",
                                 MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     }
                     else
                         if (ParentRow != null)
                         {
-                            var to = new TenancyObject();
-                            to.IdProcess = id_process;
-                            to.RentLivingArea = null;
-                            to.RentTotalArea = null;
-                            var id_assoc = -1;
+                            var to = new TenancyObject
+                            {
+                                IdProcess = idProcess,
+                                RentLivingArea = null,
+                                RentTotalArea = null
+                            };
+                            int idAssoc;
                             switch (ParentType)
                             {
                                 case ParentTypeEnum.Building:
-                                    var tenancy_buildings = DataModel.GetInstance<TenancyBuildingsAssocDataModel>();
+                                    var tenancyBuildings = DataModel.GetInstance<TenancyBuildingsAssocDataModel>();
                                     to.IdObject = Convert.ToInt32(ParentRow["id_building"], CultureInfo.InvariantCulture);
-                                    tenancy_buildings.EditingNewRecord = true;
-                                    id_assoc = tenancy_buildings.Insert(to);
-                                    if (id_assoc == -1)
+                                    tenancyBuildings.EditingNewRecord = true;
+                                    idAssoc = tenancyBuildings.Insert(to);
+                                    if (idAssoc == -1)
                                         return;
-                                    to.IdAssoc = id_assoc;
-                                    tenancy_buildings.Select().Rows.Add(id_assoc, to.IdObject, to.IdProcess, to.RentTotalArea, to.RentLivingArea, 0);
-                                    tenancy_buildings.EditingNewRecord = false;
+                                    to.IdAssoc = idAssoc;
+                                    tenancyBuildings.Select().Rows.Add(idAssoc, to.IdObject, to.IdProcess, to.RentTotalArea, to.RentLivingArea, 0);
+                                    tenancyBuildings.EditingNewRecord = false;
                                     break;
                                 case ParentTypeEnum.Premises:
-                                    var tenancy_premises = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
+                                    var tenancyPremises = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
                                     to.IdObject = Convert.ToInt32(ParentRow["id_premises"], CultureInfo.InvariantCulture);
-                                    tenancy_premises.EditingNewRecord = true;
-                                    id_assoc = tenancy_premises.Insert(to);
-                                    if (id_assoc == -1)
+                                    tenancyPremises.EditingNewRecord = true;
+                                    idAssoc = tenancyPremises.Insert(to);
+                                    if (idAssoc == -1)
                                         return;
-                                    to.IdAssoc = id_assoc;
-                                    tenancy_premises.Select().Rows.Add(id_assoc, to.IdObject, to.IdProcess, to.RentTotalArea, to.RentLivingArea, 0);
-                                    tenancy_premises.EditingNewRecord = false;
+                                    to.IdAssoc = idAssoc;
+                                    tenancyPremises.Select().Rows.Add(idAssoc, to.IdObject, to.IdProcess, to.RentTotalArea, to.RentLivingArea, 0);
+                                    tenancyPremises.EditingNewRecord = false;
                                     break;
                                 case ParentTypeEnum.SubPremises:
-                                    var tenancy_sub_premises = DataModel.GetInstance<TenancySubPremisesAssocDataModel>();
+                                    var tenancySubPremises = DataModel.GetInstance<TenancySubPremisesAssocDataModel>();
                                     to.IdObject = Convert.ToInt32(ParentRow["id_sub_premises"], CultureInfo.InvariantCulture);
-                                    tenancy_sub_premises.EditingNewRecord = true;
-                                    id_assoc = tenancy_sub_premises.Insert(to);
-                                    if (id_assoc == -1)
+                                    tenancySubPremises.EditingNewRecord = true;
+                                    idAssoc = tenancySubPremises.Insert(to);
+                                    if (idAssoc == -1)
                                         return;
-                                    to.IdAssoc = id_assoc;
-                                    tenancy_sub_premises.Select().Rows.Add(id_assoc, to.IdObject, to.IdProcess, to.RentTotalArea, 0);
-                                    tenancy_sub_premises.EditingNewRecord = false;
+                                    to.IdAssoc = idAssoc;
+                                    tenancySubPremises.Select().Rows.Add(idAssoc, to.IdObject, to.IdProcess, to.RentTotalArea, 0);
+                                    tenancySubPremises.EditingNewRecord = false;
                                     break;
                                 default: throw new ViewportException("Неизвестный тип родительского объекта");
                             }
                         }
                     // Обновляем информацию по помещениям (живое обновление не реализуемо)
-                    if (v_tenancy_addresses != null)
+                    if (_vTenancyAddresses != null)
                     {
-                        v_tenancy_addresses.DataSource = CalcDataModel.GetInstance<CalcDataModelTenancyPremisesInfo>();
+                        _vTenancyAddresses.DataSource = CalcDataModel.GetInstance<CalcDataModelTenancyPremisesInfo>();
                         FiltersRebuild();
                     }
                     GeneralDataModel.EditingNewRecord = false;
@@ -919,8 +942,8 @@ namespace Registry.Viewport
                 case ViewportState.ModifyRowState:
                     if (tenancy.IdProcess == null)
                     {
-                        MessageBox.Show("Вы пытаетесь изменить процесс найма без внутренного номера. " +
-                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", 
+                        MessageBox.Show(@"Вы пытаетесь изменить процесс найма без внутренного номера. " +
+                            @"Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка", 
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
@@ -928,8 +951,8 @@ namespace Registry.Viewport
                         return;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     is_editable = false;
-                    Filter += string.Format(CultureInfo.CurrentCulture, "(id_process = {0})", tenancy.IdProcess);
-                    GeneralBindingSource.Filter += Filter;
+                    filter += string.Format(CultureInfo.CurrentCulture, "(id_process = {0})", tenancy.IdProcess);
+                    GeneralBindingSource.Filter += filter;
                     FillRowFromTenancy(tenancy, row);
                     break;
             }
@@ -941,90 +964,96 @@ namespace Registry.Viewport
         }
 
         // Метод копирует зависимые данные по процессу найма
-        private bool CopyTenancyProcessRelData(int id_new_process, int id_copy_process)
+        private bool CopyTenancyProcessRelData(int idNewProcess, int idCopyProcess)
         {
-            var persons = from persons_row in tenancy_persons.FilterDeletedRows()
-                          where persons_row.Field<int>("id_process") == id_copy_process
-                          select persons_row;
-            tenancy_persons.EditingNewRecord = true;
-            foreach (var person_row in persons.ToList())
+            var persons = from personsRow in _tenancyPersons.FilterDeletedRows()
+                          where personsRow.Field<int>("id_process") == idCopyProcess
+                          select personsRow;
+            _tenancyPersons.EditingNewRecord = true;
+            foreach (var personRow in persons.ToList())
             {
-                var person = DataRowToPerson(person_row);
-                person.IdProcess = id_new_process;
-                var id_person = tenancy_persons.Insert(person);
-                if (id_person == -1)
+                var person = DataRowToPerson(personRow);
+                person.IdProcess = idNewProcess;
+                var idPerson = _tenancyPersons.Insert(person);
+                if (idPerson == -1)
                 {
-                    tenancy_persons.EditingNewRecord = false;
+                    _tenancyPersons.EditingNewRecord = false;
                     return false;
                 }
-                person.IdPerson = id_person;
-                tenancy_persons.Select().Rows.Add(PersonToObjectArray(person));
+                person.IdPerson = idPerson;
+                _tenancyPersons.Select().Rows.Add(PersonToObjectArray(person));
             }
-            tenancy_persons.EditingNewRecord = false;
+            _tenancyPersons.EditingNewRecord = false;
             var tenancyBuildingsAssoc = DataModel.GetInstance<TenancyBuildingsAssocDataModel>();
             var buildings = from row in tenancyBuildingsAssoc.FilterDeletedRows()
-                            where row.Field<int>("id_process") == id_copy_process
+                            where row.Field<int>("id_process") == idCopyProcess
                             select row;
             tenancyBuildingsAssoc.EditingNewRecord = true;
             foreach (var row in buildings.ToList())
             {
-                var obj = new TenancyObject();
-                obj.IdObject = row.Field<int?>("id_building");
-                obj.IdProcess = id_new_process;
-                obj.RentLivingArea = row.Field<double?>("rent_living_area");
-                obj.RentTotalArea = row.Field<double?>("rent_total_area");
-                var id_assoc = tenancyBuildingsAssoc.Insert(obj);
-                if (id_assoc == -1)
+                var obj = new TenancyObject
+                {
+                    IdObject = row.Field<int?>("id_building"),
+                    IdProcess = idNewProcess,
+                    RentLivingArea = row.Field<double?>("rent_living_area"),
+                    RentTotalArea = row.Field<double?>("rent_total_area")
+                };
+                var idAssoc = tenancyBuildingsAssoc.Insert(obj);
+                if (idAssoc == -1)
                 {
                     tenancyBuildingsAssoc.EditingNewRecord = false;
                     return false;
                 }
-                obj.IdAssoc = id_assoc;
+                obj.IdAssoc = idAssoc;
                 tenancyBuildingsAssoc.Select().Rows.Add(obj.IdAssoc, obj.IdObject, obj.IdProcess,
                     obj.RentTotalArea, obj.RentLivingArea);
             }
             tenancyBuildingsAssoc.EditingNewRecord = false;
             var tenancyPremisesAssoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
             var premises = from row in tenancyPremisesAssoc.FilterDeletedRows()
-                            where row.Field<int>("id_process") == id_copy_process
+                            where row.Field<int>("id_process") == idCopyProcess
                            select row;
             tenancyPremisesAssoc.EditingNewRecord = true;
             foreach (var row in premises.ToList())
             {
-                var obj = new TenancyObject();
-                obj.IdObject = row.Field<int?>("id_premises");
-                obj.IdProcess = id_new_process;
-                obj.RentLivingArea = row.Field<double?>("rent_living_area");
-                obj.RentTotalArea = row.Field<double?>("rent_total_area");
-                var id_assoc = tenancyPremisesAssoc.Insert(obj);
-                if (id_assoc == -1)
+                var obj = new TenancyObject
+                {
+                    IdObject = row.Field<int?>("id_premises"),
+                    IdProcess = idNewProcess,
+                    RentLivingArea = row.Field<double?>("rent_living_area"),
+                    RentTotalArea = row.Field<double?>("rent_total_area")
+                };
+                var idAssoc = tenancyPremisesAssoc.Insert(obj);
+                if (idAssoc == -1)
                 {
                     tenancyPremisesAssoc.EditingNewRecord = false;
                     return false;
                 }
-                obj.IdAssoc = id_assoc;
+                obj.IdAssoc = idAssoc;
                 tenancyPremisesAssoc.Select().Rows.Add(obj.IdAssoc, obj.IdObject, obj.IdProcess,
                     obj.RentTotalArea, obj.RentLivingArea);
             }
             tenancyPremisesAssoc.EditingNewRecord = false;
             var tenancySubPremisesAssoc = DataModel.GetInstance<TenancySubPremisesAssocDataModel>();
-            var sub_premises = from row in tenancySubPremisesAssoc.FilterDeletedRows()
-                           where row.Field<int>("id_process") == id_copy_process
+            var subPremises = from row in tenancySubPremisesAssoc.FilterDeletedRows()
+                           where row.Field<int>("id_process") == idCopyProcess
                                select row;
             tenancySubPremisesAssoc.EditingNewRecord = true;
-            foreach (var row in sub_premises.ToList())
+            foreach (var row in subPremises.ToList())
             {
-                var obj = new TenancyObject();
-                obj.IdObject = row.Field<int?>("id_sub_premises");
-                obj.IdProcess = id_new_process;
-                obj.RentTotalArea = row.Field<double?>("rent_total_area");
-                var id_assoc = tenancySubPremisesAssoc.Insert(obj);
-                if (id_assoc == -1)
+                var obj = new TenancyObject
+                {
+                    IdObject = row.Field<int?>("id_sub_premises"),
+                    IdProcess = idNewProcess,
+                    RentTotalArea = row.Field<double?>("rent_total_area")
+                };
+                var idAssoc = tenancySubPremisesAssoc.Insert(obj);
+                if (idAssoc == -1)
                 {
                     tenancySubPremisesAssoc.EditingNewRecord = false;
                     return false;
                 }
-                obj.IdAssoc = id_assoc;
+                obj.IdAssoc = idAssoc;
                 tenancySubPremisesAssoc.Select().Rows.Add(obj.IdAssoc, obj.IdObject, obj.IdProcess,
                     obj.RentTotalArea);
             }
@@ -1034,30 +1063,32 @@ namespace Registry.Viewport
 
         private TenancyPerson DataRowToPerson(DataRow row)
         {
-            var person = new TenancyPerson();
-            person.IdPerson = row.Field<int?>("id_person");
-            person.IdProcess = row.Field<int?>("id_process");
-            person.IdKinship = row.Field<int?>("id_kinship");
-            person.Surname = row.Field<string>("surname");
-            person.Name = row.Field<string>("name");
-            person.Patronymic = row.Field<string>("patronymic");
-            person.DateOfBirth = row.Field<DateTime?>("date_of_birth");
-            person.IdDocumentType = row.Field<int?>("id_document_type");
-            person.DateOfDocumentIssue = row.Field<DateTime?>("date_of_document_issue");
-            person.DocumentNum = row.Field<string>("document_num");
-            person.DocumentSeria = row.Field<string>("document_seria");
-            person.IdDocumentIssuedBy = row.Field<int?>("id_document_issued_by");
-            person.RegistrationIdStreet = row.Field<string>("registration_id_street");
-            person.RegistrationHouse = row.Field<string>("registration_house");
-            person.RegistrationFlat = row.Field<string>("registration_flat");
-            person.RegistrationRoom = row.Field<string>("registration_room");
-            person.ResidenceIdStreet = row.Field<string>("residence_id_street");
-            person.ResidenceHouse = row.Field<string>("residence_house");
-            person.ResidenceFlat = row.Field<string>("residence_flat");
-            person.ResidenceRoom = row.Field<string>("residence_room");
-            person.PersonalAccount = row.Field<string>("personal_account");
-            person.IncludeDate = row.Field<DateTime?>("include_date");
-            person.ExcludeDate = row.Field<DateTime?>("exclude_date");
+            var person = new TenancyPerson
+            {
+                IdPerson = row.Field<int?>("id_person"),
+                IdProcess = row.Field<int?>("id_process"),
+                IdKinship = row.Field<int?>("id_kinship"),
+                Surname = row.Field<string>("surname"),
+                Name = row.Field<string>("name"),
+                Patronymic = row.Field<string>("patronymic"),
+                DateOfBirth = row.Field<DateTime?>("date_of_birth"),
+                IdDocumentType = row.Field<int?>("id_document_type"),
+                DateOfDocumentIssue = row.Field<DateTime?>("date_of_document_issue"),
+                DocumentNum = row.Field<string>("document_num"),
+                DocumentSeria = row.Field<string>("document_seria"),
+                IdDocumentIssuedBy = row.Field<int?>("id_document_issued_by"),
+                RegistrationIdStreet = row.Field<string>("registration_id_street"),
+                RegistrationHouse = row.Field<string>("registration_house"),
+                RegistrationFlat = row.Field<string>("registration_flat"),
+                RegistrationRoom = row.Field<string>("registration_room"),
+                ResidenceIdStreet = row.Field<string>("residence_id_street"),
+                ResidenceHouse = row.Field<string>("residence_house"),
+                ResidenceFlat = row.Field<string>("residence_flat"),
+                ResidenceRoom = row.Field<string>("residence_room"),
+                PersonalAccount = row.Field<string>("personal_account"),
+                IncludeDate = row.Field<DateTime?>("include_date"),
+                ExcludeDate = row.Field<DateTime?>("exclude_date")
+            };
             return person;
         }
 
@@ -1098,27 +1129,27 @@ namespace Registry.Viewport
             else
             {
                 GeneralBindingSource.CurrentItemChanged -= v_tenancies_CurrentItemChanged;
-                v_tenancy_persons.ListChanged -= v_persons_ListChanged;
-                tenancy_premises_info.RefreshEvent -= tenancy_premises_info_RefreshEvent;
-                tenancy_persons.Select().RowChanged -= TenancyPersons_RowChanged;
-                tenancy_persons.Select().RowDeleted -= TenancyPersons_RowDeleted;
+                _vTenancyPersons.ListChanged -= v_persons_ListChanged;
+                _tenancyPremisesInfo.RefreshEvent -= tenancy_premises_info_RefreshEvent;
+                _tenancyPersons.Select().RowChanged -= TenancyPersons_RowChanged;
+                _tenancyPersons.Select().RowDeleted -= TenancyPersons_RowDeleted;
                 GeneralDataModel.Select().RowChanged -= TenancyViewport_RowChanged;
                 GeneralDataModel.Select().RowDeleted -= TenancyViewport_RowDeleted;
 
-                if (tenancy_building_assoc != null)
+                if (_tenancyBuildingAssoc != null)
                 {
-                        tenancy_building_assoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
-                        tenancy_building_assoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
+                        _tenancyBuildingAssoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
+                        _tenancyBuildingAssoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
                 }
-                if (tenancy_premises_assoc != null)
+                if (_tenancyPremisesAssoc != null)
                 {
-                        tenancy_premises_assoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
-                        tenancy_premises_assoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
+                        _tenancyPremisesAssoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
+                        _tenancyPremisesAssoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
                 }
-                if (tenancy_sub_premises_assoc != null)
+                if (_tenancySubPremisesAssoc != null)
                 {
-                        tenancy_sub_premises_assoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
-                        tenancy_sub_premises_assoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
+                        _tenancySubPremisesAssoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
+                        _tenancySubPremisesAssoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
                 }
             }
             base.OnClosing(e);
@@ -1162,7 +1193,7 @@ namespace Registry.Viewport
 
         public override bool HasReport(ReporterType reporterType)
         {
-            if (GeneralBindingSource.Position == -1)
+            if (GeneralBindingSource.Position == -1 || GeneralBindingSource.Count <= GeneralBindingSource.Position)
                 return false;
             var idProcess = ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_process"] != DBNull.Value
                 ? (int?)Convert.ToInt32(((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_process"],
@@ -1212,7 +1243,7 @@ namespace Registry.Viewport
                     arguments.Add("report_type", "1");
                     break;
                 case ReporterType.TenancyAgreementReporter:
-                    if (v_tenancy_agreements.Position == -1)
+                    if (_vTenancyAgreements.Position == -1)
                     {
                         MessageBox.Show(@"Не выбрано соглашение для печати",
                             @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -1237,7 +1268,7 @@ namespace Registry.Viewport
 
         private Dictionary<string, string> TenancyAgreementReporterArguments()
         {
-            var row = (DataRowView)v_tenancy_agreements[v_tenancy_agreements.Position];
+            var row = (DataRowView)_vTenancyAgreements[_vTenancyAgreements.Position];
             return new Dictionary<string, string> {{"id_agreement", row["id_agreement"].ToString()}};
         }
 
@@ -1249,14 +1280,14 @@ namespace Registry.Viewport
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
             if (!DataModelHelper.TenancyProcessHasTenant(Convert.ToInt32(row["id_process"], CultureInfo.InvariantCulture)))
             {
-                MessageBox.Show("Для формирования отчетной документации необходимо указать нанимателя процесса найма", 
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Для формирования отчетной документации необходимо указать нанимателя процесса найма", 
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             if (ViewportHelper.ValueOrNull<DateTime>(row, "registration_date") == null || ViewportHelper.ValueOrNull(row, "registration_num") == null)
             {
-                MessageBox.Show("Для формирования отчетной документации необходимо завести договор найма и указать его номер и дату регистрации", 
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Для формирования отчетной документации необходимо завести договор найма и указать его номер и дату регистрации", 
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             return true;
@@ -1287,7 +1318,7 @@ namespace Registry.Viewport
                 MenuCallback.DocumentsStateUpdate();
             }
             UnbindedCheckBoxesUpdate();
-            BindWarrantID();
+            BindWarrantId();
             if (GeneralBindingSource.Position == -1)
                 return;
             if (viewportState == ViewportState.NewRowState)
@@ -1339,24 +1370,20 @@ namespace Registry.Viewport
 
         void vButtonWarrant_Click(object sender, EventArgs e)
         {
-            if (id_warrant != null)
+            if (_idWarrant != null)
             {
-                id_warrant = null;
+                _idWarrant = null;
                 textBoxSelectedWarrant.Text = "";
-                vButtonWarrant.Text = "...";
+                vButtonWarrant.Text = @"...";
                 return;
             }
-            if (swForm == null)
-                swForm = new SelectWarrantForm();
-            if (swForm.ShowDialog() == DialogResult.OK)
-            {
-                if (swForm.WarrantId != null)
-                {
-                    id_warrant = swForm.WarrantId.Value;
-                    textBoxSelectedWarrant.Text = WarrantStringByID(swForm.WarrantId.Value);
-                    vButtonWarrant.Text = "x";
-                }
-            }
+            if (_swForm == null)
+                _swForm = new SelectWarrantForm();
+            if (_swForm.ShowDialog() != DialogResult.OK) return;
+            if (_swForm.WarrantId == null) return;
+            _idWarrant = _swForm.WarrantId.Value;
+            textBoxSelectedWarrant.Text = WarrantStringById(_swForm.WarrantId.Value);
+            vButtonWarrant.Text = @"x";
         }
 
         void checkBoxProtocolEnable_CheckedChanged(object sender, EventArgs e)
@@ -1415,6 +1442,93 @@ namespace Registry.Viewport
         private void checkBoxUntilDismissal_CheckedChanged(object sender, EventArgs e)
         {
             dateTimePickerEndDate.Enabled = !checkBoxUntilDismissal.Checked;
+        }
+
+        private void vButtonRentPeriodAdd_Click(object sender, EventArgs e)
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            if (GeneralBindingSource.Position == -1)
+            {
+                MessageBox.Show(@"Не выбран процесс найма", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            var row = (DataRowView) GeneralBindingSource[GeneralBindingSource.Position];
+            using (var form = new RentPeriodsEditor())
+            {
+                if (form.ShowDialog() != DialogResult.OK) return;
+                var rentPeriod = new TenancyRentPeriod
+                {
+                    IdProcess = (int) row["id_process"],
+                    BeginDate = form.BeginDate,
+                    EndDate = form.EndDate,
+                    UntilDismissal = form.UntilDismissal
+                };
+                _rentPeriods.EditingNewRecord = true;
+                var idRentPeriod = _rentPeriods.Insert(rentPeriod);
+                if (idRentPeriod == -1) return;
+                rentPeriod.IdRentPeriod = idRentPeriod;
+                _rentPeriods.Select().Rows.Add(idRentPeriod, rentPeriod.IdProcess, rentPeriod.BeginDate, rentPeriod.EndDate, rentPeriod.UntilDismissal);
+                _rentPeriods.EditingNewRecord = false;
+            }
+        }
+
+        private void vButtonRentPeriodDelete_Click(object sender, EventArgs e)
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            if (GeneralBindingSource.Position == -1)
+            {
+                MessageBox.Show(@"Не выбран процесс найма", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            if (_vRentPeriods.Position == -1)
+            {
+                MessageBox.Show(@"Не выбран период найма для удаления", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            if (MessageBox.Show(@"Вы уверены, что хотите удалить этот период найма?", @"Внимание",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                return;
+            var idRentPeriod = (int)((DataRowView)_vRentPeriods[_vRentPeriods.Position])["id_rent_period"];
+            if (_rentPeriods.Delete(idRentPeriod) == -1)
+                return;
+            _rentPeriods.Select().Rows.Find(idRentPeriod).Delete();
+        }
+
+        private void vButtonSwapRentPeriod_Click(object sender, EventArgs e)
+        {
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                return;
+            if (GeneralBindingSource.Position == -1)
+            {
+                MessageBox.Show(@"Не выбран процесс найма", @"Ошибка",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+            var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
+            var rentPeriod = new TenancyRentPeriod
+            {
+                IdProcess = (int)row["id_process"],
+                BeginDate = ViewportHelper.ValueOrNull<DateTime>(row, "begin_date"),
+                EndDate = ViewportHelper.ValueOrNull<DateTime>(row, "end_date"),
+                UntilDismissal = ViewportHelper.ValueOrNull<bool>(row, "until_dismissal"),
+            };
+            _rentPeriods.EditingNewRecord = true;
+            var idRentPeriod = _rentPeriods.Insert(rentPeriod);
+            if (idRentPeriod == -1) return;
+            rentPeriod.IdRentPeriod = idRentPeriod;
+            _rentPeriods.Select().Rows.Add(idRentPeriod, rentPeriod.IdProcess, rentPeriod.BeginDate, rentPeriod.EndDate, rentPeriod.UntilDismissal);
+            _rentPeriods.EditingNewRecord = false;
+
+            dateTimePickerBeginDate.Value = dateTimePickerEndDate.Value;
+            dateTimePickerBeginDate.Checked = dateTimePickerEndDate.Checked;
+            dateTimePickerEndDate.Checked = false;
+
+            dateTimePickerEndDate.Focus();
         }
     }
 }

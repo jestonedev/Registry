@@ -32,7 +32,7 @@ namespace Registry.Viewport
         /// </summary>
         private void InitializeComponent()
         {
-            var resources = new System.ComponentModel.ComponentResourceManager(typeof(RestrictionsEditor));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RestrictionsEditor));
             this.label1 = new System.Windows.Forms.Label();
             this.textBoxRestrictionNumber = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -161,6 +161,7 @@ namespace Registry.Viewport
             this.Controls.Add(this.textBoxRestrictionNumber);
             this.Controls.Add(this.label1);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "RestrictionsEditor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

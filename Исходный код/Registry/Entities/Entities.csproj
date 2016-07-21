@@ -89,6 +89,7 @@
     <Compile Include="SubPremise.cs" />
     <Compile Include="TenancyProcess.cs" />
     <Compile Include="TenancyObject.cs" />
+    <Compile Include="TenancyRentPeriod.cs" />
     <Compile Include="Warrant.cs" />
   </ItemGroup>
   <ItemGroup>

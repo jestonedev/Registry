@@ -25,7 +25,7 @@ namespace Registry.Entities
 
         public override bool Equals(object obj)
         {
-            return (this == (obj as TenancyProcess));
+            return (this == obj as TenancyProcess);
         }
 
         public bool Equals(TenancyProcess other)
