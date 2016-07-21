@@ -868,6 +868,25 @@ namespace Registry.Viewport
                           END) AS mon
                           FROM dbo.t_bks ts
                           WHERE ts.street = @street AND house = @house AND RTRIM(LTRIM(flat)) = @flat)
+                            AND mon = (
+                                SELECT 
+                                MAX(CASE SUBSTRING(ts.base_month,1,3) 
+                                WHEN 'Jan' THEN SUBSTRING(ts.base_month,4,4)+'01'
+                                WHEN 'Feb' THEN SUBSTRING(ts.base_month,4,4)+'02'
+                                WHEN 'Mar' THEN SUBSTRING(ts.base_month,4,4)+'03'
+                                WHEN 'Apr' THEN SUBSTRING(ts.base_month,4,4)+'04'
+                                WHEN 'May' THEN SUBSTRING(ts.base_month,4,4)+'05'
+                                WHEN 'Jun' THEN SUBSTRING(ts.base_month,4,4)+'06'
+                                WHEN 'Jul' THEN SUBSTRING(ts.base_month,4,4)+'07'
+                                WHEN 'Aug' THEN SUBSTRING(ts.base_month,4,4)+'08'
+                                WHEN 'Sep' THEN SUBSTRING(ts.base_month,4,4)+'09'
+                                WHEN 'Oct' THEN SUBSTRING(ts.base_month,4,4)+'10'
+                                WHEN 'Nov' THEN SUBSTRING(ts.base_month,4,4)+'11'
+                                WHEN 'Dec' THEN SUBSTRING(ts.base_month,4,4)+'12'
+                                ELSE ts.base_month
+                                END) AS mon
+                                FROM dbo.t_bks ts
+                              )
                         ORDER BY mon;"
                     };
                     var streetName = currentPremise.First().street_name;
