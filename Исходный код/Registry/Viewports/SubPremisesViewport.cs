@@ -10,6 +10,7 @@ using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Reporting;
+using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -19,11 +20,13 @@ namespace Registry.Viewport
     {
 
         #region Models
-        DataModel _objectStates;
+
+        private DataModel _objectStates;
         #endregion Models
 
         #region Views
-        BindingSource _vObjectStates;
+
+        private BindingSource _vObjectStates;
         #endregion Views
 
         private SubPremisesViewport()
@@ -38,24 +41,6 @@ namespace Registry.Viewport
             GeneralSnapshot = new DataTable("snapshot_sub_premises")
             {
                 Locale = CultureInfo.InvariantCulture
-            };
-        }
-
-        private static object[] DataRowViewToArray(DataRowView dataRowView)
-        {
-            return new[] { 
-                dataRowView["id_sub_premises"], 
-                dataRowView["id_premises"], 
-                dataRowView["id_state"], 
-                dataRowView["sub_premises_num"], 
-                dataRowView["total_area"],
-                dataRowView["living_area"],
-                dataRowView["description"],
-                dataRowView["state_date"],
-                dataRowView["cadastral_num"],
-                dataRowView["cadastral_cost"],
-                dataRowView["balance_cost"],
-                dataRowView["account"]
             };
         }
 
@@ -92,49 +77,17 @@ namespace Registry.Viewport
             return true;
         }
 
-        private static SubPremise RowToSubPremise(DataRow row)
-        {
-            var subPremise = new SubPremise
-            {
-                IdSubPremises = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises"),
-                IdPremises = ViewportHelper.ValueOrNull<int>(row, "id_premises"),
-                IdState = ViewportHelper.ValueOrNull<int>(row, "id_state"),
-                SubPremisesNum = ViewportHelper.ValueOrNull(row, "sub_premises_num"),
-                TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area"),
-                LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area"),
-                Description = ViewportHelper.ValueOrNull(row, "description"),
-                StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date"),
-                CadastralNum = ViewportHelper.ValueOrNull(row, "cadastral_num"),
-                CadastralCost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost"),
-                BalanceCost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost"),
-                Account = ViewportHelper.ValueOrNull(row, "account")
-            };
-            return subPremise;
-        }
-
         protected override List<Entity> EntitiesListFromViewport()
         {
             var list = new List<Entity>();
             for (var i = 0; i < dataGridView.Rows.Count; i++)
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
-                var sp = new SubPremise();
                 var row = dataGridView.Rows[i];
-                sp.IdSubPremises = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises");
-                sp.IdPremises = ViewportHelper.ValueOrNull<int>(row, "id_premises");
-                sp.IdState = ViewportHelper.ValueOrNull<int>(row, "id_state");
-                sp.SubPremisesNum = ViewportHelper.ValueOrNull(row, "sub_premises_num");
-                sp.TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area");
+                var sp = SubPremiseConverter.FromRow(row);
                 if (ViewportHelper.ValueOrNull<double>(row, "living_area") == 0)
                     if (sp.TotalArea != null) 
                         dataGridView.Rows[i].Cells["living_area"].Value = sp.TotalArea.Value;
-                sp.LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area");
-                sp.Description = ViewportHelper.ValueOrNull(row, "description");
-                sp.StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date");
-                sp.CadastralNum = ViewportHelper.ValueOrNull(row, "cadastral_num");
-                sp.CadastralCost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost");
-                sp.BalanceCost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost");
-                sp.Account = ViewportHelper.ValueOrNull(row, "account");
                 list.Add(sp);
             }
             return list;
@@ -145,21 +98,8 @@ namespace Registry.Viewport
             var list = new List<Entity>();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
             {
-                var sp = new SubPremise();
-                var row = ((DataRowView)GeneralBindingSource[i]);
-                sp.IdSubPremises = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises");
-                sp.IdPremises = ViewportHelper.ValueOrNull<int>(row, "id_premises");
-                sp.IdState = ViewportHelper.ValueOrNull<int>(row, "id_state");
-                sp.SubPremisesNum = ViewportHelper.ValueOrNull(row, "sub_premises_num");
-                sp.TotalArea = ViewportHelper.ValueOrNull<double>(row, "total_area");
-                sp.LivingArea = ViewportHelper.ValueOrNull<double>(row, "living_area");
-                sp.Description = ViewportHelper.ValueOrNull(row, "description");
-                sp.StateDate = ViewportHelper.ValueOrNull<DateTime>(row, "state_date");
-                sp.CadastralNum = ViewportHelper.ValueOrNull(row, "cadastral_num");
-                sp.CadastralCost = ViewportHelper.ValueOrNull<decimal>(row, "cadastral_cost");
-                sp.BalanceCost = ViewportHelper.ValueOrNull<decimal>(row, "balance_cost");
-                sp.Account = ViewportHelper.ValueOrNull(row, "account");
-                list.Add(sp);
+                var row = (DataRowView)GeneralBindingSource[i];
+                list.Add(SubPremiseConverter.FromRow(row));
             }
             return list;
         }
@@ -205,7 +145,7 @@ namespace Registry.Viewport
                 GeneralSnapshot.Columns.Add(new DataColumn(GeneralDataModel.Select().Columns[i].ColumnName, GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
+                GeneralSnapshot.Rows.Add(SubPremiseConverter.ToArray((DataRowView)GeneralBindingSource[i]));
             GeneralSnapshotBindingSource = new BindingSource {DataSource = GeneralSnapshot};
             GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_sub_premises_CurrentItemChanged;
 
@@ -240,7 +180,7 @@ namespace Registry.Viewport
         public override bool CanInsertRecord()
         {
             return (ParentType == ParentTypeEnum.Premises) && (ParentRow != null) &&
-                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal));
         }
 
         public override void InsertRecord()
@@ -260,7 +200,7 @@ namespace Registry.Viewport
         public override bool CanDeleteRecord()
         {
             return (GeneralSnapshotBindingSource.Position != -1) &&
-                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal));
         }
 
         public override void DeleteRecord()
@@ -277,14 +217,14 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
+                GeneralSnapshot.Rows.Add(SubPremiseConverter.ToArray((DataRowView)GeneralBindingSource[i]));
             MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanSaveRecord()
         {
             return SnapshotHasChanges() &&
-                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal));
         }
 
         public override void SaveRecord()
@@ -331,16 +271,14 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_sub_premises"] = idSubPremises;
-                    GeneralDataModel.Select().Rows.Add(DataRowViewToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(SubPremiseConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
-                    var subPremiseFromView = RowToSubPremise(row);
+                    var subPremiseFromView = SubPremiseConverter.FromRow(row);
                     if (subPremiseFromView == subPremise)
                         continue;
-                    if (subPremiseFromView.IdSubPremises != null 
-                        && (DataModelHelper.HasMunicipal(subPremiseFromView.IdSubPremises.Value, EntityType.SubPremise)
-                        && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal)))
+                    if (subPremiseFromView.IdSubPremises != null && DataModelHelper.HasMunicipal(subPremiseFromView.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                     {
                         MessageBox.Show(@"Вы не можете изменить информацию по данной комнате, т.к. она является муниципальной",
                             @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -348,9 +286,7 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    if (subPremiseFromView.IdSubPremises != null 
-                        && (DataModelHelper.HasNotMunicipal(subPremiseFromView.IdSubPremises.Value, EntityType.SubPremise)
-                        && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)))
+                    if (subPremiseFromView.IdSubPremises != null && DataModelHelper.HasNotMunicipal(subPremiseFromView.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                     {
                         MessageBox.Show(@"Вы не можете изменить информацию по данной комнате, т.к. она является немуниципальной",
                             @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -364,17 +300,7 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    row["id_premises"] = ViewportHelper.ValueOrDbNull(subPremise.IdPremises);
-                    row["id_state"] = ViewportHelper.ValueOrDbNull(subPremise.IdState);
-                    row["sub_premises_num"] = ViewportHelper.ValueOrDbNull(subPremise.SubPremisesNum);
-                    row["total_area"] = ViewportHelper.ValueOrDbNull(subPremise.TotalArea);
-                    row["living_area"] = ViewportHelper.ValueOrDbNull(subPremise.LivingArea);
-                    row["description"] = ViewportHelper.ValueOrDbNull(subPremise.Description);
-                    row["state_date"] = ViewportHelper.ValueOrDbNull(subPremise.StateDate); 
-                    row["cadastral_num"] = ViewportHelper.ValueOrDbNull(subPremise.CadastralNum);
-                    row["cadastral_cost"] = ViewportHelper.ValueOrDbNull(subPremise.CadastralCost);
-                    row["balance_cost"] = ViewportHelper.ValueOrDbNull(subPremise.BalanceCost);
-                    row["account"] = ViewportHelper.ValueOrDbNull(subPremise.Account);
+                    SubPremiseConverter.FillRow(subPremise, row);
                 }
             }
             list = EntitiesListFromView();
@@ -388,9 +314,7 @@ namespace Registry.Viewport
                         ((int)dataGridView.Rows[j].Cells["id_sub_premises"].Value == subPremise.IdSubPremises))
                         rowIndex = j;
                 if (rowIndex != -1) continue;
-                if (subPremise.IdSubPremises != null 
-                    && (DataModelHelper.HasMunicipal(subPremise.IdSubPremises.Value, EntityType.SubPremise)
-                    && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal)))
+                if (subPremise.IdSubPremises != null && DataModelHelper.HasMunicipal(subPremise.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                 {
                     MessageBox.Show(@"Вы не можете удалить муниципальную комнату, т.к. не имеете на это прав",
                         @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -398,9 +322,7 @@ namespace Registry.Viewport
                     GeneralDataModel.EditingNewRecord = false;
                     return;
                 }
-                if (subPremise.IdSubPremises != null 
-                    && (DataModelHelper.HasNotMunicipal(subPremise.IdSubPremises.Value, EntityType.SubPremise)
-                    && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)))
+                if (subPremise.IdSubPremises != null && DataModelHelper.HasNotMunicipal(subPremise.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                 {
                     MessageBox.Show(@"Вы не можете удалить немуниципальную комнату, т.к. не имеете на это прав",
                         @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -465,14 +387,6 @@ namespace Registry.Viewport
             base.OnClosing(e);
         }
 
-        public override void ForceClose()
-        {
-            GeneralDataModel.Select().RowChanged -= SubPremisesViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting -= SubPremisesViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted -= SubPremisesViewport_RowDeleted;
-            Close();
-        }
-
         public override bool HasAssocViewport<T>()
         {
             var reports = new List<ViewportType>
@@ -519,7 +433,7 @@ namespace Registry.Viewport
             switch (reporterType)
             {
                 case  ReporterType.RegistryExcerptReporterSubPremise:
-                    return (GeneralSnapshotBindingSource.Count > 0);
+                    return GeneralSnapshotBindingSource.Count > 0;
                 case  ReporterType.RegistryExcerptReporterPremise:
                 case ReporterType.RegistryExcerptReporterAllMunSubPremises:
                     return true;
@@ -601,9 +515,9 @@ namespace Registry.Viewport
                 {"excerpt_type", "3"}
             };
             return arguments;
-        } 
+        }
 
-        void v_snapshot_sub_premises_CurrentItemChanged(object sender, EventArgs e)
+        private void v_snapshot_sub_premises_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
             {
@@ -613,8 +527,8 @@ namespace Registry.Viewport
                 MenuCallback.DocumentsStateUpdate();
             }
         }
-        
-        void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
+
+        private void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
         {
             var cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
             switch (cell.OwningColumn.Name)
@@ -624,7 +538,7 @@ namespace Registry.Viewport
                 case "cadastral_cost":
                 case "balance_cost":
                     double stub;
-                    if ((string.IsNullOrEmpty(cell.Value.ToString()) || (!double.TryParse(cell.Value.ToString(), out stub))))
+                    if (string.IsNullOrEmpty(cell.Value.ToString()) || !double.TryParse(cell.Value.ToString(), out stub))
                         cell.Value = 0;
                     break;
                 case "sub_premises_num":
@@ -643,44 +557,38 @@ namespace Registry.Viewport
             }
         }
 
-        void SubPremisesViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        private void SubPremisesViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             MenuCallback.ForceCloseDetachedViewports();
-            if (Selected)
-            {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.StatusBarStateUpdate();
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
-            }
+            if (!Selected) return;
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.StatusBarStateUpdate();
+            MenuCallback.EditingStateUpdate();
+            MenuCallback.RelationsStateUpdate();
         }
 
-        void SubPremisesViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
+        private void SubPremisesViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
             if (!SyncViews)
                 return;
-            if (e.Action == DataRowAction.Delete)
-            {
-                var rowIndex = GeneralSnapshotBindingSource.Find("id_sub_premises", e.Row["id_sub_premises"]);
-                if (rowIndex != -1)
-                    ((DataRowView)GeneralSnapshotBindingSource[rowIndex]).Delete();
-            }
+            if (e.Action != DataRowAction.Delete) return;
+            var rowIndex = GeneralSnapshotBindingSource.Find("id_sub_premises", e.Row["id_sub_premises"]);
+            if (rowIndex != -1)
+                ((DataRowView)GeneralSnapshotBindingSource[rowIndex]).Delete();
         }
 
-        void SubPremisesViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void SubPremisesViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (!SyncViews)
                 return;
             var rowIndex = GeneralSnapshotBindingSource.Find("id_sub_premises", e.Row["id_sub_premises"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_sub_premises", e.Row["id_sub_premises"]) != -1)
             {
-                GeneralSnapshot.Rows.Add(e.Row["id_sub_premises"], e.Row["id_premises"], e.Row["id_state"], e.Row["sub_premises_num"], 
-                    e.Row["total_area"], e.Row["living_area"], e.Row["description"], e.Row["state_date"], e.Row["cadastral_num"],
-                    e.Row["cadastral_cost"], e.Row["balance_cost"], e.Row["account"]);
+                GeneralSnapshot.Rows.Add(SubPremiseConverter.ToArray(e.Row));
             } else
             if (rowIndex != -1)
             {
-                var row = ((DataRowView)GeneralSnapshotBindingSource[rowIndex]);
+                var row = (DataRowView)GeneralSnapshotBindingSource[rowIndex];
                 row["id_premises"] = e.Row["id_premises"];
                 row["id_state"] = e.Row["id_state"];
                 row["sub_premises_num"] = e.Row["sub_premises_num"];
@@ -700,12 +608,12 @@ namespace Registry.Viewport
             MenuCallback.RelationsStateUpdate();
         }
 
-        void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             MenuCallback.EditingStateUpdate();
         }
 
-        void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        private void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
             if (dataGridView.SelectedCells.Count > 0 && 
                 new[] { "total_area", "living_area", "cadastral_cost", "balance_cost" }.Contains(dataGridView.SelectedCells[0].OwningColumn.Name))
@@ -732,14 +640,14 @@ namespace Registry.Viewport
                 }
         }
 
-        void editingControl_DropDownClosed(object sender, EventArgs e)
+        private void editingControl_DropDownClosed(object sender, EventArgs e)
         {
             var editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
             if (editingControl != null) dataGridView.CurrentCell.Value = editingControl.SelectedValue;
             dataGridView.EndEdit();
         }
 
-        void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
         {
             var cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
             switch (cell.OwningColumn.Name)
@@ -762,8 +670,8 @@ namespace Registry.Viewport
                     break;
             }
         }
-        
-        void EditingControl_KeyPress(object sender, KeyPressEventArgs e)
+
+        private void EditingControl_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (dataGridView.SelectedCells.Count > 0 && 
                 new[] { "total_area", "living_area", "cadastral_cost", "balance_cost" }.Contains(dataGridView.SelectedCells[0].OwningColumn.Name))

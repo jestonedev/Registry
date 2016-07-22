@@ -2,16 +2,15 @@
 using System.Data;
 using System.Globalization;
 using System.Windows.Forms;
-using Registry.DataModels;
 using Registry.DataModels.DataModels;
 
 namespace Registry.Viewport
 {
     internal partial class SelectWarrantForm : Form
     {
-        private DataModel warrants;
+        private DataModel _warrants;
 
-        private BindingSource v_warrants;
+        private BindingSource _vWarrants;
 
         public SelectWarrantForm()
         {
@@ -22,10 +21,9 @@ namespace Registry.Viewport
         {
             get
             {
-                if (v_warrants.Position == -1)
+                if (_vWarrants.Position == -1)
                     return null;
-                else
-                    return Convert.ToInt32(((DataRowView)v_warrants[v_warrants.Position])["id_warrant"], CultureInfo.InvariantCulture);
+                return Convert.ToInt32(((DataRowView)_vWarrants[_vWarrants.Position])["id_warrant"], CultureInfo.InvariantCulture);
             }
         }
 
@@ -36,13 +34,12 @@ namespace Registry.Viewport
 
         private void SelectWarrantForm_Load(object sender, EventArgs e)
         {
-            warrants = DataModel.GetInstance<WarrantsDataModel>();
+            _warrants = DataModel.GetInstance<WarrantsDataModel>();
 
-            v_warrants = new BindingSource();
-            v_warrants.DataSource = warrants.Select();
+            _vWarrants = new BindingSource {DataSource = _warrants.Select()};
 
             dataGridView1.AutoGenerateColumns = false;
-            dataGridView1.DataSource = v_warrants;
+            dataGridView1.DataSource = _vWarrants;
             RegNumber.DataPropertyName = "registration_num";
             Date.DataPropertyName = "registration_date";
             Notary.DataPropertyName = "notary";
@@ -73,7 +70,7 @@ namespace Registry.Viewport
                     filter += " AND ";
                 filter += string.Format(CultureInfo.InvariantCulture, "registration_date = '{0}'", dateTimePickerDate.Value.Date);
             }
-            v_warrants.Filter = filter;
+            _vWarrants.Filter = filter;
         }
 
         private void textBoxRegNumber_Enter(object sender, EventArgs e)

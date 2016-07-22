@@ -4,6 +4,7 @@ using System.Data;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -101,31 +102,8 @@ namespace Registry.Viewport
 
         protected override Entity EntityFromView()
         {
-            var warrant = new Warrant();
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            warrant.IdWarrant = ViewportHelper.ValueOrNull<int>(row, "id_warrant");
-            warrant.IdWarrantDocType = ViewportHelper.ValueOrNull<int>(row, "id_warrant_doc_type");
-            warrant.RegistrationNum = ViewportHelper.ValueOrNull(row, "registration_num");
-            warrant.RegistrationDate = ViewportHelper.ValueOrNull<DateTime>(row, "registration_date");
-            warrant.OnBehalfOf = ViewportHelper.ValueOrNull(row, "on_behalf_of");
-            warrant.Notary = ViewportHelper.ValueOrNull(row, "notary");
-            warrant.NotaryDistrict = ViewportHelper.ValueOrNull(row, "notary_district");
-            warrant.Description = ViewportHelper.ValueOrNull(row, "description");
-            return warrant;
-        }
-
-        private static void FillRowFromWarrant(Warrant warrant, DataRowView row)
-        {
-            row.BeginEdit();
-            row["id_warrant"] = ViewportHelper.ValueOrDbNull(warrant.IdWarrant);
-            row["id_warrant_doc_type"] = ViewportHelper.ValueOrDbNull(warrant.IdWarrantDocType);
-            row["registration_num"] = ViewportHelper.ValueOrDbNull(warrant.RegistrationNum);
-            row["registration_date"] = ViewportHelper.ValueOrDbNull(warrant.RegistrationDate);
-            row["on_behalf_of"] = ViewportHelper.ValueOrDbNull(warrant.OnBehalfOf);
-            row["notary"] = ViewportHelper.ValueOrDbNull(warrant.Notary);
-            row["notary_district"] = ViewportHelper.ValueOrDbNull(warrant.NotaryDistrict);
-            row["description"] = ViewportHelper.ValueOrDbNull(warrant.Description);
-            row.EndEdit();
+            return WarrantConverter.FromRow(row);
         }
 
         private bool ValidateWarrant(Warrant warrant)
@@ -222,7 +200,7 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите удалить эту запись?", "Внимание", 
+            if (MessageBox.Show(@"Вы действительно хотите удалить эту запись?", @"Внимание", 
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_warrant"]) == -1)
@@ -262,7 +240,7 @@ namespace Registry.Viewport
             switch (viewportState)
             {
                 case ViewportState.ReadState:
-                    MessageBox.Show("Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
+                    MessageBox.Show(@"Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
@@ -279,15 +257,15 @@ namespace Registry.Viewport
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    FillRowFromWarrant(warrant, newRow);
+                    WarrantConverter.FillRow(warrant, newRow);
                     is_editable = true;
                     GeneralDataModel.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
                     if (warrant.IdWarrant == null)
                     {
-                        MessageBox.Show("Вы пытаетесь изменить запись о доверенности без внутренного номера. " +
-                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", 
+                        MessageBox.Show(@"Вы пытаетесь изменить запись о доверенности без внутренного номера. " +
+                            @"Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка", 
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
@@ -295,7 +273,7 @@ namespace Registry.Viewport
                         return;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     is_editable = false;
-                    FillRowFromWarrant(warrant, row);
+                    WarrantConverter.FillRow(warrant, row);
                     break;
             }
             dataGridView.Enabled = true;
@@ -341,13 +319,6 @@ namespace Registry.Viewport
             GeneralDataModel.Select().RowChanged -= WarrantsViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted -= WarrantsViewport_RowDeleted;
             base.OnClosing(e);
-        }
-
-        public override void ForceClose()
-        {
-            if (viewportState == ViewportState.NewRowState)
-                GeneralDataModel.EditingNewRecord = false;
-            Close();
         }
 
         protected override void OnVisibleChanged(EventArgs e)

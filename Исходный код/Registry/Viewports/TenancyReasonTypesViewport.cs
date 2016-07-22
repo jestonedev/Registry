@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -26,15 +27,6 @@ namespace Registry.Viewport
             GeneralSnapshot = new DataTable("snapshot_reason_types")
             {
                 Locale = CultureInfo.InvariantCulture
-            };
-        }
-
-        private static object[] DataRowViewToArray(DataRowView dataRowView)
-        {
-            return new[] { 
-                dataRowView["id_reason_type"], 
-                dataRowView["reason_name"],
-                dataRowView["reason_template"]
             };
         }
 
@@ -66,24 +58,12 @@ namespace Registry.Viewport
                     return false;
                 }
                 if (Regex.IsMatch(reasonType.ReasonTemplate, "@reason_number@") &&
-                    (Regex.IsMatch(reasonType.ReasonTemplate, "@reason_date@"))) continue;
+                    Regex.IsMatch(reasonType.ReasonTemplate, "@reason_date@")) continue;
                 MessageBox.Show(@"Шаблон основания имеет неверный формат. В шаблоне должны быть указаны номер (в виде шаблона @reason_number@) и" +
                                 @" дата (в виде шаблона @reason_date@) основания", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             return true;
-        }
-
-        private static ReasonType RowToReasonType(DataRow row)
-        {
-            var reasonType = new ReasonType
-            {
-                IdReasonType = ViewportHelper.ValueOrNull<int>(row, "id_reason_type"),
-                ReasonName = ViewportHelper.ValueOrNull(row, "reason_name"),
-                ReasonTemplate = ViewportHelper.ValueOrNull(row, "reason_template")
-            };
-
-            return reasonType;
         }
 
         protected override List<Entity> EntitiesListFromViewport()
@@ -92,12 +72,8 @@ namespace Registry.Viewport
             for (var i = 0; i < dataGridView.Rows.Count; i++)
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
-                var rt = new ReasonType();
                 var row = dataGridView.Rows[i];
-                rt.IdReasonType = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
-                rt.ReasonName = ViewportHelper.ValueOrNull(row, "reason_name");
-                rt.ReasonTemplate = ViewportHelper.ValueOrNull(row, "reason_template"); 
-                list.Add(rt);
+                list.Add(TenancyReasonTypeConverter.FromRow(row));
             }
             return list;
         }
@@ -107,12 +83,8 @@ namespace Registry.Viewport
             var list = new List<Entity>();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
             {
-                var rt = new ReasonType();
-                var row = ((DataRowView)GeneralBindingSource[i]);
-                rt.IdReasonType = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
-                rt.ReasonName = ViewportHelper.ValueOrNull(row, "reason_name");
-                rt.ReasonTemplate = ViewportHelper.ValueOrNull(row, "reason_template"); 
-                list.Add(rt);
+                var row = (DataRowView)GeneralBindingSource[i];
+                list.Add(TenancyReasonTypeConverter.FromRow(row));
             }
             return list;
         }
@@ -131,9 +103,11 @@ namespace Registry.Viewport
             //Ожидаем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
 
-            GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.DataMember = "tenancy_reason_types";
-            GeneralBindingSource.DataSource = DataModel.DataSet;
+            GeneralBindingSource = new BindingSource
+            {
+                DataMember = "tenancy_reason_types",
+                DataSource = DataModel.DataSet
+            };
 
             //Инициируем колонки snapshot-модели
             GeneralSnapshot.Locale = CultureInfo.InvariantCulture;
@@ -142,9 +116,8 @@ namespace Registry.Viewport
                     GeneralDataModel.Select().Columns[i].ColumnName, GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
-            GeneralSnapshotBindingSource = new BindingSource();
-            GeneralSnapshotBindingSource.DataSource = GeneralSnapshot;
+                GeneralSnapshot.Rows.Add(TenancyReasonTypeConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+            GeneralSnapshotBindingSource = new BindingSource {DataSource = GeneralSnapshot};
             GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_reason_types_CurrentItemChanged;
 
             dataGridView.DataSource = GeneralSnapshotBindingSource;
@@ -193,7 +166,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
+                GeneralSnapshot.Rows.Add(TenancyReasonTypeConverter.ToArray((DataRowView)GeneralBindingSource[i]));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -228,12 +201,12 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_reason_type"] = idReasonType;
-                    GeneralDataModel.Select().Rows.Add(DataRowViewToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(TenancyReasonTypeConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
 
-                    if (RowToReasonType(row) == reasonType)
+                    if (TenancyReasonTypeConverter.FromRow(row) == reasonType)
                         continue;
                     if (GeneralDataModel.Update(reasonType) == -1)
                     {
@@ -241,8 +214,7 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    row["reason_name"] = reasonType.ReasonName == null ? DBNull.Value : (object)reasonType.ReasonName;
-                    row["reason_template"] = reasonType.ReasonTemplate == null ? DBNull.Value : (object)reasonType.ReasonTemplate;
+                    TenancyReasonTypeConverter.FillRow(reasonType, row);
                 }
             }
             list = EntitiesListFromView();
@@ -311,7 +283,7 @@ namespace Registry.Viewport
             base.OnClosing(e);
         }
 
-        void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
         {
             var cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
             switch (cell.OwningColumn.Name)
@@ -330,7 +302,7 @@ namespace Registry.Viewport
                         cell.ErrorText = "Длина шаблона вида основания не может превышать 4000 символов";
                     else
                     if (!(Regex.IsMatch(cell.Value.ToString(), "@reason_number@") &&
-                         (Regex.IsMatch(cell.Value.ToString(), "@reason_date@"))))
+                         Regex.IsMatch(cell.Value.ToString(), "@reason_date@")))
                         cell.ErrorText = "Шаблон основания имеет неверный формат. В шаблоне должны быть указаны номер (в виде шаблона @reason_number@) и" +
                             " дата (в виде шаблона @reason_date@) основания";
                     else
@@ -339,7 +311,7 @@ namespace Registry.Viewport
             }
         }
 
-        void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             MenuCallback.EditingStateUpdate();
         }
@@ -354,7 +326,7 @@ namespace Registry.Viewport
             }
         }
 
-        void ReasonTypesViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
+        private void ReasonTypesViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
             if (!SyncViews)
                 return;
@@ -366,19 +338,19 @@ namespace Registry.Viewport
             }
         }
 
-        void ReasonTypesViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void ReasonTypesViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (!SyncViews)
                 return;
             var rowIndex = GeneralSnapshotBindingSource.Find("id_reason_type", e.Row["id_reason_type"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_reason_type", e.Row["id_reason_type"]) != -1)
             {
-                GeneralSnapshot.Rows.Add(e.Row["id_reason_type"], e.Row["reason_name"], e.Row["reason_template"]);
+                GeneralSnapshot.Rows.Add(TenancyReasonTypeConverter.ToArray(e.Row));
             }
             else
                 if (rowIndex != -1)
                 {
-                    var row = ((DataRowView)GeneralSnapshotBindingSource[rowIndex]);
+                    var row = (DataRowView)GeneralSnapshotBindingSource[rowIndex];
                     row["reason_name"] = e.Row["reason_name"];
                     row["reason_template"] = e.Row["reason_template"];
                 }
@@ -390,7 +362,7 @@ namespace Registry.Viewport
             }
         }
 
-        void v_snapshot_reason_types_CurrentItemChanged(object sender, EventArgs e)
+        private void v_snapshot_reason_types_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
             {

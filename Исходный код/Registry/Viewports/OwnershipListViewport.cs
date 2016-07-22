@@ -412,11 +412,6 @@ namespace Registry.Viewport
             base.OnClosing(e);
         }
 
-        public override void ForceClose()
-        {
-            Close();
-        }
-
         private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             MenuCallback.EditingStateUpdate();

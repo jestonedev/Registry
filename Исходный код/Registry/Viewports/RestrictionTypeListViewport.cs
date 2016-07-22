@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -25,14 +26,6 @@ namespace Registry.Viewport
             GeneralSnapshot = new DataTable("snapshot_restriction_types")
             {
                 Locale = CultureInfo.InvariantCulture
-            };
-        }
-
-        private static object[] DataRowViewToArray(DataRowView dataRowView)
-        {
-            return new[] { 
-                dataRowView["id_restriction_type"], 
-                dataRowView["restriction_type"]
             };
         }
 
@@ -72,11 +65,8 @@ namespace Registry.Viewport
             for (var i = 0; i < dataGridView.Rows.Count; i++)
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
-                var rt = new RestrictionType();
                 var row = dataGridView.Rows[i];
-                rt.IdRestrictionType = ViewportHelper.ValueOrNull<int>(row, "id_restriction_type");
-                rt.RestrictionTypeName = ViewportHelper.ValueOrNull(row, "restriction_type");
-                list.Add(rt);
+                list.Add(RestrictionTypeConverter.FromRow(row));
             }
             return list;
         }
@@ -86,11 +76,8 @@ namespace Registry.Viewport
             var list = new List<Entity>();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
             {
-                var rt = new RestrictionType();
-                var row = ((DataRowView)GeneralBindingSource[i]);
-                rt.IdRestrictionType = ViewportHelper.ValueOrNull<int>(row, "id_restriction_type");
-                rt.RestrictionTypeName = ViewportHelper.ValueOrNull(row, "restriction_type");
-                list.Add(rt);
+                var row = (DataRowView)GeneralBindingSource[i];
+                list.Add(RestrictionTypeConverter.FromRow(row));
             }
             return list;
         }
@@ -119,7 +106,7 @@ namespace Registry.Viewport
                     GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
+                GeneralSnapshot.Rows.Add(RestrictionTypeConverter.ToArray((DataRowView)GeneralBindingSource[i]));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
             GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_restriction_types_CurrentItemChanged;
 
@@ -166,7 +153,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
+                GeneralSnapshot.Rows.Add(RestrictionTypeConverter.ToArray((DataRowView)GeneralBindingSource[i]));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -201,7 +188,7 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_restriction_type"] = idRestrictionType;
-                    GeneralDataModel.Select().Rows.Add(DataRowViewToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(RestrictionTypeConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
@@ -213,8 +200,7 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    row["restriction_type"] = restrictionType.RestrictionTypeName == null ? 
-                        DBNull.Value : (object)restrictionType.RestrictionTypeName;
+                    RestrictionTypeConverter.FillRow(restrictionType, row);
                 }
             }
             list = EntitiesListFromView();
@@ -263,16 +249,18 @@ namespace Registry.Viewport
             {
                 var result = MessageBox.Show(@"Сохранить изменения о типах реквизитов в базу данных?", @"Внимание",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                if (result == DialogResult.Yes)
-                    SaveRecord();
-                else
-                    if (result == DialogResult.No)
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        SaveRecord();
+                        break;
+                    case DialogResult.No:
                         CancelRecord();
-                    else
-                    {
+                        break;
+                    default:
                         e.Cancel = true;
                         return;
-                    }
+                }
             }
             GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_restriction_types_CurrentItemChanged;
             dataGridView.CellValidated -= dataGridView_CellValidated;
@@ -285,15 +273,13 @@ namespace Registry.Viewport
 
         private void RestrictionTypeListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
-            if (Selected)
-            {
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.StatusBarStateUpdate();
-            }
+            if (!Selected) return;
+            MenuCallback.EditingStateUpdate();
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.StatusBarStateUpdate();
         }
 
-        void RestrictionTypeListViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
+        private void RestrictionTypeListViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
             if (!SyncViews)
                 return;
@@ -303,19 +289,19 @@ namespace Registry.Viewport
                 ((DataRowView)GeneralSnapshotBindingSource[rowIndex]).Delete();
         }
 
-        void RestrictionTypeListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void RestrictionTypeListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (!SyncViews)
                 return;
             var rowIndex = GeneralSnapshotBindingSource.Find("id_restriction_type", e.Row["id_restriction_type"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_restriction_type", e.Row["id_restriction_type"]) != -1)
             {
-                GeneralSnapshot.Rows.Add(e.Row["id_restriction_type"], e.Row["restriction_type"]);
+                GeneralSnapshot.Rows.Add(RestrictionTypeConverter.ToArray(e.Row));
             }
             else
                 if (rowIndex != -1)
                 {
-                    var row = ((DataRowView)GeneralSnapshotBindingSource[rowIndex]);
+                    var row = (DataRowView)GeneralSnapshotBindingSource[rowIndex];
                     row["restriction_type"] = e.Row["restriction_type"];
                 }
             if (Selected)
@@ -326,7 +312,7 @@ namespace Registry.Viewport
             }
         }
 
-        void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
         {
             var cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
             switch (cell.OwningColumn.Name)
@@ -343,18 +329,16 @@ namespace Registry.Viewport
             }
         }
 
-        void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             MenuCallback.EditingStateUpdate();
         }
 
-        void v_snapshot_restriction_types_CurrentItemChanged(object sender, EventArgs e)
+        private void v_snapshot_restriction_types_CurrentItemChanged(object sender, EventArgs e)
         {
-            if (Selected)
-            {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.EditingStateUpdate();
-            }
+            if (!Selected) return;
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
     }
 }

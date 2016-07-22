@@ -239,39 +239,17 @@ namespace Registry.Viewport
 
         protected override Entity EntityFromView()
         {
-            var tenancyAgreement = new TenancyAgreement();
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            tenancyAgreement.IdAgreement = ViewportHelper.ValueOrNull<int>(row, "id_agreement");
-            tenancyAgreement.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
-            tenancyAgreement.IdExecutor = ViewportHelper.ValueOrNull<int>(row, "id_executor");
-            tenancyAgreement.IdWarrant = ViewportHelper.ValueOrNull<int>(row, "id_warrant");
-            tenancyAgreement.AgreementDate = ViewportHelper.ValueOrNull<DateTime>(row, "agreement_date");
-            tenancyAgreement.AgreementContent = ViewportHelper.ValueOrNull(row, "agreement_content");
-            return tenancyAgreement;
-        }
-
-        private static void FillRowFromAgreement(TenancyAgreement tenancyAgreement, DataRowView row)
-        {
-            row.BeginEdit();
-            row["id_agreement"] = ViewportHelper.ValueOrDbNull(tenancyAgreement.IdAgreement);
-            row["id_process"] = ViewportHelper.ValueOrDbNull(tenancyAgreement.IdProcess);
-            row["agreement_date"] = ViewportHelper.ValueOrDbNull(tenancyAgreement.AgreementDate);
-            row["agreement_content"] = ViewportHelper.ValueOrDbNull(tenancyAgreement.AgreementContent);
-            row["id_executor"] = ViewportHelper.ValueOrDbNull(tenancyAgreement.IdExecutor);
-            row["id_warrant"] = ViewportHelper.ValueOrDbNull(tenancyAgreement.IdWarrant);
-            row.EndEdit();
+            return TenancyAgreementConverter.FromRow(row);
         }
 
         private bool ValidateAgreement(TenancyAgreement tenancyAgreement)
         {
-            if (tenancyAgreement.IdExecutor == null)
-            {
-                MessageBox.Show(@"Необходимо выбрать исполнителя", @"Ошибка",
-                               MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                comboBoxExecutor.Focus();
-                return false;
-            }
-            return true;
+            if (tenancyAgreement.IdExecutor != null) return true;
+            MessageBox.Show(@"Необходимо выбрать исполнителя", @"Ошибка",
+                MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+            comboBoxExecutor.Focus();
+            return false;
         }
 
         public override bool CanLoadData()
@@ -375,17 +353,16 @@ namespace Registry.Viewport
         public override void DeleteRecord()
         {
             if (MessageBox.Show(@"Вы действительно хотите это соглашение?", @"Внимание",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-            {
-                if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_agreement"]) == -1)
-                    return;
-                is_editable = false;
-                ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
-                is_editable = true;
-                viewportState = ViewportState.ReadState;
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.ForceCloseDetachedViewports();
-            }
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                return;
+            if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_agreement"]) == -1)
+                return;
+            is_editable = false;
+            ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
+            is_editable = true;
+            viewportState = ViewportState.ReadState;
+            MenuCallback.EditingStateUpdate();
+            MenuCallback.ForceCloseDetachedViewports();
         }
 
         public override bool CanCancelRecord()
@@ -456,7 +433,7 @@ namespace Registry.Viewport
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    FillRowFromAgreement(tenancyAgreement, newRow);
+                    TenancyAgreementConverter.FillRow(tenancyAgreement, newRow);
                     GeneralDataModel.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
@@ -470,7 +447,7 @@ namespace Registry.Viewport
                         return;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     is_editable = false;
-                    FillRowFromAgreement(tenancyAgreement, row);
+                    TenancyAgreementConverter.FillRow(tenancyAgreement, row);
                     break;
             }
             viewportState = ViewportState.ReadState;
@@ -738,13 +715,6 @@ namespace Registry.Viewport
                 GeneralDataModel.Select().RowChanged -= TenancyAgreementsViewport_RowChanged;
             }
             base.OnClosing(e);
-        }
-
-        public override void ForceClose()
-        {
-            if (viewportState == ViewportState.NewRowState)
-                GeneralDataModel.EditingNewRecord = false;
-            Close();
         }
 
         protected override void OnVisibleChanged(EventArgs e)

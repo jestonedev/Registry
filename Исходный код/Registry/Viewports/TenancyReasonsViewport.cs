@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -29,18 +30,6 @@ namespace Registry.Viewport
             GeneralSnapshot = new DataTable("snapshot_tenancy_reasons")
             {
                 Locale = CultureInfo.InvariantCulture
-            };
-        }
-
-        private static object[] DataRowViewToArray(DataRowView dataRowView)
-        {
-            return new[] { 
-                dataRowView["id_reason"], 
-                dataRowView["id_process"], 
-                dataRowView["id_reason_type"], 
-                dataRowView["reason_number"], 
-                dataRowView["reason_date"], 
-                dataRowView["reason_prepared"]
             };
         }
 
@@ -71,37 +60,14 @@ namespace Registry.Viewport
             return true;
         }
 
-        private static TenancyReason RowToTenancyReason(DataRow row)
-        {
-            var tenancyReason = new TenancyReason
-            {
-                IdReason = ViewportHelper.ValueOrNull<int>(row, "id_reason"),
-                IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process"),
-                IdReasonType = ViewportHelper.ValueOrNull<int>(row, "id_reason_type"),
-                ReasonNumber = ViewportHelper.ValueOrNull(row, "reason_number"),
-                ReasonDate = ViewportHelper.ValueOrNull<DateTime>(row, "reason_date"),
-                ReasonPrepared = ViewportHelper.ValueOrNull(row, "reason_prepared")
-            };
-            return tenancyReason;
-        }
-
         protected override List<Entity> EntitiesListFromViewport()
         {
             var list = new List<Entity>();
             for (var i = 0; i < dataGridView.Rows.Count; i++)
             {
-                if (!dataGridView.Rows[i].IsNewRow)
-                {
-                    var cr = new TenancyReason();
-                    var row = dataGridView.Rows[i];
-                    cr.IdReason = ViewportHelper.ValueOrNull<int>(row, "id_reason");
-                    cr.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
-                    cr.IdReasonType = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
-                    cr.ReasonNumber = ViewportHelper.ValueOrNull(row, "reason_number");
-                    cr.ReasonDate = ViewportHelper.ValueOrNull<DateTime>(row, "reason_date");
-                    cr.ReasonPrepared = ViewportHelper.ValueOrNull(row, "reason_prepared");
-                    list.Add(cr);
-                }
+                if (dataGridView.Rows[i].IsNewRow) continue;
+                var row = dataGridView.Rows[i];
+                list.Add(TenancyReasonConverter.FromRow(row));
             }
             return list;
         }
@@ -111,15 +77,8 @@ namespace Registry.Viewport
             var list = new List<Entity>();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
             {
-                var cr = new TenancyReason();
-                var row = ((DataRowView)GeneralBindingSource[i]);
-                cr.IdReason = ViewportHelper.ValueOrNull<int>(row, "id_reason");
-                cr.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
-                cr.IdReasonType = ViewportHelper.ValueOrNull<int>(row, "id_reason_type");
-                cr.ReasonNumber = ViewportHelper.ValueOrNull(row, "reason_number");
-                cr.ReasonDate = ViewportHelper.ValueOrNull<DateTime>(row, "reason_date");
-                cr.ReasonPrepared = ViewportHelper.ValueOrNull(row, "reason_prepared");
-                list.Add(cr);
+                var row = (DataRowView)GeneralBindingSource[i];
+                list.Add(TenancyReasonConverter.FromRow(row));
             }
             return list;
         }
@@ -165,7 +124,7 @@ namespace Registry.Viewport
                     GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
+                GeneralSnapshot.Rows.Add(TenancyReasonConverter.ToArray((DataRowView)GeneralBindingSource[i]));
             GeneralSnapshotBindingSource = new BindingSource {DataSource = GeneralSnapshot};
             GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_tenancy_reasons_CurrentItemChanged;
 
@@ -227,7 +186,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
+                GeneralSnapshot.Rows.Add(TenancyReasonConverter.ToArray((DataRowView)GeneralBindingSource[i]));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -262,11 +221,11 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_reason"] = idReason;
-                    GeneralDataModel.Select().Rows.Add(DataRowViewToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(TenancyReasonConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
-                    if (RowToTenancyReason(row) == tenancyReason)
+                    if (TenancyReasonConverter.FromRow(row) == tenancyReason)
                         continue;
                     if (GeneralDataModel.Update(tenancyReason) == -1)
                     {
@@ -274,11 +233,7 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    row["id_process"] = tenancyReason.IdProcess == null ? DBNull.Value : (object)tenancyReason.IdProcess;
-                    row["id_reason_type"] = tenancyReason.IdReasonType == null ? DBNull.Value : (object)tenancyReason.IdReasonType;
-                    row["reason_number"] = tenancyReason.ReasonNumber == null ? DBNull.Value : (object)tenancyReason.ReasonNumber;
-                    row["reason_date"] = tenancyReason.ReasonDate == null ? DBNull.Value : (object)tenancyReason.ReasonDate;
-                    row["reason_prepared"] = tenancyReason.ReasonPrepared == null ? DBNull.Value : (object)tenancyReason.ReasonPrepared;
+                    TenancyReasonConverter.FillRow(tenancyReason, row);
                 }
             }
             list = EntitiesListFromView();
@@ -347,7 +302,7 @@ namespace Registry.Viewport
             base.OnClosing(e);
         }
 
-        void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             var reasonTypeIndex = _vTenancyReasonTypesDataModel.Find("id_reason_type", dataGridView.Rows[e.RowIndex].Cells["id_reason_type"].Value);
             var reasonTemplate = "";
@@ -366,7 +321,7 @@ namespace Registry.Viewport
             MenuCallback.EditingStateUpdate();
         }
 
-        void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
         {
             var cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
             switch (cell.OwningColumn.Name)
@@ -382,26 +337,22 @@ namespace Registry.Viewport
             }
         }
 
-        void v_snapshot_tenancy_reasons_CurrentItemChanged(object sender, EventArgs e)
+        private void v_snapshot_tenancy_reasons_CurrentItemChanged(object sender, EventArgs e)
         {
-            if (Selected)
-            {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.EditingStateUpdate();
-            }
+            if (!Selected) return;
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
-        void TenancyReasonsViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        private void TenancyReasonsViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
-            if (Selected)
-            {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.StatusBarStateUpdate();
-                MenuCallback.EditingStateUpdate();
-            }
+            if (!Selected) return;
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.StatusBarStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
-        void TenancyReasonsViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
+        private void TenancyReasonsViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
             if (!SyncViews)
                 return;
@@ -411,34 +362,32 @@ namespace Registry.Viewport
                 ((DataRowView)GeneralSnapshotBindingSource[rowIndex]).Delete();
         }
 
-        void TenancyReasonsViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void TenancyReasonsViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (!SyncViews)
                 return;
             var rowIndex = GeneralSnapshotBindingSource.Find("id_reason", e.Row["id_reason"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_reason", e.Row["id_reason"]) != -1)
             {
-                GeneralSnapshot.Rows.Add(e.Row["id_reason"], e.Row["id_process"], e.Row["id_reason_type"], e.Row["reason_number"], e.Row["reason_date"], e.Row["reason_prepared"]);
+                GeneralSnapshot.Rows.Add(TenancyReasonConverter.ToArray(e.Row));
             }
             else
                 if (rowIndex != -1)
                 {
-                    var row = ((DataRowView)GeneralSnapshotBindingSource[rowIndex]);
+                    var row = (DataRowView)GeneralSnapshotBindingSource[rowIndex];
                     row["id_process"] = e.Row["id_process"];
                     row["id_reason_type"] = e.Row["id_reason_type"];
                     row["reason_number"] = e.Row["reason_number"];
                     row["reason_date"] = e.Row["reason_date"];
                     row["reason_prepared"] = e.Row["reason_prepared"];
                 }
-            if (Selected)
-            {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.StatusBarStateUpdate();
-                MenuCallback.EditingStateUpdate();
-            }
+            if (!Selected) return;
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.StatusBarStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
-        void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        private void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
             if (dataGridView.CurrentCell.OwningColumn.Name != "id_reason_type") return;
             var editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
@@ -447,7 +396,7 @@ namespace Registry.Viewport
             editingControl.DropDownClosed += editingControl_DropDownClosed;
         }
 
-        void editingControl_DropDownClosed(object sender, EventArgs e)
+        private void editingControl_DropDownClosed(object sender, EventArgs e)
         {
             var editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
             if (editingControl != null) dataGridView.CurrentCell.Value = editingControl.SelectedValue;

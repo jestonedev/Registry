@@ -562,15 +562,6 @@ namespace Registry.Viewport
             base.OnClosing(e);
         }
 
-        public override void ForceClose()
-        {
-            GeneralDataModel.Select().RowChanged -= PremisesListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted -= PremisesListViewport_RowDeleted;
-            _resettlePremises.Select().RowChanged -= ResettlePremisesViewport_RowChanged;
-            _resettlePremises.Select().RowDeleting -= ResettlePremisesViewport_RowDeleting;
-            base.ForceClose();
-        }
-
         public override bool HasAssocViewport<T>()
         {
             var reports = new List<ViewportType>

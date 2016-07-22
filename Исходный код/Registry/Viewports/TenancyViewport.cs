@@ -1058,13 +1058,6 @@ namespace Registry.Viewport
             base.OnClosing(e);
         }
 
-        public override void ForceClose()
-        {
-            if (viewportState == ViewportState.NewRowState)
-                GeneralDataModel.EditingNewRecord = false;
-            base.ForceClose();
-        }
-
         public override bool HasAssocViewport<T>()
         {
             var reports = new List<ViewportType>

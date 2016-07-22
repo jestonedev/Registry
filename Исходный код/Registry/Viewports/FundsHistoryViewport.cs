@@ -548,13 +548,6 @@ namespace Registry.Viewport
             base.OnClosing(e);
         }
 
-        public override void ForceClose()
-        {
-            if (viewportState == ViewportState.NewRowState)
-                GeneralDataModel.EditingNewRecord = false;
-            Close();
-        }
-
         private void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
             if (GeneralBindingSource.Position == -1 || dataGridView.RowCount == 0)
