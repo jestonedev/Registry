@@ -35,17 +35,17 @@ namespace Registry.Viewport.EntityConverters
         public static void FillRow(FundHistory fundHistory, DataRowView row)
         {
             row.BeginEdit();
-            row["id_fund"] = ViewportHelper.ValueOrDBNull(fundHistory.IdFund);
-            row["id_fund_type"] = ViewportHelper.ValueOrDBNull(fundHistory.IdFundType);
-            row["protocol_number"] = ViewportHelper.ValueOrDBNull(fundHistory.ProtocolNumber);
-            row["protocol_date"] = ViewportHelper.ValueOrDBNull(fundHistory.ProtocolDate);
-            row["include_restriction_number"] = ViewportHelper.ValueOrDBNull(fundHistory.IncludeRestrictionNumber);
-            row["include_restriction_date"] = ViewportHelper.ValueOrDBNull(fundHistory.IncludeRestrictionDate);
-            row["include_restriction_description"] = ViewportHelper.ValueOrDBNull(fundHistory.IncludeRestrictionDescription);
-            row["exclude_restriction_number"] = ViewportHelper.ValueOrDBNull(fundHistory.ExcludeRestrictionNumber);
-            row["exclude_restriction_date"] = ViewportHelper.ValueOrDBNull(fundHistory.ExcludeRestrictionDate);
-            row["exclude_restriction_description"] = ViewportHelper.ValueOrDBNull(fundHistory.ExcludeRestrictionDescription);
-            row["description"] = ViewportHelper.ValueOrDBNull(fundHistory.Description);
+            row["id_fund"] = ViewportHelper.ValueOrDbNull(fundHistory.IdFund);
+            row["id_fund_type"] = ViewportHelper.ValueOrDbNull(fundHistory.IdFundType);
+            row["protocol_number"] = ViewportHelper.ValueOrDbNull(fundHistory.ProtocolNumber);
+            row["protocol_date"] = ViewportHelper.ValueOrDbNull(fundHistory.ProtocolDate);
+            row["include_restriction_number"] = ViewportHelper.ValueOrDbNull(fundHistory.IncludeRestrictionNumber);
+            row["include_restriction_date"] = ViewportHelper.ValueOrDbNull(fundHistory.IncludeRestrictionDate);
+            row["include_restriction_description"] = ViewportHelper.ValueOrDbNull(fundHistory.IncludeRestrictionDescription);
+            row["exclude_restriction_number"] = ViewportHelper.ValueOrDbNull(fundHistory.ExcludeRestrictionNumber);
+            row["exclude_restriction_date"] = ViewportHelper.ValueOrDbNull(fundHistory.ExcludeRestrictionDate);
+            row["exclude_restriction_description"] = ViewportHelper.ValueOrDbNull(fundHistory.ExcludeRestrictionDescription);
+            row["description"] = ViewportHelper.ValueOrDbNull(fundHistory.Description);
             row.EndEdit();
         }
     }

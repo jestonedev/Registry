@@ -33,5 +33,26 @@ namespace Registry.Viewport.EntityConverters
         {
             return FromRow(row.Row);
         }
+
+        public static void FillRow(TenancyProcess tenancyProcess, DataRowView row)
+        {
+            row.BeginEdit();
+            row["id_process"] = ViewportHelper.ValueOrDbNull(tenancyProcess.IdProcess);
+            row["id_rent_type"] = ViewportHelper.ValueOrDbNull(tenancyProcess.IdRentType);
+            row["id_warrant"] = ViewportHelper.ValueOrDbNull(tenancyProcess.IdWarrant);
+            row["registration_num"] = ViewportHelper.ValueOrDbNull(tenancyProcess.RegistrationNum);
+            row["registration_date"] = ViewportHelper.ValueOrDbNull(tenancyProcess.RegistrationDate);
+            row["issue_date"] = ViewportHelper.ValueOrDbNull(tenancyProcess.IssueDate);
+            row["begin_date"] = ViewportHelper.ValueOrDbNull(tenancyProcess.BeginDate);
+            row["end_date"] = ViewportHelper.ValueOrDbNull(tenancyProcess.EndDate);
+            row["until_dismissal"] = ViewportHelper.ValueOrDbNull(tenancyProcess.UntilDismissal);
+            row["residence_warrant_num"] = ViewportHelper.ValueOrDbNull(tenancyProcess.ResidenceWarrantNum);
+            row["residence_warrant_date"] = ViewportHelper.ValueOrDbNull(tenancyProcess.ResidenceWarrantDate);
+            row["protocol_num"] = ViewportHelper.ValueOrDbNull(tenancyProcess.ProtocolNum);
+            row["protocol_date"] = ViewportHelper.ValueOrDbNull(tenancyProcess.ProtocolDate);
+            row["id_executor"] = ViewportHelper.ValueOrDbNull(tenancyProcess.IdExecutor);
+            row["description"] = ViewportHelper.ValueOrDbNull(tenancyProcess.Description);
+            row.EndEdit();
+        }
     }
 }

@@ -314,7 +314,7 @@ namespace Registry.Viewport
 
         private void ViewportFromClaimState(ClaimState claimState)
         {
-            comboBoxClaimStateType.SelectedValue = ViewportHelper.ValueOrDBNull(claimState.IdStateType);
+            comboBoxClaimStateType.SelectedValue = ViewportHelper.ValueOrDbNull(claimState.IdStateType);
             textBoxDescription.Text = claimState.Description;
             dateTimePickerStartState.Value = ViewportHelper.ValueOrDefault(claimState.DateStartState);
 

@@ -30,15 +30,15 @@ namespace Registry.Viewport.EntityConverters
         public static void FillRow(Claim claim, DataRowView row)
         {
             row.BeginEdit();
-            row["id_claim"] = ViewportHelper.ValueOrDBNull(claim.IdClaim);
-            row["id_account"] = ViewportHelper.ValueOrDBNull(claim.IdAccount);
-            row["at_date"] = ViewportHelper.ValueOrDBNull(claim.AtDate);
-            row["start_dept_period"] = ViewportHelper.ValueOrDBNull(claim.StartDeptPeriod);
-            row["end_dept_period"] = ViewportHelper.ValueOrDBNull(claim.EndDeptPeriod);
-            row["amount_tenancy"] = ViewportHelper.ValueOrDBNull(claim.AmountTenancy);
-            row["amount_dgi"] = ViewportHelper.ValueOrDBNull(claim.AmountDgi);
-            row["amount_penalties"] = ViewportHelper.ValueOrDBNull(claim.AmountPenalties);
-            row["description"] = ViewportHelper.ValueOrDBNull(claim.Description);
+            row["id_claim"] = ViewportHelper.ValueOrDbNull(claim.IdClaim);
+            row["id_account"] = ViewportHelper.ValueOrDbNull(claim.IdAccount);
+            row["at_date"] = ViewportHelper.ValueOrDbNull(claim.AtDate);
+            row["start_dept_period"] = ViewportHelper.ValueOrDbNull(claim.StartDeptPeriod);
+            row["end_dept_period"] = ViewportHelper.ValueOrDbNull(claim.EndDeptPeriod);
+            row["amount_tenancy"] = ViewportHelper.ValueOrDbNull(claim.AmountTenancy);
+            row["amount_dgi"] = ViewportHelper.ValueOrDbNull(claim.AmountDgi);
+            row["amount_penalties"] = ViewportHelper.ValueOrDbNull(claim.AmountPenalties);
+            row["description"] = ViewportHelper.ValueOrDbNull(claim.Description);
             row.EndEdit();
         }
     }

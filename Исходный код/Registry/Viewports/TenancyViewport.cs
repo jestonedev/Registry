@@ -12,6 +12,7 @@ using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Reporting;
+using Registry.Viewport.EntityConverters;
 using Registry.Viewport.ModalEditors;
 using Registry.Viewport.SearchForms;
 using Security;
@@ -387,24 +388,8 @@ namespace Registry.Viewport
 
         protected override Entity EntityFromView()
         {
-            var tenancy = new TenancyProcess();
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            tenancy.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
-            tenancy.IdRentType = ViewportHelper.ValueOrNull<int>(row, "id_rent_type");
-            tenancy.IdWarrant = ViewportHelper.ValueOrNull<int>(row, "id_warrant");
-            tenancy.IdExecutor = ViewportHelper.ValueOrNull<int>(row, "id_executor");
-            tenancy.RegistrationNum = ViewportHelper.ValueOrNull(row, "registration_num");
-            tenancy.RegistrationDate = ViewportHelper.ValueOrNull<DateTime>(row, "registration_date");
-            tenancy.IssueDate = ViewportHelper.ValueOrNull<DateTime>(row, "issue_date");
-            tenancy.BeginDate = ViewportHelper.ValueOrNull<DateTime>(row, "begin_date");
-            tenancy.EndDate = ViewportHelper.ValueOrNull<DateTime>(row, "end_date");
-            tenancy.UntilDismissal = ViewportHelper.ValueOrNull<bool>(row, "until_dismissal");     
-            tenancy.ResidenceWarrantNum = ViewportHelper.ValueOrNull(row, "residence_warrant_num");
-            tenancy.ResidenceWarrantDate = ViewportHelper.ValueOrNull<DateTime>(row, "residence_warrant_date");
-            tenancy.ProtocolNum = ViewportHelper.ValueOrNull(row, "protocol_num");
-            tenancy.ProtocolDate = ViewportHelper.ValueOrNull<DateTime>(row, "protocol_date");
-            tenancy.Description = ViewportHelper.ValueOrNull(row, "description");     
-            return tenancy;
+            return TenancyProcessConverter.FromRow(row);
         }
 
         protected override Entity EntityFromViewport()
@@ -482,8 +467,8 @@ namespace Registry.Viewport
 
         private void ViewportFromTenancy(TenancyProcess tenancy)
         {
-            comboBoxRentType.SelectedValue = ViewportHelper.ValueOrDBNull(tenancy.IdRentType);
-            comboBoxExecutor.SelectedValue = ViewportHelper.ValueOrDBNull(tenancy.IdExecutor);
+            comboBoxRentType.SelectedValue = ViewportHelper.ValueOrDbNull(tenancy.IdRentType);
+            comboBoxExecutor.SelectedValue = ViewportHelper.ValueOrDbNull(tenancy.IdExecutor);
             textBoxRegistrationNumber.Text = tenancy.RegistrationNum;
             dateTimePickerRegistrationDate.Value = ViewportHelper.ValueOrDefault(tenancy.RegistrationDate);
             dateTimePickerIssueDate.Value = ViewportHelper.ValueOrDefault(tenancy.IssueDate);
@@ -506,27 +491,6 @@ namespace Registry.Viewport
                 textBoxSelectedWarrant.Text = "";
                 _idWarrant = null;
             }
-        }
-
-        private static void FillRowFromTenancy(TenancyProcess tenancy, DataRowView row)
-        {
-            row.BeginEdit();
-            row["id_process"] = ViewportHelper.ValueOrDBNull(tenancy.IdProcess);
-            row["id_rent_type"] = ViewportHelper.ValueOrDBNull(tenancy.IdRentType);
-            row["id_warrant"] = ViewportHelper.ValueOrDBNull(tenancy.IdWarrant);
-            row["registration_num"] = ViewportHelper.ValueOrDBNull(tenancy.RegistrationNum);
-            row["registration_date"] = ViewportHelper.ValueOrDBNull(tenancy.RegistrationDate);
-            row["issue_date"] = ViewportHelper.ValueOrDBNull(tenancy.IssueDate);
-            row["begin_date"] = ViewportHelper.ValueOrDBNull(tenancy.BeginDate);
-            row["end_date"] = ViewportHelper.ValueOrDBNull(tenancy.EndDate);
-            row["until_dismissal"] = ViewportHelper.ValueOrDBNull(tenancy.UntilDismissal);
-            row["residence_warrant_num"] = ViewportHelper.ValueOrDBNull(tenancy.ResidenceWarrantNum);
-            row["residence_warrant_date"] = ViewportHelper.ValueOrDBNull(tenancy.ResidenceWarrantDate);
-            row["protocol_num"] = ViewportHelper.ValueOrDBNull(tenancy.ProtocolNum);
-            row["protocol_date"] = ViewportHelper.ValueOrDBNull(tenancy.ProtocolDate);
-            row["id_executor"] = ViewportHelper.ValueOrDBNull(tenancy.IdExecutor);
-            row["description"] = ViewportHelper.ValueOrDBNull(tenancy.Description);
-            row.EndEdit();
         }
 
         public override bool CanLoadData()
@@ -873,7 +837,7 @@ namespace Registry.Viewport
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     filter += string.Format(CultureInfo.CurrentCulture, "(id_process = {0})", tenancy.IdProcess);
                     GeneralBindingSource.Filter += filter;
-                    FillRowFromTenancy(tenancy, newRow);
+                    TenancyProcessConverter.FillRow(tenancy, newRow);
                     // Если производится копирование, а не создание новой записи, то надо скопировать участников найма и нанимаемое жилье
                     if (_isCopy && _idCopyProcess != null)
                     {
@@ -953,7 +917,7 @@ namespace Registry.Viewport
                     is_editable = false;
                     filter += string.Format(CultureInfo.CurrentCulture, "(id_process = {0})", tenancy.IdProcess);
                     GeneralBindingSource.Filter += filter;
-                    FillRowFromTenancy(tenancy, row);
+                    TenancyProcessConverter.FillRow(tenancy, row);
                     break;
             }
             UnbindedCheckBoxesUpdate();
@@ -972,7 +936,7 @@ namespace Registry.Viewport
             _tenancyPersons.EditingNewRecord = true;
             foreach (var personRow in persons.ToList())
             {
-                var person = DataRowToPerson(personRow);
+                var person = TenancyPersonConverter.FromRow(personRow);
                 person.IdProcess = idNewProcess;
                 var idPerson = _tenancyPersons.Insert(person);
                 if (idPerson == -1)
@@ -981,7 +945,7 @@ namespace Registry.Viewport
                     return false;
                 }
                 person.IdPerson = idPerson;
-                _tenancyPersons.Select().Rows.Add(PersonToObjectArray(person));
+                _tenancyPersons.Select().Rows.Add(TenancyPersonConverter.ToArray(person));
             }
             _tenancyPersons.EditingNewRecord = false;
             var tenancyBuildingsAssoc = DataModel.GetInstance<TenancyBuildingsAssocDataModel>();
@@ -1059,67 +1023,6 @@ namespace Registry.Viewport
             }
             tenancySubPremisesAssoc.EditingNewRecord = false;
             return true;
-        }
-
-        private TenancyPerson DataRowToPerson(DataRow row)
-        {
-            var person = new TenancyPerson
-            {
-                IdPerson = row.Field<int?>("id_person"),
-                IdProcess = row.Field<int?>("id_process"),
-                IdKinship = row.Field<int?>("id_kinship"),
-                Surname = row.Field<string>("surname"),
-                Name = row.Field<string>("name"),
-                Patronymic = row.Field<string>("patronymic"),
-                DateOfBirth = row.Field<DateTime?>("date_of_birth"),
-                IdDocumentType = row.Field<int?>("id_document_type"),
-                DateOfDocumentIssue = row.Field<DateTime?>("date_of_document_issue"),
-                DocumentNum = row.Field<string>("document_num"),
-                DocumentSeria = row.Field<string>("document_seria"),
-                IdDocumentIssuedBy = row.Field<int?>("id_document_issued_by"),
-                RegistrationIdStreet = row.Field<string>("registration_id_street"),
-                RegistrationHouse = row.Field<string>("registration_house"),
-                RegistrationFlat = row.Field<string>("registration_flat"),
-                RegistrationRoom = row.Field<string>("registration_room"),
-                ResidenceIdStreet = row.Field<string>("residence_id_street"),
-                ResidenceHouse = row.Field<string>("residence_house"),
-                ResidenceFlat = row.Field<string>("residence_flat"),
-                ResidenceRoom = row.Field<string>("residence_room"),
-                PersonalAccount = row.Field<string>("personal_account"),
-                IncludeDate = row.Field<DateTime?>("include_date"),
-                ExcludeDate = row.Field<DateTime?>("exclude_date")
-            };
-            return person;
-        }
-
-        private object[] PersonToObjectArray(TenancyPerson person)
-        {
-            return new object[] {
-                person.IdPerson,
-                person.IdProcess,
-                person.IdKinship,
-                person.Surname,
-                person.Name,
-                person.Patronymic,
-                person.DateOfBirth,
-                person.IdDocumentType,
-                person.DateOfDocumentIssue,
-                person.DocumentNum,
-                person.DocumentSeria,
-                person.IdDocumentIssuedBy,
-                person.RegistrationIdStreet,
-                person.RegistrationHouse,
-                person.RegistrationFlat,
-                person.RegistrationRoom,
-                person.RegistrationDate,
-                person.ResidenceIdStreet,
-                person.ResidenceHouse,
-                person.ResidenceFlat,
-                person.ResidenceRoom,
-                person.PersonalAccount,
-                person.IncludeDate,
-                person.ExcludeDate
-            };
         }
 
         protected override void OnClosing(CancelEventArgs e)

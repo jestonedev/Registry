@@ -254,7 +254,7 @@ namespace Registry.Viewport
 
         private void ViewportFromFundHistory(FundHistory fundHistory)
         {
-            comboBoxFundType.SelectedValue = ViewportHelper.ValueOrDBNull(fundHistory.IdFundType);
+            comboBoxFundType.SelectedValue = ViewportHelper.ValueOrDbNull(fundHistory.IdFundType);
             dateTimePickerProtocolDate.Value = ViewportHelper.ValueOrDefault(fundHistory.ProtocolDate);
             dateTimePickerIncludeRestDate.Value = ViewportHelper.ValueOrDefault(fundHistory.IncludeRestrictionDate);
             dateTimePickerExcludeRestDate.Value = ViewportHelper.ValueOrDefault(fundHistory.ExcludeRestrictionDate);

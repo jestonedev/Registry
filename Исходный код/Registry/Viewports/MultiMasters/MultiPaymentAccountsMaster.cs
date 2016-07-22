@@ -202,12 +202,12 @@ namespace Registry.Viewport.MultiMasters
                     break;
                 }
                 claimRow.BeginEdit();
-                claimRow["id_claim"] = ViewportHelper.ValueOrDBNull(claim.IdClaim);
-                claimRow["id_account"] = ViewportHelper.ValueOrDBNull(claim.IdAccount);
-                claimRow["amount_tenancy"] = ViewportHelper.ValueOrDBNull(claim.AmountTenancy);
-                claimRow["amount_dgi"] = ViewportHelper.ValueOrDBNull(claim.AmountDgi);
-                claimRow["amount_penalties"] = ViewportHelper.ValueOrDBNull(claim.AmountPenalties);
-                claimRow["at_date"] = ViewportHelper.ValueOrDBNull(claim.AtDate);
+                claimRow["id_claim"] = ViewportHelper.ValueOrDbNull(claim.IdClaim);
+                claimRow["id_account"] = ViewportHelper.ValueOrDbNull(claim.IdAccount);
+                claimRow["amount_tenancy"] = ViewportHelper.ValueOrDbNull(claim.AmountTenancy);
+                claimRow["amount_dgi"] = ViewportHelper.ValueOrDbNull(claim.AmountDgi);
+                claimRow["amount_penalties"] = ViewportHelper.ValueOrDbNull(claim.AmountPenalties);
+                claimRow["at_date"] = ViewportHelper.ValueOrDbNull(claim.AtDate);
                 claimRow.EndEdit();
                 // Add first state automaticaly
                 var firstStateTypes = DataModelHelper.ClaimStartStateTypeIds().ToList();
@@ -236,12 +236,12 @@ namespace Registry.Viewport.MultiMasters
                 var claimsStateRow = (DataRowView)claimStatesBindingSource.AddNew();
                 if (claimsStateRow == null) break;
                 claimsStateRow.BeginEdit();
-                claimsStateRow["id_state"] = ViewportHelper.ValueOrDBNull(claimState.IdState);
-                claimsStateRow["id_claim"] = ViewportHelper.ValueOrDBNull(claimState.IdClaim);
-                claimsStateRow["id_state_type"] = ViewportHelper.ValueOrDBNull(claimState.IdStateType);
-                claimsStateRow["transfer_to_legal_department_who"] = ViewportHelper.ValueOrDBNull(claimState.TransferToLegalDepartmentWho);
-                claimsStateRow["accepted_by_legal_department_who"] = ViewportHelper.ValueOrDBNull(claimState.AcceptedByLegalDepartmentWho);
-                claimsStateRow["date_start_state"] = ViewportHelper.ValueOrDBNull(claimState.DateStartState);
+                claimsStateRow["id_state"] = ViewportHelper.ValueOrDbNull(claimState.IdState);
+                claimsStateRow["id_claim"] = ViewportHelper.ValueOrDbNull(claimState.IdClaim);
+                claimsStateRow["id_state_type"] = ViewportHelper.ValueOrDbNull(claimState.IdStateType);
+                claimsStateRow["transfer_to_legal_department_who"] = ViewportHelper.ValueOrDbNull(claimState.TransferToLegalDepartmentWho);
+                claimsStateRow["accepted_by_legal_department_who"] = ViewportHelper.ValueOrDbNull(claimState.AcceptedByLegalDepartmentWho);
+                claimsStateRow["date_start_state"] = ViewportHelper.ValueOrDbNull(claimState.DateStartState);
                 claimsStateRow.EndEdit();
                 Application.DoEvents();
             }

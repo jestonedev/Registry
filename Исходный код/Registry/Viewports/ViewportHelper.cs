@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Reflection;
 using System.Windows.Forms;
 using Registry.DataModels.CalcDataModels;
-using Registry.Entities;
 
 namespace Registry.Viewport
 {
@@ -19,98 +18,72 @@ namespace Registry.Viewport
 
         internal static DateTime ValueOrDefault(DateTime? value)
         {
-            if (value != null)
-                return value.Value;
-            else
-                return DateTime.Now.Date;
+            return value ?? DateTime.Now.Date;
         }
 
         internal static double ValueOrDefault(double? value)
         {
-            if (value != null)
-                return value.Value;
-            else
-                return 0;
+            return value ?? 0;
         }
 
         internal static int ValueOrDefault(int? value)
         {
-            if (value != null)
-                return value.Value;
-            else
-                return 0;
-        }
-
-        internal static bool ValueOrDefault(bool? value)
-        {
-            if (value != null)
-                return value.Value;
-            else
-                return false;
+            return value ?? 0;
         }
 
         internal static decimal ValueOrDefault(decimal? value)
         {
-            if (value != null)
-                return value.Value;
-            else
-                return 0;
+            return value ?? 0;
+        }
+
+        internal static bool ValueOrDefault(bool? value)
+        {
+            return value != null && value.Value;
         }
 
         internal static string ValueOrNull(TextBox control)
         {
             if (string.IsNullOrEmpty(control.Text.Trim()))
                 return null;
-            else
-                return control.Text.Trim();
+            return control.Text.Trim();
         }
 
         internal static T? ValueOrNull<T>(ComboBox control) where T: struct
         {
-            if (control.SelectedValue == null)
-                return null;
-            else
-                return (T?)control.SelectedValue;
+            return (T?) control.SelectedValue;
         }
 
         internal static string ValueOrNull(ComboBox control)
         {
-            if (control.SelectedValue == null)
-                return null;
-            else
-                return control.SelectedValue.ToString().Trim();
+            return control.SelectedValue == null ? null : control.SelectedValue.ToString().Trim();
         }
 
         internal static DateTime? ValueOrNull(DateTimePicker control)
         {
             if (control.Checked)
                 return control.Value.Date;
-            else
-                return null;
+            return null;
         }
 
         internal static T? ValueOrNull<T>(DataRowView row, string property) where T : struct
         {
             if (row[property] is DBNull)
                 return null;
-            else
-                return (T?)Convert.ChangeType(row[property], typeof(T), CultureInfo.InvariantCulture);
+            return (T?)Convert.ChangeType(row[property], typeof(T), CultureInfo.InvariantCulture);
         }
 
         internal static string ValueOrNull(DataRowView row, string property)
         {
             if (row[property] is DBNull)
                 return null;
-            else
-                return row[property].ToString().Trim();
+            return row[property].ToString().Trim();
         }
 
         internal static T? ValueOrNull<T>(DataRow row, string property) where T : struct
         {
             if (row[property] is DBNull)
                 return null;
-            else
-                return (T?)Convert.ChangeType(row[property], typeof(T), CultureInfo.InvariantCulture);
+            return (T?)Convert.ChangeType(row[property], typeof(T), CultureInfo.InvariantCulture);
         }
 
         internal static string ValueOrNull(DataRow row, string property)
@@ -133,16 +106,12 @@ namespace Registry.Viewport
         {
             if (row.Cells[property].Value is DBNull)
                 return null;
-            else
-            if (row.Cells[property].Value == null)
-                return null;
-            else
-                return row.Cells[property].Value.ToString().Trim();
+            return row.Cells[property].Value == null ? null : row.Cells[property].Value.ToString().Trim();
         }
 
-        internal static object ValueOrDBNull(object value)
+        internal static object ValueOrDbNull(object value)
         {
-            return value == null ? DBNull.Value : value;
+            return value ?? DBNull.Value;
         }
 
         internal static int TranslateFundIdToRentId(int fundId)
@@ -161,9 +130,7 @@ namespace Registry.Viewport
             var bRow = CalcDataModel.GetInstance<CalcDataModelBuildingsCurrentFunds>().Select().Rows.Find(idBuilding);
             if (bRow == null) return false;
             var idFundType = (int)bRow["id_fund_type"];
-            if (idRentType == TranslateFundIdToRentId(idFundType))
-                return true;
-            return false;
+            return idRentType == TranslateFundIdToRentId(idFundType);
         }
 
         internal static bool PremiseFundAndRentMatch(int idPremise, int idRentType)
@@ -171,9 +138,7 @@ namespace Registry.Viewport
             var bRow = CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>().Select().Rows.Find(idPremise);
             if (bRow == null) return false;
             var idFundType = (int)bRow["id_fund_type"];
-            if (idRentType == TranslateFundIdToRentId(idFundType))
-                return true;
-            return false;
+            return idRentType == TranslateFundIdToRentId(idFundType);
         }
 
         internal static bool SubPremiseFundAndRentMatch(int idSubPremise, int idRentType)
@@ -181,25 +146,23 @@ namespace Registry.Viewport
             var bRow = CalcDataModel.GetInstance<CalcDataModelSubPremisesCurrentFunds>().Select().Rows.Find(idSubPremise);
             if (bRow == null) return false;
             var idFundType = (int)bRow["id_fund_type"];
-            if (idRentType == TranslateFundIdToRentId(idFundType))
-                return true;
-            return false;
+            return idRentType == TranslateFundIdToRentId(idFundType);
         }
 
         internal static void SelectAllText(object sender)
         {
             if (sender is NumericUpDown)
             {
-                var control = ((NumericUpDown) sender);
+                var control = (NumericUpDown) sender;
                 control.Select(0, control.Text.Length);
             }
             else if (sender is TextBox)
             {
-                var control = ((TextBox) sender);
+                var control = (TextBox) sender;
                 control.SelectAll();
             } else if (sender is ComboBox)
             {
-                var control = ((ComboBox)sender);
+                var control = (ComboBox)sender;
                 control.SelectAll();
             }
         }

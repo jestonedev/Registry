@@ -550,12 +550,12 @@ namespace Registry.Viewport
                 {
                     _vKladr.Filter = "";
                     comboBoxStreet.SelectedValue = buildingRow["id_street"];
-                    comboBoxHouse.SelectedValue = ViewportHelper.ValueOrDBNull(premise.IdBuilding);
+                    comboBoxHouse.SelectedValue = ViewportHelper.ValueOrDbNull(premise.IdBuilding);
                 }
             }
-            comboBoxState.SelectedValue = ViewportHelper.ValueOrDBNull(premise.IdState);
-            comboBoxPremisesType.SelectedValue = ViewportHelper.ValueOrDBNull(premise.IdPremisesType);
-            comboBoxPremisesKind.SelectedValue = ViewportHelper.ValueOrDBNull(premise.IdPremisesKind);
+            comboBoxState.SelectedValue = ViewportHelper.ValueOrDbNull(premise.IdState);
+            comboBoxPremisesType.SelectedValue = ViewportHelper.ValueOrDbNull(premise.IdPremisesType);
+            comboBoxPremisesKind.SelectedValue = ViewportHelper.ValueOrDbNull(premise.IdPremisesKind);
             numericUpDownFloor.Value = ViewportHelper.ValueOrDefault(premise.Floor);
             numericUpDownCadastralCost.Value = ViewportHelper.ValueOrDefault(premise.CadastralCost);
             numericUpDownBalanceCost.Value = ViewportHelper.ValueOrDefault(premise.BalanceCost);

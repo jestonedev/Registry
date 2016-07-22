@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Data;
-using System.Data.Odbc;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Globalization;
@@ -9,6 +8,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -17,18 +17,20 @@ namespace Registry.Viewport
     internal sealed partial class TenancyPersonsViewport : FormWithGridViewport
     {
         #region Models
-        DataModel kinships;
-        DataModel document_types;
-        DataModel document_issued_by;
-        DataModel kladr;
+
+        private DataModel _kinships;
+        private DataModel _documentTypes;
+        private DataModel _documentIssuedBy;
+        private DataModel _kladr;
         #endregion Models
 
         #region Views
-        BindingSource v_kinships;
-        BindingSource v_document_types;
-        BindingSource v_document_issued_by;
-        BindingSource v_registration_street;
-        BindingSource v_residence_street;
+
+        private BindingSource _vKinships;
+        private BindingSource _vDocumentTypes;
+        private BindingSource _vDocumentIssuedBy;
+        private BindingSource _vRegistrationStreet;
+        private BindingSource _vResidenceStreet;
         #endregion Views
 
         private TenancyPersonsViewport()
@@ -64,31 +66,31 @@ namespace Registry.Viewport
 
         private void DataBind()
         {
-            comboBoxKinship.DataSource = v_kinships;
+            comboBoxKinship.DataSource = _vKinships;
             comboBoxKinship.ValueMember = "id_kinship";
             comboBoxKinship.DisplayMember = "kinship";
             comboBoxKinship.DataBindings.Clear();
             comboBoxKinship.DataBindings.Add("SelectedValue", GeneralBindingSource, "id_kinship", true, DataSourceUpdateMode.Never, DBNull.Value);
 
-            comboBoxDocumentType.DataSource = v_document_types;
+            comboBoxDocumentType.DataSource = _vDocumentTypes;
             comboBoxDocumentType.ValueMember = "id_document_type";
             comboBoxDocumentType.DisplayMember = "document_type";
             comboBoxDocumentType.DataBindings.Clear();
             comboBoxDocumentType.DataBindings.Add("SelectedValue", GeneralBindingSource, "id_document_type", true, DataSourceUpdateMode.Never, DBNull.Value);
 
-            comboBoxIssuedBy.DataSource = v_document_issued_by;
+            comboBoxIssuedBy.DataSource = _vDocumentIssuedBy;
             comboBoxIssuedBy.ValueMember = "id_document_issued_by";
             comboBoxIssuedBy.DisplayMember = "document_issued_by";
             comboBoxIssuedBy.DataBindings.Clear();
             comboBoxIssuedBy.DataBindings.Add("SelectedValue", GeneralBindingSource, "id_document_issued_by", true, DataSourceUpdateMode.Never, DBNull.Value);
 
-            comboBoxRegistrationStreet.DataSource = v_registration_street;
+            comboBoxRegistrationStreet.DataSource = _vRegistrationStreet;
             comboBoxRegistrationStreet.ValueMember = "id_street";
             comboBoxRegistrationStreet.DisplayMember = "street_name";
             comboBoxRegistrationStreet.DataBindings.Clear();
             comboBoxRegistrationStreet.DataBindings.Add("SelectedValue", GeneralBindingSource, "registration_id_street", true, DataSourceUpdateMode.Never, DBNull.Value);
 
-            comboBoxResidenceStreet.DataSource = v_residence_street;
+            comboBoxResidenceStreet.DataSource = _vResidenceStreet;
             comboBoxResidenceStreet.ValueMember = "id_street";
             comboBoxResidenceStreet.DisplayMember = "street_name";
             comboBoxResidenceStreet.DataBindings.Clear();
@@ -131,7 +133,7 @@ namespace Registry.Viewport
             name.DataPropertyName = "name";
             patronymic.DataPropertyName = "patronymic";
             date_of_birth.DataPropertyName = "date_of_birth";
-            id_kinship.DataSource = v_kinships;
+            id_kinship.DataSource = _vKinships;
             id_kinship.DisplayMember = "kinship";
             id_kinship.ValueMember = "id_kinship";
             id_kinship.DataPropertyName = "id_kinship";
@@ -185,11 +187,11 @@ namespace Registry.Viewport
 
         private void ViewportFromTenancyPerson(TenancyPerson tenancyPerson)
         {
-            comboBoxKinship.SelectedValue = ViewportHelper.ValueOrDBNull(tenancyPerson.IdKinship);
-            comboBoxDocumentType.SelectedValue = ViewportHelper.ValueOrDBNull(tenancyPerson.IdDocumentType);
-            comboBoxIssuedBy.SelectedValue = ViewportHelper.ValueOrDBNull(tenancyPerson.IdDocumentIssuedBy);
-            comboBoxRegistrationStreet.SelectedValue = ViewportHelper.ValueOrDBNull(tenancyPerson.RegistrationIdStreet);
-            comboBoxResidenceStreet.SelectedValue = ViewportHelper.ValueOrDBNull(tenancyPerson.ResidenceIdStreet);
+            comboBoxKinship.SelectedValue = ViewportHelper.ValueOrDbNull(tenancyPerson.IdKinship);
+            comboBoxDocumentType.SelectedValue = ViewportHelper.ValueOrDbNull(tenancyPerson.IdDocumentType);
+            comboBoxIssuedBy.SelectedValue = ViewportHelper.ValueOrDbNull(tenancyPerson.IdDocumentIssuedBy);
+            comboBoxRegistrationStreet.SelectedValue = ViewportHelper.ValueOrDbNull(tenancyPerson.RegistrationIdStreet);
+            comboBoxResidenceStreet.SelectedValue = ViewportHelper.ValueOrDbNull(tenancyPerson.ResidenceIdStreet);
             textBoxSurname.Text = tenancyPerson.Surname;
             textBoxName.Text = tenancyPerson.Name;
             textBoxPatronymic.Text = tenancyPerson.Patronymic;
@@ -214,11 +216,14 @@ namespace Registry.Viewport
 
         protected override Entity EntityFromViewport()
         {
-            var tenancyPerson = new TenancyPerson();
-            if (GeneralBindingSource.Position == -1)
-                tenancyPerson.IdPerson = null;
-            else
-                tenancyPerson.IdPerson = ViewportHelper.ValueOrNull<int>((DataRowView)GeneralBindingSource[GeneralBindingSource.Position], "id_person");
+            var tenancyPerson = new TenancyPerson
+            {
+                IdPerson =
+                    GeneralBindingSource.Position == -1
+                        ? null
+                        : ViewportHelper.ValueOrNull<int>(
+                            (DataRowView) GeneralBindingSource[GeneralBindingSource.Position], "id_person")
+            };
             if (ParentType == ParentTypeEnum.Tenancy && ParentRow != null)
                 tenancyPerson.IdProcess = ViewportHelper.ValueOrNull<int>(ParentRow, "id_process");
             else
@@ -255,86 +260,29 @@ namespace Registry.Viewport
 
         protected override Entity EntityFromView()
         {
-            var tenancyPerson = new TenancyPerson();
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            tenancyPerson.IdPerson = ViewportHelper.ValueOrNull<int>(row, "id_person");
-            tenancyPerson.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
-            tenancyPerson.IdKinship = ViewportHelper.ValueOrNull<int>(row, "id_kinship");
-            tenancyPerson.IdDocumentType = ViewportHelper.ValueOrNull<int>(row, "id_document_type");
-            tenancyPerson.IdDocumentIssuedBy = ViewportHelper.ValueOrNull<int>(row, "id_document_issued_by");
-            tenancyPerson.Surname = ViewportHelper.ValueOrNull(row, "surname");
-            tenancyPerson.Name = ViewportHelper.ValueOrNull(row, "name");
-            tenancyPerson.Patronymic = ViewportHelper.ValueOrNull(row, "patronymic");
-            tenancyPerson.DateOfBirth = ViewportHelper.ValueOrNull<DateTime>(row, "date_of_birth");
-            tenancyPerson.DateOfDocumentIssue = ViewportHelper.ValueOrNull<DateTime>(row, "date_of_document_issue");
-            tenancyPerson.DocumentNum = ViewportHelper.ValueOrNull(row, "document_num");
-            tenancyPerson.DocumentSeria = ViewportHelper.ValueOrNull(row, "document_seria");
-            tenancyPerson.RegistrationIdStreet = ViewportHelper.ValueOrNull(row, "registration_id_street");
-            tenancyPerson.RegistrationHouse = ViewportHelper.ValueOrNull(row, "registration_house");
-            tenancyPerson.RegistrationFlat = ViewportHelper.ValueOrNull(row, "registration_flat");
-            tenancyPerson.RegistrationRoom = ViewportHelper.ValueOrNull(row, "registration_room");
-            tenancyPerson.ResidenceIdStreet = ViewportHelper.ValueOrNull(row, "residence_id_street");
-            tenancyPerson.ResidenceHouse = ViewportHelper.ValueOrNull(row, "residence_house");
-            tenancyPerson.ResidenceFlat = ViewportHelper.ValueOrNull(row, "residence_flat");
-            tenancyPerson.ResidenceRoom = ViewportHelper.ValueOrNull(row, "residence_room");
-            tenancyPerson.PersonalAccount = ViewportHelper.ValueOrNull(row, "personal_account");
-            tenancyPerson.IncludeDate = ViewportHelper.ValueOrNull<DateTime>(row, "include_date");
-            tenancyPerson.ExcludeDate = ViewportHelper.ValueOrNull<DateTime>(row, "exclude_date");
-            return tenancyPerson;
-        }
-
-        private static void FillRowFromTenancyPerson(TenancyPerson tenancyPerson, DataRowView row)
-        {
-            row.BeginEdit();
-            row["id_person"] = ViewportHelper.ValueOrDBNull(tenancyPerson.IdPerson);
-            row["id_process"] = ViewportHelper.ValueOrDBNull(tenancyPerson.IdProcess);
-            row["id_kinship"] = ViewportHelper.ValueOrDBNull(tenancyPerson.IdKinship);
-            row["surname"] = ViewportHelper.ValueOrDBNull(tenancyPerson.Surname);
-            row["name"] = ViewportHelper.ValueOrDBNull(tenancyPerson.Name);
-            row["patronymic"] = ViewportHelper.ValueOrDBNull(tenancyPerson.Patronymic);
-            row["date_of_birth"] = ViewportHelper.ValueOrDBNull(tenancyPerson.DateOfBirth);
-            row["id_document_type"] = ViewportHelper.ValueOrDBNull(tenancyPerson.IdDocumentType);
-            row["date_of_document_issue"] = ViewportHelper.ValueOrDBNull(tenancyPerson.DateOfDocumentIssue);
-            row["document_num"] = ViewportHelper.ValueOrDBNull(tenancyPerson.DocumentNum);
-            row["document_seria"] = ViewportHelper.ValueOrDBNull(tenancyPerson.DocumentSeria);
-            row["id_document_issued_by"] = ViewportHelper.ValueOrDBNull(tenancyPerson.IdDocumentIssuedBy);
-            row["registration_id_street"] = ViewportHelper.ValueOrDBNull(tenancyPerson.RegistrationIdStreet);
-            row["registration_house"] = ViewportHelper.ValueOrDBNull(tenancyPerson.RegistrationHouse);
-            row["registration_flat"] = ViewportHelper.ValueOrDBNull(tenancyPerson.RegistrationFlat);
-            row["registration_room"] = ViewportHelper.ValueOrDBNull(tenancyPerson.RegistrationRoom);
-            if (tenancyPerson.RegistrationDate != null)
-            {
-                row["registration_date"] = ViewportHelper.ValueOrDBNull(tenancyPerson.RegistrationDate);
-            }
-            row["residence_id_street"] = ViewportHelper.ValueOrDBNull(tenancyPerson.ResidenceIdStreet);
-            row["residence_house"] = ViewportHelper.ValueOrDBNull(tenancyPerson.ResidenceHouse);
-            row["residence_flat"] = ViewportHelper.ValueOrDBNull(tenancyPerson.ResidenceFlat);
-            row["residence_room"] = ViewportHelper.ValueOrDBNull(tenancyPerson.ResidenceRoom);
-            row["personal_account"] = ViewportHelper.ValueOrDBNull(tenancyPerson.PersonalAccount);
-            row["include_date"] = ViewportHelper.ValueOrDBNull(tenancyPerson.IncludeDate);
-            row["exclude_date"] = ViewportHelper.ValueOrDBNull(tenancyPerson.ExcludeDate);
-            row.EndEdit();
+            return TenancyPersonConverter.FromRow(row);
         }
 
         private bool ValidateTenancyPerson(TenancyPerson tenancyPerson)
         {
             if (tenancyPerson.Surname == null)
             {
-                MessageBox.Show("Необходимо указать фамилию участника найма", "Ошибка",
+                MessageBox.Show(@"Необходимо указать фамилию участника найма", @"Ошибка",
                                MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxSurname.Focus();
                 return false;
             }
             if (tenancyPerson.Name == null)
             {
-                MessageBox.Show("Необходимо указать имя участника найма", "Ошибка",
+                MessageBox.Show(@"Необходимо указать имя участника найма", @"Ошибка",
                                MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxName.Focus();
                 return false;
             }
             if (tenancyPerson.IdKinship == null)
             {
-                MessageBox.Show("Необходимо выбрать родственную связь", "Ошибка",
+                MessageBox.Show(@"Необходимо выбрать родственную связь", @"Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxKinship.Focus();
                 return false;
@@ -343,21 +291,18 @@ namespace Registry.Viewport
             {
                 for (var i = 0; i < GeneralBindingSource.Count; i++)
                 {
-                    if (((DataRowView)GeneralBindingSource[i])["id_kinship"] != DBNull.Value &&
-                        (Convert.ToInt32(((DataRowView)GeneralBindingSource[i])["id_kinship"], CultureInfo.InvariantCulture) == 1) &&
-                        (((DataRowView)GeneralBindingSource[i])["exclude_date"] == DBNull.Value) &&
-                        (Convert.ToInt32(((DataRowView)GeneralBindingSource[i])["id_person"], CultureInfo.InvariantCulture) != tenancyPerson.IdPerson))
-                    {
-                        MessageBox.Show("В процессе найма может быть только один наниматель", "Ошибка",
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        comboBoxKinship.Focus();
-                        return false;
-                    }
+                    var row = (DataRowView) GeneralBindingSource[i];
+                    if (row["id_kinship"] == DBNull.Value || ((int)row["id_kinship"] != 1) ||
+                       (row["exclude_date"] != DBNull.Value) || ((int)row["id_person"] == tenancyPerson.IdPerson)) continue;
+                    MessageBox.Show(@"В процессе найма может быть только один наниматель", @"Ошибка",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    comboBoxKinship.Focus();
+                    return false;
                 }
             }
             if (tenancyPerson.IdDocumentType == null)
             {
-                MessageBox.Show("Необходимо выбрать вид документа, удостоверяющего личность", "Ошибка",
+                MessageBox.Show(@"Необходимо выбрать вид документа, удостоверяющего личность", @"Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxDocumentType.Focus();
                 return false;
@@ -375,17 +320,17 @@ namespace Registry.Viewport
             dataGridViewTenancyPersons.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
             GeneralDataModel = DataModel.GetInstance<TenancyPersonsDataModel>();
-            kinships = DataModel.GetInstance<KinshipsDataModel>();
-            document_types = DataModel.GetInstance<DocumentTypesDataModel>();
-            document_issued_by = DataModel.GetInstance<DocumentsIssuedByDataModel>();
-            kladr = DataModel.GetInstance<KladrStreetsDataModel>(); 
+            _kinships = DataModel.GetInstance<KinshipsDataModel>();
+            _documentTypes = DataModel.GetInstance<DocumentTypesDataModel>();
+            _documentIssuedBy = DataModel.GetInstance<DocumentsIssuedByDataModel>();
+            _kladr = DataModel.GetInstance<KladrStreetsDataModel>(); 
 
             // Ожидаем дозагрузки, если это необходимо
             GeneralDataModel.Select();
-            kinships.Select();
-            document_types.Select();
-            document_issued_by.Select();
-            kladr.Select();
+            _kinships.Select();
+            _documentTypes.Select();
+            _documentIssuedBy.Select();
+            _kladr.Select();
 
             var ds = DataModel.DataSet;
 
@@ -394,26 +339,36 @@ namespace Registry.Viewport
             else
                 throw new ViewportException("Неизвестный тип родительского объекта");
 
-            v_kinships = new BindingSource();
-            v_kinships.DataMember = "kinships";
-            v_kinships.DataSource = ds;
+            _vKinships = new BindingSource
+            {
+                DataMember = "kinships",
+                DataSource = ds
+            };
 
-            v_registration_street = new BindingSource();
-            v_registration_street.DataMember = "kladr";
-            v_registration_street.DataSource = ds;
+            _vRegistrationStreet = new BindingSource
+            {
+                DataMember = "kladr",
+                DataSource = ds
+            };
 
-            v_residence_street = new BindingSource();
-            v_residence_street.DataMember = "kladr";
-            v_residence_street.DataSource = ds;
+            _vResidenceStreet = new BindingSource
+            {
+                DataMember = "kladr",
+                DataSource = ds
+            };
 
-            v_document_types = new BindingSource();
-            v_document_types.DataMember = "document_types";
-            v_document_types.DataSource = ds;
+            _vDocumentTypes = new BindingSource
+            {
+                DataMember = "document_types",
+                DataSource = ds
+            };
 
-            v_document_issued_by = new BindingSource();
-            v_document_issued_by.DataMember = "documents_issued_by";
-            v_document_issued_by.DataSource = ds;
-            v_document_issued_by.Sort = "document_issued_by";
+            _vDocumentIssuedBy = new BindingSource
+            {
+                DataMember = "documents_issued_by",
+                DataSource = ds,
+                Sort = "document_issued_by"
+            };
 
             GeneralBindingSource = new BindingSource();
             GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
@@ -482,7 +437,7 @@ namespace Registry.Viewport
 
         public override void DeleteRecord()
         {
-            if (MessageBox.Show("Вы действительно хотите этого участника договора?", "Внимание",
+            if (MessageBox.Show(@"Вы действительно хотите этого участника договора?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
                 if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_person"]) == -1)
@@ -509,9 +464,9 @@ namespace Registry.Viewport
 
         public override void CancelRecord()
         {
-            v_registration_street.Filter = "";
-            v_residence_street.Filter = "";
-            v_document_issued_by.Filter = "";
+            _vRegistrationStreet.Filter = "";
+            _vResidenceStreet.Filter = "";
+            _vDocumentIssuedBy.Filter = "";
             switch (viewportState)
             {
                 case ViewportState.ReadState: return;
@@ -564,31 +519,31 @@ namespace Registry.Viewport
             switch (viewportState)
             {
                 case ViewportState.ReadState:
-                    MessageBox.Show("Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка",
+                    MessageBox.Show(@"Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 case ViewportState.NewRowState:
-                    var id_person = GeneralDataModel.Insert(tenancyPerson);
-                    if (id_person == -1)
+                    var idPerson = GeneralDataModel.Insert(tenancyPerson);
+                    if (idPerson == -1)
                     {
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
                     DataRowView newRow;
-                    tenancyPerson.IdPerson = id_person;
+                    tenancyPerson.IdPerson = idPerson;
                     is_editable = false;
                     if (GeneralBindingSource.Position == -1)
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    FillRowFromTenancyPerson(tenancyPerson, newRow);
+                    TenancyPersonConverter.FillRow(tenancyPerson, newRow);
                     GeneralDataModel.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
                     if (tenancyPerson.IdPerson == null)
                     {
-                        MessageBox.Show("Вы пытаетесь изменить запись об участнике договора без внутренного номера. " +
-                            "Если вы видите это сообщение, обратитесь к системному администратору", "Ошибка", 
+                        MessageBox.Show(@"Вы пытаетесь изменить запись об участнике договора без внутренного номера. " +
+                            @"Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка", 
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         return;
                     }
@@ -596,7 +551,7 @@ namespace Registry.Viewport
                         return;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     is_editable = false;
-                    FillRowFromTenancyPerson(tenancyPerson, row);
+                    TenancyPersonConverter.FillRow(tenancyPerson, row);
                     break;
             }
             RedrawDataGridRows();
@@ -627,7 +582,7 @@ namespace Registry.Viewport
             Close();
         }
 
-        void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
+        private void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
             if (GeneralBindingSource.Position == -1 || dataGridViewTenancyPersons.RowCount == 0)
                 dataGridViewTenancyPersons.ClearSelection();
@@ -643,9 +598,9 @@ namespace Registry.Viewport
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.RelationsStateUpdate();
             }
-            v_registration_street.Filter = "";
-            v_residence_street.Filter = "";
-            v_document_issued_by.Filter = "";
+            _vRegistrationStreet.Filter = "";
+            _vResidenceStreet.Filter = "";
+            _vDocumentIssuedBy.Filter = "";
             UnbindedCheckBoxesUpdate();
             if (GeneralBindingSource.Position == -1)
                 return;
@@ -656,7 +611,7 @@ namespace Registry.Viewport
             is_editable = true;
         }
 
-        void TenancyPersonsViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void TenancyPersonsViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             UnbindedCheckBoxesUpdate();
             RedrawDataGridRows();
@@ -665,7 +620,7 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
-        void TenancyPersonsViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        private void TenancyPersonsViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Delete)
             {
@@ -683,39 +638,39 @@ namespace Registry.Viewport
             base.OnVisibleChanged(e);
         }
 
-        void comboBoxIssuedBy_DropDownClosed(object sender, EventArgs e)
+        private void comboBoxIssuedBy_DropDownClosed(object sender, EventArgs e)
         {
             if (comboBoxIssuedBy.Items.Count == 0)
                 comboBoxIssuedBy.SelectedIndex = -1;
         }
 
-        void comboBoxIssuedBy_KeyUp(object sender, KeyEventArgs e)
+        private void comboBoxIssuedBy_KeyUp(object sender, KeyEventArgs e)
         {
             if ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode == Keys.Back))
             {
                 var text = comboBoxIssuedBy.Text;
                 var selectionStart = comboBoxIssuedBy.SelectionStart;
                 var selectionLength = comboBoxIssuedBy.SelectionLength;
-                v_document_issued_by.Filter = "document_issued_by like '%" + comboBoxIssuedBy.Text + "%'";
+                _vDocumentIssuedBy.Filter = "document_issued_by like '%" + comboBoxIssuedBy.Text + "%'";
                 comboBoxIssuedBy.Text = text;
                 comboBoxIssuedBy.SelectionStart = selectionStart;
                 comboBoxIssuedBy.SelectionLength = selectionLength;
             }
         }
 
-        void comboBoxIssuedBy_Leave(object sender, EventArgs e)
+        private void comboBoxIssuedBy_Leave(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(comboBoxIssuedBy.Text))
                 comboBoxIssuedBy.SelectedValue = DBNull.Value;
         }
 
-        void comboBoxResidenceStreet_DropDownClosed(object sender, EventArgs e)
+        private void comboBoxResidenceStreet_DropDownClosed(object sender, EventArgs e)
         {
             if (comboBoxResidenceStreet.Items.Count == 0)
                 comboBoxResidenceStreet.SelectedIndex = -1;
         }
 
-        void comboBoxResidenceStreet_KeyUp(object sender, KeyEventArgs e)
+        private void comboBoxResidenceStreet_KeyUp(object sender, KeyEventArgs e)
         {
             if ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode == Keys.Back) || (e.KeyCode == Keys.Delete) ||
                 (e.KeyCode >= Keys.D0 && e.KeyCode <= Keys.D9) || (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9))
@@ -723,14 +678,14 @@ namespace Registry.Viewport
                 var text = comboBoxResidenceStreet.Text;
                 var selectionStart = comboBoxResidenceStreet.SelectionStart;
                 var selectionLength = comboBoxResidenceStreet.SelectionLength;
-                v_residence_street.Filter = "street_name like '%" + comboBoxResidenceStreet.Text + "%'";
+                _vResidenceStreet.Filter = "street_name like '%" + comboBoxResidenceStreet.Text + "%'";
                 comboBoxResidenceStreet.Text = text;
                 comboBoxResidenceStreet.SelectionStart = selectionStart;
                 comboBoxResidenceStreet.SelectionLength = selectionLength;
             }
         }
 
-        void comboBoxResidenceStreet_Leave(object sender, EventArgs e)
+        private void comboBoxResidenceStreet_Leave(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(comboBoxResidenceStreet.Text))
             {
@@ -740,20 +695,20 @@ namespace Registry.Viewport
             if (comboBoxResidenceStreet.Items.Count > 0)
             {
                 if (comboBoxResidenceStreet.SelectedValue == null)
-                    comboBoxResidenceStreet.SelectedValue = v_residence_street[v_residence_street.Position];
-                comboBoxResidenceStreet.Text = ((DataRowView)v_residence_street[v_residence_street.Position])["street_name"].ToString();
+                    comboBoxResidenceStreet.SelectedValue = _vResidenceStreet[_vResidenceStreet.Position];
+                comboBoxResidenceStreet.Text = ((DataRowView)_vResidenceStreet[_vResidenceStreet.Position])["street_name"].ToString();
             }
             if (comboBoxResidenceStreet.SelectedValue == null)
                 comboBoxResidenceStreet.Text = "";
         }
 
-        void comboBoxRegistrationStreet_DropDownClosed(object sender, EventArgs e)
+        private void comboBoxRegistrationStreet_DropDownClosed(object sender, EventArgs e)
         {
             if (comboBoxRegistrationStreet.Items.Count == 0)
                 comboBoxRegistrationStreet.SelectedIndex = -1;
         }
 
-        void comboBoxRegistrationStreet_KeyUp(object sender, KeyEventArgs e)
+        private void comboBoxRegistrationStreet_KeyUp(object sender, KeyEventArgs e)
         {
             if ((e.KeyCode >= Keys.A && e.KeyCode <= Keys.Z) || (e.KeyCode == Keys.Back) || (e.KeyCode == Keys.Delete) ||
                 (e.KeyCode >= Keys.D0 && e.KeyCode <= Keys.D9) || (e.KeyCode >= Keys.NumPad0 && e.KeyCode <= Keys.NumPad9))
@@ -761,14 +716,14 @@ namespace Registry.Viewport
                 var text = comboBoxRegistrationStreet.Text;
                 var selectionStart = comboBoxRegistrationStreet.SelectionStart;
                 var selectionLength = comboBoxRegistrationStreet.SelectionLength;
-                v_registration_street.Filter = "street_name like '%" + comboBoxRegistrationStreet.Text + "%'";
+                _vRegistrationStreet.Filter = "street_name like '%" + comboBoxRegistrationStreet.Text + "%'";
                 comboBoxRegistrationStreet.Text = text;
                 comboBoxRegistrationStreet.SelectionStart = selectionStart;
                 comboBoxRegistrationStreet.SelectionLength = selectionLength;
             }
         }
 
-        void comboBoxRegistrationStreet_Leave(object sender, EventArgs e)
+        private void comboBoxRegistrationStreet_Leave(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(comboBoxRegistrationStreet.Text))
             {
@@ -778,8 +733,8 @@ namespace Registry.Viewport
             if (comboBoxRegistrationStreet.Items.Count > 0)
             {
                 if (comboBoxRegistrationStreet.SelectedValue == null)
-                    comboBoxRegistrationStreet.SelectedValue = v_registration_street[v_registration_street.Position];
-                comboBoxRegistrationStreet.Text = ((DataRowView)v_registration_street[v_registration_street.Position])["street_name"].ToString();
+                    comboBoxRegistrationStreet.SelectedValue = _vRegistrationStreet[_vRegistrationStreet.Position];
+                comboBoxRegistrationStreet.Text = ((DataRowView)_vRegistrationStreet[_vRegistrationStreet.Position])["street_name"].ToString();
             }
             if (comboBoxRegistrationStreet.SelectedValue == null)
                 comboBoxRegistrationStreet.Text = "";
@@ -935,7 +890,7 @@ namespace Registry.Viewport
                             person.IdPerson = idPerson;
                             var row = (DataRowView)GeneralBindingSource.AddNew();
                             if (row == null) continue;
-                            FillRowFromTenancyPerson(person, row);
+                            TenancyPersonConverter.FillRow(person, row);
                         }
                         is_editable = true;
                     }

@@ -30,12 +30,12 @@ namespace Registry.Viewport.EntityConverters
         public static void FillRow(ResettleProcess resettleProcess, DataRowView row)
         {
             row.BeginEdit();
-            row["id_process"] = ViewportHelper.ValueOrDBNull(resettleProcess.IdProcess);
-            row["resettle_date"] = ViewportHelper.ValueOrDBNull(resettleProcess.ResettleDate);
-            row["debts"] = ViewportHelper.ValueOrDBNull(resettleProcess.Debts);
-            row["id_document_residence"] = ViewportHelper.ValueOrDBNull(resettleProcess.IdDocumentResidence);
-            row["description"] = ViewportHelper.ValueOrDBNull(resettleProcess.Description);
-            row["doc_number"] = ViewportHelper.ValueOrDBNull(resettleProcess.DocNumber);
+            row["id_process"] = ViewportHelper.ValueOrDbNull(resettleProcess.IdProcess);
+            row["resettle_date"] = ViewportHelper.ValueOrDbNull(resettleProcess.ResettleDate);
+            row["debts"] = ViewportHelper.ValueOrDbNull(resettleProcess.Debts);
+            row["id_document_residence"] = ViewportHelper.ValueOrDbNull(resettleProcess.IdDocumentResidence);
+            row["description"] = ViewportHelper.ValueOrDbNull(resettleProcess.Description);
+            row["doc_number"] = ViewportHelper.ValueOrDbNull(resettleProcess.DocNumber);
             row.EndEdit();
         }
     }

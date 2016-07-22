@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Viewport.EntityConverters;
 
-namespace Registry.Viewport
+namespace Registry.Viewport.ModalEditors
 {
     internal partial class TenancyAgreementOnSavePersonManager : Form
     {

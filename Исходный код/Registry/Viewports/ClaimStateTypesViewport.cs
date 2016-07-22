@@ -309,8 +309,8 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    row["state_type"] = ViewportHelper.ValueOrDBNull(list[i].StateType);
-                    row["is_start_state_type"] = ViewportHelper.ValueOrDBNull(list[i].IsStartStateType);
+                    row["state_type"] = ViewportHelper.ValueOrDbNull(list[i].StateType);
+                    row["is_start_state_type"] = ViewportHelper.ValueOrDbNull(list[i].IsStartStateType);
                 }
             }
             //Удаляем виды состояний из модели и базы

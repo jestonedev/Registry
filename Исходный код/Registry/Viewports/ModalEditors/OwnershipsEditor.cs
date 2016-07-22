@@ -75,11 +75,13 @@ namespace Registry.Viewport
         {
             get
             {
-                var ownershipRightValue = new OwnershipRight();
-                ownershipRightValue.Date = ViewportHelper.ValueOrNull(dateTimePickerOwnershipDate);
-                ownershipRightValue.Description = ViewportHelper.ValueOrNull(textBoxOwnershipDescription);
-                ownershipRightValue.Number = ViewportHelper.ValueOrNull(textBoxOwnershipNumber);
-                ownershipRightValue.IdOwnershipRightType = ViewportHelper.ValueOrNull<int>(comboBoxIdOwnershipType);
+                var ownershipRightValue = new OwnershipRight
+                {
+                    Date = ViewportHelper.ValueOrNull(dateTimePickerOwnershipDate),
+                    Description = ViewportHelper.ValueOrNull(textBoxOwnershipDescription),
+                    Number = ViewportHelper.ValueOrNull(textBoxOwnershipNumber),
+                    IdOwnershipRightType = ViewportHelper.ValueOrNull<int>(comboBoxIdOwnershipType)
+                };
                 if (state == ViewportState.ModifyRowState)
                     ownershipRightValue.IdOwnershipRight = ownershipRight.IdOwnershipRight;
                 return ownershipRightValue;
@@ -91,7 +93,7 @@ namespace Registry.Viewport
                     return;
                 textBoxOwnershipNumber.Text = value.Number;
                 textBoxOwnershipDescription.Text = value.Description;
-                dateTimePickerOwnershipDate.Value = value.Date == null ? DateTime.Now : value.Date.Value;
+                dateTimePickerOwnershipDate.Value = value.Date ?? DateTime.Now;
                 comboBoxIdOwnershipType.SelectedValue = value.IdOwnershipRightType;
             }
         }
@@ -100,8 +102,7 @@ namespace Registry.Viewport
         {
             InitializeComponent();
             ownership_right_types = DataModel.GetInstance<OwnershipRightTypesDataModel>();
-            v_ownership_right_types = new BindingSource();
-            v_ownership_right_types.DataSource = ownership_right_types.Select();
+            v_ownership_right_types = new BindingSource {DataSource = ownership_right_types.Select()};
             comboBoxIdOwnershipType.DataSource = v_ownership_right_types;
             comboBoxIdOwnershipType.ValueMember = "id_ownership_right_type";
             comboBoxIdOwnershipType.DisplayMember = "ownership_right_type";

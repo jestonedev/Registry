@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using Registry.DataModels.DataModels;
 
 namespace Registry.Viewport.ModalEditors
 {

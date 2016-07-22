@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -15,13 +16,15 @@ namespace Registry.Viewport
     internal sealed partial class RestrictionListViewport : EditableDataGridViewport
     {
         #region Models
-        DataModel _restrictionTypes;
-        DataModel _restrictionAssoc;
+
+        private DataModel _restrictionTypes;
+        private DataModel _restrictionAssoc;
         #endregion Models
 
         #region Views
-        BindingSource _vRestrictionTypes;
-        BindingSource _vRestrictionAssoc;
+
+        private BindingSource _vRestrictionTypes;
+        private BindingSource _vRestrictionAssoc;
         #endregion Views
 
         private RestrictionListViewport()
@@ -47,17 +50,6 @@ namespace Registry.Viewport
             restrictionFilter = restrictionFilter.TrimEnd(',');
             restrictionFilter += ")";
             GeneralBindingSource.Filter = restrictionFilter;
-        }
-
-        private static object[] DataRowViewToArray(DataRowView dataRowView)
-        {
-            return new[] { 
-                dataRowView["id_restriction"], 
-                dataRowView["id_restriction_type"], 
-                dataRowView["number"], 
-                dataRowView["date"], 
-                dataRowView["description"]
-            };
         }
 
         private bool ValidatePermissions()
@@ -129,33 +121,14 @@ namespace Registry.Viewport
             return true;
         }
 
-        private static Restriction RowToRestriction(DataRow row)
-        {
-            var restriction = new Restriction
-            {
-                IdRestriction = ViewportHelper.ValueOrNull<int>(row, "id_restriction"),
-                IdRestrictionType = ViewportHelper.ValueOrNull<int>(row, "id_restriction_type"),
-                Number = ViewportHelper.ValueOrNull(row, "number"),
-                Date = ViewportHelper.ValueOrNull<DateTime>(row, "date"),
-                Description = ViewportHelper.ValueOrNull(row, "description")
-            };
-            return restriction;
-        }
-
         protected override List<Entity> EntitiesListFromViewport()
         {
             var list = new List<Entity>();
             for (var i = 0; i < dataGridView.Rows.Count; i++)
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
-                var r = new Restriction();
                 var row = dataGridView.Rows[i];
-                r.IdRestriction = ViewportHelper.ValueOrNull<int>(row, "id_restriction");
-                r.IdRestrictionType = ViewportHelper.ValueOrNull<int>(row, "id_restriction_type");
-                r.Number = ViewportHelper.ValueOrNull(row, "number");
-                r.Date = ViewportHelper.ValueOrNull<DateTime>(row, "date");
-                r.Description = ViewportHelper.ValueOrNull(row, "description");
-                list.Add(r);
+                list.Add(RestrictionConverter.FromRow(row));
             }
             return list;
         }
@@ -165,14 +138,8 @@ namespace Registry.Viewport
             var list = new List<Entity>();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
             {
-                var r = new Restriction();
-                var row = ((DataRowView)GeneralBindingSource[i]);
-                r.IdRestriction = ViewportHelper.ValueOrNull<int>(row, "id_restriction");
-                r.IdRestrictionType = ViewportHelper.ValueOrNull<int>(row, "id_restriction_type");
-                r.Number = ViewportHelper.ValueOrNull(row, "number");
-                r.Date = ViewportHelper.ValueOrNull<DateTime>(row, "date");
-                r.Description = ViewportHelper.ValueOrNull(row, "description");
-                list.Add(r);
+                var row = (DataRowView)GeneralBindingSource[i];
+                list.Add(RestrictionConverter.FromRow(row));
             }
             return list;
         }
@@ -192,13 +159,17 @@ namespace Registry.Viewport
             GeneralDataModel.Select();
             _restrictionTypes.Select();
 
-            if (ParentType == ParentTypeEnum.Premises)
-                _restrictionAssoc =  DataModel.GetInstance<RestrictionsPremisesAssocDataModel>();
-            else
-                if (ParentType == ParentTypeEnum.Building)
+            switch (ParentType)
+            {
+                case ParentTypeEnum.Premises:
+                    _restrictionAssoc =  DataModel.GetInstance<RestrictionsPremisesAssocDataModel>();
+                    break;
+                case ParentTypeEnum.Building:
                     _restrictionAssoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>();
-                else
+                    break;
+                default:
                     throw new ViewportException("Неизвестный тип родительского объекта");
+            }
             _restrictionAssoc.Select();
 
             _vRestrictionAssoc = new BindingSource();
@@ -239,7 +210,7 @@ namespace Registry.Viewport
                     GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
+                GeneralSnapshot.Rows.Add(RestrictionConverter.ToArray((DataRowView)GeneralBindingSource[i]));
             GeneralSnapshotBindingSource = new BindingSource {DataSource = GeneralSnapshot};
             GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_restrictions_CurrentItemChanged;
             GeneralSnapshot.RowChanged += snapshot_restrictions_RowChanged;
@@ -270,7 +241,7 @@ namespace Registry.Viewport
         
         public override bool CanInsertRecord()
         {
-            return (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
+            return AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal);
         }
 
         public override void InsertRecord()
@@ -282,7 +253,7 @@ namespace Registry.Viewport
         public override bool CanDeleteRecord()
         {
             return (GeneralSnapshotBindingSource.Position != -1) &&
-                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal));
         }
 
         public override void DeleteRecord()
@@ -299,14 +270,14 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(DataRowViewToArray(((DataRowView)GeneralBindingSource[i])));
+                GeneralSnapshot.Rows.Add(RestrictionConverter.ToArray((DataRowView)GeneralBindingSource[i]));
             MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanSaveRecord()
         {
             return SnapshotHasChanges() &&
-                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal));
         }
 
         public override void SaveRecord()
@@ -326,8 +297,8 @@ namespace Registry.Viewport
                 var row = GeneralDataModel.Select().Rows.Find(restriction.IdRestriction);
                 if (row == null)
                 {
-                    var idParent = ((ParentType == ParentTypeEnum.Premises) && ParentRow != null) ? (int)ParentRow["id_premises"] :
-                        ((ParentType == ParentTypeEnum.Building) && ParentRow != null) ? (int)ParentRow["id_building"] :
+                    var idParent = (ParentType == ParentTypeEnum.Premises) && ParentRow != null ? (int)ParentRow["id_premises"] :
+                        (ParentType == ParentTypeEnum.Building) && ParentRow != null ? (int)ParentRow["id_building"] :
                         -1;
                     if (idParent == -1)
                     {
@@ -357,12 +328,12 @@ namespace Registry.Viewport
                             break;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_restriction"] = idRestriction;
-                    GeneralDataModel.Select().Rows.Add(DataRowViewToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(RestrictionConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                     _restrictionAssoc.Select().Rows.Add(idParent, idRestriction);
                 }
                 else
                 {
-                    if (RowToRestriction(row) == restriction)
+                    if (RestrictionConverter.FromRow(row) == restriction)
                         continue;
                     if (GeneralDataModel.Update(restriction) == -1)
                     {
@@ -371,10 +342,7 @@ namespace Registry.Viewport
                         RebuildFilter();
                         return;
                     }
-                    row["id_restriction_type"] = restriction.IdRestrictionType == null ? DBNull.Value : (object)restriction.IdRestrictionType;
-                    row["number"] = restriction.Number == null ? DBNull.Value : (object)restriction.Number;
-                    row["date"] = restriction.Date == null ? DBNull.Value : (object)restriction.Date;
-                    row["description"] = restriction.Description == null ? DBNull.Value : (object)restriction.Description;
+                    RestrictionConverter.FillRow(restriction, row);
                 }
             }
             list = EntitiesListFromView();
@@ -423,16 +391,18 @@ namespace Registry.Viewport
             {
                 var result = MessageBox.Show(@"Сохранить изменения о реквизитах в базу данных?", @"Внимание",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                if (result == DialogResult.Yes)
-                    SaveRecord();
-                else
-                    if (result == DialogResult.No)
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        SaveRecord();
+                        break;
+                    case DialogResult.No:
                         CancelRecord();
-                    else
-                    {
+                        break;
+                    default:
                         e.Cancel = true;
                         return;
-                    }
+                }
             }
             GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_restrictions_CurrentItemChanged;
             GeneralSnapshot.RowChanged -= snapshot_restrictions_RowChanged;
@@ -446,26 +416,15 @@ namespace Registry.Viewport
             base.OnClosing(e);
         }
 
-        public override void ForceClose()
+        private void snapshot_restrictions_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
-            GeneralDataModel.Select().RowChanged -= RestrictionListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting -= RestrictionListViewport_RowDeleting;
-            _restrictionAssoc.Select().RowChanged -= RestrictionAssoc_RowChanged;
-            _restrictionAssoc.Select().RowDeleted -= RestrictionAssoc_RowDeleted;
-            Close();
+            if (!Selected) return;
+            MenuCallback.EditingStateUpdate();
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.StatusBarStateUpdate();
         }
 
-        void snapshot_restrictions_RowDeleted(object sender, DataRowChangeEventArgs e)
-        {
-            if (Selected)
-            {
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.StatusBarStateUpdate();
-            }
-        }
-
-        void snapshot_restrictions_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void snapshot_restrictions_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Add && Selected)
             {
@@ -475,7 +434,7 @@ namespace Registry.Viewport
             }
         }
 
-        void RestrictionAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
+        private void RestrictionAssoc_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (!SyncViews)
                 return;
@@ -484,7 +443,7 @@ namespace Registry.Viewport
                 RebuildFilter();
         }
 
-        void RestrictionAssoc_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void RestrictionAssoc_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (!SyncViews)
                 return;
@@ -503,7 +462,7 @@ namespace Registry.Viewport
             }
         }
 
-        void RestrictionListViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
+        private void RestrictionListViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
             if (!SyncViews)
                 return;
@@ -515,7 +474,7 @@ namespace Registry.Viewport
             }
         }
 
-        void RestrictionListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void RestrictionListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (!SyncViews)
                 return;
@@ -526,7 +485,7 @@ namespace Registry.Viewport
                 case DataRowAction.ChangeOriginal:
                     var rowIndex = GeneralSnapshotBindingSource.Find("id_restriction", e.Row["id_restriction"]);
                     if (rowIndex == -1) return;
-                    var row = ((DataRowView)GeneralSnapshotBindingSource[rowIndex]);
+                    var row = (DataRowView)GeneralSnapshotBindingSource[rowIndex];
                     row["id_restriction_type"] = e.Row["id_restriction_type"];
                     row["number"] = e.Row["number"];
                     row["date"] = e.Row["date"];
@@ -537,17 +496,17 @@ namespace Registry.Viewport
                     //иначе - объект не принадлежит текущему родителю
                     rowIndex = GeneralBindingSource.Find("id_restriction", e.Row["id_restriction"]);
                     if (rowIndex != -1)
-                        GeneralSnapshot.Rows.Add(e.Row["id_restriction"], e.Row["id_restriction_type"], e.Row["number"], e.Row["date"], e.Row["description"]);
+                        GeneralSnapshot.Rows.Add(RestrictionConverter.ToArray(e.Row));
                     break;
             }
         }
 
-        void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
             MenuCallback.EditingStateUpdate();
         }
 
-        void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
         {
             var cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
             switch (cell.OwningColumn.Name)
@@ -567,7 +526,7 @@ namespace Registry.Viewport
             }
         }
 
-        void v_snapshot_restrictions_CurrentItemChanged(object sender, EventArgs e)
+        private void v_snapshot_restrictions_CurrentItemChanged(object sender, EventArgs e)
         {
             if (Selected)
             {
@@ -576,7 +535,7 @@ namespace Registry.Viewport
             }
         }
 
-        void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
+        private void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)
         {
             if (dataGridView.CurrentCell.OwningColumn.Name != "id_restriction_type") return;
             var editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
@@ -585,7 +544,7 @@ namespace Registry.Viewport
             editingControl.DropDownClosed += editingControl_DropDownClosed;
         }
 
-        void editingControl_DropDownClosed(object sender, EventArgs e)
+        private void editingControl_DropDownClosed(object sender, EventArgs e)
         {
             var editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
             if (editingControl != null) dataGridView.CurrentCell.Value = editingControl.SelectedValue;

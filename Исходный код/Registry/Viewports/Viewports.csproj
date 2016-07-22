@@ -122,6 +122,7 @@
     <Compile Include="EntityConverters\ResettlePersonConverter.cs" />
     <Compile Include="EntityConverters\ResettlePremiseConverter.cs" />
     <Compile Include="EntityConverters\ResettleProcessConverter.cs" />
+    <Compile Include="EntityConverters\RestrictionConverter.cs" />
     <Compile Include="EntityConverters\TenancyPersonConverter.cs" />
     <Compile Include="EntityConverters\TenancyProcessConverter.cs" />
     <Compile Include="ModalEditors\PersonExcludeDateForm.cs">

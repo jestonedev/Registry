@@ -202,7 +202,7 @@ namespace Registry.Viewport
 
         private void ViewportFromTenancyAgreement(TenancyAgreement tenancyAgreement)
         {
-            comboBoxExecutor.SelectedValue = ViewportHelper.ValueOrDBNull(tenancyAgreement.IdExecutor);
+            comboBoxExecutor.SelectedValue = ViewportHelper.ValueOrDbNull(tenancyAgreement.IdExecutor);
             dateTimePickerAgreementDate.Value = ViewportHelper.ValueOrDefault(tenancyAgreement.AgreementDate);
             textBoxAgreementContent.Text = tenancyAgreement.AgreementContent;
             if (tenancyAgreement.IdWarrant != null)
@@ -253,12 +253,12 @@ namespace Registry.Viewport
         private static void FillRowFromAgreement(TenancyAgreement tenancyAgreement, DataRowView row)
         {
             row.BeginEdit();
-            row["id_agreement"] = ViewportHelper.ValueOrDBNull(tenancyAgreement.IdAgreement);
-            row["id_process"] = ViewportHelper.ValueOrDBNull(tenancyAgreement.IdProcess);
-            row["agreement_date"] = ViewportHelper.ValueOrDBNull(tenancyAgreement.AgreementDate);
-            row["agreement_content"] = ViewportHelper.ValueOrDBNull(tenancyAgreement.AgreementContent);
-            row["id_executor"] = ViewportHelper.ValueOrDBNull(tenancyAgreement.IdExecutor);
-            row["id_warrant"] = ViewportHelper.ValueOrDBNull(tenancyAgreement.IdWarrant);
+            row["id_agreement"] = ViewportHelper.ValueOrDbNull(tenancyAgreement.IdAgreement);
+            row["id_process"] = ViewportHelper.ValueOrDbNull(tenancyAgreement.IdProcess);
+            row["agreement_date"] = ViewportHelper.ValueOrDbNull(tenancyAgreement.AgreementDate);
+            row["agreement_content"] = ViewportHelper.ValueOrDbNull(tenancyAgreement.AgreementContent);
+            row["id_executor"] = ViewportHelper.ValueOrDbNull(tenancyAgreement.IdExecutor);
+            row["id_warrant"] = ViewportHelper.ValueOrDbNull(tenancyAgreement.IdWarrant);
             row.EndEdit();
         }
 
@@ -545,8 +545,8 @@ namespace Registry.Viewport
             {
                 return;
             }
-            ParentRow["begin_date"] = ViewportHelper.ValueOrDBNull(beginDate);
-            ParentRow["end_date"] = ViewportHelper.ValueOrDBNull(endDate);
+            ParentRow["begin_date"] = ViewportHelper.ValueOrDbNull(beginDate);
+            ParentRow["end_date"] = ViewportHelper.ValueOrDbNull(endDate);
             ParentRow["until_dismissal"] = untilDismissal;
             tenancyProcesses.EditingNewRecord = false;
         }
@@ -596,8 +596,8 @@ namespace Registry.Viewport
                 return;
             }
             oldTenantRow.BeginEdit();
-            oldTenantRow["id_kinship"] = ViewportHelper.ValueOrDBNull(oldTenant.IdKinship);
-            oldTenantRow["exclude_date"] = ViewportHelper.ValueOrDBNull(oldTenant.ExcludeDate);
+            oldTenantRow["id_kinship"] = ViewportHelper.ValueOrDbNull(oldTenant.IdKinship);
+            oldTenantRow["exclude_date"] = ViewportHelper.ValueOrDbNull(oldTenant.ExcludeDate);
             oldTenantRow.EndEdit();
 
             newTenant.IdKinship = 1;
@@ -608,8 +608,8 @@ namespace Registry.Viewport
                 return;
             }
             newTenantRow.BeginEdit();
-            newTenantRow["id_kinship"] = ViewportHelper.ValueOrDBNull(newTenant.IdKinship);
-            newTenantRow["exclude_date"] = ViewportHelper.ValueOrDBNull(newTenant.ExcludeDate);
+            newTenantRow["id_kinship"] = ViewportHelper.ValueOrDbNull(newTenant.IdKinship);
+            newTenantRow["exclude_date"] = ViewportHelper.ValueOrDbNull(newTenant.ExcludeDate);
             newTenantRow.EndEdit();
         }
 

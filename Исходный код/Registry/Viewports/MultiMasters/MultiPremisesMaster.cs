@@ -11,7 +11,7 @@ using Registry.Viewport.ModalEditors;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
-namespace Registry.Viewport
+namespace Registry.Viewport.MultiMasters
 {
     internal sealed partial class MultiPremisesMaster : DockContent, IMultiMaster
     {

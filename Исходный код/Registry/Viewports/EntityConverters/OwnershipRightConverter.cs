@@ -52,11 +52,11 @@ namespace Registry.Viewport.EntityConverters
 
         public static void FillRow(OwnershipRight ownershipRight, DataRow row)
         {
-            row["id_ownership_right"] = ViewportHelper.ValueOrDBNull(ownershipRight.IdOwnershipRight);
-            row["id_ownership_right_type"] = ViewportHelper.ValueOrDBNull(ownershipRight.IdOwnershipRightType);
-            row["number"] = ViewportHelper.ValueOrDBNull(ownershipRight.Number);
-            row["date"] = ViewportHelper.ValueOrDBNull(ownershipRight.Date);
-            row["description"] = ViewportHelper.ValueOrDBNull(ownershipRight.Description);
+            row["id_ownership_right"] = ViewportHelper.ValueOrDbNull(ownershipRight.IdOwnershipRight);
+            row["id_ownership_right_type"] = ViewportHelper.ValueOrDbNull(ownershipRight.IdOwnershipRightType);
+            row["number"] = ViewportHelper.ValueOrDbNull(ownershipRight.Number);
+            row["date"] = ViewportHelper.ValueOrDbNull(ownershipRight.Date);
+            row["description"] = ViewportHelper.ValueOrDbNull(ownershipRight.Description);
         }
     }
 }

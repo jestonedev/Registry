@@ -186,16 +186,16 @@ namespace Registry.Viewport
                 if (sub_premises.Update(subPremise) == -1)
                     return;
                 var row = sub_premises.Select().Rows.Find(subPremise.IdSubPremises);
-                row["id_state"] = ViewportHelper.ValueOrDBNull(subPremise.IdState);
-                row["sub_premises_num"] = ViewportHelper.ValueOrDBNull(subPremise.SubPremisesNum);
-                row["total_area"] = ViewportHelper.ValueOrDBNull(subPremise.TotalArea);
-                row["living_area"] = ViewportHelper.ValueOrDBNull(subPremise.LivingArea);
-                row["description"] = ViewportHelper.ValueOrDBNull(subPremise.Description);
-                row["state_date"] = ViewportHelper.ValueOrDBNull(subPremise.StateDate);
-                row["cadastral_num"] = ViewportHelper.ValueOrDBNull(subPremise.CadastralNum);
-                row["cadastral_cost"] = ViewportHelper.ValueOrDBNull(subPremise.CadastralCost);
-                row["balance_cost"] = ViewportHelper.ValueOrDBNull(subPremise.BalanceCost);
-                row["account"] = ViewportHelper.ValueOrDBNull(subPremise.Account);
+                row["id_state"] = ViewportHelper.ValueOrDbNull(subPremise.IdState);
+                row["sub_premises_num"] = ViewportHelper.ValueOrDbNull(subPremise.SubPremisesNum);
+                row["total_area"] = ViewportHelper.ValueOrDbNull(subPremise.TotalArea);
+                row["living_area"] = ViewportHelper.ValueOrDbNull(subPremise.LivingArea);
+                row["description"] = ViewportHelper.ValueOrDbNull(subPremise.Description);
+                row["state_date"] = ViewportHelper.ValueOrDbNull(subPremise.StateDate);
+                row["cadastral_num"] = ViewportHelper.ValueOrDbNull(subPremise.CadastralNum);
+                row["cadastral_cost"] = ViewportHelper.ValueOrDbNull(subPremise.CadastralCost);
+                row["balance_cost"] = ViewportHelper.ValueOrDbNull(subPremise.BalanceCost);
+                row["account"] = ViewportHelper.ValueOrDbNull(subPremise.Account);
             }
             DialogResult = DialogResult.OK;
         }

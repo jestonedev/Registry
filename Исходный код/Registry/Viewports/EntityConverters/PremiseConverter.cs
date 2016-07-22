@@ -12,26 +12,26 @@ namespace Registry.Viewport.EntityConverters
         public static void FillRow(Premise premise, DataRowView row)
         {
             row.BeginEdit();
-            row["id_premises"] = ViewportHelper.ValueOrDBNull(premise.IdPremises);
-            row["id_building"] = ViewportHelper.ValueOrDBNull(premise.IdBuilding);
-            row["id_state"] = ViewportHelper.ValueOrDBNull(premise.IdState);
-            row["premises_num"] = ViewportHelper.ValueOrDBNull(premise.PremisesNum);
-            row["total_area"] = ViewportHelper.ValueOrDBNull(premise.TotalArea);
-            row["living_area"] = ViewportHelper.ValueOrDBNull(premise.LivingArea);
-            row["height"] = ViewportHelper.ValueOrDBNull(premise.Height);
-            row["num_rooms"] = ViewportHelper.ValueOrDBNull(premise.NumRooms);
-            row["num_beds"] = ViewportHelper.ValueOrDBNull(premise.NumBeds);
-            row["id_premises_type"] = ViewportHelper.ValueOrDBNull(premise.IdPremisesType);
-            row["id_premises_kind"] = ViewportHelper.ValueOrDBNull(premise.IdPremisesKind);
-            row["floor"] = ViewportHelper.ValueOrDBNull(premise.Floor);
-            row["cadastral_num"] = ViewportHelper.ValueOrDBNull(premise.CadastralNum);
-            row["cadastral_cost"] = ViewportHelper.ValueOrDBNull(premise.CadastralCost);
-            row["balance_cost"] = ViewportHelper.ValueOrDBNull(premise.BalanceCost);
-            row["description"] = ViewportHelper.ValueOrDBNull(premise.Description);
-            row["reg_date"] = ViewportHelper.ValueOrDBNull(premise.RegDate);
-            row["is_memorial"] = ViewportHelper.ValueOrDBNull(premise.IsMemorial);
-            row["account"] = ViewportHelper.ValueOrDBNull(premise.Account);
-            row["state_date"] = ViewportHelper.ValueOrDBNull(premise.StateDate);
+            row["id_premises"] = ViewportHelper.ValueOrDbNull(premise.IdPremises);
+            row["id_building"] = ViewportHelper.ValueOrDbNull(premise.IdBuilding);
+            row["id_state"] = ViewportHelper.ValueOrDbNull(premise.IdState);
+            row["premises_num"] = ViewportHelper.ValueOrDbNull(premise.PremisesNum);
+            row["total_area"] = ViewportHelper.ValueOrDbNull(premise.TotalArea);
+            row["living_area"] = ViewportHelper.ValueOrDbNull(premise.LivingArea);
+            row["height"] = ViewportHelper.ValueOrDbNull(premise.Height);
+            row["num_rooms"] = ViewportHelper.ValueOrDbNull(premise.NumRooms);
+            row["num_beds"] = ViewportHelper.ValueOrDbNull(premise.NumBeds);
+            row["id_premises_type"] = ViewportHelper.ValueOrDbNull(premise.IdPremisesType);
+            row["id_premises_kind"] = ViewportHelper.ValueOrDbNull(premise.IdPremisesKind);
+            row["floor"] = ViewportHelper.ValueOrDbNull(premise.Floor);
+            row["cadastral_num"] = ViewportHelper.ValueOrDbNull(premise.CadastralNum);
+            row["cadastral_cost"] = ViewportHelper.ValueOrDbNull(premise.CadastralCost);
+            row["balance_cost"] = ViewportHelper.ValueOrDbNull(premise.BalanceCost);
+            row["description"] = ViewportHelper.ValueOrDbNull(premise.Description);
+            row["reg_date"] = ViewportHelper.ValueOrDbNull(premise.RegDate);
+            row["is_memorial"] = ViewportHelper.ValueOrDbNull(premise.IsMemorial);
+            row["account"] = ViewportHelper.ValueOrDbNull(premise.Account);
+            row["state_date"] = ViewportHelper.ValueOrDbNull(premise.StateDate);
             row.EndEdit();
         }
 

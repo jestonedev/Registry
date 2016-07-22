@@ -220,7 +220,7 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    row["document_residence"] = ViewportHelper.ValueOrDBNull(document.DocumentResidenceName);
+                    row["document_residence"] = ViewportHelper.ValueOrDbNull(document.DocumentResidenceName);
                 }
             }
             list = EntitiesListFromView();

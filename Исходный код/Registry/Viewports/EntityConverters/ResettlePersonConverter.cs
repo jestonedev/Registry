@@ -36,14 +36,14 @@ namespace Registry.Viewport.EntityConverters
 
         public static void FillRow(ResettlePerson resettlePerson, DataRow row)
         {
-            row["id_person"] = ViewportHelper.ValueOrDBNull(resettlePerson.IdPerson);
-            row["id_process"] = ViewportHelper.ValueOrDBNull(resettlePerson.IdProcess);
-            row["surname"] = ViewportHelper.ValueOrDBNull(resettlePerson.Surname);
-            row["name"] = ViewportHelper.ValueOrDBNull(resettlePerson.Name); 
-            row["patronymic"] = ViewportHelper.ValueOrDBNull(resettlePerson.Patronymic); 
-            row["document_num"] = ViewportHelper.ValueOrDBNull(resettlePerson.DocumentNum); 
-            row["document_seria"] = ViewportHelper.ValueOrDBNull(resettlePerson.DocumentSeria);
-            row["founding_doc"] = ViewportHelper.ValueOrDBNull(resettlePerson.FoundingDoc);
+            row["id_person"] = ViewportHelper.ValueOrDbNull(resettlePerson.IdPerson);
+            row["id_process"] = ViewportHelper.ValueOrDbNull(resettlePerson.IdProcess);
+            row["surname"] = ViewportHelper.ValueOrDbNull(resettlePerson.Surname);
+            row["name"] = ViewportHelper.ValueOrDbNull(resettlePerson.Name); 
+            row["patronymic"] = ViewportHelper.ValueOrDbNull(resettlePerson.Patronymic); 
+            row["document_num"] = ViewportHelper.ValueOrDbNull(resettlePerson.DocumentNum); 
+            row["document_seria"] = ViewportHelper.ValueOrDbNull(resettlePerson.DocumentSeria);
+            row["founding_doc"] = ViewportHelper.ValueOrDbNull(resettlePerson.FoundingDoc);
         }
     }
 }

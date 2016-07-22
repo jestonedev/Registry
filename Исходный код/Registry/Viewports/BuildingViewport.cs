@@ -463,9 +463,9 @@ namespace Registry.Viewport
 
         private void ViewportFromBuilding(Building building)
         {
-            comboBoxStreet.SelectedValue = ViewportHelper.ValueOrDBNull(building.IdStreet);
-            comboBoxState.SelectedValue = ViewportHelper.ValueOrDBNull(building.IdState);
-            comboBoxStructureType.SelectedValue = ViewportHelper.ValueOrDBNull(building.IdStructureType);
+            comboBoxStreet.SelectedValue = ViewportHelper.ValueOrDbNull(building.IdStreet);
+            comboBoxState.SelectedValue = ViewportHelper.ValueOrDbNull(building.IdState);
+            comboBoxStructureType.SelectedValue = ViewportHelper.ValueOrDbNull(building.IdStructureType);
             numericUpDownFloors.Value = ViewportHelper.ValueOrDefault(building.Floors);
             numericUpDownStartupYear.Value = ViewportHelper.ValueOrDefault(building.StartupYear);
             checkBoxImprovement.Checked = ViewportHelper.ValueOrDefault(building.Improvement);

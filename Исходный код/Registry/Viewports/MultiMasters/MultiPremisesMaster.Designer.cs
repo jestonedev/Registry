@@ -1,6 +1,6 @@
 ﻿using System.Windows.Forms;
 
-namespace Registry.Viewport
+namespace Registry.Viewport.MultiMasters
 {
     internal partial class MultiPremisesMaster
     {

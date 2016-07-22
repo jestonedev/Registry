@@ -132,7 +132,7 @@ namespace Registry.Viewport
         {
             numericUpDownDebts.Value = ViewportHelper.ValueOrDefault(resettleProcess.Debts);
             dateTimePickerResettleDate.Value = ViewportHelper.ValueOrDefault(resettleProcess.ResettleDate);
-            comboBoxDocumentResidence.SelectedValue = ViewportHelper.ValueOrDBNull(resettleProcess.IdDocumentResidence);
+            comboBoxDocumentResidence.SelectedValue = ViewportHelper.ValueOrDbNull(resettleProcess.IdDocumentResidence);
             textBoxDescription.Text = resettleProcess.Description;
             textBoxDocNumber.Text = resettleProcess.DocNumber;
         }

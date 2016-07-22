@@ -1,10 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Data;
-using System.Drawing;
 using System.Windows.Forms;
-using CustomControls;
-using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Security;
@@ -16,11 +13,12 @@ namespace Registry.Viewport
     {
 
         #region Models
-        DataModel warrant_doc_types;
+        private DataModel _warrantDocTypes;
         #endregion Models
 
         #region Views
-        BindingSource v_warrant_doc_types;
+
+        private BindingSource _vWarrantDocTypes;
         #endregion Views
 
         private WarrantsViewport()
@@ -37,7 +35,7 @@ namespace Registry.Viewport
 
         private void DataBind()
         {
-            comboBoxWarrantDocType.DataSource = v_warrant_doc_types;
+            comboBoxWarrantDocType.DataSource = _vWarrantDocTypes;
             comboBoxWarrantDocType.ValueMember = "id_warrant_doc_type";
             comboBoxWarrantDocType.DisplayMember = "warrant_doc_type";
             comboBoxWarrantDocType.DataBindings.Clear();
@@ -75,7 +73,7 @@ namespace Registry.Viewport
 
         private void ViewportFromWarrant(Warrant warrant)
         {
-            comboBoxWarrantDocType.SelectedValue = ViewportHelper.ValueOrDBNull(warrant.IdWarrantDocType);
+            comboBoxWarrantDocType.SelectedValue = ViewportHelper.ValueOrDbNull(warrant.IdWarrantDocType);
             dateTimePickerWarrantDate.Value = ViewportHelper.ValueOrDefault(warrant.RegistrationDate);
             textBoxWarrantDescription.Text = warrant.Description;
             textBoxWarrantRegNum.Text = warrant.RegistrationNum;
@@ -119,14 +117,14 @@ namespace Registry.Viewport
         private static void FillRowFromWarrant(Warrant warrant, DataRowView row)
         {
             row.BeginEdit();
-            row["id_warrant"] = ViewportHelper.ValueOrDBNull(warrant.IdWarrant);
-            row["id_warrant_doc_type"] = ViewportHelper.ValueOrDBNull(warrant.IdWarrantDocType);
-            row["registration_num"] = ViewportHelper.ValueOrDBNull(warrant.RegistrationNum);
-            row["registration_date"] = ViewportHelper.ValueOrDBNull(warrant.RegistrationDate);
-            row["on_behalf_of"] = ViewportHelper.ValueOrDBNull(warrant.OnBehalfOf);
-            row["notary"] = ViewportHelper.ValueOrDBNull(warrant.Notary);
-            row["notary_district"] = ViewportHelper.ValueOrDBNull(warrant.NotaryDistrict);
-            row["description"] = ViewportHelper.ValueOrDBNull(warrant.Description);
+            row["id_warrant"] = ViewportHelper.ValueOrDbNull(warrant.IdWarrant);
+            row["id_warrant_doc_type"] = ViewportHelper.ValueOrDbNull(warrant.IdWarrantDocType);
+            row["registration_num"] = ViewportHelper.ValueOrDbNull(warrant.RegistrationNum);
+            row["registration_date"] = ViewportHelper.ValueOrDbNull(warrant.RegistrationDate);
+            row["on_behalf_of"] = ViewportHelper.ValueOrDbNull(warrant.OnBehalfOf);
+            row["notary"] = ViewportHelper.ValueOrDbNull(warrant.Notary);
+            row["notary_district"] = ViewportHelper.ValueOrDbNull(warrant.NotaryDistrict);
+            row["description"] = ViewportHelper.ValueOrDbNull(warrant.Description);
             row.EndEdit();
         }
 
@@ -134,14 +132,14 @@ namespace Registry.Viewport
         {
             if (warrant.IdWarrantDocType == null)
             {
-                MessageBox.Show("Необходимо выбрать тип документа", "Ошибка",
+                MessageBox.Show(@"Необходимо выбрать тип документа", @"Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 comboBoxWarrantDocType.Focus();
                 return false;
             }
             if (warrant.RegistrationNum == null)
             {
-                MessageBox.Show("Регистрационный номер не может быть пустым", "Ошибка",
+                MessageBox.Show(@"Регистрационный номер не может быть пустым", @"Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 textBoxWarrantRegNum.Focus();
                 return false;
@@ -159,17 +157,19 @@ namespace Registry.Viewport
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
             GeneralDataModel = DataModel.GetInstance<WarrantsDataModel>();
-            warrant_doc_types = DataModel.GetInstance<WarrantDocTypesDataModel>();
+            _warrantDocTypes = DataModel.GetInstance<WarrantDocTypesDataModel>();
 
             // Ожидаем дозагрузки, если это необходимо
             GeneralDataModel.Select();
-            warrant_doc_types.Select();
+            _warrantDocTypes.Select();
 
             var ds = DataModel.DataSet;
 
-            v_warrant_doc_types = new BindingSource();
-            v_warrant_doc_types.DataMember = "warrant_doc_types";
-            v_warrant_doc_types.DataSource = ds;
+            _vWarrantDocTypes = new BindingSource
+            {
+                DataMember = "warrant_doc_types",
+                DataSource = ds
+            };
 
             GeneralBindingSource = new BindingSource();
             GeneralBindingSource.CurrentItemChanged += v_warrants_CurrentItemChanged;
@@ -356,19 +356,19 @@ namespace Registry.Viewport
             base.OnVisibleChanged(e);
         }
 
-        void WarrantsViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
+        private void WarrantsViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
         }
 
-        void WarrantsViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void WarrantsViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
         }
 
-        void v_warrants_CurrentItemChanged(object sender, EventArgs e)
+        private void v_warrants_CurrentItemChanged(object sender, EventArgs e)
         {
             if (GeneralBindingSource.Position == -1 || dataGridView.RowCount == 0)
                 dataGridView.ClearSelection();

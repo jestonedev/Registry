@@ -1,9 +1,7 @@
 ﻿
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Runtime.Remoting.Channels;
 using System.Windows.Forms;
 using Registry.Entities;
 

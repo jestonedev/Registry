@@ -59,44 +59,44 @@ namespace Registry.Viewport.EntityConverters
         public static void FillRow(ClaimState claimState, DataRowView row)
         {
             row.BeginEdit();
-            row["id_state"] = ViewportHelper.ValueOrDBNull(claimState.IdState);
-            row["id_claim"] = ViewportHelper.ValueOrDBNull(claimState.IdClaim);
-            row["id_state_type"] = ViewportHelper.ValueOrDBNull(claimState.IdStateType);
-            row["date_start_state"] = ViewportHelper.ValueOrDBNull(claimState.DateStartState);
-            row["description"] = ViewportHelper.ValueOrDBNull(claimState.Description);
+            row["id_state"] = ViewportHelper.ValueOrDbNull(claimState.IdState);
+            row["id_claim"] = ViewportHelper.ValueOrDbNull(claimState.IdClaim);
+            row["id_state_type"] = ViewportHelper.ValueOrDbNull(claimState.IdStateType);
+            row["date_start_state"] = ViewportHelper.ValueOrDbNull(claimState.DateStartState);
+            row["description"] = ViewportHelper.ValueOrDbNull(claimState.Description);
 
-            row["transfert_to_legal_department_date"] = ViewportHelper.ValueOrDBNull(claimState.TransfertToLegalDepartmentDate);
-            row["transfer_to_legal_department_who"] = ViewportHelper.ValueOrDBNull(claimState.TransferToLegalDepartmentWho);
-            row["accepted_by_legal_department_date"] = ViewportHelper.ValueOrDBNull(claimState.AcceptedByLegalDepartmentDate);
-            row["accepted_by_legal_department_who"] = ViewportHelper.ValueOrDBNull(claimState.AcceptedByLegalDepartmentWho);
+            row["transfert_to_legal_department_date"] = ViewportHelper.ValueOrDbNull(claimState.TransfertToLegalDepartmentDate);
+            row["transfer_to_legal_department_who"] = ViewportHelper.ValueOrDbNull(claimState.TransferToLegalDepartmentWho);
+            row["accepted_by_legal_department_date"] = ViewportHelper.ValueOrDbNull(claimState.AcceptedByLegalDepartmentDate);
+            row["accepted_by_legal_department_who"] = ViewportHelper.ValueOrDbNull(claimState.AcceptedByLegalDepartmentWho);
 
-            row["claim_direction_date"] = ViewportHelper.ValueOrDBNull(claimState.ClaimDirectionDate);
-            row["claim_direction_description"] = ViewportHelper.ValueOrDBNull(claimState.ClaimDirectionDescription);
-            row["court_order_date"] = ViewportHelper.ValueOrDBNull(claimState.CourtOrderDate);
-            row["court_order_num"] = ViewportHelper.ValueOrDBNull(claimState.CourtOrderNum);
-            row["obtaining_court_order_date"] = ViewportHelper.ValueOrDBNull(claimState.ObtainingCourtOrderDate);
-            row["obtaining_court_order_description"] = ViewportHelper.ValueOrDBNull(claimState.ObtainingCourtOrderDescription);
+            row["claim_direction_date"] = ViewportHelper.ValueOrDbNull(claimState.ClaimDirectionDate);
+            row["claim_direction_description"] = ViewportHelper.ValueOrDbNull(claimState.ClaimDirectionDescription);
+            row["court_order_date"] = ViewportHelper.ValueOrDbNull(claimState.CourtOrderDate);
+            row["court_order_num"] = ViewportHelper.ValueOrDbNull(claimState.CourtOrderNum);
+            row["obtaining_court_order_date"] = ViewportHelper.ValueOrDbNull(claimState.ObtainingCourtOrderDate);
+            row["obtaining_court_order_description"] = ViewportHelper.ValueOrDbNull(claimState.ObtainingCourtOrderDescription);
 
-            row["direction_court_order_bailiffs_date"] = ViewportHelper.ValueOrDBNull(claimState.DirectionCourtOrderBailiffsDate);
-            row["direction_court_order_bailiffs_description"] = ViewportHelper.ValueOrDBNull(claimState.DirectionCourtOrderBailiffsDescription);
-            row["enforcement_proceeding_start_date"] = ViewportHelper.ValueOrDBNull(claimState.EnforcementProceedingStartDate);
-            row["enforcement_proceeding_start_description"] = ViewportHelper.ValueOrDBNull(claimState.EnforcementProceedingStartDescription);
-            row["enforcement_proceeding_end_date"] = ViewportHelper.ValueOrDBNull(claimState.EnforcementProceedingEndDate);
-            row["enforcement_proceeding_end_description"] = ViewportHelper.ValueOrDBNull(claimState.EnforcementProceedingEndDescription);
-            row["enforcement_proceeding_terminate_date"] = ViewportHelper.ValueOrDBNull(claimState.EnforcementProceedingTerminateDate);
-            row["enforcement_proceeding_terminate_description"] = ViewportHelper.ValueOrDBNull(claimState.EnforcementProceedingTerminateDescription);
-            row["repeated_direction_court_order_bailiffs_date"] = ViewportHelper.ValueOrDBNull(claimState.RepeatedDirectionCourtOrderBailiffsDate);
-            row["repeated_direction_court_order_bailiffs_description"] = ViewportHelper.ValueOrDBNull(claimState.RepeatedDirectionCourtOrderBailiffsDescription);
-            row["repeated_enforcement_proceeding_start_date"] = ViewportHelper.ValueOrDBNull(claimState.RepeatedEnforcementProceedingStartDate);
-            row["repeated_enforcement_proceeding_start_description"] = ViewportHelper.ValueOrDBNull(claimState.RepeatedEnforcementProceedingStartDescription);
-            row["repeated_enforcement_proceeding_end_date"] = ViewportHelper.ValueOrDBNull(claimState.RepeatedEnforcementProceedingEndDate);
-            row["repeated_enforcement_proceeding_end_description"] = ViewportHelper.ValueOrDBNull(claimState.RepeatedEnforcementProceedingEndDescription);
+            row["direction_court_order_bailiffs_date"] = ViewportHelper.ValueOrDbNull(claimState.DirectionCourtOrderBailiffsDate);
+            row["direction_court_order_bailiffs_description"] = ViewportHelper.ValueOrDbNull(claimState.DirectionCourtOrderBailiffsDescription);
+            row["enforcement_proceeding_start_date"] = ViewportHelper.ValueOrDbNull(claimState.EnforcementProceedingStartDate);
+            row["enforcement_proceeding_start_description"] = ViewportHelper.ValueOrDbNull(claimState.EnforcementProceedingStartDescription);
+            row["enforcement_proceeding_end_date"] = ViewportHelper.ValueOrDbNull(claimState.EnforcementProceedingEndDate);
+            row["enforcement_proceeding_end_description"] = ViewportHelper.ValueOrDbNull(claimState.EnforcementProceedingEndDescription);
+            row["enforcement_proceeding_terminate_date"] = ViewportHelper.ValueOrDbNull(claimState.EnforcementProceedingTerminateDate);
+            row["enforcement_proceeding_terminate_description"] = ViewportHelper.ValueOrDbNull(claimState.EnforcementProceedingTerminateDescription);
+            row["repeated_direction_court_order_bailiffs_date"] = ViewportHelper.ValueOrDbNull(claimState.RepeatedDirectionCourtOrderBailiffsDate);
+            row["repeated_direction_court_order_bailiffs_description"] = ViewportHelper.ValueOrDbNull(claimState.RepeatedDirectionCourtOrderBailiffsDescription);
+            row["repeated_enforcement_proceeding_start_date"] = ViewportHelper.ValueOrDbNull(claimState.RepeatedEnforcementProceedingStartDate);
+            row["repeated_enforcement_proceeding_start_description"] = ViewportHelper.ValueOrDbNull(claimState.RepeatedEnforcementProceedingStartDescription);
+            row["repeated_enforcement_proceeding_end_date"] = ViewportHelper.ValueOrDbNull(claimState.RepeatedEnforcementProceedingEndDate);
+            row["repeated_enforcement_proceeding_end_description"] = ViewportHelper.ValueOrDbNull(claimState.RepeatedEnforcementProceedingEndDescription);
 
-            row["court_order_cancel_date"] = ViewportHelper.ValueOrDBNull(claimState.CourtOrderCancelDate);
-            row["court_order_cancel_description"] = ViewportHelper.ValueOrDBNull(claimState.CourtOrderCancelDescription);
-            row["claim_complete_date"] = ViewportHelper.ValueOrDBNull(claimState.ClaimCompleteDate);
-            row["claim_complete_description"] = ViewportHelper.ValueOrDBNull(claimState.ClaimCompleteDescription);
-            row["claim_complete_reason"] = ViewportHelper.ValueOrDBNull(claimState.ClaimCompleteReason);
+            row["court_order_cancel_date"] = ViewportHelper.ValueOrDbNull(claimState.CourtOrderCancelDate);
+            row["court_order_cancel_description"] = ViewportHelper.ValueOrDbNull(claimState.CourtOrderCancelDescription);
+            row["claim_complete_date"] = ViewportHelper.ValueOrDbNull(claimState.ClaimCompleteDate);
+            row["claim_complete_description"] = ViewportHelper.ValueOrDbNull(claimState.ClaimCompleteDescription);
+            row["claim_complete_reason"] = ViewportHelper.ValueOrDbNull(claimState.ClaimCompleteReason);
             row.EndEdit();
         }
     }

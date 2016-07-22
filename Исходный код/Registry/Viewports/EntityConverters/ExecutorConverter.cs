@@ -54,11 +54,11 @@ namespace Registry.Viewport.EntityConverters
         public static void FillRow(Executor executor, DataRow row)
         {
             row.BeginEdit();
-            row["id_executor"] = ViewportHelper.ValueOrDBNull(executor.IdExecutor);
-            row["executor_name"] = ViewportHelper.ValueOrDBNull(executor.ExecutorName);
-            row["executor_login"] = ViewportHelper.ValueOrDBNull(executor.ExecutorLogin);
-            row["phone"] = ViewportHelper.ValueOrDBNull(executor.Phone);
-            row["is_inactive"] = ViewportHelper.ValueOrDBNull(executor.IsInactive);
+            row["id_executor"] = ViewportHelper.ValueOrDbNull(executor.IdExecutor);
+            row["executor_name"] = ViewportHelper.ValueOrDbNull(executor.ExecutorName);
+            row["executor_login"] = ViewportHelper.ValueOrDbNull(executor.ExecutorLogin);
+            row["phone"] = ViewportHelper.ValueOrDbNull(executor.Phone);
+            row["is_inactive"] = ViewportHelper.ValueOrDbNull(executor.IsInactive);
             row.EndEdit();
         }
     }

@@ -35,8 +35,8 @@ namespace Registry.Viewport.EntityConverters
         public static void FillRow(OwnershipRightType ownershipRightType, DataRow row)
         {
             row.BeginEdit();
-            row["id_ownership_right_type"] = ViewportHelper.ValueOrDBNull(ownershipRightType.IdOwnershipRightType);
-            row["ownership_right_type"] = ViewportHelper.ValueOrDBNull(ownershipRightType.OwnershipRightTypeName);
+            row["id_ownership_right_type"] = ViewportHelper.ValueOrDbNull(ownershipRightType.IdOwnershipRightType);
+            row["ownership_right_type"] = ViewportHelper.ValueOrDbNull(ownershipRightType.OwnershipRightTypeName);
             row.EndEdit();
         }
     }
