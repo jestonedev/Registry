@@ -562,13 +562,6 @@ namespace Registry.Viewport
                 DataMember = "warrants"
             };
 
-            _vRentPeriods = new BindingSource
-            {
-                DataSource = DataModel.DataSet,
-                DataMember = "tenancy_rent_periods_history",
-                Sort = "begin_date DESC"
-            };
-
             _vTenancyPersons = new BindingSource
             {
                 DataMember = "tenancy_processes_tenancy_persons",
@@ -579,6 +572,13 @@ namespace Registry.Viewport
             {
                 DataMember = "tenancy_processes_tenancy_agreements",
                 DataSource = GeneralBindingSource
+            };
+
+            _vRentPeriods = new BindingSource
+            {
+                DataMember = "tenancy_processes_tenancy_rent_periods_history",
+                DataSource = GeneralBindingSource,
+                Sort = "begin_date DESC"
             };
 
             _vTenancyReasons = new BindingSource

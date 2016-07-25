@@ -61,6 +61,10 @@
     <Compile Include="CalcDataModels\CalcDataModelTenancyPremisesInfo.cs" />
     <Compile Include="CalcDataModels\CalcDataModelTenancyNotifiesMaxDate.cs" />
     <Compile Include="CalcDataModels\CalcDataModelType.cs" />
+    <Compile Include="DataMapping\BuildingsMapping.cs" />
+    <Compile Include="DataMapping\ColumnMapping.cs" />
+    <Compile Include="DataMapping\RelationMapping.cs" />
+    <Compile Include="DataMapping\TableMapping.cs" />
     <Compile Include="DataModelsCallbackUpdater.cs" />
     <Compile Include="DataModelHelper.cs" />
     <Compile Include="DataModels\ClaimFilesDataModel.cs" />
@@ -141,8 +145,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="ClassDiagram3.cd" />
-    <None Include="ClassDiagram4.cd" />
     <None Include="DataModels.snk" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

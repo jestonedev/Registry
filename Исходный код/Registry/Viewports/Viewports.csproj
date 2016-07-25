@@ -127,8 +127,13 @@
     <Compile Include="EntityConverters\StructureTypeConverter.cs" />
     <Compile Include="EntityConverters\SubPremiseConverter.cs" />
     <Compile Include="EntityConverters\TenancyAgreementConverter.cs" />
+    <Compile Include="EntityConverters\TenancyBuildingConverter.cs" />
     <Compile Include="EntityConverters\TenancyPersonConverter.cs" />
+    <Compile Include="EntityConverters\TenancyPremiseConverter.cs" />
     <Compile Include="EntityConverters\TenancyProcessConverter.cs" />
+    <Compile Include="EntityConverters\TenancyReasonConverter.cs" />
+    <Compile Include="EntityConverters\TenancyReasonTypeConverter.cs" />
+    <Compile Include="EntityConverters\WarrantConverter.cs" />
     <Compile Include="ModalEditors\PersonExcludeDateForm.cs">
       <SubType>Form</SubType>
     </Compile>

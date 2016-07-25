@@ -20,6 +20,11 @@ namespace Registry.DataModels.DataModels
             return _dataModel ?? (_dataModel = new TenancyRentPeriodsHistoryDataModel(progressBar, incrementor));
         }
 
+        protected override void ConfigureRelations()
+        {
+            AddRelation("tenancy_processes", "id_process", TableName, "id_process");
+        }
+
         protected override void ConfigureTable()
         {
             Table.PrimaryKey = new[] { Table.Columns["id_rent_period"] };

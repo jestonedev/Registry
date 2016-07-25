@@ -38,7 +38,7 @@ namespace Registry.Entities
 
         public override bool Equals(object obj)
         {
-            return (this == (obj as Building));
+            return this == obj as Building;
         }
 
         public bool Equals(Building other)

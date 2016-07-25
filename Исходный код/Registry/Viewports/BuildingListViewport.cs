@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
@@ -98,6 +99,8 @@ namespace Registry.Viewport
             GeneralDataModel.Select().RowChanged += BuildingListViewport_RowChanged;
             GeneralDataModel.Select().RowDeleted += BuildingListViewport_RowDeleted;
             _municipalPremises.RefreshEvent += _municipalPremises_RefreshEvent;
+            DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select().RowChanged += BuildingsOwnershipChanged;
+            DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select().RowDeleted += BuildingsOwnershipChanged;
             dataGridView.RowCount = GeneralBindingSource.Count;
             ViewportHelper.SetDoubleBuffered(dataGridView);
         }
@@ -331,6 +334,8 @@ namespace Registry.Viewport
                 GeneralDataModel.Select().RowChanged -= BuildingListViewport_RowChanged;
                 GeneralDataModel.Select().RowDeleted -= BuildingListViewport_RowDeleted;
             }
+            DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select().RowChanged -= BuildingsOwnershipChanged;
+            DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select().RowDeleted -= BuildingsOwnershipChanged;
             base.OnClosing(e);
         }
 
@@ -385,6 +390,14 @@ namespace Registry.Viewport
                 GeneralBindingSource.Position = -1;
         }
 
+        private IEnumerable<int> _demolishedBuildings = DataModelHelper.DemolishedBuildingIDs().ToList();
+
+        private void BuildingsOwnershipChanged(object sender, DataRowChangeEventArgs dataRowChangeEventArgs)
+        {
+            _demolishedBuildings = DataModelHelper.DemolishedBuildingIDs().ToList();
+            dataGridView.Refresh();
+        }
+
         private void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (GeneralBindingSource.Count <= e.RowIndex) return;
@@ -392,6 +405,18 @@ namespace Registry.Viewport
             switch (dataGridView.Columns[e.ColumnIndex].Name)
             {
                 case "id_building":
+                    e.Value = row[dataGridView.Columns[e.ColumnIndex].Name];
+                    if (_demolishedBuildings.Contains((int)row["id_building"]))
+                    {
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.Red;
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.DarkRed;
+                    }
+                    else
+                    {
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.White;
+                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = SystemColors.Highlight;
+                    }
+                    break;
                 case "id_street":
                 case "house":
                 case "floors":
