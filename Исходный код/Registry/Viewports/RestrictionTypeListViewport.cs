@@ -108,19 +108,19 @@ namespace Registry.Viewport
             for (var i = 0; i < GeneralBindingSource.Count; i++)
                 GeneralSnapshot.Rows.Add(RestrictionTypeConverter.ToArray((DataRowView)GeneralBindingSource[i]));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
-            GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_restriction_types_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_restriction_types_CurrentItemChanged);
 
             dataGridView.DataSource = GeneralSnapshotBindingSource;
             id_restriction_type.DataPropertyName = "id_restriction_type";
             restriction_type.DataPropertyName = "restriction_type";
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
-            dataGridView.CellValidated += dataGridView_CellValidated;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValidated", dataGridView_CellValidated);
             //События изменения данных для проверки соответствия реальным данным в модели
-            dataGridView.CellValueChanged += dataGridView_CellValueChanged;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValueChanged", dataGridView_CellValueChanged);
             //Синхронизация данных исходные->текущие
-            GeneralDataModel.Select().RowChanged += RestrictionTypeListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting += RestrictionTypeListViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted += RestrictionTypeListViewport_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", RestrictionTypeListViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleting", RestrictionTypeListViewport_RowDeleting);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", RestrictionTypeListViewport_RowDeleted);
         }
 
         public override bool CanInsertRecord()
@@ -262,12 +262,6 @@ namespace Registry.Viewport
                         return;
                 }
             }
-            GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_restriction_types_CurrentItemChanged;
-            dataGridView.CellValidated -= dataGridView_CellValidated;
-            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
-            GeneralDataModel.Select().RowChanged -= RestrictionTypeListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting -= RestrictionTypeListViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted -= RestrictionTypeListViewport_RowDeleted;
             base.OnClosing(e);
         }
 

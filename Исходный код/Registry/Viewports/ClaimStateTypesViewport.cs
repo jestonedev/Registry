@@ -179,7 +179,7 @@ namespace Registry.Viewport
                 DataMember = "claim_state_types",
                 DataSource = DataModel.DataSet
             };
-            _vClaimStateTypesFrom.CurrentItemChanged += v_claim_state_types_from_CurrentItemChanged;
+            AddEventHandler<EventArgs>(_vClaimStateTypesFrom, "CurrentItemChanged", v_claim_state_types_from_CurrentItemChanged);
 
             _vClaimStateTypesRelations = new BindingSource
             {
@@ -195,7 +195,7 @@ namespace Registry.Viewport
             foreach (var claimStateType in GeneralBindingSource)
                 GeneralSnapshot.Rows.Add(ClaimStateTypeConverter.ToArray((DataRowView)claimStateType));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
-            GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_claim_state_types_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_claim_state_types_CurrentItemChanged);
 
             //Загружаем данные snapshot-модели из original-view relations
             foreach (object claimStateRel in _vClaimStateTypesRelations)
@@ -212,15 +212,16 @@ namespace Registry.Viewport
             dataGridViewClaimStateTypes.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
             dataGridViewClaimStateTypesFrom.RowCount = GeneralSnapshotBindingSource.Count;
             //События изменения данных для проверки соответствия реальным данным в модели
-            dataGridViewClaimStateTypes.CellValueChanged += dataGridViewClaimStateTypes_CellValueChanged;
-            dataGridViewClaimStateTypesFrom.CellValueChanged += dataGridViewClaimStateTypesFrom_CellValueChanged;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridViewClaimStateTypes, "CellValueChanged", dataGridViewClaimStateTypes_CellValueChanged);
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridViewClaimStateTypesFrom, "CellValueChanged", dataGridViewClaimStateTypesFrom_CellValueChanged);
             //Синхронизация данных исходные->текущие
-            GeneralDataModel.Select().RowChanged += ClaimStateTypesViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting += ClaimStateTypesViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted += ClaimStateTypesViewport_RowDeleted;
-            _claimStateTypesRelations.Select().RowChanged += ClaimStateTypesRelationsViewport_RowChanged;
-            _claimStateTypesRelations.Select().RowDeleting += ClaimStateTypesRelationsViewport_RowDeleting;
-            _claimStateTypesRelations.Select().RowDeleted += ClaimStateTypesRelationsViewport_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", ClaimStateTypesViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleting", ClaimStateTypesViewport_RowDeleting);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", ClaimStateTypesViewport_RowDeleted);
+
+            AddEventHandler<DataRowChangeEventArgs>(_claimStateTypesRelations.Select(), "RowChanged", ClaimStateTypesRelationsViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_claimStateTypesRelations.Select(), "RowDeleting", ClaimStateTypesRelationsViewport_RowDeleting);
+            AddEventHandler<DataRowChangeEventArgs>(_claimStateTypesRelations.Select(), "RowDeleted", ClaimStateTypesRelationsViewport_RowDeleted);
         }
 
         public override bool CanInsertRecord()
@@ -415,27 +416,19 @@ namespace Registry.Viewport
             {
                 var result = MessageBox.Show(@"Сохранить изменения о структуре зданий в базу данных?", @"Внимание",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                if (result == DialogResult.Yes)
-                    SaveRecord();
-                else
-                    if (result == DialogResult.No)
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        SaveRecord();
+                        break;
+                    case DialogResult.No:
                         CancelRecord();
-                    else
-                    {
+                        break;
+                    default:
                         e.Cancel = true;
                         return;
-                    }
+                }
             }
-            _vClaimStateTypesFrom.CurrentItemChanged -= v_claim_state_types_from_CurrentItemChanged;
-            GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_claim_state_types_CurrentItemChanged;
-            dataGridViewClaimStateTypes.CellValueChanged -= dataGridViewClaimStateTypes_CellValueChanged;
-            dataGridViewClaimStateTypesFrom.CellValueChanged -= dataGridViewClaimStateTypesFrom_CellValueChanged;
-            GeneralDataModel.Select().RowChanged -= ClaimStateTypesViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting -= ClaimStateTypesViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted -= ClaimStateTypesViewport_RowDeleted;
-            _claimStateTypesRelations.Select().RowChanged -= ClaimStateTypesRelationsViewport_RowChanged;
-            _claimStateTypesRelations.Select().RowDeleting -= ClaimStateTypesRelationsViewport_RowDeleting;
-            _claimStateTypesRelations.Select().RowDeleted -= ClaimStateTypesRelationsViewport_RowDeleted;
             base.OnClosing(e);
         }
 

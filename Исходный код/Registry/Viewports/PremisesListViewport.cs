@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
@@ -127,13 +126,13 @@ namespace Registry.Viewport
                 dataGridView.Columns.Add(residenceWarrantNumColumn);
                 dataGridView.Columns.Add(residenceWarrantDateColumn);
                 dataGridView.Columns.Add(tenantColumn);
-                _premisesTenanciesInfo.RefreshEvent += _premisesTenanciesInfo_RefreshEvent;
+                AddEventHandler<EventArgs>(_premisesTenanciesInfo, "RefreshEvent", _premisesTenanciesInfo_RefreshEvent);
             }
 
             var ds = DataModel.DataSet;
 
             GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
             GeneralBindingSource.DataMember = "premises";
             GeneralBindingSource.DataSource = ds;
             GeneralBindingSource.Filter = StaticFilter;
@@ -160,13 +159,19 @@ namespace Registry.Viewport
             id_premises_type.ValueMember = "id_premises_type";
             id_premises_type.DisplayMember = "premises_type";
 
-            GeneralDataModel.Select().RowChanged += PremisesListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted += PremisesListViewport_RowDeleted;
-            _premisesFunds.RefreshEvent += premises_funds_RefreshEvent;
-            DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select().RowChanged += BuildingsOwnershipChanged;
-            DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select().RowDeleted += BuildingsOwnershipChanged;
-            DataModel.GetInstance<OwnershipPremisesAssocDataModel>().Select().RowChanged += PremisesOwnershipChanged;
-            DataModel.GetInstance<OwnershipPremisesAssocDataModel>().Select().RowDeleted += PremisesOwnershipChanged;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", PremisesListViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", PremisesListViewport_RowDeleted);
+            AddEventHandler<EventArgs>(_premisesFunds, "RefreshEvent", premises_funds_RefreshEvent);
+
+            var buildingsAssocDataModel = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>();
+            var premisesAssocDataModel = DataModel.GetInstance<OwnershipPremisesAssocDataModel>();
+
+            AddEventHandler<DataRowChangeEventArgs>(buildingsAssocDataModel.Select(), "RowChanged", BuildingsOwnershipChanged);
+            AddEventHandler<DataRowChangeEventArgs>(buildingsAssocDataModel.Select(), "RowDeleted", BuildingsOwnershipChanged);
+
+            AddEventHandler<DataRowChangeEventArgs>(premisesAssocDataModel.Select(), "RowChanged", PremisesOwnershipChanged);
+            AddEventHandler<DataRowChangeEventArgs>(premisesAssocDataModel.Select(), "RowDeleted", PremisesOwnershipChanged);
+
             dataGridView.RowCount = GeneralBindingSource.Count;
 
             ViewportHelper.SetDoubleBuffered(dataGridView);
@@ -215,26 +220,6 @@ namespace Registry.Viewport
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
                 MenuCallback.ForceCloseDetachedViewports();
             }
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            if (_premisesTenanciesInfo != null)
-                _premisesTenanciesInfo.RefreshEvent -= _premisesTenanciesInfo_RefreshEvent;
-            if (GeneralBindingSource != null)
-                GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
-            if (GeneralDataModel != null)
-            {
-                GeneralDataModel.Select().RowChanged -= PremisesListViewport_RowChanged;
-                GeneralDataModel.Select().RowDeleted -= PremisesListViewport_RowDeleted;
-            }
-            if (_premisesFunds != null)
-                _premisesFunds.RefreshEvent -= premises_funds_RefreshEvent;
-            DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select().RowChanged -= BuildingsOwnershipChanged;
-            DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select().RowDeleted -= BuildingsOwnershipChanged;
-            DataModel.GetInstance<OwnershipPremisesAssocDataModel>().Select().RowChanged -= PremisesOwnershipChanged;
-            DataModel.GetInstance<OwnershipPremisesAssocDataModel>().Select().RowDeleted -= PremisesOwnershipChanged;
-            base.OnClosing(e);
         }
 
         public override bool CanSearchRecord()

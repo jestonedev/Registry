@@ -146,8 +146,8 @@ namespace Registry.Viewport
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
                 GeneralSnapshot.Rows.Add(SubPremiseConverter.ToArray((DataRowView)GeneralBindingSource[i]));
-            GeneralSnapshotBindingSource = new BindingSource {DataSource = GeneralSnapshot};
-            GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_sub_premises_CurrentItemChanged;
+            GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
+            AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_sub_premises_CurrentItemChanged);
 
             dataGridView.DataSource = GeneralSnapshotBindingSource;
             id_sub_premises.DataPropertyName = "id_sub_premises";
@@ -166,15 +166,15 @@ namespace Registry.Viewport
             balance_cost.DataPropertyName = "balance_cost";
             account.DataPropertyName = "account";
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
-            dataGridView.EditingControlShowing += dataGridView_EditingControlShowing;
-            dataGridView.CellValidated += dataGridView_CellValidated;
-            dataGridView.DataError += dataGridView_DataError;
+            AddEventHandler<DataGridViewEditingControlShowingEventArgs>(dataGridView, "EditingControlShowing", dataGridView_EditingControlShowing);
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValidated", dataGridView_CellValidated);
+            AddEventHandler<DataGridViewDataErrorEventArgs>(dataGridView, "DataError", dataGridView_DataError);
             //События изменения данных для проверки соответствия реальным данным в модели
-            dataGridView.CellValueChanged += dataGridView_CellValueChanged;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValueChanged", dataGridView_CellValueChanged);
             //Синхронизация данных исходные->текущие
-            GeneralDataModel.Select().RowChanged += SubPremisesViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting += SubPremisesViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted += SubPremisesViewport_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", SubPremisesViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleting", SubPremisesViewport_RowDeleting);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", SubPremisesViewport_RowDeleted);
         }
 
         public override bool CanInsertRecord()
@@ -376,14 +376,6 @@ namespace Registry.Viewport
                         return;
                 }
             }
-            GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_sub_premises_CurrentItemChanged;
-            dataGridView.EditingControlShowing -= dataGridView_EditingControlShowing;
-            dataGridView.CellValidated -= dataGridView_CellValidated;
-            dataGridView.DataError -= dataGridView_DataError;
-            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
-            GeneralDataModel.Select().RowChanged -= SubPremisesViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting -= SubPremisesViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted -= SubPremisesViewport_RowDeleted;
             base.OnClosing(e);
         }
 

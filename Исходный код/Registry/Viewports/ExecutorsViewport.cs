@@ -101,7 +101,7 @@ namespace Registry.Viewport
             foreach (var executor in GeneralBindingSource)
                 GeneralSnapshot.Rows.Add(ExecutorConverter.ToArray((DataRowView)executor));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
-            GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_executors_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_executors_CurrentItemChanged);
 
             dataGridView.DataSource = GeneralSnapshotBindingSource;
             id_executor.DataPropertyName = "id_executor";
@@ -112,13 +112,13 @@ namespace Registry.Viewport
 
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
 
-            dataGridView.CellValidated += dataGridView_CellValidated;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValidated", dataGridView_CellValidated);
             //События изменения данных для проверки соответствия реальным данным в модели
-            dataGridView.CellValueChanged += dataGridView_CellValueChanged;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValueChanged", dataGridView_CellValueChanged);
             //Синхронизация данных исходные->текущие
-            GeneralDataModel.Select().RowChanged += ExecutorsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting += ExecutorsViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted += ExecutorsViewport_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", ExecutorsViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleting", ExecutorsViewport_RowDeleting);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", ExecutorsViewport_RowDeleted);
         }
 
         public override bool CanInsertRecord()
@@ -259,12 +259,6 @@ namespace Registry.Viewport
                         return;
                 }
             }
-            GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_executors_CurrentItemChanged;
-            dataGridView.CellValidated -= dataGridView_CellValidated;
-            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
-            GeneralDataModel.Select().RowChanged -= ExecutorsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting -= ExecutorsViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted -= ExecutorsViewport_RowDeleted;
             base.OnClosing(e);
         }
 

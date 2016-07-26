@@ -597,38 +597,38 @@ namespace Registry.Viewport
             };
 
             GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.CurrentItemChanged += v_building_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", v_building_CurrentItemChanged);
             GeneralBindingSource.DataMember = "buildings";
             GeneralBindingSource.DataSource = ds;
             GeneralBindingSource.Filter = StaticFilter;
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 GeneralBindingSource.Filter += " AND ";
             GeneralBindingSource.Filter += DynamicFilter;
-            GeneralDataModel.Select().RowDeleted += BuildingViewport_RowDeleted;
-            GeneralDataModel.Select().RowChanged += BuildingViewport_RowChanged;
-            
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", BuildingViewport_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", BuildingViewport_RowChanged);
+
             _vRestrictionBuildingsAssoc = new BindingSource();
-            _vRestrictionBuildingsAssoc.CurrentItemChanged += v_restrictionBuildingsAssoc_CurrentItemChanged;
+            AddEventHandler<EventArgs>(_vRestrictionBuildingsAssoc, "CurrentItemChanged", v_restrictionBuildingsAssoc_CurrentItemChanged);
             _vRestrictionBuildingsAssoc.DataMember = "buildings_restrictions_buildings_assoc";
             _vRestrictionBuildingsAssoc.DataSource = GeneralBindingSource;
             RestrictionsFilterRebuild();
-            _restrictionBuildingsAssoc.Select().RowChanged += RestrictionsAssoc_RowChanged;
-            _restrictionBuildingsAssoc.Select().RowDeleted += RestrictionsAssoc_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(_restrictionBuildingsAssoc.Select(), "RowDeleted", RestrictionsAssoc_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_restrictionBuildingsAssoc.Select(), "RowChanged", RestrictionsAssoc_RowDeleted);
 
             _vOwnershipBuildingsAssoc = new BindingSource();
-            _vOwnershipBuildingsAssoc.CurrentItemChanged += v_ownershipBuildingsAssoc_CurrentItemChanged;
+            AddEventHandler<EventArgs>(_vOwnershipBuildingsAssoc, "CurrentItemChanged", v_ownershipBuildingsAssoc_CurrentItemChanged);
             _vOwnershipBuildingsAssoc.DataMember = "buildings_ownership_buildings_assoc";
             _vOwnershipBuildingsAssoc.DataSource = GeneralBindingSource;
             v_ownershipBuildingsAssoc_CurrentItemChanged(null, new EventArgs());
             OwnershipsFilterRebuild();
-            _ownershipBuildingsAssoc.Select().RowChanged += OwnershipsAssoc_RowChanged;
-            _ownershipBuildingsAssoc.Select().RowDeleted += OwnershipsAssoc_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(_ownershipBuildingsAssoc.Select(), "RowDeleted", OwnershipsAssoc_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_ownershipBuildingsAssoc.Select(), "RowChanged", OwnershipsAssoc_RowDeleted);
 
             DataBind();
 
-            _buildingsCurrentFund.RefreshEvent += buildingsCurrentFund_RefreshEvent;
-            _buildingsPremisesFunds.RefreshEvent += buildingsPremisesFunds_RefreshEvent;
-            _buildingsPremisesSumArea.RefreshEvent += buildingsPremisesSumArea_RefreshEvent; 
+            AddEventHandler<EventArgs>(_buildingsCurrentFund, "RefreshEvent", buildingsCurrentFund_RefreshEvent);
+            AddEventHandler<EventArgs>(_buildingsPremisesFunds, "RefreshEvent", buildingsPremisesFunds_RefreshEvent);
+            AddEventHandler<EventArgs>(_buildingsPremisesSumArea, "RefreshEvent", buildingsPremisesSumArea_RefreshEvent);
             FiltersRebuild();
             SetViewportCaption();
             DataChangeHandlersInit();
@@ -900,21 +900,6 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
-            else
-            {
-                _buildingsCurrentFund.RefreshEvent -= buildingsCurrentFund_RefreshEvent;
-                _buildingsPremisesFunds.RefreshEvent -= buildingsPremisesFunds_RefreshEvent;
-                _buildingsPremisesSumArea.RefreshEvent -= buildingsPremisesSumArea_RefreshEvent; 
-                _restrictionBuildingsAssoc.Select().RowChanged -= RestrictionsAssoc_RowChanged;
-                _restrictionBuildingsAssoc.Select().RowDeleted -= RestrictionsAssoc_RowDeleted;
-                _ownershipBuildingsAssoc.Select().RowChanged -= OwnershipsAssoc_RowChanged;
-                _ownershipBuildingsAssoc.Select().RowDeleted -= OwnershipsAssoc_RowDeleted;
-                _vRestrictionBuildingsAssoc.CurrentItemChanged -= v_restrictionBuildingsAssoc_CurrentItemChanged;
-                _vOwnershipBuildingsAssoc.CurrentItemChanged -= v_ownershipBuildingsAssoc_CurrentItemChanged;
-                GeneralBindingSource.CurrentItemChanged -= v_building_CurrentItemChanged;
-                GeneralDataModel.Select().RowDeleted -= BuildingViewport_RowDeleted;
-                GeneralDataModel.Select().RowChanged -= BuildingViewport_RowChanged;
-            }
             base.OnClosing(e);
         }
 

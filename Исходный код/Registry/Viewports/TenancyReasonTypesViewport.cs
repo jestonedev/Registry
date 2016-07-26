@@ -117,8 +117,8 @@ namespace Registry.Viewport
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
                 GeneralSnapshot.Rows.Add(TenancyReasonTypeConverter.ToArray((DataRowView)GeneralBindingSource[i]));
-            GeneralSnapshotBindingSource = new BindingSource {DataSource = GeneralSnapshot};
-            GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_reason_types_CurrentItemChanged;
+            GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
+            AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_reason_types_CurrentItemChanged);
 
             dataGridView.DataSource = GeneralSnapshotBindingSource;
             id_reason_type.DataPropertyName = "id_reason_type";
@@ -127,13 +127,14 @@ namespace Registry.Viewport
 
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
 
-            dataGridView.CellValidated += dataGridView_CellValidated;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValidated", dataGridView_CellValidated);
+
             //События изменения данных для проверки соответствия реальным данным в модели
-            dataGridView.CellValueChanged += dataGridView_CellValueChanged;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValueChanged", dataGridView_CellValueChanged);
             //Синхронизация данных исходные->текущие
-            GeneralDataModel.Select().RowChanged += ReasonTypesViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting += ReasonTypesViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted += ReasonTypesViewport_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", ReasonTypesViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleting", ReasonTypesViewport_RowDeleting);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", ReasonTypesViewport_RowDeleted);
         }
 
         public override bool CanInsertRecord()
@@ -263,23 +264,19 @@ namespace Registry.Viewport
             {
                 var result = MessageBox.Show(@"Сохранить изменения о виде основания в базу данных?", @"Внимание",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                if (result == DialogResult.Yes)
-                    SaveRecord();
-                else
-                    if (result == DialogResult.No)
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        SaveRecord();
+                        break;
+                    case DialogResult.No:
                         CancelRecord();
-                    else
-                    {
+                        break;
+                    default:
                         e.Cancel = true;
                         return;
-                    }
-            } 
-            GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_reason_types_CurrentItemChanged;
-            dataGridView.CellValidated -= dataGridView_CellValidated;
-            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
-            GeneralDataModel.Select().RowChanged -= ReasonTypesViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting -= ReasonTypesViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted -= ReasonTypesViewport_RowDeleted;
+                }
+            }
             base.OnClosing(e);
         }
 
@@ -330,12 +327,10 @@ namespace Registry.Viewport
         {
             if (!SyncViews)
                 return;
-            if (e.Action == DataRowAction.Delete)
-            {
-                var rowIndex = GeneralSnapshotBindingSource.Find("id_reason_type", e.Row["id_reason_type"]);
-                if (rowIndex != -1)
-                    ((DataRowView)GeneralSnapshotBindingSource[rowIndex]).Delete();
-            }
+            if (e.Action != DataRowAction.Delete) return;
+            var rowIndex = GeneralSnapshotBindingSource.Find("id_reason_type", e.Row["id_reason_type"]);
+            if (rowIndex != -1)
+                ((DataRowView)GeneralSnapshotBindingSource[rowIndex]).Delete();
         }
 
         private void ReasonTypesViewport_RowChanged(object sender, DataRowChangeEventArgs e)

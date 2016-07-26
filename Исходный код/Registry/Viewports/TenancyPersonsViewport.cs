@@ -371,7 +371,7 @@ namespace Registry.Viewport
             };
 
             GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
             GeneralBindingSource.DataMember = "tenancy_persons";
             GeneralBindingSource.Filter = StaticFilter;
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
@@ -381,8 +381,8 @@ namespace Registry.Viewport
 
             DataBind();
 
-            GeneralDataModel.Select().RowDeleted += TenancyPersonsViewport_RowDeleted;
-            GeneralDataModel.Select().RowChanged += TenancyPersonsViewport_RowChanged;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", TenancyPersonsViewport_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", TenancyPersonsViewport_RowChanged);
             is_editable = true;
             DataChangeHandlersInit();
             if (GeneralBindingSource.Count == 0)
@@ -566,12 +566,6 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
-            else
-            {
-                GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
-                GeneralDataModel.Select().RowDeleted -= TenancyPersonsViewport_RowDeleted;
-                GeneralDataModel.Select().RowChanged -= TenancyPersonsViewport_RowChanged;
-            }
             base.OnClosing(e);
         }
 

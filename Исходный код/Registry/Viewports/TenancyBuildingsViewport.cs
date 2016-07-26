@@ -138,9 +138,8 @@ namespace Registry.Viewport
 
             var ds = DataModel.DataSet;
 
-            GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.DataMember = "buildings";
-            GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
+            GeneralBindingSource = new BindingSource {DataMember = "buildings"};
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
             GeneralBindingSource.DataSource = ds;
 
             if ((ParentRow != null) && (ParentType == ParentTypeEnum.Tenancy))
@@ -183,10 +182,12 @@ namespace Registry.Viewport
             }
             GeneralBindingSource.Filter = DynamicFilter;
 
-            GeneralDataModel.Select().RowChanged += BuildingsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted += BuildingsViewport_RowDeleted;
-            _tenancyBuildings.Select().RowChanged += TenancyBuildingsViewport_RowChanged;
-            _tenancyBuildings.Select().RowDeleting += TenancyBuildingsViewport_RowDeleting;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", BuildingsViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", BuildingsViewport_RowDeleted);
+
+            AddEventHandler<DataRowChangeEventArgs>(_tenancyBuildings.Select(), "RowChanged", TenancyBuildingsViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_tenancyBuildings.Select(), "RowDeleting", TenancyBuildingsViewport_RowDeleting);
+
             dataGridView.RowCount = GeneralBindingSource.Count;
             ViewportHelper.SetDoubleBuffered(dataGridView);
         }
@@ -483,11 +484,6 @@ namespace Registry.Viewport
                         return;
                 }
             }
-            GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
-            GeneralDataModel.Select().RowChanged -= BuildingsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted -= BuildingsViewport_RowDeleted;
-            _tenancyBuildings.Select().RowChanged -= TenancyBuildingsViewport_RowChanged;
-            _tenancyBuildings.Select().RowDeleting -= TenancyBuildingsViewport_RowDeleting;
             base.OnClosing(e);
         }
 

@@ -677,15 +677,15 @@ namespace Registry.Viewport
             };
 
             GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.CurrentItemChanged += v_premises_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", v_premises_CurrentItemChanged);
             GeneralBindingSource.DataMember = "premises";
             GeneralBindingSource.Filter = StaticFilter;
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 GeneralBindingSource.Filter += " AND ";
             GeneralBindingSource.Filter += DynamicFilter;
             GeneralBindingSource.DataSource = ds;
-            GeneralDataModel.Select().RowChanged += PremisesViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted += PremisesViewport_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", PremisesViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", PremisesViewport_RowDeleted);
 
             _vPremisesTypes = new BindingSource
             {
@@ -730,43 +730,46 @@ namespace Registry.Viewport
                 DataMember = "premises_sub_premises",
                 DataSource = GeneralBindingSource
             };
-            _vSubPremises.CurrentItemChanged += v_sub_premises_CurrentItemChanged;
+            AddEventHandler<EventArgs>(_vSubPremises, "CurrentItemChanged", v_sub_premises_CurrentItemChanged);
 
-            _vRestrictionPremisesAssoc = new BindingSource {DataMember = "premises_restrictions_premises_assoc"};
-            _vRestrictionPremisesAssoc.CurrentItemChanged += v_restrictionPremisesAssoc_CurrentItemChanged;
+            _vRestrictionPremisesAssoc = new BindingSource { DataMember = "premises_restrictions_premises_assoc" };
+            AddEventHandler<EventArgs>(_vRestrictionPremisesAssoc, "CurrentItemChanged", v_restrictionPremisesAssoc_CurrentItemChanged);
             _vRestrictionPremisesAssoc.DataSource = GeneralBindingSource;
 
-            _vRestrictionBuildingsAssoc = new BindingSource {DataMember = "restrictions_buildings_assoc"};
-            _vRestrictionBuildingsAssoc.CurrentItemChanged += v_restrictionBuildingsAssoc_CurrentItemChanged;
+            _vRestrictionBuildingsAssoc = new BindingSource { DataMember = "restrictions_buildings_assoc" };
+            AddEventHandler<EventArgs>(_vRestrictionBuildingsAssoc, "CurrentItemChanged", v_restrictionBuildingsAssoc_CurrentItemChanged);
             _vRestrictionBuildingsAssoc.DataSource = ds;
 
             RestrictionsFilterRebuild();
-            _restrictionPremisesAssoc.Select().RowChanged += RestrictionsAssoc_RowChanged;
-            _restrictionPremisesAssoc.Select().RowDeleted += RestrictionsAssoc_RowDeleted;
-            _restrictionBuildingsAssoc.Select().RowChanged += restrictionBuildingsAssoc_RowChanged;
-            _restrictionBuildingsAssoc.Select().RowDeleted += restrictionBuildingsAssoc_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(_restrictionPremisesAssoc.Select(), "RowChanged", RestrictionsAssoc_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_restrictionPremisesAssoc.Select(), "RowDeleted", RestrictionsAssoc_RowDeleted);
 
-            _vOwnershipPremisesAssoc = new BindingSource {DataMember = "premises_ownership_premises_assoc"};
-            _vOwnershipPremisesAssoc.CurrentItemChanged += v_ownershipPremisesAssoc_CurrentItemChanged;
+            AddEventHandler<DataRowChangeEventArgs>(_restrictionBuildingsAssoc.Select(), "RowChanged", restrictionBuildingsAssoc_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_restrictionBuildingsAssoc.Select(), "RowDeleted", restrictionBuildingsAssoc_RowDeleted);
+
+            _vOwnershipPremisesAssoc = new BindingSource { DataMember = "premises_ownership_premises_assoc" };
+            AddEventHandler<EventArgs>(_vOwnershipPremisesAssoc, "CurrentItemChanged", v_ownershipPremisesAssoc_CurrentItemChanged);
             _vOwnershipPremisesAssoc.DataSource = GeneralBindingSource;
 
-            _vOwnershipBuildingsAssoc = new BindingSource {DataMember = "ownership_buildings_assoc"};
-            _vOwnershipBuildingsAssoc.CurrentItemChanged += v_ownershipBuildingsAssoc_CurrentItemChanged;
+            _vOwnershipBuildingsAssoc = new BindingSource { DataMember = "ownership_buildings_assoc" };
+            AddEventHandler<EventArgs>(_vOwnershipBuildingsAssoc, "CurrentItemChanged", v_ownershipBuildingsAssoc_CurrentItemChanged);
             _vOwnershipBuildingsAssoc.DataSource = ds;
 
             OwnershipsFilterRebuild();
-            _ownershipPremisesAssoc.Select().RowChanged += OwnershipsAssoc_RowChanged;
-            _ownershipPremisesAssoc.Select().RowDeleted += OwnershipsAssoc_RowDeleted;
-            _ownershipBuildingsAssoc.Select().RowChanged += ownershipBuildingsAssoc_RowChanged;
-            _ownershipBuildingsAssoc.Select().RowDeleted += ownershipBuildingsAssoc_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(_ownershipPremisesAssoc.Select(), "RowChanged", OwnershipsAssoc_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_ownershipPremisesAssoc.Select(), "RowDeleted", OwnershipsAssoc_RowDeleted);
 
-            _subPremises.Select().RowChanged += SubPremises_RowChanged;
+            AddEventHandler<DataRowChangeEventArgs>(_ownershipBuildingsAssoc.Select(), "RowChanged", ownershipBuildingsAssoc_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_ownershipBuildingsAssoc.Select(), "RowDeleted", ownershipBuildingsAssoc_RowDeleted);
+
+            AddEventHandler<DataRowChangeEventArgs>(_subPremises.Select(), "RowChanged", SubPremises_RowChanged);
 
             DataBind();
 
-            _premisesCurrentFund.RefreshEvent += premisesCurrentFund_RefreshEvent;
-            _premiseSubPremisesSumArea.RefreshEvent += premiseSubPremisesSumArea_RefreshEvent;
-            _subPremisesCurrentFund.RefreshEvent += subPremisesCurrentFund_RefreshEvent;
+            AddEventHandler<EventArgs>(_premisesCurrentFund, "RefreshEvent", premisesCurrentFund_RefreshEvent);
+            AddEventHandler<EventArgs>(_premiseSubPremisesSumArea, "RefreshEvent", premiseSubPremisesSumArea_RefreshEvent);
+            AddEventHandler<EventArgs>(_subPremisesCurrentFund, "RefreshEvent", subPremisesCurrentFund_RefreshEvent);
+
             FiltersRebuild();
             SetViewportCaption();
             DataChangeHandlersInit();
@@ -1013,29 +1016,6 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
-            else
-            {
-                _ownershipPremisesAssoc.Select().RowChanged -= OwnershipsAssoc_RowChanged;
-                _ownershipPremisesAssoc.Select().RowDeleted -= OwnershipsAssoc_RowDeleted;
-                _ownershipBuildingsAssoc.Select().RowChanged -= ownershipBuildingsAssoc_RowChanged;
-                _ownershipBuildingsAssoc.Select().RowDeleted -= ownershipBuildingsAssoc_RowDeleted;
-                _restrictionPremisesAssoc.Select().RowChanged -= RestrictionsAssoc_RowChanged;
-                _restrictionPremisesAssoc.Select().RowDeleted -= RestrictionsAssoc_RowDeleted;
-                _restrictionBuildingsAssoc.Select().RowChanged -= restrictionBuildingsAssoc_RowChanged;
-                _restrictionBuildingsAssoc.Select().RowDeleted -= restrictionBuildingsAssoc_RowDeleted;
-                _subPremises.Select().RowChanged -= SubPremises_RowChanged;
-                _premisesCurrentFund.RefreshEvent -= premisesCurrentFund_RefreshEvent;
-                _premiseSubPremisesSumArea.RefreshEvent -= premiseSubPremisesSumArea_RefreshEvent;
-                _subPremisesCurrentFund.RefreshEvent -= subPremisesCurrentFund_RefreshEvent;
-                _vSubPremises.CurrentItemChanged -= v_sub_premises_CurrentItemChanged;
-                _vRestrictionPremisesAssoc.CurrentItemChanged -= v_restrictionPremisesAssoc_CurrentItemChanged;
-                _vRestrictionBuildingsAssoc.CurrentItemChanged -= v_restrictionBuildingsAssoc_CurrentItemChanged;
-                _vOwnershipPremisesAssoc.CurrentItemChanged -= v_ownershipPremisesAssoc_CurrentItemChanged;
-                _vOwnershipBuildingsAssoc.CurrentItemChanged -= v_ownershipBuildingsAssoc_CurrentItemChanged;
-                GeneralDataModel.Select().RowChanged -= PremisesViewport_RowChanged;
-                GeneralDataModel.Select().RowDeleted -= PremisesViewport_RowDeleted;
-                GeneralBindingSource.CurrentItemChanged -= v_premises_CurrentItemChanged;
-            }
             base.OnClosing(e);
         }
 

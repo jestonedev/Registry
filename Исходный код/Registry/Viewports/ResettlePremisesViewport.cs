@@ -167,7 +167,7 @@ namespace Registry.Viewport
             var ds = DataModel.DataSet;
 
             GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
             GeneralBindingSource.DataMember = "premises";
             GeneralBindingSource.DataSource = ds;
             GeneralBindingSource.Filter += DynamicFilter;
@@ -253,10 +253,12 @@ namespace Registry.Viewport
 
             GeneralBindingSource.Filter += DynamicFilter;
 
-            GeneralDataModel.Select().RowChanged += PremisesListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted += PremisesListViewport_RowDeleted;
-            _resettlePremises.Select().RowChanged += ResettlePremisesViewport_RowChanged;
-            _resettlePremises.Select().RowDeleting += ResettlePremisesViewport_RowDeleting;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", PremisesListViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", PremisesListViewport_RowDeleted);
+
+            AddEventHandler<DataRowChangeEventArgs>(_resettlePremises.Select(), "RowChanged", ResettlePremisesViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_resettlePremises.Select(), "RowDeleting", ResettlePremisesViewport_RowDeleting);
+
             dataGridView.RowCount = GeneralBindingSource.Count;
             ViewportHelper.SetDoubleBuffered(dataGridView);
         }

@@ -207,10 +207,10 @@ namespace Registry.Viewport
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
                 GeneralSnapshot.Rows.Add(OwnershipRightConverter.ToArray((DataRowView)GeneralBindingSource[i]));
-            GeneralSnapshotBindingSource = new BindingSource {DataSource = GeneralSnapshot};
-            GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_ownerships_rights_CurrentItemChanged;
-            GeneralSnapshot.RowChanged += snapshot_ownerships_rights_RowChanged;
-            GeneralSnapshot.RowDeleted += snapshot_ownerships_rights_RowDeleted;
+            GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
+            AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_ownerships_rights_CurrentItemChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralSnapshot, "RowChanged", snapshot_ownerships_rights_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralSnapshot, "RowDeleted", snapshot_ownerships_rights_RowDeleted);
 
             dataGridView.DataSource = GeneralSnapshotBindingSource;
 
@@ -224,15 +224,16 @@ namespace Registry.Viewport
             description.DataPropertyName = "description";
 
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
-            dataGridView.CellValidated += dataGridView_CellValidated;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValidated", dataGridView_CellValidated);
 
             //События изменения данных для проверки соответствия реальным данным в модели
-            dataGridView.CellValueChanged += dataGridView_CellValueChanged;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValueChanged", dataGridView_CellValueChanged);
             //Синхронизация данных исходные->текущие
-            GeneralDataModel.Select().RowChanged += OwnershipListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting += OwnershipListViewport_RowDeleting;
-            _ownershipAssoc.Select().RowChanged += OwnershipAssoc_RowChanged;
-            _ownershipAssoc.Select().RowDeleted += OwnershipAssoc_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", OwnershipListViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleting", OwnershipListViewport_RowDeleting);
+
+            AddEventHandler<DataRowChangeEventArgs>(_ownershipAssoc.Select(), "RowChanged", OwnershipAssoc_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_ownershipAssoc.Select(), "RowDeleted", OwnershipAssoc_RowDeleted);
         }
 
         public override bool CanInsertRecord()
@@ -390,25 +391,19 @@ namespace Registry.Viewport
             {
                 var result = MessageBox.Show(@"Сохранить изменения об ограничениях в базу данных?", @"Внимание",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                if (result == DialogResult.Yes)
-                    SaveRecord();
-                else
-                    if (result == DialogResult.No)
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        SaveRecord();
+                        break;
+                    case DialogResult.No:
                         CancelRecord();
-                    else
-                    {
+                        break;
+                    default:
                         e.Cancel = true;
                         return;
-                    }
-            } GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_ownerships_rights_CurrentItemChanged;
-            GeneralSnapshot.RowChanged -= snapshot_ownerships_rights_RowChanged;
-            GeneralSnapshot.RowDeleted -= snapshot_ownerships_rights_RowDeleted;
-            dataGridView.CellValidated -= dataGridView_CellValidated;
-            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
-            GeneralDataModel.Select().RowChanged -= OwnershipListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting -= OwnershipListViewport_RowDeleting;
-            _ownershipAssoc.Select().RowChanged -= OwnershipAssoc_RowChanged;
-            _ownershipAssoc.Select().RowDeleted -= OwnershipAssoc_RowDeleted;
+                }
+            }
             base.OnClosing(e);
         }
 

@@ -143,8 +143,8 @@ namespace Registry.Viewport
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
                 GeneralSnapshot.Rows.Add(ResettlePersonConverter.ToArray((DataRowView)GeneralBindingSource[i]));
-            GeneralSnapshotBindingSource = new BindingSource {DataSource = GeneralSnapshot};
-            GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_resettle_persons_CurrentItemChanged;
+            GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
+            AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_resettle_persons_CurrentItemChanged);
 
             dataGridView.DataSource = GeneralSnapshotBindingSource;
             id_person.DataPropertyName = "id_person";
@@ -156,13 +156,13 @@ namespace Registry.Viewport
             document_seria.DataPropertyName = "document_seria";
             founding_doc.DataPropertyName = "founding_doc";
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
-            dataGridView.CellValidated += dataGridView_CellValidated;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValidated", dataGridView_CellValidated);
             //События изменения данных для проверки соответствия реальным данным в модели
-            dataGridView.CellValueChanged += dataGridView_CellValueChanged;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValueChanged", dataGridView_CellValueChanged);
             //Синхронизация данных исходные->текущие
-            GeneralDataModel.Select().RowChanged += ResettlePersonsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting += ResettlePersonsViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted += ResettlePersonsViewport_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", ResettlePersonsViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleting", ResettlePersonsViewport_RowDeleting);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", ResettlePersonsViewport_RowDeleted);
         }
 
         public override bool CanInsertRecord()
@@ -305,12 +305,6 @@ namespace Registry.Viewport
                         return;
                 }
             }
-            GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_resettle_persons_CurrentItemChanged;
-            dataGridView.CellValidated -= dataGridView_CellValidated;
-            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
-            GeneralDataModel.Select().RowChanged -= ResettlePersonsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting -= ResettlePersonsViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted -= ResettlePersonsViewport_RowDeleted;
             base.OnClosing(e);
         }
 

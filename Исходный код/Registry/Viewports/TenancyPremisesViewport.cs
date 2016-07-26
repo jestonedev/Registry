@@ -185,7 +185,7 @@ namespace Registry.Viewport
             var ds = DataModel.DataSet;
 
             GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
             GeneralBindingSource.DataMember = "premises";
             GeneralBindingSource.DataSource = ds;
 
@@ -262,11 +262,12 @@ namespace Registry.Viewport
 
             GeneralBindingSource.Filter += DynamicFilter;
 
-            GeneralDataModel.Select().RowChanged += PremisesListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted += PremisesListViewport_RowDeleted;
-            _tenancyPremises.Select().RowChanged += TenancyPremisesViewport_RowChanged;
-            _tenancyPremises.Select().RowDeleting += TenancyPremisesViewport_RowDeleting;
-            _premisesFunds.RefreshEvent += premises_funds_RefreshEvent;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", PremisesListViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", PremisesListViewport_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(_tenancyPremises.Select(), "RowChanged", TenancyPremisesViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_tenancyPremises.Select(), "RowDeleting", TenancyPremisesViewport_RowDeleting);
+
+            AddEventHandler<EventArgs>(_premisesFunds, "RefreshEvent", premises_funds_RefreshEvent);
 
             dataGridView.RowCount = GeneralBindingSource.Count;
             ViewportHelper.SetDoubleBuffered(dataGridView);
@@ -547,11 +548,6 @@ namespace Registry.Viewport
                         return;
                     }
             }
-            GeneralDataModel.Select().RowChanged -= PremisesListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted -= PremisesListViewport_RowDeleted;
-            _tenancyPremises.Select().RowChanged -= TenancyPremisesViewport_RowChanged;
-            _tenancyPremises.Select().RowDeleting -= TenancyPremisesViewport_RowDeleting;
-            _premisesFunds.RefreshEvent -= premises_funds_RefreshEvent;
             base.OnClosing(e);
         }
 

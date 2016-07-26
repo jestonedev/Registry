@@ -324,20 +324,20 @@ namespace Registry.Viewport
             };
 
             GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
             GeneralBindingSource.DataMember = "tenancy_agreements";
             GeneralBindingSource.Filter = StaticFilter;
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 GeneralBindingSource.Filter += " AND ";
             GeneralBindingSource.Filter += DynamicFilter;
             GeneralBindingSource.DataSource = ds;
-            GeneralDataModel.Select().RowDeleted += TenancyAgreementsViewport_RowDeleted;
-            GeneralDataModel.Select().RowChanged += TenancyAgreementsViewport_RowChanged;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", TenancyAgreementsViewport_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", TenancyAgreementsViewport_RowChanged);
 
             DataBind();
-            _tenancyPersonsExclude.Select().RowDeleted += TenancyPersonsViewport_RowDeleted;
-            _tenancyPersonsExclude.Select().RowChanged += TenancyPersonsViewport_RowChanged;
 
+            AddEventHandler<DataRowChangeEventArgs>(_tenancyPersonsExclude.Select(), "RowDeleted", TenancyPersonsViewport_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(_tenancyPersonsExclude.Select(), "RowChanged", TenancyPersonsViewport_RowChanged);
 
             is_editable = true;
             DataChangeHandlersInit();
@@ -706,14 +706,6 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
-            else
-            {
-                GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
-                _tenancyPersonsExclude.Select().RowDeleted -= TenancyPersonsViewport_RowDeleted;
-                _tenancyPersonsExclude.Select().RowChanged -= TenancyPersonsViewport_RowChanged;
-                GeneralDataModel.Select().RowDeleted -= TenancyAgreementsViewport_RowDeleted;
-                GeneralDataModel.Select().RowChanged -= TenancyAgreementsViewport_RowChanged;
-            }
             base.OnClosing(e);
         }
 

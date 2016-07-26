@@ -163,7 +163,7 @@ namespace Registry.Viewport
             };
 
             GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
             GeneralBindingSource.DataMember = "resettle_processes";
             GeneralBindingSource.DataSource = ds;
             GeneralBindingSource.Filter = StaticFilter;
@@ -175,13 +175,13 @@ namespace Registry.Viewport
 
             DataBind();
 
-            GeneralDataModel.Select().RowChanged += ResettleProcessListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted += ResettleProcessListViewport_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", ResettleProcessListViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", ResettleProcessListViewport_RowDeleted);
 
             dataGridView.RowCount = GeneralBindingSource.Count;
             SetViewportCaption();
             ViewportHelper.SetDoubleBuffered(dataGridView);
-            _resettleAggregate.RefreshEvent += resettles_aggregate_RefreshEvent;
+            AddEventHandler<EventArgs>(_resettleAggregate, "RefreshEvent", resettles_aggregate_RefreshEvent);
             is_editable = true;
             DataChangeHandlersInit();
         }
@@ -399,13 +399,6 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
-            else
-            {
-                GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
-                _resettleAggregate.RefreshEvent -= resettles_aggregate_RefreshEvent;
-                GeneralDataModel.Select().RowChanged -= ResettleProcessListViewport_RowChanged;
-                GeneralDataModel.Select().RowDeleted -= ResettleProcessListViewport_RowDeleted;
-            }
             base.OnClosing(e);
         }
 

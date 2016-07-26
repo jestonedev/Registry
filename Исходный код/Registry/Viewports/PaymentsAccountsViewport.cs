@@ -40,7 +40,7 @@ namespace Registry.Viewport
             GeneralDataModel = DataModel.GetInstance<PaymentsAccountsDataModel>();
             GeneralDataModel.Select();
             GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
             GeneralBindingSource.DataSource = DataModel.DataSet;
             GeneralBindingSource.DataMember = "payments_accounts";
             var filter = "";
@@ -286,13 +286,6 @@ namespace Registry.Viewport
             MenuCallback.NavigationStateUpdate();
             MenuCallback.EditingStateUpdate();
             MenuCallback.RelationsStateUpdate();
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            if (GeneralBindingSource != null)
-                GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
-            base.OnClosing(e);
         }
 
         internal IEnumerable<int> GetCurrentIds()

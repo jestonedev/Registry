@@ -189,7 +189,7 @@ namespace Registry.Viewport
             DataModel.GetInstance<PaymentsAccountsDataModel>().Select();
 
             GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
             GeneralBindingSource.DataMember = "claims";
             GeneralBindingSource.DataSource = DataModel.DataSet;
             GeneralBindingSource.Filter = StaticFilter;
@@ -212,8 +212,8 @@ namespace Registry.Viewport
 
             DataBind();
 
-            GeneralDataModel.Select().RowChanged += ClaimListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted += ClaimListViewport_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", ClaimListViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", ClaimListViewport_RowDeleted);
 
             dataGridViewClaims.RowCount = GeneralBindingSource.Count;
             SetViewportCaption();
@@ -221,7 +221,7 @@ namespace Registry.Viewport
             is_editable = true;
             DataChangeHandlersInit();
             _lastClaimStates = CalcDataModel.GetInstance<CalcDataModelLastClaimStates>();
-            _lastClaimStates.RefreshEvent += lastClaimStates_RefreshEvent;
+            AddEventHandler<EventArgs>(_lastClaimStates, "RefreshEvent", lastClaimStates_RefreshEvent);
         }
 
         private void lastClaimStates_RefreshEvent(object sender, EventArgs e)

@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
@@ -36,15 +38,13 @@ namespace Registry.Viewport
             MenuCallback = menuCallback;
         }
 
-        public new virtual void Close()
-        {
-            base.Close();
-        }
-
         protected override void OnClosing(CancelEventArgs e)
         {
             if (e.Cancel != true)
+            {
+                RemoveAllEventHandlers();
                 MenuCallback.SwitchToPreviousViewport();
+            }
             base.OnClosing(e);
         }
 
@@ -245,6 +245,7 @@ namespace Registry.Viewport
 
         public virtual void ForceClose()
         {
+            RemoveAllEventHandlers();
             Dispose();
         }
 
@@ -296,6 +297,31 @@ namespace Registry.Viewport
             if (GeneralBindingSource != null) 
                 GeneralBindingSource.Dispose();
             base.Dispose(disposing);
+        }
+
+        private readonly List<ViewportEventInfo> _weakEvents = new List<ViewportEventInfo>();
+
+        protected void AddEventHandler<T>(object sender, string eventName, EventHandler<T> handler)
+            where T: EventArgs
+        {
+            var eventInfo = sender.GetType().GetEvent(eventName);
+            var d = Delegate.CreateDelegate(eventInfo.EventHandlerType, handler.Target, handler.Method);
+            eventInfo.AddEventHandler(sender, d);
+            _weakEvents.Add(new ViewportEventInfo
+            {
+                Handler = d,
+                EventInfo = eventInfo,
+                Sender = sender
+            });
+        }
+
+        protected void RemoveAllEventHandlers()
+        {
+            foreach (var weakEvent in _weakEvents)
+            {
+                weakEvent.EventInfo.RemoveEventHandler(weakEvent.Sender, weakEvent.Handler);
+            }
+            _weakEvents.Clear();
         }
     }
 }

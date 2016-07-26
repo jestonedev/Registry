@@ -111,9 +111,9 @@ namespace Registry.Viewport
             _vTenancyReasonTypesDataModel = new BindingSource
             {
                 DataMember = "tenancy_reason_types",
-                DataSource = DataModel.DataSet
+                DataSource = DataModel.DataSet,
+                Sort = "reason_name"
             };
-            _vTenancyReasonTypesDataModel.Sort = "reason_name";
 
             if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
                 Text = string.Format(CultureInfo.InvariantCulture, "Основания найма №{0}", ParentRow["id_process"]);
@@ -125,8 +125,8 @@ namespace Registry.Viewport
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
                 GeneralSnapshot.Rows.Add(TenancyReasonConverter.ToArray((DataRowView)GeneralBindingSource[i]));
-            GeneralSnapshotBindingSource = new BindingSource {DataSource = GeneralSnapshot};
-            GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_tenancy_reasons_CurrentItemChanged;
+            GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
+            AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_tenancy_reasons_CurrentItemChanged);
 
             dataGridView.DataSource = GeneralSnapshotBindingSource;
 
@@ -141,14 +141,14 @@ namespace Registry.Viewport
             reason_prepared.DataPropertyName = "reason_prepared";
 
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
-            dataGridView.CellValidated += dataGridView_CellValidated;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValidated", dataGridView_CellValidated);
 
             //События изменения данных для проверки соответствия реальным данным в модели
-            dataGridView.CellValueChanged += dataGridView_CellValueChanged;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValueChanged", dataGridView_CellValueChanged);
             //Синхронизация данных исходные->текущие
-            GeneralDataModel.Select().RowChanged += TenancyReasonsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting += TenancyReasonsViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted += TenancyReasonsViewport_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", TenancyReasonsViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleting", TenancyReasonsViewport_RowDeleting);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", TenancyReasonsViewport_RowDeleted);
         }
 
         public override bool CanInsertRecord()
@@ -293,12 +293,6 @@ namespace Registry.Viewport
                         return;
                 }
             }
-            GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_tenancy_reasons_CurrentItemChanged;
-            dataGridView.CellValidated -= dataGridView_CellValidated;
-            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
-            GeneralDataModel.Select().RowChanged -= TenancyReasonsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting -= TenancyReasonsViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted -= TenancyReasonsViewport_RowDeleted;
             base.OnClosing(e);
         }
 

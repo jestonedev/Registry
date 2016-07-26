@@ -516,6 +516,7 @@
     <Compile Include="Viewport.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ViewportEventInfo.cs" />
     <Compile Include="ViewportHelper.cs" />
     <Compile Include="ViewportState.cs" />
     <Compile Include="ViewportType.cs" />

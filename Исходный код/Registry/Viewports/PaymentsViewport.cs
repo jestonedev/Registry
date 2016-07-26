@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.Windows.Forms;
@@ -40,7 +39,7 @@ namespace Registry.Viewport
                 throw new ViewportException("Неизвестный тип родительского объекта");
             title = string.Format(title, ParentRow["account"]);
             GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
             GeneralBindingSource.DataSource = ((PaymentsDataModel)GeneralDataModel).Select((int)ParentRow["id_account"]);
 
             Text = title;
@@ -162,13 +161,6 @@ namespace Registry.Viewport
             MenuCallback.NavigationStateUpdate();
             MenuCallback.EditingStateUpdate();
             MenuCallback.RelationsStateUpdate();
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            if (GeneralBindingSource != null)
-                GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
-            base.OnClosing(e);
         }
     }
 }

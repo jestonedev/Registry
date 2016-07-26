@@ -327,7 +327,7 @@ namespace Registry.Viewport
             };
 
             GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
             GeneralBindingSource.DataMember = "funds_history";
             GeneralBindingSource.DataSource = ds;
             //Перестраиваем фильтр GeneralBindingSource.Filter
@@ -335,11 +335,12 @@ namespace Registry.Viewport
 
             DataBind();
 
-            GeneralDataModel.Select().RowChanged += FundsHistoryViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted += FundsHistoryViewport_RowDeleted;
-            _fundAssoc.Select().RowChanged += FundAssoc_RowChanged;
-            _fundAssoc.Select().RowDeleted += FundAssoc_RowDeleted;
-            comboBoxFundType.SelectedIndexChanged += comboBoxFundType_SelectedIndexChanged;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", FundsHistoryViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", FundsHistoryViewport_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(_fundAssoc.Select(), "RowChanged", FundAssoc_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_fundAssoc.Select(), "RowDeleted", FundAssoc_RowDeleted);
+            AddEventHandler<EventArgs>(comboBoxFundType, "SelectedIndexChanged", comboBoxFundType_SelectedIndexChanged);
+
             is_editable = true;
             DataChangeHandlersInit();
             if (GeneralBindingSource.Count == 0)
@@ -536,15 +537,6 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
-            else
-            {
-                GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
-                GeneralDataModel.Select().RowChanged -= FundsHistoryViewport_RowChanged;
-                GeneralDataModel.Select().RowDeleted -= FundsHistoryViewport_RowDeleted;
-                _fundAssoc.Select().RowChanged -= FundAssoc_RowChanged;
-                _fundAssoc.Select().RowDeleted -= FundAssoc_RowDeleted;
-                comboBoxFundType.SelectedIndexChanged -= comboBoxFundType_SelectedIndexChanged;
-            }
             base.OnClosing(e);
         }
 

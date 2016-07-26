@@ -96,19 +96,19 @@ namespace Registry.Viewport
             for (var i = 0; i < GeneralBindingSource.Count; i++)
                 GeneralSnapshot.Rows.Add(StructureTypeConverter.ToArray((DataRowView)GeneralBindingSource[i]));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
-            GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_structure_types_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_structure_types_CurrentItemChanged);
 
             dataGridView.DataSource = GeneralSnapshotBindingSource;
             id_structure_type.DataPropertyName = "id_structure_type";
             structure_type.DataPropertyName = "structure_type";
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
-            dataGridView.CellValidated += dataGridView_CellValidated;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValidated", dataGridView_CellValidated);
             //События изменения данных для проверки соответствия реальным данным в модели
-            dataGridView.CellValueChanged += dataGridView_CellValueChanged;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValueChanged", dataGridView_CellValueChanged);
             //Синхронизация данных исходные->текущие
-            GeneralDataModel.Select().RowChanged += StructureTypeListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting += StructureTypeListViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted += StructureTypeListViewport_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", StructureTypeListViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleting", StructureTypeListViewport_RowDeleting);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", StructureTypeListViewport_RowDeleted);
         }
 
         public override bool CanInsertRecord()
@@ -247,12 +247,7 @@ namespace Registry.Viewport
                         e.Cancel = true;
                         return;
                 }
-            } GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_structure_types_CurrentItemChanged;
-            dataGridView.CellValidated -= dataGridView_CellValidated;
-            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
-            GeneralDataModel.Select().RowChanged -= StructureTypeListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting -= StructureTypeListViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted -= StructureTypeListViewport_RowDeleted;
+            }
             base.OnClosing(e);
         }
 

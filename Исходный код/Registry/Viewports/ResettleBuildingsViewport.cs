@@ -143,7 +143,7 @@ namespace Registry.Viewport
                 DataSource = ds,
                 Filter = DynamicFilter
             };
-            GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
 
             if ((ParentRow != null) && (ParentType == ParentTypeEnum.ResettleProcess))
             {
@@ -193,10 +193,10 @@ namespace Registry.Viewport
             }
             GeneralBindingSource.Filter = DynamicFilter;
 
-            GeneralDataModel.Select().RowChanged += BuildingsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted += BuildingsViewport_RowDeleted;
-            _resettleBuildings.Select().RowChanged += ResettleBuildingsViewport_RowChanged;
-            _resettleBuildings.Select().RowDeleting += ResettleBuildingsViewport_RowDeleting;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", BuildingsViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", BuildingsViewport_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(_resettleBuildings.Select(), "RowChanged", ResettleBuildingsViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_resettleBuildings.Select(), "RowDeleting", ResettleBuildingsViewport_RowDeleting);
             dataGridView.RowCount = GeneralBindingSource.Count;
             ViewportHelper.SetDoubleBuffered(dataGridView);
         }
@@ -411,7 +411,7 @@ namespace Registry.Viewport
                     if ((row["id_assoc"] != DBNull.Value) &&
                         !string.IsNullOrEmpty(row["id_assoc"].ToString()) &&
                         ((int)row["id_assoc"] == list[i].IdAssoc) &&
-                        (Convert.ToBoolean(row["is_checked"], CultureInfo.InvariantCulture) == true))
+                        Convert.ToBoolean(row["is_checked"], CultureInfo.InvariantCulture))
                         rowIndex = j;
                 }
                 if (rowIndex == -1)
@@ -494,22 +494,19 @@ namespace Registry.Viewport
             {
                 var result = MessageBox.Show(@"Сохранить изменения в базу данных?", @"Внимание",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                if (result == DialogResult.Yes)
-                    SaveRecord();
-                else
-                    if (result == DialogResult.No)
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        SaveRecord();
+                        break;
+                    case DialogResult.No:
                         CancelRecord();
-                    else
-                    {
+                        break;
+                    default:
                         e.Cancel = true;
                         return;
-                    }
+                }
             }
-            GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
-            GeneralDataModel.Select().RowChanged -= BuildingsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted -= BuildingsViewport_RowDeleted;
-            _resettleBuildings.Select().RowChanged -= ResettleBuildingsViewport_RowChanged;
-            _resettleBuildings.Select().RowDeleting -= ResettleBuildingsViewport_RowDeleting;
             base.OnClosing(e);
         }
 

@@ -441,19 +441,19 @@ namespace Registry.Viewport
             };
 
             GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.CurrentItemChanged += v_claim_states_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", v_claim_states_CurrentItemChanged);
             GeneralBindingSource.DataMember = "claim_states";
             GeneralBindingSource.DataSource = ds;
             GeneralBindingSource.Filter = StaticFilter;
 
             DataBind();
 
-            GeneralDataModel.Select().RowChanged += ClaimStatesViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted += ClaimStatesViewport_RowDeleted;
-            _claimStateTypes.Select().RowChanged += ClaimStateTypesViewport_RowChanged;
-            _claimStateTypes.Select().RowDeleted += ClaimStateTypesViewport_RowDeleted;
-            _claimStateTypesRelations.Select().RowChanged += ClaimStateTypesRelationsViewport_RowChanged;
-            _claimStateTypesRelations.Select().RowDeleted += ClaimStateTypesRelationsViewport_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", ClaimStatesViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", ClaimStatesViewport_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(_claimStateTypes.Select(), "RowChanged", ClaimStateTypesViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_claimStateTypes.Select(), "RowDeleted", ClaimStateTypesViewport_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(_claimStateTypesRelations.Select(), "RowChanged", ClaimStateTypesRelationsViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_claimStateTypesRelations.Select(), "RowDeleted", ClaimStateTypesRelationsViewport_RowDeleted);
             is_editable = true;
             DataChangeHandlersInit();
         }
@@ -660,16 +660,6 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
-            else
-            {
-                GeneralBindingSource.CurrentItemChanged -= v_claim_states_CurrentItemChanged;
-                GeneralDataModel.Select().RowChanged -= ClaimStatesViewport_RowChanged;
-                GeneralDataModel.Select().RowDeleted -= ClaimStatesViewport_RowDeleted;
-                _claimStateTypes.Select().RowChanged -= ClaimStateTypesViewport_RowChanged;
-                _claimStateTypes.Select().RowDeleted -= ClaimStateTypesViewport_RowDeleted;
-                _claimStateTypesRelations.Select().RowChanged -= ClaimStateTypesRelationsViewport_RowChanged;
-                _claimStateTypesRelations.Select().RowDeleted -= ClaimStateTypesRelationsViewport_RowDeleted;
-            }
             base.OnClosing(e);
         }
 

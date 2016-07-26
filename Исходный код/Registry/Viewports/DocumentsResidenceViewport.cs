@@ -83,6 +83,8 @@ namespace Registry.Viewport
             DockAreas = DockAreas.Document;
             GeneralDataModel = DataModel.GetInstance<DocumentsResidenceDataModel>();
 
+            GeneralDataModel.Select();
+
             GeneralBindingSource = new BindingSource
             {
                 DataMember = "documents_residence",
@@ -97,7 +99,7 @@ namespace Registry.Viewport
             foreach (var documentResidence in GeneralBindingSource)
                 GeneralSnapshot.Rows.Add(DocumentResidenceConverter.ToArray((DataRowView)documentResidence));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
-            GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_documents_issued_by_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_documents_residence_CurrentItemChanged);
 
             dataGridView.DataSource = GeneralSnapshotBindingSource;
             id_document_residence.DataPropertyName = "id_document_residence";
@@ -105,13 +107,13 @@ namespace Registry.Viewport
 
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
 
-            dataGridView.CellValidated += dataGridView_CellValidated;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValidated", dataGridView_CellValidated);
             //События изменения данных для проверки соответствия реальным данным в модели
-            dataGridView.CellValueChanged += dataGridView_CellValueChanged;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValueChanged", dataGridView_CellValueChanged);
             //Синхронизация данных исходные->текущие
-            GeneralDataModel.Select().RowChanged += DocumentResidenceViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting += DocumentResidenceViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted += DocumentResidenceViewport_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", DocumentResidenceViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleting", DocumentResidenceViewport_RowDeleting);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", DocumentResidenceViewport_RowDeleted);
         }
 
         public override bool CanInsertRecord()
@@ -144,12 +146,6 @@ namespace Registry.Viewport
                         return;
                 }
             }
-            GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_documents_issued_by_CurrentItemChanged;
-            dataGridView.CellValidated -= dataGridView_CellValidated;
-            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
-            GeneralDataModel.Select().RowChanged -= DocumentResidenceViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting -= DocumentResidenceViewport_RowDeleting;
-            GeneralDataModel.Select().RowDeleted -= DocumentResidenceViewport_RowDeleted;
             base.OnClosing(e);
         }
 
@@ -307,13 +303,11 @@ namespace Registry.Viewport
             }
         }
 
-        void v_snapshot_documents_issued_by_CurrentItemChanged(object sender, EventArgs e)
+        void v_snapshot_documents_residence_CurrentItemChanged(object sender, EventArgs e)
         {
-            if (Selected)
-            {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.EditingStateUpdate();
-            }
+            if (!Selected) return;
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)

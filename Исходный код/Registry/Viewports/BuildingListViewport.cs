@@ -14,6 +14,8 @@ using Registry.Reporting;
 using Registry.Viewport.SearchForms;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
+using MessageBox = System.Windows.Forms.MessageBox;
+using SystemColors = System.Drawing.SystemColors;
 
 namespace Registry.Viewport
 {
@@ -67,9 +69,11 @@ namespace Registry.Viewport
             _municipalPremises.Select();
 
             var ds = DataModel.DataSet;
-
+            
             GeneralBindingSource = new BindingSource {DataMember = "buildings"};
-            GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
+
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
+
             GeneralBindingSource.DataSource = ds;
             GeneralBindingSource.Filter = StaticFilter;
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
@@ -91,16 +95,20 @@ namespace Registry.Viewport
                 DataMember = "structure_types",
                 DataSource = ds
             };
-
+            
             id_structure_type.DataSource = _vStructureType;
             id_structure_type.ValueMember = "id_structure_type";
             id_structure_type.DisplayMember = "structure_type";
 
-            GeneralDataModel.Select().RowChanged += BuildingListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted += BuildingListViewport_RowDeleted;
-            _municipalPremises.RefreshEvent += _municipalPremises_RefreshEvent;
-            DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select().RowChanged += BuildingsOwnershipChanged;
-            DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select().RowDeleted += BuildingsOwnershipChanged;
+
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", BuildingListViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", BuildingListViewport_RowDeleted);
+            AddEventHandler<EventArgs>(_municipalPremises, "RefreshEvent", _municipalPremises_RefreshEvent);
+            AddEventHandler<DataRowChangeEventArgs>(DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select(),
+                "RowChanged", BuildingsOwnershipChanged);
+            AddEventHandler<DataRowChangeEventArgs>(DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select(),
+                "RowDeleted", BuildingsOwnershipChanged);
+
             dataGridView.RowCount = GeneralBindingSource.Count;
             ViewportHelper.SetDoubleBuffered(dataGridView);
         }
@@ -323,20 +331,6 @@ namespace Registry.Viewport
                 {"columnPatterns", "["+columnPatterns+",{\"columnPattern\":\"$description$\"}]"}
             };
             return arguments;
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            if (GeneralBindingSource != null)
-                GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
-            if (GeneralDataModel != null)
-            {
-                GeneralDataModel.Select().RowChanged -= BuildingListViewport_RowChanged;
-                GeneralDataModel.Select().RowDeleted -= BuildingListViewport_RowDeleted;
-            }
-            DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select().RowChanged -= BuildingsOwnershipChanged;
-            DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select().RowDeleted -= BuildingsOwnershipChanged;
-            base.OnClosing(e);
         }
 
         private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)

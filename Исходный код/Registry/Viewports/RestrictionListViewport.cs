@@ -211,10 +211,10 @@ namespace Registry.Viewport
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
                 GeneralSnapshot.Rows.Add(RestrictionConverter.ToArray((DataRowView)GeneralBindingSource[i]));
-            GeneralSnapshotBindingSource = new BindingSource {DataSource = GeneralSnapshot};
-            GeneralSnapshotBindingSource.CurrentItemChanged += v_snapshot_restrictions_CurrentItemChanged;
-            GeneralSnapshot.RowChanged += snapshot_restrictions_RowChanged;
-            GeneralSnapshot.RowDeleted += snapshot_restrictions_RowDeleted;
+            GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
+            AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_restrictions_CurrentItemChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralSnapshot, "RowChanged", snapshot_restrictions_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralSnapshot, "RowDeleted", snapshot_restrictions_RowDeleted);
 
             dataGridView.DataSource = GeneralSnapshotBindingSource;
 
@@ -228,15 +228,16 @@ namespace Registry.Viewport
             description.DataPropertyName = "description";
 
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
-            dataGridView.CellValidated += dataGridView_CellValidated;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValidated", dataGridView_CellValidated);
 
             //События изменения данных для проверки соответствия реальным данным в модели
-            dataGridView.CellValueChanged += dataGridView_CellValueChanged;
+            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValueChanged", dataGridView_CellValueChanged);
             //Синхронизация данных исходные->текущие
-            GeneralDataModel.Select().RowChanged += RestrictionListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting += RestrictionListViewport_RowDeleting;
-            _restrictionAssoc.Select().RowChanged += RestrictionAssoc_RowChanged;
-            _restrictionAssoc.Select().RowDeleted += RestrictionAssoc_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", RestrictionListViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleting", RestrictionListViewport_RowDeleting);
+
+            AddEventHandler<DataRowChangeEventArgs>(_restrictionAssoc.Select(), "RowChanged", RestrictionAssoc_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_restrictionAssoc.Select(), "RowDeleted", RestrictionAssoc_RowDeleted);
         }
         
         public override bool CanInsertRecord()
@@ -404,15 +405,6 @@ namespace Registry.Viewport
                         return;
                 }
             }
-            GeneralSnapshotBindingSource.CurrentItemChanged -= v_snapshot_restrictions_CurrentItemChanged;
-            GeneralSnapshot.RowChanged -= snapshot_restrictions_RowChanged;
-            GeneralSnapshot.RowDeleted -= snapshot_restrictions_RowDeleted;
-            dataGridView.CellValidated -= dataGridView_CellValidated;
-            dataGridView.CellValueChanged -= dataGridView_CellValueChanged;
-            GeneralDataModel.Select().RowChanged -= RestrictionListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleting -= RestrictionListViewport_RowDeleting;
-            _restrictionAssoc.Select().RowChanged -= RestrictionAssoc_RowChanged;
-            _restrictionAssoc.Select().RowDeleted -= RestrictionAssoc_RowDeleted;
             base.OnClosing(e);
         }
 

@@ -75,7 +75,7 @@ namespace Registry.Viewport
                 return;
             _vTenancyAddresses.Filter = (GeneralBindingSource.Position >= 0 ? "id_process = 0" + ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_process"] : "id_process = 0");
         }
-
+       
         private void RebuildStaticFilter()
         {
             IEnumerable<int> ids;
@@ -529,7 +529,7 @@ namespace Registry.Viewport
             _rentPeriods.Select();
 
             GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.CurrentItemChanged += v_tenancies_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", v_tenancies_CurrentItemChanged);
             GeneralBindingSource.DataMember = "tenancy_processes";
             GeneralBindingSource.DataSource = DataModel.DataSet;
             RebuildStaticFilter();
@@ -594,35 +594,39 @@ namespace Registry.Viewport
 
             DataBind();
 
-            _tenancyPersons.Select().RowChanged += TenancyPersons_RowChanged;
-            _tenancyPersons.Select().RowDeleted += TenancyPersons_RowDeleted;
-            GeneralDataModel.Select().RowChanged += TenancyViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted += TenancyViewport_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(_tenancyPersons.Select(), "RowChanged", TenancyPersons_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_tenancyPersons.Select(), "RowDeleted", TenancyPersons_RowDeleted);
+
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", TenancyViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", TenancyViewport_RowDeleted);
+
             if (ParentRow != null)
             {
                 switch (ParentType)
                 {
                     case ParentTypeEnum.Building:
                         _tenancyBuildingAssoc = DataModel.GetInstance<TenancyBuildingsAssocDataModel>();
-                        _tenancyBuildingAssoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
-                        _tenancyBuildingAssoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
+                        AddEventHandler<DataRowChangeEventArgs>(_tenancyBuildingAssoc.Select(), "RowChanged", TenancyAssocViewport_RowChanged);
+                        AddEventHandler<DataRowChangeEventArgs>(_tenancyBuildingAssoc.Select(), "RowDeleted", TenancyAssocViewport_RowDeleted);
                         break;
                     case ParentTypeEnum.Premises:
                         _tenancyPremisesAssoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
-                        _tenancyPremisesAssoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
-                        _tenancyPremisesAssoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
+                        AddEventHandler<DataRowChangeEventArgs>(_tenancyPremisesAssoc.Select(), "RowChanged", TenancyAssocViewport_RowChanged);
+                        AddEventHandler<DataRowChangeEventArgs>(_tenancyPremisesAssoc.Select(), "RowDeleted", TenancyAssocViewport_RowDeleted);
                         break;
                     case ParentTypeEnum.SubPremises:
                         _tenancySubPremisesAssoc = DataModel.GetInstance<TenancySubPremisesAssocDataModel>();
-                        _tenancySubPremisesAssoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
-                        _tenancySubPremisesAssoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
+                        AddEventHandler<DataRowChangeEventArgs>(_tenancySubPremisesAssoc.Select(), "RowChanged", TenancyAssocViewport_RowChanged);
+                        AddEventHandler<DataRowChangeEventArgs>(_tenancySubPremisesAssoc.Select(), "RowDeleted", TenancyAssocViewport_RowDeleted);
                         break;
                     default: throw new ViewportException("Неизвестный тип родительского объекта");
                 }
             }
 
-            _vTenancyPersons.ListChanged += v_persons_ListChanged;   
-            _tenancyPremisesInfo.RefreshEvent +=tenancy_premises_info_RefreshEvent;
+            AddEventHandler<ListChangedEventArgs>(_vTenancyPersons, "ListChanged", v_persons_ListChanged);
+
+            AddEventHandler<EventArgs>(_tenancyPremisesInfo, "RefreshEvent", tenancy_premises_info_RefreshEvent);
+
             FiltersRebuild();
             DataChangeHandlersInit();
         }
@@ -1029,32 +1033,6 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 e.Cancel = true;
-            else
-            {
-                GeneralBindingSource.CurrentItemChanged -= v_tenancies_CurrentItemChanged;
-                _vTenancyPersons.ListChanged -= v_persons_ListChanged;
-                _tenancyPremisesInfo.RefreshEvent -= tenancy_premises_info_RefreshEvent;
-                _tenancyPersons.Select().RowChanged -= TenancyPersons_RowChanged;
-                _tenancyPersons.Select().RowDeleted -= TenancyPersons_RowDeleted;
-                GeneralDataModel.Select().RowChanged -= TenancyViewport_RowChanged;
-                GeneralDataModel.Select().RowDeleted -= TenancyViewport_RowDeleted;
-
-                if (_tenancyBuildingAssoc != null)
-                {
-                        _tenancyBuildingAssoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
-                        _tenancyBuildingAssoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
-                }
-                if (_tenancyPremisesAssoc != null)
-                {
-                        _tenancyPremisesAssoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
-                        _tenancyPremisesAssoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
-                }
-                if (_tenancySubPremisesAssoc != null)
-                {
-                        _tenancySubPremisesAssoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
-                        _tenancySubPremisesAssoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
-                }
-            }
             base.OnClosing(e);
         }
 

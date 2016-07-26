@@ -150,12 +150,12 @@ namespace Registry.Viewport
             };
 
             GeneralBindingSource = new BindingSource();
-            GeneralBindingSource.CurrentItemChanged += v_warrants_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", v_warrants_CurrentItemChanged);
             GeneralBindingSource.DataMember = "warrants";
             GeneralBindingSource.DataSource = ds;
             GeneralBindingSource.Sort = "registration_date DESC";
-            GeneralDataModel.Select().RowChanged += WarrantsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted += WarrantsViewport_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", WarrantsViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", WarrantsViewport_RowDeleted);
 
             DataBind();
             is_editable = true;
@@ -313,11 +313,7 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.ReadState))
             {
                 e.Cancel = true;
-                return;
             }
-            GeneralBindingSource.CurrentItemChanged -= v_warrants_CurrentItemChanged;
-            GeneralDataModel.Select().RowChanged -= WarrantsViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted -= WarrantsViewport_RowDeleted;
             base.OnClosing(e);
         }
 
