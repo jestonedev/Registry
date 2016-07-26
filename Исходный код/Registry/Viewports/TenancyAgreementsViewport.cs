@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
@@ -166,7 +165,7 @@ namespace Registry.Viewport
         protected override bool ChangeViewportStateTo(ViewportState state)
         {
             if (AccessControl.HasPrivelege(Priveleges.TenancyWrite)) return base.ChangeViewportStateTo(state);
-            viewportState = ViewportState.ReadState;
+            ViewportState = ViewportState.ReadState;
             return true;
         }
 
@@ -339,14 +338,14 @@ namespace Registry.Viewport
             AddEventHandler<DataRowChangeEventArgs>(_tenancyPersonsExclude.Select(), "RowDeleted", TenancyPersonsViewport_RowDeleted);
             AddEventHandler<DataRowChangeEventArgs>(_tenancyPersonsExclude.Select(), "RowChanged", TenancyPersonsViewport_RowChanged);
 
-            is_editable = true;
+            IsEditable = true;
             DataChangeHandlersInit();
         }
 
         public override bool CanDeleteRecord()
         {
             return (GeneralBindingSource.Position > -1)
-                && (viewportState != ViewportState.NewRowState)
+                && (ViewportState != ViewportState.NewRowState)
                 && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
@@ -357,29 +356,29 @@ namespace Registry.Viewport
                 return;
             if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_agreement"]) == -1)
                 return;
-            is_editable = false;
+            IsEditable = false;
             ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
-            is_editable = true;
-            viewportState = ViewportState.ReadState;
+            IsEditable = true;
+            ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             MenuCallback.ForceCloseDetachedViewports();
         }
 
         public override bool CanCancelRecord()
         {
-            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
+            return (ViewportState == ViewportState.NewRowState) || (ViewportState == ViewportState.ModifyRowState);
         }
 
         public override void CancelRecord()
         {
-            switch (viewportState)
+            switch (ViewportState)
             {
                 case ViewportState.ReadState: return;
                 case ViewportState.NewRowState:
                     GeneralDataModel.EditingNewRecord = false;
                     if (GeneralBindingSource.Position != -1)
                     {
-                        is_editable = false;
+                        IsEditable = false;
                         dataGridView.Enabled = true;
                         ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
                         if (GeneralBindingSource.Position != -1)
@@ -387,24 +386,24 @@ namespace Registry.Viewport
                     }
                     else
                         Text = @"Соглашения отсутствуют";
-                    viewportState = ViewportState.ReadState;
+                    ViewportState = ViewportState.ReadState;
                     break;
                 case ViewportState.ModifyRowState:
                     dataGridView.Enabled = true;
-                    is_editable = false;
+                    IsEditable = false;
                     DataBind();
                     BindWarrantId();
-                    viewportState = ViewportState.ReadState;
+                    ViewportState = ViewportState.ReadState;
                     break;
             }
-            is_editable = true;
+            IsEditable = true;
             ClearModifyState();
             MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanSaveRecord()
         {
-            return ((viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState))
+            return ((ViewportState == ViewportState.NewRowState) || (ViewportState == ViewportState.ModifyRowState))
                  && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
@@ -413,7 +412,7 @@ namespace Registry.Viewport
             var tenancyAgreement = (TenancyAgreement) EntityFromViewport();
             if (!ValidateAgreement(tenancyAgreement))
                 return;
-            switch (viewportState)
+            switch (ViewportState)
             {
                 case ViewportState.ReadState:
                     MessageBox.Show(@"Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
@@ -428,7 +427,7 @@ namespace Registry.Viewport
                     }
                     DataRowView newRow;
                     tenancyAgreement.IdAgreement = idAgreement;
-                    is_editable = false;
+                    IsEditable = false;
                     if (GeneralBindingSource.Position == -1)
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
@@ -446,13 +445,13 @@ namespace Registry.Viewport
                     if (GeneralDataModel.Update(tenancyAgreement) == -1)
                         return;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    is_editable = false;
+                    IsEditable = false;
                     TenancyAgreementConverter.FillRow(tenancyAgreement, row);
                     break;
             }
-            viewportState = ViewportState.ReadState;
+            ViewportState = ViewportState.ReadState;
             dataGridView.Enabled = true;
-            is_editable = true;
+            IsEditable = true;
             MenuCallback.EditingStateUpdate();
             
             // Обновление участников найма после сохранения соглашения
@@ -599,7 +598,7 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
-            is_editable = false;
+            IsEditable = false;
             GeneralBindingSource.AddNew();
             dataGridView.Enabled = false;
             var index = _vExecutors.Find("executor_login", WindowsIdentity.GetCurrent().Name);
@@ -610,7 +609,7 @@ namespace Registry.Viewport
                     ParentRow["registration_num"],
                     ParentRow["registration_date"] != DBNull.Value ?
                         Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "");
-            is_editable = true;
+            IsEditable = true;
             GeneralDataModel.EditingNewRecord = true;
         }
 
@@ -624,13 +623,13 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
-            is_editable = false;
+            IsEditable = false;
             var tenancyAgreement = (TenancyAgreement) EntityFromView();
             GeneralBindingSource.AddNew();
             dataGridView.Enabled = false;
             GeneralDataModel.EditingNewRecord = true;
             ViewportFromTenancyAgreement(tenancyAgreement);
-            is_editable = true;
+            IsEditable = true;
         }
 
         public override bool HasReport(ReporterType reporterType)
@@ -700,13 +699,6 @@ namespace Registry.Viewport
                 return false;
             }
             return true;
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                e.Cancel = true;
-            base.OnClosing(e);
         }
 
         protected override void OnVisibleChanged(EventArgs e)
@@ -1023,11 +1015,11 @@ namespace Registry.Viewport
             BindWarrantId();
             if (GeneralBindingSource.Position == -1)
                 return;
-            if (viewportState == ViewportState.NewRowState)
+            if (ViewportState == ViewportState.NewRowState)
                 return;
             dataGridView.Enabled = true;
-            viewportState = ViewportState.ReadState;
-            is_editable = true;
+            ViewportState = ViewportState.ReadState;
+            IsEditable = true;
         }
 
         private void vButtonChangeTenancy_Click(object sender, EventArgs e)

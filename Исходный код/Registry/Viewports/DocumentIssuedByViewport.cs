@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.Windows.Forms;
@@ -126,28 +125,6 @@ namespace Registry.Viewport
         {
             var row = (DataRowView)GeneralSnapshotBindingSource.AddNew();
             if (row != null) row.EndEdit();
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            if (SnapshotHasChanges())
-            {
-                var result = MessageBox.Show(@"Сохранить изменения в базу данных?", @"Внимание",
-                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                switch (result)
-                {
-                    case DialogResult.Yes:
-                        SaveRecord();
-                        break;
-                    case DialogResult.No:
-                        CancelRecord();
-                        break;
-                    default:
-                        e.Cancel = true;
-                        return;
-                }
-            }
-            base.OnClosing(e);
         }
 
         public override bool CanDeleteRecord()

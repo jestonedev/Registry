@@ -109,7 +109,7 @@ namespace Registry.Viewport
         {
             if (ParentRow == null)
             {
-                if (viewportState == ViewportState.NewRowState)
+                if (ViewportState == ViewportState.NewRowState)
                     Text = @"Новый найм";
                 else
                     if (GeneralBindingSource.Position != -1)
@@ -122,7 +122,7 @@ namespace Registry.Viewport
                 switch (ParentType)
                 {
                     case ParentTypeEnum.Building:
-                        if (viewportState == ViewportState.NewRowState)
+                        if (ViewportState == ViewportState.NewRowState)
                             Text = string.Format(CultureInfo.InvariantCulture, "Новый найм здания №{0}", ParentRow["id_building"]);
                         else
                         if (GeneralBindingSource.Position != -1)
@@ -132,7 +132,7 @@ namespace Registry.Viewport
                             Text = string.Format(CultureInfo.InvariantCulture, "Наймы здания №{0} отсутствуют", ParentRow["id_building"]);
                         break;
                     case ParentTypeEnum.Premises:
-                        if (viewportState == ViewportState.NewRowState)
+                        if (ViewportState == ViewportState.NewRowState)
                             Text = string.Format(CultureInfo.InvariantCulture, "Новый найм помещения №{0}", ParentRow["id_premises"]);
                         else
                             if (GeneralBindingSource.Position != -1)
@@ -142,7 +142,7 @@ namespace Registry.Viewport
                                 Text = string.Format(CultureInfo.InvariantCulture, "Наймы помещения №{0} отсутствуют", ParentRow["id_premises"]);
                         break;
                     case ParentTypeEnum.SubPremises:
-                        if (viewportState == ViewportState.NewRowState)
+                        if (ViewportState == ViewportState.NewRowState)
                             Text = string.Format(CultureInfo.InvariantCulture, "Новый найм комнаты №{0}", ParentRow["id_sub_premises"]);
                         else
                             if (GeneralBindingSource.Position != -1)
@@ -312,7 +312,7 @@ namespace Registry.Viewport
         {
             if (AccessControl.HasPrivelege(Priveleges.TenancyWrite)) 
                 return base.ChangeViewportStateTo(state);
-            viewportState = ViewportState.ReadState;
+            ViewportState = ViewportState.ReadState;
             return true;
         }
 
@@ -432,7 +432,7 @@ namespace Registry.Viewport
             }
             // Отклики из прошлого, раньше была возможность менять ордер на вкладке процесса найма, убрано из-за плохой согласованности с основаниями найма
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            if (viewportState != ViewportState.NewRowState)
+            if (ViewportState != ViewportState.NewRowState)
             {
                 var reasons =
                     (from reasonRow in DataModel.GetInstance<TenancyReasonsDataModel>().FilterDeletedRows() 
@@ -656,14 +656,14 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
-            is_editable = false;
+            IsEditable = false;
             GeneralBindingSource.AddNew();
             var index = _vExecutors.Find("executor_login", WindowsIdentity.GetCurrent().Name);
             if (index != -1)
                 comboBoxExecutor.SelectedValue = ((DataRowView)_vExecutors[index])["id_executor"];
             _isCopy = false;
             _idCopyProcess = null;
-            is_editable = true;
+            IsEditable = true;
             GeneralDataModel.EditingNewRecord = true;
             UnbindedCheckBoxesUpdate();
         }
@@ -678,7 +678,7 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
-            is_editable = false;
+            IsEditable = false;
             var tenancy = (TenancyProcess) EntityFromView();
             GeneralBindingSource.AddNew();
             GeneralDataModel.EditingNewRecord = true;
@@ -693,7 +693,7 @@ namespace Registry.Viewport
                 comboBoxExecutor.SelectedValue = ((DataRowView)_vExecutors[index])["id_executor"];
             _isCopy = true;
             _idCopyProcess = tenancy.IdProcess;
-            is_editable = true;
+            IsEditable = true;
         }
 
         public override bool SearchedRecords()
@@ -729,25 +729,25 @@ namespace Registry.Viewport
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 filter += " AND ";
             filter += DynamicFilter;
-            is_editable = false;
+            IsEditable = false;
             GeneralBindingSource.Filter = filter;
-            is_editable = true;
+            IsEditable = true;
         }
 
         public override void ClearSearch()
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
-            is_editable = false;
+            IsEditable = false;
             GeneralBindingSource.Filter = StaticFilter;
-            is_editable = true;
+            IsEditable = true;
             DynamicFilter = "";
         }
 
         public override bool CanDeleteRecord()
         {
             return (GeneralBindingSource.Position > -1)
-                && (viewportState != ViewportState.NewRowState)
+                && (ViewportState != ViewportState.NewRowState)
                 && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
@@ -758,10 +758,10 @@ namespace Registry.Viewport
             {
                 if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_process"]) == -1)
                     return;
-                is_editable = false;
+                IsEditable = false;
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
-                is_editable = true;
-                viewportState = ViewportState.ReadState;
+                IsEditable = true;
+                ViewportState = ViewportState.ReadState;
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.ForceCloseDetachedViewports();
             }
@@ -769,43 +769,43 @@ namespace Registry.Viewport
 
         public override bool CanCancelRecord()
         {
-            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
+            return (ViewportState == ViewportState.NewRowState) || (ViewportState == ViewportState.ModifyRowState);
         }
 
         public override void CancelRecord()
         {
-            switch (viewportState)
+            switch (ViewportState)
             {
                 case ViewportState.ReadState: return;
                 case ViewportState.NewRowState:
                     GeneralDataModel.EditingNewRecord = false;
                     if (GeneralBindingSource.Position != -1)
                     {
-                        is_editable = false;
+                        IsEditable = false;
                         ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
                     }
                     else
                         Text = @"Процессы отсутствуют";
-                    viewportState = ViewportState.ReadState;
+                    ViewportState = ViewportState.ReadState;
                     break;
                 case ViewportState.ModifyRowState:
-                    is_editable = false;
+                    IsEditable = false;
                     DataBind();
                     BindWarrantId();
-                    viewportState = ViewportState.ReadState;
+                    ViewportState = ViewportState.ReadState;
                     break;
             }
             UnbindedCheckBoxesUpdate();
             _isCopy = false;
             _idCopyProcess = null;
-            is_editable = true;
+            IsEditable = true;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
         }
 
         public override bool CanSaveRecord()
         {
-            return ((viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState))
+            return ((ViewportState == ViewportState.NewRowState) || (ViewportState == ViewportState.ModifyRowState))
                 && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
@@ -819,7 +819,7 @@ namespace Registry.Viewport
                 filter += " OR ";
             else
                 filter += "(1 = 1) OR ";
-            switch (viewportState)
+            switch (ViewportState)
             {
                 case ViewportState.ReadState:
                     MessageBox.Show(@"Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
@@ -834,7 +834,7 @@ namespace Registry.Viewport
                     }
                     DataRowView newRow;
                     tenancy.IdProcess = idProcess;
-                    is_editable = false;
+                    IsEditable = false;
                     if (GeneralBindingSource.Position == -1)
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
@@ -918,15 +918,15 @@ namespace Registry.Viewport
                     if (GeneralDataModel.Update(tenancy) == -1)
                         return;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    is_editable = false;
+                    IsEditable = false;
                     filter += string.Format(CultureInfo.CurrentCulture, "(id_process = {0})", tenancy.IdProcess);
                     GeneralBindingSource.Filter += filter;
                     TenancyProcessConverter.FillRow(tenancy, row);
                     break;
             }
             UnbindedCheckBoxesUpdate();
-            is_editable = true;
-            viewportState = ViewportState.ReadState;
+            IsEditable = true;
+            ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
         }
@@ -1027,13 +1027,6 @@ namespace Registry.Viewport
             }
             tenancySubPremisesAssoc.EditingNewRecord = false;
             return true;
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                e.Cancel = true;
-            base.OnClosing(e);
         }
 
         public override bool HasAssocViewport<T>()
@@ -1195,10 +1188,10 @@ namespace Registry.Viewport
             BindWarrantId();
             if (GeneralBindingSource.Position == -1)
                 return;
-            if (viewportState == ViewportState.NewRowState)
+            if (ViewportState == ViewportState.NewRowState)
                 return;
-            viewportState = ViewportState.ReadState;
-            is_editable = true;
+            ViewportState = ViewportState.ReadState;
+            IsEditable = true;
         }
 
         void TenancyViewport_RowDeleted(object sender, DataRowChangeEventArgs e)

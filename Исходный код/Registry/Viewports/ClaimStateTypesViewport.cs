@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -408,28 +407,6 @@ namespace Registry.Viewport
             if (viewport.CanLoadData())
                 viewport.LoadData();
             return viewport;
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            if (SnapshotHasChanges())
-            {
-                var result = MessageBox.Show(@"Сохранить изменения о структуре зданий в базу данных?", @"Внимание",
-                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                switch (result)
-                {
-                    case DialogResult.Yes:
-                        SaveRecord();
-                        break;
-                    case DialogResult.No:
-                        CancelRecord();
-                        break;
-                    default:
-                        e.Cancel = true;
-                        return;
-                }
-            }
-            base.OnClosing(e);
         }
 
         private void v_claim_state_types_from_CurrentItemChanged(object sender, EventArgs e)

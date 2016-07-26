@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -125,7 +124,8 @@ namespace Registry.Viewport
             var ds = DataModel.DataSet;
 
             GeneralBindingSource = new BindingSource {DataMember = "tenancy_processes"};
-            GeneralBindingSource.CurrentItemChanged += GeneralBindingSource_CurrentItemChanged;
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
+
             GeneralBindingSource.DataSource = ds;
             RebuildStaticFilter();
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
@@ -140,32 +140,33 @@ namespace Registry.Viewport
                 DataSource = ds
             };
 
-            GeneralDataModel.Select().RowChanged += TenancyListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted += TenancyListViewport_RowDeleted;
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", TenancyListViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", TenancyListViewport_RowDeleted);
+
             if (ParentRow != null)
             {
                 switch (ParentType)
                 {
                     case ParentTypeEnum.Building:
                         _tenancyBuildingAssoc = DataModel.GetInstance<TenancyBuildingsAssocDataModel>();
-                        _tenancyBuildingAssoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
-                        _tenancyBuildingAssoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
+                        AddEventHandler<DataRowChangeEventArgs>(_tenancyBuildingAssoc.Select(), "RowChanged", TenancyAssocViewport_RowChanged);
+                        AddEventHandler<DataRowChangeEventArgs>(_tenancyBuildingAssoc.Select(), "RowDeleted", TenancyAssocViewport_RowDeleted);
                         break;
                     case ParentTypeEnum.Premises:
                         _tenancyPremisesAssoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
-                        _tenancyPremisesAssoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
-                        _tenancyPremisesAssoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
+                        AddEventHandler<DataRowChangeEventArgs>(_tenancyPremisesAssoc.Select(), "RowChanged", TenancyAssocViewport_RowChanged);
+                        AddEventHandler<DataRowChangeEventArgs>(_tenancyPremisesAssoc.Select(), "RowDeleted", TenancyAssocViewport_RowDeleted);
                         break;
                     case ParentTypeEnum.SubPremises:
                         _tenancySubPremisesAssoc = DataModel.GetInstance<TenancySubPremisesAssocDataModel>();
-                        _tenancySubPremisesAssoc.Select().RowChanged += TenancyAssocViewport_RowChanged;
-                        _tenancySubPremisesAssoc.Select().RowDeleted += TenancyAssocViewport_RowDeleted;
+                        AddEventHandler<DataRowChangeEventArgs>(_tenancySubPremisesAssoc.Select(), "RowChanged", TenancyAssocViewport_RowChanged);
+                        AddEventHandler<DataRowChangeEventArgs>(_tenancySubPremisesAssoc.Select(), "RowDeleted", TenancyAssocViewport_RowDeleted);
                         break;
                     default: throw new ViewportException("Неизвестный тип родительского объекта");
                 }
             }
             dataGridView.RowCount = GeneralBindingSource.Count;
-            _tenanciesAggregate.RefreshEvent += tenancies_aggregate_RefreshEvent;
+            AddEventHandler<EventArgs>(_tenanciesAggregate, "RefreshEvent", tenancies_aggregate_RefreshEvent);
             ViewportHelper.SetDoubleBuffered(dataGridView);
         }
 
@@ -438,30 +439,6 @@ namespace Registry.Viewport
                 return false;
             }
             return true;
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            GeneralDataModel.Select().RowChanged -= TenancyListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted -= TenancyListViewport_RowDeleted;
-            _tenanciesAggregate.RefreshEvent -= tenancies_aggregate_RefreshEvent;
-            GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
-            if (_tenancyBuildingAssoc != null)
-            {
-                _tenancyBuildingAssoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
-                _tenancyBuildingAssoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
-            }
-            if (_tenancyPremisesAssoc != null)
-            {
-                _tenancyPremisesAssoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
-                _tenancyPremisesAssoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
-            }
-            if (_tenancySubPremisesAssoc != null)
-            {
-                _tenancySubPremisesAssoc.Select().RowChanged -= TenancyAssocViewport_RowChanged;
-                _tenancySubPremisesAssoc.Select().RowDeleted -= TenancyAssocViewport_RowDeleted;
-            }
-            base.OnClosing(e);
         }
 
         private void dataGridView_CellDoubleClick(object sender, DataGridViewCellEventArgs e)

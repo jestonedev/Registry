@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Registry.Reporting;
+﻿using Registry.Reporting;
 using Registry.Viewport.SearchForms;
 
 namespace Registry.Viewport

@@ -1,5 +1,6 @@
 ﻿
 using System;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
@@ -9,8 +10,8 @@ namespace Registry.Viewport
 {
     internal class FormViewport: Viewport
     {
-        protected bool is_editable;
-        protected ViewportState viewportState = ViewportState.ReadState;
+        protected bool IsEditable;
+        protected ViewportState ViewportState = ViewportState.ReadState;
 
         protected FormViewport(): this(null, null)
         {
@@ -25,36 +26,36 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
-            is_editable = false;
+            IsEditable = false;
             GeneralBindingSource.MoveFirst();
-            is_editable = true;
+            IsEditable = true;
         }
 
         public sealed override void MoveLast()
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
-            is_editable = false;
+            IsEditable = false;
             GeneralBindingSource.MoveLast();
-            is_editable = true;
+            IsEditable = true;
         }
 
         public sealed override void MoveNext()
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
-            is_editable = false;
+            IsEditable = false;
             GeneralBindingSource.MoveNext();
-            is_editable = true;
+            IsEditable = true;
         }
 
         public sealed override void MovePrev()
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
-            is_editable = false;
+            IsEditable = false;
             GeneralBindingSource.MovePrevious();
-            is_editable = true;
+            IsEditable = true;
         }
 
         public sealed override bool CanMoveFirst()
@@ -93,7 +94,7 @@ namespace Registry.Viewport
 
         private bool SetReadState()
         {
-            switch (viewportState)
+            switch (ViewportState)
             {
                 case ViewportState.ReadState:
                     return true;
@@ -112,17 +113,17 @@ namespace Registry.Viewport
                         default:
                             return false;
                     }
-                    return viewportState == ViewportState.ReadState;
+                    return ViewportState == ViewportState.ReadState;
             }
             return false;
         }
 
         private bool SetModifyRowState()
         {
-            switch (viewportState)
+            switch (ViewportState)
             {
                 case ViewportState.ReadState:
-                    viewportState = ViewportState.ModifyRowState;
+                    ViewportState = ViewportState.ModifyRowState;
                     return true;
                 case ViewportState.ModifyRowState:
                     return true;
@@ -140,19 +141,19 @@ namespace Registry.Viewport
                         default:
                             return false;
                     }
-                    return viewportState == ViewportState.ReadState && ChangeViewportStateTo(ViewportState.ModifyRowState);
+                    return ViewportState == ViewportState.ReadState && ChangeViewportStateTo(ViewportState.ModifyRowState);
             }
             return false;
         }
 
         private bool SetNewRowState()
         {
-            switch (viewportState)
+            switch (ViewportState)
             {
                 case ViewportState.ReadState:
                     if (GeneralDataModel.EditingNewRecord)
                         return false;
-                    viewportState = ViewportState.NewRowState;
+                    ViewportState = ViewportState.NewRowState;
                     return true;
                 case ViewportState.NewRowState:
                     return true;
@@ -170,26 +171,26 @@ namespace Registry.Viewport
                         default:
                             return false;
                     }
-                    return viewportState == ViewportState.ReadState && ChangeViewportStateTo(ViewportState.NewRowState);
+                    return ViewportState == ViewportState.ReadState && ChangeViewportStateTo(ViewportState.NewRowState);
             }
             return false;
         }
 
         protected virtual void CheckViewportModifications()
         {
-            if (!is_editable)
+            if (!IsEditable)
                 return;
             if (!ContainsFocus)
                 return;
             if ((GeneralBindingSource.Position != -1) && (!EntityFromView().Equals(EntityFromViewport())))
             {
-                if (viewportState == ViewportState.ReadState)
-                    viewportState = ViewportState.ModifyRowState;
+                if (ViewportState == ViewportState.ReadState)
+                    ViewportState = ViewportState.ModifyRowState;
             }
             else
             {
-                if (viewportState == ViewportState.ModifyRowState)
-                    viewportState = ViewportState.ReadState;
+                if (ViewportState == ViewportState.ModifyRowState)
+                    ViewportState = ViewportState.ReadState;
             }
             if (Selected)
                 MenuCallback.EditingStateUpdate();
@@ -248,10 +249,10 @@ namespace Registry.Viewport
         public override void LocateEntityBy(string fieldName, object value)
         {
             var position = GeneralBindingSource.Find(fieldName, value);
-            is_editable = false;
+            IsEditable = false;
             if (position > 0)
                 GeneralBindingSource.Position = position;
-            is_editable = true;
+            IsEditable = true;
         }
 
         public override Viewport Duplicate()
@@ -274,10 +275,18 @@ namespace Registry.Viewport
 
         public override void ForceClose()
         {
-            if (viewportState == ViewportState.NewRowState)
+            if (ViewportState == ViewportState.NewRowState)
                 GeneralDataModel.EditingNewRecord = false;
-            viewportState = ViewportState.ReadState;
+            ViewportState = ViewportState.ReadState;
             Close();
+        }
+
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            Activate();
+            if (!ChangeViewportStateTo(ViewportState.ReadState))
+                e.Cancel = true;
+            base.OnClosing(e);
         }
     }
 }

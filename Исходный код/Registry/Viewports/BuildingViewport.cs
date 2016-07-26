@@ -310,7 +310,7 @@ namespace Registry.Viewport
             if (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) ||
                 (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)))
                 return base.ChangeViewportStateTo(state);
-            viewportState = ViewportState.ReadState;
+            ViewportState = ViewportState.ReadState;
             return true;
         }
 
@@ -404,7 +404,7 @@ namespace Registry.Viewport
 
         private void SetViewportCaption()
         {
-            if (viewportState == ViewportState.NewRowState)
+            if (ViewportState == ViewportState.NewRowState)
                 Text = @"Новое здание";
             else
                 if (GeneralBindingSource.Position != -1)
@@ -643,9 +643,9 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
-            is_editable = false;
+            IsEditable = false;
             GeneralBindingSource.Filter = StaticFilter;
-            is_editable = true;
+            IsEditable = true;
             DynamicFilter = "";
         }
 
@@ -679,14 +679,14 @@ namespace Registry.Viewport
             if (!string.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
                 filter += " AND ";
             filter += DynamicFilter;
-            is_editable = false;
+            IsEditable = false;
             GeneralBindingSource.Filter = filter;
-            is_editable = true;
+            IsEditable = true;
         }
 
         public override bool CanSaveRecord()
         {
-            return ((viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState)) &&
+            return ((ViewportState == ViewportState.NewRowState) || (ViewportState == ViewportState.ModifyRowState)) &&
                 (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
@@ -695,8 +695,8 @@ namespace Registry.Viewport
             var building = (Building) EntityFromViewport();
             if (!ValidateBuilding(building))
                 return;
-            is_editable = false;
-            switch (viewportState)
+            IsEditable = false;
+            switch (ViewportState)
             {
                 case ViewportState.ReadState:
                     MessageBox.Show(@"Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
@@ -711,8 +711,8 @@ namespace Registry.Viewport
                     break;
             }
             UnbindedCheckBoxesUpdate();
-            is_editable = true;
-            viewportState = ViewportState.ReadState;
+            IsEditable = true;
+            ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
             ShowOrHideCurrentFund();
@@ -764,34 +764,34 @@ namespace Registry.Viewport
 
         public override bool CanCancelRecord()
         {
-            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
+            return (ViewportState == ViewportState.NewRowState) || (ViewportState == ViewportState.ModifyRowState);
         }
 
         public override void CancelRecord()
         {
-            switch (viewportState)
+            switch (ViewportState)
             {
                 case ViewportState.ReadState: return;
                 case ViewportState.NewRowState:
                     GeneralDataModel.EditingNewRecord = false;
                     if (GeneralBindingSource.Position != -1)
                     {
-                        is_editable = false;
+                        IsEditable = false;
                         ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
                     }
                     else
                         Text = @"Здания отсутствуют";
-                    viewportState = ViewportState.ReadState;
+                    ViewportState = ViewportState.ReadState;
                     break;
                 case ViewportState.ModifyRowState:
                     _vKladr.Filter = "";
-                    is_editable = false;
+                    IsEditable = false;
                     DataBind();
-                    viewportState = ViewportState.ReadState;
+                    ViewportState = ViewportState.ReadState;
                     break;
             }
             UnbindedCheckBoxesUpdate();
-            is_editable = true;
+            IsEditable = true;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
         }
@@ -806,9 +806,9 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
-            is_editable = false;
+            IsEditable = false;
             GeneralBindingSource.AddNew();
-            is_editable = true;
+            IsEditable = true;
             GeneralDataModel.EditingNewRecord = true;
             UnbindedCheckBoxesUpdate();
         }
@@ -823,18 +823,18 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
-            is_editable = false;
+            IsEditable = false;
             var building = (Building) EntityFromView();
             GeneralBindingSource.AddNew();
             GeneralDataModel.EditingNewRecord = true;
             ViewportFromBuilding(building);
-            is_editable = true;
+            IsEditable = true;
         }
 
         public override bool CanDeleteRecord()
         {
             return (GeneralBindingSource.Position > -1)
-                && (viewportState != ViewportState.NewRowState) &&
+                && (ViewportState != ViewportState.NewRowState) &&
                 (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
@@ -859,10 +859,10 @@ namespace Registry.Viewport
                 }
                 if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_building"]) == -1)
                     return;
-                is_editable = false;
+                IsEditable = false;
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
-                is_editable = true;
-                viewportState = ViewportState.ReadState;
+                IsEditable = true;
+                ViewportState = ViewportState.ReadState;
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.ForceCloseDetachedViewports();
             }
@@ -894,13 +894,6 @@ namespace Registry.Viewport
                 "id_building = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"], CultureInfo.InvariantCulture),
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
                 ParentTypeEnum.Building);
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                e.Cancel = true;
-            base.OnClosing(e);
         }
 
         protected override void OnVisibleChanged(EventArgs e)
@@ -981,10 +974,10 @@ namespace Registry.Viewport
             UnbindedCheckBoxesUpdate();
             if (GeneralBindingSource.Position == -1)
                 return;
-            if (viewportState == ViewportState.NewRowState)
+            if (ViewportState == ViewportState.NewRowState)
                 return;
-            viewportState = ViewportState.ReadState;
-            is_editable = true;
+            ViewportState = ViewportState.ReadState;
+            IsEditable = true;
         }
 
         private void v_ownershipBuildingsAssoc_CurrentItemChanged(object sender, EventArgs e)

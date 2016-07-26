@@ -115,15 +115,6 @@ namespace Registry.Viewport
             base.Dispose(disposing);
         }
 
-        private static ResettleObject RowToResettleSubPremises(DataRow row)
-        {
-            var ro = new ResettleObject();
-            ro.IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
-            ro.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
-            ro.IdObject = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises");
-            return ro;
-        }
-
         public List<ResettleObject> ResettleSubPremisesFromViewport()
         {
             var list = new List<ResettleObject>();

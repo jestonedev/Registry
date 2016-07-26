@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -181,7 +180,7 @@ namespace Registry.Viewport
         protected override bool ChangeViewportStateTo(ViewportState state)
         {
             if (AccessControl.HasPrivelege(Priveleges.TenancyWrite)) return base.ChangeViewportStateTo(state);
-            viewportState = ViewportState.ReadState;
+            ViewportState = ViewportState.ReadState;
             return true;
         }
 
@@ -383,7 +382,7 @@ namespace Registry.Viewport
 
             AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", TenancyPersonsViewport_RowDeleted);
             AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", TenancyPersonsViewport_RowChanged);
-            is_editable = true;
+            IsEditable = true;
             DataChangeHandlersInit();
             if (GeneralBindingSource.Count == 0)
                 InsertRecord();
@@ -398,11 +397,11 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
-            is_editable = false;
+            IsEditable = false;
             GeneralBindingSource.AddNew();
             dataGridViewTenancyPersons.Enabled = false;
             textBoxSurname.Focus();
-            is_editable = true;
+            IsEditable = true;
             GeneralDataModel.EditingNewRecord = true;
         }
 
@@ -416,7 +415,7 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
-            is_editable = false;
+            IsEditable = false;
             var tenancyPerson = (TenancyPerson) EntityFromView();
             GeneralBindingSource.AddNew();
             dataGridViewTenancyPersons.Enabled = false;
@@ -425,13 +424,13 @@ namespace Registry.Viewport
             dateTimePickerDateOfBirth.Checked = (tenancyPerson.DateOfBirth != null);
             dateTimePickerDateOfDocumentIssue.Checked = (tenancyPerson.DateOfDocumentIssue != null);
             textBoxSurname.Focus();
-            is_editable = true;
+            IsEditable = true;
         }
 
         public override bool CanDeleteRecord()
         {
             return (GeneralBindingSource.Position > -1)
-                && (viewportState != ViewportState.NewRowState)
+                && (ViewportState != ViewportState.NewRowState)
                 && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
@@ -442,11 +441,11 @@ namespace Registry.Viewport
             {
                 if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_person"]) == -1)
                     return;
-                is_editable = false;
+                IsEditable = false;
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
-                is_editable = true;
+                IsEditable = true;
                 RedrawDataGridRows();
-                viewportState = ViewportState.ReadState;
+                ViewportState = ViewportState.ReadState;
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.ForceCloseDetachedViewports(); 
             }
@@ -459,7 +458,7 @@ namespace Registry.Viewport
 
         public override bool CanCancelRecord()
         {
-            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
+            return (ViewportState == ViewportState.NewRowState) || (ViewportState == ViewportState.ModifyRowState);
         }
 
         public override void CancelRecord()
@@ -467,37 +466,37 @@ namespace Registry.Viewport
             _vRegistrationStreet.Filter = "";
             _vResidenceStreet.Filter = "";
             _vDocumentIssuedBy.Filter = "";
-            switch (viewportState)
+            switch (ViewportState)
             {
                 case ViewportState.ReadState: return;
                 case ViewportState.NewRowState:
                     GeneralDataModel.EditingNewRecord = false;
                     if (GeneralBindingSource.Position != -1)
                     {
-                        is_editable = false; 
+                        IsEditable = false; 
                         dataGridViewTenancyPersons.Enabled = true;
                         ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
                         RedrawDataGridRows();
                         if (GeneralBindingSource.Position != -1)
                             dataGridViewTenancyPersons.Rows[GeneralBindingSource.Position].Selected = true;
                     }
-                    viewportState = ViewportState.ReadState;
+                    ViewportState = ViewportState.ReadState;
                     break;
                 case ViewportState.ModifyRowState:
                     dataGridViewTenancyPersons.Enabled = true;
-                    is_editable = false;
+                    IsEditable = false;
                     DataBind();
-                    viewportState = ViewportState.ReadState;
+                    ViewportState = ViewportState.ReadState;
                     break;
             }
             UnbindedCheckBoxesUpdate();
-            is_editable = true;
+            IsEditable = true;
             MenuCallback.EditingStateUpdate();
         }
 
         public override bool CanSaveRecord()
         {
-            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState)
+            return (ViewportState == ViewportState.NewRowState) || (ViewportState == ViewportState.ModifyRowState)
                 && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
@@ -516,7 +515,7 @@ namespace Registry.Viewport
             var tenancyPerson = (TenancyPerson) EntityFromViewport();
             if (!ValidateTenancyPerson(tenancyPerson))
                 return;
-            switch (viewportState)
+            switch (ViewportState)
             {
                 case ViewportState.ReadState:
                     MessageBox.Show(@"Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
@@ -531,7 +530,7 @@ namespace Registry.Viewport
                     }
                     DataRowView newRow;
                     tenancyPerson.IdPerson = idPerson;
-                    is_editable = false;
+                    IsEditable = false;
                     if (GeneralBindingSource.Position == -1)
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
@@ -550,23 +549,16 @@ namespace Registry.Viewport
                     if (GeneralDataModel.Update(tenancyPerson) == -1)
                         return;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    is_editable = false;
+                    IsEditable = false;
                     TenancyPersonConverter.FillRow(tenancyPerson, row);
                     break;
             }
             RedrawDataGridRows();
             UnbindedCheckBoxesUpdate();
-            viewportState = ViewportState.ReadState;
+            ViewportState = ViewportState.ReadState;
             dataGridViewTenancyPersons.Enabled = true;
-            is_editable = true;
+            IsEditable = true;
             MenuCallback.EditingStateUpdate();
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                e.Cancel = true;
-            base.OnClosing(e);
         }
 
         private void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
@@ -591,11 +583,11 @@ namespace Registry.Viewport
             UnbindedCheckBoxesUpdate();
             if (GeneralBindingSource.Position == -1)
                 return;
-            if (viewportState == ViewportState.NewRowState)
+            if (ViewportState == ViewportState.NewRowState)
                 return;
             dataGridViewTenancyPersons.Enabled = true;
-            viewportState = ViewportState.ReadState;
-            is_editable = true;
+            ViewportState = ViewportState.ReadState;
+            IsEditable = true;
         }
 
         private void TenancyPersonsViewport_RowChanged(object sender, DataRowChangeEventArgs e)
@@ -737,7 +729,7 @@ namespace Registry.Viewport
 
         private void buttonImportFromMSP_Click(object sender, EventArgs e)
         {
-            if ((GeneralBindingSource.Count == 0 || (GeneralBindingSource.Count == 1 && viewportState == ViewportState.NewRowState))
+            if ((GeneralBindingSource.Count == 0 || (GeneralBindingSource.Count == 1 && ViewportState == ViewportState.NewRowState))
                 && ParentType == ParentTypeEnum.Tenancy)
             {
                 var premisesAssoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
@@ -852,7 +844,7 @@ namespace Registry.Viewport
                     {
                         connection.Open();
                         var reader = command.ExecuteReader();
-                        is_editable = false;
+                        IsEditable = false;
                         while (reader.Read())
                         {
                             var surnameValue = reader.GetString(0);
@@ -879,13 +871,13 @@ namespace Registry.Viewport
                             if (row == null) continue;
                             TenancyPersonConverter.FillRow(person, row);
                         }
-                        is_editable = true;
+                        IsEditable = true;
                     }
                     catch (SqlException err)
                     {
                         MessageBox.Show(string.Format("Ошибка подключения к базе данных. Подробнее: {0}", err.Message), @"Ошибка",
                             MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                        is_editable = true;
+                        IsEditable = true;
                     }
                 }
                 return;

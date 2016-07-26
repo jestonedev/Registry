@@ -44,7 +44,7 @@ namespace Registry.Viewport
 
         private void SetViewportCaption()
         {
-            if (viewportState == ViewportState.NewRowState)
+            if (ViewportState == ViewportState.NewRowState)
             {
                 if ((ParentRow != null) && (ParentType == ParentTypeEnum.PaymentAccount))
                 {
@@ -120,7 +120,7 @@ namespace Registry.Viewport
         {
             if (AccessControl.HasPrivelege(Priveleges.ClaimsWrite))
                 return base.ChangeViewportStateTo(state);
-            viewportState = ViewportState.ReadState;
+            ViewportState = ViewportState.ReadState;
             return true;
         }
 
@@ -218,7 +218,7 @@ namespace Registry.Viewport
             dataGridViewClaims.RowCount = GeneralBindingSource.Count;
             SetViewportCaption();
             ViewportHelper.SetDoubleBuffered(dataGridViewClaims);
-            is_editable = true;
+            IsEditable = true;
             DataChangeHandlersInit();
             _lastClaimStates = CalcDataModel.GetInstance<CalcDataModelLastClaimStates>();
             AddEventHandler<EventArgs>(_lastClaimStates, "RefreshEvent", lastClaimStates_RefreshEvent);
@@ -252,7 +252,7 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
-            is_editable = false;
+            IsEditable = false;
             dataGridViewClaims.RowCount = dataGridViewClaims.RowCount + 1;
             GeneralBindingSource.AddNew();
             if (ParentRow != null && ParentType == ParentTypeEnum.PaymentAccount)
@@ -261,7 +261,7 @@ namespace Registry.Viewport
                 numericUpDownAmountDGI.Value = ViewportHelper.ValueOrDefault((decimal?)ParentRow["balance_output_dgi"]);
                 numericUpDownAmountPenalties.Value = ViewportHelper.ValueOrDefault((decimal?)ParentRow["balance_output_penalties"]);
             }
-            is_editable = true;
+            IsEditable = true;
             dataGridViewClaims.Enabled = false;
             GeneralDataModel.EditingNewRecord = true;
         }
@@ -276,7 +276,7 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
-            is_editable = false;
+            IsEditable = false;
             var claim = (Claim)EntityFromView();
             dataGridViewClaims.RowCount = dataGridViewClaims.RowCount + 1;
             GeneralBindingSource.AddNew();
@@ -286,12 +286,12 @@ namespace Registry.Viewport
             dateTimePickerAtDate.Checked = (claim.AtDate != null);
             dateTimePickerStartDeptPeriod.Checked = claim.StartDeptPeriod != null;
             dateTimePickerEndDeptPeriod.Checked = claim.EndDeptPeriod != null;
-            is_editable = true;
+            IsEditable = true;
         }
 
         public override bool CanDeleteRecord()
         {
-            return (GeneralBindingSource.Position > -1) && (viewportState != ViewportState.NewRowState)
+            return (GeneralBindingSource.Position > -1) && (ViewportState != ViewportState.NewRowState)
                 && AccessControl.HasPrivelege(Priveleges.ClaimsWrite);
         }
 
@@ -302,17 +302,17 @@ namespace Registry.Viewport
                 return;
             if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_claim"]) == -1)
                 return;
-            is_editable = false;
+            IsEditable = false;
             ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
-            is_editable = true;
-            viewportState = ViewportState.ReadState;
+            IsEditable = true;
+            ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             MenuCallback.ForceCloseDetachedViewports();
         }
 
         public override bool CanSaveRecord()
         {
-            return ((viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState))
+            return ((ViewportState == ViewportState.NewRowState) || (ViewportState == ViewportState.ModifyRowState))
                 && AccessControl.HasPrivelege(Priveleges.ClaimsWrite);
         }
 
@@ -338,8 +338,8 @@ namespace Registry.Viewport
             var claim = (Claim) EntityFromViewport();
             if (!ValidateClaim(claim))
                 return;
-            if (((viewportState == ViewportState.ModifyRowState && ((Claim)EntityFromView()).EndDeptPeriod != claim.EndDeptPeriod) ||
-                viewportState == ViewportState.NewRowState) && claim.EndDeptPeriod != null && claim.IdAccount != null &&
+            if (((ViewportState == ViewportState.ModifyRowState && ((Claim)EntityFromView()).EndDeptPeriod != claim.EndDeptPeriod) ||
+                ViewportState == ViewportState.NewRowState) && claim.EndDeptPeriod != null && claim.IdAccount != null &&
                 MessageBox.Show(@"Вы хотите обновить суммы взыскания на предъявленный период?",@"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
@@ -367,8 +367,8 @@ namespace Registry.Viewport
                     claim.AmountPenalties = balanceInfo.BalanceOutputPenalties;
                 }
             }
-            is_editable = false;
-            switch (viewportState)
+            IsEditable = false;
+            switch (ViewportState)
             {
                 case ViewportState.ReadState:
                     MessageBox.Show(@"Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
@@ -385,8 +385,8 @@ namespace Registry.Viewport
             UnbindedCheckBoxesUpdate();
             dataGridViewClaims.RowCount = GeneralBindingSource.Count;
             dataGridViewClaims.Enabled = true;
-            is_editable = true;
-            viewportState = ViewportState.ReadState;
+            IsEditable = true;
+            ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
         }
@@ -473,19 +473,19 @@ namespace Registry.Viewport
 
         public override bool CanCancelRecord()
         {
-            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
+            return (ViewportState == ViewportState.NewRowState) || (ViewportState == ViewportState.ModifyRowState);
         }
 
         public override void CancelRecord()
         {
-            switch (viewportState)
+            switch (ViewportState)
             {
                 case ViewportState.ReadState: return;
                 case ViewportState.NewRowState:
                     GeneralDataModel.EditingNewRecord = false;
                     if (GeneralBindingSource.Position != -1)
                     {
-                        is_editable = false;
+                        IsEditable = false;
                         dataGridViewClaims.Enabled = true;
                         ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
                         dataGridViewClaims.RowCount = dataGridViewClaims.RowCount - 1;
@@ -495,15 +495,15 @@ namespace Registry.Viewport
                     break;
                 case ViewportState.ModifyRowState:
                     dataGridViewClaims.Enabled = true;
-                    is_editable = false;
+                    IsEditable = false;
                     DataBind();
                     break;
             }
             UnbindedCheckBoxesUpdate();
             UpdateIdAccount();
             BindAccount(_idAccount);
-            is_editable = true;
-            viewportState = ViewportState.ReadState;
+            IsEditable = true;
+            ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
         }
@@ -551,19 +551,6 @@ namespace Registry.Viewport
             GeneralBindingSource.Filter = StaticFilter;
             dataGridViewClaims.RowCount = GeneralBindingSource.Count;
             DynamicFilter = "";
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                e.Cancel = true;
-            else
-            {
-                GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
-                GeneralDataModel.Select().RowChanged -= ClaimListViewport_RowChanged;
-                GeneralDataModel.Select().RowDeleted -= ClaimListViewport_RowDeleted;
-            }
-            base.OnClosing(e);
         }
 
         public override bool HasAssocViewport<T>()
@@ -622,11 +609,11 @@ namespace Registry.Viewport
             BindAccount(_idAccount);
             if (GeneralBindingSource.Position == -1)
                 return;
-            if (viewportState == ViewportState.NewRowState)
+            if (ViewportState == ViewportState.NewRowState)
                 return;
             dataGridViewClaims.Enabled = true;
-            viewportState = ViewportState.ReadState;
-            is_editable = true;
+            ViewportState = ViewportState.ReadState;
+            IsEditable = true;
         }
 
         private void UpdateIdAccount()

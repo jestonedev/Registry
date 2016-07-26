@@ -545,22 +545,19 @@ namespace Registry.Viewport
             {
                 var result = MessageBox.Show(@"Сохранить изменения в базу данных?", @"Внимание",
                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                if (result == DialogResult.Yes)
-                    SaveRecord();
-                else
-                    if (result == DialogResult.No)
+                switch (result)
+                {
+                    case DialogResult.Yes:
+                        SaveRecord();
+                        break;
+                    case DialogResult.No:
                         CancelRecord();
-                    else
-                    {
+                        break;
+                    default:
                         e.Cancel = true;
                         return;
-                    }
+                }
             }
-            GeneralBindingSource.CurrentItemChanged -= GeneralBindingSource_CurrentItemChanged;
-            GeneralDataModel.Select().RowChanged -= PremisesListViewport_RowChanged;
-            GeneralDataModel.Select().RowDeleted -= PremisesListViewport_RowDeleted;
-            _resettlePremises.Select().RowChanged -= ResettlePremisesViewport_RowChanged;
-            _resettlePremises.Select().RowDeleting -= ResettlePremisesViewport_RowDeleting;
             base.OnClosing(e);
         }
 

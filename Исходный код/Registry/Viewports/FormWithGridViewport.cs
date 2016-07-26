@@ -31,23 +31,23 @@ namespace Registry.Viewport
 
         protected override void CheckViewportModifications()
         {
-            if (!is_editable)
+            if (!IsEditable)
                 return;
             if (!ContainsFocus || (DataGridView.Focused))
                 return;
             if ((GeneralBindingSource.Position != -1) && (!EntityFromView().Equals(EntityFromViewport())))
             {
-                if (viewportState == ViewportState.ReadState)
+                if (ViewportState == ViewportState.ReadState)
                 {
-                    viewportState = ViewportState.ModifyRowState;
+                    ViewportState = ViewportState.ModifyRowState;
                     DataGridView.Enabled = false;
                 }
             }
             else
             {
-                if (viewportState == ViewportState.ModifyRowState)
+                if (ViewportState == ViewportState.ModifyRowState)
                 {
-                    viewportState = ViewportState.ReadState;
+                    ViewportState = ViewportState.ReadState;
                     DataGridView.Enabled = true;
                 }
             }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
@@ -130,7 +129,7 @@ namespace Registry.Viewport
             if (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) ||
                 (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)))
                 return base.ChangeViewportStateTo(state);
-            viewportState = ViewportState.ReadState;
+            ViewportState = ViewportState.ReadState;
             return true;
         }
 
@@ -341,7 +340,7 @@ namespace Registry.Viewport
             AddEventHandler<DataRowChangeEventArgs>(_fundAssoc.Select(), "RowDeleted", FundAssoc_RowDeleted);
             AddEventHandler<EventArgs>(comboBoxFundType, "SelectedIndexChanged", comboBoxFundType_SelectedIndexChanged);
 
-            is_editable = true;
+            IsEditable = true;
             DataChangeHandlersInit();
             if (GeneralBindingSource.Count == 0)
                 InsertRecord();
@@ -349,7 +348,7 @@ namespace Registry.Viewport
 
         public override bool CanSaveRecord()
         {
-            return ((viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState)) &&
+            return ((ViewportState == ViewportState.NewRowState) || (ViewportState == ViewportState.ModifyRowState)) &&
                 (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
@@ -358,7 +357,7 @@ namespace Registry.Viewport
             var fundHistory = (FundHistory) EntityFromViewport();
             if (!ValidateFundHistory(fundHistory))
                 return;
-            switch (viewportState)
+            switch (ViewportState)
             {
                 case ViewportState.ReadState:
                     MessageBox.Show(@"Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
@@ -397,7 +396,7 @@ namespace Registry.Viewport
                     }
                     DataRowView newRow;
                     fundHistory.IdFund = idFund;
-                    is_editable = false;
+                    IsEditable = false;
                     if (GeneralBindingSource.Position == -1)
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
@@ -418,7 +417,7 @@ namespace Registry.Viewport
                     }
                     if (GeneralDataModel.Update(fundHistory) == -1)
                         return;
-                    is_editable = false;
+                    IsEditable = false;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     FundHistoryConverter.FillRow(fundHistory, row);
                     break;
@@ -426,8 +425,8 @@ namespace Registry.Viewport
             RedrawDataGridRows();
             UnbindedCheckBoxesUpdate();
             dataGridView.Enabled = true;
-            is_editable = true;
-            viewportState = ViewportState.ReadState;
+            IsEditable = true;
+            ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
         }
 
@@ -442,7 +441,7 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             comboBoxFundType.Focus();
-            is_editable = false;
+            IsEditable = false;
             var fundHistory = (FundHistory) EntityFromView();
             GeneralBindingSource.AddNew();
             dataGridView.Enabled = false;
@@ -450,7 +449,7 @@ namespace Registry.Viewport
             ViewportFromFundHistory(fundHistory);
             checkBoxIncludeRest.Checked = (fundHistory.IncludeRestrictionDate != null);
             checkBoxExcludeRest.Checked = (fundHistory.ExcludeRestrictionDate != null);
-            is_editable = true;
+            IsEditable = true;
         }
 
         public override bool CanInsertRecord()
@@ -464,10 +463,10 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             comboBoxFundType.Focus();
-            is_editable = false;
+            IsEditable = false;
             GeneralBindingSource.AddNew();
             dataGridView.Enabled = false;
-            is_editable = true;
+            IsEditable = true;
             GeneralDataModel.EditingNewRecord = true;
             UnbindedCheckBoxesUpdate();
         }
@@ -475,7 +474,7 @@ namespace Registry.Viewport
         public override bool CanDeleteRecord()
         {
             return (GeneralBindingSource.Position > -1)
-                && (viewportState != ViewportState.NewRowState) &&
+                && (ViewportState != ViewportState.NewRowState) &&
                 (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
@@ -488,11 +487,11 @@ namespace Registry.Viewport
                     return;
                 if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_fund"]) == -1)
                     return;
-                is_editable = false;
+                IsEditable = false;
                 ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
-                is_editable = true;
+                IsEditable = true;
                 RedrawDataGridRows();
-                viewportState = ViewportState.ReadState;
+                ViewportState = ViewportState.ReadState;
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.ForceCloseDetachedViewports();
             }
@@ -500,44 +499,37 @@ namespace Registry.Viewport
 
         public override bool CanCancelRecord()
         {
-            return (viewportState == ViewportState.NewRowState) || (viewportState == ViewportState.ModifyRowState);
+            return (ViewportState == ViewportState.NewRowState) || (ViewportState == ViewportState.ModifyRowState);
         }
 
         public override void CancelRecord()
         {
-            switch (viewportState)
+            switch (ViewportState)
             {
                 case ViewportState.ReadState: return;
                 case ViewportState.NewRowState:
                     GeneralDataModel.EditingNewRecord = false;
                     if (GeneralBindingSource.Position != -1)
                     {
-                        is_editable = false;
+                        IsEditable = false;
                         dataGridView.Enabled = true;
                         ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
                         RedrawDataGridRows();
                         if (GeneralBindingSource.Position != -1)
                             dataGridView.Rows[GeneralBindingSource.Position].Selected = true;
                     }
-                    viewportState = ViewportState.ReadState;
+                    ViewportState = ViewportState.ReadState;
                     break;
                 case ViewportState.ModifyRowState:
                     dataGridView.Enabled = true;
-                    is_editable = false;
+                    IsEditable = false;
                     DataBind();
-                    viewportState = ViewportState.ReadState;
+                    ViewportState = ViewportState.ReadState;
                     break;
             }
             UnbindedCheckBoxesUpdate();
-            is_editable = true;
+            IsEditable = true;
             MenuCallback.EditingStateUpdate();
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            if (!ChangeViewportStateTo(ViewportState.ReadState))
-                e.Cancel = true;
-            base.OnClosing(e);
         }
 
         private void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
@@ -559,11 +551,11 @@ namespace Registry.Viewport
             UnbindedCheckBoxesUpdate();
             if (GeneralBindingSource.Position == -1)
                 return;
-            if (viewportState == ViewportState.NewRowState)
+            if (ViewportState == ViewportState.NewRowState)
                 return;
             dataGridView.Enabled = true;
-            viewportState = ViewportState.ReadState;
-            is_editable = true;
+            ViewportState = ViewportState.ReadState;
+            IsEditable = true;
         }
 
         private void FundsHistoryViewport_RowDeleted(object sender, DataRowChangeEventArgs e)

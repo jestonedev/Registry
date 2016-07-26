@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -529,26 +528,6 @@ namespace Registry.Viewport
                 viewport.LocateEntityBy("id_premises", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"] as int? ?? -1);
             MenuCallback.AddViewport(viewport);
             viewport.CopyRecord();
-        }
-
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            if (SnapshotHasChanges())
-            {
-                var result = MessageBox.Show(@"Сохранить изменения в базу данных?", @"Внимание",
-                    MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
-                if (result == DialogResult.Yes)
-                    SaveRecord();
-                else
-                    if (result == DialogResult.No)
-                        CancelRecord();
-                    else
-                    {
-                        e.Cancel = true;
-                        return;
-                    }
-            }
-            base.OnClosing(e);
         }
 
         public override bool HasAssocViewport<T>()
