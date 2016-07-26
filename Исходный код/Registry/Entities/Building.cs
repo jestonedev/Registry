@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Linq;
+using System.Reflection;
 
 namespace Registry.Entities
 {
@@ -33,65 +35,6 @@ namespace Registry.Entities
         public bool? RadioNetwork { get; set; }
         public int? IdHeatingType { get; set; }
         public string RoomsBTI { get; set; }
-
-        public string HousingCooperative { get; set; }
-
-        public override bool Equals(object obj)
-        {
-            return this == obj as Building;
-        }
-
-        public bool Equals(Building other)
-        {
-            return Equals((object)other);
-        }
-
-        public static bool operator==(Building first, Building second)
-        {
-            if ((object)first == null && (object)second == null)
-                return true;
-            if ((object)first == null || (object)second == null)
-                return false;
-            return first.IdBuilding == second.IdBuilding &&
-                   first.IdStreet == second.IdStreet &&
-                   first.IdStructureType == second.IdStructureType &&
-                   first.House == second.House &&
-                   first.Floors == second.Floors &&
-                   first.NumPremises == second.NumPremises &&
-                   first.NumRooms == second.NumRooms &&
-                   first.NumApartments == second.NumApartments &&
-                   first.NumSharedApartments == second.NumSharedApartments &&
-                   first.TotalArea == second.TotalArea &&
-                   first.LivingArea == second.LivingArea &&
-                   first.CadastralNum == second.CadastralNum &&
-                   first.CadastralCost == second.CadastralCost &&
-                   first.BalanceCost == second.BalanceCost &&
-                   first.Description == second.Description &&
-                   first.StartupYear == second.StartupYear &&
-                   first.Improvement == second.Improvement &&
-                   first.Elevator == second.Elevator &&
-                   first.RubbishChute == second.RubbishChute &&
-                   first.IdState == second.IdState &&
-                   first.Wear == second.Wear &&
-                   first.StateDate == second.StateDate &&
-                    first.Plumbing == second.Plumbing &&
-                    first.Electricity == second.Electricity &&
-                    first.HotWaterSupply == second.HotWaterSupply &&
-                    first.Canalization == second.Canalization &&
-                    first.RadioNetwork == second.RadioNetwork &&
-                    first.IdHeatingType == second.IdHeatingType &&
-                    first.RoomsBTI == second.RoomsBTI &&
-                    first.HousingCooperative == second.HousingCooperative;
-        }
-
-        public static bool operator !=(Building first, Building second)
-        {
-            return !(first == second);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        public string HousingCooperative { get; set; }     
     }
 }

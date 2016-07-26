@@ -10,39 +10,5 @@ namespace Registry.Entities
         public decimal? Debts { get; set; }
         public string Description { get; set; }
         public string DocNumber { get; set; }
-
-        public override bool Equals(object obj)
-        {
-            return (this == (obj as ResettleProcess));
-        }
-
-        public bool Equals(ResettleProcess other)
-        {
-            return Equals((object)other);
-        }
-
-        public static bool operator ==(ResettleProcess first, ResettleProcess second)
-        {
-            if ((object)first == null && (object)second == null)
-                return true;
-            if ((object)first == null || (object)second == null)
-                return false;
-            return first.IdProcess == second.IdProcess &&
-                   first.ResettleDate == second.ResettleDate &&
-                   first.IdDocumentResidence == second.IdDocumentResidence &&
-                   first.Debts == second.Debts &&
-                   first.Description == second.Description &&
-                   first.DocNumber == second.DocNumber;
-        }
-
-        public static bool operator !=(ResettleProcess first, ResettleProcess second)
-        {
-            return !(first == second);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
     }
 }

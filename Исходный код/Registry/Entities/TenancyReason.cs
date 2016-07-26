@@ -10,39 +10,5 @@ namespace Registry.Entities
         public string ReasonNumber { get; set; }
         public DateTime? ReasonDate { get; set; }
         public string ReasonPrepared { get; set; }
-
-        public override bool Equals(object obj)
-        {
-            return (this == (obj as TenancyReason));
-        }
-
-        public bool Equals(TenancyReason other)
-        {
-            return Equals((object)other);
-        }
-
-        public static bool operator ==(TenancyReason first, TenancyReason second)
-        {
-            if ((object)first == null && (object)second == null)
-                return true;
-            if ((object)first == null || (object)second == null)
-                return false;
-            return first.IdReason == second.IdReason &&
-                   first.IdProcess == second.IdProcess &&
-                   first.IdReasonType == second.IdReasonType &&
-                   first.ReasonNumber == second.ReasonNumber &&
-                   first.ReasonDate == second.ReasonDate &&
-                   first.ReasonPrepared == second.ReasonPrepared;
-        }
-
-        public static bool operator !=(TenancyReason first, TenancyReason second)
-        {
-            return !(first == second);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
     }
 }

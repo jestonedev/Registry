@@ -16,45 +16,5 @@ namespace Registry.Entities
         public decimal? CadastralCost { get; set; }
         public decimal? BalanceCost { get; set; }
         public string Account { get; set; }
-
-        public override bool Equals(object obj)
-        {
-            return (this == (obj as SubPremise));
-        }
-
-        public bool Equals(SubPremise other)
-        {
-            return Equals((object)other);
-        }
-
-        public static bool operator ==(SubPremise first, SubPremise second)
-        {
-            if ((object)first == null && (object)second == null)
-                return true;
-            if ((object)first == null || (object)second == null)
-                return false;
-            return first.IdSubPremises == second.IdSubPremises &&
-                   first.IdPremises == second.IdPremises &&
-                   first.SubPremisesNum == second.SubPremisesNum &&
-                   first.TotalArea == second.TotalArea &&
-                   first.LivingArea == second.LivingArea &&
-                   first.Description == second.Description &&
-                   first.IdState == second.IdState &&
-                   first.StateDate == second.StateDate &&
-                   first.CadastralNum == second.CadastralNum &&
-                   first.CadastralCost == second.CadastralCost &&
-                   first.BalanceCost == second.BalanceCost &&
-                   first.Account == second.Account;
-        }
-
-        public static bool operator !=(SubPremise first, SubPremise second)
-        {
-            return !(first == second);
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
     }
 }
