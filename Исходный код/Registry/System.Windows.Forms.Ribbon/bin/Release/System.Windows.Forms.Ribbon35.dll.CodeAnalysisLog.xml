@@ -12,27 +12,27 @@
          <Members>
           <Member Name="#Dispose(System.Boolean)" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="True">
            <Messages>
-            <Message Id="_RibbonItemFont" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message Id="_RibbonItemFont" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Certainty="75" Level="Warning" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="Ribbon.cs" Line="190">'Ribbon' contains field 'Ribbon._RibbonItemFont' that is of IDisposable type: 'Font'. Change the Dispose method on 'Ribbon' to call Dispose or Close on this field.</Issue>
             </Message>
-            <Message Id="_RibbonTabFont" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message Id="_RibbonTabFont" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Certainty="75" Level="Warning" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="Ribbon.cs" Line="190">'Ribbon' contains field 'Ribbon._RibbonTabFont' that is of IDisposable type: 'Font'. Change the Dispose method on 'Ribbon' to call Dispose or Close on this field.</Issue>
             </Message>
-            <Message Id="_sensor" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message Id="_sensor" TypeName="DisposableFieldsShouldBeDisposed" Category="Microsoft.Usage" CheckId="CA2213" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Certainty="75" Level="Warning" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="Ribbon.cs" Line="190">'Ribbon' contains field 'Ribbon._sensor' that is of IDisposable type: 'RibbonMouseSensor'. Change the Dispose method on 'Ribbon' to call Dispose or Close on this field.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#Finalize()" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Name="FinalizeOverride" Certainty="95" Level="Error" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="Ribbon.cs" Line="213">Remove the finalizer from type 'Ribbon', override Dispose(bool disposing), and put the finalization logic in the code path where 'disposing' is false.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#WndProc(System.Windows.Forms.Message&amp;)" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="OverrideLinkDemandsShouldBeIdenticalToBase" Category="Microsoft.Security" CheckId="CA2123" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="OverrideLinkDemandsShouldBeIdenticalToBase" Category="Microsoft.Security" CheckId="CA2123" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Name="BaseOnly" Certainty="33" Level="CriticalError" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="Ribbon.cs" Line="1775">Add the following security attribute to 'Ribbon.WndProc(ref Message)' in order to match a LinkDemand on base method 'Control.WndProc(ref Message)':  [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)].</Issue>
             </Message>
            </Messages>
@@ -43,7 +43,7 @@
          <Members>
           <Member Name="#.ctor()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Certainty="95" Level="CriticalWarning" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="RibbonButton.cs" Line="45">'RibbonButton.RibbonButton()' contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: &#xD;&#xA;&#xD;&#xA;RibbonButton..ctor()&#xD;&#xA;RibbonItem.set_Image(Image):Void</Issue>
              <Issue Certainty="95" Level="CriticalWarning" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="RibbonButton.cs" Line="45">'RibbonButton.RibbonButton()' contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: &#xD;&#xA;&#xD;&#xA;RibbonButton..ctor()&#xD;&#xA;RibbonItem.set_Image(Image):Void&#xD;&#xA;RibbonButton.set_SmallImage(Image):Void</Issue>
             </Message>
@@ -51,14 +51,14 @@
           </Member>
           <Member Name="#.ctor(System.Drawing.Image)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Certainty="95" Level="CriticalWarning" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="RibbonButton.cs" Line="103">'RibbonButton.RibbonButton(Image)' contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: &#xD;&#xA;&#xD;&#xA;RibbonButton..ctor(Image)&#xD;&#xA;RibbonButton.set_SmallImage(Image):Void</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#.ctor(System.String)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Certainty="95" Level="CriticalWarning" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="RibbonButton.cs" Line="97">'RibbonButton.RibbonButton(string)' contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: &#xD;&#xA;&#xD;&#xA;RibbonButton..ctor(String)&#xD;&#xA;RibbonItem.set_Text(String):Void</Issue>
             </Message>
            </Messages>
@@ -69,7 +69,7 @@
          <Members>
           <Member Name="#.ctor(System.Windows.Forms.RibbonCaptionButton+CaptionButton)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Certainty="95" Level="CriticalWarning" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="RibbonCaptionButton.cs" Line="92">'RibbonCaptionButton.RibbonCaptionButton(RibbonCaptionButton.CaptionButton)' contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: &#xD;&#xA;&#xD;&#xA;RibbonCaptionButton..ctor(RibbonCaptionButton+CaptionButton)&#xD;&#xA;RibbonCaptionButton.SetCaptionButtonType(RibbonCaptionButton+CaptionButton):Void&#xD;&#xA;RibbonItem.set_Text(String):Void</Issue>
             </Message>
            </Messages>
@@ -80,7 +80,7 @@
          <Members>
           <Member Name="#.ctor(System.Drawing.Image,System.String,System.String)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Certainty="95" Level="CriticalWarning" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="RibbonDescriptionMenuItem.cs" Line="62">'RibbonDescriptionMenuItem.RibbonDescriptionMenuItem(Image, string, string)' contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: &#xD;&#xA;&#xD;&#xA;RibbonDescriptionMenuItem..ctor(Image, String, String)&#xD;&#xA;RibbonItem.set_Image(Image):Void</Issue>
              <Issue Certainty="95" Level="CriticalWarning" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="RibbonDescriptionMenuItem.cs" Line="62">'RibbonDescriptionMenuItem.RibbonDescriptionMenuItem(Image, string, string)' contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: &#xD;&#xA;&#xD;&#xA;RibbonDescriptionMenuItem..ctor(Image, String, String)&#xD;&#xA;RibbonItem.set_Image(Image):Void&#xD;&#xA;RibbonItem.set_Text(String):Void</Issue>
             </Message>
@@ -92,11 +92,11 @@
          <Members>
           <Member Name="#Finalize()" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Name="FinalizeImplementation" Certainty="95" Level="Error" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Classes\Designers" File="RibbonDesigner.cs" Line="51">Modify 'RibbonDesigner.~RibbonDesigner()' so that it calls Dispose(false) and then returns.</Issue>
              <Issue Name="FinalizeOverride" Certainty="95" Level="Error" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Classes\Designers" File="RibbonDesigner.cs" Line="51">Remove the finalizer from type 'RibbonDesigner', override Dispose(bool disposing), and put the finalization logic in the code path where 'disposing' is false.</Issue>
             </Message>
-            <Message TypeName="RemoveEmptyFinalizers" Category="Microsoft.Performance" CheckId="CA1821" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message TypeName="RemoveEmptyFinalizers" Category="Microsoft.Performance" CheckId="CA1821" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Certainty="75" Level="Warning" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Classes\Designers" File="RibbonDesigner.cs" Line="51">'RibbonDesigner' implements a finalizer that only calls conditionally emitted methods or the base type finalizer. Remove the finalizer or ensure that it is only conditionally compiled into the assembly. If this violation occurs against a finalizer that is entirely wrapped in a conditionally-emitted block of code, suppress this message.</Issue>
             </Message>
            </Messages>
@@ -109,7 +109,7 @@
            <Accessors>
             <Accessor Name="#get_CreateParams()" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="True">
              <Messages>
-              <Message TypeName="OverrideLinkDemandsShouldBeIdenticalToBase" Category="Microsoft.Security" CheckId="CA2123" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+              <Message TypeName="OverrideLinkDemandsShouldBeIdenticalToBase" Category="Microsoft.Security" CheckId="CA2123" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
                <Issue Name="BaseOnly" Certainty="33" Level="CriticalError" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon" File="RibbonForm.cs" Line="73">Add the following security attribute to 'RibbonForm.CreateParams.get()' in order to match a LinkDemand on base method 'Form.CreateParams.get()':  [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)].</Issue>
               </Message>
              </Messages>
@@ -118,7 +118,7 @@
           </Member>
           <Member Name="#WndProc(System.Windows.Forms.Message&amp;)" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="OverrideLinkDemandsShouldBeIdenticalToBase" Category="Microsoft.Security" CheckId="CA2123" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="OverrideLinkDemandsShouldBeIdenticalToBase" Category="Microsoft.Security" CheckId="CA2123" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Name="BaseOnly" Certainty="33" Level="CriticalError" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon" File="RibbonForm.cs" Line="63">Add the following security attribute to 'RibbonForm.WndProc(ref Message)' in order to match a LinkDemand on base method 'Form.WndProc(ref Message)':  [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)].</Issue>
             </Message>
            </Messages>
@@ -129,7 +129,7 @@
          <Members>
           <Member Name="#.ctor()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Certainty="95" Level="CriticalWarning" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="RibbonItem.cs" Line="48">'RibbonItem.RibbonItem()' contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: &#xD;&#xA;&#xD;&#xA;RibbonItem..ctor()&#xD;&#xA;RibbonItem.add_Click(EventHandler):Void</Issue>
             </Message>
            </Messages>
@@ -138,14 +138,14 @@
         </Type>
         <Type Name="RibbonMouseSensor" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+          <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
            <Issue Name="ProvideDisposeBool" Certainty="95" Level="Error">Provide an overridable implementation of Dispose(bool) on 'RibbonMouseSensor' or mark the type as sealed. A call to Dispose(false) should only clean up native resources. A call to Dispose(true) should clean up both managed and native resources.</Issue>
           </Message>
          </Messages>
          <Members>
           <Member Name="#Dispose()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Name="DisposeImplementation" Certainty="95" Level="Error" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Classes" File="RibbonMouseSensor.cs" Line="814">Modify 'RibbonMouseSensor.Dispose()' so that it calls Dispose(true), then calls GC.SuppressFinalize on the current object instance ('this' or 'Me' in Visual Basic), and then returns.</Issue>
             </Message>
            </Messages>
@@ -156,7 +156,7 @@
          <Members>
           <Member Name="#Finalize()" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Name="FinalizeImplementation" Certainty="95" Level="Error" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="RibbonOrbDropDown.cs" Line="83">Modify 'RibbonOrbDropDown.~RibbonOrbDropDown()' so that it calls Dispose(false) and then returns.</Issue>
              <Issue Name="FinalizeOverride" Certainty="95" Level="Error" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="RibbonOrbDropDown.cs" Line="83">Remove the finalizer from type 'RibbonOrbDropDown', override Dispose(bool disposing), and put the finalization logic in the code path where 'disposing' is false.</Issue>
             </Message>
@@ -168,7 +168,7 @@
          <Members>
           <Member Name="#.ctor(System.String)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Certainty="95" Level="CriticalWarning" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="RibbonOrbMenuItem.cs" Line="37">'RibbonOrbMenuItem.RibbonOrbMenuItem(string)' contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: &#xD;&#xA;&#xD;&#xA;RibbonOrbMenuItem..ctor(String)&#xD;&#xA;RibbonItem.set_Text(String):Void</Issue>
             </Message>
            </Messages>
@@ -179,7 +179,7 @@
          <Members>
           <Member Name="#.ctor(System.String)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Certainty="95" Level="CriticalWarning" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="RibbonOrbOptionButton.cs" Line="30">'RibbonOrbOptionButton.RibbonOrbOptionButton(string)' contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: &#xD;&#xA;&#xD;&#xA;RibbonOrbOptionButton..ctor(String)&#xD;&#xA;RibbonItem.set_Text(String):Void</Issue>
             </Message>
            </Messages>
@@ -190,7 +190,7 @@
          <Members>
           <Member Name="#.ctor(System.String)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Certainty="95" Level="CriticalWarning" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="RibbonOrbRecentItem.cs" Line="30">'RibbonOrbRecentItem.RibbonOrbRecentItem(string)' contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: &#xD;&#xA;&#xD;&#xA;RibbonOrbRecentItem..ctor(String)&#xD;&#xA;RibbonItem.set_Text(String):Void</Issue>
             </Message>
            </Messages>
@@ -203,7 +203,7 @@
            <Accessors>
             <Accessor Name="#get_CreateParams()" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="True">
              <Messages>
-              <Message TypeName="OverrideLinkDemandsShouldBeIdenticalToBase" Category="Microsoft.Security" CheckId="CA2123" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+              <Message TypeName="OverrideLinkDemandsShouldBeIdenticalToBase" Category="Microsoft.Security" CheckId="CA2123" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
                <Issue Name="BaseOnly" Certainty="33" Level="CriticalError" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="RibbonPopup.cs" Line="249">Add the following security attribute to 'RibbonPopup.CreateParams.get()' in order to match a LinkDemand on base method 'Control.CreateParams.get()':  [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)].</Issue>
               </Message>
              </Messages>
@@ -216,14 +216,14 @@
          <Members>
           <Member Name="#ReadThemeXmlFile(System.String)" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="DependsOnFix">
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="DependsOnFix">
              <Issue Certainty="75" Level="Warning" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Classes\Renderers\Color Tables" File="RibbonProfesionalRendererColorTable.cs" Line="1075">Object 'stringReader' can be disposed more than once in method 'RibbonProfesionalRendererColorTable.ReadThemeXmlFile(string)'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 1075</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#WriteThemeXmlFile()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="DependsOnFix">
+            <Message TypeName="Do not dispose objects multiple times" Category="Microsoft.Usage" CheckId="CA2202" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="DependsOnFix">
              <Issue Certainty="75" Level="Warning" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Classes\Renderers\Color Tables" File="RibbonProfesionalRendererColorTable.cs" Line="1058">Object 'str' can be disposed more than once in method 'RibbonProfesionalRendererColorTable.WriteThemeXmlFile()'. To avoid generating a System.ObjectDisposedException you should not call Dispose more than one time on an object.: Lines: 1058</Issue>
             </Message>
            </Messages>
@@ -234,7 +234,7 @@
          <Members>
           <Member Name="#.ctor(System.Windows.Forms.Ribbon)" Kind="Method" Static="False" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message TypeName="DoNotCallOverridableMethodsInConstructors" Category="Microsoft.Usage" CheckId="CA2214" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Certainty="95" Level="CriticalWarning" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Component Classes" File="RibbonQuickAccessToolbar.cs" Line="39">'RibbonQuickAccessToolbar.RibbonQuickAccessToolbar(Ribbon)' contains a call chain that results in a call to a virtual method defined by the class. Review the following call stack for unintended consequences: &#xD;&#xA;&#xD;&#xA;RibbonQuickAccessToolbar..ctor(Ribbon)&#xD;&#xA;RibbonItem.SetOwner(Ribbon):Void</Issue>
             </Message>
            </Messages>
@@ -243,7 +243,7 @@
         </Type>
         <Type Name="RibbonToolTipRenderEventArgs" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="DependsOnFix">
+          <Message TypeName="TypesThatOwnDisposableFieldsShouldBeDisposable" Category="Microsoft.Design" CheckId="CA1001" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="DependsOnFix">
            <Issue Name="DependsOnFix" Certainty="95" Level="CriticalError">Implement IDisposable on 'RibbonToolTipRenderEventArgs' because it creates members of the following IDisposable types: 'Font'. If 'RibbonToolTipRenderEventArgs' has previously shipped, adding new members that implement IDisposable to this type is considered a breaking change to existing consumers.</Issue>
           </Message>
          </Messages>
@@ -254,28 +254,28 @@
        <Types>
         <Type Name="GlobalHook" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+          <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
            <Issue Name="ProvideDisposeBool" Certainty="95" Level="Error">Provide an overridable implementation of Dispose(bool) on 'GlobalHook' or mark the type as sealed. A call to Dispose(false) should only clean up native resources. A call to Dispose(true) should clean up both managed and native resources.</Issue>
           </Message>
          </Messages>
          <Members>
           <Member Name="#Dispose()" Kind="Method" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Name="DisposeImplementation" Certainty="95" Level="Error" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Classes" File="GlobalHook.cs" Line="501">Modify 'GlobalHook.Dispose()' so that it calls Dispose(true), then calls GC.SuppressFinalize on the current object instance ('this' or 'Me' in Visual Basic), and then returns.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#Finalize()" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="ImplementIDisposableCorrectly" Category="Microsoft.Design" CheckId="CA1063" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Name="FinalizeImplementation" Certainty="95" Level="Error" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Classes" File="GlobalHook.cs" Line="128">Modify 'GlobalHook.~GlobalHook()' so that it calls Dispose(false) and then returns.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#InstallHook()" Kind="Method" Static="False" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="CallGetLastErrorImmediatelyAfterPInvoke" Category="Microsoft.Interoperability" CheckId="CA1404" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message TypeName="CallGetLastErrorImmediatelyAfterPInvoke" Category="Microsoft.Interoperability" CheckId="CA1404" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Certainty="95" Level="Error" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\System.Windows.Forms.Ribbon\Classes" File="GlobalHook.cs" Line="460">Method 'GlobalHook.InstallHook()' called GetLastWin32Error but the immediately preceding call to 'GlobalHook.Handle.get()' is not a P/Invoke statement. Move the call to GetLastWin32Error so that it immediately follows the relevant platform invoke call.</Issue>
             </Message>
            </Messages>
@@ -286,229 +286,229 @@
          <Members>
           <Member Name="#BitBlt(System.IntPtr,System.Int32,System.Int32,System.Int32,System.Int32,System.IntPtr,System.Int32,System.Int32,System.UInt32)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.BitBlt(IntPtr, int, int, int, int, IntPtr, int, int, uint)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#CallNextHookEx(System.Int32,System.Int32,System.IntPtr,System.IntPtr)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.CallNextHookEx(int, int, IntPtr, IntPtr)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
-            <Message Id="0" TypeName="PInvokeDeclarationsShouldBePortable" Category="Microsoft.Portability" CheckId="CA1901" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message Id="0" TypeName="PInvokeDeclarationsShouldBePortable" Category="Microsoft.Portability" CheckId="CA1901" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Name="Parameter" Certainty="95" Level="Error">As it is declared in your code, parameter 'idHook' of P/Invoke 'WinApi.CallNextHookEx(int, int, IntPtr, IntPtr)' will be 4 bytes wide on 64-bit platforms. This is not correct, as the actual native declaration of this API indicates it should be 8 bytes wide on 64-bit platforms. Consult the MSDN Platform SDK documentation for help determining what data type should be used instead of 'int'.</Issue>
             </Message>
-            <Message Id="return" TypeName="PInvokeDeclarationsShouldBePortable" Category="Microsoft.Portability" CheckId="CA1901" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message Id="return" TypeName="PInvokeDeclarationsShouldBePortable" Category="Microsoft.Portability" CheckId="CA1901" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Name="Return" Certainty="95" Level="Error">As it is declared in your code, the return type of P/Invoke 'WinApi.CallNextHookEx(int, int, IntPtr, IntPtr)' will be 4 bytes wide on 64-bit platforms. This is not correct, as the actual native declaration of this API indicates it should be 8 bytes wide on 64-bit platforms. Consult the MSDN Platform SDK documentation for help determining what data type should be used instead of 'int'.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#CreateCompatibleDC(System.IntPtr)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.CreateCompatibleDC(IntPtr)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#CreateDIBSection(System.IntPtr,System.Windows.Forms.RibbonHelpers.WinApi+BITMAPINFO&amp;,System.UInt32,System.Int32,System.IntPtr,System.UInt32)" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.CreateDIBSection(IntPtr, ref WinApi.BITMAPINFO, uint, int, IntPtr, uint)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
-            <Message Id="3" TypeName="PInvokeDeclarationsShouldBePortable" Category="Microsoft.Portability" CheckId="CA1901" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message Id="3" TypeName="PInvokeDeclarationsShouldBePortable" Category="Microsoft.Portability" CheckId="CA1901" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Name="Parameter" Certainty="95" Level="Error">As it is declared in your code, parameter 'ppvBits' of P/Invoke 'WinApi.CreateDIBSection(IntPtr, ref WinApi.BITMAPINFO, uint, int, IntPtr, uint)' will be 4 bytes wide on 64-bit platforms. This is not correct, as the actual native declaration of this API indicates it should be 8 bytes wide on 64-bit platforms. Consult the MSDN Platform SDK documentation for help determining what data type should be used instead of 'int'.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#DeleteDC(System.IntPtr)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.DeleteDC(IntPtr)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#DeleteObject(System.IntPtr)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.DeleteObject(IntPtr)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#DrawThemeText(System.IntPtr,System.IntPtr,System.Int32,System.Int32,System.String,System.Int32,System.Int32,System.Int32,System.Windows.Forms.RibbonHelpers.WinApi+RECT&amp;)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.DrawThemeText(IntPtr, IntPtr, int, int, string, int, int, int, ref WinApi.RECT)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
-            <Message Id="4" TypeName="SpecifyMarshalingForPInvokeStringArguments" Category="Microsoft.Globalization" CheckId="CA2101" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message Id="4" TypeName="SpecifyMarshalingForPInvokeStringArguments" Category="Microsoft.Globalization" CheckId="CA2101" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Name="ParameterImplicitAnsi" Certainty="75" Level="Error">To reduce security risk, marshal parameter 'text' as Unicode, by setting DllImport.CharSet to CharSet.Unicode, or by explicitly marshaling the parameter as UnmanagedType.LPWStr. If you need to marshal this string as ANSI or system-dependent, specify MarshalAs explicitly, and set BestFitMapping=false; for added security, also set ThrowOnUnmappableChar=true.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#DrawThemeTextEx(System.IntPtr,System.IntPtr,System.Int32,System.Int32,System.String,System.Int32,System.Int32,System.Windows.Forms.RibbonHelpers.WinApi+RECT&amp;,System.Windows.Forms.RibbonHelpers.WinApi+DTTOPTS&amp;)" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.DrawThemeTextEx(IntPtr, IntPtr, int, int, string, int, int, ref WinApi.RECT, ref WinApi.DTTOPTS)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#DwmDefWindowProc(System.IntPtr,System.Int32,System.IntPtr,System.IntPtr,System.IntPtr&amp;)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.DwmDefWindowProc(IntPtr, int, IntPtr, IntPtr, out IntPtr)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#DwmExtendFrameIntoClientArea(System.IntPtr,System.Windows.Forms.RibbonHelpers.WinApi+MARGINS&amp;)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.DwmExtendFrameIntoClientArea(IntPtr, ref WinApi.MARGINS)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#DwmIsCompositionEnabled(System.Int32&amp;)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.DwmIsCompositionEnabled(ref int)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#GetCursorPos(System.Windows.Forms.RibbonHelpers.WinApi+POINT&amp;)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.GetCursorPos(out WinApi.POINT)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#GetDC(System.IntPtr)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.GetDC(IntPtr)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#GetDCEx(System.IntPtr,System.IntPtr,System.UInt32)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.GetDCEx(IntPtr, IntPtr, uint)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
-            <Message TypeName="PInvokesShouldNotBeVisible" Category="Microsoft.Interoperability" CheckId="CA1401" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="PInvokesShouldNotBeVisible" Category="Microsoft.Interoperability" CheckId="CA1401" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="50" Level="CriticalError">Change the accessibility of P/Invoke 'WinApi.GetDCEx(IntPtr, IntPtr, uint)' so that it is no longer visible from outside its assembly.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#GetKeyboardState(System.Byte[])" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.GetKeyboardState(byte[])' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#GetKeyState(System.Int32)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.GetKeyState(int)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#GetWindowRect(System.IntPtr,System.Windows.Forms.RibbonHelpers.WinApi+RECT&amp;)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.GetWindowRect(IntPtr, ref WinApi.RECT)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
-            <Message TypeName="PInvokesShouldNotBeVisible" Category="Microsoft.Interoperability" CheckId="CA1401" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="PInvokesShouldNotBeVisible" Category="Microsoft.Interoperability" CheckId="CA1401" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="50" Level="CriticalError">Change the accessibility of P/Invoke 'WinApi.GetWindowRect(IntPtr, ref WinApi.RECT)' so that it is no longer visible from outside its assembly.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#PostMessage(System.IntPtr,System.Int32,System.Int32,System.Int32)" Kind="Method" Static="True" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.PostMessage(IntPtr, int, int, int)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
-            <Message Id="2" TypeName="PInvokeDeclarationsShouldBePortable" Category="Microsoft.Portability" CheckId="CA1901" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message Id="2" TypeName="PInvokeDeclarationsShouldBePortable" Category="Microsoft.Portability" CheckId="CA1901" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Name="Parameter" Certainty="95" Level="Error">As it is declared in your code, parameter 'wParam' of P/Invoke 'WinApi.PostMessage(IntPtr, int, int, int)' will be 4 bytes wide on 64-bit platforms. This is not correct, as the actual native declaration of this API indicates it should be 8 bytes wide on 64-bit platforms. Consult the MSDN Platform SDK documentation for help determining what data type should be used instead of 'int'.</Issue>
             </Message>
-            <Message Id="3" TypeName="PInvokeDeclarationsShouldBePortable" Category="Microsoft.Portability" CheckId="CA1901" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message Id="3" TypeName="PInvokeDeclarationsShouldBePortable" Category="Microsoft.Portability" CheckId="CA1901" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Name="Parameter" Certainty="95" Level="Error">As it is declared in your code, parameter 'lParam' of P/Invoke 'WinApi.PostMessage(IntPtr, int, int, int)' will be 4 bytes wide on 64-bit platforms. This is not correct, as the actual native declaration of this API indicates it should be 8 bytes wide on 64-bit platforms. Consult the MSDN Platform SDK documentation for help determining what data type should be used instead of 'int'.</Issue>
             </Message>
-            <Message TypeName="PInvokesShouldNotBeVisible" Category="Microsoft.Interoperability" CheckId="CA1401" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="PInvokesShouldNotBeVisible" Category="Microsoft.Interoperability" CheckId="CA1401" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="50" Level="CriticalError">Change the accessibility of P/Invoke 'WinApi.PostMessage(IntPtr, int, int, int)' so that it is no longer visible from outside its assembly.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#RedrawWindow(System.IntPtr,System.IntPtr,System.IntPtr,System.UInt32)" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.RedrawWindow(IntPtr, IntPtr, IntPtr, uint)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#RedrawWindow(System.IntPtr,System.Windows.Forms.RibbonHelpers.WinApi+RECT&amp;,System.IntPtr,System.UInt32)" Kind="Method" Static="True" Accessibility="Private" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.RedrawWindow(IntPtr, ref WinApi.RECT, IntPtr, uint)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#ReleaseDC(System.IntPtr,System.Int32)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.ReleaseDC(IntPtr, int)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
-            <Message Id="1" TypeName="PInvokeDeclarationsShouldBePortable" Category="Microsoft.Portability" CheckId="CA1901" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message Id="1" TypeName="PInvokeDeclarationsShouldBePortable" Category="Microsoft.Portability" CheckId="CA1901" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Name="Parameter" Certainty="95" Level="Error">As it is declared in your code, parameter 'state' of P/Invoke 'WinApi.ReleaseDC(IntPtr, int)' will be 4 bytes wide on 64-bit platforms. This is not correct, as the actual native declaration of this API indicates it should be 8 bytes wide on 64-bit platforms. Consult the MSDN Platform SDK documentation for help determining what data type should be used instead of 'int'.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#SaveDC(System.IntPtr)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.SaveDC(IntPtr)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#SelectObject(System.IntPtr,System.IntPtr)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.SelectObject(IntPtr, IntPtr)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#SendMessage(System.IntPtr,System.Int32,System.IntPtr,System.IntPtr)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.SendMessage(IntPtr, int, IntPtr, IntPtr)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#SetWindowPos(System.IntPtr,System.IntPtr,System.Int32,System.Int32,System.Int32,System.Int32,System.UInt32)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.SetWindowPos(IntPtr, IntPtr, int, int, int, int, uint)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#SetWindowsHookEx(System.Int32,System.Windows.Forms.RibbonHelpers.GlobalHook+HookProcCallBack,System.IntPtr,System.Int32)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.SetWindowsHookEx(int, GlobalHook.HookProcCallBack, IntPtr, int)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
-            <Message Id="return" TypeName="PInvokeDeclarationsShouldBePortable" Category="Microsoft.Portability" CheckId="CA1901" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="NonBreaking">
+            <Message Id="return" TypeName="PInvokeDeclarationsShouldBePortable" Category="Microsoft.Portability" CheckId="CA1901" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="NonBreaking">
              <Issue Name="Return" Certainty="95" Level="Error">As it is declared in your code, the return type of P/Invoke 'WinApi.SetWindowsHookEx(int, GlobalHook.HookProcCallBack, IntPtr, int)' will be 4 bytes wide on 64-bit platforms. This is not correct, as the actual native declaration of this API indicates it should be 8 bytes wide on 64-bit platforms. Consult the MSDN Platform SDK documentation for help determining what data type should be used instead of 'int'.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#ToAscii(System.Int32,System.Int32,System.Byte[],System.Byte[],System.Int32)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.ToAscii(int, int, byte[], byte[], int)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
           </Member>
           <Member Name="#UnhookWindowsHookEx(System.Int32)" Kind="Method" Static="True" Accessibility="Assembly" ExternallyVisible="False">
            <Messages>
-            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="MovePInvokesToNativeMethodsClass" Category="Microsoft.Design" CheckId="CA1060" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="95" Level="CriticalWarning">Because it is a P/Invoke method, 'WinApi.UnhookWindowsHookEx(int)' should be defined in a class named NativeMethods, SafeNativeMethods, or UnsafeNativeMethods.</Issue>
             </Message>
            </Messages>
@@ -519,7 +519,7 @@
          <Members>
           <Member Name="#lppos" Kind="Field" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="PointersShouldNotBeVisible" Category="Microsoft.Security" CheckId="CA2111" Status="Active" Created="2016-07-22 05:48:19Z" FixCategory="Breaking">
+            <Message TypeName="PointersShouldNotBeVisible" Category="Microsoft.Security" CheckId="CA2111" Status="Active" Created="2016-07-26 04:26:59Z" FixCategory="Breaking">
              <Issue Certainty="75" Level="CriticalError">Make 'WinApi.NCCALCSIZE_PARAMS.lppos' private.</Issue>
             </Message>
            </Messages>

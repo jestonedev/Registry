@@ -12,7 +12,7 @@
          <Members>
           <Member Name="#WndProc(System.Windows.Forms.Message&amp;)" Kind="Method" Static="False" Accessibility="Family" ExternallyVisible="True">
            <Messages>
-            <Message TypeName="OverrideLinkDemandsShouldBeIdenticalToBase" Category="Microsoft.Security" CheckId="CA2123" Status="Active" Created="2016-07-22 05:48:14Z" FixCategory="Breaking">
+            <Message TypeName="OverrideLinkDemandsShouldBeIdenticalToBase" Category="Microsoft.Security" CheckId="CA2123" Status="Active" Created="2016-07-26 04:26:54Z" FixCategory="Breaking">
              <Issue Name="BaseOnly" Certainty="33" Level="CriticalError" Path="d:\Projects\Visual Studio Projects\Реестр жилого фонда\Исходный код\Registry\CustomCtrls" File="TabControlWithoutTabs.cs" Line="15">Add the following security attribute to 'TabControlWithoutTabs.WndProc(ref Message)' in order to match a LinkDemand on base method 'TabControl.WndProc(ref Message)':  [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)].</Issue>
             </Message>
            </Messages>
