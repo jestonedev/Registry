@@ -69,8 +69,10 @@ namespace Registry.Viewport.MultiMasters
                 return;
             switch (dataGridView.Columns[e.ColumnIndex].Name)
             {
-                case "id_premises":
                 case "house":
+                    e.Value = buildingRow[dataGridView.Columns[e.ColumnIndex].Name];
+                    break;
+                case "id_premises":
                 case "premises_num":
                     e.Value = row[dataGridView.Columns[e.ColumnIndex].Name];
                     break;
