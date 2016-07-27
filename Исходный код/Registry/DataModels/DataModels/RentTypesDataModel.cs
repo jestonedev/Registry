@@ -1,4 +1,4 @@
-﻿using System.Windows.Forms;
+﻿using System;
 
 namespace Registry.DataModels.DataModels
 {
@@ -8,14 +8,14 @@ namespace Registry.DataModels.DataModels
         private const string SelectQuery = "SELECT * FROM rent_types rt ORDER BY rt.rent_type DESC";
         private const string TableName = "rent_types";
 
-        private RentTypesDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, SelectQuery, TableName)
+        private RentTypesDataModel(Action afterLoadHandler)
+            : base(SelectQuery, TableName, afterLoadHandler)
         {
         }
 
-        public static RentTypesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        public static RentTypesDataModel GetInstance(Action afterLoadHandler)
         {
-            return _dataModel ?? (_dataModel = new RentTypesDataModel(progressBar, incrementor));
+            return _dataModel ?? (_dataModel = new RentTypesDataModel(afterLoadHandler));
         }
 
         protected override void ConfigureTable()

@@ -58,9 +58,9 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<PremisesDataModel>();
+            GeneralDataModel = EntityDataModel<Premise>.GetInstance();
             _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
-            _buildings = DataModel.GetInstance<BuildingsDataModel>();
+            _buildings = DataModel.GetInstance<EntityDataModel<Building>>();
             _premisesTypes = DataModel.GetInstance<PremisesTypesDataModel>();
             _objectStates = DataModel.GetInstance<ObjectStatesDataModel>();
             _fundTypes = DataModel.GetInstance<FundTypesDataModel>();

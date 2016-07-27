@@ -140,11 +140,11 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<PremisesDataModel>();
+            GeneralDataModel = EntityDataModel<Premise>.GetInstance();
             _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
-            _buildings = DataModel.GetInstance<BuildingsDataModel>();
+            _buildings = DataModel.GetInstance<EntityDataModel<Building>>();
             _premisesTypes = DataModel.GetInstance<PremisesTypesDataModel>();
-            _subPremises = DataModel.GetInstance<SubPremisesDataModel>();
+            _subPremises = EntityDataModel<SubPremise>.GetInstance();
 
             _resettlePremises = _way == ResettleEstateObjectWay.From ? 
                 DataModel.GetInstance<ResettlePremisesFromAssocDataModel>() : 

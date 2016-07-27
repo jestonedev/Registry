@@ -262,10 +262,10 @@ namespace Registry.Viewport
             dataGridViewTenancyPersons.AutoGenerateColumns = false;
             dataGridViewChangeTenant.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<TenancyAgreementsDataModel>();
-            _tenancyPersonsExclude = DataModel.GetInstance<TenancyPersonsDataModel>();
-            _executors = DataModel.GetInstance<ExecutorsDataModel>();
-            _warrants = DataModel.GetInstance<WarrantsDataModel>();
+            GeneralDataModel = EntityDataModel<TenancyAgreement>.GetInstance();
+            _tenancyPersonsExclude = EntityDataModel<TenancyPerson>.GetInstance();
+            _executors = DataModel.GetInstance<EntityDataModel<Executor>>();
+            _warrants = EntityDataModel<Warrant>.GetInstance();
             _kinships = DataModel.GetInstance<KinshipsDataModel>();
 
             // Ожидаем дозагрузки, если это необходимо
@@ -503,7 +503,7 @@ namespace Registry.Viewport
                 EndDate = ViewportHelper.ValueOrNull<DateTime>(ParentRow, "end_date"),
                 UntilDismissal = ViewportHelper.ValueOrNull<bool>(ParentRow, "until_dismissal"),
             };
-            var rentPeriods = DataModel.GetInstance<TenancyRentPeriodsHistoryDataModel>();
+            var rentPeriods = EntityDataModel<TenancyRentPeriod>.GetInstance();
             rentPeriods.EditingNewRecord = true;
             var idRentPeriod = rentPeriods.Insert(rentPeriod);
             if (idRentPeriod == -1) return;
@@ -515,7 +515,7 @@ namespace Registry.Viewport
             tenancyProcess.BeginDate = beginDate;
             tenancyProcess.EndDate = endDate;
             tenancyProcess.UntilDismissal = untilDismissal;
-            var tenancyProcesses = DataModel.GetInstance<TenancyProcessesDataModel>();
+            var tenancyProcesses = EntityDataModel<TenancyProcess>.GetInstance();
             tenancyProcesses.EditingNewRecord = true;
             if (tenancyProcesses.Update(tenancyProcess) == -1)
             {
@@ -535,12 +535,10 @@ namespace Registry.Viewport
             var excludeTenant = parameters.Where(v => v.Name == "ExcludeTenant").Select(v => (bool?)v.Value).FirstOrDefault();
             if (idOldTenant == null || idNewTenant == null) return;
             var oldTenantRow =
-                DataModel
-                    .GetInstance<TenancyPersonsDataModel>()
+                EntityDataModel<TenancyPerson>.GetInstance()
                     .FilterDeletedRows().FirstOrDefault(v => v.Field<int>("id_person") == idOldTenant.Value);
             var newTenantRow =
-                DataModel
-                    .GetInstance<TenancyPersonsDataModel>()
+                EntityDataModel<TenancyPerson>.GetInstance()
                     .FilterDeletedRows().FirstOrDefault(v => v.Field<int>("id_person") == idNewTenant.Value);
             var oldTenant = oldTenantRow != null ? TenancyPersonConverter.FromRow(oldTenantRow) : null;
             var newTenant = newTenantRow != null ? TenancyPersonConverter.FromRow(newTenantRow) : null;
@@ -566,7 +564,7 @@ namespace Registry.Viewport
             {
                 oldTenant.IdKinship = idKinshipOldTenant;
             }
-            var affected = DataModel.GetInstance<TenancyPersonsDataModel>().Update(oldTenant);
+            var affected = EntityDataModel<TenancyPerson>.GetInstance().Update(oldTenant);
             if (affected == -1)
             {
                 return;
@@ -578,7 +576,7 @@ namespace Registry.Viewport
 
             newTenant.IdKinship = 1;
             newTenant.ExcludeDate = null;
-            affected = DataModel.GetInstance<TenancyPersonsDataModel>().Update(newTenant);
+            affected = EntityDataModel<TenancyPerson>.GetInstance().Update(newTenant);
             if (affected == -1)
             {
                 return;

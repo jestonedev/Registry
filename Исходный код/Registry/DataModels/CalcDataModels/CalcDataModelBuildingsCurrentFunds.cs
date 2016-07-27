@@ -15,7 +15,7 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();
-            RefreshOnTableModify(DataModel.GetInstance<FundsHistoryDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<EntityDataModel<FundHistory>>().Select());
             RefreshOnTableModify(DataModel.GetInstance<FundsBuildingsAssocDataModel>().Select());
         }
 
@@ -34,7 +34,7 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelBuildingsCurrentFunds");
             // Фильтруем удаленные строки
-            var fundsHistory = DataModel.GetInstance<FundsHistoryDataModel>().FilterDeletedRows();
+            var fundsHistory = DataModel.GetInstance<EntityDataModel<FundHistory>>().FilterDeletedRows();
             var fundsBuildingsAssoc = DataModel.GetInstance<FundsBuildingsAssocDataModel>().FilterDeletedRows();
             // Вычисляем агрегационную информацию
             var maxIdByBuldings = DataModelHelper.MaxFundIDsByObject(fundsBuildingsAssoc, EntityType.Building);          

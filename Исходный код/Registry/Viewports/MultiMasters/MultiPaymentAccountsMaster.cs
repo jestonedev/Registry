@@ -122,20 +122,20 @@ namespace Registry.Viewport.MultiMasters
         {
             if (_paymentAccount.Count == 0)
                 return;
-            if (DataModel.GetInstance<ClaimsDataModel>().EditingNewRecord)
+            if (DataModel.GetInstance<EntityDataModel<Claim>>().EditingNewRecord)
             {
                 MessageBox.Show(@"Невозможно провести массовую операцию вставки претензионно-исковых работ пока форма исковых работ находится в состоянии добавления новой записи. Отмените добавление новой записи или сохраните ее.",
                     @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if (DataModel.GetInstance<ClaimStatesDataModel>().EditingNewRecord)
+            if (DataModel.GetInstance<EntityDataModel<ClaimState>>().EditingNewRecord)
             {
                 MessageBox.Show(@"Невозможно провести массовую операцию вставки претензионно-исковых работ пока форма состояний исковых работ находится в состоянии добавления новой записи. Отмените добавление новой записи или сохраните ее.",
                     @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 return;
             }
-            var claimsDataModel = DataModel.GetInstance<ClaimsDataModel>();
-            var claimStatesDataModel = DataModel.GetInstance<ClaimStatesDataModel>();
+            var claimsDataModel = DataModel.GetInstance<EntityDataModel<Claim>>();
+            var claimStatesDataModel = DataModel.GetInstance<EntityDataModel<ClaimState>>();
             var lastStates = from stateRow in claimStatesDataModel.FilterDeletedRows()
                              group stateRow.Field<int?>("id_state") by stateRow.Field<int>("id_claim") into gs
                 select new 
@@ -269,7 +269,7 @@ namespace Registry.Viewport.MultiMasters
         {
             if (_paymentAccount.Count == 0) return;
             // select all claims with stage 1 and with existed next stage
-            var claimStatesDataModel = DataModel.GetInstance<ClaimStatesDataModel>();
+            var claimStatesDataModel = DataModel.GetInstance<EntityDataModel<ClaimState>>();
             for (var i = 0; i < _paymentAccount.Count; i++)
             {
                 var row = ((DataRowView)_paymentAccount[i]);
@@ -290,7 +290,7 @@ namespace Registry.Viewport.MultiMasters
                                           id_state_type = stateRow.Field<int>("id_state_type")
                                       };
                 var notCompletedClaimWithFirstState =
-                    from claimRow in DataModel.GetInstance<ClaimsDataModel>().FilterDeletedRows()
+                    from claimRow in DataModel.GetInstance<EntityDataModel<Claim>>().FilterDeletedRows()
                     join claimStateRow in claimStatesDataModel.FilterDeletedRows()
                         on claimRow.Field<int?>("id_claim") equals claimStateRow.Field<int?>("id_claim")
                     join lstRow in lastStateTypes.Where(x => DataModelHelper.ClaimStateTypeIdsByPrevStateType(x.id_state_type).Any())

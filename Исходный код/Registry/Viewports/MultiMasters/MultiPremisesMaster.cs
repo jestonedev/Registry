@@ -26,7 +26,7 @@ namespace Registry.Viewport.MultiMasters
                          | DockAreas.DockTop)
                         | DockAreas.DockBottom;
             _menuCallback = menuCallback;
-            _premisesDataModel = DataModel.GetInstance<PremisesDataModel>();
+            _premisesDataModel = EntityDataModel<Premise>.GetInstance();
             _premisesDataModel.Select();
             _premises.DataSource = DataModel.DataSet;
             _premises.DataMember = "premises";
@@ -64,7 +64,7 @@ namespace Registry.Viewport.MultiMasters
         {
             if (_premises.Count <= e.RowIndex) return;
             var row = ((DataRowView)_premises[e.RowIndex]);
-            var buildingRow = DataModel.GetInstance<BuildingsDataModel>().Select().Rows.Find(row["id_building"]);
+            var buildingRow = DataModel.GetInstance<EntityDataModel<Building>>().Select().Rows.Find(row["id_building"]);
             if (buildingRow == null)
                 return;
             switch (dataGridView.Columns[e.ColumnIndex].Name)
@@ -245,7 +245,7 @@ namespace Registry.Viewport.MultiMasters
 
         private void toolStripButtonRestrictions_Click(object sender, EventArgs e)
         {
-            var restrictions = DataModel.GetInstance<RestrictionsDataModel>();
+            var restrictions = EntityDataModel<Restriction>.GetInstance();
             var restrictionsAssoc = DataModel.GetInstance<RestrictionsPremisesAssocDataModel>();
             if (restrictions.EditingNewRecord || restrictionsAssoc.EditingNewRecord)
             {
@@ -312,7 +312,7 @@ namespace Registry.Viewport.MultiMasters
 
         private void toolStripButtonOwnerships_Click(object sender, EventArgs e)
         {
-            var ownershipsRights = DataModel.GetInstance<OwnershipsRightsDataModel>();
+            var ownershipsRights = EntityDataModel<OwnershipRight>.GetInstance();
             var ownershipsRightsAssoc = DataModel.GetInstance<OwnershipPremisesAssocDataModel>();
             if (ownershipsRights.EditingNewRecord || ownershipsRightsAssoc.EditingNewRecord)
             {

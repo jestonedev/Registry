@@ -1,4 +1,4 @@
-﻿using System.Windows.Forms;
+﻿using System;
 
 namespace Registry.DataModels.DataModels
 {
@@ -8,14 +8,14 @@ namespace Registry.DataModels.DataModels
         private const string SelectQuery = "SELECT * FROM warrant_doc_types";
         private const string TableName = "warrant_doc_types";
 
-        private WarrantDocTypesDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, SelectQuery, TableName)
+        private WarrantDocTypesDataModel(Action afterLoadHandler)
+            : base(SelectQuery, TableName, afterLoadHandler)
         {
         }
 
-        public static WarrantDocTypesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        public static WarrantDocTypesDataModel GetInstance(Action afterLoadHandler)
         {
-            return _dataModel ?? (_dataModel = new WarrantDocTypesDataModel(progressBar, incrementor));
+            return _dataModel ?? (_dataModel = new WarrantDocTypesDataModel(afterLoadHandler));
         }
 
         protected override void ConfigureTable()

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.Entities;
 
 namespace Registry.Viewport.SearchForms
 {
@@ -178,7 +179,7 @@ namespace Registry.Viewport.SearchForms
             fundTypes = DataModel.GetInstance<FundTypesDataModel>();
             object_states = DataModel.GetInstance<ObjectStatesDataModel>();
             regions = DataModel.GetInstance<KladrRegionsDataModel>();
-            ownership_right_types = DataModel.GetInstance<OwnershipRightTypesDataModel>();
+            ownership_right_types = EntityDataModel<OwnershipRightType>.GetInstance();
 
             v_kladr = new BindingSource {DataSource = kladr.Select()};
 

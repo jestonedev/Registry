@@ -373,7 +373,7 @@ namespace Registry.Viewport
                         {
                             if (!ViewportHelper.PremiseFundAndRentMatch((int)ParentRow["id_premises"], tenancy.IdRentType.Value))
                             {
-                                var idBuilding = (int)DataModel.GetInstance<PremisesDataModel>().Select().Rows.Find((int)ParentRow["id_premises"])["id_building"];
+                                var idBuilding = (int)EntityDataModel<Premise>.GetInstance().Select().Rows.Find((int)ParentRow["id_premises"])["id_building"];
                                 if (!ViewportHelper.BuildingFundAndRentMatch(idBuilding, tenancy.IdRentType.Value) &&
                                     MessageBox.Show(@"Выбранный вид найма не соответствует фонду сдаваемой комнаты. Все равно продолжить сохранение?",
                                     @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
@@ -435,7 +435,7 @@ namespace Registry.Viewport
             if (ViewportState != ViewportState.NewRowState)
             {
                 var reasons =
-                    (from reasonRow in DataModel.GetInstance<TenancyReasonsDataModel>().FilterDeletedRows() 
+                    (from reasonRow in EntityDataModel<TenancyReason>.GetInstance().FilterDeletedRows() 
                         where reasonRow.Field<int>("id_process") == (int) row["id_process"] &&
                               reasonRow.Field<string>("reason_prepared").ToUpper().Contains("ОРДЕР")
                         select new
@@ -506,15 +506,15 @@ namespace Registry.Viewport
             dataGridViewTenancyReasons.AutoGenerateColumns = false;
             dataGridViewRentPeriods.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<TenancyProcessesDataModel>();
-            _executors = DataModel.GetInstance<ExecutorsDataModel>();
+            GeneralDataModel = EntityDataModel<TenancyProcess>.GetInstance();
+            _executors = DataModel.GetInstance<EntityDataModel<Executor>>();
             _rentTypes = DataModel.GetInstance<RentTypesDataModel>();
-            _tenancyAgreements = DataModel.GetInstance<TenancyAgreementsDataModel>();
-            _warrants = DataModel.GetInstance<WarrantsDataModel>();
-            _tenancyPersons = DataModel.GetInstance<TenancyPersonsDataModel>();
-            _tenancyReasons = DataModel.GetInstance<TenancyReasonsDataModel>();
+            _tenancyAgreements = EntityDataModel<TenancyAgreement>.GetInstance();
+            _warrants = EntityDataModel<Warrant>.GetInstance();
+            _tenancyPersons = EntityDataModel<TenancyPerson>.GetInstance();
+            _tenancyReasons = EntityDataModel<TenancyReason>.GetInstance();
             _kinships = DataModel.GetInstance<KinshipsDataModel>();
-            _rentPeriods = DataModel.GetInstance<TenancyRentPeriodsHistoryDataModel>();
+            _rentPeriods = EntityDataModel<TenancyRentPeriod>.GetInstance();
             _tenancyPremisesInfo = CalcDataModel.GetInstance<CalcDataModelTenancyPremisesInfo>();
 
             //Ожидаем дозагрузки данных, если это необходимо

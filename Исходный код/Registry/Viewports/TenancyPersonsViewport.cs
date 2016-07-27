@@ -215,13 +215,10 @@ namespace Registry.Viewport
 
         protected override Entity EntityFromViewport()
         {
+            var row = (DataRowView) GeneralBindingSource[GeneralBindingSource.Position];
             var tenancyPerson = new TenancyPerson
             {
-                IdPerson =
-                    GeneralBindingSource.Position == -1
-                        ? null
-                        : ViewportHelper.ValueOrNull<int>(
-                            (DataRowView) GeneralBindingSource[GeneralBindingSource.Position], "id_person")
+                IdPerson = GeneralBindingSource.Position == -1 ? null : ViewportHelper.ValueOrNull<int>(row, "id_person")
             };
             if (ParentType == ParentTypeEnum.Tenancy && ParentRow != null)
                 tenancyPerson.IdProcess = ViewportHelper.ValueOrNull<int>(ParentRow, "id_process");
@@ -247,6 +244,7 @@ namespace Registry.Viewport
             tenancyPerson.RegistrationHouse = ViewportHelper.ValueOrNull(textBoxRegistrationHouse);
             tenancyPerson.RegistrationFlat = ViewportHelper.ValueOrNull(textBoxRegistrationFlat);
             tenancyPerson.RegistrationRoom = ViewportHelper.ValueOrNull(textBoxRegistrationRoom);
+            tenancyPerson.RegistrationDate = ViewportHelper.ValueOrNull<DateTime>(row, "registration_date");
             tenancyPerson.ResidenceHouse = ViewportHelper.ValueOrNull(textBoxResidenceHouse);
             tenancyPerson.ResidenceFlat = ViewportHelper.ValueOrNull(textBoxResidenceFlat);
             tenancyPerson.ResidenceRoom = ViewportHelper.ValueOrNull(textBoxResidenceRoom);
@@ -318,10 +316,10 @@ namespace Registry.Viewport
         {
             dataGridViewTenancyPersons.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<TenancyPersonsDataModel>();
+            GeneralDataModel = EntityDataModel<TenancyPerson>.GetInstance();
             _kinships = DataModel.GetInstance<KinshipsDataModel>();
             _documentTypes = DataModel.GetInstance<DocumentTypesDataModel>();
-            _documentIssuedBy = DataModel.GetInstance<DocumentsIssuedByDataModel>();
+            _documentIssuedBy = DataModel.GetInstance<EntityDataModel<DocumentIssuedBy>>();
             _kladr = DataModel.GetInstance<KladrStreetsDataModel>(); 
 
             // Ожидаем дозагрузки, если это необходимо
@@ -505,10 +503,10 @@ namespace Registry.Viewport
             if (comboBoxIssuedBy.SelectedValue == null && !string.IsNullOrEmpty(comboBoxIssuedBy.Text))
             {
                 var document = new DocumentIssuedBy {DocumentIssuedByName = comboBoxIssuedBy.Text};
-                var idDocument = DataModel.GetInstance<DocumentsIssuedByDataModel>().Insert(document);
+                var idDocument = DataModel.GetInstance<EntityDataModel<DocumentIssuedBy>>().Insert(document);
                 if (idDocument == -1) return;
                 document.IdDocumentIssuedBy = idDocument;
-                DataModel.GetInstance<DocumentsIssuedByDataModel>().Select().Rows.
+                DataModel.GetInstance<EntityDataModel<DocumentIssuedBy>>().Select().Rows.
                     Add(document.IdDocumentIssuedBy, document.DocumentIssuedByName);
                 comboBoxIssuedBy.SelectedValue = document.IdDocumentIssuedBy;
             }
@@ -733,8 +731,8 @@ namespace Registry.Viewport
                 && ParentType == ParentTypeEnum.Tenancy)
             {
                 var premisesAssoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
-                var premises = DataModel.GetInstance<PremisesDataModel>();
-                var buildings = DataModel.GetInstance<BuildingsDataModel>();
+                var premises = EntityDataModel<Premise>.GetInstance();
+                var buildings = DataModel.GetInstance<EntityDataModel<Building>>();
                 var streets = DataModel.GetInstance<KladrStreetsDataModel>();
                 var currentPremise = (from premisesAssocRow in premisesAssoc.FilterDeletedRows()
                     join premisesRow in premises.FilterDeletedRows()

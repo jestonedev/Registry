@@ -56,7 +56,7 @@ namespace Registry.Viewport
         public override void LoadData()
         {
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<BuildingsDataModel>();
+            GeneralDataModel = DataModel.GetInstance<EntityDataModel<Building>>();
             _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
             _objectStates = DataModel.GetInstance<ObjectStatesDataModel>();
             _municipalPremises = CalcDataModel.GetInstance<CalcDataModelMunicipalPremises>();

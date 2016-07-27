@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using Registry.DataModels.DataModels;
+using Registry.Entities;
 
 namespace Registry.DataModels.CalcDataModels
 {
@@ -15,8 +16,8 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();
-            RefreshOnTableModify(DataModel.GetInstance<ResettleProcessesDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<ResettlePersonsDataModel>().Select());
+            RefreshOnTableModify(EntityDataModel<ResettleProcess>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<ResettlePerson>.GetInstance().Select());
             RefreshOnTableModify(DataModel.GetInstance<ResettleBuildingsFromAssocDataModel>().Select());
             RefreshOnTableModify(DataModel.GetInstance<ResettlePremisesFromAssocDataModel>().Select());
             RefreshOnTableModify(DataModel.GetInstance<ResettleSubPremisesFromAssocDataModel>().Select());
@@ -42,8 +43,8 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModeTenancyAggregated");
             // Фильтруем удаленные строки
-            var resettles = DataModel.GetInstance<ResettleProcessesDataModel>().FilterDeletedRows();
-            var resettlePersons = DataModel.GetInstance<ResettlePersonsDataModel>().FilterDeletedRows();
+            var resettles = EntityDataModel<ResettleProcess>.GetInstance().FilterDeletedRows();
+            var resettlePersons = EntityDataModel<ResettlePerson>.GetInstance().FilterDeletedRows();
 
             // Вычисляем агрегационную информацию
             var resettlers = from resettlePersonsRow in resettlePersons

@@ -1,5 +1,5 @@
-﻿using System.Data.Common;
-using System.Windows.Forms;
+﻿using System;
+using System.Data.Common;
 using Registry.Entities;
 
 namespace Registry.DataModels.DataModels
@@ -7,17 +7,18 @@ namespace Registry.DataModels.DataModels
     internal sealed class ResettleBuildingsFromAssocDataModel : DataModel
     {
         private static ResettleBuildingsFromAssocDataModel _dataModel;
+
         private const string SelectQuery = "SELECT * FROM resettle_buildings_from_assoc WHERE deleted = 0";
         private const string TableName = "resettle_buildings_from_assoc";
 
-        private ResettleBuildingsFromAssocDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, SelectQuery, TableName)
+        private ResettleBuildingsFromAssocDataModel(Action afterLoadHandler)
+            : base(SelectQuery, TableName, afterLoadHandler)
         {
         }
 
-        public static ResettleBuildingsFromAssocDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        public static ResettleBuildingsFromAssocDataModel GetInstance(Action afterLoadHandler)
         {
-            return _dataModel ?? (_dataModel = new ResettleBuildingsFromAssocDataModel(progressBar, incrementor));
+            return _dataModel ?? (_dataModel = new ResettleBuildingsFromAssocDataModel(afterLoadHandler));
         }
 
         protected override void ConfigureTable()

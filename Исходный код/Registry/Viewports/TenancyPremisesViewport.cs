@@ -132,7 +132,7 @@ namespace Registry.Viewport
             {
                 if (ViewportHelper.PremiseFundAndRentMatch(premises.IdObject.Value, (int) ParentRow["id_rent_type"]))
                     continue;
-                var idBuilding = (int)DataModel.GetInstance<PremisesDataModel>().Select().Rows.Find(premises.IdObject.Value)["id_building"];
+                var idBuilding = (int)EntityDataModel<Premise>.GetInstance().Select().Rows.Find(premises.IdObject.Value)["id_building"];
                 if (!ViewportHelper.BuildingFundAndRentMatch(idBuilding, (int)ParentRow["id_rent_type"]) &&
                     MessageBox.Show(@"Выбранный вид найма не соответствует фонду сдаваемого помещения. Все равно продолжить сохранение?",
                         @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != 
@@ -152,11 +152,11 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<PremisesDataModel>();
+            GeneralDataModel = EntityDataModel<Premise>.GetInstance();
             _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
-            _buildings = DataModel.GetInstance<BuildingsDataModel>();
+            _buildings = DataModel.GetInstance<EntityDataModel<Building>>();
             _premisesTypes = DataModel.GetInstance<PremisesTypesDataModel>();
-            _subPremises = DataModel.GetInstance<SubPremisesDataModel>();
+            _subPremises = EntityDataModel<SubPremise>.GetInstance();
             _tenancyPremises = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
             _objectStates = DataModel.GetInstance<ObjectStatesDataModel>();
             _premisesFunds = CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>();

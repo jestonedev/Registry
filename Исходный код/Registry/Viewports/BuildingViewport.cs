@@ -120,7 +120,7 @@ namespace Registry.Viewport
             numericUpDownCommercialPremisesCount.Value = commercialCount;
             var totalMunCount = Convert.ToDecimal(_municipalPremises.Select().AsEnumerable().Count(s => s.Field<int>("id_building") == idBuilding));
             var totalPremisesCount = Convert.ToDecimal(
-                Math.Max(DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows().Count(b => b.Field<int>("id_building") == idBuilding),
+                Math.Max(EntityDataModel<Premise>.GetInstance().FilterDeletedRows().Count(b => b.Field<int>("id_building") == idBuilding),
                 row["num_apartments"] == DBNull.Value ? 0 : (int)row["num_apartments"]));
             if (totalPremisesCount > 0)
             {
@@ -211,16 +211,16 @@ namespace Registry.Viewport
             textBoxHouse.DataBindings.Clear();
             textBoxHouse.DataBindings.Add("Text", GeneralBindingSource, "house", true, DataSourceUpdateMode.Never, "");
             numericUpDownFloors.DataBindings.Clear();
-            numericUpDownFloors.DataBindings.Add("Value", GeneralBindingSource, "floors", true, DataSourceUpdateMode.Never, 5);
+            numericUpDownFloors.DataBindings.Add("Value", GeneralBindingSource, "floors", true, DataSourceUpdateMode.Never, (decimal)5);
             numericUpDownStartupYear.DataBindings.Clear();
             numericUpDownStartupYear.Maximum = DateTime.Now.Year;
-            numericUpDownStartupYear.DataBindings.Add("Value", GeneralBindingSource, "startup_year", true, DataSourceUpdateMode.Never, DateTime.Now.Year);
+            numericUpDownStartupYear.DataBindings.Add("Value", GeneralBindingSource, "startup_year", true, DataSourceUpdateMode.Never, (decimal)DateTime.Now.Year);
             textBoxCadastralNum.DataBindings.Clear();
             textBoxCadastralNum.DataBindings.Add("Text", GeneralBindingSource, "cadastral_num", true, DataSourceUpdateMode.Never, "");
             numericUpDownCadastralCost.DataBindings.Clear();
-            numericUpDownCadastralCost.DataBindings.Add("Value", GeneralBindingSource, "cadastral_cost", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownCadastralCost.DataBindings.Add("Value", GeneralBindingSource, "cadastral_cost", true, DataSourceUpdateMode.Never, (decimal)0);
             numericUpDownBalanceCost.DataBindings.Clear();
-            numericUpDownBalanceCost.DataBindings.Add("Value", GeneralBindingSource, "balance_cost", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownBalanceCost.DataBindings.Add("Value", GeneralBindingSource, "balance_cost", true, DataSourceUpdateMode.Never, (decimal)0);
             checkBoxImprovement.DataBindings.Clear();
             checkBoxImprovement.DataBindings.Add("Checked", GeneralBindingSource, "improvement", true, DataSourceUpdateMode.Never, true);
             checkBoxElevator.DataBindings.Clear();
@@ -247,19 +247,19 @@ namespace Registry.Viewport
             textBoxHousingCooperative.DataBindings.Clear();
             textBoxHousingCooperative.DataBindings.Add("Text", GeneralBindingSource, "housing_cooperative", true, DataSourceUpdateMode.Never, "");
             numericUpDownPremisesCount.DataBindings.Clear();
-            numericUpDownPremisesCount.DataBindings.Add("Value", GeneralBindingSource, "num_premises", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownPremisesCount.DataBindings.Add("Value", GeneralBindingSource, "num_premises", true, DataSourceUpdateMode.Never, (decimal)0);
             numericUpDownRoomsCount.DataBindings.Clear();
-            numericUpDownRoomsCount.DataBindings.Add("Value", GeneralBindingSource, "num_rooms", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownRoomsCount.DataBindings.Add("Value", GeneralBindingSource, "num_rooms", true, DataSourceUpdateMode.Never, (decimal)0);
             numericUpDownApartmentsCount.DataBindings.Clear();
-            numericUpDownApartmentsCount.DataBindings.Add("Value", GeneralBindingSource, "num_apartments", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownApartmentsCount.DataBindings.Add("Value", GeneralBindingSource, "num_apartments", true, DataSourceUpdateMode.Never, (decimal)0);
             numericUpDownSharedApartmentsCount.DataBindings.Clear();
-            numericUpDownSharedApartmentsCount.DataBindings.Add("Value", GeneralBindingSource, "num_shared_apartments", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownSharedApartmentsCount.DataBindings.Add("Value", GeneralBindingSource, "num_shared_apartments", true, DataSourceUpdateMode.Never, (decimal)0);
             numericUpDownLivingArea.DataBindings.Clear();
-            numericUpDownLivingArea.DataBindings.Add("Value", GeneralBindingSource, "living_area", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownLivingArea.DataBindings.Add("Value", GeneralBindingSource, "living_area", true, DataSourceUpdateMode.Never, (decimal)0);
             numericUpDownTotalArea.DataBindings.Clear();
-            numericUpDownTotalArea.DataBindings.Add("Value", GeneralBindingSource, "total_area", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownTotalArea.DataBindings.Add("Value", GeneralBindingSource, "total_area", true, DataSourceUpdateMode.Never, (decimal)0);
             numericUpDownWear.DataBindings.Clear();
-            numericUpDownWear.DataBindings.Add("Value", GeneralBindingSource, "wear", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownWear.DataBindings.Add("Value", GeneralBindingSource, "wear", true, DataSourceUpdateMode.Never, (decimal)0);
 
             dateTimePickerStateDate.DataBindings.Clear();
             dateTimePickerStateDate.DataBindings.Add("Value", GeneralBindingSource, "state_date", true, DataSourceUpdateMode.Never, null);
@@ -503,15 +503,15 @@ namespace Registry.Viewport
             dataGridViewOwnerships.AutoGenerateColumns = false;
             dataGridViewRestrictions.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<BuildingsDataModel>();
+            GeneralDataModel = DataModel.GetInstance<EntityDataModel<Building>>();
             DataModel.GetInstance<KladrStreetsDataModel>().Select();
-            DataModel.GetInstance<StructureTypesDataModel>().Select();
-            DataModel.GetInstance<HeatingTypesDataModel>().Select();
-            _restrictions = DataModel.GetInstance<RestrictionsDataModel>();
-            DataModel.GetInstance<RestrictionTypesDataModel>().Select();
+            EntityDataModel<StructureType>.GetInstance().Select();
+            DataModel.GetInstance<EntityDataModel<HeatingType>>().Select();
+            _restrictions = EntityDataModel<Restriction>.GetInstance();
+            EntityDataModel<RestrictionType>.GetInstance().Select();
             _restrictionBuildingsAssoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>();
-            _ownershipRights = DataModel.GetInstance<OwnershipsRightsDataModel>();
-            DataModel.GetInstance<OwnershipRightTypesDataModel>().Select();
+            _ownershipRights = EntityDataModel<OwnershipRight>.GetInstance();
+            EntityDataModel<OwnershipRightType>.GetInstance().Select();
             _ownershipBuildingsAssoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>();
             DataModel.GetInstance<FundTypesDataModel>().Select();
             DataModel.GetInstance<ObjectStatesDataModel>().Select();

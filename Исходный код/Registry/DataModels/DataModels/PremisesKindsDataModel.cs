@@ -1,4 +1,4 @@
-﻿using System.Windows.Forms;
+﻿using System;
 
 namespace Registry.DataModels.DataModels
 {
@@ -8,14 +8,14 @@ namespace Registry.DataModels.DataModels
         private const string SelectQuery = "SELECT * FROM premises_kinds";
         private const string TableName = "premises_kinds";
 
-        private PremisesKindsDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, SelectQuery, TableName)
+        private PremisesKindsDataModel(Action afterLoadHandler)
+            : base(SelectQuery, TableName, afterLoadHandler)
         {
         }
 
-        public static PremisesKindsDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        public static PremisesKindsDataModel GetInstance(Action afterLoadHandler)
         {
-            return _dataModel ?? (_dataModel = new PremisesKindsDataModel(progressBar, incrementor));
+            return _dataModel ?? (_dataModel = new PremisesKindsDataModel(afterLoadHandler));
         }
 
         protected override void ConfigureTable()

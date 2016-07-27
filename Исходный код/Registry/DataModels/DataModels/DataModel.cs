@@ -7,7 +7,6 @@ using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
 using Registry.Entities;
-using Registry.DataModels.CalcDataModels;
 using Settings;
 
 namespace Registry.DataModels.DataModels
@@ -17,12 +16,13 @@ namespace Registry.DataModels.DataModels
         private static readonly DataSet dataSet = new DataSet();
         public static DataSet DataSet { get { return dataSet; } }
 
-        private DataTable _table;
         private DataModelLoadState _dmLoadState = DataModelLoadState.BeforeLoad;
-        private DataModelLoadSyncType _dmLoadType = DataModelLoadSyncType.Syncronize; // По умолчанию загрузка синхронная
-
         public DataModelLoadState DmLoadState { get { return _dmLoadState; } set { _dmLoadState = value; } }
+
+        private DataModelLoadSyncType _dmLoadType = DataModelLoadSyncType.Syncronize; // По умолчанию загрузка синхронная
         public DataModelLoadSyncType DmLoadType { get { return _dmLoadType; } set { _dmLoadType = value; } }
+
+        private DataTable _table;
         protected DataTable Table { get { return _table; } set { _table = value; } }
 
         private static readonly object LockObj = new object();
@@ -32,13 +32,15 @@ namespace Registry.DataModels.DataModels
 
         protected DataModel()
         {
+            EditingNewRecord = false;
         }
 
-        protected DataModel(ToolStripProgressBar progressBar, int incrementor, string selectQuery, string tableName)
+        protected DataModel(string selectQuery, string tableName, Action afterLoadHandler)
         {
+            EditingNewRecord = false;
             var context = SynchronizationContext.Current;
             DmLoadType = DataModelLoadSyncType.Asyncronize;
-            ThreadPool.QueueUserWorkItem(progress =>
+            ThreadPool.QueueUserWorkItem(state =>
             {
                 try
                 {
@@ -62,15 +64,11 @@ namespace Registry.DataModels.DataModels
                         }
                     }
                     DmLoadState = DataModelLoadState.SuccessLoad;
-                    if (progress != null)
+                    if (afterLoadHandler != null)
                     {
-                        context.Post(_ => {
-                            progressBar.Value += incrementor;
-                            if (progressBar.Value != progressBar.Maximum) return;
-                            progressBar.Visible = false;
-                            //Если мы загрузили все данные, то запускаем CallbackUpdater
-                            DataModelsCallbackUpdater.GetInstance().Run();
-                            CalcDataModel.RunRefreshWalker();
+                        context.Post(_ =>
+                        {
+                            afterLoadHandler();
                         }, null);
                     }
                 }
@@ -78,7 +76,7 @@ namespace Registry.DataModels.DataModels
                 {
                     lock (LockObj)
                     {
-                        MessageBox.Show(string.Format(CultureInfo.InvariantCulture, 
+                        MessageBox.Show(string.Format(CultureInfo.InvariantCulture,
                             "Произошла ошибка при загрузке данных из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                         DmLoadState = DataModelLoadState.ErrorLoad;
@@ -87,11 +85,11 @@ namespace Registry.DataModels.DataModels
                 }
                 catch (DataModelException e)
                 {
-                    MessageBox.Show(e.Message, "Ошибка", 
+                    MessageBox.Show(e.Message, "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     DmLoadState = DataModelLoadState.ErrorLoad;
                 }
-            }, progressBar); 
+            }, null); 
         }
 
         public static DataModel GetLoadedInstance(string tableName)
@@ -159,7 +157,7 @@ namespace Registry.DataModels.DataModels
                 }
                 catch (OdbcException e)
                 {
-                    MessageBox.Show(String.Format(CultureInfo.InvariantCulture,
+                    MessageBox.Show(string.Format(CultureInfo.InvariantCulture,
                         "Не удалось удалить объект из базы данных. Подробная ошибка: {0}", e.Message), "Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return -1;
@@ -169,6 +167,7 @@ namespace Registry.DataModels.DataModels
 
         protected virtual void ConfigureDeleteCommand(DbCommand command, int id)
         {
+            throw new DataModelException("Необходимо переопределеить метод ConfigureDeleteCommand");
         }
 
         public virtual int Update(Entity entity)
@@ -199,6 +198,7 @@ namespace Registry.DataModels.DataModels
 
         protected virtual void ConfigureUpdateCommand(DbCommand command, Entity entity)
         {
+            throw new DataModelException("Необходимо переопределеить метод ConfigureUpdateCommand");
         }
 
         public virtual int Insert(Entity entity)
@@ -241,6 +241,7 @@ namespace Registry.DataModels.DataModels
 
         protected virtual void ConfigureInsertCommand(DbCommand command, Entity entity)
         {
+            throw new DataModelException("Необходимо переопределеить метод ConfigureInsertCommand");
         }
 
         public IEnumerable<DataRow> FilterDeletedRows()
@@ -251,26 +252,25 @@ namespace Registry.DataModels.DataModels
                    select tableRow;
         }
     
-          //public static DataModel GetInstance(DataModelType dataModelType)
         public static DataModel GetInstance<T>() where T : DataModel
         {            
-             return GetInstance<T>(null,0);
+             return GetInstance<T>(null);
         }
 
-        public static DataModel GetInstance<T>(ToolStripProgressBar progressBar, int incrementor) where T :  DataModel
+        public static DataModel GetInstance<T>(Action afterLoadHandler) where T :  DataModel
         {
-            Type currentDataModel = typeof(T);            
+            var currentDataModel = typeof(T);            
             if(typeof(T) == typeof(PaymentsDataModel) || typeof(T) == typeof(SelectableSigners))
             {
                 var method = currentDataModel.GetMethod("GetInstance",new Type[] {});
-                var instanceDM = (T)method.Invoke(null, new object[] { });
-                return instanceDM;
+                var instanceDm = (T)method.Invoke(null, new object[] { });
+                return instanceDm;
             }
             else
             {
-                var method = currentDataModel.GetMethod("GetInstance", new Type[] { typeof(ToolStripProgressBar), typeof(int) });
-                var instanceDM = (T)method.Invoke(null, new object[] { progressBar, incrementor });
-                return instanceDM;
+                var method = currentDataModel.GetMethod("GetInstance", new[] { typeof(Action) });
+                var instanceDm = (T)method.Invoke(null, new object[] { afterLoadHandler });
+                return instanceDm;
             }                            
         }
     }

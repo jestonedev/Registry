@@ -1,5 +1,5 @@
-﻿using System.Data.Common;
-using System.Windows.Forms;
+﻿using System;
+using System.Data.Common;
 using Registry.Entities;
 
 namespace Registry.DataModels.DataModels
@@ -10,14 +10,14 @@ namespace Registry.DataModels.DataModels
         private const string SelectQuery = "SELECT * FROM restrictions_premises_assoc WHERE deleted = 0";
         private const string TableName = "restrictions_premises_assoc";
 
-        private RestrictionsPremisesAssocDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, SelectQuery, TableName)
+        private RestrictionsPremisesAssocDataModel(Action afterLoadHandler)
+            : base(SelectQuery, TableName, afterLoadHandler)
         {
         }
 
-        public static RestrictionsPremisesAssocDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        public static RestrictionsPremisesAssocDataModel GetInstance(Action afterLoadHandler)
         {
-            return _dataModel ?? (_dataModel = new RestrictionsPremisesAssocDataModel(progressBar, incrementor));
+            return _dataModel ?? (_dataModel = new RestrictionsPremisesAssocDataModel(afterLoadHandler));
         }
 
         protected override void ConfigureTable()

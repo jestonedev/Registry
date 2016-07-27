@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using Registry.DataModels.DataModels;
+using Registry.Entities;
 
 namespace Registry.DataModels.CalcDataModels
 {
@@ -16,9 +17,9 @@ namespace Registry.DataModels.CalcDataModels
         private CalcDataModelLastClaimStates()
         {
             Table = InitializeTable();
-            Refresh();      
-            RefreshOnTableModify(DataModel.GetInstance<ClaimStatesDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<ClaimsDataModel>().Select());
+            Refresh();
+            RefreshOnTableModify(DataModel.GetInstance<EntityDataModel<ClaimState>>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<EntityDataModel<Claim>>().Select());
         }
 
         private static DataTable InitializeTable()
@@ -38,7 +39,7 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModeTenancyAggregated");
             // Фильтруем удаленные строки
-            var claimStates = DataModel.GetInstance<ClaimStatesDataModel>().FilterDeletedRows();
+            var claimStates = DataModel.GetInstance<EntityDataModel<ClaimState>>().FilterDeletedRows();
             // Вычисляем агрегационную информацию
             var lastClaimStateMaxIds =
                         from claimStateRow in claimStates
@@ -53,7 +54,7 @@ namespace Registry.DataModels.CalcDataModels
                 join lastClaimStateRow in lastClaimStateMaxIds
                     on claimStateRow.Field<int?>("id_state") equals lastClaimStateRow.id_state
                 join stateTypeRow in
-                    DataModel.GetInstance<ClaimStateTypesDataModel>().FilterDeletedRows()
+                    DataModel.GetInstance<EntityDataModel<ClaimStateType>>().FilterDeletedRows()
                     on claimStateRow.Field<int?>("id_state_type") equals
                     stateTypeRow.Field<int?>("id_state_type")
                 select new

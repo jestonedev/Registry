@@ -1,4 +1,4 @@
-﻿using System.Windows.Forms;
+﻿using System;
 
 namespace Registry.DataModels.DataModels
 {
@@ -8,14 +8,14 @@ namespace Registry.DataModels.DataModels
         private const string SelectQuery = "SELECT * FROM fund_types ft ORDER BY CASE ft.id_fund_type WHEN 4 THEN 0 ELSE ft.fund_type END DESC";
         private const string TableName = "fund_types";
 
-        private FundTypesDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, SelectQuery, TableName)
+        private FundTypesDataModel(Action afterLoadHandler)
+            : base(SelectQuery, TableName, afterLoadHandler)
         {
         }
 
-        public static FundTypesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        public static FundTypesDataModel GetInstance(Action afterLoadHandler)
         {
-            return _dataModel ?? (_dataModel = new FundTypesDataModel(progressBar, incrementor));
+            return _dataModel ?? (_dataModel = new FundTypesDataModel(afterLoadHandler));
         }
 
         protected override void ConfigureTable()

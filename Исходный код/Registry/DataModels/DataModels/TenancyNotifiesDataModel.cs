@@ -1,4 +1,4 @@
-﻿using System.Windows.Forms;
+﻿using System;
 
 namespace Registry.DataModels.DataModels
 {
@@ -8,14 +8,14 @@ namespace Registry.DataModels.DataModels
         private const string SelectQuery = "SELECT * FROM tenancy_notifies WHERE deleted <> 1";
         private const string TableName = "tenancy_notifies";
 
-        private TenancyNotifiesDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, SelectQuery, TableName)
+        private TenancyNotifiesDataModel(Action afterLoadHandler)
+            : base(SelectQuery, TableName, afterLoadHandler)
         {
         }
 
-        public static TenancyNotifiesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        public static TenancyNotifiesDataModel GetInstance(Action afterLoadHandler)
         {
-            return _dataModel ?? (_dataModel = new TenancyNotifiesDataModel(progressBar, incrementor));
+            return _dataModel ?? (_dataModel = new TenancyNotifiesDataModel(afterLoadHandler));
         }
 
         protected override void ConfigureTable()

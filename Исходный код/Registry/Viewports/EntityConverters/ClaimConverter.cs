@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Reflection;
 using Registry.Entities;
 
 namespace Registry.Viewport.EntityConverters

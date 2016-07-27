@@ -17,8 +17,8 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();
-            RefreshOnTableModify(DataModel.GetInstance<PremisesDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<SubPremisesDataModel>().Select());
+            RefreshOnTableModify(EntityDataModel<Premise>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<SubPremise>.GetInstance().Select());
             RefreshOnTableModify(DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>().Select());
             RefreshOnTableModify(DataModel.GetInstance<RestrictionsPremisesAssocDataModel>().Select());
         }
@@ -39,8 +39,8 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelBuildingsPremisesSumArea");
             // Фильтруем удаленные строки
-            var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
-            var subPremises = DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows();
+            var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows();
+            var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
             var restrictionsBuildignsAssoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>().FilterDeletedRows();
             var restrictionsPremisesAssoc = DataModel.GetInstance<RestrictionsPremisesAssocDataModel>().FilterDeletedRows(); 
             

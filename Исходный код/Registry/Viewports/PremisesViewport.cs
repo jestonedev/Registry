@@ -585,18 +585,18 @@ namespace Registry.Viewport
             dataGridViewRooms.AutoGenerateColumns = false;
             DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
 
-            GeneralDataModel = DataModel.GetInstance<PremisesDataModel>();
+            GeneralDataModel = EntityDataModel<Premise>.GetInstance();
             _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
-            _buildings = DataModel.GetInstance<BuildingsDataModel>();
+            _buildings = EntityDataModel<Building>.GetInstance();
             _premisesTypes = DataModel.GetInstance<PremisesTypesDataModel>();
             _premisesKinds = DataModel.GetInstance<PremisesKindsDataModel>();
-            _subPremises = DataModel.GetInstance<SubPremisesDataModel>();
-            _restrictions = DataModel.GetInstance<RestrictionsDataModel>();
-            _restrictionTypes = DataModel.GetInstance<RestrictionTypesDataModel>();
+            _subPremises = EntityDataModel<SubPremise>.GetInstance();
+            _restrictions = EntityDataModel<Restriction>.GetInstance();
+            _restrictionTypes = EntityDataModel<RestrictionType>.GetInstance();
             _restrictionPremisesAssoc = DataModel.GetInstance<RestrictionsPremisesAssocDataModel>();
             _restrictionBuildingsAssoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>();
-            _ownershipRights = DataModel.GetInstance<OwnershipsRightsDataModel>();
-            _ownershipRightTypes = DataModel.GetInstance<OwnershipRightTypesDataModel>();
+            _ownershipRights = EntityDataModel<OwnershipRight>.GetInstance();
+            _ownershipRightTypes = EntityDataModel<OwnershipRightType>.GetInstance();
             _ownershipPremisesAssoc = DataModel.GetInstance<OwnershipPremisesAssocDataModel>();
             _ownershipBuildingsAssoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>();
             _fundTypes = DataModel.GetInstance<FundTypesDataModel>();

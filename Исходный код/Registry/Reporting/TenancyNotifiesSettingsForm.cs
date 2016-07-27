@@ -12,6 +12,7 @@ using System.Text;
 using System.Windows.Forms;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
+using Registry.Entities;
 
 namespace Registry.Reporting
 {
@@ -61,9 +62,9 @@ namespace Registry.Reporting
             InitializeComponent();
 
             dataGridView.AutoGenerateColumns = false;
-            tenancies = DataModel.GetInstance<TenancyProcessesDataModel>();
+            tenancies = EntityDataModel<TenancyProcess>.GetInstance();
             rent_types = DataModel.GetInstance<RentTypesDataModel>();
-            executors = DataModel.GetInstance<ExecutorsDataModel>();
+            executors = DataModel.GetInstance<EntityDataModel<Executor>>();
             tenancies_aggregate = (CalcDataModel)CalcDataModel.GetInstance<CalcDataModelTenancyAggregated>();
             tenancy_notifies_max_date = (CalcDataModel) CalcDataModel.GetInstance<CalcDataModelTenancyNotifiesMaxDate>();
 

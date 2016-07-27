@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
+using Registry.Entities;
 
 namespace Registry.Viewport.ModalEditors
 {
@@ -27,7 +28,7 @@ namespace Registry.Viewport.ModalEditors
         public RestrictionsEditorMultiMaster()
         {
             InitializeComponent();
-            var restrictionTypes = DataModel.GetInstance<RestrictionTypesDataModel>();
+            var restrictionTypes = EntityDataModel<RestrictionType>.GetInstance();
             var vRestrictionTypes = new BindingSource {DataSource = restrictionTypes.Select()};
             comboBoxIdRestrictionType.DataSource = vRestrictionTypes;
             comboBoxIdRestrictionType.ValueMember = "id_restriction_type";

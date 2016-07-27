@@ -182,7 +182,7 @@ namespace Registry.Viewport
         {
             DockAreas = DockAreas.Document;
             dataGridViewClaims.AutoGenerateColumns = false;
-            GeneralDataModel = DataModel.GetInstance<ClaimsDataModel>();
+            GeneralDataModel = DataModel.GetInstance<EntityDataModel<Claim>>();
 
             // Ожидаем дозагрузки, если это необходимо
             GeneralDataModel.Select();
@@ -428,7 +428,7 @@ namespace Registry.Viewport
 
         private void InsertFirstClaimState(int? idClaim)
         {
-            var claimStatesDataModel = DataModel.GetInstance<ClaimStatesDataModel>();
+            var claimStatesDataModel = DataModel.GetInstance<EntityDataModel<ClaimState>>();
             if (claimStatesDataModel.EditingNewRecord)
             {
                 MessageBox.Show(@"Не удалось автоматически вставить первый этап претензионно-исковой работы, т.к. форма состояний исковых работ находится в состоянии добавления новой записи.",

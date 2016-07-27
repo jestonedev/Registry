@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using Registry.DataModels.DataModels;
+using Registry.Entities;
 
 namespace Registry.DataModels.CalcDataModels
 {
@@ -17,8 +18,8 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();      
-            RefreshOnTableModify(DataModel.GetInstance<TenancyProcessesDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<TenancyPersonsDataModel>().Select());
+            RefreshOnTableModify(EntityDataModel<TenancyProcess>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<TenancyPerson>.GetInstance().Select());
             RefreshOnTableModify(DataModel.GetInstance<TenancyBuildingsAssocDataModel>().Select());
             RefreshOnTableModify(DataModel.GetInstance<TenancyPremisesAssocDataModel>().Select());
             RefreshOnTableModify(DataModel.GetInstance<TenancySubPremisesAssocDataModel>().Select());
@@ -40,8 +41,8 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModeTenancyAggregated");
             // Фильтруем удаленные строки
-            var tenancies = DataModel.GetInstance<TenancyProcessesDataModel>().FilterDeletedRows();
-            var tenancyPersons = DataModel.GetInstance<TenancyPersonsDataModel>().FilterDeletedRows();
+            var tenancies = EntityDataModel<TenancyProcess>.GetInstance().FilterDeletedRows();
+            var tenancyPersons = EntityDataModel<TenancyPerson>.GetInstance().FilterDeletedRows();
             // Вычисляем агрегационную информацию
             var tenants = from tenancyPersonsRow in tenancyPersons
                           where tenancyPersonsRow.Field<int?>("id_kinship") == 1 && tenancyPersonsRow.Field<DateTime?>("exclude_date") == null

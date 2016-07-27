@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.Entities;
 
 namespace Registry.Viewport.SearchForms
 {
@@ -171,7 +172,7 @@ namespace Registry.Viewport.SearchForms
             DataModel.GetInstance<FundTypesDataModel>().Select();
             DataModel.GetInstance<ObjectStatesDataModel>().Select();
             regions = DataModel.GetInstance<KladrRegionsDataModel>();
-            ownership_right_types = DataModel.GetInstance<OwnershipRightTypesDataModel>();
+            ownership_right_types = EntityDataModel<OwnershipRightType>.GetInstance();
 
             var ds = DataModel.DataSet;
 

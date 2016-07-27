@@ -61,6 +61,7 @@ namespace Registry.Viewport
             this.dataGridView.ShowCellToolTips = false;
             this.dataGridView.Size = new System.Drawing.Size(819, 328);
             this.dataGridView.TabIndex = 2;
+            this.dataGridView.DataError += new System.Windows.Forms.DataGridViewDataErrorEventHandler(this.dataGridView_DataError);
             this.dataGridView.EditingControlShowing += new System.Windows.Forms.DataGridViewEditingControlShowingEventHandler(this.dataGridView_EditingControlShowing);
             // 
             // id_ownership_right

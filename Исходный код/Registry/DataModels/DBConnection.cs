@@ -51,6 +51,15 @@ namespace Registry.DataModels
             return parameter;
         }
 
+        public static DbParameter CreateParameter(string name, object value)
+        {
+            var parameter = Factory.CreateParameter();
+            if (parameter == null) return null;
+            parameter.ParameterName = name;
+            parameter.Value = value ?? DBNull.Value;
+            return parameter;
+        }
+
         private static string ParseProviderName(string name)
         {
             var dt = DbProviderFactories.GetFactoryClasses();

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
-using System.Windows.Forms;
 
 namespace Registry.DataModels.DataModels
 {
@@ -63,14 +63,14 @@ namespace Registry.DataModels.DataModels
                 GROUP BY p.id_account) pm ON pa.id_account = pm.id_account";
         private const string TableName = "payments_accounts";
 
-        private PaymentsAccountsDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, SelectQuery, TableName)
+        private PaymentsAccountsDataModel(Action afterLoadHandler)
+            : base(SelectQuery, TableName, afterLoadHandler)
         {
         }
 
-        public static PaymentsAccountsDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        public static PaymentsAccountsDataModel GetInstance(Action afterLoadHandler)
         {
-            return _dataModel ?? (_dataModel = new PaymentsAccountsDataModel(progressBar, incrementor));
+            return _dataModel ?? (_dataModel = new PaymentsAccountsDataModel(afterLoadHandler));
         }
 
         protected override void ConfigureRelations()

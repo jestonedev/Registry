@@ -145,8 +145,8 @@ namespace Registry.Viewport
         {
             DockAreas = DockAreas.Document;
             dataGridView.AutoGenerateColumns = false;
-            GeneralDataModel = DataModel.GetInstance<ResettleProcessesDataModel>();
-            _documentsResidence = DataModel.GetInstance<DocumentsResidenceDataModel>();
+            GeneralDataModel = EntityDataModel<ResettleProcess>.GetInstance();
+            _documentsResidence = DataModel.GetInstance<EntityDataModel<DocumentResidence>>();
             _resettleAggregate = CalcDataModel.GetInstance<CalcDataModelResettleAggregated>();
 
             // Ожидаем дозагрузки, если это необходимо

@@ -273,7 +273,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<FundsHistoryDataModel>();
+            GeneralDataModel = DataModel.GetInstance<EntityDataModel<FundHistory>>();
             _fundTypes = DataModel.GetInstance<FundTypesDataModel>();
 
             // Ожидаем дозагрузки, если это необходимо

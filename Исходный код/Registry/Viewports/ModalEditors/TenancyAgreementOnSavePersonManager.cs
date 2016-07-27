@@ -77,7 +77,7 @@ namespace Registry.Viewport.ModalEditors
                     });
                 }
             }
-            var tenancyPersons = DataModel.GetInstance<TenancyPersonsDataModel>();
+            var tenancyPersons = EntityDataModel<TenancyPerson>.GetInstance();
             switch (_personsOperationType)
             {
                 case PersonsOperationType.IncludePersons:

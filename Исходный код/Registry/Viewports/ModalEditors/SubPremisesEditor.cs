@@ -15,7 +15,7 @@ namespace Registry.Viewport
         private ViewportState state = ViewportState.NewRowState;
         private SubPremise subPremise;
         private ParentTypeEnum parentType;
-        private DataModel sub_premises = DataModel.GetInstance<SubPremisesDataModel>();
+        private DataModel sub_premises = EntityDataModel<SubPremise>.GetInstance();
         private DataModel object_states;
         private BindingSource v_object_states;
 

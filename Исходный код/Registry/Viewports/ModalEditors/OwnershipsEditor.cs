@@ -13,7 +13,7 @@ namespace Registry.Viewport
         private ViewportState state = ViewportState.NewRowState;
         private OwnershipRight ownershipRight;
         private ParentTypeEnum parentType;
-        private DataModel ownership_rights = DataModel.GetInstance<OwnershipsRightsDataModel>();
+        private DataModel ownership_rights = EntityDataModel<OwnershipRight>.GetInstance();
         private DataModel ownership_assoc;
         private DataModel ownership_right_types;
         private BindingSource v_ownership_right_types;
@@ -99,7 +99,7 @@ namespace Registry.Viewport
         public OwnershipsEditor()
         {
             InitializeComponent();
-            ownership_right_types = DataModel.GetInstance<OwnershipRightTypesDataModel>();
+            ownership_right_types = EntityDataModel<OwnershipRightType>.GetInstance();
             v_ownership_right_types = new BindingSource {DataSource = ownership_right_types.Select()};
             comboBoxIdOwnershipType.DataSource = v_ownership_right_types;
             comboBoxIdOwnershipType.ValueMember = "id_ownership_right_type";

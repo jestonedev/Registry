@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.Entities;
 
 namespace Registry.Viewport.SearchForms
 {
@@ -19,7 +20,7 @@ namespace Registry.Viewport.SearchForms
 
             DataModel.GetInstance<KladrStreetsDataModel>().Select();
             DataModel.GetInstance<RentTypesDataModel>().Select();
-            DataModel.GetInstance<TenancyReasonTypesDataModel>().Select();
+            EntityDataModel<ReasonType>.GetInstance().Select();
             var regions = DataModel.GetInstance<KladrRegionsDataModel>();
 
             var ds = DataModel.DataSet;
@@ -94,7 +95,7 @@ namespace Registry.Viewport.SearchForms
             if (checkBoxReasonTypeEnable.Checked)
             {
                 var processesIds =
-                    from reason in DataModel.GetInstance<TenancyReasonsDataModel>().FilterDeletedRows()
+                    from reason in EntityDataModel<TenancyReason>.GetInstance().FilterDeletedRows()
                     where reason.Field<int?>("id_reason_type") == (int?)comboBoxReasonType.SelectedValue
                     select reason.Field<int>("id_process");
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
@@ -102,7 +103,7 @@ namespace Registry.Viewport.SearchForms
             if (checkBoxReasonNumEnable.Checked)
             {
                 var processesIds =
-                    from reason in DataModel.GetInstance<TenancyReasonsDataModel>().FilterDeletedRows()
+                    from reason in EntityDataModel<TenancyReason>.GetInstance().FilterDeletedRows()
                     where reason.Field<string>("reason_number") == textBoxReasonNum.Text
                     select reason.Field<int>("id_process");
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);

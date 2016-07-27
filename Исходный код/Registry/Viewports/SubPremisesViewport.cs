@@ -112,7 +112,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<SubPremisesDataModel>();
+            GeneralDataModel = EntityDataModel<SubPremise>.GetInstance();
             _objectStates = DataModel.GetInstance<ObjectStatesDataModel>();
             // Дожидаемся дозагрузки данных, если это необходимо
             GeneralDataModel.Select();

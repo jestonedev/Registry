@@ -2,8 +2,14 @@
 
 namespace Registry.Entities
 {
+    [Relation(MasterTableName = "fund_types", MasterFieldName = "id_fund_type")]
+    [Relation(SlaveTableName = "funds_buildings_assoc")]
+    [Relation(SlaveTableName = "funds_premises_assoc")]
+    [Relation(SlaveTableName = "funds_sub_premises_assoc")]
+    [DataTable(Name = "funds_history", HasDeletedMark = true)]
     public sealed class FundHistory : Entity
     {
+        [DataColumn(IsPrimaryKey = true)]
         public int? IdFund { get; set; }
         public int? IdFundType { get; set; }
         public string ProtocolNumber { get; set; }

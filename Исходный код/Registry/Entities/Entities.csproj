@@ -52,10 +52,14 @@
   <ItemGroup>
     <Compile Include="AggregatedAddress.cs" />
     <Compile Include="ClaimFile.cs" />
+    <Compile Include="ClaimStateTypeRelation.cs" />
+    <Compile Include="DataColumnAttribute.cs" />
+    <Compile Include="DataTableAttribute.cs" />
     <Compile Include="DocumentResidence.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="EntityType.cs" />
     <Compile Include="HeatingTypes.cs" />
+    <Compile Include="RelationAttribute.cs" />
     <Compile Include="RestrictionRightObjectAssoc.cs" />
     <Compile Include="OwnershipRightObjectAssoc.cs" />
     <Compile Include="FundObjectAssoc.cs" />
@@ -70,7 +74,6 @@
     <Compile Include="Claim.cs" />
     <Compile Include="ClaimState.cs" />
     <Compile Include="ClaimStateType.cs" />
-    <Compile Include="ClaimStateTypeRelation.cs" />
     <Compile Include="TenancyReason.cs" />
     <Compile Include="DocumentIssuedBy.cs" />
     <Compile Include="Executor.cs" />

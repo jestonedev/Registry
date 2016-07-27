@@ -26,6 +26,7 @@ namespace Registry.Viewport.EntityConverters
                 RegistrationHouse = ViewportHelper.ValueOrNull(row, "registration_house"),
                 RegistrationFlat = ViewportHelper.ValueOrNull(row, "registration_flat"),
                 RegistrationRoom = ViewportHelper.ValueOrNull(row, "registration_room"),
+                RegistrationDate = ViewportHelper.ValueOrNull<DateTime>(row, "registration_date"),
                 ResidenceIdStreet = ViewportHelper.ValueOrNull(row, "residence_id_street"),
                 ResidenceHouse = ViewportHelper.ValueOrNull(row, "residence_house"),
                 ResidenceFlat = ViewportHelper.ValueOrNull(row, "residence_flat"),

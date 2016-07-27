@@ -13,7 +13,7 @@ namespace Registry.Viewport
         private ViewportState state = ViewportState.NewRowState;
         private Restriction restriction;
         private ParentTypeEnum parentType;
-        private DataModel restrictions = DataModel.GetInstance<RestrictionsDataModel>();
+        private DataModel restrictions = EntityDataModel<Restriction>.GetInstance();
         private DataModel restriction_assoc;
         private DataModel restriction_types;
         private BindingSource v_restriction_types;
@@ -93,9 +93,8 @@ namespace Registry.Viewport
         public RestrictionsEditor()
         {
             InitializeComponent();
-            restriction_types = DataModel.GetInstance<RestrictionTypesDataModel>();
-            v_restriction_types = new BindingSource();
-            v_restriction_types.DataSource = restriction_types.Select();
+            restriction_types = EntityDataModel<RestrictionType>.GetInstance();
+            v_restriction_types = new BindingSource {DataSource = restriction_types.Select()};
             comboBoxIdRestrictionType.DataSource = v_restriction_types;
             comboBoxIdRestrictionType.ValueMember = "id_restriction_type";
             comboBoxIdRestrictionType.DisplayMember = "restriction_type";

@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using Registry.DataModels.DataModels;
+using Registry.Entities;
 
 namespace Registry.DataModels.CalcDataModels
 {
@@ -17,9 +18,9 @@ namespace Registry.DataModels.CalcDataModels
             RefreshOnTableModify(DataModel.GetInstance<TenancyPremisesAssocDataModel>().Select());
             RefreshOnTableModify(DataModel.GetInstance<TenancyBuildingsAssocDataModel>().Select());
             RefreshOnTableModify(DataModel.GetInstance<KladrStreetsDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<BuildingsDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<PremisesDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<SubPremisesDataModel>().Select());
+            RefreshOnTableModify(EntityDataModel<Building>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<Premise>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<SubPremise>.GetInstance().Select());
         }
 
         private static DataTable InitializeTable()
@@ -43,9 +44,9 @@ namespace Registry.DataModels.CalcDataModels
             var assocPremises = DataModel.GetInstance<TenancyPremisesAssocDataModel>().FilterDeletedRows();
             var assocBuildings = DataModel.GetInstance<TenancyBuildingsAssocDataModel>().FilterDeletedRows();
             var kladrStreet = DataModel.GetInstance<KladrStreetsDataModel>().FilterDeletedRows();
-            var buildings = DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows();
-            var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
-            var subPremises = DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows();
+            var buildings = EntityDataModel<Building>.GetInstance().FilterDeletedRows();
+            var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows();
+            var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
 
             var aSubPremises = from assocSubPremisesRow in assocSubPremises
                                     join subPremisesRow in subPremises

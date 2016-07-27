@@ -84,7 +84,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<OwnershipRightTypesDataModel>(); 
+            GeneralDataModel = EntityDataModel<OwnershipRightType>.GetInstance();
             GeneralDataModel.Select();
 
             GeneralBindingSource = new BindingSource

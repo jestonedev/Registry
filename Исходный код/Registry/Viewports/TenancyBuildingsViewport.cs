@@ -120,7 +120,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<BuildingsDataModel>();
+            GeneralDataModel = DataModel.GetInstance<EntityDataModel<Building>>();
             _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
             _tenancyBuildings = DataModel.GetInstance<TenancyBuildingsAssocDataModel>();
             // Ожидаем дозагрузки данных, если это необходимо

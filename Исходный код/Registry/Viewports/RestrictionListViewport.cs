@@ -152,8 +152,8 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<RestrictionsDataModel>();
-            _restrictionTypes = DataModel.GetInstance<RestrictionTypesDataModel>();
+            GeneralDataModel = EntityDataModel<Restriction>.GetInstance();
+            _restrictionTypes = EntityDataModel<RestrictionType>.GetInstance();
             // Дожидаемся дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
             _restrictionTypes.Select();

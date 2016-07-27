@@ -149,8 +149,8 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<OwnershipsRightsDataModel>();
-            _ownershipsRightsTypes = DataModel.GetInstance<OwnershipRightTypesDataModel>();
+            GeneralDataModel = EntityDataModel<OwnershipRight>.GetInstance();
+            _ownershipsRightsTypes = EntityDataModel<OwnershipRightType>.GetInstance();
             // Дожидаемся дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
             _ownershipsRightsTypes.Select();
@@ -295,8 +295,9 @@ namespace Registry.Viewport
                 var row = GeneralDataModel.Select().Rows.Find(ownershipRight.IdOwnershipRight);
                 if (row == null)
                 {
-                    var idParent = ((ParentType == ParentTypeEnum.Premises) && ParentRow != null) ? (int)ParentRow["id_premises"] :
-                        ((ParentType == ParentTypeEnum.Building) && ParentRow != null) ? (int)ParentRow["id_building"] :
+                    var idParent = 
+                        (ParentType == ParentTypeEnum.Premises) && ParentRow != null ? (int)ParentRow["id_premises"] :
+                        (ParentType == ParentTypeEnum.Building) && ParentRow != null ? (int)ParentRow["id_building"] :
                         -1;
                     if (idParent == -1)
                     {
@@ -491,7 +492,7 @@ namespace Registry.Viewport
                     //Если строка имеется в текущем контексте оригинального представления, то добавить его и в snapshot, 
                     //иначе - объект не принадлежит текущему родителю
                     if (rowIndex != -1)
-                        GeneralSnapshot.Rows.Add(e.Row["id_ownership_right"], e.Row["id_ownership_right_type"], e.Row["number"], e.Row["date"], e.Row["description"]);
+                        GeneralSnapshot.Rows.Add(OwnershipRightConverter.ToArray(e.Row));
                     break;
             }
         }
@@ -521,6 +522,11 @@ namespace Registry.Viewport
             var editingControl = dataGridView.EditingControl as DataGridViewComboBoxEditingControl;
             if (editingControl != null) dataGridView.CurrentCell.Value = editingControl.SelectedValue;
             dataGridView.EndEdit();
+        }
+
+        private void dataGridView_DataError(object sender, DataGridViewDataErrorEventArgs e)
+        {
+            e.Cancel = true;
         }
     }
 }

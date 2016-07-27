@@ -7,7 +7,7 @@ namespace Registry.Viewport.EntityConverters
 {
     internal sealed class OwnershipRightConverter
     {
-        public static object[] ToArray(DataRowView row)
+        public static object[] ToArray(DataRow row)
         {
             return new[] { 
                 row["id_ownership_right"], 
@@ -16,6 +16,11 @@ namespace Registry.Viewport.EntityConverters
                 row["date"], 
                 row["description"]
             };
+        }
+
+        public static object[] ToArray(DataRowView row)
+        {
+            return ToArray(row.Row);
         }
 
         public static OwnershipRight FromRow(DataRow row)

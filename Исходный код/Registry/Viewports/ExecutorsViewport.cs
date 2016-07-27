@@ -83,7 +83,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<ExecutorsDataModel>();
+            GeneralDataModel = DataModel.GetInstance<EntityDataModel<Executor>>();
 
 
             GeneralBindingSource = new BindingSource

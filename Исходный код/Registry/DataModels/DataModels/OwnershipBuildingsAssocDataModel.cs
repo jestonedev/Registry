@@ -1,5 +1,5 @@
-﻿using System.Data.Common;
-using System.Windows.Forms;
+﻿using System;
+using System.Data.Common;
 using Registry.Entities;
 
 namespace Registry.DataModels.DataModels
@@ -10,14 +10,14 @@ namespace Registry.DataModels.DataModels
         private const string SelectQuery = "SELECT * FROM ownership_buildings_assoc WHERE deleted = 0";
         private const string TableName = "ownership_buildings_assoc";
 
-        private OwnershipBuildingsAssocDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, SelectQuery, TableName)
+        private OwnershipBuildingsAssocDataModel(Action afterLoadHandler)
+            : base(SelectQuery, TableName, afterLoadHandler)
         {
         }
 
-        public static OwnershipBuildingsAssocDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        public static OwnershipBuildingsAssocDataModel GetInstance(Action afterLoadHandler)
         {
-            return _dataModel ?? (_dataModel = new OwnershipBuildingsAssocDataModel(progressBar, incrementor));
+            return _dataModel ?? (_dataModel = new OwnershipBuildingsAssocDataModel(afterLoadHandler));
         }
 
         protected override void ConfigureTable()

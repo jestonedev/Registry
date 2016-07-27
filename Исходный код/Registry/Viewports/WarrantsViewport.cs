@@ -133,7 +133,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<WarrantsDataModel>();
+            GeneralDataModel = EntityDataModel<Warrant>.GetInstance();
             _warrantDocTypes = DataModel.GetInstance<WarrantDocTypesDataModel>();
 
             // Ожидаем дозагрузки, если это необходимо

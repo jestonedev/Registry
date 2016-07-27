@@ -19,11 +19,11 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();
-            RefreshOnTableModify(DataModel.GetInstance<FundsHistoryDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<EntityDataModel<FundHistory>>().Select());
             RefreshOnTableModify(DataModel.GetInstance<FundsPremisesAssocDataModel>().Select());
             RefreshOnTableModify(DataModel.GetInstance<FundsSubPremisesAssocDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<PremisesDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<SubPremisesDataModel>().Select());
+            RefreshOnTableModify(EntityDataModel<Premise>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<SubPremise>.GetInstance().Select());
         }
 
         private static DataTable InitializeTable()
@@ -44,11 +44,11 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelMunicipalPremises");            
             // Фильтруем удаленные строки
-            var fundsHistory = DataModel.GetInstance<FundsHistoryDataModel>().FilterDeletedRows().ToList();
+            var fundsHistory = DataModel.GetInstance<EntityDataModel<FundHistory>>().FilterDeletedRows().ToList();
             var fundsPremisesAssoc = DataModel.GetInstance<FundsPremisesAssocDataModel>().FilterDeletedRows().ToList();
             var fundsSubPremisesAssoc = DataModel.GetInstance<FundsSubPremisesAssocDataModel>().FilterDeletedRows().ToList();
-            var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows().ToList();
-            var subPremises = DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows().ToList();
+            var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows().ToList();
+            var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows().ToList();
 
             // Вычисляем агрегационную информацию
             var fundInfoPremises =

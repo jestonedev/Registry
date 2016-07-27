@@ -16,9 +16,9 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();
-            RefreshOnTableModify(DataModel.GetInstance<BuildingsDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<PremisesDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<FundsHistoryDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<EntityDataModel<Building>>().Select());
+            RefreshOnTableModify(EntityDataModel<Premise>.GetInstance().Select());
+            RefreshOnTableModify(DataModel.GetInstance<EntityDataModel<FundHistory>>().Select());
             RefreshOnTableModify(DataModel.GetInstance<FundsPremisesAssocDataModel>().Select());
         }
 
@@ -40,9 +40,9 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelBuildingsPremisesFunds");
             // Фильтруем удаленные строки
-            var buildings = DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows();
-            var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
-            var fundsHistory = DataModel.GetInstance<FundsHistoryDataModel>().FilterDeletedRows();
+            var buildings = DataModel.GetInstance<EntityDataModel<Building>>().FilterDeletedRows();
+            var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows();
+            var fundsHistory = DataModel.GetInstance<EntityDataModel<FundHistory>>().FilterDeletedRows();
             var fundsPremisesAssoc = DataModel.GetInstance<FundsPremisesAssocDataModel>().FilterDeletedRows();
 
             // Вычисляем агрегационную информацию

@@ -2,8 +2,12 @@
 
 namespace Registry.Entities
 {
+    [Relation(MasterTableName = "claims", MasterFieldName = "id_claim")]
+    [Relation(MasterTableName = "claim_state_types", MasterFieldName = "id_state_type")]
+    [DataTable(HasDeletedMark = true, Name = "claim_states")]
     public sealed class ClaimState : Entity
     {
+        [DataColumn(IsPrimaryKey = true)]
         public int? IdState { get; set; }
         public int? IdClaim { get; set; }
         public int? IdStateType { get; set; }

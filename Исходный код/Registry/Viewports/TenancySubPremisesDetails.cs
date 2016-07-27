@@ -157,13 +157,13 @@ namespace Registry.Viewport
             {
                 if (!ViewportHelper.SubPremiseFundAndRentMatch(subPremises.IdObject.Value, (int)ParentRow["id_rent_type"]))
                 {
-                    var idPremises = (int)DataModel.GetInstance<SubPremisesDataModel>().Select().Rows.Find(subPremises.IdObject.Value)["id_premises"];
+                    var idPremises = (int)EntityDataModel<SubPremise>.GetInstance().Select().Rows.Find(subPremises.IdObject.Value)["id_premises"];
                     if (!ViewportHelper.PremiseFundAndRentMatch(idPremises, (int)ParentRow["id_rent_type"]))
                     {
-                        var idBuilding = (int)DataModel.GetInstance<PremisesDataModel>().Select().Rows.Find(idPremises)["id_building"];
+                        var idBuilding = (int)EntityDataModel<Premise>.GetInstance().Select().Rows.Find(idPremises)["id_building"];
                         if (!ViewportHelper.BuildingFundAndRentMatch(idBuilding, (int)ParentRow["id_rent_type"]) &&
-                                    MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемой комнаты. Все равно продолжить сохранение?",
-                                    "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) !=
+                                    MessageBox.Show(@"Выбранный вид найма не соответствует фонду сдаваемой комнаты. Все равно продолжить сохранение?",
+                                    @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) !=
                                     DialogResult.Yes)
                             return false;
                         return true;

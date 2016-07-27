@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
+using Registry.Entities;
 
 namespace Registry.Viewport
 {
@@ -52,7 +53,7 @@ namespace Registry.Viewport
             InitializeComponent();
             var source = new BindingSource
             {
-                DataSource = DataModel.GetInstance<ClaimStateTypesDataModel>().Select()
+                DataSource = DataModel.GetInstance<EntityDataModel<ClaimStateType>>().Select()
             };
             comboBoxClaimStateType.ValueMember = "id_state_type";
             comboBoxClaimStateType.DisplayMember = "state_type";

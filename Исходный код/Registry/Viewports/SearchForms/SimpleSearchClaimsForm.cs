@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
+using Registry.Entities;
 
 namespace Registry.Viewport.SearchForms
 {
@@ -17,7 +18,7 @@ namespace Registry.Viewport.SearchForms
         {
             InitializeComponent();
 
-            DataModel.GetInstance<ClaimStatesDataModel>().Select();
+            DataModel.GetInstance<EntityDataModel<ClaimState>>().Select();
             comboBoxState.DataSource = new BindingSource
             {
                 DataSource = DataModel.DataSet,
@@ -52,7 +53,7 @@ namespace Registry.Viewport.SearchForms
             {
                 if (checkBoxStateEnable.Checked && comboBoxState.SelectedValue != null)
                 {
-                    var claimStatesDataModel = DataModel.GetInstance<ClaimStatesDataModel>();
+                    var claimStatesDataModel = DataModel.GetInstance<EntityDataModel<ClaimState>>();
                     var lastStates = from stateRow in claimStatesDataModel.FilterDeletedRows()
                         group stateRow.Field<int?>("id_state") by stateRow.Field<int>("id_claim")
                         into gs
@@ -89,7 +90,7 @@ namespace Registry.Viewport.SearchForms
             } else if (checkBoxStateEnable.Checked || checkBoxDateStartStateEnable.Checked)
             {
 
-                var claims = from row in DataModel.GetInstance<ClaimStatesDataModel>().FilterDeletedRows()
+                var claims = from row in DataModel.GetInstance<EntityDataModel<ClaimState>>().FilterDeletedRows()
                     where
                         (!checkBoxStateEnable.Checked ||
                          row.Field<int?>("id_state_type") == (int?) comboBoxState.SelectedValue) &&
