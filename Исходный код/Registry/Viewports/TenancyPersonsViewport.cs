@@ -258,7 +258,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return TenancyPersonConverter.FromRow(row);
+            return EntityConverter<TenancyPerson>.FromRow(row);
         }
 
         private bool ValidateTenancyPerson(TenancyPerson tenancyPerson)
@@ -533,7 +533,7 @@ namespace Registry.Viewport
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    TenancyPersonConverter.FillRow(tenancyPerson, newRow);
+                    EntityConverter<TenancyPerson>.FillRow(tenancyPerson, newRow);
                     GeneralDataModel.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
@@ -548,7 +548,7 @@ namespace Registry.Viewport
                         return;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     IsEditable = false;
-                    TenancyPersonConverter.FillRow(tenancyPerson, row);
+                    EntityConverter<TenancyPerson>.FillRow(tenancyPerson, row);
                     break;
             }
             RedrawDataGridRows();
@@ -867,7 +867,7 @@ namespace Registry.Viewport
                             person.IdPerson = idPerson;
                             var row = (DataRowView)GeneralBindingSource.AddNew();
                             if (row == null) continue;
-                            TenancyPersonConverter.FillRow(person, row);
+                            EntityConverter<TenancyPerson>.FillRow(person, row);
                         }
                         IsEditable = true;
                     }

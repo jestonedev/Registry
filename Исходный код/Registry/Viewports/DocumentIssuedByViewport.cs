@@ -56,7 +56,7 @@ namespace Registry.Viewport
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
                 var row = dataGridView.Rows[i];
-                list.Add(DocumentIssuedByConverter.FromRow(row));
+                list.Add(EntityConverter<DocumentIssuedBy>.FromRow(row));
             }
             return list;
         }
@@ -67,7 +67,7 @@ namespace Registry.Viewport
             foreach (var document in GeneralBindingSource)
             {
                 var row = (DataRowView)document;
-                list.Add(DocumentIssuedByConverter.FromRow(row));
+                list.Add(EntityConverter<DocumentIssuedBy>.FromRow(row));
             }
             return list;
         }
@@ -97,7 +97,7 @@ namespace Registry.Viewport
                     GeneralDataModel.Select().Columns[i].ColumnName, GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             foreach (var document in GeneralBindingSource)
-                GeneralSnapshot.Rows.Add(DocumentIssuedByConverter.ToArray((DataRowView)document));
+                GeneralSnapshot.Rows.Add(EntityConverter<DocumentIssuedBy>.ToArray((DataRowView)document));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
             AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_documents_issued_by_CurrentItemChanged);
 
@@ -146,7 +146,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             foreach (var document in GeneralBindingSource)
-                GeneralSnapshot.Rows.Add(DocumentIssuedByConverter.ToArray(((DataRowView)document)));
+                GeneralSnapshot.Rows.Add(EntityConverter<DocumentIssuedBy>.ToArray(((DataRowView)document)));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -181,12 +181,12 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_document_issued_by"] = idDocumentIssuedBy;
-                    GeneralDataModel.Select().Rows.Add(DocumentIssuedByConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(EntityConverter<DocumentIssuedBy>.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
 
-                    if (DocumentIssuedByConverter.FromRow(row) == document)
+                    if (EntityConverter<DocumentIssuedBy>.FromRow(row) == document)
                         continue;
                     if (GeneralDataModel.Update(list[i]) == -1)
                     {

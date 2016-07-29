@@ -2,14 +2,13 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
-using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Registry.Entities;
 
 namespace Registry.DataModels.DataModels
 {
-    public class EntityDataModel<T> : DataModel
+    public class EntityDataModel<T>: DataModel
         where T: Entity
     {
         private static EntityDataModel<T> _dataModel;
@@ -38,6 +37,7 @@ namespace Registry.DataModels.DataModels
                 return string.Format(template, tableName);
             }
         }
+
         protected static string TableName
         {
             get

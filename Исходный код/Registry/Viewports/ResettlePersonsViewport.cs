@@ -141,7 +141,7 @@ namespace Registry.Viewport
                 GeneralSnapshot.Columns.Add(new DataColumn(GeneralDataModel.Select().Columns[i].ColumnName, GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(ResettlePersonConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+                GeneralSnapshot.Rows.Add(EntityConverter<ResettlePerson>.ToArray((DataRowView)GeneralBindingSource[i]));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
             AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_resettle_persons_CurrentItemChanged);
 
@@ -198,7 +198,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(ResettlePersonConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+                GeneralSnapshot.Rows.Add(EntityConverter<ResettlePerson>.ToArray((DataRowView)GeneralBindingSource[i]));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -233,11 +233,11 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_person"] = idPerson;
-                    GeneralDataModel.Select().Rows.Add(ResettlePersonConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(EntityConverter<ResettlePerson>.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
-                    if (ResettlePersonConverter.FromRow(row) == person)
+                    if (EntityConverter<ResettlePerson>.FromRow(row) == person)
                         continue;
                     if (GeneralDataModel.Update(person) == -1)
                     {
@@ -245,7 +245,7 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    ResettlePersonConverter.FillRow(person, row);
+                    EntityConverter<ResettlePerson>.FillRow(person, row);
                 }
             }
             list = EntitiesListFromView();

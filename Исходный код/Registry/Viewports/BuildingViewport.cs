@@ -43,7 +43,6 @@ namespace Registry.Viewport
         private BindingSource _vObjectStates;
         private BindingSource _vBuildingCurrentFund;
         private BindingSource _vHeatingType;
-
         #endregion Views
 
         //Forms
@@ -458,7 +457,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return BuildingConverter.FromRow(row);
+            return EntityConverter<Building>.FromRow(row);
         }
 
         private void ViewportFromBuilding(Building building)
@@ -503,18 +502,12 @@ namespace Registry.Viewport
             dataGridViewOwnerships.AutoGenerateColumns = false;
             dataGridViewRestrictions.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<EntityDataModel<Building>>();
-            DataModel.GetInstance<KladrStreetsDataModel>().Select();
-            EntityDataModel<StructureType>.GetInstance().Select();
-            DataModel.GetInstance<EntityDataModel<HeatingType>>().Select();
+
+            GeneralDataModel = EntityDataModel<Building>.GetInstance();
             _restrictions = EntityDataModel<Restriction>.GetInstance();
-            EntityDataModel<RestrictionType>.GetInstance().Select();
             _restrictionBuildingsAssoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>();
             _ownershipRights = EntityDataModel<OwnershipRight>.GetInstance();
-            EntityDataModel<OwnershipRightType>.GetInstance().Select();
             _ownershipBuildingsAssoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>();
-            DataModel.GetInstance<FundTypesDataModel>().Select();
-            DataModel.GetInstance<ObjectStatesDataModel>().Select();
 
             //Вычисляемые модели
             _buildingsPremisesFunds = CalcDataModel.GetInstance<CalcDataModelBuildingsPremisesFunds>();
@@ -524,6 +517,14 @@ namespace Registry.Viewport
 
             //Ожидаем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
+            EntityDataModel<StructureType>.GetInstance().Select();
+            EntityDataModel<HeatingType>.GetInstance().Select();
+            EntityDataModel<RestrictionType>.GetInstance().Select();
+            EntityDataModel<OwnershipRightType>.GetInstance().Select();
+            DataModel.GetInstance<KladrStreetsDataModel>().Select();
+            DataModel.GetInstance<FundTypesDataModel>().Select();
+            DataModel.GetInstance<ObjectStatesDataModel>().Select();
+
             _restrictions.Select();
             _restrictionBuildingsAssoc.Select();
             _ownershipRights.Select();
@@ -532,103 +533,49 @@ namespace Registry.Viewport
             _municipalPremises.Select();
             _buildingsPremisesSumArea.Select();
 
-            var ds = DataModel.DataSet;
+            _vKladr= BindDataSource("kladr");
+            _vStructureTypes = BindDataSource<StructureType>();
+            _vRestrictions = BindDataSource<Restriction>();
+            _vRestrictions.Sort = "date";
+            _vOwnershipRights = BindDataSource<OwnershipRight>();
+            _vOwnershipRights.Sort = "date";
+            _vRestrictonTypes = BindDataSource<RestrictionType>();
+            _vOwnershipRightTypes = BindDataSource<OwnershipRightType>();
+            _vHeatingType = BindDataSource<HeatingType>();
+            _vBuildingCurrentFund = BindDataSource("buildings_current_funds", _buildingsCurrentFund.Select());
+            _vFundType = BindDataSource("fund_types");
+            _vObjectStates = BindDataSource("object_states");
 
-            _vKladr = new BindingSource
-            {
-                DataMember = "kladr",
-                DataSource = ds
-            };
-
-            _vStructureTypes = new BindingSource
-            {
-                DataMember = "structure_types",
-                DataSource = ds
-            };
-
-            _vRestrictions = new BindingSource
-            {
-                DataMember = "restrictions",
-                DataSource = ds,
-                Sort = "date"
-            };
-
-            _vOwnershipRights = new BindingSource
-            {
-                DataMember = "ownership_rights",
-                DataSource = ds,
-                Sort = "date"
-            };
-
-            _vRestrictonTypes = new BindingSource
-            {
-                DataMember = "restriction_types",
-                DataSource = ds
-            };
-
-            _vOwnershipRightTypes = new BindingSource
-            {
-                DataMember = "ownership_right_types",
-                DataSource = ds
-            };
-
-            _vHeatingType = new BindingSource
-            {
-                DataMember = "heating_type",
-                DataSource = ds
-            };
-
-            _vBuildingCurrentFund = new BindingSource
-            {
-                DataMember = "buildings_current_funds",
-                DataSource = _buildingsCurrentFund.Select()
-            };
-
-            _vFundType = new BindingSource
-            {
-                DataMember = "fund_types",
-                DataSource = ds
-            };
-
-            _vObjectStates = new BindingSource
-            {
-                DataMember = "object_states",
-                DataSource = ds
-            };
-
-            GeneralBindingSource = new BindingSource();
-            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", v_building_CurrentItemChanged);
-            GeneralBindingSource.DataMember = "buildings";
-            GeneralBindingSource.DataSource = ds;
+            GeneralBindingSource = BindDataSource<Building>();
             GeneralBindingSource.Filter = StaticFilter;
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 GeneralBindingSource.Filter += " AND ";
             GeneralBindingSource.Filter += DynamicFilter;
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", BuildingViewport_RowDeleted);
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", BuildingViewport_RowChanged);
 
-            _vRestrictionBuildingsAssoc = new BindingSource();
-            AddEventHandler<EventArgs>(_vRestrictionBuildingsAssoc, "CurrentItemChanged", v_restrictionBuildingsAssoc_CurrentItemChanged);
-            _vRestrictionBuildingsAssoc.DataMember = "buildings_restrictions_buildings_assoc";
-            _vRestrictionBuildingsAssoc.DataSource = GeneralBindingSource;
-            RestrictionsFilterRebuild();
-            AddEventHandler<DataRowChangeEventArgs>(_restrictionBuildingsAssoc.Select(), "RowDeleted", RestrictionsAssoc_RowChanged);
-            AddEventHandler<DataRowChangeEventArgs>(_restrictionBuildingsAssoc.Select(), "RowChanged", RestrictionsAssoc_RowDeleted);
-
-            _vOwnershipBuildingsAssoc = new BindingSource();
-            AddEventHandler<EventArgs>(_vOwnershipBuildingsAssoc, "CurrentItemChanged", v_ownershipBuildingsAssoc_CurrentItemChanged);
-            _vOwnershipBuildingsAssoc.DataMember = "buildings_ownership_buildings_assoc";
-            _vOwnershipBuildingsAssoc.DataSource = GeneralBindingSource;
-            v_ownershipBuildingsAssoc_CurrentItemChanged(null, new EventArgs());
-            OwnershipsFilterRebuild();
-            AddEventHandler<DataRowChangeEventArgs>(_ownershipBuildingsAssoc.Select(), "RowDeleted", OwnershipsAssoc_RowChanged);
-            AddEventHandler<DataRowChangeEventArgs>(_ownershipBuildingsAssoc.Select(), "RowChanged", OwnershipsAssoc_RowDeleted);
+            _vRestrictionBuildingsAssoc = BindDataSource("buildings_restrictions_buildings_assoc", GeneralBindingSource);
+            _vOwnershipBuildingsAssoc = BindDataSource("buildings_ownership_buildings_assoc", GeneralBindingSource);
 
             DataBind();
 
+            AddEventHandler<DataRowChangeEventArgs>(_restrictionBuildingsAssoc.Select(), "RowDeleted", RestrictionsAssoc_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_restrictionBuildingsAssoc.Select(), "RowChanged", RestrictionsAssoc_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(_ownershipBuildingsAssoc.Select(), "RowDeleted", OwnershipsAssoc_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_ownershipBuildingsAssoc.Select(), "RowChanged", OwnershipsAssoc_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", BuildingViewport_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", BuildingViewport_RowChanged);
             AddEventHandler<EventArgs>(_buildingsCurrentFund, "RefreshEvent", buildingsCurrentFund_RefreshEvent);
             AddEventHandler<EventArgs>(_buildingsPremisesFunds, "RefreshEvent", buildingsPremisesFunds_RefreshEvent);
             AddEventHandler<EventArgs>(_buildingsPremisesSumArea, "RefreshEvent", buildingsPremisesSumArea_RefreshEvent);
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", v_building_CurrentItemChanged);
+            AddEventHandler<EventArgs>(_vOwnershipBuildingsAssoc, "CurrentItemChanged", v_ownershipBuildingsAssoc_CurrentItemChanged);
+            AddEventHandler<EventArgs>(_vRestrictionBuildingsAssoc, "CurrentItemChanged", v_restrictionBuildingsAssoc_CurrentItemChanged);
+
+            v_building_CurrentItemChanged(null, new EventArgs());
+            v_ownershipBuildingsAssoc_CurrentItemChanged(null, new EventArgs());
+            v_restrictionBuildingsAssoc_CurrentItemChanged(null, new EventArgs());
+
+            OwnershipsFilterRebuild();
+            RestrictionsFilterRebuild();
             FiltersRebuild();
             SetViewportCaption();
             DataChangeHandlersInit();
@@ -732,7 +679,7 @@ namespace Registry.Viewport
                 newRow = (DataRowView) GeneralBindingSource.AddNew();
             else
                 newRow = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            BuildingConverter.FillRow(building, newRow);
+            EntityConverter<Building>.FillRow(building, newRow);
         }
 
         private void UpdateRecord(Building building)
@@ -748,7 +695,7 @@ namespace Registry.Viewport
                 return;
             RebuildFilterAfterSave(GeneralBindingSource, building.IdBuilding);
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            BuildingConverter.FillRow(building, row);
+            EntityConverter<Building>.FillRow(building, row);
         }
 
         private void RebuildFilterAfterSave(IBindingListView bindingSource, int? idBuilding)

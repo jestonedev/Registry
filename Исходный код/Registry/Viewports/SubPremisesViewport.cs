@@ -83,10 +83,7 @@ namespace Registry.Viewport
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
                 var row = dataGridView.Rows[i];
-                var sp = SubPremiseConverter.FromRow(row);
-                if (ViewportHelper.ValueOrNull<double>(row, "living_area") == 0)
-                    if (sp.TotalArea != null) 
-                        dataGridView.Rows[i].Cells["living_area"].Value = sp.TotalArea.Value;
+                var sp = EntityConverter<SubPremise>.FromRow(row);
                 list.Add(sp);
             }
             return list;
@@ -98,7 +95,7 @@ namespace Registry.Viewport
             for (var i = 0; i < GeneralBindingSource.Count; i++)
             {
                 var row = (DataRowView)GeneralBindingSource[i];
-                list.Add(SubPremiseConverter.FromRow(row));
+                list.Add(EntityConverter<SubPremise>.FromRow(row));
             }
             return list;
         }
@@ -144,7 +141,7 @@ namespace Registry.Viewport
                 GeneralSnapshot.Columns.Add(new DataColumn(GeneralDataModel.Select().Columns[i].ColumnName, GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(SubPremiseConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+                GeneralSnapshot.Rows.Add(EntityConverter<SubPremise>.ToArray((DataRowView)GeneralBindingSource[i]));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
             AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_sub_premises_CurrentItemChanged);
 
@@ -216,7 +213,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(SubPremiseConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+                GeneralSnapshot.Rows.Add(EntityConverter<SubPremise>.ToArray((DataRowView)GeneralBindingSource[i]));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -270,11 +267,11 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_sub_premises"] = idSubPremises;
-                    GeneralDataModel.Select().Rows.Add(SubPremiseConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(EntityConverter<SubPremise>.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
-                    var subPremiseFromView = SubPremiseConverter.FromRow(row);
+                    var subPremiseFromView = EntityConverter<SubPremise>.FromRow(row);
                     if (subPremiseFromView == subPremise)
                         continue;
                     if (subPremiseFromView.IdSubPremises != null && DataModelHelper.HasMunicipal(subPremiseFromView.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
@@ -299,7 +296,7 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    SubPremiseConverter.FillRow(subPremise, row);
+                    EntityConverter<SubPremise>.FillRow(subPremise, row);
                 }
             }
             list = EntitiesListFromView();
@@ -553,7 +550,7 @@ namespace Registry.Viewport
             var rowIndex = GeneralSnapshotBindingSource.Find("id_sub_premises", e.Row["id_sub_premises"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_sub_premises", e.Row["id_sub_premises"]) != -1)
             {
-                GeneralSnapshot.Rows.Add(SubPremiseConverter.ToArray(e.Row));
+                GeneralSnapshot.Rows.Add(EntityConverter<SubPremise>.ToArray(e.Row));
             } else
             if (rowIndex != -1)
             {

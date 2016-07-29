@@ -389,7 +389,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return TenancyProcessConverter.FromRow(row);
+            return EntityConverter<TenancyProcess>.FromRow(row);
         }
 
         protected override Entity EntityFromViewport()
@@ -841,7 +841,7 @@ namespace Registry.Viewport
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     filter += string.Format(CultureInfo.CurrentCulture, "(id_process = {0})", tenancy.IdProcess);
                     GeneralBindingSource.Filter += filter;
-                    TenancyProcessConverter.FillRow(tenancy, newRow);
+                    EntityConverter<TenancyProcess>.FillRow(tenancy, newRow);
                     // Если производится копирование, а не создание новой записи, то надо скопировать участников найма и нанимаемое жилье
                     if (_isCopy && _idCopyProcess != null)
                     {
@@ -921,7 +921,7 @@ namespace Registry.Viewport
                     IsEditable = false;
                     filter += string.Format(CultureInfo.CurrentCulture, "(id_process = {0})", tenancy.IdProcess);
                     GeneralBindingSource.Filter += filter;
-                    TenancyProcessConverter.FillRow(tenancy, row);
+                    EntityConverter<TenancyProcess>.FillRow(tenancy, row);
                     break;
             }
             UnbindedCheckBoxesUpdate();
@@ -940,7 +940,7 @@ namespace Registry.Viewport
             _tenancyPersons.EditingNewRecord = true;
             foreach (var personRow in persons.ToList())
             {
-                var person = TenancyPersonConverter.FromRow(personRow);
+                var person = EntityConverter<TenancyPerson>.FromRow(personRow);
                 person.IdProcess = idNewProcess;
                 var idPerson = _tenancyPersons.Insert(person);
                 if (idPerson == -1)
@@ -949,7 +949,13 @@ namespace Registry.Viewport
                     return false;
                 }
                 person.IdPerson = idPerson;
-                _tenancyPersons.Select().Rows.Add(TenancyPersonConverter.ToArray(person));
+                var personBinding = new BindingSource
+                {
+                    DataSource = DataModel.DataSet,
+                    DataMember = "tenancy_persons"
+                };
+                var newPersonRow = (DataRowView)personBinding.AddNew();
+                EntityConverter<TenancyPerson>.FillRow(person, newPersonRow);
             }
             _tenancyPersons.EditingNewRecord = false;
             var tenancyBuildingsAssoc = DataModel.GetInstance<TenancyBuildingsAssocDataModel>();

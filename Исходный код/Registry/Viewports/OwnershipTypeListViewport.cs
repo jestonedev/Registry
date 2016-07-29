@@ -99,7 +99,7 @@ namespace Registry.Viewport
                     GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(OwnershipRightTypeConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+                GeneralSnapshot.Rows.Add(EntityConverter<OwnershipRightType>.ToArray((DataRowView)GeneralBindingSource[i]));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
             AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_ownership_right_types_CurrentItemChanged);
 
@@ -146,7 +146,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(OwnershipRightTypeConverter.ToArray(((DataRowView)GeneralBindingSource[i])));
+                GeneralSnapshot.Rows.Add(EntityConverter<OwnershipRightType>.ToArray(((DataRowView)GeneralBindingSource[i])));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -181,11 +181,11 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_ownership_right_type"] = idOwnershipRightType;
-                    GeneralDataModel.Select().Rows.Add(OwnershipRightTypeConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(EntityConverter<OwnershipRightType>.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
-                    if (OwnershipRightTypeConverter.FromRow(row) == ownershipType)
+                    if (EntityConverter<OwnershipRightType>.FromRow(row) == ownershipType)
                         continue;
                     if (GeneralDataModel.Update(ownershipType) == -1)
                     {
@@ -193,7 +193,7 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    OwnershipRightTypeConverter.FillRow(ownershipType, row);
+                    EntityConverter<OwnershipRightType>.FillRow(ownershipType, row);
                 }
             }
             list = EntitiesListFromView();
@@ -264,7 +264,7 @@ namespace Registry.Viewport
             if (rowIndex == -1 && GeneralBindingSource.Find("id_ownership_right_type", e.Row["id_ownership_right_type"]) != -1)
             {
                 GeneralSnapshot.Rows.Add(
-                    OwnershipRightTypeConverter.ToArray(e.Row));
+                    EntityConverter<OwnershipRightType>.ToArray(e.Row));
             }
             else
                 if (rowIndex != -1)

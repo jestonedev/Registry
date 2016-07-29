@@ -6,6 +6,8 @@
     {
         [DataColumn(IsPrimaryKey = true)]
         public int? IdDocumentResidence { get; set; }
+
+         [DataColumn(Name = "document_residence")]
         public string DocumentResidenceName { get; set; }
     }
 }

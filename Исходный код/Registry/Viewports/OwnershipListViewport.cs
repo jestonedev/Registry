@@ -124,7 +124,7 @@ namespace Registry.Viewport
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
                 var row = dataGridView.Rows[i];
-                list.Add(OwnershipRightConverter.FromRow(row));
+                list.Add(EntityConverter<OwnershipRight>.FromRow(row));
             }
             return list;
         }
@@ -135,7 +135,7 @@ namespace Registry.Viewport
             for (var i = 0; i < GeneralBindingSource.Count; i++)
             {
                 var row = (DataRowView)GeneralBindingSource[i];
-                list.Add(OwnershipRightConverter.FromRow(row));
+                list.Add(EntityConverter<OwnershipRight>.FromRow(row));
             }
             return list;
         }
@@ -205,7 +205,7 @@ namespace Registry.Viewport
                     GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(OwnershipRightConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+                GeneralSnapshot.Rows.Add(EntityConverter<OwnershipRight>.ToArray((DataRowView)GeneralBindingSource[i]));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
             AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_ownerships_rights_CurrentItemChanged);
             AddEventHandler<DataRowChangeEventArgs>(GeneralSnapshot, "RowChanged", snapshot_ownerships_rights_RowChanged);
@@ -267,7 +267,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(OwnershipRightConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+                GeneralSnapshot.Rows.Add(EntityConverter<OwnershipRight>.ToArray((DataRowView)GeneralBindingSource[i]));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -327,12 +327,12 @@ namespace Registry.Viewport
                             break;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_ownership_right"] = idOwnershipRight;
-                    GeneralDataModel.Select().Rows.Add(OwnershipRightConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(EntityConverter<OwnershipRight>.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                     _ownershipAssoc.Select().Rows.Add(idParent, idOwnershipRight);
                 }
                 else
                 {
-                    if (OwnershipRightConverter.FromRow(row) == ownershipRight)
+                    if (EntityConverter<OwnershipRight>.FromRow(row) == ownershipRight)
                         continue;
                     if (GeneralDataModel.Update(ownershipRight) == -1)
                     {
@@ -341,7 +341,7 @@ namespace Registry.Viewport
                         RebuildFilter();
                         return;
                     }
-                    OwnershipRightConverter.FillRow(ownershipRight, row);
+                    EntityConverter<OwnershipRight>.FillRow(ownershipRight, row);
                 }
             }
             list = EntitiesListFromView();
@@ -445,7 +445,7 @@ namespace Registry.Viewport
             var row = (DataRowView)GeneralBindingSource[rowIndex];
             if ((GeneralSnapshotBindingSource.Find("id_ownership_right", e.Row["id_ownership_right"]) == -1) && (rowIndex != -1))
             {
-                GeneralSnapshot.Rows.Add(OwnershipRightConverter.ToArray(row));
+                GeneralSnapshot.Rows.Add(EntityConverter<OwnershipRight>.ToArray(row));
             }
         }
 
@@ -492,7 +492,7 @@ namespace Registry.Viewport
                     //Если строка имеется в текущем контексте оригинального представления, то добавить его и в snapshot, 
                     //иначе - объект не принадлежит текущему родителю
                     if (rowIndex != -1)
-                        GeneralSnapshot.Rows.Add(OwnershipRightConverter.ToArray(e.Row));
+                        GeneralSnapshot.Rows.Add(EntityConverter<OwnershipRight>.ToArray(e.Row));
                     break;
             }
         }

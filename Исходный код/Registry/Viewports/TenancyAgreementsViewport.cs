@@ -239,7 +239,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return TenancyAgreementConverter.FromRow(row);
+            return EntityConverter<TenancyAgreement>.FromRow(row);
         }
 
         private bool ValidateAgreement(TenancyAgreement tenancyAgreement)
@@ -432,7 +432,7 @@ namespace Registry.Viewport
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    TenancyAgreementConverter.FillRow(tenancyAgreement, newRow);
+                    EntityConverter<TenancyAgreement>.FillRow(tenancyAgreement, newRow);
                     GeneralDataModel.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
@@ -446,7 +446,7 @@ namespace Registry.Viewport
                         return;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     IsEditable = false;
-                    TenancyAgreementConverter.FillRow(tenancyAgreement, row);
+                    EntityConverter<TenancyAgreement>.FillRow(tenancyAgreement, row);
                     break;
             }
             ViewportState = ViewportState.ReadState;
@@ -511,7 +511,7 @@ namespace Registry.Viewport
             rentPeriods.Select().Rows.Add(idRentPeriod, rentPeriod.IdProcess, rentPeriod.BeginDate, rentPeriod.EndDate, rentPeriod.UntilDismissal);
             rentPeriods.EditingNewRecord = false;
 
-            var tenancyProcess = TenancyProcessConverter.FromRow(ParentRow);
+            var tenancyProcess = EntityConverter<TenancyProcess>.FromRow(ParentRow);
             tenancyProcess.BeginDate = beginDate;
             tenancyProcess.EndDate = endDate;
             tenancyProcess.UntilDismissal = untilDismissal;
@@ -540,8 +540,8 @@ namespace Registry.Viewport
             var newTenantRow =
                 EntityDataModel<TenancyPerson>.GetInstance()
                     .FilterDeletedRows().FirstOrDefault(v => v.Field<int>("id_person") == idNewTenant.Value);
-            var oldTenant = oldTenantRow != null ? TenancyPersonConverter.FromRow(oldTenantRow) : null;
-            var newTenant = newTenantRow != null ? TenancyPersonConverter.FromRow(newTenantRow) : null;
+            var oldTenant = oldTenantRow != null ? EntityConverter<TenancyPerson>.FromRow(oldTenantRow) : null;
+            var newTenant = newTenantRow != null ? EntityConverter<TenancyPerson>.FromRow(newTenantRow) : null;
 
             if (oldTenant == null || newTenant == null)
             {

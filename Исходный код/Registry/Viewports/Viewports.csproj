@@ -106,34 +106,14 @@
     <Compile Include="DataGridViewport.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EntityConverters\BuildingConverter.cs" />
-    <Compile Include="EntityConverters\ClaimConverter.cs" />
-    <Compile Include="EntityConverters\ClaimStateConverter.cs" />
     <Compile Include="EntityConverters\ClaimStateTypeConverter.cs" />
     <Compile Include="EntityConverters\ClaimStateTypeRelationConverter.cs" />
-    <Compile Include="EntityConverters\DocumentIssuedByConverter.cs" />
-    <Compile Include="EntityConverters\DocumentResidenceConverter.cs" />
+    <Compile Include="EntityConverters\EntityConverter.cs" />
     <Compile Include="EntityConverters\ExecutorConverter.cs" />
-    <Compile Include="EntityConverters\FundHistoryConverter.cs" />
-    <Compile Include="EntityConverters\OwnershipRightConverter.cs" />
-    <Compile Include="EntityConverters\OwnershipRightTypeConverter.cs" />
-    <Compile Include="EntityConverters\PremiseConverter.cs" />
     <Compile Include="EntityConverters\ResettleBuildingConverter.cs" />
-    <Compile Include="EntityConverters\ResettlePersonConverter.cs" />
     <Compile Include="EntityConverters\ResettlePremiseConverter.cs" />
-    <Compile Include="EntityConverters\ResettleProcessConverter.cs" />
-    <Compile Include="EntityConverters\RestrictionConverter.cs" />
-    <Compile Include="EntityConverters\RestrictionTypeConverter.cs" />
-    <Compile Include="EntityConverters\StructureTypeConverter.cs" />
-    <Compile Include="EntityConverters\SubPremiseConverter.cs" />
-    <Compile Include="EntityConverters\TenancyAgreementConverter.cs" />
     <Compile Include="EntityConverters\TenancyBuildingConverter.cs" />
-    <Compile Include="EntityConverters\TenancyPersonConverter.cs" />
     <Compile Include="EntityConverters\TenancyPremiseConverter.cs" />
-    <Compile Include="EntityConverters\TenancyProcessConverter.cs" />
-    <Compile Include="EntityConverters\TenancyReasonConverter.cs" />
-    <Compile Include="EntityConverters\TenancyReasonTypeConverter.cs" />
-    <Compile Include="EntityConverters\WarrantConverter.cs" />
     <Compile Include="ModalEditors\PersonExcludeDateForm.cs">
       <SubType>Form</SubType>
     </Compile>

@@ -8,7 +8,6 @@ namespace Registry.Entities
     {
         public string Name { get; set; }
         public bool HasDeletedMark { get; set; }
-
         public string CustomSelectQuery { get; set; }
     }
 }

@@ -1,6 +1,5 @@
 ﻿namespace Registry.Entities
 {
-    [DataTable(HasDeletedMark = true)]
     public sealed class FundObjectAssoc : Entity
     {
         public int? IdObject { get; set; }

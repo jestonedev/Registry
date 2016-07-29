@@ -402,7 +402,7 @@ namespace Registry.Viewport.MultiMasters
                     {
                         continue;
                     }
-                    var premise = PremiseConverter.FromRow((DataRowView) _premises[i]);
+                    var premise = EntityConverter<Premise>.FromRow((DataRowView)_premises[i]);
                     premise.IdState = form.IdObjectState;
                     if (_premisesDataModel.Update(premise) == -1)
                     {
@@ -443,7 +443,7 @@ namespace Registry.Viewport.MultiMasters
                     {
                         continue;
                     }
-                    var premise = PremiseConverter.FromRow((DataRowView)_premises[i]);
+                    var premise = EntityConverter<Premise>.FromRow((DataRowView)_premises[i]);
                     premise.RegDate = form.RegDate;
                     if (_premisesDataModel.Update(premise) == -1)
                     {

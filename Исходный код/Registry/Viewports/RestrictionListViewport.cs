@@ -127,7 +127,7 @@ namespace Registry.Viewport
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
                 var row = dataGridView.Rows[i];
-                list.Add(RestrictionConverter.FromRow(row));
+                list.Add(EntityConverter<Restriction>.FromRow(row));
             }
             return list;
         }
@@ -138,7 +138,7 @@ namespace Registry.Viewport
             for (var i = 0; i < GeneralBindingSource.Count; i++)
             {
                 var row = (DataRowView)GeneralBindingSource[i];
-                list.Add(RestrictionConverter.FromRow(row));
+                list.Add(EntityConverter<Restriction>.FromRow(row));
             }
             return list;
         }
@@ -209,7 +209,7 @@ namespace Registry.Viewport
                     GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(RestrictionConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+                GeneralSnapshot.Rows.Add(EntityConverter<Restriction>.ToArray((DataRowView)GeneralBindingSource[i]));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
             AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_restrictions_CurrentItemChanged);
             AddEventHandler<DataRowChangeEventArgs>(GeneralSnapshot, "RowChanged", snapshot_restrictions_RowChanged);
@@ -270,7 +270,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(RestrictionConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+                GeneralSnapshot.Rows.Add(EntityConverter<Restriction>.ToArray((DataRowView)GeneralBindingSource[i]));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -328,12 +328,12 @@ namespace Registry.Viewport
                             break;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_restriction"] = idRestriction;
-                    GeneralDataModel.Select().Rows.Add(RestrictionConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(EntityConverter<Restriction>.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                     _restrictionAssoc.Select().Rows.Add(idParent, idRestriction);
                 }
                 else
                 {
-                    if (RestrictionConverter.FromRow(row) == restriction)
+                    if (EntityConverter<Restriction>.FromRow(row) == restriction)
                         continue;
                     if (GeneralDataModel.Update(restriction) == -1)
                     {
@@ -342,7 +342,7 @@ namespace Registry.Viewport
                         RebuildFilter();
                         return;
                     }
-                    RestrictionConverter.FillRow(restriction, row);
+                    EntityConverter<Restriction>.FillRow(restriction, row);
                 }
             }
             list = EntitiesListFromView();
@@ -465,7 +465,7 @@ namespace Registry.Viewport
                     //иначе - объект не принадлежит текущему родителю
                     rowIndex = GeneralBindingSource.Find("id_restriction", e.Row["id_restriction"]);
                     if (rowIndex != -1)
-                        GeneralSnapshot.Rows.Add(RestrictionConverter.ToArray(e.Row));
+                        GeneralSnapshot.Rows.Add(EntityConverter<Restriction>.ToArray(e.Row));
                     break;
             }
         }

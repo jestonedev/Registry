@@ -399,7 +399,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return ClaimStateConverter.FromRow(row);
+            return EntityConverter<ClaimState>.FromRow(row);
         }
 
         public override bool CanLoadData()
@@ -488,7 +488,7 @@ namespace Registry.Viewport
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    ClaimStateConverter.FillRow(claimState, newRow);
+                    EntityConverter<ClaimState>.FillRow(claimState, newRow);
                     GeneralBindingSource.Position = GeneralBindingSource.Count - 1;
                     GeneralDataModel.EditingNewRecord = false;
                     break;
@@ -503,7 +503,7 @@ namespace Registry.Viewport
                         return;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     IsEditable = false;
-                    ClaimStateConverter.FillRow(claimState, row);
+                    EntityConverter<ClaimState>.FillRow(claimState, row);
                     break;
             }
             UnbindedCheckBoxesUpdate();

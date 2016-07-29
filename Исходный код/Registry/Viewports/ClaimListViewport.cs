@@ -139,7 +139,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return ClaimConverter.FromRow(row);
+            return EntityConverter<Claim>.FromRow(row);
         }
 
         protected override Entity EntityFromViewport()
@@ -404,7 +404,7 @@ namespace Registry.Viewport
                 return;
             RebuildFilterAfterSave(GeneralBindingSource, claim.IdClaim);
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            ClaimConverter.FillRow(claim, row);
+            EntityConverter<Claim>.FillRow(claim, row);
         }
 
         private void InsertRecord(Claim claim)
@@ -421,7 +421,7 @@ namespace Registry.Viewport
                 newRow = (DataRowView)GeneralBindingSource.AddNew();
             else
                 newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-            ClaimConverter.FillRow(claim, newRow);
+            EntityConverter<Claim>.FillRow(claim, newRow);
 
             InsertFirstClaimState(claim.IdClaim);
         }
@@ -456,11 +456,11 @@ namespace Registry.Viewport
             var claimsStateRow = (DataRowView)claimStatesBindingSource.AddNew();
             if (claimsStateRow != null)
             {
-                ClaimStateConverter.FillRow(claimState, claimsStateRow);
+                EntityConverter<ClaimState>.FillRow(claimState, claimsStateRow);
             }
         }
 
-        private void RebuildFilterAfterSave(IBindingListView bindingSource, int? idClaim)
+        private static void RebuildFilterAfterSave(IBindingListView bindingSource, int? idClaim)
         {
             var filter = "";
             if (!string.IsNullOrEmpty(bindingSource.Filter))

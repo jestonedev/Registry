@@ -108,7 +108,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return ResettleProcessConverter.FromRow(row);
+            return EntityConverter<ResettleProcess>.FromRow(row);
         }
 
         protected override Entity EntityFromViewport()
@@ -331,7 +331,7 @@ namespace Registry.Viewport
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     filter += string.Format(CultureInfo.CurrentCulture, "(id_process = {0})", resettleProcess.IdProcess);
                     GeneralBindingSource.Filter += filter;
-                    ResettleProcessConverter.FillRow(resettleProcess, newRow);
+                    EntityConverter<ResettleProcess>.FillRow(resettleProcess, newRow);
                     GeneralDataModel.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
@@ -348,7 +348,7 @@ namespace Registry.Viewport
                     IsEditable = false;
                     filter += string.Format(CultureInfo.CurrentCulture, "(id_process = {0})", resettleProcess.IdProcess);
                     GeneralBindingSource.Filter += filter;
-                    ResettleProcessConverter.FillRow(resettleProcess, row);
+                    EntityConverter<ResettleProcess>.FillRow(resettleProcess, row);
                     break;
             }
             UnbindedCheckBoxesUpdate();

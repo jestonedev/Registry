@@ -72,7 +72,7 @@ namespace Registry.Viewport
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
                 var row = dataGridView.Rows[i];
-                list.Add(TenancyReasonTypeConverter.FromRow(row));
+                list.Add(EntityConverter<ReasonType>.FromRow(row));
             }
             return list;
         }
@@ -83,7 +83,7 @@ namespace Registry.Viewport
             for (var i = 0; i < GeneralBindingSource.Count; i++)
             {
                 var row = (DataRowView)GeneralBindingSource[i];
-                list.Add(TenancyReasonTypeConverter.FromRow(row));
+                list.Add(EntityConverter<ReasonType>.FromRow(row));
             }
             return list;
         }
@@ -115,7 +115,7 @@ namespace Registry.Viewport
                     GeneralDataModel.Select().Columns[i].ColumnName, GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(TenancyReasonTypeConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+                GeneralSnapshot.Rows.Add(EntityConverter<ReasonType>.ToArray((DataRowView)GeneralBindingSource[i]));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
             AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_reason_types_CurrentItemChanged);
 
@@ -166,7 +166,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(TenancyReasonTypeConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+                GeneralSnapshot.Rows.Add(EntityConverter<ReasonType>.ToArray((DataRowView)GeneralBindingSource[i]));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -201,12 +201,12 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_reason_type"] = idReasonType;
-                    GeneralDataModel.Select().Rows.Add(TenancyReasonTypeConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(EntityConverter<ReasonType>.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
 
-                    if (TenancyReasonTypeConverter.FromRow(row) == reasonType)
+                    if (EntityConverter<ReasonType>.FromRow(row) == reasonType)
                         continue;
                     if (GeneralDataModel.Update(reasonType) == -1)
                     {
@@ -214,7 +214,7 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    TenancyReasonTypeConverter.FillRow(reasonType, row);
+                    EntityConverter<ReasonType>.FillRow(reasonType, row);
                 }
             }
             list = EntitiesListFromView();
@@ -317,7 +317,7 @@ namespace Registry.Viewport
             var rowIndex = GeneralSnapshotBindingSource.Find("id_reason_type", e.Row["id_reason_type"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_reason_type", e.Row["id_reason_type"]) != -1)
             {
-                GeneralSnapshot.Rows.Add(TenancyReasonTypeConverter.ToArray(e.Row));
+                GeneralSnapshot.Rows.Add(EntityConverter<ReasonType>.ToArray(e.Row));
             }
             else
                 if (rowIndex != -1)

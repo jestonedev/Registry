@@ -248,7 +248,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return FundHistoryConverter.FromRow(row);
+            return EntityConverter<FundHistory>.FromRow(row);
         }
 
         private void ViewportFromFundHistory(FundHistory fundHistory)
@@ -401,7 +401,7 @@ namespace Registry.Viewport
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    FundHistoryConverter.FillRow(fundHistory, newRow);
+                    EntityConverter<FundHistory>.FillRow(fundHistory, newRow);
                     _fundAssoc.Select().Rows.Add(idParent, idFund);
                     RebuildFilter();
                     GeneralBindingSource.Position = GeneralBindingSource.Count - 1;
@@ -419,7 +419,7 @@ namespace Registry.Viewport
                         return;
                     IsEditable = false;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    FundHistoryConverter.FillRow(fundHistory, row);
+                    EntityConverter<FundHistory>.FillRow(fundHistory, row);
                     break;
             }
             RedrawDataGridRows();

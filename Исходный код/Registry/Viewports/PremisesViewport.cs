@@ -505,7 +505,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return PremiseConverter.FromRow(row);
+            return EntityConverter<Premise>.FromRow(row);
         }
 
         protected override Entity EntityFromViewport()
@@ -948,7 +948,7 @@ namespace Registry.Viewport
                 newRow = (DataRowView)GeneralBindingSource.AddNew();
             else
                 newRow = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            PremiseConverter.FillRow(premise, newRow);
+            EntityConverter<Premise>.FillRow(premise, newRow);
         }
 
         public void UpdateRecord(Premise premise)
@@ -964,7 +964,7 @@ namespace Registry.Viewport
                 return;
             RebuildFilterAfterSave(GeneralBindingSource, premise.IdPremises);
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            PremiseConverter.FillRow(premise, row);
+            EntityConverter<Premise>.FillRow(premise, row);
         }
 
         private void RebuildFilterAfterSave(IBindingListView bindingSource, int? idPremise)
@@ -1529,7 +1529,7 @@ namespace Registry.Viewport
                 return;
             }
             var row = (DataRowView)_vOwnershipRights[_vOwnershipRights.Position];
-            var ownershipRight = OwnershipRightConverter.FromRow(row);
+            var ownershipRight = EntityConverter<OwnershipRight>.FromRow(row);
             using (var editor = new OwnershipsEditor())
             {
                 editor.State = ViewportState.ModifyRowState;

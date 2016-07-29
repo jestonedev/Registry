@@ -102,7 +102,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return WarrantConverter.FromRow(row);
+            return EntityConverter<Warrant>.FromRow(row);
         }
 
         private bool ValidateWarrant(Warrant warrant)
@@ -256,7 +256,7 @@ namespace Registry.Viewport
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    WarrantConverter.FillRow(warrant, newRow);
+                    EntityConverter<Warrant>.FillRow(warrant, newRow);
                     IsEditable = true;
                     GeneralDataModel.EditingNewRecord = false;
                     break;
@@ -272,7 +272,7 @@ namespace Registry.Viewport
                         return;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     IsEditable = false;
-                    WarrantConverter.FillRow(warrant, row);
+                    EntityConverter<Warrant>.FillRow(warrant, row);
                     break;
             }
             dataGridView.Enabled = true;

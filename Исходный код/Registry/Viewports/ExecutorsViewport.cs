@@ -85,6 +85,7 @@ namespace Registry.Viewport
             DockAreas = DockAreas.Document;
             GeneralDataModel = DataModel.GetInstance<EntityDataModel<Executor>>();
 
+            GeneralDataModel.Select();
 
             GeneralBindingSource = new BindingSource
             {
