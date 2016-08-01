@@ -280,16 +280,20 @@ namespace Registry.Viewport
             GeneralDataModel.Select();
             _fundTypes.Select();
 
-            if (ParentType == ParentTypeEnum.SubPremises)
-                _fundAssoc = DataModel.GetInstance<FundsSubPremisesAssocDataModel>();
-            else
-                if (ParentType == ParentTypeEnum.Premises)
-                    _fundAssoc = DataModel.GetInstance<FundsPremisesAssocDataModel>();
-                else
-                    if (ParentType == ParentTypeEnum.Building)
-                        _fundAssoc = DataModel.GetInstance<FundsBuildingsAssocDataModel>();
-                    else
-                        throw new ViewportException("Неизвестный тип родительского объекта");
+            switch (ParentType)
+            {
+                case ParentTypeEnum.SubPremises:
+                    _fundAssoc = EntityDataModel<FundSubPremisesAssoc>.GetInstance();
+                    break;
+                case ParentTypeEnum.Premises:
+                    _fundAssoc = EntityDataModel<FundPremisesAssoc>.GetInstance();
+                    break;
+                case ParentTypeEnum.Building:
+                    _fundAssoc = EntityDataModel<FundBuildingAssoc>.GetInstance();
+                    break;
+                default:
+                    throw new ViewportException("Неизвестный тип родительского объекта");
+            }
 
             var ds = DataModel.DataSet;
 
@@ -381,17 +385,16 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    var assoc = new FundObjectAssoc(idParent, idFund);
                     switch (ParentType)
                     {
                         case ParentTypeEnum.Building:
-                            DataModel.GetInstance<FundsBuildingsAssocDataModel>().Insert(assoc);
+                            _fundAssoc.Insert(new FundBuildingAssoc(idParent, idFund));
                             break;
                         case ParentTypeEnum.Premises:
-                            DataModel.GetInstance<FundsPremisesAssocDataModel>().Insert(assoc);
+                            _fundAssoc.Insert(new FundPremisesAssoc(idParent, idFund));
                             break;
                         case ParentTypeEnum.SubPremises:
-                            DataModel.GetInstance<FundsSubPremisesAssocDataModel>().Insert(assoc);
+                            _fundAssoc.Insert(new FundSubPremisesAssoc(idParent, idFund));
                             break;
                     }
                     DataRowView newRow;

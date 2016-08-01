@@ -199,6 +199,10 @@ namespace Registry.DataModels.DataModels
             {
                 var columnName = ConvertPropertyToColumnName(property.Name);
                 var attribute = property.GetCustomAttributes(false).OfType<DataColumnAttribute>().FirstOrDefault();
+                if (attribute != null && !attribute.IncludeIntoInsert)
+                {
+                    continue;
+                }
                 if (attribute != null && attribute.Name != null)
                 {
                     columnName = attribute.Name;
@@ -206,6 +210,17 @@ namespace Registry.DataModels.DataModels
                 intoStatement += string.Format(columnTemplate, columnName) + ",";
                 valuesStatement += "?,";
                 command.Parameters.Add(DBConnection.CreateParameter(columnName, property.GetValue(entity, null)));
+            }
+            if (PrimaryKeyProperty.GetCustomAttributes(false)
+                .OfType<DataColumnAttribute>()
+                .Any(a => a.IncludeIntoInsert))
+            {
+                var primaryKeyColumn =
+                    PrimaryKeyProperty.GetCustomAttributes(false).OfType<DataColumnAttribute>().First().Name ??
+                    ConvertPropertyToColumnName(PrimaryKeyProperty.Name);
+                intoStatement += string.Format(columnTemplate, primaryKeyColumn) + ",";
+                valuesStatement += "?,";
+                command.Parameters.Add(DBConnection.CreateParameter(primaryKeyColumn, PrimaryKeyProperty.GetValue(entity, null)));
             }
             intoStatement = intoStatement.TrimEnd(',');
             valuesStatement = valuesStatement.TrimEnd(',');

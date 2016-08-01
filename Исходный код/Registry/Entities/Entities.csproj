@@ -58,11 +58,13 @@
     <Compile Include="DocumentResidence.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="EntityType.cs" />
+    <Compile Include="FundSubPremisesAssoc.cs" />
+    <Compile Include="FundPremisesAssoc.cs" />
+    <Compile Include="FundBuildingAssoc.cs" />
     <Compile Include="HeatingTypes.cs" />
     <Compile Include="RelationAttribute.cs" />
     <Compile Include="RestrictionRightObjectAssoc.cs" />
     <Compile Include="OwnershipRightObjectAssoc.cs" />
-    <Compile Include="FundObjectAssoc.cs" />
     <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="ResettleEstateObjectWay.cs" />
     <Compile Include="ResettleObject.cs" />

@@ -18,8 +18,8 @@ namespace Registry.DataModels.CalcDataModels
             Refresh();
             RefreshOnTableModify(DataModel.GetInstance<EntityDataModel<Building>>().Select());
             RefreshOnTableModify(EntityDataModel<Premise>.GetInstance().Select());
-            RefreshOnTableModify(DataModel.GetInstance<EntityDataModel<FundHistory>>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<FundsPremisesAssocDataModel>().Select());
+            RefreshOnTableModify(EntityDataModel<FundHistory>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<FundPremisesAssoc>.GetInstance().Select());
         }
 
         private static DataTable InitializeTable()
@@ -43,16 +43,16 @@ namespace Registry.DataModels.CalcDataModels
             var buildings = DataModel.GetInstance<EntityDataModel<Building>>().FilterDeletedRows();
             var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows();
             var fundsHistory = DataModel.GetInstance<EntityDataModel<FundHistory>>().FilterDeletedRows();
-            var fundsPremisesAssoc = DataModel.GetInstance<FundsPremisesAssocDataModel>().FilterDeletedRows();
+            var fundsPremisesAssoc = EntityDataModel<FundPremisesAssoc>.GetInstance().FilterDeletedRows();
 
             // Вычисляем агрегационную информацию
-            var maxIdByPremises = DataModelHelper.MaxFundIDsByObject(fundsPremisesAssoc, EntityType.Premise);  
+            var maxIdByPremises = DataModelHelper.MaxFundIDsByPremisesId(fundsPremisesAssoc);  
             var currentFunds = from fundHistoryRow in fundsHistory
                                     join maxIdByPremisesRow in maxIdByPremises
                                        on fundHistoryRow.Field<int>("id_fund") equals maxIdByPremisesRow.IdFund
                                     select new
                                     {
-                                        id_premises = maxIdByPremisesRow.IdObject,
+                                        id_premises = maxIdByPremisesRow.IdPremises,
                                         id_fund = maxIdByPremisesRow.IdFund,
                                         id_fund_type = fundHistoryRow.Field<int>("id_fund_type"),
                                     };
@@ -108,10 +108,10 @@ namespace Registry.DataModels.CalcDataModels
                          select new
                          {
                              id_building = buildingsRow.Field<int>("id_building"),
-                             social_premises_count = (buildingsRowSp == null) ? 0 : buildingsRowSp.social_premises_count,
-                             commercial_premises_count = (buildingsRowCp == null) ? 0 : buildingsRowCp.commercial_premises_count,
-                             special_premises_count = (buildingsRowSpp == null) ? 0 : buildingsRowSpp.special_premises_count,
-                             other_premises_count = (buildingsRowOpp == null) ? 0 : buildingsRowOpp.other_premises_count
+                             social_premises_count = buildingsRowSp == null ? 0 : buildingsRowSp.social_premises_count,
+                             commercial_premises_count = buildingsRowCp == null ? 0 : buildingsRowCp.commercial_premises_count,
+                             special_premises_count = buildingsRowSpp == null ? 0 : buildingsRowSpp.special_premises_count,
+                             other_premises_count = buildingsRowOpp == null ? 0 : buildingsRowOpp.other_premises_count
                          };
             // Заполняем таблицу изменений
             DataTable table = InitializeTable();

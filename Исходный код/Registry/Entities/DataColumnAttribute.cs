@@ -9,5 +9,6 @@ namespace Registry.Entities
         public bool IsPrimaryKey { get; set; }
         public object DefaultValue { get; set; }
         public bool IncludeIntoUpdate { get; set; }
+        public bool IncludeIntoInsert { get; set; }
     }
 }

@@ -802,47 +802,42 @@ namespace Registry.DataModels
             return includedIntoMunicipal;
         }
 
-        /// <summary>
-        /// Максимальные идентификаторы фонда объектов недвижимости
-        /// </summary>
-        /// <param name="objectAssocDataRows">Список строк из ассоциативной модели фондов</param>
-        /// <param name="entity">Тип ассоциативной модели</param>
-        /// <returns>Возвращает максимальные id_fund, не имеющий реквизита исключения</returns>
-        public static IEnumerable<FundObjectAssoc> MaxFundIDsByObject(IEnumerable<DataRow> objectAssocDataRows, EntityType entity)
+        public static IEnumerable<FundBuildingAssoc> MaxFundIDsByBuildingId(IEnumerable<DataRow> objectAssocDataRows)
         {
-            string fieldName = null;
-            switch (entity)
-            {
-                case EntityType.Premise:
-                    fieldName = "id_premises";
-                    break;
-                case EntityType.Building:
-                    fieldName = "id_building";
-                    break;
-                case EntityType.SubPremise:
-                    fieldName = "id_sub_premises";
-                    break;
-            }
-            if (fieldName == null)
-                throw new DataModelException("Не указано название поля идентификатора в методе ObjectIDsIncludedIntoMunicipal");
             var fundsHistory = DataModel.GetInstance<EntityDataModel<FundHistory>>().FilterDeletedRows();
-            var maxIdByObject = from assocRow in objectAssocDataRows
+            return from assocRow in objectAssocDataRows
                                      join fundHistoryRow in fundsHistory
                                         on assocRow.Field<int>("id_fund") equals fundHistoryRow.Field<int>("id_fund")
                                      where fundHistoryRow.Field<DateTime?>("exclude_restriction_date") == null
                                      group assocRow.Field<int>("id_fund") by
-                                             assocRow.Field<int>(fieldName) into gs
-                                     select new FundObjectAssoc(gs.Key, gs.Max());
-            return maxIdByObject;
+                                             assocRow.Field<int>("id_building") into gs
+                                select new FundBuildingAssoc(gs.Key, gs.Max());
         }
 
-        /// <summary>
-        /// Агрегатор адреса для различных процессов: найма, приватизации, переселения и т.д.
-        /// </summary>
-        /// <param name="assocBuildings">Ассоциативная модель зданий</param>
-        /// <param name="assocPremises">Ассоциативная модель помещений</param>
-        /// <param name="assocSubPremises">Ассоциативная модель комнат</param>
-        /// <returns>Возвращает перечисление вида id_process, address</returns>
+        public static IEnumerable<FundPremisesAssoc> MaxFundIDsByPremisesId(IEnumerable<DataRow> objectAssocDataRows)
+        {
+            var fundsHistory = DataModel.GetInstance<EntityDataModel<FundHistory>>().FilterDeletedRows();
+             return from assocRow in objectAssocDataRows
+                    join fundHistoryRow in fundsHistory
+                        on assocRow.Field<int>("id_fund") equals fundHistoryRow.Field<int>("id_fund")
+                    where fundHistoryRow.Field<DateTime?>("exclude_restriction_date") == null
+                    group assocRow.Field<int>("id_fund") by
+                            assocRow.Field<int>("id_premises") into gs
+                    select new FundPremisesAssoc(gs.Key, gs.Max());
+        }
+
+        public static IEnumerable<FundSubPremisesAssoc> MaxFundIDsBySubPremiseId(IEnumerable<DataRow> objectAssocDataRows)
+        {
+            var fundsHistory = DataModel.GetInstance<EntityDataModel<FundHistory>>().FilterDeletedRows();
+            return from assocRow in objectAssocDataRows
+                                join fundHistoryRow in fundsHistory
+                                   on assocRow.Field<int>("id_fund") equals fundHistoryRow.Field<int>("id_fund")
+                                where fundHistoryRow.Field<DateTime?>("exclude_restriction_date") == null
+                                group assocRow.Field<int>("id_fund") by
+                                        assocRow.Field<int>("id_sub_premises") into gs
+                                select new FundSubPremisesAssoc(gs.Key, gs.Max());
+        }
+
         public static IEnumerable<AggregatedAddress> AggregateAddressByIdProcess(IEnumerable<DataRow> assocBuildings, IEnumerable<DataRow> assocPremises, IEnumerable<DataRow> assocSubPremises)
         {
             if (assocBuildings == null || assocPremises == null || assocSubPremises == null)

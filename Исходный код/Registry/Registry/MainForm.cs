@@ -102,9 +102,9 @@ namespace Registry
                 EntityDataModel<StructureType>.GetInstance(afterLoadHandler);
                 EntityDataModel<HeatingType>.GetInstance(afterLoadHandler);
                 DataModel.GetInstance<PremisesKindsDataModel>(afterLoadHandler);
-                DataModel.GetInstance<FundsBuildingsAssocDataModel>(afterLoadHandler);
-                DataModel.GetInstance<FundsPremisesAssocDataModel>(afterLoadHandler);
-                DataModel.GetInstance<FundsSubPremisesAssocDataModel>(afterLoadHandler);
+                EntityDataModel<FundBuildingAssoc>.GetInstance(afterLoadHandler);
+                EntityDataModel<FundPremisesAssoc>.GetInstance(afterLoadHandler);
+                EntityDataModel<FundSubPremisesAssoc>.GetInstance(afterLoadHandler);
                 EntityDataModel<FundHistory>.GetInstance(afterLoadHandler);
                 DataModel.GetInstance<OwnershipBuildingsAssocDataModel>(afterLoadHandler);
                 DataModel.GetInstance<OwnershipPremisesAssocDataModel>(afterLoadHandler);
