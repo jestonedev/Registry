@@ -8,7 +8,7 @@ using Registry.Entities;
 
 namespace Registry.DataModels.Services
 {
-    public sealed class BuildingService
+    public static class BuildingService
     {
         public static IEnumerable<int> BuildingIdsBySnp(string[] snp, Func<DataRow, bool> condition)
         {
@@ -18,11 +18,12 @@ namespace Registry.DataModels.Services
             (from tenancyBuildingsAssocRow in tenancyBuildingsAssoc
              join tenancyPersonsRow in tenancyPersons
              on tenancyBuildingsAssocRow.Field<int>("id_process") equals tenancyPersonsRow.Field<int>("id_process")
-             where snp.Any() && tenancyPersonsRow.Field<string>("surname") != null && String.Equals(tenancyPersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase) &&
+             where snp.Any() && tenancyPersonsRow.Field<string>("surname") != null && 
+                    string.Equals(tenancyPersonsRow.Field<string>("surname"), snp[0], StringComparison.InvariantCultureIgnoreCase) &&
                     ((snp.Length < 2) || tenancyPersonsRow.Field<string>("name") != null &&
-                     String.Equals(tenancyPersonsRow.Field<string>("name"), snp[1], StringComparison.InvariantCultureIgnoreCase)) &&
+                     string.Equals(tenancyPersonsRow.Field<string>("name"), snp[1], StringComparison.InvariantCultureIgnoreCase)) &&
                     ((snp.Length < 3) || tenancyPersonsRow.Field<string>("patronymic") != null &&
-                     String.Equals(tenancyPersonsRow.Field<string>("patronymic"), snp[2], StringComparison.InvariantCultureIgnoreCase)) &&
+                     string.Equals(tenancyPersonsRow.Field<string>("patronymic"), snp[2], StringComparison.InvariantCultureIgnoreCase)) &&
                     condition(tenancyPersonsRow)
              select tenancyBuildingsAssocRow.Field<int>("id_building")).Distinct();
         }

@@ -4,7 +4,6 @@ using System.Data;
 using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
-using Registry.Entities;
 using Registry.Entities.Infrastructure;
 using WeifenLuo.WinFormsUI.Docking;
 

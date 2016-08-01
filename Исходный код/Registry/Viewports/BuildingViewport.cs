@@ -1091,13 +1091,8 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            var restriction = new Restriction();
             var row = (DataRowView)_vRestrictions[_vRestrictions.Position];
-            restriction.IdRestriction = (int?)row["id_restriction"];
-            restriction.IdRestrictionType = (int?)row["id_restriction_type"];
-            restriction.Number = row["number"].ToString();
-            restriction.Date = (DateTime?)row["date"];
-            restriction.Description = row["description"].ToString();
+            var restriction = EntityConverter<Restriction>.FromRow(row);
             using (var editor = new RestrictionsEditor())
             {
                 editor.State = ViewportState.ModifyRowState;
@@ -1175,13 +1170,8 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            var ownershipRight = new OwnershipRight();
             var row = (DataRowView)_vOwnershipRights[_vOwnershipRights.Position];
-            ownershipRight.IdOwnershipRight = (int?)row["id_ownership_right"];
-            ownershipRight.IdOwnershipRightType = (int?)row["id_ownership_right_type"];
-            ownershipRight.Number = row["number"].ToString();
-            ownershipRight.Date = (DateTime?)row["date"];
-            ownershipRight.Description = row["description"].ToString();
+            var ownershipRight = EntityConverter<OwnershipRight>.FromRow(row);
             using (var editor = new OwnershipsEditor())
             {
                 editor.State = ViewportState.ModifyRowState;

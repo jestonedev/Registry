@@ -8,7 +8,7 @@ using Registry.Entities;
 
 namespace Registry.DataModels.Services
 {
-    public sealed class PremisesService
+    public static class PremisesService
     {
         public static IEnumerable<int> PremisesIdsBySnp(string[] snp, Func<DataRow, bool> condition)
         {

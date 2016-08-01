@@ -8,7 +8,7 @@ using Registry.Entities.Infrastructure;
 
 namespace Registry.DataModels.Services
 {
-    public sealed class OtherService
+    public static class OtherService
     {
         public static IEnumerable<int> ObjectIdsByStates(EntityType entity, int[] states)
         {

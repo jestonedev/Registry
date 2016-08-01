@@ -7,7 +7,7 @@ using Registry.Entities;
 
 namespace Registry.DataModels.Services
 {
-    public sealed class ResettleService
+    public static class ResettleService
     {
         public static IEnumerable<int> ResettleProcessIdsBySnp(string[] snp)
         {

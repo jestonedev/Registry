@@ -8,7 +8,7 @@ using Registry.Entities;
 
 namespace Registry.DataModels.Services
 {
-    public sealed class ClaimsService
+    public static class ClaimsService
     {
         public static IEnumerable<int> ClaimStateTypeIdsByNextStateType(int nextStateType)
         {

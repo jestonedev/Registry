@@ -6,7 +6,6 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
-using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
 using Registry.Entities;

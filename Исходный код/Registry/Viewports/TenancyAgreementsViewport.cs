@@ -8,7 +8,6 @@ using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Declensions.Unicode;
-using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
 using Registry.Entities;
