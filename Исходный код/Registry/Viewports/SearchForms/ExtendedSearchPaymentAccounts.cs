@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
 
 namespace Registry.Viewport.SearchForms
@@ -187,7 +188,7 @@ namespace Registry.Viewport.SearchForms
                         (from lastStateTypeRow in lastStateTypes
                         join claimsRow in claimsDataModel.FilterDeletedRows()
                             on lastStateTypeRow.id_claim equals claimsRow.Field<int>("id_claim")
-                        where DataModelHelper.ClaimStateTypeIdsByPrevStateType(lastStateTypeRow.id_state_type).Any()
+                         where ClaimsService.ClaimStateTypeIdsByPrevStateType(lastStateTypeRow.id_state_type).Any()
                         select claimsRow.Field<int>("id_account")).Distinct();
                     if (radioButtonWithUncompletedClaims.Checked)
                     {

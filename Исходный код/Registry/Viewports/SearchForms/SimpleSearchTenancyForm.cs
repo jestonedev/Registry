@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.Services;
 
 namespace Registry.Viewport.SearchForms
 {
@@ -39,7 +40,7 @@ namespace Registry.Viewport.SearchForms
         internal override string GetFilter()
         {
             var filter = "";
-            IEnumerable<int> included_processes = null;
+            IEnumerable<int> includedProcesses = null;
             if (comboBoxCriteriaType.SelectedIndex == 0)
             {
                 //по номеру договора
@@ -51,30 +52,30 @@ namespace Registry.Viewport.SearchForms
             {
                 //по ФИО нанимателя
                 var snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var processes_ids = DataModelHelper.TenancyProcessIdsBySnp(snp, (row) => { return row.Field<int?>("id_kinship") == 1; });
-                included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
+                var processesIds = TenancyService.TenancyProcessIdsBySnp(snp, row => row.Field<int?>("id_kinship") == 1);
+                includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (comboBoxCriteriaType.SelectedIndex == 2)
             {
                 //по ФИО участника
                 var snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var processes_ids = DataModelHelper.TenancyProcessIdsBySnp(snp, (row) => { return true; });
-                included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
+                var processesIds = TenancyService.TenancyProcessIdsBySnp(snp, row => true);
+                includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (comboBoxCriteriaType.SelectedIndex == 3)
             {
                 //по адресу
                 var addressParts = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var processes_ids = DataModelHelper.TenancyProcessIDsByAddress(addressParts);
-                included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
+                var processesIds = TenancyService.TenancyProcessIDsByAddress(addressParts);
+                includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
 
-            if (included_processes != null)
+            if (includedProcesses != null)
             {
                 if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 filter += "id_process IN (0";
-                foreach (var id in included_processes)
+                foreach (var id in includedProcesses)
                     filter += id.ToString(CultureInfo.InvariantCulture) + ",";
                 filter = filter.TrimEnd(',') + ")";
             }
@@ -85,7 +86,7 @@ namespace Registry.Viewport.SearchForms
         {
             if (string.IsNullOrEmpty(textBoxCriteria.Text.Trim()))
             {
-                MessageBox.Show("Не ввиден критерий поиска","Ошибка",
+                MessageBox.Show(@"Не ввиден критерий поиска",@"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }

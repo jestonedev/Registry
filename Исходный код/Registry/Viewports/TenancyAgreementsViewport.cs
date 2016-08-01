@@ -10,7 +10,9 @@ using System.Windows.Forms;
 using Declensions.Unicode;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Reporting;
 using Registry.Viewport.EntityConverters;
 using Registry.Viewport.ModalEditors;
@@ -684,7 +686,7 @@ namespace Registry.Viewport
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (!DataModelHelper.TenancyProcessHasTenant(Convert.ToInt32(ParentRow["id_process"], CultureInfo.InvariantCulture)))
+            if (!TenancyService.TenancyProcessHasTenant(Convert.ToInt32(ParentRow["id_process"], CultureInfo.InvariantCulture)))
             {
                 MessageBox.Show(@"Для формирования отчетной документации необходимо указать нанимателя процесса найма", 
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);

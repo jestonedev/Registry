@@ -7,6 +7,8 @@ using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
+using Registry.Viewport.EntityConverters;
 
 namespace Registry.Viewport
 {
@@ -67,26 +69,27 @@ namespace Registry.Viewport
             snapshot_resettle_sub_premises.Columns.Add("is_checked").DataType = typeof(bool);
 
             if (way == ResettleEstateObjectWay.From)
-                resettle_sub_premises = DataModel.GetInstance<ResettleSubPremisesFromAssocDataModel>();
+                resettle_sub_premises = EntityDataModel<ResettleSubPremisesFromAssoc>.GetInstance();
             else
-                resettle_sub_premises = DataModel.GetInstance<ResettleSubPremisesToAssocDataModel>();
+                resettle_sub_premises = EntityDataModel<ResettleSubPremisesToAssoc>.GetInstance();
             resettle_sub_premises.Select();
 
             var ds = DataModel.DataSet;
 
-            v_resettle_sub_premises = new BindingSource();
-            if (way == ResettleEstateObjectWay.From)
-                v_resettle_sub_premises.DataMember = "resettle_sub_premises_from_assoc";
-            else
-                v_resettle_sub_premises.DataMember = "resettle_sub_premises_to_assoc";
-            v_resettle_sub_premises.Filter = StaticFilter;
-            v_resettle_sub_premises.DataSource = ds;
+            v_resettle_sub_premises = new BindingSource
+            {
+                DataMember =
+                    way == ResettleEstateObjectWay.From
+                        ? "resettle_sub_premises_from_assoc"
+                        : "resettle_sub_premises_to_assoc",
+                Filter = StaticFilter,
+                DataSource = ds
+            };
 
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < v_resettle_sub_premises.Count; i++)
                 snapshot_resettle_sub_premises.Rows.Add(DataRowViewToArray(((DataRowView)v_resettle_sub_premises[i])));
-            v_snapshot_resettle_sub_premises = new BindingSource();
-            v_snapshot_resettle_sub_premises.DataSource = snapshot_resettle_sub_premises;
+            v_snapshot_resettle_sub_premises = new BindingSource {DataSource = snapshot_resettle_sub_premises};
 
             v_sub_premises.CurrentChanged += dataSource_CurrentChanged;
             dataGridView.CellValueNeeded += dataGridView_CellValueNeeded;
@@ -115,39 +118,43 @@ namespace Registry.Viewport
             base.Dispose(disposing);
         }
 
-        public List<ResettleObject> ResettleSubPremisesFromViewport()
+        public List<ResettleSubPremisesFromAssoc> ResettleSubPremisesFromViewport()
         {
-            var list = new List<ResettleObject>();
+            var list = new List<ResettleSubPremisesFromAssoc>();
             for (var i = 0; i < snapshot_resettle_sub_premises.Rows.Count; i++)
             {
                 var row = snapshot_resettle_sub_premises.Rows[i];
                 if (Convert.ToBoolean(row["is_checked"], CultureInfo.InvariantCulture) == false)
                     continue;
-                var ro = new ResettleObject();
-                ro.IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
-                ro.IdProcess = ViewportHelper.ValueOrNull<int>(ParentRow, "id_process");
-                ro.IdObject = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises");
+                var ro = new ResettleSubPremisesFromAssoc
+                {
+                    IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc"),
+                    IdProcess = ViewportHelper.ValueOrNull<int>(ParentRow, "id_process"),
+                    IdSubPremises = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises")
+                };
                 list.Add(ro);
             }
             return list;
         }
 
-        public List<ResettleObject> ResettleSubPremisesFromView()
+        public List<ResettleSubPremisesFromAssoc> ResettleSubPremisesFromView()
         {
-            var list = new List<ResettleObject>();
+            var list = new List<ResettleSubPremisesFromAssoc>();
             for (var i = 0; i < v_resettle_sub_premises.Count; i++)
             {
-                var ro = new ResettleObject();
-                var row = ((DataRowView)v_resettle_sub_premises[i]);
-                ro.IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
-                ro.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
-                ro.IdObject = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises");
+                var row = (DataRowView)v_resettle_sub_premises[i];
+                var ro = new ResettleSubPremisesFromAssoc
+                {
+                    IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc"),
+                    IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process"),
+                    IdSubPremises = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises")
+                };
                 list.Add(ro);
             }
             return list;
         }
 
-        public static bool ValidateResettleSubPremises(List<ResettleObject> resettleSubPremises)
+        public static bool ValidateResettleSubPremises(List<ResettleSubPremisesFromAssoc> resettleSubPremises)
         {
             return true;
         }
@@ -188,8 +195,8 @@ namespace Registry.Viewport
         public void SaveRecord()
         {
             sync_views = false;
-            var resettleSubPremisesFromAssoc = DataModel.GetInstance<ResettleSubPremisesFromAssocDataModel>();
-            var resettleSubPremisesToAssoc = DataModel.GetInstance<ResettleSubPremisesToAssocDataModel>();
+            var resettleSubPremisesFromAssoc = EntityDataModel<ResettleSubPremisesFromAssoc>.GetInstance();
+            var resettleSubPremisesToAssoc = EntityDataModel<ResettleSubPremisesToAssoc>.GetInstance();
             resettleSubPremisesFromAssoc.EditingNewRecord = true;
             resettleSubPremisesToAssoc.EditingNewRecord = true;
             var list = ResettleSubPremisesFromViewport();
@@ -200,12 +207,10 @@ namespace Registry.Viewport
                     row = resettle_sub_premises.Select().Rows.Find(list[i].IdAssoc);
                 if (row == null)
                 {
-                    var id_assoc = -1;
-                    if (way == ResettleEstateObjectWay.From)
-                        id_assoc = resettleSubPremisesFromAssoc.Insert(list[i]);
-                    else
-                        id_assoc = resettleSubPremisesToAssoc.Insert(list[i]);
-                    if (id_assoc == -1)
+                    var idAssoc = way == ResettleEstateObjectWay.From ? 
+                        resettleSubPremisesFromAssoc.Insert(list[i]) : 
+                        resettleSubPremisesToAssoc.Insert(ResettleSubPremiseConverter.CastFromToAssoc(list[i]));
+                    if (idAssoc == -1)
                     {
                         sync_views = true;
                         resettleSubPremisesFromAssoc.EditingNewRecord = false;
@@ -213,30 +218,28 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)v_snapshot_resettle_sub_premises[
-                        v_snapshot_resettle_sub_premises.Find("id_sub_premises", list[i].IdObject)])["id_assoc"] = id_assoc;
-                    resettle_sub_premises.Select().Rows.Add(id_assoc, list[i].IdObject, list[i].IdProcess, 0);
+                        v_snapshot_resettle_sub_premises.Find("id_sub_premises", list[i].IdSubPremises)])["id_assoc"] = idAssoc;
+                    resettle_sub_premises.Select().Rows.Add(idAssoc, list[i].IdSubPremises, list[i].IdProcess, 0);
                 }
             }
             list = ResettleSubPremisesFromView();
             for (var i = 0; i < list.Count; i++)
             {
-                var row_index = -1;
+                var rowIndex = -1;
                 for (var j = 0; j < v_snapshot_resettle_sub_premises.Count; j++)
                 {
                     var row = (DataRowView)v_snapshot_resettle_sub_premises[j];
                     if ((row["id_assoc"] != DBNull.Value) &&
                         !string.IsNullOrEmpty(row["id_assoc"].ToString()) &&
                         ((int)row["id_assoc"] == list[i].IdAssoc) &&
-                        (Convert.ToBoolean(row["is_checked"], CultureInfo.InvariantCulture) == true))
-                        row_index = j;
+                        Convert.ToBoolean(row["is_checked"], CultureInfo.InvariantCulture))
+                        rowIndex = j;
                 }
-                if (row_index == -1)
+                if (rowIndex == -1)
                 {
-                    var affected = -1;
-                    if (way == ResettleEstateObjectWay.From)
-                        affected = resettleSubPremisesFromAssoc.Delete(list[i].IdAssoc.Value);
-                    else
-                        affected = resettleSubPremisesToAssoc.Delete(list[i].IdAssoc.Value);
+                    var affected = way == ResettleEstateObjectWay.From ? 
+                        resettleSubPremisesFromAssoc.Delete(list[i].IdAssoc.Value) : 
+                        resettleSubPremisesToAssoc.Delete(list[i].IdAssoc.Value);
 
                     if (affected == -1)
                     {
@@ -245,17 +248,17 @@ namespace Registry.Viewport
                         resettleSubPremisesToAssoc.EditingNewRecord = false;
                         return;
                     }
-                    var snapshot_row_index = -1;
+                    var snapshotRowIndex = -1;
                     for (var j = 0; j < v_snapshot_resettle_sub_premises.Count; j++)
                         if (((DataRowView)v_snapshot_resettle_sub_premises[j])["id_assoc"] != DBNull.Value &&
                             Convert.ToInt32(((DataRowView)v_snapshot_resettle_sub_premises[j])["id_assoc"], CultureInfo.InvariantCulture) == list[i].IdAssoc)
-                            snapshot_row_index = j;
-                    if (snapshot_row_index != -1)
+                            snapshotRowIndex = j;
+                    if (snapshotRowIndex != -1)
                     {
-                        var sub_premises_row_index = v_sub_premises.Find("id_sub_premises", list[i].IdObject);
-                        ((DataRowView)v_snapshot_resettle_sub_premises[snapshot_row_index]).Delete();
-                        if (sub_premises_row_index != -1)
-                            dataGridView.InvalidateRow(sub_premises_row_index);
+                        var subPremisesRowIndex = v_sub_premises.Find("id_sub_premises", list[i].IdSubPremises);
+                        ((DataRowView)v_snapshot_resettle_sub_premises[snapshotRowIndex]).Delete();
+                        if (subPremisesRowIndex != -1)
+                            dataGridView.InvalidateRow(subPremisesRowIndex);
                     }
                     resettle_sub_premises.Select().Rows.Find(list[i].IdAssoc).Delete();
                 }
@@ -273,7 +276,7 @@ namespace Registry.Viewport
                 dataGridView.Rows[0].Selected = true;
         }
 
-        void sub_premises_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void sub_premises_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (!sync_views)
                 return;
@@ -285,7 +288,7 @@ namespace Registry.Viewport
             dataGridView.Invalidate();
         }
 
-        void sub_premises_RowDeleted(object sender, DataRowChangeEventArgs e)
+        private void sub_premises_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (!sync_views)
                 return;
@@ -294,24 +297,24 @@ namespace Registry.Viewport
             CalcControlHeight();
         }
 
-        void dataSource_CurrentChanged(object sender, EventArgs e)
+        private void dataSource_CurrentChanged(object sender, EventArgs e)
         {
             dataGridView.RowCount = v_sub_premises.Count;
         }
 
-        void dataGridView_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)
+        private void dataGridView_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)
         {
             if (v_sub_premises.Count <= e.RowIndex || v_sub_premises.Count == 0) return;
             var id_sub_premises = Convert.ToInt32(((DataRowView)v_sub_premises[e.RowIndex])["id_sub_premises"], CultureInfo.InvariantCulture);
-            var row_index = v_snapshot_resettle_sub_premises.Find("id_sub_premises", id_sub_premises);
+            var rowIndex = v_snapshot_resettle_sub_premises.Find("id_sub_premises", id_sub_premises);
             sync_views = false;
             switch (dataGridView.Columns[e.ColumnIndex].Name)
             {
                 case "is_checked":
-                    if (row_index == -1)
+                    if (rowIndex == -1)
                         snapshot_resettle_sub_premises.Rows.Add(null, id_sub_premises, e.Value);
                     else
-                        ((DataRowView)v_snapshot_resettle_sub_premises[row_index])["is_checked"] = e.Value;
+                        ((DataRowView)v_snapshot_resettle_sub_premises[rowIndex])["is_checked"] = e.Value;
                     break;
             }
             sync_views = true;
@@ -319,33 +322,29 @@ namespace Registry.Viewport
                 menuCallback.EditingStateUpdate();
         }
 
-        void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
+        private void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
             if (v_sub_premises.Count <= e.RowIndex || v_sub_premises.Count == 0) return;
             var id_sub_premises = Convert.ToInt32(((DataRowView)v_sub_premises[e.RowIndex])["id_sub_premises"], CultureInfo.InvariantCulture);
-            var row_index = v_snapshot_resettle_sub_premises.Find("id_sub_premises", id_sub_premises);
+            var rowIndex = v_snapshot_resettle_sub_premises.Find("id_sub_premises", id_sub_premises);
             switch (dataGridView.Columns[e.ColumnIndex].Name)
             {
                 case "is_checked":
-                    if (row_index != -1)
-                        e.Value = ((DataRowView)v_snapshot_resettle_sub_premises[row_index])["is_checked"];
+                    if (rowIndex != -1)
+                        e.Value = ((DataRowView)v_snapshot_resettle_sub_premises[rowIndex])["is_checked"];
                     break;
-                case "id_sub_premises": e.Value = ((DataRowView)v_sub_premises[e.RowIndex])["id_sub_premises"];
-                    break;
-                case "id_premises": e.Value = ((DataRowView)v_sub_premises[e.RowIndex])["id_premises"];
-                    break;
-                case "sub_premises_num": e.Value = ((DataRowView)v_sub_premises[e.RowIndex])["sub_premises_num"];
-                    break;
-                case "total_area": e.Value = ((DataRowView)v_sub_premises[e.RowIndex])["total_area"];
-                    break;
-                case "description": e.Value = ((DataRowView)v_sub_premises[e.RowIndex])["description"];
-                    break;
-                case "id_state": e.Value = ((DataRowView)v_sub_premises[e.RowIndex])["id_state"];
+                case "id_sub_premises":
+                case "id_premises":
+                case "sub_premises_num":
+                case "total_area":
+                case "description":
+                case "id_state": 
+                    e.Value = ((DataRowView)v_sub_premises[e.RowIndex])[dataGridView.Columns[e.ColumnIndex].Name];
                     break;
             }
         }
 
-        void SubPremisesDetailsControl_RowDeleting(object sender, DataRowChangeEventArgs e)
+        private void SubPremisesDetailsControl_RowDeleting(object sender, DataRowChangeEventArgs e)
         {
             if (!sync_views)
                 return;
@@ -353,29 +352,29 @@ namespace Registry.Viewport
                 return;
             if (e.Action == DataRowAction.Delete)
             {
-                var row_index = v_snapshot_resettle_sub_premises.Find("id_sub_premises", e.Row["id_sub_premises"]);
-                if (row_index != -1)
-                    ((DataRowView)v_snapshot_resettle_sub_premises[row_index]).Delete();
+                var rowIndex = v_snapshot_resettle_sub_premises.Find("id_sub_premises", e.Row["id_sub_premises"]);
+                if (rowIndex != -1)
+                    ((DataRowView)v_snapshot_resettle_sub_premises[rowIndex]).Delete();
             }
             dataGridView.Refresh();
         }
 
-        void SubPremisesDetailsControl_RowChanged(object sender, DataRowChangeEventArgs e)
+        private void SubPremisesDetailsControl_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (!sync_views)
                 return;
             if (e.Row["id_process"] == DBNull.Value || 
                 Convert.ToInt32(e.Row["id_process"], CultureInfo.InvariantCulture) != Convert.ToInt32(ParentRow["id_process"], CultureInfo.InvariantCulture))
                 return;
-            var row_index = v_snapshot_resettle_sub_premises.Find("id_sub_premises", e.Row["id_sub_premises"]);
-            if (row_index == -1 && v_resettle_sub_premises.Find("id_assoc", e.Row["id_assoc"]) != -1)
+            var rowIndex = v_snapshot_resettle_sub_premises.Find("id_sub_premises", e.Row["id_sub_premises"]);
+            if (rowIndex == -1 && v_resettle_sub_premises.Find("id_assoc", e.Row["id_assoc"]) != -1)
             {
                 snapshot_resettle_sub_premises.Rows.Add(e.Row["id_assoc"], e.Row["id_sub_premises"], true);
             }
             dataGridView.Invalidate();
         }
 
-        void dataGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
+        private void dataGridView_CurrentCellDirtyStateChanged(object sender, EventArgs e)
         {
             if (dataGridView.CurrentCell is DataGridViewCheckBoxCell)
                 dataGridView.EndEdit();

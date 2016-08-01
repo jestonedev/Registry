@@ -21,19 +21,19 @@ namespace Registry.Viewport.EntityConverters
             return ToArray(row.Row);
         }
 
-        public static TenancyObject FromRow(DataRow row)
+        public static TenancyPremisesAssoc FromRow(DataRow row)
         {
-            return new TenancyObject
+            return new TenancyPremisesAssoc
             {
                 IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc"),
                 IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process"),
-                IdObject = ViewportHelper.ValueOrNull<int>(row, "id_premises"),
+                IdPremises = ViewportHelper.ValueOrNull<int>(row, "id_premises"),
                 RentTotalArea = ViewportHelper.ValueOrNull<double>(row, "rent_total_area"),
                 RentLivingArea = ViewportHelper.ValueOrNull<double>(row, "rent_living_area")
             };
         }
 
-        public static TenancyObject FromRow(DataRowView row)
+        public static TenancyPremisesAssoc FromRow(DataRowView row)
         {
             return FromRow(row.Row);
         }

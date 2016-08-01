@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
 using Registry.Reporting;
 using Registry.Viewport.EntityConverters;
@@ -203,9 +204,9 @@ namespace Registry.Viewport.MultiMasters
                 int? lastId = null;
                 if (lastStateTypes.Any())
                     lastId = lastStateTypes.First().id_state_type;
-                var localValid = lastId != null ? 
-                    DataModelHelper.ClaimStateTypeIdsByPrevStateType(lastId.Value).Contains(form.IdStateType.Value) : 
-                    DataModelHelper.ClaimStartStateTypeIds().Contains(form.IdStateType.Value);
+                var localValid = lastId != null ?
+                    ClaimsService.ClaimStateTypeIdsByPrevStateType(lastId.Value).Contains(form.IdStateType.Value) :
+                    ClaimsService.ClaimStartStateTypeIds().Contains(form.IdStateType.Value);
                 if (localValid == false)
                 {
                     MessageBox.Show(string.Format(@"Невозможно произвести массовый перевод исковой работы №{0} в указанное состояние, т.к. это нарушает порядок перехода по стадиям", row["id_claim"]), 
@@ -376,10 +377,10 @@ namespace Registry.Viewport.MultiMasters
                 if (DataModel.GetInstance<EntityDataModel<Claim>>().Update(claim) != -1)
                 {
                     claimRow.BeginEdit();
-                    claimRow["start_dept_period"] = claim.StartDeptPeriod;
-                    claimRow["end_dept_period"] = claim.EndDeptPeriod;
-                    claimRow["amount_tenancy"] = claim.AmountTenancy;
-                    claimRow["amount_dgi"] = claim.AmountDgi;
+                    claimRow["start_dept_period"] = ViewportHelper.ValueOrDbNull(claim.StartDeptPeriod);
+                    claimRow["end_dept_period"] = ViewportHelper.ValueOrDbNull(claim.EndDeptPeriod);
+                    claimRow["amount_tenancy"] = ViewportHelper.ValueOrDbNull(claim.AmountTenancy);
+                    claimRow["amount_dgi"] = ViewportHelper.ValueOrDbNull(claim.AmountDgi);
                     claimRow.EndEdit();
                 }
                 Application.DoEvents();

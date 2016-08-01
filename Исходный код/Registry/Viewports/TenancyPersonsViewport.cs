@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -730,7 +731,7 @@ namespace Registry.Viewport
             if ((GeneralBindingSource.Count == 0 || (GeneralBindingSource.Count == 1 && ViewportState == ViewportState.NewRowState))
                 && ParentType == ParentTypeEnum.Tenancy)
             {
-                var premisesAssoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
+                var premisesAssoc = EntityDataModel<TenancyPremisesAssoc>.GetInstance();
                 var premises = EntityDataModel<Premise>.GetInstance();
                 var buildings = DataModel.GetInstance<EntityDataModel<Building>>();
                 var streets = DataModel.GetInstance<KladrStreetsDataModel>();

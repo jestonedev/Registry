@@ -5,7 +5,9 @@ using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -156,14 +158,14 @@ namespace Registry.Viewport
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
             }
-            if (DataModelHelper.HasMunicipal((int)ParentRow[fieldName], entity)
+            if (OtherService.HasMunicipal((int)ParentRow[fieldName], entity)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
                 MessageBox.Show(@"У вас нет прав на изменение информации об истории фондов муниципальных объектов",
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (DataModelHelper.HasNotMunicipal((int)ParentRow[fieldName], entity)
+            if (OtherService.HasNotMunicipal((int)ParentRow[fieldName], entity)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
                 MessageBox.Show(@"У вас нет прав на изменение информации об истории фондов немуниципальных объектов",

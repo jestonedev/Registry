@@ -1,4 +1,4 @@
-﻿namespace Registry.Entities
+﻿namespace Registry.Entities.Infrastructure
 {
     public enum ParentTypeEnum
     {

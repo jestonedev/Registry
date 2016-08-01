@@ -1,4 +1,6 @@
-﻿namespace Registry.Entities
+﻿using Registry.Entities.Infrastructure;
+
+namespace Registry.Entities
 {
     [Relation(SlaveTableName = "resettle_processes")]
     [DataTable(Name = "documents_residence", HasDeletedMark = true)]

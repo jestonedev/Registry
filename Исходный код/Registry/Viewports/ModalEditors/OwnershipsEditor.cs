@@ -3,7 +3,10 @@ using System.Data;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
+using Registry.Viewport.EntityConverters;
 using Security;
 
 namespace Registry.Viewport
@@ -29,10 +32,10 @@ namespace Registry.Viewport
                 switch (value)
                 {
                     case ParentTypeEnum.Premises:
-                        ownership_assoc = DataModel.GetInstance<OwnershipPremisesAssocDataModel>();
+                        ownership_assoc = EntityDataModel<OwnershipRightPremisesAssoc>.GetInstance();
                         break;
                     case ParentTypeEnum.Building:
-                        ownership_assoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>();
+                        ownership_assoc = EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance();
                         break;
                     default:
                         throw new ViewportException("Неизвестный тип родительского объекта");
@@ -110,29 +113,29 @@ namespace Registry.Viewport
         {
             var entity = EntityType.Unknown;
             string fieldName = null;
-            if (ParentType == ParentTypeEnum.Building)
+            switch (ParentType)
             {
-                entity = EntityType.Building;
-                fieldName = "id_building";
-            }
-            else
-                if (ParentType == ParentTypeEnum.Premises)
-                {
+                case ParentTypeEnum.Building:
+                    entity = EntityType.Building;
+                    fieldName = "id_building";
+                    break;
+                case ParentTypeEnum.Premises:
                     entity = EntityType.Premise;
                     fieldName = "id_premises";
-                }
-            if (DataModelHelper.HasMunicipal((int)ParentRow[fieldName], entity)
+                    break;
+            }
+            if (OtherService.HasMunicipal((int)ParentRow[fieldName], entity)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
-                MessageBox.Show("У вас нет прав на изменение информации об ограничениях муниципальных объектов",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"У вас нет прав на изменение информации об ограничениях муниципальных объектов",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (DataModelHelper.HasNotMunicipal((int)ParentRow[fieldName], entity)
+            if (OtherService.HasNotMunicipal((int)ParentRow[fieldName], entity)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
-                MessageBox.Show("У вас нет прав на изменение информации об ограничениях немуниципальных объектов",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"У вас нет прав на изменение информации об ограничениях немуниципальных объектов",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             return true;
@@ -144,7 +147,7 @@ namespace Registry.Viewport
                 return false;
             if (ownershipRight.IdOwnershipRightType == null)
             {
-                MessageBox.Show("Не выбран тип ограничения", "Ошибка",
+                MessageBox.Show(@"Не выбран тип ограничения", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
@@ -162,26 +165,28 @@ namespace Registry.Viewport
             {
                 if (id_parent == -1)
                 {
-                    MessageBox.Show("Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(@"Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
+                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
                 ownership_rights.EditingNewRecord = true;
-                var id_ownership_right = ownership_rights.Insert(ownershipRight);
-                if (id_ownership_right == -1)
+                var idOwnershipRight = ownership_rights.Insert(ownershipRight);
+                if (idOwnershipRight == -1)
                     return;
-                var assoc = new OwnershipRightObjectAssoc(id_parent, id_ownership_right);
                 switch (ParentType)
                 {
                     case ParentTypeEnum.Building:
-                        DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Insert(assoc);
+                        EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance().Insert(
+                            new OwnershipRightBuildingAssoc(id_parent, idOwnershipRight));
                         break;
                     case ParentTypeEnum.Premises:
-                        DataModel.GetInstance<OwnershipPremisesAssocDataModel>().Insert(assoc);
+                        EntityDataModel<OwnershipRightPremisesAssoc>.GetInstance().Insert(
+                            new OwnershipRightPremisesAssoc(id_parent, idOwnershipRight));
                         break;
                 }
-                ownership_rights.Select().Rows.Add(id_ownership_right, ownershipRight.IdOwnershipRightType, ownershipRight.Number, ownershipRight.Date, ownershipRight.Description);
-                ownership_assoc.Select().Rows.Add(id_parent, id_ownership_right);
+                ownership_rights.Select().Rows.Add(idOwnershipRight, ownershipRight.IdOwnershipRightType, 
+                    ownershipRight.Number, ownershipRight.Date, ownershipRight.Description);
+                ownership_assoc.Select().Rows.Add(id_parent, idOwnershipRight);
                 ownership_rights.EditingNewRecord = false;
             } else
             {

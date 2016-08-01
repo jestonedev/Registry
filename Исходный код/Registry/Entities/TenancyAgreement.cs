@@ -1,4 +1,5 @@
 ﻿using System;
+using Registry.Entities.Infrastructure;
 
 namespace Registry.Entities
 {

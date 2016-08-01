@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Linq;
 
-namespace Registry.Entities
+namespace Registry.Entities.Infrastructure
 {
     [AttributeUsage(AttributeTargets.Class)]
     public class DataTableAttribute : Attribute

@@ -1,4 +1,6 @@
-﻿namespace Registry.Entities
+﻿using Registry.Entities.Infrastructure;
+
+namespace Registry.Entities
 {
     [Relation(MasterTableName = "resettle_processes", MasterFieldName = "id_process")]
     [DataTable(Name = "resettle_persons", HasDeletedMark = true)]

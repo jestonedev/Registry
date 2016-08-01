@@ -16,6 +16,8 @@ using Security;
 using Settings;
 using WeifenLuo.WinFormsUI.Docking;
 using Registry.DataModels.CalcDataModels;
+using Registry.DataModels.Services;
+using Registry.Entities.Infrastructure;
 
 namespace Registry
 {
@@ -106,11 +108,11 @@ namespace Registry
                 EntityDataModel<FundPremisesAssoc>.GetInstance(afterLoadHandler);
                 EntityDataModel<FundSubPremisesAssoc>.GetInstance(afterLoadHandler);
                 EntityDataModel<FundHistory>.GetInstance(afterLoadHandler);
-                DataModel.GetInstance<OwnershipBuildingsAssocDataModel>(afterLoadHandler);
-                DataModel.GetInstance<OwnershipPremisesAssocDataModel>(afterLoadHandler);
+                EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance(afterLoadHandler);
+                EntityDataModel<OwnershipRightPremisesAssoc>.GetInstance(afterLoadHandler);
                 EntityDataModel<OwnershipRight>.GetInstance(afterLoadHandler);
-                DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>(afterLoadHandler);
-                DataModel.GetInstance<RestrictionsPremisesAssocDataModel>(afterLoadHandler);
+                EntityDataModel<RestrictionBuildingAssoc>.GetInstance(afterLoadHandler);
+                EntityDataModel<RestrictionPremisesAssoc>.GetInstance(afterLoadHandler);
                 EntityDataModel<Restriction>.GetInstance(afterLoadHandler);
                 EntityDataModel<RestrictionType>.GetInstance(afterLoadHandler);
             }
@@ -121,9 +123,9 @@ namespace Registry
                 // Данные подгружаются по необходимости
                 EntityDataModel<TenancyPerson>.GetInstance(afterLoadHandler);
                 DataModel.GetInstance<KinshipsDataModel>(afterLoadHandler);
-                DataModel.GetInstance<TenancyBuildingsAssocDataModel>(afterLoadHandler);
-                DataModel.GetInstance<TenancyPremisesAssocDataModel>(afterLoadHandler);
-                DataModel.GetInstance<TenancySubPremisesAssocDataModel>(afterLoadHandler);
+                EntityDataModel<TenancyBuildingAssoc>.GetInstance(afterLoadHandler);
+                EntityDataModel<TenancyPremisesAssoc>.GetInstance(afterLoadHandler);
+                EntityDataModel<TenancySubPremisesAssoc>.GetInstance(afterLoadHandler);
                 EntityDataModel<TenancyReason>.GetInstance(afterLoadHandler);
                 EntityDataModel<ReasonType>.GetInstance(afterLoadHandler);
                 DataModel.GetInstance<RentTypesDataModel>(afterLoadHandler);
@@ -696,7 +698,7 @@ namespace Registry
         private void ribbonOrbMenuItemPremises_Click(object sender, EventArgs e)
         {
             var filter = "";
-            var municipalIds = DataModelHelper.ObjectIdsByStates(EntityType.Premise, DataModelHelper.MunicipalObjectStates().ToArray());
+            var municipalIds = OtherService.ObjectIdsByStates(EntityType.Premise, DataModelHelper.MunicipalObjectStates().ToArray());
             var ids = municipalIds.Aggregate("", (current, id) => current + id.ToString(CultureInfo.InvariantCulture) + ",");
             var municipalStateIds = DataModelHelper.MunicipalObjectStates()
                 .Aggregate("", (current, id) => current + id.ToString(CultureInfo.InvariantCulture) + ",");

@@ -7,7 +7,9 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Reporting;
 using Registry.Viewport.EntityConverters;
 using Security;
@@ -274,7 +276,7 @@ namespace Registry.Viewport
                     var subPremiseFromView = EntityConverter<SubPremise>.FromRow(row);
                     if (subPremiseFromView == subPremise)
                         continue;
-                    if (subPremiseFromView.IdSubPremises != null && DataModelHelper.HasMunicipal(subPremiseFromView.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+                    if (subPremiseFromView.IdSubPremises != null && OtherService.HasMunicipal(subPremiseFromView.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                     {
                         MessageBox.Show(@"Вы не можете изменить информацию по данной комнате, т.к. она является муниципальной",
                             @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -282,7 +284,7 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    if (subPremiseFromView.IdSubPremises != null && DataModelHelper.HasNotMunicipal(subPremiseFromView.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+                    if (subPremiseFromView.IdSubPremises != null && OtherService.HasNotMunicipal(subPremiseFromView.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                     {
                         MessageBox.Show(@"Вы не можете изменить информацию по данной комнате, т.к. она является немуниципальной",
                             @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -310,7 +312,7 @@ namespace Registry.Viewport
                         ((int)dataGridView.Rows[j].Cells["id_sub_premises"].Value == subPremise.IdSubPremises))
                         rowIndex = j;
                 if (rowIndex != -1) continue;
-                if (subPremise.IdSubPremises != null && DataModelHelper.HasMunicipal(subPremise.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+                if (subPremise.IdSubPremises != null && OtherService.HasMunicipal(subPremise.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                 {
                     MessageBox.Show(@"Вы не можете удалить муниципальную комнату, т.к. не имеете на это прав",
                         @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -318,7 +320,7 @@ namespace Registry.Viewport
                     GeneralDataModel.EditingNewRecord = false;
                     return;
                 }
-                if (subPremise.IdSubPremises != null && DataModelHelper.HasNotMunicipal(subPremise.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+                if (subPremise.IdSubPremises != null && OtherService.HasNotMunicipal(subPremise.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                 {
                     MessageBox.Show(@"Вы не можете удалить немуниципальную комнату, т.к. не имеете на это прав",
                         @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);

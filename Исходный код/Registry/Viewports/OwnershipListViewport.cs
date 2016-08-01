@@ -5,7 +5,9 @@ using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -68,14 +70,14 @@ namespace Registry.Viewport
             }
             if (fieldName == null)
                 return false;
-            if (DataModelHelper.HasMunicipal((int)ParentRow[fieldName], entity)
+            if (OtherService.HasMunicipal((int)ParentRow[fieldName], entity)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
                 MessageBox.Show(@"У вас нет прав на изменение информации об ограничениях муниципальных объектов",
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (!DataModelHelper.HasNotMunicipal((int) ParentRow[fieldName], entity) ||
+            if (!OtherService.HasNotMunicipal((int)ParentRow[fieldName], entity) ||
                 AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)) return true;
             MessageBox.Show(@"У вас нет прав на изменение информации об ограничениях немуниципальных объектов",
                 @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -157,10 +159,10 @@ namespace Registry.Viewport
             switch (ParentType)
             {
                 case ParentTypeEnum.Premises:
-                    _ownershipAssoc = DataModel.GetInstance<OwnershipPremisesAssocDataModel>();
+                    _ownershipAssoc = EntityDataModel<OwnershipRightPremisesAssoc>.GetInstance();
                     break;
                 case ParentTypeEnum.Building:
-                    _ownershipAssoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>();
+                    _ownershipAssoc = EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance();
                     break;
                 default:
                     throw new ViewportException("Неизвестный тип родительского объекта");
@@ -316,14 +318,15 @@ namespace Registry.Viewport
                         RebuildFilter();
                         return;
                     }
-                    var assoc = new OwnershipRightObjectAssoc(idParent, idOwnershipRight);
                     switch (ParentType)
                     {
                         case ParentTypeEnum.Building:
-                            DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Insert(assoc);
+                            EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance().Insert(
+                                new OwnershipRightBuildingAssoc(idParent, idOwnershipRight));
                             break;
                         case ParentTypeEnum.Premises:
-                            DataModel.GetInstance<OwnershipPremisesAssocDataModel>().Insert(assoc);
+                            EntityDataModel<OwnershipRightPremisesAssoc>.GetInstance().Insert(
+                                new OwnershipRightPremisesAssoc(idParent, idOwnershipRight));
                             break;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_ownership_right"] = idOwnershipRight;

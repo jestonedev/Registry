@@ -1,4 +1,6 @@
-﻿namespace Registry.Entities
+﻿using Registry.Entities.Infrastructure;
+
+namespace Registry.Entities
 {
     [Relation(SlaveTableName = "buildings")]
     [DataTable(Name = "heating_type", HasDeletedMark = true)]

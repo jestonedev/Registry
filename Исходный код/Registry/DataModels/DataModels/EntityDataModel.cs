@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 
 namespace Registry.DataModels.DataModels
 {

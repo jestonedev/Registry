@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Security;
 
 namespace Registry.Viewport

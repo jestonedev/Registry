@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Reporting;
 using Registry.Viewport.SearchForms;
 using WeifenLuo.WinFormsUI.Docking;

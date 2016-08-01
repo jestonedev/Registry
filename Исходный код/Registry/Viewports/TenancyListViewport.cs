@@ -7,7 +7,9 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Reporting;
 using Registry.Viewport.SearchForms;
 using Security;
@@ -55,13 +57,13 @@ namespace Registry.Viewport
             switch (ParentType)
             {
                 case ParentTypeEnum.Building:
-                    ids = DataModelHelper.TenancyProcessIDsByBuildingId(Convert.ToInt32(ParentRow["id_building"], CultureInfo.InvariantCulture));
+                    ids = TenancyService.TenancyProcessIDsByBuildingId(Convert.ToInt32(ParentRow["id_building"], CultureInfo.InvariantCulture));
                     break;
                 case ParentTypeEnum.Premises:
-                    ids = DataModelHelper.TenancyProcessIDsByPremisesId(Convert.ToInt32(ParentRow["id_premises"], CultureInfo.InvariantCulture));
+                    ids = TenancyService.TenancyProcessIDsByPremisesId(Convert.ToInt32(ParentRow["id_premises"], CultureInfo.InvariantCulture));
                     break;
                 case ParentTypeEnum.SubPremises:
-                    ids = DataModelHelper.TenancyProcessIDsBySubPremisesId(Convert.ToInt32(ParentRow["id_sub_premises"], CultureInfo.InvariantCulture));
+                    ids = TenancyService.TenancyProcessIDsBySubPremisesId(Convert.ToInt32(ParentRow["id_sub_premises"], CultureInfo.InvariantCulture));
                     break;
                 default: 
                     throw new ViewportException("Неизвестный тип родительского объекта");
@@ -148,17 +150,17 @@ namespace Registry.Viewport
                 switch (ParentType)
                 {
                     case ParentTypeEnum.Building:
-                        _tenancyBuildingAssoc = DataModel.GetInstance<TenancyBuildingsAssocDataModel>();
+                        _tenancyBuildingAssoc = EntityDataModel<TenancyBuildingAssoc>.GetInstance();
                         AddEventHandler<DataRowChangeEventArgs>(_tenancyBuildingAssoc.Select(), "RowChanged", TenancyAssocViewport_RowChanged);
                         AddEventHandler<DataRowChangeEventArgs>(_tenancyBuildingAssoc.Select(), "RowDeleted", TenancyAssocViewport_RowDeleted);
                         break;
                     case ParentTypeEnum.Premises:
-                        _tenancyPremisesAssoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
+                        _tenancyPremisesAssoc = EntityDataModel<TenancyPremisesAssoc>.GetInstance();
                         AddEventHandler<DataRowChangeEventArgs>(_tenancyPremisesAssoc.Select(), "RowChanged", TenancyAssocViewport_RowChanged);
                         AddEventHandler<DataRowChangeEventArgs>(_tenancyPremisesAssoc.Select(), "RowDeleted", TenancyAssocViewport_RowDeleted);
                         break;
                     case ParentTypeEnum.SubPremises:
-                        _tenancySubPremisesAssoc = DataModel.GetInstance<TenancySubPremisesAssocDataModel>();
+                        _tenancySubPremisesAssoc = EntityDataModel<TenancySubPremisesAssoc>.GetInstance();
                         AddEventHandler<DataRowChangeEventArgs>(_tenancySubPremisesAssoc.Select(), "RowChanged", TenancyAssocViewport_RowChanged);
                         AddEventHandler<DataRowChangeEventArgs>(_tenancySubPremisesAssoc.Select(), "RowDeleted", TenancyAssocViewport_RowDeleted);
                         break;
@@ -359,7 +361,7 @@ namespace Registry.Viewport
                 case ReporterType.TenancyNotifyContractAgreement:
                     return idProcess != null;
                 case ReporterType.TenancyAgreementReporter:
-                    return idProcess != null && (DataModelHelper.TenancyAgreementsForProcess(idProcess.Value) > 0);
+                    return idProcess != null && (TenancyService.TenancyAgreementsForProcess(idProcess.Value) > 0);
             }
             return false;
         }
@@ -426,7 +428,7 @@ namespace Registry.Viewport
             if (GeneralBindingSource.Position == -1)
                 return false;
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            if (!DataModelHelper.TenancyProcessHasTenant(Convert.ToInt32(row["id_process"], CultureInfo.InvariantCulture)))
+            if (!TenancyService.TenancyProcessHasTenant(Convert.ToInt32(row["id_process"], CultureInfo.InvariantCulture)))
             {
                 MessageBox.Show(@"Для формирования отчетной документации необходимо указать нанимателя процесса найма",@"Ошибка", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);

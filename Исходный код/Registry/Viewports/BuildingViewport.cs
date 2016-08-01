@@ -9,7 +9,9 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 using Registry.Viewport.SearchForms;
 using Security;
@@ -358,14 +360,14 @@ namespace Registry.Viewport
             }
             // Проверяем права на модификацию муниципального или не муниципального здания
             var buildingFromView = (Building)EntityFromView();
-            if (buildingFromView.IdBuilding != null && DataModelHelper.HasMunicipal(buildingFromView.IdBuilding.Value, EntityType.Building)
+            if (buildingFromView.IdBuilding != null && OtherService.HasMunicipal(buildingFromView.IdBuilding.Value, EntityType.Building)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
                 MessageBox.Show(@"Вы не можете изменить информацию по данному зданию, т.к. оно является муниципальным или содержит в себе муниципальные помещения", 
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (buildingFromView.IdBuilding != null && DataModelHelper.HasNotMunicipal(buildingFromView.IdBuilding.Value, EntityType.Building)
+            if (buildingFromView.IdBuilding != null && OtherService.HasNotMunicipal(buildingFromView.IdBuilding.Value, EntityType.Building)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
                 MessageBox.Show(@"Вы не можете изменить информацию по данному зданию, т.к. оно является немуниципальным или содержит в себе немуниципальные помещения",
@@ -394,7 +396,7 @@ namespace Registry.Viewport
                 }
             // Проверяем дубликаты адресов домов
             if ((building.House != buildingFromView.House) || (building.IdStreet != buildingFromView.IdStreet))
-                if (DataModelHelper.BuildingsDuplicateCount(building) != 0 &&
+                if (BuildingService.BuildingsDuplicateCount(building) != 0 &&
                     MessageBox.Show(@"В базе уже имеется здание с таким адресом. Все равно продолжить сохранение?", @"Внимание",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                     return false;
@@ -505,9 +507,9 @@ namespace Registry.Viewport
 
             GeneralDataModel = EntityDataModel<Building>.GetInstance();
             _restrictions = EntityDataModel<Restriction>.GetInstance();
-            _restrictionBuildingsAssoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>();
+            _restrictionBuildingsAssoc = EntityDataModel<RestrictionBuildingAssoc>.GetInstance();
             _ownershipRights = EntityDataModel<OwnershipRight>.GetInstance();
-            _ownershipBuildingsAssoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>();
+            _ownershipBuildingsAssoc = EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance();
 
             //Вычисляемые модели
             _buildingsPremisesFunds = CalcDataModel.GetInstance<CalcDataModelBuildingsPremisesFunds>();
@@ -557,10 +559,10 @@ namespace Registry.Viewport
 
             DataBind();
 
-            AddEventHandler<DataRowChangeEventArgs>(_restrictionBuildingsAssoc.Select(), "RowDeleted", RestrictionsAssoc_RowChanged);
-            AddEventHandler<DataRowChangeEventArgs>(_restrictionBuildingsAssoc.Select(), "RowChanged", RestrictionsAssoc_RowDeleted);
-            AddEventHandler<DataRowChangeEventArgs>(_ownershipBuildingsAssoc.Select(), "RowDeleted", OwnershipsAssoc_RowChanged);
-            AddEventHandler<DataRowChangeEventArgs>(_ownershipBuildingsAssoc.Select(), "RowChanged", OwnershipsAssoc_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(_restrictionBuildingsAssoc.Select(), "RowDeleted", RestrictionsAssoc_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(_restrictionBuildingsAssoc.Select(), "RowChanged", RestrictionsAssoc_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_ownershipBuildingsAssoc.Select(), "RowDeleted", OwnershipsAssoc_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(_ownershipBuildingsAssoc.Select(), "RowChanged", OwnershipsAssoc_RowChanged);
             AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", BuildingViewport_RowDeleted);
             AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", BuildingViewport_RowChanged);
             AddEventHandler<EventArgs>(_buildingsCurrentFund, "RefreshEvent", buildingsCurrentFund_RefreshEvent);
@@ -790,14 +792,14 @@ namespace Registry.Viewport
             if (MessageBox.Show(@"Вы действительно хотите удалить это здание?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                if (DataModelHelper.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
+                if (OtherService.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                 {
                     MessageBox.Show(@"У вас нет прав на удаление муниципальных жилых зданий и зданий, в которых присутствуют муниципальные помещения",
                         @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
-                if (DataModelHelper.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
+                if (OtherService.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                 {
                     MessageBox.Show(@"У вас нет прав на удаление немуниципальных жилых зданий и зданий, в которых присутствуют немуниципальные помещения",

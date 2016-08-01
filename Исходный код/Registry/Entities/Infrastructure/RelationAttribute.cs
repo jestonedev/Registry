@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Registry.Entities
+namespace Registry.Entities.Infrastructure
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
     public class RelationAttribute : Attribute

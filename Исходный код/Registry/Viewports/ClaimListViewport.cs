@@ -8,7 +8,9 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Reporting;
 using Registry.Viewport.EntityConverters;
 using Registry.Viewport.ModalEditors;
@@ -435,7 +437,7 @@ namespace Registry.Viewport
                     @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 return;
             }
-            var firstStateTypes = DataModelHelper.ClaimStartStateTypeIds().ToList();
+            var firstStateTypes = ClaimsService.ClaimStartStateTypeIds().ToList();
             if (!firstStateTypes.Any()) return;
             var firstStateType = firstStateTypes.First();
             var claimStatesBindingSource = new BindingSource

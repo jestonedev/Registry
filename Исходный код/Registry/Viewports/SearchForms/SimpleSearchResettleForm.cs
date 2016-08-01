@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
 
 namespace Registry.Viewport.SearchForms
@@ -33,35 +34,35 @@ namespace Registry.Viewport.SearchForms
         internal override string GetFilter()
         {
             var filter = "";
-            IEnumerable<int> included_processes = null;
+            IEnumerable<int> includedProcesses = null;
             if (comboBoxCriteriaType.SelectedIndex == 0)
             {
                 //по ФИО участника переселения
                 var snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var processes_ids = DataModelHelper.ResettleProcessIdsBySnp(snp);
-                included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
+                var processesIds = ResettleService.ResettleProcessIdsBySnp(snp);
+                includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (comboBoxCriteriaType.SelectedIndex == 1)
             {
                 //по адресу переселения (откуда)
                 var addressParts = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var processes_ids = DataModelHelper.ResettleProcessIDsByAddress(addressParts, ResettleEstateObjectWay.From);
-                included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
+                var processesIds = ResettleService.ResettleProcessIDsByAddress(addressParts, ResettleEstateObjectWay.From);
+                includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (comboBoxCriteriaType.SelectedIndex == 2)
             {
                 //по адресу переселения (куда)
                 var addressParts = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var processes_ids = DataModelHelper.ResettleProcessIDsByAddress(addressParts, ResettleEstateObjectWay.To);
-                included_processes = DataModelHelper.Intersect(included_processes, processes_ids);
+                var processesIds = ResettleService.ResettleProcessIDsByAddress(addressParts, ResettleEstateObjectWay.To);
+                includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
 
-            if (included_processes != null)
+            if (includedProcesses != null)
             {
                 if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
                 filter += "id_process IN (0";
-                foreach (var id in included_processes)
+                foreach (var id in includedProcesses)
                     filter += id.ToString(CultureInfo.InvariantCulture) + ",";
                 filter = filter.TrimEnd(',') + ")";
             }
@@ -72,7 +73,7 @@ namespace Registry.Viewport.SearchForms
         {
             if (string.IsNullOrEmpty(textBoxCriteria.Text.Trim()))
             {
-                MessageBox.Show("Не ввиден критерий поиска","Ошибка",
+                MessageBox.Show(@"Не ввиден критерий поиска",@"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }

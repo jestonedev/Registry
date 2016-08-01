@@ -84,18 +84,21 @@ namespace Registry.Viewport
 
         protected override Entity EntityFromViewport()
         {
-            var warrant = new Warrant();
-            if (GeneralBindingSource.Position == -1)
-                warrant.IdWarrant = null;
-            else
-                warrant.IdWarrant = ViewportHelper.ValueOrNull<int>((DataRowView)GeneralBindingSource[GeneralBindingSource.Position],"id_warrant");
-            warrant.IdWarrantDocType = ViewportHelper.ValueOrNull<int>(comboBoxWarrantDocType);
-            warrant.RegistrationNum = ViewportHelper.ValueOrNull(textBoxWarrantRegNum);
-            warrant.OnBehalfOf = ViewportHelper.ValueOrNull(textBoxWarrantOnBehalfOf);
-            warrant.Notary = ViewportHelper.ValueOrNull(textBoxWarrantNotary);
-            warrant.NotaryDistrict = ViewportHelper.ValueOrNull(textBoxWarrantDistrict);
-            warrant.Description = ViewportHelper.ValueOrNull(textBoxWarrantDescription);
-            warrant.RegistrationDate = dateTimePickerWarrantDate.Value;
+            var warrant = new Warrant
+            {
+                IdWarrant =
+                    GeneralBindingSource.Position == -1
+                        ? null
+                        : ViewportHelper.ValueOrNull<int>(
+                            (DataRowView) GeneralBindingSource[GeneralBindingSource.Position], "id_warrant"),
+                IdWarrantDocType = ViewportHelper.ValueOrNull<int>(comboBoxWarrantDocType),
+                RegistrationNum = ViewportHelper.ValueOrNull(textBoxWarrantRegNum),
+                OnBehalfOf = ViewportHelper.ValueOrNull(textBoxWarrantOnBehalfOf),
+                Notary = ViewportHelper.ValueOrNull(textBoxWarrantNotary),
+                NotaryDistrict = ViewportHelper.ValueOrNull(textBoxWarrantDistrict),
+                Description = ViewportHelper.ValueOrNull(textBoxWarrantDescription),
+                RegistrationDate = ViewportHelper.ValueOrNull(dateTimePickerWarrantDate)
+            };
             return warrant;
         }
 

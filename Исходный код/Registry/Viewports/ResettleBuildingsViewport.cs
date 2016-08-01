@@ -7,7 +7,9 @@ using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 using Registry.Viewport.SearchForms;
 using Security;
@@ -75,28 +77,28 @@ namespace Registry.Viewport
             GeneralBindingSource.Position = GeneralBindingSource.Find("id_building", id);
         }
 
-        private List<ResettleObject> ResettleBuildingsFromViewport()
+        private List<ResettleBuildingFromAssoc> ResettleBuildingsFromViewport()
         {
-            var list = new List<ResettleObject>();
+            var list = new List<ResettleBuildingFromAssoc>();
             for (var i = 0; i < _snapshotResettleBuildings.Rows.Count; i++)
             {
                 var row = _snapshotResettleBuildings.Rows[i];
                 if (Convert.ToBoolean(row["is_checked"], CultureInfo.InvariantCulture) == false)
                     continue;
-                var ro = new ResettleObject
+                var ro = new ResettleBuildingFromAssoc
                 {
                     IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc"),
                     IdProcess = ViewportHelper.ValueOrNull<int>(ParentRow, "id_process"),
-                    IdObject = ViewportHelper.ValueOrNull<int>(row, "id_building")
+                    IdBuilding = ViewportHelper.ValueOrNull<int>(row, "id_building")
                 };
                 list.Add(ro);
             }
             return list;
         }
 
-        private List<ResettleObject> ResettleBuildingsFromView()
+        private List<ResettleBuildingFromAssoc> ResettleBuildingsFromView()
         {
-            var list = new List<ResettleObject>();
+            var list = new List<ResettleBuildingFromAssoc>();
             for (var i = 0; i < _vResettleBuildings.Count; i++)
             {
                 var row = (DataRowView)_vResettleBuildings[i];
@@ -105,7 +107,7 @@ namespace Registry.Viewport
             return list;
         }
 
-        private static bool ValidateResettleBuildings(List<ResettleObject> resettleObject)
+        private static bool ValidateResettleBuildings(List<ResettleBuildingFromAssoc> resettleObject)
         {
             return true;
         }
@@ -122,8 +124,8 @@ namespace Registry.Viewport
             GeneralDataModel = DataModel.GetInstance<EntityDataModel<Building>>();
             _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
             _resettleBuildings = _way == ResettleEstateObjectWay.From ? 
-                DataModel.GetInstance<ResettleBuildingsFromAssocDataModel>() : 
-                DataModel.GetInstance<ResettleBuildingsToAssocDataModel>();
+                (DataModel) EntityDataModel<ResettleBuildingFromAssoc>.GetInstance() :
+                EntityDataModel<ResettleBuildingToAssoc>.GetInstance();
             // Ожидаем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
             _kladr.Select();
@@ -212,14 +214,14 @@ namespace Registry.Viewport
             if (MessageBox.Show(@"Вы действительно хотите удалить это здание?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                 return;
-            if (DataModelHelper.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
+            if (OtherService.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
                 MessageBox.Show(@"У вас нет прав на удаление муниципальных жилых зданий и зданий, в которых присутствуют муниципальные помещения",
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if (DataModelHelper.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
+            if (OtherService.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
                 MessageBox.Show(@"У вас нет прав на удаление немуниципальных жилых зданий и зданий, в которых присутствуют немуниципальные помещения",
@@ -369,8 +371,8 @@ namespace Registry.Viewport
         {
             _syncViews = false;
             dataGridView.EndEdit();
-            var resettleBuildingsFromAssoc = DataModel.GetInstance<ResettleBuildingsFromAssocDataModel>();
-            var resettleBuildingsToAssoc = DataModel.GetInstance<ResettleBuildingsToAssocDataModel>();
+            var resettleBuildingsFromAssoc = EntityDataModel<ResettleBuildingFromAssoc>.GetInstance();
+            var resettleBuildingsToAssoc = EntityDataModel<ResettleBuildingToAssoc>.GetInstance();
             resettleBuildingsFromAssoc.EditingNewRecord = true;
             resettleBuildingsToAssoc.EditingNewRecord = true;
             var list = ResettleBuildingsFromViewport();
@@ -388,8 +390,8 @@ namespace Registry.Viewport
                     row = _resettleBuildings.Select().Rows.Find(list[i].IdAssoc);
                 if (row != null) continue;
                 var idAssoc = _way == ResettleEstateObjectWay.From ? 
-                    resettleBuildingsFromAssoc.Insert(list[i]) : 
-                    resettleBuildingsToAssoc.Insert(list[i]);
+                    resettleBuildingsFromAssoc.Insert(list[i]) :
+                    resettleBuildingsToAssoc.Insert(ResettleBuildingConverter.CastFromToAssoc(list[i]));
                 if (idAssoc == -1)
                 {
                     _syncViews = true;
@@ -398,8 +400,8 @@ namespace Registry.Viewport
                     return;
                 }
                 ((DataRowView)_vSnapshotResettleBuildings[
-                    _vSnapshotResettleBuildings.Find("id_building", list[i].IdObject)])["id_assoc"] = idAssoc;
-                _resettleBuildings.Select().Rows.Add(idAssoc, list[i].IdObject, list[i].IdProcess, 0);
+                    _vSnapshotResettleBuildings.Find("id_building", list[i].IdBuilding)])["id_assoc"] = idAssoc;
+                _resettleBuildings.Select().Rows.Add(idAssoc, list[i].IdBuilding, list[i].IdProcess, 0);
             }
             list = ResettleBuildingsFromView();
             for (var i = 0; i < list.Count; i++)
@@ -433,7 +435,7 @@ namespace Registry.Viewport
                             snapshotRowIndex = j;
                     if (snapshotRowIndex != -1)
                     {
-                        var buildingRowIndex = GeneralBindingSource.Find("id_building", list[i].IdObject);
+                        var buildingRowIndex = GeneralBindingSource.Find("id_building", list[i].IdBuilding);
                         ((DataRowView)_vSnapshotResettleBuildings[snapshotRowIndex]).Delete();
                         if (buildingRowIndex != -1)
                             dataGridView.InvalidateRow(buildingRowIndex);

@@ -5,7 +5,9 @@ using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -68,14 +70,14 @@ namespace Registry.Viewport
             }
             if (fieldName == null)
                 return false;
-            if (DataModelHelper.HasMunicipal((int)ParentRow[fieldName], entity)
+            if (OtherService.HasMunicipal((int)ParentRow[fieldName], entity)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
                 MessageBox.Show(@"У вас нет прав на изменение информации о реквизитах НПА муниципальных объектов",
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (DataModelHelper.HasNotMunicipal((int)ParentRow[fieldName], entity)
+            if (OtherService.HasNotMunicipal((int)ParentRow[fieldName], entity)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
                 MessageBox.Show(@"У вас нет прав на изменение информации о реквизитах НПА немуниципальных объектов",
@@ -161,10 +163,10 @@ namespace Registry.Viewport
             switch (ParentType)
             {
                 case ParentTypeEnum.Premises:
-                    _restrictionAssoc =  DataModel.GetInstance<RestrictionsPremisesAssocDataModel>();
+                    _restrictionAssoc = EntityDataModel<RestrictionPremisesAssoc>.GetInstance();
                     break;
                 case ParentTypeEnum.Building:
-                    _restrictionAssoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>();
+                    _restrictionAssoc = EntityDataModel<RestrictionBuildingAssoc>.GetInstance();
                     break;
                 default:
                     throw new ViewportException("Неизвестный тип родительского объекта");
@@ -317,14 +319,13 @@ namespace Registry.Viewport
                         RebuildFilter();
                         return;
                     }
-                    var assoc = new RestrictionObjectAssoc(idParent, idRestriction, null);
                     switch (ParentType)
                     {
                         case ParentTypeEnum.Building:
-                            DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>().Insert(assoc);
+                            EntityDataModel<RestrictionBuildingAssoc>.GetInstance().Insert(new RestrictionBuildingAssoc(idParent, idRestriction, null));
                             break;
                         case ParentTypeEnum.Premises:
-                            DataModel.GetInstance<RestrictionsPremisesAssocDataModel>().Insert(assoc);
+                            EntityDataModel<RestrictionPremisesAssoc>.GetInstance().Insert(new RestrictionPremisesAssoc(idParent, idRestriction, null));
                             break;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_restriction"] = idRestriction;

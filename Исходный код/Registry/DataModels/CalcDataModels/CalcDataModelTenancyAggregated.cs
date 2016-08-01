@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
 
 namespace Registry.DataModels.CalcDataModels
@@ -20,9 +21,9 @@ namespace Registry.DataModels.CalcDataModels
             Refresh();      
             RefreshOnTableModify(EntityDataModel<TenancyProcess>.GetInstance().Select());
             RefreshOnTableModify(EntityDataModel<TenancyPerson>.GetInstance().Select());
-            RefreshOnTableModify(DataModel.GetInstance<TenancyBuildingsAssocDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<TenancyPremisesAssocDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<TenancySubPremisesAssocDataModel>().Select());
+            RefreshOnTableModify(EntityDataModel<TenancyBuildingAssoc>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<TenancyPremisesAssoc>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<TenancySubPremisesAssoc>.GetInstance().Select());
         }
 
         private static DataTable InitializeTable()
@@ -52,10 +53,10 @@ namespace Registry.DataModels.CalcDataModels
                               id_process = gs.Key,
                               tenant = (gs.First().Field<string>("surname")+" "+gs.First().Field<string>("name")+" "+gs.First().Field<string>("patronymic")).Trim()
                           };
-            var addresses = DataModelHelper.AggregateAddressByIdProcess(
-                DataModel.GetInstance<TenancyBuildingsAssocDataModel>().FilterDeletedRows(),
-                DataModel.GetInstance<TenancyPremisesAssocDataModel>().FilterDeletedRows(),
-                DataModel.GetInstance<TenancySubPremisesAssocDataModel>().FilterDeletedRows());
+            var addresses = TenancyService.AggregateAddressByIdProcess(
+                EntityDataModel<TenancyBuildingAssoc>.GetInstance().FilterDeletedRows(),
+                EntityDataModel<TenancyPremisesAssoc>.GetInstance().FilterDeletedRows(),
+                EntityDataModel<TenancySubPremisesAssoc>.GetInstance().FilterDeletedRows());
             var result = from tenanciesRow in tenancies
                          join tenantsRow in tenants
                          on tenanciesRow.Field<int>("id_process") equals tenantsRow.id_process into spT

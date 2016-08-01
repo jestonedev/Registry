@@ -1,4 +1,6 @@
-﻿namespace Registry.Entities
+﻿using Registry.Entities.Infrastructure;
+
+namespace Registry.Entities
 {
     [Relation(SlaveTableName = "tenancy_processes")]
     [Relation(SlaveTableName = "tenancy_agreements")]

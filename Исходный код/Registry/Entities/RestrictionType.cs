@@ -1,4 +1,6 @@
-﻿namespace Registry.Entities
+﻿using Registry.Entities.Infrastructure;
+
+namespace Registry.Entities
 {
     [Relation(SlaveTableName = "restrictions")]
     [DataTable(Name = "restriction_types", HasDeletedMark = true)]
@@ -6,6 +8,7 @@
     {
         [DataColumn(IsPrimaryKey = true)]
         public int? IdRestrictionType { get; set; }
+
         [DataColumn(Name = "restriction_type")]
         public string RestrictionTypeName { get; set; }
     }

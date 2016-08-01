@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 
 namespace Registry.Viewport.EntityConverters
 {

@@ -19,19 +19,29 @@ namespace Registry.Viewport.EntityConverters
             return ToArray(row.Row);
         }
 
-        public static ResettleObject FromRow(DataRow row)
+        public static ResettlePremisesFromAssoc FromRow(DataRow row)
         {
-            return new ResettleObject
+            return new ResettlePremisesFromAssoc
             {
                 IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc"),
                 IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process"),
-                IdObject = ViewportHelper.ValueOrNull<int>(row, "id_premises")
+                IdPremises = ViewportHelper.ValueOrNull<int>(row, "id_premises")
             };
         }
 
-        public static ResettleObject FromRow(DataRowView row)
+        public static ResettlePremisesFromAssoc FromRow(DataRowView row)
         {
             return FromRow(row.Row);
+        }
+
+        public static ResettlePremisesToAssoc CastFromToAssoc(ResettlePremisesFromAssoc assoc)
+        {
+            return new ResettlePremisesToAssoc
+            {
+                IdAssoc = assoc.IdAssoc,
+                IdPremises = assoc.IdPremises,
+                IdProcess = assoc.IdProcess
+            };
         }
     }
 }

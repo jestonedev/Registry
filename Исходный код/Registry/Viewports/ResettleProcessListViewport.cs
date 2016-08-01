@@ -10,6 +10,7 @@ using Registry.Viewport.SearchForms;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 using System.Linq;
+using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 
 namespace Registry.Viewport

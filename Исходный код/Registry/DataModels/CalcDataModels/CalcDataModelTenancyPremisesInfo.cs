@@ -14,9 +14,9 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();
-            RefreshOnTableModify(DataModel.GetInstance<TenancySubPremisesAssocDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<TenancyPremisesAssocDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<TenancyBuildingsAssocDataModel>().Select());
+            RefreshOnTableModify(EntityDataModel<TenancySubPremisesAssoc>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<TenancyPremisesAssoc>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<TenancyBuildingAssoc>.GetInstance().Select());
             RefreshOnTableModify(DataModel.GetInstance<KladrStreetsDataModel>().Select());
             RefreshOnTableModify(EntityDataModel<Building>.GetInstance().Select());
             RefreshOnTableModify(EntityDataModel<Premise>.GetInstance().Select());
@@ -40,12 +40,12 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelTenancyPremisesInfo");
             // Вычисляем агрегационную информацию
-            var assocSubPremises = DataModel.GetInstance<TenancySubPremisesAssocDataModel>().FilterDeletedRows();
-            var assocPremises = DataModel.GetInstance<TenancyPremisesAssocDataModel>().FilterDeletedRows();
-            var assocBuildings = DataModel.GetInstance<TenancyBuildingsAssocDataModel>().FilterDeletedRows();
-            var kladrStreet = DataModel.GetInstance<KladrStreetsDataModel>().FilterDeletedRows();
-            var buildings = EntityDataModel<Building>.GetInstance().FilterDeletedRows();
-            var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows();
+            var assocSubPremises = EntityDataModel<TenancySubPremisesAssoc>.GetInstance().FilterDeletedRows();
+            var assocPremises = EntityDataModel<TenancyPremisesAssoc>.GetInstance().FilterDeletedRows();
+            var assocBuildings = EntityDataModel<TenancyBuildingAssoc>.GetInstance().FilterDeletedRows();
+            var kladrStreet = DataModel.GetInstance<KladrStreetsDataModel>().FilterDeletedRows().ToList();
+            var buildings = EntityDataModel<Building>.GetInstance().FilterDeletedRows().ToList();
+            var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows().ToList();
             var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
 
             var aSubPremises = from assocSubPremisesRow in assocSubPremises

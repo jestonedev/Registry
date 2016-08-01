@@ -1,4 +1,6 @@
-﻿namespace Registry.Entities
+﻿using Registry.Entities.Infrastructure;
+
+namespace Registry.Entities
 {
     [Relation(MasterTableName = "claim_state_types", MasterFieldName = "id_state_type", SlaveFieldName = "id_state_from")]
     [Relation(MasterTableName = "claim_state_types", MasterFieldName = "id_state_type", SlaveFieldName = "id_state_to")]

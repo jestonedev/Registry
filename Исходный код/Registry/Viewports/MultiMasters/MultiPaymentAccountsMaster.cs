@@ -4,8 +4,8 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
 using Registry.Reporting;
 using Security;
@@ -160,7 +160,7 @@ namespace Registry.Viewport.MultiMasters
                     join claimsRow in claimsDataModel.FilterDeletedRows()
                         on lastStateTypeRow.id_claim equals claimsRow.Field<int>("id_claim")
                     where claimsRow.Field<int?>("id_account") == (int?) row["id_account"] &&
-                        DataModelHelper.ClaimStateTypeIdsByPrevStateType(lastStateTypeRow.id_state_type).Any()
+                        ClaimsService.ClaimStateTypeIdsByPrevStateType(lastStateTypeRow.id_state_type).Any()
                     select claimsRow).Any();
                 if (isDuplicate && MessageBox.Show(string.Format(
                     @"По лицевому счету {0} уже заведена незавершенная претензионно-исковая работа. Все равно продолжить?",
@@ -210,7 +210,7 @@ namespace Registry.Viewport.MultiMasters
                 claimRow["at_date"] = ViewportHelper.ValueOrDbNull(claim.AtDate);
                 claimRow.EndEdit();
                 // Add first state automaticaly
-                var firstStateTypes = DataModelHelper.ClaimStartStateTypeIds().ToList();
+                var firstStateTypes = ClaimsService.ClaimStartStateTypeIds().ToList();
                 if (!firstStateTypes.Any()) continue;
                 var firstStateType = firstStateTypes.First();
                 var claimStatesBindingSource = new BindingSource
@@ -293,7 +293,7 @@ namespace Registry.Viewport.MultiMasters
                     from claimRow in DataModel.GetInstance<EntityDataModel<Claim>>().FilterDeletedRows()
                     join claimStateRow in claimStatesDataModel.FilterDeletedRows()
                         on claimRow.Field<int?>("id_claim") equals claimStateRow.Field<int?>("id_claim")
-                    join lstRow in lastStateTypes.Where(x => DataModelHelper.ClaimStateTypeIdsByPrevStateType(x.id_state_type).Any())
+                    join lstRow in lastStateTypes.Where(x => ClaimsService.ClaimStateTypeIdsByPrevStateType(x.id_state_type).Any())
                         on claimRow.Field<int?>("id_claim") equals lstRow.id_claim into j
                     from jRow in j.DefaultIfEmpty()
                     where jRow != null &&

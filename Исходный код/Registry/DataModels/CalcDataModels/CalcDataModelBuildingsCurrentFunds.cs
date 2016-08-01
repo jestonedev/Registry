@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
 
 namespace Registry.DataModels.CalcDataModels
@@ -37,7 +38,7 @@ namespace Registry.DataModels.CalcDataModels
             var fundsHistory = EntityDataModel<FundHistory>.GetInstance().FilterDeletedRows();
             var fundsBuildingsAssoc = EntityDataModel<FundBuildingAssoc>.GetInstance().FilterDeletedRows();
             // Вычисляем агрегационную информацию
-            var maxIdByBuldings = DataModelHelper.MaxFundIDsByBuildingId(fundsBuildingsAssoc);          
+            var maxIdByBuldings = OtherService.MaxFundIDsByBuildingId(fundsBuildingsAssoc);          
             var result = from fundHistoryRow in fundsHistory
                          join maxIdByBuildingRow in maxIdByBuldings
                                        on fundHistoryRow.Field<int>("id_fund") equals maxIdByBuildingRow.IdFund

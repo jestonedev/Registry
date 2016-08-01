@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
 
 namespace Registry.DataModels.CalcDataModels
@@ -19,8 +20,8 @@ namespace Registry.DataModels.CalcDataModels
             Refresh();
             RefreshOnTableModify(EntityDataModel<Premise>.GetInstance().Select());
             RefreshOnTableModify(EntityDataModel<SubPremise>.GetInstance().Select());
-            RefreshOnTableModify(DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<RestrictionsPremisesAssocDataModel>().Select());
+            RefreshOnTableModify(EntityDataModel<RestrictionBuildingAssoc>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<RestrictionPremisesAssoc>.GetInstance().Select());
         }
 
         private static DataTable InitializeTable()
@@ -39,10 +40,10 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelBuildingsPremisesSumArea");
             // Фильтруем удаленные строки
-            var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows();
+            var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows().ToList();
             var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
-            var restrictionsBuildignsAssoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>().FilterDeletedRows();
-            var restrictionsPremisesAssoc = DataModel.GetInstance<RestrictionsPremisesAssocDataModel>().FilterDeletedRows(); 
+            var restrictionsBuildignsAssoc = EntityDataModel<RestrictionBuildingAssoc>.GetInstance().FilterDeletedRows().ToList();
+            var restrictionsPremisesAssoc = EntityDataModel<RestrictionPremisesAssoc>.GetInstance().FilterDeletedRows().ToList(); 
             
             // Вычисляем агрегационную информацию
             var subPremisesSumArea = from premisesRow in premises
@@ -56,13 +57,13 @@ namespace Registry.DataModels.CalcDataModels
                                             sum_area = gs.Sum()
                                         };
             // Определяем снесеные здания и снесеные (на всякий случай) квартиры
-            var demolishedBuildings = DataModelHelper.DemolishedBuildingIDs();
-            var demolishedPremises = DataModelHelper.DemolishedPremisesIDs();
+            var demolishedBuildings = BuildingService.DemolishedBuildingIDs();
+            var demolishedPremises = PremisesService.DemolishedPremisesIDs();
             // Определяем исключенные здания и квартиры из муниципальной собственности
-            var buildingsExcludeFromMunicipal = DataModelHelper.ObjectIDsExcludedFromMunicipal(restrictionsBuildignsAssoc, EntityType.Building);
-            var buildingsIncludedIntoMunicipal = DataModelHelper.ObjectIDsIncludedIntoMunicipal(restrictionsBuildignsAssoc, EntityType.Building);
-            var premisesExcludeFromMunicipal = DataModelHelper.ObjectIDsExcludedFromMunicipal(restrictionsPremisesAssoc, EntityType.Premise);
-            var premisesIncludedIntoMunicipal = DataModelHelper.ObjectIDsIncludedIntoMunicipal(restrictionsPremisesAssoc, EntityType.Premise);
+            var buildingsExcludeFromMunicipal = BuildingService.BuildingIDsExcludedFromMunicipal(restrictionsBuildignsAssoc);
+            var buildingsIncludedIntoMunicipal = BuildingService.BuildingIDsIncludedIntoMunicipal(restrictionsBuildignsAssoc);
+            var premisesExcludeFromMunicipal = PremisesService.PremiseIDsExcludedFromMunicipal(restrictionsPremisesAssoc);
+            var premisesIncludedIntoMunicipal = PremisesService.PremiseIDsIncludedIntoMunicipal(restrictionsPremisesAssoc);
             // Возвращаем сумму площадей только муниципальных помещений
             var result = from premisesRow in premises
                          join subPremisesSumAreaRow in subPremisesSumArea
@@ -75,16 +76,16 @@ namespace Registry.DataModels.CalcDataModels
                          on premisesRow.Field<int>("id_premises") equals demolishedPremisesId into dpr
                          from dprRow in dpr.DefaultIfEmpty()
                          join buildingsExcludeFromMunicipalRow in buildingsExcludeFromMunicipal
-                         on premisesRow.Field<int>("id_building") equals buildingsExcludeFromMunicipalRow.IdObject into befmr
+                         on premisesRow.Field<int>("id_building") equals buildingsExcludeFromMunicipalRow.IdBuilding into befmr
                          from befmrRow in befmr.DefaultIfEmpty()
                          join premisesExcludeFromMunicipalRow in premisesExcludeFromMunicipal
-                         on premisesRow.Field<int>("id_premises") equals premisesExcludeFromMunicipalRow.IdObject into pefmr
+                         on premisesRow.Field<int>("id_premises") equals premisesExcludeFromMunicipalRow.IdPremises into pefmr
                          from pefmrRow in pefmr.DefaultIfEmpty()
                          join buildingsIncludedIntoMunicipalRow in buildingsIncludedIntoMunicipal
-                         on premisesRow.Field<int>("id_building") equals buildingsIncludedIntoMunicipalRow.IdObject into biimr
+                         on premisesRow.Field<int>("id_building") equals buildingsIncludedIntoMunicipalRow.IdBuilding into biimr
                          from biimrRow in biimr.DefaultIfEmpty()
                          join premisesIncludedIntoMunicipalRow in premisesIncludedIntoMunicipal
-                         on premisesRow.Field<int>("id_premises") equals premisesIncludedIntoMunicipalRow.IdObject into piimr
+                         on premisesRow.Field<int>("id_premises") equals premisesIncludedIntoMunicipalRow.IdPremises into piimr
                          from piimrRow in piimr.DefaultIfEmpty()
                          where dbrRow == 0 && dprRow == 0 &&
                                (befmrRow == null || (piimrRow != null && befmrRow.Date <= piimrRow.Date)) && 

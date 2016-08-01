@@ -5,56 +5,54 @@ using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
 
 namespace Registry.Viewport.SearchForms
 {
     internal partial class ExtendedSearchResettleForm : SearchForm
     {
-        DataModel regions;
-        BindingSource v_kladr_from;
-        BindingSource v_regions_from;
-        BindingSource v_kladr_to;
-        BindingSource v_regions_to;
+        private readonly BindingSource _vKladrFrom;
+        private readonly BindingSource _vKladrTo;
 
         public ExtendedSearchResettleForm()
         {
             InitializeComponent();
 
             DataModel.GetInstance<KladrStreetsDataModel>().Select();
-            regions = DataModel.GetInstance<KladrRegionsDataModel>();
+            var regions = DataModel.GetInstance<KladrRegionsDataModel>();
 
             var ds = DataModel.DataSet;
 
-            v_kladr_from = new BindingSource
+            _vKladrFrom = new BindingSource
             {
                 DataSource = ds,
                 DataMember = "kladr"
             };
 
-            v_kladr_to = new BindingSource
+            _vKladrTo = new BindingSource
             {
                 DataSource = ds,
                 DataMember = "kladr"
             };
 
-            v_regions_from = new BindingSource { DataSource = regions.Select() };
+            var vRegionsFrom = new BindingSource { DataSource = regions.Select() };
 
-            v_regions_to = new BindingSource { DataSource = regions.Select() };
+            var vRegionsTo = new BindingSource { DataSource = regions.Select() };
 
-            comboBoxStreetFrom.DataSource = v_kladr_from;
+            comboBoxStreetFrom.DataSource = _vKladrFrom;
             comboBoxStreetFrom.ValueMember = "id_street";
             comboBoxStreetFrom.DisplayMember = "street_name";
 
-            comboBoxStreetTo.DataSource = v_kladr_to;
+            comboBoxStreetTo.DataSource = _vKladrTo;
             comboBoxStreetTo.ValueMember = "id_street";
             comboBoxStreetTo.DisplayMember = "street_name";
 
-            comboBoxRegionFrom.DataSource = v_regions_from;
+            comboBoxRegionFrom.DataSource = vRegionsFrom;
             comboBoxRegionFrom.ValueMember = "id_region";
             comboBoxRegionFrom.DisplayMember = "region";
 
-            comboBoxRegionTo.DataSource = v_regions_to;
+            comboBoxRegionTo.DataSource = vRegionsTo;
             comboBoxRegionTo.ValueMember = "id_region";
             comboBoxRegionTo.DisplayMember = "region";
 
@@ -91,40 +89,40 @@ namespace Registry.Viewport.SearchForms
             if (checkBoxPersonSNPEnable.Checked)
             {
                 var snp = textBoxPersonSNP.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var processesIds = DataModelHelper.ResettleProcessIdsBySnp(snp);
+                var processesIds = ResettleService.ResettleProcessIdsBySnp(snp);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (checkBoxRegionFromEnable.Checked && (comboBoxRegionFrom.SelectedValue != null))
             {
-                var processesIds = DataModelHelper.ResettleProcessIDsByCondition(
+                var processesIds = ResettleService.ResettleProcessIDsByCondition(
                     row => row.Field<string>("id_street").StartsWith(comboBoxRegionFrom.SelectedValue.ToString(), StringComparison.OrdinalIgnoreCase), 
                     DataModelHelper.ConditionType.BuildingCondition, ResettleEstateObjectWay.From);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (checkBoxStreetFromEnable.Checked && (comboBoxStreetFrom.SelectedValue != null))
             {
-                var processesIds = DataModelHelper.ResettleProcessIDsByCondition(
+                var processesIds = ResettleService.ResettleProcessIDsByCondition(
                     row => row.Field<string>("id_street") == comboBoxStreetFrom.SelectedValue.ToString(),
                     DataModelHelper.ConditionType.BuildingCondition, ResettleEstateObjectWay.From);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (checkBoxHouseFromEnable.Checked)
             {
-                var processesIds = DataModelHelper.ResettleProcessIDsByCondition(
+                var processesIds = ResettleService.ResettleProcessIDsByCondition(
                     row => row.Field<string>("house") == textBoxHouseFrom.Text.Trim().Replace("'", ""),
                     DataModelHelper.ConditionType.BuildingCondition, ResettleEstateObjectWay.From);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (checkBoxPremisesNumFromEnable.Checked)
             {
-                var processesIds = DataModelHelper.ResettleProcessIDsByCondition(
+                var processesIds = ResettleService.ResettleProcessIDsByCondition(
                     row => row.Field<string>("premises_num") == textBoxPremisesNumFrom.Text.Trim().Replace("'", ""),
                     DataModelHelper.ConditionType.PremisesCondition, ResettleEstateObjectWay.From);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (checkBoxRegionToEnable.Checked && (comboBoxRegionTo.SelectedValue != null))
             {
-                var processesIds = DataModelHelper.ResettleProcessIDsByCondition(
+                var processesIds = ResettleService.ResettleProcessIDsByCondition(
                     row => row.Field<string>("id_street").StartsWith(
                         comboBoxRegionTo.SelectedValue.ToString(), StringComparison.OrdinalIgnoreCase),
                     DataModelHelper.ConditionType.BuildingCondition, ResettleEstateObjectWay.To);
@@ -132,21 +130,21 @@ namespace Registry.Viewport.SearchForms
             }
             if (checkBoxStreetToEnable.Checked && (comboBoxStreetTo.SelectedValue != null))
             {
-                var processesIds = DataModelHelper.ResettleProcessIDsByCondition(
+                var processesIds = ResettleService.ResettleProcessIDsByCondition(
                     row => row.Field<string>("id_street") == comboBoxStreetTo.SelectedValue.ToString(),
                     DataModelHelper.ConditionType.BuildingCondition, ResettleEstateObjectWay.To);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (checkBoxHouseToEnable.Checked)
             {
-                var processesIds = DataModelHelper.ResettleProcessIDsByCondition(
+                var processesIds = ResettleService.ResettleProcessIDsByCondition(
                     row => row.Field<string>("house") == textBoxHouseTo.Text.Trim().Replace("'", ""),
                     DataModelHelper.ConditionType.BuildingCondition, ResettleEstateObjectWay.To);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (checkBoxPremisesNumToEnable.Checked)
             {
-                var processesIds = DataModelHelper.ResettleProcessIDsByCondition(
+                var processesIds = ResettleService.ResettleProcessIDsByCondition(
                     row => row.Field<string>("premises_num") == textBoxPremisesNumTo.Text.Trim().Replace("'", ""),
                     DataModelHelper.ConditionType.PremisesCondition, ResettleEstateObjectWay.To);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
@@ -297,7 +295,7 @@ namespace Registry.Viewport.SearchForms
                 var text = comboBoxStreetFrom.Text;
                 var selectionStart = comboBoxStreetFrom.SelectionStart;
                 var selectionLength = comboBoxStreetFrom.SelectionLength;
-                v_kladr_from.Filter = "street_name like '%" + comboBoxStreetFrom.Text + "%'";
+                _vKladrFrom.Filter = "street_name like '%" + comboBoxStreetFrom.Text + "%'";
                 comboBoxStreetFrom.Text = text;
                 comboBoxStreetFrom.SelectionStart = selectionStart;
                 comboBoxStreetFrom.SelectionLength = selectionLength;
@@ -309,8 +307,8 @@ namespace Registry.Viewport.SearchForms
             if (comboBoxStreetFrom.Items.Count > 0)
             {
                 if (comboBoxStreetFrom.SelectedValue == null)
-                    comboBoxStreetFrom.SelectedValue = v_kladr_from[v_kladr_from.Position];
-                comboBoxStreetFrom.Text = ((DataRowView)v_kladr_from[v_kladr_from.Position])["street_name"].ToString();
+                    comboBoxStreetFrom.SelectedValue = _vKladrFrom[_vKladrFrom.Position];
+                comboBoxStreetFrom.Text = ((DataRowView)_vKladrFrom[_vKladrFrom.Position])["street_name"].ToString();
             }
             if (comboBoxStreetFrom.SelectedValue == null)
                 comboBoxStreetFrom.Text = "";
@@ -329,7 +327,7 @@ namespace Registry.Viewport.SearchForms
                 var text = comboBoxStreetTo.Text;
                 var selectionStart = comboBoxStreetTo.SelectionStart;
                 var selectionLength = comboBoxStreetTo.SelectionLength;
-                v_kladr_to.Filter = "street_name like '%" + comboBoxStreetTo.Text + "%'";
+                _vKladrTo.Filter = "street_name like '%" + comboBoxStreetTo.Text + "%'";
                 comboBoxStreetTo.Text = text;
                 comboBoxStreetTo.SelectionStart = selectionStart;
                 comboBoxStreetTo.SelectionLength = selectionLength;
@@ -341,8 +339,8 @@ namespace Registry.Viewport.SearchForms
             if (comboBoxStreetTo.Items.Count > 0)
             {
                 if (comboBoxStreetTo.SelectedValue == null)
-                    comboBoxStreetTo.SelectedValue = v_kladr_to[v_kladr_to.Position];
-                comboBoxStreetTo.Text = ((DataRowView)v_kladr_to[v_kladr_to.Position])["street_name"].ToString();
+                    comboBoxStreetTo.SelectedValue = _vKladrTo[_vKladrTo.Position];
+                comboBoxStreetTo.Text = ((DataRowView)_vKladrTo[_vKladrTo.Position])["street_name"].ToString();
             }
             if (comboBoxStreetTo.SelectedValue == null)
                 comboBoxStreetTo.Text = "";

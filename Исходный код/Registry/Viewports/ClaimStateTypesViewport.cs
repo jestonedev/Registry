@@ -101,7 +101,7 @@ namespace Registry.Viewport
             {
                 if (dataGridViewClaimStateTypes.Rows[i].IsNewRow) continue;
                 var row = dataGridViewClaimStateTypes.Rows[i];
-                list.Add(ClaimStateTypeConverter.FromRow(row));
+                list.Add(EntityConverter<ClaimStateType>.FromRow(row));
             }
             return list;
         }
@@ -112,7 +112,7 @@ namespace Registry.Viewport
             foreach (var claimStateType in GeneralBindingSource)
             {
                 var row = ((DataRowView)claimStateType);
-                list.Add(ClaimStateTypeConverter.FromRow(row));
+                list.Add(EntityConverter<ClaimStateType>.FromRow(row));
             }
             return list;
         }
@@ -192,12 +192,13 @@ namespace Registry.Viewport
                     GeneralDataModel.Select().Columns[i].ColumnName, GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             foreach (var claimStateType in GeneralBindingSource)
-                GeneralSnapshot.Rows.Add(ClaimStateTypeConverter.ToArray((DataRowView)claimStateType));
+                GeneralSnapshot.Rows.Add(EntityConverter<ClaimStateType>.ToArray((DataRowView)claimStateType));
+            GeneralSnapshot.Columns["is_start_state_type"].DefaultValue = 0;
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
             AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_claim_state_types_CurrentItemChanged);
 
             //Загружаем данные snapshot-модели из original-view relations
-            foreach (object claimStateRel in _vClaimStateTypesRelations)
+            foreach (var claimStateRel in _vClaimStateTypesRelations)
                 _snapshotClaimStateTypesRelations.Rows.Add(ClaimStateTypeRelationConverter.ToArray((DataRowView)claimStateRel));
             _vSnapshotClaimStateTypesRelations = new BindingSource
             {
@@ -208,6 +209,7 @@ namespace Registry.Viewport
             id_state_type.DataPropertyName = "id_state_type";
             state_type.DataPropertyName = "state_type";
             is_start_state_type.DataPropertyName = "is_start_state_type";
+            is_start_state_type.FalseValue = false;
             dataGridViewClaimStateTypes.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
             dataGridViewClaimStateTypesFrom.RowCount = GeneralSnapshotBindingSource.Count;
             //События изменения данных для проверки соответствия реальным данным в модели
@@ -255,7 +257,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             foreach (var claimStateType in GeneralBindingSource)
-                GeneralSnapshot.Rows.Add(ClaimStateTypeConverter.ToArray((DataRowView)claimStateType));
+                GeneralSnapshot.Rows.Add(EntityConverter<ClaimStateType>.ToArray((DataRowView)claimStateType));
             _tempIdStateType = int.MaxValue;
             _snapshotClaimStateTypesRelations.Clear();
             foreach (var claimStateRel in _vClaimStateTypesRelations)
@@ -297,11 +299,11 @@ namespace Registry.Viewport
                     foreach (var claimStateRel in _vSnapshotClaimStateTypesRelations)
                         if ((int)((DataRowView)claimStateRel)["id_state_to"] == list[i].IdStateType)
                             ((DataRowView)claimStateRel)["id_state_to"] = idStateType;
-                    GeneralDataModel.Select().Rows.Add(ClaimStateTypeConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(EntityConverter<ClaimStateType>.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
-                    if (ClaimStateTypeConverter.FromRow(row) == list[i])
+                    if (EntityConverter<ClaimStateType>.FromRow(row) == list[i])
                         continue;
                     if (GeneralDataModel.Update(list[i]) == -1)
                     {

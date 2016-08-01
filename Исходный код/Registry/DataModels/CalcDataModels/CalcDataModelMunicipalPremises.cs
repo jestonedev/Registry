@@ -6,6 +6,7 @@ using Registry.DataModels.DataModels;
 using Registry.Entities;
 using System.Data;
 using System.Globalization;
+using Registry.DataModels.Services;
 
 namespace Registry.DataModels.CalcDataModels
 {
@@ -52,7 +53,7 @@ namespace Registry.DataModels.CalcDataModels
 
             // Вычисляем агрегационную информацию
             var fundInfoPremises =
-                (from fundRow in DataModelHelper.MaxFundIDsByPremisesId(fundsPremisesAssoc)
+                (from fundRow in OtherService.MaxFundIDsByPremisesId(fundsPremisesAssoc)
                 join fundsHistoryRow in fundsHistory
                     on fundRow.IdFund equals fundsHistoryRow.Field<int?>("id_fund")
                 select new
@@ -62,7 +63,7 @@ namespace Registry.DataModels.CalcDataModels
                     id_fund_type = fundsHistoryRow.Field<int?>("id_fund_type")
                 }).ToList();
             var fundInfoSubPremises =
-                 (from fundRow in DataModelHelper.MaxFundIDsBySubPremiseId(fundsSubPremisesAssoc)
+                 (from fundRow in OtherService.MaxFundIDsBySubPremiseId(fundsSubPremisesAssoc)
                  join fundsHistoryRow in fundsHistory
                      on fundRow.IdFund equals fundsHistoryRow.Field<int?>("id_fund")
                  select new

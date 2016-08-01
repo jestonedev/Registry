@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;

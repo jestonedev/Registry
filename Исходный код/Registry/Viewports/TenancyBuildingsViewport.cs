@@ -7,7 +7,9 @@ using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 using Registry.Viewport.SearchForms;
 using Security;
@@ -66,19 +68,19 @@ namespace Registry.Viewport
             return false;
         }
 
-        private List<TenancyObject> TenancyBuildingsFromViewport()
+        private List<TenancyBuildingAssoc> TenancyBuildingsFromViewport()
         {
-            var list = new List<TenancyObject>();
+            var list = new List<TenancyBuildingAssoc>();
             for (var i = 0; i < _snapshotTenancyBuildings.Rows.Count; i++)
             {
                 var row = _snapshotTenancyBuildings.Rows[i];
                 if (Convert.ToBoolean(row["is_checked"], CultureInfo.InvariantCulture) == false)
                     continue;
-                var to = new TenancyObject
+                var to = new TenancyBuildingAssoc
                 {
                     IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc"),
                     IdProcess = ViewportHelper.ValueOrNull<int>(ParentRow, "id_process"),
-                    IdObject = ViewportHelper.ValueOrNull<int>(row, "id_building"),
+                    IdBuilding = ViewportHelper.ValueOrNull<int>(row, "id_building"),
                     RentTotalArea = ViewportHelper.ValueOrNull<double>(row, "rent_total_area"),
                     RentLivingArea = ViewportHelper.ValueOrNull<double>(row, "rent_living_area")
                 };
@@ -87,9 +89,9 @@ namespace Registry.Viewport
             return list;
         }
 
-        private List<TenancyObject> TenancyBuildingsFromView()
+        private List<TenancyBuildingAssoc> TenancyBuildingsFromView()
         {
-            var list = new List<TenancyObject>();
+            var list = new List<TenancyBuildingAssoc>();
             for (var i = 0; i < _vTenancyBuildings.Count; i++)
             {
                 var row = (DataRowView)_vTenancyBuildings[i];
@@ -98,15 +100,14 @@ namespace Registry.Viewport
             return list;
         }
 
-        private bool ValidateTenancyBuildings(IEnumerable<TenancyObject> tenancyBuildings)
+        private bool ValidateTenancyBuildings(IEnumerable<TenancyBuildingAssoc> tenancyBuildings)
         {
             foreach (var building in tenancyBuildings)
             {
-                if (!ViewportHelper.BuildingFundAndRentMatch(building.IdObject.Value, (int)ParentRow["id_rent_type"]) &&
-                            MessageBox.Show(@"Выбранный вид найма не соответствует фонду сдаваемого здания. Все равно продолжить сохранение?",
-                            @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
-                    return false;
-                return true;
+                return building.IdBuilding == null || 
+                    ViewportHelper.BuildingFundAndRentMatch(building.IdBuilding.Value, (int)ParentRow["id_rent_type"]) || 
+                    MessageBox.Show(@"Выбранный вид найма не соответствует фонду сдаваемого здания. Все равно продолжить сохранение?",
+                        @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes;
             }
             return true;
         }
@@ -122,7 +123,7 @@ namespace Registry.Viewport
             DockAreas = DockAreas.Document;
             GeneralDataModel = DataModel.GetInstance<EntityDataModel<Building>>();
             _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
-            _tenancyBuildings = DataModel.GetInstance<TenancyBuildingsAssocDataModel>();
+            _tenancyBuildings = EntityDataModel<TenancyBuildingAssoc>.GetInstance();
             // Ожидаем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
             _kladr.Select();
@@ -203,14 +204,14 @@ namespace Registry.Viewport
             if (MessageBox.Show(@"Вы действительно хотите удалить это здание?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                if (DataModelHelper.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
+                if (OtherService.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                 {
                     MessageBox.Show(@"У вас нет прав на удаление муниципальных жилых зданий и зданий, в которых присутствуют муниципальные помещения",
                         @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
-                if (DataModelHelper.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
+                if (OtherService.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                 {
                     MessageBox.Show(@"У вас нет прав на удаление немуниципальных жилых зданий и зданий, в которых присутствуют немуниципальные помещения",
@@ -373,7 +374,7 @@ namespace Registry.Viewport
                     row = _tenancyBuildings.Select().Rows.Find(list[i].IdAssoc);
                 if (row == null)
                 {
-                    var idAssoc = DataModel.GetInstance<TenancyBuildingsAssocDataModel>().Insert(list[i]);
+                    var idAssoc = EntityDataModel<TenancyBuildingAssoc>.GetInstance().Insert(list[i]);
                     if (idAssoc == -1)
                     {
                         _syncViews = true;
@@ -381,14 +382,14 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)_vSnapshotTenancyBuildings[
-                        _vSnapshotTenancyBuildings.Find("id_building", list[i].IdObject)])["id_assoc"] = idAssoc;
-                    _tenancyBuildings.Select().Rows.Add(idAssoc, list[i].IdObject, list[i].IdProcess, list[i].RentTotalArea, list[i].RentLivingArea, 0);
+                        _vSnapshotTenancyBuildings.Find("id_building", list[i].IdBuilding)])["id_assoc"] = idAssoc;
+                    _tenancyBuildings.Select().Rows.Add(idAssoc, list[i].IdBuilding, list[i].IdProcess, list[i].RentTotalArea, list[i].RentLivingArea, 0);
                 }
                 else
                 {
                     if (TenancyBuildingConverter.FromRow(row) == list[i])
                         continue;
-                    if (DataModel.GetInstance<TenancyBuildingsAssocDataModel>().Update(list[i]) == -1)
+                    if (EntityDataModel<TenancyBuildingAssoc>.GetInstance().Update(list[i]) == -1)
                     {
                         _syncViews = true;
                         _tenancyBuildings.EditingNewRecord = false;
@@ -413,7 +414,7 @@ namespace Registry.Viewport
                 }
                 if (rowIndex == -1)
                 {
-                    if (DataModel.GetInstance<TenancyBuildingsAssocDataModel>().Delete(list[i].IdAssoc.Value) == -1)
+                    if (EntityDataModel<TenancyBuildingAssoc>.GetInstance().Delete(list[i].IdAssoc.Value) == -1)
                     {
                         _syncViews = true;
                         _tenancyBuildings.EditingNewRecord = false;
@@ -426,7 +427,7 @@ namespace Registry.Viewport
                             snapshotRowIndex = j;
                     if (snapshotRowIndex != -1)
                     {
-                        var buildingRowIndex = GeneralBindingSource.Find("id_building", list[i].IdObject);
+                        var buildingRowIndex = GeneralBindingSource.Find("id_building", list[i].IdBuilding);
                         ((DataRowView)_vSnapshotTenancyBuildings[snapshotRowIndex]).Delete();
                         if (buildingRowIndex != -1)
                             dataGridView.InvalidateRow(buildingRowIndex);

@@ -1,4 +1,6 @@
-﻿namespace Registry.Entities
+﻿using Registry.Entities.Infrastructure;
+
+namespace Registry.Entities
 {
     [DataTable(Name = "claim_files", CustomSelectQuery = "SELECT * FROM claim_files WHERE id_claim = {0}")]
     public class ClaimFile: Entity

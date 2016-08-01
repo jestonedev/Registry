@@ -18,8 +18,8 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();
-            RefreshOnTableModify(DataModel.GetInstance<TenancyPremisesAssocDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<TenancySubPremisesAssocDataModel>().Select());
+            RefreshOnTableModify(EntityDataModel<TenancyPremisesAssoc>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<TenancySubPremisesAssoc>.GetInstance().Select());
             RefreshOnTableModify(EntityDataModel<TenancyProcess>.GetInstance().Select());
             RefreshOnTableModify(EntityDataModel<TenancyPerson>.GetInstance().Select());
         }
@@ -46,8 +46,8 @@ namespace Registry.DataModels.CalcDataModels
                 throw new DataModelException(
                     "Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelPremisesTenanciesRegNumbers");
             // Фильтруем удаленные строки
-            var tenancyPremises = DataModel.GetInstance<TenancyPremisesAssocDataModel>().FilterDeletedRows();
-            var tenancySubPremises = DataModel.GetInstance<TenancySubPremisesAssocDataModel>().FilterDeletedRows();
+            var tenancyPremises = EntityDataModel<TenancyPremisesAssoc>.GetInstance().FilterDeletedRows();
+            var tenancySubPremises = EntityDataModel<TenancySubPremisesAssoc>.GetInstance().FilterDeletedRows();
             var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
             var tenancyProcesses = EntityDataModel<TenancyProcess>.GetInstance().FilterDeletedRows();
             var tenancyPersons = EntityDataModel<TenancyPerson>.GetInstance().FilterDeletedRows();
