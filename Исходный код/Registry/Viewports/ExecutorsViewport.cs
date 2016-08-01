@@ -58,7 +58,7 @@ namespace Registry.Viewport
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
                 var row = dataGridView.Rows[i];
-                list.Add(ExecutorConverter.FromRow(row));
+                list.Add(EntityConverter<Executor>.FromRow(row));
             }
             return list;
         }
@@ -69,7 +69,7 @@ namespace Registry.Viewport
             foreach (var executor in GeneralBindingSource)
             {
                 var row = ((DataRowView)executor);
-                list.Add(ExecutorConverter.FromRow(row));
+                list.Add(EntityConverter<Executor>.FromRow(row));
             }
             return list;
         }
@@ -83,8 +83,9 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<ExecutorsDataModel>();
+            GeneralDataModel = DataModel.GetInstance<EntityDataModel<Executor>>();
 
+            GeneralDataModel.Select();
 
             GeneralBindingSource = new BindingSource
             {
@@ -96,9 +97,10 @@ namespace Registry.Viewport
             for (var i = 0; i < GeneralDataModel.Select().Columns.Count; i++)
                 GeneralSnapshot.Columns.Add(new DataColumn(
                     GeneralDataModel.Select().Columns[i].ColumnName, GeneralDataModel.Select().Columns[i].DataType));
+            GeneralSnapshot.Columns["is_inactive"].DefaultValue = 0;
             //Загружаем данные snapshot-модели из original-view
             foreach (var executor in GeneralBindingSource)
-                GeneralSnapshot.Rows.Add(ExecutorConverter.ToArray((DataRowView)executor));
+                GeneralSnapshot.Rows.Add(EntityConverter<Executor>.ToArray((DataRowView)executor));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
             AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_executors_CurrentItemChanged);
 
@@ -108,6 +110,7 @@ namespace Registry.Viewport
             executor_login.DataPropertyName = "executor_login";
             phone.DataPropertyName = "phone";
             is_inactive.DataPropertyName = "is_inactive";
+            is_inactive.FalseValue = false;
 
             dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
 
@@ -150,7 +153,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             foreach (var executor in GeneralBindingSource)
-                GeneralSnapshot.Rows.Add(ExecutorConverter.ToArray((DataRowView)executor));
+                GeneralSnapshot.Rows.Add(EntityConverter<Executor>.ToArray((DataRowView)executor));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -185,11 +188,11 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_executor"] = idExecutor;
-                    GeneralDataModel.Select().Rows.Add(ExecutorConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(EntityConverter<Executor>.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
-                    if (ExecutorConverter.FromRow(row) == executor)
+                    if (EntityConverter<Executor>.FromRow(row) == executor)
                         continue;
                     if (GeneralDataModel.Update(list[i]) == -1)
                     {
@@ -197,7 +200,7 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    ExecutorConverter.FillRow(executor, row);
+                    EntityConverter<Executor>.FillRow(executor, row);
                 }
             }
             list = EntitiesListFromView();
@@ -280,7 +283,7 @@ namespace Registry.Viewport
             var rowIndex = GeneralSnapshotBindingSource.Find("id_executor", e.Row["id_executor"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_executor", e.Row["id_executor"]) != -1)
             {
-                GeneralSnapshot.Rows.Add(ExecutorConverter.ToArray(e.Row));
+                GeneralSnapshot.Rows.Add(EntityConverter<Executor>.ToArray(e.Row));
             }
             else
                 if (rowIndex != -1)

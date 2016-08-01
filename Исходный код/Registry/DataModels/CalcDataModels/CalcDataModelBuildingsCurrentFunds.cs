@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
 
 namespace Registry.DataModels.CalcDataModels
@@ -15,8 +16,8 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();
-            RefreshOnTableModify(DataModel.GetInstance<FundsHistoryDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<FundsBuildingsAssocDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<EntityDataModel<FundHistory>>().Select());
+            RefreshOnTableModify(EntityDataModel<FundBuildingAssoc>.GetInstance().Select());
         }
 
         private static DataTable InitializeTable()
@@ -34,16 +35,16 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelBuildingsCurrentFunds");
             // Фильтруем удаленные строки
-            var fundsHistory = DataModel.GetInstance<FundsHistoryDataModel>().FilterDeletedRows();
-            var fundsBuildingsAssoc = DataModel.GetInstance<FundsBuildingsAssocDataModel>().FilterDeletedRows();
+            var fundsHistory = EntityDataModel<FundHistory>.GetInstance().FilterDeletedRows();
+            var fundsBuildingsAssoc = EntityDataModel<FundBuildingAssoc>.GetInstance().FilterDeletedRows();
             // Вычисляем агрегационную информацию
-            var maxIdByBuldings = DataModelHelper.MaxFundIDsByObject(fundsBuildingsAssoc, EntityType.Building);          
+            var maxIdByBuldings = OtherService.MaxFundIDsByBuildingId(fundsBuildingsAssoc);          
             var result = from fundHistoryRow in fundsHistory
                          join maxIdByBuildingRow in maxIdByBuldings
                                        on fundHistoryRow.Field<int>("id_fund") equals maxIdByBuildingRow.IdFund
                          select new
                          {
-                             id_building = maxIdByBuildingRow.IdObject,
+                             id_building = maxIdByBuildingRow.IdBuilding,
                              id_fund = maxIdByBuildingRow.IdFund,
                              id_fund_type = fundHistoryRow.Field<int>("id_fund_type")
                          };

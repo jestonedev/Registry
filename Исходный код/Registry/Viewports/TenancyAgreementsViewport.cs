@@ -10,7 +10,9 @@ using System.Windows.Forms;
 using Declensions.Unicode;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Reporting;
 using Registry.Viewport.EntityConverters;
 using Registry.Viewport.ModalEditors;
@@ -239,7 +241,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return TenancyAgreementConverter.FromRow(row);
+            return EntityConverter<TenancyAgreement>.FromRow(row);
         }
 
         private bool ValidateAgreement(TenancyAgreement tenancyAgreement)
@@ -262,10 +264,10 @@ namespace Registry.Viewport
             dataGridViewTenancyPersons.AutoGenerateColumns = false;
             dataGridViewChangeTenant.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<TenancyAgreementsDataModel>();
-            _tenancyPersonsExclude = DataModel.GetInstance<TenancyPersonsDataModel>();
-            _executors = DataModel.GetInstance<ExecutorsDataModel>();
-            _warrants = DataModel.GetInstance<WarrantsDataModel>();
+            GeneralDataModel = EntityDataModel<TenancyAgreement>.GetInstance();
+            _tenancyPersonsExclude = EntityDataModel<TenancyPerson>.GetInstance();
+            _executors = DataModel.GetInstance<EntityDataModel<Executor>>();
+            _warrants = EntityDataModel<Warrant>.GetInstance();
             _kinships = DataModel.GetInstance<KinshipsDataModel>();
 
             // Ожидаем дозагрузки, если это необходимо
@@ -432,7 +434,7 @@ namespace Registry.Viewport
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    TenancyAgreementConverter.FillRow(tenancyAgreement, newRow);
+                    EntityConverter<TenancyAgreement>.FillRow(tenancyAgreement, newRow);
                     GeneralDataModel.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
@@ -446,7 +448,7 @@ namespace Registry.Viewport
                         return;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     IsEditable = false;
-                    TenancyAgreementConverter.FillRow(tenancyAgreement, row);
+                    EntityConverter<TenancyAgreement>.FillRow(tenancyAgreement, row);
                     break;
             }
             ViewportState = ViewportState.ReadState;
@@ -503,7 +505,7 @@ namespace Registry.Viewport
                 EndDate = ViewportHelper.ValueOrNull<DateTime>(ParentRow, "end_date"),
                 UntilDismissal = ViewportHelper.ValueOrNull<bool>(ParentRow, "until_dismissal"),
             };
-            var rentPeriods = DataModel.GetInstance<TenancyRentPeriodsHistoryDataModel>();
+            var rentPeriods = EntityDataModel<TenancyRentPeriod>.GetInstance();
             rentPeriods.EditingNewRecord = true;
             var idRentPeriod = rentPeriods.Insert(rentPeriod);
             if (idRentPeriod == -1) return;
@@ -511,11 +513,11 @@ namespace Registry.Viewport
             rentPeriods.Select().Rows.Add(idRentPeriod, rentPeriod.IdProcess, rentPeriod.BeginDate, rentPeriod.EndDate, rentPeriod.UntilDismissal);
             rentPeriods.EditingNewRecord = false;
 
-            var tenancyProcess = TenancyProcessConverter.FromRow(ParentRow);
+            var tenancyProcess = EntityConverter<TenancyProcess>.FromRow(ParentRow);
             tenancyProcess.BeginDate = beginDate;
             tenancyProcess.EndDate = endDate;
             tenancyProcess.UntilDismissal = untilDismissal;
-            var tenancyProcesses = DataModel.GetInstance<TenancyProcessesDataModel>();
+            var tenancyProcesses = EntityDataModel<TenancyProcess>.GetInstance();
             tenancyProcesses.EditingNewRecord = true;
             if (tenancyProcesses.Update(tenancyProcess) == -1)
             {
@@ -535,15 +537,13 @@ namespace Registry.Viewport
             var excludeTenant = parameters.Where(v => v.Name == "ExcludeTenant").Select(v => (bool?)v.Value).FirstOrDefault();
             if (idOldTenant == null || idNewTenant == null) return;
             var oldTenantRow =
-                DataModel
-                    .GetInstance<TenancyPersonsDataModel>()
+                EntityDataModel<TenancyPerson>.GetInstance()
                     .FilterDeletedRows().FirstOrDefault(v => v.Field<int>("id_person") == idOldTenant.Value);
             var newTenantRow =
-                DataModel
-                    .GetInstance<TenancyPersonsDataModel>()
+                EntityDataModel<TenancyPerson>.GetInstance()
                     .FilterDeletedRows().FirstOrDefault(v => v.Field<int>("id_person") == idNewTenant.Value);
-            var oldTenant = oldTenantRow != null ? TenancyPersonConverter.FromRow(oldTenantRow) : null;
-            var newTenant = newTenantRow != null ? TenancyPersonConverter.FromRow(newTenantRow) : null;
+            var oldTenant = oldTenantRow != null ? EntityConverter<TenancyPerson>.FromRow(oldTenantRow) : null;
+            var newTenant = newTenantRow != null ? EntityConverter<TenancyPerson>.FromRow(newTenantRow) : null;
 
             if (oldTenant == null || newTenant == null)
             {
@@ -566,7 +566,7 @@ namespace Registry.Viewport
             {
                 oldTenant.IdKinship = idKinshipOldTenant;
             }
-            var affected = DataModel.GetInstance<TenancyPersonsDataModel>().Update(oldTenant);
+            var affected = EntityDataModel<TenancyPerson>.GetInstance().Update(oldTenant);
             if (affected == -1)
             {
                 return;
@@ -578,7 +578,7 @@ namespace Registry.Viewport
 
             newTenant.IdKinship = 1;
             newTenant.ExcludeDate = null;
-            affected = DataModel.GetInstance<TenancyPersonsDataModel>().Update(newTenant);
+            affected = EntityDataModel<TenancyPerson>.GetInstance().Update(newTenant);
             if (affected == -1)
             {
                 return;
@@ -686,7 +686,7 @@ namespace Registry.Viewport
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (!DataModelHelper.TenancyProcessHasTenant(Convert.ToInt32(ParentRow["id_process"], CultureInfo.InvariantCulture)))
+            if (!TenancyService.TenancyProcessHasTenant(Convert.ToInt32(ParentRow["id_process"], CultureInfo.InvariantCulture)))
             {
                 MessageBox.Show(@"Для формирования отчетной документации необходимо указать нанимателя процесса найма", 
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);

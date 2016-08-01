@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
 
 namespace Registry.DataModels.CalcDataModels
@@ -16,10 +17,10 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();
-            RefreshOnTableModify(DataModel.GetInstance<BuildingsDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<PremisesDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<FundsHistoryDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<FundsPremisesAssocDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<EntityDataModel<Building>>().Select());
+            RefreshOnTableModify(EntityDataModel<Premise>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<FundHistory>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<FundPremisesAssoc>.GetInstance().Select());
         }
 
         private static DataTable InitializeTable()
@@ -40,19 +41,19 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelBuildingsPremisesFunds");
             // Фильтруем удаленные строки
-            var buildings = DataModel.GetInstance<BuildingsDataModel>().FilterDeletedRows();
-            var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
-            var fundsHistory = DataModel.GetInstance<FundsHistoryDataModel>().FilterDeletedRows();
-            var fundsPremisesAssoc = DataModel.GetInstance<FundsPremisesAssocDataModel>().FilterDeletedRows();
+            var buildings = DataModel.GetInstance<EntityDataModel<Building>>().FilterDeletedRows();
+            var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows();
+            var fundsHistory = DataModel.GetInstance<EntityDataModel<FundHistory>>().FilterDeletedRows();
+            var fundsPremisesAssoc = EntityDataModel<FundPremisesAssoc>.GetInstance().FilterDeletedRows();
 
             // Вычисляем агрегационную информацию
-            var maxIdByPremises = DataModelHelper.MaxFundIDsByObject(fundsPremisesAssoc, EntityType.Premise);  
+            var maxIdByPremises = OtherService.MaxFundIDsByPremisesId(fundsPremisesAssoc);  
             var currentFunds = from fundHistoryRow in fundsHistory
                                     join maxIdByPremisesRow in maxIdByPremises
                                        on fundHistoryRow.Field<int>("id_fund") equals maxIdByPremisesRow.IdFund
                                     select new
                                     {
-                                        id_premises = maxIdByPremisesRow.IdObject,
+                                        id_premises = maxIdByPremisesRow.IdPremises,
                                         id_fund = maxIdByPremisesRow.IdFund,
                                         id_fund_type = fundHistoryRow.Field<int>("id_fund_type"),
                                     };
@@ -108,10 +109,10 @@ namespace Registry.DataModels.CalcDataModels
                          select new
                          {
                              id_building = buildingsRow.Field<int>("id_building"),
-                             social_premises_count = (buildingsRowSp == null) ? 0 : buildingsRowSp.social_premises_count,
-                             commercial_premises_count = (buildingsRowCp == null) ? 0 : buildingsRowCp.commercial_premises_count,
-                             special_premises_count = (buildingsRowSpp == null) ? 0 : buildingsRowSpp.special_premises_count,
-                             other_premises_count = (buildingsRowOpp == null) ? 0 : buildingsRowOpp.other_premises_count
+                             social_premises_count = buildingsRowSp == null ? 0 : buildingsRowSp.social_premises_count,
+                             commercial_premises_count = buildingsRowCp == null ? 0 : buildingsRowCp.commercial_premises_count,
+                             special_premises_count = buildingsRowSpp == null ? 0 : buildingsRowSpp.special_premises_count,
+                             other_premises_count = buildingsRowOpp == null ? 0 : buildingsRowOpp.other_premises_count
                          };
             // Заполняем таблицу изменений
             DataTable table = InitializeTable();

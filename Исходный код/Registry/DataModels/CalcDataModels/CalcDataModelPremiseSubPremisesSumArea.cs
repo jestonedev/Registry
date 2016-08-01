@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using Registry.DataModels.DataModels;
+using Registry.Entities;
 
 namespace Registry.DataModels.CalcDataModels
 {
@@ -16,8 +17,8 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();
-            RefreshOnTableModify(DataModel.GetInstance<PremisesDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<SubPremisesDataModel>().Select());
+            RefreshOnTableModify(EntityDataModel<Premise>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<SubPremise>.GetInstance().Select());
         }
 
         private static DataTable InitializeTable()
@@ -35,8 +36,8 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelPremiseSubPremisesSumArea");
             // Фильтруем удаленные строки
-            var premises = DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows();
-            var subPremises = DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows();
+            var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows();
+            var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
             // Вычисляем агрегационную информацию
             var result = from premisesRow in premises
                          join subPremisesRow in subPremises

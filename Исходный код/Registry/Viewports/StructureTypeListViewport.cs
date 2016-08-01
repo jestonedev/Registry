@@ -52,7 +52,7 @@ namespace Registry.Viewport
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
                 var row = dataGridView.Rows[i];
-                list.Add(StructureTypeConverter.FromRow(row));
+                list.Add(EntityConverter<StructureType>.FromRow(row));
             }
             return list;
         }
@@ -63,7 +63,7 @@ namespace Registry.Viewport
             for (var i = 0; i < GeneralBindingSource.Count; i++)
             {
                 var row = (DataRowView)GeneralBindingSource[i];
-                list.Add(StructureTypeConverter.FromRow(row));
+                list.Add(EntityConverter<StructureType>.FromRow(row));
             }
             return list;
         }
@@ -77,7 +77,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<StructureTypesDataModel>();
+            GeneralDataModel = EntityDataModel<StructureType>.GetInstance();
             //Ожиданем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
 
@@ -93,7 +93,7 @@ namespace Registry.Viewport
                     GeneralDataModel.Select().Columns[i].ColumnName, GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(StructureTypeConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+                GeneralSnapshot.Rows.Add(EntityConverter<StructureType>.ToArray((DataRowView)GeneralBindingSource[i]));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
             AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_structure_types_CurrentItemChanged);
 
@@ -140,7 +140,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(StructureTypeConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+                GeneralSnapshot.Rows.Add(EntityConverter<StructureType>.ToArray((DataRowView)GeneralBindingSource[i]));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -175,11 +175,11 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_structure_type"] = idStructureType;
-                    GeneralDataModel.Select().Rows.Add(StructureTypeConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(EntityConverter<StructureType>.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
-                    if (StructureTypeConverter.FromRow(row) == structureType)
+                    if (EntityConverter<StructureType>.FromRow(row) == structureType)
                         continue;
                     if (GeneralDataModel.Update(structureType) == -1)
                     {
@@ -187,7 +187,7 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    StructureTypeConverter.FillRow(structureType, row);
+                    EntityConverter<StructureType>.FillRow(structureType, row);
                 }
             }
             list = EntitiesListFromView();
@@ -230,12 +230,10 @@ namespace Registry.Viewport
 
         private void StructureTypeListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
-            if (Selected)
-            {
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.StatusBarStateUpdate();
-            }
+            if (!Selected) return;
+            MenuCallback.EditingStateUpdate();
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.StatusBarStateUpdate();
         }
 
         private void StructureTypeListViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
@@ -255,7 +253,7 @@ namespace Registry.Viewport
             var rowIndex = GeneralSnapshotBindingSource.Find("id_structure_type", e.Row["id_structure_type"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_structure_type", e.Row["id_structure_type"]) != -1)
             {
-                GeneralSnapshot.Rows.Add(StructureTypeConverter.ToArray(e.Row));
+                GeneralSnapshot.Rows.Add(EntityConverter<StructureType>.ToArray(e.Row));
             }
             else
                 if (rowIndex != -1)

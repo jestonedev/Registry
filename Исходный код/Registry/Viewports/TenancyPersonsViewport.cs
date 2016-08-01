@@ -7,6 +7,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -215,13 +216,10 @@ namespace Registry.Viewport
 
         protected override Entity EntityFromViewport()
         {
+            var row = (DataRowView) GeneralBindingSource[GeneralBindingSource.Position];
             var tenancyPerson = new TenancyPerson
             {
-                IdPerson =
-                    GeneralBindingSource.Position == -1
-                        ? null
-                        : ViewportHelper.ValueOrNull<int>(
-                            (DataRowView) GeneralBindingSource[GeneralBindingSource.Position], "id_person")
+                IdPerson = GeneralBindingSource.Position == -1 ? null : ViewportHelper.ValueOrNull<int>(row, "id_person")
             };
             if (ParentType == ParentTypeEnum.Tenancy && ParentRow != null)
                 tenancyPerson.IdProcess = ViewportHelper.ValueOrNull<int>(ParentRow, "id_process");
@@ -247,6 +245,7 @@ namespace Registry.Viewport
             tenancyPerson.RegistrationHouse = ViewportHelper.ValueOrNull(textBoxRegistrationHouse);
             tenancyPerson.RegistrationFlat = ViewportHelper.ValueOrNull(textBoxRegistrationFlat);
             tenancyPerson.RegistrationRoom = ViewportHelper.ValueOrNull(textBoxRegistrationRoom);
+            tenancyPerson.RegistrationDate = ViewportHelper.ValueOrNull<DateTime>(row, "registration_date");
             tenancyPerson.ResidenceHouse = ViewportHelper.ValueOrNull(textBoxResidenceHouse);
             tenancyPerson.ResidenceFlat = ViewportHelper.ValueOrNull(textBoxResidenceFlat);
             tenancyPerson.ResidenceRoom = ViewportHelper.ValueOrNull(textBoxResidenceRoom);
@@ -260,7 +259,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return TenancyPersonConverter.FromRow(row);
+            return EntityConverter<TenancyPerson>.FromRow(row);
         }
 
         private bool ValidateTenancyPerson(TenancyPerson tenancyPerson)
@@ -318,10 +317,10 @@ namespace Registry.Viewport
         {
             dataGridViewTenancyPersons.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<TenancyPersonsDataModel>();
+            GeneralDataModel = EntityDataModel<TenancyPerson>.GetInstance();
             _kinships = DataModel.GetInstance<KinshipsDataModel>();
             _documentTypes = DataModel.GetInstance<DocumentTypesDataModel>();
-            _documentIssuedBy = DataModel.GetInstance<DocumentsIssuedByDataModel>();
+            _documentIssuedBy = DataModel.GetInstance<EntityDataModel<DocumentIssuedBy>>();
             _kladr = DataModel.GetInstance<KladrStreetsDataModel>(); 
 
             // Ожидаем дозагрузки, если это необходимо
@@ -505,10 +504,10 @@ namespace Registry.Viewport
             if (comboBoxIssuedBy.SelectedValue == null && !string.IsNullOrEmpty(comboBoxIssuedBy.Text))
             {
                 var document = new DocumentIssuedBy {DocumentIssuedByName = comboBoxIssuedBy.Text};
-                var idDocument = DataModel.GetInstance<DocumentsIssuedByDataModel>().Insert(document);
+                var idDocument = DataModel.GetInstance<EntityDataModel<DocumentIssuedBy>>().Insert(document);
                 if (idDocument == -1) return;
                 document.IdDocumentIssuedBy = idDocument;
-                DataModel.GetInstance<DocumentsIssuedByDataModel>().Select().Rows.
+                DataModel.GetInstance<EntityDataModel<DocumentIssuedBy>>().Select().Rows.
                     Add(document.IdDocumentIssuedBy, document.DocumentIssuedByName);
                 comboBoxIssuedBy.SelectedValue = document.IdDocumentIssuedBy;
             }
@@ -535,7 +534,7 @@ namespace Registry.Viewport
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    TenancyPersonConverter.FillRow(tenancyPerson, newRow);
+                    EntityConverter<TenancyPerson>.FillRow(tenancyPerson, newRow);
                     GeneralDataModel.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
@@ -550,7 +549,7 @@ namespace Registry.Viewport
                         return;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     IsEditable = false;
-                    TenancyPersonConverter.FillRow(tenancyPerson, row);
+                    EntityConverter<TenancyPerson>.FillRow(tenancyPerson, row);
                     break;
             }
             RedrawDataGridRows();
@@ -732,9 +731,9 @@ namespace Registry.Viewport
             if ((GeneralBindingSource.Count == 0 || (GeneralBindingSource.Count == 1 && ViewportState == ViewportState.NewRowState))
                 && ParentType == ParentTypeEnum.Tenancy)
             {
-                var premisesAssoc = DataModel.GetInstance<TenancyPremisesAssocDataModel>();
-                var premises = DataModel.GetInstance<PremisesDataModel>();
-                var buildings = DataModel.GetInstance<BuildingsDataModel>();
+                var premisesAssoc = EntityDataModel<TenancyPremisesAssoc>.GetInstance();
+                var premises = EntityDataModel<Premise>.GetInstance();
+                var buildings = DataModel.GetInstance<EntityDataModel<Building>>();
                 var streets = DataModel.GetInstance<KladrStreetsDataModel>();
                 var currentPremise = (from premisesAssocRow in premisesAssoc.FilterDeletedRows()
                     join premisesRow in premises.FilterDeletedRows()
@@ -869,7 +868,7 @@ namespace Registry.Viewport
                             person.IdPerson = idPerson;
                             var row = (DataRowView)GeneralBindingSource.AddNew();
                             if (row == null) continue;
-                            TenancyPersonConverter.FillRow(person, row);
+                            EntityConverter<TenancyPerson>.FillRow(person, row);
                         }
                         IsEditable = true;
                     }

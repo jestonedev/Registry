@@ -5,7 +5,9 @@ using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -68,14 +70,14 @@ namespace Registry.Viewport
             }
             if (fieldName == null)
                 return false;
-            if (DataModelHelper.HasMunicipal((int)ParentRow[fieldName], entity)
+            if (OtherService.HasMunicipal((int)ParentRow[fieldName], entity)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
                 MessageBox.Show(@"У вас нет прав на изменение информации о реквизитах НПА муниципальных объектов",
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (DataModelHelper.HasNotMunicipal((int)ParentRow[fieldName], entity)
+            if (OtherService.HasNotMunicipal((int)ParentRow[fieldName], entity)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
                 MessageBox.Show(@"У вас нет прав на изменение информации о реквизитах НПА немуниципальных объектов",
@@ -127,7 +129,7 @@ namespace Registry.Viewport
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
                 var row = dataGridView.Rows[i];
-                list.Add(RestrictionConverter.FromRow(row));
+                list.Add(EntityConverter<Restriction>.FromRow(row));
             }
             return list;
         }
@@ -138,7 +140,7 @@ namespace Registry.Viewport
             for (var i = 0; i < GeneralBindingSource.Count; i++)
             {
                 var row = (DataRowView)GeneralBindingSource[i];
-                list.Add(RestrictionConverter.FromRow(row));
+                list.Add(EntityConverter<Restriction>.FromRow(row));
             }
             return list;
         }
@@ -152,8 +154,8 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<RestrictionsDataModel>();
-            _restrictionTypes = DataModel.GetInstance<RestrictionTypesDataModel>();
+            GeneralDataModel = EntityDataModel<Restriction>.GetInstance();
+            _restrictionTypes = EntityDataModel<RestrictionType>.GetInstance();
             // Дожидаемся дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
             _restrictionTypes.Select();
@@ -161,10 +163,10 @@ namespace Registry.Viewport
             switch (ParentType)
             {
                 case ParentTypeEnum.Premises:
-                    _restrictionAssoc =  DataModel.GetInstance<RestrictionsPremisesAssocDataModel>();
+                    _restrictionAssoc = EntityDataModel<RestrictionPremisesAssoc>.GetInstance();
                     break;
                 case ParentTypeEnum.Building:
-                    _restrictionAssoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>();
+                    _restrictionAssoc = EntityDataModel<RestrictionBuildingAssoc>.GetInstance();
                     break;
                 default:
                     throw new ViewportException("Неизвестный тип родительского объекта");
@@ -209,7 +211,7 @@ namespace Registry.Viewport
                     GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(RestrictionConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+                GeneralSnapshot.Rows.Add(EntityConverter<Restriction>.ToArray((DataRowView)GeneralBindingSource[i]));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
             AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_restrictions_CurrentItemChanged);
             AddEventHandler<DataRowChangeEventArgs>(GeneralSnapshot, "RowChanged", snapshot_restrictions_RowChanged);
@@ -270,7 +272,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(RestrictionConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+                GeneralSnapshot.Rows.Add(EntityConverter<Restriction>.ToArray((DataRowView)GeneralBindingSource[i]));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -317,23 +319,22 @@ namespace Registry.Viewport
                         RebuildFilter();
                         return;
                     }
-                    var assoc = new RestrictionObjectAssoc(idParent, idRestriction, null);
                     switch (ParentType)
                     {
                         case ParentTypeEnum.Building:
-                            DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>().Insert(assoc);
+                            EntityDataModel<RestrictionBuildingAssoc>.GetInstance().Insert(new RestrictionBuildingAssoc(idParent, idRestriction, null));
                             break;
                         case ParentTypeEnum.Premises:
-                            DataModel.GetInstance<RestrictionsPremisesAssocDataModel>().Insert(assoc);
+                            EntityDataModel<RestrictionPremisesAssoc>.GetInstance().Insert(new RestrictionPremisesAssoc(idParent, idRestriction, null));
                             break;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_restriction"] = idRestriction;
-                    GeneralDataModel.Select().Rows.Add(RestrictionConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(EntityConverter<Restriction>.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                     _restrictionAssoc.Select().Rows.Add(idParent, idRestriction);
                 }
                 else
                 {
-                    if (RestrictionConverter.FromRow(row) == restriction)
+                    if (EntityConverter<Restriction>.FromRow(row) == restriction)
                         continue;
                     if (GeneralDataModel.Update(restriction) == -1)
                     {
@@ -342,7 +343,7 @@ namespace Registry.Viewport
                         RebuildFilter();
                         return;
                     }
-                    RestrictionConverter.FillRow(restriction, row);
+                    EntityConverter<Restriction>.FillRow(restriction, row);
                 }
             }
             list = EntitiesListFromView();
@@ -465,7 +466,7 @@ namespace Registry.Viewport
                     //иначе - объект не принадлежит текущему родителю
                     rowIndex = GeneralBindingSource.Find("id_restriction", e.Row["id_restriction"]);
                     if (rowIndex != -1)
-                        GeneralSnapshot.Rows.Add(RestrictionConverter.ToArray(e.Row));
+                        GeneralSnapshot.Rows.Add(EntityConverter<Restriction>.ToArray(e.Row));
                     break;
             }
         }

@@ -65,7 +65,7 @@ namespace Registry.Viewport
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
                 var row = dataGridView.Rows[i];
-                list.Add(RestrictionTypeConverter.FromRow(row));
+                list.Add(EntityConverter<RestrictionType>.FromRow(row));
             }
             return list;
         }
@@ -76,7 +76,7 @@ namespace Registry.Viewport
             for (var i = 0; i < GeneralBindingSource.Count; i++)
             {
                 var row = (DataRowView)GeneralBindingSource[i];
-                list.Add(RestrictionTypeConverter.FromRow(row));
+                list.Add(EntityConverter<RestrictionType>.FromRow(row));
             }
             return list;
         }
@@ -90,7 +90,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<RestrictionTypesDataModel>();
+            GeneralDataModel = EntityDataModel<RestrictionType>.GetInstance();
             GeneralDataModel.Select();
 
             GeneralBindingSource = new BindingSource
@@ -105,7 +105,7 @@ namespace Registry.Viewport
                     GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(RestrictionTypeConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+                GeneralSnapshot.Rows.Add(EntityConverter<RestrictionType>.ToArray((DataRowView)GeneralBindingSource[i]));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
             AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_restriction_types_CurrentItemChanged);
 
@@ -152,7 +152,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(RestrictionTypeConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+                GeneralSnapshot.Rows.Add(EntityConverter<RestrictionType>.ToArray((DataRowView)GeneralBindingSource[i]));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -187,7 +187,7 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_restriction_type"] = idRestrictionType;
-                    GeneralDataModel.Select().Rows.Add(RestrictionTypeConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(EntityConverter<RestrictionType>.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
@@ -199,7 +199,7 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    RestrictionTypeConverter.FillRow(restrictionType, row);
+                    EntityConverter<RestrictionType>.FillRow(restrictionType, row);
                 }
             }
             list = EntitiesListFromView();
@@ -267,7 +267,7 @@ namespace Registry.Viewport
             var rowIndex = GeneralSnapshotBindingSource.Find("id_restriction_type", e.Row["id_restriction_type"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_restriction_type", e.Row["id_restriction_type"]) != -1)
             {
-                GeneralSnapshot.Rows.Add(RestrictionTypeConverter.ToArray(e.Row));
+                GeneralSnapshot.Rows.Add(EntityConverter<RestrictionType>.ToArray(e.Row));
             }
             else
                 if (rowIndex != -1)

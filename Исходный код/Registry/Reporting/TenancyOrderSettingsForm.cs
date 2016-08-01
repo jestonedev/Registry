@@ -3,6 +3,7 @@ using System.Data;
 using System.Windows.Forms;
 using System.Globalization;
 using Registry.DataModels.DataModels;
+using Registry.Entities;
 
 namespace Registry.Reporting
 {
@@ -157,7 +158,7 @@ namespace Registry.Reporting
         {
             InitializeComponent();
             DataModel.GetInstance<RentTypesDataModel>().Select();
-            DataModel.GetInstance<ExecutorsDataModel>().Select();
+            DataModel.GetInstance<EntityDataModel<Executor>>().Select();
             DataModel.GetInstance<KladrStreetsDataModel>().Select();
 
             var ds = DataModel.DataSet;

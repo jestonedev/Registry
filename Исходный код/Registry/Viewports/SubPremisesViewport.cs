@@ -7,7 +7,9 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Reporting;
 using Registry.Viewport.EntityConverters;
 using Security;
@@ -83,7 +85,7 @@ namespace Registry.Viewport
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
                 var row = dataGridView.Rows[i];
-                var sp = SubPremiseConverter.FromRow(row);
+                var sp = EntityConverter<SubPremise>.FromRow(row);
                 list.Add(sp);
             }
             return list;
@@ -95,7 +97,7 @@ namespace Registry.Viewport
             for (var i = 0; i < GeneralBindingSource.Count; i++)
             {
                 var row = (DataRowView)GeneralBindingSource[i];
-                list.Add(SubPremiseConverter.FromRow(row));
+                list.Add(EntityConverter<SubPremise>.FromRow(row));
             }
             return list;
         }
@@ -109,7 +111,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<SubPremisesDataModel>();
+            GeneralDataModel = EntityDataModel<SubPremise>.GetInstance();
             _objectStates = DataModel.GetInstance<ObjectStatesDataModel>();
             // Дожидаемся дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
@@ -141,7 +143,7 @@ namespace Registry.Viewport
                 GeneralSnapshot.Columns.Add(new DataColumn(GeneralDataModel.Select().Columns[i].ColumnName, GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(SubPremiseConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+                GeneralSnapshot.Rows.Add(EntityConverter<SubPremise>.ToArray((DataRowView)GeneralBindingSource[i]));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
             AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_sub_premises_CurrentItemChanged);
 
@@ -213,7 +215,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(SubPremiseConverter.ToArray((DataRowView)GeneralBindingSource[i]));
+                GeneralSnapshot.Rows.Add(EntityConverter<SubPremise>.ToArray((DataRowView)GeneralBindingSource[i]));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -267,14 +269,14 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_sub_premises"] = idSubPremises;
-                    GeneralDataModel.Select().Rows.Add(SubPremiseConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(EntityConverter<SubPremise>.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
-                    var subPremiseFromView = SubPremiseConverter.FromRow(row);
+                    var subPremiseFromView = EntityConverter<SubPremise>.FromRow(row);
                     if (subPremiseFromView == subPremise)
                         continue;
-                    if (subPremiseFromView.IdSubPremises != null && DataModelHelper.HasMunicipal(subPremiseFromView.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+                    if (subPremiseFromView.IdSubPremises != null && OtherService.HasMunicipal(subPremiseFromView.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                     {
                         MessageBox.Show(@"Вы не можете изменить информацию по данной комнате, т.к. она является муниципальной",
                             @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -282,7 +284,7 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    if (subPremiseFromView.IdSubPremises != null && DataModelHelper.HasNotMunicipal(subPremiseFromView.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+                    if (subPremiseFromView.IdSubPremises != null && OtherService.HasNotMunicipal(subPremiseFromView.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                     {
                         MessageBox.Show(@"Вы не можете изменить информацию по данной комнате, т.к. она является немуниципальной",
                             @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -296,7 +298,7 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    SubPremiseConverter.FillRow(subPremise, row);
+                    EntityConverter<SubPremise>.FillRow(subPremise, row);
                 }
             }
             list = EntitiesListFromView();
@@ -310,7 +312,7 @@ namespace Registry.Viewport
                         ((int)dataGridView.Rows[j].Cells["id_sub_premises"].Value == subPremise.IdSubPremises))
                         rowIndex = j;
                 if (rowIndex != -1) continue;
-                if (subPremise.IdSubPremises != null && DataModelHelper.HasMunicipal(subPremise.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
+                if (subPremise.IdSubPremises != null && OtherService.HasMunicipal(subPremise.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                 {
                     MessageBox.Show(@"Вы не можете удалить муниципальную комнату, т.к. не имеете на это прав",
                         @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -318,7 +320,7 @@ namespace Registry.Viewport
                     GeneralDataModel.EditingNewRecord = false;
                     return;
                 }
-                if (subPremise.IdSubPremises != null && DataModelHelper.HasNotMunicipal(subPremise.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
+                if (subPremise.IdSubPremises != null && OtherService.HasNotMunicipal(subPremise.IdSubPremises.Value, EntityType.SubPremise) && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                 {
                     MessageBox.Show(@"Вы не можете удалить немуниципальную комнату, т.к. не имеете на это прав",
                         @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -550,7 +552,7 @@ namespace Registry.Viewport
             var rowIndex = GeneralSnapshotBindingSource.Find("id_sub_premises", e.Row["id_sub_premises"]);
             if (rowIndex == -1 && GeneralBindingSource.Find("id_sub_premises", e.Row["id_sub_premises"]) != -1)
             {
-                GeneralSnapshot.Rows.Add(SubPremiseConverter.ToArray(e.Row));
+                GeneralSnapshot.Rows.Add(EntityConverter<SubPremise>.ToArray(e.Row));
             } else
             if (rowIndex != -1)
             {

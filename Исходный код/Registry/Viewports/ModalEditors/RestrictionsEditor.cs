@@ -3,7 +3,10 @@ using System.Data;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
+using Registry.Viewport.EntityConverters;
 using Security;
 
 namespace Registry.Viewport
@@ -13,7 +16,7 @@ namespace Registry.Viewport
         private ViewportState state = ViewportState.NewRowState;
         private Restriction restriction;
         private ParentTypeEnum parentType;
-        private DataModel restrictions = DataModel.GetInstance<RestrictionsDataModel>();
+        private DataModel restrictions = EntityDataModel<Restriction>.GetInstance();
         private DataModel restriction_assoc;
         private DataModel restriction_types;
         private BindingSource v_restriction_types;
@@ -26,13 +29,17 @@ namespace Registry.Viewport
             }
             set
             {
-                if (value == ParentTypeEnum.Premises)
-                    restriction_assoc = DataModel.GetInstance<RestrictionsPremisesAssocDataModel>();
-                else
-                    if (value == ParentTypeEnum.Building)
-                        restriction_assoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>();
-                    else
+                switch (value)
+                {
+                    case ParentTypeEnum.Premises:
+                        restriction_assoc = EntityDataModel<RestrictionPremisesAssoc>.GetInstance();
+                        break;
+                    case ParentTypeEnum.Building:
+                        restriction_assoc = EntityDataModel<RestrictionBuildingAssoc>.GetInstance();
+                        break;
+                    default:
                         throw new ViewportException("Неизвестный тип родительского объекта");
+                }
                 parentType = value;
             }
         }
@@ -53,13 +60,13 @@ namespace Registry.Viewport
                 }
                 if (value == ViewportState.ModifyRowState)
                 {
-                    Text = "Изменить реквизит";
-                    vButtonSave.Text = "Изменить";
+                    Text = @"Изменить реквизит";
+                    vButtonSave.Text = @"Изменить";
                 }
                 else
                 {
-                    Text = "Добавить реквизит";
-                    vButtonSave.Text = "Добавить";
+                    Text = @"Добавить реквизит";
+                    vButtonSave.Text = @"Добавить";
                 }
                 state = value;
             }
@@ -69,11 +76,13 @@ namespace Registry.Viewport
         {
             get
             {
-                var restrictionValue = new Restriction();
-                restrictionValue.Date = ViewportHelper.ValueOrNull(dateTimePickerRestrictionDate);
-                restrictionValue.Description = ViewportHelper.ValueOrNull(textBoxRestrictionDescription);
-                restrictionValue.Number = ViewportHelper.ValueOrNull(textBoxRestrictionNumber);
-                restrictionValue.IdRestrictionType = ViewportHelper.ValueOrNull<int>(comboBoxIdRestrictionType);
+                var restrictionValue = new Restriction
+                {
+                    Date = ViewportHelper.ValueOrNull(dateTimePickerRestrictionDate),
+                    Description = ViewportHelper.ValueOrNull(textBoxRestrictionDescription),
+                    Number = ViewportHelper.ValueOrNull(textBoxRestrictionNumber),
+                    IdRestrictionType = ViewportHelper.ValueOrNull<int>(comboBoxIdRestrictionType)
+                };
                 if (state == ViewportState.ModifyRowState)
                     restrictionValue.IdRestriction = restriction.IdRestriction;
                 return restrictionValue;
@@ -85,7 +94,7 @@ namespace Registry.Viewport
                     return;
                 textBoxRestrictionNumber.Text = value.Number;
                 textBoxRestrictionDescription.Text = value.Description;
-                dateTimePickerRestrictionDate.Value = value.Date == null ? DateTime.Now : value.Date.Value;
+                dateTimePickerRestrictionDate.Value = value.Date ?? DateTime.Now;
                 comboBoxIdRestrictionType.SelectedValue = value.IdRestrictionType;
             }
         }
@@ -93,9 +102,8 @@ namespace Registry.Viewport
         public RestrictionsEditor()
         {
             InitializeComponent();
-            restriction_types = DataModel.GetInstance<RestrictionTypesDataModel>();
-            v_restriction_types = new BindingSource();
-            v_restriction_types.DataSource = restriction_types.Select();
+            restriction_types = EntityDataModel<RestrictionType>.GetInstance();
+            v_restriction_types = new BindingSource {DataSource = restriction_types.Select()};
             comboBoxIdRestrictionType.DataSource = v_restriction_types;
             comboBoxIdRestrictionType.ValueMember = "id_restriction_type";
             comboBoxIdRestrictionType.DisplayMember = "restriction_type";
@@ -116,18 +124,18 @@ namespace Registry.Viewport
                     entity = EntityType.Premise;
                     fieldName = "id_premises";
                 }
-            if (DataModelHelper.HasMunicipal((int)ParentRow[fieldName], entity)
+            if (OtherService.HasMunicipal((int)ParentRow[fieldName], entity)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
-                MessageBox.Show("У вас нет прав на изменение информации о реквизитах НПА муниципальных объектов",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"У вас нет прав на изменение информации о реквизитах НПА муниципальных объектов",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (DataModelHelper.HasNotMunicipal((int)ParentRow[fieldName], entity)
+            if (OtherService.HasNotMunicipal((int)ParentRow[fieldName], entity)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
-                MessageBox.Show("У вас нет прав на изменение информации о реквизитах НПА немуниципальных объектов",
-                    "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"У вас нет прав на изменение информации о реквизитах НПА немуниципальных объектов",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
             return true;
@@ -139,7 +147,7 @@ namespace Registry.Viewport
                 return false;
             if (restriction.IdRestrictionType == null)
             {
-                MessageBox.Show("Не выбран тип реквизита", "Ошибка",
+                MessageBox.Show(@"Не выбран тип реквизита", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
@@ -151,42 +159,38 @@ namespace Registry.Viewport
             var restriction = RestrictionValue;
             if (!ValidateData(restriction))
                 return;
-            var id_parent = ((ParentType == ParentTypeEnum.Premises) && ParentRow != null) ? (int)ParentRow["id_premises"] :
-                        ((ParentType == ParentTypeEnum.Building) && ParentRow != null) ? (int)ParentRow["id_building"] : -1;
+            var idParent = (ParentType == ParentTypeEnum.Premises) && ParentRow != null ? (int)ParentRow["id_premises"] :
+                        (ParentType == ParentTypeEnum.Building) && ParentRow != null ? (int)ParentRow["id_building"] : -1;
             if (state == ViewportState.NewRowState)
             {
-                if (id_parent == -1)
+                if (idParent == -1)
                 {
-                    MessageBox.Show("Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
-                        "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                    MessageBox.Show(@"Неизвестный родительский элемент. Если вы видите это сообщение, обратитесь к администратору",
+                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
-                var id_restriction = restrictions.Insert(restriction);
-                if (id_restriction == -1)
+                var idRestriction = restrictions.Insert(restriction);
+                if (idRestriction == -1)
                     return;
-                var assoc = new RestrictionObjectAssoc(id_parent, id_restriction, null);
                 switch (ParentType)
                 {
                     case ParentTypeEnum.Building:
-                        DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>().Insert(assoc);
+                        EntityDataModel<RestrictionBuildingAssoc>.GetInstance().Insert(new RestrictionBuildingAssoc(idParent, idRestriction, null));
                         break;
                     case ParentTypeEnum.Premises:
-                        DataModel.GetInstance<RestrictionsPremisesAssocDataModel>().Insert(assoc);
+                        EntityDataModel<RestrictionPremisesAssoc>.GetInstance().Insert(new RestrictionPremisesAssoc(idParent, idRestriction, null));
                         break;
                 }
                 restrictions.EditingNewRecord = true;
-                restrictions.Select().Rows.Add(id_restriction, restriction.IdRestrictionType, restriction.Number, restriction.Date, restriction.Description);
-                restriction_assoc.Select().Rows.Add(id_parent, id_restriction);
+                restrictions.Select().Rows.Add(idRestriction, restriction.IdRestrictionType, restriction.Number, restriction.Date, restriction.Description);
+                restriction_assoc.Select().Rows.Add(idParent, idRestriction);
                 restrictions.EditingNewRecord = false;
             } else
             {
                 if (restrictions.Update(restriction) == -1)
                     return;
                 var row = restrictions.Select().Rows.Find(restriction.IdRestriction);
-                row["id_restriction_type"] = restriction.IdRestrictionType == null ? DBNull.Value : (object)restriction.IdRestrictionType;
-                row["number"] = restriction.Number == null ? DBNull.Value : (object)restriction.Number;
-                row["date"] = restriction.Date == null ? DBNull.Value : (object)restriction.Date;
-                row["description"] = restriction.Description == null ? DBNull.Value : (object)restriction.Description;
+                EntityConverter<Restriction>.FillRow(restriction, row);
             }
             DialogResult = DialogResult.OK;
         }

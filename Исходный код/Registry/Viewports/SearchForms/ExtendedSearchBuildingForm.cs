@@ -6,22 +6,14 @@ using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
+using Registry.Entities;
 
 namespace Registry.Viewport.SearchForms
 {
     internal partial class ExtendedSearchBuildingForm : SearchForm
     {
-        DataModel kladr;
-        DataModel regions;
-        DataModel fundTypes;
-        DataModel object_states;
-        DataModel ownership_right_types;
-
-        BindingSource v_kladr;
-        BindingSource v_regions;
-        BindingSource v_fundTypes;
-        BindingSource v_object_states;
-        BindingSource v_ownership_right_types;
+        private readonly BindingSource _vKladr;
 
         internal override string GetFilter()
         {
@@ -82,8 +74,8 @@ namespace Registry.Viewport.SearchForms
             {
                 if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                string array = string.Empty;
-                for (int i = 0; i < checkedListBox1.CheckedItems.Count; i++)
+                var array = string.Empty;
+                for (var i = 0; i < checkedListBox1.CheckedItems.Count; i++)
                 {
                     var row = (DataRowView)checkedListBox1.CheckedItems[i];
                     array += checkedListBox1.CheckedItems.IndexOf(row) == checkedListBox1.CheckedItems.Count - 1 ?
@@ -95,24 +87,24 @@ namespace Registry.Viewport.SearchForms
                 includedBuildings = DataModelHelper.Intersect(null, new List<int>() { Convert.ToInt32(numericUpDownIDBuilding.Value) });
             if ((checkBoxFundTypeEnable.Checked) && (comboBoxStreet.SelectedValue != null))
             {
-                var buildingsIds = DataModelHelper.BuildingIDsByCurrentFund(
+                var buildingsIds = BuildingService.BuildingIDsByCurrentFund(
                     Convert.ToInt32(comboBoxFundType.SelectedValue, CultureInfo.InvariantCulture));
                 includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingsIds);
             }
             if (checkBoxContractNumberEnable.Checked)
             {
-                var buildingsIds = DataModelHelper.BuildingIDsByRegistrationNumber(textBoxContractNumber.Text.Trim().Replace("'", ""));
+                var buildingsIds = BuildingService.BuildingIDsByRegistrationNumber(textBoxContractNumber.Text.Trim().Replace("'", ""));
                 includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingsIds);
             }
             if (checkBoxTenantSNPEnable.Checked)
             {
                 var snp = textBoxTenantSNP.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var buildingsIds = DataModelHelper.BuildingIdsBySnp(snp, row => row.Field<int?>("id_kinship") == 1);
+                var buildingsIds = BuildingService.BuildingIdsBySnp(snp, row => row.Field<int?>("id_kinship") == 1);
                 includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingsIds);
             }
             if ((checkBoxOwnershipTypeEnable.Checked) && (comboBoxOwnershipType.SelectedValue != null))
             {
-                var buildingsIds = DataModelHelper.BuildingIDsByOwnershipType(
+                var buildingsIds = BuildingService.BuildingIDsByOwnershipType(
                     int.Parse(comboBoxOwnershipType.SelectedValue.ToString(), CultureInfo.InvariantCulture));
                 includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingsIds);
             }
@@ -174,39 +166,39 @@ namespace Registry.Viewport.SearchForms
         public ExtendedSearchBuildingForm()
         {
             InitializeComponent();
-            kladr = DataModel.GetInstance<KladrStreetsDataModel>();
-            fundTypes = DataModel.GetInstance<FundTypesDataModel>();
-            object_states = DataModel.GetInstance<ObjectStatesDataModel>();
-            regions = DataModel.GetInstance<KladrRegionsDataModel>();
-            ownership_right_types = DataModel.GetInstance<OwnershipRightTypesDataModel>();
+            var kladr = DataModel.GetInstance<KladrStreetsDataModel>();
+            var fundTypes = DataModel.GetInstance<FundTypesDataModel>();
+            var objectStates = DataModel.GetInstance<ObjectStatesDataModel>();
+            var regions = DataModel.GetInstance<KladrRegionsDataModel>();
+            DataModel ownershipRightTypes = EntityDataModel<OwnershipRightType>.GetInstance();
 
-            v_kladr = new BindingSource {DataSource = kladr.Select()};
+            _vKladr = new BindingSource {DataSource = kladr.Select()};
 
-            v_regions = new BindingSource {DataSource = regions.Select()};
+            var vRegions = new BindingSource {DataSource = regions.Select()};
 
-            v_fundTypes = new BindingSource {DataSource = fundTypes.Select()};
+            var vFundTypes = new BindingSource {DataSource = fundTypes.Select()};
 
-            v_object_states = new BindingSource {DataSource = object_states.Select()};
+            var vObjectStates = new BindingSource {DataSource = objectStates.Select()};
 
-            v_ownership_right_types = new BindingSource {DataSource = ownership_right_types.Select()};
+            var vOwnershipRightTypes = new BindingSource {DataSource = ownershipRightTypes.Select()};
 
-            comboBoxStreet.DataSource = v_kladr;
+            comboBoxStreet.DataSource = _vKladr;
             comboBoxStreet.ValueMember = "id_street";
             comboBoxStreet.DisplayMember = "street_name";
 
-            comboBoxFundType.DataSource = v_fundTypes;
+            comboBoxFundType.DataSource = vFundTypes;
             comboBoxFundType.ValueMember = "id_fund_type";
             comboBoxFundType.DisplayMember = "fund_type";
 
-            checkedListBox1.DataSource = v_object_states;
+            checkedListBox1.DataSource = vObjectStates;
             checkedListBox1.ValueMember = "id_state";
             checkedListBox1.DisplayMember = "state_neutral";            
 
-            comboBoxRegion.DataSource = v_regions;
+            comboBoxRegion.DataSource = vRegions;
             comboBoxRegion.ValueMember = "id_region";
             comboBoxRegion.DisplayMember = "region";
 
-            comboBoxOwnershipType.DataSource = v_ownership_right_types;
+            comboBoxOwnershipType.DataSource = vOwnershipRightTypes;
             comboBoxOwnershipType.ValueMember = "id_ownership_right_type";
             comboBoxOwnershipType.DisplayMember = "ownership_right_type";
 
@@ -270,8 +262,8 @@ namespace Registry.Viewport.SearchForms
             if (comboBoxStreet.Items.Count > 0)
             {
                 if (comboBoxStreet.SelectedValue == null)
-                    comboBoxStreet.SelectedValue = v_kladr[v_kladr.Position];
-                comboBoxStreet.Text = ((DataRowView)v_kladr[v_kladr.Position])["street_name"].ToString();
+                    comboBoxStreet.SelectedValue = _vKladr[_vKladr.Position];
+                comboBoxStreet.Text = ((DataRowView)_vKladr[_vKladr.Position])["street_name"].ToString();
             }
             if (comboBoxStreet.SelectedValue == null)
                 comboBoxStreet.Text = "";
@@ -285,7 +277,7 @@ namespace Registry.Viewport.SearchForms
                 var text = comboBoxStreet.Text;
                 var selectionStart = comboBoxStreet.SelectionStart;
                 var selectionLength = comboBoxStreet.SelectionLength;
-                v_kladr.Filter = "street_name like '%" + comboBoxStreet.Text + "%'";
+                _vKladr.Filter = "street_name like '%" + comboBoxStreet.Text + "%'";
                 comboBoxStreet.Text = text;
                 comboBoxStreet.SelectionStart = selectionStart;
                 comboBoxStreet.SelectionLength = selectionLength;

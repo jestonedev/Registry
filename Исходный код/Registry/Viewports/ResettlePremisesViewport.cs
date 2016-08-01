@@ -13,6 +13,8 @@ using Registry.Viewport.SearchForms;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 using System.Linq;
+using Registry.DataModels.Services;
+using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 
 namespace Registry.Viewport
@@ -79,15 +81,15 @@ namespace Registry.Viewport
                     return true;
             }
             //Проверяем комнаты
-            listFromView = ((ResettleSubPremisesDetails)dataGridView.DetailsControl).ResettleSubPremisesFromView();
-            listFromViewport = ((ResettleSubPremisesDetails)dataGridView.DetailsControl).ResettleSubPremisesFromViewport();
-            if (listFromView.Count != listFromViewport.Count)
+            var listRoomsFromView = ((ResettleSubPremisesDetails)dataGridView.DetailsControl).ResettleSubPremisesFromView();
+            var listRoomsFromViewport = ((ResettleSubPremisesDetails)dataGridView.DetailsControl).ResettleSubPremisesFromViewport();
+            if (listRoomsFromView.Count != listRoomsFromViewport.Count)
                 return true;
-            for (var i = 0; i < listFromView.Count; i++)
+            for (var i = 0; i < listRoomsFromView.Count; i++)
             {
                 founded = false;
-                for (var j = 0; j < listFromViewport.Count; j++)
-                    if (listFromView[i] == listFromViewport[j])
+                for (var j = 0; j < listRoomsFromViewport.Count; j++)
+                    if (listRoomsFromView[i] == listRoomsFromViewport[j])
                         founded = true;
                 if (!founded)
                     return true;
@@ -102,31 +104,31 @@ namespace Registry.Viewport
                 GeneralBindingSource.Position = position;
         }
 
-        private List<ResettleObject> ResettlePremisesFromViewport()
+        private List<ResettlePremisesFromAssoc> ResettlePremisesFromViewport()
         {
-            var list = new List<ResettleObject>();
+            var list = new List<ResettlePremisesFromAssoc>();
             for (var i = 0; i < _snapshotResettlePremises.Rows.Count; i++)
             {
                 var row = _snapshotResettlePremises.Rows[i];
                 if (Convert.ToBoolean(row["is_checked"], CultureInfo.InvariantCulture) == false)
                     continue;
-                var ro = new ResettleObject
+                var ro = new ResettlePremisesFromAssoc
                 {
                     IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc"),
                     IdProcess = ViewportHelper.ValueOrNull<int>(ParentRow, "id_process"),
-                    IdObject = ViewportHelper.ValueOrNull<int>(row, "id_premises")
+                    IdPremises = ViewportHelper.ValueOrNull<int>(row, "id_premises")
                 };
                 list.Add(ro);
             }
             return list;
         }
 
-        private List<ResettleObject> ResettlePremisesFromView()
+        private List<ResettlePremisesFromAssoc> ResettlePremisesFromView()
         {
             return (from DataRowView row in _vResettlePremises select ResettlePremiseConverter.FromRow(row)).ToList();
         }
 
-        private static bool ValidateResettlePremises(List<ResettleObject> resettlePremises)
+        private static bool ValidateResettlePremises(List<ResettlePremisesFromAssoc> resettlePremises)
         {
             return true;
         }
@@ -140,15 +142,15 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<PremisesDataModel>();
+            GeneralDataModel = EntityDataModel<Premise>.GetInstance();
             _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
-            _buildings = DataModel.GetInstance<BuildingsDataModel>();
+            _buildings = DataModel.GetInstance<EntityDataModel<Building>>();
             _premisesTypes = DataModel.GetInstance<PremisesTypesDataModel>();
-            _subPremises = DataModel.GetInstance<SubPremisesDataModel>();
+            _subPremises = EntityDataModel<SubPremise>.GetInstance();
 
-            _resettlePremises = _way == ResettleEstateObjectWay.From ? 
-                DataModel.GetInstance<ResettlePremisesFromAssocDataModel>() : 
-                DataModel.GetInstance<ResettlePremisesToAssocDataModel>();
+            _resettlePremises = _way == ResettleEstateObjectWay.From ?
+                (DataModel) EntityDataModel<ResettlePremisesFromAssoc>.GetInstance() :
+                EntityDataModel<ResettlePremisesToAssoc>.GetInstance();
 
             // Ожидаем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
@@ -274,14 +276,14 @@ namespace Registry.Viewport
             if (MessageBox.Show(@"Вы действительно хотите удалить это помещение?", @"Внимание", 
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                if (DataModelHelper.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
+                if (OtherService.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                 {
                     MessageBox.Show(@"У вас нет прав на удаление муниципальных жилых помещений и помещений, в которых присутствуют муниципальные комнаты",
                         @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
-                if (DataModelHelper.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
+                if (OtherService.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                 {
                     MessageBox.Show(@"У вас нет прав на удаление немуниципальных жилых помещений и помещений, в которых присутствуют немуниципальные комнаты",
@@ -385,8 +387,8 @@ namespace Registry.Viewport
         {
             _syncViews = false;
             dataGridView.EndEdit();
-            var resettlePremisesFromAssoc = DataModel.GetInstance<ResettlePremisesFromAssocDataModel>();
-            var resettlePremisesToAssoc = DataModel.GetInstance<ResettlePremisesToAssocDataModel>();
+            var resettlePremisesFromAssoc = EntityDataModel<ResettlePremisesFromAssoc>.GetInstance();
+            var resettlePremisesToAssoc = EntityDataModel<ResettlePremisesToAssoc>.GetInstance();
             resettlePremisesFromAssoc.EditingNewRecord = true;
             resettlePremisesToAssoc.EditingNewRecord = true;
             var list = ResettlePremisesFromViewport();
@@ -417,7 +419,7 @@ namespace Registry.Viewport
                 {
                     var idAssoc = _way == ResettleEstateObjectWay.From ? 
                         resettlePremisesFromAssoc.Insert(list[i]) : 
-                        resettlePremisesToAssoc.Insert(list[i]);
+                        resettlePremisesToAssoc.Insert(ResettlePremiseConverter.CastFromToAssoc(list[i]));
                     if (idAssoc == -1)
                     {
                         _syncViews = true;
@@ -426,8 +428,8 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)_vSnapshotResettlePremises[
-                        _vSnapshotResettlePremises.Find("id_premises", list[i].IdObject)])["id_assoc"] = idAssoc;
-                    _resettlePremises.Select().Rows.Add(idAssoc, list[i].IdObject, list[i].IdProcess, 0);
+                        _vSnapshotResettlePremises.Find("id_premises", list[i].IdPremises)])["id_assoc"] = idAssoc;
+                    _resettlePremises.Select().Rows.Add(idAssoc, list[i].IdPremises, list[i].IdProcess, 0);
                 }
             }
             list = ResettlePremisesFromView();
@@ -462,7 +464,7 @@ namespace Registry.Viewport
                             snapshotRowIndex = j;
                     if (snapshotRowIndex != -1)
                     {
-                        var premisesRowIndex = GeneralBindingSource.Find("id_premises", list[i].IdObject);
+                        var premisesRowIndex = GeneralBindingSource.Find("id_premises", list[i].IdPremises);
                         ((DataRowView)_vSnapshotResettlePremises[snapshotRowIndex]).Delete();
                         if (premisesRowIndex != -1)
                             dataGridView.InvalidateRow(premisesRowIndex);

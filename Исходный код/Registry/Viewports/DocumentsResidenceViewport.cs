@@ -55,7 +55,7 @@ namespace Registry.Viewport
             {
                 if (dataGridView.Rows[i].IsNewRow) continue;
                 var row = dataGridView.Rows[i];
-                list.Add(DocumentResidenceConverter.FromRow(row));
+                list.Add(EntityConverter<DocumentResidence>.FromRow(row));
             }
             return list;
         }
@@ -66,7 +66,7 @@ namespace Registry.Viewport
             foreach (var document in GeneralBindingSource)
             {
                 var row = (DataRowView)document;
-                list.Add(DocumentResidenceConverter.FromRow(row));
+                list.Add(EntityConverter<DocumentResidence>.FromRow(row));
             }
             return list;
         }
@@ -80,7 +80,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<DocumentsResidenceDataModel>();
+            GeneralDataModel = DataModel.GetInstance<EntityDataModel<DocumentResidence>>();
 
             GeneralDataModel.Select();
 
@@ -96,7 +96,7 @@ namespace Registry.Viewport
                     GeneralDataModel.Select().Columns[i].ColumnName, GeneralDataModel.Select().Columns[i].DataType));
             //Загружаем данные snapshot-модели из original-view
             foreach (var documentResidence in GeneralBindingSource)
-                GeneralSnapshot.Rows.Add(DocumentResidenceConverter.ToArray((DataRowView)documentResidence));
+                GeneralSnapshot.Rows.Add(EntityConverter<DocumentResidence>.ToArray((DataRowView)documentResidence));
             GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
             AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_documents_residence_CurrentItemChanged);
 
@@ -145,7 +145,7 @@ namespace Registry.Viewport
         {
             GeneralSnapshot.Clear();
             foreach (var document in GeneralBindingSource)
-                GeneralSnapshot.Rows.Add(DocumentResidenceConverter.ToArray((DataRowView)document));
+                GeneralSnapshot.Rows.Add(EntityConverter<DocumentResidence>.ToArray((DataRowView)document));
             MenuCallback.EditingStateUpdate();
         }
 
@@ -180,12 +180,12 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)GeneralSnapshotBindingSource[i])["id_document_residence"] = idDocumentResidence;
-                    GeneralDataModel.Select().Rows.Add(DocumentResidenceConverter.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
+                    GeneralDataModel.Select().Rows.Add(EntityConverter<DocumentResidence>.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
                 }
                 else
                 {
 
-                    if (DocumentResidenceConverter.FromRow(row) == document)
+                    if (EntityConverter<DocumentResidence>.FromRow(row) == document)
                         continue;
                     if (GeneralDataModel.Update(list[i]) == -1)
                     {

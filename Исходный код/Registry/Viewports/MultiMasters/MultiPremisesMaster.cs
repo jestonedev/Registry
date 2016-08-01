@@ -4,7 +4,9 @@ using System.Data;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Reporting;
 using Registry.Viewport.EntityConverters;
 using Registry.Viewport.ModalEditors;
@@ -26,7 +28,7 @@ namespace Registry.Viewport.MultiMasters
                          | DockAreas.DockTop)
                         | DockAreas.DockBottom;
             _menuCallback = menuCallback;
-            _premisesDataModel = DataModel.GetInstance<PremisesDataModel>();
+            _premisesDataModel = EntityDataModel<Premise>.GetInstance();
             _premisesDataModel.Select();
             _premises.DataSource = DataModel.DataSet;
             _premises.DataMember = "premises";
@@ -64,7 +66,7 @@ namespace Registry.Viewport.MultiMasters
         {
             if (_premises.Count <= e.RowIndex) return;
             var row = ((DataRowView)_premises[e.RowIndex]);
-            var buildingRow = DataModel.GetInstance<BuildingsDataModel>().Select().Rows.Find(row["id_building"]);
+            var buildingRow = DataModel.GetInstance<EntityDataModel<Building>>().Select().Rows.Find(row["id_building"]);
             if (buildingRow == null)
                 return;
             switch (dataGridView.Columns[e.ColumnIndex].Name)
@@ -205,7 +207,7 @@ namespace Registry.Viewport.MultiMasters
 
         private static bool ValidatePermissions(int idPremises)
         {
-            if (DataModelHelper.HasMunicipal(idPremises, EntityType.Premise)
+            if (OtherService.HasMunicipal(idPremises, EntityType.Premise)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
                 MessageBox.Show(@"У вас нет прав на изменение информации о реквизитах НПА муниципальных объектов. "+
@@ -213,7 +215,7 @@ namespace Registry.Viewport.MultiMasters
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (DataModelHelper.HasNotMunicipal(idPremises, EntityType.Premise)
+            if (OtherService.HasNotMunicipal(idPremises, EntityType.Premise)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
                 MessageBox.Show(@"У вас нет прав на изменение информации о реквизитах НПА немуниципальных объектов"+
@@ -247,8 +249,8 @@ namespace Registry.Viewport.MultiMasters
 
         private void toolStripButtonRestrictions_Click(object sender, EventArgs e)
         {
-            var restrictions = DataModel.GetInstance<RestrictionsDataModel>();
-            var restrictionsAssoc = DataModel.GetInstance<RestrictionsPremisesAssocDataModel>();
+            var restrictions = EntityDataModel<Restriction>.GetInstance();
+            var restrictionsAssoc = EntityDataModel<RestrictionPremisesAssoc>.GetInstance();
             if (restrictions.EditingNewRecord || restrictionsAssoc.EditingNewRecord)
             {
                 MessageBox.Show(@"Форма реквизитов уже находится в режиме добавления новой записи. "+
@@ -297,9 +299,7 @@ namespace Registry.Viewport.MultiMasters
                             @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                         break;
                     }
-                    
-                    var assoc = new RestrictionObjectAssoc(idPremises, idRestriction, null);
-                    restrictionsAssoc.Insert(assoc);
+                    restrictionsAssoc.Insert(new RestrictionPremisesAssoc(idPremises, idRestriction, null));
                     restrictions.EditingNewRecord = true;
                     restrictions.Select().Rows.Add(idRestriction, restriction.IdRestrictionType, restriction.Number, restriction.Date, restriction.Description);
                     restrictionsAssoc.Select().Rows.Add(idPremises, idRestriction);
@@ -314,8 +314,8 @@ namespace Registry.Viewport.MultiMasters
 
         private void toolStripButtonOwnerships_Click(object sender, EventArgs e)
         {
-            var ownershipsRights = DataModel.GetInstance<OwnershipsRightsDataModel>();
-            var ownershipsRightsAssoc = DataModel.GetInstance<OwnershipPremisesAssocDataModel>();
+            var ownershipsRights = EntityDataModel<OwnershipRight>.GetInstance();
+            var ownershipsRightsAssoc = EntityDataModel<OwnershipRightPremisesAssoc>.GetInstance();
             if (ownershipsRights.EditingNewRecord || ownershipsRightsAssoc.EditingNewRecord)
             {
                 MessageBox.Show(@"Форма ограничений уже находится в режиме добавления новой записи. " +
@@ -363,7 +363,7 @@ namespace Registry.Viewport.MultiMasters
                         break;
                     }
 
-                    var assoc = new OwnershipRightObjectAssoc(idPremises, idOwnershipRight);
+                    var assoc = new OwnershipRightPremisesAssoc(idPremises, idOwnershipRight);
                     ownershipsRightsAssoc.Insert(assoc);
                     ownershipsRights.EditingNewRecord = true;
                     ownershipsRights.Select().Rows.Add(idOwnershipRight, ownershipRight.IdOwnershipRightType,
@@ -404,7 +404,7 @@ namespace Registry.Viewport.MultiMasters
                     {
                         continue;
                     }
-                    var premise = PremiseConverter.FromRow((DataRowView) _premises[i]);
+                    var premise = EntityConverter<Premise>.FromRow((DataRowView)_premises[i]);
                     premise.IdState = form.IdObjectState;
                     if (_premisesDataModel.Update(premise) == -1)
                     {
@@ -445,7 +445,7 @@ namespace Registry.Viewport.MultiMasters
                     {
                         continue;
                     }
-                    var premise = PremiseConverter.FromRow((DataRowView)_premises[i]);
+                    var premise = EntityConverter<Premise>.FromRow((DataRowView)_premises[i]);
                     premise.RegDate = form.RegDate;
                     if (_premisesDataModel.Update(premise) == -1)
                     {

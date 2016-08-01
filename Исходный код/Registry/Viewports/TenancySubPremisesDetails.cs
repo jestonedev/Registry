@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 
 namespace Registry.Viewport
 {
@@ -64,7 +65,7 @@ namespace Registry.Viewport
             snapshot_tenancy_sub_premises.Columns.Add("is_checked").DataType = typeof(bool);
             snapshot_tenancy_sub_premises.Columns.Add("rent_total_area").DataType = typeof(double);
 
-            tenancy_sub_premises = DataModel.GetInstance<TenancySubPremisesAssocDataModel>();
+            tenancy_sub_premises = EntityDataModel<TenancySubPremisesAssoc>.GetInstance();
             tenancy_sub_premises.Select();
 
             var ds = DataModel.DataSet;
@@ -77,8 +78,7 @@ namespace Registry.Viewport
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < v_tenancy_sub_premises.Count; i++)
                 snapshot_tenancy_sub_premises.Rows.Add(DataRowViewToArray(((DataRowView)v_tenancy_sub_premises[i])));
-            v_snapshot_tenancy_sub_premises = new BindingSource();
-            v_snapshot_tenancy_sub_premises.DataSource = snapshot_tenancy_sub_premises;
+            v_snapshot_tenancy_sub_premises = new BindingSource {DataSource = snapshot_tenancy_sub_premises};
 
             v_sub_premises.CurrentChanged += dataSource_CurrentChanged;
             dataGridView.CellValueNeeded += dataGridView_CellValueNeeded;
@@ -107,68 +107,68 @@ namespace Registry.Viewport
             base.Dispose(disposing);
         }
 
-        private static TenancyObject RowToTenancySubPremises(DataRow row)
+        private static TenancySubPremisesAssoc RowToTenancySubPremises(DataRow row)
         {
-            var to = new TenancyObject();
-            to.IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
-            to.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
-            to.IdObject = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises");
-            to.RentTotalArea = ViewportHelper.ValueOrNull<double>(row, "rent_total_area");
+            var to = new TenancySubPremisesAssoc
+            {
+                IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc"),
+                IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process"),
+                IdSubPremises = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises"),
+                RentTotalArea = ViewportHelper.ValueOrNull<double>(row, "rent_total_area")
+            };
             return to;
         }
 
-        public List<TenancyObject> TenancySubPremisesFromViewport()
+        public List<TenancySubPremisesAssoc> TenancySubPremisesFromViewport()
         {
-            var list = new List<TenancyObject>();
+            var list = new List<TenancySubPremisesAssoc>();
             for (var i = 0; i < snapshot_tenancy_sub_premises.Rows.Count; i++)
             {
                 var row = snapshot_tenancy_sub_premises.Rows[i];
                 if (Convert.ToBoolean(row["is_checked"], CultureInfo.InvariantCulture) == false)
                     continue;
-                var to = new TenancyObject();
-                to.IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
-                to.IdProcess = ViewportHelper.ValueOrNull<int>(ParentRow, "id_process");
-                to.IdObject = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises");
-                to.RentTotalArea = ViewportHelper.ValueOrNull<double>(row, "rent_total_area");
+                var to = new TenancySubPremisesAssoc
+                {
+                    IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc"),
+                    IdProcess = ViewportHelper.ValueOrNull<int>(ParentRow, "id_process"),
+                    IdSubPremises = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises"),
+                    RentTotalArea = ViewportHelper.ValueOrNull<double>(row, "rent_total_area")
+                };
                 list.Add(to);
             }
             return list;
         }
 
-        public List<TenancyObject> TenancySubPremisesFromView()
+        public List<TenancySubPremisesAssoc> TenancySubPremisesFromView()
         {
-            var list = new List<TenancyObject>();
+            var list = new List<TenancySubPremisesAssoc>();
             for (var i = 0; i < v_tenancy_sub_premises.Count; i++)
             {
-                var to = new TenancyObject();
-                var row = ((DataRowView)v_tenancy_sub_premises[i]);
-                to.IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc");
-                to.IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process");
-                to.IdObject = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises");
-                to.RentTotalArea = ViewportHelper.ValueOrNull<double>(row, "rent_total_area");
+                var row = (DataRowView)v_tenancy_sub_premises[i];
+                var to = new TenancySubPremisesAssoc
+                {
+                    IdAssoc = ViewportHelper.ValueOrNull<int>(row, "id_assoc"),
+                    IdProcess = ViewportHelper.ValueOrNull<int>(row, "id_process"),
+                    IdSubPremises = ViewportHelper.ValueOrNull<int>(row, "id_sub_premises"),
+                    RentTotalArea = ViewportHelper.ValueOrNull<double>(row, "rent_total_area")
+                };
                 list.Add(to);
             }
             return list;
         }
 
-        public bool ValidateTenancySubPremises(List<TenancyObject> tenancySubPremises)
+        public bool ValidateTenancySubPremises(List<TenancySubPremisesAssoc> tenancySubPremises)
         {
             foreach (var subPremises in tenancySubPremises)
             {
-                if (!ViewportHelper.SubPremiseFundAndRentMatch(subPremises.IdObject.Value, (int)ParentRow["id_rent_type"]))
-                {
-                    var idPremises = (int)DataModel.GetInstance<SubPremisesDataModel>().Select().Rows.Find(subPremises.IdObject.Value)["id_premises"];
-                    if (!ViewportHelper.PremiseFundAndRentMatch(idPremises, (int)ParentRow["id_rent_type"]))
-                    {
-                        var idBuilding = (int)DataModel.GetInstance<PremisesDataModel>().Select().Rows.Find(idPremises)["id_building"];
-                        if (!ViewportHelper.BuildingFundAndRentMatch(idBuilding, (int)ParentRow["id_rent_type"]) &&
-                                    MessageBox.Show("Выбранный вид найма не соответствует фонду сдаваемой комнаты. Все равно продолжить сохранение?",
-                                    "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) !=
-                                    DialogResult.Yes)
-                            return false;
-                        return true;
-                    }
-                }
+                if (subPremises.IdSubPremises != null && ViewportHelper.SubPremiseFundAndRentMatch(subPremises.IdSubPremises.Value,
+                    (int) ParentRow["id_rent_type"])) continue;
+                var idPremises = (int)EntityDataModel<SubPremise>.GetInstance().Select().Rows.Find(subPremises.IdSubPremises.Value)["id_premises"];
+                if (ViewportHelper.PremiseFundAndRentMatch(idPremises, (int) ParentRow["id_rent_type"])) continue;
+                var idBuilding = (int)EntityDataModel<Premise>.GetInstance().Select().Rows.Find(idPremises)["id_building"];
+                return ViewportHelper.BuildingFundAndRentMatch(idBuilding, (int)ParentRow["id_rent_type"]) || 
+                    MessageBox.Show(@"Выбранный вид найма не соответствует фонду сдаваемой комнаты. Все равно продолжить сохранение?",
+                        @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes;
             }
             return true;
         }
@@ -227,8 +227,8 @@ namespace Registry.Viewport
                         return;
                     }
                     ((DataRowView)v_snapshot_tenancy_sub_premises[
-                        v_snapshot_tenancy_sub_premises.Find("id_sub_premises", list[i].IdObject)])["id_assoc"] = id_assoc;
-                    tenancy_sub_premises.Select().Rows.Add(id_assoc, list[i].IdObject, list[i].IdProcess, list[i].RentTotalArea, 0);
+                        v_snapshot_tenancy_sub_premises.Find("id_sub_premises", list[i].IdSubPremises)])["id_assoc"] = id_assoc;
+                    tenancy_sub_premises.Select().Rows.Add(id_assoc, list[i].IdSubPremises, list[i].IdProcess, list[i].RentTotalArea, 0);
                 }
                 else
                 {
@@ -246,7 +246,7 @@ namespace Registry.Viewport
             list = TenancySubPremisesFromView();
             for (var i = 0; i < list.Count; i++)
             {
-                var row_index = -1;
+                var rowIndex = -1;
                 for (var j = 0; j < v_snapshot_tenancy_sub_premises.Count; j++)
                 {
                     var row = (DataRowView)v_snapshot_tenancy_sub_premises[j];
@@ -254,9 +254,9 @@ namespace Registry.Viewport
                         !string.IsNullOrEmpty(row["id_assoc"].ToString()) &&
                         ((int)row["id_assoc"] == list[i].IdAssoc) &&
                         (Convert.ToBoolean(row["is_checked"], CultureInfo.InvariantCulture) == true))
-                        row_index = j;
+                        rowIndex = j;
                 }
-                if (row_index == -1)
+                if (rowIndex == -1)
                 {
                     if (tenancy_sub_premises.Delete(list[i].IdAssoc.Value) == -1)
                     {
@@ -264,17 +264,17 @@ namespace Registry.Viewport
                         tenancy_sub_premises.EditingNewRecord = false;
                         return;
                     }
-                    var snapshot_row_index = -1;
+                    var snapshotRowIndex = -1;
                     for (var j = 0; j < v_snapshot_tenancy_sub_premises.Count; j++)
                         if (((DataRowView)v_snapshot_tenancy_sub_premises[j])["id_assoc"] != DBNull.Value &&
                             Convert.ToInt32(((DataRowView)v_snapshot_tenancy_sub_premises[j])["id_assoc"], CultureInfo.InvariantCulture) == list[i].IdAssoc)
-                            snapshot_row_index = j;
-                    if (snapshot_row_index != -1)
+                            snapshotRowIndex = j;
+                    if (snapshotRowIndex != -1)
                     {
-                        var sub_premises_row_index = v_sub_premises.Find("id_sub_premises", list[i].IdObject);
-                        ((DataRowView)v_snapshot_tenancy_sub_premises[snapshot_row_index]).Delete();
-                        if (sub_premises_row_index != -1)
-                            dataGridView.InvalidateRow(sub_premises_row_index);
+                        var subPremisesRowIndex = v_sub_premises.Find("id_sub_premises", list[i].IdSubPremises);
+                        ((DataRowView)v_snapshot_tenancy_sub_premises[snapshotRowIndex]).Delete();
+                        if (subPremisesRowIndex != -1)
+                            dataGridView.InvalidateRow(subPremisesRowIndex);
                     }
                     tenancy_sub_premises.Select().Rows.Find(list[i].IdAssoc).Delete();
                 }

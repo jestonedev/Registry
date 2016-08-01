@@ -8,7 +8,9 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Reporting;
 using Registry.Viewport.SearchForms;
 using Security;
@@ -56,7 +58,7 @@ namespace Registry.Viewport
         public override void LoadData()
         {
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<BuildingsDataModel>();
+            GeneralDataModel = DataModel.GetInstance<EntityDataModel<Building>>();
             _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
             _objectStates = DataModel.GetInstance<ObjectStatesDataModel>();
             _municipalPremises = CalcDataModel.GetInstance<CalcDataModelMunicipalPremises>();
@@ -103,9 +105,9 @@ namespace Registry.Viewport
             AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", BuildingListViewport_RowChanged);
             AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", BuildingListViewport_RowDeleted);
             AddEventHandler<EventArgs>(_municipalPremises, "RefreshEvent", _municipalPremises_RefreshEvent);
-            AddEventHandler<DataRowChangeEventArgs>(DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select(),
+            AddEventHandler<DataRowChangeEventArgs>(EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance().Select(),
                 "RowChanged", BuildingsOwnershipChanged);
-            AddEventHandler<DataRowChangeEventArgs>(DataModel.GetInstance<OwnershipBuildingsAssocDataModel>().Select(),
+            AddEventHandler<DataRowChangeEventArgs>(EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance().Select(),
                 "RowDeleted", BuildingsOwnershipChanged);
 
             dataGridView.RowCount = GeneralBindingSource.Count;
@@ -199,14 +201,14 @@ namespace Registry.Viewport
             if (MessageBox.Show(@"Вы действительно хотите удалить это здание?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                if (DataModelHelper.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
+                if (OtherService.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                 {
                     MessageBox.Show(@"У вас нет прав на удаление муниципальных жилых зданий и зданий, в которых присутствуют муниципальные помещения",
                         @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
-                if (DataModelHelper.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
+                if (OtherService.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                 {
                     MessageBox.Show(@"У вас нет прав на удаление немуниципальных жилых зданий и зданий, в которых присутствуют немуниципальные помещения",
@@ -383,11 +385,11 @@ namespace Registry.Viewport
                 GeneralBindingSource.Position = -1;
         }
 
-        private IEnumerable<int> _demolishedBuildings = DataModelHelper.DemolishedBuildingIDs().ToList();
+        private IEnumerable<int> _demolishedBuildings = BuildingService.DemolishedBuildingIDs().ToList();
 
         private void BuildingsOwnershipChanged(object sender, DataRowChangeEventArgs dataRowChangeEventArgs)
         {
-            _demolishedBuildings = DataModelHelper.DemolishedBuildingIDs().ToList();
+            _demolishedBuildings = BuildingService.DemolishedBuildingIDs().ToList();
             dataGridView.Refresh();
         }
 

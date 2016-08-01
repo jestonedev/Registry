@@ -1,4 +1,4 @@
-﻿using System.Windows.Forms;
+﻿using System;
 
 namespace Registry.DataModels.DataModels
 {
@@ -8,14 +8,14 @@ namespace Registry.DataModels.DataModels
         private const string SelectQuery = "SELECT * FROM object_states";
         private const string TableName = "object_states";
 
-        private ObjectStatesDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, SelectQuery, TableName)
+        private ObjectStatesDataModel(Action afterLoadHandler)
+            : base(SelectQuery, TableName, afterLoadHandler)
         {
         }
 
-        public static ObjectStatesDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        public static ObjectStatesDataModel GetInstance(Action afterLoadHandler)
         {
-            return _dataModel ?? (_dataModel = new ObjectStatesDataModel(progressBar, incrementor));
+            return _dataModel ?? (_dataModel = new ObjectStatesDataModel(afterLoadHandler));
         }
 
         protected override void ConfigureTable()

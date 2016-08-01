@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Reporting;
 using Registry.Viewport.SearchForms;
 using WeifenLuo.WinFormsUI.Docking;
@@ -19,8 +21,11 @@ namespace Registry.Viewport
         public string DynamicFilter { get; set; }
         public DataRow ParentRow { get; set; }
         public ParentTypeEnum ParentType { get; set; }
+
         protected BindingSource GeneralBindingSource;
         protected DataModel GeneralDataModel;
+
+
 
         protected Viewport(): this(null, null)
         {
@@ -322,6 +327,37 @@ namespace Registry.Viewport
                 weakEvent.EventInfo.RemoveEventHandler(weakEvent.Sender, weakEvent.Handler);
             }
             _weakEvents.Clear();
+        }
+
+        protected BindingSource BindDataSource(string dataMember, object dataSource = null)
+        {
+            var ds = dataSource ?? DataModel.DataSet;
+
+            return new BindingSource
+            {
+                DataMember = dataMember,
+                DataSource = ds
+            };
+        }
+
+        protected BindingSource BindDataSource<T>(object dataSource = null)
+            where T : Entity
+        {
+            var ds = dataSource ?? DataModel.DataSet;
+            var attribute = typeof(T).GetCustomAttributes(false).OfType<DataTableAttribute>().FirstOrDefault();
+            if (attribute == null)
+            {
+                throw new ViewportException(string.Format("У класса {0} не указан атрибут DataTableAttribute", typeof(T)));
+            }
+            if (string.IsNullOrEmpty(attribute.Name))
+            {
+                throw new ViewportException(string.Format("Свойство Name атрибута DataTableAttribute у класса {0} отсутствует", typeof(T)));
+            }
+            return new BindingSource
+            {
+                DataMember = attribute.Name,
+                DataSource = ds
+            };
         }
     }
 }

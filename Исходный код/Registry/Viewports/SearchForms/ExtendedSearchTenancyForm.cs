@@ -6,6 +6,8 @@ using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
+using Registry.Entities;
 
 namespace Registry.Viewport.SearchForms
 {
@@ -19,7 +21,7 @@ namespace Registry.Viewport.SearchForms
 
             DataModel.GetInstance<KladrStreetsDataModel>().Select();
             DataModel.GetInstance<RentTypesDataModel>().Select();
-            DataModel.GetInstance<TenancyReasonTypesDataModel>().Select();
+            EntityDataModel<ReasonType>.GetInstance().Select();
             var regions = DataModel.GetInstance<KladrRegionsDataModel>();
 
             var ds = DataModel.DataSet;
@@ -94,7 +96,7 @@ namespace Registry.Viewport.SearchForms
             if (checkBoxReasonTypeEnable.Checked)
             {
                 var processesIds =
-                    from reason in DataModel.GetInstance<TenancyReasonsDataModel>().FilterDeletedRows()
+                    from reason in EntityDataModel<TenancyReason>.GetInstance().FilterDeletedRows()
                     where reason.Field<int?>("id_reason_type") == (int?)comboBoxReasonType.SelectedValue
                     select reason.Field<int>("id_process");
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
@@ -102,7 +104,7 @@ namespace Registry.Viewport.SearchForms
             if (checkBoxReasonNumEnable.Checked)
             {
                 var processesIds =
-                    from reason in DataModel.GetInstance<TenancyReasonsDataModel>().FilterDeletedRows()
+                    from reason in EntityDataModel<TenancyReason>.GetInstance().FilterDeletedRows()
                     where reason.Field<string>("reason_number") == textBoxReasonNum.Text
                     select reason.Field<int>("id_process");
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
@@ -178,18 +180,18 @@ namespace Registry.Viewport.SearchForms
             if (checkBoxTenantSNPEnable.Checked)
             {
                 var snp = textBoxTenantSNP.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var processesIds = DataModelHelper.TenancyProcessIdsBySnp(snp, row => row.Field<int?>("id_kinship") == 1);
+                var processesIds = TenancyService.TenancyProcessIdsBySnp(snp, row => row.Field<int?>("id_kinship") == 1);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (checkBoxPersonSNPEnable.Checked)
             {
                 var snp = textBoxPersonSNP.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var processesIds = DataModelHelper.TenancyProcessIdsBySnp(snp, row => true);
+                var processesIds = TenancyService.TenancyProcessIdsBySnp(snp, row => true);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (checkBoxRegionEnable.Checked && (comboBoxRegion.SelectedValue != null))
             {
-                var processesIds = DataModelHelper.TenancyProcessIDsByCondition(
+                var processesIds = TenancyService.TenancyProcessIDsByCondition(
                     row => row.Field<string>("id_street").StartsWith(
                         comboBoxRegion.SelectedValue.ToString(), StringComparison.OrdinalIgnoreCase), 
                     DataModelHelper.ConditionType.BuildingCondition);
@@ -197,21 +199,21 @@ namespace Registry.Viewport.SearchForms
             }
             if (checkBoxStreetEnable.Checked && (comboBoxStreet.SelectedValue != null))
             {
-                var processesIds = DataModelHelper.TenancyProcessIDsByCondition(
+                var processesIds = TenancyService.TenancyProcessIDsByCondition(
                     row => row.Field<string>("id_street") == comboBoxStreet.SelectedValue.ToString(),
                     DataModelHelper.ConditionType.BuildingCondition);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (checkBoxHouseEnable.Checked)
             {
-                var processesIds = DataModelHelper.TenancyProcessIDsByCondition(
+                var processesIds = TenancyService.TenancyProcessIDsByCondition(
                     row => row.Field<string>("house") == textBoxHouse.Text.Trim().Replace("'", ""), 
                     DataModelHelper.ConditionType.BuildingCondition);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);
             }
             if (checkBoxPremisesNumEnable.Checked)
             {
-                var processesIds = DataModelHelper.TenancyProcessIDsByCondition(
+                var processesIds = TenancyService.TenancyProcessIDsByCondition(
                     row => row.Field<string>("premises_num") == textBoxPremisesNum.Text.Trim().Replace("'", ""), 
                     DataModelHelper.ConditionType.PremisesCondition);
                 includedProcesses = DataModelHelper.Intersect(includedProcesses, processesIds);

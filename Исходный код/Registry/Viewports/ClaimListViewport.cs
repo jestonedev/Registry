@@ -8,7 +8,9 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Reporting;
 using Registry.Viewport.EntityConverters;
 using Registry.Viewport.ModalEditors;
@@ -139,7 +141,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return ClaimConverter.FromRow(row);
+            return EntityConverter<Claim>.FromRow(row);
         }
 
         protected override Entity EntityFromViewport()
@@ -182,7 +184,7 @@ namespace Registry.Viewport
         {
             DockAreas = DockAreas.Document;
             dataGridViewClaims.AutoGenerateColumns = false;
-            GeneralDataModel = DataModel.GetInstance<ClaimsDataModel>();
+            GeneralDataModel = DataModel.GetInstance<EntityDataModel<Claim>>();
 
             // Ожидаем дозагрузки, если это необходимо
             GeneralDataModel.Select();
@@ -404,7 +406,7 @@ namespace Registry.Viewport
                 return;
             RebuildFilterAfterSave(GeneralBindingSource, claim.IdClaim);
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            ClaimConverter.FillRow(claim, row);
+            EntityConverter<Claim>.FillRow(claim, row);
         }
 
         private void InsertRecord(Claim claim)
@@ -421,21 +423,21 @@ namespace Registry.Viewport
                 newRow = (DataRowView)GeneralBindingSource.AddNew();
             else
                 newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-            ClaimConverter.FillRow(claim, newRow);
+            EntityConverter<Claim>.FillRow(claim, newRow);
 
             InsertFirstClaimState(claim.IdClaim);
         }
 
         private void InsertFirstClaimState(int? idClaim)
         {
-            var claimStatesDataModel = DataModel.GetInstance<ClaimStatesDataModel>();
+            var claimStatesDataModel = DataModel.GetInstance<EntityDataModel<ClaimState>>();
             if (claimStatesDataModel.EditingNewRecord)
             {
                 MessageBox.Show(@"Не удалось автоматически вставить первый этап претензионно-исковой работы, т.к. форма состояний исковых работ находится в состоянии добавления новой записи.",
                     @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
                 return;
             }
-            var firstStateTypes = DataModelHelper.ClaimStartStateTypeIds().ToList();
+            var firstStateTypes = ClaimsService.ClaimStartStateTypeIds().ToList();
             if (!firstStateTypes.Any()) return;
             var firstStateType = firstStateTypes.First();
             var claimStatesBindingSource = new BindingSource
@@ -456,11 +458,11 @@ namespace Registry.Viewport
             var claimsStateRow = (DataRowView)claimStatesBindingSource.AddNew();
             if (claimsStateRow != null)
             {
-                ClaimStateConverter.FillRow(claimState, claimsStateRow);
+                EntityConverter<ClaimState>.FillRow(claimState, claimsStateRow);
             }
         }
 
-        private void RebuildFilterAfterSave(IBindingListView bindingSource, int? idClaim)
+        private static void RebuildFilterAfterSave(IBindingListView bindingSource, int? idClaim)
         {
             var filter = "";
             if (!string.IsNullOrEmpty(bindingSource.Filter))

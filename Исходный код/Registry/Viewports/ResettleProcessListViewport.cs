@@ -10,6 +10,7 @@ using Registry.Viewport.SearchForms;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 using System.Linq;
+using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 
 namespace Registry.Viewport
@@ -108,7 +109,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return ResettleProcessConverter.FromRow(row);
+            return EntityConverter<ResettleProcess>.FromRow(row);
         }
 
         protected override Entity EntityFromViewport()
@@ -145,8 +146,8 @@ namespace Registry.Viewport
         {
             DockAreas = DockAreas.Document;
             dataGridView.AutoGenerateColumns = false;
-            GeneralDataModel = DataModel.GetInstance<ResettleProcessesDataModel>();
-            _documentsResidence = DataModel.GetInstance<DocumentsResidenceDataModel>();
+            GeneralDataModel = EntityDataModel<ResettleProcess>.GetInstance();
+            _documentsResidence = DataModel.GetInstance<EntityDataModel<DocumentResidence>>();
             _resettleAggregate = CalcDataModel.GetInstance<CalcDataModelResettleAggregated>();
 
             // Ожидаем дозагрузки, если это необходимо
@@ -331,7 +332,7 @@ namespace Registry.Viewport
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     filter += string.Format(CultureInfo.CurrentCulture, "(id_process = {0})", resettleProcess.IdProcess);
                     GeneralBindingSource.Filter += filter;
-                    ResettleProcessConverter.FillRow(resettleProcess, newRow);
+                    EntityConverter<ResettleProcess>.FillRow(resettleProcess, newRow);
                     GeneralDataModel.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
@@ -348,7 +349,7 @@ namespace Registry.Viewport
                     IsEditable = false;
                     filter += string.Format(CultureInfo.CurrentCulture, "(id_process = {0})", resettleProcess.IdProcess);
                     GeneralBindingSource.Filter += filter;
-                    ResettleProcessConverter.FillRow(resettleProcess, row);
+                    EntityConverter<ResettleProcess>.FillRow(resettleProcess, row);
                     break;
             }
             UnbindedCheckBoxesUpdate();

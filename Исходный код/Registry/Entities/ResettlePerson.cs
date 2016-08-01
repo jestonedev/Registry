@@ -1,7 +1,12 @@
-﻿namespace Registry.Entities
+﻿using Registry.Entities.Infrastructure;
+
+namespace Registry.Entities
 {
+    [Relation(MasterTableName = "resettle_processes", MasterFieldName = "id_process")]
+    [DataTable(Name = "resettle_persons", HasDeletedMark = true)]
     public sealed class ResettlePerson : Entity
     {
+        [DataColumn(IsPrimaryKey = true)]
         public int? IdPerson { get; set; }
         public int? IdProcess { get; set; }
         public string Surname { get; set; }

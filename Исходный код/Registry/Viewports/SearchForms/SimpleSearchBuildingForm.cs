@@ -5,7 +5,9 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 
 namespace Registry.Viewport.SearchForms
 {
@@ -49,21 +51,21 @@ namespace Registry.Viewport.SearchForms
             {
                 //по адресу
                 var addressParts = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 2, StringSplitOptions.RemoveEmptyEntries);
-                var buildingIds = DataModelHelper.BuildingIDsByAddress(addressParts);
+                var buildingIds = BuildingService.BuildingIDsByAddress(addressParts);
                 includedBuildings = DataModelHelper.Intersect(null, buildingIds);
             }
             if (comboBoxCriteriaType.SelectedIndex == 1)
             {
                 //по ФИО нанимателя
                 var snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var buildingIds = DataModelHelper.BuildingIdsBySnp(snp, row => row.Field<int?>("id_kinship") == 1);
+                var buildingIds = BuildingService.BuildingIdsBySnp(snp, row => row.Field<int?>("id_kinship") == 1);
                 includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingIds);
             }
             if (comboBoxCriteriaType.SelectedIndex == 2)
             {
                 // по ФИО участника
                 var snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var buildingIds = DataModelHelper.BuildingIdsBySnp(snp, row => true);
+                var buildingIds = BuildingService.BuildingIdsBySnp(snp, row => true);
                 includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingIds);
             }
             if (comboBoxCriteriaType.SelectedIndex == 3)
@@ -76,7 +78,7 @@ namespace Registry.Viewport.SearchForms
             if (comboBoxCriteriaType.SelectedIndex == 4)
             {
                 // по номеру договора
-                var buildingIds = DataModelHelper.BuildingIDsByRegistrationNumber(textBoxCriteria.Text.Trim().Replace("'", ""));
+                var buildingIds = BuildingService.BuildingIDsByRegistrationNumber(textBoxCriteria.Text.Trim().Replace("'", ""));
                 includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingIds);
             }
             if (includedBuildings != null)
@@ -90,7 +92,7 @@ namespace Registry.Viewport.SearchForms
             if (!checkBoxMunicipalOnly.Checked) return filter;
             if (!string.IsNullOrEmpty(filter.Trim()))
                 filter += " AND ";
-            var municipalIds = DataModelHelper.ObjectIdsByStates(EntityType.Building, DataModelHelper.MunicipalObjectStates().ToArray());
+            var municipalIds = OtherService.ObjectIdsByStates(EntityType.Building, DataModelHelper.MunicipalObjectStates().ToArray());
             var ids = municipalIds.Aggregate("", (current, id) => current + id.ToString(CultureInfo.InvariantCulture) + ",");
             var municipalStateIds = DataModelHelper.MunicipalObjectStates().
                 Aggregate("", (current, id) => current + id.ToString(CultureInfo.InvariantCulture) + ",");

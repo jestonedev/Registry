@@ -67,14 +67,6 @@ namespace Registry.DataModels.CalcDataModels
             var instanceDM = (T)method.Invoke(null, new object[] { });
             return instanceDM;                        
         }
-
-        //public static CalcDataModel GetInstance<T>() where T : CalcDataModel
-        //{
-        //    Type currentDataModel = typeof(T);
-        //    var method = currentDataModel.GetMethod("GetInstance", new Type[] { });
-        //    var instanceDM = (T)method.Invoke(null, new object[] { });
-        //    return instanceDM;
-        //}
        
 
         public void Refresh()

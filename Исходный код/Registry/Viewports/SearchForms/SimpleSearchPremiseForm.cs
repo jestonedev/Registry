@@ -5,7 +5,8 @@ using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
-using Registry.Entities;
+using Registry.DataModels.Services;
+using Registry.Entities.Infrastructure;
 
 namespace Registry.Viewport.SearchForms
 {
@@ -48,11 +49,11 @@ namespace Registry.Viewport.SearchForms
                 var addressParts = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
                 if (addressParts.Count() == 3)
                 {
-                    var premisesIds = DataModelHelper.PremiseIDsByAddress(addressParts);
+                    var premisesIds = PremisesService.PremiseIDsByAddress(addressParts);
                     includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);
                 } else
                 {
-                    var buildingIds = DataModelHelper.BuildingIDsByAddress(addressParts);
+                    var buildingIds = BuildingService.BuildingIDsByAddress(addressParts);
                     includedBuildings = DataModelHelper.Intersect(includedPremises, buildingIds);
                 }
             }
@@ -60,14 +61,14 @@ namespace Registry.Viewport.SearchForms
             {
                 //по ФИО нанимателя
                 var snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var premisesIds = DataModelHelper.PremisesIdsBySnp(snp, row => row.Field<int?>("id_kinship") == 1);
+                var premisesIds = PremisesService.PremisesIdsBySnp(snp, row => row.Field<int?>("id_kinship") == 1);
                 includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);
             }
             if (comboBoxCriteriaType.SelectedIndex == 2)
             {
                 // по ФИО участника
                 var snp = textBoxCriteria.Text.Trim().Replace("'", "").Split(new[] { ' ' }, 3, StringSplitOptions.RemoveEmptyEntries);
-                var premisesIds = DataModelHelper.PremisesIdsBySnp(snp, row => true);
+                var premisesIds = PremisesService.PremisesIdsBySnp(snp, row => true);
                 includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);
             }
             if (comboBoxCriteriaType.SelectedIndex == 3)
@@ -80,7 +81,7 @@ namespace Registry.Viewport.SearchForms
             if (comboBoxCriteriaType.SelectedIndex == 4)
             {
                 // по номеру договора
-                var premisesIds = DataModelHelper.PremiseIDsByRegistrationNumber(textBoxCriteria.Text.Trim().Replace("'", ""));
+                var premisesIds = PremisesService.PremiseIDsByRegistrationNumber(textBoxCriteria.Text.Trim().Replace("'", ""));
                 includedPremises = DataModelHelper.Intersect(includedPremises, premisesIds);
             }
             if (includedPremises != null)
@@ -102,7 +103,7 @@ namespace Registry.Viewport.SearchForms
             if (!checkBoxMunicipalOnly.Checked) return filter;
             if (!string.IsNullOrEmpty(filter.Trim()))
                 filter += " AND ";
-            var municipalIds = DataModelHelper.ObjectIdsByStates(EntityType.Premise, DataModelHelper.MunicipalObjectStates().ToArray());
+            var municipalIds = OtherService.ObjectIdsByStates(EntityType.Premise, DataModelHelper.MunicipalObjectStates().ToArray());
             var ids = municipalIds.Aggregate("", (current, id) => current + id.ToString(CultureInfo.InvariantCulture) + ",");
             var municipalStateIds = DataModelHelper.MunicipalObjectStates().
                 Aggregate("", (current, id) => current + id.ToString(CultureInfo.InvariantCulture) + ",");

@@ -3,6 +3,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
 
 namespace Registry.DataModels.CalcDataModels
@@ -17,8 +18,8 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();
-            RefreshOnTableModify(DataModel.GetInstance<FundsHistoryDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<FundsSubPremisesAssocDataModel>().Select());
+            RefreshOnTableModify(EntityDataModel<FundHistory>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<FundSubPremisesAssoc>.GetInstance().Select());
         }
 
         private static DataTable InitializeTable()
@@ -36,17 +37,17 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelSubPremisesCurrentFunds");
             // Фильтруем удаленные строки
-            var fundsHistory = DataModel.GetInstance<FundsHistoryDataModel>().FilterDeletedRows();
-            var fundsSubPremisesAssoc = DataModel.GetInstance<FundsSubPremisesAssocDataModel>().FilterDeletedRows();
+            var fundsHistory = DataModel.GetInstance<EntityDataModel<FundHistory>>().FilterDeletedRows();
+            var fundsSubPremisesAssoc = EntityDataModel<FundSubPremisesAssoc>.GetInstance().FilterDeletedRows();
 
             // Вычисляем агрегационную информацию
-            var maxIdBySubPremises = DataModelHelper.MaxFundIDsByObject(fundsSubPremisesAssoc, EntityType.SubPremise); 
+            var maxIdBySubPremises = OtherService.MaxFundIDsBySubPremiseId(fundsSubPremisesAssoc); 
             var result = from fundHistoryRow in fundsHistory
                          join maxIdBySubPremisesRow in maxIdBySubPremises
                             on fundHistoryRow.Field<int>("id_fund") equals maxIdBySubPremisesRow.IdFund
                          select new
                          {
-                             id_sub_premises = maxIdBySubPremisesRow.IdObject,
+                             id_sub_premises = maxIdBySubPremisesRow.IdSubPremises,
                              id_fund = maxIdBySubPremisesRow.IdFund,
                              id_fund_type = fundHistoryRow.Field<int>("id_fund_type"),
                              protocol_number = fundHistoryRow.Field<string>("protocol_number"),

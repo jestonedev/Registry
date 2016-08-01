@@ -6,6 +6,8 @@ using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
+using Registry.Entities;
 
 namespace Registry.Viewport.SearchForms
 {
@@ -149,7 +151,7 @@ namespace Registry.Viewport.SearchForms
             {
                 if (radioButtonWithClaims.Checked || radioButtonWithoutClaims.Checked)
                 {
-                    var idsByClaims = (from row in DataModel.GetInstance<ClaimsDataModel>().FilterDeletedRows()
+                    var idsByClaims = (from row in DataModel.GetInstance<EntityDataModel<Claim>>().FilterDeletedRows()
                         select row.Field<int>("id_account")).Distinct();
                     if (radioButtonWithClaims.Checked)
                     {
@@ -165,8 +167,8 @@ namespace Registry.Viewport.SearchForms
                 else
                 if (radioButtonWithUncompletedClaims.Checked || radioButtonWithoutUncompletedClaims.Checked)
                 {
-                    var claimsDataModel = DataModel.GetInstance<ClaimsDataModel>();
-                    var claimStatesDataModel = DataModel.GetInstance<ClaimStatesDataModel>();
+                    var claimsDataModel = DataModel.GetInstance<EntityDataModel<Claim>>();
+                    var claimStatesDataModel = DataModel.GetInstance<EntityDataModel<ClaimState>>();
                     var lastStates = from stateRow in claimStatesDataModel.FilterDeletedRows()
                                      group stateRow.Field<int?>("id_state") by stateRow.Field<int>("id_claim") into gs
                                      select new
@@ -186,7 +188,7 @@ namespace Registry.Viewport.SearchForms
                         (from lastStateTypeRow in lastStateTypes
                         join claimsRow in claimsDataModel.FilterDeletedRows()
                             on lastStateTypeRow.id_claim equals claimsRow.Field<int>("id_claim")
-                        where DataModelHelper.ClaimStateTypeIdsByPrevStateType(lastStateTypeRow.id_state_type).Any()
+                         where ClaimsService.ClaimStateTypeIdsByPrevStateType(lastStateTypeRow.id_state_type).Any()
                         select claimsRow.Field<int>("id_account")).Distinct();
                     if (radioButtonWithUncompletedClaims.Checked)
                     {

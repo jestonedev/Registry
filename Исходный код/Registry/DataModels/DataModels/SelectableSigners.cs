@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Forms;
-
-namespace Registry.DataModels.DataModels
+﻿namespace Registry.DataModels.DataModels
 {
     internal class SelectableSigners : DataModel
     {
@@ -16,7 +10,7 @@ namespace Registry.DataModels.DataModels
         private const string TableName = "selectable_head_housing_dep";
 
         private SelectableSigners()
-            : base(null, 1, SelectQuery, TableName)
+            : base(SelectQuery, TableName, null)
         {
         }
 

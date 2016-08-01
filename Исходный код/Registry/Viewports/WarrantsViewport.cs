@@ -84,25 +84,28 @@ namespace Registry.Viewport
 
         protected override Entity EntityFromViewport()
         {
-            var warrant = new Warrant();
-            if (GeneralBindingSource.Position == -1)
-                warrant.IdWarrant = null;
-            else
-                warrant.IdWarrant = ViewportHelper.ValueOrNull<int>((DataRowView)GeneralBindingSource[GeneralBindingSource.Position],"id_warrant");
-            warrant.IdWarrantDocType = ViewportHelper.ValueOrNull<int>(comboBoxWarrantDocType);
-            warrant.RegistrationNum = ViewportHelper.ValueOrNull(textBoxWarrantRegNum);
-            warrant.OnBehalfOf = ViewportHelper.ValueOrNull(textBoxWarrantOnBehalfOf);
-            warrant.Notary = ViewportHelper.ValueOrNull(textBoxWarrantNotary);
-            warrant.NotaryDistrict = ViewportHelper.ValueOrNull(textBoxWarrantDistrict);
-            warrant.Description = ViewportHelper.ValueOrNull(textBoxWarrantDescription);
-            warrant.RegistrationDate = dateTimePickerWarrantDate.Value;
+            var warrant = new Warrant
+            {
+                IdWarrant =
+                    GeneralBindingSource.Position == -1
+                        ? null
+                        : ViewportHelper.ValueOrNull<int>(
+                            (DataRowView) GeneralBindingSource[GeneralBindingSource.Position], "id_warrant"),
+                IdWarrantDocType = ViewportHelper.ValueOrNull<int>(comboBoxWarrantDocType),
+                RegistrationNum = ViewportHelper.ValueOrNull(textBoxWarrantRegNum),
+                OnBehalfOf = ViewportHelper.ValueOrNull(textBoxWarrantOnBehalfOf),
+                Notary = ViewportHelper.ValueOrNull(textBoxWarrantNotary),
+                NotaryDistrict = ViewportHelper.ValueOrNull(textBoxWarrantDistrict),
+                Description = ViewportHelper.ValueOrNull(textBoxWarrantDescription),
+                RegistrationDate = ViewportHelper.ValueOrNull(dateTimePickerWarrantDate)
+            };
             return warrant;
         }
 
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return WarrantConverter.FromRow(row);
+            return EntityConverter<Warrant>.FromRow(row);
         }
 
         private bool ValidateWarrant(Warrant warrant)
@@ -133,7 +136,7 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<WarrantsDataModel>();
+            GeneralDataModel = EntityDataModel<Warrant>.GetInstance();
             _warrantDocTypes = DataModel.GetInstance<WarrantDocTypesDataModel>();
 
             // Ожидаем дозагрузки, если это необходимо
@@ -256,7 +259,7 @@ namespace Registry.Viewport
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    WarrantConverter.FillRow(warrant, newRow);
+                    EntityConverter<Warrant>.FillRow(warrant, newRow);
                     IsEditable = true;
                     GeneralDataModel.EditingNewRecord = false;
                     break;
@@ -272,7 +275,7 @@ namespace Registry.Viewport
                         return;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     IsEditable = false;
-                    WarrantConverter.FillRow(warrant, row);
+                    EntityConverter<Warrant>.FillRow(warrant, row);
                     break;
             }
             dataGridView.Enabled = true;

@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using Registry.DataModels.DataModels;
+using Registry.Entities;
 
 namespace Registry.DataModels.CalcDataModels
 {
@@ -17,10 +18,10 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();
-            RefreshOnTableModify(DataModel.GetInstance<TenancyPremisesAssocDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<TenancySubPremisesAssocDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<TenancyProcessesDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<TenancyPersonsDataModel>().Select());
+            RefreshOnTableModify(EntityDataModel<TenancyPremisesAssoc>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<TenancySubPremisesAssoc>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<TenancyProcess>.GetInstance().Select());
+            RefreshOnTableModify(EntityDataModel<TenancyPerson>.GetInstance().Select());
         }
 
         private static DataTable InitializeTable()
@@ -45,11 +46,11 @@ namespace Registry.DataModels.CalcDataModels
                 throw new DataModelException(
                     "Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelPremisesTenanciesRegNumbers");
             // Фильтруем удаленные строки
-            var tenancyPremises = DataModel.GetInstance<TenancyPremisesAssocDataModel>().FilterDeletedRows();
-            var tenancySubPremises = DataModel.GetInstance<TenancySubPremisesAssocDataModel>().FilterDeletedRows();
-            var subPremises = DataModel.GetInstance<SubPremisesDataModel>().FilterDeletedRows();
-            var tenancyProcesses = DataModel.GetInstance<TenancyProcessesDataModel>().FilterDeletedRows();
-            var tenancyPersons = DataModel.GetInstance<TenancyPersonsDataModel>().FilterDeletedRows();
+            var tenancyPremises = EntityDataModel<TenancyPremisesAssoc>.GetInstance().FilterDeletedRows();
+            var tenancySubPremises = EntityDataModel<TenancySubPremisesAssoc>.GetInstance().FilterDeletedRows();
+            var subPremises = EntityDataModel<SubPremise>.GetInstance().FilterDeletedRows();
+            var tenancyProcesses = EntityDataModel<TenancyProcess>.GetInstance().FilterDeletedRows();
+            var tenancyPersons = EntityDataModel<TenancyPerson>.GetInstance().FilterDeletedRows();
             // Вычисляем агрегационную информацию
             var tenancyAssoc = (from tenancySubPremisesRow in tenancySubPremises
                 join subPremisesRow in subPremises

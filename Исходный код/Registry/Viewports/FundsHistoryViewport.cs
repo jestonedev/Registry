@@ -5,7 +5,9 @@ using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -156,14 +158,14 @@ namespace Registry.Viewport
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return false;
             }
-            if (DataModelHelper.HasMunicipal((int)ParentRow[fieldName], entity)
+            if (OtherService.HasMunicipal((int)ParentRow[fieldName], entity)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
                 MessageBox.Show(@"У вас нет прав на изменение информации об истории фондов муниципальных объектов",
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (DataModelHelper.HasNotMunicipal((int)ParentRow[fieldName], entity)
+            if (OtherService.HasNotMunicipal((int)ParentRow[fieldName], entity)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
                 MessageBox.Show(@"У вас нет прав на изменение информации об истории фондов немуниципальных объектов",
@@ -248,7 +250,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return FundHistoryConverter.FromRow(row);
+            return EntityConverter<FundHistory>.FromRow(row);
         }
 
         private void ViewportFromFundHistory(FundHistory fundHistory)
@@ -273,23 +275,27 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<FundsHistoryDataModel>();
+            GeneralDataModel = DataModel.GetInstance<EntityDataModel<FundHistory>>();
             _fundTypes = DataModel.GetInstance<FundTypesDataModel>();
 
             // Ожидаем дозагрузки, если это необходимо
             GeneralDataModel.Select();
             _fundTypes.Select();
 
-            if (ParentType == ParentTypeEnum.SubPremises)
-                _fundAssoc = DataModel.GetInstance<FundsSubPremisesAssocDataModel>();
-            else
-                if (ParentType == ParentTypeEnum.Premises)
-                    _fundAssoc = DataModel.GetInstance<FundsPremisesAssocDataModel>();
-                else
-                    if (ParentType == ParentTypeEnum.Building)
-                        _fundAssoc = DataModel.GetInstance<FundsBuildingsAssocDataModel>();
-                    else
-                        throw new ViewportException("Неизвестный тип родительского объекта");
+            switch (ParentType)
+            {
+                case ParentTypeEnum.SubPremises:
+                    _fundAssoc = EntityDataModel<FundSubPremisesAssoc>.GetInstance();
+                    break;
+                case ParentTypeEnum.Premises:
+                    _fundAssoc = EntityDataModel<FundPremisesAssoc>.GetInstance();
+                    break;
+                case ParentTypeEnum.Building:
+                    _fundAssoc = EntityDataModel<FundBuildingAssoc>.GetInstance();
+                    break;
+                default:
+                    throw new ViewportException("Неизвестный тип родительского объекта");
+            }
 
             var ds = DataModel.DataSet;
 
@@ -381,17 +387,16 @@ namespace Registry.Viewport
                         GeneralDataModel.EditingNewRecord = false;
                         return;
                     }
-                    var assoc = new FundObjectAssoc(idParent, idFund);
                     switch (ParentType)
                     {
                         case ParentTypeEnum.Building:
-                            DataModel.GetInstance<FundsBuildingsAssocDataModel>().Insert(assoc);
+                            _fundAssoc.Insert(new FundBuildingAssoc(idParent, idFund));
                             break;
                         case ParentTypeEnum.Premises:
-                            DataModel.GetInstance<FundsPremisesAssocDataModel>().Insert(assoc);
+                            _fundAssoc.Insert(new FundPremisesAssoc(idParent, idFund));
                             break;
                         case ParentTypeEnum.SubPremises:
-                            DataModel.GetInstance<FundsSubPremisesAssocDataModel>().Insert(assoc);
+                            _fundAssoc.Insert(new FundSubPremisesAssoc(idParent, idFund));
                             break;
                     }
                     DataRowView newRow;
@@ -401,7 +406,7 @@ namespace Registry.Viewport
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    FundHistoryConverter.FillRow(fundHistory, newRow);
+                    EntityConverter<FundHistory>.FillRow(fundHistory, newRow);
                     _fundAssoc.Select().Rows.Add(idParent, idFund);
                     RebuildFilter();
                     GeneralBindingSource.Position = GeneralBindingSource.Count - 1;
@@ -419,7 +424,7 @@ namespace Registry.Viewport
                         return;
                     IsEditable = false;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    FundHistoryConverter.FillRow(fundHistory, row);
+                    EntityConverter<FundHistory>.FillRow(fundHistory, row);
                     break;
             }
             RedrawDataGridRows();

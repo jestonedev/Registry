@@ -8,7 +8,9 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Reporting;
 using Registry.Viewport.SearchForms;
 using Security;
@@ -58,9 +60,9 @@ namespace Registry.Viewport
         {
             dataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<PremisesDataModel>();
+            GeneralDataModel = EntityDataModel<Premise>.GetInstance();
             _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
-            _buildings = DataModel.GetInstance<BuildingsDataModel>();
+            _buildings = DataModel.GetInstance<EntityDataModel<Building>>();
             _premisesTypes = DataModel.GetInstance<PremisesTypesDataModel>();
             _objectStates = DataModel.GetInstance<ObjectStatesDataModel>();
             _fundTypes = DataModel.GetInstance<FundTypesDataModel>();
@@ -163,8 +165,9 @@ namespace Registry.Viewport
             AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", PremisesListViewport_RowDeleted);
             AddEventHandler<EventArgs>(_premisesFunds, "RefreshEvent", premises_funds_RefreshEvent);
 
-            var buildingsAssocDataModel = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>();
-            var premisesAssocDataModel = DataModel.GetInstance<OwnershipPremisesAssocDataModel>();
+            var buildingsAssocDataModel = EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance();
+            var premisesAssocDataModel = EntityDataModel<OwnershipRightPremisesAssoc>.GetInstance();
+            var ownershipsDataModel = EntityDataModel<OwnershipRight>.GetInstance();
 
             AddEventHandler<DataRowChangeEventArgs>(buildingsAssocDataModel.Select(), "RowChanged", BuildingsOwnershipChanged);
             AddEventHandler<DataRowChangeEventArgs>(buildingsAssocDataModel.Select(), "RowDeleted", BuildingsOwnershipChanged);
@@ -172,20 +175,31 @@ namespace Registry.Viewport
             AddEventHandler<DataRowChangeEventArgs>(premisesAssocDataModel.Select(), "RowChanged", PremisesOwnershipChanged);
             AddEventHandler<DataRowChangeEventArgs>(premisesAssocDataModel.Select(), "RowDeleted", PremisesOwnershipChanged);
 
+            AddEventHandler<DataRowChangeEventArgs>(ownershipsDataModel.Select(), "RowChanged", OwnershipChanged);
+            AddEventHandler<DataRowChangeEventArgs>(ownershipsDataModel.Select(), "RowDeleted", OwnershipChanged);
+
             dataGridView.RowCount = GeneralBindingSource.Count;
 
             ViewportHelper.SetDoubleBuffered(dataGridView);
         }
 
+        private void OwnershipChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action != DataRowAction.Change) return;
+            _demolishedBuildings = BuildingService.DemolishedBuildingIDs().ToList();
+            _demolishedPremises = PremisesService.DemolishedPremisesIDs().ToList();
+            dataGridView.Refresh();
+        }
+
         private void BuildingsOwnershipChanged(object sender, DataRowChangeEventArgs dataRowChangeEventArgs)
         {
-            _demolishedBuildings = DataModelHelper.DemolishedBuildingIDs().ToList();
+            _demolishedBuildings = BuildingService.DemolishedBuildingIDs().ToList();
             dataGridView.Refresh();
         }
 
         private void PremisesOwnershipChanged(object sender, DataRowChangeEventArgs dataRowChangeEventArgs)
         {
-            _demolishedPremises = DataModelHelper.DemolishedPremisesIDs().ToList();
+            _demolishedPremises = PremisesService.DemolishedPremisesIDs().ToList();
             dataGridView.Refresh();
         }
 
@@ -201,14 +215,14 @@ namespace Registry.Viewport
             if (MessageBox.Show(@"Вы действительно хотите удалить это помещение?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                if (DataModelHelper.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
+                if (OtherService.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                 {
                     MessageBox.Show(@"У вас нет прав на удаление муниципальных жилых помещений и помещений, в которых присутствуют муниципальные комнаты",
                         @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
-                if (DataModelHelper.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
+                if (OtherService.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                 {
                     MessageBox.Show(@"У вас нет прав на удаление немуниципальных жилых помещений и помещений, в которых присутствуют немуниципальные комнаты",
@@ -491,8 +505,8 @@ namespace Registry.Viewport
 
         private int _idPremises = int.MinValue;
         private IEnumerable<DataRow> _tenancyInfoRows;
-        private IEnumerable<int> _demolishedBuildings = DataModelHelper.DemolishedBuildingIDs().ToList();
-        private IEnumerable<int> _demolishedPremises = DataModelHelper.DemolishedPremisesIDs().ToList();
+        private IEnumerable<int> _demolishedBuildings = BuildingService.DemolishedBuildingIDs().ToList();
+        private IEnumerable<int> _demolishedPremises = PremisesService.DemolishedPremisesIDs().ToList();
 
         private void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {

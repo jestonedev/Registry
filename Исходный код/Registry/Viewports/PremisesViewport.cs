@@ -12,6 +12,8 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
+using Registry.Entities.Infrastructure;
 using Registry.Reporting;
 using Registry.Viewport.EntityConverters;
 using Registry.Viewport.SearchForms;
@@ -466,14 +468,14 @@ namespace Registry.Viewport
             }
             // Проверяем права на модификацию муниципального или не муниципального здания
             var premiseFromView = (Premise)EntityFromView();
-            if (premiseFromView.IdPremises != null && DataModelHelper.HasMunicipal(premiseFromView.IdPremises.Value, EntityType.Premise)
+            if (premiseFromView.IdPremises != null && OtherService.HasMunicipal(premiseFromView.IdPremises.Value, EntityType.Premise)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
                 MessageBox.Show(@"Вы не можете изменить информацию по данному помещению, т.к. оно является муниципальным или содержит в себе муниципальные комнаты",
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (premiseFromView.IdPremises != null && DataModelHelper.HasNotMunicipal(premiseFromView.IdPremises.Value, EntityType.Premise)
+            if (premiseFromView.IdPremises != null && OtherService.HasNotMunicipal(premiseFromView.IdPremises.Value, EntityType.Premise)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
                 MessageBox.Show(@"Вы не можете изменить информацию по данному помещения, т.к. оно является немуниципальным или содержит в себе немуниципальные комнаты",
@@ -495,7 +497,7 @@ namespace Registry.Viewport
             }
             // Проверяем дубликаты квартир
             if ((premise.PremisesNum != premiseFromView.PremisesNum) || (premise.IdBuilding != premiseFromView.IdBuilding))
-                if (DataModelHelper.PremisesDuplicateCount(premise) != 0 &&
+                if (PremisesService.PremisesDuplicateCount(premise) != 0 &&
                     MessageBox.Show(@"В указанном доме уже есть квартира с таким номером. Все равно продолжить сохранение?", @"Внимание", 
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                     return false;
@@ -505,7 +507,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return PremiseConverter.FromRow(row);
+            return EntityConverter<Premise>.FromRow(row);
         }
 
         protected override Entity EntityFromViewport()
@@ -585,20 +587,20 @@ namespace Registry.Viewport
             dataGridViewRooms.AutoGenerateColumns = false;
             DockAreas = WeifenLuo.WinFormsUI.Docking.DockAreas.Document;
 
-            GeneralDataModel = DataModel.GetInstance<PremisesDataModel>();
+            GeneralDataModel = EntityDataModel<Premise>.GetInstance();
             _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
-            _buildings = DataModel.GetInstance<BuildingsDataModel>();
+            _buildings = EntityDataModel<Building>.GetInstance();
             _premisesTypes = DataModel.GetInstance<PremisesTypesDataModel>();
             _premisesKinds = DataModel.GetInstance<PremisesKindsDataModel>();
-            _subPremises = DataModel.GetInstance<SubPremisesDataModel>();
-            _restrictions = DataModel.GetInstance<RestrictionsDataModel>();
-            _restrictionTypes = DataModel.GetInstance<RestrictionTypesDataModel>();
-            _restrictionPremisesAssoc = DataModel.GetInstance<RestrictionsPremisesAssocDataModel>();
-            _restrictionBuildingsAssoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>();
-            _ownershipRights = DataModel.GetInstance<OwnershipsRightsDataModel>();
-            _ownershipRightTypes = DataModel.GetInstance<OwnershipRightTypesDataModel>();
-            _ownershipPremisesAssoc = DataModel.GetInstance<OwnershipPremisesAssocDataModel>();
-            _ownershipBuildingsAssoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>();
+            _subPremises = EntityDataModel<SubPremise>.GetInstance();
+            _restrictions = EntityDataModel<Restriction>.GetInstance();
+            _restrictionTypes = EntityDataModel<RestrictionType>.GetInstance();
+            _restrictionPremisesAssoc = EntityDataModel<RestrictionPremisesAssoc>.GetInstance();
+            _restrictionBuildingsAssoc = EntityDataModel<RestrictionBuildingAssoc>.GetInstance();
+            _ownershipRights = EntityDataModel<OwnershipRight>.GetInstance();
+            _ownershipRightTypes = EntityDataModel<OwnershipRightType>.GetInstance();
+            _ownershipPremisesAssoc = EntityDataModel<OwnershipRightPremisesAssoc>.GetInstance();
+            _ownershipBuildingsAssoc = EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance();
             _fundTypes = DataModel.GetInstance<FundTypesDataModel>();
             _objectStates = DataModel.GetInstance<ObjectStatesDataModel>(); 
 
@@ -875,14 +877,14 @@ namespace Registry.Viewport
             if (MessageBox.Show(@"Вы действительно хотите удалить это помещение?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                if (DataModelHelper.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
+                if (OtherService.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                 {
                     MessageBox.Show(@"У вас нет прав на удаление муниципальных жилых помещений и помещений, в которых присутствуют муниципальные комнаты",
                         @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
-                if (DataModelHelper.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
+                if (OtherService.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                 {
                     MessageBox.Show(@"У вас нет прав на удаление немуниципальных жилых помещений и помещений, в которых присутствуют немуниципальные комнаты",
@@ -948,7 +950,7 @@ namespace Registry.Viewport
                 newRow = (DataRowView)GeneralBindingSource.AddNew();
             else
                 newRow = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            PremiseConverter.FillRow(premise, newRow);
+            EntityConverter<Premise>.FillRow(premise, newRow);
         }
 
         public void UpdateRecord(Premise premise)
@@ -964,7 +966,7 @@ namespace Registry.Viewport
                 return;
             RebuildFilterAfterSave(GeneralBindingSource, premise.IdPremises);
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            PremiseConverter.FillRow(premise, row);
+            EntityConverter<Premise>.FillRow(premise, row);
         }
 
         private void RebuildFilterAfterSave(IBindingListView bindingSource, int? idPremise)
@@ -1529,7 +1531,7 @@ namespace Registry.Viewport
                 return;
             }
             var row = (DataRowView)_vOwnershipRights[_vOwnershipRights.Position];
-            var ownershipRight = OwnershipRightConverter.FromRow(row);
+            var ownershipRight = EntityConverter<OwnershipRight>.FromRow(row);
             using (var editor = new OwnershipsEditor())
             {
                 editor.State = ViewportState.ModifyRowState;
@@ -1660,7 +1662,7 @@ namespace Registry.Viewport
             label20.ForeColor = SystemColors.ControlText;
             if (!(comboBoxHouse.SelectedValue is int)) return;
             var idBuilding = (int)comboBoxHouse.SelectedValue;
-            var isDemolished = DataModelHelper.DemolishedBuildingIDs().Any(v => v == idBuilding);
+            var isDemolished = BuildingService.DemolishedBuildingIDs().Any(v => v == idBuilding);
             if (!isDemolished) return;
             label20.Text = @"Номер дома (снесен)";
             label20.ForeColor = Color.Red;

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
+using Registry.Entities;
 
 namespace Registry.Viewport.ModalEditors
 {
@@ -27,7 +28,7 @@ namespace Registry.Viewport.ModalEditors
         public OwnershipsEditorMultiMaster()
         {
             InitializeComponent();
-            var ownershipRightTypes = DataModel.GetInstance<OwnershipRightTypesDataModel>();
+            var ownershipRightTypes = EntityDataModel<OwnershipRightType>.GetInstance();
             var vOwnershipRightTypes = new BindingSource {DataSource = ownershipRightTypes.Select()};
             comboBoxIdOwnershipType.DataSource = vOwnershipRightTypes;
             comboBoxIdOwnershipType.ValueMember = "id_ownership_right_type";

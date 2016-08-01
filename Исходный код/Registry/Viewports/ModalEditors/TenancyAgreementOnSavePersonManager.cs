@@ -77,7 +77,7 @@ namespace Registry.Viewport.ModalEditors
                     });
                 }
             }
-            var tenancyPersons = DataModel.GetInstance<TenancyPersonsDataModel>();
+            var tenancyPersons = EntityDataModel<TenancyPerson>.GetInstance();
             switch (_personsOperationType)
             {
                 case PersonsOperationType.IncludePersons:
@@ -104,7 +104,7 @@ namespace Registry.Viewport.ModalEditors
                     {
                         var row = tenancyPersons.Select().Rows.Find(person.IdPerson);
                         if (row == null) continue;
-                        var tenancyPerson = TenancyPersonConverter.FromRow(row);
+                        var tenancyPerson = EntityConverter<TenancyPerson>.FromRow(row);
                         tenancyPerson.ExcludeDate = person.ExcludeDate;
                         var affected = tenancyPersons.Update(tenancyPerson);
                         if (affected == -1)
@@ -123,7 +123,7 @@ namespace Registry.Viewport.ModalEditors
                     {                          
                         var row = tenancyPersons.Select().Rows.Find(persons[i].IdPerson);
                         if (row == null) continue;
-                        var tenancyPerson = TenancyPersonConverter.FromRow(row);
+                        var tenancyPerson = EntityConverter<TenancyPerson>.FromRow(row);
                         if(i == 0)
                         {
                             tenancyPerson.ExcludeDate = dateTimePickerDate.Value.Date;    

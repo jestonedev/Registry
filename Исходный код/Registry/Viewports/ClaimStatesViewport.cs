@@ -8,7 +8,9 @@ using System.Threading;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -47,7 +49,7 @@ namespace Registry.Viewport
             IEnumerable<int> includedStates = null;
             // Если текущая позиция - первый элемент, и количество элементов 1 то он может иметь только начальное состояние (любое)
             if ((GeneralBindingSource.Position == 0) && (GeneralBindingSource.Count == 1))
-                includedStates = DataModelHelper.ClaimStartStateTypeIds();
+                includedStates = ClaimsService.ClaimStartStateTypeIds();
             else
             // Если текущая позиция - первый элемент, и количество элементов 1 то он может иметь только начальное состояние 
             // (не противоречащее следующей позиции)
@@ -55,7 +57,7 @@ namespace Registry.Viewport
             {
                 var nextClaimStateType = Convert.ToInt32(
                     ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position + 1])["id_state_type"], CultureInfo.InvariantCulture);
-                includedStates = DataModelHelper.ClaimStateTypeIdsByNextStateType(nextClaimStateType);
+                includedStates = ClaimsService.ClaimStateTypeIdsByNextStateType(nextClaimStateType);
             }
             else
             // Если текущая позиция - последний элемент, то выбрать состояние, в которое можно перейти из состояния предыдущего элемента
@@ -63,7 +65,7 @@ namespace Registry.Viewport
             {
                 var prevClaimStateType = Convert.ToInt32(
                     ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position - 1])["id_state_type"], CultureInfo.InvariantCulture);
-                includedStates = DataModelHelper.ClaimStateTypeIdsByPrevStateType(prevClaimStateType);
+                includedStates = ClaimsService.ClaimStateTypeIdsByPrevStateType(prevClaimStateType);
             }
             else
             // Мы находимся не в конце списка и не в начале и необходимо выбрать только те состояния, в которые можно перейти с учетом окружающих состояний
@@ -73,7 +75,7 @@ namespace Registry.Viewport
                     Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position - 1])["id_state_type"], CultureInfo.InvariantCulture);
                 var nextClaimStateType = 
                     Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position + 1])["id_state_type"], CultureInfo.InvariantCulture);
-                includedStates = DataModelHelper.ClaimStateTypeIdsByNextAndPrevStateTypes(nextClaimStateType, prevClaimStateType); 
+                includedStates = ClaimsService.ClaimStateTypeIdsByNextAndPrevStateTypes(nextClaimStateType, prevClaimStateType); 
             }
             if (includedStates != null)
             {
@@ -399,7 +401,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return ClaimStateConverter.FromRow(row);
+            return EntityConverter<ClaimState>.FromRow(row);
         }
 
         public override bool CanLoadData()
@@ -411,9 +413,9 @@ namespace Registry.Viewport
         {
             DockAreas = DockAreas.Document;
             dataGridView.AutoGenerateColumns = false;
-            GeneralDataModel = DataModel.GetInstance<ClaimStatesDataModel>();
-            _claimStateTypes = DataModel.GetInstance<ClaimStateTypesDataModel>();
-            _claimStateTypesRelations = DataModel.GetInstance<ClaimStateTypesRelationsDataModel>();
+            GeneralDataModel = DataModel.GetInstance<EntityDataModel<ClaimState>>();
+            _claimStateTypes = DataModel.GetInstance<EntityDataModel<ClaimStateType>>();
+            _claimStateTypesRelations = DataModel.GetInstance<EntityDataModel<ClaimStateTypeRelation>>();
 
             //Ожидаем дозагрузки, если это необходимо
             GeneralDataModel.Select();
@@ -488,7 +490,7 @@ namespace Registry.Viewport
                         newRow = (DataRowView)GeneralBindingSource.AddNew();
                     else
                         newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    ClaimStateConverter.FillRow(claimState, newRow);
+                    EntityConverter<ClaimState>.FillRow(claimState, newRow);
                     GeneralBindingSource.Position = GeneralBindingSource.Count - 1;
                     GeneralDataModel.EditingNewRecord = false;
                     break;
@@ -503,7 +505,7 @@ namespace Registry.Viewport
                         return;
                     var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
                     IsEditable = false;
-                    ClaimStateConverter.FillRow(claimState, row);
+                    EntityConverter<ClaimState>.FillRow(claimState, row);
                     break;
             }
             UnbindedCheckBoxesUpdate();

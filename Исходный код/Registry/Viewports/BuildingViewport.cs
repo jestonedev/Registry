@@ -9,7 +9,9 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 using Registry.Viewport.SearchForms;
 using Security;
@@ -43,7 +45,6 @@ namespace Registry.Viewport
         private BindingSource _vObjectStates;
         private BindingSource _vBuildingCurrentFund;
         private BindingSource _vHeatingType;
-
         #endregion Views
 
         //Forms
@@ -120,7 +121,7 @@ namespace Registry.Viewport
             numericUpDownCommercialPremisesCount.Value = commercialCount;
             var totalMunCount = Convert.ToDecimal(_municipalPremises.Select().AsEnumerable().Count(s => s.Field<int>("id_building") == idBuilding));
             var totalPremisesCount = Convert.ToDecimal(
-                Math.Max(DataModel.GetInstance<PremisesDataModel>().FilterDeletedRows().Count(b => b.Field<int>("id_building") == idBuilding),
+                Math.Max(EntityDataModel<Premise>.GetInstance().FilterDeletedRows().Count(b => b.Field<int>("id_building") == idBuilding),
                 row["num_apartments"] == DBNull.Value ? 0 : (int)row["num_apartments"]));
             if (totalPremisesCount > 0)
             {
@@ -211,16 +212,16 @@ namespace Registry.Viewport
             textBoxHouse.DataBindings.Clear();
             textBoxHouse.DataBindings.Add("Text", GeneralBindingSource, "house", true, DataSourceUpdateMode.Never, "");
             numericUpDownFloors.DataBindings.Clear();
-            numericUpDownFloors.DataBindings.Add("Value", GeneralBindingSource, "floors", true, DataSourceUpdateMode.Never, 5);
+            numericUpDownFloors.DataBindings.Add("Value", GeneralBindingSource, "floors", true, DataSourceUpdateMode.Never, (decimal)5);
             numericUpDownStartupYear.DataBindings.Clear();
             numericUpDownStartupYear.Maximum = DateTime.Now.Year;
-            numericUpDownStartupYear.DataBindings.Add("Value", GeneralBindingSource, "startup_year", true, DataSourceUpdateMode.Never, DateTime.Now.Year);
+            numericUpDownStartupYear.DataBindings.Add("Value", GeneralBindingSource, "startup_year", true, DataSourceUpdateMode.Never, (decimal)DateTime.Now.Year);
             textBoxCadastralNum.DataBindings.Clear();
             textBoxCadastralNum.DataBindings.Add("Text", GeneralBindingSource, "cadastral_num", true, DataSourceUpdateMode.Never, "");
             numericUpDownCadastralCost.DataBindings.Clear();
-            numericUpDownCadastralCost.DataBindings.Add("Value", GeneralBindingSource, "cadastral_cost", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownCadastralCost.DataBindings.Add("Value", GeneralBindingSource, "cadastral_cost", true, DataSourceUpdateMode.Never, (decimal)0);
             numericUpDownBalanceCost.DataBindings.Clear();
-            numericUpDownBalanceCost.DataBindings.Add("Value", GeneralBindingSource, "balance_cost", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownBalanceCost.DataBindings.Add("Value", GeneralBindingSource, "balance_cost", true, DataSourceUpdateMode.Never, (decimal)0);
             checkBoxImprovement.DataBindings.Clear();
             checkBoxImprovement.DataBindings.Add("Checked", GeneralBindingSource, "improvement", true, DataSourceUpdateMode.Never, true);
             checkBoxElevator.DataBindings.Clear();
@@ -247,19 +248,19 @@ namespace Registry.Viewport
             textBoxHousingCooperative.DataBindings.Clear();
             textBoxHousingCooperative.DataBindings.Add("Text", GeneralBindingSource, "housing_cooperative", true, DataSourceUpdateMode.Never, "");
             numericUpDownPremisesCount.DataBindings.Clear();
-            numericUpDownPremisesCount.DataBindings.Add("Value", GeneralBindingSource, "num_premises", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownPremisesCount.DataBindings.Add("Value", GeneralBindingSource, "num_premises", true, DataSourceUpdateMode.Never, (decimal)0);
             numericUpDownRoomsCount.DataBindings.Clear();
-            numericUpDownRoomsCount.DataBindings.Add("Value", GeneralBindingSource, "num_rooms", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownRoomsCount.DataBindings.Add("Value", GeneralBindingSource, "num_rooms", true, DataSourceUpdateMode.Never, (decimal)0);
             numericUpDownApartmentsCount.DataBindings.Clear();
-            numericUpDownApartmentsCount.DataBindings.Add("Value", GeneralBindingSource, "num_apartments", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownApartmentsCount.DataBindings.Add("Value", GeneralBindingSource, "num_apartments", true, DataSourceUpdateMode.Never, (decimal)0);
             numericUpDownSharedApartmentsCount.DataBindings.Clear();
-            numericUpDownSharedApartmentsCount.DataBindings.Add("Value", GeneralBindingSource, "num_shared_apartments", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownSharedApartmentsCount.DataBindings.Add("Value", GeneralBindingSource, "num_shared_apartments", true, DataSourceUpdateMode.Never, (decimal)0);
             numericUpDownLivingArea.DataBindings.Clear();
-            numericUpDownLivingArea.DataBindings.Add("Value", GeneralBindingSource, "living_area", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownLivingArea.DataBindings.Add("Value", GeneralBindingSource, "living_area", true, DataSourceUpdateMode.Never, (decimal)0);
             numericUpDownTotalArea.DataBindings.Clear();
-            numericUpDownTotalArea.DataBindings.Add("Value", GeneralBindingSource, "total_area", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownTotalArea.DataBindings.Add("Value", GeneralBindingSource, "total_area", true, DataSourceUpdateMode.Never, (decimal)0);
             numericUpDownWear.DataBindings.Clear();
-            numericUpDownWear.DataBindings.Add("Value", GeneralBindingSource, "wear", true, DataSourceUpdateMode.Never, 0);
+            numericUpDownWear.DataBindings.Add("Value", GeneralBindingSource, "wear", true, DataSourceUpdateMode.Never, (decimal)0);
 
             dateTimePickerStateDate.DataBindings.Clear();
             dateTimePickerStateDate.DataBindings.Add("Value", GeneralBindingSource, "state_date", true, DataSourceUpdateMode.Never, null);
@@ -359,14 +360,14 @@ namespace Registry.Viewport
             }
             // Проверяем права на модификацию муниципального или не муниципального здания
             var buildingFromView = (Building)EntityFromView();
-            if (buildingFromView.IdBuilding != null && DataModelHelper.HasMunicipal(buildingFromView.IdBuilding.Value, EntityType.Building)
+            if (buildingFromView.IdBuilding != null && OtherService.HasMunicipal(buildingFromView.IdBuilding.Value, EntityType.Building)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
             {
                 MessageBox.Show(@"Вы не можете изменить информацию по данному зданию, т.к. оно является муниципальным или содержит в себе муниципальные помещения", 
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (buildingFromView.IdBuilding != null && DataModelHelper.HasNotMunicipal(buildingFromView.IdBuilding.Value, EntityType.Building)
+            if (buildingFromView.IdBuilding != null && OtherService.HasNotMunicipal(buildingFromView.IdBuilding.Value, EntityType.Building)
                 && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
             {
                 MessageBox.Show(@"Вы не можете изменить информацию по данному зданию, т.к. оно является немуниципальным или содержит в себе немуниципальные помещения",
@@ -395,7 +396,7 @@ namespace Registry.Viewport
                 }
             // Проверяем дубликаты адресов домов
             if ((building.House != buildingFromView.House) || (building.IdStreet != buildingFromView.IdStreet))
-                if (DataModelHelper.BuildingsDuplicateCount(building) != 0 &&
+                if (BuildingService.BuildingsDuplicateCount(building) != 0 &&
                     MessageBox.Show(@"В базе уже имеется здание с таким адресом. Все равно продолжить сохранение?", @"Внимание",
                         MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                     return false;
@@ -458,7 +459,7 @@ namespace Registry.Viewport
         protected override Entity EntityFromView()
         {
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return BuildingConverter.FromRow(row);
+            return EntityConverter<Building>.FromRow(row);
         }
 
         private void ViewportFromBuilding(Building building)
@@ -503,18 +504,12 @@ namespace Registry.Viewport
             dataGridViewOwnerships.AutoGenerateColumns = false;
             dataGridViewRestrictions.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<BuildingsDataModel>();
-            DataModel.GetInstance<KladrStreetsDataModel>().Select();
-            DataModel.GetInstance<StructureTypesDataModel>().Select();
-            DataModel.GetInstance<HeatingTypesDataModel>().Select();
-            _restrictions = DataModel.GetInstance<RestrictionsDataModel>();
-            DataModel.GetInstance<RestrictionTypesDataModel>().Select();
-            _restrictionBuildingsAssoc = DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>();
-            _ownershipRights = DataModel.GetInstance<OwnershipsRightsDataModel>();
-            DataModel.GetInstance<OwnershipRightTypesDataModel>().Select();
-            _ownershipBuildingsAssoc = DataModel.GetInstance<OwnershipBuildingsAssocDataModel>();
-            DataModel.GetInstance<FundTypesDataModel>().Select();
-            DataModel.GetInstance<ObjectStatesDataModel>().Select();
+
+            GeneralDataModel = EntityDataModel<Building>.GetInstance();
+            _restrictions = EntityDataModel<Restriction>.GetInstance();
+            _restrictionBuildingsAssoc = EntityDataModel<RestrictionBuildingAssoc>.GetInstance();
+            _ownershipRights = EntityDataModel<OwnershipRight>.GetInstance();
+            _ownershipBuildingsAssoc = EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance();
 
             //Вычисляемые модели
             _buildingsPremisesFunds = CalcDataModel.GetInstance<CalcDataModelBuildingsPremisesFunds>();
@@ -524,6 +519,14 @@ namespace Registry.Viewport
 
             //Ожидаем дозагрузки данных, если это необходимо
             GeneralDataModel.Select();
+            EntityDataModel<StructureType>.GetInstance().Select();
+            EntityDataModel<HeatingType>.GetInstance().Select();
+            EntityDataModel<RestrictionType>.GetInstance().Select();
+            EntityDataModel<OwnershipRightType>.GetInstance().Select();
+            DataModel.GetInstance<KladrStreetsDataModel>().Select();
+            DataModel.GetInstance<FundTypesDataModel>().Select();
+            DataModel.GetInstance<ObjectStatesDataModel>().Select();
+
             _restrictions.Select();
             _restrictionBuildingsAssoc.Select();
             _ownershipRights.Select();
@@ -532,103 +535,49 @@ namespace Registry.Viewport
             _municipalPremises.Select();
             _buildingsPremisesSumArea.Select();
 
-            var ds = DataModel.DataSet;
+            _vKladr= BindDataSource("kladr");
+            _vStructureTypes = BindDataSource<StructureType>();
+            _vRestrictions = BindDataSource<Restriction>();
+            _vRestrictions.Sort = "date";
+            _vOwnershipRights = BindDataSource<OwnershipRight>();
+            _vOwnershipRights.Sort = "date";
+            _vRestrictonTypes = BindDataSource<RestrictionType>();
+            _vOwnershipRightTypes = BindDataSource<OwnershipRightType>();
+            _vHeatingType = BindDataSource<HeatingType>();
+            _vBuildingCurrentFund = BindDataSource("buildings_current_funds", _buildingsCurrentFund.Select());
+            _vFundType = BindDataSource("fund_types");
+            _vObjectStates = BindDataSource("object_states");
 
-            _vKladr = new BindingSource
-            {
-                DataMember = "kladr",
-                DataSource = ds
-            };
-
-            _vStructureTypes = new BindingSource
-            {
-                DataMember = "structure_types",
-                DataSource = ds
-            };
-
-            _vRestrictions = new BindingSource
-            {
-                DataMember = "restrictions",
-                DataSource = ds,
-                Sort = "date"
-            };
-
-            _vOwnershipRights = new BindingSource
-            {
-                DataMember = "ownership_rights",
-                DataSource = ds,
-                Sort = "date"
-            };
-
-            _vRestrictonTypes = new BindingSource
-            {
-                DataMember = "restriction_types",
-                DataSource = ds
-            };
-
-            _vOwnershipRightTypes = new BindingSource
-            {
-                DataMember = "ownership_right_types",
-                DataSource = ds
-            };
-
-            _vHeatingType = new BindingSource
-            {
-                DataMember = "heating_type",
-                DataSource = ds
-            };
-
-            _vBuildingCurrentFund = new BindingSource
-            {
-                DataMember = "buildings_current_funds",
-                DataSource = _buildingsCurrentFund.Select()
-            };
-
-            _vFundType = new BindingSource
-            {
-                DataMember = "fund_types",
-                DataSource = ds
-            };
-
-            _vObjectStates = new BindingSource
-            {
-                DataMember = "object_states",
-                DataSource = ds
-            };
-
-            GeneralBindingSource = new BindingSource();
-            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", v_building_CurrentItemChanged);
-            GeneralBindingSource.DataMember = "buildings";
-            GeneralBindingSource.DataSource = ds;
+            GeneralBindingSource = BindDataSource<Building>();
             GeneralBindingSource.Filter = StaticFilter;
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 GeneralBindingSource.Filter += " AND ";
             GeneralBindingSource.Filter += DynamicFilter;
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", BuildingViewport_RowDeleted);
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", BuildingViewport_RowChanged);
 
-            _vRestrictionBuildingsAssoc = new BindingSource();
-            AddEventHandler<EventArgs>(_vRestrictionBuildingsAssoc, "CurrentItemChanged", v_restrictionBuildingsAssoc_CurrentItemChanged);
-            _vRestrictionBuildingsAssoc.DataMember = "buildings_restrictions_buildings_assoc";
-            _vRestrictionBuildingsAssoc.DataSource = GeneralBindingSource;
-            RestrictionsFilterRebuild();
-            AddEventHandler<DataRowChangeEventArgs>(_restrictionBuildingsAssoc.Select(), "RowDeleted", RestrictionsAssoc_RowChanged);
-            AddEventHandler<DataRowChangeEventArgs>(_restrictionBuildingsAssoc.Select(), "RowChanged", RestrictionsAssoc_RowDeleted);
-
-            _vOwnershipBuildingsAssoc = new BindingSource();
-            AddEventHandler<EventArgs>(_vOwnershipBuildingsAssoc, "CurrentItemChanged", v_ownershipBuildingsAssoc_CurrentItemChanged);
-            _vOwnershipBuildingsAssoc.DataMember = "buildings_ownership_buildings_assoc";
-            _vOwnershipBuildingsAssoc.DataSource = GeneralBindingSource;
-            v_ownershipBuildingsAssoc_CurrentItemChanged(null, new EventArgs());
-            OwnershipsFilterRebuild();
-            AddEventHandler<DataRowChangeEventArgs>(_ownershipBuildingsAssoc.Select(), "RowDeleted", OwnershipsAssoc_RowChanged);
-            AddEventHandler<DataRowChangeEventArgs>(_ownershipBuildingsAssoc.Select(), "RowChanged", OwnershipsAssoc_RowDeleted);
+            _vRestrictionBuildingsAssoc = BindDataSource("buildings_restrictions_buildings_assoc", GeneralBindingSource);
+            _vOwnershipBuildingsAssoc = BindDataSource("buildings_ownership_buildings_assoc", GeneralBindingSource);
 
             DataBind();
 
+            AddEventHandler<DataRowChangeEventArgs>(_restrictionBuildingsAssoc.Select(), "RowDeleted", RestrictionsAssoc_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(_restrictionBuildingsAssoc.Select(), "RowChanged", RestrictionsAssoc_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(_ownershipBuildingsAssoc.Select(), "RowDeleted", OwnershipsAssoc_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(_ownershipBuildingsAssoc.Select(), "RowChanged", OwnershipsAssoc_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", BuildingViewport_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", BuildingViewport_RowChanged);
             AddEventHandler<EventArgs>(_buildingsCurrentFund, "RefreshEvent", buildingsCurrentFund_RefreshEvent);
             AddEventHandler<EventArgs>(_buildingsPremisesFunds, "RefreshEvent", buildingsPremisesFunds_RefreshEvent);
             AddEventHandler<EventArgs>(_buildingsPremisesSumArea, "RefreshEvent", buildingsPremisesSumArea_RefreshEvent);
+            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", v_building_CurrentItemChanged);
+            AddEventHandler<EventArgs>(_vOwnershipBuildingsAssoc, "CurrentItemChanged", v_ownershipBuildingsAssoc_CurrentItemChanged);
+            AddEventHandler<EventArgs>(_vRestrictionBuildingsAssoc, "CurrentItemChanged", v_restrictionBuildingsAssoc_CurrentItemChanged);
+
+            v_building_CurrentItemChanged(null, new EventArgs());
+            v_ownershipBuildingsAssoc_CurrentItemChanged(null, new EventArgs());
+            v_restrictionBuildingsAssoc_CurrentItemChanged(null, new EventArgs());
+
+            OwnershipsFilterRebuild();
+            RestrictionsFilterRebuild();
             FiltersRebuild();
             SetViewportCaption();
             DataChangeHandlersInit();
@@ -732,7 +681,7 @@ namespace Registry.Viewport
                 newRow = (DataRowView) GeneralBindingSource.AddNew();
             else
                 newRow = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            BuildingConverter.FillRow(building, newRow);
+            EntityConverter<Building>.FillRow(building, newRow);
         }
 
         private void UpdateRecord(Building building)
@@ -748,7 +697,7 @@ namespace Registry.Viewport
                 return;
             RebuildFilterAfterSave(GeneralBindingSource, building.IdBuilding);
             var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            BuildingConverter.FillRow(building, row);
+            EntityConverter<Building>.FillRow(building, row);
         }
 
         private void RebuildFilterAfterSave(IBindingListView bindingSource, int? idBuilding)
@@ -843,14 +792,14 @@ namespace Registry.Viewport
             if (MessageBox.Show(@"Вы действительно хотите удалить это здание?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                if (DataModelHelper.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
+                if (OtherService.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
                 {
                     MessageBox.Show(@"У вас нет прав на удаление муниципальных жилых зданий и зданий, в которых присутствуют муниципальные помещения",
                         @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     return;
                 }
-                if (DataModelHelper.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
+                if (OtherService.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
                     && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                 {
                     MessageBox.Show(@"У вас нет прав на удаление немуниципальных жилых зданий и зданий, в которых присутствуют немуниципальные помещения",

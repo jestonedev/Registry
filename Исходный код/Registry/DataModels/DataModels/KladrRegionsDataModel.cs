@@ -1,4 +1,4 @@
-﻿using System.Windows.Forms;
+﻿using System;
 
 namespace Registry.DataModels.DataModels
 {
@@ -8,14 +8,14 @@ namespace Registry.DataModels.DataModels
         private const string SelectQuery = "SELECT * FROM v_kladr_regions";
         private const string TableName = "kladr_regions";
 
-        private KladrRegionsDataModel(ToolStripProgressBar progressBar, int incrementor)
-            : base(progressBar, incrementor, SelectQuery, TableName)
+        private KladrRegionsDataModel(Action afterLoadHandler)
+            : base(SelectQuery, TableName, afterLoadHandler)
         {
         }
 
-        public static KladrRegionsDataModel GetInstance(ToolStripProgressBar progressBar, int incrementor)
+        public static KladrRegionsDataModel GetInstance(Action afterLoadHandler)
         {
-            return _dataModel ?? (_dataModel = new KladrRegionsDataModel(progressBar, incrementor));
+            return _dataModel ?? (_dataModel = new KladrRegionsDataModel(afterLoadHandler));
         }
 
         protected override void ConfigureTable()

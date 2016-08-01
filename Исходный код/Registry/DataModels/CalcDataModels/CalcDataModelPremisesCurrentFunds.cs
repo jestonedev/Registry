@@ -3,6 +3,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
 
 namespace Registry.DataModels.CalcDataModels
@@ -17,8 +18,8 @@ namespace Registry.DataModels.CalcDataModels
         {
             Table = InitializeTable();
             Refresh();
-            RefreshOnTableModify(DataModel.GetInstance<FundsHistoryDataModel>().Select());
-            RefreshOnTableModify(DataModel.GetInstance<FundsPremisesAssocDataModel>().Select());
+            RefreshOnTableModify(DataModel.GetInstance<EntityDataModel<FundHistory>>().Select());
+            RefreshOnTableModify(EntityDataModel<FundPremisesAssoc>.GetInstance().Select());
         }
 
         private static DataTable InitializeTable()
@@ -36,17 +37,17 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelPremisesCurrentFunds");
             // Фильтруем удаленные строки
-            var fundsHistory = DataModel.GetInstance<FundsHistoryDataModel>().FilterDeletedRows();
-            var fundsPremisesAssoc = DataModel.GetInstance<FundsPremisesAssocDataModel>().FilterDeletedRows();
+            var fundsHistory = EntityDataModel<FundHistory>.GetInstance().FilterDeletedRows();
+            var fundsPremisesAssoc = EntityDataModel<FundPremisesAssoc>.GetInstance().FilterDeletedRows();
             
             // Вычисляем агрегационную информацию
-            var maxIdByPremises = DataModelHelper.MaxFundIDsByObject(fundsPremisesAssoc, EntityType.Premise); 
+            var maxIdByPremises = OtherService.MaxFundIDsByPremisesId(fundsPremisesAssoc); 
             var result = from fundHistoryRow in fundsHistory
                          join maxIdByPremisesRow in maxIdByPremises
                             on fundHistoryRow.Field<int>("id_fund") equals maxIdByPremisesRow.IdFund
                          select new
                          {
-                             id_premises = maxIdByPremisesRow.IdObject,
+                             id_premises = maxIdByPremisesRow.IdPremises,
                              id_fund = maxIdByPremisesRow.IdFund,
                              id_fund_type = fundHistoryRow.Field<int>("id_fund_type"),
                              protocol_number = fundHistoryRow.Field<string>("protocol_number"),

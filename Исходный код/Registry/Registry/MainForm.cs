@@ -15,6 +15,9 @@ using Registry.Viewport.SearchForms;
 using Security;
 using Settings;
 using WeifenLuo.WinFormsUI.Docking;
+using Registry.DataModels.CalcDataModels;
+using Registry.DataModels.Services;
+using Registry.Entities.Infrastructure;
 
 namespace Registry
 {
@@ -63,6 +66,16 @@ namespace Registry
 
         private void PreLoadData()
         {
+            Action afterLoadHandler = () =>
+            {
+                toolStripProgressBar.Value += 1;
+                if (toolStripProgressBar.Value != toolStripProgressBar.Maximum) return;
+                toolStripProgressBar.Visible = false;
+                //Если мы загрузили все данные, то запускаем CallbackUpdater
+                DataModelsCallbackUpdater.GetInstance().Run();
+                CalcDataModel.RunRefreshWalker();
+            };
+
             toolStripProgressBar.Maximum = 0;
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead) || AccessControl.HasPrivelege(Priveleges.TenancyRead)
                 || AccessControl.HasPrivelege(Priveleges.ResettleRead))
@@ -75,56 +88,56 @@ namespace Registry
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead) || AccessControl.HasPrivelege(Priveleges.TenancyRead)
                 || AccessControl.HasPrivelege(Priveleges.ResettleRead))
             {
-                DataModel.GetInstance<BuildingsDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<PremisesDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<SubPremisesDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<KladrStreetsDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<KladrRegionsDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<PremisesTypesDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<FundTypesDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<ObjectStatesDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<OwnershipRightTypesDataModel>(toolStripProgressBar, 1);
+                EntityDataModel<Building>.GetInstance(afterLoadHandler);
+                EntityDataModel<Premise>.GetInstance(afterLoadHandler);
+                EntityDataModel<SubPremise>.GetInstance(afterLoadHandler);
+                DataModel.GetInstance<KladrStreetsDataModel>(afterLoadHandler);
+                DataModel.GetInstance<KladrRegionsDataModel>(afterLoadHandler);
+                DataModel.GetInstance<PremisesTypesDataModel>(afterLoadHandler);
+                DataModel.GetInstance<FundTypesDataModel>(afterLoadHandler);
+                DataModel.GetInstance<ObjectStatesDataModel>(afterLoadHandler);
+                EntityDataModel<OwnershipRightType>.GetInstance(afterLoadHandler);
             }
             // Реестр жилого фонда
             if (AccessControl.HasPrivelege(Priveleges.RegistryRead))
             {
-                DataModel.GetInstance<StructureTypesDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<HeatingTypesDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<PremisesKindsDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<FundsBuildingsAssocDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<FundsPremisesAssocDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<FundsSubPremisesAssocDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<FundsHistoryDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<OwnershipBuildingsAssocDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<OwnershipPremisesAssocDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<OwnershipsRightsDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<RestrictionsBuildingsAssocDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<RestrictionsPremisesAssocDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<RestrictionsDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<RestrictionTypesDataModel>(toolStripProgressBar, 1);
+                EntityDataModel<StructureType>.GetInstance(afterLoadHandler);
+                EntityDataModel<HeatingType>.GetInstance(afterLoadHandler);
+                DataModel.GetInstance<PremisesKindsDataModel>(afterLoadHandler);
+                EntityDataModel<FundBuildingAssoc>.GetInstance(afterLoadHandler);
+                EntityDataModel<FundPremisesAssoc>.GetInstance(afterLoadHandler);
+                EntityDataModel<FundSubPremisesAssoc>.GetInstance(afterLoadHandler);
+                EntityDataModel<FundHistory>.GetInstance(afterLoadHandler);
+                EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance(afterLoadHandler);
+                EntityDataModel<OwnershipRightPremisesAssoc>.GetInstance(afterLoadHandler);
+                EntityDataModel<OwnershipRight>.GetInstance(afterLoadHandler);
+                EntityDataModel<RestrictionBuildingAssoc>.GetInstance(afterLoadHandler);
+                EntityDataModel<RestrictionPremisesAssoc>.GetInstance(afterLoadHandler);
+                EntityDataModel<Restriction>.GetInstance(afterLoadHandler);
+                EntityDataModel<RestrictionType>.GetInstance(afterLoadHandler);
             }
             // Процессы найма
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
             {
                 // При поиске здания или помещения по нанимателю предварительная подгрузка не производится 
                 // Данные подгружаются по необходимости
-                DataModel.GetInstance<TenancyPersonsDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<KinshipsDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<TenancyBuildingsAssocDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<TenancyPremisesAssocDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<TenancySubPremisesAssocDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<TenancyReasonsDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<TenancyReasonTypesDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<RentTypesDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<DocumentTypesDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<ExecutorsDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<TenancyAgreementsDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<WarrantsDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<WarrantDocTypesDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<DocumentsIssuedByDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<TenancyNotifiesDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<TenancyProcessesDataModel>(toolStripProgressBar, 1);
-                DataModel.GetInstance<TenancyRentPeriodsHistoryDataModel>(toolStripProgressBar, 1);
+                EntityDataModel<TenancyPerson>.GetInstance(afterLoadHandler);
+                DataModel.GetInstance<KinshipsDataModel>(afterLoadHandler);
+                EntityDataModel<TenancyBuildingAssoc>.GetInstance(afterLoadHandler);
+                EntityDataModel<TenancyPremisesAssoc>.GetInstance(afterLoadHandler);
+                EntityDataModel<TenancySubPremisesAssoc>.GetInstance(afterLoadHandler);
+                EntityDataModel<TenancyReason>.GetInstance(afterLoadHandler);
+                EntityDataModel<ReasonType>.GetInstance(afterLoadHandler);
+                DataModel.GetInstance<RentTypesDataModel>(afterLoadHandler);
+                DataModel.GetInstance<DocumentTypesDataModel>(afterLoadHandler);
+                EntityDataModel<Executor>.GetInstance(afterLoadHandler);
+                EntityDataModel<TenancyAgreement>.GetInstance(afterLoadHandler);
+                EntityDataModel<Warrant>.GetInstance(afterLoadHandler);
+                DataModel.GetInstance<WarrantDocTypesDataModel>(afterLoadHandler);
+                EntityDataModel<DocumentIssuedBy>.GetInstance(afterLoadHandler);
+                DataModel.GetInstance<TenancyNotifiesDataModel>(afterLoadHandler);
+                EntityDataModel<TenancyProcess>.GetInstance(afterLoadHandler);
+                EntityDataModel<TenancyRentPeriod>.GetInstance(afterLoadHandler);
             }
             if (toolStripProgressBar.Maximum == 0)
                 toolStripProgressBar.Visible = false;
@@ -685,7 +698,7 @@ namespace Registry
         private void ribbonOrbMenuItemPremises_Click(object sender, EventArgs e)
         {
             var filter = "";
-            var municipalIds = DataModelHelper.ObjectIdsByStates(EntityType.Premise, DataModelHelper.MunicipalObjectStates().ToArray());
+            var municipalIds = OtherService.ObjectIdsByStates(EntityType.Premise, DataModelHelper.MunicipalObjectStates().ToArray());
             var ids = municipalIds.Aggregate("", (current, id) => current + id.ToString(CultureInfo.InvariantCulture) + ",");
             var municipalStateIds = DataModelHelper.MunicipalObjectStates()
                 .Aggregate("", (current, id) => current + id.ToString(CultureInfo.InvariantCulture) + ",");

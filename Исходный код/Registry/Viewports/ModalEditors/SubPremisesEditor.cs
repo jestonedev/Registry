@@ -6,6 +6,7 @@ using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Registry.Entities.Infrastructure;
 using Security;
 
 namespace Registry.Viewport
@@ -15,7 +16,7 @@ namespace Registry.Viewport
         private ViewportState state = ViewportState.NewRowState;
         private SubPremise subPremise;
         private ParentTypeEnum parentType;
-        private DataModel sub_premises = DataModel.GetInstance<SubPremisesDataModel>();
+        private DataModel sub_premises = EntityDataModel<SubPremise>.GetInstance();
         private DataModel object_states;
         private BindingSource v_object_states;
 
