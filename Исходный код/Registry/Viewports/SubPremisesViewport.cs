@@ -84,9 +84,6 @@ namespace Registry.Viewport
                 if (dataGridView.Rows[i].IsNewRow) continue;
                 var row = dataGridView.Rows[i];
                 var sp = SubPremiseConverter.FromRow(row);
-                if (ViewportHelper.ValueOrNull<double>(row, "living_area") == 0)
-                    if (sp.TotalArea != null) 
-                        dataGridView.Rows[i].Cells["living_area"].Value = sp.TotalArea.Value;
                 list.Add(sp);
             }
             return list;
