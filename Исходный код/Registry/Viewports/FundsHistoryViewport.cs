@@ -3,6 +3,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
 using Registry.Entities;
@@ -296,7 +297,7 @@ namespace Registry.Viewport
                     throw new ViewportException("Неизвестный тип родительского объекта");
             }
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
 
             _vFundAssoc = new BindingSource();
             if ((ParentType == ParentTypeEnum.SubPremises) && (ParentRow != null))

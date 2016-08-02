@@ -131,7 +131,7 @@ namespace Registry.Viewport
                 AddEventHandler<EventArgs>(_premisesTenanciesInfo, "RefreshEvent", _premisesTenanciesInfo_RefreshEvent);
             }
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
 
             GeneralBindingSource = new BindingSource();
             AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);

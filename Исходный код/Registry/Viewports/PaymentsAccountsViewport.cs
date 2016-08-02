@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities.Infrastructure;
 using Registry.Viewport.SearchForms;
@@ -40,7 +41,7 @@ namespace Registry.Viewport
             GeneralDataModel.Select();
             GeneralBindingSource = new BindingSource();
             AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
-            GeneralBindingSource.DataSource = DataModel.DataSet;
+            GeneralBindingSource.DataSource = DataStorage.DataSet;
             GeneralBindingSource.DataMember = "payments_accounts";
             var filter = "";
             var title = "Лицевые счета";

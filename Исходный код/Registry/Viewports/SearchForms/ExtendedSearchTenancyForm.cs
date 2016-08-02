@@ -24,7 +24,7 @@ namespace Registry.Viewport.SearchForms
             EntityDataModel<ReasonType>.GetInstance().Select();
             var regions = DataModel.GetInstance<KladrRegionsDataModel>();
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
 
             vKladr = new BindingSource
             {

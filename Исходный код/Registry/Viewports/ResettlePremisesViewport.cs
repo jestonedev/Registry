@@ -12,6 +12,7 @@ using Registry.Viewport.SearchForms;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 using System.Linq;
+using Registry.DataModels;
 using Registry.DataModels.Services;
 using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
@@ -165,7 +166,7 @@ namespace Registry.Viewport
             _snapshotResettlePremises.Columns.Add("id_premises").DataType = typeof(int);
             _snapshotResettlePremises.Columns.Add("is_checked").DataType = typeof(bool);
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
 
             GeneralBindingSource = new BindingSource();
             AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);

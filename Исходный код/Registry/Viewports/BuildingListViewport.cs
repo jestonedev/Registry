@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
@@ -68,7 +69,7 @@ namespace Registry.Viewport
             _objectStates.Select();
             _municipalPremises.Select();
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
             
             GeneralBindingSource = new BindingSource {DataMember = "buildings"};
 

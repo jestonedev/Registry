@@ -8,6 +8,7 @@ using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Declensions.Unicode;
+using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
 using Registry.Entities;
@@ -276,7 +277,7 @@ namespace Registry.Viewport
             _warrants.Select();
             _kinships.Select();
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
 
             if ((ParentType == ParentTypeEnum.Tenancy) && (ParentRow != null))
                 Text = string.Format(CultureInfo.InvariantCulture, "Соглашения найма №{0}", ParentRow["id_process"]);

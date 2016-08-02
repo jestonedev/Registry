@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Entities.Infrastructure;
@@ -106,12 +107,12 @@ namespace Registry.Viewport
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 GeneralBindingSource.Filter += " AND ";
             GeneralBindingSource.Filter += DynamicFilter;
-            GeneralBindingSource.DataSource = DataModel.DataSet;
+            GeneralBindingSource.DataSource = DataStorage.DataSet;
 
             _vTenancyReasonTypesDataModel = new BindingSource
             {
                 DataMember = "tenancy_reason_types",
-                DataSource = DataModel.DataSet,
+                DataSource = DataStorage.DataSet,
                 Sort = "reason_name"
             };
 

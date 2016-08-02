@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Viewport.EntityConverters;
@@ -143,7 +144,7 @@ namespace Registry.Viewport
             GeneralDataModel.Select();
             _warrantDocTypes.Select();
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
 
             _vWarrantDocTypes = new BindingSource
             {

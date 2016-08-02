@@ -10,6 +10,7 @@ using Registry.Viewport.SearchForms;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 using System.Linq;
+using Registry.DataModels;
 using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 
@@ -154,7 +155,7 @@ namespace Registry.Viewport
             GeneralDataModel.Select();
             _documentsResidence.Select();
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
 
             _vDocumentsResidence = new BindingSource
             {

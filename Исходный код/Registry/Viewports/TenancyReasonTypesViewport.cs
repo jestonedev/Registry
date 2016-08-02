@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Viewport.EntityConverters;
@@ -105,7 +106,7 @@ namespace Registry.Viewport
             GeneralBindingSource = new BindingSource
             {
                 DataMember = "tenancy_reason_types",
-                DataSource = DataModel.DataSet
+                DataSource = DataStorage.DataSet
             };
 
             //Инициируем колонки snapshot-модели

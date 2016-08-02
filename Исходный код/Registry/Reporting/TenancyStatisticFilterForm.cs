@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.Globalization;
+using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 
@@ -17,7 +18,7 @@ namespace Registry.Reporting
             DataModel.GetInstance<RentTypesDataModel>().Select();
             EntityDataModel<ReasonType>.GetInstance().Select();
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
 
             var vKladr = new BindingSource
             {

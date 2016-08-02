@@ -22,7 +22,7 @@ namespace Registry.Viewport.SearchForms
             DataModel.GetInstance<KladrStreetsDataModel>().Select();
             var regions = DataModel.GetInstance<KladrRegionsDataModel>();
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
 
             _vKladrFrom = new BindingSource
             {

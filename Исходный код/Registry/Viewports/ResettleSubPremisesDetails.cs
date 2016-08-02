@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Entities.Infrastructure;
@@ -74,7 +75,7 @@ namespace Registry.Viewport
                 resettle_sub_premises = EntityDataModel<ResettleSubPremisesToAssoc>.GetInstance();
             resettle_sub_premises.Select();
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
 
             v_resettle_sub_premises = new BindingSource
             {

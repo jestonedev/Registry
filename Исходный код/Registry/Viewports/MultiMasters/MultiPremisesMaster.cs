@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
 using Registry.Entities;
@@ -29,7 +30,7 @@ namespace Registry.Viewport.MultiMasters
             _menuCallback = menuCallback;
             _premisesDataModel = EntityDataModel<Premise>.GetInstance();
             _premisesDataModel.Select();
-            _premises.DataSource = DataModel.DataSet;
+            _premises.DataSource = DataStorage.DataSet;
             _premises.DataMember = "premises";
             _premises.Filter = "0 = 1";
             dataGridView.RowCount = 0;

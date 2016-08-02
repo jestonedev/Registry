@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Viewport.EntityConverters;
@@ -88,7 +89,7 @@ namespace Registry.Viewport
             GeneralBindingSource = new BindingSource
             {
                 DataMember = "documents_issued_by",
-                DataSource = DataModel.DataSet
+                DataSource = DataStorage.DataSet
             };
 
             //Инициируем колонки snapshot-модели

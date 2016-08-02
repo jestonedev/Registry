@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.DataModels;
 
 namespace Registry.Viewport.ModalEditors
@@ -28,7 +29,7 @@ namespace Registry.Viewport.ModalEditors
             model.Select();
             _viewModel = new BindingSource
             {
-                DataSource = DataModel.DataSet,
+                DataSource = DataStorage.DataSet,
                 DataMember = "payments_accounts",
                 Filter =
                     string.Format("id_account IN (0{0})",

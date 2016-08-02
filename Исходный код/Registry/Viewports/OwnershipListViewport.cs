@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
 using Registry.Entities;
@@ -184,12 +185,12 @@ namespace Registry.Viewport
                 }
                 else
                     throw new ViewportException("Неизвестный тип родительского объекта");
-            _vOwnershipAssoc.DataSource = DataModel.DataSet;
+            _vOwnershipAssoc.DataSource = DataStorage.DataSet;
 
             GeneralBindingSource = new BindingSource
             {
                 DataMember = "ownership_rights",
-                DataSource = DataModel.DataSet
+                DataSource = DataStorage.DataSet
             };
             //Перестраиваем фильтр v_ownerships_rights.Filter
             RebuildFilter();
@@ -197,7 +198,7 @@ namespace Registry.Viewport
             _vOwnershipRightTypes = new BindingSource
             {
                 DataMember = "ownership_right_types",
-                DataSource = DataModel.DataSet
+                DataSource = DataStorage.DataSet
             };
 
             //Инициируем колонки snapshot-модели

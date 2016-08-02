@@ -5,6 +5,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
@@ -192,7 +193,7 @@ namespace Registry.Viewport
             GeneralBindingSource = new BindingSource();
             AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
             GeneralBindingSource.DataMember = "claims";
-            GeneralBindingSource.DataSource = DataModel.DataSet;
+            GeneralBindingSource.DataSource = DataStorage.DataSet;
             GeneralBindingSource.Filter = StaticFilter;
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 GeneralBindingSource.Filter += " AND ";
@@ -207,7 +208,7 @@ namespace Registry.Viewport
 
             _vAccounts = new BindingSource
             {
-                DataSource = DataModel.DataSet,
+                DataSource = DataStorage.DataSet,
                 DataMember = "payments_accounts"
             };
 

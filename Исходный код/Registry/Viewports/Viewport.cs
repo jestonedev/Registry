@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Entities.Infrastructure;
@@ -331,7 +332,7 @@ namespace Registry.Viewport
 
         protected BindingSource BindDataSource(string dataMember, object dataSource = null)
         {
-            var ds = dataSource ?? DataModel.DataSet;
+            var ds = dataSource ?? DataStorage.DataSet;
 
             return new BindingSource
             {
@@ -343,7 +344,7 @@ namespace Registry.Viewport
         protected BindingSource BindDataSource<T>(object dataSource = null)
             where T : Entity
         {
-            var ds = dataSource ?? DataModel.DataSet;
+            var ds = dataSource ?? DataStorage.DataSet;
             var attribute = typeof(T).GetCustomAttributes(false).OfType<DataTableAttribute>().FirstOrDefault();
             if (attribute == null)
             {

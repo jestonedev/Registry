@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
@@ -62,7 +63,7 @@ namespace Registry.Reporting
             rentTypes.Select();
             executors.Select();
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
 
             _vTenancies = new BindingSource {DataMember = "tenancy_processes"};
             _vTenancies.CurrentItemChanged += v_tenancies_CurrentItemChanged;

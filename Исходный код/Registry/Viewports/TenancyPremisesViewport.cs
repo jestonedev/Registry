@@ -181,7 +181,7 @@ namespace Registry.Viewport
             _snapshotTenancyPremises.Columns.Add("rent_total_area").DataType = typeof(double);
             _snapshotTenancyPremises.Columns.Add("rent_living_area").DataType = typeof(double);
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
 
             GeneralBindingSource = new BindingSource();
             AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);

@@ -628,7 +628,7 @@ namespace Registry.Viewport
             _fundTypes.Select();
             _objectStates.Select();
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
 
             _vKladr = new BindingSource
             {

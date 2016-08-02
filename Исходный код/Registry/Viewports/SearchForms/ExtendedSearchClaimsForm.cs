@@ -21,7 +21,7 @@ namespace Registry.Viewport.SearchForms
             DataModel.GetInstance<EntityDataModel<ClaimState>>().Select();
             comboBoxState.DataSource = new BindingSource
             {
-                DataSource = DataModel.DataSet,
+                DataSource = DataStorage.DataSet,
                 DataMember = "claim_state_types"
             };
             comboBoxState.DisplayMember = "state_type";

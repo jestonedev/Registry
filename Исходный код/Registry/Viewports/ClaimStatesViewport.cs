@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
 using Registry.Entities;
@@ -421,7 +422,7 @@ namespace Registry.Viewport
             _claimStateTypes.Select();
             _claimStateTypesRelations.Select();
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
 
             if (ParentType == ParentTypeEnum.Claim && ParentRow != null)
                 Text = string.Format(CultureInfo.InvariantCulture, "Состояния иск. работы №{0}", ParentRow["id_claim"]);
@@ -688,12 +689,10 @@ namespace Registry.Viewport
 
         private void ClaimStatesViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
-            if (e.Action == DataRowAction.Delete)
-            {
-                UnbindedCheckBoxesUpdate();
-                if (Selected)
-                    MenuCallback.StatusBarStateUpdate();
-            }
+            if (e.Action != DataRowAction.Delete) return;
+            UnbindedCheckBoxesUpdate();
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
         }
 
         private void ClaimStatesViewport_RowChanged(object sender, DataRowChangeEventArgs e)

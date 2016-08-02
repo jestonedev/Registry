@@ -2,6 +2,7 @@
 using System.Data;
 using System.Windows.Forms;
 using System.Globalization;
+using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 
@@ -161,7 +162,7 @@ namespace Registry.Reporting
             DataModel.GetInstance<EntityDataModel<Executor>>().Select();
             DataModel.GetInstance<KladrStreetsDataModel>().Select();
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
 
             var vRentTypes = new BindingSource
             {

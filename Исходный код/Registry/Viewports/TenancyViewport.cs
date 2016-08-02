@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Linq;
 using System.Security.Principal;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
@@ -532,7 +533,7 @@ namespace Registry.Viewport
             GeneralBindingSource = new BindingSource();
             AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", v_tenancies_CurrentItemChanged);
             GeneralBindingSource.DataMember = "tenancy_processes";
-            GeneralBindingSource.DataSource = DataModel.DataSet;
+            GeneralBindingSource.DataSource = DataStorage.DataSet;
             RebuildStaticFilter();
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 GeneralBindingSource.Filter += " AND ";
@@ -540,26 +541,26 @@ namespace Registry.Viewport
 
             _vExecutors = new BindingSource
             {
-                DataSource = DataModel.DataSet,
+                DataSource = DataStorage.DataSet,
                 DataMember = "executors",
                 Filter = "is_inactive = 0"
             };
 
             _vRentTypes = new BindingSource
             {
-                DataSource = DataModel.DataSet,
+                DataSource = DataStorage.DataSet,
                 DataMember = "rent_types"
             };
 
             _vKinships = new BindingSource
             {
-                DataSource = DataModel.DataSet,
+                DataSource = DataStorage.DataSet,
                 DataMember = "kinships"
             };
 
             _vWarrants = new BindingSource
             {
-                DataSource = DataModel.DataSet,
+                DataSource = DataStorage.DataSet,
                 DataMember = "warrants"
             };
 
@@ -966,7 +967,7 @@ namespace Registry.Viewport
                 person.IdPerson = idPerson;
                 var personBinding = new BindingSource
                 {
-                    DataSource = DataModel.DataSet,
+                    DataSource = DataStorage.DataSet,
                     DataMember = "tenancy_persons"
                 };
                 var newPersonRow = (DataRowView)personBinding.AddNew();

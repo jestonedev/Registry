@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Entities.Infrastructure;
@@ -58,8 +59,10 @@ namespace Registry.Viewport
                 throw new ViewportException("Неизвестный родительский объект");
 
             // Инициализируем snapshot-модель
-            snapshot_tenancy_sub_premises = new DataTable("selected_sub_premises");
-            snapshot_tenancy_sub_premises.Locale = CultureInfo.InvariantCulture;
+            snapshot_tenancy_sub_premises = new DataTable("selected_sub_premises")
+            {
+                Locale = CultureInfo.InvariantCulture
+            };
             snapshot_tenancy_sub_premises.Columns.Add("id_assoc").DataType = typeof(int);
             snapshot_tenancy_sub_premises.Columns.Add("id_sub_premises").DataType = typeof(int);
             snapshot_tenancy_sub_premises.Columns.Add("is_checked").DataType = typeof(bool);
@@ -68,12 +71,14 @@ namespace Registry.Viewport
             tenancy_sub_premises = EntityDataModel<TenancySubPremisesAssoc>.GetInstance();
             tenancy_sub_premises.Select();
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
 
-            v_tenancy_sub_premises = new BindingSource();
-            v_tenancy_sub_premises.DataMember = "tenancy_sub_premises_assoc";
-            v_tenancy_sub_premises.Filter = StaticFilter;
-            v_tenancy_sub_premises.DataSource = ds;
+            v_tenancy_sub_premises = new BindingSource
+            {
+                DataMember = "tenancy_sub_premises_assoc",
+                Filter = StaticFilter,
+                DataSource = ds
+            };
 
             //Загружаем данные snapshot-модели из original-view
             for (var i = 0; i < v_tenancy_sub_premises.Count; i++)

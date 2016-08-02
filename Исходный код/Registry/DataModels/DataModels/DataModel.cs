@@ -13,8 +13,6 @@ namespace Registry.DataModels.DataModels
 {
     public class DataModel
     {
-        private static readonly DataSet dataSet = new DataSet();
-        public static DataSet DataSet { get { return dataSet; } }
 
         private DataModelLoadState _dmLoadState = DataModelLoadState.BeforeLoad;
         public DataModelLoadState DmLoadState { get { return _dmLoadState; } set { _dmLoadState = value; } }
@@ -56,10 +54,10 @@ namespace Registry.DataModels.DataModels
                     ConfigureTable();
                     lock (LockObj)
                     {
-                        if (!dataSet.Tables.Contains(Table.TableName))
+                        if (!DataStorage.ContainTable(Table))
                         {
                             Table.ExtendedProperties.Add("model", this);
-                            dataSet.Tables.Add(Table);
+                            DataStorage.AddTable(Table);
                             ConfigureRelations();
                         }
                     }
@@ -97,8 +95,10 @@ namespace Registry.DataModels.DataModels
             DataModel dm = null;
             lock (LockObj)
             {
-                if (dataSet.Tables.Contains(tableName))
-                    dm = (DataModel)dataSet.Tables[tableName].ExtendedProperties["model"];
+                if (DataStorage.ContainTable(tableName))
+                {
+                    dm = DataStorage.GetDataModel(tableName);
+                }
             }
             return dm;
         }              
@@ -106,13 +106,14 @@ namespace Registry.DataModels.DataModels
         protected static void AddRelation(string masterTableName, string masterColumnName, string slaveTableName,
             string slaveColumnName)
         {
-            if (!dataSet.Tables.Contains(masterTableName)) return;
-            if (!dataSet.Tables.Contains(slaveTableName)) return;
-            if (dataSet.Relations.Contains(masterTableName + "_" + slaveTableName)) return;
+            if (!DataStorage.ContainTable(masterTableName)) return;
+            if (!DataStorage.ContainTable(slaveTableName)) return;
+            if (DataStorage.ContainRelation(masterTableName + "_" + slaveTableName)) return;
+
             var relation = new DataRelation(masterTableName + "_" + slaveTableName,
-                dataSet.Tables[masterTableName].Columns[masterColumnName],
-                dataSet.Tables[slaveTableName].Columns[slaveColumnName], true);
-            dataSet.Relations.Add(relation);
+                DataStorage.DataSet.Tables[masterTableName].Columns[masterColumnName],
+                DataStorage.DataSet.Tables[slaveTableName].Columns[slaveColumnName], true);
+            DataStorage.DataSet.Relations.Add(relation);
         }
 
         protected virtual void ConfigureRelations()

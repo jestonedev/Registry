@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
@@ -122,7 +123,7 @@ namespace Registry.Viewport
 
             SetViewportCaption();
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
 
             GeneralBindingSource = new BindingSource {DataMember = "tenancy_processes"};
             AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);

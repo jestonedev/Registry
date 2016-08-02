@@ -4,6 +4,7 @@ using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
 using Registry.Entities;
@@ -27,7 +28,7 @@ namespace Registry.Viewport.MultiMasters
                         | DockAreas.DockBottom;
             _menuCallback = menuCallback;
             DataModel.GetInstance<EntityDataModel<Claim>>().Select();
-            _claims.DataSource = DataModel.DataSet;
+            _claims.DataSource = DataStorage.DataSet;
             _claims.DataMember = "claims";
             _claims.Filter = "0 = 1";
             dataGridView.RowCount = 0;

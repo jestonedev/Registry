@@ -120,7 +120,7 @@ namespace Registry.Viewport
             _vObjectStates = new BindingSource
             {
                 DataMember = "object_states",
-                DataSource = DataModel.DataSet
+                DataSource = DataStorage.DataSet
             };
 
             GeneralBindingSource = new BindingSource
@@ -131,7 +131,7 @@ namespace Registry.Viewport
             if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
                 GeneralBindingSource.Filter += " AND ";
             GeneralBindingSource.Filter += DynamicFilter;
-            GeneralBindingSource.DataSource = DataModel.DataSet;
+            GeneralBindingSource.DataSource = DataStorage.DataSet;
 
             if (ParentRow != null && ParentType == ParentTypeEnum.Premises)
                 Text = string.Format(CultureInfo.InvariantCulture, "Комнаты помещения №{0}", ParentRow["id_premises"]);

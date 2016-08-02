@@ -168,7 +168,7 @@ namespace Registry.Viewport.SearchForms
             var regions = DataModel.GetInstance<KladrRegionsDataModel>();
             DataModel ownershipRightTypes = EntityDataModel<OwnershipRightType>.GetInstance();
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
 
             _vKladr = new BindingSource
             {

@@ -5,6 +5,7 @@ using System.Data;
 using System.Linq;
 using System.Globalization;
 using System.Windows.Forms;
+using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
 using Registry.Entities;
@@ -136,7 +137,7 @@ namespace Registry.Viewport
             _snapshotTenancyBuildings.Columns.Add("rent_total_area").DataType = typeof(double);
             _snapshotTenancyBuildings.Columns.Add("rent_living_area").DataType = typeof(double);
 
-            var ds = DataModel.DataSet;
+            var ds = DataStorage.DataSet;
 
             GeneralBindingSource = new BindingSource {DataMember = "buildings"};
             AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);

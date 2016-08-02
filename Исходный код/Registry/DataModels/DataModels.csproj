@@ -78,6 +78,7 @@
     <Compile Include="DataModels\DataModel.cs" />
     <Compile Include="DataModels\DataModelLoadState.cs" />
     <Compile Include="DataModels\DataModelLoadSyncType.cs" />
+    <Compile Include="DataStorage.cs" />
     <Compile Include="DBConnection.cs" />
     <Compile Include="DataModels\DocumentTypesDataModel.cs" />
     <Compile Include="DataModels\FundTypesDataModel.cs" />
