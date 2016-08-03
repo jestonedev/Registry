@@ -104,8 +104,8 @@ namespace Registry.Viewport
         {
             foreach (var building in tenancyBuildings)
             {
-                return building.IdBuilding == null || 
-                    ViewportHelper.BuildingFundAndRentMatch(building.IdBuilding.Value, (int)ParentRow["id_rent_type"]) || 
+                return building.IdBuilding == null ||
+                    OtherService.BuildingFundAndRentMatch(building.IdBuilding.Value, (int)ParentRow["id_rent_type"]) || 
                     MessageBox.Show(@"Выбранный вид найма не соответствует фонду сдаваемого здания. Все равно продолжить сохранение?",
                         @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes;
             }

@@ -2,7 +2,7 @@
 
 namespace Registry.DataModels.DataModels
 {
-    internal sealed class TenancyNotifiesDataModel : DataModel
+    public sealed class TenancyNotifiesDataModel : DataModel
     {
         private static TenancyNotifiesDataModel _dataModel;
         private const string SelectQuery = "SELECT * FROM tenancy_notifies WHERE deleted <> 1";

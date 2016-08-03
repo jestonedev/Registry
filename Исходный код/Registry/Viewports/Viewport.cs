@@ -9,6 +9,7 @@ using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Entities.Infrastructure;
 using Registry.Reporting;
+using Registry.Viewport.Presenters;
 using Registry.Viewport.SearchForms;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -26,13 +27,14 @@ namespace Registry.Viewport
         protected BindingSource GeneralBindingSource;
         protected DataModel GeneralDataModel;
 
+        protected Presenter Presenter { get; set; }
 
-
-        protected Viewport(): this(null, null)
+        protected Viewport()
+            : this(null, null)
         {
         }
 
-        protected Viewport(Viewport viewport, IMenuCallback menuCallback)
+        protected Viewport(Viewport viewport = null, IMenuCallback menuCallback = null, Presenter presenter = null)
         {
             if (viewport != null)
             {
@@ -42,6 +44,12 @@ namespace Registry.Viewport
                 ParentType = viewport.ParentType;
             }
             MenuCallback = menuCallback;
+            Presenter = presenter;
+            if (presenter != null)
+            {
+                GeneralBindingSource = presenter.ViewModel["general"].BindingSource;
+                GeneralDataModel = presenter.ViewModel["general"].Model;
+            }
         }
 
         protected override void OnClosing(CancelEventArgs e)

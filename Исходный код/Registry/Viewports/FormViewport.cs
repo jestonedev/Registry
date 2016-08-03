@@ -1,10 +1,10 @@
-﻿
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 using Registry.Entities;
+using Registry.Viewport.Presenters;
 
 namespace Registry.Viewport
 {
@@ -17,8 +17,8 @@ namespace Registry.Viewport
         {
         }
 
-        protected FormViewport(Viewport viewport, IMenuCallback menuCallback)
-            : base(viewport, menuCallback)
+        protected FormViewport(Viewport viewport, IMenuCallback menuCallback, Presenter presenter = null)
+            : base(viewport, menuCallback, presenter)
         {
         }
 

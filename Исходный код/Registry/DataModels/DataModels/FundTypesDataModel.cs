@@ -2,7 +2,7 @@
 
 namespace Registry.DataModels.DataModels
 {
-    internal sealed class FundTypesDataModel : DataModel
+    public sealed class FundTypesDataModel : DataModel
     {
         private static FundTypesDataModel _dataModel;
         private const string SelectQuery = "SELECT * FROM fund_types ft ORDER BY CASE ft.id_fund_type WHEN 4 THEN 0 ELSE ft.fund_type END DESC";

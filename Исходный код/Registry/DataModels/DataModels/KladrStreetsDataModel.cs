@@ -2,7 +2,7 @@
 
 namespace Registry.DataModels.DataModels
 {
-    internal sealed class KladrStreetsDataModel : DataModel
+    public sealed class KladrStreetsDataModel : DataModel
     {
         private static KladrStreetsDataModel _dataModel;
         private const string SelectQuery = "SELECT * FROM v_kladr_streets";

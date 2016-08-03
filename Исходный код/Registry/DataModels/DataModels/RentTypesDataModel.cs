@@ -2,7 +2,7 @@
 
 namespace Registry.DataModels.DataModels
 {
-    internal sealed class RentTypesDataModel : DataModel
+    public sealed class RentTypesDataModel : DataModel
     {
         private static RentTypesDataModel _dataModel;
         private const string SelectQuery = "SELECT * FROM rent_types rt ORDER BY rt.rent_type DESC";

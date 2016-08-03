@@ -89,7 +89,6 @@ namespace Registry.DataModels.CalcDataModels
                         : fiRow.id_fund_type.Value,
                     total_area = premisesRow.Field<double>("total_area")
                 }).ToList();
-            var test = premisesDataSet.Where(v => v.id_building == 3482);
 
             // выбираем муниц. комнаты, принадлежащие какому-либо фонду, а также имеющие состояния: 4, 5 или 9
             var subPremisesDataSet = (from premisesRow in premises

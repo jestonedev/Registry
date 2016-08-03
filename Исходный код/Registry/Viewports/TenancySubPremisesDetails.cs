@@ -7,6 +7,7 @@ using System.Globalization;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities;
 using Registry.Entities.Infrastructure;
 
@@ -166,12 +167,12 @@ namespace Registry.Viewport
         {
             foreach (var subPremises in tenancySubPremises)
             {
-                if (subPremises.IdSubPremises != null && ViewportHelper.SubPremiseFundAndRentMatch(subPremises.IdSubPremises.Value,
+                if (subPremises.IdSubPremises != null && OtherService.SubPremiseFundAndRentMatch(subPremises.IdSubPremises.Value,
                     (int) ParentRow["id_rent_type"])) continue;
                 var idPremises = (int)EntityDataModel<SubPremise>.GetInstance().Select().Rows.Find(subPremises.IdSubPremises.Value)["id_premises"];
-                if (ViewportHelper.PremiseFundAndRentMatch(idPremises, (int) ParentRow["id_rent_type"])) continue;
+                if (OtherService.PremiseFundAndRentMatch(idPremises, (int)ParentRow["id_rent_type"])) continue;
                 var idBuilding = (int)EntityDataModel<Premise>.GetInstance().Select().Rows.Find(idPremises)["id_building"];
-                return ViewportHelper.BuildingFundAndRentMatch(idBuilding, (int)ParentRow["id_rent_type"]) || 
+                return OtherService.BuildingFundAndRentMatch(idBuilding, (int)ParentRow["id_rent_type"]) || 
                     MessageBox.Show(@"Выбранный вид найма не соответствует фонду сдаваемой комнаты. Все равно продолжить сохранение?",
                         @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes;
             }

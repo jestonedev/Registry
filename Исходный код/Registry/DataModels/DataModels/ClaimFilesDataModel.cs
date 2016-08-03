@@ -3,7 +3,7 @@ using Registry.Entities;
 
 namespace Registry.DataModels.DataModels
 {
-    public class ClaimFilesDataModel : EntityDataModel<ClaimFile>
+    public sealed class ClaimFilesDataModel : EntityDataModel<ClaimFile>
     {
 
         public override DataTable Select()

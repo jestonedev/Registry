@@ -188,6 +188,11 @@
     <Compile Include="ModalEditors\SelectAccountForm.Designer.cs">
       <DependentUpon>SelectAccountForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presenters\BuildingListPresenter.cs" />
+    <Compile Include="Presenters\BuldingPresenter.cs" />
+    <Compile Include="Presenters\PremisesListPresenter.cs" />
+    <Compile Include="Presenters\PremisesPresenter.cs" />
+    <Compile Include="Presenters\Presenter.cs" />
     <Compile Include="SearchForms\ExtendedSearchResettleForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -492,6 +497,12 @@
     <Compile Include="TenancyViewport.Designer.cs">
       <DependentUpon>TenancyViewport.cs</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels\BuildingListViewModel.cs" />
+    <Compile Include="ViewModels\BuildingViewModel.cs" />
+    <Compile Include="ViewModels\PremisesListViewModel.cs" />
+    <Compile Include="ViewModels\PremisesViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelItem.cs" />
+    <Compile Include="ViewModels\ViewModel.cs" />
     <Compile Include="Viewport.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -750,6 +761,7 @@
   <ItemGroup>
     <None Include="Resources\list-remove %28max%29.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

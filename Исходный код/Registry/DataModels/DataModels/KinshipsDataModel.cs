@@ -2,7 +2,7 @@
 
 namespace Registry.DataModels.DataModels
 {
-    internal sealed class KinshipsDataModel : DataModel
+    public sealed class KinshipsDataModel : DataModel
     {
         private static KinshipsDataModel _dataModel;
         private const string SelectQuery = "SELECT * FROM kinships";

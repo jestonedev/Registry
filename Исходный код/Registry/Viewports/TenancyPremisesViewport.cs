@@ -132,11 +132,11 @@ namespace Registry.Viewport
         {
             foreach (var premises in tenancyPremises)
             {
-                if (premises.IdPremises != null && 
-                    ViewportHelper.PremiseFundAndRentMatch(premises.IdPremises.Value, (int) ParentRow["id_rent_type"]))
+                if (premises.IdPremises != null &&
+                    OtherService.PremiseFundAndRentMatch(premises.IdPremises.Value, (int)ParentRow["id_rent_type"]))
                     continue;
                 var idBuilding = (int)EntityDataModel<Premise>.GetInstance().Select().Rows.Find(premises.IdPremises.Value)["id_building"];
-                return ViewportHelper.BuildingFundAndRentMatch(idBuilding, (int)ParentRow["id_rent_type"]) || 
+                return OtherService.BuildingFundAndRentMatch(idBuilding, (int)ParentRow["id_rent_type"]) || 
                     MessageBox.Show(@"Выбранный вид найма не соответствует фонду сдаваемого помещения. Все равно продолжить сохранение?",
                         @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes;
             }

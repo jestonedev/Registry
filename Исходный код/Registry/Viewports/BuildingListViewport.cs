@@ -5,14 +5,12 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using Registry.DataModels;
-using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
 using Registry.Entities;
 using Registry.Entities.Infrastructure;
 using Registry.Reporting;
-using Registry.Viewport.SearchForms;
+using Registry.Viewport.Presenters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 using MessageBox = System.Windows.Forms.MessageBox;
@@ -22,32 +20,12 @@ namespace Registry.Viewport
 {
     internal sealed partial class BuildingListViewport : DataGridViewport
     {
-
-        #region Models
-        private DataModel _kladr;
-        private DataModel _objectStates;
-        private CalcDataModel _municipalPremises;
-        #endregion
-
-        #region Views
-        private BindingSource _vKladr;
-        private BindingSource _vStructureType;
-        #endregion
-
-        //Forms
-        private SearchForm _sbSimpleSearchForm;
-        private SearchForm _sbExtendedSearchForm;
-
-        private BuildingListViewport()
-            : this(null, null)
-        {
-        }
-
-        public BuildingListViewport(Viewport viewport, IMenuCallback menuCallback)
-            : base(viewport, menuCallback)
+        public BuildingListViewport(Viewport viewport = null, IMenuCallback menuCallback = null)
+            : base(viewport, menuCallback, new BuildingListPresenter())
         {
             InitializeComponent();
             DataGridView = dataGridView;
+            DockAreas = DockAreas.Document;
         }
 
         public override bool CanLoadData()
@@ -57,68 +35,39 @@ namespace Registry.Viewport
 
         public override void LoadData()
         {
-            DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<EntityDataModel<Building>>();
-            _kladr = DataModel.GetInstance<KladrStreetsDataModel>();
-            _objectStates = DataModel.GetInstance<ObjectStatesDataModel>();
-            _municipalPremises = CalcDataModel.GetInstance<CalcDataModelMunicipalPremises>();
-            
-            // Ожидаем дозагрузки данных, если это необходимо
-            GeneralDataModel.Select();
-            _kladr.Select();
-            _objectStates.Select();
-            _municipalPremises.Select();
+            GeneralBindingSource = Presenter.ViewModel["general"].BindingSource;
+            GeneralDataModel = Presenter.ViewModel["general"].Model;
 
-            var ds = DataStorage.DataSet;
-            
-            GeneralBindingSource = new BindingSource {DataMember = "buildings"};
+            Presenter.SetGeneralBindingSourceFilter(StaticFilter, DynamicFilter);
 
-            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
-
-            GeneralBindingSource.DataSource = ds;
-            GeneralBindingSource.Filter = StaticFilter;
-            if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
-                GeneralBindingSource.Filter += " AND ";
-            GeneralBindingSource.Filter += DynamicFilter;
-
-            _vKladr = new BindingSource
-            {
-                DataMember = "kladr",
-                DataSource = ds
-            };
-
-            id_street.DataSource = _vKladr;
-            id_street.ValueMember = "id_street";
+            id_street.DataSource = Presenter.ViewModel["kladr"].DataSource;
+            id_street.ValueMember = Presenter.ViewModel["kladr"].PrimaryKeyFirst;
             id_street.DisplayMember = "street_name";
 
-            _vStructureType = new BindingSource
-            {
-                DataMember = "structure_types",
-                DataSource = ds
-            };
+            id_structure_type.DataSource = Presenter.ViewModel["structure_types"].DataSource;
+            id_structure_type.ValueMember = Presenter.ViewModel["structure_types"].PrimaryKeyFirst;
+            id_structure_type.DisplayMember = "structure_type";         
+
+            AddEventHandler<EventArgs>(Presenter.ViewModel["general"].BindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowChanged", GeneralDataSource_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleted", GeneralDataSource_RowDeleted);
+            AddEventHandler<EventArgs>(Presenter.ViewModel["municipal_premises"].Model, "RefreshEvent", _municipalPremises_RefreshEvent);
             
-            id_structure_type.DataSource = _vStructureType;
-            id_structure_type.ValueMember = "id_structure_type";
-            id_structure_type.DisplayMember = "structure_type";
+            var ownershipRightsAssoc = EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance().Select();
+            AddEventHandler<DataRowChangeEventArgs>(ownershipRightsAssoc, "RowChanged", BuildingsOwnershipChanged);
+            AddEventHandler<DataRowChangeEventArgs>(ownershipRightsAssoc, "RowDeleted", BuildingsOwnershipChanged);
 
+            DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count;
+            ViewportHelper.SetDoubleBuffered(DataGridView);
 
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", BuildingListViewport_RowChanged);
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", BuildingListViewport_RowDeleted);
-            AddEventHandler<EventArgs>(_municipalPremises, "RefreshEvent", _municipalPremises_RefreshEvent);
-            AddEventHandler<DataRowChangeEventArgs>(EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance().Select(),
-                "RowChanged", BuildingsOwnershipChanged);
-            AddEventHandler<DataRowChangeEventArgs>(EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance().Select(),
-                "RowDeleted", BuildingsOwnershipChanged);
-
-            dataGridView.RowCount = GeneralBindingSource.Count;
-            ViewportHelper.SetDoubleBuffered(dataGridView);
+            GeneralBindingSource_CurrentItemChanged(null, new EventArgs());
         }
 
-        void _municipalPremises_RefreshEvent(object sender, EventArgs e)
+        private void _municipalPremises_RefreshEvent(object sender, EventArgs e)
         {
-            if (dataGridView.Columns["mun_area"] != null)
+            if (DataGridView.Columns["mun_area"] != null)
             {
-                dataGridView.InvalidateColumn(dataGridView.Columns["mun_area"].Index);
+                DataGridView.InvalidateColumn(DataGridView.Columns["mun_area"].Index);
             }
         }
 
@@ -127,49 +76,9 @@ namespace Registry.Viewport
             return true;
         }
 
-        public override bool SearchedRecords()
-        {
-            return !string.IsNullOrEmpty(DynamicFilter);
-        }
-
-        public override void SearchRecord(SearchFormType searchFormType)
-        {
-            switch (searchFormType)
-            {
-                case SearchFormType.SimpleSearchForm:
-                    if (_sbSimpleSearchForm == null)
-                        _sbSimpleSearchForm = new SimpleSearchBuildingForm();
-                    if (_sbSimpleSearchForm.ShowDialog() != DialogResult.OK)
-                        return;
-                    DynamicFilter = _sbSimpleSearchForm.GetFilter();
-                    break;
-                case SearchFormType.ExtendedSearchForm:
-                    if (_sbExtendedSearchForm == null)
-                        _sbExtendedSearchForm = new ExtendedSearchBuildingForm();
-                    if (_sbExtendedSearchForm.ShowDialog() != DialogResult.OK)
-                        return;
-                    DynamicFilter = _sbExtendedSearchForm.GetFilter();
-                    break;
-            }
-            var filter = StaticFilter;
-            if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
-                filter += " AND ";
-            filter += DynamicFilter;
-            dataGridView.RowCount = 0;
-            GeneralBindingSource.Filter = filter;
-            dataGridView.RowCount = GeneralBindingSource.Count;
-        }
-
-        public override void ClearSearch()
-        {
-            GeneralBindingSource.Filter = StaticFilter;
-            dataGridView.RowCount = GeneralBindingSource.Count;
-            DynamicFilter = "";
-        }
-
         public override bool CanOpenDetails()
         {
-            return GeneralBindingSource.Position != -1;
+            return Presenter.ViewModel["general"].CurrentRow != null;
         }
 
         public override void OpenDetails()
@@ -185,46 +94,32 @@ namespace Registry.Viewport
                 viewport.LoadData();
             else
                 return;
-            if (GeneralBindingSource.Count > 0)
-                viewport.LocateEntityBy("id_building", (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] as int?) ?? -1);
+            if (Presenter.ViewModel["general"].BindingSource.Count > 0)
+                viewport.LocateEntityBy(Presenter.ViewModel["general"].PrimaryKeyFirst,
+                    Presenter.ViewModel["general"].CurrentRow[Presenter.ViewModel["general"].PrimaryKeyFirst] as int? ?? -1);
             MenuCallback.AddViewport(viewport);
         }
 
         public override bool CanDeleteRecord()
         {
-            return (GeneralBindingSource.Position > -1) &&
-                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
+            return Presenter.ViewModel["general"].CurrentRow != null &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal));
         }
 
         public override void DeleteRecord()
         {
             if (MessageBox.Show(@"Вы действительно хотите удалить это здание?", @"Внимание",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                return;
+            if (((BuildingListPresenter) Presenter).DeleteRecord())
             {
-                if (OtherService.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
-                    && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
-                {
-                    MessageBox.Show(@"У вас нет прав на удаление муниципальных жилых зданий и зданий, в которых присутствуют муниципальные помещения",
-                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return;
-                }
-                if (OtherService.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_building"], EntityType.Building)
-                    && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
-                {
-                    MessageBox.Show(@"У вас нет прав на удаление немуниципальных жилых зданий и зданий, в которых присутствуют немуниципальные помещения",
-                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return;
-                }
-                if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_building"]) == -1)
-                    return;
-                ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
                 MenuCallback.ForceCloseDetachedViewports();
             }
         }
 
         public override bool CanInsertRecord()
         {
-            return (!GeneralDataModel.EditingNewRecord) && 
+            return !GeneralDataModel.EditingNewRecord && 
                 (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
@@ -247,8 +142,8 @@ namespace Registry.Viewport
 
         public override bool CanCopyRecord()
         {
-            return (GeneralBindingSource.Position != -1) && (!GeneralDataModel.EditingNewRecord) &&
-                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
+            return Presenter.ViewModel["general"].CurrentRow != null && !Presenter.ViewModel["general"].Model.EditingNewRecord &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal));
         }
 
         public override void CopyRecord()
@@ -264,8 +159,11 @@ namespace Registry.Viewport
                 viewport.LoadData();
             else
                 return;
-            if (GeneralBindingSource.Count > 0)
-                viewport.LocateEntityBy("id_building", (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"] as int?) ?? -1);
+            var viewModel = Presenter.ViewModel["general"];
+            if (viewModel.CurrentRow != null)
+            {
+                viewport.LocateEntityBy(viewModel.PrimaryKeyFirst, viewModel.CurrentRow[viewModel.PrimaryKeyFirst] as int? ?? -1);   
+            }
             MenuCallback.AddViewport(viewport);
             viewport.CopyRecord();
         }
@@ -280,20 +178,21 @@ namespace Registry.Viewport
                 ViewportType.FundsHistoryViewport,
                 ViewportType.TenancyListViewport
             };
-            return reports.Any(v => v.ToString() == typeof(T).Name) && (GeneralBindingSource.Position > -1);
+            return reports.Any(v => v.ToString() == typeof(T).Name) && Presenter.ViewModel["general"].CurrentRow != null;
         }
         
         public override void ShowAssocViewport<T>()
         {
-            if (GeneralBindingSource.Position == -1)
+            var viewModel = Presenter.ViewModel["general"];
+            if (viewModel.CurrentRow == null)
             {
-                MessageBox.Show(@"Не выбрано здание для отображения истории найма", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Не выбрано здание", @"Ошибка", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport<T>(MenuCallback,
-                "id_building = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_building"], CultureInfo.InvariantCulture),
-                ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
-                ParentTypeEnum.Building);
+            ShowAssocViewport<T>(MenuCallback, viewModel.PrimaryKeyFirst + " = " +
+                Convert.ToInt32(viewModel.CurrentRow[viewModel.PrimaryKeyFirst], CultureInfo.InvariantCulture), 
+                viewModel.CurrentRow.Row, ParentTypeEnum.Building);
         }
 
         public override bool HasReport(ReporterType reporterType)
@@ -320,14 +219,16 @@ namespace Registry.Viewport
 
         private Dictionary<string,string> ExportReportArguments()
         {
-            var columnHeaders = dataGridView.Columns.Cast<DataGridViewColumn>().
+            var columnHeaders = DataGridView.Columns.Cast<DataGridViewColumn>().
                 Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnHeader\":\"" + column.HeaderText + "\"}");
-            var columnPatterns = dataGridView.Columns.Cast<DataGridViewColumn>().
+            var columnPatterns = DataGridView.Columns.Cast<DataGridViewColumn>().
                 Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnPattern\":\"$column" + column.DisplayIndex + "$\"}");
             var arguments = new Dictionary<string, string>
             {
                 {"type", "1"},
-                {"filter", GeneralBindingSource.Filter.Trim() == "" ? "(1=1)" : GeneralBindingSource.Filter},
+                {"filter", 
+                    Presenter.ViewModel["general"].BindingSource.Filter.Trim() == "" ? "(1=1)" : 
+                    Presenter.ViewModel["general"].BindingSource.Filter},
                 {"columnHeaders", "["+columnHeaders+",{\"columnHeader\":\"Дополнительные сведения\"}]"},
                 {"columnPatterns", "["+columnPatterns+",{\"columnPattern\":\"$description$\"}]"}
             };
@@ -343,46 +244,12 @@ namespace Registry.Viewport
 
         private void dataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (dataGridView.Columns[e.ColumnIndex].SortMode == DataGridViewColumnSortMode.NotSortable)
-                return;
-            Func<SortOrder, bool> changeSortColumn = way =>
-            {
-                foreach (DataGridViewColumn column in dataGridView.Columns)
-                    column.HeaderCell.SortGlyphDirection = SortOrder.None;
-                GeneralBindingSource.Sort = dataGridView.Columns[e.ColumnIndex].Name + " " + ((way == SortOrder.Ascending) ? "ASC" : "DESC");
-                dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = way;
-                return true;
-            };
-            changeSortColumn(dataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection == SortOrder.Ascending
-                ? SortOrder.Descending
-                : SortOrder.Ascending);
-            dataGridView.Refresh();
-        }
-
-        private void BuildingListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
-        {
-            dataGridView.RowCount = GeneralBindingSource.Count;
-            dataGridView.Refresh();
-            MenuCallback.ForceCloseDetachedViewports();
-            if (Selected)
-                MenuCallback.StatusBarStateUpdate();
-        }
-
-        private void BuildingListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
-        {
-            if (e.Action == DataRowAction.Change || e.Action == DataRowAction.ChangeCurrentAndOriginal || e.Action == DataRowAction.ChangeOriginal)
-                dataGridView.Refresh();
-            dataGridView.RowCount = GeneralBindingSource.Count;
-            if (Selected)
-                MenuCallback.StatusBarStateUpdate();
+            DataGridView_ColumnHeaderMouseClick(sender, e);
         }
 
         private void dataGridView_SelectionChanged(object sender, EventArgs e)
         {
-            if (dataGridView.SelectedRows.Count > 0)
-                GeneralBindingSource.Position = dataGridView.SelectedRows[0].Index;
-            else
-                GeneralBindingSource.Position = -1;
+            DataGridView_SelectionChanged();
         }
 
         private IEnumerable<int> _demolishedBuildings = BuildingService.DemolishedBuildingIDs().ToList();
@@ -390,26 +257,27 @@ namespace Registry.Viewport
         private void BuildingsOwnershipChanged(object sender, DataRowChangeEventArgs dataRowChangeEventArgs)
         {
             _demolishedBuildings = BuildingService.DemolishedBuildingIDs().ToList();
-            dataGridView.Refresh();
+            DataGridView.Refresh();
         }
 
         private void dataGridView_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
-            if (GeneralBindingSource.Count <= e.RowIndex) return;
-            var row = ((DataRowView) GeneralBindingSource[e.RowIndex]);
-            switch (dataGridView.Columns[e.ColumnIndex].Name)
+            if (Presenter.ViewModel["general"].BindingSource.Count <= e.RowIndex) return;
+            var row = (DataRowView)Presenter.ViewModel["general"].BindingSource[e.RowIndex];
+            switch (DataGridView.Columns[e.ColumnIndex].Name)
             {
                 case "id_building":
-                    e.Value = row[dataGridView.Columns[e.ColumnIndex].Name];
-                    if (_demolishedBuildings.Contains((int)row["id_building"]))
+                    e.Value = row[DataGridView.Columns[e.ColumnIndex].Name];
+                    var style = DataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style;
+                    if (_demolishedBuildings.Contains((int)row[Presenter.ViewModel["general"].PrimaryKeyFirst]))
                     {
-                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.Red;
-                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = Color.DarkRed;
+                        style.BackColor = Color.Red;
+                        style.SelectionBackColor = Color.DarkRed;
                     }
                     else
                     {
-                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.BackColor = Color.White;
-                        dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Style.SelectionBackColor = SystemColors.Highlight;
+                        style.BackColor = Color.White;
+                        style.SelectionBackColor = SystemColors.Highlight;
                     }
                     break;
                 case "id_street":
@@ -418,17 +286,16 @@ namespace Registry.Viewport
                 case "living_area":
                 case "cadastral_num":
                 case "startup_year":
-                case "id_premises_type":
                 case "id_structure_type":
-                    e.Value = row[dataGridView.Columns[e.ColumnIndex].Name];
+                    e.Value = row[DataGridView.Columns[e.ColumnIndex].Name];
                     break;
                 case "id_state":
-                    var stateRow = _objectStates.Select().Rows.Find(row["id_state"]);
+                    var stateRow = Presenter.ViewModel["object_states"].DataSource.Rows.Find(row["id_state"]);
                     if (stateRow != null)
                         e.Value = stateRow["state_female"];
                     break;
                 case "mun_area":
-                    e.Value = Convert.ToDecimal(_municipalPremises.Select().AsEnumerable().
+                    e.Value = Convert.ToDecimal(Presenter.ViewModel["municipal_premises"].DataSource.AsEnumerable().
                         Where(s => s.Field<int>("id_building") == (int?)row["id_building"]).Sum(m => m.Field<double>("total_area")));
                     break;
             }
@@ -436,9 +303,9 @@ namespace Registry.Viewport
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
-            var idStreetColumn = dataGridView.Columns["id_street"];
+            var idStreetColumn = DataGridView.Columns["id_street"];
             if (idStreetColumn == null) return;
-            if (dataGridView.Size.Width > 1010)
+            if (DataGridView.Size.Width > 1010)
             {
                 if (idStreetColumn.AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     idStreetColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -448,15 +315,6 @@ namespace Registry.Viewport
                 if (idStreetColumn.AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
                     idStreetColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
-        }
-
-
-        internal int GetCurrentId()
-        {
-            if (GeneralBindingSource.Position < 0) return -1;
-            if (((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_building"] != DBNull.Value)
-                return (int) ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_building"];
-            return -1;
         }
     }
 }

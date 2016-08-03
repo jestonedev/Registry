@@ -43,9 +43,7 @@ namespace Registry.Viewport
 
         internal static string ValueOrNull(TextBox control)
         {
-            if (string.IsNullOrEmpty(control.Text.Trim()))
-                return null;
-            return control.Text.Trim();
+            return string.IsNullOrEmpty(control.Text.Trim()) ? null : control.Text.Trim();
         }
 
         internal static T? ValueOrNull<T>(ComboBox control) where T: struct
@@ -112,41 +110,6 @@ namespace Registry.Viewport
         internal static object ValueOrDbNull(object value)
         {
             return value ?? DBNull.Value;
-        }
-
-        internal static int TranslateFundIdToRentId(int fundId)
-        {
-            switch (fundId)
-            {
-                case 1: return 3;
-                case 2: return 1;
-                case 3: return 2;
-                default: return 0;
-            }
-        }
-
-        internal static bool BuildingFundAndRentMatch(int idBuilding, int idRentType)
-        {
-            var bRow = CalcDataModel.GetInstance<CalcDataModelBuildingsCurrentFunds>().Select().Rows.Find(idBuilding);
-            if (bRow == null) return false;
-            var idFundType = (int)bRow["id_fund_type"];
-            return idRentType == TranslateFundIdToRentId(idFundType);
-        }
-
-        internal static bool PremiseFundAndRentMatch(int idPremise, int idRentType)
-        {
-            var bRow = CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>().Select().Rows.Find(idPremise);
-            if (bRow == null) return false;
-            var idFundType = (int)bRow["id_fund_type"];
-            return idRentType == TranslateFundIdToRentId(idFundType);
-        }
-
-        internal static bool SubPremiseFundAndRentMatch(int idSubPremise, int idRentType)
-        {
-            var bRow = CalcDataModel.GetInstance<CalcDataModelSubPremisesCurrentFunds>().Select().Rows.Find(idSubPremise);
-            if (bRow == null) return false;
-            var idFundType = (int)bRow["id_fund_type"];
-            return idRentType == TranslateFundIdToRentId(idFundType);
         }
 
         internal static void SelectAllText(object sender)

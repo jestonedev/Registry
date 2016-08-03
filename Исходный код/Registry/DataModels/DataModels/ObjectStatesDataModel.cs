@@ -2,7 +2,7 @@
 
 namespace Registry.DataModels.DataModels
 {
-    internal class ObjectStatesDataModel : DataModel
+    public class ObjectStatesDataModel : DataModel
     {
         private static ObjectStatesDataModel _dataModel;
         private const string SelectQuery = "SELECT * FROM object_states";

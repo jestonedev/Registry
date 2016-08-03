@@ -2,6 +2,8 @@
 using System.Data;
 using System.Linq;
 using System.Windows.Forms;
+using Registry.Viewport.Presenters;
+using Registry.Viewport.SearchForms;
 
 namespace Registry.Viewport
 {
@@ -9,11 +11,12 @@ namespace Registry.Viewport
     {
         protected DataGridView DataGridView;
 
-        protected DataGridViewport(): this(null, null)
+        protected DataGridViewport():this(null,null)
         {
         }
 
-        protected DataGridViewport(Viewport viewport, IMenuCallback menuCallback): base(viewport, menuCallback)
+        protected DataGridViewport(Viewport viewport, IMenuCallback menuCallback, Presenter presenter = null): 
+            base(viewport, menuCallback, presenter)
         {
         }
 
@@ -85,11 +88,39 @@ namespace Registry.Viewport
             MenuCallback.DocumentsStateUpdate();
         }
 
+        protected void GeneralDataSource_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (e.Action == DataRowAction.Change || e.Action == DataRowAction.ChangeCurrentAndOriginal || e.Action == DataRowAction.ChangeOriginal)
+                DataGridView.Refresh();
+            DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count;
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
+        }
+
+        protected void GeneralDataSource_RowDeleted(object sender, DataRowChangeEventArgs e)
+        {
+            DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count;
+            DataGridView.Refresh();
+            MenuCallback.ForceCloseDetachedViewports();
+            if (Selected)
+                MenuCallback.StatusBarStateUpdate();
+        }
+
         public override void LocateEntityBy(string fieldName, object value)
         {
             var position = GeneralBindingSource.Find(fieldName, value);
             if (position > 0)
                 GeneralBindingSource.Position = position;
+        }
+
+        public int GetCurrentId()
+        {
+            return Presenter.GetCurrentId();
+        }
+
+        public override bool CanDuplicate()
+        {
+            return true;
         }
 
         public override Viewport Duplicate()
@@ -100,13 +131,71 @@ namespace Registry.Viewport
             if (GeneralBindingSource.Count <= 0 || !GeneralDataModel.Select().PrimaryKey.Any()) return viewport;
             var fileName = GeneralDataModel.Select().PrimaryKey[0].ColumnName;
             viewport.LocateEntityBy(fileName,
-                (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])[fileName] as int?) ?? -1);
+                ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])[fileName] as int? ?? -1);
             return viewport;
         }
 
-        public override bool CanDuplicate()
+        public override void SearchRecord(SearchFormType searchFormType)
         {
-            return true;
+            switch (searchFormType)
+            {
+                case SearchFormType.SimpleSearchForm:
+                    if (Presenter.SimpleSearchForm.ShowDialog() != DialogResult.OK)
+                        return;
+                    DynamicFilter = Presenter.SimpleSearchForm.GetFilter();
+                    break;
+                case SearchFormType.ExtendedSearchForm:
+                    if (Presenter.SimpleSearchForm.ShowDialog() != DialogResult.OK)
+                        return;
+                    DynamicFilter = Presenter.SimpleSearchForm.GetFilter();
+                    break;
+            }
+            var filter = StaticFilter;
+            if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
+                filter += " AND ";
+            filter += DynamicFilter;
+            DataGridView.RowCount = 0;
+            Presenter.ViewModel["general"].BindingSource.Filter = filter;
+            DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count;
+        }
+
+        public override void ClearSearch()
+        {
+            Presenter.ViewModel["general"].BindingSource.Filter = StaticFilter;
+            DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count;
+            DynamicFilter = "";
+        }
+
+        public override bool SearchedRecords()
+        {
+            return !string.IsNullOrEmpty(DynamicFilter);
+        }
+
+        public void DataGridView_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            if (DataGridView.Columns[e.ColumnIndex].SortMode == DataGridViewColumnSortMode.NotSortable)
+                return;
+            Func<SortOrder, bool> changeSortColumn = way =>
+            {
+                foreach (DataGridViewColumn column in DataGridView.Columns)
+                    column.HeaderCell.SortGlyphDirection = SortOrder.None;
+                Presenter.ViewModel["general"].BindingSource.Sort = DataGridView.Columns[e.ColumnIndex].Name + " " + 
+                    (way == SortOrder.Ascending ? "ASC" : "DESC");
+                DataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = way;
+                return true;
+            };
+            changeSortColumn(DataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection == SortOrder.Ascending
+                ? SortOrder.Descending
+                : SortOrder.Ascending);
+            DataGridView.Refresh();
+        }
+
+        public void DataGridView_SelectionChanged()
+        {
+            if (DataGridView.SelectedRows.Count > 0)
+                Presenter.ViewModel["general"].BindingSource.Position = DataGridView.SelectedRows[0].Index;
+            else
+                Presenter.ViewModel["general"].BindingSource.Position = -1;
         }
     }
 }

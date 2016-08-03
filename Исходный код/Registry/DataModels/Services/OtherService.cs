@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Entities.Infrastructure;
@@ -139,6 +140,41 @@ namespace Registry.DataModels.Services
                    group assocRow.Field<int>("id_fund") by
                            assocRow.Field<int>("id_sub_premises") into gs
                    select new FundSubPremisesAssoc(gs.Key, gs.Max());
+        }
+
+        internal static int TranslateFundIdToRentId(int fundId)
+        {
+            switch (fundId)
+            {
+                case 1: return 3;
+                case 2: return 1;
+                case 3: return 2;
+                default: return 0;
+            }
+        }
+
+        internal static bool BuildingFundAndRentMatch(int idBuilding, int idRentType)
+        {
+            var bRow = CalcDataModel.GetInstance<CalcDataModelBuildingsCurrentFunds>().Select().Rows.Find(idBuilding);
+            if (bRow == null) return false;
+            var idFundType = (int)bRow["id_fund_type"];
+            return idRentType == TranslateFundIdToRentId(idFundType);
+        }
+
+        internal static bool PremiseFundAndRentMatch(int idPremise, int idRentType)
+        {
+            var bRow = CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>().Select().Rows.Find(idPremise);
+            if (bRow == null) return false;
+            var idFundType = (int)bRow["id_fund_type"];
+            return idRentType == TranslateFundIdToRentId(idFundType);
+        }
+
+        internal static bool SubPremiseFundAndRentMatch(int idSubPremise, int idRentType)
+        {
+            var bRow = CalcDataModel.GetInstance<CalcDataModelSubPremisesCurrentFunds>().Select().Rows.Find(idSubPremise);
+            if (bRow == null) return false;
+            var idFundType = (int)bRow["id_fund_type"];
+            return idRentType == TranslateFundIdToRentId(idFundType);
         }
     }
 }

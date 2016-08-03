@@ -2,7 +2,7 @@
 
 namespace Registry.DataModels.DataModels
 {
-    internal sealed class WarrantDocTypesDataModel : DataModel
+    public sealed class WarrantDocTypesDataModel : DataModel
     {
         private static WarrantDocTypesDataModel _dataModel;
         private const string SelectQuery = "SELECT * FROM warrant_doc_types";
