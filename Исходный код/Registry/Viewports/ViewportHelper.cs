@@ -129,5 +129,28 @@ namespace Registry.Viewport
                 control.SelectAll();
             }
         }
+
+
+        internal static void BindProperty(IBindableComponent control, string controlProperty,
+            BindingSource dataSource, string dataSourceProperty, object defaultValue)
+        {
+            control.DataBindings.Clear();
+            control.DataBindings.Add(controlProperty, dataSource, dataSourceProperty, true, DataSourceUpdateMode.Never, defaultValue);
+        }
+
+        internal static void BindSource(ComboBox comboBox, BindingSource dataSource, string displayMember, string valueMember)
+        {
+            comboBox.DataSource = dataSource;
+            comboBox.ValueMember = valueMember;
+            comboBox.DisplayMember = displayMember;
+        }
+
+        internal static void BindSource(DataGridViewComboBoxColumn comboBox, BindingSource dataSource, string displayMember, string valueMember, string dataPropertyName = null)
+        {
+            comboBox.DataSource = dataSource;
+            comboBox.ValueMember = valueMember;
+            comboBox.DisplayMember = displayMember;
+            comboBox.DataPropertyName = dataPropertyName ?? valueMember;
+        }
     }
 }

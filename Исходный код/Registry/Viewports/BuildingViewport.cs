@@ -31,6 +31,7 @@ namespace Registry.Viewport
             dataGridViewOwnerships.AutoGenerateColumns = false;
             dataGridViewRestrictions.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
+            numericUpDownStartupYear.Maximum = DateTime.Now.Year;
         }
 
         private void FiltersRebuild()
@@ -151,109 +152,69 @@ namespace Registry.Viewport
 
         private void DataBind()
         {
-            comboBoxStreet.DataSource = Presenter.ViewModel["kladr"].BindingSource;
-            comboBoxStreet.ValueMember = Presenter.ViewModel["kladr"].PrimaryKeyFirst;
-            comboBoxStreet.DisplayMember = "street_name";
-            comboBoxStreet.DataBindings.Clear();
-            comboBoxStreet.DataBindings.Add("SelectedValue", Presenter.ViewModel["general"].BindingSource, "id_street", true, DataSourceUpdateMode.Never, DBNull.Value);
+            var bindingSource = Presenter.ViewModel["general"].BindingSource;
+            ViewportHelper.BindSource(comboBoxStreet, Presenter.ViewModel["kladr"].BindingSource, "street_name", 
+                Presenter.ViewModel["kladr"].PrimaryKeyFirst);
+            ViewportHelper.BindProperty(comboBoxStreet, "SelectedValue", bindingSource, 
+                Presenter.ViewModel["kladr"].PrimaryKeyFirst, DBNull.Value);
+            ViewportHelper.BindProperty(textBoxDescription, "Text", bindingSource, "description", "");
+            ViewportHelper.BindProperty(textBoxHouse, "Text", bindingSource, "house", "");
+            ViewportHelper.BindProperty(numericUpDownFloors, "Value", bindingSource, "floors", 5m);
+            ViewportHelper.BindProperty(numericUpDownStartupYear, "Value", bindingSource, "startup_year", (decimal)DateTime.Now.Year);
+            ViewportHelper.BindProperty(textBoxCadastralNum, "Text", bindingSource, "cadastral_num", "");
+            ViewportHelper.BindProperty(numericUpDownCadastralCost, "Value", bindingSource, "cadastral_cost", 0m);
+            ViewportHelper.BindProperty(numericUpDownBalanceCost, "Value", bindingSource, "balance_cost", 0m);
+            ViewportHelper.BindProperty(checkBoxImprovement, "Checked", bindingSource, "improvement", true);
+            ViewportHelper.BindProperty(checkBoxElevator, "Checked", bindingSource, "elevator", false);
+            ViewportHelper.BindProperty(checkBoxRubbishChute, "Checked", bindingSource, "rubbish_chute", false);
+            ViewportHelper.BindProperty(checkBoxPlumbing, "Checked", bindingSource, "plumbing", true);
+            ViewportHelper.BindProperty(checkBoxHotWaterSupply, "Checked", bindingSource, "hot_water_supply", true);
+            ViewportHelper.BindProperty(checkBoxCanalization, "Checked", bindingSource, "canalization", true);
+            ViewportHelper.BindProperty(checkBoxElectricity, "Checked", bindingSource, "electricity", true);
+            ViewportHelper.BindProperty(checkBoxRadioNetwork, "Checked", bindingSource, "radio_network", false);
+            ViewportHelper.BindProperty(textBoxRoomsBTI, "Text", bindingSource, "BTI_rooms", "");
+            ViewportHelper.BindProperty(textBoxHousingCooperative, "Text", bindingSource, "housing_cooperative", "");
+            ViewportHelper.BindProperty(numericUpDownPremisesCount, "Value", bindingSource, "num_premises", 0m);
+            ViewportHelper.BindProperty(numericUpDownRoomsCount, "Value", bindingSource, "num_rooms", 0m);
+            ViewportHelper.BindProperty(numericUpDownApartmentsCount, "Value", bindingSource, "num_apartments", 0m);
+            ViewportHelper.BindProperty(numericUpDownSharedApartmentsCount, "Value", bindingSource, "num_shared_apartments", 0m);
+            ViewportHelper.BindProperty(numericUpDownLivingArea, "Value", bindingSource, "living_area", 0m);
+            ViewportHelper.BindProperty(numericUpDownTotalArea, "Value", bindingSource, "total_area", 0m);
+            ViewportHelper.BindProperty(numericUpDownWear, "Value", bindingSource, "wear", 0m);
+            ViewportHelper.BindProperty(dateTimePickerStateDate, "Value", bindingSource, "state_date", DateTime.Now.Date);
 
-            textBoxDescription.DataBindings.Clear();
-            textBoxDescription.DataBindings.Add("Text", Presenter.ViewModel["general"].BindingSource, "description", true, DataSourceUpdateMode.Never, "");
-            textBoxHouse.DataBindings.Clear();
-            textBoxHouse.DataBindings.Add("Text", Presenter.ViewModel["general"].BindingSource, "house", true, DataSourceUpdateMode.Never, "");
-            numericUpDownFloors.DataBindings.Clear();
-            numericUpDownFloors.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "floors", true, DataSourceUpdateMode.Never, (decimal)5);
-            numericUpDownStartupYear.DataBindings.Clear();
-            numericUpDownStartupYear.Maximum = DateTime.Now.Year;
-            numericUpDownStartupYear.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "startup_year", true, DataSourceUpdateMode.Never, (decimal)DateTime.Now.Year);
-            textBoxCadastralNum.DataBindings.Clear();
-            textBoxCadastralNum.DataBindings.Add("Text", Presenter.ViewModel["general"].BindingSource, "cadastral_num", true, DataSourceUpdateMode.Never, "");
-            numericUpDownCadastralCost.DataBindings.Clear();
-            numericUpDownCadastralCost.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "cadastral_cost", true, DataSourceUpdateMode.Never, (decimal)0);
-            numericUpDownBalanceCost.DataBindings.Clear();
-            numericUpDownBalanceCost.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "balance_cost", true, DataSourceUpdateMode.Never, (decimal)0);
-            checkBoxImprovement.DataBindings.Clear();
-            checkBoxImprovement.DataBindings.Add("Checked", Presenter.ViewModel["general"].BindingSource, "improvement", true, DataSourceUpdateMode.Never, true);
-            checkBoxElevator.DataBindings.Clear();
-            checkBoxElevator.DataBindings.Add("Checked", Presenter.ViewModel["general"].BindingSource, "elevator", true, DataSourceUpdateMode.Never, false);
-            checkBoxRubbishChute.DataBindings.Clear();
-            checkBoxRubbishChute.DataBindings.Add("Checked", Presenter.ViewModel["general"].BindingSource, "rubbish_chute", true, DataSourceUpdateMode.Never, false);
-            checkBoxPlumbing.DataBindings.Clear();
-            checkBoxPlumbing.DataBindings.Add("Checked", Presenter.ViewModel["general"].BindingSource, "plumbing", true, 
-                DataSourceUpdateMode.Never, false);
-            checkBoxHotWaterSupply.DataBindings.Clear();
-            checkBoxHotWaterSupply.DataBindings.Add("Checked", Presenter.ViewModel["general"].BindingSource, "hot_water_supply", true,
-                DataSourceUpdateMode.Never, false);
-            checkBoxCanalization.DataBindings.Clear();
-            checkBoxCanalization.DataBindings.Add("Checked", Presenter.ViewModel["general"].BindingSource, "canalization", true,
-                DataSourceUpdateMode.Never, false);
-            checkBoxElectricity.DataBindings.Clear();
-            checkBoxElectricity.DataBindings.Add("Checked", Presenter.ViewModel["general"].BindingSource, "electricity", true,
-                DataSourceUpdateMode.Never, false);
-            checkBoxRadioNetwork.DataBindings.Clear();
-            checkBoxRadioNetwork.DataBindings.Add("Checked", Presenter.ViewModel["general"].BindingSource, "radio_network", true,
-                DataSourceUpdateMode.Never, false);                      
-            textBoxRoomsBTI.DataBindings.Clear();
-            textBoxRoomsBTI.DataBindings.Add("Text", Presenter.ViewModel["general"].BindingSource, "BTI_rooms", true, DataSourceUpdateMode.Never, "");
-            textBoxHousingCooperative.DataBindings.Clear();
-            textBoxHousingCooperative.DataBindings.Add("Text", Presenter.ViewModel["general"].BindingSource, "housing_cooperative", true, DataSourceUpdateMode.Never, "");
-            numericUpDownPremisesCount.DataBindings.Clear();
-            numericUpDownPremisesCount.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "num_premises", true, DataSourceUpdateMode.Never, (decimal)0);
-            numericUpDownRoomsCount.DataBindings.Clear();
-            numericUpDownRoomsCount.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "num_rooms", true, DataSourceUpdateMode.Never, (decimal)0);
-            numericUpDownApartmentsCount.DataBindings.Clear();
-            numericUpDownApartmentsCount.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "num_apartments", true, DataSourceUpdateMode.Never, (decimal)0);
-            numericUpDownSharedApartmentsCount.DataBindings.Clear();
-            numericUpDownSharedApartmentsCount.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "num_shared_apartments", true, DataSourceUpdateMode.Never, (decimal)0);
-            numericUpDownLivingArea.DataBindings.Clear();
-            numericUpDownLivingArea.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "living_area", true, DataSourceUpdateMode.Never, (decimal)0);
-            numericUpDownTotalArea.DataBindings.Clear();
-            numericUpDownTotalArea.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "total_area", true, DataSourceUpdateMode.Never, (decimal)0);
-            numericUpDownWear.DataBindings.Clear();
-            numericUpDownWear.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "wear", true, DataSourceUpdateMode.Never, (decimal)0);
 
-            dateTimePickerStateDate.DataBindings.Clear();
-            dateTimePickerStateDate.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "state_date", true, DataSourceUpdateMode.Never, null);
+            ViewportHelper.BindSource(comboBoxStructureType, Presenter.ViewModel["structure_types"].BindingSource, "structure_type",
+                Presenter.ViewModel["structure_types"].PrimaryKeyFirst);
+            ViewportHelper.BindProperty(comboBoxStructureType, "SelectedValue", bindingSource,
+                Presenter.ViewModel["structure_types"].PrimaryKeyFirst, DBNull.Value);
 
-            comboBoxStructureType.DataSource = Presenter.ViewModel["structure_types"].BindingSource;
-            comboBoxStructureType.ValueMember = Presenter.ViewModel["structure_types"].PrimaryKeyFirst;
-            comboBoxStructureType.DisplayMember = "structure_type";
-            comboBoxStructureType.DataBindings.Clear();
-            comboBoxStructureType.DataBindings.Add("SelectedValue", Presenter.ViewModel["general"].BindingSource, "id_structure_type", true, DataSourceUpdateMode.Never, DBNull.Value);
+            ViewportHelper.BindSource(comboBoxHeatingType, Presenter.ViewModel["heating_types"].BindingSource, "heating_type",
+                Presenter.ViewModel["heating_types"].PrimaryKeyFirst);
+            ViewportHelper.BindProperty(comboBoxHeatingType, "SelectedValue", bindingSource,
+                Presenter.ViewModel["heating_types"].PrimaryKeyFirst, DBNull.Value);
 
-            comboBoxHeatingType.DataSource = Presenter.ViewModel["heating_types"].BindingSource;
-            comboBoxHeatingType.ValueMember = Presenter.ViewModel["heating_types"].PrimaryKeyFirst;
-            comboBoxHeatingType.DisplayMember = "heating_type";
-            comboBoxHeatingType.DataBindings.Clear();
-            comboBoxHeatingType.DataBindings.Add("SelectedValue", Presenter.ViewModel["general"].BindingSource, "id_heating_type", true, DataSourceUpdateMode.Never, DBNull.Value);
+            ViewportHelper.BindSource(comboBoxState, Presenter.ViewModel["object_states"].BindingSource, "state_neutral",
+                Presenter.ViewModel["object_states"].PrimaryKeyFirst);
+            ViewportHelper.BindProperty(comboBoxState, "SelectedValue", bindingSource,
+                Presenter.ViewModel["object_states"].PrimaryKeyFirst, DBNull.Value);
 
-            comboBoxCurrentFundType.DataSource = Presenter.ViewModel["fund_types"].BindingSource;
-            comboBoxCurrentFundType.ValueMember = Presenter.ViewModel["fund_types"].PrimaryKeyFirst;
-            comboBoxCurrentFundType.DisplayMember = "fund_type";
-
-            comboBoxState.DataSource = Presenter.ViewModel["object_states"].BindingSource;
-            comboBoxState.ValueMember = Presenter.ViewModel["object_states"].PrimaryKeyFirst;
-            comboBoxState.DisplayMember = "state_neutral";
-            comboBoxState.DataBindings.Clear();
-            comboBoxState.DataBindings.Add("SelectedValue", Presenter.ViewModel["general"].BindingSource, "id_state", true, DataSourceUpdateMode.Never, DBNull.Value);
-
+            ViewportHelper.BindSource(comboBoxCurrentFundType, Presenter.ViewModel["fund_types"].BindingSource, "fund_type",
+                Presenter.ViewModel["fund_types"].PrimaryKeyFirst);
+            
             dataGridViewRestrictions.DataSource = Presenter.ViewModel["restrictions"].BindingSource;
-            id_restriction_type.DataSource = Presenter.ViewModel["restriction_types"].BindingSource;
-            id_restriction_type.DataPropertyName = Presenter.ViewModel["restriction_types"].PrimaryKeyFirst;
-            id_restriction_type.ValueMember = Presenter.ViewModel["restriction_types"].PrimaryKeyFirst;
-            id_restriction_type.DisplayMember = "restriction_type";
             restriction_number.DataPropertyName = "number";
             restriction_date.DataPropertyName = "date";
             restriction_description.DataPropertyName = "description";
+            ViewportHelper.BindSource(id_restriction_type, Presenter.ViewModel["restriction_types"].BindingSource, "restriction_type",
+                Presenter.ViewModel["restriction_types"].PrimaryKeyFirst);
 
             dataGridViewOwnerships.DataSource = Presenter.ViewModel["ownership_rights"].BindingSource;
-            id_ownership_type.DataSource = Presenter.ViewModel["ownership_right_types"].BindingSource;
-            id_ownership_type.DataPropertyName = Presenter.ViewModel["ownership_right_types"].PrimaryKeyFirst;
-            id_ownership_type.ValueMember = Presenter.ViewModel["ownership_right_types"].PrimaryKeyFirst;
-            id_ownership_type.DisplayMember = "ownership_right_type";
             ownership_number.DataPropertyName = "number";
             ownership_date.DataPropertyName = "date";
             ownership_description.DataPropertyName = "description";
+            ViewportHelper.BindSource(id_ownership_type, Presenter.ViewModel["ownership_right_types"].BindingSource, "ownership_right_type",
+                Presenter.ViewModel["ownership_right_types"].PrimaryKeyFirst);
         }
 
         protected override bool ChangeViewportStateTo(ViewportState state)
@@ -524,12 +485,8 @@ namespace Registry.Viewport
                     DynamicFilter = Presenter.ExtendedSearchForm.GetFilter();
                     break;
             }
-            var filter = StaticFilter;
-            if (!string.IsNullOrEmpty(StaticFilter) && !String.IsNullOrEmpty(DynamicFilter))
-                filter += " AND ";
-            filter += DynamicFilter;
             IsEditable = false;
-            Presenter.ViewModel["general"].BindingSource.Filter = filter;
+            Presenter.SetGeneralBindingSourceFilter(StaticFilter, DynamicFilter);
             IsEditable = true;
         }
 
@@ -680,7 +637,8 @@ namespace Registry.Viewport
             var columnName = Presenter.ViewModel["general"].PrimaryKeyFirst;
             if (row == null)
             {
-                MessageBox.Show(@"Не выбрано здание для отображения истории найма", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                MessageBox.Show(@"Не выбрано здание для отображения истории найма", @"Ошибка", 
+                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
             ShowAssocViewport<T>(MenuCallback, columnName+" = " + Convert.ToInt32(row[columnName], CultureInfo.InvariantCulture), 
@@ -1025,9 +983,10 @@ namespace Registry.Viewport
         internal int GetCurrentId()
         {
             var row = Presenter.ViewModel["general"].CurrentRow;
+            var columnName = Presenter.ViewModel["general"].PrimaryKeyFirst;
             if (row == null) return -1;
-            if (row[Presenter.ViewModel["general"].PrimaryKeyFirst] != DBNull.Value)
-                return (int)row[Presenter.ViewModel["general"].PrimaryKeyFirst];
+            if (row[columnName] != DBNull.Value)
+                return (int)row[columnName];
             return -1;
         }   
     }

@@ -23,9 +23,9 @@ namespace Registry.Viewport.Presenters
 
         public void RestrictionsFilterRebuild()
         {
-            var assocBindingSource = ViewModel["restrictions_buildings_assoc"].BindingSource;
+            var assocBindingSource = ViewModel["buildings_restrictions_buildings_assoc"].BindingSource;
             var bindingSource = ViewModel["restrictions"].BindingSource;
-            var columnName = ViewModel["restrictions_buildings_assoc"].PrimaryKeyFirst;
+            var columnName = ViewModel["buildings_restrictions_buildings_assoc"].PrimaryKeyFirst;
             var restrictionsFilter = columnName+" IN (0";
             for (var i = 0; i < assocBindingSource.Count; i++)
                 restrictionsFilter += ((DataRowView)assocBindingSource[i])[columnName] + ",";
@@ -36,9 +36,9 @@ namespace Registry.Viewport.Presenters
 
         public void OwnershipsFilterRebuild()
         {
-            var assocBindingSource = ViewModel["ownership_buildings_assoc"].BindingSource;
+            var assocBindingSource = ViewModel["buildings_ownership_buildings_assoc"].BindingSource;
             var bindingSource = ViewModel["ownership_rights"].BindingSource;
-            var columnName = ViewModel["ownership_buildings_assoc"].PrimaryKeyFirst;
+            var columnName = ViewModel["buildings_ownership_buildings_assoc"].PrimaryKeyFirst;
             var restrictionsFilter = columnName + " IN (0";
             for (var i = 0; i < assocBindingSource.Count; i++)
                 restrictionsFilter += ((DataRowView)assocBindingSource[i])[columnName] + ",";

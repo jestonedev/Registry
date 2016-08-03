@@ -12,7 +12,7 @@
          <Members>
           <Member Name="#RoomsBTI" Kind="Property" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message Id="BTI" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2016-08-01 07:25:38Z" FixCategory="Breaking">
+            <Message Id="BTI" TypeName="IdentifiersShouldBeCasedCorrectly" Category="Microsoft.Naming" CheckId="CA1709" Status="Active" Created="2016-08-03 09:36:40Z" FixCategory="Breaking">
              <Issue Name="Member" Certainty="85" Level="Error">Correct the casing of 'BTI' in member name 'Building.RoomsBTI' by changing it to 'Bti'.</Issue>
             </Message>
            </Messages>
@@ -23,7 +23,7 @@
          <Members>
           <Member Name="#ExecutorLogin" Kind="Property" Static="False" Accessibility="Public" ExternallyVisible="True">
            <Messages>
-            <Message Id="Login" TypeName="UsePreferredTerms" Category="Microsoft.Naming" CheckId="CA1726" Status="Active" Created="2016-08-01 07:25:38Z" FixCategory="Breaking">
+            <Message Id="Login" TypeName="UsePreferredTerms" Category="Microsoft.Naming" CheckId="CA1726" Status="Active" Created="2016-08-03 09:36:40Z" FixCategory="Breaking">
              <Issue Name="Member" Certainty="95" Level="Error">Replace the term 'Login' in member name 'Executor.ExecutorLogin' with the preferred alternate 'LogOn'.</Issue>
             </Message>
            </Messages>
@@ -36,28 +36,28 @@
        <Types>
         <Type Name="DataColumnAttribute" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="AvoidUnsealedAttributes" Category="Microsoft.Performance" CheckId="CA1813" Status="Active" Created="2016-08-01 07:25:38Z" FixCategory="Breaking">
+          <Message TypeName="AvoidUnsealedAttributes" Category="Microsoft.Performance" CheckId="CA1813" Status="Active" Created="2016-08-03 09:36:40Z" FixCategory="Breaking">
            <Issue Certainty="75" Level="Warning">Seal 'DataColumnAttribute', if possible.</Issue>
           </Message>
          </Messages>
         </Type>
         <Type Name="DataTableAttribute" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="AvoidUnsealedAttributes" Category="Microsoft.Performance" CheckId="CA1813" Status="Active" Created="2016-08-01 07:25:38Z" FixCategory="Breaking">
+          <Message TypeName="AvoidUnsealedAttributes" Category="Microsoft.Performance" CheckId="CA1813" Status="Active" Created="2016-08-03 09:36:40Z" FixCategory="Breaking">
            <Issue Certainty="75" Level="Warning">Seal 'DataTableAttribute', if possible.</Issue>
           </Message>
          </Messages>
         </Type>
         <Type Name="ParentTypeEnum" Kind="Enum" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="IdentifiersShouldNotHaveIncorrectSuffix" Category="Microsoft.Naming" CheckId="CA1711" Status="Active" Created="2016-08-01 07:25:38Z" FixCategory="Breaking">
+          <Message TypeName="IdentifiersShouldNotHaveIncorrectSuffix" Category="Microsoft.Naming" CheckId="CA1711" Status="Active" Created="2016-08-03 09:36:40Z" FixCategory="Breaking">
            <Issue Name="TypeNoAlternate" Certainty="95" Level="CriticalError">Rename type name 'ParentTypeEnum' so that it does not end in 'Enum'.</Issue>
           </Message>
          </Messages>
         </Type>
         <Type Name="RelationAttribute" Kind="Class" Accessibility="Public" ExternallyVisible="True">
          <Messages>
-          <Message TypeName="AvoidUnsealedAttributes" Category="Microsoft.Performance" CheckId="CA1813" Status="Active" Created="2016-08-01 07:25:38Z" FixCategory="Breaking">
+          <Message TypeName="AvoidUnsealedAttributes" Category="Microsoft.Performance" CheckId="CA1813" Status="Active" Created="2016-08-03 09:36:40Z" FixCategory="Breaking">
            <Issue Certainty="75" Level="Warning">Seal 'RelationAttribute', if possible.</Issue>
           </Message>
          </Messages>

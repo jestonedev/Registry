@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
 using System.Data;
@@ -151,8 +150,8 @@ namespace Registry.Viewport
 
         private void RedrawSubPremiseDataGridRows()
         {
-            var subPremises = Presenter.ViewModel["sub_premises"].BindingSource;
-            var subPremisesKey = Presenter.ViewModel["sub_premises"].PrimaryKeyFirst;
+            var subPremises = Presenter.ViewModel["premises_sub_premises"].BindingSource;
+            var subPremisesKey = Presenter.ViewModel["premises_sub_premises"].PrimaryKeyFirst;
             if (subPremises == null)
                 return;
             if (subPremises.Count != dataGridViewRooms.Rows.Count)
@@ -185,44 +184,48 @@ namespace Registry.Viewport
                 }
                 else
                     Text = @"Новое помещение";
+                return;
             }
-            else
-                if (GeneralBindingSource.Position != -1)
+            var row = Presenter.ViewModel["general"].CurrentRow;
+            if (row != null)
+            {
+                if (ParentRow == null)
                 {
-                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                    {
-                        Text = string.Format(CultureInfo.InvariantCulture, "Помещение №{0} здания №{1}",
-                            ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_premises"],
-                            ParentRow["id_building"]);
-                    } else
-                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.PaymentAccount))
-                    {
+                    Text = string.Format(CultureInfo.InvariantCulture, "Помещение №{0}", row["id_premises"]);
+                    return;
+                }
+                switch (ParentType)
+                {
+                    case ParentTypeEnum.Building:
+                        Text = string.Format(CultureInfo.InvariantCulture, "Помещение №{0} здания №{1}", row["id_premises"], ParentRow["id_building"]);
+                        return;
+                    case ParentTypeEnum.PaymentAccount:
                         Text = string.Format("Помещения по лицевому счету №{0}", ParentRow["account"]);
-                    }
-                    else
-                        Text = string.Format(CultureInfo.InvariantCulture, "Помещение №{0}", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"]);
+                        break;
                 }
-                else
-                {
-                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
-                    {
-                        Text = string.Format(CultureInfo.InvariantCulture, "Помещения в здании №{0} отсутствуют",
-                            ParentRow["id_building"]);
-                    } else
-                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.PaymentAccount))
-                    {
-                        Text = string.Format("Помещения по лицевому счету №{0} отсутствуют", ParentRow["account"]);
-                    }
-                    else
-                        Text = @"Помещения отсутствуют";
-                }
+                return;
+            }
+            if (ParentRow == null)
+            {
+                Text = @"Помещения отсутствуют";
+                return;
+            }
+            switch (ParentType)
+            {
+                case ParentTypeEnum.Building:
+                    Text = string.Format(CultureInfo.InvariantCulture, "Помещения в здании №{0} отсутствуют", ParentRow["id_building"]);
+                    break;
+                case ParentTypeEnum.PaymentAccount:
+                    Text = string.Format("Помещения по лицевому счету №{0} отсутствуют", ParentRow["account"]);
+                    break;
+            }
         }
 
         private void ShowOrHideCurrentFund()
         {
-            if (comboBoxCurrentFundType.SelectedValue != null && GeneralBindingSource.Position != -1 &&
-                ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_state"] != DBNull.Value &&
-                DataModelHelper.MunicipalAndUnknownObjectStates().Contains((int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_state"]))
+            var row = Presenter.ViewModel["general"].CurrentRow;
+            if (comboBoxCurrentFundType.SelectedValue != null && row != null && row["id_state"] != DBNull.Value &&
+                DataModelHelper.MunicipalAndUnknownObjectStates().Contains((int)row["id_state"]))
             {
                 label38.Visible = true;
                 comboBoxCurrentFundType.Visible = true;
@@ -238,40 +241,37 @@ namespace Registry.Viewport
 
         private void SelectCurrentBuilding()
         {
-            if ((comboBoxHouse.DataSource != null) && (comboBoxStreet.DataSource != null))
-            {
-                int? idBuilding = null;
-                var row = Presenter.ViewModel["general"].CurrentRow;
-                if ((row != null) && (row["id_building"] != DBNull.Value))
-                    idBuilding = Convert.ToInt32(row["id_building"], CultureInfo.InvariantCulture);
-                else 
+            if ((comboBoxHouse.DataSource == null) || (comboBoxStreet.DataSource == null)) return;
+            int? idBuilding = null;
+            var row = Presenter.ViewModel["general"].CurrentRow;
+            if ((row != null) && (row["id_building"] != DBNull.Value))
+                idBuilding = Convert.ToInt32(row["id_building"], CultureInfo.InvariantCulture);
+            else 
                 if ((ParentRow != null) && (ParentType == ParentTypeEnum.Building))
                     idBuilding = Convert.ToInt32(ParentRow["id_building"], CultureInfo.InvariantCulture);
-                string idStreet = null;
-                if (idBuilding != null)
-                {
-                    var buildingRow = Presenter.ViewModel["buildings"].DataSource.Rows.Find(idBuilding);
-                    if (buildingRow != null)
-                        idStreet = buildingRow["id_street"].ToString();
-                }
-                Presenter.ViewModel["kladr"].BindingSource.Filter = "";
-                if (idStreet != null)
-                    comboBoxStreet.SelectedValue = idStreet;
-                else
-                    comboBoxStreet.SelectedValue = DBNull.Value;
-                if (idBuilding != null)
-                    comboBoxHouse.SelectedValue = idBuilding;
-                else
-                    comboBoxHouse.SelectedValue = DBNull.Value;
-                CheckViewportModifications();
+            string idStreet = null;
+            if (idBuilding != null)
+            {
+                var buildingRow = Presenter.ViewModel["buildings"].DataSource.Rows.Find(idBuilding);
+                if (buildingRow != null)
+                    idStreet = buildingRow["id_street"].ToString();
             }
+            Presenter.ViewModel["kladr"].BindingSource.Filter = "";
+            if (idStreet != null)
+                comboBoxStreet.SelectedValue = idStreet;
+            else
+                comboBoxStreet.SelectedValue = DBNull.Value;
+            if (idBuilding != null)
+                comboBoxHouse.SelectedValue = idBuilding;
+            else
+                comboBoxHouse.SelectedValue = DBNull.Value;
+            CheckViewportModifications();
         }
 
         private void UnbindedCheckBoxesUpdate()
         {
-            if (GeneralBindingSource.Count == 0) return;
-            var row = GeneralBindingSource.Position >= 0 ? (DataRowView)GeneralBindingSource[GeneralBindingSource.Position] : null;
-            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["state_date"] != DBNull.Value)))
+            var row = Presenter.ViewModel["general"].CurrentRow;
+            if (row != null && (row["state_date"] != DBNull.Value))
                 dateTimePickerStateDate.Checked = true;
             else
             {
@@ -282,107 +282,71 @@ namespace Registry.Viewport
 
         private void DataBind()
         {
-            comboBoxStreet.DataSource = Presenter.ViewModel["kladr"].BindingSource;
-            comboBoxStreet.ValueMember = Presenter.ViewModel["kladr"].PrimaryKeyFirst;
-            comboBoxStreet.DisplayMember = "street_name";
-            comboBoxHouse.DataSource = Presenter.ViewModel["kladr_buildings"].BindingSource;
-            comboBoxHouse.ValueMember = Presenter.ViewModel["kladr_buildings"].PrimaryKeyFirst;
-            comboBoxHouse.DisplayMember = "house";
-            comboBoxPremisesKind.DataSource = Presenter.ViewModel["premises_kinds"].BindingSource;
-            comboBoxPremisesKind.ValueMember = Presenter.ViewModel["premises_kinds"].PrimaryKeyFirst;
-            comboBoxPremisesKind.DisplayMember = "premises_kind";
-            comboBoxPremisesKind.DataBindings.Clear();
-            comboBoxPremisesKind.DataBindings.Add("SelectedValue", Presenter.ViewModel["general"].BindingSource, 
-                Presenter.ViewModel["premises_kinds"].PrimaryKeyFirst, true, DataSourceUpdateMode.Never, 1);
-            comboBoxPremisesType.DataSource = Presenter.ViewModel["premises_types"].BindingSource;
-            comboBoxPremisesType.ValueMember = Presenter.ViewModel["premises_types"].PrimaryKeyFirst;
-            comboBoxPremisesType.DisplayMember = "premises_type_as_num";
-            comboBoxPremisesType.DataBindings.Clear();
-            comboBoxPremisesType.DataBindings.Add("SelectedValue", Presenter.ViewModel["general"].BindingSource,
-                Presenter.ViewModel["premises_types"].PrimaryKeyFirst, true, DataSourceUpdateMode.Never, 1);
-
-            textBoxPremisesNumber.DataBindings.Clear();
-            textBoxPremisesNumber.DataBindings.Add("Text", Presenter.ViewModel["general"].BindingSource, "premises_num", true, DataSourceUpdateMode.Never, "");
-            numericUpDownFloor.DataBindings.Clear();
-            numericUpDownFloor.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "floor", true, DataSourceUpdateMode.Never, 0);
-            textBoxCadastralNum.DataBindings.Clear();
-            textBoxCadastralNum.DataBindings.Add("Text", Presenter.ViewModel["general"].BindingSource, "cadastral_num", true, DataSourceUpdateMode.Never, "");
-            textBoxDescription.DataBindings.Clear();
-            textBoxDescription.DataBindings.Add("Text", Presenter.ViewModel["general"].BindingSource, "description", true, DataSourceUpdateMode.Never, "");
-            textBoxAccount.DataBindings.Clear();
-            textBoxAccount.DataBindings.Add("Text", Presenter.ViewModel["general"].BindingSource, "account", true, DataSourceUpdateMode.Never, "");
-            numericUpDownCadastralCost.DataBindings.Clear();
-            numericUpDownCadastralCost.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "cadastral_cost", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownBalanceCost.DataBindings.Clear();
-            numericUpDownBalanceCost.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "balance_cost", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownNumRooms.DataBindings.Clear();
-            numericUpDownNumRooms.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "num_rooms", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownNumBeds.DataBindings.Clear();
-            numericUpDownNumBeds.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "num_beds", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownTotalArea.DataBindings.Clear();
-            numericUpDownTotalArea.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "total_area", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownLivingArea.DataBindings.Clear();
-            numericUpDownLivingArea.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "living_area", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownHeight.DataBindings.Clear();
-            numericUpDownHeight.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "height", true, DataSourceUpdateMode.Never, 0);
-
-            comboBoxCurrentFundType.DataSource = Presenter.ViewModel["fund_types"].BindingSource;
-            comboBoxCurrentFundType.ValueMember = Presenter.ViewModel["fund_types"].PrimaryKeyFirst;
-            comboBoxCurrentFundType.DisplayMember = "fund_type";
-
-            comboBoxState.DataSource = Presenter.ViewModel["object_states"].BindingSource;
-            comboBoxState.ValueMember = Presenter.ViewModel["object_states"].PrimaryKeyFirst;
-            comboBoxState.DisplayMember = "state_neutral";
-            comboBoxState.DataBindings.Clear();
-            comboBoxState.DataBindings.Add("SelectedValue", Presenter.ViewModel["general"].BindingSource, 
-                Presenter.ViewModel["object_states"].PrimaryKeyFirst, true, DataSourceUpdateMode.Never, DBNull.Value);
-
-            checkBoxIsMemorial.DataBindings.Clear();
-            checkBoxIsMemorial.DataBindings.Add("Checked", Presenter.ViewModel["general"].BindingSource, "is_memorial", true, DataSourceUpdateMode.Never, true);
-
-            dateTimePickerRegDate.DataBindings.Clear();
-            dateTimePickerRegDate.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "reg_date", true, DataSourceUpdateMode.Never, null);
-
-            dateTimePickerStateDate.DataBindings.Clear();
-            dateTimePickerStateDate.DataBindings.Add("Value", Presenter.ViewModel["general"].BindingSource, "state_date", true, DataSourceUpdateMode.Never, null);
+            var bindingSource = Presenter.ViewModel["general"].BindingSource;
+            ViewportHelper.BindSource(comboBoxStreet, Presenter.ViewModel["kladr"].BindingSource, "street_name", 
+                Presenter.ViewModel["kladr"].PrimaryKeyFirst);
+            ViewportHelper.BindSource(comboBoxHouse, Presenter.ViewModel["kladr_buildings"].BindingSource, "house", "id_building");
+            ViewportHelper.BindSource(comboBoxPremisesKind, Presenter.ViewModel["premises_kinds"].BindingSource, "premises_kind",
+                Presenter.ViewModel["premises_kinds"].PrimaryKeyFirst);
+            ViewportHelper.BindProperty(comboBoxPremisesKind, "SelectedValue", bindingSource,
+                Presenter.ViewModel["premises_kinds"].PrimaryKeyFirst, 1);
+            ViewportHelper.BindSource(comboBoxPremisesType, Presenter.ViewModel["premises_types"].BindingSource, "premises_type_as_num",
+                Presenter.ViewModel["premises_types"].PrimaryKeyFirst);
+            ViewportHelper.BindProperty(comboBoxPremisesType, "SelectedValue", bindingSource,
+                Presenter.ViewModel["premises_types"].PrimaryKeyFirst, 1);
+            ViewportHelper.BindProperty(textBoxPremisesNumber, "Text", bindingSource, "premises_num", "");
+            ViewportHelper.BindProperty(numericUpDownFloor, "Value", bindingSource, "floor", 0m);
+            ViewportHelper.BindProperty(textBoxCadastralNum, "Text", bindingSource, "cadastral_num", "");
+            ViewportHelper.BindProperty(textBoxDescription, "Text", bindingSource, "description", "");
+            ViewportHelper.BindProperty(textBoxAccount, "Text", bindingSource, "account", "");
+            ViewportHelper.BindProperty(numericUpDownCadastralCost, "Value", bindingSource, "cadastral_cost", 0m);
+            ViewportHelper.BindProperty(numericUpDownBalanceCost, "Value", bindingSource, "balance_cost", 0m);
+            ViewportHelper.BindProperty(numericUpDownNumRooms, "Value", bindingSource, "num_rooms", 0m);
+            ViewportHelper.BindProperty(numericUpDownNumBeds, "Value", bindingSource, "num_beds", 0m);
+            ViewportHelper.BindProperty(numericUpDownTotalArea, "Value", bindingSource, "total_area", 0m);
+            ViewportHelper.BindProperty(numericUpDownLivingArea, "Value", bindingSource, "living_area", 0m);
+            ViewportHelper.BindProperty(numericUpDownHeight, "Value", bindingSource, "height", 0m);
+            ViewportHelper.BindSource(comboBoxCurrentFundType, Presenter.ViewModel["fund_types"].BindingSource, "fund_type",
+                Presenter.ViewModel["fund_types"].PrimaryKeyFirst);
+            ViewportHelper.BindSource(comboBoxState, Presenter.ViewModel["object_states"].BindingSource, "state_neutral",
+                Presenter.ViewModel["object_states"].PrimaryKeyFirst);
+            ViewportHelper.BindProperty(comboBoxState, "SelectedValue", bindingSource,
+                Presenter.ViewModel["object_states"].PrimaryKeyFirst, DBNull.Value);
+            ViewportHelper.BindProperty(checkBoxIsMemorial, "Checked", bindingSource, "is_memorial", true);
+            ViewportHelper.BindProperty(dateTimePickerRegDate, "Value", bindingSource, "reg_date", DateTime.Now.Date);
+            ViewportHelper.BindProperty(dateTimePickerStateDate, "Value", bindingSource, "state_date", DateTime.Now.Date);
 
             dataGridViewRestrictions.DataSource = Presenter.ViewModel["restrictions"].BindingSource;
             id_restriction.DataPropertyName = Presenter.ViewModel["restrictions"].PrimaryKeyFirst;
-            id_restriction_type.DataSource = Presenter.ViewModel["restriction_types"].BindingSource;
-            id_restriction_type.DataPropertyName = Presenter.ViewModel["restriction_types"].PrimaryKeyFirst;
-            id_restriction_type.ValueMember = Presenter.ViewModel["restriction_types"].PrimaryKeyFirst;
-            id_restriction_type.DisplayMember = "restriction_type";
             restriction_number.DataPropertyName = "number";
             restriction_date.DataPropertyName = "date";
             restriction_description.DataPropertyName = "description";
+            ViewportHelper.BindSource(id_restriction_type, Presenter.ViewModel["restriction_types"].BindingSource, "restriction_type",
+                Presenter.ViewModel["restriction_types"].PrimaryKeyFirst);
 
             dataGridViewOwnerships.DataSource = Presenter.ViewModel["ownership_rights"].BindingSource;
             id_ownership_right.DataPropertyName = Presenter.ViewModel["ownership_rights"].PrimaryKeyFirst;
-            id_ownership_type.DataSource = Presenter.ViewModel["ownership_right_types"].BindingSource;
-            id_ownership_type.DataPropertyName = Presenter.ViewModel["ownership_right_types"].PrimaryKeyFirst;
-            id_ownership_type.ValueMember = Presenter.ViewModel["ownership_right_types"].PrimaryKeyFirst;
-            id_ownership_type.DisplayMember = "ownership_right_type";
             ownership_number.DataPropertyName = "number";
             ownership_date.DataPropertyName = "date";
             ownership_description.DataPropertyName = "description";
+            ViewportHelper.BindSource(id_ownership_type, Presenter.ViewModel["ownership_right_types"].BindingSource, "ownership_right_type",
+                Presenter.ViewModel["ownership_right_types"].PrimaryKeyFirst);
 
             dataGridViewRooms.DataSource = Presenter.ViewModel["premises_sub_premises"].BindingSource;
             sub_premises_num.DataPropertyName = "sub_premises_num";
             sub_premises_total_area.DataPropertyName = "total_area";
-            sub_premises_id_state.DataSource = Presenter.ViewModel["sub_premises_object_states"].BindingSource;
-            sub_premises_id_state.DataPropertyName = Presenter.ViewModel["sub_premises_object_states"].PrimaryKeyFirst;
-            sub_premises_id_state.ValueMember = Presenter.ViewModel["sub_premises_object_states"].PrimaryKeyFirst;
-            sub_premises_id_state.DisplayMember = "state_female";
             sub_premises_cadastral_num.DataPropertyName = "cadastral_num";
             sub_premises_cadastral_cost.DataPropertyName = "cadastral_cost";
             sub_premises_balance_cost.DataPropertyName = "balance_cost";
             sub_premises_account.DataPropertyName = "account";
+            ViewportHelper.BindSource(sub_premises_id_state, Presenter.ViewModel["sub_premises_object_states"].BindingSource, "state_female",
+                Presenter.ViewModel["sub_premises_object_states"].PrimaryKeyFirst);
         }
 
         protected override bool ChangeViewportStateTo(ViewportState state)
         {
             if (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) ||
-                (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)))
+                AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
                 return base.ChangeViewportStateTo(state);
             ViewportState = ViewportState.ReadState;
             return true;
@@ -455,16 +419,16 @@ namespace Registry.Viewport
 
         protected override Entity EntityFromView()
         {
-            var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
+            var row = Presenter.ViewModel["general"].CurrentRow;
             return EntityConverter<Premise>.FromRow(row);
         }
 
         protected override Entity EntityFromViewport()
         {
+            var row = Presenter.ViewModel["general"].CurrentRow;
             var premise = new Premise
             {
-                IdPremises = GeneralBindingSource.Position == -1 ? null : ViewportHelper.ValueOrNull<int>(
-                    (DataRowView) GeneralBindingSource[GeneralBindingSource.Position], "id_premises"),
+                IdPremises = row == null ? null : ViewportHelper.ValueOrNull<int>(row, "id_premises"),
                 IdBuilding = ViewportHelper.ValueOrNull<int>(comboBoxHouse),
                 IdState = ViewportHelper.ValueOrNull<int>(comboBoxState),
                 PremisesNum = ViewportHelper.ValueOrNull(textBoxPremisesNumber),
@@ -537,10 +501,10 @@ namespace Registry.Viewport
 
             Presenter.SetGeneralBindingSourceFilter(StaticFilter, DynamicFilter);
 
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", PremisesViewport_RowChanged);
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", PremisesViewport_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowChanged", PremisesViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleted", PremisesViewport_RowDeleted);
 
-            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", v_premises_CurrentItemChanged);
+            AddEventHandler<EventArgs>(Presenter.ViewModel["general"].BindingSource, "CurrentItemChanged", v_premises_CurrentItemChanged);
             AddEventHandler<EventArgs>(Presenter.ViewModel["sub_premises"].BindingSource, 
                 "CurrentItemChanged", v_sub_premises_CurrentItemChanged);
             AddEventHandler<EventArgs>(Presenter.ViewModel["premises_restrictions_premises_assoc"].BindingSource, 
@@ -586,8 +550,8 @@ namespace Registry.Viewport
         
         public override bool CanCopyRecord()
         {
-            return ((GeneralBindingSource.Position != -1) && (!GeneralDataModel.EditingNewRecord)) &&
-                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
+            return Presenter.ViewModel["general"].CurrentRow != null && !Presenter.ViewModel["general"].Model.EditingNewRecord &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal));
         }
 
         public override void CopyRecord()
@@ -596,8 +560,8 @@ namespace Registry.Viewport
                 return;
             IsEditable = false;
             var premise = (Premise) EntityFromView();
-            GeneralBindingSource.AddNew();
-            GeneralDataModel.EditingNewRecord = true;
+            Presenter.ViewModel["general"].BindingSource.AddNew();
+            Presenter.ViewModel["general"].Model.EditingNewRecord = true;
             if (premise.IdBuilding != null)
             {
                 comboBoxStreet.SelectedValue = premise.IdBuilding;
@@ -609,8 +573,8 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return (!GeneralDataModel.EditingNewRecord) &&
-                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
+            return !Presenter.ViewModel["general"].Model.EditingNewRecord &&
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal));
         }
 
         public override void InsertRecord()
@@ -618,9 +582,9 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             IsEditable = false;
-            GeneralBindingSource.AddNew();
+            Presenter.ViewModel["general"].BindingSource.AddNew();
             IsEditable = true;
-            GeneralDataModel.EditingNewRecord = true;
+            Presenter.ViewModel["general"].Model.EditingNewRecord = true;
             UnbindedCheckBoxesUpdate();
         }
 
@@ -651,64 +615,47 @@ namespace Registry.Viewport
                     DynamicFilter = Presenter.ExtendedSearchForm.GetFilter();
                     break;
             }
-            var filter = StaticFilter;
-            if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
-                filter += " AND ";
-            filter += DynamicFilter;
             IsEditable = false;
-            Presenter.ViewModel["general"].BindingSource.Filter = filter;
+            Presenter.SetGeneralBindingSourceFilter(StaticFilter, DynamicFilter);
             IsEditable = true;
         }
 
         public override void ClearSearch()
         {
             IsEditable = false;
-            GeneralBindingSource.Filter = StaticFilter;
+            Presenter.ViewModel["general"].BindingSource.Filter = StaticFilter;
             IsEditable = true;
             DynamicFilter = "";
         }
 
         public override bool CanDeleteRecord()
         {
-            return (GeneralBindingSource.Position > -1)
+            return (Presenter.ViewModel["general"].CurrentRow != null)
                 && (ViewportState != ViewportState.NewRowState) &&
-                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal));
         }
 
         public override void DeleteRecord()
         {
             if (MessageBox.Show(@"Вы действительно хотите удалить это помещение?", @"Внимание",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                return;
+            IsEditable = false;
+            if (!((PremisesPresenter)Presenter).DeleteRecord())
             {
-                if (OtherService.HasMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
-                    && !AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal))
-                {
-                    MessageBox.Show(@"У вас нет прав на удаление муниципальных жилых помещений и помещений, в которых присутствуют муниципальные комнаты",
-                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return;
-                }
-                if (OtherService.HasNotMunicipal((int)((DataRowView)GeneralBindingSource.Current)["id_premises"], EntityType.Premise)
-                    && !AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal))
-                {
-                    MessageBox.Show(@"У вас нет прав на удаление немуниципальных жилых помещений и помещений, в которых присутствуют немуниципальные комнаты",
-                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return;
-                }
-                if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_premises"]) == -1)
-                    return;
-                IsEditable = false;
-                ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
                 IsEditable = true;
-                ViewportState = ViewportState.ReadState;
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.ForceCloseDetachedViewports();
+                return;
             }
+            IsEditable = true;
+            ViewportState = ViewportState.ReadState;
+            MenuCallback.EditingStateUpdate();
+            MenuCallback.ForceCloseDetachedViewports();
         }
 
         public override bool CanSaveRecord()
         {
             return ((ViewportState == ViewportState.NewRowState) || (ViewportState == ViewportState.ModifyRowState)) &&
-                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal));
         }
 
         public override void SaveRecord()
@@ -724,11 +671,11 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
-                    InsertRecord(premise);
-                    GeneralDataModel.EditingNewRecord = false;
+                    ((PremisesPresenter)Presenter).InsertRecord(premise);
+                    Presenter.ViewModel["general"].Model.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
-                    UpdateRecord(premise);
+                    ((PremisesPresenter)Presenter).UpdateRecord(premise);
                     break;
             }
             UnbindedCheckBoxesUpdate();
@@ -737,50 +684,6 @@ namespace Registry.Viewport
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
             ShowOrHideCurrentFund();
-        }
-
-        public void InsertRecord(Premise premise)
-        {
-            var idPremise = GeneralDataModel.Insert(premise);
-            if (idPremise == -1)
-            {
-                return;
-            }
-            DataRowView newRow;
-            premise.IdPremises = idPremise;
-            RebuildFilterAfterSave(GeneralBindingSource, premise.IdPremises);
-            if (GeneralBindingSource.Position == -1)
-                newRow = (DataRowView)GeneralBindingSource.AddNew();
-            else
-                newRow = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            EntityConverter<Premise>.FillRow(premise, newRow);
-        }
-
-        public void UpdateRecord(Premise premise)
-        {
-            if (premise.IdPremises == null)
-            {
-                MessageBox.Show(@"Вы пытаетесь изменить помещение без внутренного номера. " +
-                    @"Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                return;
-            }
-            if (GeneralDataModel.Update(premise) == -1)
-                return;
-            RebuildFilterAfterSave(GeneralBindingSource, premise.IdPremises);
-            var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            EntityConverter<Premise>.FillRow(premise, row);
-        }
-
-        private void RebuildFilterAfterSave(IBindingListView bindingSource, int? idPremise)
-        {
-            var filter = "";
-            if (!string.IsNullOrEmpty(bindingSource.Filter))
-                filter += " OR ";
-            else
-                filter += "(1 = 1) OR ";
-            filter += string.Format(CultureInfo.CurrentCulture, "(id_premises = {0})", idPremise);
-            bindingSource.Filter += filter;
         }
 
         public override bool CanCancelRecord()
@@ -794,11 +697,11 @@ namespace Registry.Viewport
             {
                 case ViewportState.ReadState: return;
                 case ViewportState.NewRowState:
-                    GeneralDataModel.EditingNewRecord = false;
-                    if (GeneralBindingSource.Position != -1)
+                    Presenter.ViewModel["general"].Model.EditingNewRecord = false;
+                    if (Presenter.ViewModel["general"].CurrentRow != null)
                     {
                         IsEditable = false;
-                        ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
+                        Presenter.ViewModel["general"].CurrentRow.Delete();
                     }
                     else
                         Text = @"Здания отсутствуют";
@@ -828,22 +731,23 @@ namespace Registry.Viewport
                 ViewportType.TenancyListViewport,
                 ViewportType.PaymentsAccountsViewport
             };
-            return reports.Any(v => v.ToString() == typeof(T).Name) && (GeneralBindingSource.Position > -1);
+            return reports.Any(v => v.ToString() == typeof(T).Name) && Presenter.ViewModel["general"].CurrentRow != null;
         }
 
         public override void ShowAssocViewport<T>()
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
-            if (GeneralBindingSource.Position == -1)
+            var row = Presenter.ViewModel["general"].CurrentRow;
+            var columnName = Presenter.ViewModel["general"].PrimaryKeyFirst;
+            if (row == null)
             {
                 MessageBox.Show(@"Не выбрано помещение", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport<T>(MenuCallback, 
-                "id_premises = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"], CultureInfo.InvariantCulture),
-                ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row,
+            ShowAssocViewport<T>(MenuCallback,
+                columnName+" = " + Convert.ToInt32(row[columnName], CultureInfo.InvariantCulture), row.Row,
                 ParentTypeEnum.Premises);
         }
 
@@ -885,7 +789,7 @@ namespace Registry.Viewport
         {
             var arguments = new Dictionary<string, string>
             {
-                {"ids", ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_premises"].ToString()},
+                {"ids", Presenter.ViewModel["general"].CurrentRow["id_premises"].ToString()},
                 {"excerpt_type", "1"}
             };
             return arguments;
@@ -905,7 +809,7 @@ namespace Registry.Viewport
         {
             var arguments = new Dictionary<string, string>
             {
-                {"ids", ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_premises"].ToString()},
+                {"ids", Presenter.ViewModel["general"].CurrentRow["id_premises"].ToString()},
                 {"excerpt_type", "3"}
             };
             return arguments;
@@ -1029,11 +933,9 @@ namespace Registry.Viewport
 
         private void comboBoxStreet_VisibleChanged(object sender, EventArgs e)
         {
-            if (_isFirstVisibility)
-            {
-                SelectCurrentBuilding();
-                _isFirstVisibility = false;
-            }
+            if (!_isFirstVisibility) return;
+            SelectCurrentBuilding();
+            _isFirstVisibility = false;
         }
 
         private void comboBoxStreet_DropDownClosed(object sender, EventArgs e)
@@ -1081,7 +983,7 @@ namespace Registry.Viewport
                 MenuCallback.RelationsStateUpdate();
             }
             UnbindedCheckBoxesUpdate();
-            if (GeneralBindingSource.Position == -1)
+            if (Presenter.ViewModel["general"].CurrentRow == null)
                 return;
             if (ViewportState == ViewportState.NewRowState)
                 return;
@@ -1315,7 +1217,7 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
-            if (GeneralBindingSource.Position == -1)
+            if (Presenter.ViewModel["general"].CurrentRow == null)
             {
                 MessageBox.Show(@"Не выбрано помещение", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -1405,7 +1307,8 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
-            if (Presenter.ViewModel["general"].CurrentRow == null)
+            var premiseRow = Presenter.ViewModel["general"].CurrentRow;
+            if (premiseRow == null)
             {
                 MessageBox.Show(@"Не выбрано помещение", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -1423,7 +1326,7 @@ namespace Registry.Viewport
             {
                 editor.State = ViewportState.ModifyRowState;
                 editor.ParentType = ParentTypeEnum.Premises;
-                editor.ParentRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row;             
+                editor.ParentRow = premiseRow.Row;             
                 editor.SubPremiseValue = subPremise;
                 editor.ShowDialog();
             }
@@ -1431,15 +1334,17 @@ namespace Registry.Viewport
 
         internal int GetCurrentId()
         {
-            if (GeneralBindingSource.Position < 0) return -1;
-            if (((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"] != DBNull.Value)
-                return (int)((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_premises"];
+            var row = Presenter.ViewModel["general"].CurrentRow;
+            var columnName = Presenter.ViewModel["general"].PrimaryKeyFirst;
+            if (row == null) return -1;
+            if (row[columnName] != DBNull.Value)
+                return (int)row[columnName];
             return -1;
         }
 
         internal string GetFilter()
         {
-            return GeneralBindingSource.Filter;
+            return Presenter.ViewModel["general"].BindingSource.Filter;
         }
 
         private void comboBoxHouse_SelectedValueChanged(object sender, EventArgs e)
