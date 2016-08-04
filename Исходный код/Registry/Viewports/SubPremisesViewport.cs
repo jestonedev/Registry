@@ -363,7 +363,10 @@ namespace Registry.Viewport
 
         private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            MenuCallback.EditingStateUpdate();
+            if (Selected)
+            {
+                MenuCallback.EditingStateUpdate();
+            }
         }
 
         private void dataGridView_EditingControlShowing(object sender, DataGridViewEditingControlShowingEventArgs e)

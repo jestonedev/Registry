@@ -9,7 +9,6 @@ namespace Registry.Viewport.ViewModels
 {
     public class ViewModelItem
     {
-        private DataTable _dataSource;
 
         public DataModel Model { get; private set; }
 
@@ -17,11 +16,7 @@ namespace Registry.Viewport.ViewModels
         {
             get
             {
-                if (_dataSource != null)
-                {
-                    return _dataSource;
-                }
-                return _dataSource = Model.Select();
+                return Model.Select();
             }
         }
 
