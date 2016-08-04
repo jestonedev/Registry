@@ -29,7 +29,7 @@ namespace Registry.Viewport.ViewModels
             {"current_funds", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>())},
             {"sub_premises_sum_area", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelPremiseSubPremisesSumArea>())},
             {"sub_premises_current_funds", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelSubPremisesCurrentFunds>())},
-            {"municipal_premises", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelMunicipalPremises>())},
+            {"municipal_premises", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelMunicipalPremises>())}
         })
         {
             AddViewModeItem("premises_restrictions_premises_assoc",

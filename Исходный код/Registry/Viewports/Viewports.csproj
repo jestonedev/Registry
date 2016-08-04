@@ -193,6 +193,7 @@
     <Compile Include="Presenters\PremisesListPresenter.cs" />
     <Compile Include="Presenters\PremisesPresenter.cs" />
     <Compile Include="Presenters\Presenter.cs" />
+    <Compile Include="Presenters\SubPremisesPresenter.cs" />
     <Compile Include="SearchForms\ExtendedSearchResettleForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -501,6 +502,8 @@
     <Compile Include="ViewModels\BuildingViewModel.cs" />
     <Compile Include="ViewModels\PremisesListViewModel.cs" />
     <Compile Include="ViewModels\PremisesViewModel.cs" />
+    <Compile Include="ViewModels\SnapshotedViewModel.cs" />
+    <Compile Include="ViewModels\SubPremisesViewModel.cs" />
     <Compile Include="ViewModels\ViewModelItem.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
     <Compile Include="Viewport.cs">

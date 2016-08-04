@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Windows.Forms;
 using Registry.Entities;
+using Registry.Viewport.Presenters;
 
 namespace Registry.Viewport
 {
@@ -18,8 +19,8 @@ namespace Registry.Viewport
         {
         }
 
-        protected EditableDataGridViewport(Viewport viewport, IMenuCallback menuCallback)
-            : base(viewport, menuCallback)
+        protected EditableDataGridViewport(Viewport viewport, IMenuCallback menuCallback, Presenter presenter = null)
+            : base(viewport, menuCallback, presenter)
         {
         }
 
