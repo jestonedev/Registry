@@ -194,7 +194,7 @@ namespace Registry.Viewport.Presenters
             return list;
         }
 
-        private List<Entity> EntitiesListFromSnapshot()
+        public List<Entity> EntitiesListFromSnapshot()
         {
             var list = new List<Entity>();
             var snapshot = ((SnapshotedViewModel) ViewModel).SnapshotBindingSource;

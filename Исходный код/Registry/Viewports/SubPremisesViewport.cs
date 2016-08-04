@@ -8,7 +8,6 @@ using System.Windows.Forms;
 using Registry.Entities;
 using Registry.Entities.Infrastructure;
 using Registry.Reporting;
-using Registry.Viewport.EntityConverters;
 using Registry.Viewport.Presenters;
 using Registry.Viewport.ViewModels;
 using Security;
@@ -33,26 +32,12 @@ namespace Registry.Viewport
 
         protected override List<Entity> EntitiesListFromViewport()
         {
-            var list = new List<Entity>();
-            for (var i = 0; i < dataGridView.Rows.Count; i++)
-            {
-                if (dataGridView.Rows[i].IsNewRow) continue;
-                var row = dataGridView.Rows[i];
-                var sp = EntityConverter<SubPremise>.FromRow(row);
-                list.Add(sp);
-            }
-            return list;
+            return ((SubPremisesPresenter)Presenter).EntitiesListFromSnapshot();
         }
 
         protected override List<Entity> EntitiesListFromView()
         {
-            var list = new List<Entity>();
-            for (var i = 0; i < Presenter.ViewModel["general"].BindingSource.Count; i++)
-            {
-                var row = (DataRowView)Presenter.ViewModel["general"].BindingSource[i];
-                list.Add(EntityConverter<SubPremise>.FromRow(row));
-            }
-            return list;
+            return ((SubPremisesPresenter)Presenter).EntitiesListFromView();
         }
 
         public override bool CanLoadData()

@@ -145,9 +145,9 @@ namespace Registry.Viewport
                     DynamicFilter = Presenter.SimpleSearchForm.GetFilter();
                     break;
                 case SearchFormType.ExtendedSearchForm:
-                    if (Presenter.SimpleSearchForm.ShowDialog() != DialogResult.OK)
+                    if (Presenter.ExtendedSearchForm.ShowDialog() != DialogResult.OK)
                         return;
-                    DynamicFilter = Presenter.SimpleSearchForm.GetFilter();
+                    DynamicFilter = Presenter.ExtendedSearchForm.GetFilter();
                     break;
             }
             var filter = StaticFilter;
