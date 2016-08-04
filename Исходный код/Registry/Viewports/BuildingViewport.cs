@@ -414,8 +414,6 @@ namespace Registry.Viewport
 
             Presenter.SetGeneralBindingSourceFilter(StaticFilter, DynamicFilter);
 
-            DataBind();
-
             var restricitonAssoc = Presenter.ViewModel["buildings_restrictions_buildings_assoc"].DataSource;
             AddEventHandler<DataRowChangeEventArgs>(restricitonAssoc, "RowDeleted", RestrictionsAssoc_RowDeleted);
             AddEventHandler<DataRowChangeEventArgs>(restricitonAssoc, "RowChanged", RestrictionsAssoc_RowChanged);
@@ -437,15 +435,17 @@ namespace Registry.Viewport
             AddEventHandler<EventArgs>(Presenter.ViewModel["buildings_restrictions_buildings_assoc"].BindingSource, "CurrentItemChanged", 
                 v_restrictionBuildingsAssoc_CurrentItemChanged);
 
+            DataBind();
+
             v_building_CurrentItemChanged(null, new EventArgs());
             v_ownershipBuildingsAssoc_CurrentItemChanged(null, new EventArgs());
             v_restrictionBuildingsAssoc_CurrentItemChanged(null, new EventArgs());
 
             ((BuildingPresenter)Presenter).OwnershipsFilterRebuild();
             ((BuildingPresenter)Presenter).RestrictionsFilterRebuild();
-            FiltersRebuild();
-            SetViewportCaption();
+
             DataChangeHandlersInit();
+            IsEditable = true;
         }
         
         public override bool CanSearchRecord()
@@ -648,7 +648,7 @@ namespace Registry.Viewport
         protected override void OnVisibleChanged(EventArgs e)
         {
             UnbindedCheckBoxesUpdate();
-            textBoxHouse.Focus();           
+            textBoxHouse.Focus();
             base.OnVisibleChanged(e);
         }
 
@@ -714,19 +714,13 @@ namespace Registry.Viewport
             SetViewportCaption();
             FiltersRebuild();
             Presenter.ViewModel["kladr"].BindingSource.Filter = "";
+            UnbindedCheckBoxesUpdate();
             if (Selected)
             {
                 MenuCallback.NavigationStateUpdate();
                 MenuCallback.EditingStateUpdate();
                 MenuCallback.RelationsStateUpdate();
             }
-            UnbindedCheckBoxesUpdate();
-            if (Presenter.ViewModel["general"].CurrentRow == null)
-                return;
-            if (ViewportState == ViewportState.NewRowState)
-                return;
-            ViewportState = ViewportState.ReadState;
-            IsEditable = true;
         }
 
         private void v_ownershipBuildingsAssoc_CurrentItemChanged(object sender, EventArgs e)

@@ -78,6 +78,7 @@ namespace Registry.Viewport
             if (subPremisesSumArea != null)
             {
                 var position = subPremisesSumArea.Find("id_premises", row["id_premises"]);
+                IsEditable = false;
                 if (position != -1)
                 {
                     var value = Convert.ToDecimal((double)((DataRowView)subPremisesSumArea[position])["sum_area"]);
@@ -91,6 +92,7 @@ namespace Registry.Viewport
                     numericUpDownMunicipalArea.Maximum = 0;
                     numericUpDownMunicipalArea.Value = 0;
                 }
+                IsEditable = true;
             }
         }
 
@@ -257,6 +259,7 @@ namespace Registry.Viewport
                     idStreet = buildingRow["id_street"].ToString();
             }
             Presenter.ViewModel["kladr"].BindingSource.Filter = "";
+            IsEditable = false;
             if (idStreet != null)
                 comboBoxStreet.SelectedValue = idStreet;
             else
@@ -265,12 +268,13 @@ namespace Registry.Viewport
                 comboBoxHouse.SelectedValue = idBuilding;
             else
                 comboBoxHouse.SelectedValue = DBNull.Value;
-            CheckViewportModifications();
+            IsEditable = true;
         }
 
         private void UnbindedCheckBoxesUpdate()
         {
             var row = Presenter.ViewModel["general"].CurrentRow;
+            IsEditable = false;
             if (row != null && (row["state_date"] != DBNull.Value))
                 dateTimePickerStateDate.Checked = true;
             else
@@ -278,6 +282,7 @@ namespace Registry.Viewport
                 dateTimePickerStateDate.Value = DateTime.Now.Date;
                 dateTimePickerStateDate.Checked = false;
             }
+            IsEditable = true;
         }
 
         private void DataBind()
@@ -530,15 +535,11 @@ namespace Registry.Viewport
 
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["sub_premises"].DataSource, "RowChanged", SubPremises_RowChanged);
 
-            DataBind();
-
             AddEventHandler<EventArgs>(Presenter.ViewModel["current_funds"].Model, "RefreshEvent", premisesCurrentFund_RefreshEvent);
             AddEventHandler<EventArgs>(Presenter.ViewModel["sub_premises_sum_area"].Model, "RefreshEvent", premiseSubPremisesSumArea_RefreshEvent);
             AddEventHandler<EventArgs>(Presenter.ViewModel["sub_premises_current_funds"].Model, "RefreshEvent", subPremisesCurrentFund_RefreshEvent);
 
-            FiltersRebuild();
-            SetViewportCaption();
-            DataChangeHandlersInit();
+            DataBind();
 
             v_premises_CurrentItemChanged(null, new EventArgs());
             v_sub_premises_CurrentItemChanged(null, new EventArgs());
@@ -546,6 +547,9 @@ namespace Registry.Viewport
             v_restrictionBuildingsAssoc_CurrentItemChanged(null, new EventArgs());
             v_ownershipPremisesAssoc_CurrentItemChanged(null, new EventArgs());
             v_ownershipBuildingsAssoc_CurrentItemChanged(null, new EventArgs());
+
+            DataChangeHandlersInit();
+            IsEditable = true;
         }
         
         public override bool CanCopyRecord()
@@ -973,22 +977,16 @@ namespace Registry.Viewport
 
         private void v_premises_CurrentItemChanged(object sender, EventArgs e)
         {
+            var isEditable = IsEditable;
             SetViewportCaption();
             FiltersRebuild();
             SelectCurrentBuilding();
-            if (Selected)
-            {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
-            }
             UnbindedCheckBoxesUpdate();
-            if (Presenter.ViewModel["general"].CurrentRow == null)
-                return;
-            if (ViewportState == ViewportState.NewRowState)
-                return;
-            ViewportState = ViewportState.ReadState;
-            IsEditable = true;
+            IsEditable = isEditable;
+            if (!Selected) return;
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.EditingStateUpdate();
+            MenuCallback.RelationsStateUpdate();
         }
 
         private void v_sub_premises_CurrentItemChanged(object sender, EventArgs e)
