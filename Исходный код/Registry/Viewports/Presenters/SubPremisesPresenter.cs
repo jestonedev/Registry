@@ -82,11 +82,11 @@ namespace Registry.Viewport.Presenters
 
         private bool SaveDeletedRecords(IEnumerable<Entity> list)
         {
+            var snapshot = ((SnapshotedViewModel)ViewModel).SnapshotBindingSource;
             foreach (var entity in list)
             {
                 var subPremise = (SubPremise)entity;
                 var rowIndex = -1;
-                var snapshot = ((SnapshotedViewModel)ViewModel).SnapshotBindingSource;
                 for (var j = 0; j < snapshot.Count; j++)
                 {
                     var id = ((DataRowView)snapshot[j])["id_sub_premises"];
@@ -120,9 +120,9 @@ namespace Registry.Viewport.Presenters
 
         private bool SaveUpdatedRecords(IEnumerable<Entity> list)
         {
-            foreach (var enity in list)
+            foreach (var entity in list)
             {
-                var subPremise = (SubPremise)enity;
+                var subPremise = (SubPremise)entity;
                 var row = ViewModel["general"].DataSource.Rows.Find(subPremise.IdSubPremises);
                 if (row == null) continue;
                 var subPremiseFromView = EntityConverter<SubPremise>.FromRow(row);

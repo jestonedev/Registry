@@ -93,14 +93,12 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return (ParentType == ParentTypeEnum.Premises) && (ParentRow != null) &&
-                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal));
+            return AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) ||
+                   AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal);
         }
 
         public override void InsertRecord()
         {
-            if ((ParentRow == null) || (ParentType != ParentTypeEnum.Premises))
-                return;
             ((SubPremisesPresenter)Presenter).InsertRecordIntoSnapshot((int)ParentRow["id_premises"]);
         }
 

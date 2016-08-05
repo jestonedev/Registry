@@ -191,6 +191,7 @@
     <Compile Include="Presenters\BuildingListPresenter.cs" />
     <Compile Include="Presenters\BuldingPresenter.cs" />
     <Compile Include="Presenters\FundsHistoryPresenter.cs" />
+    <Compile Include="Presenters\OwnershipListPresenter.cs" />
     <Compile Include="Presenters\PremisesListPresenter.cs" />
     <Compile Include="Presenters\PremisesPresenter.cs" />
     <Compile Include="Presenters\Presenter.cs" />
@@ -502,6 +503,7 @@
     <Compile Include="ViewModels\BuildingListViewModel.cs" />
     <Compile Include="ViewModels\BuildingViewModel.cs" />
     <Compile Include="ViewModels\FundsHistoryViewModel.cs" />
+    <Compile Include="ViewModels\OwnershipListViewModel.cs" />
     <Compile Include="ViewModels\PremisesListViewModel.cs" />
     <Compile Include="ViewModels\PremisesViewModel.cs" />
     <Compile Include="ViewModels\SnapshotedViewModel.cs" />
