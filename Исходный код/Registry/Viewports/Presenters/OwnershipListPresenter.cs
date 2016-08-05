@@ -233,12 +233,10 @@ namespace Registry.Viewport.Presenters
                 switch (ParentType)
                 {
                     case ParentTypeEnum.Building:
-                        EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance().Insert(
-                            new OwnershipRightBuildingAssoc(idParent, idOwnershipRight));
+                        ViewModel["assoc"].Model.Insert(new OwnershipRightBuildingAssoc(idParent, idOwnershipRight));
                         break;
                     case ParentTypeEnum.Premises:
-                        EntityDataModel<OwnershipRightPremisesAssoc>.GetInstance().Insert(
-                            new OwnershipRightPremisesAssoc(idParent, idOwnershipRight));
+                        ViewModel["assoc"].Model.Insert(new OwnershipRightPremisesAssoc(idParent, idOwnershipRight));
                         break;
                 }
                 ((DataRowView)((SnapshotedViewModel)ViewModel).SnapshotBindingSource[i])["id_ownership_right"] = idOwnershipRight;
@@ -251,7 +249,7 @@ namespace Registry.Viewport.Presenters
 
         public void InsertOrUpdateAssocRowIntoSnapshot(DataRow row)
         {
-            //Если добавлена новая ассоциативная связь, то перестраиваем фильтр v_ownerships_rights.Filter
+            //Если добавлена новая ассоциативная связь, то перестраиваем фильтр
             RebuildFilter();
             //Если в модели есть запись, а в снапшоте нет, то добавляем в снапшот
             if (row["id_ownership_right"] == DBNull.Value)

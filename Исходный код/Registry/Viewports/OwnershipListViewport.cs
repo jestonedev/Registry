@@ -51,7 +51,7 @@ namespace Registry.Viewport
 
             ((OwnershipListPresenter)Presenter).AddAssocViewModelItem();
 
-            //Перестраиваем фильтр v_ownerships_rights.Filter
+            //Перестраиваем фильтр
             ((OwnershipListPresenter)Presenter).RebuildFilter();
 
             ((SnapshotedViewModel)Presenter.ViewModel).InitializeSnapshot();
@@ -78,7 +78,6 @@ namespace Registry.Viewport
             }
 
             DataBind();
-
 
             AddEventHandler<EventArgs>(((SnapshotedViewModel)Presenter.ViewModel).SnapshotBindingSource,
                 "CurrentItemChanged", v_snapshot_ownerships_rights_CurrentItemChanged);
@@ -219,7 +218,7 @@ namespace Registry.Viewport
         {
             if (!SyncViews)
                 return;
-            //Если удалена ассоциативная связь, то перестраиваем фильтр v_ownerships_rights.Filter
+            //Если удалена ассоциативная связь, то перестраиваем фильтр
             if (e.Action == DataRowAction.Delete)
                 ((OwnershipListPresenter)Presenter).RebuildFilter();
             if (!Selected) return;
