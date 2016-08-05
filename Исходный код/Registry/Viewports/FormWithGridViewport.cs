@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using Registry.Viewport.Presenters;
 
 namespace Registry.Viewport
 {
@@ -19,8 +20,8 @@ namespace Registry.Viewport
         {
         }
 
-        protected FormWithGridViewport(Viewport viewport, IMenuCallback menuCallback)
-            : base(viewport, menuCallback)
+        protected FormWithGridViewport(Viewport viewport, IMenuCallback menuCallback, Presenter presenter = null)
+            : base(viewport, menuCallback, presenter)
         {
         }
 

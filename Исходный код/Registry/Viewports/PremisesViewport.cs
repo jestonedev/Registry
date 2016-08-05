@@ -66,6 +66,7 @@ namespace Registry.Viewport
                 ClearPremiseCalcInfo();
                 return;
             }
+            IsEditable = false;
             var currentFunds = Presenter.ViewModel["current_funds"].BindingSource;
             if (currentFunds != null)
             {
@@ -78,7 +79,6 @@ namespace Registry.Viewport
             if (subPremisesSumArea != null)
             {
                 var position = subPremisesSumArea.Find("id_premises", row["id_premises"]);
-                IsEditable = false;
                 if (position != -1)
                 {
                     var value = Convert.ToDecimal((double)((DataRowView)subPremisesSumArea[position])["sum_area"]);
@@ -92,8 +92,8 @@ namespace Registry.Viewport
                     numericUpDownMunicipalArea.Maximum = 0;
                     numericUpDownMunicipalArea.Value = 0;
                 }
-                IsEditable = true;
             }
+            IsEditable = true;
         }
 
         private void ClearPremiseCalcInfo()
@@ -510,7 +510,7 @@ namespace Registry.Viewport
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleted", PremisesViewport_RowDeleted);
 
             AddEventHandler<EventArgs>(Presenter.ViewModel["general"].BindingSource, "CurrentItemChanged", v_premises_CurrentItemChanged);
-            AddEventHandler<EventArgs>(Presenter.ViewModel["sub_premises"].BindingSource, 
+            AddEventHandler<EventArgs>(Presenter.ViewModel["premises_sub_premises"].BindingSource, 
                 "CurrentItemChanged", v_sub_premises_CurrentItemChanged);
             AddEventHandler<EventArgs>(Presenter.ViewModel["premises_restrictions_premises_assoc"].BindingSource, 
                 "CurrentItemChanged", v_restrictionPremisesAssoc_CurrentItemChanged);
@@ -675,11 +675,18 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
-                    ((PremisesPresenter)Presenter).InsertRecord(premise);
-                    Presenter.ViewModel["general"].Model.EditingNewRecord = false;
+                    if (!((PremisesPresenter)Presenter).InsertRecord(premise))
+                    {
+                        IsEditable = true;
+                        return;
+                    }
                     break;
                 case ViewportState.ModifyRowState:
-                    ((PremisesPresenter)Presenter).UpdateRecord(premise);
+                    if (!((PremisesPresenter) Presenter).UpdateRecord(premise))
+                    {
+                        IsEditable = true;
+                        return;
+                    }
                     break;
             }
             UnbindedCheckBoxesUpdate();
@@ -707,19 +714,16 @@ namespace Registry.Viewport
                         IsEditable = false;
                         Presenter.ViewModel["general"].CurrentRow.Delete();
                     }
-                    else
-                        Text = @"Здания отсутствуют";
-                    ViewportState = ViewportState.ReadState;
                     break;
                 case ViewportState.ModifyRowState:
                     IsEditable = false;
                     DataBind();
                     SelectCurrentBuilding();
-                    ViewportState = ViewportState.ReadState;
                     break;
             }
             UnbindedCheckBoxesUpdate();
             IsEditable = true;
+            ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
         }
@@ -983,19 +987,17 @@ namespace Registry.Viewport
             SelectCurrentBuilding();
             UnbindedCheckBoxesUpdate();
             IsEditable = isEditable;
+
             if (!Selected) return;
             MenuCallback.NavigationStateUpdate();
-            MenuCallback.EditingStateUpdate();
             MenuCallback.RelationsStateUpdate();
         }
 
         private void v_sub_premises_CurrentItemChanged(object sender, EventArgs e)
         {
-            if (Selected)
-            {
-                MenuCallback.DocumentsStateUpdate();
-                RedrawSubPremiseDataGridRows();
-            }
+            if (!Selected) return;
+            MenuCallback.DocumentsStateUpdate();
+            RedrawSubPremiseDataGridRows();
         }
 
         private void dataGridViewRestrictions_Resize(object sender, EventArgs e)

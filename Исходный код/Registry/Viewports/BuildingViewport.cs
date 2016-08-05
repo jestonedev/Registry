@@ -47,6 +47,7 @@ namespace Registry.Viewport
                 ResetMunicipalInfo(); 
                 return;
             }
+            IsEditable = false;
             var idBuilding = (int)row["id_building"];
 
             var currentFundBindingSource = Presenter.ViewModel["buildings_current_funds"].BindingSource;
@@ -94,7 +95,8 @@ namespace Registry.Viewport
             numericUpDownMunicipalArea.Value = sumArea;
             numericUpDownMunPremisesCount.Minimum = totalMunCount;
             numericUpDownMunPremisesCount.Maximum = totalMunCount;
-            numericUpDownMunPremisesCount.Value = totalMunCount;           
+            numericUpDownMunPremisesCount.Value = totalMunCount;
+            IsEditable = true;
         }
 
         private void ResetMunicipalInfo()
@@ -141,6 +143,7 @@ namespace Registry.Viewport
         private void UnbindedCheckBoxesUpdate()
         {
             var row = Presenter.ViewModel["general"].CurrentRow;
+            IsEditable = false;
             if (row != null && (row["state_date"] != DBNull.Value))
                 dateTimePickerStateDate.Checked = true;
             else
@@ -148,6 +151,7 @@ namespace Registry.Viewport
                 dateTimePickerStateDate.Value = DateTime.Now.Date;
                 dateTimePickerStateDate.Checked = false;
             }
+            IsEditable = true;
         }
 
         private void DataBind()
@@ -509,10 +513,18 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
-                    ((BuildingPresenter)Presenter).InsertRecord(building);
+                    if (!((BuildingPresenter) Presenter).InsertRecord(building))
+                    {
+                        IsEditable = true;
+                        return;
+                    }
                     break;
                 case ViewportState.ModifyRowState:
-                    ((BuildingPresenter)Presenter).UpdateRecord(building);
+                    if (!((BuildingPresenter) Presenter).UpdateRecord(building))
+                    {
+                        IsEditable = true;
+                        return;
+                    }
                     break;
             }
             UnbindedCheckBoxesUpdate();
@@ -541,19 +553,16 @@ namespace Registry.Viewport
                         IsEditable = false;
                         row.Delete();
                     }
-                    else
-                        Text = @"Здания отсутствуют";
-                    ViewportState = ViewportState.ReadState;
                     break;
                 case ViewportState.ModifyRowState:
                     Presenter.ViewModel["kladr"].BindingSource.Filter = "";
                     IsEditable = false;
                     DataBind();
-                    ViewportState = ViewportState.ReadState;
                     break;
             }
             UnbindedCheckBoxesUpdate();
             IsEditable = true;
+            ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
         }
@@ -711,16 +720,16 @@ namespace Registry.Viewport
 
         private void v_building_CurrentItemChanged(object sender, EventArgs e)
         {
+            var isEditable = IsEditable;
             SetViewportCaption();
             FiltersRebuild();
             Presenter.ViewModel["kladr"].BindingSource.Filter = "";
             UnbindedCheckBoxesUpdate();
-            if (Selected)
-            {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
-            }
+            IsEditable = isEditable;
+
+            if (!Selected) return;
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.RelationsStateUpdate();
         }
 
         private void v_ownershipBuildingsAssoc_CurrentItemChanged(object sender, EventArgs e)

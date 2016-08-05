@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Data;
+using Registry.Entities.Infrastructure;
 using Registry.Viewport.SearchForms;
 using Registry.Viewport.ViewModels;
 
@@ -9,6 +11,8 @@ namespace Registry.Viewport.Presenters
         public ViewModel ViewModel { get; private set; }
         public SearchForm SimpleSearchForm { get; private set; }
         public SearchForm ExtendedSearchForm { get; private set; }
+        public DataRow ParentRow { get; set; }
+        public ParentTypeEnum ParentType { get; set; }
 
         public Presenter(ViewModel viewModel, SearchForm simpleSearchForm = null, SearchForm extendedSearchForm = null)
         {

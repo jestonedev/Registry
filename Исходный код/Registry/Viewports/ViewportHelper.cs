@@ -141,15 +141,15 @@ namespace Registry.Viewport
         internal static void BindSource(ComboBox comboBox, BindingSource dataSource, string displayMember, string valueMember)
         {
             comboBox.DataSource = dataSource;
-            comboBox.ValueMember = valueMember;
             comboBox.DisplayMember = displayMember;
+            comboBox.ValueMember = valueMember;
         }
 
         internal static void BindSource(DataGridViewComboBoxColumn comboBox, BindingSource dataSource, string displayMember, string valueMember, string dataPropertyName = null)
         {
             comboBox.DataSource = dataSource;
-            comboBox.ValueMember = valueMember;
             comboBox.DisplayMember = displayMember;
+            comboBox.ValueMember = valueMember;
             comboBox.DataPropertyName = dataPropertyName ?? valueMember;
         }
     }

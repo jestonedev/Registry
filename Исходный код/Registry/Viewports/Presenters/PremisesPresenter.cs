@@ -111,6 +111,7 @@ namespace Registry.Viewport.Presenters
             RebuildFilterAfterSave(ViewModel["general"].BindingSource, premise.IdPremises);
             var row = ViewModel["general"].CurrentRow ?? (DataRowView)ViewModel["general"].BindingSource.AddNew();
             EntityConverter<Premise>.FillRow(premise, row);
+            ViewModel["general"].Model.EditingNewRecord = false;
             return true;
         }
 
