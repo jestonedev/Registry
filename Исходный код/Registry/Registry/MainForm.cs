@@ -821,6 +821,7 @@ namespace Registry
             //Обновляем состояние главного меню и вкладок в соответствии с правами пользователя
             MainMenuStateUpdate();
             RibbonTabsStateUpdate();
+            DocumentsStateUpdate();
         }
 
         private void RunReport(ReporterType reporterType)
