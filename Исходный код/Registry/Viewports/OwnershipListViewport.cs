@@ -59,7 +59,6 @@ namespace Registry.Viewport
             GeneralSnapshot = ((SnapshotedViewModel)Presenter.ViewModel).SnapshotDataSource;
             GeneralSnapshotBindingSource = ((SnapshotedViewModel)Presenter.ViewModel).SnapshotBindingSource;
 
-
             if (ParentRow == null)
             {
                 throw new ViewportException("Не указан родительский объект");

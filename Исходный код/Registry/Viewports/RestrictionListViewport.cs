@@ -63,7 +63,6 @@ namespace Registry.Viewport
                 throw new ViewportException("Не указан родительский объект");
             }
 
-
             switch (ParentType)
             {
                 case ParentTypeEnum.Premises:

@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Globalization;
 using System.Windows.Forms;
-using Registry.DataModels;
-using Registry.DataModels.DataModels;
 using Registry.Entities;
-using Registry.Viewport.EntityConverters;
+using Registry.Viewport.Presenters;
+using Registry.Viewport.ViewModels;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -20,66 +18,21 @@ namespace Registry.Viewport
         }
 
         public RestrictionTypeListViewport(Viewport viewport, IMenuCallback menuCallback)
-            : base(viewport, menuCallback)
+            : base(viewport, menuCallback, new RestrictionTypeListPresenter())
         {
             InitializeComponent();
-            GeneralSnapshot = new DataTable("snapshot_restriction_types")
-            {
-                Locale = CultureInfo.InvariantCulture
-            };
-        }
-
-        private static bool ValidateViewportData(IEnumerable<Entity> list)
-        {
-            foreach (var entity in list)
-            {
-                var restrictionType = (RestrictionType) entity;
-                if (restrictionType.RestrictionTypeName == null)
-                {
-                    MessageBox.Show(@"Не заполнено наименование типа реквизита", @"Ошибка", 
-                        MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return false;
-                }
-                if (restrictionType.RestrictionTypeName == null || restrictionType.RestrictionTypeName.Length <= 255)
-                    continue;
-                MessageBox.Show(@"Длина названия типа реквизита не может превышать 255 символов", @"Ошибка", 
-                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                return false;
-            }
-            return true;
-        }
-
-        private static RestrictionType RowToRestrictionType(DataRow row)
-        {
-            var restrictionType = new RestrictionType
-            {
-                IdRestrictionType = ViewportHelper.ValueOrNull<int>(row, "id_restriction_type"),
-                RestrictionTypeName = ViewportHelper.ValueOrNull(row, "restriction_type")
-            };
-            return restrictionType;
+            dataGridView.AutoGenerateColumns = false;
+            DockAreas = DockAreas.Document;
         }
 
         protected override List<Entity> EntitiesListFromViewport()
         {
-            var list = new List<Entity>();
-            for (var i = 0; i < dataGridView.Rows.Count; i++)
-            {
-                if (dataGridView.Rows[i].IsNewRow) continue;
-                var row = dataGridView.Rows[i];
-                list.Add(EntityConverter<RestrictionType>.FromRow(row));
-            }
-            return list;
+            return ((RestrictionTypeListPresenter)Presenter).EntitiesListFromSnapshot();
         }
 
         protected override List<Entity> EntitiesListFromView()
         {
-            var list = new List<Entity>();
-            for (var i = 0; i < GeneralBindingSource.Count; i++)
-            {
-                var row = (DataRowView)GeneralBindingSource[i];
-                list.Add(EntityConverter<RestrictionType>.FromRow(row));
-            }
-            return list;
+            return ((RestrictionTypeListPresenter)Presenter).EntitiesListFromView();
         }
 
         public override bool CanLoadData()
@@ -89,38 +42,31 @@ namespace Registry.Viewport
 
         public override void LoadData()
         {
-            dataGridView.AutoGenerateColumns = false;
-            DockAreas = DockAreas.Document;
-            GeneralDataModel = EntityDataModel<RestrictionType>.GetInstance();
-            GeneralDataModel.Select();
+            GeneralDataModel = Presenter.ViewModel["general"].Model;
+            GeneralBindingSource = Presenter.ViewModel["general"].BindingSource;
 
-            GeneralBindingSource = new BindingSource
-            {
-                DataMember = "restriction_types",
-                DataSource = DataStorage.DataSet
-            };
+            ((SnapshotedViewModel)Presenter.ViewModel).InitializeSnapshot();
 
-            //Инициируем колонки snapshot-модели
-            for (var i = 0; i < GeneralDataModel.Select().Columns.Count; i++)
-                GeneralSnapshot.Columns.Add(new DataColumn(GeneralDataModel.Select().Columns[i].ColumnName, 
-                    GeneralDataModel.Select().Columns[i].DataType));
-            //Загружаем данные snapshot-модели из original-view
-            for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(EntityConverter<RestrictionType>.ToArray((DataRowView)GeneralBindingSource[i]));
-            GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
+            GeneralSnapshot = ((SnapshotedViewModel)Presenter.ViewModel).SnapshotDataSource;
+            GeneralSnapshotBindingSource = ((SnapshotedViewModel)Presenter.ViewModel).SnapshotBindingSource;
+
+            DataBind();
+
             AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_restriction_types_CurrentItemChanged);
 
+            //Синхронизация данных исходные->текущие
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowChanged", RestrictionTypeListViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleting", RestrictionTypeListViewport_RowDeleting);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleted", RestrictionTypeListViewport_RowDeleted);
+
+            v_snapshot_restriction_types_CurrentItemChanged(null, new EventArgs());
+        }
+
+        private void DataBind()
+        {
             dataGridView.DataSource = GeneralSnapshotBindingSource;
             id_restriction_type.DataPropertyName = "id_restriction_type";
             restriction_type.DataPropertyName = "restriction_type";
-            dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
-            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValidated", dataGridView_CellValidated);
-            //События изменения данных для проверки соответствия реальным данным в модели
-            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValueChanged", dataGridView_CellValueChanged);
-            //Синхронизация данных исходные->текущие
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", RestrictionTypeListViewport_RowChanged);
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleting", RestrictionTypeListViewport_RowDeleting);
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", RestrictionTypeListViewport_RowDeleted);
         }
 
         public override bool CanInsertRecord()
@@ -130,18 +76,18 @@ namespace Registry.Viewport
 
         public override void InsertRecord()
         {
-            var row = (DataRowView)GeneralSnapshotBindingSource.AddNew();
-            if (row != null) row.EndEdit();
+            ((RestrictionTypeListPresenter)Presenter).InsertRecordIntoSnapshot();
         }
 
         public override bool CanDeleteRecord()
         {
-            return (GeneralSnapshotBindingSource.Position != -1) && AccessControl.HasPrivelege(Priveleges.RegistryDirectoriesReadWrite);
+            return (((SnapshotedViewModel)Presenter.ViewModel).SnapshotBindingSource.Position != -1) && 
+                AccessControl.HasPrivelege(Priveleges.RegistryDirectoriesReadWrite);
         }
 
         public override void DeleteRecord()
         {
-            ((DataRowView)GeneralSnapshotBindingSource[GeneralSnapshotBindingSource.Position]).Row.Delete();
+            ((RestrictionTypeListPresenter)Presenter).DeleteCurrentRecordFromSnapshot();
         }
 
         public override bool CanCancelRecord()
@@ -151,9 +97,7 @@ namespace Registry.Viewport
 
         public override void CancelRecord()
         {
-            GeneralSnapshot.Clear();
-            for (var i = 0; i < GeneralBindingSource.Count; i++)
-                GeneralSnapshot.Rows.Add(EntityConverter<RestrictionType>.ToArray((DataRowView)GeneralBindingSource[i]));
+            ((SnapshotedViewModel)Presenter.ViewModel).LoadSnapshot();
             MenuCallback.EditingStateUpdate();
         }
 
@@ -166,67 +110,14 @@ namespace Registry.Viewport
         {
             SyncViews = false;
             dataGridView.EndEdit();
-            GeneralDataModel.EditingNewRecord = true;
-            var list = EntitiesListFromViewport();
-            if (!ValidateViewportData(list))
+            Presenter.ViewModel["general"].Model.EditingNewRecord = true;
+            if (((RestrictionTypeListPresenter)Presenter).ValidateRestrictionTypesInSnapshot())
             {
-                SyncViews = true;
-                GeneralDataModel.EditingNewRecord = false;
-                return;
+                ((RestrictionTypeListPresenter)Presenter).SaveRecords();
+                MenuCallback.EditingStateUpdate();
             }
-            for (var i = 0; i < list.Count; i++)
-            {
-                var restrictionType = (RestrictionType) list[i];
-                var row = GeneralDataModel.Select().Rows.Find(restrictionType.IdRestrictionType);
-                if (row == null)
-                {
-                    var idRestrictionType = GeneralDataModel.Insert(restrictionType);
-                    if (idRestrictionType == -1)
-                    {
-                        SyncViews = true;
-                        GeneralDataModel.EditingNewRecord = false;
-                        return;
-                    }
-                    ((DataRowView)GeneralSnapshotBindingSource[i])["id_restriction_type"] = idRestrictionType;
-                    GeneralDataModel.Select().Rows.Add(EntityConverter<RestrictionType>.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
-                }
-                else
-                {
-                    if (RowToRestrictionType(row) == restrictionType)
-                        continue;
-                    if (GeneralDataModel.Update(restrictionType) == -1)
-                    {
-                        SyncViews = true;
-                        GeneralDataModel.EditingNewRecord = false;
-                        return;
-                    }
-                    EntityConverter<RestrictionType>.FillRow(restrictionType, row);
-                }
-            }
-            list = EntitiesListFromView();
-            foreach (var entity in list)
-            {
-                var restrictionType = (RestrictionType) entity;
-                var rowIndex = -1;
-                for (var j = 0; j < dataGridView.Rows.Count; j++)
-                    if ((dataGridView.Rows[j].Cells["id_restriction_type"].Value != null) &&
-                        !string.IsNullOrEmpty(dataGridView.Rows[j].Cells["id_restriction_type"].Value.ToString()) &&
-                        ((int)dataGridView.Rows[j].Cells["id_restriction_type"].Value == restrictionType.IdRestrictionType))
-                        rowIndex = j;
-                if (rowIndex == -1)
-                {
-                    if (restrictionType.IdRestrictionType != null && 
-                        GeneralDataModel.Delete(restrictionType.IdRestrictionType.Value) == -1)
-                    {
-                        SyncViews = true;
-                        GeneralDataModel.EditingNewRecord = false;
-                        return;
-                    }
-                    GeneralDataModel.Select().Rows.Find(restrictionType.IdRestrictionType).Delete();
-                }
-            }
+            Presenter.ViewModel["general"].Model.EditingNewRecord = false;
             SyncViews = true;
-            GeneralDataModel.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
         }
 
@@ -256,37 +147,27 @@ namespace Registry.Viewport
             if (!SyncViews)
                 return;
             if (e.Action != DataRowAction.Delete) return;
-            var rowIndex = GeneralSnapshotBindingSource.Find("id_restriction_type", e.Row["id_restriction_type"]);
-            if (rowIndex != -1)
-                ((DataRowView)GeneralSnapshotBindingSource[rowIndex]).Delete();
+            ((RestrictionTypeListPresenter)Presenter).DeleteRowByIdFromSnapshot((int)e.Row["id_restriction_type"]);
         }
 
         private void RestrictionTypeListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (!SyncViews)
                 return;
-            var rowIndex = GeneralSnapshotBindingSource.Find("id_restriction_type", e.Row["id_restriction_type"]);
-            if (rowIndex == -1 && GeneralBindingSource.Find("id_restriction_type", e.Row["id_restriction_type"]) != -1)
-            {
-                GeneralSnapshot.Rows.Add(EntityConverter<RestrictionType>.ToArray(e.Row));
-            }
-            else
-                if (rowIndex != -1)
-                {
-                    var row = (DataRowView)GeneralSnapshotBindingSource[rowIndex];
-                    row["restriction_type"] = e.Row["restriction_type"];
-                }
-            if (Selected)
-            {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.StatusBarStateUpdate();
-                MenuCallback.EditingStateUpdate();
-            }
+            ((RestrictionTypeListPresenter)Presenter).InsertOrUpdateRowIntoSnapshot(e.Row);
+            if (!Selected) return;
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.StatusBarStateUpdate();
+            MenuCallback.EditingStateUpdate();
         }
 
         private void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
         {
             var cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            if (cell.Value == null)
+            {
+                return;
+            }
             switch (cell.OwningColumn.Name)
             {
                 case "restriction_type":
@@ -303,14 +184,16 @@ namespace Registry.Viewport
 
         private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            MenuCallback.EditingStateUpdate();
+            if (Selected)
+            {
+                MenuCallback.EditingStateUpdate();   
+            }
         }
 
         private void v_snapshot_restriction_types_CurrentItemChanged(object sender, EventArgs e)
         {
             if (!Selected) return;
             MenuCallback.NavigationStateUpdate();
-            MenuCallback.EditingStateUpdate();
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Data;
-using System.Text;
 using Registry.DataModels.DataModels;
 
 namespace Registry.DataModels
