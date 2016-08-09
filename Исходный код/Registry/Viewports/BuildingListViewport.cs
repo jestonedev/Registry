@@ -26,6 +26,7 @@ namespace Registry.Viewport
             InitializeComponent();
             DataGridView = dataGridView;
             DockAreas = DockAreas.Document;
+            ViewportHelper.SetDoubleBuffered(DataGridView);
         }
 
         public override bool CanLoadData()
@@ -58,7 +59,6 @@ namespace Registry.Viewport
             AddEventHandler<DataRowChangeEventArgs>(ownershipRightsAssoc, "RowDeleted", BuildingsOwnershipChanged);
 
             DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count;
-            ViewportHelper.SetDoubleBuffered(DataGridView);
 
             GeneralBindingSource_CurrentItemChanged(null, new EventArgs());
         }

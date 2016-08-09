@@ -144,14 +144,14 @@ namespace Registry.Viewport.MultiMasters
                     id_claim = gs.Key,
                     id_state = gs.Max()
                 };
-            var lastStateTypes = from lastStateRow in lastStates
+            var lastStateTypes = (from lastStateRow in lastStates
                 join stateRow in claimStatesDataModel.FilterDeletedRows()
                     on lastStateRow.id_state equals stateRow.Field<int?>("id_state")
                 select new
                 {
                     id_claim = stateRow.Field<int>("id_claim"),
                     id_state_type = stateRow.Field<int>("id_state_type")
-                };
+                }).ToList();
             // Check duplicates
             for (var i = 0; i < _paymentAccount.Count; i++)
             {

@@ -30,6 +30,8 @@ namespace Registry.Viewport
             DataGridView = dataGridView;
             DataGridView.AutoGenerateColumns = false;
             DockAreas = DockAreas.Document;
+
+            ViewportHelper.SetDoubleBuffered(DataGridView);
         }
 
         public override bool CanLoadData()
@@ -144,7 +146,7 @@ namespace Registry.Viewport
 
             DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count;
 
-            ViewportHelper.SetDoubleBuffered(DataGridView);
+            GeneralBindingSource_CurrentItemChanged(null, new EventArgs());
         }
 
         private void OwnershipChanged(object sender, DataRowChangeEventArgs e)

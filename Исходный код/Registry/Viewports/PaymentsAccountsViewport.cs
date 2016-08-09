@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels;
 using Registry.DataModels.DataModels;
+using Registry.DataModels.Services;
 using Registry.Entities.Infrastructure;
 using Registry.Viewport.SearchForms;
 using WeifenLuo.WinFormsUI.Docking;
@@ -51,11 +52,11 @@ namespace Registry.Viewport
                 switch (ParentType)
                 {
                     case ParentTypeEnum.Premises:
-                        ids = PaymentsAccountsDataModel.GetAccountIdsByPremiseFilter(StaticFilter);
+                        ids = PaymentService.GetAccountIdsByPremiseFilter(StaticFilter);
                         title = string.Format("Лицевой счет помещение №{0}", ParentRow["id_premises"]);
                         break;
                     case ParentTypeEnum.SubPremises:
-                        ids = PaymentsAccountsDataModel.GetAccountIdsBySubPremiseFilter(StaticFilter);
+                        ids = PaymentService.GetAccountIdsBySubPremiseFilter(StaticFilter);
                         title = string.Format("Лицевой счет комнаты {0} помещения №{1}", ParentRow["sub_premises_num"], ParentRow["id_premises"]);
                         break;
                     case ParentTypeEnum.Claim:
@@ -240,7 +241,7 @@ namespace Registry.Viewport
                              CultureInfo.InvariantCulture);
             if (typeof(T) == typeof(PremisesListViewport))
             {
-                var ids = PaymentsAccountsDataModel.GetPremisesIdsByAccountFilter(filter).ToList();
+                var ids = PaymentService.GetPremisesIdsByAccountFilter(filter).ToList();
                 if (!ids.Any())
                 {
                     MessageBox.Show(@"К данному лицевому счету не привязано ни одного объекта недвижимости", @"Внимание",

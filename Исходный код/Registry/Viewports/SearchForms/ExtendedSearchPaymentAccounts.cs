@@ -79,11 +79,11 @@ namespace Registry.Viewport.SearchForms
                 filter += string.Format("raw_address LIKE '%{0}%'", textBoxRawAddress.Text);
             }
             if (checkBoxStreetEnable.Checked)
-                includedAccounts = DataModelHelper.Intersect(null, PaymentsAccountsDataModel.GetAccountIdsByStreet(comboBoxStreet.SelectedValue.ToString()));
+                includedAccounts = DataModelHelper.Intersect(null, PaymentService.GetAccountIdsByStreet(comboBoxStreet.SelectedValue.ToString()));
             if (checkBoxHouseEnable.Checked)
-                includedAccounts = DataModelHelper.Intersect(includedAccounts, PaymentsAccountsDataModel.GetAccountIdsByHouse(textBoxHouse.Text));
+                includedAccounts = DataModelHelper.Intersect(includedAccounts, PaymentService.GetAccountIdsByHouse(textBoxHouse.Text));
             if (checkBoxPremisesNumEnable.Checked)
-                includedAccounts = DataModelHelper.Intersect(includedAccounts, PaymentsAccountsDataModel.GetAccountIdsByPremiseNumber(textBoxPremisesNum.Text));         
+                includedAccounts = DataModelHelper.Intersect(includedAccounts, PaymentService.GetAccountIdsByPremiseNumber(textBoxPremisesNum.Text));         
             if (checkBoxDateEnable.Checked && !checkBoxBalanceInputEnable.Checked &&
                 !checkBoxBalanceInputTenancyEnable.Checked
                 && !checkBoxBalanceInputDGIEnable.Checked && !checkBoxChargingEnable.Checked &&
@@ -103,7 +103,7 @@ namespace Registry.Viewport.SearchForms
             {
                 if (checkBoxTenantSNPEnable.Checked)
                     includedAccounts =
-                        PaymentsAccountsDataModel.GetAccountIdsByPaymentFilter(string.Format("tenant LIKE '%{0}%'", textBoxTenantSNP.Text.Trim()));
+                        PaymentService.GetAccountIdsByPaymentFilter(string.Format("tenant LIKE '%{0}%'", textBoxTenantSNP.Text.Trim()));
                 if (checkBoxBalanceInputEnable.Checked)
                     includedAccounts = AccountIdsByPaymentInfo(includedAccounts, "balance_input",
                         comboBoxBalanceInputExpr.Text, numericUpDownBalanceInputFrom.Value, numericUpDownBalanceInputTo.Value);
@@ -222,7 +222,7 @@ namespace Registry.Viewport.SearchForms
             if (checkBoxDateEnable.Checked)
                 format += string.Format(" AND date {0} STR_TO_DATE('{1}','%d.%m.%Y')", ConvertDisplayEqExprToSql(comboBoxDateExpr.Text), dateTimePickerDate.Value.ToString("dd.MM.yyyy"));
             includedAccounts = DataModelHelper.Intersect(includedAccounts,
-                PaymentsAccountsDataModel.GetAccountIdsByPaymentFilter(
+                PaymentService.GetAccountIdsByPaymentFilter(
                     string.Format(format, field, op, from.ToString(CultureInfo.InvariantCulture), to.ToString(CultureInfo.InvariantCulture))));
             return includedAccounts;
         }

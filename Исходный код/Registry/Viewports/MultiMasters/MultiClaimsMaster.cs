@@ -332,7 +332,7 @@ namespace Registry.Viewport.MultiMasters
                         idsAccounts.Add(id.Value);
                 }
                 idsAccounts = idsAccounts.Distinct().ToList();
-                balanceInfoTable = PaymentsAccountsDataModel.GetBalanceInfoOnDate(idsAccounts, form.DeptPeriodTo.Value.Year,
+                balanceInfoTable = PaymentService.GetBalanceInfoOnDate(idsAccounts, form.DeptPeriodTo.Value.Year,
                     form.DeptPeriodTo.Value.Month);
             }
             var idsClaimsWithIncorrectBalanceInfo = new List<int>();

@@ -345,7 +345,7 @@ namespace Registry.Viewport
                 MessageBox.Show(@"Вы хотите обновить суммы взыскания на предъявленный период?",@"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
             {
-                var balanceInfoTable = PaymentsAccountsDataModel.GetBalanceInfoOnDate(
+                var balanceInfoTable = PaymentService.GetBalanceInfoOnDate(
                     new List<int> {claim.IdAccount.Value}, claim.EndDeptPeriod.Value.Year,
                     claim.EndDeptPeriod.Value.Month);
                 var balanceInfoList = (from row in balanceInfoTable.Select()

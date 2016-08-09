@@ -102,6 +102,7 @@
     <Compile Include="Services\BuildingService.cs" />
     <Compile Include="Services\ClaimsService.cs" />
     <Compile Include="Services\OtherService.cs" />
+    <Compile Include="Services\PaymentService.cs" />
     <Compile Include="Services\PremisesService.cs" />
     <Compile Include="Services\ResettleService.cs" />
     <Compile Include="Services\TenancyService.cs" />
