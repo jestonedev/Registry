@@ -69,6 +69,7 @@
             this.textBoxCourtNumber = new System.Windows.Forms.TextBox();
             this.label16 = new System.Windows.Forms.Label();
             this.tabPageResettle2013to2017 = new System.Windows.Forms.TabPage();
+            this.radioButtonGeneral = new System.Windows.Forms.RadioButton();
             this.radioButtonResettleRetransfer = new System.Windows.Forms.RadioButton();
             this.radioButtonResettleFreeList = new System.Windows.Forms.RadioButton();
             this.dateTimePickerResettleDate = new System.Windows.Forms.DateTimePicker();
@@ -76,7 +77,6 @@
             this.textBoxResettleNumber = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.radioButtonGeneral = new System.Windows.Forms.RadioButton();
             this.groupBoxAddress.SuspendLayout();
             this.tabControlExtInfo.SuspendLayout();
             this.tabPageGeneral.SuspendLayout();
@@ -411,7 +411,7 @@
             this.tabPageCourt.Location = new System.Drawing.Point(4, 44);
             this.tabPageCourt.Name = "tabPageCourt";
             this.tabPageCourt.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageCourt.Size = new System.Drawing.Size(360, 246);
+            this.tabPageCourt.Size = new System.Drawing.Size(360, 245);
             this.tabPageCourt.TabIndex = 4;
             this.tabPageCourt.Tag = "4";
             this.tabPageCourt.Text = "По решению суда";
@@ -431,7 +431,7 @@
             this.comboBoxCourt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxCourt.FormattingEnabled = true;
             this.comboBoxCourt.Items.AddRange(new object[] {
-            "Братского городского суда",
+            "Братского городского суда Иркутской области",
             "Падунского районного суда г. Братска и Иркутской области",
             "Иркутского областного суда"});
             this.comboBoxCourt.Location = new System.Drawing.Point(6, 111);
@@ -483,11 +483,23 @@
             this.tabPageResettle2013to2017.Location = new System.Drawing.Point(4, 44);
             this.tabPageResettle2013to2017.Name = "tabPageResettle2013to2017";
             this.tabPageResettle2013to2017.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageResettle2013to2017.Size = new System.Drawing.Size(360, 245);
+            this.tabPageResettle2013to2017.Size = new System.Drawing.Size(360, 246);
             this.tabPageResettle2013to2017.TabIndex = 1;
             this.tabPageResettle2013to2017.Tag = "5";
             this.tabPageResettle2013to2017.Text = "Переселение 2013-2017";
             this.tabPageResettle2013to2017.UseVisualStyleBackColor = true;
+            // 
+            // radioButtonGeneral
+            // 
+            this.radioButtonGeneral.AutoSize = true;
+            this.radioButtonGeneral.Checked = true;
+            this.radioButtonGeneral.Location = new System.Drawing.Point(9, 98);
+            this.radioButtonGeneral.Name = "radioButtonGeneral";
+            this.radioButtonGeneral.Size = new System.Drawing.Size(170, 19);
+            this.radioButtonGeneral.TabIndex = 2;
+            this.radioButtonGeneral.TabStop = true;
+            this.radioButtonGeneral.Text = "Основное распоряжение";
+            this.radioButtonGeneral.UseVisualStyleBackColor = true;
             // 
             // radioButtonResettleRetransfer
             // 
@@ -551,18 +563,6 @@
             this.groupBox1.TabIndex = 7;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Вид распоряжения";
-            // 
-            // radioButtonGeneral
-            // 
-            this.radioButtonGeneral.AutoSize = true;
-            this.radioButtonGeneral.Checked = true;
-            this.radioButtonGeneral.Location = new System.Drawing.Point(9, 98);
-            this.radioButtonGeneral.Name = "radioButtonGeneral";
-            this.radioButtonGeneral.Size = new System.Drawing.Size(170, 19);
-            this.radioButtonGeneral.TabIndex = 2;
-            this.radioButtonGeneral.TabStop = true;
-            this.radioButtonGeneral.Text = "Основное распоряжение";
-            this.radioButtonGeneral.UseVisualStyleBackColor = true;
             // 
             // TenancyOrderSettingsForm
             // 

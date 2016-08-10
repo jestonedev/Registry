@@ -21,14 +21,14 @@ namespace Registry.Viewport
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.BTI_rooms = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_building = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_street = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.id_street = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.house = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.floors = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.living_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mun_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cadastral_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.startup_year = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_structure_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.id_structure_type = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
             this.SuspendLayout();
@@ -94,13 +94,10 @@ namespace Registry.Viewport
             // 
             // id_street
             // 
-            this.id_street.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.id_street.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
             this.id_street.HeaderText = "Адрес";
             this.id_street.MinimumWidth = 250;
             this.id_street.Name = "id_street";
             this.id_street.ReadOnly = true;
-            this.id_street.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.Automatic;
             this.id_street.Width = 250;
             // 
             // house
@@ -163,12 +160,11 @@ namespace Registry.Viewport
             // 
             // id_structure_type
             // 
-            this.id_structure_type.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.id_structure_type.DisplayStyle = System.Windows.Forms.DataGridViewComboBoxDisplayStyle.Nothing;
             this.id_structure_type.HeaderText = "Тип строения (материал)";
-            this.id_structure_type.MinimumWidth = 100;
+            this.id_structure_type.MinimumWidth = 120;
             this.id_structure_type.Name = "id_structure_type";
             this.id_structure_type.ReadOnly = true;
+            this.id_structure_type.Width = 120;
             // 
             // id_state
             // 
@@ -195,14 +191,14 @@ namespace Registry.Viewport
         }
         private DataGridViewTextBoxColumn BTI_rooms;
         private DataGridViewTextBoxColumn id_building;
-        private DataGridViewComboBoxColumn id_street;
+        private DataGridViewTextBoxColumn id_street;
         private DataGridViewTextBoxColumn house;
         private DataGridViewTextBoxColumn floors;
         private DataGridViewTextBoxColumn living_area;
         private DataGridViewTextBoxColumn mun_area;
         private DataGridViewTextBoxColumn cadastral_num;
         private DataGridViewTextBoxColumn startup_year;
-        private DataGridViewComboBoxColumn id_structure_type;
+        private DataGridViewTextBoxColumn id_structure_type;
         private DataGridViewTextBoxColumn id_state;
     }
 }

@@ -232,23 +232,19 @@ namespace Registry.Viewport
                 comboBoxRentType.Focus();
                 return false;
             }
-            if (checkBoxContractEnable.Checked)
+            if (checkBoxContractEnable.Checked && tenancy.RegistrationNum == null)
             {
-                if (tenancy.RegistrationNum == null)
-                {
-                    MessageBox.Show(@"Не указан номер договора найма", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    textBoxRegistrationNumber.Focus();
-                    return false;
-                }
+                MessageBox.Show(@"Не указан номер договора найма", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error,
+                    MessageBoxDefaultButton.Button1);
+                textBoxRegistrationNumber.Focus();
+                return false;
             }
-            if (checkBoxProtocolEnable.Checked)
+            if (checkBoxProtocolEnable.Checked && tenancy.ProtocolNum == null)
             {
-                if (tenancy.ProtocolNum == null)
-                {
-                    MessageBox.Show(@"Не указан номер протокола жилищной комиссии", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    textBoxProtocolNumber.Focus();
-                    return false;
-                }
+                MessageBox.Show(@"Не указан номер протокола жилищной комиссии", @"Ошибка", MessageBoxButtons.OK,
+                    MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxProtocolNumber.Focus();
+                return false;
             }
             var tenancyFromView = (TenancyProcess) EntityFromView();
             if (tenancy.RegistrationNum != null && tenancy.RegistrationNum != tenancyFromView.RegistrationNum)

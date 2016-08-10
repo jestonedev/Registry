@@ -39,15 +39,7 @@ namespace Registry.Viewport
             GeneralBindingSource = Presenter.ViewModel["general"].BindingSource;
             GeneralDataModel = Presenter.ViewModel["general"].Model;
 
-            Presenter.SetGeneralBindingSourceFilter(StaticFilter, DynamicFilter);
-
-            id_street.DataSource = Presenter.ViewModel["kladr"].DataSource;
-            id_street.ValueMember = Presenter.ViewModel["kladr"].PrimaryKeyFirst;
-            id_street.DisplayMember = "street_name";
-
-            id_structure_type.DataSource = Presenter.ViewModel["structure_types"].DataSource;
-            id_structure_type.ValueMember = Presenter.ViewModel["structure_types"].PrimaryKeyFirst;
-            id_structure_type.DisplayMember = "structure_type";         
+            Presenter.SetGeneralBindingSourceFilter(StaticFilter, DynamicFilter);   
 
             AddEventHandler<EventArgs>(Presenter.ViewModel["general"].BindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowChanged", GeneralDataSource_RowChanged);
@@ -280,14 +272,22 @@ namespace Registry.Viewport
                         style.SelectionBackColor = SystemColors.Highlight;
                     }
                     break;
-                case "id_street":
                 case "house":
                 case "floors":
                 case "living_area":
                 case "cadastral_num":
                 case "startup_year":
-                case "id_structure_type":
                     e.Value = row[DataGridView.Columns[e.ColumnIndex].Name];
+                    break;
+                case "id_street":
+                    var streetRow = Presenter.ViewModel["kladr"].DataSource.Rows.Find(row["id_street"]);
+                    if (streetRow != null)
+                        e.Value = streetRow["street_name"];
+                    break;
+                case "id_structure_type":
+                    var structureRow = Presenter.ViewModel["structure_types"].DataSource.Rows.Find(row["id_structure_type"]);
+                    if (structureRow != null)
+                        e.Value = structureRow["structure_type"];
                     break;
                 case "id_state":
                     var stateRow = Presenter.ViewModel["object_states"].DataSource.Rows.Find(row["id_state"]);
