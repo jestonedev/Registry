@@ -8,6 +8,8 @@ namespace Registry.DataModels.CalcDataModels
 {
     internal sealed class CalcDataModelTenancyPremisesInfo : CalcDataModel
     {
+        private static CalcDataModelTenancyPremisesInfo _dataModel;
+
         private const string TableName = "tenancy_premises_info";
 
         private CalcDataModelTenancyPremisesInfo()
@@ -114,7 +116,7 @@ namespace Registry.DataModels.CalcDataModels
 
         public static CalcDataModelTenancyPremisesInfo GetInstance()
         {
-            return new CalcDataModelTenancyPremisesInfo();
+            return _dataModel ?? (_dataModel = new CalcDataModelTenancyPremisesInfo());
         }
     }
 }

@@ -60,6 +60,7 @@ namespace Registry
             this.ribbonButtonOrbTenancyContract1712 = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbTenancyAct = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbTenancyAgreement = new System.Windows.Forms.RibbonButton();
+            this.ribbonButtonNotifyContractAgreement = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbRegistryExcerptPremise = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbRegistryExcerptSubPremise = new System.Windows.Forms.RibbonButton();
             this.ribbonButtonOrbRegistryExcerptSubPremises = new System.Windows.Forms.RibbonButton();
@@ -172,7 +173,6 @@ namespace Registry
             this.toolStripLabelRecordCount = new System.Windows.Forms.ToolStripLabel();
             this.dockPanel = new WeifenLuo.WinFormsUI.Docking.DockPanel();
             this.ribbonButton3 = new System.Windows.Forms.RibbonButton();
-            this.ribbonButtonNotifyContractAgreement = new System.Windows.Forms.RibbonButton();
             this.mbStatusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -375,6 +375,17 @@ namespace Registry
             this.ribbonButtonOrbTenancyAgreement.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonOrbTenancyAgreement.ToolTipImage")));
             this.ribbonButtonOrbTenancyAgreement.ToolTipTitle = "Соглашение";
             this.ribbonButtonOrbTenancyAgreement.Click += new System.EventHandler(this.ribbonButtonTenancyAgreement_Click);
+            // 
+            // ribbonButtonNotifyContractAgreement
+            // 
+            this.ribbonButtonNotifyContractAgreement.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyContractAgreement.Image")));
+            this.ribbonButtonNotifyContractAgreement.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyContractAgreement.SmallImage")));
+            this.ribbonButtonNotifyContractAgreement.Text = "Уведомление о готовности документов";
+            this.ribbonButtonNotifyContractAgreement.ToolTip = "При нажатии на данную кнопку будет сформировано уведомление о необходимости прийт" +
+    "и в отдел жилищных отношений за документами";
+            this.ribbonButtonNotifyContractAgreement.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyContractAgreement.ToolTipImage")));
+            this.ribbonButtonNotifyContractAgreement.ToolTipTitle = "Уведомление";
+            this.ribbonButtonNotifyContractAgreement.Click += new System.EventHandler(this.ribbonButtonNotifyContractAgreement_Click);
             // 
             // ribbonButtonOrbRegistryExcerptPremise
             // 
@@ -1601,17 +1612,6 @@ namespace Registry
             this.ribbonButton3.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButton3.Image")));
             this.ribbonButton3.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButton3.SmallImage")));
             this.ribbonButton3.Text = "Лицевые счета";
-            // 
-            // ribbonButtonNotifyContractAgreement
-            // 
-            this.ribbonButtonNotifyContractAgreement.Image = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyContractAgreement.Image")));
-            this.ribbonButtonNotifyContractAgreement.SmallImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyContractAgreement.SmallImage")));
-            this.ribbonButtonNotifyContractAgreement.Text = "Уведомление";
-            this.ribbonButtonNotifyContractAgreement.ToolTip = "При нажатии на данную кнопку будет сформировано уведомление о необходимости прийт" +
-    "и в отдел жилищных отношений за документами";
-            this.ribbonButtonNotifyContractAgreement.ToolTipImage = ((System.Drawing.Image)(resources.GetObject("ribbonButtonNotifyContractAgreement.ToolTipImage")));
-            this.ribbonButtonNotifyContractAgreement.ToolTipTitle = "Уведомление";
-            this.ribbonButtonNotifyContractAgreement.Click += new System.EventHandler(this.ribbonButtonNotifyContractAgreement_Click);
             // 
             // MainForm
             // 

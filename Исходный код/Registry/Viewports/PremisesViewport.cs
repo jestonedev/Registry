@@ -563,9 +563,9 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             IsEditable = false;
-            var premise = (Premise) EntityFromView();
-            Presenter.ViewModel["general"].BindingSource.AddNew();
             Presenter.ViewModel["general"].Model.EditingNewRecord = true;
+            var premise = (Premise)EntityFromView();
+            Presenter.ViewModel["general"].BindingSource.AddNew();
             if (premise.IdBuilding != null)
             {
                 comboBoxStreet.SelectedValue = premise.IdBuilding;
@@ -586,10 +586,10 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             IsEditable = false;
-            Presenter.ViewModel["general"].BindingSource.AddNew();
-            IsEditable = true;
             Presenter.ViewModel["general"].Model.EditingNewRecord = true;
+            Presenter.ViewModel["general"].BindingSource.AddNew();
             UnbindedCheckBoxesUpdate();
+            IsEditable = true;
         }
 
         public override bool CanSearchRecord()

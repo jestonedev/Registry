@@ -578,10 +578,10 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             IsEditable = false;
-            Presenter.ViewModel["general"].BindingSource.AddNew();
-            IsEditable = true;
             Presenter.ViewModel["general"].Model.EditingNewRecord = true;
+            Presenter.ViewModel["general"].BindingSource.AddNew();
             UnbindedCheckBoxesUpdate();
+            IsEditable = true;
         }
 
         public override bool CanCopyRecord()
@@ -595,9 +595,9 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             IsEditable = false;
-            var building = (Building) EntityFromView();
-            Presenter.ViewModel["general"].BindingSource.AddNew();
             Presenter.ViewModel["general"].Model.EditingNewRecord = true;
+            var building = (Building)EntityFromView();
+            Presenter.ViewModel["general"].BindingSource.AddNew();
             ViewportFromBuilding(building);
             IsEditable = true;
         }
