@@ -93,7 +93,7 @@ namespace Registry.Viewport
 
         private void DataBind()
         {
-            dataGridView.DataSource = GeneralSnapshotBindingSource;
+            dataGridView.DataSource = ((SnapshotedViewModel)Presenter.ViewModel).SnapshotBindingSource;
 
             id_restriction.DataPropertyName = "id_restriction";
             number.DataPropertyName = "number";
