@@ -432,7 +432,7 @@
             this.comboBoxCourt.FormattingEnabled = true;
             this.comboBoxCourt.Items.AddRange(new object[] {
             "Братского городского суда Иркутской области",
-            "Падунского районного суда г. Братска и Иркутской области",
+            "Падунского районного суда Иркутской области",
             "Иркутского областного суда"});
             this.comboBoxCourt.Location = new System.Drawing.Point(6, 111);
             this.comboBoxCourt.Name = "comboBoxCourt";

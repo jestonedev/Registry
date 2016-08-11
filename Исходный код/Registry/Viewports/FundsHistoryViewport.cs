@@ -78,13 +78,14 @@ namespace Registry.Viewport
         private void UnbindedCheckBoxesUpdate()
         {
             var row = Presenter.ViewModel["general"].CurrentRow;
-            if (row == null) return;
-            checkBoxIncludeRest.Checked = (row["include_restriction_date"] != DBNull.Value) &&
-                                          (row["include_restriction_number"] != DBNull.Value);
-            checkBoxExcludeRest.Checked = (row["exclude_restriction_date"] != DBNull.Value) &&
-                                          (row["exclude_restriction_number"] != DBNull.Value);
             IsEditable = false;
-            if (row["protocol_date"] != DBNull.Value)
+            checkBoxIncludeRest.Checked = row != null &&
+                                          (row["include_restriction_date"] != DBNull.Value) &&
+                                          (row["include_restriction_number"] != DBNull.Value);
+            checkBoxExcludeRest.Checked = row != null &&
+                                          (row["exclude_restriction_date"] != DBNull.Value) &&
+                                          (row["exclude_restriction_number"] != DBNull.Value);
+            if (row != null && row["protocol_date"] != DBNull.Value)
             {
                 dateTimePickerProtocolDate.Checked = true;   
             }
@@ -305,15 +306,15 @@ namespace Registry.Viewport
         {
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
-            comboBoxFundType.Focus();
             IsEditable = false;
-            var fundHistory = (FundHistory) EntityFromView();
-            Presenter.ViewModel["general"].BindingSource.AddNew();
-            DataGridView.Enabled = false;
+            var fundHistory = (FundHistory)EntityFromView();
             Presenter.ViewModel["general"].Model.EditingNewRecord = true;
+            Presenter.ViewModel["general"].BindingSource.AddNew();
             ViewportFromFundHistory(fundHistory);
+            DataGridView.Enabled = false;
             checkBoxIncludeRest.Checked = fundHistory.IncludeRestrictionDate != null;
             checkBoxExcludeRest.Checked = fundHistory.ExcludeRestrictionDate != null;
+            comboBoxFundType.Focus();
             IsEditable = true;
         }
 
@@ -329,9 +330,9 @@ namespace Registry.Viewport
                 return;
             comboBoxFundType.Focus();
             IsEditable = false;
+            Presenter.ViewModel["general"].Model.EditingNewRecord = true;
             Presenter.ViewModel["general"].BindingSource.AddNew();
             DataGridView.Enabled = false;
-            Presenter.ViewModel["general"].Model.EditingNewRecord = true;
             UnbindedCheckBoxesUpdate();
             IsEditable = true;
         }
@@ -408,9 +409,8 @@ namespace Registry.Viewport
             else
                 if (bindingSource.Position >= DataGridView.RowCount)
                     DataGridView.Rows[DataGridView.RowCount - 1].Selected = true;
-                else
-                    if (DataGridView.Rows[bindingSource.Position].Selected != true)
-                        DataGridView.Rows[bindingSource.Position].Selected = true;
+                else if (DataGridView.Rows[bindingSource.Position].Selected != true)
+                    DataGridView.Rows[bindingSource.Position].Selected = true;
 
             var isEditable = IsEditable;
             UnbindedCheckBoxesUpdate();
