@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
 using System.Linq;
@@ -8,14 +9,37 @@ using Declensions.Unicode;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Viewport.EntityConverters;
+using Registry.Viewport.ModalEditors;
 using Registry.Viewport.ViewModels;
 
 namespace Registry.Viewport.Presenters
 {
     internal sealed class TenancyAgreementsPresenter: Presenter
     {
+
+        public enum ExtModificationTypes
+        {
+            CommercialProlong,
+            SpecialProlong,
+            ChangeTenant
+        }
+
+        public sealed class ExtModificationParameter
+        {
+            public string Name { get; set; }
+            public object Value { get; set; }
+        }
+
+        // Auto modify properties
+        private List<TenancyPerson> ExcludePersons { get; set; }
+        private List<TenancyPerson> IncludePersons { get; set; }
+        private List<Dictionary<ExtModificationTypes, List<ExtModificationParameter>>> Modifications { get; set; }
+
         public TenancyAgreementsPresenter() : base(new TenancyAgreementsViewModel(), null, null)
         {
+            Modifications = new List<Dictionary<ExtModificationTypes, List<ExtModificationParameter>>>();
+            IncludePersons = new List<TenancyPerson>();
+            ExcludePersons = new List<TenancyPerson>();
         }
 
         public void InitExtendedViewModelItems(string staticFilter)
@@ -83,6 +107,132 @@ namespace Registry.Viewport.Presenters
             var row = ViewModel["general"].CurrentRow;
             EntityConverter<TenancyAgreement>.FillRow(tenancyAgreement, row);
             return true;
+        }
+
+        private void Prolong(List<ExtModificationParameter> parameters)
+        {
+            var beginDate = parameters.Where(v => v.Name == "ProlongFrom").Select(v => (DateTime?)v.Value).FirstOrDefault();
+            var endDate = parameters.Where(v => v.Name == "ProlongTo").Select(v => (DateTime?)v.Value).FirstOrDefault();
+            var untilDismissal = parameters.Where(v => v.Name == "UntilDismissal").Select(v => (bool?)v.Value).FirstOrDefault() ?? false;
+
+            var rentPeriod = new TenancyRentPeriod
+            {
+                IdProcess = (int)ParentRow["id_process"],
+                BeginDate = ViewportHelper.ValueOrNull<DateTime>(ParentRow, "begin_date"),
+                EndDate = ViewportHelper.ValueOrNull<DateTime>(ParentRow, "end_date"),
+                UntilDismissal = ViewportHelper.ValueOrNull<bool>(ParentRow, "until_dismissal"),
+            };
+            var rentPeriods = EntityDataModel<TenancyRentPeriod>.GetInstance();
+            rentPeriods.EditingNewRecord = true;
+            var idRentPeriod = rentPeriods.Insert(rentPeriod);
+            if (idRentPeriod == -1) return;
+            rentPeriod.IdRentPeriod = idRentPeriod;
+            rentPeriods.Select().Rows.Add(idRentPeriod, rentPeriod.IdProcess, rentPeriod.BeginDate, rentPeriod.EndDate, rentPeriod.UntilDismissal);
+            rentPeriods.EditingNewRecord = false;
+
+            var tenancyProcess = EntityConverter<TenancyProcess>.FromRow(ParentRow);
+            tenancyProcess.BeginDate = beginDate;
+            tenancyProcess.EndDate = endDate;
+            tenancyProcess.UntilDismissal = untilDismissal;
+            var tenancyProcesses = EntityDataModel<TenancyProcess>.GetInstance();
+            tenancyProcesses.EditingNewRecord = true;
+            if (tenancyProcesses.Update(tenancyProcess) == -1)
+            {
+                return;
+            }
+            ParentRow["begin_date"] = ViewportHelper.ValueOrDbNull(beginDate);
+            ParentRow["end_date"] = ViewportHelper.ValueOrDbNull(endDate);
+            ParentRow["until_dismissal"] = untilDismissal;
+            tenancyProcesses.EditingNewRecord = false;
+        }
+
+        private void ExtModificationsExecute()
+        {
+            foreach (var modification in Modifications)
+            {
+                foreach (var modificationPair in modification)
+                {
+                    switch (modificationPair.Key)
+                    {
+                        case ExtModificationTypes.ChangeTenant:
+                            ChangeTenant(modificationPair.Value);
+                            break;
+                        case ExtModificationTypes.CommercialProlong:
+                        case ExtModificationTypes.SpecialProlong:
+                            Prolong(modificationPair.Value);
+                            break;
+                    }
+                }
+            }
+            ClearModifyState();
+        }
+
+        private static void ChangeTenant(List<ExtModificationParameter> parameters)
+        {
+            var idOldTenant = parameters.Where(v => v.Name == "IdOldTenant").Select(v => (int?)v.Value).FirstOrDefault();
+            var idKinshipOldTenant = parameters.Where(v => v.Name == "IdKinshipOldTenant").Select(v => (int?)v.Value).FirstOrDefault();
+            var idNewTenant = parameters.Where(v => v.Name == "IdNewTenant").Select(v => (int?)v.Value).FirstOrDefault();
+            var excludeTenant = parameters.Where(v => v.Name == "ExcludeTenant").Select(v => (bool?)v.Value).FirstOrDefault();
+            if (idOldTenant == null || idNewTenant == null) return;
+            var oldTenantRow =
+                EntityDataModel<TenancyPerson>.GetInstance()
+                    .FilterDeletedRows().FirstOrDefault(v => v.Field<int>("id_person") == idOldTenant.Value);
+            var newTenantRow =
+                EntityDataModel<TenancyPerson>.GetInstance()
+                    .FilterDeletedRows().FirstOrDefault(v => v.Field<int>("id_person") == idNewTenant.Value);
+            var oldTenant = oldTenantRow != null ? EntityConverter<TenancyPerson>.FromRow(oldTenantRow) : null;
+            var newTenant = newTenantRow != null ? EntityConverter<TenancyPerson>.FromRow(newTenantRow) : null;
+
+            if (oldTenant == null || newTenant == null)
+            {
+                MessageBox.Show(@"Произошла непредвиденная ошибка при изменении данных об участниках найма",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                return;
+            }
+
+            if (excludeTenant == true)
+            {
+                using (var form = new PersonExcludeDateForm())
+                {
+                    if (form.ShowDialog() == DialogResult.OK)
+                    {
+                        oldTenant.ExcludeDate = form.ExcludeDate;
+                    }
+                }
+            }
+            else
+            {
+                oldTenant.IdKinship = idKinshipOldTenant;
+            }
+            var affected = EntityDataModel<TenancyPerson>.GetInstance().Update(oldTenant);
+            if (affected == -1)
+            {
+                return;
+            }
+            oldTenantRow.BeginEdit();
+            oldTenantRow["id_kinship"] = ViewportHelper.ValueOrDbNull(oldTenant.IdKinship);
+            oldTenantRow["exclude_date"] = ViewportHelper.ValueOrDbNull(oldTenant.ExcludeDate);
+            oldTenantRow.EndEdit();
+
+            newTenant.IdKinship = 1;
+            newTenant.ExcludeDate = null;
+            affected = EntityDataModel<TenancyPerson>.GetInstance().Update(newTenant);
+            if (affected == -1)
+            {
+                return;
+            }
+            newTenantRow.BeginEdit();
+            newTenantRow["id_kinship"] = ViewportHelper.ValueOrDbNull(newTenant.IdKinship);
+            newTenantRow["exclude_date"] = ViewportHelper.ValueOrDbNull(newTenant.ExcludeDate);
+            newTenantRow.EndEdit();
+        }
+
+        public void ClearModifyState()
+        {
+
+            IncludePersons.Clear();
+            ExcludePersons.Clear();
+            Modifications.Clear();
         }
 
         public string ExplainContentModifier(string content, string generalPoint, string point, string explainContent)
@@ -372,6 +522,130 @@ namespace Registry.Viewport.Presenters
                 "\r\n\u200B2) пункт {4} исключить.",
                 registrationNumber, regDateStr, rentPeriodStr,
                 requestDate.ToString("dd.MM.yyyy"), prolongGeneralPoint);
+        }
+
+        internal void AddProlongModification(DateTime? prolongFrom, DateTime? prolongTo, bool untilDismissal, ExtModificationTypes prolongType)
+        {
+            ClearModifyState();
+            Modifications.Add(new Dictionary<ExtModificationTypes, List<ExtModificationParameter>>
+            {
+                {
+                    prolongType, new List<ExtModificationParameter>
+                    {
+                        new ExtModificationParameter
+                        {
+                            Name = "ProlongFrom",
+                            Value = prolongFrom
+                        },
+                        new ExtModificationParameter
+                        {
+                            Name = "ProlongTo",
+                            Value = prolongTo
+                        },
+                        new ExtModificationParameter
+                        {
+                            Name = "UntilDismissal",
+                            Value = untilDismissal
+                        }
+                    }
+                }
+            });
+        }
+
+        internal void AddChangeTenantModification(bool excludeTenant, int? idKinshipOldTenant)
+        {
+            ClearModifyState();
+            var tenantChangeTenant = ViewModel["tenant_change_tenant"].BindingSource;
+            var personsChangeTenant = ViewModel["persons_change_tenant"].BindingSource;
+            var oldTenantRow = (DataRowView)tenantChangeTenant[0];
+            var newTenantRow = (DataRowView)personsChangeTenant[personsChangeTenant.Position];
+
+            Modifications.Add(
+                new Dictionary<ExtModificationTypes, List<ExtModificationParameter>>
+            {
+                { ExtModificationTypes.ChangeTenant, new List<ExtModificationParameter>
+                    {
+                        new ExtModificationParameter
+                        {
+                            Name = "ExcludeTenant",
+                            Value = excludeTenant
+                        },
+                        new ExtModificationParameter
+                        {
+                            Name = "IdNewTenant",
+                            Value = (int)newTenantRow["id_person"]
+                        },
+                        new ExtModificationParameter
+                        {
+                            Name = "IdOldTenant",
+                            Value = (int?)oldTenantRow["id_person"]
+                        },
+                        new ExtModificationParameter
+                        {
+                            Name = "IdKinshipOldTenant",
+                            Value = idKinshipOldTenant
+                        }
+                    } 
+                }
+            });
+        }
+
+        internal void AddExcludePersonModification()
+        {
+            var tenancyPerson = ViewModel["persons_exclude"].CurrentRow;
+            ExcludePersons.Add(new TenancyPerson
+            {
+                IdProcess = (int?)ParentRow["id_process"],
+                IdPerson = (int?)tenancyPerson["id_person"],
+                Surname = tenancyPerson["surname"].ToString(),
+                Name = tenancyPerson["name"].ToString(),
+                Patronymic = tenancyPerson["patronymic"].ToString(),
+                DateOfBirth = (DateTime?)(tenancyPerson["date_of_birth"] == DBNull.Value ? null : tenancyPerson["date_of_birth"]),
+                IdKinship = (int?)tenancyPerson["id_kinship"]
+            });
+        }
+
+        internal void IncludePersonModification(string surname, string name, string patronymic, DateTime dateOfBirth, int? idKinship)
+        {
+            IncludePersons.Add(new TenancyPerson
+            {
+                IdProcess = (int?)ParentRow["id_process"],
+                Surname = surname,
+                Name = name,
+                Patronymic = patronymic,
+                DateOfBirth = dateOfBirth,
+                IdKinship = idKinship
+            });
+        }
+
+        internal void ApplyModifications()
+        {
+            // Обновление участников найма после сохранения соглашения
+            if (IncludePersons.Count > 0)
+            {
+                new TenancyAgreementOnSavePersonManager(IncludePersons,
+                    TenancyAgreementOnSavePersonManager.PersonsOperationType.IncludePersons).ShowDialog();
+            }
+            if (ExcludePersons.Count > 0)
+            {
+                new TenancyAgreementOnSavePersonManager(ExcludePersons,
+                    TenancyAgreementOnSavePersonManager.PersonsOperationType.ExcludePersons).ShowDialog();
+            }
+            // Дополнительные обновления
+            ExtModificationsExecute();
+        }
+
+        internal string TerminateStringBuilder(string terminateReason, DateTime terminateDate)
+        {
+            return string.Format(CultureInfo.InvariantCulture,
+                "1.1. По настоящему Соглашению Стороны договорились расторгнуть с {3} договор № {0} от {1} {4} найма жилого помещения (далее - договор) по {2}.\r\n" +
+                "1.2. Обязательства, возникшие из указанного договора до момента расторжения, подлежат исполнению в соответствии с указанным договором. Стороны не имеют взаимных претензий по исполнению условий договора № {0} от {1}.",
+                ParentRow["registration_num"],
+                ParentRow["registration_date"] != DBNull.Value ? 
+                    Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "",
+                terminateReason.StartsWith("по ") ? terminateReason.Substring(3).Trim() : terminateReason.Trim(),
+                terminateDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture),
+                ViewModel["rent_types"].DataSource.Rows.Find(ParentRow["id_rent_type"])["rent_type_genetive"]);
         }
     }
 }

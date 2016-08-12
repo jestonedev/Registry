@@ -8,13 +8,11 @@ using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Declensions.Unicode;
-using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
 using Registry.Entities;
 using Registry.Entities.Infrastructure;
 using Registry.Reporting;
 using Registry.Viewport.EntityConverters;
-using Registry.Viewport.ModalEditors;
 using Registry.Viewport.Presenters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -26,31 +24,6 @@ namespace Registry.Viewport
         //Forms
         private SelectWarrantForm _swForm;
         private int? _idWarrant;
-
-        // Auto modify properties
-        private readonly List<TenancyPerson> _excludePersons = new List<TenancyPerson>();
-        private readonly List<TenancyPerson> _includePersons = new List<TenancyPerson>();
-
-        private enum ExtModificationTypes
-        {
-            CommercialProlong,
-            SpecialProlong,
-            ChangeTenant
-        }
-
-        private sealed class ExtModificationParameter
-        {
-            public string Name { get; set; }
-            public object Value { get; set; }
-        }
-
-        private readonly List<Dictionary<ExtModificationTypes, List<ExtModificationParameter>>> _modifications = 
-            new List<Dictionary<ExtModificationTypes, List<ExtModificationParameter>>>();
-
-        private TenancyAgreementsViewport()
-            : this(null, null)
-        {
-        }
 
         public TenancyAgreementsViewport(Viewport viewport, IMenuCallback menuCallback)
             : base(viewport, menuCallback, new TenancyAgreementsPresenter())
@@ -309,7 +282,7 @@ namespace Registry.Viewport
             }
             IsEditable = true;
             DataGridView.Enabled = true;
-            ClearModifyState();
+            ((TenancyAgreementsPresenter)Presenter).ClearModifyState();
             ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
         }
@@ -352,143 +325,13 @@ namespace Registry.Viewport
             DataGridView.Enabled = true;
             ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
-            
-            // Обновление участников найма после сохранения соглашения
-            if (_includePersons.Count > 0)
-            {
-                new TenancyAgreementOnSavePersonManager(_includePersons,
-                    TenancyAgreementOnSavePersonManager.PersonsOperationType.IncludePersons).ShowDialog();
-            }
-            if (_excludePersons.Count > 0)
-            {
-                new TenancyAgreementOnSavePersonManager(_excludePersons,
-                    TenancyAgreementOnSavePersonManager.PersonsOperationType.ExcludePersons).ShowDialog();
-            }
-            // Дополнительные обновления
-            ExtModificationsExecute(_modifications);
-            ClearModifyState();
-        }
 
-        private void ExtModificationsExecute(IEnumerable<Dictionary<ExtModificationTypes, List<ExtModificationParameter>>> modifications)
-        {
-            foreach (var modification in modifications)
-            {
-                foreach (var modificationPair in modification)
-                {
-                    switch (modificationPair.Key)
-                    {
-                            case ExtModificationTypes.ChangeTenant:
-                                ChangeTenant(modificationPair.Value);
-                                break;
-                            case ExtModificationTypes.CommercialProlong:
-                            case ExtModificationTypes.SpecialProlong:
-                                Prolong(modificationPair.Value);
-                                break;
-                    }
-                }
-            }
-        }
-
-        private void Prolong(List<ExtModificationParameter> parameters)
-        {
-            var beginDate = parameters.Where(v => v.Name == "ProlongFrom").Select(v => (DateTime?)v.Value).FirstOrDefault();
-            var endDate = parameters.Where(v => v.Name == "ProlongTo").Select(v => (DateTime?)v.Value).FirstOrDefault();
-            var untilDismissal = parameters.Where(v => v.Name == "UntilDismissal").Select(v => (bool?)v.Value).FirstOrDefault() ?? false;
-
-            var rentPeriod = new TenancyRentPeriod
-            {
-                IdProcess = (int)ParentRow["id_process"],
-                BeginDate = ViewportHelper.ValueOrNull<DateTime>(ParentRow, "begin_date"),
-                EndDate = ViewportHelper.ValueOrNull<DateTime>(ParentRow, "end_date"),
-                UntilDismissal = ViewportHelper.ValueOrNull<bool>(ParentRow, "until_dismissal"),
-            };
-            var rentPeriods = EntityDataModel<TenancyRentPeriod>.GetInstance();
-            rentPeriods.EditingNewRecord = true;
-            var idRentPeriod = rentPeriods.Insert(rentPeriod);
-            if (idRentPeriod == -1) return;
-            rentPeriod.IdRentPeriod = idRentPeriod;
-            rentPeriods.Select().Rows.Add(idRentPeriod, rentPeriod.IdProcess, rentPeriod.BeginDate, rentPeriod.EndDate, rentPeriod.UntilDismissal);
-            rentPeriods.EditingNewRecord = false;
-
-            var tenancyProcess = EntityConverter<TenancyProcess>.FromRow(ParentRow);
-            tenancyProcess.BeginDate = beginDate;
-            tenancyProcess.EndDate = endDate;
-            tenancyProcess.UntilDismissal = untilDismissal;
-            var tenancyProcesses = EntityDataModel<TenancyProcess>.GetInstance();
-            tenancyProcesses.EditingNewRecord = true;
-            if (tenancyProcesses.Update(tenancyProcess) == -1)
-            {
-                return;
-            }
-            ParentRow["begin_date"] = ViewportHelper.ValueOrDbNull(beginDate);
-            ParentRow["end_date"] = ViewportHelper.ValueOrDbNull(endDate);
-            ParentRow["until_dismissal"] = untilDismissal;
-            tenancyProcesses.EditingNewRecord = false;
-        }
-
-        private static void ChangeTenant(List<ExtModificationParameter> parameters)
-        {
-            var idOldTenant = parameters.Where(v => v.Name == "IdOldTenant").Select(v => (int?)v.Value).FirstOrDefault();
-            var idKinshipOldTenant = parameters.Where(v => v.Name == "IdKinshipOldTenant").Select(v => (int?)v.Value).FirstOrDefault();
-            var idNewTenant = parameters.Where(v => v.Name == "IdNewTenant").Select(v => (int?)v.Value).FirstOrDefault();
-            var excludeTenant = parameters.Where(v => v.Name == "ExcludeTenant").Select(v => (bool?)v.Value).FirstOrDefault();
-            if (idOldTenant == null || idNewTenant == null) return;
-            var oldTenantRow =
-                EntityDataModel<TenancyPerson>.GetInstance()
-                    .FilterDeletedRows().FirstOrDefault(v => v.Field<int>("id_person") == idOldTenant.Value);
-            var newTenantRow =
-                EntityDataModel<TenancyPerson>.GetInstance()
-                    .FilterDeletedRows().FirstOrDefault(v => v.Field<int>("id_person") == idNewTenant.Value);
-            var oldTenant = oldTenantRow != null ? EntityConverter<TenancyPerson>.FromRow(oldTenantRow) : null;
-            var newTenant = newTenantRow != null ? EntityConverter<TenancyPerson>.FromRow(newTenantRow) : null;
-
-            if (oldTenant == null || newTenant == null)
-            {
-                MessageBox.Show(@"Произошла непредвиденная ошибка при изменении данных об участниках найма",
-                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                return;
-            }
-
-            if (excludeTenant == true)
-            {
-                using (var form = new PersonExcludeDateForm())
-                {
-                    if (form.ShowDialog() == DialogResult.OK)
-                    {
-                        oldTenant.ExcludeDate = form.ExcludeDate;
-                    }
-                }
-            }
-            else
-            {
-                oldTenant.IdKinship = idKinshipOldTenant;
-            }
-            var affected = EntityDataModel<TenancyPerson>.GetInstance().Update(oldTenant);
-            if (affected == -1)
-            {
-                return;
-            }
-            oldTenantRow.BeginEdit();
-            oldTenantRow["id_kinship"] = ViewportHelper.ValueOrDbNull(oldTenant.IdKinship);
-            oldTenantRow["exclude_date"] = ViewportHelper.ValueOrDbNull(oldTenant.ExcludeDate);
-            oldTenantRow.EndEdit();
-
-            newTenant.IdKinship = 1;
-            newTenant.ExcludeDate = null;
-            affected = EntityDataModel<TenancyPerson>.GetInstance().Update(newTenant);
-            if (affected == -1)
-            {
-                return;
-            }
-            newTenantRow.BeginEdit();
-            newTenantRow["id_kinship"] = ViewportHelper.ValueOrDbNull(newTenant.IdKinship);
-            newTenantRow["exclude_date"] = ViewportHelper.ValueOrDbNull(newTenant.ExcludeDate);
-            newTenantRow.EndEdit();
+            ((TenancyAgreementsPresenter) Presenter).ApplyModifications();
         }
 
         public override bool CanInsertRecord()
         {
-            return (!Presenter.ViewModel["general"].Model.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
+            return !Presenter.ViewModel["general"].Model.EditingNewRecord && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void InsertRecord()
@@ -658,17 +501,8 @@ namespace Registry.Viewport
                 textBoxExplainPoint.Focus();
                 return;
             }
-            ClearModifyState();
-            textBoxAgreementContent.Text =
-                string.Format(CultureInfo.InvariantCulture,
-                    "1.1. По настоящему Соглашению Стороны договорились расторгнуть с {3} договор № {0} от {1} {4} найма жилого помещения (далее - договор) по {2}.\r\n" +
-                    "1.2. Обязательства, возникшие из указанного договора до момента расторжения, подлежат исполнению в соответствии с указанным договором. Стороны не имеют взаимных претензий по исполнению условий договора № {0} от {1}.",
-                    ParentRow["registration_num"],
-                    ParentRow["registration_date"] != DBNull.Value ?
-                        Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "",
-                        textBoxTerminateAgreement.Text.StartsWith("по ") ? textBoxTerminateAgreement.Text.Substring(3).Trim() : textBoxTerminateAgreement.Text.Trim(),
-                    dateTimePickerTerminateDate.Value.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture),
-                    DataModel.GetInstance<RentTypesDataModel>().Select().Rows.Find(ParentRow["id_rent_type"])["rent_type_genetive"]);
+            ((TenancyAgreementsPresenter)Presenter).ClearModifyState();
+            textBoxAgreementContent.Text = ((TenancyAgreementsPresenter) Presenter).TerminateStringBuilder(textBoxTerminateAgreement.Text, dateTimePickerTerminateDate.Value);
         }
 
         private void vButtonExplainPaste_Click(object sender, EventArgs e)
@@ -717,15 +551,9 @@ namespace Registry.Viewport
                 textBoxGeneralIncludePoint.Text, textBoxIncludePoint.Text, sSurname, sName, sPatronymic,
                 ((DataRowView)comboBoxIncludeKinship.SelectedItem)["kinship"].ToString(), dateTimePickerIncludeDateOfBirth.Value);
 
-            _includePersons.Add(new TenancyPerson
-            {
-                IdProcess = (int?)ParentRow["id_process"],
-                Surname = sSurname,
-                Name = sName,
-                Patronymic = sPatronymic,
-                DateOfBirth = dateTimePickerIncludeDateOfBirth.Value.Date,
-                IdKinship = (int?)comboBoxIncludeKinship.SelectedValue
-            });
+
+            ((TenancyAgreementsPresenter)Presenter).IncludePersonModification(
+                sSurname, sName, sPatronymic, dateTimePickerIncludeDateOfBirth.Value.Date, (int?)comboBoxIncludeKinship.SelectedValue);
         }
 
         private void vButtonExcludePaste_Click(object sender, EventArgs e)
@@ -741,17 +569,7 @@ namespace Registry.Viewport
                 textBoxGeneralExcludePoint.Text,
                 textBoxExcludePoint.Text);
 
-            var tenancyPerson = Presenter.ViewModel["persons_exclude"].CurrentRow;
-            _excludePersons.Add(new TenancyPerson
-            {
-                IdProcess = (int?)ParentRow["id_process"],
-                IdPerson = (int?)tenancyPerson["id_person"],
-                Surname = tenancyPerson["surname"].ToString(),
-                Name = tenancyPerson["name"].ToString(),
-                Patronymic = tenancyPerson["patronymic"].ToString(),
-                DateOfBirth = (DateTime?)(tenancyPerson["date_of_birth"] == DBNull.Value ? null : tenancyPerson["date_of_birth"]),
-                IdKinship = (int?)tenancyPerson["id_kinship"]
-            });
+            ((TenancyAgreementsPresenter) Presenter).AddExcludePersonModification();
         }
 
         private void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
@@ -803,40 +621,12 @@ namespace Registry.Viewport
                 return;
             }
 
-            ClearModifyState();
-
             textBoxAgreementContent.Text = ((TenancyAgreementsPresenter)Presenter).ChangeTenancyStringBuilder();
 
-            var oldTenantRow = (DataRowView)tenantChangeTenant[0];
-            var newTenantRow = (DataRowView)personsChangeTenant[personsChangeTenant.Position];
-            _modifications.Add(new Dictionary<ExtModificationTypes, List<ExtModificationParameter>>
-            {
-                { ExtModificationTypes.ChangeTenant, new List<ExtModificationParameter>
-                    {
-                        new ExtModificationParameter
-                        {
-                            Name = "ExcludeTenant",
-                            Value = checkBoxExcludeTenant.Checked
-                        },
-                        new ExtModificationParameter
-                        {
-                            Name = "IdNewTenant",
-                            Value = (int)newTenantRow["id_person"]
-                        },
-                        new ExtModificationParameter
-                        {
-                            Name = "IdOldTenant",
-                            Value = (int?)oldTenantRow["id_person"]
-                        },
-                        new ExtModificationParameter
-                        {
-                            Name = "IdKinshipOldTenant",
-                            Value = !checkBoxExcludeTenant.Checked && comboboxTenantChangeKinship.SelectedValue != null ? 
-                                    (int?)comboboxTenantChangeKinship.SelectedValue : null
-                        }
-                    } 
-                }
-            });
+            ((TenancyAgreementsPresenter) Presenter).AddChangeTenantModification(
+                checkBoxExcludeTenant.Checked,
+                !checkBoxExcludeTenant.Checked && comboboxTenantChangeKinship.SelectedValue != null ?
+                                    (int?)comboboxTenantChangeKinship.SelectedValue : null);
         }
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -863,7 +653,6 @@ namespace Registry.Viewport
 
         private void vButtonProlongCommercial_Click(object sender, EventArgs e)
         {
-            ClearModifyState();
             var text = ((TenancyAgreementsPresenter)Presenter).ProlongCommercialStringBuilder(
                 dateTimePickerCommercialProlongFrom.Checked ? (DateTime?)dateTimePickerCommercialProlongFrom.Value : null,
                 dateTimePickerCommercialProlongTo.Checked ? (DateTime?)dateTimePickerCommercialProlongTo.Value : null,
@@ -874,33 +663,16 @@ namespace Registry.Viewport
 
             textBoxAgreementContent.Text = text;
 
-            _modifications.Add(new Dictionary<ExtModificationTypes, List<ExtModificationParameter>>
-            {
-                { ExtModificationTypes.CommercialProlong, new List<ExtModificationParameter>
-                    {
-                        new ExtModificationParameter
-                        {
-                            Name = "ProlongFrom",
-                            Value = ViewportHelper.ValueOrNull(dateTimePickerCommercialProlongFrom)
-                        },
-                        new ExtModificationParameter
-                        {
-                            Name = "ProlongTo",
-                            Value = ViewportHelper.ValueOrNull(dateTimePickerCommercialProlongTo)
-                        },
-                        new ExtModificationParameter
-                        {
-                            Name = "UntilDismissal",
-                            Value = checkBoxCommercialProlongUntilDismissal.Checked
-                        }
-                    } 
-                }
-            });
+            ((TenancyAgreementsPresenter)Presenter).AddProlongModification(
+                ViewportHelper.ValueOrNull(dateTimePickerCommercialProlongFrom),
+                ViewportHelper.ValueOrNull(dateTimePickerCommercialProlongTo),
+                checkBoxCommercialProlongUntilDismissal.Checked,
+                TenancyAgreementsPresenter.ExtModificationTypes.CommercialProlong
+            );
         }
 
         private void vButtonProlongSpecial_Click(object sender, EventArgs e)
         {
-            ClearModifyState();
             var text = ((TenancyAgreementsPresenter)Presenter).ProlongSpecialStringBuilder(
                 dateTimePickerSpecialProlongFrom.Checked ? (DateTime?)dateTimePickerSpecialProlongFrom.Value : null,
                 dateTimePickerSpecialProlongTo.Checked ? (DateTime?)dateTimePickerSpecialProlongTo.Value : null,
@@ -908,37 +680,14 @@ namespace Registry.Viewport
                 textBoxSpecialProlongPoint.Text,
                 textBoxSpecialProlongGeneralPoint.Text
             );
+
             textBoxAgreementContent.Text = text;
 
-            _modifications.Add(new Dictionary<ExtModificationTypes, List<ExtModificationParameter>>
-            {
-                { ExtModificationTypes.SpecialProlong, new List<ExtModificationParameter>
-                    {
-                        new ExtModificationParameter
-                        {
-                            Name = "ProlongFrom",
-                            Value = ViewportHelper.ValueOrNull(dateTimePickerSpecialProlongFrom)
-                        },
-                        new ExtModificationParameter
-                        {
-                            Name = "ProlongTo",
-                            Value = ViewportHelper.ValueOrNull(dateTimePickerSpecialProlongTo)
-                        },
-                        new ExtModificationParameter
-                        {
-                            Name = "UntilDismissal",
-                            Value = checkBoxSpecialProlongUntilDismissal.Checked
-                        }
-                    } 
-                }
-            });
-        }
-
-        private void ClearModifyState()
-        {
-            _includePersons.Clear();
-            _excludePersons.Clear();
-            _modifications.Clear();
+            ((TenancyAgreementsPresenter)Presenter).AddProlongModification(
+                ViewportHelper.ValueOrNull(dateTimePickerSpecialProlongFrom),
+                ViewportHelper.ValueOrNull(dateTimePickerSpecialProlongTo),
+                checkBoxSpecialProlongUntilDismissal.Checked, 
+                TenancyAgreementsPresenter.ExtModificationTypes.SpecialProlong);
         }
 
         private void checkBoxSpecialProlongUntilDismissal_CheckedChanged(object sender, EventArgs e)
