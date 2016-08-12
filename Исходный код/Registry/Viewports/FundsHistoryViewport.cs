@@ -48,7 +48,6 @@ namespace Registry.Viewport
             }
         }
 
-
         private void DataBind()
         {
             var bindingSource = Presenter.ViewModel["general"].BindingSource;
@@ -347,22 +346,21 @@ namespace Registry.Viewport
         public override void DeleteRecord()
         {
             if (MessageBox.Show(@"Вы действительно хотите удалить эту запись?", @"Внимание",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
+                MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
+                return;
+            if (((FundsHistoryPresenter)Presenter).ValidatePermissions() == false)
+                return;
+            IsEditable = false;
+            if (!((FundsHistoryPresenter) Presenter).DeleteRecord())
             {
-                if (((FundsHistoryPresenter)Presenter).ValidatePermissions() == false)
-                    return;
-                IsEditable = false;
-                if (!((FundsHistoryPresenter) Presenter).DeleteRecord())
-                {
-                    IsEditable = true;
-                    return;
-                }
                 IsEditable = true;
-                RedrawDataGridRows();
-                ViewportState = ViewportState.ReadState;
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.ForceCloseDetachedViewports();
+                return;
             }
+            IsEditable = true;
+            RedrawDataGridRows();
+            ViewportState = ViewportState.ReadState;
+            MenuCallback.EditingStateUpdate();
+            MenuCallback.ForceCloseDetachedViewports();
         }
 
         public override bool CanCancelRecord()

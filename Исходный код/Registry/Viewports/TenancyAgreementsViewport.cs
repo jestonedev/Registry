@@ -8,7 +8,6 @@ using System.Security.Principal;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Declensions.Unicode;
-using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
 using Registry.Entities;
@@ -16,6 +15,7 @@ using Registry.Entities.Infrastructure;
 using Registry.Reporting;
 using Registry.Viewport.EntityConverters;
 using Registry.Viewport.ModalEditors;
+using Registry.Viewport.Presenters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -23,31 +23,12 @@ namespace Registry.Viewport
 {
     internal sealed partial class TenancyAgreementsViewport : FormWithGridViewport
     {
-        #region Modeles
-
-        private DataModel _tenancyPersonsExclude;
-        private DataModel _executors;
-        private DataModel _warrants;
-        private DataModel _kinships;
-        #endregion Modeles
-        
-        #region Views
-
-        private BindingSource _vPersonsExclude;
-        private BindingSource _vPersonsChangeTenant;
-        private BindingSource _vTenantChangeTenant;
-        private BindingSource _vExecutors;
-        private BindingSource _vWarrants;
-        private BindingSource _vKinships;
-        #endregion Views
-
         //Forms
         private SelectWarrantForm _swForm;
         private int? _idWarrant;
-        private bool _isFirstVisible = true;   // первое отображение формы
 
         // Auto modify properties
-        private readonly List<TenancyPerson> _excludePersons = new List<TenancyPerson>(); 
+        private readonly List<TenancyPerson> _excludePersons = new List<TenancyPerson>();
         private readonly List<TenancyPerson> _includePersons = new List<TenancyPerson>();
 
         private enum ExtModificationTypes
@@ -72,10 +53,14 @@ namespace Registry.Viewport
         }
 
         public TenancyAgreementsViewport(Viewport viewport, IMenuCallback menuCallback)
-            : base(viewport, menuCallback)
+            : base(viewport, menuCallback, new TenancyAgreementsPresenter())
         {
             InitializeComponent();
             DataGridView = dataGridView;
+            DataGridView.AutoGenerateColumns = false;
+            dataGridViewTenancyPersons.AutoGenerateColumns = false;
+            dataGridViewChangeTenant.AutoGenerateColumns = false;
+            DockAreas = DockAreas.Document;
         }
 
         private void RedrawDataGridTenancyPersonsRows()
@@ -84,13 +69,11 @@ namespace Registry.Viewport
                 return;
             for (var i = 0; i < dataGridViewTenancyPersons.Rows.Count; i++)
             {
-                if (_vPersonsExclude.Count <= i) break;
-                if (((DataRowView)_vPersonsExclude[i])["id_kinship"] != DBNull.Value &&
-                    Convert.ToInt32(((DataRowView)_vPersonsExclude[i])["id_kinship"], CultureInfo.InvariantCulture) ==
-                    1 &&
-                    ((DataRowView)_vPersonsExclude[i])["exclude_date"] == DBNull.Value)
+                if (Presenter.ViewModel["persons_exclude"].BindingSource.Count <= i) break;
+                var row = (DataRowView)Presenter.ViewModel["persons_exclude"].BindingSource[i];
+                if (ViewportHelper.ValueOrNull<int>(row, "id_kinship") == 1 && row["exclude_date"] == DBNull.Value)
                     dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
-                else if (((DataRowView)_vPersonsExclude[i])["exclude_date"] != DBNull.Value)
+                else if (row["exclude_date"] != DBNull.Value)
                     dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.LightCoral;
                 else
                     dataGridViewTenancyPersons.Rows[i].DefaultCellStyle.BackColor = Color.White;
@@ -100,13 +83,11 @@ namespace Registry.Viewport
                 return;
             for (var i = 0; i < dataGridViewChangeTenant.Rows.Count; i++)
             {
-                if (_vPersonsChangeTenant.Count <= i) break;
-                if (((DataRowView) _vPersonsChangeTenant[i])["id_kinship"] != DBNull.Value &&
-                    Convert.ToInt32(((DataRowView) _vPersonsChangeTenant[i])["id_kinship"], CultureInfo.InvariantCulture) ==
-                    1 &&
-                    ((DataRowView) _vPersonsChangeTenant[i])["exclude_date"] == DBNull.Value)
+                if (Presenter.ViewModel["persons_change_tenant"].BindingSource.Count <= i) break;
+                var row = (DataRowView)Presenter.ViewModel["persons_change_tenant"].BindingSource[i];
+                if (ViewportHelper.ValueOrNull<int>(row, "id_kinship") == 1 && row["exclude_date"] == DBNull.Value)
                     dataGridViewChangeTenant.Rows[i].DefaultCellStyle.BackColor = Color.LightGreen;
-                else if (((DataRowView) _vPersonsChangeTenant[i])["exclude_date"] != DBNull.Value)
+                else if (row["exclude_date"] != DBNull.Value)
                     dataGridViewChangeTenant.Rows[i].DefaultCellStyle.BackColor = Color.LightCoral;
                 else
                     dataGridViewChangeTenant.Rows[i].DefaultCellStyle.BackColor = Color.White;
@@ -115,40 +96,35 @@ namespace Registry.Viewport
 
         private void DataBind()
         {
-            comboBoxExecutor.DataSource = _vExecutors;
-            comboBoxExecutor.ValueMember = "id_executor";
-            comboBoxExecutor.DisplayMember = "executor_name";
-            comboBoxExecutor.DataBindings.Clear();
-            comboBoxExecutor.DataBindings.Add("SelectedValue", GeneralBindingSource, "id_executor", true, DataSourceUpdateMode.Never, DBNull.Value);
+            var bindingSource = Presenter.ViewModel["general"].BindingSource;
+            ViewportHelper.BindSource(comboBoxExecutor, Presenter.ViewModel["executors"].BindingSource, "executor_name",
+                 Presenter.ViewModel["executors"].PrimaryKeyFirst);
+            ViewportHelper.BindProperty(comboBoxExecutor, "SelectedValue", bindingSource,
+                Presenter.ViewModel["executors"].PrimaryKeyFirst, DBNull.Value);
 
-            comboBoxIncludeKinship.DataSource = _vKinships;
-            comboBoxIncludeKinship.ValueMember = "id_kinship";
-            comboBoxIncludeKinship.DisplayMember = "kinship";
+            ViewportHelper.BindSource(comboBoxIncludeKinship, Presenter.ViewModel["kinships"].BindingSource, "kinship",
+                Presenter.ViewModel["kinships"].PrimaryKeyFirst);
 
-            textBoxAgreementContent.DataBindings.Clear();
-            textBoxAgreementContent.DataBindings.Add("Text", GeneralBindingSource, "agreement_content", true, DataSourceUpdateMode.Never, "");
+            ViewportHelper.BindProperty(textBoxAgreementContent, "Text", bindingSource, "agreement_content", "");
+            ViewportHelper.BindProperty(dateTimePickerAgreementDate, "Value", bindingSource, "agreement_date", DateTime.Now.Date);
 
-            dateTimePickerAgreementDate.DataBindings.Clear();
-            dateTimePickerAgreementDate.DataBindings.Add("Value", GeneralBindingSource, "agreement_date", true, DataSourceUpdateMode.Never, DateTime.Now);
+            ViewportHelper.BindSource(comboboxTenantChangeKinship, Presenter.ViewModel["kinships"].BindingSource,
+                "kinship", Presenter.ViewModel["kinships"].PrimaryKeyFirst);
 
-            dataGridViewTenancyPersons.DataSource = _vPersonsExclude;
+            UpdateTenantChangeTab();
+
+            dataGridView.DataSource = bindingSource;
+            id_agreement.DataPropertyName = "id_agreement";
+            agreement_date.DataPropertyName = "agreement_date";
+            agreement_content.DataPropertyName = "agreement_content";
+
+            dataGridViewTenancyPersons.DataSource = Presenter.ViewModel["persons_exclude"].BindingSource;
             surname.DataPropertyName = "surname";
             name.DataPropertyName = "name";
             patronymic.DataPropertyName = "patronymic";
             date_of_birth.DataPropertyName = "date_of_birth";
 
-            dataGridView.DataSource = GeneralBindingSource;
-            id_agreement.DataPropertyName = "id_agreement";
-            agreement_date.DataPropertyName = "agreement_date";
-            agreement_content.DataPropertyName = "agreement_content";
-
-            comboboxTenantChangeKinship.DataSource = _vKinships;
-            comboboxTenantChangeKinship.DisplayMember = "kinship";
-            comboboxTenantChangeKinship.ValueMember = "id_kinship";
-
-            UpdateTenantChangeTab();
-
-            dataGridViewChangeTenant.DataSource = _vPersonsChangeTenant;
+            dataGridViewChangeTenant.DataSource = Presenter.ViewModel["persons_change_tenant"].BindingSource;
             surnameChangeTenant.DataPropertyName = "surname";
             nameChangeTenant.DataPropertyName = "name";
             patronymicChangeTenant.DataPropertyName = "patronymic";
@@ -157,11 +133,9 @@ namespace Registry.Viewport
 
         private void UpdateTenantChangeTab()
         {
-            if (_vTenantChangeTenant.Count > 0)
-            {
-                var row = (DataRowView)_vTenantChangeTenant[0];
-                textBoxChangeTenantChangeFIO.Text = row["surname"] + @" " + row["name"] + @" " + row["patronymic"];
-            }
+            if (Presenter.ViewModel["tenant_change_tenant"].BindingSource.Count <= 0) return;
+            var row = (DataRowView)Presenter.ViewModel["tenant_change_tenant"].BindingSource[0];
+            textBoxChangeTenantChangeFIO.Text = row["surname"] + @" " + row["name"] + @" " + row["patronymic"];
         }
 
         protected override bool ChangeViewportStateTo(ViewportState state)
@@ -171,26 +145,14 @@ namespace Registry.Viewport
             return true;
         }
 
-        private string WarrantStringById(int idWarrant)
-        {
-            if (_vWarrants.Position == -1)
-                return null;
-            var rowIndex = _vWarrants.Find("id_warrant", idWarrant);
-            if (rowIndex == -1)
-                return null;
-            var registrationDate = Convert.ToDateTime(((DataRowView)_vWarrants[rowIndex])["registration_date"], CultureInfo.InvariantCulture);
-            var registrationNum = ((DataRowView)_vWarrants[rowIndex])["registration_num"].ToString();
-            return string.Format(CultureInfo.InvariantCulture, "№ {0} от {1}",
-                registrationNum, registrationDate.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture));
-        }
-
         private void BindWarrantId()
         {
-            if ((GeneralBindingSource.Position > -1) && ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_warrant"] != DBNull.Value)
+            IsEditable = false;
+            var row = Presenter.ViewModel["general"].CurrentRow;
+            if ((row != null) && row["id_warrant"] != DBNull.Value)
             {
-                _idWarrant = Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_warrant"], CultureInfo.InvariantCulture);
-                textBoxAgreementWarrant.Text =
-                    WarrantStringById(_idWarrant.Value);
+                _idWarrant = Convert.ToInt32(row["id_warrant"], CultureInfo.InvariantCulture);
+                textBoxAgreementWarrant.Text = ((TenancyAgreementsPresenter)Presenter).WarrantStringById(_idWarrant.Value);
                 vButtonSelectWarrant.Text = @"x";
             }
             else
@@ -199,6 +161,7 @@ namespace Registry.Viewport
                 textBoxAgreementWarrant.Text = "";
                 vButtonSelectWarrant.Text = @"...";
             }
+            IsEditable = true;
         }
 
         private void ViewportFromTenancyAgreement(TenancyAgreement tenancyAgreement)
@@ -208,7 +171,7 @@ namespace Registry.Viewport
             textBoxAgreementContent.Text = tenancyAgreement.AgreementContent;
             if (tenancyAgreement.IdWarrant != null)
             {
-                textBoxAgreementWarrant.Text = WarrantStringById(tenancyAgreement.IdWarrant.Value);
+                textBoxAgreementWarrant.Text = ((TenancyAgreementsPresenter)Presenter).WarrantStringById(tenancyAgreement.IdWarrant.Value);
                 _idWarrant = tenancyAgreement.IdWarrant;
             }
             else
@@ -220,27 +183,22 @@ namespace Registry.Viewport
 
         protected override Entity EntityFromViewport()
         {
+            var row = Presenter.ViewModel["general"].CurrentRow;
             var tenancyAgreement = new TenancyAgreement
             {
-                IdAgreement = GeneralBindingSource.Position == -1
-                    ? null
-                    : ViewportHelper.ValueOrNull<int>((DataRowView) GeneralBindingSource[GeneralBindingSource.Position],
-                        "id_agreement")
+                IdAgreement = row == null ? null : ViewportHelper.ValueOrNull<int>(row, "id_agreement"),
+                IdProcess = ViewportHelper.ValueOrNull<int>(ParentRow, "id_process"),
+                IdExecutor = ViewportHelper.ValueOrNull<int>(comboBoxExecutor),
+                IdWarrant = _idWarrant,
+                AgreementContent = textBoxAgreementContent.Text,
+                AgreementDate = ViewportHelper.ValueOrNull(dateTimePickerAgreementDate)
             };
-            if (ParentType == ParentTypeEnum.Tenancy && ParentRow != null)
-                tenancyAgreement.IdProcess = ViewportHelper.ValueOrNull<int>(ParentRow, "id_process");
-            else
-                tenancyAgreement.IdProcess = null;
-            tenancyAgreement.IdExecutor = ViewportHelper.ValueOrNull<int>(comboBoxExecutor);
-            tenancyAgreement.IdWarrant = _idWarrant;
-            tenancyAgreement.AgreementContent = textBoxAgreementContent.Text;
-            tenancyAgreement.AgreementDate = ViewportHelper.ValueOrNull(dateTimePickerAgreementDate);
             return tenancyAgreement;
         }
 
         protected override Entity EntityFromView()
         {
-            var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
+            var row = Presenter.ViewModel["general"].CurrentRow;
             return EntityConverter<TenancyAgreement>.FromRow(row);
         }
 
@@ -260,93 +218,46 @@ namespace Registry.Viewport
 
         public override void LoadData()
         {
-            dataGridView.AutoGenerateColumns = false;
-            dataGridViewTenancyPersons.AutoGenerateColumns = false;
-            dataGridViewChangeTenant.AutoGenerateColumns = false;
-            DockAreas = DockAreas.Document;
-            GeneralDataModel = EntityDataModel<TenancyAgreement>.GetInstance();
-            _tenancyPersonsExclude = EntityDataModel<TenancyPerson>.GetInstance();
-            _executors = DataModel.GetInstance<EntityDataModel<Executor>>();
-            _warrants = EntityDataModel<Warrant>.GetInstance();
-            _kinships = DataModel.GetInstance<KinshipsDataModel>();
+            GeneralDataModel = Presenter.ViewModel["general"].Model;
+            GeneralBindingSource = Presenter.ViewModel["general"].BindingSource;
+            Presenter.ParentRow = ParentRow;
+            Presenter.ParentType = ParentType;
 
-            // Ожидаем дозагрузки, если это необходимо
-            GeneralDataModel.Select();
-            _tenancyPersonsExclude.Select();
-            _executors.Select();
-            _warrants.Select();
-            _kinships.Select();
+            if (ParentRow == null)
+            {
+                throw new ViewportException("Не указан родительский объект");
+            }
 
-            var ds = DataStorage.DataSet;
-
-            if ((ParentType == ParentTypeEnum.Tenancy) && (ParentRow != null))
+            if (ParentType == ParentTypeEnum.Tenancy)
                 Text = string.Format(CultureInfo.InvariantCulture, "Соглашения найма №{0}", ParentRow["id_process"]);
             else
                 throw new ViewportException("Неизвестный тип родительского объекта");
 
-            _vPersonsExclude = new BindingSource
-            {
-                DataMember = "tenancy_persons",
-                Filter = StaticFilter,
-                DataSource = ds
-            };
-
-            _vPersonsChangeTenant = new BindingSource
-            {
-                DataMember = "tenancy_persons",
-                Filter = StaticFilter + " AND (id_kinship <> 1 OR exclude_date is not null)",
-                DataSource = ds
-            };
-
-            _vTenantChangeTenant = new BindingSource
-            {
-                DataMember = "tenancy_persons",
-                Filter = StaticFilter + " AND (id_kinship = 1 AND exclude_date is null)",
-                DataSource = ds
-            };
-
-            _vExecutors = new BindingSource
-            {
-                DataMember = "executors",
-                DataSource = ds,
-                Filter = "is_inactive = 0"
-            };
-
-            _vWarrants = new BindingSource
-            {
-                DataMember = "warrants",
-                DataSource = ds
-            };
-
-            _vKinships = new BindingSource
-            {
-                DataMember = "kinships",
-                DataSource = ds
-            };
-
-            GeneralBindingSource = new BindingSource();
-            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
-            GeneralBindingSource.DataMember = "tenancy_agreements";
-            GeneralBindingSource.Filter = StaticFilter;
-            if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
-                GeneralBindingSource.Filter += " AND ";
-            GeneralBindingSource.Filter += DynamicFilter;
-            GeneralBindingSource.DataSource = ds;
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", TenancyAgreementsViewport_RowDeleted);
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", TenancyAgreementsViewport_RowChanged);
+            Presenter.SetGeneralBindingSourceFilter(StaticFilter, DynamicFilter);
+            ((TenancyAgreementsPresenter)Presenter).InitExtendedViewModelItems(StaticFilter);
 
             DataBind();
 
-            AddEventHandler<DataRowChangeEventArgs>(_tenancyPersonsExclude.Select(), "RowDeleted", TenancyPersonsViewport_RowDeleted);
-            AddEventHandler<DataRowChangeEventArgs>(_tenancyPersonsExclude.Select(), "RowChanged", TenancyPersonsViewport_RowChanged);
+            AddEventHandler<EventArgs>(Presenter.ViewModel["general"].BindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
+
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleted", TenancyAgreementsViewport_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowChanged", TenancyAgreementsViewport_RowChanged);
+
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["persons_exclude"].DataSource, "RowDeleted", TenancyPersonsViewport_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["persons_exclude"].DataSource, "RowChanged", TenancyPersonsViewport_RowChanged);
+
+            GeneralBindingSource_CurrentItemChanged(null, new EventArgs());
+
+            DataChangeHandlersInit();
 
             IsEditable = true;
-            DataChangeHandlersInit();
+            if (Presenter.ViewModel["general"].BindingSource.Count == 0)
+                InsertRecord();
         }
 
         public override bool CanDeleteRecord()
         {
-            return (GeneralBindingSource.Position > -1)
+            return (Presenter.ViewModel["general"].CurrentRow != null)
                 && (ViewportState != ViewportState.NewRowState)
                 && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
@@ -356,10 +267,13 @@ namespace Registry.Viewport
             if (MessageBox.Show(@"Вы действительно хотите это соглашение?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                 return;
-            if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_agreement"]) == -1)
-                return;
+
             IsEditable = false;
-            ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
+            if (!((TenancyAgreementsPresenter)Presenter).DeleteRecord())
+            {
+                IsEditable = true;
+                return;
+            }
             IsEditable = true;
             ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
@@ -377,29 +291,26 @@ namespace Registry.Viewport
             {
                 case ViewportState.ReadState: return;
                 case ViewportState.NewRowState:
-                    GeneralDataModel.EditingNewRecord = false;
-                    if (GeneralBindingSource.Position != -1)
+                    Presenter.ViewModel["general"].Model.EditingNewRecord = false;
+                    var row = Presenter.ViewModel["general"].CurrentRow;
+                    if (row != null)
                     {
                         IsEditable = false;
-                        dataGridView.Enabled = true;
-                        ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
-                        if (GeneralBindingSource.Position != -1)
-                            dataGridView.Rows[GeneralBindingSource.Position].Selected = true;
+                        row.Delete();
+                        if (Presenter.ViewModel["general"].CurrentRow != null)
+                            DataGridView.Rows[Presenter.ViewModel["general"].BindingSource.Position].Selected = true;
                     }
-                    else
-                        Text = @"Соглашения отсутствуют";
-                    ViewportState = ViewportState.ReadState;
                     break;
                 case ViewportState.ModifyRowState:
-                    dataGridView.Enabled = true;
                     IsEditable = false;
                     DataBind();
                     BindWarrantId();
-                    ViewportState = ViewportState.ReadState;
                     break;
             }
             IsEditable = true;
+            DataGridView.Enabled = true;
             ClearModifyState();
+            ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
         }
 
@@ -414,46 +325,32 @@ namespace Registry.Viewport
             var tenancyAgreement = (TenancyAgreement) EntityFromViewport();
             if (!ValidateAgreement(tenancyAgreement))
                 return;
+
+            IsEditable = false;
             switch (ViewportState)
             {
                 case ViewportState.ReadState:
                     MessageBox.Show(@"Нельзя сохранить неизмененные данные. Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return;
+                    break;
                 case ViewportState.NewRowState:
-                    var idAgreement = GeneralDataModel.Insert(tenancyAgreement);
-                    if (idAgreement == -1)
+                    if (!((TenancyAgreementsPresenter)Presenter).InsertRecord(tenancyAgreement))
                     {
-                        GeneralDataModel.EditingNewRecord = false;
+                        IsEditable = true;
                         return;
                     }
-                    DataRowView newRow;
-                    tenancyAgreement.IdAgreement = idAgreement;
-                    IsEditable = false;
-                    if (GeneralBindingSource.Position == -1)
-                        newRow = (DataRowView)GeneralBindingSource.AddNew();
-                    else
-                        newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    EntityConverter<TenancyAgreement>.FillRow(tenancyAgreement, newRow);
-                    GeneralDataModel.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
-                    if (tenancyAgreement.IdAgreement == null)
+                    if (!((TenancyAgreementsPresenter)Presenter).UpdateRecord(tenancyAgreement))
                     {
-                        MessageBox.Show(@"Вы пытаетесь изменить соглашение без внутренного номера. " +
-                            @"Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        IsEditable = true;
                         return;
                     }
-                    if (GeneralDataModel.Update(tenancyAgreement) == -1)
-                        return;
-                    var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    IsEditable = false;
-                    EntityConverter<TenancyAgreement>.FillRow(tenancyAgreement, row);
                     break;
             }
-            ViewportState = ViewportState.ReadState;
-            dataGridView.Enabled = true;
             IsEditable = true;
+            DataGridView.Enabled = true;
+            ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             
             // Обновление участников найма после сохранения соглашения
@@ -472,7 +369,7 @@ namespace Registry.Viewport
             ClearModifyState();
         }
 
-        private void ExtModificationsExecute(List<Dictionary<ExtModificationTypes, List<ExtModificationParameter>>> modifications)
+        private void ExtModificationsExecute(IEnumerable<Dictionary<ExtModificationTypes, List<ExtModificationParameter>>> modifications)
         {
             foreach (var modification in modifications)
             {
@@ -529,7 +426,7 @@ namespace Registry.Viewport
             tenancyProcesses.EditingNewRecord = false;
         }
 
-        private void ChangeTenant(List<ExtModificationParameter> parameters)
+        private static void ChangeTenant(List<ExtModificationParameter> parameters)
         {
             var idOldTenant = parameters.Where(v => v.Name == "IdOldTenant").Select(v => (int?)v.Value).FirstOrDefault();
             var idKinshipOldTenant = parameters.Where(v => v.Name == "IdKinshipOldTenant").Select(v => (int?)v.Value).FirstOrDefault();
@@ -591,7 +488,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return (!GeneralDataModel.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
+            return (!Presenter.ViewModel["general"].Model.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
         public override void InsertRecord()
@@ -599,23 +496,25 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             IsEditable = false;
-            GeneralBindingSource.AddNew();
-            dataGridView.Enabled = false;
-            var index = _vExecutors.Find("executor_login", WindowsIdentity.GetCurrent().Name);
+            Presenter.ViewModel["general"].Model.EditingNewRecord = true;
+            Presenter.ViewModel["general"].BindingSource.AddNew();
+            DataGridView.Enabled = false;
+            var index = Presenter.ViewModel["executors"].BindingSource.Find("executor_login", WindowsIdentity.GetCurrent().Name);
             if (index != -1)
-                comboBoxExecutor.SelectedValue = ((DataRowView)_vExecutors[index])["id_executor"];
-            if (ParentRow != null && ParentType == ParentTypeEnum.Tenancy)
-                textBoxAgreementContent.Text = string.Format(CultureInfo.InvariantCulture, "1.1. По настоящему Соглашению Стороны по договору № {0} от {1} договорились:",
-                    ParentRow["registration_num"],
-                    ParentRow["registration_date"] != DBNull.Value ?
-                        Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "");
+                comboBoxExecutor.SelectedValue = ((DataRowView)Presenter.ViewModel["executors"].BindingSource[index])["id_executor"];
+            textBoxAgreementContent.Text = string.Format(CultureInfo.InvariantCulture,
+                "1.1. По настоящему Соглашению Стороны по договору № {0} от {1} договорились:",
+                ParentRow["registration_num"],
+                ParentRow["registration_date"] != DBNull.Value
+                    ? Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture)
+                        .ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)
+                    : "");
             IsEditable = true;
-            GeneralDataModel.EditingNewRecord = true;
         }
 
         public override bool CanCopyRecord()
         {
-            return (GeneralBindingSource.Position != -1) && (!GeneralDataModel.EditingNewRecord)
+            return (Presenter.ViewModel["general"].CurrentRow != null) && (!Presenter.ViewModel["general"].Model.EditingNewRecord)
                 && AccessControl.HasPrivelege(Priveleges.TenancyWrite);
         }
 
@@ -624,21 +523,20 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             IsEditable = false;
-            var tenancyAgreement = (TenancyAgreement) EntityFromView();
-            GeneralBindingSource.AddNew();
-            dataGridView.Enabled = false;
-            GeneralDataModel.EditingNewRecord = true;
+            var tenancyAgreement = (TenancyAgreement)EntityFromView();
+            Presenter.ViewModel["general"].Model.EditingNewRecord = true;
+            Presenter.ViewModel["general"].BindingSource.AddNew();
+            DataGridView.Enabled = false;
             ViewportFromTenancyAgreement(tenancyAgreement);
             IsEditable = true;
         }
 
         public override bool HasReport(ReporterType reporterType)
         {
-            if (GeneralBindingSource.Position == -1)
+            var row = Presenter.ViewModel["general"].CurrentRow;
+            if (row == null)
                 return false;
-            var idAgreement = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_agreement"] != DBNull.Value
-                ? (int?)Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_agreement"],
-                    CultureInfo.InvariantCulture) : null;
+            var idAgreement = ViewportHelper.ValueOrNull(row, "id_agreement");
             switch (reporterType)
             {
                 case ReporterType.TenancyAgreementReporter:
@@ -654,13 +552,13 @@ namespace Registry.Viewport
                 return;
             if (!TenancyValidForReportGenerate())
                 return;
-            if (GeneralBindingSource.Position == -1)
+            var row = Presenter.ViewModel["general"].CurrentRow;
+            if (row == null)
             {
                 MessageBox.Show(@"Не выбрано соглашение для печати",
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
             switch (reporterType)
             {
                 case ReporterType.TenancyAgreementReporter:
@@ -692,7 +590,8 @@ namespace Registry.Viewport
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return false;
             }
-            if (ViewportHelper.ValueOrNull<DateTime>(ParentRow, "registration_date") == null || ViewportHelper.ValueOrNull(ParentRow, "registration_num") == null)
+            if (ViewportHelper.ValueOrNull<DateTime>(ParentRow, "registration_date") == null || 
+                ViewportHelper.ValueOrNull(ParentRow, "registration_num") == null)
             {
                 MessageBox.Show(@"Для формирования отчетной документации необходимо завести договор найма и указать его номер и дату регистрации", 
                     @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -704,12 +603,6 @@ namespace Registry.Viewport
         protected override void OnVisibleChanged(EventArgs e)
         {
             RedrawDataGridTenancyPersonsRows();
-            if (_isFirstVisible)
-            {
-                _isFirstVisible = false;
-                if (GeneralBindingSource.Count == 0)
-                    InsertRecord();
-            }
             vButtonSelectWarrant.Focus();
             base.OnVisibleChanged(e);
         }
@@ -725,15 +618,11 @@ namespace Registry.Viewport
             }
             if (_swForm == null)
                 _swForm = new SelectWarrantForm();
-            if (_swForm.ShowDialog() == DialogResult.OK)
-            {
-                if (_swForm.WarrantId != null)
-                {
-                    _idWarrant = _swForm.WarrantId.Value;
-                    textBoxAgreementWarrant.Text = WarrantStringById(_swForm.WarrantId.Value);
-                    vButtonSelectWarrant.Text = @"x";
-                }
-            }
+            if (_swForm.ShowDialog() != DialogResult.OK) return;
+            if (_swForm.WarrantId == null) return;
+            _idWarrant = _swForm.WarrantId.Value;
+            textBoxAgreementWarrant.Text = ((TenancyAgreementsPresenter)Presenter).WarrantStringById(_swForm.WarrantId.Value);
+            vButtonSelectWarrant.Text = @"x";
         }
 
         private void TenancyAgreementsViewport_RowChanged(object sender, DataRowChangeEventArgs e)
@@ -798,52 +687,10 @@ namespace Registry.Viewport
                 textBoxExplainContent.Focus();
                 return;
             }
-            var contentList = textBoxAgreementContent.Lines.ToList();
-            var headersCount = 0;
-            for (var i = 0; i < contentList.Count; i++)
-            {
-                if (Regex.IsMatch(contentList[i], "^\u200B"))
-                    headersCount++;
-            }
-            var headerIndex = -1;
-            var lastPointIndex = -1;
-            for (var i = 0; i < contentList.Count; i++)
-            {
-                if (Regex.IsMatch(contentList[i], "^\u200B.*изложить"))
-                {
-                    headerIndex = i;
-                }
-                else
-                    if (headerIndex != -1 && Regex.IsMatch(contentList[i],
-                        "^(\u200B.*из пункта .+ исключить|\u200B.*пункт .+ дополнить|\u200B.*изложить|\u200B.*расторгнуть|\u200B.*считать.+нанимателем)"))
-                    {
-                        lastPointIndex = i;
-                        break;
-                    }
-            }
-            string point;
-            if (!string.IsNullOrEmpty(textBoxExplainPoint.Text.Trim()) &&
-                !string.IsNullOrEmpty(textBoxExplainGeneralPoint.Text.Trim()))
-            {
-                point = string.Format("подпункт {0} пункта {1}", textBoxExplainPoint.Text.Trim(), textBoxExplainGeneralPoint.Text.Trim());
-            } else if (!string.IsNullOrEmpty(textBoxExplainPoint.Text.Trim()))
-            {
-                point = string.Format("подпункт {0}", textBoxExplainPoint.Text.Trim());
-            }
-            else
-            {
-                point = string.Format("пункт {0}", textBoxExplainGeneralPoint.Text.Trim());
-            }
-            var element = string.Format(CultureInfo.InvariantCulture, "{0}. {1}", point, textBoxExplainContent.Text.Trim());
-            if (headerIndex == -1)
-            {
-                contentList.Add(string.Format("\u200B{0}) изложить в новой редакции:", ++headersCount));
-            }
-            if (lastPointIndex == -1)
-                contentList.Add(element);
-            else
-                contentList.Insert(lastPointIndex, element);
-            textBoxAgreementContent.Lines = contentList.ToArray();
+            textBoxAgreementContent.Text = ((TenancyAgreementsPresenter)Presenter).ExplainContentModifier(textBoxAgreementContent.Text,
+                textBoxExplainGeneralPoint.Text,
+                textBoxExplainPoint.Text, textBoxExplainContent.Text);
+
         }
 
         private void vButtonIncludePaste_Click(object sender, EventArgs e)
@@ -862,64 +709,14 @@ namespace Registry.Viewport
                 comboBoxIncludeKinship.Focus();
                 return;
             }
-            var contentList = textBoxAgreementContent.Lines.ToList();
-            var headersCount = 0;
-            for (var i = 0; i < contentList.Count; i++)
-            {
-                if (Regex.IsMatch(contentList[i], "^\u200B"))
-                    headersCount++;
-            }
-            var headerIndex = -1;
-            var lastPointIndex = -1;
-            for (var i = 0; i < contentList.Count; i++)
-            {
-                if (Regex.IsMatch(contentList[i], string.Format("^\u200B.*пункт {0} договора дополнить", 
-                    textBoxGeneralIncludePoint.Text)))
-                {
-                    headerIndex = i;
-                }
-                else
-                    if (headerIndex != -1 && Regex.IsMatch(contentList[i],
-                        "^(\u200B.*из пункта .+ договора исключить|\u200B.*пункт .+ договора дополнить|\u200B.*изложить|\u200B.*расторгнуть|\u200B.*считать.+нанимателем)"))
-                    {
-                        lastPointIndex = i;
-                        break;
-                    }
-            }
-
-            var kinship = ((DataRowView)comboBoxIncludeKinship.SelectedItem)["kinship"].ToString();
-            var element = string.Format(CultureInfo.InvariantCulture, "«{0}. {1}, {2} - {3} г.р.»;", textBoxIncludePoint.Text,
-                textBoxIncludeSNP.Text.Trim(),
-                kinship,
-                dateTimePickerIncludeDateOfBirth.Value.Date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture)); 
             var snp = textBoxIncludeSNP.Text.Trim();
             string sSurname, sName, sPatronymic;
             Declension.GetSNM(snp, out sSurname, out sName, out sPatronymic);
-            if (kinship == "наниматель")
-            {
-                var gender = Declension.GetGender(sPatronymic);
-                contentList.Add(string.Format("\u200B{4}) считать по договору № {0} от {1} нанимателем - «{2} - {3} г.р.»;",
-                    ParentRow["registration_num"],
-                    ParentRow["registration_date"] != DBNull.Value ?
-                        Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "",
-                        gender == Gender.NotDefind ? snp :
-                            Declension.GetSNPDeclension(snp, gender, DeclensionCase.Vinit),
-                        dateTimePickerIncludeDateOfBirth.Value.Date.ToString("dd.MM.yyyy", CultureInfo.InvariantCulture),
-                        ++headersCount));
-            }
-            else
-            {
-                if (headerIndex == -1)
-                {
-                    contentList.Add(string.Format("\u200B{2}) пункт {0} договора дополнить подпунктом {1} следующего содержания:",
-                        textBoxGeneralIncludePoint.Text, textBoxIncludePoint.Text, ++headersCount));
-                }
-                if (lastPointIndex == -1)
-                    contentList.Add(element);
-                else
-                    contentList.Insert(lastPointIndex, element);
-            }
-            textBoxAgreementContent.Lines = contentList.ToArray();
+
+            textBoxAgreementContent.Text = ((TenancyAgreementsPresenter)Presenter).IncludePersonsContentModifier(textBoxAgreementContent.Text,
+                textBoxGeneralIncludePoint.Text, textBoxIncludePoint.Text, sSurname, sName, sPatronymic,
+                ((DataRowView)comboBoxIncludeKinship.SelectedItem)["kinship"].ToString(), dateTimePickerIncludeDateOfBirth.Value);
+
             _includePersons.Add(new TenancyPerson
             {
                 IdProcess = (int?)ParentRow["id_process"],
@@ -933,57 +730,18 @@ namespace Registry.Viewport
 
         private void vButtonExcludePaste_Click(object sender, EventArgs e)
         {
-            if (_vPersonsExclude.Position == -1)
+            if (Presenter.ViewModel["persons_exclude"].BindingSource.Position == -1)
             {
                 MessageBox.Show(@"Не выбран участник найма", @"Ошибка", 
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            var contentList = textBoxAgreementContent.Lines.ToList();
-            var headerIndex = -1;
-            var lastPointIndex = -1;
-            var headersCount = 0;
-            for (var i = 0; i < contentList.Count; i++)
-            {
-                if (Regex.IsMatch(contentList[i], "^\u200B"))
-                    headersCount++;
-            }
-            for (var i = 0; i < contentList.Count; i++)
-            {
-                if (Regex.IsMatch(contentList[i], string.Format("^\u200B.*из пункта {0} договора исключить",
-                    textBoxGeneralExcludePoint.Text)))
-                {
-                    headerIndex = i;
-                }
-                else
-                    if (headerIndex != -1 && Regex.IsMatch(contentList[i],
-                        "^(\u200B.*из пункта .+ договора исключить|\u200B.*пункт .+ договора дополнить|\u200B.*изложить|\u200B.*расторгнуть|\u200B.*считать.+нанимателем)"))
-                    {
-                        lastPointIndex = i;
-                        break;
-                    }
-            }
-            var tenancyPerson = ((DataRowView)_vPersonsExclude[_vPersonsExclude.Position]);
 
-            var kinship = tenancyPerson["id_kinship"] != DBNull.Value ?
-                ((DataRowView)_vKinships[_vKinships.Find("id_kinship", tenancyPerson["id_kinship"])])["kinship"].ToString() : "";
-            var element = string.Format(CultureInfo.InvariantCulture, "«{0}. {1} {2} {3} - {4}, {5} г.р.»;", textBoxExcludePoint.Text,
-                tenancyPerson["surname"],
-                tenancyPerson["name"],
-                tenancyPerson["patronymic"],
-                kinship,
-                tenancyPerson["date_of_birth"] != DBNull.Value ?
-                    Convert.ToDateTime(tenancyPerson["date_of_birth"], CultureInfo.InvariantCulture).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "");
-            if (headerIndex == -1)
-            {
-                contentList.Add(string.Format("\u200B{2}) из пункта {0} договора исключить подпункт {1} следующего содержания:",
-                    textBoxGeneralExcludePoint.Text, textBoxExcludePoint.Text, ++headersCount));
-            }
-            if (lastPointIndex == -1)
-                contentList.Add(element);
-            else
-                contentList.Insert(lastPointIndex, element);
-            textBoxAgreementContent.Lines = contentList.ToArray();
+            textBoxAgreementContent.Text = ((TenancyAgreementsPresenter)Presenter).ExcludePersonsContentModifier(textBoxAgreementContent.Text,
+                textBoxGeneralExcludePoint.Text,
+                textBoxExcludePoint.Text);
+
+            var tenancyPerson = Presenter.ViewModel["persons_exclude"].CurrentRow;
             _excludePersons.Add(new TenancyPerson
             {
                 IdProcess = (int?)ParentRow["id_process"],
@@ -998,39 +756,35 @@ namespace Registry.Viewport
 
         private void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
-            if (GeneralBindingSource.Position == -1 || dataGridView.RowCount == 0)
-                dataGridView.ClearSelection();
+            var bindingSource = Presenter.ViewModel["general"].BindingSource;
+            if (Presenter.ViewModel["general"].CurrentRow == null || DataGridView.RowCount == 0)
+                DataGridView.ClearSelection();
             else
-                if (GeneralBindingSource.Position >= dataGridView.RowCount)
-                    dataGridView.Rows[dataGridView.RowCount - 1].Selected = true;
-                else
-                    if (dataGridView.Rows[GeneralBindingSource.Position].Selected != true)
-                        dataGridView.Rows[GeneralBindingSource.Position].Selected = true;
-            if (Selected)
-            {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
-            }
+                if (bindingSource.Position >= DataGridView.RowCount)
+                    DataGridView.Rows[DataGridView.RowCount - 1].Selected = true;
+                else if (DataGridView.Rows[bindingSource.Position].Selected != true)
+                    DataGridView.Rows[bindingSource.Position].Selected = true;
+
+            var isEditable = IsEditable;
             BindWarrantId();
-            if (GeneralBindingSource.Position == -1)
-                return;
-            if (ViewportState == ViewportState.NewRowState)
-                return;
-            dataGridView.Enabled = true;
-            ViewportState = ViewportState.ReadState;
-            IsEditable = true;
+            IsEditable = isEditable;
+
+            if (!Selected) return;
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.RelationsStateUpdate();
         }
 
         private void vButtonChangeTenancy_Click(object sender, EventArgs e)
         {
-            if (_vTenantChangeTenant.Count == 0 || _vPersonsChangeTenant.Position == -1)
+            var tenantChangeTenant = Presenter.ViewModel["tenant_change_tenant"].BindingSource;
+            var personsChangeTenant = Presenter.ViewModel["persons_change_tenant"].BindingSource;
+            if (tenantChangeTenant.Position == -1)
             {
                 MessageBox.Show(@"Не выбран текущий наниматель", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if (_vPersonsChangeTenant.Position == -1)
+            if (personsChangeTenant.Position == -1)
             {
                 MessageBox.Show(@"Не выбран новый наниматель", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -1042,7 +796,7 @@ namespace Registry.Viewport
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            if ((comboboxTenantChangeKinship.SelectedValue != null && (int)comboboxTenantChangeKinship.SelectedValue == 1) && !checkBoxExcludeTenant.Checked)
+            if (comboboxTenantChangeKinship.SelectedValue != null && (int)comboboxTenantChangeKinship.SelectedValue == 1 && !checkBoxExcludeTenant.Checked)
             {
                 MessageBox.Show(@"Нельзя исключаемому нанимателю указать новую родственную связь «наниматель». Выберите другую родственную связь", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
@@ -1050,36 +804,11 @@ namespace Registry.Viewport
             }
 
             ClearModifyState();
-            var regDateStr = ParentRow["registration_date"] != DBNull.Value
-                ? Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture)
-                .ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "";
-            var registrationNumber = ParentRow["registration_num"];
 
-            textBoxAgreementContent.Text = string.Format(CultureInfo.InvariantCulture,
-                "1.1. По настоящему Соглашению Стороны по договору № {0} от {1}, ",
-                regDateStr, registrationNumber);
-            
-            // Исключаем старого нанимателя
-            var oldTenantRow = (DataRowView)_vTenantChangeTenant[0];      
-            var snp = oldTenantRow["surname"] + @" " + oldTenantRow["name"] + @" " + oldTenantRow["patronymic"];
-            var sPatronymic = oldTenantRow["patronymic"].ToString(); 
-            var gender = Declension.GetGender(sPatronymic);
-            textBoxAgreementContent.Text += string.Format("в связи c ________________________________________ нанимателя «{0}», договорились:",
-                gender == Gender.NotDefind ? snp : Declension.GetSNPDeclension(snp, gender, DeclensionCase.Rodit));
-            
-            // Включаем нового нанимателя
-            var newTenantRow = ((DataRowView) _vPersonsChangeTenant[_vPersonsChangeTenant.Position]);
-            var newTenantSurname = (string)newTenantRow["surname"];
-            var newTenantName = (string)newTenantRow["name"];
-            var newTenantPatronymic = (string)newTenantRow["patronymic"];
-            var newTenantSnp = newTenantSurname + " " + newTenantName + " " + newTenantPatronymic;
-            gender = Declension.GetGender(newTenantPatronymic);
-            textBoxAgreementContent.Text += Environment.NewLine +
-                string.Format("\u200B1) считать стороной по договору - нанимателем - «{0}, {1}»;",
-                gender == Gender.NotDefind ? newTenantSnp : Declension.GetSNPDeclension(newTenantSnp, gender, DeclensionCase.Vinit),
-                newTenantRow["date_of_birth"] != DBNull.Value ? ((DateTime)newTenantRow["date_of_birth"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "");
+            textBoxAgreementContent.Text = ((TenancyAgreementsPresenter)Presenter).ChangeTenancyStringBuilder();
 
-
+            var oldTenantRow = (DataRowView)tenantChangeTenant[0];
+            var newTenantRow = (DataRowView)personsChangeTenant[personsChangeTenant.Position];
             _modifications.Add(new Dictionary<ExtModificationTypes, List<ExtModificationParameter>>
             {
                 { ExtModificationTypes.ChangeTenant, new List<ExtModificationParameter>
@@ -1112,9 +841,7 @@ namespace Registry.Viewport
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
-            if (keyData == Keys.Enter)
-                return false;
-            return base.ProcessCmdKey(ref msg, keyData);
+            return keyData != Keys.Enter && base.ProcessCmdKey(ref msg, keyData);
         }
 
         private void selectAll_Enter(object sender, EventArgs e)
@@ -1124,33 +851,9 @@ namespace Registry.Viewport
 
         private void vButtonPaymentInsert_Click(object sender, EventArgs e)
         {
-            var add = "";
             var pointCount = textBoxAgreementContent.Lines.Count(v => Regex.IsMatch(v, "^\u200B?[0-9]+\\)"));
-            switch ((int)ParentRow["id_rent_type"]) 
-            {
-                case 3 :
-                    add = "\u200B" + (pointCount + 1) + @") изложить подпункт ""з"" пункта ___ в следующей редакции:
-«вносить плату:
-• за пользование жилым помещением (плата за наем) на расчетный счет Наймодателя в размере, установленном муниципальным правовым актом города Братска в соответствии с Жилищным кодексом Российской Федерации; 
-• за содержание и ремонт жилого помещения лицам, осуществляющим соответствующий вид деятельности, в размере установленном муниципальным правовым актом города Братска в соответствии с Жилищным кодексом Российской Федерации;
-• за коммунальные услуги лицам, осуществляющим соответствующий вид деятельности, в соответствии с тарифами, установленными в соответствии законодательством Российской Федерации.
-Плата за жилое помещение и коммунальные услуги вносится ежемесячно до десятого числа месяца, следующего за истекшим месяцем, если иной срок не установлен договором управления многоквартирным домом либо решением общего собрания членов товарищества собственников жилья, жилищного кооператива или иного специализированного потребительского кооператива, созданного в целях удовлетворения потребностей граждан в жилье в соответствии с федеральным законом о таком кооперативе.
-Плата за жилое помещение и коммунальные услуги вносится Нанимателем на основании платежных документов.
-В случае невнесения в установленный срок платы за жилое помещение и (или) коммунальные услуги Наниматель уплачивает Наймодателю пени в размере, установленном Жилищным кодексом Российской Федерации, что не освобождает Нанимателя от уплаты причитающихся платежей».";                     
-                    break;
-                case 1:
-                case 2:
-                    add = "\u200B" + (pointCount + 1) + @") главу ___ изложить в следующей редакции:
-Наниматель вносит плату:
-• за пользование жилым помещением (плата за наем) на расчетный счет Наймодателя в размере, установленном решением органа местного самоуправления в соответствии с Жилищным кодексом Российской Федерации;
-• за содержание и ремонт жилого помещения лицам, осуществляющим соответствующий вид деятельности, в размере установленном решением органа местного самоуправления, в соответствии с Жилищным кодексом Российской Федерации;
-• за коммунальные услуги лицам, осуществляющим соответствующий вид деятельности, в соответствии с тарифами, установленными в соответствии законодательством Российской Федерации.
-Плата за жилое помещение и коммунальные услуги вносится ежемесячно до десятого числа месяца, следующего за истекшим месяцем, если иной срок не установлен договором управления многоквартирным домом либо решением общего собрания членов товарищества собственников жилья, жилищного кооператива или иного специализированного потребительского кооператива, созданного в целях удовлетворения потребностей граждан в жилье в соответствии с федеральным законом о таком кооперативе.
-Плата за жилое помещение и коммунальные услуги вносится Нанимателем на основании платежных документов.
-Наймодатель вправе в одностороннем порядке изменить размер платы за пользование жилым помещением (плата за наем) и за содержание и ремонт жилого помещения в случае внесения изменения в муниципальный правовой акт города Братска, устанавливающего размер платы за жилое помещение.";
-                    break;
-            }
-            textBoxAgreementContent.Text += textBoxAgreementContent.Text.EndsWith("\n") ? add : Environment.NewLine + add;                                       
+            var text = ((TenancyAgreementsPresenter)Presenter).PaymentStringBuilder(pointCount + 1);
+            textBoxAgreementContent.Text += textBoxAgreementContent.Text.EndsWith("\n") ? text : Environment.NewLine + text;                                       
         }
 
         private void checkBoxExcludeTenant_CheckStateChanged(object sender, EventArgs e)
@@ -1161,38 +864,15 @@ namespace Registry.Viewport
         private void vButtonProlongCommercial_Click(object sender, EventArgs e)
         {
             ClearModifyState();
-            var regDateStr = ParentRow["registration_date"] != DBNull.Value
-                ? Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture)
-                .ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "";
-            var registrationNumber = ParentRow["registration_num"];
+            var text = ((TenancyAgreementsPresenter)Presenter).ProlongCommercialStringBuilder(
+                dateTimePickerCommercialProlongFrom.Checked ? (DateTime?)dateTimePickerCommercialProlongFrom.Value : null,
+                dateTimePickerCommercialProlongTo.Checked ? (DateTime?)dateTimePickerCommercialProlongTo.Value : null,
+                checkBoxCommercialProlongUntilDismissal.Checked,
+                dateTimePickerCommercialProlongRequest.Value,
+                textBoxCommercialProlongGeneralPoint.Text
+            );
 
-            var rentPeriodStr = "";
-            if (dateTimePickerCommercialProlongFrom.Checked)
-            {
-                rentPeriodStr += "с " + dateTimePickerCommercialProlongFrom.Value.ToString("dd.MM.yyy", CultureInfo.InvariantCulture);
-            }
-            if (checkBoxCommercialProlongUntilDismissal.Checked)
-            {
-                if (!string.IsNullOrEmpty(rentPeriodStr))
-                    rentPeriodStr += " ";
-                rentPeriodStr += "на период трудовых отношений";
-            }
-            else if (dateTimePickerCommercialProlongTo.Checked)
-            {
-                if (!string.IsNullOrEmpty(rentPeriodStr))
-                    rentPeriodStr += " ";
-                rentPeriodStr += "по " + dateTimePickerCommercialProlongTo.Value.ToString("dd.MM.yyy", CultureInfo.InvariantCulture);
-            }
-            if (!checkBoxCommercialProlongUntilDismissal.Checked)
-            {
-                rentPeriodStr = "на период " + rentPeriodStr;
-            }
-
-            textBoxAgreementContent.Text = string.Format(@"1.1. По настоящему Соглашению на основании личного заявления нанимателя от {3}. Стороны договорились:"+
-                "\r\n\u200B1) продлить срок действия  договора  № {0} от {1} {2}."+
-                "\r\n\u200B2) пункт {4} исключить.",
-                registrationNumber, regDateStr, rentPeriodStr,
-                dateTimePickerCommercialProlongRequest.Value.ToString("dd.MM.yyyy"), textBoxCommercialProlongGeneralPoint.Text);
+            textBoxAgreementContent.Text = text;
 
             _modifications.Add(new Dictionary<ExtModificationTypes, List<ExtModificationParameter>>
             {
@@ -1221,33 +901,14 @@ namespace Registry.Viewport
         private void vButtonProlongSpecial_Click(object sender, EventArgs e)
         {
             ClearModifyState();
-            var regDateStr = ParentRow["registration_date"] != DBNull.Value
-                ? Convert.ToDateTime(ParentRow["registration_date"], CultureInfo.InvariantCulture)
-                .ToString("dd.MM.yyyy", CultureInfo.InvariantCulture) : "";
-            var registrationNumber = ParentRow["registration_num"];
-            var rentPeriodStr = "";
-            if (dateTimePickerSpecialProlongFrom.Checked)
-            {
-                rentPeriodStr += "с " + dateTimePickerSpecialProlongFrom.Value.ToString("dd.MM.yyy", CultureInfo.InvariantCulture);
-            }
-            if (checkBoxSpecialProlongUntilDismissal.Checked)
-            {
-                if (!string.IsNullOrEmpty(rentPeriodStr))
-                    rentPeriodStr += " ";
-                rentPeriodStr += "на период трудовых отношений";
-            }
-            else if (dateTimePickerSpecialProlongTo.Checked)
-            {
-                if (!string.IsNullOrEmpty(rentPeriodStr))
-                    rentPeriodStr += " ";
-                rentPeriodStr += "по " + dateTimePickerSpecialProlongTo.Value.ToString("dd.MM.yyy", CultureInfo.InvariantCulture);
-            }
-
-            textBoxAgreementContent.Text = string.Format(@"1.1. По настоящему Соглашению Стороны по договору № {0} от {1} договорились:"+
-                "\r\n\u200B1) изложить в новой редакции:" +
-                "\r\nподпункт {2} пункта {3}: \"Срок найма жилого помещения устанавливается {4}\".",
-                regDateStr, registrationNumber, 
-                textBoxSpecialProlongPoint.Text, textBoxSpecialProlongGeneralPoint.Text, rentPeriodStr);
+            var text = ((TenancyAgreementsPresenter)Presenter).ProlongSpecialStringBuilder(
+                dateTimePickerSpecialProlongFrom.Checked ? (DateTime?)dateTimePickerSpecialProlongFrom.Value : null,
+                dateTimePickerSpecialProlongTo.Checked ? (DateTime?)dateTimePickerSpecialProlongTo.Value : null,
+                checkBoxSpecialProlongUntilDismissal.Checked,
+                textBoxSpecialProlongPoint.Text,
+                textBoxSpecialProlongGeneralPoint.Text
+            );
+            textBoxAgreementContent.Text = text;
 
             _modifications.Add(new Dictionary<ExtModificationTypes, List<ExtModificationParameter>>
             {

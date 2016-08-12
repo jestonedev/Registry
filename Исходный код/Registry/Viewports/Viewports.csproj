@@ -200,6 +200,7 @@
     <Compile Include="Presenters\PremisesPresenter.cs" />
     <Compile Include="Presenters\Presenter.cs" />
     <Compile Include="Presenters\SubPremisesPresenter.cs" />
+    <Compile Include="Presenters\TenancyAgreementsPresenter.cs" />
     <Compile Include="Presenters\TenancyListPresenter.cs" />
     <Compile Include="Presenters\TenancyPersonsPresenter.cs" />
     <Compile Include="Presenters\TenancyPresenter.cs" />
@@ -520,6 +521,7 @@
     <Compile Include="ViewModels\PremisesViewModel.cs" />
     <Compile Include="ViewModels\SnapshotedViewModel.cs" />
     <Compile Include="ViewModels\SubPremisesViewModel.cs" />
+    <Compile Include="ViewModels\TenancyAgreementsViewModel.cs" />
     <Compile Include="ViewModels\TenancyListViewModel.cs" />
     <Compile Include="ViewModels\TenancyPersonsViewModel.cs" />
     <Compile Include="ViewModels\TenancyReasonsViewModel.cs" />

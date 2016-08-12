@@ -1,9 +1,5 @@
-﻿using System;
-using System.Data;
-using System.Data.SqlClient;
-using System.Linq;
+﻿using System.Data;
 using System.Windows.Forms;
-using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
 using Registry.Entities;
 using Registry.Viewport.EntityConverters;

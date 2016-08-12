@@ -436,7 +436,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(487, 122);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(487, 120);
             this.dataGridViewTenancyPersons.TabIndex = 3;
             // 
             // surname
@@ -641,9 +641,9 @@ namespace Registry.Viewport
             this.tabPageExplain.Controls.Add(this.textBoxExplainPoint);
             this.tabPageExplain.Controls.Add(this.vButtonExplainPaste);
             this.tabPageExplain.Controls.Add(this.label79);
-            this.tabPageExplain.Location = new System.Drawing.Point(4, 22);
+            this.tabPageExplain.Location = new System.Drawing.Point(4, 24);
             this.tabPageExplain.Name = "tabPageExplain";
-            this.tabPageExplain.Size = new System.Drawing.Size(493, 194);
+            this.tabPageExplain.Size = new System.Drawing.Size(493, 192);
             this.tabPageExplain.TabIndex = 2;
             this.tabPageExplain.Text = "Изложить";
             // 
@@ -654,7 +654,7 @@ namespace Registry.Viewport
             this.textBoxExplainGeneralPoint.Location = new System.Drawing.Point(164, 6);
             this.textBoxExplainGeneralPoint.Name = "textBoxExplainGeneralPoint";
             this.textBoxExplainGeneralPoint.Size = new System.Drawing.Size(291, 21);
-            this.textBoxExplainGeneralPoint.TabIndex = 49;
+            this.textBoxExplainGeneralPoint.TabIndex = 0;
             // 
             // label5
             // 
@@ -673,8 +673,8 @@ namespace Registry.Viewport
             this.textBoxExplainContent.Location = new System.Drawing.Point(15, 61);
             this.textBoxExplainContent.Multiline = true;
             this.textBoxExplainContent.Name = "textBoxExplainContent";
-            this.textBoxExplainContent.Size = new System.Drawing.Size(440, 97);
-            this.textBoxExplainContent.TabIndex = 1;
+            this.textBoxExplainContent.Size = new System.Drawing.Size(440, 95);
+            this.textBoxExplainContent.TabIndex = 2;
             this.textBoxExplainContent.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // textBoxExplainPoint
@@ -684,7 +684,7 @@ namespace Registry.Viewport
             this.textBoxExplainPoint.Location = new System.Drawing.Point(164, 34);
             this.textBoxExplainPoint.Name = "textBoxExplainPoint";
             this.textBoxExplainPoint.Size = new System.Drawing.Size(291, 21);
-            this.textBoxExplainPoint.TabIndex = 0;
+            this.textBoxExplainPoint.TabIndex = 1;
             this.textBoxExplainPoint.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
             // vButtonExplainPaste
@@ -696,7 +696,7 @@ namespace Registry.Viewport
             this.vButtonExplainPaste.Name = "vButtonExplainPaste";
             this.vButtonExplainPaste.RoundedCornersMask = ((byte)(15));
             this.vButtonExplainPaste.Size = new System.Drawing.Size(27, 20);
-            this.vButtonExplainPaste.TabIndex = 2;
+            this.vButtonExplainPaste.TabIndex = 3;
             this.vButtonExplainPaste.Text = "→";
             this.vButtonExplainPaste.UseVisualStyleBackColor = false;
             this.vButtonExplainPaste.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -719,9 +719,9 @@ namespace Registry.Viewport
             this.tabPageTerminate.Controls.Add(this.vButtonTerminatePaste);
             this.tabPageTerminate.Controls.Add(this.textBoxTerminateAgreement);
             this.tabPageTerminate.Controls.Add(this.label80);
-            this.tabPageTerminate.Location = new System.Drawing.Point(4, 24);
+            this.tabPageTerminate.Location = new System.Drawing.Point(4, 22);
             this.tabPageTerminate.Name = "tabPageTerminate";
-            this.tabPageTerminate.Size = new System.Drawing.Size(493, 192);
+            this.tabPageTerminate.Size = new System.Drawing.Size(493, 194);
             this.tabPageTerminate.TabIndex = 3;
             this.tabPageTerminate.Text = "Расторгнуть";
             // 
@@ -906,10 +906,10 @@ namespace Registry.Viewport
             this.tabPageProlongSpecial.Controls.Add(this.dateTimePickerSpecialProlongFrom);
             this.tabPageProlongSpecial.Controls.Add(this.label14);
             this.tabPageProlongSpecial.Controls.Add(this.vButtonProlongSpecial);
-            this.tabPageProlongSpecial.Location = new System.Drawing.Point(4, 24);
+            this.tabPageProlongSpecial.Location = new System.Drawing.Point(4, 22);
             this.tabPageProlongSpecial.Name = "tabPageProlongSpecial";
             this.tabPageProlongSpecial.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPageProlongSpecial.Size = new System.Drawing.Size(493, 192);
+            this.tabPageProlongSpecial.Size = new System.Drawing.Size(493, 194);
             this.tabPageProlongSpecial.TabIndex = 6;
             this.tabPageProlongSpecial.Text = "Срок по спец. найму";
             this.tabPageProlongSpecial.UseVisualStyleBackColor = true;
