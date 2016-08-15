@@ -52,19 +52,20 @@ namespace Registry.Viewport
 
             DataBind();
 
-            AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_documents_issued_by_CurrentItemChanged);
+            AddEventHandler<EventArgs>(((SnapshotedViewModel)Presenter.ViewModel).SnapshotBindingSource, 
+                "CurrentItemChanged", v_snapshot_documents_issued_by_CurrentItemChanged);
 
             //Синхронизация данных исходные->текущие
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", DocumentIssuedByViewport_RowChanged);
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleting", DocumentIssuedByViewport_RowDeleting);
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", DocumentIssuedByViewport_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowChanged", DocumentIssuedByViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleting", DocumentIssuedByViewport_RowDeleting);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleted", DocumentIssuedByViewport_RowDeleted);
 
             v_snapshot_documents_issued_by_CurrentItemChanged(null, new EventArgs());
         }
 
         private void DataBind()
         {
-            dataGridView.DataSource = GeneralSnapshotBindingSource;
+            dataGridView.DataSource = ((SnapshotedViewModel)Presenter.ViewModel).SnapshotBindingSource;
             id_document_issued_by.DataPropertyName = "id_document_issued_by";
             document_issued_by.DataPropertyName = "document_issued_by";
         }

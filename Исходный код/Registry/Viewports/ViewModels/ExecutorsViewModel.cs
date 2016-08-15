@@ -38,7 +38,7 @@ namespace Registry.Viewport.ViewModels
             SnapshotDataSource.Clear();
             //Загружаем данные snapshot-модели из original-view
             foreach (var row in this["general"].BindingSource)
-                SnapshotDataSource.Rows.Add(EntityConverter<DocumentIssuedBy>.ToArray((DataRowView)row));
+                SnapshotDataSource.Rows.Add(EntityConverter<Executor>.ToArray((DataRowView)row));
         }
     }
 }

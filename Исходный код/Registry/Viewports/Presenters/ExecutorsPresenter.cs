@@ -63,11 +63,9 @@ namespace Registry.Viewport.Presenters
         public void InsertRecordIntoSnapshot()
         {
             var row = (DataRowView)((SnapshotedViewModel)ViewModel).SnapshotBindingSource.AddNew();
-            if (row != null)
-            {
-                row["is_inactive"] = false;
-                row.EndEdit();
-            }
+            if (row == null) return;
+            row["is_inactive"] = false;
+            row.EndEdit();
         }
 
         public void DeleteCurrentRecordFromSnapshot()

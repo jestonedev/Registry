@@ -53,19 +53,20 @@ namespace Registry.Viewport
 
             DataBind();
 
-            AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_executors_CurrentItemChanged);
+            AddEventHandler<EventArgs>(((SnapshotedViewModel)Presenter.ViewModel).SnapshotBindingSource, 
+                "CurrentItemChanged", v_snapshot_executors_CurrentItemChanged);
 
             //Синхронизация данных исходные->текущие
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", ExecutorsViewport_RowChanged);
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleting", ExecutorsViewport_RowDeleting);
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", ExecutorsViewport_RowDeleted);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowChanged", ExecutorsViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleting", ExecutorsViewport_RowDeleting);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleted", ExecutorsViewport_RowDeleted);
 
             v_snapshot_executors_CurrentItemChanged(null, new EventArgs());
         }
 
         private void DataBind()
         {
-            dataGridView.DataSource = GeneralSnapshotBindingSource;
+            dataGridView.DataSource = ((SnapshotedViewModel)Presenter.ViewModel).SnapshotBindingSource;
             id_executor.DataPropertyName = "id_executor";
             executor_name.DataPropertyName = "executor_name";
             executor_login.DataPropertyName = "executor_login";
