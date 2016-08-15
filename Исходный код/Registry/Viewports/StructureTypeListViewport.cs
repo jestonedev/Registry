@@ -154,7 +154,6 @@ namespace Registry.Viewport
         {
             if (!SyncViews)
                 return;
-
             ((StructureTypeListPresenter)Presenter).InsertOrUpdateRowIntoSnapshot(e.Row);
             if (!Selected) return;
             MenuCallback.NavigationStateUpdate();
@@ -164,10 +163,8 @@ namespace Registry.Viewport
 
         private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
-            if (Selected)
-            {
-                MenuCallback.EditingStateUpdate();
-            }
+            if (!Selected) return;
+            MenuCallback.NavigationStateUpdate();
         }
 
         private void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)

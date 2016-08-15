@@ -24,6 +24,7 @@ namespace Registry.Viewport
         //Forms
         private SelectWarrantForm _swForm;
         private int? _idWarrant;
+        private bool _firstShowing = true;
 
         public TenancyAgreementsViewport(Viewport viewport, IMenuCallback menuCallback)
             : base(viewport, menuCallback, new TenancyAgreementsPresenter())
@@ -224,8 +225,6 @@ namespace Registry.Viewport
             DataChangeHandlersInit();
 
             IsEditable = true;
-            if (Presenter.ViewModel["general"].BindingSource.Count == 0)
-                InsertRecord();
         }
 
         public override bool CanDeleteRecord()
@@ -342,7 +341,8 @@ namespace Registry.Viewport
             Presenter.ViewModel["general"].Model.EditingNewRecord = true;
             Presenter.ViewModel["general"].BindingSource.AddNew();
             DataGridView.Enabled = false;
-            var index = Presenter.ViewModel["executors"].BindingSource.Find("executor_login", WindowsIdentity.GetCurrent().Name);
+            var login = WindowsIdentity.GetCurrent().Name;
+            var index = Presenter.ViewModel["executors"].BindingSource.Find("executor_login", login);
             if (index != -1)
                 comboBoxExecutor.SelectedValue = ((DataRowView)Presenter.ViewModel["executors"].BindingSource[index])["id_executor"];
             textBoxAgreementContent.Text = string.Format(CultureInfo.InvariantCulture,
@@ -447,6 +447,12 @@ namespace Registry.Viewport
         {
             RedrawDataGridTenancyPersonsRows();
             vButtonSelectWarrant.Focus();
+            if (_firstShowing && Presenter.ViewModel["general"].BindingSource.Count == 0)
+            {
+                _firstShowing = false;
+                InsertRecord();
+                MenuCallback.EditingStateUpdate();
+            }
             base.OnVisibleChanged(e);
         }
 
