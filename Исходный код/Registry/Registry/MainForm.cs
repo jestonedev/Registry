@@ -121,23 +121,23 @@ namespace Registry
             {
                 // При поиске здания или помещения по нанимателю предварительная подгрузка не производится 
                 // Данные подгружаются по необходимости
+                EntityDataModel<TenancyProcess>.GetInstance(afterLoadHandler);
                 EntityDataModel<TenancyPerson>.GetInstance(afterLoadHandler);
-                DataModel.GetInstance<KinshipsDataModel>(afterLoadHandler);
                 EntityDataModel<TenancyBuildingAssoc>.GetInstance(afterLoadHandler);
                 EntityDataModel<TenancyPremisesAssoc>.GetInstance(afterLoadHandler);
                 EntityDataModel<TenancySubPremisesAssoc>.GetInstance(afterLoadHandler);
                 EntityDataModel<TenancyReason>.GetInstance(afterLoadHandler);
                 EntityDataModel<ReasonType>.GetInstance(afterLoadHandler);
-                DataModel.GetInstance<RentTypesDataModel>(afterLoadHandler);
-                DataModel.GetInstance<DocumentTypesDataModel>(afterLoadHandler);
                 EntityDataModel<Executor>.GetInstance(afterLoadHandler);
                 EntityDataModel<TenancyAgreement>.GetInstance(afterLoadHandler);
                 EntityDataModel<Warrant>.GetInstance(afterLoadHandler);
-                DataModel.GetInstance<WarrantDocTypesDataModel>(afterLoadHandler);
                 EntityDataModel<DocumentIssuedBy>.GetInstance(afterLoadHandler);
-                DataModel.GetInstance<TenancyNotifiesDataModel>(afterLoadHandler);
-                EntityDataModel<TenancyProcess>.GetInstance(afterLoadHandler);
                 EntityDataModel<TenancyRentPeriod>.GetInstance(afterLoadHandler);
+                DataModel.GetInstance<KinshipsDataModel>(afterLoadHandler);
+                DataModel.GetInstance<RentTypesDataModel>(afterLoadHandler);
+                DataModel.GetInstance<DocumentTypesDataModel>(afterLoadHandler);
+                DataModel.GetInstance<WarrantDocTypesDataModel>(afterLoadHandler);
+                DataModel.GetInstance<TenancyNotifiesDataModel>(afterLoadHandler);
             }
             if (toolStripProgressBar.Maximum == 0)
                 toolStripProgressBar.Visible = false;

@@ -208,6 +208,7 @@
     <Compile Include="Presenters\TenancyPresenter.cs" />
     <Compile Include="Presenters\TenancyReasonsPresenter.cs" />
     <Compile Include="Presenters\TenancyReasonTypesPresenter.cs" />
+    <Compile Include="Presenters\WarrantsPresenter.cs" />
     <Compile Include="SearchForms\ExtendedSearchResettleForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -534,6 +535,7 @@
     <Compile Include="ViewModels\TenancyViewModel.cs" />
     <Compile Include="ViewModels\ViewModelItem.cs" />
     <Compile Include="ViewModels\ViewModel.cs" />
+    <Compile Include="ViewModels\WarrantsViewModel.cs" />
     <Compile Include="Viewport.cs">
       <SubType>Form</SubType>
     </Compile>

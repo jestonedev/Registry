@@ -66,6 +66,7 @@ namespace Registry.Viewport.ViewModels
                 }
                 else
                 {
+                    model.Select(); // waiting for loading
                     newBindingSource.DataSource = DataStorage.DataSet;
                     newBindingSource.DataMember = DataSource.TableName;   
                 }

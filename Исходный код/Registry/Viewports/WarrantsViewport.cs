@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Data;
 using System.Windows.Forms;
-using Registry.DataModels;
-using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Viewport.EntityConverters;
+using Registry.Viewport.Presenters;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -13,49 +12,36 @@ namespace Registry.Viewport
     internal sealed partial class WarrantsViewport : FormWithGridViewport
     {
 
-        #region Models
-        private DataModel _warrantDocTypes;
-        #endregion Models
-
-        #region Views
-
-        private BindingSource _vWarrantDocTypes;
-        #endregion Views
-
         private WarrantsViewport()
             : this(null, null)
         {
         }
 
         public WarrantsViewport(Viewport viewport, IMenuCallback menuCallback)
-            : base(viewport, menuCallback)
+            : base(viewport, menuCallback, new WarrantsPresenter())
         {
             InitializeComponent();
             DataGridView = dataGridView;
+            DataGridView.AutoGenerateColumns = false;
+            DockAreas = DockAreas.Document;
         }
 
         private void DataBind()
         {
-            comboBoxWarrantDocType.DataSource = _vWarrantDocTypes;
-            comboBoxWarrantDocType.ValueMember = "id_warrant_doc_type";
-            comboBoxWarrantDocType.DisplayMember = "warrant_doc_type";
-            comboBoxWarrantDocType.DataBindings.Clear();
-            comboBoxWarrantDocType.DataBindings.Add("SelectedValue", GeneralBindingSource, "id_warrant_doc_type", true, DataSourceUpdateMode.Never, DBNull.Value);
+            var bindingSource = Presenter.ViewModel["general"].BindingSource;
+            ViewportHelper.BindSource(comboBoxWarrantDocType, Presenter.ViewModel["warrant_doc_types"].BindingSource, "warrant_doc_type",
+                 Presenter.ViewModel["warrant_doc_types"].PrimaryKeyFirst);
+            ViewportHelper.BindProperty(comboBoxWarrantDocType, "SelectedValue", bindingSource,
+                Presenter.ViewModel["warrant_doc_types"].PrimaryKeyFirst, DBNull.Value);
 
-            textBoxWarrantRegNum.DataBindings.Clear();
-            textBoxWarrantRegNum.DataBindings.Add("Text", GeneralBindingSource, "registration_num", true, DataSourceUpdateMode.Never, "");
-            textBoxWarrantNotary.DataBindings.Clear();
-            textBoxWarrantNotary.DataBindings.Add("Text", GeneralBindingSource, "notary", true, DataSourceUpdateMode.Never, "");
-            textBoxWarrantOnBehalfOf.DataBindings.Clear();
-            textBoxWarrantOnBehalfOf.DataBindings.Add("Text", GeneralBindingSource, "on_behalf_of", true, DataSourceUpdateMode.Never, "");
-            textBoxWarrantDistrict.DataBindings.Clear();
-            textBoxWarrantDistrict.DataBindings.Add("Text", GeneralBindingSource, "notary_district", true, DataSourceUpdateMode.Never, "");
-            textBoxWarrantDescription.DataBindings.Clear();
-            textBoxWarrantDescription.DataBindings.Add("Text", GeneralBindingSource, "description", true, DataSourceUpdateMode.Never, "");
-            dateTimePickerWarrantDate.DataBindings.Clear();
-            dateTimePickerWarrantDate.DataBindings.Add("Value", GeneralBindingSource, "registration_date", true, DataSourceUpdateMode.Never, DateTime.Now);
-
-            dataGridView.DataSource = GeneralBindingSource;
+            ViewportHelper.BindProperty(textBoxWarrantRegNum, "Text", bindingSource, "registration_num", "");
+            ViewportHelper.BindProperty(textBoxWarrantNotary, "Text", bindingSource, "notary", "");
+            ViewportHelper.BindProperty(textBoxWarrantOnBehalfOf, "Text", bindingSource, "on_behalf_of", "");
+            ViewportHelper.BindProperty(textBoxWarrantDistrict, "Text", bindingSource, "notary_district", "");
+            ViewportHelper.BindProperty(textBoxWarrantDescription, "Text", bindingSource, "description", "");
+            ViewportHelper.BindProperty(dateTimePickerWarrantDate, "Value", bindingSource, "registration_date", DateTime.Now.Date);
+            
+            DataGridView.DataSource = bindingSource;
             id_warrant.DataPropertyName = "id_warrant";
             notary.DataPropertyName = "notary";
             on_behalf_of.DataPropertyName = "on_behalf_of";
@@ -85,13 +71,10 @@ namespace Registry.Viewport
 
         protected override Entity EntityFromViewport()
         {
+            var row = Presenter.ViewModel["general"].CurrentRow;
             var warrant = new Warrant
             {
-                IdWarrant =
-                    GeneralBindingSource.Position == -1
-                        ? null
-                        : ViewportHelper.ValueOrNull<int>(
-                            (DataRowView) GeneralBindingSource[GeneralBindingSource.Position], "id_warrant"),
+                IdWarrant = row == null ? null : ViewportHelper.ValueOrNull<int>(row, "id_warrant"),
                 IdWarrantDocType = ViewportHelper.ValueOrNull<int>(comboBoxWarrantDocType),
                 RegistrationNum = ViewportHelper.ValueOrNull(textBoxWarrantRegNum),
                 OnBehalfOf = ViewportHelper.ValueOrNull(textBoxWarrantOnBehalfOf),
@@ -105,8 +88,7 @@ namespace Registry.Viewport
 
         protected override Entity EntityFromView()
         {
-            var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            return EntityConverter<Warrant>.FromRow(row);
+            return EntityConverter<Warrant>.FromRow(Presenter.ViewModel["general"].CurrentRow);
         }
 
         private bool ValidateWarrant(Warrant warrant)
@@ -135,40 +117,29 @@ namespace Registry.Viewport
 
         public override void LoadData()
         {
-            dataGridView.AutoGenerateColumns = false;
-            DockAreas = DockAreas.Document;
-            GeneralDataModel = EntityDataModel<Warrant>.GetInstance();
-            _warrantDocTypes = DataModel.GetInstance<WarrantDocTypesDataModel>();
-
-            // Ожидаем дозагрузки, если это необходимо
-            GeneralDataModel.Select();
-            _warrantDocTypes.Select();
-
-            var ds = DataStorage.DataSet;
-
-            _vWarrantDocTypes = new BindingSource
-            {
-                DataMember = "warrant_doc_types",
-                DataSource = ds
-            };
-
-            GeneralBindingSource = new BindingSource();
-            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", v_warrants_CurrentItemChanged);
-            GeneralBindingSource.DataMember = "warrants";
-            GeneralBindingSource.DataSource = ds;
-            GeneralBindingSource.Sort = "registration_date DESC";
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", WarrantsViewport_RowChanged);
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", WarrantsViewport_RowDeleted);
+            GeneralDataModel = Presenter.ViewModel["general"].Model;
+            GeneralBindingSource = Presenter.ViewModel["general"].BindingSource;
 
             DataBind();
-            IsEditable = true;
+
+            AddEventHandler<EventArgs>(Presenter.ViewModel["general"].BindingSource, "CurrentItemChanged", v_warrants_CurrentItemChanged);
+
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowChanged", WarrantsViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleted", WarrantsViewport_RowDeleted);
+
+            AddEventHandler<EventArgs>(Presenter.ViewModel["general"].DataSource.Constraints, 
+                "CollectionChanged", (s,e) => DataBind());
 
             DataChangeHandlersInit();
+
+            v_warrants_CurrentItemChanged(null, new EventArgs());
+
+            IsEditable = true;
         }
 
         public override bool CanInsertRecord()
         {
-            return (!GeneralDataModel.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.TenancyDirectoriesReadWrite);
+            return !Presenter.ViewModel["general"].Model.EditingNewRecord && AccessControl.HasPrivelege(Priveleges.TenancyDirectoriesReadWrite);
         }
 
         public override void InsertRecord()
@@ -176,15 +147,15 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             IsEditable = false;
-            GeneralBindingSource.AddNew();
-            dataGridView.Enabled = false;
-            IsEditable = true;
             GeneralDataModel.EditingNewRecord = true;
+            GeneralBindingSource.AddNew();
+            DataGridView.Enabled = false;
+            IsEditable = true;
         }
 
         public override bool CanCopyRecord()
         {
-            return (GeneralBindingSource.Position != -1) && (!GeneralDataModel.EditingNewRecord)
+            return (Presenter.ViewModel["general"].CurrentRow != null) && !Presenter.ViewModel["general"].Model.EditingNewRecord
                 && AccessControl.HasPrivelege(Priveleges.TenancyDirectoriesReadWrite);
         }
 
@@ -193,11 +164,11 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             IsEditable = false;
-            var warrant = (Warrant) EntityFromView();
-            GeneralBindingSource.AddNew();
-            dataGridView.Enabled = false;
-            GeneralDataModel.EditingNewRecord = true;
+            var warrant = (Warrant)EntityFromView();
+            Presenter.ViewModel["general"].Model.EditingNewRecord = true;
+            Presenter.ViewModel["general"].BindingSource.AddNew();
             ViewportFromWarrant(warrant);
+            DataGridView.Enabled = false;
             IsEditable = true;
         }
 
@@ -209,7 +180,11 @@ namespace Registry.Viewport
                 if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_warrant"]) == -1)
                     return;
                 IsEditable = false;
-                ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
+                if (!((WarrantsPresenter)Presenter).DeleteRecord())
+                {
+                    IsEditable = true;
+                    return;
+                }
                 IsEditable = true;
                 ViewportState = ViewportState.ReadState;
                 MenuCallback.EditingStateUpdate();
@@ -219,7 +194,7 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            return (GeneralBindingSource.Position > -1)
+            return (Presenter.ViewModel["general"].CurrentRow != null)
                 && (ViewportState != ViewportState.NewRowState)
                 && AccessControl.HasPrivelege(Priveleges.TenancyDirectoriesReadWrite);
         }
@@ -237,9 +212,10 @@ namespace Registry.Viewport
 
         public override void SaveRecord()
         {
-            var warrant = (Warrant) EntityFromViewport();
+            var warrant = (Warrant)EntityFromViewport();
             if (!ValidateWarrant(warrant))
                 return;
+            IsEditable = false;
             switch (ViewportState)
             {
                 case ViewportState.ReadState:
@@ -247,39 +223,21 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
-                    var id_warrant = GeneralDataModel.Insert(warrant);
-                    if (id_warrant == -1)
+                    if (!((WarrantsPresenter)Presenter).InsertRecord(warrant))
                     {
-                        GeneralDataModel.EditingNewRecord = false;
+                        IsEditable = true;
                         return;
                     }
-                    DataRowView newRow;
-                    warrant.IdWarrant = id_warrant;
-                    IsEditable = false;
-                    if (GeneralBindingSource.Position == -1)
-                        newRow = (DataRowView)GeneralBindingSource.AddNew();
-                    else
-                        newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    EntityConverter<Warrant>.FillRow(warrant, newRow);
-                    IsEditable = true;
-                    GeneralDataModel.EditingNewRecord = false;
                     break;
                 case ViewportState.ModifyRowState:
-                    if (warrant.IdWarrant == null)
+                    if (!((WarrantsPresenter)Presenter).UpdateRecord(warrant))
                     {
-                        MessageBox.Show(@"Вы пытаетесь изменить запись о доверенности без внутренного номера. " +
-                            @"Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка", 
-                            MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                        IsEditable = true;
                         return;
                     }
-                    if (GeneralDataModel.Update(warrant) == -1)
-                        return;
-                    var row = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-                    IsEditable = false;
-                    EntityConverter<Warrant>.FillRow(warrant, row);
                     break;
             }
-            dataGridView.Enabled = true;
+            DataGridView.Enabled = true;
             IsEditable = true;
             ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
@@ -291,23 +249,22 @@ namespace Registry.Viewport
             {
                 case ViewportState.ReadState: return;
                 case ViewportState.NewRowState:
-                    GeneralDataModel.EditingNewRecord = false;
-                    if (GeneralBindingSource.Position != -1)
+                    Presenter.ViewModel["general"].Model.EditingNewRecord = false;
+                    var row = Presenter.ViewModel["general"].CurrentRow;
+                    if (row != null)
                     {
                         IsEditable = false;
-                        dataGridView.Enabled = true;
-                        ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
+                        row.Delete();
                     }
-                    ViewportState = ViewportState.ReadState;
                     break;
                 case ViewportState.ModifyRowState:
-                    dataGridView.Enabled = true;
                     IsEditable = false;
                     DataBind();
-                    ViewportState = ViewportState.ReadState;
                     break;
             }
+            ViewportState = ViewportState.ReadState;
             IsEditable = true;
+            DataGridView.Enabled = true;
             MenuCallback.EditingStateUpdate();
         }
 
@@ -319,6 +276,7 @@ namespace Registry.Viewport
 
         private void WarrantsViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
+            if (e.Action != DataRowAction.Delete) return;
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
         }
@@ -327,31 +285,22 @@ namespace Registry.Viewport
         {
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
+            CheckViewportModifications();
         }
 
         private void v_warrants_CurrentItemChanged(object sender, EventArgs e)
         {
-            if (GeneralBindingSource.Position == -1 || dataGridView.RowCount == 0)
-                dataGridView.ClearSelection();
+            var bindingSource = Presenter.ViewModel["general"].BindingSource;
+            if (Presenter.ViewModel["general"].CurrentRow == null || DataGridView.RowCount == 0)
+                DataGridView.ClearSelection();
             else
-                if (GeneralBindingSource.Position >= dataGridView.RowCount)
-                    dataGridView.Rows[dataGridView.RowCount - 1].Selected = true;
-                else
-                    if (dataGridView.Rows[GeneralBindingSource.Position].Selected != true)
-                        dataGridView.Rows[GeneralBindingSource.Position].Selected = true;
-            if (Selected)
-            {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
-            }
-            if (GeneralBindingSource.Position == -1)
-                return;
-            if (ViewportState == ViewportState.NewRowState)
-                return;
-            dataGridView.Enabled = true;
-            ViewportState = ViewportState.ReadState;
-            IsEditable = true;
+                if (bindingSource.Position >= DataGridView.RowCount)
+                    DataGridView.Rows[DataGridView.RowCount - 1].Selected = true;
+                else if (DataGridView.Rows[bindingSource.Position].Selected != true)
+                    DataGridView.Rows[bindingSource.Position].Selected = true;
+            if (!Selected) return;
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.RelationsStateUpdate();
         }
 
         private void selectAll_Enter(object sender, EventArgs e)
