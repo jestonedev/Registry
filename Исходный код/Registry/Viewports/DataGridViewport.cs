@@ -161,6 +161,7 @@ namespace Registry.Viewport
 
         public override void ClearSearch()
         {
+            DataGridView.RowCount = 0;
             Presenter.ViewModel["general"].BindingSource.Filter = StaticFilter;
             DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count;
             DynamicFilter = "";

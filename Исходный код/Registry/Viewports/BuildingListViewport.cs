@@ -111,7 +111,7 @@ namespace Registry.Viewport
 
         public override bool CanInsertRecord()
         {
-            return !GeneralDataModel.EditingNewRecord && 
+            return !Presenter.ViewModel["general"].Model.EditingNewRecord && 
                 (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
         }
 
