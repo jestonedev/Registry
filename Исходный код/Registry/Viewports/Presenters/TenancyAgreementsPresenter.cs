@@ -403,7 +403,7 @@ namespace Registry.Viewport.Presenters
 
             var result = string.Format(CultureInfo.InvariantCulture,
                 "1.1. По настоящему Соглашению Стороны по договору № {0} от {1}, ",
-                regDateStr, registrationNumber);
+                registrationNumber, regDateStr);
 
             // Исключаем старого нанимателя
             var oldTenantRow = (DataRowView)tenantChangeTenant[0];
@@ -482,7 +482,7 @@ namespace Registry.Viewport.Presenters
             return string.Format(@"1.1. По настоящему Соглашению Стороны по договору № {0} от {1} договорились:" +
                 "\r\n\u200B1) изложить в новой редакции:" +
                 "\r\nподпункт {2} пункта {3}: \"Срок найма жилого помещения устанавливается {4}\".",
-                regDateStr, registrationNumber,
+                registrationNumber, regDateStr,
                 prolongPoint, prolongGeneralPoint, rentPeriodStr);
         }
 
