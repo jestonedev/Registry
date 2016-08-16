@@ -65,35 +65,35 @@ namespace Registry.Viewport
                 {
                     Name = "registration_num",
                     HeaderText = @"№ договора найма",
-                    Width = 80,
+                    Width = 90,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
                 var registrationDateColumn = new DataGridViewTextBoxColumn
                 {
                     Name = "registration_date",
-                    HeaderText = @"Дата договора найма",
-                    Width = 80,
+                    HeaderText = @"Дата регистрации договора",
+                    Width = 90,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
                 var endDateColumn = new DataGridViewTextBoxColumn
                 {
                     Name = "end_date",
                     HeaderText = @"Дата окончания договора",
-                    Width = 80,
+                    Width = 90,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
                 var residenceWarrantNumColumn = new DataGridViewTextBoxColumn
                 {
                     Name = "residence_warrant_num",
                     HeaderText = @"№ ордера найма",
-                    Width = 80,
+                    Width = 90,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
                 var residenceWarrantDateColumn = new DataGridViewTextBoxColumn
                 {
                     Name = "residence_warrant_date",
                     HeaderText = @"Дата ордера найма",
-                    Width = 80,
+                    Width = 90,
                     SortMode = DataGridViewColumnSortMode.NotSortable
                 };
                 var tenantColumn = new DataGridViewTextBoxColumn
@@ -500,7 +500,7 @@ namespace Registry.Viewport
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
-            if ((AccessControl.HasPrivelege(Priveleges.TenancyRead) && DataGridView.Size.Width > 1495) ||
+            if ((AccessControl.HasPrivelege(Priveleges.TenancyRead) && DataGridView.Size.Width > 1535) ||
                 (!AccessControl.HasPrivelege(Priveleges.TenancyRead) && DataGridView.Size.Width > 845))
             {
                 premises_num.Frozen = false;

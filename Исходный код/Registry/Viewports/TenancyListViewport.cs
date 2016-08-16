@@ -396,7 +396,7 @@ namespace Registry.Viewport
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
-            if (DataGridView.Size.Width > 1170)
+            if (DataGridView.Size.Width > 1210)
             {
                 if (address.AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     address.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;

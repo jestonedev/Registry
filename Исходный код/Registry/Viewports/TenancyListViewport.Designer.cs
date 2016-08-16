@@ -88,37 +88,37 @@ namespace Registry.Viewport
             // 
             this.registration_num.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.registration_num.HeaderText = "№ договора";
-            this.registration_num.MinimumWidth = 80;
+            this.registration_num.MinimumWidth = 90;
             this.registration_num.Name = "registration_num";
             this.registration_num.ReadOnly = true;
-            this.registration_num.Width = 80;
+            this.registration_num.Width = 90;
             // 
             // registration_date
             // 
             this.registration_date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.registration_date.HeaderText = "Дата договора";
-            this.registration_date.MinimumWidth = 80;
+            this.registration_date.HeaderText = "Дата регистрации договора";
+            this.registration_date.MinimumWidth = 90;
             this.registration_date.Name = "registration_date";
             this.registration_date.ReadOnly = true;
-            this.registration_date.Width = 80;
+            this.registration_date.Width = 90;
             // 
             // end_date
             // 
             this.end_date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.end_date.HeaderText = "Дата окончания договора";
-            this.end_date.MinimumWidth = 80;
+            this.end_date.MinimumWidth = 90;
             this.end_date.Name = "end_date";
             this.end_date.ReadOnly = true;
-            this.end_date.Width = 80;
+            this.end_date.Width = 90;
             // 
             // residence_warrant_num
             // 
             this.residence_warrant_num.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             this.residence_warrant_num.HeaderText = "№ ордера";
-            this.residence_warrant_num.MinimumWidth = 80;
+            this.residence_warrant_num.MinimumWidth = 90;
             this.residence_warrant_num.Name = "residence_warrant_num";
             this.residence_warrant_num.ReadOnly = true;
-            this.residence_warrant_num.Width = 80;
+            this.residence_warrant_num.Width = 90;
             // 
             // tenant
             // 
