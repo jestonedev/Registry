@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Globalization;
 using System.Linq;
 using System.Windows.Forms;
-using Registry.DataModels;
-using Registry.DataModels.CalcDataModels;
-using Registry.DataModels.DataModels;
-using Registry.DataModels.Services;
 using Registry.Entities;
 using Registry.Entities.Infrastructure;
 using Registry.Reporting;
 using Registry.Viewport.EntityConverters;
 using Registry.Viewport.ModalEditors;
+using Registry.Viewport.Presenters;
 using Registry.Viewport.SearchForms;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
@@ -22,14 +18,6 @@ namespace Registry.Viewport
 {
     internal sealed partial class ClaimListViewport : FormWithGridViewport
     {
-        private BindingSource _vAccounts;
-
-
-        private SearchForm _spExtendedSearchForm;
-        private SearchForm _spSimpleSearchForm;
-
-        private CalcDataModel _lastClaimStates;
-
         private int? _idAccount;
 
         private ClaimListViewport()
@@ -38,10 +26,13 @@ namespace Registry.Viewport
         }
 
         public ClaimListViewport(Viewport viewport, IMenuCallback menuCallback)
-            : base(viewport, menuCallback)
+            : base(viewport, menuCallback, new ClaimListPresenter())
         {
             InitializeComponent();
             DataGridView = dataGridViewClaims;
+            DataGridView.AutoGenerateColumns = false;
+            DockAreas = DockAreas.Document;
+            ViewportHelper.SetDoubleBuffered(DataGridView);          
         }
 
         private void SetViewportCaption()
@@ -54,68 +45,64 @@ namespace Registry.Viewport
                 }
                 else
                     Text = @"Новая исковая работа";
+                return;
+            }
+            var row = Presenter.ViewModel["general"].CurrentRow;
+            if (row != null)
+            {
+                if ((ParentRow != null) && (ParentType == ParentTypeEnum.PaymentAccount))
+                    Text = string.Format(CultureInfo.InvariantCulture, "Исковая работа №{0} по ЛС №{1}",
+                        row["id_claim"], ParentRow["account"]);
+                else
+                    Text = string.Format(CultureInfo.InvariantCulture, "Исковая работа №{0}", row["id_claim"]);
             }
             else
-                if (GeneralBindingSource.Position != -1)
-                {
-                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.PaymentAccount))
-                        Text = string.Format(CultureInfo.InvariantCulture, "Исковая работа №{0} по ЛС №{1}",
-                            ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"], ParentRow["account"]);
-                    else
-                        Text = string.Format(CultureInfo.InvariantCulture, "Исковая работа №{0}", ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"]);
-                }
+            {
+                if ((ParentRow != null) && (ParentType == ParentTypeEnum.PaymentAccount))
+                    Text = string.Format(CultureInfo.InvariantCulture, "Исковые работы по ЛС №{0} отсутствуют", ParentRow["account"]);
                 else
-                {
-                    if ((ParentRow != null) && (ParentType == ParentTypeEnum.PaymentAccount))
-                        Text = string.Format(CultureInfo.InvariantCulture, "Исковые работы по ЛС №{0} отсутствуют", ParentRow["account"]);
-                    else
-                        Text = @"Исковые работы отсутствуют";
-                }
+                    Text = @"Исковые работы отсутствуют";
+            }
         }
 
         private void DataBind()
         {
-            textBoxDescription.DataBindings.Clear();
-            textBoxDescription.DataBindings.Add("Text", GeneralBindingSource, "description", true, DataSourceUpdateMode.Never, "");
-            dateTimePickerAtDate.DataBindings.Clear();
-            dateTimePickerAtDate.DataBindings.Add("Value", GeneralBindingSource, "at_date", true, DataSourceUpdateMode.Never, null);
-            dateTimePickerStartDeptPeriod.DataBindings.Clear();
-            dateTimePickerStartDeptPeriod.DataBindings.Add("Value", GeneralBindingSource, "start_dept_period", true, DataSourceUpdateMode.Never, null);
-            dateTimePickerEndDeptPeriod.DataBindings.Clear();
-            dateTimePickerEndDeptPeriod.DataBindings.Add("Value", GeneralBindingSource, "end_dept_period", true, DataSourceUpdateMode.Never, null);
-            numericUpDownAmountDGI.DataBindings.Clear();
-            numericUpDownAmountDGI.DataBindings.Add("Value", GeneralBindingSource, "amount_dgi", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownAmountTenancy.DataBindings.Clear();
-            numericUpDownAmountTenancy.DataBindings.Add("Value", GeneralBindingSource, "amount_tenancy", true, DataSourceUpdateMode.Never, 0);
-            numericUpDownAmountPenalties.DataBindings.Clear();
-            numericUpDownAmountPenalties.DataBindings.Add("Value", GeneralBindingSource, "amount_penalties", true, DataSourceUpdateMode.Never, 0);
+            var bindingSource = Presenter.ViewModel["general"].BindingSource;
+            ViewportHelper.BindProperty(textBoxDescription, "Text", bindingSource, "description", "");
+            ViewportHelper.BindProperty(dateTimePickerAtDate, "Value", bindingSource, "at_date", null);
+            ViewportHelper.BindProperty(dateTimePickerStartDeptPeriod, "Value", bindingSource, "start_dept_period", null);
+            ViewportHelper.BindProperty(dateTimePickerEndDeptPeriod, "Value", bindingSource, "end_dept_period", null);
+            ViewportHelper.BindProperty(numericUpDownAmountDGI, "Value", bindingSource, "amount_dgi", 0m);
+            ViewportHelper.BindProperty(numericUpDownAmountTenancy, "Value", bindingSource, "amount_tenancy", 0m);
+            ViewportHelper.BindProperty(numericUpDownAmountPenalties, "Value", bindingSource, "amount_penalties", 0m);
         }
 
         private void UnbindedCheckBoxesUpdate()
         {
-            if (GeneralBindingSource.Count == 0) return;
-            var row = GeneralBindingSource.Position >= 0 ? (DataRowView)GeneralBindingSource[GeneralBindingSource.Position] : null;
-            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["at_date"] != DBNull.Value)))
+            IsEditable = false;
+            var row = Presenter.ViewModel["general"].CurrentRow;
+            if (row != null && (row["at_date"] != DBNull.Value))
                 dateTimePickerAtDate.Checked = true;
             else
             {
                 dateTimePickerAtDate.Value = DateTime.Now.Date;
                 dateTimePickerAtDate.Checked = false;
             }
-            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["start_dept_period"] != DBNull.Value)))
+            if (row != null && (row["start_dept_period"] != DBNull.Value))
                 dateTimePickerStartDeptPeriod.Checked = true;
             else
             {
                 dateTimePickerStartDeptPeriod.Value = DateTime.Now.Date;
                 dateTimePickerStartDeptPeriod.Checked = false;
             }
-            if (row != null && ((GeneralBindingSource.Position >= 0) && (row["end_dept_period"] != DBNull.Value)))
+            if (row != null && (row["end_dept_period"] != DBNull.Value))
                 dateTimePickerEndDeptPeriod.Checked = true;
             else
             {
                 dateTimePickerEndDeptPeriod.Value = DateTime.Now.Date;
                 dateTimePickerEndDeptPeriod.Checked = false;
             }
+            IsEditable = true;
         }
 
         protected override bool ChangeViewportStateTo(ViewportState state)
@@ -140,25 +127,27 @@ namespace Registry.Viewport
 
         protected override Entity EntityFromView()
         {
-            var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
+            var row = Presenter.ViewModel["general"].CurrentRow;
             return EntityConverter<Claim>.FromRow(row);
         }
 
         protected override Entity EntityFromViewport()
         {
-            var claim = new Claim();
-            if ((GeneralBindingSource.Position == -1) || ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"] is DBNull)
-                claim.IdClaim = null;
-            else
-                claim.IdClaim = Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"], CultureInfo.InvariantCulture);
-            claim.IdAccount = _idAccount;
-            claim.AmountTenancy = numericUpDownAmountTenancy.Value;
-            claim.AmountDgi = numericUpDownAmountDGI.Value;
-            claim.AmountPenalties = numericUpDownAmountPenalties.Value;
-            claim.AtDate = ViewportHelper.ValueOrNull(dateTimePickerAtDate);
-            claim.StartDeptPeriod = ViewportHelper.ValueOrNull(dateTimePickerStartDeptPeriod);
-            claim.EndDeptPeriod = ViewportHelper.ValueOrNull(dateTimePickerEndDeptPeriod);
-            claim.Description = ViewportHelper.ValueOrNull(textBoxDescription);
+            var row = Presenter.ViewModel["general"].CurrentRow;
+            var claim = new Claim
+            {
+                IdClaim = row == null || row["id_claim"] is DBNull
+                    ? (int?) null
+                    : Convert.ToInt32(row["id_claim"], CultureInfo.InvariantCulture),
+                IdAccount = _idAccount,
+                AmountTenancy = numericUpDownAmountTenancy.Value,
+                AmountDgi = numericUpDownAmountDGI.Value,
+                AmountPenalties = numericUpDownAmountPenalties.Value,
+                AtDate = ViewportHelper.ValueOrNull(dateTimePickerAtDate),
+                StartDeptPeriod = ViewportHelper.ValueOrNull(dateTimePickerStartDeptPeriod),
+                EndDeptPeriod = ViewportHelper.ValueOrNull(dateTimePickerEndDeptPeriod),
+                Description = ViewportHelper.ValueOrNull(textBoxDescription)
+            };
             return claim;
         }
 
@@ -182,23 +171,12 @@ namespace Registry.Viewport
 
         public override void LoadData()
         {
-            DockAreas = DockAreas.Document;
-            dataGridViewClaims.AutoGenerateColumns = false;
-            GeneralDataModel = DataModel.GetInstance<EntityDataModel<Claim>>();
+            GeneralDataModel = Presenter.ViewModel["general"].Model;
+            GeneralBindingSource = Presenter.ViewModel["general"].BindingSource;
+            Presenter.SetGeneralBindingSourceFilter(StaticFilter, DynamicFilter);
 
-            // Ожидаем дозагрузки, если это необходимо
-            GeneralDataModel.Select();
-            DataModel.GetInstance<PaymentsAccountsDataModel>().Select();
-
-            GeneralBindingSource = new BindingSource();
-            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
-            GeneralBindingSource.DataMember = "claims";
-            GeneralBindingSource.DataSource = DataStorage.DataSet;
-            GeneralBindingSource.Filter = StaticFilter;
-            if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
-                GeneralBindingSource.Filter += " AND ";
-            GeneralBindingSource.Filter += DynamicFilter;
-
+            SetViewportCaption();
+            
             if (ParentRow != null && ParentType == ParentTypeEnum.PaymentAccount)
             {
                 _idAccount = (int?) ParentRow["id_account"];
@@ -206,48 +184,47 @@ namespace Registry.Viewport
             }
             BindAccount(_idAccount);
 
-            _vAccounts = new BindingSource
-            {
-                DataSource = DataStorage.DataSet,
-                DataMember = "payments_accounts"
-            };
-
             DataBind();
 
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", ClaimListViewport_RowChanged);
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", ClaimListViewport_RowDeleted);
+            AddEventHandler<EventArgs>(Presenter.ViewModel["general"].BindingSource, "CurrentItemChanged", 
+                GeneralBindingSource_CurrentItemChanged);
 
-            dataGridViewClaims.RowCount = GeneralBindingSource.Count;
-            SetViewportCaption();
-            ViewportHelper.SetDoubleBuffered(dataGridViewClaims);
-            IsEditable = true;
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, 
+                "RowChanged", ClaimListViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, 
+                "RowDeleted", ClaimListViewport_RowDeleted);
+
+            AddEventHandler<EventArgs>(Presenter.ViewModel["last_claim_states"].Model, 
+                "RefreshEvent", lastClaimStates_RefreshEvent);
+
+            DataGridView.RowCount = GeneralBindingSource.Count;
+
+            GeneralBindingSource_CurrentItemChanged(null, new EventArgs());
+
             DataChangeHandlersInit();
-            _lastClaimStates = CalcDataModel.GetInstance<CalcDataModelLastClaimStates>();
-            AddEventHandler<EventArgs>(_lastClaimStates, "RefreshEvent", lastClaimStates_RefreshEvent);
+            IsEditable = true;
         }
 
         private void lastClaimStates_RefreshEvent(object sender, EventArgs e)
         {
-            dataGridViewClaims.Refresh();
+            DataGridView.Refresh();
         }
 
         private void BindAccount(int? idAccount)
         {
+            IsEditable = false;
             if (ParentRow != null && ParentType == ParentTypeEnum.PaymentAccount)
                 textBoxAccount.Text = ParentRow["account"].ToString();
             else
             {
-                if (idAccount == null) return;
-                textBoxAccount.Text =
-                    (from row in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
-                        where row.Field<int>("id_account") == idAccount.Value
-                        select row.Field<string>("account")).FirstOrDefault();
+                textBoxAccount.Text = ((ClaimListPresenter)Presenter).AccountById(idAccount);
             }
+            IsEditable = true;
         }
 
         public override bool CanInsertRecord()
         {
-            return (!GeneralDataModel.EditingNewRecord) && AccessControl.HasPrivelege(Priveleges.ClaimsWrite);
+            return !Presenter.ViewModel["general"].Model.EditingNewRecord && AccessControl.HasPrivelege(Priveleges.ClaimsWrite);
         }
 
         public override void InsertRecord()
@@ -255,8 +232,10 @@ namespace Registry.Viewport
             if (!ChangeViewportStateTo(ViewportState.NewRowState))
                 return;
             IsEditable = false;
-            dataGridViewClaims.RowCount = dataGridViewClaims.RowCount + 1;
-            GeneralBindingSource.AddNew();
+            Presenter.ViewModel["general"].Model.EditingNewRecord = true;
+            DataGridView.RowCount = DataGridView.RowCount + 1;
+            DataGridView.Enabled = false;
+            Presenter.ViewModel["general"].BindingSource.AddNew();
             if (ParentRow != null && ParentType == ParentTypeEnum.PaymentAccount)
             {
                 numericUpDownAmountTenancy.Value = ViewportHelper.ValueOrDefault((decimal?)ParentRow["balance_output_tenancy"]);
@@ -264,13 +243,12 @@ namespace Registry.Viewport
                 numericUpDownAmountPenalties.Value = ViewportHelper.ValueOrDefault((decimal?)ParentRow["balance_output_penalties"]);
             }
             IsEditable = true;
-            dataGridViewClaims.Enabled = false;
-            GeneralDataModel.EditingNewRecord = true;
         }
 
         public override bool CanCopyRecord()
         {
-            return (GeneralBindingSource.Position != -1) && (!GeneralDataModel.EditingNewRecord) 
+            return (Presenter.ViewModel["general"].CurrentRow != null) 
+                && !Presenter.ViewModel["general"].Model.EditingNewRecord 
                 && AccessControl.HasPrivelege(Priveleges.ClaimsWrite);
         }
 
@@ -280,12 +258,12 @@ namespace Registry.Viewport
                 return;
             IsEditable = false;
             var claim = (Claim)EntityFromView();
-            dataGridViewClaims.RowCount = dataGridViewClaims.RowCount + 1;
-            GeneralBindingSource.AddNew();
-            dataGridViewClaims.Enabled = false;
-            GeneralDataModel.EditingNewRecord = true;
+            Presenter.ViewModel["general"].Model.EditingNewRecord = true;
+            DataGridView.RowCount = DataGridView.RowCount + 1;
+            DataGridView.Enabled = false;
+            Presenter.ViewModel["general"].BindingSource.AddNew();
             ViewportFromClaim(claim);
-            dateTimePickerAtDate.Checked = (claim.AtDate != null);
+            dateTimePickerAtDate.Checked = claim.AtDate != null;
             dateTimePickerStartDeptPeriod.Checked = claim.StartDeptPeriod != null;
             dateTimePickerEndDeptPeriod.Checked = claim.EndDeptPeriod != null;
             IsEditable = true;
@@ -293,7 +271,8 @@ namespace Registry.Viewport
 
         public override bool CanDeleteRecord()
         {
-            return (GeneralBindingSource.Position > -1) && (ViewportState != ViewportState.NewRowState)
+            return (Presenter.ViewModel["general"].CurrentRow != null) 
+                && (ViewportState != ViewportState.NewRowState)
                 && AccessControl.HasPrivelege(Priveleges.ClaimsWrite);
         }
 
@@ -302,10 +281,12 @@ namespace Registry.Viewport
             if (MessageBox.Show(@"Вы действительно хотите удалить эту запись?", @"Внимание",
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1) != DialogResult.Yes)
                 return;
-            if (GeneralDataModel.Delete((int)((DataRowView)GeneralBindingSource.Current)["id_claim"]) == -1)
-                return;
             IsEditable = false;
-            ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
+            if (!((ClaimListPresenter)Presenter).DeleteRecord())
+            {
+                IsEditable = true;
+                return;
+            }
             IsEditable = true;
             ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
@@ -322,9 +303,7 @@ namespace Registry.Viewport
         {
             if (textBoxAccount.Enabled)
             {
-                var accounts = (from row in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
-                                where row.Field<string>("account") == textBoxAccount.Text.Trim()
-                                select row.Field<int?>("id_account")).ToList();
+                var accounts = ((ClaimListPresenter) Presenter).IdsByAccount(textBoxAccount.Text.Trim());
                 if (accounts.Count == 1)
                     _idAccount = accounts.First();
                 else
@@ -340,35 +319,7 @@ namespace Registry.Viewport
             var claim = (Claim) EntityFromViewport();
             if (!ValidateClaim(claim))
                 return;
-            if (((ViewportState == ViewportState.ModifyRowState && ((Claim)EntityFromView()).EndDeptPeriod != claim.EndDeptPeriod) ||
-                ViewportState == ViewportState.NewRowState) && claim.EndDeptPeriod != null && claim.IdAccount != null &&
-                MessageBox.Show(@"Вы хотите обновить суммы взыскания на предъявленный период?",@"Внимание",
-                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) == DialogResult.Yes)
-            {
-                var balanceInfoTable = PaymentService.GetBalanceInfoOnDate(
-                    new List<int> {claim.IdAccount.Value}, claim.EndDeptPeriod.Value.Year,
-                    claim.EndDeptPeriod.Value.Month);
-                var balanceInfoList = (from row in balanceInfoTable.Select()
-                                  where row.Field<int>("id_account") == claim.IdAccount.Value
-                    select new
-                    {
-                        BalanceOutputTenancy = row.Field<decimal>("balance_output_tenancy"),
-                        BalanceOutputDgi = row.Field<decimal>("balance_output_dgi"),
-                        BalanceOutputPenalties = row.Field<decimal>("balance_output_penalties")
-                    }).ToList();
-                if (!balanceInfoList.Any())
-                {
-                    MessageBox.Show(@"На конец указанного периода отсутствуют данные по задолженности", @"Внимание",
-                        MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
-                }
-                else
-                {
-                    var balanceInfo = balanceInfoList.First();
-                    claim.AmountTenancy = balanceInfo.BalanceOutputTenancy;
-                    claim.AmountDgi = balanceInfo.BalanceOutputDgi;
-                    claim.AmountPenalties = balanceInfo.BalanceOutputPenalties;
-                }
-            }
+            UpdateBalance(claim);
             IsEditable = false;
             switch (ViewportState)
             {
@@ -377,100 +328,40 @@ namespace Registry.Viewport
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     break;
                 case ViewportState.NewRowState:
-                    InsertRecord(claim);
-                    GeneralDataModel.EditingNewRecord = false;
+                    if (!((ClaimListPresenter)Presenter).InsertRecord(claim))
+                    {
+                        IsEditable = true;
+                        return;
+                    }
                     break;
                 case ViewportState.ModifyRowState:
-                    UpdateRecord(claim);
+                    if (!((ClaimListPresenter)Presenter).UpdateRecord(claim))
+                    {
+                        IsEditable = true;
+                        return;
+                    }
                     break;
             }
             UnbindedCheckBoxesUpdate();
-            dataGridViewClaims.RowCount = GeneralBindingSource.Count;
-            dataGridViewClaims.Enabled = true;
             IsEditable = true;
+            DataGridView.RowCount = GeneralBindingSource.Count;
+            DataGridView.Enabled = true;
             ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
         }
 
-        private void UpdateRecord(Claim claim)
+        private void UpdateBalance(Claim claim)
         {
-            if (claim.IdClaim == null)
-            {
-                MessageBox.Show(@"Вы пытаетесь изменить запись о претензионно-исковой работе без внутреннего номера. " +
-                    @"Если вы видите это сообщение, обратитесь к системному администратору", @"Ошибка",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                return;
-            }
-            if (GeneralDataModel.Update(claim) == -1)
-                return;
-            RebuildFilterAfterSave(GeneralBindingSource, claim.IdClaim);
-            var row = (DataRowView)GeneralBindingSource[GeneralBindingSource.Position];
-            EntityConverter<Claim>.FillRow(claim, row);
-        }
-
-        private void InsertRecord(Claim claim)
-        {
-            var idClaim = GeneralDataModel.Insert(claim);
-            if (idClaim == -1)
-            {
-                return;
-            }
-            DataRowView newRow;
-            claim.IdClaim = idClaim;
-            RebuildFilterAfterSave(GeneralBindingSource, claim.IdClaim);
-            if (GeneralBindingSource.Position == -1)
-                newRow = (DataRowView)GeneralBindingSource.AddNew();
-            else
-                newRow = ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]);
-            EntityConverter<Claim>.FillRow(claim, newRow);
-
-            InsertFirstClaimState(claim.IdClaim);
-        }
-
-        private void InsertFirstClaimState(int? idClaim)
-        {
-            var claimStatesDataModel = DataModel.GetInstance<EntityDataModel<ClaimState>>();
-            if (claimStatesDataModel.EditingNewRecord)
-            {
-                MessageBox.Show(@"Не удалось автоматически вставить первый этап претензионно-исковой работы, т.к. форма состояний исковых работ находится в состоянии добавления новой записи.",
-                    @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1);
-                return;
-            }
-            var firstStateTypes = ClaimsService.ClaimStartStateTypeIds().ToList();
-            if (!firstStateTypes.Any()) return;
-            var firstStateType = firstStateTypes.First();
-            var claimStatesBindingSource = new BindingSource
-            {
-                DataSource = claimStatesDataModel.Select()
-            };
-            var claimState = new ClaimState
-            {
-                IdClaim = idClaim,
-                IdStateType = firstStateType,
-                TransferToLegalDepartmentWho = UserDomain.Current.DisplayName,
-                AcceptedByLegalDepartmentWho = UserDomain.Current.DisplayName,
-                DateStartState = DateTime.Now.Date
-            };
-            var idState = claimStatesDataModel.Insert(claimState);
-            if (idState == -1) return;
-            claimState.IdState = idState;
-            var claimsStateRow = (DataRowView)claimStatesBindingSource.AddNew();
-            if (claimsStateRow != null)
-            {
-                EntityConverter<ClaimState>.FillRow(claimState, claimsStateRow);
-            }
-        }
-
-        private static void RebuildFilterAfterSave(IBindingListView bindingSource, int? idClaim)
-        {
-            var filter = "";
-            if (!string.IsNullOrEmpty(bindingSource.Filter))
-                filter += " OR ";
-            else
-                filter += "(1 = 1) OR ";
-            filter += string.Format(CultureInfo.CurrentCulture, "(id_claim = {0})", idClaim);
-            bindingSource.Filter += filter;
+            if ((ViewportState != ViewportState.ModifyRowState ||
+                 ((Claim) EntityFromView()).EndDeptPeriod == claim.EndDeptPeriod) &&
+                ViewportState != ViewportState.NewRowState) return;               
+            if (claim.EndDeptPeriod == null) return;
+            if (claim.IdAccount == null) return;
+            if (MessageBox.Show(@"Вы хотите обновить суммы взыскания на предъявленный период?", @"Внимание",
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button1) !=
+                DialogResult.Yes) return;
+            ((ClaimListPresenter) Presenter).UpdateBalance(claim);
         }
 
         public override bool CanCancelRecord()
@@ -484,19 +375,18 @@ namespace Registry.Viewport
             {
                 case ViewportState.ReadState: return;
                 case ViewportState.NewRowState:
-                    GeneralDataModel.EditingNewRecord = false;
-                    if (GeneralBindingSource.Position != -1)
+                    Presenter.ViewModel["general"].Model.EditingNewRecord = false;
+                    var row = Presenter.ViewModel["general"].CurrentRow;
+                    if (row != null)
                     {
                         IsEditable = false;
-                        dataGridViewClaims.Enabled = true;
-                        ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Delete();
-                        dataGridViewClaims.RowCount = dataGridViewClaims.RowCount - 1;
-                        if (GeneralBindingSource.Position != -1)
-                            dataGridViewClaims.Rows[GeneralBindingSource.Position].Selected = true;
+                        row.Delete();
+                        DataGridView.RowCount = DataGridView.RowCount - 1;
+                        if (Presenter.ViewModel["general"].CurrentRow != null)
+                            DataGridView.Rows[Presenter.ViewModel["general"].BindingSource.Position].Selected = true;
                     }
                     break;
                 case ViewportState.ModifyRowState:
-                    dataGridViewClaims.Enabled = true;
                     IsEditable = false;
                     DataBind();
                     break;
@@ -505,6 +395,7 @@ namespace Registry.Viewport
             UpdateIdAccount();
             BindAccount(_idAccount);
             IsEditable = true;
+            DataGridView.Enabled = true;
             ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
             SetViewportCaption();
@@ -525,33 +416,26 @@ namespace Registry.Viewport
             switch (searchFormType)
             {
                 case SearchFormType.SimpleSearchForm:
-                    if (_spSimpleSearchForm == null)
-                        _spSimpleSearchForm = new SimpleSearchClaimsForm();
-                    if (_spSimpleSearchForm.ShowDialog() != DialogResult.OK)
+                    if (Presenter.SimpleSearchForm.ShowDialog() != DialogResult.OK)
                         return;
-                    DynamicFilter = _spSimpleSearchForm.GetFilter();
+                    DynamicFilter = Presenter.SimpleSearchForm.GetFilter();
                     break;
                 case SearchFormType.ExtendedSearchForm:
-                    if (_spExtendedSearchForm == null)
-                        _spExtendedSearchForm = new ExtendedSearchClaimsForm();
-                    if (_spExtendedSearchForm.ShowDialog() != DialogResult.OK)
+                    if (Presenter.ExtendedSearchForm.ShowDialog() != DialogResult.OK)
                         return;
-                    DynamicFilter = _spExtendedSearchForm.GetFilter();
+                    DynamicFilter = Presenter.ExtendedSearchForm.GetFilter();
                     break;
             }
-            var filter = StaticFilter;
-            if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
-                filter += " AND ";
-            filter += DynamicFilter;
-            dataGridViewClaims.RowCount = 0;
-            GeneralBindingSource.Filter = filter;
-            dataGridViewClaims.RowCount = GeneralBindingSource.Count;
+            DataGridView.RowCount = 0;
+            Presenter.SetGeneralBindingSourceFilter(StaticFilter, DynamicFilter);
+            DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count;
         }
 
         public override void ClearSearch()
         {
-            GeneralBindingSource.Filter = StaticFilter;
-            dataGridViewClaims.RowCount = GeneralBindingSource.Count;
+            DataGridView.RowCount = 0;
+            Presenter.ViewModel["general"].BindingSource.Filter = StaticFilter;
+            DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count;
             DynamicFilter = "";
         }
 
@@ -562,68 +446,61 @@ namespace Registry.Viewport
                 ViewportType.ClaimStatesViewport,
                 ViewportType.PaymentsAccountsViewport
             };
-            return reports.Any(v => v.ToString() == typeof(T).Name) && (GeneralBindingSource.Position > -1);
+            return reports.Any(v => v.ToString() == typeof(T).Name) && (Presenter.ViewModel["general"].CurrentRow != null);
         }
 
         public override void ShowAssocViewport<T>()
         {
             if (!ChangeViewportStateTo(ViewportState.ReadState))
                 return;
-            if (GeneralBindingSource.Position == -1)
+            var viewModel = Presenter.ViewModel["general"];
+            if (viewModel.CurrentRow == null)
             {
-                MessageBox.Show(@"Не выбрана протензионно-исковая работа для отображения ее состояний", @"Ошибка",
+                MessageBox.Show(@"ННе выбрана протензионно-исковая работа для отображения ее состояний", @"Ошибка",
                     MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            ShowAssocViewport<T>(MenuCallback, 
-                "id_claim = " + Convert.ToInt32(((DataRowView)GeneralBindingSource[GeneralBindingSource.Position])["id_claim"], CultureInfo.InvariantCulture),
-                ((DataRowView)GeneralBindingSource[GeneralBindingSource.Position]).Row, ParentTypeEnum.Claim);
+            ShowAssocViewport<T>(MenuCallback, viewModel.PrimaryKeyFirst + " = " +
+                Convert.ToInt32(viewModel.CurrentRow[viewModel.PrimaryKeyFirst], CultureInfo.InvariantCulture),
+                viewModel.CurrentRow.Row, ParentTypeEnum.Claim);
         }
 
         private void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
             SetViewportCaption();
-            if (_vAccounts != null) _vAccounts.Filter = "";
-            if (GeneralBindingSource.Position == -1 || dataGridViewClaims.RowCount == 0)
-                dataGridViewClaims.ClearSelection();
-            else
-                if (GeneralBindingSource.Position >= dataGridViewClaims.RowCount)
-				{
-                    dataGridViewClaims.Rows[dataGridViewClaims.RowCount - 1].Selected = true;
-					dataGridViewClaims.CurrentCell = dataGridViewClaims.Rows[dataGridViewClaims.RowCount - 1].
-						Cells[1];
-				}
-            else
-                    if (dataGridViewClaims.Rows[GeneralBindingSource.Position].Selected != true)
-					{
-                        dataGridViewClaims.Rows[GeneralBindingSource.Position].Selected = true;
-						dataGridViewClaims.CurrentCell = dataGridViewClaims.Rows[GeneralBindingSource.Position].
-							Cells[1];
-					}
-            if (Selected)
+            if (Presenter.ViewModel["payments_accounts"].BindingSource != null) 
+                Presenter.ViewModel["payments_accounts"].BindingSource.Filter = "";
+            var bindingSource = Presenter.ViewModel["general"].BindingSource;
+            if (Presenter.ViewModel["general"].CurrentRow == null || DataGridView.RowCount == 0)
+                DataGridView.ClearSelection();
+            else if (bindingSource.Position >= DataGridView.RowCount)
             {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.RelationsStateUpdate();
+                DataGridView.Rows[DataGridView.RowCount - 1].Selected = true;
+                DataGridView.CurrentCell = DataGridView.Rows[DataGridView.RowCount - 1].Cells[1];
             }
+            else if (DataGridView.Rows[bindingSource.Position].Selected != true)
+            {
+                DataGridView.Rows[bindingSource.Position].Selected = true;
+                DataGridView.CurrentCell = DataGridView.Rows[GeneralBindingSource.Position].Cells[1];
+            }
+
+            var isEditable = IsEditable;
             UnbindedCheckBoxesUpdate();
             UpdateIdAccount();
             BindAccount(_idAccount);
-            if (GeneralBindingSource.Position == -1)
-                return;
-            if (ViewportState == ViewportState.NewRowState)
-                return;
-            dataGridViewClaims.Enabled = true;
-            ViewportState = ViewportState.ReadState;
-            IsEditable = true;
+            IsEditable = isEditable;
+
+            if (!Selected) return;
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.RelationsStateUpdate();
         }
 
         private void UpdateIdAccount()
         {
-            if (GeneralBindingSource.Position > -1 && ParentRow == null &&
-                ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_account"] != DBNull.Value)
+            var row = Presenter.ViewModel["general"].CurrentRow;
+            if (row != null && ParentRow == null && row["id_account"] != DBNull.Value)
             {
-                _idAccount = (int?) ((DataRowView) GeneralBindingSource[GeneralBindingSource.Position])["id_account"];
+                _idAccount = (int?) row["id_account"];
             }
             else
             {
@@ -656,14 +533,14 @@ namespace Registry.Viewport
 
         private Dictionary<string, string> ExportReportArguments()
         {
-            var columnHeaders = dataGridViewClaims.Columns.Cast<DataGridViewColumn>().
+            var columnHeaders = DataGridView.Columns.Cast<DataGridViewColumn>().
                 Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnHeader\":\"" + column.HeaderText + "\"}");
-            var columnPatterns = dataGridViewClaims.Columns.Cast<DataGridViewColumn>().
+            var columnPatterns = DataGridView.Columns.Cast<DataGridViewColumn>().
                 Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnPattern\":\"$column" + column.DisplayIndex + "$\"}");
             var arguments = new Dictionary<string, string>
             {
                 {"type", "4"},
-                {"filter", GeneralBindingSource.Filter.Trim() == "" ? "(1=1)" : GeneralBindingSource.Filter},
+                {"filter", Presenter.ViewModel["general"].BindingSource.Filter.Trim() == "" ? "(1=1)" : Presenter.ViewModel["general"].BindingSource.Filter},
                 {"columnHeaders", "["+columnHeaders+",{\"columnHeader\":\"Примечание\"}]"},
                 {"columnPatterns", "["+columnPatterns+",{\"columnPattern\":\"$description$\"}]"}
             };
@@ -672,29 +549,30 @@ namespace Registry.Viewport
 
         private void dataGridViewClaims_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            if (dataGridViewClaims.Columns[e.ColumnIndex].SortMode == DataGridViewColumnSortMode.NotSortable)
+            if (DataGridView.Columns[e.ColumnIndex].SortMode == DataGridViewColumnSortMode.NotSortable)
                 return;
             Func<SortOrder, bool> changeSortColumn = way =>
             {
-                foreach (DataGridViewColumn column in dataGridViewClaims.Columns)
+                foreach (DataGridViewColumn column in DataGridView.Columns)
                     column.HeaderCell.SortGlyphDirection = SortOrder.None;
-                GeneralBindingSource.Sort = dataGridViewClaims.Columns[e.ColumnIndex].Name + " " + ((way == SortOrder.Ascending) ? "ASC" : "DESC");
-                dataGridViewClaims.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = way;
+                Presenter.ViewModel["general"].BindingSource.Sort = 
+                    DataGridView.Columns[e.ColumnIndex].Name + " " + (way == SortOrder.Ascending ? "ASC" : "DESC");
+                DataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection = way;
                 return true;
             };
-            changeSortColumn(dataGridViewClaims.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection ==
+            changeSortColumn(DataGridView.Columns[e.ColumnIndex].HeaderCell.SortGlyphDirection ==
                              SortOrder.Ascending
                 ? SortOrder.Descending
                 : SortOrder.Ascending);
-            dataGridViewClaims.Refresh();
+            DataGridView.Refresh();
         }
 
         private void dataGridViewClaims_SelectionChanged(object sender, EventArgs e)
         {
-            if (dataGridViewClaims.SelectedRows.Count > 0)
-                GeneralBindingSource.Position = dataGridViewClaims.SelectedRows[0].Index;
+            if (DataGridView.SelectedRows.Count > 0)
+                Presenter.ViewModel["general"].BindingSource.Position = DataGridView.SelectedRows[0].Index;
             else
-                GeneralBindingSource.Position = -1;
+                Presenter.ViewModel["general"].BindingSource.Position = -1;
         }
 
         private int _idClaim = int.MinValue;
@@ -702,59 +580,48 @@ namespace Registry.Viewport
 
         private void dataGridViewClaims_CellValueNeeded(object sender, DataGridViewCellValueEventArgs e)
         {
-            if (GeneralBindingSource.Count <= e.RowIndex) return;
-            var row = ((DataRowView)GeneralBindingSource[e.RowIndex]);
-            switch (dataGridViewClaims.Columns[e.ColumnIndex].Name)
+            if (Presenter.ViewModel["general"].BindingSource.Count <= e.RowIndex) return;
+            var row = (DataRowView)Presenter.ViewModel["general"].BindingSource[e.RowIndex];
+            switch (DataGridView.Columns[e.ColumnIndex].Name)
             {
                 case "id_claim":
-                    e.Value = row["id_claim"];
+                case "amount_tenancy":
+                case "amount_dgi":
+                case "amount_penalties":
+                    e.Value = row[DataGridView.Columns[e.ColumnIndex].Name];
+                    break;
+                case "start_dept_period":
+                case "end_dept_period":
+                case "at_date":
+                    e.Value = row[DataGridView.Columns[e.ColumnIndex].Name] == DBNull.Value ? "" :
+                        ((DateTime)row[DataGridView.Columns[e.ColumnIndex].Name]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                     break;
                 case "account":
                 case "raw_address":
                 case "tenant":
                     if (row["id_account"] == DBNull.Value) return;
-                    if ((int)row["id_claim"] != _idClaim || _accountList.Any(entry => entry.RowState == DataRowState.Deleted || entry.RowState == DataRowState.Detached))
-                    {   
-                        _accountList =
-                            (from paymentAccountRow in
-                                DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
-                                where paymentAccountRow.Field<int?>("id_account") == (int?) row["id_account"]
-                                select paymentAccountRow).ToList();
+                    if ((int)row["id_claim"] != _idClaim || 
+                        _accountList.Any(entry => entry.RowState == DataRowState.Deleted || entry.RowState == DataRowState.Detached))
+                    {
+                        _accountList = ((ClaimListPresenter) Presenter).AccountRowsById((int?) row["id_account"]);
                         _idClaim = (int)row["id_claim"];
                     }
                     if (_accountList != null && _accountList.Any())
                     {
-                        e.Value = _accountList.First().Field<string>(dataGridViewClaims.Columns[e.ColumnIndex].Name);
+                        e.Value = _accountList.First().Field<string>(DataGridView.Columns[e.ColumnIndex].Name);
                     }
-                    break;
-                case "start_dept_period":
-                    e.Value = row["start_dept_period"] == DBNull.Value ? "" :
-                        ((DateTime)row["start_dept_period"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
-                    break;
-                case "end_dept_period":
-                    e.Value = row["end_dept_period"] == DBNull.Value ? "" :
-                        ((DateTime)row["end_dept_period"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
-                    break;
-                case "amount_tenancy":
-                case "amount_dgi":
-                case "amount_penalties":
-                    e.Value = row[dataGridViewClaims.Columns[e.ColumnIndex].Name];
-                    break;
-                case "at_date":
-                    e.Value = row["at_date"] == DBNull.Value ? "" :
-                        ((DateTime)row["at_date"]).ToString("dd.MM.yyyy", CultureInfo.InvariantCulture);
                     break;
                 case "state_type":
                     if (row["id_claim"] == DBNull.Value || row["id_claim"] == null) return;
                     var idClaim = (int?) row["id_claim"];
-                    var lastClaimState = _lastClaimStates.Select().Rows.Find(idClaim);
+                    var lastClaimState = Presenter.ViewModel["last_claim_states"].DataSource.Rows.Find(idClaim);
                     if (lastClaimState != null)
                         e.Value = lastClaimState.Field<string>("state_type");
                     break;
                 case "date_start_state":
                     if (row["id_claim"] == DBNull.Value || row["id_claim"] == null) return;
                     idClaim = (int?) row["id_claim"];
-                    lastClaimState = _lastClaimStates.Select().Rows.Find(idClaim);
+                    lastClaimState = Presenter.ViewModel["last_claim_states"].DataSource.Rows.Find(idClaim);
                     if (lastClaimState != null && lastClaimState.Field<DateTime?>("date_start_state") != null)
                         e.Value = lastClaimState.Field<DateTime>("date_start_state").ToString("dd.MM.yyyy");
                     break;
@@ -764,8 +631,8 @@ namespace Registry.Viewport
         private void ClaimListViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action != DataRowAction.Delete) return;
-            dataGridViewClaims.RowCount = GeneralBindingSource.Count;
-            dataGridViewClaims.Refresh();
+            DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count;
+            DataGridView.Invalidate();
             UnbindedCheckBoxesUpdate();
             UpdateIdAccount();
             BindAccount(_idAccount);
@@ -777,8 +644,9 @@ namespace Registry.Viewport
         private void ClaimListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Change || e.Action == DataRowAction.ChangeCurrentAndOriginal || e.Action == DataRowAction.ChangeOriginal)
-                dataGridViewClaims.Refresh();
-            dataGridViewClaims.RowCount = GeneralBindingSource.Count;
+                DataGridView.Refresh();
+            DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count;
+            DataGridView.Invalidate();
             UnbindedCheckBoxesUpdate();
             UpdateIdAccount();
             BindAccount(_idAccount);
@@ -801,23 +669,24 @@ namespace Registry.Viewport
         internal IEnumerable<int> GetCurrentIds()
         {
             var ids = new List<int>();
-            if (GeneralBindingSource.Position < 0) return ids;
-            for (var i = 0; i < dataGridViewClaims.SelectedRows.Count; i++)
-                if (((DataRowView)GeneralBindingSource[dataGridViewClaims.SelectedRows[i].Index])["id_claim"] != DBNull.Value)
-                    ids.Add((int)((DataRowView)GeneralBindingSource[dataGridViewClaims.SelectedRows[i].Index])["id_claim"]);
+            if (Presenter.ViewModel["general"].BindingSource.Position < 0) return ids;
+            for (var i = 0; i < DataGridView.SelectedRows.Count; i++)
+            {
+                var row = (DataRowView)Presenter.ViewModel["general"].BindingSource[DataGridView.SelectedRows[i].Index];
+                if (row["id_claim"] != DBNull.Value)
+                    ids.Add((int) row["id_claim"]);
+            }
             return ids;
         }
 
         internal string GetFilter()
         {
-            return GeneralBindingSource.Filter;
+            return Presenter.ViewModel["general"].BindingSource.Filter;
         }
 
         private void textBoxAccount_Leave(object sender, EventArgs e)
         {
-            _idAccount = (from row in DataModel.GetInstance<PaymentsAccountsDataModel>().FilterDeletedRows()
-                where row.Field<string>("account") == textBoxAccount.Text.Trim()
-                select row.Field<int?>("id_account")).LastOrDefault();
+            _idAccount = ((ClaimListPresenter) Presenter).IdsByAccount(textBoxAccount.Text.Trim()).LastOrDefault();
             BindAccount(_idAccount);
             CheckViewportModifications();
         }

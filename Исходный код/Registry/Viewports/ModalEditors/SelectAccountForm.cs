@@ -21,7 +21,7 @@ namespace Registry.Viewport.ModalEditors
             }
         }
 
-        public SelectAccountForm(IEnumerable<int?> idAccounts)
+        public SelectAccountForm(IEnumerable<int> idAccounts)
         {
             InitializeComponent();
             dataGridView.AutoGenerateColumns = false;

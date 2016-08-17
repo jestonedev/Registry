@@ -190,6 +190,7 @@
     </Compile>
     <Compile Include="Presenters\BuildingListPresenter.cs" />
     <Compile Include="Presenters\BuldingPresenter.cs" />
+    <Compile Include="Presenters\ClaimListPresenter.cs" />
     <Compile Include="Presenters\DocumentIssuedByPresenter.cs" />
     <Compile Include="Presenters\ExecutorsPresenter.cs" />
     <Compile Include="Presenters\FundsHistoryPresenter.cs" />
@@ -516,6 +517,7 @@
     </Compile>
     <Compile Include="ViewModels\BuildingListViewModel.cs" />
     <Compile Include="ViewModels\BuildingViewModel.cs" />
+    <Compile Include="ViewModels\ClaimListViewModel.cs" />
     <Compile Include="ViewModels\DocumentIssuedByViewModel.cs" />
     <Compile Include="ViewModels\ExecutorsViewModel.cs" />
     <Compile Include="ViewModels\FundsHistoryViewModel.cs" />
