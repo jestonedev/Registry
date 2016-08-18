@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Settings;
 
@@ -15,26 +11,28 @@ namespace Registry.Reporting.TenancyReporters
         public override void Run()
         {
             ReportTitle = "Уведомления";
-            Dictionary<string, string> arguments = new Dictionary<string, string>();
-            arguments.Add("config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "tenancy\\notifies.xml"));
-            arguments.Add("connectionString", RegistrySettings.ConnectionString);
-            using (TenancyNotifiesSettingsForm tnsForm = new TenancyNotifiesSettingsForm())
+            var arguments = new Dictionary<string, string>
             {
-                if (tnsForm.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {"config", Path.Combine(RegistrySettings.ActivityManagerConfigsPath, "tenancy\\notifies.xml")},
+                {"connectionString", RegistrySettings.ConnectionString}
+            };
+            using (var tnsForm = new TenancyNotifiesSettingsForm())
+            {
+                if (tnsForm.ShowDialog() == DialogResult.OK)
                 {
                     arguments.Add("id_executor", tnsForm.IdExecutor.ToString(CultureInfo.InvariantCulture));
                     arguments.Add("report_type", tnsForm.ReportType == TenancyNotifiesReportType.ExportAsIs ? "1" : (
                         tnsForm.ReportType == TenancyNotifiesReportType.PrintNotifiesPrimary ? "2" : "3"));
-                    string processesStr = "";
-                    Collection<int> processIds = tnsForm.TenancyProcessIds;
-                    foreach (int processID in processIds)
+                    var processesStr = "";
+                    var processIds = tnsForm.TenancyProcessIds;
+                    foreach (var processID in processIds)
                         processesStr += processID.ToString(CultureInfo.InvariantCulture) + ",";
-                    processesStr = processesStr.TrimEnd(new char[] { ',' });
+                    processesStr = processesStr.TrimEnd(',');
                     arguments.Add("process_ids", processesStr);
                     base.Run(arguments);
                 }
                 else
-                    base.Cancel();
+                    Cancel();
             }
         }
     }

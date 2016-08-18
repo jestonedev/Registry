@@ -165,7 +165,16 @@ namespace Registry.DataModels
                     //Если строки нет, то игнорируем и возвращаем false, чтобы сохранить в кэш строку
                     if (_updRow == null)
                         return false;
-                    SetValue(_updRow, fieldName, fieldValue);
+                    //Если строка есть, но при обновлении нарушается ссылочная целостность, то
+                    //текущий пользователь уже удалил строку справочника. Игнорируем и возвращаем true
+                    try
+                    {
+                        SetValue(_updRow, fieldName, fieldValue);
+                    }
+                    catch (InvalidConstraintException)
+                    {
+                        return true;
+                    }
                     return true;
                 case "DELETE":
                     //Если строка не найдена, значит она уже удалена, возвращаем true

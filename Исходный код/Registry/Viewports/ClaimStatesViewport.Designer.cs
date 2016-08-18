@@ -244,7 +244,7 @@ namespace Registry.Viewport
             this.tableLayoutPanelAll.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanelAll.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 412F));
             this.tableLayoutPanelAll.Size = new System.Drawing.Size(1002, 565);
-            this.tableLayoutPanelAll.TabIndex = 1;
+            this.tableLayoutPanelAll.TabIndex = 0;
             // 
             // groupBox35
             // 
@@ -290,6 +290,7 @@ namespace Registry.Viewport
             this.tabControlWithoutTabs1.SelectedIndex = 0;
             this.tabControlWithoutTabs1.Size = new System.Drawing.Size(996, 356);
             this.tabControlWithoutTabs1.TabIndex = 2;
+            this.tabControlWithoutTabs1.TabStop = false;
             // 
             // tabPageToLegalDepartment
             // 
@@ -393,9 +394,9 @@ namespace Registry.Viewport
             // tabPageAcceptedByLegalDepartment
             // 
             this.tabPageAcceptedByLegalDepartment.Controls.Add(this.groupBoxAcceptedByLegalDepartment);
-            this.tabPageAcceptedByLegalDepartment.Location = new System.Drawing.Point(4, 24);
+            this.tabPageAcceptedByLegalDepartment.Location = new System.Drawing.Point(4, 22);
             this.tabPageAcceptedByLegalDepartment.Name = "tabPageAcceptedByLegalDepartment";
-            this.tabPageAcceptedByLegalDepartment.Size = new System.Drawing.Size(988, 328);
+            this.tabPageAcceptedByLegalDepartment.Size = new System.Drawing.Size(988, 330);
             this.tabPageAcceptedByLegalDepartment.TabIndex = 4;
             this.tabPageAcceptedByLegalDepartment.Text = "Принято в юр. отдел";
             this.tabPageAcceptedByLegalDepartment.UseVisualStyleBackColor = true;
@@ -493,10 +494,10 @@ namespace Registry.Viewport
             this.tabPagePreparingOrder.Controls.Add(this.groupBoxObtainingCourtOrder);
             this.tabPagePreparingOrder.Controls.Add(this.groupBoxCourtOrder);
             this.tabPagePreparingOrder.Controls.Add(this.groupBoxClaimDirectedToCourt);
-            this.tabPagePreparingOrder.Location = new System.Drawing.Point(4, 24);
+            this.tabPagePreparingOrder.Location = new System.Drawing.Point(4, 22);
             this.tabPagePreparingOrder.Margin = new System.Windows.Forms.Padding(0);
             this.tabPagePreparingOrder.Name = "tabPagePreparingOrder";
-            this.tabPagePreparingOrder.Size = new System.Drawing.Size(988, 328);
+            this.tabPagePreparingOrder.Size = new System.Drawing.Size(988, 330);
             this.tabPagePreparingOrder.TabIndex = 1;
             this.tabPagePreparingOrder.Text = "Подготовка и получение судебного приказа";
             this.tabPagePreparingOrder.UseVisualStyleBackColor = true;
@@ -774,10 +775,10 @@ namespace Registry.Viewport
             this.tabPageExecutoryProcess.Controls.Add(this.groupBoxEnforcementProceedingEnd);
             this.tabPageExecutoryProcess.Controls.Add(this.groupBoxEnforcementProceedingStart);
             this.tabPageExecutoryProcess.Controls.Add(this.groupBoxDirectionCourtOrderBailiffs);
-            this.tabPageExecutoryProcess.Location = new System.Drawing.Point(4, 24);
+            this.tabPageExecutoryProcess.Location = new System.Drawing.Point(4, 22);
             this.tabPageExecutoryProcess.Margin = new System.Windows.Forms.Padding(0);
             this.tabPageExecutoryProcess.Name = "tabPageExecutoryProcess";
-            this.tabPageExecutoryProcess.Size = new System.Drawing.Size(988, 328);
+            this.tabPageExecutoryProcess.Size = new System.Drawing.Size(988, 330);
             this.tabPageExecutoryProcess.TabIndex = 2;
             this.tabPageExecutoryProcess.Text = "Исполнительное производство";
             this.tabPageExecutoryProcess.UseVisualStyleBackColor = true;
@@ -1402,10 +1403,10 @@ namespace Registry.Viewport
             // 
             this.tabPageCompletionClaims.Controls.Add(this.groupBoxClaimComplete);
             this.tabPageCompletionClaims.Controls.Add(this.groupBoxCourtOrderCancel);
-            this.tabPageCompletionClaims.Location = new System.Drawing.Point(4, 24);
+            this.tabPageCompletionClaims.Location = new System.Drawing.Point(4, 22);
             this.tabPageCompletionClaims.Margin = new System.Windows.Forms.Padding(0);
             this.tabPageCompletionClaims.Name = "tabPageCompletionClaims";
-            this.tabPageCompletionClaims.Size = new System.Drawing.Size(988, 328);
+            this.tabPageCompletionClaims.Size = new System.Drawing.Size(988, 330);
             this.tabPageCompletionClaims.TabIndex = 3;
             this.tabPageCompletionClaims.Text = "Завершение претензионной работы";
             this.tabPageCompletionClaims.UseVisualStyleBackColor = true;
