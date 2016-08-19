@@ -464,7 +464,7 @@ namespace Registry.Viewport
             MenuCallback.EditingStateUpdate();
         }
 
-        private void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
+        protected override void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
             var bindingSource = Presenter.ViewModel["general"].BindingSource;
             if (Presenter.ViewModel["general"].CurrentRow == null || DataGridView.RowCount == 0)

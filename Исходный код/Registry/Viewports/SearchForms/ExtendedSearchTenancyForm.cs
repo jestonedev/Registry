@@ -91,7 +91,7 @@ namespace Registry.Viewport.SearchForms
             {
                 if (!string.IsNullOrEmpty(filter.Trim()))
                     filter += " AND ";
-                filter += string.Format(CultureInfo.InvariantCulture, "registration_num = '%{0}%'", textBoxRegistrationNum.Text.Trim().Replace("'", ""));
+                filter += string.Format(CultureInfo.InvariantCulture, "registration_num like '%{0}%'", textBoxRegistrationNum.Text.Trim().Replace("'", ""));
             }
             if (checkBoxReasonTypeEnable.Checked)
             {

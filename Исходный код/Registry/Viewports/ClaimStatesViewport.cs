@@ -304,7 +304,7 @@ namespace Registry.Viewport
 
             DataBind();
 
-            AddEventHandler<EventArgs>(Presenter.ViewModel["general"].BindingSource, "CurrentItemChanged", v_claim_states_CurrentItemChanged);
+            AddEventHandler<EventArgs>(Presenter.ViewModel["general"].BindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
 
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowChanged", ClaimStatesViewport_RowChanged);
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleted", ClaimStatesViewport_RowDeleted);
@@ -316,8 +316,8 @@ namespace Registry.Viewport
                 "RowChanged", ClaimStateTypesRelationsViewport_RowChanged);
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["claim_state_types_relations"].DataSource, 
                 "RowDeleted", ClaimStateTypesRelationsViewport_RowDeleted);
-            
-            v_claim_states_CurrentItemChanged(null, new EventArgs());
+
+            GeneralBindingSource_CurrentItemChanged(null, new EventArgs());
             
             DataChangeHandlersInit();
             
@@ -451,7 +451,7 @@ namespace Registry.Viewport
             MenuCallback.EditingStateUpdate();
         }
 
-        private void v_claim_states_CurrentItemChanged(object sender, EventArgs e)
+        protected override void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
             var bindingSource = Presenter.ViewModel["general"].BindingSource;
             _noUpdateFieldList = true;

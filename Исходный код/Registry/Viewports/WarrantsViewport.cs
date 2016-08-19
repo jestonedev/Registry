@@ -122,7 +122,7 @@ namespace Registry.Viewport
 
             DataBind();
 
-            AddEventHandler<EventArgs>(Presenter.ViewModel["general"].BindingSource, "CurrentItemChanged", v_warrants_CurrentItemChanged);
+            AddEventHandler<EventArgs>(Presenter.ViewModel["general"].BindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
 
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowChanged", WarrantsViewport_RowChanged);
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleted", WarrantsViewport_RowDeleted);
@@ -132,7 +132,7 @@ namespace Registry.Viewport
 
             DataChangeHandlersInit();
 
-            v_warrants_CurrentItemChanged(null, new EventArgs());
+            GeneralBindingSource_CurrentItemChanged(null, new EventArgs());
 
             IsEditable = true;
         }
@@ -288,7 +288,7 @@ namespace Registry.Viewport
             CheckViewportModifications();
         }
 
-        private void v_warrants_CurrentItemChanged(object sender, EventArgs e)
+        protected override void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
             var bindingSource = Presenter.ViewModel["general"].BindingSource;
             if (Presenter.ViewModel["general"].CurrentRow == null || DataGridView.RowCount == 0)

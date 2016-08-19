@@ -195,6 +195,7 @@
     <Compile Include="Presenters\DocumentIssuedByPresenter.cs" />
     <Compile Include="Presenters\ExecutorsPresenter.cs" />
     <Compile Include="Presenters\FundsHistoryPresenter.cs" />
+    <Compile Include="Presenters\PaymentsAccountsPresenter.cs" />
     <Compile Include="Presenters\StructureTypeListPresenter.cs" />
     <Compile Include="Presenters\RestrictionTypeListPresenter.cs" />
     <Compile Include="Presenters\OwnershipTypeListPresenter.cs" />
@@ -523,6 +524,7 @@
     <Compile Include="ViewModels\DocumentIssuedByViewModel.cs" />
     <Compile Include="ViewModels\ExecutorsViewModel.cs" />
     <Compile Include="ViewModels\FundsHistoryViewModel.cs" />
+    <Compile Include="ViewModels\PaymentsAccountsViewModel.cs" />
     <Compile Include="ViewModels\StructureTypeListViewModel.cs" />
     <Compile Include="ViewModels\RestrictionTypeListViewModel.cs" />
     <Compile Include="ViewModels\OwnershipTypeListViewModel.cs" />

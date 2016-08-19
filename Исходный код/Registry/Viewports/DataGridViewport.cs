@@ -60,7 +60,7 @@ namespace Registry.Viewport
             GeneralBindingSource.MoveLast();
         }
 
-        protected void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
+        protected virtual void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
             if (GeneralBindingSource.Position == -1 || DataGridView.RowCount == 0)
             {
@@ -83,7 +83,6 @@ namespace Registry.Viewport
             }
             if (!Selected) return;
             MenuCallback.NavigationStateUpdate();
-            MenuCallback.EditingStateUpdate();
             MenuCallback.RelationsStateUpdate();
             MenuCallback.DocumentsStateUpdate();
         }

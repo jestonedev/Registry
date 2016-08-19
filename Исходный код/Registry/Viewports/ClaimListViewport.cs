@@ -465,7 +465,7 @@ namespace Registry.Viewport
                 viewModel.CurrentRow.Row, ParentTypeEnum.Claim);
         }
 
-        private void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
+        protected override void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
             SetViewportCaption();
             if (Presenter.ViewModel["payments_accounts"].BindingSource != null) 

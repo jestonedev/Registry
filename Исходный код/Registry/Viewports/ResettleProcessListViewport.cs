@@ -459,7 +459,7 @@ namespace Registry.Viewport
             dataGridView.Refresh();
         }
 
-        private void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
+        protected override void GeneralBindingSource_CurrentItemChanged(object sender, EventArgs e)
         {
             SetViewportCaption();
             if (GeneralBindingSource.Position == -1 || dataGridView.RowCount == 0)
