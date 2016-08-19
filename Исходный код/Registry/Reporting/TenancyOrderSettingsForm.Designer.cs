@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyOrderSettingsForm));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyOrderSettingsForm));
             this.vButtonOk = new VIBlend.WinForms.Controls.vButton();
             this.vButtonCancel = new VIBlend.WinForms.Controls.vButton();
             this.textBoxGeneralNumber = new System.Windows.Forms.TextBox();

@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClaimsFilterForm));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(ClaimsFilterForm));
             this.vButton2 = new VIBlend.WinForms.Controls.vButton();
             this.vButton1 = new VIBlend.WinForms.Controls.vButton();
             this.numericUpDownIDClaim = new System.Windows.Forms.NumericUpDown();

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Registry.Reporting
 {
@@ -11,7 +8,7 @@ namespace Registry.Reporting
 
         public ReportOutputStreamEventArgs(string text)
         {
-            this.Text = text;
+            Text = text;
         }
     }
 }

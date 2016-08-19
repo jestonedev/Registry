@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SelectRegionsForm));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(SelectRegionsForm));
             this.checkedListBoxRegions = new System.Windows.Forms.CheckedListBox();
             this.vButton1 = new VIBlend.WinForms.Controls.vButton();
             this.vButton2 = new VIBlend.WinForms.Controls.vButton();

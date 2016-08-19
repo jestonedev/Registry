@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(JudicialOrderSettingsForm));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(JudicialOrderSettingsForm));
             this.vButtonOk = new VIBlend.WinForms.Controls.vButton();
             this.vButtonCancel = new VIBlend.WinForms.Controls.vButton();
             this.comboBoxSigner = new System.Windows.Forms.ComboBox();

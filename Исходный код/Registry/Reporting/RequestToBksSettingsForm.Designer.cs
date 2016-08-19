@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RequestToBksSettingsForm));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(RequestToBksSettingsForm));
             this.dateTimePickerRequestDateFrom = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
             this.vButtonOk = new VIBlend.WinForms.Controls.vButton();

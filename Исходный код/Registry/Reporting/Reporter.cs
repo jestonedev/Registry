@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Diagnostics;
@@ -38,12 +37,12 @@ namespace Registry.Reporting
                     "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                 return;
             }
-            SynchronizationContext context = SynchronizationContext.Current;
+            var context = SynchronizationContext.Current;
             ThreadPool.QueueUserWorkItem((args) =>
             {
-                using (Process process = new Process())
+                using (var process = new Process())
                 {
-                    ProcessStartInfo psi = new ProcessStartInfo(RegistrySettings.ActivityManagerPath,
+                    var psi = new ProcessStartInfo(RegistrySettings.ActivityManagerPath,
                         GetArguments((Dictionary<string, string>)args));
                     psi.CreateNoWindow = true;
                     psi.RedirectStandardOutput = true;
@@ -53,10 +52,10 @@ namespace Registry.Reporting
                     process.Start();
                     if (ReportOutputStreamResponse != null)
                     {
-                        StreamReader reader = process.StandardOutput;
+                        var reader = process.StandardOutput;
                         do
                         {
-                            string line = reader.ReadLine();
+                            var line = reader.ReadLine();
                             context.Post(
                                 _ =>
                                 {
@@ -91,7 +90,7 @@ namespace Registry.Reporting
 
         private static string GetArguments(Dictionary<string, string> arguments)
         {
-            string argumentsString = "";
+            var argumentsString = "";
             foreach (var argument in arguments)
                 argumentsString += String.Format(CultureInfo.InvariantCulture, "{0}=\"{1}\" ", 
                     argument.Key.Replace("\"", "\\\""), 

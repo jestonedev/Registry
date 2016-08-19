@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyStatisticFilterForm));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyStatisticFilterForm));
             this.vButtonOk = new VIBlend.WinForms.Controls.vButton();
             this.vButtonCancel = new VIBlend.WinForms.Controls.vButton();
             this.comboBoxRegion = new System.Windows.Forms.ComboBox();

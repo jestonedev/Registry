@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RegistryExcerptSettingsForm));
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(RegistryExcerptSettingsForm));
             this.dateTimePickerExcertFrom = new System.Windows.Forms.DateTimePicker();
             this.label2 = new System.Windows.Forms.Label();
             this.vButtonOk = new VIBlend.WinForms.Controls.vButton();

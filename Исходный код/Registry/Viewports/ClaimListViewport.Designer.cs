@@ -38,6 +38,7 @@ namespace Registry.Viewport
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ClaimListViewport));
             this.tableLayoutPanel15 = new System.Windows.Forms.TableLayoutPanel();
             this.groupBox34 = new System.Windows.Forms.GroupBox();
@@ -526,6 +527,8 @@ namespace Registry.Viewport
             // 
             // amount_penalties
             // 
+            dataGridViewCellStyle3.Format = "#0.0# руб.";
+            this.amount_penalties.DefaultCellStyle = dataGridViewCellStyle3;
             this.amount_penalties.HeaderText = "Сумма долга пени";
             this.amount_penalties.MinimumWidth = 110;
             this.amount_penalties.Name = "amount_penalties";

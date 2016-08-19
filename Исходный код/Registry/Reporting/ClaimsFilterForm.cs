@@ -1,10 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.Globalization;
 
@@ -15,23 +9,23 @@ namespace Registry.Reporting
         public ClaimsFilterForm()
         {
             InitializeComponent();
-            foreach (Control control in this.Controls)
+            foreach (Control control in Controls)
                 control.KeyDown += (sender, e) =>
                 {
-                    ComboBox comboBox = sender as ComboBox;
+                    var comboBox = sender as ComboBox;
                     if (comboBox != null && comboBox.DroppedDown)
                         return;
                     if (e.KeyCode == Keys.Enter)
-                        this.DialogResult = System.Windows.Forms.DialogResult.OK;
+                        DialogResult = DialogResult.OK;
                     else
                         if (e.KeyCode == Keys.Escape)
-                            this.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+                            DialogResult = DialogResult.Cancel;
                 };
         }
 
         internal string GetFilter()
         {
-            string filter = "";
+            var filter = "";
             if (checkBoxIDClaimEnable.Checked)
             {
                 if (!String.IsNullOrEmpty(filter.Trim()))

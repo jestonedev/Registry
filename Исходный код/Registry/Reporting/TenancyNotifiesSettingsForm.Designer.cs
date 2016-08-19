@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyNotifiesSettingsForm));
+            var dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            var resources = new System.ComponentModel.ComponentResourceManager(typeof(TenancyNotifiesSettingsForm));
             this.panel1 = new System.Windows.Forms.Panel();
             this.checkBoxWithoutRegNum = new System.Windows.Forms.CheckBox();
             this.comboBoxExecutor = new System.Windows.Forms.ComboBox();

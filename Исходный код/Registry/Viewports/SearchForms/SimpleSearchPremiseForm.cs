@@ -105,9 +105,10 @@ namespace Registry.Viewport.SearchForms
                 filter += " AND ";
             var municipalIds = OtherService.ObjectIdsByStates(EntityType.Premise, DataModelHelper.MunicipalObjectStates().ToArray());
             var ids = municipalIds.Aggregate("", (current, id) => current + id.ToString(CultureInfo.InvariantCulture) + ",");
+            ids = ids.TrimEnd(',');
             var municipalStateIds = DataModelHelper.MunicipalObjectStates().
                 Aggregate("", (current, id) => current + id.ToString(CultureInfo.InvariantCulture) + ",");
-            ids = ids.TrimEnd(',');
+            municipalStateIds = municipalStateIds.TrimEnd(',');
             filter += string.Format("(id_state IN ({0}) OR (id_state = 1 AND id_premises IN (0{1})))", municipalStateIds, ids);
             return filter;
         }

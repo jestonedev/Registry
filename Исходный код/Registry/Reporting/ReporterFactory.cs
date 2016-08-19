@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Registry.Reporting.RegistryReporters;
 using Registry.Reporting.ClaimsReporters;
 using Registry.Reporting.TenancyReporters;

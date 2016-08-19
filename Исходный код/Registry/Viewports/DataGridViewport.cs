@@ -149,12 +149,8 @@ namespace Registry.Viewport
                     DynamicFilter = Presenter.ExtendedSearchForm.GetFilter();
                     break;
             }
-            var filter = StaticFilter;
-            if (!string.IsNullOrEmpty(StaticFilter) && !string.IsNullOrEmpty(DynamicFilter))
-                filter += " AND ";
-            filter += DynamicFilter;
             DataGridView.RowCount = 0;
-            Presenter.ViewModel["general"].BindingSource.Filter = filter;
+            Presenter.SetGeneralBindingSourceFilter(StaticFilter, DynamicFilter);
             DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count;
         }
 
