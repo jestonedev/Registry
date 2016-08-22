@@ -69,9 +69,9 @@ namespace Registry.Viewport
         {
             var bindingSource = Presenter.ViewModel["general"].BindingSource;
             ViewportHelper.BindProperty(textBoxDescription, "Text", bindingSource, "description", "");
-            ViewportHelper.BindProperty(dateTimePickerAtDate, "Value", bindingSource, "at_date", null);
-            ViewportHelper.BindProperty(dateTimePickerStartDeptPeriod, "Value", bindingSource, "start_dept_period", null);
-            ViewportHelper.BindProperty(dateTimePickerEndDeptPeriod, "Value", bindingSource, "end_dept_period", null);
+            ViewportHelper.BindProperty(dateTimePickerAtDate, "Value", bindingSource, "at_date", DateTime.Now.Date);
+            ViewportHelper.BindProperty(dateTimePickerStartDeptPeriod, "Value", bindingSource, "start_dept_period", DateTime.Now.Date);
+            ViewportHelper.BindProperty(dateTimePickerEndDeptPeriod, "Value", bindingSource, "end_dept_period", DateTime.Now.Date);
             ViewportHelper.BindProperty(numericUpDownAmountDGI, "Value", bindingSource, "amount_dgi", 0m);
             ViewportHelper.BindProperty(numericUpDownAmountTenancy, "Value", bindingSource, "amount_tenancy", 0m);
             ViewportHelper.BindProperty(numericUpDownAmountPenalties, "Value", bindingSource, "amount_penalties", 0m);
@@ -197,7 +197,7 @@ namespace Registry.Viewport
             AddEventHandler<EventArgs>(Presenter.ViewModel["last_claim_states"].Model, 
                 "RefreshEvent", lastClaimStates_RefreshEvent);
 
-            DataGridView.RowCount = GeneralBindingSource.Count;
+            DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count;
 
             GeneralBindingSource_CurrentItemChanged(null, new EventArgs());
 
@@ -344,7 +344,7 @@ namespace Registry.Viewport
             }
             UnbindedCheckBoxesUpdate();
             IsEditable = true;
-            DataGridView.RowCount = GeneralBindingSource.Count;
+            DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count;
             DataGridView.Enabled = true;
             ViewportState = ViewportState.ReadState;
             MenuCallback.EditingStateUpdate();
@@ -481,7 +481,7 @@ namespace Registry.Viewport
             else if (DataGridView.Rows[bindingSource.Position].Selected != true)
             {
                 DataGridView.Rows[bindingSource.Position].Selected = true;
-                DataGridView.CurrentCell = DataGridView.Rows[GeneralBindingSource.Position].Cells[1];
+                DataGridView.CurrentCell = DataGridView.Rows[bindingSource.Position].Cells[1];
             }
 
             var isEditable = IsEditable;
@@ -644,9 +644,8 @@ namespace Registry.Viewport
         private void ClaimListViewport_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             if (e.Action == DataRowAction.Change || e.Action == DataRowAction.ChangeCurrentAndOriginal || e.Action == DataRowAction.ChangeOriginal)
-                DataGridView.Refresh();
+                DataGridView.Invalidate();
             DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count;
-            DataGridView.Invalidate();
             UnbindedCheckBoxesUpdate();
             UpdateIdAccount();
             BindAccount(_idAccount);
