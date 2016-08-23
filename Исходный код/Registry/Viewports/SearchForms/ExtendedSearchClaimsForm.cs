@@ -58,7 +58,7 @@ namespace Registry.Viewport.SearchForms
             {
                 if (checkBoxStateEnable.Checked && comboBoxState.SelectedValue != null)
                 {
-                    var lastStates = (CalcDataModel) CalcDataModel.GetInstance<CalcDataModelLastClaimStates>();
+                    var lastStates = CalcDataModel.GetInstance<CalcDataModelLastClaimStates>();
                     var lastStateTypes = from lastStateRow in lastStates.FilterDeletedRows()
                         where lastStateRow.Field<int?>("id_state_type") == (int?) comboBoxState.SelectedValue
                         select lastStateRow.Field<int>("id_claim");
@@ -195,10 +195,10 @@ namespace Registry.Viewport.SearchForms
             var op = ConvertDisplayEqExprToSql(rawOperator);
             var format = "{0} {1} {2}";
             if (op != "BETWEEN")
-                return string.Format(format, field, op, @from.ToString(CultureInfo.InvariantCulture),
+                return string.Format(format, field, op, from.ToString(CultureInfo.InvariantCulture),
                     to.ToString(CultureInfo.InvariantCulture));
             format = "{0} >= {1} AND {0} <= {2}";
-            return string.Format(format, field, @from.ToString(CultureInfo.InvariantCulture), to.ToString(CultureInfo.InvariantCulture));
+            return string.Format(format, field, from.ToString(CultureInfo.InvariantCulture), to.ToString(CultureInfo.InvariantCulture));
         }
 
         private string BuildFilter(string field, string rawOperator, DateTime from, DateTime to)

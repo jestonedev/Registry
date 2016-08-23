@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using System.Globalization;
 
@@ -10,12 +7,12 @@ namespace CustomControls
     class DateTimeEditingControl : DateTimePicker, IDataGridViewEditingControl
     {
         DataGridView dataGridView;
-        private bool valueChanged = false;
+        private bool valueChanged;
         int rowIndex;
 
         public DateTimeEditingControl()
         {
-            this.Format = DateTimePickerFormat.Short;
+            Format = DateTimePickerFormat.Short;
         }
 
         // Implements the IDataGridViewEditingControl.EditingControlFormattedValue  
@@ -24,7 +21,7 @@ namespace CustomControls
         {
             get
             {
-                return this.Value.ToShortDateString();
+                return Value.ToShortDateString();
             }
             set
             {
@@ -33,11 +30,11 @@ namespace CustomControls
                 {
                     try
                     {
-                        this.Value = DateTime.Parse(valueStr, CultureInfo.InvariantCulture);
+                        Value = DateTime.Parse(valueStr, CultureInfo.InvariantCulture);
                     }
                     catch(InvalidCastException)
                     {
-                        this.Value = DateTime.Now;
+                        Value = DateTime.Now;
                     }
                 }
             }
@@ -58,9 +55,9 @@ namespace CustomControls
         {
             if (dataGridViewCellStyle == null)
                 return;
-            this.Font = dataGridViewCellStyle.Font;
-            this.CalendarForeColor = dataGridViewCellStyle.ForeColor;
-            this.CalendarMonthBackground = dataGridViewCellStyle.BackColor;
+            Font = dataGridViewCellStyle.Font;
+            CalendarForeColor = dataGridViewCellStyle.ForeColor;
+            CalendarMonthBackground = dataGridViewCellStyle.BackColor;
         }
 
         // Implements the IDataGridViewEditingControl.EditingControlRowIndex  
@@ -150,7 +147,7 @@ namespace CustomControls
         {
             get
             {
-                return base.Cursor;
+                return Cursor;
             }
         }
 
@@ -159,7 +156,7 @@ namespace CustomControls
             // Notify the DataGridView that the contents of the cell 
             // have changed.
             valueChanged = true;
-            this.EditingControlDataGridView.NotifyCurrentCellDirty(true);
+            EditingControlDataGridView.NotifyCurrentCellDirty(true);
             base.OnValueChanged(eventargs);
         }
     }

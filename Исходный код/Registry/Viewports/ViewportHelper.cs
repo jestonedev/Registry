@@ -3,7 +3,6 @@ using System.Data;
 using System.Globalization;
 using System.Reflection;
 using System.Windows.Forms;
-using Registry.DataModels.CalcDataModels;
 
 namespace Registry.Viewport
 {

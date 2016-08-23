@@ -441,10 +441,7 @@ namespace Registry.Viewport
                     if ((e.KeyChar == '.') || (e.KeyChar == ','))
                     {
                         e.KeyChar = ',';
-                        if (((TextBox)dataGridView.EditingControl).Text.IndexOf(',') != -1)
-                            e.Handled = true;
-                        else
-                            e.Handled = false;
+                        e.Handled = ((TextBox)dataGridView.EditingControl).Text.IndexOf(',') != -1;
                     }
                     else
                         e.Handled = true;

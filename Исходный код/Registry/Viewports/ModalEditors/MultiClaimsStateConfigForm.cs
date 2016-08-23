@@ -2,8 +2,9 @@
 using System.Windows.Forms;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
+using Settings;
 
-namespace Registry.Viewport
+namespace Registry.Viewport.ModalEditors
 {
     internal partial class MultiClaimsStateConfigForm : Form
     {

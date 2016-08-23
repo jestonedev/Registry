@@ -17,7 +17,6 @@ namespace Registry.Viewport
         }
 
         public ViewportException()
-            : base()
         {
         }
 

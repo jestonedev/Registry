@@ -42,13 +42,13 @@ namespace Registry.DataModels.CalcDataModels
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModelBuildingsPremisesFunds");
             // Фильтруем удаленные строки
             var buildings = DataModel.GetInstance<EntityDataModel<Building>>().FilterDeletedRows();
-            var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows();
+            var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows().ToList();
             var fundsHistory = DataModel.GetInstance<EntityDataModel<FundHistory>>().FilterDeletedRows();
             var fundsPremisesAssoc = EntityDataModel<FundPremisesAssoc>.GetInstance().FilterDeletedRows();
 
             // Вычисляем агрегационную информацию
             var maxIdByPremises = OtherService.MaxFundIDsByPremisesId(fundsPremisesAssoc);  
-            var currentFunds = from fundHistoryRow in fundsHistory
+            var currentFunds = (from fundHistoryRow in fundsHistory
                                     join maxIdByPremisesRow in maxIdByPremises
                                        on fundHistoryRow.Field<int>("id_fund") equals maxIdByPremisesRow.IdFund
                                     select new
@@ -56,7 +56,7 @@ namespace Registry.DataModels.CalcDataModels
                                         id_premises = maxIdByPremisesRow.IdPremises,
                                         id_fund = maxIdByPremisesRow.IdFund,
                                         id_fund_type = fundHistoryRow.Field<int>("id_fund_type"),
-                                    };
+                                    }).ToList();
             var socialPremises = from premisesRow in premises
                                   join aggRow in currentFunds
                                   on premisesRow.Field<int>("id_premises") equals aggRow.id_premises

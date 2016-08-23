@@ -21,9 +21,9 @@ namespace CustomControls
             var ctl =
                 DataGridView.EditingControl as DateTimeEditingControl;
             // Use the default row value when Value property is null. 
-            DateTime stub;
             try
             {
+                DateTime stub;
                 if ((Value == null) || !DateTime.TryParse(Value.ToString(), out stub))
                 {
                     if (DefaultNewRowValue == null) return;

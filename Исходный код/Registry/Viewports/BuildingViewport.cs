@@ -10,6 +10,7 @@ using Registry.DataModels.Services;
 using Registry.Entities;
 using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
+using Registry.Viewport.ModalEditors;
 using Registry.Viewport.Presenters;
 using Registry.Viewport.SearchForms;
 using Security;

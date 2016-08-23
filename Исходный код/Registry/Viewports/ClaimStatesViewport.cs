@@ -9,6 +9,7 @@ using Registry.Entities.Infrastructure;
 using Registry.Viewport.EntityConverters;
 using Registry.Viewport.Presenters;
 using Security;
+using Settings;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport

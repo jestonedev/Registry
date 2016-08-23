@@ -192,6 +192,7 @@
     <Compile Include="Presenters\BuldingPresenter.cs" />
     <Compile Include="Presenters\ClaimListPresenter.cs" />
     <Compile Include="Presenters\ClaimStatesPresenter.cs" />
+    <Compile Include="Presenters\DocumentsResidencePresenter.cs" />
     <Compile Include="Presenters\DocumentIssuedByPresenter.cs" />
     <Compile Include="Presenters\ExecutorsPresenter.cs" />
     <Compile Include="Presenters\FundsHistoryPresenter.cs" />
@@ -211,6 +212,7 @@
     <Compile Include="Presenters\TenancyListPresenter.cs" />
     <Compile Include="Presenters\TenancyPersonsPresenter.cs" />
     <Compile Include="Presenters\TenancyPresenter.cs" />
+    <Compile Include="Presenters\ResettlePersonsPresenter.cs" />
     <Compile Include="Presenters\TenancyReasonsPresenter.cs" />
     <Compile Include="Presenters\TenancyReasonTypesPresenter.cs" />
     <Compile Include="Presenters\WarrantsPresenter.cs" />
@@ -523,6 +525,7 @@
     <Compile Include="ViewModels\ClaimListViewModel.cs" />
     <Compile Include="ViewModels\ClaimStatesViewModel.cs" />
     <Compile Include="ViewModels\DocumentIssuedByViewModel.cs" />
+    <Compile Include="ViewModels\DocumentsResidenceViewModel.cs" />
     <Compile Include="ViewModels\ExecutorsViewModel.cs" />
     <Compile Include="ViewModels\FundsHistoryViewModel.cs" />
     <Compile Include="ViewModels\PaymentsAccountsViewModel.cs" />
@@ -540,6 +543,7 @@
     <Compile Include="ViewModels\TenancyBuildingsViewModel.cs" />
     <Compile Include="ViewModels\TenancyListViewModel.cs" />
     <Compile Include="ViewModels\TenancyPersonsViewModel.cs" />
+    <Compile Include="ViewModels\ResettlePersonsViewModel.cs" />
     <Compile Include="ViewModels\TenancyReasonsViewModel.cs" />
     <Compile Include="ViewModels\TenancyReasonTypesViewModel.cs" />
     <Compile Include="ViewModels\TenancyViewModel.cs" />

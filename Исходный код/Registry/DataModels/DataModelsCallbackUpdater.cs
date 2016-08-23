@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Data;
-using System.Data.Common;
 using System.Data.Odbc;
 using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
-using Registry.DataModels.CalcDataModels;
 using Registry.DataModels.DataModels;
 using Settings;
 

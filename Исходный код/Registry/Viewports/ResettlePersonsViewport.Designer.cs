@@ -66,6 +66,8 @@ namespace Registry.Viewport
             this.dataGridView.ShowCellToolTips = false;
             this.dataGridView.Size = new System.Drawing.Size(1011, 415);
             this.dataGridView.TabIndex = 1;
+            this.dataGridView.CellValidated += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellValidated);
+            this.dataGridView.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridView_CellValueChanged);
             // 
             // id_person
             // 

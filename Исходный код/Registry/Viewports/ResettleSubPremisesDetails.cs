@@ -63,8 +63,10 @@ namespace Registry.Viewport
                 throw new ViewportException("Неизвестный родительский объект");
 
             // Инициализируем snapshot-модель
-            snapshot_resettle_sub_premises = new DataTable("selected_sub_premises");
-            snapshot_resettle_sub_premises.Locale = CultureInfo.InvariantCulture;
+            snapshot_resettle_sub_premises = new DataTable("selected_sub_premises")
+            {
+                Locale = CultureInfo.InvariantCulture
+            };
             snapshot_resettle_sub_premises.Columns.Add("id_assoc").DataType = typeof(int);
             snapshot_resettle_sub_premises.Columns.Add("id_sub_premises").DataType = typeof(int);
             snapshot_resettle_sub_premises.Columns.Add("is_checked").DataType = typeof(bool);

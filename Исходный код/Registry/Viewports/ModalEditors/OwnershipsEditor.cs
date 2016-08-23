@@ -7,7 +7,7 @@ using Registry.Entities;
 using Registry.Entities.Infrastructure;
 using Security;
 
-namespace Registry.Viewport
+namespace Registry.Viewport.ModalEditors
 {
     internal partial class OwnershipsEditor : Form
     {

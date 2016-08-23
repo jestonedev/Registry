@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.DirectoryServices.ActiveDirectory;
 using System.DirectoryServices;
+using System.DirectoryServices.ActiveDirectory;
 using System.Globalization;
-using Settings;
+using System.Linq;
 
-namespace Registry
+namespace Settings
 {
     public class UserDomain
     {
-        private static UserDomain _currentUser = null;
+        private static readonly UserDomain CurrentUser = null;
 
         public string sAMAccountName { get; set; }
         public string DisplayName { get; set; }
@@ -21,24 +19,22 @@ namespace Registry
         }
 
         public static UserDomain Current {
-            get {
-                if (_currentUser != null)
-                    return _currentUser;
-                else
+            get
+            {
+                if (CurrentUser != null)
+                    return CurrentUser;
+                try
                 {
-                    try
-                    {
-                        return GetUserDomain(System.Security.Principal.WindowsIdentity.GetCurrent().Name);
-                    }
-                    catch
-                    {
-                        return null;
-                    }
+                    return GetUserDomain(System.Security.Principal.WindowsIdentity.GetCurrent().Name);
+                }
+                catch
+                {
+                    return null;
                 }
             }
         }
 
-        private static ICollection<string> GetDomains()
+        private static IEnumerable<string> GetDomains()
         {
             ICollection<string> domains = new List<string>();
             foreach (Domain d in Forest.GetCurrentForest().Domains)
@@ -49,32 +45,34 @@ namespace Registry
 
         public static UserDomain GetUserDomain(string login)
         {
-            foreach (string domainName in GetDomains())
+            foreach (var domainName in GetDomains())
             {
-                DirectoryContext context = new DirectoryContext(DirectoryContextType.Domain, domainName,
+                var context = new DirectoryContext(DirectoryContextType.Domain, domainName,
                 RegistrySettings.LdapUserName, RegistrySettings.LdapPassword);
-                Domain domain = Domain.GetDomain(context);
-                using (DirectoryEntry domainEntry = domain.GetDirectoryEntry())
+                var domain = Domain.GetDomain(context);
+                using (var domainEntry = domain.GetDirectoryEntry())
                 {
-                    using (DirectorySearcher searcher = new DirectorySearcher())
+                    using (var searcher = new DirectorySearcher())
                     {
                         searcher.SearchRoot = domainEntry;
                         searcher.SearchScope = SearchScope.Subtree;
                         searcher.PropertiesToLoad.Add("samAccountName");
                         searcher.PropertiesToLoad.Add("displayName");
-                        if (String.IsNullOrEmpty(login))
+                        if (string.IsNullOrEmpty(login))
                             throw new ArgumentNullException("login","Не задано имя пользователя");
-                        string[] loginParts = login.Split('\\');
+                        var loginParts = login.Split('\\');
                         searcher.Filter = string.Format(CultureInfo.InvariantCulture, 
                             "(&(objectClass=user)(samAccountName={0}))", loginParts[loginParts.Count() - 1]);
                         try
                         {
-                            SearchResultCollection results = searcher.FindAll();
-                            if (results == null || results.Count == 0)
+                            var results = searcher.FindAll();
+                            if (results.Count == 0)
                                 continue;
-                            UserDomain user = new UserDomain();
-                            user.DisplayName = results[0].Properties["displayName"][0].ToString();
-                            user.sAMAccountName = results[0].Properties["samAccountName"][0].ToString();
+                            var user = new UserDomain
+                            {
+                                DisplayName = results[0].Properties["displayName"][0].ToString(),
+                                sAMAccountName = results[0].Properties["samAccountName"][0].ToString()
+                            };
                             return user;
                         }
                         finally

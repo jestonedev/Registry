@@ -9,7 +9,9 @@ using Registry.DataModels.DataModels;
 using Registry.DataModels.Services;
 using Registry.Entities;
 using Registry.Reporting;
+using Registry.Viewport.ModalEditors;
 using Security;
+using Settings;
 using WeifenLuo.WinFormsUI.Docking;
 
 namespace Registry.Viewport.MultiMasters

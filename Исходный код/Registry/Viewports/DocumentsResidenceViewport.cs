@@ -7,6 +7,8 @@ using Registry.DataModels;
 using Registry.DataModels.DataModels;
 using Registry.Entities;
 using Registry.Viewport.EntityConverters;
+using Registry.Viewport.Presenters;
+using Registry.Viewport.ViewModels;
 using Security;
 using WeifenLuo.WinFormsUI.Docking;
 
@@ -20,56 +22,21 @@ namespace Registry.Viewport
         }
 
         public DocumentsResidenceViewport(Viewport viewport, IMenuCallback menuCallback)
-            : base(viewport, menuCallback)
+            : base(viewport, menuCallback, new DocumentsResidencePresenter())
         {
             InitializeComponent();
-            GeneralSnapshot = new DataTable("snapshot_documents_residence")
-            {
-                Locale = CultureInfo.InvariantCulture
-            };
-        }
-
-        private static bool ValidateViewportData(IEnumerable<Entity> list)
-        {
-            foreach (var entity in list)
-            {
-                var documentResidence = (DocumentResidence) entity;
-                if (documentResidence.DocumentResidenceName == null)
-                {
-                    MessageBox.Show(@"Наименование документа-основания на проживание не может быть пустым",
-                        @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                    return false;
-                }
-                if (documentResidence.DocumentResidenceName == null ||
-                    documentResidence.DocumentResidenceName.Length <= 255) continue;
-                MessageBox.Show(@"Длина наименования документа-основания на проживание не может превышать 255 символов",
-                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
-                return false;
-            }
-            return true;
+            dataGridView.AutoGenerateColumns = false;
+            DockAreas = DockAreas.Document;
         }
 
         protected override List<Entity> EntitiesListFromViewport()
         {
-            var list = new List<Entity>();
-            for (var i = 0; i < dataGridView.Rows.Count; i++)
-            {
-                if (dataGridView.Rows[i].IsNewRow) continue;
-                var row = dataGridView.Rows[i];
-                list.Add(EntityConverter<DocumentResidence>.FromRow(row));
-            }
-            return list;
+            return ((DocumentsResidencePresenter)Presenter).EntitiesListFromSnapshot();
         }
 
         protected override List<Entity> EntitiesListFromView()
         {
-            var list = new List<Entity>();
-            foreach (var document in GeneralBindingSource)
-            {
-                var row = (DataRowView)document;
-                list.Add(EntityConverter<DocumentResidence>.FromRow(row));
-            }
-            return list;
+            return ((DocumentsResidencePresenter)Presenter).EntitiesListFromView();
         }
 
         public override bool CanLoadData()
@@ -79,41 +46,32 @@ namespace Registry.Viewport
 
         public override void LoadData()
         {
-            dataGridView.AutoGenerateColumns = false;
-            DockAreas = DockAreas.Document;
-            GeneralDataModel = DataModel.GetInstance<EntityDataModel<DocumentResidence>>();
+            GeneralDataModel = Presenter.ViewModel["general"].Model;
+            GeneralBindingSource = Presenter.ViewModel["general"].BindingSource;
 
-            GeneralDataModel.Select();
+            ((SnapshotedViewModel)Presenter.ViewModel).InitializeSnapshot();
 
-            GeneralBindingSource = new BindingSource
-            {
-                DataMember = "documents_residence",
-                DataSource = DataStorage.DataSet
-            };
+            GeneralSnapshot = ((SnapshotedViewModel)Presenter.ViewModel).SnapshotDataSource;
+            GeneralSnapshotBindingSource = ((SnapshotedViewModel)Presenter.ViewModel).SnapshotBindingSource;
 
-            //Инициируем колонки snapshot-модели
-            for (var i = 0; i < GeneralDataModel.Select().Columns.Count; i++)
-                GeneralSnapshot.Columns.Add(new DataColumn(
-                    GeneralDataModel.Select().Columns[i].ColumnName, GeneralDataModel.Select().Columns[i].DataType));
-            //Загружаем данные snapshot-модели из original-view
-            foreach (var documentResidence in GeneralBindingSource)
-                GeneralSnapshot.Rows.Add(EntityConverter<DocumentResidence>.ToArray((DataRowView)documentResidence));
-            GeneralSnapshotBindingSource = new BindingSource { DataSource = GeneralSnapshot };
-            AddEventHandler<EventArgs>(GeneralSnapshotBindingSource, "CurrentItemChanged", v_snapshot_documents_residence_CurrentItemChanged);
+            DataBind();
 
+            AddEventHandler<EventArgs>(((SnapshotedViewModel)Presenter.ViewModel).SnapshotBindingSource, 
+                "CurrentItemChanged", v_snapshot_documents_residence_CurrentItemChanged);
+
+            //Синхронизация данных исходные->текущие
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowChanged", DocumentResidenceViewport_RowChanged);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleting", DocumentResidenceViewport_RowDeleting);
+            AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleted", DocumentResidenceViewport_RowDeleted);
+
+            v_snapshot_documents_residence_CurrentItemChanged(null, new EventArgs());
+        }
+
+        private void DataBind()
+        {
             dataGridView.DataSource = GeneralSnapshotBindingSource;
             id_document_residence.DataPropertyName = "id_document_residence";
             document_residence.DataPropertyName = "document_residence";
-
-            dataGridView.DataBindings.DefaultDataSourceUpdateMode = DataSourceUpdateMode.OnPropertyChanged;
-
-            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValidated", dataGridView_CellValidated);
-            //События изменения данных для проверки соответствия реальным данным в модели
-            AddEventHandler<DataGridViewCellEventArgs>(dataGridView, "CellValueChanged", dataGridView_CellValueChanged);
-            //Синхронизация данных исходные->текущие
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowChanged", DocumentResidenceViewport_RowChanged);
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleting", DocumentResidenceViewport_RowDeleting);
-            AddEventHandler<DataRowChangeEventArgs>(GeneralDataModel.Select(), "RowDeleted", DocumentResidenceViewport_RowDeleted);
         }
 
         public override bool CanInsertRecord()
@@ -123,18 +81,18 @@ namespace Registry.Viewport
 
         public override void InsertRecord()
         {
-            var row = (DataRowView)GeneralSnapshotBindingSource.AddNew();
-            if (row != null) row.EndEdit();
+            ((DocumentsResidencePresenter)Presenter).InsertRecordIntoSnapshot();
         }
 
         public override bool CanDeleteRecord()
         {
-            return (GeneralSnapshotBindingSource.Position != -1) && AccessControl.HasPrivelege(Priveleges.TenancyDirectoriesReadWrite);
+            return (((SnapshotedViewModel)Presenter.ViewModel).SnapshotBindingSource.Position != -1) && 
+                AccessControl.HasPrivelege(Priveleges.TenancyDirectoriesReadWrite);
         }
 
         public override void DeleteRecord()
         {
-            ((DataRowView)GeneralSnapshotBindingSource[GeneralSnapshotBindingSource.Position]).Row.Delete();
+            ((DocumentsResidencePresenter)Presenter).DeleteCurrentRecordFromSnapshot();
         }
 
         public override bool CanCancelRecord()
@@ -144,9 +102,7 @@ namespace Registry.Viewport
 
         public override void CancelRecord()
         {
-            GeneralSnapshot.Clear();
-            foreach (var document in GeneralBindingSource)
-                GeneralSnapshot.Rows.Add(EntityConverter<DocumentResidence>.ToArray((DataRowView)document));
+            ((SnapshotedViewModel)Presenter.ViewModel).LoadSnapshot();
             MenuCallback.EditingStateUpdate();
         }
 
@@ -159,67 +115,14 @@ namespace Registry.Viewport
         {
             SyncViews = false;
             dataGridView.EndEdit();
-            GeneralDataModel.EditingNewRecord = true;
-            var list = EntitiesListFromViewport();
-            if (!ValidateViewportData(list))
+            Presenter.ViewModel["general"].Model.EditingNewRecord = true;
+            if (((DocumentsResidencePresenter)Presenter).ValidateDocumentsResidenceSnapshot())
             {
-                SyncViews = true;
-                GeneralDataModel.EditingNewRecord = false;
-                return;
+                ((DocumentsResidencePresenter)Presenter).SaveRecords();
+                MenuCallback.EditingStateUpdate();
             }
-            for (var i = 0; i < list.Count; i++)
-            {
-                var document = (DocumentResidence)list[i];
-                var row = GeneralDataModel.Select().Rows.Find(document.IdDocumentResidence);
-                if (row == null)
-                {
-                    var idDocumentResidence = GeneralDataModel.Insert(list[i]);
-                    if (idDocumentResidence == -1)
-                    {
-                        SyncViews = true;
-                        GeneralDataModel.EditingNewRecord = false;
-                        return;
-                    }
-                    ((DataRowView)GeneralSnapshotBindingSource[i])["id_document_residence"] = idDocumentResidence;
-                    GeneralDataModel.Select().Rows.Add(EntityConverter<DocumentResidence>.ToArray((DataRowView)GeneralSnapshotBindingSource[i]));
-                }
-                else
-                {
-
-                    if (EntityConverter<DocumentResidence>.FromRow(row) == document)
-                        continue;
-                    if (GeneralDataModel.Update(list[i]) == -1)
-                    {
-                        SyncViews = true;
-                        GeneralDataModel.EditingNewRecord = false;
-                        return;
-                    }
-                    row["document_residence"] = ViewportHelper.ValueOrDbNull(document.DocumentResidenceName);
-                }
-            }
-            list = EntitiesListFromView();
-            foreach (var entity in list)
-            {
-                var document = (DocumentResidence)entity;
-                var rowIndex = -1;
-                for (var j = 0; j < dataGridView.Rows.Count; j++)
-                    if ((dataGridView.Rows[j].Cells["id_document_residence"].Value != null) &&
-                        !string.IsNullOrEmpty(dataGridView.Rows[j].Cells["id_document_residence"].Value.ToString()) &&
-                        ((int)dataGridView.Rows[j].Cells["id_document_residence"].Value == document.IdDocumentResidence))
-                        rowIndex = j;
-                if (rowIndex == -1)
-                {
-                    if (document.IdDocumentResidence != null && GeneralDataModel.Delete(document.IdDocumentResidence.Value) == -1)
-                    {
-                        SyncViews = true;
-                        GeneralDataModel.EditingNewRecord = false;
-                        return;
-                    }
-                    GeneralDataModel.Select().Rows.Find(document.IdDocumentResidence).Delete();
-                }
-            }
+            Presenter.ViewModel["general"].Model.EditingNewRecord = false;
             SyncViews = true;
-            GeneralDataModel.EditingNewRecord = false;
             MenuCallback.EditingStateUpdate();
         }
 
@@ -236,61 +139,46 @@ namespace Registry.Viewport
             return viewport;
         }
 
-        void DocumentResidenceViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
-        {
-            if (Selected)
-            {
-                MenuCallback.EditingStateUpdate();
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.StatusBarStateUpdate();
-            }
-        }
-
-        void DocumentResidenceViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
-        {
-            if (!SyncViews)
-                return;
-            if (e.Action == DataRowAction.Delete)
-            {
-                var rowIndex = GeneralSnapshotBindingSource.Find("id_document_residence", e.Row["id_document_residence"]);
-                if (rowIndex != -1)
-                    ((DataRowView)GeneralSnapshotBindingSource[rowIndex]).Delete();
-            }
-        }
-
-        void DocumentResidenceViewport_RowChanged(object sender, DataRowChangeEventArgs e)
-        {
-            if (!SyncViews)
-                return;
-            var rowIndex = GeneralSnapshotBindingSource.Find("id_document_residence", e.Row["id_document_residence"]);
-            if (rowIndex == -1 && GeneralBindingSource.Find("id_document_residence", e.Row["id_document_residence"]) != -1)
-            {
-                GeneralSnapshot.Rows.Add(e.Row["id_document_residence"], e.Row["document_residence"]);
-            }
-            else
-                if (rowIndex != -1)
-                {
-                    var row = ((DataRowView)GeneralSnapshotBindingSource[rowIndex]);
-                    row["document_residence"] = e.Row["document_residence"];
-                }
-            if (Selected)
-            {
-                MenuCallback.NavigationStateUpdate();
-                MenuCallback.StatusBarStateUpdate();
-                MenuCallback.EditingStateUpdate();
-            }
-        }
-
-        void v_snapshot_documents_residence_CurrentItemChanged(object sender, EventArgs e)
+        private void DocumentResidenceViewport_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
             if (!Selected) return;
+            MenuCallback.EditingStateUpdate();
             MenuCallback.NavigationStateUpdate();
+            MenuCallback.StatusBarStateUpdate();
+        }
+
+        private void DocumentResidenceViewport_RowDeleting(object sender, DataRowChangeEventArgs e)
+        {
+            if (!SyncViews)
+                return;
+            if (e.Action != DataRowAction.Delete) return;
+            ((DocumentsResidencePresenter)Presenter).DeleteRowByIdFromSnapshot((int)e.Row["id_document_residence"]);
+        }
+
+        private void DocumentResidenceViewport_RowChanged(object sender, DataRowChangeEventArgs e)
+        {
+            if (!SyncViews)
+                return;
+            ((DocumentsResidencePresenter)Presenter).InsertOrUpdateRowIntoSnapshot(e.Row);
+            if (!Selected) return;
+            MenuCallback.NavigationStateUpdate();
+            MenuCallback.StatusBarStateUpdate();
             MenuCallback.EditingStateUpdate();
         }
 
-        void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
+        private void v_snapshot_documents_residence_CurrentItemChanged(object sender, EventArgs e)
+        {
+            if (!Selected) return;
+            MenuCallback.NavigationStateUpdate();
+        }
+
+        private void dataGridView_CellValidated(object sender, DataGridViewCellEventArgs e)
         {
             var cell = dataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            if (cell.Value == null)
+            {
+                return;
+            }
             switch (cell.OwningColumn.Name)
             {
                 case "document_residence":
@@ -305,8 +193,9 @@ namespace Registry.Viewport
             }
         }
 
-        void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        private void dataGridView_CellValueChanged(object sender, DataGridViewCellEventArgs e)
         {
+            if (!Selected) return;
             MenuCallback.EditingStateUpdate();
         }
     }

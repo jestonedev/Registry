@@ -1,4 +1,4 @@
-﻿namespace Registry.Viewport
+﻿namespace Registry.Viewport.ModalEditors
 {
     partial class MultiPaymentAccountsAtDateForm
     {

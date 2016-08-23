@@ -39,7 +39,7 @@ namespace Registry.DataModels.CalcDataModels
             if (e == null)
                 throw new DataModelException("Не передана ссылка на объект DoWorkEventArgs в классе CalcDataModeTenancyAggregated");
             // Фильтруем удаленные строки
-            var claimStates = DataModel.GetInstance<EntityDataModel<ClaimState>>().FilterDeletedRows();
+            var claimStates = DataModel.GetInstance<EntityDataModel<ClaimState>>().FilterDeletedRows().ToList();
             // Вычисляем агрегационную информацию
             var lastClaimStateMaxIds =
                         from claimStateRow in claimStates
