@@ -47,7 +47,7 @@ namespace Registry.Viewport
             Presenter.ParentRow = ParentRow;
             Presenter.ParentType = ParentType;
 
-            ((TenancyBuildingsViewModel)Presenter.ViewModel).InitializeSnapshot();
+            ((SnapshotedViewModel)Presenter.ViewModel).InitializeSnapshot();
 
             if ((ParentRow != null) && (ParentType == ParentTypeEnum.Tenancy))
                 Text = @"Здания найма №" + ParentRow["id_process"];
@@ -59,9 +59,9 @@ namespace Registry.Viewport
             {
                 DynamicFilter = ((TenancyBuildingsPresenter) Presenter).GetDefaultDynamicFilter();
             }
-            GeneralBindingSource.Filter = DynamicFilter;
+            Presenter.ViewModel["general"].BindingSource.Filter = DynamicFilter;
 
-            AddEventHandler<EventArgs>(GeneralBindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
+            AddEventHandler<EventArgs>(Presenter.ViewModel["general"].BindingSource, "CurrentItemChanged", GeneralBindingSource_CurrentItemChanged);
 
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowChanged", BuildingsViewport_RowChanged);
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleted", BuildingsViewport_RowDeleted);
@@ -241,7 +241,7 @@ namespace Registry.Viewport
                 ViewportType.FundsHistoryViewport,
                 ViewportType.TenancyListViewport
             };
-            return reports.Any(v => v.ToString() == typeof(T).Name) && (GeneralBindingSource.Position > -1);
+            return reports.Any(v => v.ToString() == typeof(T).Name) && (Presenter.ViewModel["general"].CurrentRow != null);
         }
 
         public override void ShowAssocViewport<T>()
@@ -338,7 +338,8 @@ namespace Registry.Viewport
 
         private void dataGridView_CellValuePushed(object sender, DataGridViewCellValueEventArgs e)
         {
-            var idBuilding = Convert.ToInt32(((DataRowView)GeneralBindingSource[e.RowIndex])["id_building"], CultureInfo.InvariantCulture);
+            var bindingSource = Presenter.ViewModel["general"].BindingSource;
+            var idBuilding = Convert.ToInt32(((DataRowView)bindingSource[e.RowIndex])["id_building"], CultureInfo.InvariantCulture);
             var snapshotedBindinsSource = ((SnapshotedViewModel) Presenter.ViewModel).SnapshotBindingSource;
             var snapshotedDataSource = ((SnapshotedViewModel) Presenter.ViewModel).SnapshotDataSource;
             var rowIndex = snapshotedBindinsSource.Find("id_building", idBuilding);
@@ -383,13 +384,17 @@ namespace Registry.Viewport
                         e.Value = ((DataRowView)snapshotedBindinsSource[rowIndex])[DataGridView.Columns[e.ColumnIndex].Name];
                     break;
                 case "id_building":
-                case "id_street":
                 case "house":
                 case "floors":
                 case "living_area":
                 case "cadastral_num":
                 case "startup_year":
                     e.Value = row[DataGridView.Columns[e.ColumnIndex].Name];
+                    break;
+                case "id_street":
+                    var streetRow = Presenter.ViewModel["kladr"].DataSource.Rows.Find(row["id_street"]);
+                    if (streetRow != null)
+                        e.Value = streetRow["street_name"];
                     break;
             }
         }

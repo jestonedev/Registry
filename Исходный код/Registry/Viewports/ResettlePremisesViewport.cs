@@ -125,7 +125,13 @@ namespace Registry.Viewport
 
         private List<ResettlePremisesFromAssoc> ResettlePremisesFromView()
         {
-            return (from DataRowView row in _vResettlePremises select ResettlePremiseConverter.FromRow(row)).ToList();
+            var list = new List<ResettlePremisesFromAssoc>();
+            for (var i = 0; i < _vResettlePremises.Count; i++)
+            {
+                var row = (DataRowView)_vResettlePremises[i];
+                list.Add(ResettlePremiseConverter.FromRow(row));
+            }
+            return list;
         }
 
         private static bool ValidateResettlePremises(List<ResettlePremisesFromAssoc> resettlePremises)

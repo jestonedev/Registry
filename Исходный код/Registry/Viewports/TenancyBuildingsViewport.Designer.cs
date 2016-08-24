@@ -139,6 +139,7 @@ namespace Registry.Viewport
             this.id_street.HeaderText = "Адрес";
             this.id_street.MinimumWidth = 250;
             this.id_street.Name = "id_street";
+            this.id_street.ReadOnly = true;
             this.id_street.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             this.id_street.Width = 250;
             // 

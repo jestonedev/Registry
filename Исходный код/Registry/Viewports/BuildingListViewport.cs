@@ -303,17 +303,15 @@ namespace Registry.Viewport
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
-            var idStreetColumn = DataGridView.Columns["id_street"];
-            if (idStreetColumn == null) return;
             if (DataGridView.Size.Width > 1010)
             {
-                if (idStreetColumn.AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
-                    idStreetColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                if (id_street.AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
+                    id_street.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
             }
             else
             {
-                if (idStreetColumn.AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
-                    idStreetColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
+                if (id_street.AutoSizeMode != DataGridViewAutoSizeColumnMode.None)
+                    id_street.AutoSizeMode = DataGridViewAutoSizeColumnMode.None;
             }
         }
     }

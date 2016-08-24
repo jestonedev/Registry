@@ -163,7 +163,7 @@ namespace Registry.Viewport.Presenters
                         rowIndex = j;
                 }
                 if (rowIndex != -1) continue;
-                if (entity.IdAssoc != null && EntityDataModel<TenancyBuildingAssoc>.GetInstance().Delete(entity.IdAssoc.Value) == -1)
+                if (entity.IdAssoc != null && ViewModel["tenancy_buildings_assoc"].Model.Delete(entity.IdAssoc.Value) == -1)
                 {
                     return false;
                 }
@@ -191,7 +191,7 @@ namespace Registry.Viewport.Presenters
                 if (row == null) continue;
                 if (TenancyBuildingConverter.FromRow(row) == entity)
                     continue;
-                if (EntityDataModel<TenancyBuildingAssoc>.GetInstance().Update(entity) == -1)
+                if (ViewModel["tenancy_buildings_assoc"].Model.Update(entity) == -1)
                 {
                     return false;
                 }
@@ -210,7 +210,7 @@ namespace Registry.Viewport.Presenters
                 if (entity.IdAssoc != null)
                     row = ViewModel["tenancy_buildings_assoc"].DataSource.Rows.Find(entity.IdAssoc);
                 if (row != null) continue;
-                var idAssoc = EntityDataModel<TenancyBuildingAssoc>.GetInstance().Insert(entity);
+                var idAssoc = ViewModel["tenancy_buildings_assoc"].Model.Insert(entity);
                 if (idAssoc == -1)
                 {
                     return false;

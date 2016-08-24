@@ -13,6 +13,7 @@ namespace Registry.DataModels.DataModels
         where T: Entity
     {
         private static EntityDataModel<T> _dataModel;
+        private static readonly object LockObj = new object();
 
         protected static string SelectQuery
         {
@@ -90,12 +91,18 @@ namespace Registry.DataModels.DataModels
 
         public static EntityDataModel<T> GetInstance(Action afterLoadHandler)
         {
-            return _dataModel ?? (_dataModel = new EntityDataModel<T>(afterLoadHandler));
+            lock (LockObj)
+            {
+                return _dataModel ?? (_dataModel = new EntityDataModel<T>(afterLoadHandler));
+            }
         }
 
         public static EntityDataModel<T> GetInstance()
         {
-            return _dataModel ?? (_dataModel = new EntityDataModel<T>(null));
+            lock (LockObj)
+            {
+                return _dataModel ?? (_dataModel = new EntityDataModel<T>(null));
+            }
         }
 
         private static string ConvertPropertyToColumnName(string propertyName)

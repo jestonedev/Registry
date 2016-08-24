@@ -52,13 +52,17 @@ namespace Registry.DataModels.DataModels
                     }
                     DbAccessSemaphore.Release();
                     ConfigureTable();
+                    Table.ExtendedProperties.Add("model", this);
                     lock (LockObj)
                     {
                         if (!DataStorage.ContainTable(Table))
                         {
-                            Table.ExtendedProperties.Add("model", this);
                             DataStorage.AddTable(Table);
                             ConfigureRelations();
+                        }
+                        else
+                        {
+                            Table = DataStorage.DataSet.Tables[tableName];
                         }
                     }
                     DmLoadState = DataModelLoadState.SuccessLoad;
@@ -87,7 +91,7 @@ namespace Registry.DataModels.DataModels
                         MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
                     DmLoadState = DataModelLoadState.ErrorLoad;
                 }
-            }, null); 
+            }, null);
         }
 
         public static DataModel GetLoadedInstance(string tableName)
