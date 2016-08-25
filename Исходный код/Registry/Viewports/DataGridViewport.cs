@@ -89,9 +89,8 @@ namespace Registry.Viewport
 
         protected void GeneralDataSource_RowChanged(object sender, DataRowChangeEventArgs e)
         {
-            if (e.Action == DataRowAction.Change || e.Action == DataRowAction.ChangeCurrentAndOriginal || e.Action == DataRowAction.ChangeOriginal)
-                DataGridView.Refresh();
             DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count;
+            DataGridView.Refresh();
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
         }

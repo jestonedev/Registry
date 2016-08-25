@@ -107,9 +107,9 @@ namespace Registry.Viewport.Presenters
             return ViewModel["general"].Delete((int)row[columnName]);
         }
 
-        public void DeleteRowByIdFromSnapshot(int idSubPremise)
+        public void DeleteRowByIdFromSnapshot(int idBuilding)
         {
-            var rowIndex = ((SnapshotedViewModel)ViewModel).SnapshotBindingSource.Find("id_building", idSubPremise);
+            var rowIndex = ((SnapshotedViewModel)ViewModel).SnapshotBindingSource.Find("id_building", idBuilding);
             if (rowIndex != -1)
                 ((DataRowView)((SnapshotedViewModel)ViewModel).SnapshotBindingSource[rowIndex]).Delete();
         }

@@ -85,7 +85,10 @@ namespace Registry.Viewport
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["general"].DataSource, "RowDeleted", BuildingsViewport_RowDeleted);
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["assoc"].DataSource, "RowChanged", ResettleBuildingsViewport_RowChanged);
             AddEventHandler<DataRowChangeEventArgs>(Presenter.ViewModel["assoc"].DataSource, "RowDeleting", ResettleBuildingsViewport_RowDeleting);
+
             DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count;
+
+            GeneralBindingSource_CurrentItemChanged(null, new EventArgs());
         }
 
         public override bool CanDeleteRecord()
@@ -124,9 +127,9 @@ namespace Registry.Viewport
                     DynamicFilter = Presenter.SimpleSearchForm.GetFilter();
                     break;
                 case SearchFormType.ExtendedSearchForm:
-                    if (Presenter.SimpleSearchForm.ShowDialog() != DialogResult.OK)
+                    if (Presenter.ExtendedSearchForm.ShowDialog() != DialogResult.OK)
                         return;
-                    DynamicFilter = Presenter.SimpleSearchForm.GetFilter();
+                    DynamicFilter = Presenter.ExtendedSearchForm.GetFilter();
                     break;
             }
             DataGridView.RowCount = 0;
@@ -192,7 +195,7 @@ namespace Registry.Viewport
         public override bool CanCopyRecord()
         {
             return (Presenter.ViewModel["general"].CurrentRow != null) && !Presenter.ViewModel["general"].Model.EditingNewRecord &&
-                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || (AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal)));
+                (AccessControl.HasPrivelege(Priveleges.RegistryWriteMunicipal) || AccessControl.HasPrivelege(Priveleges.RegistryWriteNotMunicipal));
         }
 
         public override void CopyRecord()
@@ -247,11 +250,6 @@ namespace Registry.Viewport
             _syncViews = true;
             DataGridView.Invalidate();
             MenuCallback.EditingStateUpdate();
-        }
-
-        public override bool CanDuplicate()
-        {
-            return true;
         }
 
         public override bool HasAssocViewport<T>()
@@ -347,9 +345,8 @@ namespace Registry.Viewport
         {
             if (!_syncViews)
                 return;
-            if (e.Action == DataRowAction.Change || e.Action == DataRowAction.ChangeCurrentAndOriginal || e.Action == DataRowAction.ChangeOriginal)
-                DataGridView.Refresh();
             DataGridView.RowCount = Presenter.ViewModel["general"].BindingSource.Count;
+            DataGridView.Refresh();
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
         }

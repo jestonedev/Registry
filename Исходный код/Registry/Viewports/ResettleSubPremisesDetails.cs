@@ -271,6 +271,21 @@ namespace Registry.Viewport
             resettleSubPremisesToAssoc.EditingNewRecord = false;
         }
 
+        internal string GetDefaultDynamicFilter()
+        {
+            var filter = "";
+            if (v_snapshot_resettle_sub_premises.Count <= 0) return filter;
+            filter += "id_premises IN (0";
+            foreach (DataRowView row in v_snapshot_resettle_sub_premises)
+            {
+                var subPremisesRow = sub_premises.Rows.Find(row["id_sub_premises"]);
+                if (subPremisesRow != null)
+                    filter += "," + subPremisesRow["id_premises"];
+            }
+            filter += ")";
+            return filter;
+        }
+
         protected override void OnVisibleChanged(EventArgs e)
         {
             base.OnVisibleChanged(e);

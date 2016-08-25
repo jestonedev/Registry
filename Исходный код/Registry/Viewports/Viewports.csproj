@@ -197,6 +197,8 @@
     <Compile Include="Presenters\ExecutorsPresenter.cs" />
     <Compile Include="Presenters\FundsHistoryPresenter.cs" />
     <Compile Include="Presenters\PaymentsAccountsPresenter.cs" />
+    <Compile Include="Presenters\TenancyPremisesPresenter.cs" />
+    <Compile Include="Presenters\ResettlePremisesPresenter.cs" />
     <Compile Include="Presenters\ResettleProcessListPresenter.cs" />
     <Compile Include="Presenters\StructureTypeListPresenter.cs" />
     <Compile Include="Presenters\RestrictionTypeListPresenter.cs" />
@@ -530,6 +532,8 @@
     <Compile Include="ViewModels\ExecutorsViewModel.cs" />
     <Compile Include="ViewModels\FundsHistoryViewModel.cs" />
     <Compile Include="ViewModels\PaymentsAccountsViewModel.cs" />
+    <Compile Include="ViewModels\TenancyPremisesViewModel.cs" />
+    <Compile Include="ViewModels\ResettlePremisesViewModel.cs" />
     <Compile Include="ViewModels\ResettleProcessListViewModel.cs" />
     <Compile Include="ViewModels\StructureTypeListViewModel.cs" />
     <Compile Include="ViewModels\RestrictionTypeListViewModel.cs" />

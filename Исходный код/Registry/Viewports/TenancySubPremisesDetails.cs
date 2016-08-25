@@ -573,5 +573,20 @@ namespace Registry.Viewport
             ResumeLayout(false);
 
         }
+
+        internal string GetDefaultDynamicFilter()
+        {
+            var filter = "";
+            if (v_snapshot_tenancy_sub_premises.Count <= 0) return filter;
+            filter += "id_premises IN (0";
+            foreach (DataRowView row in v_snapshot_tenancy_sub_premises)
+            {
+                var subPremisesRow = sub_premises.Rows.Find(row["id_sub_premises"]);
+                if (subPremisesRow != null)
+                    filter += "," + subPremisesRow["id_premises"];
+            }
+            filter += ")";
+            return filter;
+        }
     }
 }
