@@ -27,10 +27,11 @@ namespace Registry.Viewport.Presenters
 
         public void SetGeneralBindingSourceFilter(string staticFilter, string dynamicFilter)
         {
-            ViewModel["general"].BindingSource.Filter = staticFilter;
+            var filter = staticFilter;
             if (!string.IsNullOrEmpty(staticFilter) && !string.IsNullOrEmpty(dynamicFilter))
-                ViewModel["general"].BindingSource.Filter += " AND ";
-            ViewModel["general"].BindingSource.Filter += dynamicFilter;
+                filter += " AND ";
+            filter += dynamicFilter;
+            ViewModel["general"].BindingSource.Filter = filter;
         }
 
         public void LocateEntityBy(string fieldName, object value)
