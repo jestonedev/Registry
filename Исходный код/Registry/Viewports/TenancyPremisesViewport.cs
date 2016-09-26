@@ -414,7 +414,7 @@ namespace Registry.Viewport
                 width += DataGridView.Columns[i].Width;
             width += DataGridView.RowHeadersWidth;
             ((TenancySubPremisesDetails)((DataGridViewWithDetails)DataGridView).DetailsControl).SetControlWidth(width);
-            if (DataGridView.Size.Width > 1540)
+            if (DataGridView.Size.Width > 1650)
             {
                 if (id_street.AutoSizeMode != DataGridViewAutoSizeColumnMode.Fill)
                     id_street.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
@@ -525,6 +525,7 @@ namespace Registry.Viewport
                 case "premises_num":
                 case "id_premises_type":
                 case "total_area":
+                case "cadastral_num":
                     e.Value = row[DataGridView.Columns[e.ColumnIndex].Name];
                     break;
                 case "id_state":

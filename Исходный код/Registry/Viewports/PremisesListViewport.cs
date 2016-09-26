@@ -427,6 +427,7 @@ namespace Registry.Viewport
                 case "premises_num":
                 case "id_premises_type":
                 case "total_area":
+                case "cadastral_num":
                     e.Value = row[DataGridView.Columns[e.ColumnIndex].Name];
                     break;
                 case "id_state":
@@ -500,8 +501,8 @@ namespace Registry.Viewport
 
         private void dataGridView_Resize(object sender, EventArgs e)
         {
-            if ((AccessControl.HasPrivelege(Priveleges.TenancyRead) && DataGridView.Size.Width > 1535) ||
-                (!AccessControl.HasPrivelege(Priveleges.TenancyRead) && DataGridView.Size.Width > 845))
+            if ((AccessControl.HasPrivelege(Priveleges.TenancyRead) && DataGridView.Size.Width > 1645) ||
+                (!AccessControl.HasPrivelege(Priveleges.TenancyRead) && DataGridView.Size.Width > 955))
             {
                 premises_num.Frozen = false;
                 house.Frozen = false;

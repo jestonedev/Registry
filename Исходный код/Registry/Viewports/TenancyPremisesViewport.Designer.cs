@@ -43,6 +43,7 @@ namespace Registry.Viewport
             this.house = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.premises_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_premises_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
+            this.cadastral_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.current_fund = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -76,6 +77,7 @@ namespace Registry.Viewport
             this.house,
             this.premises_num,
             this.id_premises_type,
+            this.cadastral_num,
             this.total_area,
             this.id_state,
             this.current_fund});
@@ -211,6 +213,13 @@ namespace Registry.Viewport
             this.id_premises_type.ReadOnly = true;
             this.id_premises_type.Width = 150;
             // 
+            // cadastral_num
+            // 
+            this.cadastral_num.HeaderText = "Кадастровый номер";
+            this.cadastral_num.MinimumWidth = 110;
+            this.cadastral_num.Name = "cadastral_num";
+            this.cadastral_num.Width = 110;
+            // 
             // total_area
             // 
             dataGridViewCellStyle11.Alignment = System.Windows.Forms.DataGridViewContentAlignment.TopLeft;
@@ -267,6 +276,7 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn house;
         private DataGridViewTextBoxColumn premises_num;
         private DataGridViewComboBoxColumn id_premises_type;
+        private DataGridViewTextBoxColumn cadastral_num;
         private DataGridViewTextBoxColumn total_area;
         private DataGridViewTextBoxColumn id_state;
         private DataGridViewTextBoxColumn current_fund;

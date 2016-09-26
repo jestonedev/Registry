@@ -393,7 +393,7 @@ namespace Registry.Viewport
                 case "id_building":
                 case "house":
                 case "floors":
-                case "living_area":
+                case "total_area":
                 case "cadastral_num":
                 case "startup_year":
                     e.Value = row[DataGridView.Columns[e.ColumnIndex].Name];

@@ -24,7 +24,7 @@ namespace Registry.Viewport
             this.id_street = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.house = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.floors = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.living_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.mun_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cadastral_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.startup_year = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -55,7 +55,7 @@ namespace Registry.Viewport
             this.id_street,
             this.house,
             this.floors,
-            this.living_area,
+            this.total_area,
             this.mun_area,
             this.cadastral_num,
             this.startup_year,
@@ -118,16 +118,16 @@ namespace Registry.Viewport
             this.floors.ReadOnly = true;
             this.floors.Width = 60;
             // 
-            // living_area
+            // total_area
             // 
-            this.living_area.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
+            this.total_area.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
             dataGridViewCellStyle2.Format = "#0.0## м²";
-            this.living_area.DefaultCellStyle = dataGridViewCellStyle2;
-            this.living_area.HeaderText = "Жил. площадь";
-            this.living_area.MinimumWidth = 70;
-            this.living_area.Name = "living_area";
-            this.living_area.ReadOnly = true;
-            this.living_area.Width = 70;
+            this.total_area.DefaultCellStyle = dataGridViewCellStyle2;
+            this.total_area.HeaderText = "Общая площадь";
+            this.total_area.MinimumWidth = 70;
+            this.total_area.Name = "total_area";
+            this.total_area.ReadOnly = true;
+            this.total_area.Width = 70;
             // 
             // mun_area
             // 
@@ -194,7 +194,7 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn id_street;
         private DataGridViewTextBoxColumn house;
         private DataGridViewTextBoxColumn floors;
-        private DataGridViewTextBoxColumn living_area;
+        private DataGridViewTextBoxColumn total_area;
         private DataGridViewTextBoxColumn mun_area;
         private DataGridViewTextBoxColumn cadastral_num;
         private DataGridViewTextBoxColumn startup_year;
