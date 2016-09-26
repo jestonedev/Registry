@@ -99,7 +99,6 @@
             this.label21 = new System.Windows.Forms.Label();
             this.dataGridView = new System.Windows.Forms.DataGridView();
             this.date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.id_account = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.crn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.raw_address = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.parsed_address = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -1121,7 +1120,6 @@
             this.dataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.date,
-            this.id_account,
             this.crn,
             this.raw_address,
             this.parsed_address,
@@ -1167,13 +1165,6 @@
             this.date.HeaderText = "Состояние на дату";
             this.date.Name = "date";
             this.date.ReadOnly = true;
-            // 
-            // id_account
-            // 
-            this.id_account.HeaderText = "№";
-            this.id_account.Name = "id_account";
-            this.id_account.ReadOnly = true;
-            this.id_account.Visible = false;
             // 
             // crn
             // 
@@ -1476,7 +1467,6 @@
         private System.Windows.Forms.NumericUpDown numericUpDownPenaltiesOutput;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.DataGridViewTextBoxColumn date;
-        private System.Windows.Forms.DataGridViewTextBoxColumn id_account;
         private System.Windows.Forms.DataGridViewTextBoxColumn crn;
         private System.Windows.Forms.DataGridViewTextBoxColumn raw_address;
         private System.Windows.Forms.DataGridViewTextBoxColumn parsed_address;

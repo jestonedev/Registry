@@ -6,6 +6,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Registry.DataModels.Services;
 using Registry.Entities.Infrastructure;
+using Registry.Reporting;
 using Registry.Viewport.Presenters;
 using Registry.Viewport.SearchForms;
 using WeifenLuo.WinFormsUI.Docking;
@@ -230,6 +231,42 @@ namespace Registry.Viewport
         internal string GetFilter()
         {
             return Presenter.ViewModel["general"].BindingSource.Filter;
+        }
+
+        public override bool HasReport(ReporterType reporterType)
+        {
+            var reports = new List<ReporterType>
+            {
+                ReporterType.ExportReporter
+            };
+            return reports.Contains(reporterType);
+        }
+
+        public override void GenerateReport(ReporterType reporterType)
+        {
+            var reporter = ReporterFactory.CreateReporter(reporterType);
+            var arguments = new Dictionary<string, string>();
+            if (reporterType == ReporterType.ExportReporter)
+            {
+                arguments = ExportReportArguments();
+            }
+            reporter.Run(arguments);
+        }
+
+        private Dictionary<string, string> ExportReportArguments()
+        {
+            var columnHeaders = DataGridView.Columns.Cast<DataGridViewColumn>().
+                Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnHeader\":\"" + column.HeaderText + "\"}");
+            var columnPatterns = DataGridView.Columns.Cast<DataGridViewColumn>().
+                Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnPattern\":\"$column" + column.DisplayIndex + "$\"}");
+            var arguments = new Dictionary<string, string>
+            {
+                {"type", "5"},
+                {"filter", Presenter.ViewModel["general"].BindingSource.Filter.Trim() == "" ? "(1=1)" : Presenter.ViewModel["general"].BindingSource.Filter},
+                {"columnHeaders", "["+columnHeaders+"]"},
+                {"columnPatterns", "["+columnPatterns+"]"}
+            };
+            return arguments;
         }
     }
 }
