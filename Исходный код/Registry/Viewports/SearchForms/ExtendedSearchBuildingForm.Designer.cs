@@ -65,10 +65,19 @@ namespace Registry.Viewport.SearchForms
             this.comboBoxStreet = new System.Windows.Forms.ComboBox();
             this.comboBoxOwnershipType = new System.Windows.Forms.ComboBox();
             this.checkBoxOwnershipTypeEnable = new System.Windows.Forms.CheckBox();
-            this.label12 = new System.Windows.Forms.Label();
             this.checkedListBox1 = new System.Windows.Forms.CheckedListBox();
             this.vButton1 = new VIBlend.WinForms.Controls.vButton();
             this.vButton2 = new VIBlend.WinForms.Controls.vButton();
+            this.label14 = new System.Windows.Forms.Label();
+            this.textBoxRestrictionNumber = new System.Windows.Forms.TextBox();
+            this.checkBoxRestrictionNumberEnable = new System.Windows.Forms.CheckBox();
+            this.comboBoxRestrictionType = new System.Windows.Forms.ComboBox();
+            this.checkBoxRestrictionTypeEnable = new System.Windows.Forms.CheckBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.label13 = new System.Windows.Forms.Label();
+            this.textBoxOwnershipNumber = new System.Windows.Forms.TextBox();
+            this.checkBoxOwnershipNumberEnable = new System.Windows.Forms.CheckBox();
+            this.label10 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownIDBuilding)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownStartupYear)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownFloors)).BeginInit();
@@ -139,17 +148,17 @@ namespace Registry.Viewport.SearchForms
             // checkBoxStateEnable
             // 
             this.checkBoxStateEnable.AutoSize = true;
-            this.checkBoxStateEnable.Location = new System.Drawing.Point(497, 29);
+            this.checkBoxStateEnable.Location = new System.Drawing.Point(494, 29);
             this.checkBoxStateEnable.Name = "checkBoxStateEnable";
             this.checkBoxStateEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxStateEnable.TabIndex = 18;
+            this.checkBoxStateEnable.TabIndex = 20;
             this.checkBoxStateEnable.UseVisualStyleBackColor = true;
             this.checkBoxStateEnable.CheckedChanged += new System.EventHandler(this.checkBoxStateEnable_CheckedChanged);
             // 
             // label7
             // 
             this.label7.AutoSize = true;
-            this.label7.Location = new System.Drawing.Point(494, 8);
+            this.label7.Location = new System.Drawing.Point(491, 8);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(114, 15);
             this.label7.TabIndex = 21;
@@ -158,10 +167,10 @@ namespace Registry.Viewport.SearchForms
             // checkBoxImprovementEnable
             // 
             this.checkBoxImprovementEnable.AutoSize = true;
-            this.checkBoxImprovementEnable.Location = new System.Drawing.Point(521, 304);
+            this.checkBoxImprovementEnable.Location = new System.Drawing.Point(17, 375);
             this.checkBoxImprovementEnable.Name = "checkBoxImprovementEnable";
             this.checkBoxImprovementEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxImprovementEnable.TabIndex = 22;
+            this.checkBoxImprovementEnable.TabIndex = 18;
             this.checkBoxImprovementEnable.UseVisualStyleBackColor = true;
             this.checkBoxImprovementEnable.CheckedChanged += new System.EventHandler(this.checkBoxImprovementEnable_CheckedChanged);
             // 
@@ -169,20 +178,20 @@ namespace Registry.Viewport.SearchForms
             // 
             this.checkBoxImprovement.AutoSize = true;
             this.checkBoxImprovement.Enabled = false;
-            this.checkBoxImprovement.Location = new System.Drawing.Point(545, 302);
+            this.checkBoxImprovement.Location = new System.Drawing.Point(41, 373);
             this.checkBoxImprovement.Name = "checkBoxImprovement";
             this.checkBoxImprovement.Size = new System.Drawing.Size(126, 19);
-            this.checkBoxImprovement.TabIndex = 23;
+            this.checkBoxImprovement.TabIndex = 19;
             this.checkBoxImprovement.Text = "Благоустройство";
             this.checkBoxImprovement.UseVisualStyleBackColor = true;
             // 
             // checkBoxElevatorEnable
             // 
             this.checkBoxElevatorEnable.AutoSize = true;
-            this.checkBoxElevatorEnable.Location = new System.Drawing.Point(521, 277);
+            this.checkBoxElevatorEnable.Location = new System.Drawing.Point(17, 350);
             this.checkBoxElevatorEnable.Name = "checkBoxElevatorEnable";
             this.checkBoxElevatorEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxElevatorEnable.TabIndex = 20;
+            this.checkBoxElevatorEnable.TabIndex = 16;
             this.checkBoxElevatorEnable.UseVisualStyleBackColor = true;
             this.checkBoxElevatorEnable.CheckedChanged += new System.EventHandler(this.checkBoxElevatorEnable_CheckedChanged);
             // 
@@ -190,10 +199,10 @@ namespace Registry.Viewport.SearchForms
             // 
             this.checkBoxElevator.AutoSize = true;
             this.checkBoxElevator.Enabled = false;
-            this.checkBoxElevator.Location = new System.Drawing.Point(545, 275);
+            this.checkBoxElevator.Location = new System.Drawing.Point(41, 348);
             this.checkBoxElevator.Name = "checkBoxElevator";
             this.checkBoxElevator.Size = new System.Drawing.Size(118, 19);
-            this.checkBoxElevator.TabIndex = 21;
+            this.checkBoxElevator.TabIndex = 17;
             this.checkBoxElevator.Text = "Наличие лифта";
             this.checkBoxElevator.UseVisualStyleBackColor = true;
             // 
@@ -210,7 +219,7 @@ namespace Registry.Viewport.SearchForms
             // checkBoxStructureTypeEnable
             // 
             this.checkBoxStructureTypeEnable.AutoSize = true;
-            this.checkBoxStructureTypeEnable.Location = new System.Drawing.Point(16, 321);
+            this.checkBoxStructureTypeEnable.Location = new System.Drawing.Point(17, 321);
             this.checkBoxStructureTypeEnable.Name = "checkBoxStructureTypeEnable";
             this.checkBoxStructureTypeEnable.Size = new System.Drawing.Size(15, 14);
             this.checkBoxStructureTypeEnable.TabIndex = 14;
@@ -397,49 +406,40 @@ namespace Registry.Viewport.SearchForms
             this.comboBoxOwnershipType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBoxOwnershipType.Enabled = false;
             this.comboBoxOwnershipType.FormattingEnabled = true;
-            this.comboBoxOwnershipType.Location = new System.Drawing.Point(42, 362);
+            this.comboBoxOwnershipType.Location = new System.Drawing.Point(518, 192);
             this.comboBoxOwnershipType.Name = "comboBoxOwnershipType";
-            this.comboBoxOwnershipType.Size = new System.Drawing.Size(437, 23);
-            this.comboBoxOwnershipType.TabIndex = 17;
+            this.comboBoxOwnershipType.Size = new System.Drawing.Size(238, 23);
+            this.comboBoxOwnershipType.TabIndex = 23;
             // 
             // checkBoxOwnershipTypeEnable
             // 
             this.checkBoxOwnershipTypeEnable.AutoSize = true;
-            this.checkBoxOwnershipTypeEnable.Location = new System.Drawing.Point(16, 364);
+            this.checkBoxOwnershipTypeEnable.Location = new System.Drawing.Point(491, 195);
             this.checkBoxOwnershipTypeEnable.Name = "checkBoxOwnershipTypeEnable";
             this.checkBoxOwnershipTypeEnable.Size = new System.Drawing.Size(15, 14);
-            this.checkBoxOwnershipTypeEnable.TabIndex = 16;
+            this.checkBoxOwnershipTypeEnable.TabIndex = 22;
             this.checkBoxOwnershipTypeEnable.UseVisualStyleBackColor = true;
             this.checkBoxOwnershipTypeEnable.CheckedChanged += new System.EventHandler(this.checkBoxOwnershipTypeEnable_CheckedChanged);
-            // 
-            // label12
-            // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(13, 343);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(105, 15);
-            this.label12.TabIndex = 36;
-            this.label12.Text = "Тип ограничения";
             // 
             // checkedListBox1
             // 
             this.checkedListBox1.CheckOnClick = true;
             this.checkedListBox1.Enabled = false;
             this.checkedListBox1.FormattingEnabled = true;
-            this.checkedListBox1.Location = new System.Drawing.Point(521, 29);
+            this.checkedListBox1.Location = new System.Drawing.Point(518, 26);
             this.checkedListBox1.Name = "checkedListBox1";
-            this.checkedListBox1.Size = new System.Drawing.Size(238, 228);
-            this.checkedListBox1.TabIndex = 19;
+            this.checkedListBox1.Size = new System.Drawing.Size(238, 148);
+            this.checkedListBox1.TabIndex = 21;
             // 
             // vButton1
             // 
             this.vButton1.AllowAnimations = true;
             this.vButton1.BackColor = System.Drawing.Color.Transparent;
-            this.vButton1.Location = new System.Drawing.Point(497, 350);
+            this.vButton1.Location = new System.Drawing.Point(501, 353);
             this.vButton1.Name = "vButton1";
             this.vButton1.RoundedCornersMask = ((byte)(15));
             this.vButton1.Size = new System.Drawing.Size(117, 35);
-            this.vButton1.TabIndex = 24;
+            this.vButton1.TabIndex = 30;
             this.vButton1.Text = "Поиск";
             this.vButton1.UseVisualStyleBackColor = false;
             this.vButton1.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
@@ -450,25 +450,128 @@ namespace Registry.Viewport.SearchForms
             this.vButton2.AllowAnimations = true;
             this.vButton2.BackColor = System.Drawing.Color.Transparent;
             this.vButton2.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.vButton2.Location = new System.Drawing.Point(635, 350);
+            this.vButton2.Location = new System.Drawing.Point(639, 353);
             this.vButton2.Name = "vButton2";
             this.vButton2.RoundedCornersMask = ((byte)(15));
             this.vButton2.Size = new System.Drawing.Size(117, 35);
-            this.vButton2.TabIndex = 25;
+            this.vButton2.TabIndex = 31;
             this.vButton2.Text = "Отмена";
             this.vButton2.UseVisualStyleBackColor = false;
             this.vButton2.VIBlendTheme = VIBlend.Utilities.VIBLEND_THEME.OFFICEBLUE;
+            // 
+            // label14
+            // 
+            this.label14.AutoSize = true;
+            this.label14.Location = new System.Drawing.Point(486, 301);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(110, 15);
+            this.label14.TabIndex = 77;
+            this.label14.Text = "Номер реквизита";
+            // 
+            // textBoxRestrictionNumber
+            // 
+            this.textBoxRestrictionNumber.Enabled = false;
+            this.textBoxRestrictionNumber.Location = new System.Drawing.Point(518, 319);
+            this.textBoxRestrictionNumber.MaxLength = 255;
+            this.textBoxRestrictionNumber.Name = "textBoxRestrictionNumber";
+            this.textBoxRestrictionNumber.Size = new System.Drawing.Size(238, 21);
+            this.textBoxRestrictionNumber.TabIndex = 29;
+            // 
+            // checkBoxRestrictionNumberEnable
+            // 
+            this.checkBoxRestrictionNumberEnable.AutoSize = true;
+            this.checkBoxRestrictionNumberEnable.Location = new System.Drawing.Point(491, 322);
+            this.checkBoxRestrictionNumberEnable.Name = "checkBoxRestrictionNumberEnable";
+            this.checkBoxRestrictionNumberEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxRestrictionNumberEnable.TabIndex = 28;
+            this.checkBoxRestrictionNumberEnable.UseVisualStyleBackColor = true;
+            this.checkBoxRestrictionNumberEnable.CheckedChanged += new System.EventHandler(this.checkBoxRestrictionNumberEnable_CheckedChanged);
+            // 
+            // comboBoxRestrictionType
+            // 
+            this.comboBoxRestrictionType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxRestrictionType.Enabled = false;
+            this.comboBoxRestrictionType.FormattingEnabled = true;
+            this.comboBoxRestrictionType.Location = new System.Drawing.Point(518, 274);
+            this.comboBoxRestrictionType.Name = "comboBoxRestrictionType";
+            this.comboBoxRestrictionType.Size = new System.Drawing.Size(238, 23);
+            this.comboBoxRestrictionType.TabIndex = 27;
+            // 
+            // checkBoxRestrictionTypeEnable
+            // 
+            this.checkBoxRestrictionTypeEnable.AutoSize = true;
+            this.checkBoxRestrictionTypeEnable.Location = new System.Drawing.Point(490, 277);
+            this.checkBoxRestrictionTypeEnable.Name = "checkBoxRestrictionTypeEnable";
+            this.checkBoxRestrictionTypeEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxRestrictionTypeEnable.TabIndex = 26;
+            this.checkBoxRestrictionTypeEnable.UseVisualStyleBackColor = true;
+            this.checkBoxRestrictionTypeEnable.CheckedChanged += new System.EventHandler(this.checkBoxRestrictionTypeEnable_CheckedChanged);
+            // 
+            // label15
+            // 
+            this.label15.AutoSize = true;
+            this.label15.Location = new System.Drawing.Point(481, 256);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(157, 15);
+            this.label15.TabIndex = 76;
+            this.label15.Text = "Тип права собственности";
+            // 
+            // label13
+            // 
+            this.label13.AutoSize = true;
+            this.label13.Location = new System.Drawing.Point(486, 215);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(123, 15);
+            this.label13.TabIndex = 75;
+            this.label13.Text = "Номер ограничения";
+            // 
+            // textBoxOwnershipNumber
+            // 
+            this.textBoxOwnershipNumber.Enabled = false;
+            this.textBoxOwnershipNumber.Location = new System.Drawing.Point(518, 232);
+            this.textBoxOwnershipNumber.MaxLength = 255;
+            this.textBoxOwnershipNumber.Name = "textBoxOwnershipNumber";
+            this.textBoxOwnershipNumber.Size = new System.Drawing.Size(238, 21);
+            this.textBoxOwnershipNumber.TabIndex = 25;
+            // 
+            // checkBoxOwnershipNumberEnable
+            // 
+            this.checkBoxOwnershipNumberEnable.AutoSize = true;
+            this.checkBoxOwnershipNumberEnable.Location = new System.Drawing.Point(491, 235);
+            this.checkBoxOwnershipNumberEnable.Name = "checkBoxOwnershipNumberEnable";
+            this.checkBoxOwnershipNumberEnable.Size = new System.Drawing.Size(15, 14);
+            this.checkBoxOwnershipNumberEnable.TabIndex = 24;
+            this.checkBoxOwnershipNumberEnable.UseVisualStyleBackColor = true;
+            this.checkBoxOwnershipNumberEnable.CheckedChanged += new System.EventHandler(this.checkBoxOwnershipNumberEnable_CheckedChanged);
+            // 
+            // label10
+            // 
+            this.label10.AutoSize = true;
+            this.label10.Location = new System.Drawing.Point(488, 176);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(105, 15);
+            this.label10.TabIndex = 74;
+            this.label10.Text = "Тип ограничения";
             // 
             // ExtendedSearchBuildingForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(190)))), ((int)(((byte)(208)))), ((int)(((byte)(235)))));
-            this.ClientSize = new System.Drawing.Size(768, 394);
+            this.ClientSize = new System.Drawing.Size(768, 396);
+            this.Controls.Add(this.label14);
+            this.Controls.Add(this.textBoxRestrictionNumber);
+            this.Controls.Add(this.checkBoxRestrictionNumberEnable);
+            this.Controls.Add(this.comboBoxRestrictionType);
+            this.Controls.Add(this.checkBoxRestrictionTypeEnable);
+            this.Controls.Add(this.label15);
+            this.Controls.Add(this.label13);
+            this.Controls.Add(this.textBoxOwnershipNumber);
+            this.Controls.Add(this.checkBoxOwnershipNumberEnable);
+            this.Controls.Add(this.label10);
             this.Controls.Add(this.checkedListBox1);
             this.Controls.Add(this.comboBoxOwnershipType);
             this.Controls.Add(this.checkBoxOwnershipTypeEnable);
-            this.Controls.Add(this.label12);
             this.Controls.Add(this.numericUpDownIDBuilding);
             this.Controls.Add(this.checkBoxIDBuildingEnable);
             this.Controls.Add(this.label9);
@@ -551,10 +654,19 @@ namespace Registry.Viewport.SearchForms
         private NumericUpDown numericUpDownIDBuilding;
         private ComboBox comboBoxOwnershipType;
         private CheckBox checkBoxOwnershipTypeEnable;
-        private Label label12;
         private CheckedListBox checkedListBox1;
         private vButton vButton1;
         private vButton vButton2;
+        private Label label14;
+        private TextBox textBoxRestrictionNumber;
+        private CheckBox checkBoxRestrictionNumberEnable;
+        private ComboBox comboBoxRestrictionType;
+        private CheckBox checkBoxRestrictionTypeEnable;
+        private Label label15;
+        private Label label13;
+        private TextBox textBoxOwnershipNumber;
+        private CheckBox checkBoxOwnershipNumberEnable;
+        private Label label10;
 
     }
 }

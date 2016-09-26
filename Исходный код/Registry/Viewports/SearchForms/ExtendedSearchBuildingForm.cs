@@ -90,11 +90,27 @@ namespace Registry.Viewport.SearchForms
                 filter += string.Format("id_structure_type = {0}", comboBoxStructureType.SelectedValue);
             }
             if (checkBoxIDBuildingEnable.Checked)
-                includedBuildings = DataModelHelper.Intersect(null, new List<int> { Convert.ToInt32(numericUpDownIDBuilding.Value) });
+                includedBuildings = DataModelHelper.Intersect(null, new List<int> { Convert.ToInt32(numericUpDownIDBuilding.Value) });          
             if (checkBoxOwnershipTypeEnable.Checked && (comboBoxOwnershipType.SelectedValue != null))
             {
                 var buildingsIds = BuildingService.BuildingIDsByOwnershipType(
                     int.Parse(comboBoxOwnershipType.SelectedValue.ToString(), CultureInfo.InvariantCulture));
+                includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingsIds);
+            }
+            if (checkBoxOwnershipNumberEnable.Checked && !string.IsNullOrEmpty(textBoxOwnershipNumber.Text.Trim()))
+            {
+                var buildingsIds = BuildingService.BuildingIDsByOwnershipNumber(textBoxOwnershipNumber.Text.Trim());
+                includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingsIds);
+            }
+            if (checkBoxRestrictionTypeEnable.Checked && (comboBoxRestrictionType.SelectedValue != null))
+            {
+                var buildingsIds = BuildingService.BuildingIDsByRestricitonType(
+                    int.Parse(comboBoxRestrictionType.SelectedValue.ToString(), CultureInfo.InvariantCulture));
+                includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingsIds);
+            }
+            if (checkBoxRestrictionNumberEnable.Checked && !string.IsNullOrEmpty(textBoxRestrictionNumber.Text.Trim()))
+            {
+                var buildingsIds = BuildingService.BuildingIDsByRestricitonNumber(textBoxRestrictionNumber.Text.Trim());
                 includedBuildings = DataModelHelper.Intersect(includedBuildings, buildingsIds);
             }
             if (includedBuildings == null) return filter == "" ? "0 = 1" : filter;
@@ -160,6 +176,7 @@ namespace Registry.Viewport.SearchForms
             var objectStates = DataModel.GetInstance<ObjectStatesDataModel>();
             var regions = DataModel.GetInstance<KladrRegionsDataModel>();
             DataModel ownershipRightTypes = EntityDataModel<OwnershipRightType>.GetInstance();
+            DataModel restrictionTypes = EntityDataModel<RestrictionType>.GetInstance();
 
             _vKladr = new BindingSource {DataSource = kladr.Select()};
 
@@ -169,7 +186,8 @@ namespace Registry.Viewport.SearchForms
 
             var vObjectStates = new BindingSource {DataSource = objectStates.Select()};
 
-            var vOwnershipRightTypes = new BindingSource {DataSource = ownershipRightTypes.Select()};
+            var vOwnershipRightTypes = new BindingSource { DataSource = ownershipRightTypes.Select() };
+            var vRestrictionTypes = new BindingSource { DataSource = restrictionTypes.Select() };
 
             comboBoxStreet.DataSource = _vKladr;
             comboBoxStreet.ValueMember = "id_street";
@@ -190,6 +208,10 @@ namespace Registry.Viewport.SearchForms
             comboBoxOwnershipType.DataSource = vOwnershipRightTypes;
             comboBoxOwnershipType.ValueMember = "id_ownership_right_type";
             comboBoxOwnershipType.DisplayMember = "ownership_right_type";
+
+            comboBoxRestrictionType.DataSource = vRestrictionTypes;
+            comboBoxRestrictionType.ValueMember = "id_restriction_type";
+            comboBoxRestrictionType.DisplayMember = "restriction_type";
 
             numericUpDownStartupYear.Maximum = DateTime.Now.Year;
             foreach (Control control in Controls)
@@ -295,6 +317,20 @@ namespace Registry.Viewport.SearchForms
                 textBoxHouse.Focus();
                 return;
             }
+            if (checkBoxOwnershipNumberEnable.Checked && string.IsNullOrEmpty(textBoxOwnershipNumber.Text.Trim()))
+            {
+                MessageBox.Show(@"Введите номер ограничения или уберите галочку поиска по номеру ограничения",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxOwnershipNumber.Focus();
+                return;
+            }
+            if (checkBoxRestrictionNumberEnable.Checked && string.IsNullOrEmpty(textBoxRestrictionNumber.Text.Trim()))
+            {
+                MessageBox.Show(@"Введите номер реквизита или уберите галочку поиска по номеру реквизита",
+                    @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button1);
+                textBoxRestrictionNumber.Focus();
+                return;
+            }
             DialogResult = DialogResult.OK;
         }
 
@@ -321,6 +357,21 @@ namespace Registry.Viewport.SearchForms
         private void selectAll_Enter(object sender, EventArgs e)
         {
             ViewportHelper.SelectAllText(sender);
+        }
+
+        private void checkBoxOwnershipNumberEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxOwnershipNumber.Enabled = checkBoxOwnershipNumberEnable.Checked;
+        }
+
+        private void checkBoxRestrictionTypeEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            comboBoxRestrictionType.Enabled = checkBoxRestrictionTypeEnable.Checked;
+        }
+
+        private void checkBoxRestrictionNumberEnable_CheckedChanged(object sender, EventArgs e)
+        {
+            textBoxRestrictionNumber.Enabled = checkBoxRestrictionNumberEnable.Checked;
         }
     }
 }
