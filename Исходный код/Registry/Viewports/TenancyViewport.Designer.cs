@@ -61,7 +61,7 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn rent_area;
         private GroupBox groupBox31;
         private TextBox textBoxDescription;
-        private GroupBox groupBox1;
+        private GroupBox groupBoxPersons;
         private DataGridView dataGridViewTenancyPersons;
         private DataGridViewTextBoxColumn surname;
         private DataGridViewTextBoxColumn name;
@@ -85,7 +85,7 @@ namespace Registry.Viewport
             this.label41 = new System.Windows.Forms.Label();
             this.comboBoxRentType = new System.Windows.Forms.ComboBox();
             this.label46 = new System.Windows.Forms.Label();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBoxPersons = new System.Windows.Forms.GroupBox();
             this.dataGridViewTenancyPersons = new System.Windows.Forms.DataGridView();
             this.surname = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.name = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -97,6 +97,11 @@ namespace Registry.Viewport
             this.panel6 = new System.Windows.Forms.Panel();
             this.vButtonSwapRentPeriod = new VIBlend.WinForms.Controls.vButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.dataGridViewRentPeriods = new System.Windows.Forms.DataGridView();
+            this.rent_periods_begin_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rent_periods_end_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rent_periods_until_dismissal = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.panel1 = new System.Windows.Forms.Panel();
             this.vButtonRentPeriodDelete = new VIBlend.WinForms.Controls.vButton();
             this.vButtonRentPeriodAdd = new VIBlend.WinForms.Controls.vButton();
@@ -107,6 +112,7 @@ namespace Registry.Viewport
             this.label50 = new System.Windows.Forms.Label();
             this.dateTimePickerBeginDate = new System.Windows.Forms.DateTimePicker();
             this.panel5 = new System.Windows.Forms.Panel();
+            this.labelDuplicateContract = new System.Windows.Forms.Label();
             this.vButtonWarrant = new VIBlend.WinForms.Controls.vButton();
             this.textBoxSelectedWarrant = new System.Windows.Forms.TextBox();
             this.label82 = new System.Windows.Forms.Label();
@@ -138,20 +144,17 @@ namespace Registry.Viewport
             this.total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.living_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.rent_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.dataGridViewRentPeriods = new System.Windows.Forms.DataGridView();
-            this.rent_periods_begin_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.rent_periods_end_date = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.rent_periods_until_dismissal = new System.Windows.Forms.DataGridViewCheckBoxColumn();
             this.tableLayoutPanel9.SuspendLayout();
             this.groupBox31.SuspendLayout();
             this.groupBox22.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.groupBoxPersons.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyPersons)).BeginInit();
             this.groupBoxTenancyContract.SuspendLayout();
             this.tableLayoutPanel10.SuspendLayout();
             this.panel6.SuspendLayout();
             this.groupBox2.SuspendLayout();
+            this.panel2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRentPeriods)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel5.SuspendLayout();
             this.groupBox25.SuspendLayout();
@@ -161,8 +164,6 @@ namespace Registry.Viewport
             this.groupBoxProtocol.SuspendLayout();
             this.groupBox21.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyAddress)).BeginInit();
-            this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRentPeriods)).BeginInit();
             this.SuspendLayout();
             // 
             // tableLayoutPanel9
@@ -172,7 +173,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel9.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel9.Controls.Add(this.groupBox31, 0, 3);
             this.tableLayoutPanel9.Controls.Add(this.groupBox22, 0, 0);
-            this.tableLayoutPanel9.Controls.Add(this.groupBox1, 1, 3);
+            this.tableLayoutPanel9.Controls.Add(this.groupBoxPersons, 1, 3);
             this.tableLayoutPanel9.Controls.Add(this.groupBoxTenancyContract, 0, 1);
             this.tableLayoutPanel9.Controls.Add(this.groupBox25, 1, 2);
             this.tableLayoutPanel9.Controls.Add(this.groupBox24, 0, 2);
@@ -187,7 +188,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 85F));
             this.tableLayoutPanel9.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
-            this.tableLayoutPanel9.Size = new System.Drawing.Size(1002, 641);
+            this.tableLayoutPanel9.Size = new System.Drawing.Size(1018, 641);
             this.tableLayoutPanel9.TabIndex = 0;
             // 
             // groupBox31
@@ -196,7 +197,7 @@ namespace Registry.Viewport
             this.groupBox31.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox31.Location = new System.Drawing.Point(3, 423);
             this.groupBox31.Name = "groupBox31";
-            this.groupBox31.Size = new System.Drawing.Size(495, 79);
+            this.groupBox31.Size = new System.Drawing.Size(503, 79);
             this.groupBox31.TabIndex = 6;
             this.groupBox31.TabStop = false;
             this.groupBox31.Text = "Дополнительные сведения";
@@ -209,7 +210,7 @@ namespace Registry.Viewport
             this.textBoxDescription.Multiline = true;
             this.textBoxDescription.Name = "textBoxDescription";
             this.textBoxDescription.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.textBoxDescription.Size = new System.Drawing.Size(489, 59);
+            this.textBoxDescription.Size = new System.Drawing.Size(497, 59);
             this.textBoxDescription.TabIndex = 0;
             this.textBoxDescription.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -222,7 +223,7 @@ namespace Registry.Viewport
             this.groupBox22.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox22.Location = new System.Drawing.Point(3, 3);
             this.groupBox22.Name = "groupBox22";
-            this.groupBox22.Size = new System.Drawing.Size(495, 79);
+            this.groupBox22.Size = new System.Drawing.Size(503, 79);
             this.groupBox22.TabIndex = 0;
             this.groupBox22.TabStop = false;
             this.groupBox22.Text = "Общие сведения";
@@ -235,7 +236,7 @@ namespace Registry.Viewport
             this.comboBoxExecutor.FormattingEnabled = true;
             this.comboBoxExecutor.Location = new System.Drawing.Point(168, 48);
             this.comboBoxExecutor.Name = "comboBoxExecutor";
-            this.comboBoxExecutor.Size = new System.Drawing.Size(318, 23);
+            this.comboBoxExecutor.Size = new System.Drawing.Size(326, 23);
             this.comboBoxExecutor.TabIndex = 1;
             // 
             // label41
@@ -257,7 +258,7 @@ namespace Registry.Viewport
             this.comboBoxRentType.FormattingEnabled = true;
             this.comboBoxRentType.Location = new System.Drawing.Point(168, 19);
             this.comboBoxRentType.Name = "comboBoxRentType";
-            this.comboBoxRentType.Size = new System.Drawing.Size(318, 23);
+            this.comboBoxRentType.Size = new System.Drawing.Size(326, 23);
             this.comboBoxRentType.TabIndex = 0;
             // 
             // label46
@@ -269,17 +270,17 @@ namespace Registry.Viewport
             this.label46.TabIndex = 16;
             this.label46.Text = "Тип найма жилья";
             // 
-            // groupBox1
+            // groupBoxPersons
             // 
-            this.groupBox1.Controls.Add(this.dataGridViewTenancyPersons);
-            this.groupBox1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox1.Location = new System.Drawing.Point(504, 423);
-            this.groupBox1.Name = "groupBox1";
-            this.tableLayoutPanel9.SetRowSpan(this.groupBox1, 2);
-            this.groupBox1.Size = new System.Drawing.Size(495, 215);
-            this.groupBox1.TabIndex = 8;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "Участники найма";
+            this.groupBoxPersons.Controls.Add(this.dataGridViewTenancyPersons);
+            this.groupBoxPersons.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupBoxPersons.Location = new System.Drawing.Point(512, 423);
+            this.groupBoxPersons.Name = "groupBoxPersons";
+            this.tableLayoutPanel9.SetRowSpan(this.groupBoxPersons, 2);
+            this.groupBoxPersons.Size = new System.Drawing.Size(503, 215);
+            this.groupBoxPersons.TabIndex = 8;
+            this.groupBoxPersons.TabStop = false;
+            this.groupBoxPersons.Text = "Участники найма";
             // 
             // dataGridViewTenancyPersons
             // 
@@ -301,7 +302,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyPersons.Name = "dataGridViewTenancyPersons";
             this.dataGridViewTenancyPersons.ReadOnly = true;
             this.dataGridViewTenancyPersons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(489, 195);
+            this.dataGridViewTenancyPersons.Size = new System.Drawing.Size(497, 195);
             this.dataGridViewTenancyPersons.TabIndex = 0;
             this.dataGridViewTenancyPersons.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyPersons_CellDoubleClick);
             // 
@@ -349,7 +350,7 @@ namespace Registry.Viewport
             this.groupBoxTenancyContract.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBoxTenancyContract.Location = new System.Drawing.Point(3, 88);
             this.groupBoxTenancyContract.Name = "groupBoxTenancyContract";
-            this.groupBoxTenancyContract.Size = new System.Drawing.Size(996, 194);
+            this.groupBoxTenancyContract.Size = new System.Drawing.Size(1012, 194);
             this.groupBoxTenancyContract.TabIndex = 2;
             this.groupBoxTenancyContract.TabStop = false;
             this.groupBoxTenancyContract.Text = "      Договор найма";
@@ -366,7 +367,7 @@ namespace Registry.Viewport
             this.tableLayoutPanel10.Name = "tableLayoutPanel10";
             this.tableLayoutPanel10.RowCount = 1;
             this.tableLayoutPanel10.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 90F));
-            this.tableLayoutPanel10.Size = new System.Drawing.Size(990, 174);
+            this.tableLayoutPanel10.Size = new System.Drawing.Size(1006, 174);
             this.tableLayoutPanel10.TabIndex = 1;
             // 
             // panel6
@@ -380,10 +381,10 @@ namespace Registry.Viewport
             this.panel6.Controls.Add(this.label50);
             this.panel6.Controls.Add(this.dateTimePickerBeginDate);
             this.panel6.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel6.Location = new System.Drawing.Point(495, 0);
+            this.panel6.Location = new System.Drawing.Point(503, 0);
             this.panel6.Margin = new System.Windows.Forms.Padding(0);
             this.panel6.Name = "panel6";
-            this.panel6.Size = new System.Drawing.Size(495, 174);
+            this.panel6.Size = new System.Drawing.Size(503, 174);
             this.panel6.TabIndex = 1;
             // 
             // vButtonSwapRentPeriod
@@ -392,7 +393,7 @@ namespace Registry.Viewport
             this.vButtonSwapRentPeriod.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonSwapRentPeriod.BackColor = System.Drawing.Color.Transparent;
             this.vButtonSwapRentPeriod.Image = ((System.Drawing.Image)(resources.GetObject("vButtonSwapRentPeriod.Image")));
-            this.vButtonSwapRentPeriod.Location = new System.Drawing.Point(455, 7);
+            this.vButtonSwapRentPeriod.Location = new System.Drawing.Point(463, 7);
             this.vButtonSwapRentPeriod.Name = "vButtonSwapRentPeriod";
             this.vButtonSwapRentPeriod.RoundedCornersMask = ((byte)(15));
             this.vButtonSwapRentPeriod.Size = new System.Drawing.Size(32, 51);
@@ -410,17 +411,67 @@ namespace Registry.Viewport
             this.groupBox2.Controls.Add(this.panel1);
             this.groupBox2.Location = new System.Drawing.Point(5, 81);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(487, 90);
+            this.groupBox2.Size = new System.Drawing.Size(495, 90);
             this.groupBox2.TabIndex = 4;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Предыдущие периоды найма";
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.dataGridViewRentPeriods);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(3, 17);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(451, 70);
+            this.panel2.TabIndex = 5;
+            // 
+            // dataGridViewRentPeriods
+            // 
+            this.dataGridViewRentPeriods.AllowUserToAddRows = false;
+            this.dataGridViewRentPeriods.AllowUserToDeleteRows = false;
+            this.dataGridViewRentPeriods.AllowUserToResizeRows = false;
+            this.dataGridViewRentPeriods.BackgroundColor = System.Drawing.Color.White;
+            this.dataGridViewRentPeriods.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridViewRentPeriods.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.rent_periods_begin_date,
+            this.rent_periods_end_date,
+            this.rent_periods_until_dismissal});
+            this.dataGridViewRentPeriods.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.dataGridViewRentPeriods.Location = new System.Drawing.Point(0, 0);
+            this.dataGridViewRentPeriods.MultiSelect = false;
+            this.dataGridViewRentPeriods.Name = "dataGridViewRentPeriods";
+            this.dataGridViewRentPeriods.ReadOnly = true;
+            this.dataGridViewRentPeriods.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
+            this.dataGridViewRentPeriods.Size = new System.Drawing.Size(451, 70);
+            this.dataGridViewRentPeriods.TabIndex = 1;
+            // 
+            // rent_periods_begin_date
+            // 
+            this.rent_periods_begin_date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.rent_periods_begin_date.HeaderText = "С";
+            this.rent_periods_begin_date.Name = "rent_periods_begin_date";
+            this.rent_periods_begin_date.ReadOnly = true;
+            // 
+            // rent_periods_end_date
+            // 
+            this.rent_periods_end_date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.rent_periods_end_date.HeaderText = "По";
+            this.rent_periods_end_date.Name = "rent_periods_end_date";
+            this.rent_periods_end_date.ReadOnly = true;
+            // 
+            // rent_periods_until_dismissal
+            // 
+            this.rent_periods_until_dismissal.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.rent_periods_until_dismissal.HeaderText = "На период ТО";
+            this.rent_periods_until_dismissal.Name = "rent_periods_until_dismissal";
+            this.rent_periods_until_dismissal.ReadOnly = true;
             // 
             // panel1
             // 
             this.panel1.Controls.Add(this.vButtonRentPeriodDelete);
             this.panel1.Controls.Add(this.vButtonRentPeriodAdd);
             this.panel1.Dock = System.Windows.Forms.DockStyle.Right;
-            this.panel1.Location = new System.Drawing.Point(446, 17);
+            this.panel1.Location = new System.Drawing.Point(454, 17);
             this.panel1.Margin = new System.Windows.Forms.Padding(0);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(38, 70);
@@ -492,7 +543,7 @@ namespace Registry.Viewport
             this.dateTimePickerEndDate.Location = new System.Drawing.Point(174, 37);
             this.dateTimePickerEndDate.Name = "dateTimePickerEndDate";
             this.dateTimePickerEndDate.ShowCheckBox = true;
-            this.dateTimePickerEndDate.Size = new System.Drawing.Size(275, 21);
+            this.dateTimePickerEndDate.Size = new System.Drawing.Size(283, 21);
             this.dateTimePickerEndDate.TabIndex = 1;
             // 
             // label50
@@ -511,11 +562,12 @@ namespace Registry.Viewport
             this.dateTimePickerBeginDate.Location = new System.Drawing.Point(174, 8);
             this.dateTimePickerBeginDate.Name = "dateTimePickerBeginDate";
             this.dateTimePickerBeginDate.ShowCheckBox = true;
-            this.dateTimePickerBeginDate.Size = new System.Drawing.Size(275, 21);
+            this.dateTimePickerBeginDate.Size = new System.Drawing.Size(283, 21);
             this.dateTimePickerBeginDate.TabIndex = 0;
             // 
             // panel5
             // 
+            this.panel5.Controls.Add(this.labelDuplicateContract);
             this.panel5.Controls.Add(this.vButtonWarrant);
             this.panel5.Controls.Add(this.textBoxSelectedWarrant);
             this.panel5.Controls.Add(this.label82);
@@ -529,15 +581,27 @@ namespace Registry.Viewport
             this.panel5.Location = new System.Drawing.Point(0, 0);
             this.panel5.Margin = new System.Windows.Forms.Padding(0);
             this.panel5.Name = "panel5";
-            this.panel5.Size = new System.Drawing.Size(495, 174);
+            this.panel5.Size = new System.Drawing.Size(503, 174);
             this.panel5.TabIndex = 0;
+            // 
+            // labelDuplicateContract
+            // 
+            this.labelDuplicateContract.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.labelDuplicateContract.AutoSize = true;
+            this.labelDuplicateContract.ForeColor = System.Drawing.Color.Red;
+            this.labelDuplicateContract.Location = new System.Drawing.Point(44, 128);
+            this.labelDuplicateContract.Name = "labelDuplicateContract";
+            this.labelDuplicateContract.Size = new System.Drawing.Size(404, 15);
+            this.labelDuplicateContract.TabIndex = 24;
+            this.labelDuplicateContract.Text = "В базе уже присутствует договор соц. найма с тем же нанимателем";
+            this.labelDuplicateContract.Visible = false;
             // 
             // vButtonWarrant
             // 
             this.vButtonWarrant.AllowAnimations = true;
             this.vButtonWarrant.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.vButtonWarrant.BackColor = System.Drawing.Color.Transparent;
-            this.vButtonWarrant.Location = new System.Drawing.Point(459, 90);
+            this.vButtonWarrant.Location = new System.Drawing.Point(467, 90);
             this.vButtonWarrant.Name = "vButtonWarrant";
             this.vButtonWarrant.RoundedCornersMask = ((byte)(15));
             this.vButtonWarrant.Size = new System.Drawing.Size(27, 20);
@@ -554,7 +618,7 @@ namespace Registry.Viewport
             this.textBoxSelectedWarrant.Location = new System.Drawing.Point(172, 90);
             this.textBoxSelectedWarrant.Name = "textBoxSelectedWarrant";
             this.textBoxSelectedWarrant.ReadOnly = true;
-            this.textBoxSelectedWarrant.Size = new System.Drawing.Size(281, 21);
+            this.textBoxSelectedWarrant.Size = new System.Drawing.Size(289, 21);
             this.textBoxSelectedWarrant.TabIndex = 3;
             // 
             // label82
@@ -581,7 +645,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerRegistrationDate.Location = new System.Drawing.Point(172, 33);
             this.dateTimePickerRegistrationDate.Name = "dateTimePickerRegistrationDate";
-            this.dateTimePickerRegistrationDate.Size = new System.Drawing.Size(314, 21);
+            this.dateTimePickerRegistrationDate.Size = new System.Drawing.Size(322, 21);
             this.dateTimePickerRegistrationDate.TabIndex = 1;
             // 
             // textBoxRegistrationNumber
@@ -591,7 +655,7 @@ namespace Registry.Viewport
             this.textBoxRegistrationNumber.Location = new System.Drawing.Point(172, 4);
             this.textBoxRegistrationNumber.MaxLength = 255;
             this.textBoxRegistrationNumber.Name = "textBoxRegistrationNumber";
-            this.textBoxRegistrationNumber.Size = new System.Drawing.Size(314, 21);
+            this.textBoxRegistrationNumber.Size = new System.Drawing.Size(322, 21);
             this.textBoxRegistrationNumber.TabIndex = 0;
             this.textBoxRegistrationNumber.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -620,7 +684,7 @@ namespace Registry.Viewport
             this.dateTimePickerIssueDate.Location = new System.Drawing.Point(172, 62);
             this.dateTimePickerIssueDate.Name = "dateTimePickerIssueDate";
             this.dateTimePickerIssueDate.ShowCheckBox = true;
-            this.dateTimePickerIssueDate.Size = new System.Drawing.Size(314, 21);
+            this.dateTimePickerIssueDate.Size = new System.Drawing.Size(322, 21);
             this.dateTimePickerIssueDate.TabIndex = 2;
             // 
             // checkBoxContractEnable
@@ -639,9 +703,9 @@ namespace Registry.Viewport
             // 
             this.groupBox25.Controls.Add(this.dataGridViewTenancyAgreements);
             this.groupBox25.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBox25.Location = new System.Drawing.Point(504, 288);
+            this.groupBox25.Location = new System.Drawing.Point(512, 288);
             this.groupBox25.Name = "groupBox25";
-            this.groupBox25.Size = new System.Drawing.Size(495, 129);
+            this.groupBox25.Size = new System.Drawing.Size(503, 129);
             this.groupBox25.TabIndex = 4;
             this.groupBox25.TabStop = false;
             this.groupBox25.Text = "Соглашения найма";
@@ -662,7 +726,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyAgreements.Name = "dataGridViewTenancyAgreements";
             this.dataGridViewTenancyAgreements.ReadOnly = true;
             this.dataGridViewTenancyAgreements.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyAgreements.Size = new System.Drawing.Size(489, 109);
+            this.dataGridViewTenancyAgreements.Size = new System.Drawing.Size(497, 109);
             this.dataGridViewTenancyAgreements.TabIndex = 0;
             this.dataGridViewTenancyAgreements.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyAgreements_CellDoubleClick);
             // 
@@ -685,7 +749,7 @@ namespace Registry.Viewport
             this.groupBox24.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox24.Location = new System.Drawing.Point(3, 288);
             this.groupBox24.Name = "groupBox24";
-            this.groupBox24.Size = new System.Drawing.Size(495, 129);
+            this.groupBox24.Size = new System.Drawing.Size(503, 129);
             this.groupBox24.TabIndex = 3;
             this.groupBox24.TabStop = false;
             this.groupBox24.Text = "Основания найма";
@@ -707,7 +771,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyReasons.Name = "dataGridViewTenancyReasons";
             this.dataGridViewTenancyReasons.ReadOnly = true;
             this.dataGridViewTenancyReasons.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyReasons.Size = new System.Drawing.Size(489, 109);
+            this.dataGridViewTenancyReasons.Size = new System.Drawing.Size(497, 109);
             this.dataGridViewTenancyReasons.TabIndex = 0;
             this.dataGridViewTenancyReasons.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyReasons_CellDoubleClick);
             // 
@@ -738,9 +802,9 @@ namespace Registry.Viewport
             this.groupBoxProtocol.Controls.Add(this.textBoxProtocolNumber);
             this.groupBoxProtocol.Controls.Add(this.checkBoxProtocolEnable);
             this.groupBoxProtocol.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupBoxProtocol.Location = new System.Drawing.Point(504, 3);
+            this.groupBoxProtocol.Location = new System.Drawing.Point(512, 3);
             this.groupBoxProtocol.Name = "groupBoxProtocol";
-            this.groupBoxProtocol.Size = new System.Drawing.Size(495, 79);
+            this.groupBoxProtocol.Size = new System.Drawing.Size(503, 79);
             this.groupBoxProtocol.TabIndex = 1;
             this.groupBoxProtocol.TabStop = false;
             this.groupBoxProtocol.Text = "      Протокол жилищной комиссии";
@@ -760,7 +824,7 @@ namespace Registry.Viewport
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dateTimePickerProtocolDate.Location = new System.Drawing.Point(171, 48);
             this.dateTimePickerProtocolDate.Name = "dateTimePickerProtocolDate";
-            this.dateTimePickerProtocolDate.Size = new System.Drawing.Size(313, 21);
+            this.dateTimePickerProtocolDate.Size = new System.Drawing.Size(321, 21);
             this.dateTimePickerProtocolDate.TabIndex = 2;
             // 
             // label42
@@ -779,7 +843,7 @@ namespace Registry.Viewport
             this.textBoxProtocolNumber.Location = new System.Drawing.Point(171, 19);
             this.textBoxProtocolNumber.MaxLength = 50;
             this.textBoxProtocolNumber.Name = "textBoxProtocolNumber";
-            this.textBoxProtocolNumber.Size = new System.Drawing.Size(313, 21);
+            this.textBoxProtocolNumber.Size = new System.Drawing.Size(321, 21);
             this.textBoxProtocolNumber.TabIndex = 1;
             this.textBoxProtocolNumber.Enter += new System.EventHandler(this.selectAll_Enter);
             // 
@@ -801,7 +865,7 @@ namespace Registry.Viewport
             this.groupBox21.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupBox21.Location = new System.Drawing.Point(3, 508);
             this.groupBox21.Name = "groupBox21";
-            this.groupBox21.Size = new System.Drawing.Size(495, 130);
+            this.groupBox21.Size = new System.Drawing.Size(503, 130);
             this.groupBox21.TabIndex = 7;
             this.groupBox21.TabStop = false;
             this.groupBox21.Text = "Нанимаемое жилье";
@@ -825,7 +889,7 @@ namespace Registry.Viewport
             this.dataGridViewTenancyAddress.Name = "dataGridViewTenancyAddress";
             this.dataGridViewTenancyAddress.ReadOnly = true;
             this.dataGridViewTenancyAddress.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewTenancyAddress.Size = new System.Drawing.Size(489, 110);
+            this.dataGridViewTenancyAddress.Size = new System.Drawing.Size(497, 110);
             this.dataGridViewTenancyAddress.TabIndex = 0;
             this.dataGridViewTenancyAddress.CellDoubleClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridViewTenancyAddress_CellDoubleClick);
             // 
@@ -863,62 +927,12 @@ namespace Registry.Viewport
             this.rent_area.Name = "rent_area";
             this.rent_area.ReadOnly = true;
             // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.dataGridViewRentPeriods);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(3, 17);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(443, 70);
-            this.panel2.TabIndex = 5;
-            // 
-            // dataGridViewRentPeriods
-            // 
-            this.dataGridViewRentPeriods.AllowUserToAddRows = false;
-            this.dataGridViewRentPeriods.AllowUserToDeleteRows = false;
-            this.dataGridViewRentPeriods.AllowUserToResizeRows = false;
-            this.dataGridViewRentPeriods.BackgroundColor = System.Drawing.Color.White;
-            this.dataGridViewRentPeriods.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridViewRentPeriods.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
-            this.rent_periods_begin_date,
-            this.rent_periods_end_date,
-            this.rent_periods_until_dismissal});
-            this.dataGridViewRentPeriods.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dataGridViewRentPeriods.Location = new System.Drawing.Point(0, 0);
-            this.dataGridViewRentPeriods.MultiSelect = false;
-            this.dataGridViewRentPeriods.Name = "dataGridViewRentPeriods";
-            this.dataGridViewRentPeriods.ReadOnly = true;
-            this.dataGridViewRentPeriods.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridViewRentPeriods.Size = new System.Drawing.Size(443, 70);
-            this.dataGridViewRentPeriods.TabIndex = 1;
-            // 
-            // rent_periods_begin_date
-            // 
-            this.rent_periods_begin_date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.rent_periods_begin_date.HeaderText = "С";
-            this.rent_periods_begin_date.Name = "rent_periods_begin_date";
-            this.rent_periods_begin_date.ReadOnly = true;
-            // 
-            // rent_periods_end_date
-            // 
-            this.rent_periods_end_date.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.rent_periods_end_date.HeaderText = "По";
-            this.rent_periods_end_date.Name = "rent_periods_end_date";
-            this.rent_periods_end_date.ReadOnly = true;
-            // 
-            // rent_periods_until_dismissal
-            // 
-            this.rent_periods_until_dismissal.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
-            this.rent_periods_until_dismissal.HeaderText = "На период ТО";
-            this.rent_periods_until_dismissal.Name = "rent_periods_until_dismissal";
-            this.rent_periods_until_dismissal.ReadOnly = true;
-            // 
             // TenancyViewport
             // 
             this.AutoScroll = true;
             this.AutoScrollMinSize = new System.Drawing.Size(1000, 600);
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1008, 647);
+            this.ClientSize = new System.Drawing.Size(1024, 647);
             this.Controls.Add(this.tableLayoutPanel9);
             this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -930,7 +944,7 @@ namespace Registry.Viewport
             this.groupBox31.PerformLayout();
             this.groupBox22.ResumeLayout(false);
             this.groupBox22.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
+            this.groupBoxPersons.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyPersons)).EndInit();
             this.groupBoxTenancyContract.ResumeLayout(false);
             this.groupBoxTenancyContract.PerformLayout();
@@ -938,6 +952,8 @@ namespace Registry.Viewport
             this.panel6.ResumeLayout(false);
             this.panel6.PerformLayout();
             this.groupBox2.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRentPeriods)).EndInit();
             this.panel1.ResumeLayout(false);
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
@@ -949,8 +965,6 @@ namespace Registry.Viewport
             this.groupBoxProtocol.PerformLayout();
             this.groupBox21.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridViewTenancyAddress)).EndInit();
-            this.panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dataGridViewRentPeriods)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -966,5 +980,6 @@ namespace Registry.Viewport
         private DataGridViewTextBoxColumn rent_periods_begin_date;
         private DataGridViewTextBoxColumn rent_periods_end_date;
         private DataGridViewCheckBoxColumn rent_periods_until_dismissal;
+        private Label labelDuplicateContract;
     }
 }

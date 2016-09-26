@@ -407,5 +407,33 @@ namespace Registry.Viewport.Presenters
                 idRentPeriod, rentPeriod.IdProcess, rentPeriod.BeginDate, rentPeriod.EndDate, rentPeriod.UntilDismissal);
             rentPeriodsViewModel.Model.EditingNewRecord = false;
         }
+
+        public bool HasContractDuplicates()
+        {
+            var currentRow = ViewModel["general"].CurrentRow;
+            if (currentRow == null) return false;
+            if (currentRow["id_rent_type"] == DBNull.Value || 
+                currentRow["id_process"] == DBNull.Value || 
+                (int) currentRow["id_rent_type"] != 3) return false;           
+            var tenant = (from processRow in ViewModel["general"].Model.FilterDeletedRows()
+                join personsRow in EntityDataModel<TenancyPerson>.GetInstance().FilterDeletedRows()
+                    on processRow.Field<int>("id_process") equals personsRow.Field<int>("id_process")
+                where processRow.Field<int>("id_process") == (int) currentRow["id_process"] &&
+                      personsRow.Field<int>("id_kinship") == 1 && personsRow["exclude_date"] == DBNull.Value
+                select personsRow).FirstOrDefault();
+            if (tenant == null) return false;
+            var result = from processRow in ViewModel["general"].Model.FilterDeletedRows()
+                join personsRow in EntityDataModel<TenancyPerson>.GetInstance().FilterDeletedRows()
+                    on processRow.Field<int>("id_process") equals personsRow.Field<int>("id_process")
+                where personsRow.Field<int>("id_kinship") == 1 &&
+                      personsRow["exclude_date"] == DBNull.Value &&
+                      personsRow.Field<string>("surname") == tenant.Field<string>("surname") &&
+                      personsRow.Field<string>("name") == tenant.Field<string>("name") &&
+                      personsRow.Field<string>("patronymic") == tenant.Field<string>("patronymic") &&
+                      processRow.Field<int>("id_process") != (int) currentRow["id_process"] &&
+                      processRow.Field<int>("id_rent_type") == 3
+                select processRow;
+            return result.Any();
+        }
     }
 }

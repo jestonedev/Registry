@@ -140,6 +140,72 @@ namespace Registry.DataModels.Services
                 select premisesRow.Field<int>("id_premises");
         }
 
+        public static IEnumerable<int> PremiseIDsByOwnershipNumber(string ownershipNumber)
+        {
+            var ownershipRights = EntityDataModel<OwnershipRight>.GetInstance().FilterDeletedRows();
+            var ownershipPremisesAssoc = EntityDataModel<OwnershipRightPremisesAssoc>.GetInstance().FilterDeletedRows();
+            var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows().ToList();
+            var buildingIds = BuildingService.BuildingIDsByOwnershipNumber(ownershipNumber);
+
+            return (from premisesRow in premises
+                join ownershipPremisesAssocRow in ownershipPremisesAssoc
+                    on premisesRow.Field<int>("id_premises") equals ownershipPremisesAssocRow.Field<int>("id_premises")
+                join ownershipRightsRow in ownershipRights
+                    on ownershipPremisesAssocRow.Field<int>("id_ownership_right") equals
+                    ownershipRightsRow.Field<int>("id_ownership_right")
+                where ownershipRightsRow.Field<string>("number") == ownershipNumber
+                select premisesRow.Field<int>("id_premises")).Union(
+                    from premisesRow in premises
+                    join buildingId in buildingIds
+                        on premisesRow.Field<int>("id_building") equals buildingId
+                    select premisesRow.Field<int>("id_premises")
+                );
+        }
+
+        public static IEnumerable<int> PremiseIDsByRestricitonNumber(string restrictionNumber)
+        {
+            var restricitons = EntityDataModel<Restriction>.GetInstance().FilterDeletedRows();
+            var restrictionPremisesAssoc = EntityDataModel<RestrictionPremisesAssoc>.GetInstance().FilterDeletedRows();
+            var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows().ToList();
+            var buildingIds = BuildingService.BuildingIDsByRestricitonNumber(restrictionNumber);
+            return (from premisesRow in premises
+                join restrictionPremisesAssocRow in restrictionPremisesAssoc
+                    on premisesRow.Field<int>("id_premises") equals
+                    restrictionPremisesAssocRow.Field<int>("id_premises")
+                join restrictionsRow in restricitons
+                    on restrictionPremisesAssocRow.Field<int>("id_restriction") equals
+                    restrictionsRow.Field<int>("id_restriction")
+                where restrictionsRow.Field<string>("number") == restrictionNumber
+                select premisesRow.Field<int>("id_premises")).Union(
+                    from premisesRow in premises
+                    join buildingId in buildingIds
+                        on premisesRow.Field<int>("id_building") equals buildingId
+                    select premisesRow.Field<int>("id_premises")
+                );
+        }
+
+        public static IEnumerable<int> PremiseIDsByRestricitonType(int idRestrictionType)
+        {
+            var restricitons = EntityDataModel<Restriction>.GetInstance().FilterDeletedRows();
+            var restrictionPremisesAssoc = EntityDataModel<RestrictionPremisesAssoc>.GetInstance().FilterDeletedRows();
+            var premises = EntityDataModel<Premise>.GetInstance().FilterDeletedRows().ToList();
+            var buildingIds = BuildingService.BuildingIDsByRestricitonType(idRestrictionType);
+            return (from premisesRow in premises
+                join restrictionPremisesAssocRow in restrictionPremisesAssoc
+                    on premisesRow.Field<int>("id_premises") equals
+                    restrictionPremisesAssocRow.Field<int>("id_premises")
+                join restrictionsRow in restricitons
+                    on restrictionPremisesAssocRow.Field<int>("id_restriction") equals
+                    restrictionsRow.Field<int>("id_restriction")
+                where restrictionsRow.Field<int>("id_restriction_type") == idRestrictionType
+                select premisesRow.Field<int>("id_premises")).Union(
+                    from premisesRow in premises
+                    join buildingId in buildingIds
+                        on premisesRow.Field<int>("id_building") equals buildingId
+                    select premisesRow.Field<int>("id_premises")
+                );
+        }
+
         public static IEnumerable<RestrictionPremisesAssoc> PremiseIDsExcludedFromMunicipal(List<DataRow> premisesAssocDataRows)
         {
             var restrictions = EntityDataModel<Restriction>.GetInstance().FilterDeletedRows().ToList();

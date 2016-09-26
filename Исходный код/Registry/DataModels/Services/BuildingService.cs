@@ -153,6 +153,48 @@ namespace Registry.DataModels.Services
                 select ownershipBuildingdsAssocRow.Field<int>("id_building");
         }
 
+        public static IEnumerable<int> BuildingIDsByOwnershipNumber(string ownershipNumber)
+        {
+            var ownershipRights = EntityDataModel<OwnershipRight>.GetInstance().FilterDeletedRows();
+            var ownershipBuildingsAssoc = EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance().FilterDeletedRows();
+            var buildings = EntityDataModel<Building>.GetInstance().FilterDeletedRows();
+            return from buildingsRow in buildings
+                   join ownershipBuildingsAssocRow in ownershipBuildingsAssoc
+                   on buildingsRow.Field<int>("id_building") equals ownershipBuildingsAssocRow.Field<int>("id_building")
+                   join ownershipRightsRow in ownershipRights
+                   on ownershipBuildingsAssocRow.Field<int>("id_ownership_right") equals ownershipRightsRow.Field<int>("id_ownership_right")
+                   where ownershipRightsRow.Field<string>("number") == ownershipNumber
+                   select buildingsRow.Field<int>("id_building");
+        }
+
+        public static IEnumerable<int> BuildingIDsByRestricitonNumber(string restrictionNumber)
+        {
+            var restricitons = EntityDataModel<Restriction>.GetInstance().FilterDeletedRows();
+            var restrictionBuildingsAssoc = EntityDataModel<RestrictionBuildingAssoc>.GetInstance().FilterDeletedRows();
+            var buildings = EntityDataModel<Building>.GetInstance().FilterDeletedRows();
+            return from buildingsRow in buildings
+                   join restrictionBuildingsAssocRow in restrictionBuildingsAssoc
+                   on buildingsRow.Field<int>("id_building") equals restrictionBuildingsAssocRow.Field<int>("id_building")
+                   join restrictionsRow in restricitons
+                   on restrictionBuildingsAssocRow.Field<int>("id_restriction") equals restrictionsRow.Field<int>("id_restriction")
+                   where restrictionsRow.Field<string>("number") == restrictionNumber
+                   select buildingsRow.Field<int>("id_building");
+        }
+
+        public static IEnumerable<int> BuildingIDsByRestricitonType(int idRestrictionType)
+        {
+            var restricitons = EntityDataModel<Restriction>.GetInstance().FilterDeletedRows();
+            var restrictionBuildingsAssoc = EntityDataModel<RestrictionBuildingAssoc>.GetInstance().FilterDeletedRows();
+            var buildings = EntityDataModel<Building>.GetInstance().FilterDeletedRows();
+            return from buildingsRow in buildings
+                   join restrictionBuildingsAssocRow in restrictionBuildingsAssoc
+                   on buildingsRow.Field<int>("id_building") equals restrictionBuildingsAssocRow.Field<int>("id_building")
+                   join restrictionsRow in restricitons
+                   on restrictionBuildingsAssocRow.Field<int>("id_restriction") equals restrictionsRow.Field<int>("id_restriction")
+                   where restrictionsRow.Field<int>("id_restriction_type") == idRestrictionType
+                   select buildingsRow.Field<int>("id_building");
+        }
+
         public static IEnumerable<RestrictionBuildingAssoc> BuildingIDsExcludedFromMunicipal(List<DataRow> buildingAssocDataRows)
         {
             var restrictions = EntityDataModel<Restriction>.GetInstance().FilterDeletedRows().ToList();

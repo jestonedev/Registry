@@ -727,6 +727,7 @@ namespace Registry.Viewport
             }
             reporter.Run(arguments);
         }
+        
         private Dictionary<string, string> TenancyContractReporterArguments()
         {
             var row = Presenter.ViewModel["general"].CurrentRow;
@@ -785,6 +786,7 @@ namespace Registry.Viewport
             SetViewportCaption();
             UnbindedCheckBoxesUpdate();
             BindWarrantId();
+            labelDuplicateContract.Visible = ((TenancyPresenter) Presenter).HasContractDuplicates();
             ((TenancyPresenter)Presenter).FiltersRebuild();
             IsEditable = isEditable;
             if (!Selected) return;
@@ -800,6 +802,7 @@ namespace Registry.Viewport
             MenuCallback.ForceCloseDetachedViewports();
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
+            labelDuplicateContract.Visible = ((TenancyPresenter)Presenter).HasContractDuplicates();
         }
 
         private void TenancyViewport_RowChanged(object sender, DataRowChangeEventArgs e)
@@ -808,19 +811,20 @@ namespace Registry.Viewport
             if (Selected)
                 MenuCallback.StatusBarStateUpdate();
             CheckViewportModifications();
+            labelDuplicateContract.Visible = ((TenancyPresenter)Presenter).HasContractDuplicates();
         }
 
         private void TenancyPersons_RowDeleted(object sender, DataRowChangeEventArgs e)
         {
-            if (e.Action == DataRowAction.Delete)
-            {
-                RedrawDataGridRows();
-            }
+            if (e.Action != DataRowAction.Delete) return;
+            RedrawDataGridRows();
+            labelDuplicateContract.Visible = ((TenancyPresenter)Presenter).HasContractDuplicates();
         }
 
         private void TenancyPersons_RowChanged(object sender, DataRowChangeEventArgs e)
         {
             RedrawDataGridRows();
+            labelDuplicateContract.Visible = ((TenancyPresenter)Presenter).HasContractDuplicates();
         }
 
         private void TenancyAssocViewport_RowChanged(object sender, DataRowChangeEventArgs e)
