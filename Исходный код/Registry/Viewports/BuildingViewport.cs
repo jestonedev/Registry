@@ -598,6 +598,7 @@ namespace Registry.Viewport
             IsEditable = false;
             Presenter.ViewModel["general"].Model.EditingNewRecord = true;
             var building = (Building)EntityFromView();
+            building.RoomsBTI = null;
             Presenter.ViewModel["general"].BindingSource.AddNew();
             ViewportFromBuilding(building);
             IsEditable = true;
