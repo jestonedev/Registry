@@ -426,9 +426,19 @@ namespace Registry.Viewport
                     break;
                 case "premises_num":
                 case "id_premises_type":
-                case "total_area":
                 case "cadastral_num":
                     e.Value = row[DataGridView.Columns[e.ColumnIndex].Name];
+                    break;
+                case "total_area":
+                    var subPremisesSumArea = Presenter.ViewModel["sub_premises_sum_area"].DataSource.Rows.Find(row["id_premises"]);
+                    if (subPremisesSumArea != null && (double) subPremisesSumArea["sum_area"] > 0)
+                    {
+                        e.Value = subPremisesSumArea["sum_area"];
+                    }
+                    else
+                    {
+                        e.Value = row[DataGridView.Columns[e.ColumnIndex].Name];
+                    }   
                     break;
                 case "id_state":
                     var stateRow = Presenter.ViewModel["object_states"].DataSource.Rows.Find(

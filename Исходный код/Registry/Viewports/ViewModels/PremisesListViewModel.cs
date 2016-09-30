@@ -21,7 +21,8 @@ namespace Registry.Viewport.ViewModels
                 {"object_states", new ViewModelItem(DataModel.GetInstance<ObjectStatesDataModel>())},
                 {"premises_types", new ViewModelItem(DataModel.GetInstance<PremisesTypesDataModel>())},
                 {"fund_types", new ViewModelItem(DataModel.GetInstance<FundTypesDataModel>())},
-                {"premises_current_funds", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>())}
+                {"premises_current_funds", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>())},
+                {"sub_premises_sum_area", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelPremiseSubPremisesSumArea>())}
             })
         {
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
