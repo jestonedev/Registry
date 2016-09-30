@@ -427,18 +427,17 @@ namespace Registry.Viewport
                 case "premises_num":
                 case "id_premises_type":
                 case "cadastral_num":
+                case "total_area":
                     e.Value = row[DataGridView.Columns[e.ColumnIndex].Name];
                     break;
-                case "total_area":
-                    var subPremisesSumArea = Presenter.ViewModel["sub_premises_sum_area"].DataSource.Rows.Find(row["id_premises"]);
-                    if (subPremisesSumArea != null && (double) subPremisesSumArea["sum_area"] > 0)
-                    {
-                        e.Value = subPremisesSumArea["sum_area"];
-                    }
-                    else
-                    {
-                        e.Value = row[DataGridView.Columns[e.ColumnIndex].Name];
-                    }   
+                case "rooms_area":
+                    var subPremises =
+                        (from subPremisesRow in Presenter.ViewModel["sub_premises"].Model.FilterDeletedRows()
+                        where subPremisesRow.Field<int>("id_premises") == (int)row["id_premises"] &&
+                                new List<int> { 4, 5, 9, 11, 12 }.Contains((int)subPremisesRow["id_state"])
+                        select subPremisesRow).ToList();
+                    if (subPremises.Any())
+                        e.Value = subPremises.Select(sp => sp["total_area"].ToString()).Aggregate((v, acc) => v + " / " + acc);
                     break;
                 case "id_state":
                     var stateRow = Presenter.ViewModel["object_states"].DataSource.Rows.Find(

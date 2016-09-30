@@ -28,6 +28,7 @@ namespace Registry.Viewport
             this.id_premises_type = new System.Windows.Forms.DataGridViewComboBoxColumn();
             this.cadastral_num = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.total_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.rooms_area = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.id_state = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.current_fund = new System.Windows.Forms.DataGridViewTextBoxColumn();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView)).BeginInit();
@@ -58,6 +59,7 @@ namespace Registry.Viewport
             this.id_premises_type,
             this.cadastral_num,
             this.total_area,
+            this.rooms_area,
             this.id_state,
             this.current_fund});
             this.dataGridView.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -144,6 +146,14 @@ namespace Registry.Viewport
             this.total_area.ReadOnly = true;
             this.total_area.Width = 70;
             // 
+            // rooms_area
+            // 
+            this.rooms_area.HeaderText = "Площадь мун. комнат";
+            this.rooms_area.MinimumWidth = 100;
+            this.rooms_area.Name = "rooms_area";
+            this.rooms_area.ReadOnly = true;
+            this.rooms_area.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
+            // 
             // id_state
             // 
             this.id_state.HeaderText = "Текущее состояние";
@@ -184,6 +194,7 @@ namespace Registry.Viewport
         private DataGridViewComboBoxColumn id_premises_type;
         private DataGridViewTextBoxColumn cadastral_num;
         private DataGridViewTextBoxColumn total_area;
+        private DataGridViewTextBoxColumn rooms_area;
         private DataGridViewTextBoxColumn id_state;
         private DataGridViewTextBoxColumn current_fund;
     }

@@ -13,6 +13,7 @@ namespace Registry.Viewport.ViewModels
             : base(new Dictionary<string, ViewModelItem>
             {
                 {"general", new ViewModelItem(EntityDataModel<Premise>.GetInstance())},
+                {"sub_premises", new ViewModelItem(EntityDataModel<SubPremise>.GetInstance())},
                 {"buildings", new ViewModelItem(EntityDataModel<Building>.GetInstance())},
                 {"ownership_rights", new ViewModelItem(EntityDataModel<OwnershipRight>.GetInstance())},
                 {"ownership_buildings_assoc", new ViewModelItem(EntityDataModel<OwnershipRightBuildingAssoc>.GetInstance())},
@@ -21,8 +22,7 @@ namespace Registry.Viewport.ViewModels
                 {"object_states", new ViewModelItem(DataModel.GetInstance<ObjectStatesDataModel>())},
                 {"premises_types", new ViewModelItem(DataModel.GetInstance<PremisesTypesDataModel>())},
                 {"fund_types", new ViewModelItem(DataModel.GetInstance<FundTypesDataModel>())},
-                {"premises_current_funds", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>())},
-                {"sub_premises_sum_area", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelPremiseSubPremisesSumArea>())}
+                {"premises_current_funds", new ViewModelItem(CalcDataModel.GetInstance<CalcDataModelPremisesCurrentFunds>())}
             })
         {
             if (AccessControl.HasPrivelege(Priveleges.TenancyRead))
