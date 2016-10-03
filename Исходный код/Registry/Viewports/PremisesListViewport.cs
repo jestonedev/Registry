@@ -345,9 +345,9 @@ namespace Registry.Viewport
 
         private Dictionary<string, string> ExportReportArguments()
         {
-            var columnHeaders = DataGridView.Columns.Cast<DataGridViewColumn>().
+            var columnHeaders = DataGridView.Columns.Cast<DataGridViewColumn>().Where(c => c.Name != "rooms_area").
                 Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnHeader\":\"" + column.HeaderText + "\"}");
-            var columnPatterns = DataGridView.Columns.Cast<DataGridViewColumn>().
+            var columnPatterns = DataGridView.Columns.Cast<DataGridViewColumn>().Where(c => c.Name != "rooms_area").
                 Aggregate("", (current, column) => current + (current == "" ? "" : ",") + "{\"columnPattern\":\"$column" + column.DisplayIndex + "$\"}");
             var arguments = new Dictionary<string, string>
             {
